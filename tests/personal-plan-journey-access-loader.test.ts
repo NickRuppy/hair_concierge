@@ -198,7 +198,6 @@ function deps(
     stage2Enabled: () => true,
     stage3Enabled: () => true,
     stage4Enabled: () => true,
-    stage5Rollout: () => "all" as const,
     loadPreparedArtifact: async () => ({ id: "artifact-1" }),
     loadPlan: async () => ({
       id: "plan-1",
@@ -257,7 +256,6 @@ test("Stage 2 access keeps the app rollout gate and stops before later-stage aut
   let draftReads = 0
   let stage3Reads = 0
   let stage4Reads = 0
-  let stage5Reads = 0
   const access = await loadPersonalPlanStage2AccessWithDeps(
     deps({
       loadCurrentRefinedNeed: async () => {
@@ -276,10 +274,6 @@ test("Stage 2 access keeps the app rollout gate and stops before later-stage aut
         stage4Reads += 1
         throw new Error("must not read Stage 4 flag")
       },
-      stage5Rollout: () => {
-        stage5Reads += 1
-        throw new Error("must not read Stage 5 rollout")
-      },
     }),
     "owner-1",
   )
@@ -288,7 +282,6 @@ test("Stage 2 access keeps the app rollout gate and stops before later-stage aut
   assert.equal(draftReads, 0)
   assert.equal(stage3Reads, 0)
   assert.equal(stage4Reads, 0)
-  assert.equal(stage5Reads, 0)
 })
 
 test("Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads", async () => {
@@ -1010,7 +1003,6 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
       stage2Enabled: () => true,
       stage3Enabled: () => true,
       stage4Enabled: () => true,
-      stage5Rollout: () => "internal",
     },
     "user-1",
   )
@@ -1036,7 +1028,7 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
     ["refined_need_version_id", "refined-1"],
     ["status", "neq:stale"],
   ])
-  assert.deepEqual(predicatesFor("profiles"), [["id", "user-1"]])
+  assert.deepEqual(predicatesFor("profiles"), [])
 
   queries.length = 0
   await loadPersonalPlanJourneyAccessWithDeps(
@@ -1048,7 +1040,6 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
       stage2Enabled: () => true,
       stage3Enabled: () => true,
       stage4Enabled: () => true,
-      stage5Rollout: () => "all",
     },
     "user-1",
   )

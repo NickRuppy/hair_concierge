@@ -1,13 +1,7 @@
 import "server-only"
 
 import { isMissingPersonalPlanFieldTestRelation } from "@/lib/personal-plan-field-test/errors"
-import { createAdminClient } from "@/lib/supabase/admin"
-import {
-  canAccessPersonalPlanAppV1Rollout,
-  isPersonalPlanAppV1Enabled,
-  resolvePersonalPlanAppV1Rollout,
-  resolvePersonalPlanAppV1InternalEmails,
-} from "./release"
+import { resolvePersonalPlanAppV1InternalEmails } from "./release"
 
 export type PersonalPlanInternalUserClient = {
   from: (table: "profiles") => {
@@ -139,20 +133,10 @@ export async function isPersonalPlanInternalUser(
 }
 
 export async function isPersonalPlanAppV1AllowedForUser(
-  userId: string,
-  client?: PersonalPlanInternalUserClient,
+  _userId: string,
+  _client?: PersonalPlanInternalUserClient,
 ): Promise<boolean> {
-  const appEnabled = isPersonalPlanAppV1Enabled()
-  const rollout = resolvePersonalPlanAppV1Rollout()
-  if (!appEnabled || rollout === "off") return false
-  if (rollout === "all") return true
-
-  return canAccessPersonalPlanAppV1Rollout({
-    appEnabled,
-    rollout,
-    isInternal: await isPersonalPlanInternalUser(
-      userId,
-      client ?? (createAdminClient() as unknown as PersonalPlanInternalUserClient),
-    ),
-  })
+  void _userId
+  void _client
+  return true
 }

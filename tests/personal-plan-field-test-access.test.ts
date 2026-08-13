@@ -127,7 +127,6 @@ test("field-test activation qualifies Stage 1 and the journey without a payment 
       stage2Enabled: () => false,
       stage3Enabled: () => false,
       stage4Enabled: () => false,
-      stage5Rollout: () => "off",
       loadPreparedArtifact: async () => ({ id: "artifact-1" }),
       loadPlan: async () => null,
       loadCurrentRefinedNeed: async () => null,

@@ -155,7 +155,7 @@ function createMiddleware({
   return createUpdateSession(dependencies)
 }
 
-test("internal rollout routing uses the server-owned eligibility client", async () => {
+test("released routing ignores obsolete internal rollout environment", async () => {
   const originalFetch = globalThis.fetch
   const environment = [
     "NEXT_PUBLIC_SUPABASE_URL",
@@ -170,7 +170,7 @@ test("internal rollout routing uses the server-owned eligibility client", async 
 
   process.env.NEXT_PUBLIC_SUPABASE_URL = "https://supabase.test"
   process.env.SUPABASE_SERVICE_ROLE_KEY = "test-service-role-key"
-  process.env.PERSONAL_PLAN_APP_V1_ENABLED = "true"
+  process.env.PERSONAL_PLAN_APP_V1_ENABLED = "false"
   process.env.PERSONAL_PLAN_APP_V1_ROLLOUT = "internal"
   process.env.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS = "field-test@example.com"
   process.env.PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF = "2026-08-12T12:00:00.000Z"
@@ -202,7 +202,8 @@ test("internal rollout routing uses the server-owned eligibility client", async 
 
     assert.equal(response.status, 307)
     assert.equal(response.headers.get("location"), "https://chaarlie.de/plan-start")
-    assert.ok(requests.some(({ url }) => url.includes(`/auth/v1/admin/users/${fieldTestUserId}`)))
+    assert.ok(requests.every(({ url }) => !url.includes(`/auth/v1/admin/users/${fieldTestUserId}`)))
+    assert.ok(requests.every(({ url }) => !url.includes("/rest/v1/profiles")))
     assert.ok(
       requests.every(({ authorization }) => authorization === "Bearer test-service-role-key"),
     )

@@ -6,14 +6,14 @@ import {
   isPersonalPlanStage4Enabled,
 } from "../src/lib/personal-plan/release"
 
-test("Stage 4 release gate is strict and default-off", () => {
-  assert.equal(isPersonalPlanStage4Enabled({}), false)
-  assert.equal(isPersonalPlanStage4Enabled({ PERSONAL_PLAN_STAGE4_ENABLED: "false" }), false)
-  assert.equal(isPersonalPlanStage4Enabled({ PERSONAL_PLAN_STAGE4_ENABLED: "TRUE" }), false)
+test("released Stage 4 ignores obsolete launch flags", () => {
+  assert.equal(isPersonalPlanStage4Enabled({}), true)
+  assert.equal(isPersonalPlanStage4Enabled({ PERSONAL_PLAN_STAGE4_ENABLED: "false" }), true)
+  assert.equal(isPersonalPlanStage4Enabled({ PERSONAL_PLAN_STAGE4_ENABLED: "TRUE" }), true)
   assert.equal(isPersonalPlanStage4Enabled({ PERSONAL_PLAN_STAGE4_ENABLED: "true" }), true)
 })
 
-test("initial Routine auto-activation is strict, default-off, and requires Stage 4", () => {
+test("initial Routine auto-activation remains a strict, default-off write gate", () => {
   assert.equal(isPersonalPlanStage4AutoActivateInitialEnabled({}), false)
   assert.equal(
     isPersonalPlanStage4AutoActivateInitialEnabled({
@@ -29,13 +29,6 @@ test("initial Routine auto-activation is strict, default-off, and requires Stage
   )
   assert.equal(
     isPersonalPlanStage4AutoActivateInitialEnabled({
-      PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL: "true",
-    }),
-    false,
-  )
-  assert.equal(
-    isPersonalPlanStage4AutoActivateInitialEnabled({
-      PERSONAL_PLAN_STAGE4_ENABLED: "true",
       PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL: "true",
     }),
     true,

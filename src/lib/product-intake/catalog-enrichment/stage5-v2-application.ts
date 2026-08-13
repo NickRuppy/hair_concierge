@@ -11,7 +11,7 @@ export function canonicalJson(value: unknown): string {
   if (value !== null && typeof value === "object") {
     return `{${Object.entries(value as Record<string, unknown>)
       .filter(([, entry]) => entry !== undefined)
-      .sort(([left], [right]) => left.localeCompare(right))
+      .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
       .map(([key, entry]) => `${JSON.stringify(key)}:${canonicalJson(entry)}`)
       .join(",")}}`
   }
@@ -20,6 +20,62 @@ export function canonicalJson(value: unknown): string {
 
 export function stage5V2SourceFingerprint(role: string, payload: unknown): string {
   return createHash("sha256").update(canonicalJson({ role, payload })).digest("hex")
+}
+
+export function stage5V2ArtifactFingerprint(artifactText: string): string {
+  return createHash("sha256").update(artifactText, "utf8").digest("hex")
+}
+
+const SHA256_PATTERN = /^[a-f0-9]{64}$/
+const GIT_SHA_PATTERN = /^[a-f0-9]{40}$/
+const EXPECTED_PROJECT_ID = "pqdkhefxsxkyeqelqegq"
+
+export type Stage5V2ApplicationApplyArgs =
+  | { apply: false }
+  | { apply: true; reviewedHead: string; expectedFingerprint: string }
+
+export function parseStage5V2ApplicationApplyArgs(
+  args: readonly string[],
+): Stage5V2ApplicationApplyArgs {
+  const supported = new Set(["--apply", `--confirm-project=${EXPECTED_PROJECT_ID}`])
+  const valued = ["--reviewed-head=", "--expected-fingerprint="]
+  for (const argument of args) {
+    if (!supported.has(argument) && !valued.some((prefix) => argument.startsWith(prefix))) {
+      throw new Error(`unknown_argument:${argument}`)
+    }
+  }
+  if (!args.includes("--apply")) return { apply: false }
+  if (!args.includes(`--confirm-project=${EXPECTED_PROJECT_ID}`)) {
+    throw new Error(`confirm-project=${EXPECTED_PROJECT_ID} is required`)
+  }
+  const reviewedHead = args
+    .find((argument) => argument.startsWith("--reviewed-head="))
+    ?.slice("--reviewed-head=".length)
+  const expectedFingerprint = args
+    .find((argument) => argument.startsWith("--expected-fingerprint="))
+    ?.slice("--expected-fingerprint=".length)
+  if (!reviewedHead || !GIT_SHA_PATTERN.test(reviewedHead)) {
+    throw new Error("valid_reviewed_head_is_required")
+  }
+  if (!expectedFingerprint || !SHA256_PATTERN.test(expectedFingerprint)) {
+    throw new Error("valid_expected_fingerprint_is_required")
+  }
+  return { apply: true, reviewedHead, expectedFingerprint }
+}
+
+export function isStage5V2ProductionWriteAuthorized(
+  environment: Record<string, string | undefined>,
+) {
+  let projectId: string | null = null
+  try {
+    projectId = new URL(environment.NEXT_PUBLIC_SUPABASE_URL ?? "").hostname.split(".")[0] ?? null
+  } catch {
+    projectId = null
+  }
+  return (
+    environment.ALLOW_PERSONAL_PLAN_STAGE5_V2_PRODUCTION_WRITE === "1" &&
+    projectId === EXPECTED_PROJECT_ID
+  )
 }
 
 const artifactItemSchema = z
@@ -81,6 +137,9 @@ export type Stage5V2ApplicationPreflightRead = {
       guidance_payload: unknown
     }>
   >
+  listActiveCuratedProtocols?(): Promise<
+    Array<{ product_id: string; category: string; role: string; guidance_payload: unknown }>
+  >
 }
 
 export async function preflightStage5V2ApplicationArtifact(
@@ -109,6 +168,32 @@ export async function preflightStage5V2ApplicationArtifact(
     blockers.push("observed_product_count_mismatch")
   if (artifact.observed_counts.family_templates !== artifact.family_templates.length)
     blockers.push("observed_template_count_mismatch")
+  if (
+    artifact.observed_counts.exact_workflows !==
+    artifact.items.filter((item) => item.exact_workflow_id !== null).length
+  )
+    blockers.push("observed_exact_workflow_count_mismatch")
+  if (
+    artifact.observed_counts.composable_rows !==
+    artifact.items.filter((item) => item.guidance_payload_v2.runtimeBlockerCode === null).length
+  )
+    blockers.push("observed_composable_count_mismatch")
+  if (
+    artifact.observed_counts.blocked_rows !==
+    artifact.items.filter((item) => item.guidance_payload_v2.runtimeBlockerCode !== null).length
+  )
+    blockers.push("observed_blocked_count_mismatch")
+  const byCategory = Object.fromEntries(
+    [...new Set(artifact.items.map((item) => item.guidance_payload_v2.scope.category))]
+      .sort()
+      .map((category) => [
+        category,
+        artifact.items.filter((item) => item.guidance_payload_v2.scope.category === category)
+          .length,
+      ]),
+  )
+  if (canonicalJson(artifact.observed_counts.by_category) !== canonicalJson(byCategory))
+    blockers.push("observed_category_counts_mismatch")
 
   for (const item of artifact.items) {
     const pointer = item.guidance_payload_v2
@@ -138,6 +223,26 @@ export async function preflightStage5V2ApplicationArtifact(
     }
   }
 
+  if (read.listActiveCuratedProtocols) {
+    const artifactProtocolKeys = new Set(
+      artifact.items.map(
+        (item) =>
+          `${item.product_id}:${item.guidance_payload_v2.scope.category}:${item.source_role}`,
+      ),
+    )
+    const activeProtocols = await read.listActiveCuratedProtocols()
+    for (const protocol of activeProtocols) {
+      if (
+        protocol.guidance_payload !== null &&
+        !artifactProtocolKeys.has(`${protocol.product_id}:${protocol.category}:${protocol.role}`)
+      ) {
+        blockers.push(
+          `active_protocol_missing_from_artifact:${protocol.product_id}:${protocol.role}`,
+        )
+      }
+    }
+  }
+
   return {
     ok: blockers.length === 0,
     blockers,
@@ -149,6 +254,67 @@ export async function preflightStage5V2ApplicationArtifact(
       explicitRuntimeBlockers: artifact.items.filter(
         (item) => item.guidance_payload_v2.runtimeBlockerCode !== null,
       ).length,
+    },
+  }
+}
+
+export type Stage5V2ApplicationAppliedRead = {
+  listV2Families(
+    guidanceKeys: string[],
+  ): Promise<
+    Array<{ guidance_key: string; contract_version: number; payload: unknown; status: string }>
+  >
+  listV2Protocols(
+    productIds: string[],
+  ): Promise<
+    Array<{ product_id: string; category: string; role: string; guidance_payload_v2: unknown }>
+  >
+}
+
+export async function verifyStage5V2AppliedArtifact(
+  input: unknown,
+  read: Stage5V2ApplicationAppliedRead,
+) {
+  const artifact = stage5V2ApplicationArtifactSchema.parse(input)
+  const guidanceKeys = artifact.family_templates.map((template) => template.guidanceKey).sort()
+  const productIds = [...new Set(artifact.items.map((item) => item.product_id))].sort()
+  const [families, protocols] = await Promise.all([
+    read.listV2Families(guidanceKeys),
+    read.listV2Protocols(productIds),
+  ])
+  const familyByKey = new Map(families.map((family) => [family.guidance_key, family]))
+  const protocolByKey = new Map(
+    protocols.map((protocol) => [
+      `${protocol.product_id}:${protocol.category}:${protocol.role}`,
+      protocol,
+    ]),
+  )
+  const blockers: string[] = []
+  for (const template of artifact.family_templates) {
+    const family = familyByKey.get(template.guidanceKey)
+    if (
+      !family ||
+      family.contract_version !== 2 ||
+      family.status !== "active" ||
+      canonicalJson(family.payload) !== canonicalJson(template)
+    )
+      blockers.push(`v2_family_mismatch:${template.guidanceKey}`)
+  }
+  for (const item of artifact.items) {
+    const pointer = item.guidance_payload_v2
+    const protocol = protocolByKey.get(
+      `${item.product_id}:${pointer.scope.category}:${item.source_role}`,
+    )
+    if (!protocol || canonicalJson(protocol.guidance_payload_v2) !== canonicalJson(pointer)) {
+      blockers.push(`v2_product_pointer_mismatch:${item.key}`)
+    }
+  }
+  return {
+    ok: blockers.length === 0,
+    blockers,
+    observed: {
+      familyRows: families.length,
+      productRows: protocols.filter((row) => row.guidance_payload_v2 !== null).length,
     },
   }
 }

@@ -4,6 +4,7 @@ import {
   deriveStage5CuratedCohortProduct,
   type Stage5ProtocolPreflightRead,
 } from "@/lib/product-intake/catalog-enrichment/stage5-protocols"
+import type { Stage5V2ApplicationPreflightRead } from "@/lib/product-intake/catalog-enrichment/stage5-v2-application"
 
 type QueryResult<T> = Promise<{ data: T | null; error: { message: string } | null }>
 type SelectBuilder<T> = PromiseLike<{
@@ -18,17 +19,25 @@ type Stage5ProtocolClient = {
     select: <T = Record<string, unknown>>(columns: string) => SelectBuilder<T>
   }
   rpc: (
-    name: "apply_personal_plan_stage5_protocol_batch_v1",
-    args: {
-      p_batch_json: string
-      p_expected_batch_fingerprint: string
-      p_reviewed_by: "nick"
-    },
+    name:
+      | "apply_personal_plan_stage5_protocol_batch_v1"
+      | "apply_personal_plan_stage5_v2_artifact_v1",
+    args:
+      | {
+          p_batch_json: string
+          p_expected_batch_fingerprint: string
+          p_reviewed_by: "nick"
+        }
+      | {
+          p_artifact_json: string
+          p_expected_artifact_fingerprint: string
+          p_reviewed_by: "nick"
+        },
   ) => QueryResult<Record<string, unknown>[]>
 }
 
 export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient) {
-  const read: Stage5ProtocolPreflightRead = {
+  const read: Stage5ProtocolPreflightRead & Stage5V2ApplicationPreflightRead = {
     async listProducts(productIds) {
       const { data, error } = await client
         .from("products")
@@ -56,6 +65,23 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
         }>("product_id,category,role,cadence,source_url,guidance_payload")
         .in("product_id", productIds)
       if (error) throw new Error(`Stage 5 protocol preflight failed: ${error.message}`)
+      return data ?? []
+    },
+    async listActiveCuratedProtocols() {
+      const { data, error } = await client
+        .from("product_application_protocols")
+        .select<{
+          product_id: string
+          category: string
+          role: string
+          guidance_payload: unknown
+        }>(
+          "product_id,category,role,guidance_payload,products!inner(origin,is_active,lifecycle_status)",
+        )
+        .eq("products.origin", "curated")
+        .eq("products.is_active", true)
+        .eq("products.lifecycle_status", "active")
+      if (error) throw new Error(`Stage 5 reverse-coverage preflight failed: ${error.message}`)
       return data ?? []
     },
   }
@@ -201,6 +227,43 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
       })
       if (error) throw new Error(`Stage 5 protocol apply failed: ${error.message}`)
       return data ?? []
+    },
+    v2: {
+      async apply(artifactJson: string, fingerprint: string) {
+        const { data, error } = await client.rpc("apply_personal_plan_stage5_v2_artifact_v1", {
+          p_artifact_json: artifactJson,
+          p_expected_artifact_fingerprint: fingerprint,
+          p_reviewed_by: "nick",
+        })
+        if (error) throw new Error(`Stage 5 V2 application apply failed: ${error.message}`)
+        return data ?? []
+      },
+      async listV2Families(guidanceKeys: string[]) {
+        const { data, error } = await client
+          .from("application_guidance_protocols")
+          .select<{
+            guidance_key: string
+            contract_version: number
+            payload: unknown
+            status: string
+          }>("guidance_key,contract_version,payload,status")
+          .in("guidance_key", guidanceKeys)
+        if (error) throw new Error(`Stage 5 V2 family verification failed: ${error.message}`)
+        return data ?? []
+      },
+      async listV2Protocols(productIds: string[]) {
+        const { data, error } = await client
+          .from("product_application_protocols")
+          .select<{
+            product_id: string
+            category: string
+            role: string
+            guidance_payload_v2: unknown
+          }>("product_id,category,role,guidance_payload_v2")
+          .in("product_id", productIds)
+        if (error) throw new Error(`Stage 5 V2 pointer verification failed: ${error.message}`)
+        return data ?? []
+      },
     },
   }
 }
