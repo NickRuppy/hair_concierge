@@ -3,71 +3,40 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import AnwendungPage, {
-  resolveAnwendungPage,
-  type AnwendungResolverDeps,
-} from "../src/app/anwendung/page"
+import { ApplicationPage } from "../src/components/application/application-page"
+import { resolveAnwendungPage, type AnwendungResolverDeps } from "../src/app/anwendung/page"
 import type { ApplicationDayTypeKey } from "../src/lib/routines/personal-plan/application/contracts"
 import { SHARED_APPLICATION_TEMPLATE_BY_KEY_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 
-test("direct Anwendung route stays compact and non-exposing while the rollout is off", async () => {
-  const previous = process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
-  const previousMarker = process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
-  process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = "off"
-  delete process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
+test("direct Anwendung route stays compact and non-exposing without an eligible owner", async () => {
+  const view = await resolveAnwendungPage(readyDeps({ getUserId: async () => null }))
+  const html = renderToStaticMarkup(<ApplicationPage view={view} />)
 
-  try {
-    const html = renderToStaticMarkup(await AnwendungPage())
-
-    assert.match(html, /Anwendung gerade nicht verfügbar/)
-    assert.match(html, /Deine Routine bleibt verfügbar/)
-    assert.match(html, /href="\/routine"/)
-    assert.doesNotMatch(html, /Waschtag|Bond-Repair-Tag|Auffrisch-Tag/)
-    assert.doesNotMatch(html, /K18|Olaplex|Batiste|Moroccanoil/i)
-    assert.doesNotMatch(html, /checkbox|Kalender|heute|erledigt|Fortschritt/i)
-    assert.doesNotMatch(html, /data-personal-plan-application-compute-ms/)
-  } finally {
-    if (previous === undefined) delete process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
-    else process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = previous
-    if (previousMarker === undefined)
-      delete process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
-    else process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED = previousMarker
-  }
+  assert.match(html, /Anwendung gerade nicht verfügbar/)
+  assert.match(html, /Deine Routine bleibt verfügbar/)
+  assert.match(html, /href="\/routine"/)
+  assert.doesNotMatch(html, /Waschtag|Bond-Repair-Tag|Auffrisch-Tag/)
+  assert.doesNotMatch(html, /K18|Olaplex|Batiste|Moroccanoil/i)
+  assert.doesNotMatch(html, /checkbox|Kalender|heute|erledigt|Fortschritt/i)
+  assert.doesNotMatch(html, /data-personal-plan-application-compute-ms/)
 })
 
-test("application compute timing is exposed only behind the diagnostic marker", async () => {
-  const previousRollout = process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
-  const previousMarker = process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
-  process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = "off"
-  process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED = "true"
-
-  try {
-    const html = renderToStaticMarkup(await AnwendungPage())
-    assert.match(html, /data-personal-plan-application-root="true"/)
-    assert.match(html, /data-personal-plan-application-compute-ms="[0-9.]+"/)
-  } finally {
-    if (previousRollout === undefined) delete process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
-    else process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = previousRollout
-    if (previousMarker === undefined)
-      delete process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
-    else process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED = previousMarker
-  }
+test("application compute timing is exposed only behind the diagnostic marker", () => {
+  const source = readFileSync("src/app/anwendung/page.tsx", "utf8")
+  assert.match(source, /PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED === "true"/)
+  const html = renderToStaticMarkup(
+    <ApplicationPage view={{ state: "feature_disabled" }} internalComputeMs={1.25} />,
+  )
+  assert.match(html, /data-personal-plan-application-root="true"/)
+  assert.match(html, /data-personal-plan-application-compute-ms="1.25"/)
 })
 
-test("route source composes the accepted Stage 4 Routine adapter", async () => {
-  const previous = process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
-  process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = "all"
-
-  try {
-    const source = readFileSync("src/app/anwendung/page.tsx", "utf8")
-    assert.match(source, /loadPersonalPlanRoutineView/)
-    assert.match(source, /adaptAcceptedActiveRoutineForApplication/)
-    assert.match(source, /canAccessPersonalPlanJourneyStage/)
-    assert.match(source, /loadCachedPersonalPlanJourneyAccessForUser/)
-  } finally {
-    if (previous === undefined) delete process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
-    else process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = previous
-  }
+test("route source composes the accepted Stage 4 Routine adapter", () => {
+  const source = readFileSync("src/app/anwendung/page.tsx", "utf8")
+  assert.match(source, /loadPersonalPlanRoutineView/)
+  assert.match(source, /adaptAcceptedActiveRoutineForApplication/)
+  assert.match(source, /canAccessPersonalPlanJourneyStage/)
+  assert.match(source, /loadCachedPersonalPlanJourneyAccessForUser/)
 })
 
 test("Anwendung page has no production fixture import or sample product path", () => {
@@ -75,7 +44,7 @@ test("Anwendung page has no production fixture import or sample product path", (
 
   assert.doesNotMatch(source, /fixture|mock|sample/i)
   assert.doesNotMatch(source, /K18|Olaplex|Batiste|Moroccanoil/i)
-  assert.match(source, /compileApplicationView\(/)
+  assert.match(source, /compileApplicationViewV2\(/)
 })
 
 test("loading does not flash Anwendung navigation before owner eligibility is known", () => {
@@ -140,6 +109,38 @@ const shampooProtocol = {
   ],
 }
 
+const shampooTemplate = SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.get(
+  "shampoo.standard-scalp-cleanse.v2",
+)!
+
+const shampooPointer = {
+  schemaVersion: 2 as const,
+  contractKind: "product_pointer" as const,
+  scope: {
+    kind: "product" as const,
+    category: "shampoo" as const,
+    productId: shampooItem.productId,
+  },
+  sourceRole: "shampoo_everyday",
+  role: "cleanse" as const,
+  applicationFamily: "standard_rinse_out_cleanse" as const,
+  facts: {
+    applicationState: "wet_hair" as const,
+    applicationArea: "scalp_roots" as const,
+    rinse: "rinse_out" as const,
+    contactTime: null,
+    amount: null,
+    heat: null,
+    conditionerPolicy: "not_applicable" as const,
+  },
+  workflowId: null,
+  requiredCompanionProductId: null,
+  runtimeBlockerCode: null,
+  exactSteps: [],
+  cautionCodes: [],
+  evidence: shampooProtocol.evidence,
+}
+
 function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungResolverDeps {
   return {
     getUserId: async () => "user-1",
@@ -167,6 +168,7 @@ function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungRes
       routineItems: [shampooItem],
       unresolvedRoutineItems: [],
       exactGuidanceProtocols: [],
+      applicationPointersV2: [shampooPointer],
     }),
     loadProfile: async () => ({}),
     loadContent: () =>
@@ -180,22 +182,20 @@ function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungRes
             summary: key,
             sortOrder: index + 1,
           })),
-        loadActiveGuidanceProtocols: async () => [{ id: "guidance-1", payload: shampooProtocol }],
+        loadActiveGuidanceProtocols: async () => [{ id: "guidance-v2", payload: shampooTemplate }],
       }) as never,
     createReadClient: () => ({}) as never,
     appEnabled: () => true,
     stage4Enabled: () => true,
-    rollout: () => "all",
     reportFailure: () => undefined,
     ...overrides,
   }
 }
 
-test("internal rollout denial happens before any Routine, profile, catalog, or content read", async () => {
+test("journey denial happens before any Routine, profile, catalog, or content read", async () => {
   let privilegedReads = 0
   const view = await resolveAnwendungPage(
     readyDeps({
-      rollout: () => "internal",
       loadJourneyAccess: async () => ({
         kind: "personal_plan" as const,
         personalPlanId: "plan-1",
@@ -304,6 +304,7 @@ test("a rendered partial day is usable and does not emit a route failure", async
         routineItems: [{ ...shampooItem, availability: "planned", executable: false }],
         unresolvedRoutineItems: [],
         exactGuidanceProtocols: [],
+        applicationPointersV2: [shampooPointer],
       }),
       reportFailure: (details) => failures.push(details),
     }),
@@ -320,7 +321,6 @@ test("V2 route uses one generation for product and family reads and ignores V1 e
   const template = SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.get("shampoo.standard-scalp-cleanse.v2")!
   const view = await resolveAnwendungPage(
     readyDeps({
-      contractVersion: () => 2,
       adaptRoutine: async (options) => {
         adaptedContractVersion = options.contractVersion
         return {
@@ -399,30 +399,9 @@ test("V2 route uses one generation for product and family reads and ignores V1 e
   assert.match(JSON.stringify(view), /Haare und Kopfhaut vollständig anfeuchten/)
 })
 
-test("route composes a planned Heat item with its reviewed exact product instructions", async () => {
+test("route composes a planned Heat item with its canonical family instructions", async () => {
   const productId = "10000000-0000-4000-8000-000000000009"
-  const heatProtocol = {
-    ...shampooProtocol,
-    guidanceKey: "exact-dry-heat",
-    scope: { kind: "product" as const, category: "heat_protectant" as const, productId },
-    role: "heat_protection" as const,
-    applicationFamily: "dry_hair_protection" as const,
-    compatibleDayTypes: ["styling_day" as const],
-    exactGuidanceRequired: true,
-    sequence: { ...shampooProtocol.sequence, anchor: "dry_pre_heat" as const },
-    requirements: {
-      requiredCatalogFacts: ["applicationState", "reapplication", "formatResolution"],
-      requiredProtocolFacts: [],
-      requiredProfileFacts: ["heatEvents"],
-    },
-    steps: [
-      {
-        stepKey: "apply-dry-heat",
-        action: "apply_product" as const,
-        copyTemplateDe: "Vor dem Glätteisen gleichmäßig auftragen.",
-      },
-    ],
-  }
+  const heatTemplate = SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.get("heat.dry.heat-protectant.v2")!
   const view = await resolveAnwendungPage(
     readyDeps({
       adaptRoutine: async () => ({
@@ -444,7 +423,37 @@ test("route composes a planned Heat item with its reviewed exact product instruc
           },
         ],
         unresolvedRoutineItems: [],
-        exactGuidanceProtocols: [heatProtocol],
+        exactGuidanceProtocols: [],
+        applicationPointersV2: [
+          {
+            schemaVersion: 2,
+            contractKind: "product_pointer",
+            scope: { kind: "product", category: "heat_protectant", productId },
+            sourceRole: "pre_heat_protection",
+            role: "heat_protection",
+            applicationFamily: "pre_heat_dry",
+            facts: {
+              applicationState: "dry_hair",
+              applicationArea: "hair_lengths_ends",
+              rinse: "leave_in",
+              contactTime: null,
+              amount: null,
+              heat: {
+                supportedStates: ["dry_hair"],
+                activationRequired: false,
+                maximumClaimedTemperatureC: null,
+                reapplication: "each_separate_heat_event",
+              },
+              conditionerPolicy: "not_applicable",
+            },
+            workflowId: null,
+            requiredCompanionProductId: null,
+            runtimeBlockerCode: null,
+            exactSteps: [],
+            cautionCodes: [],
+            evidence: shampooProtocol.evidence,
+          },
+        ],
       }),
       loadProfile: async () => ({
         heatEvents: [
@@ -452,6 +461,19 @@ test("route composes a planned Heat item with its reviewed exact product instruc
           { id: "heat:iron", tool: "straightener", route: "direct_contact_heat" },
         ],
       }),
+      loadContent: () =>
+        ({
+          loadActiveDayTypeDefinitions: async () =>
+            DAY_KEYS.map((key, index) => ({
+              key,
+              definitionVersion: 1,
+              locale: "de" as const,
+              label: key,
+              summary: key,
+              sortOrder: index + 1,
+            })),
+          loadActiveGuidanceProtocols: async () => [{ id: "guidance-v2", payload: heatTemplate }],
+        }) as never,
     }),
   )
 
@@ -463,7 +485,7 @@ test("route composes a planned Heat item with its reviewed exact product instruc
   assert.equal(stylingDay.provisionalProductCount, 1)
   assert.equal(
     stylingDay.steps.find((step) => step.kind === "product")?.actions[0]?.copyDe,
-    "Vor dem Glätteisen gleichmäßig auftragen.",
+    "Gleichmäßig auf vollständig trockenem Haar verteilen. Erst danach das heiße Tool verwenden.",
   )
 })
 

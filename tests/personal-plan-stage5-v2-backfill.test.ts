@@ -101,6 +101,20 @@ test("only the two reviewed conditioners retain a typed wait", () => {
   assert.deepEqual(timed, ["Elvital Fiber Booster Conditioner", "Nivea Power Repair Conditioner"])
 })
 
+test("targeted shampoo timing is rendered once instead of repeated as a generic caution", () => {
+  const targeted = artifact.items.filter((item) => {
+    const pointer = productApplicationPointerV2Schema.parse(item.guidance_payload_v2)
+    return pointer.applicationFamily === "targeted_treatment_shampoo"
+  })
+
+  assert.ok(targeted.length > 0)
+  for (const item of targeted) {
+    const pointer = productApplicationPointerV2Schema.parse(item.guidance_payload_v2)
+    assert.ok(pointer.facts.contactTime, item.key)
+    assert.equal(pointer.cautionCodes.includes("follow_label_time"), false, item.key)
+  }
+})
+
 test("OLAPLEX No.0 remains explicitly blocked until its real companion is verified", () => {
   const row = artifact.items.find(
     ({ exact_workflow_id }) => exact_workflow_id === "olaplex_no0_companion",

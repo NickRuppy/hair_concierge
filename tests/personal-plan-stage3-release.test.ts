@@ -13,11 +13,10 @@ import {
   resolvePersonalPlanAppV1InternalEmails,
 } from "../src/lib/personal-plan/release"
 
-test("the single Personal Plan app kill-switch is strict and default-off", () => {
-  assert.equal(isPersonalPlanAppV1Enabled({}), false)
-  assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "false" }), false)
-  assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "TRUE" }), false)
+test("the released Personal Plan app ignores obsolete launch flags", () => {
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), true)
+  assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "false" }), true)
+  assert.equal(isPersonalPlanAppV1Enabled({}), true)
 })
 
 test("the legacy-quiz Personal Plan cutover is independently strict and default-off", () => {
@@ -36,8 +35,8 @@ test("the legacy-quiz Personal Plan cutover is independently strict and default-
   )
 })
 
-test("the Personal Plan rollout supports an internal-only production cohort", () => {
-  assert.equal(resolvePersonalPlanAppV1Rollout({}), "off")
+test("the released Personal Plan rollout is all and ignores obsolete cohort flags", () => {
+  assert.equal(resolvePersonalPlanAppV1Rollout({}), "all")
   assert.equal(resolvePersonalPlanAppV1Rollout({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), "all")
 
   assert.deepEqual(
@@ -54,14 +53,14 @@ test("the Personal Plan rollout supports an internal-only production cohort", ()
       PERSONAL_PLAN_APP_V1_ENABLED: "true",
       PERSONAL_PLAN_APP_V1_ROLLOUT: "internal",
     }),
-    "internal",
+    "all",
   )
   assert.equal(
     resolvePersonalPlanAppV1Rollout({
       PERSONAL_PLAN_APP_V1_ENABLED: "true",
       PERSONAL_PLAN_APP_V1_ROLLOUT: "invalid",
     }),
-    "off",
+    "all",
   )
 
   assert.equal(
@@ -78,14 +77,14 @@ test("the Personal Plan rollout supports an internal-only production cohort", ()
   )
 })
 
-test("Stage 2 and Stage 3 release gates are strict and default-off", () => {
+test("released Stage 2 and Stage 3 ignore obsolete launch flags", () => {
   for (const [reader, key] of [
     [isPersonalPlanStage2Enabled, "PERSONAL_PLAN_STAGE2_ENABLED"],
     [isPersonalPlanStage3Enabled, "PERSONAL_PLAN_STAGE3_ENABLED"],
   ] as const) {
-    assert.equal(reader({}), false)
-    assert.equal(reader({ [key]: "false" }), false)
-    assert.equal(reader({ [key]: "TRUE" }), false)
+    assert.equal(reader({}), true)
+    assert.equal(reader({ [key]: "false" }), true)
+    assert.equal(reader({ [key]: "TRUE" }), true)
     assert.equal(reader({ [key]: "true" }), true)
   }
 })

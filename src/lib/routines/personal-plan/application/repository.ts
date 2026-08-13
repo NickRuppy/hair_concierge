@@ -3,7 +3,7 @@ import "server-only"
 import { APPLICATION_DAY_TYPE_KEYS, applicationGuidanceProtocolSchema } from "./contracts"
 import { applicationFamilyTemplateV2Schema, type ApplicationFamilyTemplateV2 } from "./contracts-v2"
 import type { ApplicationGuidanceProtocolV1 } from "./contracts"
-import type { PersonalPlanStage5ContractVersion } from "@/lib/personal-plan/stage5-rollout"
+import type { PersonalPlanStage5ContractVersion } from "@/lib/personal-plan/stage5-access"
 import { createAdminClient } from "@/lib/supabase/admin"
 
 type QueryError = { message?: string }

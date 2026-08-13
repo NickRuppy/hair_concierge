@@ -1251,7 +1251,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "225c0bbd16be25771a066d4d2e05b71bc6d6401e1890919b25c4527421e94210",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -1278,9 +1278,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.clickandcare.ch/de/marken/guhl/kopfhaut-sensitiv-shampoo",
@@ -1347,7 +1345,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "39f7aaa8054c92c6e0bf1567973d6ea220bd8c5e9c55e50354487ebfa0f23f36",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -1374,9 +1372,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://salthouse.com/de/produkte/anti-fett-shampoo/",
@@ -1730,7 +1726,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "bbed6a000a6cff4944501a76eea7768e98c7ddfc57b62aeb693f570caf29c045",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -1757,9 +1753,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
@@ -1928,7 +1922,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "ff54e581f791b72837fa6f4faf598598e5bd5f68e40a1bb328c2324991d7849e",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -1955,9 +1949,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
@@ -2219,7 +2211,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "797a626e041bc5da89080a215a626e044b5f3f31d12544820360fbca9c9ca801",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -2246,9 +2238,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
@@ -2706,7 +2696,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "39f7aaa8054c92c6e0bf1567973d6ea220bd8c5e9c55e50354487ebfa0f23f36",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -2733,9 +2723,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://salthouse.com/de/produkte/anti-juckreiz-shampoo/",
@@ -2805,7 +2793,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "976bace8eb6e7bc4aac19991e7e675e487cbb7011608c44787912e15e33cabb7",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -2832,9 +2820,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/3063729/dejan-garz-shampoo-the-foundation",
@@ -3140,7 +3126,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "890c4f1b7205dec5506051b1f729ce21f68fd0d0c93787ef31e1f83f81be5c4c",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -3167,9 +3153,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
@@ -3716,7 +3700,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "e486d470d8788beb5b01ef445404b7ae9a9ea026db0b180b21804f4841e5811a",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -3743,9 +3727,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://sebamed.de/de/p/antischuppen-shampoo/",
@@ -6523,7 +6505,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "58a84116a3b1c372208923fac2476265d7e7a75bce40bf11a81491e9c357e3b0",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -6550,9 +6532,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/1561902/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex",
@@ -7381,7 +7361,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "f847a7cd87caff1bef6000460c2d4412d19897104d7dea0d2b40c4c28446fe7c",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -7408,9 +7388,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
@@ -7571,7 +7549,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "5420a38f1b57df35ca5980563a6b5fca727c1ccaef3999421855269b51f2d69e",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -7598,9 +7576,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/1446893/guhl-shampoo-anti-schuppen",
@@ -9791,7 +9767,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "2bfccad456a8c94271d781e062bc7fbc3be3b4e9889cbb3c54b82ba9daf61f25",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -9818,9 +9794,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/1588728/schauma-shampoo-anti-schuppen-classic",
@@ -13594,7 +13568,7 @@
       ],
       "exact_workflow_id": null,
       "before_visible_step_fingerprint": "443de5a16d57ddbb49ae4da006b2eb3588c2a8112726194773907a5892878ad2",
-      "after_visible_step_fingerprint": "26b698871d939075698a83a24a26a2826a4362eb3f8b2791d4e2466546ceaa98",
+      "after_visible_step_fingerprint": "5401c6c1ab3ba2fa4b75e433ba2778ed4c90b7c1554c04f447d251a1725df401",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -13621,9 +13595,7 @@
         "requiredCompanionProductId": null,
         "runtimeBlockerCode": null,
         "exactSteps": [],
-        "cautionCodes": [
-          "follow_label_time"
-        ],
+        "cautionCodes": [],
         "evidence": [
           {
             "sourceUrl": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",

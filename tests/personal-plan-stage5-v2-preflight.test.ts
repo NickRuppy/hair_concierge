@@ -85,3 +85,44 @@ test("Stage 5 V2 preflight rejects source drift", async () => {
   assert.equal(result.ok, false)
   assert.deepEqual(result.blockers, [`source_protocol_diverged:${item.key}`])
 })
+
+test("Stage 5 V2 preflight rejects every stale observed-count projection", async () => {
+  for (const [field, value, blocker] of [
+    ["exact_workflows", 1, "observed_exact_workflow_count_mismatch"],
+    ["composable_rows", 0, "observed_composable_count_mismatch"],
+    ["blocked_rows", 1, "observed_blocked_count_mismatch"],
+    ["by_category", { conditioner: 1 }, "observed_category_counts_mismatch"],
+  ] as const) {
+    const result = await preflightStage5V2ApplicationArtifact(
+      { ...artifact, observed_counts: { ...artifact.observed_counts, [field]: value } },
+      reads(),
+    )
+    assert.equal(result.ok, false, field)
+    assert.deepEqual(result.blockers, [blocker], field)
+  }
+})
+
+test("Stage 5 V2 preflight rejects an active curated protocol omitted from the artifact", async () => {
+  const result = await preflightStage5V2ApplicationArtifact(artifact, {
+    ...reads(),
+    listActiveCuratedProtocols: async () => [
+      {
+        product_id: item.product_id,
+        category: "shampoo",
+        role: item.source_role,
+        guidance_payload: sourcePayload,
+      },
+      {
+        product_id: "20000000-0000-4000-8000-000000000001",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        guidance_payload: { reviewed: "new source authority" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, false)
+  assert.deepEqual(result.blockers, [
+    "active_protocol_missing_from_artifact:20000000-0000-4000-8000-000000000001:shampoo_everyday",
+  ])
+})
