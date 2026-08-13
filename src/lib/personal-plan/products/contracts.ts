@@ -1057,7 +1057,16 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
     const isPendingReplacementSelection =
       decision.choiceState === "planned_purchase" &&
       decision.resolutionAction === "select_replacement" &&
-      decision.recommendation !== null
+      decision.recommendation !== null &&
+      Boolean(decision.authorityEvidence?.recommendationFactFingerprint)
+    if (
+      decision.resolutionAction === "select_replacement" &&
+      (!decision.recommendation || !decision.authorityEvidence?.recommendationFactFingerprint)
+    ) {
+      issues.push(
+        `replacement decision ${decision.decisionKey} requires recommendation fingerprint evidence`,
+      )
+    }
     if (
       product?.identity.kind === "pending_submission" &&
       decision.choiceState !== "pending_review" &&

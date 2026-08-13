@@ -143,8 +143,35 @@ const authorityIntentPayloadSchema = z
     subjectKey: domainIdentifier,
     action: z.enum(STAGE3_AUTHORITY_ACTION_KINDS),
     selectedCandidateId: domainIdentifier.optional(),
+    selectedCandidateFactFingerprint: domainIdentifier.optional(),
   })
   .strict()
+  .superRefine((intent, ctx) => {
+    if (intent.action === "select_replacement") {
+      if (!intent.selectedCandidateId) {
+        ctx.addIssue({
+          code: "custom",
+          message: "select_replacement requires selectedCandidateId",
+          path: ["selectedCandidateId"],
+        })
+      }
+      if (!intent.selectedCandidateFactFingerprint) {
+        ctx.addIssue({
+          code: "custom",
+          message: "select_replacement requires selectedCandidateFactFingerprint",
+          path: ["selectedCandidateFactFingerprint"],
+        })
+      }
+      return
+    }
+    if (intent.selectedCandidateFactFingerprint !== undefined) {
+      ctx.addIssue({
+        code: "custom",
+        message: "selectedCandidateFactFingerprint is only valid for select_replacement",
+        path: ["selectedCandidateFactFingerprint"],
+      })
+    }
+  })
 const authorityIntentSchema = z
   .object({
     draftId: identifier,

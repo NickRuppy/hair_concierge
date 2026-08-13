@@ -19,6 +19,7 @@ export type PendingStage3RecoveryDecisionIntent = {
   subjectKey: string
   action: Stage3AuthoritySemanticIntent["action"]
   selectedCandidateId?: string
+  selectedCandidateFactFingerprint?: string
   expectedRevision: number
   createdAt: number
 }
@@ -29,6 +30,7 @@ export type PendingStage3RecoveryDecisionBatchIntent = {
     subjectKey: string
     action: Stage3AuthoritySemanticIntent["action"]
     selectedCandidateId?: string
+    selectedCandidateFactFingerprint?: string
   }>
   expectedRevision: number
   createdAt: number
@@ -232,6 +234,9 @@ export function pendingIntentToAuthorityIntents(
     subjectKey: item.subjectKey,
     action: item.action,
     ...(item.selectedCandidateId ? { selectedCandidateId: item.selectedCandidateId } : {}),
+    ...(item.selectedCandidateFactFingerprint
+      ? { selectedCandidateFactFingerprint: item.selectedCandidateFactFingerprint }
+      : {}),
   }))
 }
 
@@ -348,11 +353,30 @@ function parseDecisionItem(value: unknown) {
   ) {
     return null
   }
+  if (
+    "selectedCandidateFactFingerprint" in candidate &&
+    candidate.selectedCandidateFactFingerprint !== undefined &&
+    typeof candidate.selectedCandidateFactFingerprint !== "string"
+  ) {
+    return null
+  }
+  if (
+    (candidate.action === "select_replacement" &&
+      (typeof candidate.selectedCandidateId !== "string" ||
+        typeof candidate.selectedCandidateFactFingerprint !== "string")) ||
+    (candidate.action !== "select_replacement" &&
+      candidate.selectedCandidateFactFingerprint !== undefined)
+  ) {
+    return null
+  }
   return {
     subjectKey: candidate.subjectKey,
     action: candidate.action,
     ...(typeof candidate.selectedCandidateId === "string"
       ? { selectedCandidateId: candidate.selectedCandidateId }
+      : {}),
+    ...(typeof candidate.selectedCandidateFactFingerprint === "string"
+      ? { selectedCandidateFactFingerprint: candidate.selectedCandidateFactFingerprint }
       : {}),
   }
 }
@@ -378,6 +402,7 @@ function isDecisionAction(value: unknown): value is Stage3AuthoritySemanticInten
     value === "keep_owned" ||
     value === "acknowledge_override" ||
     value === "plan_recommendation" ||
+    value === "select_replacement" ||
     value === "keep_pending" ||
     value === "leave_uncovered"
   )

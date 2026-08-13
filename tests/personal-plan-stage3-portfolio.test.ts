@@ -36,6 +36,19 @@ const requirements: Stage3CategoryRequirement[] = [
   },
 ]
 
+function replacementEvidence(decisionKey: string) {
+  return {
+    schemaVersion: 1 as const,
+    subjectKey: decisionKey,
+    refinedNeedVersionId: "refined-v1",
+    refinedInputHash: "refined-input-v1",
+    authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    productFactFingerprint: "facts-current-conditioner",
+    recommendationFactFingerprint: "facts-catalog-conditioner-replacement",
+    coverageRuleIds: ["conditioner.fixture.replacement"],
+  }
+}
+
 function completedDraft(): Stage3ProductDraft {
   return {
     schemaVersion: 1,
@@ -399,6 +412,7 @@ test("portfolio v3 keeps a pending submission while projecting its selected veri
         verdict: "mismatch" as const,
         choiceState: "planned_purchase" as const,
         resolutionAction: "select_replacement" as const,
+        authorityEvidence: replacementEvidence(decisionKey),
         criterionResults: [],
         recommendation: {
           recommendationId: "rec-conditioner-replacement",
@@ -479,6 +493,7 @@ test("portfolio v3 moves a replaced catalog product to retained inventory", () =
         verdict: "mismatch" as const,
         choiceState: "planned_purchase" as const,
         resolutionAction: "select_replacement" as const,
+        authorityEvidence: replacementEvidence(decisionKey),
         recommendation: {
           recommendationId: "rec-conditioner-replacement",
           productId: "catalog-conditioner-replacement",
@@ -531,6 +546,7 @@ test("portfolio v3 round-trips a selected replacement beside a legacy planned re
             verdict: "mismatch" as const,
             choiceState: "planned_purchase" as const,
             resolutionAction: "select_replacement" as const,
+            authorityEvidence: replacementEvidence(replacementDecisionKey),
             recommendation: {
               recommendationId: "rec-conditioner-replacement",
               productId: "catalog-conditioner-replacement",

@@ -760,6 +760,7 @@ test("Stage 3 PATCH transports selected replacement intents and exposes an inval
           subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
           action: "select_replacement",
           selectedCandidateId: "replacement-1",
+          selectedCandidateFactFingerprint: "facts-replacement-1",
         },
       }),
     }),
@@ -773,6 +774,7 @@ test("Stage 3 PATCH transports selected replacement intents and exposes an inval
       subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
       action: "select_replacement",
       selectedCandidateId: "replacement-1",
+      selectedCandidateFactFingerprint: "facts-replacement-1",
     },
   })
   assert.deepEqual(
@@ -783,6 +785,62 @@ test("Stage 3 PATCH transports selected replacement intents and exposes an inval
         error: "stage3_replacement_candidate_invalid",
       },
     ],
+  )
+})
+
+test("Stage 3 PATCH enforces replacement fingerprints only for viewed replacements", async () => {
+  let calls = 0
+  const handlers = createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          resolveDecision: async () => {
+            calls += 1
+            throw new Error("should not reach gateway")
+          },
+        }) as never,
+    }),
+  )
+  const response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+          action: "select_replacement",
+          selectedCandidateId: "replacement-1",
+        },
+      }),
+    }),
+  )
+
+  assert.equal(calls, 0)
+  assert.deepEqual([response!.status, await response!.json()], [400, { error: "invalid_request" }])
+
+  const legacyResponse = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+          action: "keep_owned",
+          selectedCandidateFactFingerprint: "unexpected-facts",
+        },
+      }),
+    }),
+  )
+
+  assert.equal(calls, 0)
+  assert.deepEqual(
+    [legacyResponse!.status, await legacyResponse!.json()],
+    [400, { error: "invalid_request" }],
   )
 })
 

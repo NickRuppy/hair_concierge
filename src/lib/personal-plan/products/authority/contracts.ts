@@ -32,6 +32,7 @@ export type Stage3AuthoritySemanticIntent = {
   subjectKey: string
   action: Stage3AuthorityActionKind
   selectedCandidateId?: string
+  selectedCandidateFactFingerprint?: string
 }
 
 export type Stage3AuthorityProtocolFact = {

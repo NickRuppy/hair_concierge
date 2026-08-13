@@ -76,13 +76,26 @@ export function authorityDecisionIntent(
   subjectKey: string,
   action: Stage3AuthoritySemanticIntent["action"],
   selectedCandidateId?: string,
+  selectedCandidateFactFingerprint?: string,
 ): Stage3AuthoritySemanticIntent {
+  if (
+    action === "select_replacement" &&
+    (!selectedCandidateId || !selectedCandidateFactFingerprint)
+  ) {
+    throw new Error("select_replacement requires the viewed candidate and fact fingerprint")
+  }
+  if (action !== "select_replacement" && selectedCandidateFactFingerprint) {
+    throw new Error("candidate fact fingerprint is only valid for select_replacement")
+  }
   return {
     type: "resolve_decision",
     subjectKey,
     action,
     ...((action === "plan_recommendation" || action === "select_replacement") && selectedCandidateId
       ? { selectedCandidateId }
+      : {}),
+    ...(action === "select_replacement" && selectedCandidateFactFingerprint
+      ? { selectedCandidateFactFingerprint }
       : {}),
   }
 }

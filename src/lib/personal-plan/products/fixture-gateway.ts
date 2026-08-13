@@ -349,6 +349,7 @@ export function createFixtureStage3Gateway(
       input.intent.action === "plan_recommendation" &&
       (evaluation.status !== "known" ||
         !evaluation.recommendation ||
+        input.intent.selectedCandidateFactFingerprint !== undefined ||
         input.intent.selectedCandidateId !== evaluation.recommendation.productId)
     ) {
       throw new Error("fixture recommendation candidate is unavailable")
@@ -359,13 +360,18 @@ export function createFixtureStage3Gateway(
             (candidate) => candidate.productId === input.intent.selectedCandidateId,
           ) ?? null)
         : null
-    if (input.intent.action === "select_replacement" && !selectedReplacement) {
+    if (
+      input.intent.action === "select_replacement" &&
+      (!selectedReplacement ||
+        input.intent.selectedCandidateFactFingerprint !==
+          `fixture-facts:${selectedReplacement.productId}`)
+    ) {
       throw new Stage3ProductsGatewayError("stage3_replacement_candidate_invalid", undefined, 409)
     }
     if (
-      input.intent.action !== "plan_recommendation" &&
       input.intent.action !== "select_replacement" &&
-      input.intent.selectedCandidateId
+      (input.intent.selectedCandidateFactFingerprint !== undefined ||
+        (input.intent.action !== "plan_recommendation" && input.intent.selectedCandidateId))
     ) {
       throw new Error("fixture recommendation candidate is unexpected")
     }

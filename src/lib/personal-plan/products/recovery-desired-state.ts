@@ -63,8 +63,17 @@ function decisionMatchesIntent(
 ) {
   const action = actionForDecision(decision)
   if (action !== intent.action) return false
+  if (intent.action === "select_replacement") {
+    return (
+      intent.selectedCandidateId !== undefined &&
+      decision.recommendation?.productId === intent.selectedCandidateId &&
+      intent.selectedCandidateFactFingerprint !== undefined &&
+      decision.authorityEvidence?.recommendationFactFingerprint ===
+        intent.selectedCandidateFactFingerprint
+    )
+  }
   return (
-    (intent.action !== "plan_recommendation" && intent.action !== "select_replacement") ||
+    intent.action !== "plan_recommendation" ||
     intent.selectedCandidateId === undefined ||
     decision.recommendation?.productId === intent.selectedCandidateId
   )

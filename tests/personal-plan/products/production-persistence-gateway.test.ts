@@ -1764,6 +1764,7 @@ test("selected replacement candidate #2 and #3 persist exact recommendation evid
         subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
         action: "select_replacement",
         selectedCandidateId,
+        selectedCandidateFactFingerprint: `facts-${selectedCandidateId}`,
       },
     })
 
@@ -1806,6 +1807,7 @@ test("selected replacement must be present in the bounded current comparison bef
             subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
             action: "select_replacement",
             selectedCandidateId,
+            selectedCandidateFactFingerprint: `facts-${selectedCandidateId}`,
           },
         }),
       (error: unknown) =>
@@ -1813,6 +1815,41 @@ test("selected replacement must be present in the bounded current comparison bef
         error.code === "stage3_replacement_candidate_invalid",
     )
   }
+  assert.equal(saves, 0)
+})
+
+test("selected replacement rejects changed facts for the same viewed candidate", async () => {
+  const draft = authorityDraft()
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async () => conditionerReplacementFacts(),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.resolveDecision({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+          action: "select_replacement",
+          selectedCandidateId: "replacement-2",
+          selectedCandidateFactFingerprint: "facts-replacement-2-viewed",
+        },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3AuthorityMutationError &&
+      error.code === "stage3_replacement_candidate_invalid",
+  )
   assert.equal(saves, 0)
 })
 

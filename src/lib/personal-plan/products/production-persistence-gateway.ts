@@ -935,12 +935,19 @@ function validateSelectedCandidate(
     if (!candidate) {
       throw new Stage3AuthorityMutationError("stage3_replacement_candidate_invalid")
     }
+    if (
+      !intent.selectedCandidateFactFingerprint ||
+      intent.selectedCandidateFactFingerprint !== candidate.factFingerprint
+    ) {
+      throw new Stage3AuthorityMutationError("stage3_replacement_candidate_invalid")
+    }
     return candidate
   }
   if (intent.action === "plan_recommendation") {
     if (
       evaluation.status !== "known" ||
       !evaluation.recommendation ||
+      intent.selectedCandidateFactFingerprint !== undefined ||
       (intent.selectedCandidateId !== undefined &&
         intent.selectedCandidateId !== evaluation.recommendation.productId)
     ) {
@@ -948,7 +955,10 @@ function validateSelectedCandidate(
     }
     return null
   }
-  if (intent.selectedCandidateId !== undefined) {
+  if (
+    intent.selectedCandidateId !== undefined ||
+    intent.selectedCandidateFactFingerprint !== undefined
+  ) {
     throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
   }
   return null

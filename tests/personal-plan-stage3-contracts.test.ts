@@ -214,6 +214,16 @@ test("replacement resolutions retain their semantic action and selected candidat
     },
     limitationAcknowledged: false,
     resolutionAction: "select_replacement" as const,
+    authorityEvidence: {
+      schemaVersion: 1 as const,
+      subjectKey: "decision:oil:dry_finish:oil-1",
+      refinedNeedVersionId: "refined-1",
+      refinedInputHash: "refined-hash-1",
+      authorityVersion: "oil-v1",
+      productFactFingerprint: "facts-owned-oil",
+      recommendationFactFingerprint: "facts-replacement-1",
+      coverageRuleIds: ["oil.fit"],
+    },
   }
 
   assert.equal(stage3ProductDecisionSchema.safeParse(decision).success, true)
@@ -224,8 +234,19 @@ test("replacement resolutions retain their semantic action and selected candidat
       subjectKey: decision.decisionKey,
       action: "select_replacement",
       selectedCandidateId: "replacement-1",
+      selectedCandidateFactFingerprint: "facts-replacement-1",
     }),
     "satisfied",
+  )
+  assert.equal(
+    classifyStage3DesiredState(replacementDraft, {
+      type: "resolve_decision",
+      subjectKey: decision.decisionKey,
+      action: "select_replacement",
+      selectedCandidateId: "replacement-1",
+      selectedCandidateFactFingerprint: "facts-replacement-1-changed",
+    }),
+    "different",
   )
   assert.equal(
     classifyStage3DesiredState(replacementDraft, {
@@ -518,6 +539,16 @@ test("a pending source may retain a planned replacement only through select_repl
     },
     limitationAcknowledged: false,
     resolutionAction: "select_replacement" as const,
+    authorityEvidence: {
+      schemaVersion: 1 as const,
+      subjectKey: "decision:oil:dry_finish:oil-1",
+      refinedNeedVersionId: "refined-1",
+      refinedInputHash: "refined-hash-1",
+      authorityVersion: "oil-v1",
+      productFactFingerprint: null,
+      recommendationFactFingerprint: "facts-oil-replacement",
+      coverageRuleIds: ["oil.replacement"],
+    },
   }
   const pendingDraft = draft({ products: [pendingProduct] })
 

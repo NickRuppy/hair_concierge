@@ -1716,6 +1716,11 @@ export function Stage3ProductsFlow({
                 ...(item.selectedCandidateId
                   ? { selectedCandidateId: item.selectedCandidateId }
                   : {}),
+                ...(item.selectedCandidateFactFingerprint
+                  ? {
+                      selectedCandidateFactFingerprint: item.selectedCandidateFactFingerprint,
+                    }
+                  : {}),
               })),
               expectedRevision: canonicalDraft.revision,
               createdAt: Date.now(),
@@ -1961,6 +1966,9 @@ export function Stage3ProductsFlow({
         subjectKey: intent.subjectKey,
         action: intent.action,
         ...(intent.selectedCandidateId ? { selectedCandidateId: intent.selectedCandidateId } : {}),
+        ...(intent.selectedCandidateFactFingerprint
+          ? { selectedCandidateFactFingerprint: intent.selectedCandidateFactFingerprint }
+          : {}),
         expectedRevision: sourceDraft.revision,
         createdAt: Date.now(),
       },
@@ -2080,6 +2088,11 @@ export function Stage3ProductsFlow({
               action: intent.action,
               ...(intent.selectedCandidateId
                 ? { selectedCandidateId: intent.selectedCandidateId }
+                : {}),
+              ...(intent.selectedCandidateFactFingerprint
+                ? {
+                    selectedCandidateFactFingerprint: intent.selectedCandidateFactFingerprint,
+                  }
                 : {}),
             })),
             expectedRevision: nextDraft.revision,

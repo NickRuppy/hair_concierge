@@ -544,6 +544,25 @@ test("Labs fixture validates exact replacement candidates without exposing the a
         subjectKey: evaluation!.subjectKey,
         action: "select_replacement",
         selectedCandidateId: "fixture-forged-product",
+        selectedCandidateFactFingerprint: "fixture-facts:fixture-forged-product",
+      },
+    }),
+    (error: unknown) =>
+      error instanceof Stage3ProductsGatewayError &&
+      error.code === "stage3_replacement_candidate_invalid" &&
+      error.status === 409,
+  )
+
+  await assert.rejects(
+    subject.resolveDecision({
+      draftId: "draft-1",
+      expectedRevision: captureComplete.draft.revision,
+      intent: {
+        type: "resolve_decision",
+        subjectKey: evaluation!.subjectKey,
+        action: "select_replacement",
+        selectedCandidateId: replacementId,
+        selectedCandidateFactFingerprint: `fixture-facts:${replacementId}:changed`,
       },
     }),
     (error: unknown) =>
@@ -560,6 +579,7 @@ test("Labs fixture validates exact replacement candidates without exposing the a
       subjectKey: evaluation!.subjectKey,
       action: "select_replacement",
       selectedCandidateId: replacementId,
+      selectedCandidateFactFingerprint: `fixture-facts:${replacementId}`,
     },
   })
   assert.equal(resolved.status, "saved")

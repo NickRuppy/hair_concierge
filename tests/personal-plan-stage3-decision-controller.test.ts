@@ -118,12 +118,23 @@ test("authority decision intents preserve a selected replacement candidate", () 
       "decision:oil:dry_finish:capture-1",
       "select_replacement",
       "candidate-1",
+      "facts-candidate-1",
     ),
     {
       type: "resolve_decision",
       subjectKey: "decision:oil:dry_finish:capture-1",
       action: "select_replacement",
       selectedCandidateId: "candidate-1",
+      selectedCandidateFactFingerprint: "facts-candidate-1",
     },
+  )
+  assert.throws(
+    () =>
+      authorityDecisionIntent(
+        "decision:oil:dry_finish:capture-1",
+        "select_replacement",
+        "candidate-1",
+      ),
+    /requires the viewed candidate and fact fingerprint/,
   )
 })
