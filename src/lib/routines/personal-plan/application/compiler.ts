@@ -120,6 +120,11 @@ function transitionCopy(fromAnchor: string, toAnchor: string) {
   return `Danach mit dem nächsten Schritt fortfahren.`
 }
 
+function productBlockIncludesAnchorPreparation(block: CompiledProductBlock) {
+  if (block.anchor !== "wet_cleanse") return false
+  return block.steps.some(({ stepKey, action }) => stepKey === "wet" && action === "section")
+}
+
 type AnchorOrdering =
   | { status: "ordered"; ranks: Map<ApplicationAnchor, number> }
   | {
@@ -566,7 +571,8 @@ function compileDay(
       continue
     }
     const block = entry.block
-    if (previousAnchor === null && block.anchor === "wet_cleanse") {
+    const includesAnchorPreparation = productBlockIncludesAnchorPreparation(block)
+    if (previousAnchor === null && block.anchor === "wet_cleanse" && !includesAnchorPreparation) {
       outerSequence.push({
         kind: "state_transition",
         fromAnchor: "dry",
@@ -574,7 +580,7 @@ function compileDay(
         copyDe: "Haare gründlich mit Wasser anfeuchten.",
       })
     }
-    if (previousAnchor !== null && previousAnchor !== block.anchor) {
+    if (previousAnchor !== null && previousAnchor !== block.anchor && !includesAnchorPreparation) {
       outerSequence.push({
         kind: "state_transition",
         fromAnchor: previousAnchor,

@@ -46,6 +46,7 @@
     "test:personal-plan:nested": "node scripts/ci/run-personal-plan-nested.mjs",
     "test:personal-plan-stage5": "node --import ./tests/server-only-register.cjs --import tsx --test tests/personal-plan-stage5-*.test.ts tests/personal-plan-stage5-*.test.tsx tests/auth-intake-state.test.ts tests/auth-unauthenticated-redirect.test.ts tests/seo-metadata-routes.test.ts tests/routine-routing-nav.test.ts",
     "personal-plan:application-v2-generate": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-generate.ts",
+    "personal-plan:application-v2-review": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-review.ts",
     "personal-plan:application-audit": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-generate.ts --check",
     "products:intake:stage5-v2-application:preflight": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-preflight.ts",
     "products:intake:stage5-v2-application:apply": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-apply.ts",

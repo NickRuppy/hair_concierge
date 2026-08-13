@@ -40,6 +40,7 @@ import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/cons
 import { SHAMPOO_BUCKETS } from "@/lib/shampoo/constants"
 import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
+import { buildProductApplicationPointerV2 } from "@/lib/product-intake/catalog-enrichment/stage5-v2-builder"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
 export const PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__" as const
@@ -178,6 +179,7 @@ type ProductIntakeSpecRowByTable = {
     source_url: string | null
     source_text: string | null
     guidance_payload: Record<string, unknown>
+    guidance_payload_v2?: Record<string, unknown>
   }
 }
 
@@ -1045,12 +1047,32 @@ function validateExactProtocol(
     }
   }
 
+  let protocolsWithV2: Array<
+    (typeof protocols.data.product_application_protocols)[number] & {
+      guidance_payload_v2: Record<string, unknown>
+    }
+  >
+  try {
+    protocolsWithV2 = protocols.data.product_application_protocols.map((protocol) => ({
+      ...protocol,
+      guidance_payload_v2: buildProductApplicationPointerV2({
+        sourceRole: protocol.role,
+        guidancePayload: protocol.guidance_payload,
+        applicationState: protocol.application_state,
+      }) as unknown as Record<string, unknown>,
+    }))
+  } catch {
+    return {
+      ok: false,
+      missingFields: ["final.category_specs.product_application_protocols.guidance_payload"],
+      targetSpecOperations: [],
+    }
+  }
+
   return {
     ok: true,
     missingFields: [],
-    targetSpecOperations: [
-      upsert("product_application_protocols", protocols.data.product_application_protocols),
-    ],
+    targetSpecOperations: [upsert("product_application_protocols", protocolsWithV2)],
   }
 }
 
@@ -1186,6 +1208,8 @@ export function validateProductIntakeApprovalPayload(
     profile === "legacy_personal_plan_launch_v1" &&
     (categoryKey === "heat_protectant" || categoryKey === "scalp_care")
   ) {
+    // Offline launch-cohort enrichment retains its separate V2 backfill path.
+    // The go-forward Product Intake approval RPC uses the default profile below.
     return categoryValidation
   }
 

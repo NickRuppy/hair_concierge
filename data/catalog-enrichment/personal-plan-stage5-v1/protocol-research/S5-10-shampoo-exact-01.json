@@ -1086,6 +1086,7 @@
           "conditionerRelationship": "not_applicable",
           "reapplication": "none",
           "amount": null,
+          "workflowId": "swiss_o_par_tea_tree_two_pass",
           "cautions": []
         },
         "steps": [

@@ -39,6 +39,15 @@ test("Anwendung view owns German day labels, summaries, and sort order", () => {
 
   assert.ok(html.indexOf("Waschtag aus der Datenbank") < html.indexOf("Pausentag"))
   assert.match(html, /Reihenfolge aus dem View/)
+
+  const detailHtml = renderToStaticMarkup(
+    createElement(ApplicationPage, {
+      view: { state: "ready", days, selectedDayType: "wash_day" },
+    }),
+  )
+  assert.match(detailHtml, /Waschtag aus der Datenbank/)
+  assert.match(detailHtml, /Reihenfolge aus dem View/)
+  assert.match(detailHtml, /Nach deinem Rhythmus/)
 })
 
 test("no-complete-day state retains visible Pausentag plus recovery explanation", () => {

@@ -34,14 +34,14 @@ const artifact = JSON.parse(
 
 test("Stage 5 V2 backfill exhaustively covers the reviewed production-shaped snapshot", () => {
   assert.deepEqual(artifact.observed_counts, {
-    rows: 273,
-    products: 224,
-    exact_workflows: 5,
+    rows: 272,
+    products: 223,
+    exact_workflows: 4,
     family_templates: 23,
     composable_rows: 272,
-    blocked_rows: 1,
+    blocked_rows: 0,
     by_category: {
-      bondbuilder: 4,
+      bondbuilder: 3,
       conditioner: 41,
       deep_cleansing_shampoo: 6,
       dry_shampoo: 10,
@@ -54,7 +54,7 @@ test("Stage 5 V2 backfill exhaustively covers the reviewed production-shaped sna
     },
   })
   assert.equal(new Set(artifact.items.map(({ key }) => key)).size, artifact.items.length)
-  assert.equal(new Set(artifact.items.map(({ product_id }) => product_id)).size, 224)
+  assert.equal(new Set(artifact.items.map(({ product_id }) => product_id)).size, 223)
   assert.equal(artifact.family_templates.length, SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.size)
 })
 
@@ -115,12 +115,17 @@ test("targeted shampoo timing is rendered once instead of repeated as a generic 
   }
 })
 
-test("OLAPLEX No.0 remains explicitly blocked until its real companion is verified", () => {
-  const row = artifact.items.find(
-    ({ exact_workflow_id }) => exact_workflow_id === "olaplex_no0_companion",
+test("retired OLAPLEX No.0 is the only removed pointer", () => {
+  assert.equal(
+    artifact.items.some(({ product_id }) => product_id === "aadbbab5-bcf5-4b46-b38a-5533648bcb1d"),
+    false,
   )
-  assert.ok(row)
-  const pointer = productApplicationPointerV2Schema.parse(row.guidance_payload_v2)
-  assert.equal(pointer.requiredCompanionProductId, null)
-  assert.equal(pointer.runtimeBlockerCode, "missing_verified_companion")
+  assert.equal(
+    artifact.items.some(({ exact_workflow_id }) => exact_workflow_id === null),
+    true,
+  )
+  assert.equal(
+    artifact.items.filter(({ exact_workflow_id }) => exact_workflow_id !== null).length,
+    4,
+  )
 })

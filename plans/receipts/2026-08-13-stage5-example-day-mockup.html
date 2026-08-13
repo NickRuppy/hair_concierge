@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Stage 5 – Beispiel-Waschtag</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #291d2e;
+        --body: #4e4551;
+        --muted: #766d78;
+        --line: #e6dde6;
+        --paper: #fbf8fb;
+        --card: #fff;
+        --plum: #6f3f70;
+        --plum-soft: #f5edf5;
+        --general: #e8f1ff;
+        --general-ink: #315a86;
+        --category: #f1e8f4;
+        --category-ink: #704177;
+        --shadow: 0 18px 55px -42px rgba(75, 37, 75, 0.55);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.5 ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button,
+      a {
+        font: inherit;
+      }
+      .review-bar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px max(16px, calc((100vw - 820px) / 2));
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(10px);
+      }
+      .review-bar p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .toggle {
+        display: inline-flex;
+        flex: none;
+        padding: 3px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--paper);
+      }
+      .toggle button {
+        min-height: 36px;
+        border: 0;
+        border-radius: 999px;
+        padding: 0 13px;
+        color: var(--muted);
+        background: transparent;
+        cursor: pointer;
+      }
+      .toggle button[aria-pressed="true"] {
+        color: #fff;
+        background: var(--plum);
+      }
+      .journey {
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+      .journey-inner {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 15px 24px;
+      }
+      .brand {
+        font:
+          700 1.05rem/1.2 ui-serif,
+          Georgia,
+          serif;
+      }
+      .stages {
+        display: flex;
+        gap: 7px;
+        margin-top: 10px;
+      }
+      .stage {
+        height: 4px;
+        flex: 1;
+        border-radius: 99px;
+        background: #e7e1e7;
+      }
+      .stage.done {
+        background: var(--plum);
+      }
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 30px 24px 80px;
+      }
+      .back {
+        color: var(--plum);
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .day-header {
+        margin-top: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--line);
+      }
+      .eyebrow {
+        color: var(--plum);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 5px 0 6px;
+        font:
+          650 clamp(2rem, 7vw, 3.5rem)/1.03 ui-serif,
+          Georgia,
+          serif;
+      }
+      .summary {
+        max-width: 38rem;
+        margin: 0;
+        color: var(--body);
+        font-size: 1.04rem;
+      }
+      .cadence {
+        display: inline-flex;
+        margin-top: 13px;
+        border-radius: 999px;
+        padding: 6px 11px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-size: 0.82rem;
+        font-weight: 750;
+      }
+      .layer-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        width: fit-content;
+        margin-bottom: 9px;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .layer-label.general {
+        color: var(--general-ink);
+        background: var(--general);
+      }
+      .layer-label.category {
+        color: var(--category-ink);
+        background: var(--category);
+      }
+      .plain .layer-label,
+      .plain .review-note {
+        display: none;
+      }
+      .review-note {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+      .day-header .layer-label {
+        margin-top: 16px;
+      }
+      .sequence {
+        margin: 28px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .sequence > li {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+      .number {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--plum);
+        color: #fff;
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+      .transition .number {
+        border: 1px dashed #94b3d5;
+        color: var(--general-ink);
+        background: var(--general);
+      }
+      .step-card {
+        border: 1px solid #dfd0e2;
+        border-radius: 15px;
+        padding: 17px;
+        background: var(--plum-soft);
+        box-shadow: var(--shadow);
+      }
+      .transition-card {
+        border: 1px dashed #a9c4df;
+        border-radius: 13px;
+        padding: 13px 15px;
+        color: var(--general-ink);
+        background: #f7faff;
+      }
+      .transition-card p {
+        margin: 0;
+      }
+      .category-name {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.74rem;
+        font-weight: 750;
+      }
+      h2 {
+        margin: 2px 0 3px;
+        font-size: 1.06rem;
+        line-height: 1.3;
+      }
+      .purpose {
+        margin: 0;
+        color: var(--body);
+        font-size: 0.87rem;
+      }
+      .actions {
+        margin: 15px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .actions li {
+        display: grid;
+        grid-template-columns: 25px minmax(0, 1fr);
+        gap: 8px;
+        margin-top: 10px;
+        color: var(--body);
+        font-size: 0.9rem;
+      }
+      .action-number {
+        display: grid;
+        place-items: center;
+        width: 23px;
+        height: 23px;
+        border-radius: 50%;
+        color: var(--plum);
+        background: #fff;
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+      .closing {
+        margin: 28px 0 0 50px;
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+      @media (max-width: 640px) {
+        .review-bar {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 10px 14px;
+        }
+        .review-bar p {
+          display: none;
+        }
+        .toggle {
+          width: 100%;
+        }
+        .toggle button {
+          flex: 1;
+          padding: 0 8px;
+          font-size: 0.78rem;
+        }
+        .journey-inner,
+        main {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+        main {
+          padding-top: 22px;
+        }
+        .sequence > li {
+          grid-template-columns: 34px minmax(0, 1fr);
+          gap: 8px;
+        }
+        .number {
+          width: 31px;
+          height: 31px;
+        }
+        .step-card {
+          padding: 15px;
+        }
+        .closing {
+          margin-left: 42px;
+        }
+      }
+    </style>
+  </head>
+  <body class="review">
+    <div class="review-bar">
+      <p>Review-Mockup · Die farbigen Ebenen-Labels erscheinen nicht im Kundenprodukt.</p>
+      <div class="toggle" aria-label="Ansicht wählen">
+        <button type="button" data-mode="review" aria-pressed="true">Ebenen anzeigen</button>
+        <button type="button" data-mode="plain" aria-pressed="false">Kundenansicht</button>
+      </div>
+    </div>
+
+    <header class="journey">
+      <div class="journey-inner">
+        <div class="brand">Chaarlie</div>
+        <div class="stages" aria-label="Schritt 5 von 5">
+          <span class="stage done"></span><span class="stage done"></span
+          ><span class="stage done"></span><span class="stage done"></span
+          ><span class="stage done"></span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <a class="back" href="#">← Alle Tage</a>
+
+      <section class="day-header" aria-labelledby="day-title">
+        <div class="layer-label general">Allgemein · gilt für den ganzen Tag</div>
+        <div class="eyebrow">Anwendung</div>
+        <h1 id="day-title">Waschtag</h1>
+        <p class="summary">
+          Deine vollständige Basiswäsche. Folge den Schritten in dieser Reihenfolge.
+        </p>
+        <span class="cadence">2× pro Woche</span>
+        <p class="review-note">Allgemeine Ebene: Tag, Zweck, Frequenz und Reihenfolge.</p>
+      </section>
+
+      <ol class="sequence">
+        <li>
+          <span class="number">1</span>
+          <article class="step-card">
+            <div class="layer-label category">Kanonische Kategorie-Anleitung · Shampoo</div>
+            <p class="category-name">Shampoo</p>
+            <h2>OGX Renewing + Argan Oil of Morocco Shampoo</h2>
+            <p class="purpose">Reinigt Kopfhaut und Ansatz.</p>
+            <ol class="actions">
+              <li>
+                <span class="action-number">1</span
+                ><span>Haare und Kopfhaut vollständig anfeuchten.</span>
+              </li>
+              <li>
+                <span class="action-number">2</span
+                ><span
+                  >Eine kleine Menge auf die Kopfhaut geben und sanft einmassieren. Die Längen
+                  werden beim Ausspülen mitgereinigt.</span
+                >
+              </li>
+              <li><span class="action-number">3</span><span>Gründlich ausspülen.</span></li>
+            </ol>
+            <p class="review-note">
+              Diese Technik wird mit allen normalen Shampoos geteilt – kein OGX-Sondertext.
+            </p>
+          </article>
+        </li>
+
+        <li>
+          <span class="number">2</span>
+          <article class="step-card">
+            <div class="layer-label category">Kanonische Kategorie-Anleitung · Conditioner</div>
+            <p class="category-name">Conditioner</p>
+            <h2>OGX Renewing Argan Oil of Morocco Conditioner</h2>
+            <p class="purpose">Pflegt Längen und Spitzen.</p>
+            <ol class="actions">
+              <li>
+                <span class="action-number">1</span
+                ><span>Überschüssiges Wasser sanft aus dem Haar drücken.</span>
+              </li>
+              <li>
+                <span class="action-number">2</span
+                ><span>Eine kleine Menge gleichmäßig in Längen und Spitzen verteilen.</span>
+              </li>
+              <li>
+                <span class="action-number">3</span><span>2–3 Minuten einwirken lassen.</span>
+              </li>
+              <li><span class="action-number">4</span><span>Gründlich ausspülen.</span></li>
+            </ol>
+            <p class="review-note">
+              Die Einwirkzeit kommt aus den geprüften Produktfakten; die Technik bleibt kanonisch.
+            </p>
+          </article>
+        </li>
+
+        <li class="transition">
+          <span class="number">3</span>
+          <div class="transition-card">
+            <div class="layer-label general">Allgemeiner Übergang</div>
+            <p>Im handtuchtrockenen Haar weitermachen.</p>
+            <p class="review-note">
+              Produktunabhängiger Zustandswechsel zwischen Ausspülen und Leave-on-Pflege.
+            </p>
+          </div>
+        </li>
+
+        <li>
+          <span class="number">4</span>
+          <article class="step-card">
+            <div class="layer-label category">Kanonische Kategorie-Anleitung · Hitzeschutz</div>
+            <p class="category-name">Hitzeschutz</p>
+            <h2>Balea Hitzeschutzspray 2-Phasen</h2>
+            <p class="purpose">Schützt das Haar vor dem bestätigten Wärmeschritt.</p>
+            <ol class="actions">
+              <li>
+                <span class="action-number">1</span
+                ><span
+                  >Gleichmäßig auf handtuchtrockenem Haar verteilen. Erst danach föhnen oder
+                  stylen.</span
+                >
+              </li>
+            </ol>
+            <p class="review-note">
+              Auch hier wird die Kategorie-Technik geteilt; der Produktname bestimmt nicht die
+              Formulierung.
+            </p>
+          </article>
+        </li>
+      </ol>
+
+      <p class="closing">
+        In diesem Beispiel ist kein produktspezifischer Sonderablauf nötig. Ein Sonderablauf würde
+        nur die betreffende Produktkarte ersetzen – die allgemeinen Tages- und Übergangsschritte
+        blieben bestehen.
+      </p>
+    </main>
+
+    <script>
+      const buttons = document.querySelectorAll("[data-mode]")
+      buttons.forEach((button) =>
+        button.addEventListener("click", () => {
+          const mode = button.dataset.mode
+          document.body.className = mode
+          buttons.forEach((candidate) =>
+            candidate.setAttribute("aria-pressed", String(candidate === button)),
+          )
+        }),
+      )
+    </script>
+  </body>
+</html>

@@ -22,7 +22,7 @@ import {
   loadImmutableRoutineProfile,
   type ApplicationRoutineReadClient,
 } from "@/lib/personal-plan/routine/application-adapter"
-import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
+import { loadPersonalPlanActiveRoutineVersion } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import { compileApplicationViewV2 } from "@/lib/routines/personal-plan/application/compiler-v2"
 import { applicationFamilyTemplateV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
@@ -43,7 +43,11 @@ type AdminReadClient = PersonalPlanRoutineReadClient & ApplicationRoutineReadCli
 export type AnwendungResolverDeps = {
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
-  loadRoutine: (userId: string) => ReturnType<typeof loadPersonalPlanRoutineView>
+  loadRoutineVersion: (
+    userId: string,
+    planId: string,
+    activeRoutineVersionId: string,
+  ) => ReturnType<typeof loadPersonalPlanActiveRoutineVersion>
   adaptRoutine: typeof adaptAcceptedActiveRoutineForApplication
   loadProfile: typeof loadImmutableRoutineProfile
   loadContent: (
@@ -83,30 +87,31 @@ export async function resolveAnwendungPage(
     if (!canAccessPersonalPlanJourneyStage(journey, "stage5")) {
       return { state: "feature_disabled" }
     }
-    const routine = await deps.loadRoutine(userId)
-    if (routine.status === "no_personal_plan" || !routine.activeVersion) {
+    if (journey.kind !== "personal_plan" || !journey.activeRoutineVersionId) {
       return { state: "no_active_routine" }
-    }
-    failureContext = {
-      planId: routine.personalPlanId,
-      routineVersionId: routine.activeVersion.id,
-      refinedVersionId: routine.activeVersion.payload.source.refinedVersionId,
     }
     const client = deps.createReadClient()
     const contractVersion = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
-    const [accepted, profile, content] = await Promise.all([
-      deps.adaptRoutine({ client, activeVersion: routine.activeVersion, contractVersion }),
+    const content = deps.loadContent(contractVersion)
+    const [activeVersion, dayDefinitions, protocols] = await Promise.all([
+      deps.loadRoutineVersion(userId, journey.personalPlanId, journey.activeRoutineVersionId),
+      content.loadActiveDayTypeDefinitions(),
+      content.loadActiveGuidanceProtocols(),
+    ])
+    if (!activeVersion) return { state: "no_active_routine" }
+    failureContext = {
+      planId: journey.personalPlanId,
+      routineVersionId: activeVersion.id,
+      refinedVersionId: activeVersion.payload.source.refinedVersionId,
+    }
+    const [accepted, profile] = await Promise.all([
+      deps.adaptRoutine({ client, activeVersion, contractVersion }),
       deps.loadProfile({
         client,
         userId,
-        planId: routine.personalPlanId,
-        refinedVersionId: routine.activeVersion.payload.source.refinedVersionId,
+        planId: journey.personalPlanId,
+        refinedVersionId: activeVersion.payload.source.refinedVersionId,
       }),
-      deps.loadContent(contractVersion),
-    ])
-    const [dayDefinitions, protocols] = await Promise.all([
-      content.loadActiveDayTypeDefinitions(),
-      content.loadActiveGuidanceProtocols(),
     ])
     const familyPayloads = protocols.map((protocol) =>
       applicationFamilyTemplateV2Schema.parse(protocol.payload),
@@ -184,12 +189,12 @@ function createAdminReadClient() {
 const defaultDeps: AnwendungResolverDeps = {
   getUserId: loadCachedAuthenticatedAppUserId,
   loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
-  loadRoutine: (userId) =>
-    loadPersonalPlanRoutineView({
+  loadRoutineVersion: (userId, planId, activeRoutineVersionId) =>
+    loadPersonalPlanActiveRoutineVersion({
       client: createAdminReadClient(),
       userId,
-      enabled: true,
-      includePendingProposal: false,
+      planId,
+      activeRoutineVersionId,
     }),
   adaptRoutine: adaptAcceptedActiveRoutineForApplication,
   loadProfile: loadImmutableRoutineProfile,

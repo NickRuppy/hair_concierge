@@ -1179,6 +1179,7 @@
           "applicationArea": "all_hair",
           "rinse": "rinse_out",
           "contactTimeSeconds": 180,
+          "sharedTemplateContactTime": "include",
           "conditionerRelationship": "not_applicable",
           "reapplication": "none",
           "amount": null,

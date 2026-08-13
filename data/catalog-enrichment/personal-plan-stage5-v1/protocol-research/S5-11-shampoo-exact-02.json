@@ -132,6 +132,9 @@
           "conditionerRelationship": "not_applicable",
           "reapplication": "none",
           "amount": null,
+          "cautionCodes": [
+            "cosmetic_claim_only"
+          ],
           "cautions": []
         },
         "steps": [

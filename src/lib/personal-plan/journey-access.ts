@@ -17,6 +17,8 @@ export type PersonalPlanJourneyAccess =
       allowed: Readonly<Record<PersonalPlanJourneyStage, boolean>>
       nextHref: "/plan-start" | "/routine" | "/anwendung"
       personalPlanId: string
+      /** Owner-scoped identity already proven while resolving Stage 4/5 reachability. */
+      activeRoutineVersionId?: string | null
       hasPendingRoutineProposal?: boolean
     }
 
@@ -120,6 +122,7 @@ export function resolvePersonalPlanJourneyAccess(
   return {
     kind: "personal_plan",
     personalPlanId: input.plan.id,
+    activeRoutineVersionId: input.plan.activeRoutineVersionId,
     frontier,
     nextHref,
     allowed,
