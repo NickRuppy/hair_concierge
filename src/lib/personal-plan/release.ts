@@ -1,33 +1,18 @@
 type PersonalPlanAppReleaseEnvironment = {
   [key: string]: string | undefined
-  PERSONAL_PLAN_APP_V1_ENABLED?: string
-  PERSONAL_PLAN_APP_V1_ROLLOUT?: string
   PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string
   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
-  PERSONAL_PLAN_STAGE2_ENABLED?: string
-  PERSONAL_PLAN_STAGE3_ENABLED?: string
-  PERSONAL_PLAN_STAGE4_ENABLED?: string
   PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL?: string
 }
 
 export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
 
-const APP_ROLLOUT_VALUES = new Set<PersonalPlanAppV1Rollout>(["off", "internal", "all"])
-
 export function resolvePersonalPlanAppV1Rollout(
-  environment: PersonalPlanAppReleaseEnvironment = process.env,
+  _environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): PersonalPlanAppV1Rollout {
-  const configured = environment.PERSONAL_PLAN_APP_V1_ROLLOUT
-  if (configured !== undefined) {
-    return APP_ROLLOUT_VALUES.has(configured as PersonalPlanAppV1Rollout)
-      ? (configured as PersonalPlanAppV1Rollout)
-      : "off"
-  }
-
-  // Preserve the reviewed boolean release contract for existing test and
-  // deployment environments that do not configure a cohort rollout yet.
-  return environment.PERSONAL_PLAN_APP_V1_ENABLED === "true" ? "all" : "off"
+  void _environment
+  return "all"
 }
 
 export function canAccessPersonalPlanAppV1Rollout(input: {
@@ -51,44 +36,43 @@ export function resolvePersonalPlanAppV1InternalEmails(
 }
 
 export function isPersonalPlanStage2Enabled(
-  environment: PersonalPlanAppReleaseEnvironment = process.env,
+  _environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
-  return environment.PERSONAL_PLAN_STAGE2_ENABLED === "true"
+  void _environment
+  return true
 }
 
 export function isPersonalPlanStage3Enabled(
-  environment: PersonalPlanAppReleaseEnvironment = process.env,
+  _environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
-  return environment.PERSONAL_PLAN_STAGE3_ENABLED === "true"
+  void _environment
+  return true
 }
 
 export function isPersonalPlanStage4Enabled(
-  environment: PersonalPlanAppReleaseEnvironment = process.env,
+  _environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
-  return environment.PERSONAL_PLAN_STAGE4_ENABLED === "true"
+  void _environment
+  return true
 }
 
 /**
- * Keeps first-Routine auto-activation independently reversible while refusing
- * to create a Routine that the Stage 4 journey cannot expose. The migration is
- * additive; with either flag absent or disabled callers retain the legacy
- * pending-proposal completion RPC.
+ * Keeps first-Routine auto-activation independently reversible. This controls
+ * a write behavior, not whether a released journey stage is visible.
  */
 export function isPersonalPlanStage4AutoActivateInitialEnabled(
   environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
-  return (
-    isPersonalPlanStage4Enabled(environment) &&
-    environment.PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL === "true"
-  )
+  return environment.PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL === "true"
 }
 
 const UTC_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/
 
 export function isPersonalPlanAppV1Enabled(
-  environment: PersonalPlanAppReleaseEnvironment = process.env,
+  _environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
-  return environment.PERSONAL_PLAN_APP_V1_ENABLED === "true"
+  void _environment
+  return true
 }
 
 /** Separate default-off rollback gate for regular-quiz buyers. */

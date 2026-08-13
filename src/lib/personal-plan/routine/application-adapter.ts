@@ -15,7 +15,7 @@ import {
   type ReviewedProductApplicationProtocolRow,
 } from "@/lib/routines/personal-plan/application/product-protocol-adapter"
 import type { ProductApplicationPointerV2 } from "@/lib/routines/personal-plan/application/contracts-v2"
-import type { PersonalPlanStage5ContractVersion } from "@/lib/personal-plan/stage5-rollout"
+import type { PersonalPlanStage5ContractVersion } from "@/lib/personal-plan/stage5-access"
 
 const semanticRoleByRoutineRole = {
   shampoo_everyday: "cleanse",

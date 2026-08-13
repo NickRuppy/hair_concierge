@@ -65,44 +65,13 @@ function profileClient(
   return { client, calls }
 }
 
-test("internal rollout resolves eligibility from the server-owned admin profile signal", async () => {
-  const previousEnabled = process.env.PERSONAL_PLAN_APP_V1_ENABLED
-  const previousRollout = process.env.PERSONAL_PLAN_APP_V1_ROLLOUT
-  const previousEmails = process.env.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS
-  process.env.PERSONAL_PLAN_APP_V1_ENABLED = "true"
-  process.env.PERSONAL_PLAN_APP_V1_ROLLOUT = "internal"
-  process.env.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS = "fresh-plan-test@example.com"
-
-  try {
-    const internal = profileClient(true)
-    const customer = profileClient(false)
-    const freshTestAccount = profileClient(false, "FRESH-PLAN-TEST@EXAMPLE.COM")
-    const unconfirmedTestAccount = profileClient(false, "fresh-plan-test@example.com", null)
-    assert.equal(await isPersonalPlanAppV1AllowedForUser("nick-1", internal.client as never), true)
-    assert.equal(
-      await isPersonalPlanAppV1AllowedForUser("customer-1", customer.client as never),
-      false,
-    )
-    assert.equal(
-      await isPersonalPlanAppV1AllowedForUser("fresh-1", freshTestAccount.client as never),
-      true,
-    )
-    assert.equal(
-      await isPersonalPlanAppV1AllowedForUser(
-        "unconfirmed-1",
-        unconfirmedTestAccount.client as never,
-      ),
-      false,
-    )
-    assert.deepEqual(internal.calls, ["from:profiles", "select:is_admin", "eq:id:nick-1"])
-  } finally {
-    if (previousEnabled === undefined) delete process.env.PERSONAL_PLAN_APP_V1_ENABLED
-    else process.env.PERSONAL_PLAN_APP_V1_ENABLED = previousEnabled
-    if (previousRollout === undefined) delete process.env.PERSONAL_PLAN_APP_V1_ROLLOUT
-    else process.env.PERSONAL_PLAN_APP_V1_ROLLOUT = previousRollout
-    if (previousEmails === undefined) delete process.env.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS
-    else process.env.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS = previousEmails
-  }
+test("released Personal Plan access no longer reads internal rollout state", async () => {
+  const customer = profileClient(false)
+  assert.equal(
+    await isPersonalPlanAppV1AllowedForUser("customer-1", customer.client as never),
+    true,
+  )
+  assert.deepEqual(customer.calls, [])
 })
 
 test("an active tester grant admits a field-test owner without an email allowlist", async () => {

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import PlanStartPage, { resolvePlanStartPageState } from "../src/app/plan-start/page"
+import { resolvePlanStartPageState } from "../src/app/plan-start/page"
 import {
   NeedCard,
   PlanStartFlow,
@@ -258,21 +258,11 @@ test("renders compact unavailable state H with profile and support exits", () =>
   assert.doesNotMatch(html, /\/chat|\/routine|\/onboarding|\/quiz/)
 })
 
-test("the flag-off production page renders unavailable H instead of redirecting or loading data", async () => {
-  const previous = process.env.PERSONAL_PLAN_APP_V1_ENABLED
-  delete process.env.PERSONAL_PLAN_APP_V1_ENABLED
-  try {
-    const html = renderToStaticMarkup(await PlanStartPage())
-    assert.match(html, /Dieser Planbereich ist gerade nicht verfügbar/)
-    assert.match(html, /Zum Profil/)
-    assert.doesNotMatch(html, /redirect|permanentRedirect|\/chat|\/routine|\/onboarding/)
-  } finally {
-    if (previous === undefined) {
-      delete process.env.PERSONAL_PLAN_APP_V1_ENABLED
-    } else {
-      process.env.PERSONAL_PLAN_APP_V1_ENABLED = previous
-    }
-  }
+test("the production page uses released defaults instead of reading a launch flag", () => {
+  const source = readFileSync("src/app/plan-start/page.tsx", "utf8")
+  assert.match(source, /enabled: isPersonalPlanAppV1Enabled/)
+  assert.match(source, /stage2Enabled: isPersonalPlanStage2Enabled/)
+  assert.doesNotMatch(source, /process\.env\.PERSONAL_PLAN_(?:APP_V1|STAGE2)/)
 })
 
 test("the production page exposes only the admitted Stage 1 gate and sends delayed provisioning to its compact wait page", async () => {

@@ -2,10 +2,9 @@ import { ApplicationPage } from "@/components/application/application-page"
 import type { ApplicationPageView } from "@/components/application/application-types"
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
 import {
-  resolvePersonalPlanStage5ContractVersion,
-  resolvePersonalPlanStage5Rollout,
+  PERSONAL_PLAN_STAGE5_CONTRACT_VERSION,
   type PersonalPlanStage5ContractVersion,
-} from "@/lib/personal-plan/stage5-rollout"
+} from "@/lib/personal-plan/stage5-access"
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
@@ -25,14 +24,11 @@ import {
 } from "@/lib/personal-plan/routine/application-adapter"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
-import { compileApplicationView } from "@/lib/routines/personal-plan/application/compiler"
 import { compileApplicationViewV2 } from "@/lib/routines/personal-plan/application/compiler-v2"
+import { applicationFamilyTemplateV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
 import { projectApplicationCadenceByDay } from "@/lib/routines/personal-plan/application/cadence-projector"
 import { createServerApplicationGuidanceRepository } from "@/lib/routines/personal-plan/application/repository"
-import type {
-  ApplicationDayTypeKey,
-  ApplicationGuidanceProtocolV1,
-} from "@/lib/routines/personal-plan/application/contracts"
+import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   capturePersonalPlanApplicationFailure,
@@ -56,8 +52,6 @@ export type AnwendungResolverDeps = {
   createReadClient: () => AdminReadClient
   appEnabled: () => boolean
   stage4Enabled: () => boolean
-  rollout: () => ReturnType<typeof resolvePersonalPlanStage5Rollout>
-  contractVersion?: () => PersonalPlanStage5ContractVersion
   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
 }
 
@@ -75,8 +69,7 @@ export async function resolveAnwendungPage(
   deps: AnwendungResolverDeps,
   selectedDayType?: ApplicationDayTypeKey,
 ): Promise<ApplicationPageView> {
-  // Keep `off` non-exposing: no profile, Routine, product, or content read.
-  if (!deps.appEnabled() || !deps.stage4Enabled() || deps.rollout() === "off") {
+  if (!deps.appEnabled() || !deps.stage4Enabled()) {
     return { state: "feature_disabled" }
   }
   const userId = await deps.getUserId()
@@ -100,7 +93,7 @@ export async function resolveAnwendungPage(
       refinedVersionId: routine.activeVersion.payload.source.refinedVersionId,
     }
     const client = deps.createReadClient()
-    const contractVersion = deps.contractVersion?.() ?? 1
+    const contractVersion = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
     const [accepted, profile, content] = await Promise.all([
       deps.adaptRoutine({ client, activeVersion: routine.activeVersion, contractVersion }),
       deps.loadProfile({
@@ -115,31 +108,24 @@ export async function resolveAnwendungPage(
       content.loadActiveDayTypeDefinitions(),
       content.loadActiveGuidanceProtocols(),
     ])
-    const familyPayloads = protocols.map((protocol) => protocol.payload)
+    const familyPayloads = protocols.map((protocol) =>
+      applicationFamilyTemplateV2Schema.parse(protocol.payload),
+    )
     const applicationInput = {
       routineItems: accepted.routineItems,
       unresolvedRoutineItems: accepted.unresolvedRoutineItems,
       profile,
       dayTypes: dayDefinitions.map((day) => ({ key: day.key, sortOrder: day.sortOrder })),
     }
-    const compiled =
-      contractVersion === 2
-        ? compileApplicationViewV2({
-            input: applicationInput,
-            familyTemplates: familyPayloads.filter((payload) => payload.schemaVersion === 2),
-            productPointers: accepted.applicationPointersV2 ?? [],
-          })
-        : compileApplicationView({
-            input: applicationInput,
-            protocols: [
-              ...(familyPayloads as ApplicationGuidanceProtocolV1[]),
-              ...accepted.exactGuidanceProtocols,
-            ],
-          })
-    const pointerIssues =
-      contractVersion === 2
-        ? (compiled as ReturnType<typeof compileApplicationViewV2>).pointerIssues
-        : []
+    if (!accepted.applicationPointersV2) {
+      throw new Error("application_v2_product_pointers_unavailable")
+    }
+    const compiled = compileApplicationViewV2({
+      input: applicationInput,
+      familyTemplates: familyPayloads,
+      productPointers: accepted.applicationPointersV2,
+    })
+    const pointerIssues = compiled.pointerIssues
     if (pointerIssues.length > 0) {
       for (const issue of pointerIssues) {
         deps.reportFailure({
@@ -211,8 +197,6 @@ const defaultDeps: AnwendungResolverDeps = {
   createReadClient: createAdminReadClient,
   appEnabled: isPersonalPlanAppV1Enabled,
   stage4Enabled: isPersonalPlanStage4Enabled,
-  rollout: resolvePersonalPlanStage5Rollout,
-  contractVersion: resolvePersonalPlanStage5ContractVersion,
   reportFailure: capturePersonalPlanApplicationFailure,
 }
 

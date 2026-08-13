@@ -16,7 +16,7 @@ import {
   resolvePersonalPlanAppV1Rollout,
   type PersonalPlanAppV1Rollout,
 } from "./release"
-import { canAccessPersonalPlanStage5, resolvePersonalPlanStage5Rollout } from "./stage5-rollout"
+import { canAccessPersonalPlanStage5 } from "./stage5-access"
 import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from "./rollout-access"
 import {
   resolvePersonalPlanJourneyAccess,
@@ -44,7 +44,6 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
   stage2Enabled: () => boolean
   stage3Enabled: () => boolean
   stage4Enabled: () => boolean
-  stage5Rollout: () => "off" | "internal" | "all"
   loadPreparedArtifact: (
     userId: string,
     leadId: string,
@@ -345,12 +344,8 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
   const stage2Enabled = deps.stage2Enabled()
   const stage3Enabled = deps.stage3Enabled()
   const stage4Enabled = deps.stage4Enabled()
-  const rollout = deps.stage5Rollout()
-  const isInternal = rollout === "internal" ? await deps.loadIsInternal(userId) : false
   const stage5Allowed = canAccessPersonalPlanStage5({
-    rollout,
     isEligiblePersonalPlanOwner: true,
-    isInternal,
   })
 
   let stage3AuthorityReady = false
@@ -444,7 +439,6 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
     stage2Enabled: isPersonalPlanStage2Enabled,
     stage3Enabled: isPersonalPlanStage3Enabled,
     stage4Enabled: isPersonalPlanStage4Enabled,
-    stage5Rollout: resolvePersonalPlanStage5Rollout,
     async loadPreparedArtifact(userId, leadId, quizSourceKind) {
       if (quizSourceKind === "legacy") {
         const lead = await required(

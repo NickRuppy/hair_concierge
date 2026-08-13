@@ -258,11 +258,6 @@ function exactSteps(row: SourceRow, workflowId: string | null) {
 
 function cautionCodes(row: SourceRow): ProductApplicationPointerV2["cautionCodes"] {
   const codes: ProductApplicationPointerV2["cautionCodes"] = []
-  if (
-    row.guidance_payload.applicationFamily === "targeted_treatment_shampoo" &&
-    row.guidance_payload.protocolFacts.contactTimeSeconds === null
-  )
-    codes.push("follow_label_time")
   if (row.guidance_payload.applicationFamily === "aerosol_spray") {
     codes.push("avoid_eye_contact", "flammable_aerosol", "use_in_ventilated_area")
   }
