@@ -81,7 +81,9 @@ export function authorityDecisionIntent(
     type: "resolve_decision",
     subjectKey,
     action,
-    ...(action === "plan_recommendation" && selectedCandidateId ? { selectedCandidateId } : {}),
+    ...((action === "plan_recommendation" || action === "select_replacement") && selectedCandidateId
+      ? { selectedCandidateId }
+      : {}),
   }
 }
 

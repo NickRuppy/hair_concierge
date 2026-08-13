@@ -31,6 +31,7 @@ import {
 } from "../src/lib/personal-plan/products/gateway"
 import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
+import { readFileSync } from "node:fs"
 
 const allowed = {
   stage1: true,
@@ -39,6 +40,20 @@ const allowed = {
   stage4: false,
   stage5: false,
 } as const
+
+test("direct Stage 3 entry and retry install the same once-per-journey analytics bootstrap", () => {
+  const source = readFileSync("src/components/personal-plan-start/plan-start-flow.tsx", "utf8")
+  assert.match(
+    source,
+    /installNewStage3Bootstrap\(await loadStage3Bootstrap\(initialJourney\.refinedVersionId\)\)/,
+  )
+  assert.match(source, /installNewStage3Bootstrap\(loaded\)/)
+  assert.equal(
+    source.match(/stage3BaselineAnalytics\.track\("personal_plan_stage3_journey_started", \{\}\)/g)
+      ?.length,
+    1,
+  )
+})
 
 function refinementSession(
   status: "in_progress" | "complete",

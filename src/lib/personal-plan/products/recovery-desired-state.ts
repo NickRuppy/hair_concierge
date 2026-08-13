@@ -64,7 +64,7 @@ function decisionMatchesIntent(
   const action = actionForDecision(decision)
   if (action !== intent.action) return false
   return (
-    intent.action !== "plan_recommendation" ||
+    (intent.action !== "plan_recommendation" && intent.action !== "select_replacement") ||
     intent.selectedCandidateId === undefined ||
     decision.recommendation?.productId === intent.selectedCandidateId
   )
@@ -73,6 +73,7 @@ function decisionMatchesIntent(
 function actionForDecision(
   decision: Stage3ProductDecision,
 ): Stage3AuthoritySemanticIntent["action"] {
+  if (decision.resolutionAction) return decision.resolutionAction
   switch (decision.choiceState) {
     case "owned_active":
       return "keep_owned"

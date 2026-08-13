@@ -178,12 +178,14 @@ function sourceIdentity(
     (product) => product.sourceDecisionKey === resolution.decisionKey,
   )
   if (owned) return owned.capturedProductId
+  const decisionKeyedPlanned =
+    portfolio.schemaVersion === 3 ? findPlannedPurchase(portfolio, resolution) : undefined
+  if (decisionKeyedPlanned) return decisionKeyedPlanned.plannedPurchaseId
   const pending = portfolio.pendingProducts.find(
     (product) => product.capturedProductId === resolution.capturedProductId,
   )
   if (pending) return pending.capturedProductId
-  const planned = findPlannedPurchase(portfolio, resolution)
-  return planned?.plannedPurchaseId ?? "none"
+  return findPlannedPurchase(portfolio, resolution)?.plannedPurchaseId ?? "none"
 }
 
 function findPlannedPurchase(

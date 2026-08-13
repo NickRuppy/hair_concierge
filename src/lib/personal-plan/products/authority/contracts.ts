@@ -18,6 +18,7 @@ export const STAGE3_AUTHORITY_ACTION_KINDS = [
   "keep_owned",
   "acknowledge_override",
   "plan_recommendation",
+  "select_replacement",
   "keep_pending",
   "leave_uncovered",
 ] as const
@@ -42,6 +43,7 @@ export type Stage3AuthorityProtocolFact = {
 export type Stage3AuthorityCommonProductFacts = {
   productId: string
   displayName: string
+  presentationImageUrl?: string | null
   category: PersonalPlanCategory
   isActive: boolean
   lifecycleStatus: string | null

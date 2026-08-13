@@ -6,8 +6,12 @@ import type { AppEventMap, AppEventName } from "../src/lib/analytics/events"
 import { eventRoutes } from "../src/lib/analytics/routes"
 import { posthog } from "../src/lib/analytics/runtime/posthog"
 import { developmentStage3Analytics } from "../src/lib/personal-plan/products/stage3-development-analytics"
+import {
+  createConsentAwareStage3BaselineAnalytics,
+  type Stage3AnalyticsPort,
+} from "../src/lib/personal-plan/products/stage3-analytics"
 
-const stage3EventNames = [
+const verboseStage3EventNames = [
   "personal_plan_stage3_flow_viewed",
   "personal_plan_stage3_search_interacted",
   "personal_plan_stage3_fallback_opened",
@@ -17,10 +21,46 @@ const stage3EventNames = [
   "personal_plan_stage3_handoff",
 ] as const
 
+const baselineStage3EventNames = [
+  "personal_plan_stage3_journey_started",
+  "personal_plan_stage3_routine_opened",
+] as const
+
+const stage3EventNames = [...baselineStage3EventNames, ...verboseStage3EventNames] as const
+
 test("Stage 3 structural analytics is PostHog-only", () => {
   for (const eventName of stage3EventNames) {
     assert.deepEqual(eventRoutes[eventName], { customerio: false, meta: false, posthog: true })
   }
+})
+
+test("Stage 3 baseline analytics is consent-aware and suppresses verbose events", () => {
+  const calls: Array<{ eventName: string; payload: object }> = []
+  const analytics = createConsentAwareStage3BaselineAnalytics({
+    loadConsent: () => ({ essential: true, analytics: false, marketing: false, ts: 0 }),
+    trackAppEvent: ((eventName: string, payload: object) =>
+      calls.push({ eventName, payload })) as Stage3AnalyticsPort["track"],
+  })
+
+  analytics.track("personal_plan_stage3_journey_started", {})
+  assert.equal(calls.length, 0)
+
+  const consentedAnalytics = createConsentAwareStage3BaselineAnalytics({
+    loadConsent: () => ({ essential: true, analytics: true, marketing: false, ts: 0 }),
+    trackAppEvent: ((eventName: string, payload: object) =>
+      calls.push({ eventName, payload })) as Stage3AnalyticsPort["track"],
+  })
+  consentedAnalytics.track("personal_plan_stage3_journey_started", {})
+  consentedAnalytics.track("personal_plan_stage3_routine_opened", {})
+  consentedAnalytics.track("personal_plan_stage3_flow_viewed", {
+    pass: "product_capture",
+    stepKey: "product_search",
+  })
+
+  assert.deepEqual(calls, [
+    { eventName: "personal_plan_stage3_journey_started", payload: {} },
+    { eventName: "personal_plan_stage3_routine_opened", payload: {} },
+  ])
 })
 
 test("Stage 3 handoff outcomes keep pending products and gaps non-blocking", () => {
@@ -34,7 +74,7 @@ test("Stage 3 handoff outcomes keep pending products and gaps non-blocking", () 
 })
 
 test("Stage 3 structural analytics maps only its bounded privacy-safe contract", () => {
-  const payloads: { [E in (typeof stage3EventNames)[number]]: AppEventMap[E] } = {
+  const payloads: { [E in (typeof verboseStage3EventNames)[number]]: AppEventMap[E] } = {
     personal_plan_stage3_decision_selected: { decisionType: "override", stepKey: "fit_decision" },
     personal_plan_stage3_fallback_opened: { stepKey: "product_search" },
     personal_plan_stage3_flow_viewed: { pass: "product_capture", stepKey: "product_search" },
@@ -59,7 +99,7 @@ test("Stage 3 structural analytics maps only its bounded privacy-safe contract",
   }) as typeof posthog.capture
 
   try {
-    for (const eventName of stage3EventNames) {
+    for (const eventName of verboseStage3EventNames) {
       postHogDestination.track(eventName, payloads[eventName])
     }
   } finally {
@@ -97,6 +137,26 @@ test("Stage 3 structural analytics maps only its bounded privacy-safe contract",
   for (const forbiddenField of ["query", "product", "image", "free_text", "criteria", "profile"]) {
     assert.equal(mappedPropertyKeys.includes(forbiddenField), false, forbiddenField)
   }
+})
+
+test("Stage 3 baseline events map to PostHog with empty payloads", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    for (const eventName of baselineStage3EventNames) postHogDestination.track(eventName, {})
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    ["personal_plan_stage3_journey_started", {}],
+    ["personal_plan_stage3_routine_opened", {}],
+  ])
 })
 
 test("Stage 3 Labs adapter preserves the typed PostHog route", () => {

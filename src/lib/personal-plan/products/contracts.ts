@@ -13,6 +13,7 @@ import {
   getCategoryRolePolicy,
   roleAllowedForCategory,
 } from "./authorities"
+import type { Stage3AuthorityActionKind } from "./authority/contracts"
 
 export const PERSONAL_PLAN_PRODUCT_CATEGORIES = [
   "shampoo",
@@ -255,6 +256,8 @@ export type Stage3ProductDecision = {
   criterionResults: Stage3CriterionResult[]
   recommendation: Stage3Recommendation | null
   limitationAcknowledged: boolean
+  /** The authority action that produced this decision, retained for replay. */
+  resolutionAction?: Stage3AuthorityActionKind
   authorityEvidence?: Stage3DecisionAuthorityEvidenceV1
 }
 
@@ -521,6 +524,16 @@ export const stage3ProductDecisionSchema: z.ZodType<Stage3ProductDecision> = z
     criterionResults: z.array(stage3CriterionResultSchema),
     recommendation: stage3RecommendationSchema.nullable(),
     limitationAcknowledged: z.boolean(),
+    resolutionAction: z
+      .enum([
+        "keep_owned",
+        "acknowledge_override",
+        "plan_recommendation",
+        "select_replacement",
+        "keep_pending",
+        "leave_uncovered",
+      ])
+      .optional(),
     authorityEvidence: z
       .object({
         schemaVersion: z.literal(1),
@@ -1041,10 +1054,15 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
         `decision category ${decision.category} does not match product category ${product.identity.category}`,
       )
     }
+    const isPendingReplacementSelection =
+      decision.choiceState === "planned_purchase" &&
+      decision.resolutionAction === "select_replacement" &&
+      decision.recommendation !== null
     if (
       product?.identity.kind === "pending_submission" &&
       decision.choiceState !== "pending_review" &&
-      decision.choiceState !== "unassigned"
+      decision.choiceState !== "unassigned" &&
+      !isPendingReplacementSelection
     ) {
       issues.push(
         `pending product ${product.capturedProductId} must remain pending_review or be left unassigned`,

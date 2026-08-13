@@ -12,6 +12,7 @@ import { createStage3Draft } from "../src/lib/personal-plan/products/state-machi
 import {
   automaticAuthorityOutcomes,
   automaticOutcomeIntents,
+  authorityDecisionIntent,
   clearFitDecisions,
   hasUnresolvedDecisionSubjects,
 } from "../src/components/personal-plan-products/stage3-decision-controller"
@@ -108,5 +109,21 @@ test("Stage 3 decision controller separates automatic Oil outcomes from user-fac
   assert.deepEqual(
     clearFitDecisions(draft, evaluations).map(({ subject }) => subject.role),
     ["dry_finish"],
+  )
+})
+
+test("authority decision intents preserve a selected replacement candidate", () => {
+  assert.deepEqual(
+    authorityDecisionIntent(
+      "decision:oil:dry_finish:capture-1",
+      "select_replacement",
+      "candidate-1",
+    ),
+    {
+      type: "resolve_decision",
+      subjectKey: "decision:oil:dry_finish:capture-1",
+      action: "select_replacement",
+      selectedCandidateId: "candidate-1",
+    },
   )
 })

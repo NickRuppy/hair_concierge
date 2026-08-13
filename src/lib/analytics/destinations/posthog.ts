@@ -313,6 +313,9 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         step_index: data.stepIndex,
       }
     }
+    case "personal_plan_stage3_journey_started":
+    case "personal_plan_stage3_routine_opened":
+      return {}
     case "personal_plan_stage3_flow_viewed": {
       const data = payload as AppEventMap["personal_plan_stage3_flow_viewed"]
       return { pass: data.pass, step_key: data.stepKey }

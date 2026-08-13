@@ -13,6 +13,7 @@ import {
 import { createStage3SearchRouteHandler } from "../src/app/api/personal-plan/stage-3/search/route"
 import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
 import { Stage3AuthoritySnapshotError } from "../src/lib/personal-plan/products/authority/snapshot"
+import { Stage3AuthorityMutationError } from "../src/lib/personal-plan/products/production-persistence-gateway"
 
 const draft = {
   schemaVersion: 1 as const,
@@ -536,6 +537,59 @@ test("Stage 3 GET exposes server authority projections after capture", async () 
   assert.equal(body.authorityEvaluations[0]?.status, "unknown")
 })
 
+test("Stage 3 GET transports aligned fit reviews without evaluating authority twice", async () => {
+  let fallbackEvaluations = 0
+  const authorityEvaluation = {
+    status: "unknown" as const,
+    category: "shampoo" as const,
+    subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+    missingFacts: ["verified_protocol"],
+    criteria: [],
+    allowedActions: ["leave_uncovered" as const],
+    coverageRuleIds: [],
+  }
+  const fitComparison = {
+    schemaVersion: 1 as const,
+    mode: "unavailable" as const,
+    category: "shampoo" as const,
+    role: "shampoo_everyday" as const,
+    subjectKey: authorityEvaluation.subjectKey,
+    sourceIdentity: null,
+    authorityEvaluation,
+    products: [],
+    alternatives: [],
+    dimensions: [] as [],
+    reason: "no_exact_product" as const,
+  }
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => ({
+          status: "active",
+          draft: { ...draft, pass: "product_decisions" as const },
+          requirements,
+        }),
+        evaluateDecisions: async () => {
+          fallbackEvaluations += 1
+          return []
+        },
+        reviewDecisionBundles: async () => [{ authorityEvaluation, fitComparison }],
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+  const body = await response!.json()
+
+  assert.equal(response!.status, 200)
+  assert.equal(fallbackEvaluations, 0)
+  assert.equal(body.authorityEvaluations[0]?.subjectKey, authorityEvaluation.subjectKey)
+  assert.equal(body.fitComparisons[0]?.subjectKey, authorityEvaluation.subjectKey)
+})
+
 test("Stage 3 GET preserves stale refined authority as a recoverable conflict", async () => {
   const response = await createStage3RouteHandlers(
     deps({
@@ -679,6 +733,57 @@ test("Stage 3 PATCH accepts semantic decision intent without accepting a client 
       action: "keep_owned",
     },
   })
+})
+
+test("Stage 3 PATCH transports selected replacement intents and exposes an invalid replacement as a conflict", async () => {
+  let received: unknown = null
+  const handlers = createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          resolveDecision: async (input: unknown) => {
+            received = input
+            throw new Stage3AuthorityMutationError("stage3_replacement_candidate_invalid" as never)
+          },
+        }) as never,
+    }),
+  )
+  const response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+          action: "select_replacement",
+          selectedCandidateId: "replacement-1",
+        },
+      }),
+    }),
+  )
+
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intent: {
+      type: "resolve_decision",
+      subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+      action: "select_replacement",
+      selectedCandidateId: "replacement-1",
+    },
+  })
+  assert.deepEqual(
+    [response!.status, await response!.json()],
+    [
+      409,
+      {
+        error: "stage3_replacement_candidate_invalid",
+      },
+    ],
+  )
 })
 
 test("Stage 3 PATCH accepts one revision-safe semantic decision batch", async () => {

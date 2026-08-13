@@ -1,5 +1,6 @@
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type { Stage3AuthorityEvaluation } from "./authority/contracts"
+import type { Stage3FitComparison } from "./fit-comparison"
 import type { Stage3DraftResponse } from "./gateway"
 
 import { CATEGORY_ROLE_POLICIES } from "./authorities"
@@ -30,10 +31,14 @@ export type Stage3Bootstrap = {
   draft: Stage3DraftResponse["draft"]
   requirements: Stage3DraftResponse["requirements"]
   authorityEvaluations: Stage3AuthorityEvaluation[]
+  fitComparisons?: Stage3FitComparison[]
 }
 
 export function buildStage3Bootstrap(
-  response: Stage3DraftResponse & { authorityEvaluations?: Stage3AuthorityEvaluation[] },
+  response: Stage3DraftResponse & {
+    authorityEvaluations?: Stage3AuthorityEvaluation[]
+    fitComparisons?: Stage3FitComparison[]
+  },
   ids: Stage3EntryIds,
 ): Stage3Bootstrap {
   const personalPlanId = requireOpaqueId(ids.personalPlanId, "personalPlanId")
@@ -70,6 +75,7 @@ export function buildStage3Bootstrap(
     draft: response.draft,
     requirements: response.requirements,
     authorityEvaluations: response.authorityEvaluations,
+    fitComparisons: Array.isArray(response.fitComparisons) ? response.fitComparisons : [],
   }
 }
 

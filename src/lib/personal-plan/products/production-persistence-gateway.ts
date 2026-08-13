@@ -59,6 +59,11 @@ import { requireCurrentAuthoritySnapshot, Stage3AuthoritySnapshotError } from ".
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { expectedShampooBucket } from "./authority/categories/shampoo"
 import { classifyStage3DesiredState, stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
+import {
+  buildStage3FitComparison,
+  type Stage3FitComparison,
+  type Stage3SelectedComparisonCandidate,
+} from "./fit-comparison"
 
 export type Stage3AssessmentSearchContext = {
   hairThickness: "fine" | "normal" | "coarse"
@@ -177,6 +182,7 @@ export type Stage3ProductionGatewayOptions = {
 
 export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
   evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
+  reviewDecisionBundles(input: { draftId: string }): Promise<Stage3DecisionReviewBundle[]>
   resolveDecision(input: {
     draftId: string
     expectedRevision: number
@@ -187,6 +193,11 @@ export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
     expectedRevision: number
     intents: Stage3AuthoritySemanticIntent[]
   }): Promise<Stage3MutationResponse>
+}
+
+export type Stage3DecisionReviewBundle = {
+  authorityEvaluation: Stage3AuthorityEvaluation
+  fitComparison: Stage3FitComparison
 }
 
 export function createProductionStage3ProductsGateway(
@@ -246,11 +257,11 @@ export function createProductionStage3ProductsGateway(
     }
   }
 
-  async function authoritativeEvaluation(
+  async function authoritativeReview(
     draft: Stage3ProductDraft,
     subjectKey: string,
     context: Stage3EvaluationContext,
-  ): Promise<Stage3AuthorityEvaluation> {
+  ): Promise<Stage3DecisionReviewBundle & { authorityInput: Stage3AuthorityInput }> {
     const snapshot = requireCurrentAuthoritySnapshot(draft)
 
     const subject = deriveStage3DecisionSubjects(draft).find(
@@ -273,7 +284,7 @@ export function createProductionStage3ProductsGateway(
       context,
     })
 
-    return evaluateStage3Authority({
+    const authorityInput = {
       category: subject.category,
       authorityVersion: snapshot.authorityVersions[subject.category],
       refinedVersionId: draft.refinedVersionId,
@@ -285,7 +296,21 @@ export function createProductionStage3ProductsGateway(
       categoryDecision,
       coverage: effectiveStage3Coverage(draft),
       ...facts,
-    } as Stage3AuthorityInput)
+    } as Stage3AuthorityInput
+    const authorityEvaluation = evaluateStage3Authority(authorityInput)
+    return {
+      authorityInput,
+      authorityEvaluation,
+      fitComparison: buildStage3FitComparison(authorityInput, authorityEvaluation),
+    }
+  }
+
+  async function authoritativeEvaluation(
+    draft: Stage3ProductDraft,
+    subjectKey: string,
+    context: Stage3EvaluationContext,
+  ): Promise<Stage3AuthorityEvaluation> {
+    return (await authoritativeReview(draft, subjectKey, context)).authorityEvaluation
   }
 
   async function loadEvaluationContext(
@@ -359,19 +384,30 @@ export function createProductionStage3ProductsGateway(
     draft: Stage3ProductDraft,
     context: Stage3EvaluationContext,
   ): Promise<boolean> {
-    const evaluations = await Promise.all(
+    const reviews = await Promise.all(
       deriveStage3DecisionSubjects(draft).map((subject) =>
-        authoritativeEvaluation(draft, subject.decisionKey, context),
+        authoritativeReview(draft, subject.decisionKey, context),
       ),
     )
-    const evaluationsBySubject = new Map(
-      evaluations.map((evaluation) => [evaluation.subjectKey, evaluation]),
+    const reviewsBySubject = new Map(
+      reviews.map((review) => [review.authorityEvaluation.subjectKey, review]),
     )
     return draft.decisions.every((decision) => {
-      const evaluation = evaluationsBySubject.get(decision.decisionKey)
-      if (!evaluation) return false
-      const action = authorityActionForChoiceState(decision.choiceState)
-      if (!action || !evaluation.allowedActions.includes(action as never)) return false
+      const review = reviewsBySubject.get(decision.decisionKey)
+      if (!review) return false
+      const evaluation = review.authorityEvaluation
+      const action = authorityActionForDecision(decision)
+      if (!action) return false
+      if (action === "select_replacement") {
+        const candidate = review.fitComparison.alternatives.find(
+          (item) => item.productId === decision.recommendation?.productId,
+        )
+        return (
+          candidate !== undefined &&
+          decision.authorityEvidence?.recommendationFactFingerprint === candidate.factFingerprint
+        )
+      }
+      if (!evaluation.allowedActions.includes(action as never)) return false
       if (
         (decision.choiceState === "owned_active" || decision.choiceState === "owned_override") &&
         evaluation.status !== "known"
@@ -710,6 +746,19 @@ export function createProductionStage3ProductsGateway(
         ),
       )
     },
+    async reviewDecisionBundles(input) {
+      const loaded = await current(input.draftId)
+      const context = await loadEvaluationContext(loaded.draft)
+      const reviews = await Promise.all(
+        deriveStage3DecisionSubjects(loaded.draft).map((subject) =>
+          authoritativeReview(loaded.draft, subject.decisionKey, context),
+        ),
+      )
+      return reviews.map(({ authorityEvaluation, fitComparison }) => ({
+        authorityEvaluation,
+        fitComparison,
+      }))
+    },
     async resolveDecision(input) {
       return resolveAuthorityDecisions({ ...input, intents: [input.intent] })
     },
@@ -790,8 +839,8 @@ export function createProductionStage3ProductsGateway(
       return subject
     })
     phaseStartedAt = performance.now()
-    const evaluations = await Promise.all(
-      subjects.map((subject) => authoritativeEvaluation(draft, subject.decisionKey, context)),
+    const reviews = await Promise.all(
+      subjects.map((subject) => authoritativeReview(draft, subject.decisionKey, context)),
     )
     reportPersonalPlanTransitionTiming({
       layer: "server",
@@ -802,12 +851,22 @@ export function createProductionStage3ProductsGateway(
 
     const snapshot = requireCurrentAuthoritySnapshot(draft)
     const decisions = input.intents.map((intent, index) => {
-      const evaluation = evaluations[index]!
-      if (!evaluation.allowedActions.includes(intent.action as never)) {
+      const review = reviews[index]!
+      const evaluation = review.authorityEvaluation
+      if (
+        intent.action !== "select_replacement" &&
+        !evaluation.allowedActions.includes(intent.action as never)
+      ) {
         throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
       }
-      validateSelectedCandidate(intent, evaluation)
-      return buildAuthorityDecision(subjects[index]!, intent, evaluation, snapshot)
+      const selectedCandidate = validateSelectedCandidate(intent, review)
+      return buildAuthorityDecision(
+        subjects[index]!,
+        intent,
+        evaluation,
+        snapshot,
+        selectedCandidate,
+      )
     })
     const folded = decisions.reduce(recordProductDecision, draft)
     const next = { ...folded, revision: draft.revision + 1, updatedAt: now() }
@@ -840,7 +899,8 @@ export class Stage3AuthorityMutationError extends Error {
     public readonly code:
       | "stage3_authority_subject_invalid"
       | "stage3_authority_action_invalid"
-      | "stage3_authority_candidate_invalid",
+      | "stage3_authority_candidate_invalid"
+      | "stage3_replacement_candidate_invalid",
   ) {
     super(code)
     this.name = "Stage3AuthorityMutationError"
@@ -863,8 +923,20 @@ function qualifyingHeatRoutes(
 
 function validateSelectedCandidate(
   intent: Stage3AuthoritySemanticIntent,
-  evaluation: Stage3AuthorityEvaluation,
-) {
+  review: Stage3DecisionReviewBundle,
+): Stage3SelectedComparisonCandidate | null {
+  const evaluation = review.authorityEvaluation
+  if (intent.action === "select_replacement") {
+    const candidate = intent.selectedCandidateId
+      ? (review.fitComparison.alternatives.find(
+          (alternative) => alternative.productId === intent.selectedCandidateId,
+        ) ?? null)
+      : null
+    if (!candidate) {
+      throw new Stage3AuthorityMutationError("stage3_replacement_candidate_invalid")
+    }
+    return candidate
+  }
   if (intent.action === "plan_recommendation") {
     if (
       evaluation.status !== "known" ||
@@ -874,17 +946,19 @@ function validateSelectedCandidate(
     ) {
       throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
     }
-    return
+    return null
   }
   if (intent.selectedCandidateId !== undefined) {
     throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
   }
+  return null
 }
 
-function authorityActionForChoiceState(
-  choiceState: Stage3ProductDecision["choiceState"],
+function authorityActionForDecision(
+  decision: Stage3ProductDecision,
 ): Stage3AuthoritySemanticIntent["action"] | null {
-  switch (choiceState) {
+  if (decision.resolutionAction) return decision.resolutionAction
+  switch (decision.choiceState) {
     case "owned_active":
       return "keep_owned"
     case "owned_override":
@@ -904,20 +978,18 @@ function buildAuthorityDecision(
   intent: Stage3AuthoritySemanticIntent,
   evaluation: Stage3AuthorityEvaluation,
   snapshot: NonNullable<Stage3ProductDraft["authoritySnapshot"]>,
+  selectedCandidate: Stage3SelectedComparisonCandidate | null = null,
 ): Stage3ProductDecision {
   const known = evaluation.status === "known" ? evaluation : null
   const criteria =
     evaluation.status === "known" || evaluation.status === "unknown" ? evaluation.criteria : []
-  const choiceState: Stage3ProductDecision["choiceState"] =
-    intent.action === "keep_owned"
-      ? "owned_active"
-      : intent.action === "acknowledge_override"
-        ? "owned_override"
-        : intent.action === "plan_recommendation"
-          ? "planned_purchase"
-          : intent.action === "keep_pending"
-            ? "pending_review"
-            : "unassigned"
+  const choiceState = choiceStateForAuthorityAction(intent.action)
+  const recommendation =
+    intent.action === "select_replacement"
+      ? (selectedCandidate?.recommendation ?? null)
+      : intent.action === "plan_recommendation"
+        ? (known?.recommendation ?? null)
+        : null
 
   return {
     decisionKey: subject.decisionKey,
@@ -927,9 +999,9 @@ function buildAuthorityDecision(
     verdict: known?.verdict ?? "unknown",
     choiceState,
     criterionResults: criteria,
-    recommendation:
-      intent.action === "plan_recommendation" ? (known?.recommendation ?? null) : null,
+    recommendation,
     limitationAcknowledged: intent.action === "acknowledge_override",
+    resolutionAction: intent.action,
     authorityEvidence: {
       schemaVersion: 1,
       subjectKey: subject.decisionKey,
@@ -937,9 +1009,28 @@ function buildAuthorityDecision(
       refinedInputHash: snapshot.refinedInputHash,
       authorityVersion: snapshot.authorityVersions[subject.category],
       productFactFingerprint: known?.productFactFingerprint ?? null,
-      recommendationFactFingerprint: known?.recommendationFactFingerprint ?? null,
+      recommendationFactFingerprint:
+        selectedCandidate?.factFingerprint ?? known?.recommendationFactFingerprint ?? null,
       coverageRuleIds: evaluation.coverageRuleIds,
     },
+  }
+}
+
+function choiceStateForAuthorityAction(
+  action: Stage3AuthoritySemanticIntent["action"],
+): Stage3ProductDecision["choiceState"] {
+  switch (action) {
+    case "keep_owned":
+      return "owned_active"
+    case "acknowledge_override":
+      return "owned_override"
+    case "plan_recommendation":
+    case "select_replacement":
+      return "planned_purchase"
+    case "keep_pending":
+      return "pending_review"
+    case "leave_uncovered":
+      return "unassigned"
   }
 }
 

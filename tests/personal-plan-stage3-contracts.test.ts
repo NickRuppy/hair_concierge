@@ -13,6 +13,7 @@ import {
   validateStage3Draft,
   type Stage3ProductDraft,
 } from "../src/lib/personal-plan/products"
+import { classifyStage3DesiredState } from "../src/lib/personal-plan/products/recovery-desired-state"
 
 const now = "2026-08-07T10:00:00.000Z"
 
@@ -190,6 +191,50 @@ test("role and decision schemas enforce category authority and explicit allowed 
       limitationAcknowledged: false,
     }).success,
     false,
+  )
+})
+
+test("replacement resolutions retain their semantic action and selected candidate in canonical state", () => {
+  const decision = {
+    decisionKey: "decision:oil:dry_finish:oil-1",
+    category: "oil" as const,
+    role: "dry_finish" as const,
+    capturedProductId: "oil-1",
+    verdict: "mismatch" as const,
+    choiceState: "planned_purchase" as const,
+    criterionResults: [],
+    recommendation: {
+      recommendationId: "replacement-1",
+      productId: "replacement-1",
+      category: "oil" as const,
+      role: "dry_finish" as const,
+      displayName: "Passendes Öl",
+      reason: "Passt besser",
+      authorityRuleId: "rule-1",
+    },
+    limitationAcknowledged: false,
+    resolutionAction: "select_replacement" as const,
+  }
+
+  assert.equal(stage3ProductDecisionSchema.safeParse(decision).success, true)
+  const replacementDraft = draft({ decisions: [decision] })
+  assert.equal(
+    classifyStage3DesiredState(replacementDraft, {
+      type: "resolve_decision",
+      subjectKey: decision.decisionKey,
+      action: "select_replacement",
+      selectedCandidateId: "replacement-1",
+    }),
+    "satisfied",
+  )
+  assert.equal(
+    classifyStage3DesiredState(replacementDraft, {
+      type: "resolve_decision",
+      subjectKey: decision.decisionKey,
+      action: "plan_recommendation",
+      selectedCandidateId: "replacement-1",
+    }),
+    "different",
   )
 })
 
@@ -440,5 +485,48 @@ test("an uncovered role can carry only an unassigned or planned-purchase decisio
       "\n",
     ),
     /must remain unassigned or planned/,
+  )
+})
+
+test("a pending source may retain a planned replacement only through select_replacement", () => {
+  const pendingProduct = {
+    ...draft().products[0],
+    identity: {
+      kind: "pending_submission" as const,
+      submissionId: "submission-oil-1",
+      displayName: "Noch geprüftes Öl",
+      category: "oil" as const,
+      reviewStatus: "pending_review" as const,
+    },
+  }
+  const replacementDecision = {
+    decisionKey: "decision:oil:dry_finish:oil-1",
+    category: "oil" as const,
+    role: "dry_finish" as const,
+    capturedProductId: "oil-1",
+    verdict: "unknown" as const,
+    choiceState: "planned_purchase" as const,
+    criterionResults: [],
+    recommendation: {
+      recommendationId: "recommend:oil-replacement:dry_finish",
+      productId: "oil-replacement",
+      category: "oil" as const,
+      role: "dry_finish" as const,
+      displayName: "Passendes Öl",
+      reason: "Als Alternative einplanen.",
+      authorityRuleId: "oil.replacement",
+    },
+    limitationAcknowledged: false,
+    resolutionAction: "select_replacement" as const,
+  }
+  const pendingDraft = draft({ products: [pendingProduct] })
+
+  assert.deepEqual(validateStage3Draft({ ...pendingDraft, decisions: [replacementDecision] }), [])
+  assert.match(
+    validateStage3Draft({
+      ...pendingDraft,
+      decisions: [{ ...replacementDecision, resolutionAction: undefined }],
+    }).join("\n"),
+    /must remain pending_review or be left unassigned/,
   )
 })

@@ -262,13 +262,28 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
           requirements: [],
           ...parsed.data,
         })
-        const authorityEvaluations =
-          loaded.draft.pass === "product_capture" || !gateway.evaluateDecisions
+        const usesReviewBundles =
+          loaded.draft.pass !== "product_capture" && Boolean(gateway.reviewDecisionBundles)
+        const reviewBundles =
+          !usesReviewBundles || !gateway.reviewDecisionBundles
+            ? []
+            : await gateway.reviewDecisionBundles({ draftId: loaded.draft.draftId })
+        const authorityEvaluations = usesReviewBundles
+          ? reviewBundles.map((bundle) => bundle.authorityEvaluation)
+          : loaded.draft.pass === "product_capture" || !gateway.evaluateDecisions
             ? []
             : await gateway.evaluateDecisions({ draftId: loaded.draft.draftId })
-        return response({ ...loaded, authorityEvaluations }, 200, {
-          "Server-Timing": serverTiming(auth.phases),
-        })
+        return response(
+          {
+            ...loaded,
+            authorityEvaluations,
+            fitComparisons: reviewBundles.map((bundle) => bundle.fitComparison),
+          },
+          200,
+          {
+            "Server-Timing": serverTiming(auth.phases),
+          },
+        )
       } catch (error) {
         if (error instanceof Stage3AuthoritySnapshotError) {
           log("conflict", started, error.code)
@@ -329,6 +344,12 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         return response(result, 200, { "Server-Timing": serverTiming(auth.phases) })
       } catch (error) {
         if (error instanceof Stage3AuthorityMutationError) {
+          if (error.code === "stage3_replacement_candidate_invalid") {
+            log("conflict", started, error.code, auth.phases)
+            return response({ error: error.code }, 409, {
+              "Server-Timing": serverTiming(auth.phases),
+            })
+          }
           return response({ error: "invalid_request" }, 400, {
             "Server-Timing": serverTiming(auth.phases),
           })
@@ -366,7 +387,7 @@ type Stage3RouteGateway = Stage3ProductsGateway &
   Partial<
     Pick<
       Stage3AuthorityProductionGateway,
-      "evaluateDecisions" | "resolveDecision" | "resolveDecisions"
+      "evaluateDecisions" | "reviewDecisionBundles" | "resolveDecision" | "resolveDecisions"
     >
   >
 

@@ -30,6 +30,8 @@ export const eventRoutes = {
   personal_plan_quiz_screen_viewed: { customerio: false, meta: false, posthog: true },
   personal_plan_result_reveal_completed: { customerio: false, meta: false, posthog: true },
   personal_plan_result_reveal_step_viewed: { customerio: false, meta: false, posthog: true },
+  personal_plan_stage3_journey_started: { customerio: false, meta: false, posthog: true },
+  personal_plan_stage3_routine_opened: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_decision_selected: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_fallback_opened: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_flow_viewed: { customerio: false, meta: false, posthog: true },

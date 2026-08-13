@@ -314,6 +314,7 @@ export function Stage3ProductsFlow({
   const decisionSubmitInFlight = useRef(false)
   const saveMutationInFlight = useRef(false)
   const bootstrapDecisionPreparationStarted = useRef(false)
+  const routineOpenedAnalyticsRecorded = useRef(false)
 
   const currentRequirement =
     requirements[categoryIndex] ?? requirements[0] ?? DEFAULT_REQUIREMENTS[0]!
@@ -1222,6 +1223,10 @@ export function Stage3ProductsFlow({
       routineProposalId: ready.routineProposalId,
       next: ready.next,
     }
+    if (!routineOpenedAnalyticsRecorded.current) {
+      routineOpenedAnalyticsRecorded.current = true
+      analytics.track("personal_plan_stage3_routine_opened", {})
+    }
     if (onOpenRoutine) onOpenRoutine(handoff)
     else if (typeof window !== "undefined") window.location.replace(ready.next.href)
   }
@@ -1248,7 +1253,14 @@ export function Stage3ProductsFlow({
       interaction: "candidate_selected",
       resultCountBand: searchResults.length <= 3 ? "1_3" : "4_8",
       selectedCandidatePosition: Math.min(8, candidatePosition + 1) as
-        1 | 2 | 3 | 4 | 5 | 6 | 7 | 8,
+        | 1
+        | 2
+        | 3
+        | 4
+        | 5
+        | 6
+        | 7
+        | 8,
     })
   }
 

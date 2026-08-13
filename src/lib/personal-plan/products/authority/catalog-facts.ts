@@ -25,9 +25,24 @@ type CategorySelectionContext = {
   conditionerTarget: ConditionerTarget | null
 }
 
+export const STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT = 12
+
+export function stage3AuthorityFactFingerprint(input: {
+  common: Stage3AuthorityCommonFingerprintInput & { presentationImageUrl?: string | null }
+  spec: unknown
+}): string {
+  const fingerprintCommon = omitPresentationImage(input.common)
+  return fingerprint({ ...fingerprintCommon, spec: input.spec })
+}
+
 export type Stage3AuthorityFactBundle = Pick<
   Stage3AuthorityInput,
   "productFacts" | "recommendationCandidates" | "heatCarrierCoverage"
+>
+
+type Stage3AuthorityCommonFingerprintInput = Omit<
+  Stage3CategoryProductFacts,
+  "spec" | "factFingerprint" | "presentationImageUrl"
 >
 
 export async function loadStage3AuthorityFactBundle(
@@ -76,7 +91,7 @@ async function loadRecommendationCandidates(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,purchase_link_status",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,purchase_link_status",
     )
     .eq("category_key", category)
     .eq("is_active", true)
@@ -84,7 +99,7 @@ async function loadRecommendationCandidates(
     .eq("is_chaarlie_recommended", true)
     .order("sort_order", { ascending: true })
     .order("id", { ascending: true })
-    .limit(12)
+    .limit(STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT)
   if (error) throw new Error("stage3_authority_catalog_unavailable")
   const facts = await Promise.all(
     (data ?? []).map((row) =>
@@ -105,7 +120,7 @@ async function loadOneProduct(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,purchase_link_status",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,purchase_link_status",
     )
     .eq("id", productId)
     .eq("category_key", category)
@@ -129,6 +144,7 @@ async function normalizeProductFacts(
   const common = {
     productId,
     displayName: text(product.name) ?? productId,
+    presentationImageUrl: text(product.image_url),
     category,
     isActive: product.is_active === true,
     lifecycleStatus: text(product.lifecycle_status),
@@ -148,11 +164,21 @@ async function normalizeProductFacts(
         ? product.purchase_link_status
         : null,
   }
-  const withoutFingerprint = { ...common, spec }
+  const fingerprintCommon = omitPresentationImage(common)
+  const withoutFingerprint = { ...fingerprintCommon, spec }
   return {
-    ...withoutFingerprint,
+    ...common,
+    spec,
     factFingerprint: fingerprint(withoutFingerprint),
   } as Stage3CategoryProductFacts
+}
+
+function omitPresentationImage<T extends { presentationImageUrl?: string | null }>(
+  value: T,
+): Omit<T, "presentationImageUrl"> {
+  return Object.fromEntries(
+    Object.entries(value).filter(([key]) => key !== "presentationImageUrl"),
+  ) as Omit<T, "presentationImageUrl">
 }
 
 async function loadCategorySpec(
