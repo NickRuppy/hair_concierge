@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import {
   linkExactPlanBereitSourceToProfile,
-  loadPlanBereitReadiness,
+  loadPlanBereitInitialReadiness,
   updateMissingPlanBereitSourceFact,
   type PlanBereitQuizSourceKind,
 } from "../readiness"
@@ -103,7 +103,7 @@ async function resolveStatus(request: Request, retryLink: boolean) {
     }
     const readiness = retryLink
       ? await linkExactPlanBereitSourceToProfile(admin, readinessInput)
-      : await loadPlanBereitReadiness(admin, readinessInput)
+      : await loadPlanBereitInitialReadiness(admin, readinessInput)
 
     return NextResponse.json(readiness, { headers: { "Cache-Control": "private, no-store" } })
   } catch (error) {

@@ -3,7 +3,10 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
+  applyPersonalPlanReadyPollResponse,
   canContinueToPersonalPlan,
+  createPersonalPlanReadyPollRequestState,
+  takePersonalPlanReadyPollRequest,
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
   PERSONAL_PLAN_READY_POLL_LIMIT,
 } from "../src/app/plan-bereit/transition"
@@ -21,6 +24,21 @@ test("readiness polling remains bounded to thirty seconds", () => {
   assert.equal(PERSONAL_PLAN_READY_POLL_INTERVAL_MS, 1_500)
   assert.equal(PERSONAL_PLAN_READY_POLL_LIMIT, 20)
   assert.equal(PERSONAL_PLAN_READY_POLL_INTERVAL_MS * PERSONAL_PLAN_READY_POLL_LIMIT, 30_000)
+})
+
+test("read-only polling escalates to one authoritative link request when the server signals it", () => {
+  let requestState = createPersonalPlanReadyPollRequestState("poll")
+
+  const firstPoll = takePersonalPlanReadyPollRequest(requestState)
+  assert.equal(firstPoll.method, "GET")
+  requestState = applyPersonalPlanReadyPollResponse("link")
+
+  const link = takePersonalPlanReadyPollRequest(requestState)
+  assert.equal(link.method, "POST")
+  requestState = applyPersonalPlanReadyPollResponse(undefined)
+
+  const nextPoll = takePersonalPlanReadyPollRequest(requestState)
+  assert.equal(nextPoll.method, "GET")
 })
 
 test("an active buyer waits for exact subscription correlation instead of entering onboarding", () => {
@@ -65,7 +83,7 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(route, /export async function PATCH/)
   assert.match(route, /updateMissingPlanBereitSourceFact/)
   assert.match(client, /!response\.ok \|\| body\.status === "transient_error"/)
-  assert.match(client, /method: attempts === 1 \? "POST" : "GET"/)
+  assert.match(client, /takePersonalPlanReadyPollRequest/)
   assert.match(client, /\/plan-bereit\/status\?lead=/)
   assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
   assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Bedarfsplan ansehen/)
@@ -73,16 +91,21 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(readiness, /Wie lang sind deine Haare aktuell/)
   assert.match(client, /method: "PATCH"/)
   assert.doesNotMatch(client, /storyComplete && readiness === "ready"/)
-  assert.match(client, /data-personal-plan-ready-preview/)
-  assert.match(client, /Das empfehlen wir für dein Haar\./)
-  assert.match(client, /Basierend auf deinen Quiz-Antworten\./)
+  assert.doesNotMatch(client, /data-personal-plan-ready-preview/)
+  assert.match(client, /Deine Angaben sind gespeichert/)
+  assert.match(client, /Dein Haarplan ist bereit\./)
+  assert.match(client, /Starte mit deinem Bedarfsplan und verfeinere ihn danach Schritt für Schritt\./)
   assert.match(client, /Wir bereiten deinen Haarplan vor\./)
+  assert.match(client, /Haarplan wird geprüft/)
+  assert.match(client, /<noscript>/)
+  assert.doesNotMatch(client, /motion-safe:animate-spin/)
+  assert.doesNotMatch(client, /Die Aktivierung dauert gerade etwas länger\. Deine Zahlung/)
   assert.doesNotMatch(client, /PERSONAL_PLAN_READY_MESSAGES/)
   assert.doesNotMatch(client, /personalPlanStoryIndexAt/)
   assert.doesNotMatch(client, /setInterval/)
   assert.doesNotMatch(client, /Zuerst siehst du, was dein Haar laut deinem Quiz braucht/)
   assert.doesNotMatch(client, /wirklich zu deinem/)
-  assert.match(route, /loadPlanBereitReadiness\(admin, readinessInput\)/)
+  assert.match(route, /loadPlanBereitInitialReadiness\(admin, readinessInput\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)
   assert.match(readiness, /canLinkDirectQuizLead/)
   assert.match(readiness, /\.upsert\(output, \{ onConflict: "user_id" \}\)/)

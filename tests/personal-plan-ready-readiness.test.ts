@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  linkExactPlanBereitSourceToProfile,
+  loadPlanBereitInitialReadiness,
   loadPlanBereitReadiness,
   updateMissingPlanBereitSourceFact,
 } from "../src/app/plan-bereit/readiness"
@@ -18,6 +20,20 @@ const COMPLETE_LEGACY_ANSWERS = {
   treatment: ["gefaerbt"],
   concerns: ["frizz"],
   goals: ["moisture"],
+}
+
+const COMPLETE_PROFILE = {
+  user_id: "user-1",
+  hair_texture: "wavy",
+  thickness: "fine",
+  hair_length: "medium",
+  density: "low",
+  cuticle_condition: "rough",
+  protein_moisture_balance: "snaps",
+  scalp_type: "dry",
+  scalp_condition: null,
+  concerns: ["frizz"],
+  chemical_treatment: ["colored"],
 }
 
 type Row = Record<string, unknown>
@@ -85,11 +101,20 @@ class FakeQuery {
     return this.maybeSingle()
   }
 
-  async maybeSingle() {
+  then<TResult1 = { data: Row[]; error: null }, TResult2 = never>(
+    onfulfilled?: ((value: { data: Row[]; error: null }) => TResult1 | PromiseLike<TResult1>) | null,
+    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
+  ) {
+    return Promise.resolve({ data: this.matchingRows(), error: null }).then(onfulfilled, onrejected)
+  }
+
+  private matchingRows() {
     const rows = this.db.tables[this.table] ?? []
-    const matching = rows.filter((row) =>
-      this.filters.every(({ column, value }) => row[column] === value),
-    )
+    return rows.filter((row) => this.filters.every(({ column, value }) => row[column] === value))
+  }
+
+  async maybeSingle() {
+    const matching = this.matchingRows()
 
     if (this.updateValues) {
       const row = matching[0] ?? null
@@ -111,15 +136,24 @@ class FakeSupabase {
   }> = []
   readonly inserts: Array<{ table: string; values: Row }> = []
   readonly upserts: Array<{ table: string; values: Row; onConflict: string }> = []
+  readonly rpcs: Array<{ fn: string; args: Row }> = []
 
-  constructor(readonly tables: Record<string, Row[]>) {}
+  constructor(
+    readonly tables: Record<string, Row[]>,
+    private readonly rpcResults: Record<string, { data: unknown; error: { message: string } | null }> = {},
+  ) {}
 
   from(table: string) {
     return new FakeQuery(this, table)
   }
+
+  rpc(fn: string, args: Row) {
+    this.rpcs.push({ fn, args })
+    return Promise.resolve(this.rpcResults[fn] ?? { data: null, error: null })
+  }
 }
 
-test("legacy readiness is ready from the exact lead snapshot without hair_profiles as authority", async () => {
+test("legacy readiness is ready only when the exact lead is already projected into hair_profiles", async () => {
   const db = new FakeSupabase({
     leads: [
       {
@@ -131,7 +165,7 @@ test("legacy readiness is ready from the exact lead snapshot without hair_profil
         updated_at: "2026-08-12T08:00:00.000Z",
       },
     ],
-    hair_profiles: [{ user_id: "user-1" }],
+    hair_profiles: [COMPLETE_PROFILE],
   })
 
   const readiness = await loadPlanBereitReadiness(db as never, {
@@ -150,7 +184,208 @@ test("legacy readiness is ready from the exact lead snapshot without hair_profil
   )
 })
 
-test("legacy readiness accepts the exact active regular-quiz field-test enrollment", async () => {
+test("legacy readiness is not a no-op when the persisted profile misses a projected fact", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: COMPLETE_LEGACY_ANSWERS,
+        user_id: "user-1",
+        status: "anything-goes",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [{ ...COMPLETE_PROFILE, hair_length: null }],
+  })
+
+  const readiness = await loadPlanBereitReadiness(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  assert.equal(readiness.status, "source_pending")
+  assert.equal(db.updates.length, 0)
+  assert.equal(db.upserts.length, 0)
+  assert.equal(
+    db.queries.some((query) => query.table === "hair_profiles" && query.column === "user_id"),
+    true,
+  )
+})
+
+test("legacy readiness compares every projected profile field and ignores goals plus unrelated fields", async () => {
+  const fieldMutations: Array<[keyof typeof COMPLETE_PROFILE, unknown]> = [
+    ["hair_texture", "curly"],
+    ["thickness", "coarse"],
+    ["hair_length", "long"],
+    ["density", "medium"],
+    ["cuticle_condition", "smooth"],
+    ["protein_moisture_balance", "stretches"],
+    ["scalp_type", "balanced"],
+    ["scalp_condition", "dandruff"],
+    ["concerns", []],
+    ["chemical_treatment", []],
+  ]
+
+  for (const [field, value] of fieldMutations) {
+    const db = new FakeSupabase({
+      leads: [
+        {
+          id: `lead-${field}`,
+          email: "lea@example.test",
+          quiz_kind: "legacy",
+          quiz_answers: COMPLETE_LEGACY_ANSWERS,
+          user_id: "user-1",
+          updated_at: "2026-08-12T08:00:00.000Z",
+        },
+      ],
+      hair_profiles: [{ ...COMPLETE_PROFILE, goals: ["ignored"], unrelated_note: "ignored", [field]: value }],
+    })
+
+    const readiness = await loadPlanBereitInitialReadiness(db as never, {
+      userId: "user-1",
+      email: "lea@example.test",
+      leadId: `lead-${field}`,
+      expectedQuizSourceKind: "legacy",
+    })
+
+    assert.equal(readiness.status, "checking", `${String(field)} mismatch should require link`)
+    assert.equal(readiness.initialAction, "link", `${String(field)} mismatch should post once`)
+    assert.equal(db.updates.length, 0)
+    assert.equal(db.upserts.length, 0)
+    assert.equal(db.rpcs.length, 0)
+  }
+
+  const matching = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-extra-fields",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: COMPLETE_LEGACY_ANSWERS,
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [{ ...COMPLETE_PROFILE, goals: ["ignored"], unrelated_note: "ignored" }],
+  })
+
+  const readiness = await loadPlanBereitInitialReadiness(matching as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-extra-fields",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  assert.equal(readiness.status, "ready")
+  assert.equal(readiness.initialAction, "none")
+})
+
+test("legacy readiness treats missing projected fields and array order drift as unequal", async () => {
+  const missingThicknessProfile = { ...COMPLETE_PROFILE }
+  delete (missingThicknessProfile as Partial<typeof COMPLETE_PROFILE>).thickness
+
+  const cases: Array<{ name: string; answers: Row; profile: Row }> = [
+    {
+      name: "missing scalar",
+      answers: COMPLETE_LEGACY_ANSWERS,
+      profile: missingThicknessProfile,
+    },
+    {
+      name: "array order",
+      answers: { ...COMPLETE_LEGACY_ANSWERS, treatment: ["gefaerbt", "blondiert"] },
+      profile: { ...COMPLETE_PROFILE, chemical_treatment: ["bleached", "colored"] },
+    },
+  ]
+
+  for (const fixture of cases) {
+    const db = new FakeSupabase({
+      leads: [
+        {
+          id: `lead-${fixture.name}`,
+          email: "lea@example.test",
+          quiz_kind: "legacy",
+          quiz_answers: fixture.answers,
+          user_id: "user-1",
+          updated_at: "2026-08-12T08:00:00.000Z",
+        },
+      ],
+      hair_profiles: [fixture.profile],
+    })
+
+    const readiness = await loadPlanBereitInitialReadiness(db as never, {
+      userId: "user-1",
+      email: "lea@example.test",
+      leadId: `lead-${fixture.name}`,
+      expectedQuizSourceKind: "legacy",
+    })
+
+    assert.equal(readiness.status, "checking", fixture.name)
+    assert.equal(readiness.initialAction, "link", fixture.name)
+  }
+})
+
+test("legacy initial readiness skips posting when already semantically projected", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: COMPLETE_LEGACY_ANSWERS,
+        user_id: "user-1",
+        status: "not-a-readiness-predicate",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [COMPLETE_PROFILE],
+  })
+
+  const readiness = await loadPlanBereitInitialReadiness(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  assert.equal(readiness.status, "ready")
+  assert.equal(readiness.initialAction, "none")
+  assert.equal(db.updates.length, 0)
+  assert.equal(db.upserts.length, 0)
+})
+
+test("legacy initial readiness keeps the authoritative POST for an unprojected owner lead", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: COMPLETE_LEGACY_ANSWERS,
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [{ ...COMPLETE_PROFILE, density: "medium" }],
+  })
+
+  const readiness = await loadPlanBereitInitialReadiness(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  assert.equal(readiness.status, "checking")
+  assert.equal(readiness.initialAction, "link")
+  assert.equal(db.updates.length, 0)
+  assert.equal(db.upserts.length, 0)
+})
+
+test("legacy readiness accepts the exact active regular-quiz field-test enrollment as linkable", async () => {
   const db = new FakeSupabase({
     leads: [
       {
@@ -183,14 +418,15 @@ test("legacy readiness accepts the exact active regular-quiz field-test enrollme
     ],
   })
 
-  const readiness = await loadPlanBereitReadiness(db as never, {
+  const readiness = await loadPlanBereitInitialReadiness(db as never, {
     userId: "guest-1",
     email: "field-test@guest.chaarlie.invalid",
     leadId: "lead-legacy-field-test",
     expectedQuizSourceKind: "legacy",
   })
 
-  assert.equal(readiness.status, "ready")
+  assert.equal(readiness.status, "checking")
+  assert.equal(readiness.initialAction, "link")
   assert.equal(readiness.quizSourceKind, "legacy")
   assert.equal(
     db.queries.some(
@@ -317,7 +553,7 @@ test("foreign exact leads are forbidden and never patched from the recovery form
   assert.equal(db.updates.length, 0)
 })
 
-test("Personal Plan readiness keeps the attached artifact requirement", async () => {
+test("Personal Plan readiness keeps the attached artifact and projected profile requirement", async () => {
   const db = new FakeSupabase({
     leads: [
       {
@@ -329,9 +565,15 @@ test("Personal Plan readiness keeps the attached artifact requirement", async ()
       },
     ],
     personal_plan_prepared_artifacts: [
-      { id: "artifact-1", lead_id: "lead-pp", user_id: "user-1", status: "attached" },
+      {
+        id: "artifact-1",
+        lead_id: "lead-pp",
+        user_id: "user-1",
+        status: "attached",
+        canonical_profile: COMPLETE_LEGACY_ANSWERS,
+      },
     ],
-    hair_profiles: [],
+    hair_profiles: [COMPLETE_PROFILE],
   })
 
   const readiness = await loadPlanBereitReadiness(db as never, {
@@ -342,4 +584,132 @@ test("Personal Plan readiness keeps the attached artifact requirement", async ()
   })
 
   assert.equal(readiness.status, "ready")
+})
+
+test("Personal Plan readiness is not ready when the attached artifact is not yet linked", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-pp",
+        email: "lea@example.test",
+        quiz_kind: "personal_plan",
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    personal_plan_prepared_artifacts: [
+      {
+        id: "artifact-1",
+        lead_id: "lead-pp",
+        user_id: null,
+        status: "attached",
+        canonical_profile: COMPLETE_LEGACY_ANSWERS,
+      },
+    ],
+    hair_profiles: [COMPLETE_PROFILE],
+  })
+
+  const readiness = await loadPlanBereitInitialReadiness(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp",
+    expectedQuizSourceKind: "personal_plan",
+  })
+
+  assert.equal(readiness.status, "checking")
+  assert.equal(readiness.initialAction, "link")
+  assert.equal(
+    db.queries.some(
+      (query) => query.table === "personal_plan_prepared_artifacts" && query.column === "user_id",
+    ),
+    false,
+    "attached artifact readiness must not hide unlinked artifacts behind a user_id filter",
+  )
+})
+
+test("Personal Plan initial readiness links when an attached artifact belongs to another user", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-pp",
+        email: "lea@example.test",
+        quiz_kind: "personal_plan",
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    personal_plan_prepared_artifacts: [
+      {
+        id: "artifact-1",
+        lead_id: "lead-pp",
+        user_id: "other-user",
+        status: "attached",
+        canonical_profile: COMPLETE_LEGACY_ANSWERS,
+      },
+    ],
+    hair_profiles: [COMPLETE_PROFILE],
+  })
+
+  const readiness = await loadPlanBereitInitialReadiness(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp",
+    expectedQuizSourceKind: "personal_plan",
+  })
+
+  assert.equal(readiness.status, "checking")
+  assert.equal(readiness.initialAction, "link")
+  assert.equal(db.updates.length, 0)
+  assert.equal(db.upserts.length, 0)
+  assert.equal(db.rpcs.length, 0)
+})
+
+test("Personal Plan POST keeps the authoritative artifact owner race rejection", async () => {
+  const db = new FakeSupabase(
+    {
+      leads: [
+        {
+          id: "lead-pp",
+          email: "lea@example.test",
+          quiz_kind: "personal_plan",
+          user_id: "user-1",
+          updated_at: "2026-08-12T08:00:00.000Z",
+        },
+      ],
+      personal_plan_prepared_artifacts: [
+        {
+          id: "artifact-1",
+          lead_id: "lead-pp",
+          user_id: "other-user",
+          status: "attached",
+          canonical_profile: COMPLETE_LEGACY_ANSWERS,
+        },
+      ],
+      hair_profiles: [COMPLETE_PROFILE],
+    },
+    {
+      link_personal_plan_artifact_to_user: {
+        data: null,
+        error: { message: "personal-plan artifact belongs to another user" },
+      },
+    },
+  )
+
+  await assert.rejects(
+    () =>
+      linkExactPlanBereitSourceToProfile(db as never, {
+        userId: "user-1",
+        email: "lea@example.test",
+        leadId: "lead-pp",
+        expectedQuizSourceKind: "personal_plan",
+      }),
+    /personal plan artifact link failed: personal-plan artifact belongs to another user/,
+  )
+  assert.deepEqual(db.rpcs, [
+    {
+      fn: "link_personal_plan_artifact_to_user",
+      args: { p_lead_id: "lead-pp", p_user_id: "user-1" },
+    },
+  ])
+  assert.equal(db.upserts.length, 0)
 })
