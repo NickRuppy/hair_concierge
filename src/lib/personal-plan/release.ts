@@ -3,7 +3,7 @@ type PersonalPlanAppReleaseEnvironment = {
   PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string
   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
-  PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL?: string
+  PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2?: string
 }
 
 export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
@@ -49,21 +49,18 @@ export function isPersonalPlanStage3Enabled(
   return true
 }
 
+/** Default-off: marked v2 envelopes still resume through their persisted pass. */
+export function isPersonalPlanStage3InventoryAuthorityV2Enabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2 === "true"
+}
+
 export function isPersonalPlanStage4Enabled(
   _environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
   void _environment
   return true
-}
-
-/**
- * Keeps first-Routine auto-activation independently reversible. This controls
- * a write behavior, not whether a released journey stage is visible.
- */
-export function isPersonalPlanStage4AutoActivateInitialEnabled(
-  environment: PersonalPlanAppReleaseEnvironment = process.env,
-): boolean {
-  return environment.PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL === "true"
 }
 
 const UTC_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/

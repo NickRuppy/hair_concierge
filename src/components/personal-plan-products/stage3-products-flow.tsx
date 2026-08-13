@@ -16,8 +16,12 @@ import type { PlanProductRole } from "@/lib/personal-plan/types"
 import {
   deriveStage3DecisionSubjects,
   type PersonalPlanCategory,
+  type Stage3CapturedProduct,
   type Stage3CategoryRequirement,
   type Stage3EntryContext,
+  type Stage3InventoryAuthorityV1,
+  type Stage3InventoryDispositionV1,
+  type Stage3NeedMaterialDelta,
   type Stage3ProductDraft,
 } from "@/lib/personal-plan/products/contracts"
 import { createStage3Draft } from "@/lib/personal-plan/products/state-machine"
@@ -87,7 +91,19 @@ import {
   type LocalCatalogCapture,
 } from "./use-stage3-category-capture-controller"
 
-type FlowPhase = "product_kinds" | "capture" | "roles" | "decisions" | "handoff"
+type FlowPhase =
+  | "product_kinds"
+  | "capture"
+  | "roles"
+  | "need_revision_review"
+  | "decisions"
+  | "handoff"
+
+function flowPhaseForDraft(draft: Stage3ProductDraft): FlowPhase {
+  if (draft.pass === "need_revision_review") return "need_revision_review"
+  if (draft.pass === "ready_for_routine" || draft.status === "completed") return "handoff"
+  return draft.pass === "product_capture" && draft.categoryCursor ? "capture" : "decisions"
+}
 
 type Stage3DecisionReviewBundle = {
   authorityEvaluation: Stage3AuthorityEvaluation
@@ -115,6 +131,17 @@ function decisionReviewBundlesBySubject(
 
 type Stage3UiGateway = Stage3ProductsGateway & {
   evaluateDecisions?: (input: { draftId: string }) => Promise<Stage3AuthorityEvaluation[]>
+  resolveNeedRevision?: (input: {
+    draftId: string
+    expectedRevision: number
+    action: "accept" | "reject"
+    expectedProposalFingerprint: string
+  }) => Promise<Stage3MutationResponse>
+  acknowledgeInventoryDisposition?: (input: {
+    draftId: string
+    expectedRevision: number
+    dispositionKey: string
+  }) => Promise<Stage3MutationResponse>
   resolveDecision?: (input: {
     draftId: string
     expectedRevision: number
@@ -278,11 +305,7 @@ export function Stage3ProductsFlow({
   const [reviewSelectedKinds, setReviewSelectedKinds] =
     useState<PersonalPlanCategory[]>(initialOwnedCategories)
   const [productKindStatus, setProductKindStatus] = useState<"idle" | "saving" | "error">("idle")
-  const [phase, setPhase] = useState<FlowPhase>(() =>
-    initialDraft.pass === "product_capture" && initialDraft.categoryCursor
-      ? "capture"
-      : "decisions",
-  )
+  const [phase, setPhase] = useState<FlowPhase>(() => flowPhaseForDraft(initialDraft))
   const [draft, setDraft] = useState<Stage3ProductDraft>(initialDraft)
   const recoveryScope = useMemo(
     () => pendingRecoveryScopeForDraft(initialDraft, personalPlanId),
@@ -830,6 +853,32 @@ export function Stage3ProductsFlow({
     )
   }
 
+  if (phase === "need_revision_review") {
+    const authority = draft.inventoryAuthority
+    if (!authority || authority.status !== "pending" || !authority.proposalFingerprint) {
+      return shell(
+        <Stage3SystemState
+          state="conflict"
+          title="Dein Bedarfsplan wurde aktualisiert."
+          message="Lade den aktuellen Stand, bevor du die Produktprüfung fortsetzt."
+          actionLabel="Aktuellen Stand laden"
+          onAction={() => window.location.reload()}
+        />,
+        "Bedarfsplan",
+      )
+    }
+    return shell(
+      <Stage3NeedRevisionCheckpoint
+        authority={authority}
+        disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
+        onAccept={() => void chooseNeedRevision("accept", authority)}
+        onReject={() => void chooseNeedRevision("reject", authority)}
+      />,
+      "Bedarfsplan",
+      onBackToRefinement,
+    )
+  }
+
   if (phase === "decisions") {
     const unresolvedSubjects = unresolvedDecisionSubjects(draft)
     const nextSubject =
@@ -849,7 +898,6 @@ export function Stage3ProductsFlow({
         "Abschluss",
       )
     }
-    const reviewBundle = reviewBundles.get(nextSubject.decisionKey)
     if (authorityStatus !== "ready") {
       return shell(
         <Stage3SystemState
@@ -860,6 +908,29 @@ export function Stage3ProductsFlow({
         CATEGORY_COPY[nextSubject.category].label,
       )
     }
+    if (nextSubject.subjectKind === "inventory_disposition") {
+      const disposition = draft.inventoryDispositions?.find(
+        (candidate) => candidate.dispositionKey === nextSubject.decisionKey,
+      )
+      const product = nextSubject.capturedProductId
+        ? draft.products.find(
+            (candidate) => candidate.capturedProductId === nextSubject.capturedProductId,
+          )
+        : undefined
+      if (disposition && product) {
+        return shell(
+          <Stage3InventoryDispositionReview
+            disposition={disposition}
+            product={product}
+            disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
+            onAcknowledge={() => void acknowledgeInventoryDisposition(disposition.dispositionKey)}
+            onBack={() => void backFromReview(nextSubject)}
+          />,
+          CATEGORY_COPY[nextSubject.category].label,
+        )
+      }
+    }
+    const reviewBundle = reviewBundles.get(nextSubject.decisionKey)
     if (!reviewBundle) {
       return shell(
         <Stage3SystemState
@@ -921,6 +992,16 @@ export function Stage3ProductsFlow({
     categoryCapture.setSaveLabel("Gespeichert")
     setDraftReadyForQueueReconciliation(true)
 
+    if (loadedDraft.pass === "need_revision_review") {
+      setPhase("need_revision_review")
+      setAuthorityStatus("ready")
+      analytics.track("personal_plan_stage3_flow_viewed", {
+        pass: "need_revision_review",
+        stepKey: "need_revision_review",
+      })
+      return
+    }
+
     if (loadedDraft.pass === "ready_for_routine" || loadedDraft.status === "completed") {
       await completeFlow(loadedDraft)
       return
@@ -977,11 +1058,7 @@ export function Stage3ProductsFlow({
     if (sameProductKinds(normalized, initial)) {
       setConfirmedOwnedCategories(normalized)
       setReviewedProductKinds(true)
-      setPhase(
-        initialDraft.pass === "product_capture" && initialDraft.categoryCursor
-          ? "capture"
-          : "decisions",
-      )
+      setPhase(flowPhaseForDraft(initialDraft))
       return
     }
     if (!onProductKindsCorrection) {
@@ -1008,6 +1085,13 @@ export function Stage3ProductsFlow({
     preloaded?: Stage3AuthorityEvaluation[],
     preloadedComparisons?: Stage3FitComparison[],
   ): Promise<Stage3DecisionReviewBundles> {
+    if (!requiresFitReviewBundles(sourceDraft)) {
+      const bundles = new Map()
+      setReviewBundles(bundles)
+      setDisplayedAlternativeIndex(0)
+      setAuthorityStatus("ready")
+      return bundles
+    }
     setAuthorityStatus("loading")
     let evaluations = preloaded
     let comparisons = preloadedComparisons ?? []
@@ -1056,8 +1140,70 @@ export function Stage3ProductsFlow({
     preloaded?: Stage3AuthorityEvaluation[],
     preloadedComparisons?: Stage3FitComparison[],
   ) {
+    if (sourceDraft.pass === "need_revision_review") {
+      setAuthorityStatus("ready")
+      setPhase("need_revision_review")
+      return
+    }
     await loadDecisionReviewBundles(sourceDraft, preloaded, preloadedComparisons)
     setPhase("decisions")
+  }
+
+  async function resolveNeedRevision(input: {
+    draftId: string
+    expectedRevision: number
+    action: "accept" | "reject"
+    expectedProposalFingerprint: string
+  }): Promise<Stage3MutationResponse> {
+    if (gateway.resolveNeedRevision) return gateway.resolveNeedRevision(input)
+    const response = await fetch("/api/personal-plan/stage-3", {
+      method: "PATCH",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        draftId: input.draftId,
+        expectedRevision: input.expectedRevision,
+        action: input.action,
+        expectedProposalFingerprint: input.expectedProposalFingerprint,
+      }),
+      cache: "no-store",
+    })
+    const body = (await response.json().catch(() => null)) as unknown
+    const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
+    if (conflict) return conflict
+    if (!response.ok) throw stage3GatewayErrorFromResponse(response, body)
+    if (!body || typeof body !== "object" || !("status" in body)) {
+      throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    }
+    return body as Stage3MutationResponse
+  }
+
+  async function resolveInventoryDisposition(input: {
+    draftId: string
+    expectedRevision: number
+    dispositionKey: string
+  }): Promise<Stage3MutationResponse> {
+    if (gateway.acknowledgeInventoryDisposition) {
+      return gateway.acknowledgeInventoryDisposition(input)
+    }
+    const response = await fetch("/api/personal-plan/stage-3", {
+      method: "PATCH",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        draftId: input.draftId,
+        expectedRevision: input.expectedRevision,
+        action: "acknowledge_inventory_disposition",
+        dispositionKey: input.dispositionKey,
+      }),
+      cache: "no-store",
+    })
+    const body = (await response.json().catch(() => null)) as unknown
+    const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
+    if (conflict) return conflict
+    if (!response.ok) throw stage3GatewayErrorFromResponse(response, body)
+    if (!body || typeof body !== "object" || !("status" in body)) {
+      throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    }
+    return body as Stage3MutationResponse
   }
 
   async function resolveAuthorityDecision(input: {
@@ -2041,6 +2187,81 @@ export function Stage3ProductsFlow({
     }
   }
 
+  async function chooseNeedRevision(
+    action: "accept" | "reject",
+    authority: Stage3InventoryAuthorityV1,
+  ) {
+    if (!authority.proposalFingerprint || !beginDecisionSubmission()) return
+    analytics.track("personal_plan_stage3_review_action", {
+      category: null,
+      verdict: "need_revision_review",
+      action: action === "accept" ? "accept_need_revision" : "reject_need_revision",
+      position: 1,
+      count: 1,
+    })
+    try {
+      const response = await resolveNeedRevision({
+        draftId: activeDraft.draftId,
+        expectedRevision: activeDraft.revision,
+        action,
+        expectedProposalFingerprint: authority.proposalFingerprint,
+      })
+      if (response.status === "conflict") {
+        finishDecisionSubmission()
+        return handleConflict(response.latestDraft)
+      }
+      const canonical = await loadCanonicalStage3Draft(response.draft)
+      categoryCapture.setSaveLabel("Gespeichert")
+      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
+      finishDecisionSubmission()
+      await prepareDecisionPhase(
+        canonical.draft,
+        canonical.authorityEvaluations,
+        canonical.fitComparisons,
+      )
+    } catch (error) {
+      finishDecisionSubmission()
+      handleNeedRevisionError(error)
+    }
+  }
+
+  async function acknowledgeInventoryDisposition(dispositionKey: string) {
+    if (!beginDecisionSubmission()) return
+    analytics.track("personal_plan_stage3_review_action", {
+      category: null,
+      verdict: "inventory_disposition",
+      action: "leave_uncovered",
+      position: reviewPosition(activeDraft, dispositionKey),
+      count: deriveStage3DecisionSubjects(activeDraft).length,
+    })
+    try {
+      const response = await resolveInventoryDisposition({
+        draftId: activeDraft.draftId,
+        expectedRevision: activeDraft.revision,
+        dispositionKey,
+      })
+      if (response.status === "conflict") {
+        finishDecisionSubmission()
+        return handleConflict(response.latestDraft)
+      }
+      const canonical = await loadCanonicalStage3Draft(response.draft)
+      clearPendingStage3Recovery(canonical.draft)
+      categoryCapture.setSaveLabel("Gespeichert")
+      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
+      const remaining = hasUnresolvedDecisionSubjects(canonical.draft)
+      setReviewHistory((current) => [...current, dispositionKey])
+      setCurrentReviewSubjectKey(
+        unresolvedDecisionSubjects(canonical.draft)[0]?.decisionKey ?? null,
+      )
+      finishDecisionSubmission()
+      if (remaining) await prepareDecisionPhase(canonical.draft)
+      else void completeFlow(canonical.draft)
+    } catch (error) {
+      finishDecisionSubmission()
+      handleNeedRevisionError(error)
+    }
+  }
+
   async function backFromReview(subject: ReturnType<typeof deriveStage3DecisionSubjects>[number]) {
     if (decisionSubmitInFlight.current || pendingRecoveryMode) return
     analytics.track("personal_plan_stage3_review_back", {
@@ -2227,7 +2448,7 @@ export function Stage3ProductsFlow({
       actionLabel: "Weiter prüfen",
       retry: () => {
         setSystemIssue(null)
-        setPhase(latestDraft.pass === "product_capture" ? "capture" : "decisions")
+        setPhase(flowPhaseForDraft(latestDraft))
       },
     })
   }
@@ -2290,6 +2511,280 @@ export function Stage3ProductsFlow({
       retry,
     })
   }
+
+  function handleNeedRevisionError(error: unknown) {
+    if (error instanceof Stage3ProductsGatewayError) {
+      if (
+        error.code === "stale_refined_source" ||
+        error.code === "stale_authority_snapshot" ||
+        error.code === "revision_conflict"
+      ) {
+        setSystemIssue({
+          kind: "conflict",
+          title: "Dein Bedarfsplan wurde aktualisiert.",
+          message: "Lade den aktuellen Stand, bevor du die Produktprüfung fortsetzt.",
+          actionLabel: "Aktuellen Stand laden",
+          retry: () => window.location.reload(),
+        })
+        return
+      }
+      if (error.code === "unauthorized") {
+        setSystemIssue({
+          kind: "error",
+          title: "Deine Sitzung ist abgelaufen.",
+          message: "Melde dich erneut an, bevor du deine Produktprüfung fortsetzt.",
+          actionLabel: "Erneut anmelden",
+          retry: () => {
+            window.location.href = "/auth"
+          },
+        })
+        return
+      }
+    }
+    setSystemIssue({
+      kind: "error",
+      title: "Speicherstatus noch offen.",
+      message: "Prüfe den aktuellen Stand erneut, bevor du weiter machst.",
+      actionLabel: "Speicherstatus erneut prüfen",
+      retry: () => window.location.reload(),
+    })
+  }
+}
+
+export function Stage3NeedRevisionCheckpoint({
+  authority,
+  disabled,
+  onAccept,
+  onReject,
+}: {
+  authority: Stage3InventoryAuthorityV1
+  disabled?: boolean
+  onAccept: () => void
+  onReject: () => void
+}) {
+  const changeCount = authority.materialDelta.length
+
+  return (
+    <section className="min-w-0 pb-32" aria-labelledby="stage3-need-revision-title">
+      <header className="mb-6">
+        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">Dein Bedarfsplan</p>
+        <h1
+          id="stage3-need-revision-title"
+          className="font-header text-3xl leading-tight text-foreground"
+        >
+          {changeCount === 1
+            ? "Deine Produkte verändern einen Punkt."
+            : `Deine Produkte verändern ${changeCount} Punkte.`}
+        </h1>
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+          Wir haben deine verwendeten Produkte und ihre Häufigkeit geprüft. Diese Ergänzung war
+          vorher noch nicht sicher.
+        </p>
+      </header>
+
+      <article className="rounded-2xl border border-[var(--brand-plum)]/25 bg-[var(--brand-lilac)]/60 p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background text-xl text-[var(--brand-plum)]">
+            ↻
+          </div>
+          <span className="rounded-full bg-background px-3 py-1 text-xs font-semibold text-[var(--brand-plum)]">
+            Neu · Optional
+          </span>
+        </div>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">
+          {changeCount === 1 ? "Das ändert sich" : "Diese Punkte ändern sich"}
+        </h2>
+        <ul className="mt-2 space-y-2 text-sm leading-relaxed text-muted-foreground">
+          {authority.materialDelta.map((delta, index) => (
+            <li key={`${delta.kind}:${delta.category}:${index}`}>{materialDeltaSummary(delta)}</li>
+          ))}
+        </ul>
+        <div className="mt-4 rounded-xl border border-border bg-background p-4">
+          <p className="text-sm font-semibold text-foreground">Warum jetzt?</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Deine erfassten Produkte liefern ein neues Signal für den finalen Bedarfsplan. Erst nach
+            deiner Entscheidung prüfen wir konkrete Produkte.
+          </p>
+        </div>
+      </article>
+
+      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        Wenn du ablehnst, bleibt dein bisheriger Bedarfsplan erhalten.
+      </p>
+
+      <div className="fixed inset-x-0 bottom-0 z-20 grid gap-2 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
+        <Button
+          type="button"
+          variant="funnelCta"
+          className="w-full"
+          disabled={disabled}
+          onClick={onAccept}
+        >
+          Ergänzung übernehmen
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          disabled={disabled}
+          onClick={onReject}
+        >
+          Bedarfsplan beibehalten
+        </Button>
+      </div>
+    </section>
+  )
+}
+
+export function Stage3InventoryDispositionReview({
+  disposition,
+  product,
+  disabled,
+  onAcknowledge,
+  onBack,
+}: {
+  disposition: Stage3InventoryDispositionV1
+  product: Stage3CapturedProduct
+  disabled?: boolean
+  onAcknowledge: () => void
+  onBack: () => void
+}) {
+  return (
+    <section className="min-w-0 pb-28" aria-labelledby="stage3-inventory-disposition-title">
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={onBack}
+          disabled={disabled}
+          aria-label="Zurück zu meinen Produkten"
+          className="shrink-0 rounded-full"
+        >
+          ←
+        </Button>
+        <p className="text-right text-sm font-medium text-muted-foreground">Produkte prüfen</p>
+      </div>
+
+      <header className="mb-5">
+        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">Dein Produkt</p>
+        <h1
+          id="stage3-inventory-disposition-title"
+          className="font-header text-3xl leading-tight text-foreground"
+        >
+          Dieses Produkt bleibt erfasst.
+        </h1>
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+          {disposition.reason === "category_not_in_final_plan"
+            ? "Diese Produktart gehört aktuell nicht zu den Basis- oder Optional-Kategorien deines finalen Bedarfsplans."
+            : "Dieses Produkt ist aktuell keiner Aufgabe in deinem finalen Bedarfsplan zugeordnet."}
+        </p>
+      </header>
+
+      <article className="rounded-2xl border border-border bg-card p-5">
+        <div className="flex min-w-0 gap-4">
+          <ProductIdentityImage product={product} />
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {CATEGORY_COPY[disposition.category].label}
+            </p>
+            <h2 className="mt-1 break-words text-lg font-semibold text-foreground">
+              {product.identity.displayName}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Von dir als regelmäßig verwendet erfasst.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 border-l-4 border-[var(--brand-plum)] bg-[var(--brand-blush)]/60 p-4">
+          <p className="font-semibold text-foreground">Nicht Teil deiner Routine</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            {inventoryDispositionReason(disposition.reason)}
+          </p>
+        </div>
+
+        <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-[var(--status-ok-text)]">
+          <span
+            aria-hidden="true"
+            className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--status-ok-bg)]"
+          >
+            ✓
+          </span>
+          Bleibt unter „Meine Produkte“ gespeichert
+        </p>
+      </article>
+
+      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        Wenn sich dein Bedarfsplan später ändert, wird das Produkt neu geprüft.
+      </p>
+
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
+        <Button
+          type="button"
+          variant="funnelCta"
+          className="w-full"
+          disabled={disabled}
+          onClick={onAcknowledge}
+        >
+          Verstanden, weiter
+        </Button>
+      </div>
+    </section>
+  )
+}
+
+function ProductIdentityImage({ product }: { product: Stage3CapturedProduct }) {
+  const imageUrl = product.identity.imageUrl
+  if (imageUrl) {
+    return (
+      // Product images may come from owner-submitted catalog sources that are not configured
+      // as Next image hosts, so the review keeps this bounded thumbnail unoptimized.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={imageUrl}
+        alt=""
+        className="h-20 w-20 shrink-0 rounded-2xl border border-border object-cover"
+      />
+    )
+  }
+  return (
+    <div
+      aria-label={`${product.identity.displayName}: Bild nicht verfügbar`}
+      className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-muted text-muted-foreground"
+    >
+      Produkt
+    </div>
+  )
+}
+
+function materialDeltaSummary(delta: Stage3NeedMaterialDelta) {
+  const categoryLabel = CATEGORY_COPY[delta.category].label
+  if (delta.kind === "category_added") {
+    return `${categoryLabel} wird als neuer Punkt ergänzt.`
+  }
+  if (delta.kind === "category_removed") {
+    return `${categoryLabel} fällt aus dem finalen Bedarfsplan heraus.`
+  }
+  if (delta.kind === "category_order_changed") {
+    return `${categoryLabel} verschiebt sich in der Reihenfolge.`
+  }
+  if (delta.kind === "need_tier_changed") {
+    return `${categoryLabel} wechselt in seiner Priorität.`
+  }
+  if (delta.kind === "roles_changed") {
+    return `${categoryLabel} bekommt eine andere Aufgabe.`
+  }
+  if (delta.kind === "frequency_changed") {
+    return `${categoryLabel} bekommt eine andere Häufigkeit.`
+  }
+  return `${categoryLabel} wird in der Anwendung anders eingeordnet.`
+}
+
+function inventoryDispositionReason(reason: Stage3InventoryDispositionV1["reason"]) {
+  return reason === "category_not_in_final_plan"
+    ? "Diese Produktart ist gerade kein Schritt in deinem finalen Bedarfsplan."
+    : "Dieses Produkt ist keiner finalen Planrolle zugeordnet."
 }
 
 function requirement(
@@ -2376,6 +2871,12 @@ function reviewPosition(sourceDraft: Stage3ProductDraft, subjectKey: string) {
 
 function reviewVerdict(evaluation: Stage3AuthorityEvaluation) {
   return evaluation.status === "known" ? evaluation.verdict : evaluation.status
+}
+
+function requiresFitReviewBundles(draft: Stage3ProductDraft) {
+  return deriveStage3DecisionSubjects(draft).some(
+    (subject) => subject.subjectKind !== "inventory_disposition",
+  )
 }
 
 function isCategoryCaptureRetryLimitedError(error: unknown): error is Error & { retryAt: number } {

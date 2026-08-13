@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan · Aktualisierte Mock-ups</title>
+    <style>
+      :root {
+        --ink:#2c1748; --muted:#716b6a; --plum:#704daa; --plum-soft:#f4eef9;
+        --coral:#d95f6b; --coral-soft:#fff0f1; --green:#39764c; --green-soft:#edf7ef;
+        --amber:#9b642c; --amber-soft:#fff6e9; --line:#e7dfe6; --paper:#fffdfb;
+        --shampoo:#f6f0e4; --conditioner:#edf4f6; --leave:#edf5f0; --page:#efedeb;
+      }
+      *{box-sizing:border-box} html{scroll-behavior:smooth}
+      body{margin:0;background:var(--page);color:var(--ink);font:15px/1.42 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+      h1,h2,h3,p{margin:0}.board{width:min(1480px,100%);margin:auto;padding:40px 30px 72px}
+      .board-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:24px}
+      .eyebrow{color:var(--plum);font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+      .board-head h1{margin-top:7px;font:500 48px/1.04 Georgia,serif;letter-spacing:-.035em}
+      .board-head p{max-width:620px;color:var(--muted);font-size:15px}
+      .legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}.pill,.status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}
+      .active{background:var(--green-soft);color:var(--green)}.planned{background:var(--amber-soft);color:var(--amber)}.retained{background:#f2eff2;color:#625b62}.partial{background:var(--coral-soft);color:#a4404a}
+      .group{margin-top:28px;border:1px solid #dcd6da;border-radius:28px;background:#fff;overflow:hidden;box-shadow:0 28px 78px -58px #2c1748}
+      .group-label{display:flex;justify-content:space-between;gap:20px;padding:15px 22px;border-bottom:1px solid var(--line)}
+      .group-label strong{font-size:15px}.group-label span{color:var(--muted);font-size:13px}
+      .stage{padding:28px;background:linear-gradient(180deg,#fffaf7,#fff 42%)}
+      .appbar{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 25px;border-bottom:1px solid var(--line);background:#fff}
+      .logo{font:700 27px/1 Georgia,serif}.logo:before{content:"▥";margin-right:8px;color:var(--plum);font:18px system-ui}.saved{color:var(--green);font-size:12px;font-weight:800}
+      .journey{display:flex;align-items:center;gap:8px;color:#8a8288;font-size:11px}.journey i{width:38px;height:4px;border-radius:8px;background:#7552aa}.journey b{color:var(--ink)}
+      .screen{overflow:hidden;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 18px 50px -44px #2c1748}
+      .screen-content{padding:26px}.topline{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}
+      .topline h2{font:500 35px/1.06 Georgia,serif}.topline p{margin-top:6px;color:var(--muted)}
+      .button{border:1px solid var(--plum);border-radius:12px;background:white;color:var(--plum);padding:11px 15px;font-weight:800}.primary{border-color:var(--coral);background:var(--coral);color:#fff}
+      /* Stage 3 */
+      .stage3-wrap{display:grid;grid-template-columns:minmax(320px,720px) minmax(260px,1fr);gap:24px;align-items:start}.stage3-screen{position:relative;max-width:720px}
+      .review-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.back{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}.counter{color:var(--muted);font-size:13px;font-weight:700}
+      .review-intro h2{font:500 34px/1.06 Georgia,serif;margin:6px 0 18px}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .compare-card{min-width:0;border:1px solid #c9b6df;border-radius:18px;padding:14px;background:#fff}.compare-card.recommended{border-color:var(--plum);background:var(--plum-soft);box-shadow:inset 0 0 0 1px #ffffff80}
+      .card-label{color:var(--muted);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.product-line{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:center;margin-top:9px}
+      .product-line img{width:72px;height:86px;object-fit:contain;border-radius:12px;background:#fff;padding:4px}.product-name{font-weight:800;line-height:1.2}.product-reason{margin-top:5px;color:var(--plum);font-size:12px}.product-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.product-meta span{padding:4px 7px;border:1px solid #e4dce7;border-radius:999px;background:#fff;color:#5d555f;font-size:10px;font-weight:800}
+      .alt-nav{display:flex;justify-content:center;align-items:center;gap:15px;margin:13px 0}.alt-nav button{width:35px;height:35px;border:1px solid var(--line);border-radius:10px;background:#fff}.alt-nav span{color:var(--muted);font-size:12px}
+      .rails{border:1px solid var(--line);border-radius:18px;padding:15px}.rails-title{display:flex;justify-content:space-between;align-items:center;gap:12px}.rails h3{font-size:15px}.rail-key{display:flex;gap:10px;color:var(--muted);font-size:10px}.rail-key i{font-style:normal}.rail-key .mine-key{color:#443b47}.rail-key .goal-key{color:var(--green)}.rail-key .alt-key{color:var(--plum)}.rail{margin-top:16px}.rail-head{font-size:12px;font-weight:800}.rail-track{position:relative;height:22px;margin:8px 6px 1px}.rail-track:before{content:"";position:absolute;left:0;right:0;top:9px;height:4px;border-radius:9px;background:#e7e0e8}.mark{position:absolute;top:1px;width:18px;height:18px;border:2px solid #fff;border-radius:50%;transform:translateX(-50%);transition:left .28s ease}.mark.mine{left:18%;background:#443b47}.mark.goal{left:68%;background:var(--green)}.mark.alt{left:72%;background:var(--plum)}
+      .rail-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:10px}.review-actions{display:grid;gap:8px;margin-top:15px}.review-actions .button{width:100%}.review-actions .quiet{border:0;color:var(--muted)}
+      .outcome{border-radius:20px;background:#f7f2f8;padding:20px}.outcome h3{font:500 25px/1.1 Georgia,serif}.outcome-list{display:grid;gap:10px;margin-top:16px}.outcome-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:11px;border-radius:14px;background:white}.mini-img{width:44px;height:52px;object-fit:contain}.outcome-row b{display:block;font-size:13px}.outcome-row small{color:var(--muted)}
+      /* Stage 4 */
+      .summary-row{display:flex;flex-wrap:wrap;gap:8px;margin:3px 0 22px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px}.section-title h3{font-size:17px}.section-title span{color:var(--muted);font-size:12px}
+      .routine-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.routine-card{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:15px;border:1px solid var(--line);border-radius:19px}.routine-card.shampoo{background:var(--shampoo)}.routine-card.conditioner{background:var(--conditioner)}.routine-card.leave{background:var(--leave)}
+      .routine-card.is-planned{border-style:dashed}.routine-card img{width:88px;height:108px;object-fit:contain;border-radius:13px;background:rgba(255,255,255,.78);padding:5px}.tag{font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:var(--plum)}
+      .routine-card h3{margin-top:5px;font-size:17px;line-height:1.18}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chip{padding:5px 7px;border:1px solid #ffffffaa;border-radius:999px;background:#ffffffaa;color:#595057;font-size:10px;font-weight:750}
+      .card-foot{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding-top:11px;border-top:1px solid #3d2b4814}.card-foot a{color:var(--plum);font-size:12px;font-weight:800}
+      .retained-box{padding:12px;border:1px solid var(--line);border-radius:18px;background:#faf8fa}.retained-product{display:grid;grid-template-columns:52px 1fr auto;gap:11px;align-items:center;padding:9px 10px;border-radius:13px;background:#fff}.retained-product img{width:52px;height:62px;object-fit:contain}.retained-product b{font-size:13px}
+      /* Stage 5 */
+      .stacks{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.day{padding:16px;border:1px solid var(--line);border-radius:20px;background:#fff}.day.wash{background:#e8f3f7}.day.rest{background:#f2eee9}.day-visual{position:relative;height:138px;display:flex;align-items:end;justify-content:center;gap:7px;margin-bottom:13px;padding-bottom:12px;border-radius:15px;background:linear-gradient(180deg,#ffffffd9,#fff9f3c9);overflow:hidden}.day-visual:before{content:"";position:absolute;left:8%;right:8%;bottom:8px;height:9px;border-radius:4px;background:linear-gradient(180deg,#ead9c7,#ceb294);box-shadow:0 8px 15px -8px #604832}.day-visual:after{content:"";position:absolute;left:15%;right:15%;bottom:17px;height:8px;border-radius:50%;background:#2c174822;filter:blur(6px)}
+      .stack-product{position:relative;z-index:1;width:58px;border-radius:11px;background:#fff;display:grid;place-items:end center;padding:6px;box-shadow:0 8px 18px -16px #2c1748}.stack-product img{width:100%;height:100%;object-fit:contain}.stack-product.one{height:108px}.stack-product.two{height:92px}.stack-product.three{height:78px}.stack-product.is-planned{border:2px dashed #c58b50;opacity:.86}.stack-product em{position:absolute;right:-5px;top:-8px;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--amber-soft);color:var(--amber);font:normal 800 11px system-ui}.empty-product{position:relative;z-index:1;width:58px;height:88px;display:grid;place-items:center;border:2px dashed #d6c6df;border-radius:11px;color:var(--plum);background:#fff9;font-size:26px}.empty-product em{position:absolute;right:-6px;top:-9px;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--plum-soft);font:normal 800 11px system-ui}
+      .day h3{font-size:18px}.day p{margin-top:4px;color:var(--muted);font-size:12px}.day-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:11px}.step-count{padding:6px 8px;border-radius:8px;background:#fff;font-size:10px;font-weight:850}.moon{align-self:center;font-size:52px;z-index:1}
+      .stage-note{margin-top:16px;padding:11px 13px;border-left:3px solid var(--plum);background:#f6f2f8;color:#5f5661;font-size:12px}
+      @media(max-width:900px){
+        .board{padding:22px 10px 50px}.board-head{display:block}.board-head h1{font-size:36px}.board-head p{margin-top:14px}.group{border-radius:22px}.group-label{display:block}.group-label span{display:block;margin-top:5px}.stage{padding:14px}.journey{display:none}.appbar{padding:0 16px}.screen-content{padding:19px 15px}.topline{align-items:start}.topline h2{font-size:30px}.stage3-wrap{grid-template-columns:1fr}.comparison{grid-template-columns:1fr}.outcome{display:none}.rail-key{gap:6px;font-size:9px}.routine-grid{grid-template-columns:1fr}.routine-card{grid-template-columns:76px minmax(0,1fr)}.routine-card img{width:76px;height:94px}.stacks{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:7px}.day{min-width:78vw;scroll-snap-align:start}.retained-product{grid-template-columns:44px 1fr}.retained-product .status{grid-column:2;width:max-content}.retained-product img{width:44px}.topline .button{font-size:0;padding:10px}.topline .button:after{content:"Ändern";font-size:12px}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <header class="board-head">
+        <div><div class="eyebrow">Personal Plan · aktualisierte Auswahl</div><h1>Produktstatus über Stage 3–5</h1></div>
+        <p>Vom Produktvergleich bis zur Anwendung: derselbe ehrliche Produktstatus.</p>
+      </header>
+      <div class="legend"><span class="pill active">✓ Aktiv / vorhanden</span><span class="pill planned">◷ Noch kaufen / vorläufig</span><span class="pill retained">Nicht verwendet</span></div>
+
+      <section class="group" id="stage3">
+        <div class="group-label"><strong>Stage 3 · Rollenbezogener Produktvergleich</strong><span>Produkt ersetzen oder weiterverwenden.</span></div>
+        <div class="stage stage3-wrap">
+          <div class="screen stage3-screen">
+            <div class="appbar"><div class="logo">chaarlie</div><span class="saved">2 von 4 geprüft</span></div>
+            <div class="screen-content">
+              <div class="review-head"><span class="back">←</span><span class="counter">Produkte prüfen</span></div>
+              <div class="review-intro"><div class="eyebrow">Ein Produkt nach dem anderen</div><h2>Wie gut passt dein Produkt?</h2></div>
+              <div class="comparison">
+                <article class="compare-card"><div class="card-label">Dein Produkt</div><div class="product-line"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/e1ad37be-9330-49b4-8add-872a30324122/29-e1ad37be-9330-49b4-8add-872a30324122-jean-len-jean-len-repair-keratin-mandel-77390c5b0538.webp" alt="Jean&amp;Len Conditioner"><div><div class="product-name">Jean&amp;Len Conditioner Keratin/Mandel</div><div class="product-reason">Von dir verwendet</div><div class="product-meta"><span>300 ml</span><span>4,29 €</span></div></div></div></article>
+                <article class="compare-card recommended" id="alternative-card"><div class="card-label" id="alternative-label">Ideal für dich</div><div class="product-line"><img id="alternative-image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt="Bali Curls Conditioner"><div><div class="product-name" id="alternative-name">Bali Curls Moisturising Conditioner</div><div class="product-reason" id="alternative-reason">Leichtere Pflege.</div><div class="product-meta"><span id="alternative-size">250 ml</span><span id="alternative-price">13,01 €</span></div></div></div></article>
+              </div>
+              <div class="alt-nav"><button id="previous-alternative" type="button" aria-label="Vorherige Alternative">‹</button><span id="alternative-counter" role="status" aria-live="polite">1 von 2 Alternativen</span><button id="next-alternative" type="button" aria-label="Nächste Alternative">›</button></div>
+              <section class="rails"><div class="rails-title"><h3>Die zwei Unterschiede</h3><div class="rail-key"><i class="mine-key">● Deins</i><i class="goal-key">● Ziel</i><i class="alt-key">● Alternative</i></div></div><div class="rail"><div class="rail-head">Pflegewirkung</div><div class="rail-track"><i class="mark mine"></i><i class="mark goal"></i><i class="mark alt" id="alternative-care-marker"></i></div><div class="rail-scale"><span>leicht</span><span>intensiv</span></div></div><div class="rail"><div class="rail-head">Gewicht im Haar</div><div class="rail-track"><i class="mark mine" style="left:78%"></i><i class="mark goal" style="left:38%"></i><i class="mark alt" id="alternative-weight-marker" style="left:42%"></i></div><div class="rail-scale"><span>leicht</span><span>reichhaltig</span></div></div></section>
+              <div class="review-actions"><button class="button primary" id="replacement-action">Bali Curls als Ersatz übernehmen</button><button class="button quiet">Jean&amp;Len mit Einschränkung weiterverwenden</button></div>
+            </div>
+          </div>
+          <aside class="outcome"><div class="eyebrow">Nach dem Ersetzen</div><h3>Beide Produkte bleiben sichtbar.</h3><div class="outcome-list"><div class="outcome-row"><img class="mini-img" id="outcome-alternative-image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt=""><div><b id="outcome-alternative-name">Bali Curls</b><small>Routine und Anwendung</small></div><span class="status planned">Noch kaufen</span></div><div class="outcome-row"><img class="mini-img" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/e1ad37be-9330-49b4-8add-872a30324122/29-e1ad37be-9330-49b4-8add-872a30324122-jean-len-jean-len-repair-keratin-mandel-77390c5b0538.webp" alt=""><div><b>Jean&amp;Len</b><small>im Profil</small></div><span class="status retained">Nicht verwendet</span></div></div></aside>
+        </div>
+      </section>
+
+      <section class="group" id="stage4">
+        <div class="group-label"><strong>Stage 4A · Bedarfsplan 1:1, gemischter Produktstatus</strong><span>Eine Karte pro finaler Kategorie.</span></div>
+        <div class="stage"><div class="screen"><div class="appbar"><div class="logo">chaarlie</div><div class="journey"><i></i> Bedarf <i></i> Verfeinerung <i></i> Produkte <i></i> <b>Routine</b></div><span class="saved">Gespeichert</span></div><div class="screen-content">
+          <div class="topline"><div><h2>Deine Routine</h2><p>Dein Bedarfsplan mit konkreten Produkten.</p></div><button class="button">Routine anpassen</button></div>
+          <div class="summary-row"><span class="status active">1 aktiv</span><span class="status planned">2 noch kaufen</span><span class="status retained">1 nicht verwendet</span></div>
+          <div class="section-title"><h3>Deine Basis</h3><span>1 Kategorie</span></div>
+          <div class="routine-grid"><article class="routine-card shampoo"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp" alt="OGX Shampoo"><div><div class="tag">Shampoo · Basis</div><h3>OGX Renewing + Argan Oil of Morocco Shampoo</h3><div class="chips"><span class="chip">3–4× pro Woche</span><span class="chip">Haarwäsche</span></div></div><div class="card-foot"><span class="status active">✓ Aktiv</span><a>Details →</a></div></article></div>
+          <div class="section-title"><h3>Optional</h3><span>2 Kategorien</span></div>
+          <div class="routine-grid"><article class="routine-card conditioner is-planned"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt="Bali Curls Conditioner"><div><div class="tag">Conditioner · Optional</div><h3>Bali Curls Moisturising Conditioner</h3><div class="chips"><span class="chip">Nach jeder Wäsche</span></div></div><div class="card-foot"><span class="status planned">◷ Noch kaufen</span><a>Details →</a></div></article><article class="routine-card leave is-planned"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp" alt="It’s a 10 Leave-In"><div><div class="tag">Leave-in · Optional</div><h3>It’s a 10 Miracle Leave-In</h3><div class="chips"><span class="chip">Nach jeder Wäsche</span></div></div><div class="card-foot"><span class="status planned">◷ Noch kaufen</span><a>Details →</a></div></article></div>
+          <div class="section-title"><h3>Nicht verwendete Produkte</h3><span>Bleiben gespeichert</span></div>
+          <div class="retained-box"><div class="retained-product"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/e1ad37be-9330-49b4-8add-872a30324122/29-e1ad37be-9330-49b4-8add-872a30324122-jean-len-jean-len-repair-keratin-mandel-77390c5b0538.webp" alt=""><b>Jean&amp;Len Conditioner Keratin/Mandel</b><span class="status retained">Nicht verwendet</span></div></div>
+        </div></div></div>
+      </section>
+
+      <section class="group" id="stage5">
+        <div class="group-label"><strong>Stage 5 · Option 3 Produktstapel, teilweise bereit</strong><span>Aktiv und vorläufig auf einen Blick.</span></div>
+        <div class="stage"><div class="screen"><div class="appbar"><div class="logo">chaarlie</div><div class="journey"><i></i> Bedarf <i></i> Verfeinerung <i></i> Produkte <i></i> Routine <i></i> <b>Anwendung</b></div><span class="saved">Gespeichert</span></div><div class="screen-content">
+          <div class="topline"><div><h2>Deine Anwendungen</h2><p>Wähle, was heute passt.</p></div></div>
+          <div class="summary-row"><span class="status partial">Plan teilweise bereit</span><span class="status planned">2 Produkte vorläufig</span></div>
+          <div class="stacks">
+            <article class="day wash"><div class="day-visual"><span class="stack-product one"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp" alt=""></span><span class="stack-product two is-planned"><em>◷</em><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt=""></span><span class="stack-product three is-planned"><em>◷</em><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp" alt=""></span></div><h3>Waschtag</h3><p>1 aktiv · 2 Produkte vorläufig</p><div class="day-meta"><span class="status partial">Teilweise bereit</span><span class="step-count">6 Schritte</span></div></article>
+            <article class="day"><div class="day-visual"><span class="empty-product"><em>?</em>＋</span></div><h3>Auffrisch-Tag</h3><p>1 Detail offen</p><div class="day-meta"><span class="status partial">Teilweise bereit</span><span class="step-count">Bei Bedarf</span></div></article>
+            <article class="day"><div class="day-visual"><span class="empty-product"><em>?</em>＋</span></div><h3>Pflegetag ohne Wäsche</h3><p>1 Detail offen</p><div class="day-meta"><span class="status partial">Teilweise bereit</span><span class="step-count">Bei Bedarf</span></div></article>
+            <article class="day rest"><div class="day-visual"><span class="moon">☾</span></div><h3>Pausentag</h3><p>Keine Produkte nötig</p><div class="day-meta"><span class="status active">Immer möglich</span><span class="step-count">0 Schritte</span></div></article>
+          </div>
+          <div class="stage-note">◷ Vorläufige Produkte sind im Ablauf klar markiert.</div>
+        </div></div></div>
+      </section>
+    </main>
+    <script>
+      const alternatives = [
+        {
+          label: "Ideal für dich",
+          name: "Bali Curls Moisturising Conditioner",
+          shortName: "Bali Curls",
+          reason: "Leichtere Pflege.",
+          size: "250 ml",
+          price: "13,01 €",
+          image: "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp",
+          care: "72%",
+          weight: "42%"
+        },
+        {
+          label: "Sehr passend",
+          name: "Garnier Hair Food Aloe Vera Feuchtigkeits-Spülung",
+          shortName: "Garnier Hair Food Aloe",
+          reason: "Leicht und feuchtigkeitsspendend.",
+          size: "400 ml",
+          price: "3,99 €",
+          image: "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/5516009a-eecb-42dd-87f6-07c560161136/17-5516009a-eecb-42dd-87f6-07c560161136-garnier-garnier-fructis-hair-food-aloe-vera-feuchtigkeits-spulung-84d29653e868.webp",
+          care: "60%",
+          weight: "30%"
+        }
+      ]
+      let alternativeIndex = 0
+      const renderAlternative = (nextIndex) => {
+        alternativeIndex = (nextIndex + alternatives.length) % alternatives.length
+        const alternative = alternatives[alternativeIndex]
+        document.querySelector("#alternative-label").textContent = alternative.label
+        document.querySelector("#alternative-image").src = alternative.image
+        document.querySelector("#alternative-image").alt = alternative.name
+        document.querySelector("#alternative-name").textContent = alternative.name
+        document.querySelector("#alternative-reason").textContent = alternative.reason
+        document.querySelector("#alternative-size").textContent = alternative.size
+        document.querySelector("#alternative-price").textContent = alternative.price
+        document.querySelector("#alternative-counter").textContent = `${alternativeIndex + 1} von ${alternatives.length} Alternativen`
+        document.querySelector("#alternative-care-marker").style.left = alternative.care
+        document.querySelector("#alternative-weight-marker").style.left = alternative.weight
+        document.querySelector("#replacement-action").textContent = `${alternative.shortName} als Ersatz übernehmen`
+        document.querySelector("#outcome-alternative-image").src = alternative.image
+        document.querySelector("#outcome-alternative-name").textContent = alternative.shortName
+      }
+      document.querySelector("#previous-alternative").addEventListener("click", () => renderAlternative(alternativeIndex - 1))
+      document.querySelector("#next-alternative").addEventListener("click", () => renderAlternative(alternativeIndex + 1))
+      renderAlternative(alternativeIndex)
+    </script>
+  </body>
+</html>

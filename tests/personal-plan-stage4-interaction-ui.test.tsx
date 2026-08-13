@@ -11,12 +11,16 @@ import {
 import {
   classifyProposalReload,
   friendlyError,
+  initialRoutineProposalSheetOpen,
   refreshRouteAfterRoutineAcceptance,
   routineEntrySyncTiming,
   routineProposalDeltaEntries,
 } from "../src/components/routine/personal-plan/personal-plan-routine-client"
 import { RoutineProductDetail } from "../src/components/routine/personal-plan/routine-product-detail"
-import type { RoutinePayloadV1 } from "../src/lib/personal-plan/routine/contracts"
+import type {
+  PersonalPlanRoutineView,
+  RoutinePayloadV1,
+} from "../src/lib/personal-plan/routine/contracts"
 import type { RoutineEditOperation } from "../src/lib/personal-plan/routine-candidate-compiler"
 
 type AnyElement = ReactElement<Record<string, any>>
@@ -351,6 +355,30 @@ test("Routine entry never blocks actions and defers reconciliation behind a pend
   assert.equal(
     routineEntrySyncTiming({ enabled: true, hasPendingProposal: true }),
     "after_proposal_resolution",
+  )
+})
+
+test("successor proposals are available from the overview but never auto-open on entry", () => {
+  const routine = payload([item()])
+  const view: PersonalPlanRoutineView = {
+    status: "active",
+    personalPlanId: "plan-1",
+    planRevision: 2,
+    sourceRevision: 3,
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: {
+      id: "proposal-1",
+      candidateVersionId: routine.versionId,
+      sourceRevision: 3,
+      delta: { schemaVersion: 1, direct: [], consequential: [], unchangedItemCount: 1 },
+      candidate: routine,
+    },
+  }
+
+  assert.equal(initialRoutineProposalSheetOpen(view), false)
+  assert.equal(
+    initialRoutineProposalSheetOpen({ ...view, activeVersion: null, status: "proposal" }),
+    false,
   )
 })
 

@@ -93,6 +93,11 @@ export function refreshRouteAfterRoutineAcceptance({
   if (action === "accept") refresh()
 }
 
+export function initialRoutineProposalSheetOpen(view: PersonalPlanRoutineView): boolean {
+  void view
+  return false
+}
+
 function editorSeed(view: PersonalPlanRoutineView): RoutinePayloadV1 | null {
   return view.activeVersion?.payload ?? view.pendingProposal?.candidate ?? null
 }
@@ -198,7 +203,9 @@ export function PersonalPlanRoutineClient({
   // A successor proposal is intentionally non-blocking during the current
   // visit, but it must be presented again on the next Routine-page visit until
   // the owner explicitly accepts or rejects it.
-  const [proposalOpen, setProposalOpen] = React.useState(Boolean(initialView.pendingProposal))
+  const [proposalOpen, setProposalOpen] = React.useState(
+    initialRoutineProposalSheetOpen(initialView),
+  )
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
@@ -268,8 +275,8 @@ export function PersonalPlanRoutineClient({
           if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
           const result = (await response.json()) as { proposalStaged?: unknown }
           if (result.proposalStaged === true) {
-            const next = await reload()
-            setProposalOpen(Boolean(next.pendingProposal))
+            await reload()
+            setProposalOpen(false)
           }
           outcome = result.proposalStaged === true ? "proposal_staged" : "unchanged"
         } catch {
@@ -339,7 +346,7 @@ export function PersonalPlanRoutineClient({
         }
         const next = await reload()
         setMode("overview")
-        setProposalOpen(Boolean(next.pendingProposal))
+        setProposalOpen(false)
         if (!next.pendingProposal) {
           routineAnalytics.track("personal_plan_stage4_outcome", {
             origin: "editor",
@@ -477,9 +484,9 @@ export function PersonalPlanRoutineClient({
           interaction: "acquisition_declared",
           surface: "routine_detail",
         })
-        const next = await reload()
+        await reload()
         setDetailOpen(false)
-        setProposalOpen(result.proposalStaged === true || Boolean(next.pendingProposal))
+        setProposalOpen(false)
         if (result.needsRetry === true) {
           setError(
             "Der Kauf ist gespeichert. Der neue Routine-Vorschlag wird noch einmal vorbereitet.",
@@ -510,6 +517,16 @@ export function PersonalPlanRoutineClient({
         retryMessage={error}
         onCancel={() => setMode("overview")}
         onSubmitOperations={submitOperations}
+      />
+    )
+  }
+
+  if (!seed && view.status === "authority_repair_required") {
+    return (
+      <RoutinePage
+        view={view}
+        stage5Reachable={stage5Reachable}
+        portfolioPresentation={portfolioPresentation}
       />
     )
   }
@@ -545,7 +562,9 @@ export function PersonalPlanRoutineClient({
         view={view}
         stage5Reachable={stage5Reachable}
         onEdit={canEdit ? openEditor : undefined}
-        onConfirm={isInitial && enabled ? () => setProposalOpen(true) : undefined}
+        onReviewProposal={
+          !isInitial && pending && enabled ? () => setProposalOpen(true) : undefined
+        }
         onItemDetail={(item) => void openDetail(item)}
         portfolioPresentation={portfolioPresentation}
       />

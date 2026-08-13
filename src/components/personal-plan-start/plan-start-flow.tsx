@@ -49,7 +49,7 @@ export type PlanStartReadyViewModel = {
 export type PlanStartInitialJourney =
   | { stage: "stage1"; refinementAvailable?: boolean }
   | { stage: "stage2"; refinementAvailable?: boolean }
-  | { stage: "stage3"; refinedVersionId: string }
+  | { stage: "stage3"; refinedVersionId: string; repairRoutineVersionId?: string }
 
 export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
 
@@ -295,12 +295,16 @@ export async function loadPlanStartStage3Bootstrap(input: {
   gateway: Pick<Stage3ProductsGateway, "loadOrCreate">
   personalPlanId: string
   refinedVersionId: string
+  repairRoutineVersionId?: string
 }): Promise<Stage3Bootstrap> {
   const loaded = await input.gateway.loadOrCreate({
     draftId: "client-derived",
     userId: "client-derived",
     personalPlanId: input.personalPlanId,
     refinedVersionId: input.refinedVersionId,
+    ...(input.repairRoutineVersionId
+      ? { repairRoutineVersionId: input.repairRoutineVersionId }
+      : {}),
     requirements: [],
   })
   return buildStage3Bootstrap(
@@ -359,9 +363,11 @@ export function PlanStartCustomerJourney({
         gateway: stage3Gateway,
         personalPlanId,
         refinedVersionId,
+        repairRoutineVersionId:
+          initialJourney.stage === "stage3" ? initialJourney.repairRoutineVersionId : undefined,
       })
     },
-    [personalPlanId, stage3Gateway],
+    [initialJourney, personalPlanId, stage3Gateway],
   )
   const installNewStage3Bootstrap = useCallback((bootstrap: Stage3Bootstrap) => {
     setStage3Bootstrap(bootstrap)

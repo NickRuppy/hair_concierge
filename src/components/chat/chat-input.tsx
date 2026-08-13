@@ -40,7 +40,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   }
 
   return (
-    <div className="bg-background p-4 pb-[max(1rem,var(--personal-plan-shell-bottom-padding,env(safe-area-inset-bottom)))] shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
+    <div className="bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
       <div className="flex min-w-0 items-end gap-2">
         {/* Text input */}
         <textarea

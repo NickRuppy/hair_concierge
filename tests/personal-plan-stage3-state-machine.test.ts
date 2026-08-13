@@ -16,9 +16,13 @@ import {
   replaceCategoryRoleAssignments,
   recordProductDecision,
   reopenCaptureCategory,
+  resolveStage3NeedRevision,
   resolveStage3ProductLoadResolution,
+  acknowledgeStage3InventoryDisposition,
+  finalizeStage3CaptureWithoutInventoryAuthority,
   type Stage3CategoryRequirement,
 } from "../src/lib/personal-plan/products"
+import type { InitialNeedPlanSnapshot } from "../src/lib/personal-plan/types"
 import type { Stage3AuthoritySnapshotV1 } from "../src/lib/personal-plan/products/contracts"
 import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
 
@@ -517,7 +521,7 @@ test("current-only captured categories can complete without fabricated required 
   )
 })
 
-test("final capture computes the immutable product-load overlay from captured frequencies", () => {
+test("final capture opens an explicit need-revision review instead of applying a hidden overlay", () => {
   const draft = completeCaptureCategory(
     completeCaptureCategory(
       completeCaptureCategory(productLoadCaptureDraft(), "dry_shampoo", currentOnlyRequirements),
@@ -528,11 +532,14 @@ test("final capture computes the immutable product-load overlay from captured fr
     currentOnlyRequirements,
   )
 
-  assert.equal(draft.pass, "product_decisions")
-  assert.equal(draft.productLoadResolution?.schemaVersion, 1)
-  assert.equal(draft.productLoadResolution?.decisions.length, 2)
+  assert.equal(draft.pass, "need_revision_review")
+  assert.equal(draft.productLoadResolution, undefined)
+  assert.deepEqual(draft.orderedCategories, ["dry_shampoo", "leave_in", "oil"])
+  assert.equal(draft.inventoryAuthority?.status, "pending")
+  assert.equal(draft.inventoryAuthority?.schemaVersion, 1)
+  assert.equal(draft.inventoryAuthority?.proposalFingerprint?.length, 64)
   assert.deepEqual(
-    draft.productLoadResolution?.decisions.map((decision) => ({
+    draft.inventoryAuthority?.proposedOutputSnapshot?.decisions.map((decision) => ({
       category: decision.category,
       roles: decision.roles,
       tier: decision.needTier,
@@ -563,17 +570,222 @@ test("final capture computes the immutable product-load overlay from captured fr
       },
     ],
   )
+  assert.deepEqual(draft.uncoveredRoles, [])
+  assert.equal(computeStage3PathState(draft, currentOnlyRequirements).canCreatePortfolio, false)
+})
+
+test("gate-off capture preserves Stage 2 authority without a hidden inventory overlay", () => {
+  const pending = completeCaptureCategory(
+    completeCaptureCategory(
+      completeCaptureCategory(productLoadCaptureDraft(), "dry_shampoo", currentOnlyRequirements),
+      "leave_in",
+      currentOnlyRequirements,
+    ),
+    "oil",
+    currentOnlyRequirements,
+  )
+  const gateOff = finalizeStage3CaptureWithoutInventoryAuthority(pending)
+
+  assert.equal(gateOff.pass, "product_decisions")
+  assert.equal(gateOff.refinedVersionId, pending.refinedVersionId)
+  assert.equal(gateOff.inventoryAuthority, undefined)
+  assert.equal(gateOff.productLoadResolution, undefined)
+  assert.deepEqual(gateOff.orderedCategories, pending.orderedCategories)
+})
+
+test("no-change inventory dispositions distinguish in-plan extras from inventory-only categories", () => {
+  const conditionerRequirement: Stage3CategoryRequirement = {
+    category: "conditioner",
+    requiredRoles: ["conditioner_rinse_out"],
+    needSummary: "Pflege nach jeder Wäsche",
+    authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+  }
+  const dryShampooRequirement: Stage3CategoryRequirement = {
+    category: "dry_shampoo",
+    requiredRoles: [],
+    needSummary: "Aktuell verwendetes Trockenshampoo erfassen",
+    authorityVersion: CATEGORY_ROLE_POLICIES.dry_shampoo.authorityVersion,
+  }
+  const mixedRequirements = [conditionerRequirement, dryShampooRequirement]
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: "refined-mixed-v1",
+    refinedInputHash: "refined-mixed-input",
+    categoryDecisions: [
+      {
+        category: "conditioner",
+        resolution: "resolved",
+        needTier: "basis",
+        roles: ["conditioner_rinse_out"],
+        target: {
+          category: "conditioner",
+          roles: ["conditioner_rinse_out"],
+          weight: "light",
+          careDirection: "moisture",
+          repairSupportLevel: "medium",
+          functionalNeeds: [],
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: [],
+      },
+    ],
+    coverage: [],
+    orderedCategories: ["conditioner", "dry_shampoo"],
+    inventoryOnlyCategories: ["dry_shampoo"],
+    authorityVersions: Object.fromEntries(
+      Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+        category,
+        policy.authorityVersion,
+      ]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+  }
+  let draft = createStage3Draft({
+    draftId: "draft-mixed-dispositions",
+    userId: "user-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-mixed-v1",
+    requirements: mixedRequirements,
+    authoritySnapshot,
+    now,
+  })
+  draft = assignProductRoles(
+    addCapturedProduct(addConditioner(addConditioner(draft, "conditioner-1"), "conditioner-2"), {
+      capturedProductId: "dry-shampoo-1",
+      userProductId: "user-product-dry-shampoo-1",
+      identity: {
+        kind: "catalog_product",
+        productId: "dry-shampoo-product-1",
+        displayName: "Trockenshampoo A",
+        category: "dry_shampoo",
+      },
+      frequencyRange: "monthly_1x",
+      ownership: "owned",
+      source: "catalog_search",
+    }),
+    {
+      capturedProductId: "conditioner-1",
+      category: "conditioner",
+      roles: ["conditioner_rinse_out"],
+    },
+  )
+
+  const completed = completeCaptureCategory(
+    completeCaptureCategory(draft, "conditioner", mixedRequirements),
+    "dry_shampoo",
+    mixedRequirements,
+  )
+
+  assert.equal(completed.inventoryAuthority?.status, "not_needed")
   assert.deepEqual(
-    draft.uncoveredRoles.map((role) => [role.category, role.role]),
+    completed.inventoryDispositions?.map((disposition) => [
+      disposition.capturedProductId,
+      disposition.reason,
+    ]),
+    [
+      ["conditioner-2", "not_assigned_to_final_role"],
+      ["dry-shampoo-1", "category_not_in_final_plan"],
+    ],
+  )
+})
+
+test("rejecting a need revision creates current inventory dispositions that block until acknowledged", () => {
+  const pending = completeCaptureCategory(
+    completeCaptureCategory(
+      completeCaptureCategory(productLoadCaptureDraft(), "dry_shampoo", currentOnlyRequirements),
+      "leave_in",
+      currentOnlyRequirements,
+    ),
+    "oil",
+    currentOnlyRequirements,
+  )
+  const proposalFingerprint = pending.inventoryAuthority?.proposalFingerprint
+  assert.ok(proposalFingerprint)
+
+  const rejected = resolveStage3NeedRevision(pending, {
+    action: "reject",
+    expectedProposalFingerprint: proposalFingerprint,
+    requirements: currentOnlyRequirements,
+  })
+  const rejectedPath = computeStage3PathState(rejected, currentOnlyRequirements)
+
+  assert.equal(rejected.pass, "product_decisions")
+  assert.equal(rejected.inventoryAuthority?.status, "rejected")
+  assert.equal(rejected.inventoryDispositions?.length, 3)
+  assert.equal(rejectedPath.canCreatePortfolio, false)
+  assert.ok(
+    rejectedPath.blockingReasons.some(
+      (reason) => reason.code === "inventory_disposition_unacknowledged",
+    ),
+  )
+
+  const acknowledged = rejected.inventoryDispositions!.reduce(
+    (draft, disposition) =>
+      acknowledgeStage3InventoryDisposition(draft, disposition.dispositionKey),
+    rejected,
+  )
+
+  assert.equal(computeStage3PathState(acknowledged, currentOnlyRequirements).canCreatePortfolio, true)
+})
+
+test("accepting a need revision rebases to the accepted authority without inventing product ownership", () => {
+  const pending = completeCaptureCategory(
+    completeCaptureCategory(
+      completeCaptureCategory(productLoadCaptureDraft(), "dry_shampoo", currentOnlyRequirements),
+      "leave_in",
+      currentOnlyRequirements,
+    ),
+    "oil",
+    currentOnlyRequirements,
+  )
+  const proposal = pending.inventoryAuthority?.proposedOutputSnapshot
+  const proposalFingerprint = pending.inventoryAuthority?.proposalFingerprint
+  assert.ok(proposal)
+  assert.ok(proposalFingerprint)
+  const acceptedRequirements: Stage3CategoryRequirement[] = proposal.renderedOrder.map((category) => {
+    const decision = proposal.decisions.find((candidate) => candidate.category === category)
+    if (!decision) throw new Error(`missing decision for ${category}`)
+    return {
+      category,
+      requiredRoles: decision.roles,
+      needSummary: category,
+      authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
+    }
+  })
+  const acceptedSnapshot: Stage3AuthoritySnapshotV1 = {
+    ...pending.authoritySnapshot!,
+    refinedNeedVersionId: "refined-accepted-v1",
+    refinedInputHash: proposal.inputHash,
+    categoryDecisions: proposal.decisions,
+    coverage: proposal.coverage,
+    orderedCategories: [...proposal.renderedOrder],
+    inventoryOnlyCategories: [],
+  }
+
+  const accepted = resolveStage3NeedRevision(pending, {
+    action: "accept",
+    expectedProposalFingerprint: proposalFingerprint,
+    refinedVersionId: "refined-accepted-v1",
+    requirements: acceptedRequirements,
+    authoritySnapshot: acceptedSnapshot,
+  })
+
+  assert.equal(accepted.refinedVersionId, "refined-accepted-v1")
+  assert.equal(accepted.inventoryAuthority?.status, "accepted")
+  assert.deepEqual(
+    accepted.uncoveredRoles.map((role) => [role.category, role.role]),
     [
       ["deep_cleansing_shampoo", "residue_reset"],
       ["scalp_care", "scalp_exfoliant"],
     ],
   )
-  assert.equal(
-    computeStage3PathState(draft, currentOnlyRequirements).firstUnresolvedStepKey,
-    "decision:deep_cleansing_shampoo:residue_reset:gap",
+  assert.deepEqual(
+    accepted.inventoryDispositions?.map((disposition) => disposition.capturedProductId),
+    ["dry-shampoo-1", "leave-in-1", "oil-1"],
   )
+  assert.deepEqual(accepted.decisions, [])
 })
 
 test("product-load weighed-down corroboration only adds one Reset point with a weekly load signal", () => {
@@ -757,10 +969,166 @@ test("product-load coverage links base Deep Cleansing to overlay Scalp Care", ()
   )
 
   assert.deepEqual(
-    completed.productLoadResolution?.decisions.map((decision) => decision.category),
+    completed.inventoryAuthority?.proposedOutputSnapshot?.decisions
+      .filter((decision) => decision.category === "scalp_care")
+      .map((decision) => decision.category),
     ["scalp_care"],
   )
-  assert.deepEqual(completed.productLoadResolution?.coverage, [deepCleansingScalpResetCoverage])
+  assert.deepEqual(completed.inventoryAuthority?.proposedOutputSnapshot?.coverage, [
+    deepCleansingScalpResetCoverage,
+  ])
+})
+
+test("inventory authority proposals preserve the immutable base refined snapshot payload", () => {
+  const baseCoverage: InitialNeedPlanSnapshot["coverage"][number] = {
+    job: "dry_shampoo_bridge",
+    ruleId: "portfolio.dry_shampoo_bridge.base",
+    primaryCategories: ["dry_shampoo"],
+    supportingCategories: [],
+    outcome: "owned",
+  }
+  const snapshot = currentOnlyAuthoritySnapshot(["dry_shampoo", "leave_in", "oil"])
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    ...snapshot,
+    coverage: [baseCoverage],
+    categoryDecisions: [
+      deepCleansingBasisDecision,
+      ...snapshot.categoryDecisions.filter(
+        (decision) => decision.category !== "deep_cleansing_shampoo",
+      ),
+    ],
+  }
+  const baseRefinedSnapshot = {
+    schemaVersion: 1,
+    snapshotKind: "initial_need",
+    computationVersion: "stage2.refined.immutable.v7",
+    inputHash: "refined-input-v1",
+    createdAt: "2026-08-13T08:00:00.000Z",
+    sourceQuiz: {
+      kind: "personal_plan",
+      version: 2,
+      answers: {
+        thickness: "fine",
+        goals: ["hydration"],
+      },
+    },
+    profile: {
+      source: {
+        quizVersion: 2,
+        artifactId: "stage2-artifact-1",
+        projection: "refined_post_plan",
+      },
+      hair: {
+        texture: "wavy",
+        thickness: "fine",
+        density: "medium",
+        length: "medium",
+        surface: "frizzy",
+        elasticity: "normal",
+        chemicalTreatments: ["none"],
+      },
+      scalp: {
+        oiliness: "balanced",
+        concerns: [],
+        irritationState: { state: "known", value: "normal" },
+      },
+      goals: ["hydration"],
+      concerns: ["low_volume_or_weighed_down"],
+      concernRecurrence: { state: "known", value: "sometimes" },
+      routine: {
+        currentProductLoad: { state: "unknown", reason: "current_product_load" },
+        shampooFrequency: { state: "known", value: "weekly_2x" },
+        heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+        mechanicalExposureSignals: [],
+        dryShampooBridgePreference: {
+          state: "unknown",
+          reason: "dry_shampoo_bridge_preference",
+        },
+        scalpIrritationState: { state: "known", value: "normal" },
+      },
+    },
+    assessments: {
+      sentinel: "stage2-assessments-are-preserved",
+      resetLoad: { knownScore: 1, missingInputs: ["current_product_load"] },
+    },
+    decisions: [
+      deepCleansingBasisDecision,
+      {
+        category: "heat_protectant",
+        resolution: "resolved",
+        needTier: "not_needed",
+        roles: [],
+        target: null,
+        frequency: null,
+        reasons: [],
+        executionState: "paused",
+        executionPauseReason: {
+          id: "heat_protectant.pause.no_heat",
+          salience: "primary",
+          evidence: [],
+          values: {},
+        },
+        deferredFacts: ["heat_tool_use"],
+      },
+    ],
+    coverage: [],
+    productPreviews: [
+      {
+        category: "conditioner",
+        state: "absent",
+        reason: "deferred_fit",
+        selectionRuleIds: ["preview.conditioner.deferred"],
+        selectionVersion: "preview-v1",
+      },
+    ],
+    renderedOrder: ["deep_cleansing_shampoo"],
+    deferredFacts: ["heat_tool_use"],
+  } as unknown as InitialNeedPlanSnapshot
+  const draft = {
+    ...productLoadCaptureDraft(),
+    authoritySnapshot,
+  }
+
+  const completed = completeCaptureCategory(
+    completeCaptureCategory(
+      completeCaptureCategory(draft, "dry_shampoo", currentOnlyRequirements),
+      "leave_in",
+      currentOnlyRequirements,
+    ),
+    "oil",
+    currentOnlyRequirements,
+    { baseRefinedSnapshot },
+  )
+  const proposed = completed.inventoryAuthority?.proposedOutputSnapshot
+
+  assert.equal(completed.pass, "need_revision_review")
+  assert.equal(proposed?.sourceQuiz, baseRefinedSnapshot.sourceQuiz)
+  assert.equal(proposed?.profile, baseRefinedSnapshot.profile)
+  assert.equal(proposed?.profile.hair.thickness, "fine")
+  assert.equal(proposed?.assessments, baseRefinedSnapshot.assessments)
+  assert.equal(proposed?.productPreviews, baseRefinedSnapshot.productPreviews)
+  assert.equal(proposed?.deferredFacts, baseRefinedSnapshot.deferredFacts)
+  assert.equal(proposed?.createdAt, baseRefinedSnapshot.createdAt)
+  assert.equal(proposed?.computationVersion, "stage3.product_load_refined_snapshot.v1")
+  assert.notEqual(proposed?.inputHash, baseRefinedSnapshot.inputHash)
+  assert.deepEqual(
+    proposed?.decisions.map((decision) => [decision.category, decision.roles]),
+    [
+      ["deep_cleansing_shampoo", ["residue_reset"]],
+      ["heat_protectant", []],
+      ["scalp_care", ["scalp_exfoliant"]],
+    ],
+  )
+  assert.equal(
+    proposed?.decisions.find((decision) => decision.category === "heat_protectant")?.executionState,
+    "paused",
+  )
+  assert.equal(
+    proposed?.decisions.filter((decision) => decision.category === "heat_protectant").length,
+    1,
+  )
+  assert.deepEqual(proposed?.coverage, [baseCoverage, deepCleansingScalpResetCoverage])
+  assert.deepEqual(proposed?.renderedOrder, ["deep_cleansing_shampoo", "scalp_care"])
 })
 
 test("product-load Deep Cleansing overlay preserves irritated or dry-flake scalp pause", () => {
@@ -805,7 +1173,7 @@ test("product-load Deep Cleansing overlay preserves irritated or dry-flake scalp
     "dry_shampoo",
     [dryShampooRequirement],
   )
-  const deepCleansing = completed.productLoadResolution?.decisions.find(
+  const deepCleansing = completed.inventoryAuthority?.proposedOutputSnapshot?.decisions.find(
     (decision) => decision.category === "deep_cleansing_shampoo",
   )
 
@@ -854,10 +1222,14 @@ test("product-load coverage links overlay Deep Cleansing to base Scalp Care", ()
   const completed = completeCaptureCategory(captured, "leave_in", [leaveInRequirement])
 
   assert.deepEqual(
-    completed.productLoadResolution?.decisions.map((decision) => decision.category),
+    completed.inventoryAuthority?.proposedOutputSnapshot?.decisions
+      .filter((decision) => decision.category === "deep_cleansing_shampoo")
+      .map((decision) => decision.category),
     ["deep_cleansing_shampoo"],
   )
-  assert.deepEqual(completed.productLoadResolution?.coverage, [deepCleansingScalpResetCoverage])
+  assert.deepEqual(completed.inventoryAuthority?.proposedOutputSnapshot?.coverage, [
+    deepCleansingScalpResetCoverage,
+  ])
 })
 
 test("effective product-load coverage dedupes base and overlay ledger facts", () => {
@@ -895,7 +1267,11 @@ test("effective product-load coverage dedupes base and overlay ledger facts", ()
     currentOnlyRequirements,
   )
 
-  assert.equal(completed.productLoadResolution?.coverage.length, 0)
+  const resolution = resolveStage3ProductLoadResolution({
+    ...completed,
+    productLoadResolution: undefined,
+  })
+  assert.equal(resolution?.coverage.length, 0)
   assert.deepEqual(effectiveStage3Coverage(completed), [deepCleansingScalpResetCoverage])
 })
 
@@ -938,7 +1314,7 @@ test("product-load Scalp Care overlay preserves an existing stronger base decisi
     currentOnlyRequirements,
   )
 
-  const scalpOverlay = completed.productLoadResolution?.decisions.find(
+  const scalpOverlay = completed.inventoryAuthority?.proposedOutputSnapshot?.decisions.find(
     (decision) => decision.category === "scalp_care",
   )
   assert.equal(scalpOverlay?.needTier, "basis")
@@ -994,10 +1370,12 @@ function oilOnlyDraft(
 test("captured weekly Oil with confirmed scalp purpose adds Scalp Care exfoliant load", () => {
   const draft = oilOnlyDraft(["scalp"])
   assert.deepEqual(
-    draft.productLoadResolution?.decisions.map((decision) => ({
-      category: decision.category,
-      roles: decision.roles,
-    })),
+    draft.inventoryAuthority?.proposedOutputSnapshot?.decisions
+      .filter((decision) => decision.category === "scalp_care")
+      .map((decision) => ({
+        category: decision.category,
+        roles: decision.roles,
+      })),
     [{ category: "scalp_care", roles: ["scalp_exfoliant"] }],
   )
 })
@@ -1056,7 +1434,7 @@ test("captured weekly Oil without scalp or dry-finish purpose does not create pr
   assert.equal(draft.productLoadResolution, undefined)
 })
 
-test("capture edits prune the product-load overlay and dependent decisions", () => {
+test("capture edits clear the pending need authority and dependent decisions", () => {
   const completed = completeCaptureCategory(
     completeCaptureCategory(
       completeCaptureCategory(productLoadCaptureDraft(), "dry_shampoo", currentOnlyRequirements),
@@ -1066,29 +1444,12 @@ test("capture edits prune the product-load overlay and dependent decisions", () 
     "oil",
     currentOnlyRequirements,
   )
-  const withDecision = recordProductDecision(completed, {
-    decisionKey: "decision:deep_cleansing_shampoo:residue_reset:gap",
-    category: "deep_cleansing_shampoo",
-    role: "residue_reset",
-    capturedProductId: null,
-    verdict: "unknown",
-    choiceState: "unassigned",
-    criterionResults: [],
-    recommendation: null,
-    limitationAcknowledged: false,
-  })
 
-  const reopened = reopenCaptureCategory(withDecision, "dry_shampoo")
+  const reopened = reopenCaptureCategory(completed, "dry_shampoo")
 
   assert.equal(reopened.productLoadResolution, undefined)
-  assert.equal(
-    reopened.decisions.some((decision) => decision.category === "deep_cleansing_shampoo"),
-    false,
-  )
-  assert.equal(
-    reopened.uncoveredRoles.some((role) => role.category === "deep_cleansing_shampoo"),
-    false,
-  )
+  assert.equal(reopened.inventoryAuthority, undefined)
+  assert.deepEqual(reopened.decisions, [])
   assert.equal(reopened.orderedCategories.includes("deep_cleansing_shampoo"), false)
   assert.equal(reopened.completedCaptureCategories.includes("deep_cleansing_shampoo"), false)
   assert.equal(reopened.authorityVersions.deep_cleansing_shampoo, undefined)

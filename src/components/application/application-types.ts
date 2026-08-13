@@ -11,6 +11,7 @@ export type ApplicationProductStepView = {
   applicationInstanceKey: string
   productId: string
   productName: string
+  imageUrl: string | null
   categoryLabelDe: string
   purposeDe: string
   actions: ApplicationProductActionView[]
@@ -49,7 +50,18 @@ export type ApplicationDayView = {
   isPartial: boolean
   provisionalProductCount: number
   unresolvedProductCount: number
+  shelf?: ApplicationShelfSlotView[]
 }
+
+export type ApplicationShelfSlotView =
+  | {
+      kind: "product"
+      productId: string
+      productName: string
+      imageUrl: string | null
+      status: "confirmed" | "provisional"
+    }
+  | { kind: "open"; categoryLabelDe: string }
 
 export type ApplicationRecoveryKind =
   | "feature_disabled"

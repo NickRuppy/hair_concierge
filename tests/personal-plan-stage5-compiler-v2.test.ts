@@ -123,6 +123,44 @@ test("V2 compiler renders OGX through canonical shampoo copy only", () => {
   assert.deepEqual(visibleWettingSteps, ["Haare und Kopfhaut vollständig anfeuchten."])
 })
 
+test("V2 compiler renders towel-drying once when the Leave-in protocol already owns it", () => {
+  const result = compileApplicationViewV2({
+    input: input("leave_in", "leave_in"),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      supportingShampooPointer(),
+      pointer({
+        scope: { kind: "product", category: "leave_in", productId },
+        sourceRole: "leave_in",
+        role: "leave_in",
+        applicationFamily: "post_wash_booster",
+        facts: {
+          ...pointer().facts,
+          applicationState: "damp_hair",
+          applicationArea: "hair_lengths_ends",
+          rinse: "leave_in",
+        },
+      }),
+    ],
+  })
+
+  assert.deepEqual(result.pointerIssues, [])
+  const washDay = result.days.find(({ key }) => key === "wash_day")
+  assert.ok(washDay)
+  const visibleTowelDryingSteps = washDay.outerSequence
+    .flatMap((step) =>
+      step.kind === "state_transition"
+        ? [step.copyDe]
+        : step.kind === "product"
+          ? step.block.steps.map(({ copyDe }) => copyDe)
+          : [],
+    )
+    .filter((copyDe) => /handtuch/i.test(copyDe))
+  assert.deepEqual(visibleTowelDryingSteps, [
+    "Das Haar nach dem Waschen sanft handtuchtrocknen.",
+  ])
+})
+
 test("V2 compiler keeps the wetting fallback for an exact shampoo workflow without one", () => {
   const result = compileApplicationViewV2({
     input: input(),

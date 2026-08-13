@@ -518,7 +518,7 @@ export function ChatContainer({
   const greeting = firstName ? `${timeGreeting}, ${firstName}` : timeGreeting
 
   return (
-    <div className="flex h-[calc(100dvh-3.5rem)] overflow-hidden">
+    <div className="flex h-[calc(100dvh-3.5rem-var(--personal-plan-shell-bottom-padding,0px))] overflow-hidden">
       {/* Desktop Sidebar */}
       <div className="hidden w-72 shrink-0 md:block">
         <ConversationSidebar

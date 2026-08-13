@@ -1,7 +1,8 @@
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutineProductPresentation } from "@/lib/personal-plan/routine/contracts"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
-import { RoutineItemCard } from "./routine-item-card"
+import { RoutineCategoryCard } from "./routine-item-card"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
 
@@ -12,6 +13,7 @@ export function RoutineSection({
   emptyLabel,
   onItemDetail,
   presentation = null,
+  productPresentation = null,
 }: {
   title: "Deine Basis" | "Optional" | "Später ergänzen"
   items: RoutineItem[]
@@ -19,8 +21,19 @@ export function RoutineSection({
   emptyLabel?: string
   onItemDetail?: (item: RoutineItem) => void
   presentation?: PortfolioPresentation | null
+  productPresentation?: RoutineProductPresentation | null
 }) {
   const headingId = `${title.toLowerCase().replaceAll(" ", "-").replaceAll("ä", "ae")}-heading`
+  const categoryGroups = [
+    ...items
+      .reduce((groups, item) => {
+        const group = groups.get(item.category) ?? []
+        group.push(item)
+        groups.set(item.category, group)
+        return groups
+      }, new Map<string, RoutineItem[]>())
+      .entries(),
+  ]
 
   return (
     <section aria-labelledby={headingId} className="space-y-3">
@@ -36,13 +49,15 @@ export function RoutineSection({
         </p>
       ) : null}
       <div className="grid gap-3 lg:grid-cols-2">
-        {items.map((item) => (
-          <RoutineItemCard
-            key={item.itemKey}
-            item={item}
+        {categoryGroups.map(([category, groupedItems]) => (
+          <RoutineCategoryCard
+            key={category}
+            category={category}
+            items={groupedItems}
             variant={variant}
             onDetail={onItemDetail}
             presentation={presentation}
+            productPresentation={productPresentation}
           />
         ))}
       </div>

@@ -216,6 +216,7 @@ const nullableTrimmedString = z.preprocess((value) => {
 
 const isoDateString = z.string().datetime({ offset: true })
 const currencyString = z.literal("EUR")
+const netContentUnit = z.enum(["ml", "g"])
 const urlString = z.string().url()
 const productIdPlaceholder = PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER
 const identifierTypeSchema = z.preprocess(
@@ -259,8 +260,14 @@ const reviewedProductSchema = z
     purchase_link_status: z.enum(["available", "unavailable"]),
     purchase_link_checked_at: isoDateString,
     price_checked_at: isoDateString,
+    net_content_value: z.number().finite().positive().nullable().optional(),
+    net_content_unit: netContentUnit.nullable().optional(),
   })
   .strict()
+  .refine((product) => (product.net_content_value == null) === (product.net_content_unit == null), {
+    path: ["net_content_value"],
+    message: "net content value and unit must be supplied together",
+  })
 
 const finalPayloadSchema = z
   .object({

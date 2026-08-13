@@ -69,7 +69,7 @@ const proposalView = (candidate: RoutinePayloadV1): PersonalPlanRoutineView => (
   },
 })
 
-test("renders Basis before Optional and preserves adjacent cards for the same category", () => {
+test("renders Basis before Optional and groups multiple roles into one Bedarfsplan category card", () => {
   const routine = payload(
     [
       item({
@@ -107,8 +107,9 @@ test("renders Basis before Optional and preserves adjacent cards for the same ca
   const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)
 
   assert.ok(html.indexOf("Deine Basis") < html.indexOf("Optional"))
-  assert.equal((html.match(/Zweck: Regelmäßige Reinigung; Kategorie: Shampoo/g) ?? []).length, 1)
-  assert.equal((html.match(/Zweck: Schuppenpflege; Kategorie: Shampoo/g) ?? []).length, 1)
+  assert.equal((html.match(/aria-label="Kategorie: Shampoo/g) ?? []).length, 1)
+  assert.match(html, /Regelmäßige Reinigung/)
+  assert.match(html, /Schuppenpflege/)
   assert.ok(html.indexOf("Sanftes Shampoo") < html.indexOf("Kopfhautserum"))
   assert.match(html, /Geplant/)
 })
@@ -132,9 +133,9 @@ test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 
     activeVersion: { id: active.versionId, payload: active },
   }
 
-  assert.match(
+  assert.doesNotMatch(
     renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
-    /Deine Routine steht/,
+    /Routine bestätigen/,
   )
   const html = renderToStaticMarkup(
     <RoutinePage view={activeWithPending} stage5Reachable={false} />,
@@ -151,6 +152,41 @@ test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 
     renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
     /Anwendung ansehen/,
   )
+})
+
+test("uses presentation-only catalog image and name facts outside the Routine payload", () => {
+  const routine = payload([
+    item({
+      product: {
+        kind: "owned",
+        capturedProductId: "captured-shampoo",
+        productId: "product-shampoo",
+        displayName: "Eingefrorener Produktname",
+      },
+    }),
+  ])
+  const view: PersonalPlanRoutineView = {
+    ...proposalView(routine),
+    status: "active",
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+    productPresentation: {
+      catalogProducts: [
+        {
+          productId: "product-shampoo",
+          displayName: "Aktueller Katalogname",
+          imageUrl: "https://example.test/shampoo.webp",
+        },
+      ],
+    },
+  }
+
+  const html = renderToStaticMarkup(<RoutinePage view={view} />)
+
+  assert.match(html, /Aktueller Katalogname/)
+  assert.match(html, /src="https:\/\/example.test\/shampoo.webp"/)
+  assert.doesNotMatch(html, /Eingefrorener Produktname/)
+  assert.equal(routine.items[0]?.product.displayName, "Eingefrorener Produktname")
 })
 
 test("renders active routine as product-led result with separated later additions", () => {
@@ -307,6 +343,46 @@ test("shows v3 replacement labels and retained owned products without adding the
     />,
   )
   assert.doesNotMatch(emptyHtml, /Nicht verwendete Produkte/)
+})
+
+test("shows v4 retained inventory as stored, non-executable product context", () => {
+  const routine = payload([item()])
+  const presentation: PortfolioPresentation = {
+    schemaVersion: 4,
+    plannedPurchaseDecisionKeys: [],
+    retainedOwnedProducts: [],
+    retainedInventoryProducts: [
+      {
+        kind: "catalog_product",
+        capturedProductId: "inventory-captured",
+        userProductId: "inventory-user-product",
+        productId: "inventory-product",
+        displayName: "Nicht verwendetes Trockenshampoo",
+        category: "dry_shampoo",
+        role: null,
+        sourceDispositionKey: "inventory:dry-shampoo:1",
+        planStatus: "not_used",
+        reason: "category_not_in_final_plan",
+      },
+    ],
+  }
+
+  const html = renderToStaticMarkup(
+    <RoutinePage
+      view={{
+        ...proposalView(routine),
+        status: "active",
+        activeVersion: { id: routine.versionId, payload: routine },
+        pendingProposal: null,
+      }}
+      portfolioPresentation={presentation}
+    />,
+  )
+
+  assert.match(html, /Nicht verwendete Produkte/)
+  assert.match(html, /Nicht verwendetes Trockenshampoo/)
+  assert.match(html, /Nicht verwendet/)
+  assert.doesNotMatch(html, /inventory-captured/)
 })
 
 test("keeps required Basis gaps explicit and renders a named recovery state without payload", () => {

@@ -2,8 +2,8 @@ import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
+import { renderToStaticMarkup } from "react-dom/server"
 
-import { Button } from "../src/components/ui/button"
 import {
   IntakeFallbackBoundary,
   ProductCaptureScreen,
@@ -14,6 +14,8 @@ import {
   Stage3Transition,
 } from "../src/components/personal-plan-products"
 import {
+  Stage3InventoryDispositionReview,
+  Stage3NeedRevisionCheckpoint,
   Stage3ProductsFlow,
   type Stage3RoutineHandoff,
   updateStage3RoleAssignments,
@@ -731,6 +733,247 @@ test("waiting for catalog analysis preserves the selected product and cadence", 
   assert.deepEqual(replacement?.uncoveredRoles, [
     { category: "shampoo", role: "shampoo_everyday", reason: "not_ready_to_decide" },
   ])
+})
+
+test("material inventory authority opens a Bedarfsplan checkpoint before product fit review", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "oil",
+      requiredRoles: ["dry_finish"],
+      needSummary: "Finish für deine Längen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+    },
+  ]
+  const pendingDraft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-need-revision-checkpoint",
+      userId: "user-need-revision-checkpoint",
+      personalPlanId: "plan-need-revision-checkpoint",
+      refinedVersionId: "refined-need-revision-checkpoint",
+      requirements,
+      now: "2026-08-13T00:00:00.000Z",
+    }),
+    pass: "need_revision_review",
+    categoryCursor: null,
+    inventoryAuthority: {
+      schemaVersion: 1,
+      stage2RefinedNeedVersionId: "refined-need-revision-checkpoint",
+      inventorySnapshotFingerprint: "a".repeat(64),
+      status: "pending",
+      proposalFingerprint: "b".repeat(64),
+      proposedInputHash: "proposed-input-hash",
+      proposedOutputSnapshot: null,
+      materialDelta: [
+        {
+          kind: "category_added",
+          category: "deep_cleansing_shampoo",
+          before: null,
+          after: "optional",
+        },
+      ],
+      resolvedFingerprint: null,
+    },
+    inventoryDispositions: [],
+  }
+  const acceptedDraft: Stage3ProductDraft = {
+    ...pendingDraft,
+    pass: "product_decisions",
+    revision: 1,
+    inventoryAuthority: {
+      ...pendingDraft.inventoryAuthority!,
+      status: "accepted",
+      resolvedFingerprint: "b".repeat(64),
+    },
+  }
+  const actions: string[] = []
+  let latestDraft = pendingDraft
+  const gateway = {
+    ...createAuthorityTestGateway(),
+    loadOrCreate: async () => ({
+      status: "active" as const,
+      draft: latestDraft,
+      requirements,
+    }),
+    resolveNeedRevision: async (input: {
+      action: "accept" | "reject"
+    }): Promise<Stage3MutationResponse> => {
+      actions.push(input.action)
+      latestDraft = acceptedDraft
+      return { status: "saved", draft: acceptedDraft }
+    },
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext: {
+        schemaVersion: 1,
+        personalPlanId: pendingDraft.personalPlanId,
+        refinedVersionId: pendingDraft.refinedVersionId,
+        orderedCategories: requirements,
+        inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+      },
+      gateway,
+      searchDebounceMs: 0,
+    }),
+  )
+
+  let tree = await renderSettled(harness)
+  const checkpoint = findByType<React.ComponentProps<typeof Stage3NeedRevisionCheckpoint>>(
+    tree,
+    Stage3NeedRevisionCheckpoint,
+  )
+  assert.ok(checkpoint, textContent(tree))
+  assert.equal(findByType(tree, ProductFitComparison), null)
+  const checkpointHtml = renderToStaticMarkup(
+    <Stage3NeedRevisionCheckpoint
+      authority={checkpoint.props.authority}
+      onAccept={() => {}}
+      onReject={() => {}}
+    />,
+  )
+  assert.match(checkpointHtml, /Deine Produkte verändern einen Punkt/)
+  assert.match(checkpointHtml, /Tiefenreinigung/)
+  assert.match(checkpointHtml, /Ergänzung übernehmen/)
+  assert.match(checkpointHtml, /Bedarfsplan beibehalten/)
+
+  checkpoint.props.onAccept()
+  tree = await renderSettled(harness)
+  assert.deepEqual(actions, ["accept"])
+  assert.equal(findByType(tree, Stage3NeedRevisionCheckpoint), null)
+})
+
+test("inventory-only products render acknowledgement-only and never enter fit comparison", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "dry_shampoo",
+      requiredRoles: [],
+      needSummary: "Aktuell verwendetes Trockenshampoo erfassen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.dry_shampoo.authorityVersion,
+    },
+  ]
+  const dispositionKey = "inventory:dry_shampoo:dry-shampoo-owned"
+  const baseDraft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-inventory-disposition-ui",
+      userId: "user-inventory-disposition-ui",
+      personalPlanId: "plan-inventory-disposition-ui",
+      refinedVersionId: "refined-inventory-disposition-ui",
+      requirements,
+      now: "2026-08-13T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [
+      {
+        capturedProductId: "dry-shampoo-owned",
+        userProductId: "user-product-dry-shampoo-owned",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-dry-shampoo-owned",
+          displayName: "Batiste Blush Trockenshampoo",
+          category: "dry_shampoo",
+          imageUrl: "https://example.test/batiste.webp",
+        },
+        frequencyRange: "weekly_1x",
+        ownership: "owned",
+        source: "existing_inventory",
+      },
+    ],
+    inventoryAuthority: {
+      schemaVersion: 1,
+      stage2RefinedNeedVersionId: "refined-inventory-disposition-ui",
+      inventorySnapshotFingerprint: "c".repeat(64),
+      status: "rejected",
+      proposalFingerprint: "d".repeat(64),
+      proposedInputHash: null,
+      proposedOutputSnapshot: null,
+      materialDelta: [],
+      resolvedFingerprint: "d".repeat(64),
+    },
+    inventoryDispositions: [
+      {
+        schemaVersion: 1,
+        dispositionKey,
+        capturedProductId: "dry-shampoo-owned",
+        category: "dry_shampoo",
+        planStatus: "not_used",
+        reason: "category_not_in_final_plan",
+        acknowledged: false,
+        authorityFingerprint: "d".repeat(64),
+      },
+    ],
+  }
+  const acknowledgedDraft: Stage3ProductDraft = {
+    ...baseDraft,
+    revision: 1,
+    inventoryDispositions: baseDraft.inventoryDispositions!.map((disposition) => ({
+      ...disposition,
+      acknowledged: true,
+    })),
+  }
+  const acknowledgements: string[] = []
+  let completeCalls = 0
+  let latestDraft = baseDraft
+  const gateway = {
+    ...createAuthorityTestGateway(),
+    loadOrCreate: async () => ({
+      status: "active" as const,
+      draft: latestDraft,
+      requirements,
+    }),
+    acknowledgeInventoryDisposition: async (input: {
+      dispositionKey: string
+    }): Promise<Stage3MutationResponse> => {
+      acknowledgements.push(input.dispositionKey)
+      latestDraft = acknowledgedDraft
+      return { status: "saved", draft: acknowledgedDraft }
+    },
+    complete: async () => {
+      completeCalls += 1
+      return { status: "not_ready" as const, draft: acknowledgedDraft }
+    },
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext: {
+        schemaVersion: 1,
+        personalPlanId: baseDraft.personalPlanId,
+        refinedVersionId: baseDraft.refinedVersionId,
+        orderedCategories: requirements,
+        inventoryPrompts: [
+          { category: "dry_shampoo", allowsMultiple: true, allowsExplicitNone: true },
+        ],
+      },
+      gateway,
+      searchDebounceMs: 0,
+    }),
+  )
+
+  let tree = await renderSettled(harness)
+  const disposition = findByType<React.ComponentProps<typeof Stage3InventoryDispositionReview>>(
+    tree,
+    Stage3InventoryDispositionReview,
+  )
+  assert.ok(disposition, textContent(tree))
+  assert.equal(findByType(tree, ProductFitComparison), null)
+  const dispositionHtml = renderToStaticMarkup(
+    <Stage3InventoryDispositionReview
+      disposition={disposition.props.disposition}
+      product={disposition.props.product}
+      onAcknowledge={() => {}}
+      onBack={() => {}}
+    />,
+  )
+  assert.match(dispositionHtml, /Batiste Blush Trockenshampoo/)
+  assert.match(dispositionHtml, /Nicht Teil deiner Routine/)
+  assert.match(dispositionHtml, /Bleibt unter .Meine Produkte. gespeichert/)
+  assert.match(dispositionHtml, /Verstanden, weiter/)
+  assert.doesNotMatch(dispositionHtml, /Alternative|Ersatz|übernehmen/)
+
+  disposition.props.onAcknowledge()
+  tree = await renderSettled(harness)
+  assert.deepEqual(acknowledgements, [dispositionKey])
+  assert.equal(findByType(tree, Stage3InventoryDispositionReview), null)
+  assert.equal(completeCalls, 1)
 })
 
 test("bootstrap Stage 3 opens capture directly and keeps product-kind correction available", async () => {
@@ -2132,7 +2375,33 @@ test("a generic product mutation conflict adopts the latest draft without captur
     if (revisions.length === 1) {
       const saved = await originalMutate(input)
       assert.equal(saved.status, "saved")
-      return { status: "conflict", latestDraft: saved.draft }
+      return {
+        status: "conflict",
+        latestDraft: {
+          ...saved.draft,
+          pass: "need_revision_review",
+          categoryCursor: null,
+          inventoryAuthority: {
+            schemaVersion: 1,
+            stage2RefinedNeedVersionId: saved.draft.refinedVersionId,
+            inventorySnapshotFingerprint: "a".repeat(64),
+            status: "pending",
+            proposalFingerprint: "b".repeat(64),
+            proposedInputHash: "c".repeat(64),
+            proposedOutputSnapshot: null,
+            materialDelta: [
+              {
+                kind: "category_added",
+                category: "deep_cleansing_shampoo",
+                before: null,
+                after: "optional",
+              },
+            ],
+            resolvedFingerprint: null,
+          },
+          inventoryDispositions: [],
+        },
+      }
     }
     return originalMutate(input)
   }
@@ -2191,9 +2460,10 @@ test("a generic product mutation conflict adopts the latest draft without captur
   assert.equal(recovery?.props.actionLabel, "Weiter prüfen")
 
   recovery?.props.onAction?.()
-  await new Promise((resolve) => setImmediate(resolve))
+  tree = await renderSettled(harness)
 
   assert.deepEqual(revisions, [0])
+  assert.ok(findByType(tree, Stage3NeedRevisionCheckpoint))
 })
 
 test("a stale refined source offers a current-state reload instead of retrying the obsolete mutation", async () => {

@@ -844,7 +844,100 @@ test("Heat candidate selection is stable across input order and UUID changes", (
   }
 })
 
-test("Heat candidate selection excludes products without verified current availability", () => {
+test("Heat candidate authority ignores commerce and presentation-only changes", () => {
+  const evaluate = (commerce: {
+    preferred: Required<
+      Pick<
+        Stage3AuthorityCommonProductFacts,
+        | "priceEur"
+        | "purchaseLinkStatus"
+        | "netContentValue"
+        | "netContentUnit"
+        | "presentationImageUrl"
+      >
+    >
+    alternative: Required<
+      Pick<
+        Stage3AuthorityCommonProductFacts,
+        | "priceEur"
+        | "purchaseLinkStatus"
+        | "netContentValue"
+        | "netContentUnit"
+        | "presentationImageUrl"
+      >
+    >
+  }) => {
+    const heatInput = input("heat_protectant", "known") as Stage3AuthorityInput<"heat_protectant">
+    heatInput.capturedProductId = null
+    heatInput.subjectIdentity = null
+    heatInput.productFacts = null
+
+    const preferred = Object.assign(
+      heatCandidate({
+        productId: "semantic-preferred",
+        displayName: "Z Semantisch bevorzugt",
+        priceEur: commerce.preferred.priceEur,
+        purchaseLinkStatus: commerce.preferred.purchaseLinkStatus,
+      }),
+      { catalogSortOrder: 1, ...commerce.preferred },
+    )
+    const alternative = Object.assign(
+      heatCandidate({
+        productId: "semantic-alternative",
+        displayName: "A Semantische Alternative",
+        priceEur: commerce.alternative.priceEur,
+        purchaseLinkStatus: commerce.alternative.purchaseLinkStatus,
+      }),
+      { catalogSortOrder: 2, ...commerce.alternative },
+    )
+    heatInput.recommendationCandidates = [alternative, preferred]
+
+    return evaluateStage3Authority(heatInput as never)
+  }
+
+  const baseline = evaluate({
+    preferred: {
+      priceEur: 49.95,
+      purchaseLinkStatus: "unavailable",
+      netContentValue: 75,
+      netContentUnit: "ml",
+      presentationImageUrl: "https://example.com/preferred-before.jpg",
+    },
+    alternative: {
+      priceEur: 4.95,
+      purchaseLinkStatus: "available",
+      netContentValue: 250,
+      netContentUnit: "g",
+      presentationImageUrl: "https://example.com/alternative-before.jpg",
+    },
+  })
+  const presentationChanged = evaluate({
+    preferred: {
+      priceEur: 0.01,
+      purchaseLinkStatus: "available",
+      netContentValue: 500,
+      netContentUnit: "g",
+      presentationImageUrl: "https://example.com/preferred-after.jpg",
+    },
+    alternative: {
+      priceEur: 999.99,
+      purchaseLinkStatus: "unavailable",
+      netContentValue: 10,
+      netContentUnit: "ml",
+      presentationImageUrl: "https://example.com/alternative-after.jpg",
+    },
+  })
+
+  for (const result of [baseline, presentationChanged]) {
+    assert.equal(result.status, "known")
+    if (result.status !== "known") continue
+    assert.equal(result.recommendation?.productId, "semantic-preferred")
+    assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+    assert.equal(result.recommendationFactFingerprint, "facts-Z Semantisch bevorzugt")
+  }
+})
+
+test("Heat candidate selection keeps unavailable products eligible by catalog order", () => {
   const heatInput = input("heat_protectant", "known") as Stage3AuthorityInput<"heat_protectant">
   heatInput.capturedProductId = null
   heatInput.subjectIdentity = null
@@ -863,12 +956,14 @@ test("Heat candidate selection excludes products without verified current availa
       purchaseLinkStatus: "available",
     }),
   ]
+  heatInput.recommendationCandidates[0]!.catalogSortOrder = 1
+  heatInput.recommendationCandidates[1]!.catalogSortOrder = 2
 
   const result = evaluateStage3Authority(heatInput as never)
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.recommendation?.productId, "available")
+  assert.equal(result.recommendation?.productId, "cheap-unavailable")
 })
 
 test("Heat candidate selection uses a stable name fallback instead of UUID or insertion order", () => {

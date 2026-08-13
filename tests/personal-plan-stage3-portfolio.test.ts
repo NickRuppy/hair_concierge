@@ -586,6 +586,116 @@ test("portfolio v3 round-trips a selected replacement beside a legacy planned re
   )
 })
 
+test("portfolio v4 retains inventory-only catalog and pending products outside Routine-owned products", () => {
+  const base = completedDraft()
+  const inventoryOnlyProducts = [
+    {
+      capturedProductId: "dry-shampoo-owned",
+      userProductId: "user-product-dry-shampoo-owned",
+      identity: {
+        kind: "catalog_product" as const,
+        productId: "catalog-dry-shampoo-owned",
+        displayName: "Trockenshampoo vorhanden",
+        category: "dry_shampoo" as const,
+      },
+      frequencyRange: "weekly_1x" as const,
+      ownership: "owned" as const,
+      source: "catalog_search" as const,
+    },
+    {
+      capturedProductId: "leave-in-pending",
+      userProductId: "user-product-leave-in-pending",
+      identity: {
+        kind: "pending_submission" as const,
+        submissionId: "submission-leave-in-pending",
+        displayName: "Leave-in in Prüfung",
+        category: "leave_in" as const,
+        reviewStatus: "pending_review" as const,
+      },
+      frequencyRange: "weekly_2x" as const,
+      ownership: "owned" as const,
+      source: "intake_fallback" as const,
+    },
+  ]
+  const inventoryDispositions = [
+    {
+      schemaVersion: 1 as const,
+      dispositionKey: "inventory:dry_shampoo:dry-shampoo-owned",
+      capturedProductId: "dry-shampoo-owned",
+      category: "dry_shampoo" as const,
+      planStatus: "not_used" as const,
+      reason: "category_not_in_final_plan" as const,
+      acknowledged: true,
+      authorityFingerprint: "d".repeat(64),
+    },
+    {
+      schemaVersion: 1 as const,
+      dispositionKey: "inventory:leave_in:leave-in-pending",
+      capturedProductId: "leave-in-pending",
+      category: "leave_in" as const,
+      planStatus: "not_used" as const,
+      reason: "not_assigned_to_final_role" as const,
+      acknowledged: true,
+      authorityFingerprint: "d".repeat(64),
+    },
+  ]
+  const draft: Stage3ProductDraft = {
+    ...base,
+    orderedCategories: [...base.orderedCategories, "dry_shampoo", "leave_in"],
+    completedCaptureCategories: [...base.completedCaptureCategories, "dry_shampoo", "leave_in"],
+    products: [...base.products, ...inventoryOnlyProducts],
+    inventoryAuthority: {
+      schemaVersion: 1,
+      stage2RefinedNeedVersionId: "refined-v1",
+      inventorySnapshotFingerprint: "c".repeat(64),
+      status: "rejected",
+      proposalFingerprint: "d".repeat(64),
+      proposedInputHash: null,
+      proposedOutputSnapshot: null,
+      materialDelta: [],
+      resolvedFingerprint: "d".repeat(64),
+    },
+    inventoryDispositions,
+  }
+
+  const portfolio = createProposedProductPortfolio(draft, requirements, {
+    portfolioVersionId: "portfolio-v4-inventory",
+    createdAt: now,
+  })
+  const parsed = parseProposedProductPortfolio(portfolio, { includeV4: true })
+
+  assert.equal(parsed.schemaVersion, 4)
+  assert.equal(parsed.ownedProducts.some((product) => product.category === "dry_shampoo"), false)
+  assert.equal(parsed.ownedProducts.some((product) => product.category === "leave_in"), false)
+  assert.deepEqual(parsed.retainedInventoryProducts, [
+    {
+      kind: "catalog_product",
+      capturedProductId: "dry-shampoo-owned",
+      userProductId: "user-product-dry-shampoo-owned",
+      productId: "catalog-dry-shampoo-owned",
+      displayName: "Trockenshampoo vorhanden",
+      category: "dry_shampoo",
+      role: null,
+      sourceDispositionKey: "inventory:dry_shampoo:dry-shampoo-owned",
+      planStatus: "not_used",
+      reason: "category_not_in_final_plan",
+    },
+    {
+      kind: "pending_submission",
+      capturedProductId: "leave-in-pending",
+      userProductId: "user-product-leave-in-pending",
+      submissionId: "submission-leave-in-pending",
+      displayName: "Leave-in in Prüfung",
+      category: "leave_in",
+      role: null,
+      reviewStatus: "pending_review",
+      sourceDispositionKey: "inventory:leave_in:leave-in-pending",
+      planStatus: "not_used",
+      reason: "not_assigned_to_final_role",
+    },
+  ])
+})
+
 function productLoadSnapshot(): Stage3AuthoritySnapshotV1 {
   return {
     schemaVersion: 1,

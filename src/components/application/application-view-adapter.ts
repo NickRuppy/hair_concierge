@@ -14,6 +14,7 @@ import type {
   ApplicationDayView,
   ApplicationOuterStepView,
   ApplicationPageView,
+  ApplicationShelfSlotView,
 } from "./application-types"
 
 const EXTRA_CATEGORY_LABELS_DE: Partial<Record<PersonalPlanCategory, string>> = {
@@ -57,6 +58,7 @@ function productStep(block: CompiledProductBlock): ApplicationOuterStepView {
     applicationInstanceKey: block.applicationInstanceKey,
     productId: block.productId,
     productName: block.productName,
+    imageUrl: block.imageUrl ?? null,
     categoryLabelDe: categoryLabelDe(block.category),
     purposeDe: purposeDe(block),
     actions: block.steps.map((step) => ({ actionKey: step.stepKey, copyDe: step.copyDe })),
@@ -108,6 +110,21 @@ export function toApplicationPageView({
         .length,
       unresolvedProductCount: day.outerSequence.filter((step) => step.kind === "unresolved_product")
         .length,
+      shelf: day.outerSequence.flatMap<ApplicationShelfSlotView>((step) => {
+        if (step.kind === "product")
+          return [
+            {
+              kind: "product" as const,
+              productId: step.block.productId,
+              productName: step.block.productName,
+              imageUrl: step.block.imageUrl ?? null,
+              status: step.block.status,
+            },
+          ]
+        if (step.kind === "unresolved_product")
+          return [{ kind: "open" as const, categoryLabelDe: categoryLabelDe(step.block.category) }]
+        return []
+      }),
     }
   })
 

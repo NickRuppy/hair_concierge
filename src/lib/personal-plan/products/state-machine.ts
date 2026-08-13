@@ -1,5 +1,5 @@
 import { allowsMultipleProductsForRole, CATEGORY_ROLE_POLICIES } from "./authorities"
-import type { PlanProductRole } from "@/lib/personal-plan/types"
+import type { InitialNeedPlanSnapshot, PlanProductRole } from "@/lib/personal-plan/types"
 import {
   deriveStage3DecisionSubjects,
   isExecutableChoice,
@@ -19,15 +19,29 @@ import {
   type Stage3ProductDecision,
   type Stage3ProductDraft,
   type Stage3RoleAssignment,
+  stage3InventoryDispositionKey,
 } from "./contracts"
 import {
   effectiveStage3Requirements,
-  resolveStage3ProductLoadResolution,
+  resolveStage3InventoryAuthority,
 } from "./product-load-resolution"
+
+export type Stage3InventoryAuthorityTransitionOptions = {
+  baseRefinedSnapshot?: InitialNeedPlanSnapshot
+}
 
 function clearProductLoadResolution(draft: Stage3ProductDraft): Stage3ProductDraft {
   const resolution = draft.productLoadResolution
-  if (!resolution) return draft
+  if (!resolution) {
+    if (!draft.inventoryAuthority && !draft.inventoryDispositions) return draft
+    return {
+      ...draft,
+      inventoryAuthority: undefined,
+      inventoryDispositions: undefined,
+      decisions: [],
+      completedDecisionKeys: [],
+    }
+  }
   const overlayCategories = new Set(
     resolution.requirements.map((requirement) => requirement.category),
   )
@@ -52,46 +66,279 @@ function clearProductLoadResolution(draft: Stage3ProductDraft): Stage3ProductDra
     uncoveredRoles: draft.uncoveredRoles.filter((role) => !overlayCategories.has(role.category)),
     decisions,
     completedDecisionKeys: draft.completedDecisionKeys.filter((key) => decisionKeys.has(key)),
+    inventoryAuthority: undefined,
+    inventoryDispositions: undefined,
     productLoadResolution: undefined,
   }
 }
 
-function applyProductLoadResolution(draft: Stage3ProductDraft): Stage3ProductDraft {
+function applyProductLoadResolution(
+  draft: Stage3ProductDraft,
+  options: Stage3InventoryAuthorityTransitionOptions = {},
+): Stage3ProductDraft {
   const cleared = clearProductLoadResolution(draft)
-  const resolution = resolveStage3ProductLoadResolution(cleared)
-  if (!resolution) return { ...cleared, productLoadResolution: undefined }
-  const orderedCategories = [...cleared.orderedCategories]
-  const completedCaptureCategories = new Set(cleared.completedCaptureCategories)
-  const uncoveredRoles = [...cleared.uncoveredRoles]
-  const authorityVersions = { ...cleared.authorityVersions }
-  for (const requirement of resolution.requirements) {
-    if (!orderedCategories.includes(requirement.category))
-      orderedCategories.push(requirement.category)
-    completedCaptureCategories.add(requirement.category)
-    authorityVersions[requirement.category] = requirement.authorityVersion
-    for (const role of requirement.requiredRoles) {
-      const assigned = cleared.roleAssignments.some(
-        (assignment) =>
-          assignment.category === requirement.category && assignment.roles.includes(role),
-      )
-      const uncovered = uncoveredRoles.some(
-        (candidate) => candidate.category === requirement.category && candidate.role === role,
-      )
-      if (!assigned && !uncovered) {
-        uncoveredRoles.push({ category: requirement.category, role, reason: "no_product_owned" })
-      }
+  const authority = resolveStage3InventoryAuthority(cleared, options.baseRefinedSnapshot)
+  if (!authority) return { ...cleared, productLoadResolution: undefined }
+  if (authority.status === "pending") {
+    return {
+      ...cleared,
+      pass: "need_revision_review",
+      categoryCursor: null,
+      decisions: [],
+      completedDecisionKeys: [],
+      inventoryAuthority: authority,
+      inventoryDispositions: [],
+      productLoadResolution: undefined,
     }
   }
   return {
     ...cleared,
-    authorityVersions,
-    orderedCategories,
-    completedCaptureCategories: orderedCategories.filter((category) =>
-      completedCaptureCategories.has(category),
+    pass: "product_decisions",
+    categoryCursor: null,
+    inventoryAuthority: authority,
+    inventoryDispositions: deriveInventoryDispositions(
+      cleared,
+      finalRefinedRequirementsForInventoryDispositions(cleared),
+      authority.resolvedFingerprint ?? authority.inventorySnapshotFingerprint,
     ),
-    uncoveredRoles,
-    productLoadResolution: resolution,
+    productLoadResolution: undefined,
   }
+}
+
+/**
+ * Rollback-safe capture transition for an unmarked draft while inventory
+ * authority v2 is disabled. It deliberately retains the Stage-2 source,
+ * clears every overlay/envelope, and records only non-executable inventory
+ * dispositions; it never treats a proposed need as accepted or rejected.
+ */
+export function finalizeStage3CaptureWithoutInventoryAuthority(
+  draft: Stage3ProductDraft,
+): Stage3ProductDraft {
+  const cleared = clearProductLoadResolution(draft)
+  const requirements = finalRefinedRequirementsForInventoryDispositions(cleared)
+  const sourceFingerprint = cleared.authoritySnapshot?.refinedInputHash
+  const authorityFingerprint =
+    sourceFingerprint && /^[0-9a-f]{64}$/.test(sourceFingerprint)
+      ? sourceFingerprint
+      : "0".repeat(64)
+  const next = {
+    ...cleared,
+    pass: "product_decisions" as const,
+    categoryCursor: null,
+    completedCaptureCategories: [...cleared.orderedCategories],
+    decisions: [],
+    completedDecisionKeys: [],
+    inventoryAuthority: undefined,
+    productLoadResolution: undefined,
+  }
+  return cloneWithRevision(cleared, {
+    ...next,
+    inventoryDispositions: deriveInventoryDispositions(next, requirements, authorityFingerprint),
+  })
+}
+
+function finalRefinedRequirementsForInventoryDispositions(
+  draft: Stage3ProductDraft,
+): Stage3CategoryRequirement[] {
+  const snapshot = draft.authoritySnapshot
+  if (!snapshot || snapshot.refinedNeedVersionId !== draft.refinedVersionId) {
+    return draft.orderedCategories.map((category) => ({
+      category,
+      requiredRoles: [],
+      needSummary: category,
+      authorityVersion: draft.authorityVersions[category] ?? "unknown",
+    }))
+  }
+
+  const decisionsByCategory = new Map(
+    snapshot.categoryDecisions.map((decision) => [decision.category, decision]),
+  )
+  const orderedCategories = [
+    ...snapshot.orderedCategories,
+    ...draft.orderedCategories.filter(
+      (category) => !snapshot.orderedCategories.includes(category),
+    ),
+  ]
+
+  return orderedCategories.map((category) => {
+    const decision = decisionsByCategory.get(category)
+    const included = decision?.needTier === "basis" || decision?.needTier === "optional"
+    return {
+      category,
+      requiredRoles: included ? [...(decision?.roles ?? [])] : [],
+      needSummary: category,
+      authorityVersion:
+        snapshot.authorityVersions[category] ?? draft.authorityVersions[category] ?? "unknown",
+    }
+  })
+}
+
+function deriveInventoryDispositions(
+  draft: Stage3ProductDraft,
+  requirements: Stage3CategoryRequirement[],
+  authorityFingerprint: string,
+): NonNullable<Stage3ProductDraft["inventoryDispositions"]> {
+  const assignedProductIds = new Set(
+    draft.roleAssignments.map((assignment) => assignment.capturedProductId),
+  )
+  const requirementByCategory = new Map(
+    requirements.map((requirement) => [requirement.category, requirement]),
+  )
+  const inventoryOnlyCategories = new Set(draft.authoritySnapshot?.inventoryOnlyCategories ?? [])
+
+  return draft.products
+    .filter((product) => !assignedProductIds.has(product.capturedProductId))
+    .map((product) => {
+      const requirement = requirementByCategory.get(product.identity.category)
+      const categoryNotInFinalPlan =
+        !requirement ||
+        requirement.requiredRoles.length === 0 ||
+        inventoryOnlyCategories.has(product.identity.category)
+      return {
+        schemaVersion: 1 as const,
+        dispositionKey: stage3InventoryDispositionKey(
+          product.identity.category,
+          product.capturedProductId,
+        ),
+        capturedProductId: product.capturedProductId,
+        category: product.identity.category,
+        planStatus: "not_used" as const,
+        reason: categoryNotInFinalPlan
+          ? ("category_not_in_final_plan" as const)
+          : ("not_assigned_to_final_role" as const),
+        acknowledged: false,
+        authorityFingerprint,
+      }
+    })
+}
+
+type ResolveNeedRevisionInput =
+  | {
+      action: "accept"
+      expectedProposalFingerprint: string
+      refinedVersionId: string
+      requirements: Stage3CategoryRequirement[]
+      authoritySnapshot: Stage3AuthoritySnapshotV1
+      updatedAt?: string
+    }
+  | {
+      action: "reject"
+      expectedProposalFingerprint: string
+      requirements: Stage3CategoryRequirement[]
+      updatedAt?: string
+    }
+
+function requirePendingNeedRevision(draft: Stage3ProductDraft, expectedProposalFingerprint: string) {
+  const authority = draft.inventoryAuthority
+  if (!authority || authority.status !== "pending" || draft.pass !== "need_revision_review") {
+    throw new Error("need_revision_review_not_pending")
+  }
+  if (authority.proposalFingerprint !== expectedProposalFingerprint) {
+    throw new Error("stale_need_revision_proposal")
+  }
+  return authority
+}
+
+function missingUncoveredRoles(
+  draft: Stage3ProductDraft,
+  requirements: Stage3CategoryRequirement[],
+): Stage3CapturedUncoveredRole[] {
+  const assignedRoleKeys = new Set(
+    draft.roleAssignments.flatMap((assignment) =>
+      assignment.roles.map((role) => `${assignment.category}:${role}`),
+    ),
+  )
+  const existingGapKeys = new Set(
+    draft.uncoveredRoles.map((role) => `${role.category}:${role.role}`),
+  )
+  return requirements.flatMap((requirement) =>
+    requirement.requiredRoles
+      .filter(
+        (role) =>
+          !assignedRoleKeys.has(`${requirement.category}:${role}`) &&
+          !existingGapKeys.has(`${requirement.category}:${role}`),
+      )
+      .map((role) => ({
+        category: requirement.category,
+        role,
+        reason: "no_product_owned" as const,
+      })),
+  )
+}
+
+export function resolveStage3NeedRevision(
+  draft: Stage3ProductDraft,
+  input: ResolveNeedRevisionInput,
+): Stage3ProductDraft {
+  const authority = requirePendingNeedRevision(draft, input.expectedProposalFingerprint)
+  const resolvedAuthority = {
+    ...authority,
+    status: input.action === "accept" ? ("accepted" as const) : ("rejected" as const),
+    resolvedFingerprint: authority.proposalFingerprint,
+  }
+  const requirements = input.requirements
+  const requirementCategories = requirements.map((requirement) => requirement.category)
+  const requirementCategorySet = new Set(requirementCategories)
+  const inventoryOnlyCategories = draft.orderedCategories.filter(
+    (category) =>
+      !requirementCategorySet.has(category) &&
+      draft.products.some((product) => product.identity.category === category),
+  )
+  const orderedCategories = [...requirementCategories, ...inventoryOnlyCategories]
+  const authorityVersions = Object.fromEntries(
+    orderedCategories.map((category) => [
+      category,
+      requirements.find((requirement) => requirement.category === category)?.authorityVersion ??
+        draft.authorityVersions[category] ??
+        "unknown",
+    ]),
+  )
+  const baseDraft: Stage3ProductDraft = {
+    ...draft,
+    ...(input.action === "accept"
+      ? {
+          refinedVersionId: input.refinedVersionId,
+          authoritySnapshot: input.authoritySnapshot,
+        }
+      : {}),
+    pass: "product_decisions",
+    categoryCursor: null,
+    orderedCategories,
+    authorityVersions,
+    completedCaptureCategories: orderedCategories,
+    uncoveredRoles: [...draft.uncoveredRoles, ...missingUncoveredRoles(draft, requirements)],
+    decisions: [],
+    completedDecisionKeys: [],
+    inventoryAuthority: resolvedAuthority,
+    productLoadResolution: undefined,
+  }
+
+  return cloneWithRevision(draft, {
+    ...baseDraft,
+    inventoryDispositions: deriveInventoryDispositions(
+      baseDraft,
+      requirements,
+      input.expectedProposalFingerprint,
+    ),
+    updatedAt: input.updatedAt ?? draft.updatedAt,
+  })
+}
+
+export function acknowledgeStage3InventoryDisposition(
+  draft: Stage3ProductDraft,
+  dispositionKey: string,
+): Stage3ProductDraft {
+  const dispositions = draft.inventoryDispositions ?? []
+  if (!dispositions.some((disposition) => disposition.dispositionKey === dispositionKey)) {
+    throw new Error(`inventory disposition ${dispositionKey} does not exist`)
+  }
+  return cloneWithRevision(draft, {
+    inventoryDispositions: dispositions.map((disposition) =>
+      disposition.dispositionKey === dispositionKey
+        ? { ...disposition, acknowledged: true }
+        : disposition,
+    ),
+  })
 }
 
 type CreateStage3DraftInput = {
@@ -104,7 +351,10 @@ type CreateStage3DraftInput = {
   now: string
 }
 
-export function createStage3Draft(input: CreateStage3DraftInput): Stage3ProductDraft {
+export function createStage3Draft(
+  input: CreateStage3DraftInput,
+  options: Stage3InventoryAuthorityTransitionOptions = {},
+): Stage3ProductDraft {
   const orderedCategories = input.requirements.map((requirement) => requirement.category)
   const ownedCategories = input.authoritySnapshot?.productLoadContext?.ownedCategories
   const knownOwned = ownedCategories ? new Set(ownedCategories) : null
@@ -152,12 +402,13 @@ export function createStage3Draft(input: CreateStage3DraftInput): Stage3ProductD
     updatedAt: input.now,
     ...(input.authoritySnapshot ? { authoritySnapshot: input.authoritySnapshot } : {}),
   }
-  return captureComplete ? applyProductLoadResolution(draft) : draft
+  return captureComplete ? applyProductLoadResolution(draft, options) : draft
 }
 
 export function repairCursorlessCaptureDraft(
   draft: Stage3ProductDraft,
   updatedAt = draft.updatedAt,
+  options: Stage3InventoryAuthorityTransitionOptions = {},
 ): Stage3ProductDraft {
   const allCaptureCategoriesComplete =
     draft.status === "active" &&
@@ -168,6 +419,7 @@ export function repairCursorlessCaptureDraft(
   if (!allCaptureCategoriesComplete) return draft
   return applyProductLoadResolution(
     cloneWithRevision(draft, { pass: "product_decisions", updatedAt }),
+    options,
   )
 }
 
@@ -278,6 +530,7 @@ export function replaceCategoryRoleAssignments(
   category: PersonalPlanCategory,
   assignments: Stage3RoleAssignment[],
   requirements: Stage3CategoryRequirement[],
+  options: Stage3InventoryAuthorityTransitionOptions = {},
 ): Stage3ProductDraft {
   draft = clearProductLoadResolution(draft)
   if (!draft.orderedCategories.includes(category)) {
@@ -335,11 +588,18 @@ export function replaceCategoryRoleAssignments(
       (uncoveredRole) => uncoveredRole.category !== category,
     ),
   }
-  return cloneWithRevision(draft, {
+  const next = cloneWithRevision(draft, {
     roleAssignments: candidate.roleAssignments,
     uncoveredRoles: candidate.uncoveredRoles,
     ...pruneInvalidDecisionDescendants(candidate),
   })
+  const captureComplete =
+    next.orderedCategories.every((candidate) =>
+      next.completedCaptureCategories.includes(candidate),
+    ) && computeCaptureCompletion(next, requirements).canCompleteCapture
+  return captureComplete
+    ? applyProductLoadResolution(next, options)
+    : next
 }
 
 export function markRoleUncovered(
@@ -380,6 +640,7 @@ export function finalizeCaptureCategory(
   assignments: Stage3RoleAssignment[],
   uncoveredRoles: Stage3CapturedUncoveredRole[],
   requirements: Stage3CategoryRequirement[],
+  options: Stage3InventoryAuthorityTransitionOptions = {},
 ): Stage3ProductDraft {
   draft = clearProductLoadResolution(draft)
   if (!draft.orderedCategories.includes(category)) {
@@ -478,7 +739,7 @@ export function finalizeCaptureCategory(
       : (draft.orderedCategories.find((candidate) => !completed.has(candidate)) ?? null),
     ...pruneInvalidDecisionDescendants(candidate),
   })
-  return captureComplete ? applyProductLoadResolution(next) : next
+  return captureComplete ? applyProductLoadResolution(next, options) : next
 }
 
 /**
@@ -495,6 +756,7 @@ export function replaceCaptureCategorySnapshot(
   assignments: Stage3RoleAssignment[],
   uncoveredRoles: Stage3CapturedUncoveredRole[],
   requirements: Stage3CategoryRequirement[],
+  options: Stage3InventoryAuthorityTransitionOptions = {},
 ): Stage3ProductDraft {
   if (!draft.orderedCategories.includes(category)) {
     throw new Error(`category ${category} is not in this draft`)
@@ -535,7 +797,14 @@ export function replaceCaptureCategorySnapshot(
     ),
   }
 
-  return finalizeCaptureCategory(replacement, category, assignments, uncoveredRoles, requirements)
+  return finalizeCaptureCategory(
+    replacement,
+    category,
+    assignments,
+    uncoveredRoles,
+    requirements,
+    options,
+  )
 }
 
 export function reopenCaptureCategory(
@@ -583,6 +852,7 @@ export function completeCaptureCategory(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
   requirements: Stage3CategoryRequirement[],
+  options: Stage3InventoryAuthorityTransitionOptions = {},
 ): Stage3ProductDraft {
   if (!draft.orderedCategories.includes(category)) {
     throw new Error(`category ${category} is not in this draft`)
@@ -601,7 +871,7 @@ export function completeCaptureCategory(
       ? null
       : (draft.orderedCategories.find((candidate) => !completed.has(candidate)) ?? null),
   })
-  return captureComplete ? applyProductLoadResolution(next) : next
+  return captureComplete ? applyProductLoadResolution(next, options) : next
 }
 
 export function recordProductDecision(
@@ -668,6 +938,18 @@ function hasDecisionForRole(
   )
 }
 
+function isDecisionSubjectResolved(draft: Stage3ProductDraft, subject: ReturnType<typeof deriveStage3DecisionSubjects>[number]): boolean {
+  if (subject.subjectKind === "inventory_disposition") {
+    return Boolean(
+      (draft.inventoryDispositions ?? []).find(
+        (disposition) =>
+          disposition.dispositionKey === subject.decisionKey && disposition.acknowledged,
+      ),
+    )
+  }
+  return draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey)
+}
+
 function areAllDecisionSubjectsComplete(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
@@ -677,9 +959,7 @@ function areAllDecisionSubjectsComplete(
   )
   return (
     subjects.length > 0 &&
-    subjects.every((subject) =>
-      draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
-    )
+    subjects.every((subject) => isDecisionSubjectResolved(draft, subject))
   )
 }
 
@@ -808,13 +1088,39 @@ export function computeStage3PathState(
     }
   }
 
+  if (
+    draft.pass === "need_revision_review" ||
+    draft.inventoryAuthority?.status === "pending"
+  ) {
+    return {
+      pass: "need_revision_review",
+      orderedStepKeys: [...orderedStepKeys, "need_revision_review"],
+      completedStepKeys,
+      firstUnresolvedStepKey: "need_revision_review",
+      categorySummaries: captureCompletion.categorySummaries,
+      canCompleteCapture: true,
+      canCreatePortfolio: false,
+      blockingReasons: [
+        ...blockingReasons,
+        {
+          code: "need_revision_pending",
+          category: null,
+          role: null,
+          message: "Stage 3 inventory changed the refined need authority and requires review.",
+        },
+      ],
+    }
+  }
+
   const subjects = deriveStage3DecisionSubjects(draft)
   const requirementKeys = new Set(requirements.map((requirement) => requirement.category))
   const decisionStepKeys = subjects
     .filter((subject) => requirementKeys.has(subject.category))
     .map((subject) => subject.decisionKey)
   const completedDecisionStepKeys = decisionStepKeys.filter((stepKey) =>
-    draft.decisions.some((decision) => decision.decisionKey === stepKey),
+    subjects.some(
+      (subject) => subject.decisionKey === stepKey && isDecisionSubjectResolved(draft, subject),
+    ),
   )
   const firstUnresolvedDecisionStepKey =
     decisionStepKeys.find((stepKey) => !completedDecisionStepKeys.includes(stepKey)) ?? null
@@ -840,12 +1146,28 @@ export function computeStage3PathState(
       }
     }
   }
+  for (const subject of subjects) {
+    if (
+      subject.subjectKind === "inventory_disposition" &&
+      !isDecisionSubjectResolved(draft, subject)
+    ) {
+      blockingReasons.push({
+        code: "inventory_disposition_unacknowledged",
+        category: subject.category,
+        role: null,
+        message: `${subject.category} inventory disposition is not acknowledged.`,
+      })
+    }
+  }
 
   const canCreatePortfolio =
     draft.status === "active" &&
     validationIssues.length === 0 &&
     captureCompletion.canCompleteCapture &&
     firstUnresolvedDecisionStepKey === null &&
+    !blockingReasons.some(
+      (reason) => reason.code === "inventory_disposition_unacknowledged",
+    ) &&
     draft.decisions.every(
       (decision) =>
         isExecutableChoice(decision.choiceState) ||

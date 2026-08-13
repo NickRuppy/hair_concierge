@@ -16,10 +16,14 @@ export function createHttpStage3ProductsGateway({
   fetch: fetcher = fetch,
 }: { fetch?: FetchLike } = {}): Stage3ProductsGateway {
   return {
-    loadOrCreate: async ({ personalPlanId, refinedVersionId }) =>
+    loadOrCreate: async ({ personalPlanId, refinedVersionId, repairRoutineVersionId }) =>
       request<Stage3DraftResponse>(
         fetcher,
-        `/api/personal-plan/stage-3?${new URLSearchParams({ personalPlanId, refinedVersionId })}`,
+        `/api/personal-plan/stage-3?${new URLSearchParams({
+          personalPlanId,
+          refinedVersionId,
+          ...(repairRoutineVersionId ? { repairRoutineVersionId } : {}),
+        })}`,
         { method: "GET" },
       ),
     search: async ({ draftId, category, query, requestToken }) =>
@@ -52,6 +56,20 @@ export function createHttpStage3ProductsGateway({
         fetcher,
         "/api/personal-plan/stage-3",
         jsonRequest("PATCH", input),
+        { allowRevisionConflict: true },
+      ),
+    resolveNeedRevision: async (input) =>
+      request<Stage3MutationResponse>(
+        fetcher,
+        "/api/personal-plan/stage-3",
+        jsonRequest("PATCH", input),
+        { allowRevisionConflict: true },
+      ),
+    acknowledgeInventoryDisposition: async (input) =>
+      request<Stage3MutationResponse>(
+        fetcher,
+        "/api/personal-plan/stage-3",
+        jsonRequest("PATCH", { ...input, action: "acknowledge_inventory_disposition" }),
         { allowRevisionConflict: true },
       ),
     invalidateForRefinedVersion: async () => {

@@ -101,6 +101,36 @@ export function createSupabaseStage3ProductionPersistence(
         | { outcome: "revision_conflict"; draft: Stage3ProductDraft }
         | { outcome: "stale_source"; draft: Stage3ProductDraft }
     },
+    async resolveNeedRevision(input) {
+      const { data, error } = await client.rpc("personal_plan_resolve_stage3_need_revision_v1", {
+        p_user_id: input.userId,
+        p_draft_id: input.draftId,
+        p_expected_revision: input.expectedRevision,
+        p_expected_proposal_fingerprint: input.expectedProposalFingerprint,
+        p_action: input.action,
+        p_pass: input.draft.pass,
+        p_cursor: {
+          categoryCursor: input.draft.categoryCursor,
+          completedCaptureCategories: input.draft.completedCaptureCategories,
+          completedDecisionKeys: input.draft.completedDecisionKeys,
+        },
+        p_category_authority_versions: input.draft.authorityVersions,
+        p_payload: draftPayload(input.draft),
+      })
+      if (error || !data) throw new Error("stage3_need_revision_resolve_failed")
+      const outcome = String((data as Record<string, unknown>).outcome)
+      if (outcome !== "saved" && outcome !== "revision_conflict" && outcome !== "stale_source") {
+        throw new Error("stage3_need_revision_resolve_rejected")
+      }
+      if (outcome === "stale_source") return { outcome, draft: input.draft } as const
+      return {
+        outcome,
+        draft: mapStage3Draft((data as Record<string, unknown>).draft ?? data),
+      } as
+        | { outcome: "saved"; draft: Stage3ProductDraft }
+        | { outcome: "revision_conflict"; draft: Stage3ProductDraft }
+        | { outcome: "stale_source"; draft: Stage3ProductDraft }
+    },
     async search(input) {
       const query = normalizeOwnedProductSearchQuery(input.query)
       const { data, error } = await client.rpc("personal_plan_search_assessment_products_v2", {
@@ -300,7 +330,7 @@ export function createSupabaseStage3ProductionPersistence(
         .limit(1)
         .maybeSingle()
       if (proposalError) throw new Error("stage3_completion_receipt_load_failed")
-      const portfolio = parseProposedProductPortfolio(portfolioResult.data.snapshot)
+      const portfolio = parseProposedProductPortfolio(portfolioResult.data.snapshot, { includeV4: true })
       return {
         portfolio: {
           ...portfolio,
@@ -475,5 +505,7 @@ function mapStage3Draft(raw: unknown): Stage3ProductDraft {
     createdAt: String(row.created_at ?? payload.createdAt),
     updatedAt: String(row.updated_at ?? payload.updatedAt),
     authoritySnapshot: payload.authoritySnapshot as Stage3ProductDraft["authoritySnapshot"],
+    inventoryAuthority: payload.inventoryAuthority as Stage3ProductDraft["inventoryAuthority"],
+    inventoryDispositions: payload.inventoryDispositions as Stage3ProductDraft["inventoryDispositions"],
   }
 }

@@ -192,6 +192,37 @@ test("plan-start re-entry selects Stage 3 when refinement is complete and curren
   })
 })
 
+test("a server-validated Routine repair request re-enters Stage 3 from a later frontier", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage5",
+      nextHref: "/anwendung",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
+    }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+  const repairRoutineVersionId = "44444444-4444-4444-8444-444444444444"
+
+  assert.deepEqual(
+    await resolvePlanStartPageState(deps, { repairRoutineVersionId }),
+    {
+      state: "production",
+      initialJourney: {
+        stage: "stage3",
+        refinedVersionId: "refined-1",
+        repairRoutineVersionId,
+      },
+      personalPlanId: "plan-1",
+      initialRefinementSession: refinementSession("complete", "refined-1"),
+    },
+  )
+})
+
 test("completed refinement remains at the Stage 2 bridge until Stage 3 authority is ready", async () => {
   const deps: ResumeAwareDeps = {
     enabled: () => true,

@@ -7,10 +7,7 @@ import {
 import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
 import type { Stage3ProductsGateway } from "@/lib/personal-plan/products/gateway"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
-import {
-  isPersonalPlanAppV1Enabled,
-  isPersonalPlanStage4AutoActivateInitialEnabled,
-} from "@/lib/personal-plan/release"
+import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { createInitialRoutineCandidateCompiler } from "@/lib/personal-plan/routine-candidate-compiler"
 import {
   createSupabaseRoutineCadenceAuthorityReader,
@@ -229,7 +226,6 @@ export const { GET, POST } = createStage3CompleteRouteHandlers({
       ),
       stager: createRoutineProposalStagerRpcAdapter({
         client: admin as unknown as RoutineProposalRpcClient,
-        activateInitialRoutine: isPersonalPlanStage4AutoActivateInitialEnabled(),
       }),
     }).complete(input)
   },

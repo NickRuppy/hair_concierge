@@ -2,7 +2,10 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { PersonalPlanRoutineTerminalSourceDetails } from "@/lib/observability/personal-plan-application"
 
-import { parseProposedProductPortfolio, type ProposedProductPortfolio } from "../products/contracts"
+import {
+  parseProposedProductPortfolio,
+  type AnyProposedProductPortfolio,
+} from "../products/contracts"
 import {
   diffRoutinePayloads,
   hashRoutineSemantics,
@@ -38,7 +41,7 @@ type RoutineSourcePlan = {
 
 type RoutineSourceBase = {
   routine: RoutineCompiledPayload
-  portfolio: ProposedProductPortfolio
+  portfolio: AnyProposedProductPortfolio
   sourceProductDraftId: string
   sourceProductDraftRevision: number
 }
@@ -52,7 +55,7 @@ export function parseRoutineSourceBaseSnapshots(input: {
   try {
     return {
       routine: routinePayloadV1Schema.parse(input.routine) as RoutineCompiledPayload,
-      portfolio: parseProposedProductPortfolio(input.portfolio),
+      portfolio: parseProposedProductPortfolio(input.portfolio, { includeV4: true }),
       sourceProductDraftId: String(input.sourceProductDraftId),
       sourceProductDraftRevision: Number(input.sourceProductDraftRevision),
     }
@@ -87,7 +90,7 @@ export type RoutineSourceSyncRepository = {
     userId: string
     plan: RoutineSourcePlan
     sourceKey: string
-    portfolio: ProposedProductPortfolio
+    portfolio: AnyProposedProductPortfolio
     routine: RoutineCompiledPayload
     delta: unknown
     origin: "acquisition"

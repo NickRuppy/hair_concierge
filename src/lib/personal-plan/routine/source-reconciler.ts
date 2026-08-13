@@ -1,4 +1,4 @@
-import type { ProposedProductPortfolio } from "../products/contracts"
+import type { AnyProposedProductPortfolio } from "../products/contracts"
 import {
   applyRoutineEdits,
   diffRoutinePayloads,
@@ -27,7 +27,7 @@ export type RoutineSourceReconciliationResult =
   | {
       status: "changed"
       origin: "acquisition"
-      portfolio: ProposedProductPortfolio
+      portfolio: AnyProposedProductPortfolio
       routine: RoutineCompiledPayload
       delta: RoutineProposalDelta
     }
@@ -68,7 +68,7 @@ function plannedAssignmentOperations(input: {
  */
 export function reconcileRoutineUserProductSource(input: {
   routine: RoutineCompiledPayload
-  portfolio: ProposedProductPortfolio
+  portfolio: AnyProposedProductPortfolio
   userProduct: RoutineSourceUserProduct
   sourceRevision: number
 }): RoutineSourceReconciliationResult {
@@ -175,7 +175,7 @@ export function reconcileRoutineUserProductSource(input: {
   )
   for (const decisionKey of decisionKeys) {
     const plannedEntry = planned.find((entry) =>
-      input.portfolio.schemaVersion === 3
+      input.portfolio.schemaVersion === 3 || input.portfolio.schemaVersion === 4
         ? entry.sourceDecisionKey === decisionKey
         : entry.category === input.userProduct.category &&
           entry.role ===

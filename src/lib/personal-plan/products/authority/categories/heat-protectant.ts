@@ -26,14 +26,6 @@ function hasCompleteProtocol(facts: Stage3HeatProtectantFacts, input: HeatInput)
   )
 }
 
-function hasKnownBudget(candidate: Stage3HeatProtectantFacts): boolean {
-  return (
-    typeof candidate.priceEur === "number" &&
-    Number.isFinite(candidate.priceEur) &&
-    candidate.priceEur >= 0
-  )
-}
-
 function stableCandidateName(candidate: Stage3HeatProtectantFacts): string {
   return candidate.displayName
     .normalize("NFKC")
@@ -46,10 +38,10 @@ function compareRecommendationCandidates(
   left: Stage3HeatProtectantFacts,
   right: Stage3HeatProtectantFacts,
 ): number {
-  const leftPrice = left.priceEur as number
-  const rightPrice = right.priceEur as number
+  const leftCatalogOrder = left.catalogSortOrder ?? Number.MAX_SAFE_INTEGER
+  const rightCatalogOrder = right.catalogSortOrder ?? Number.MAX_SAFE_INTEGER
   return (
-    leftPrice - rightPrice ||
+    leftCatalogOrder - rightCatalogOrder ||
     stableCandidateName(left).localeCompare(stableCandidateName(right), "de-DE")
   )
 }
@@ -68,26 +60,12 @@ function recommendationCandidate(input: HeatInput): Stage3HeatProtectantFacts | 
       hasCompleteProtocol(candidate, input),
   )
 
-  // Current availability and price are signed selection dimensions. Unknown
-  // availability blocks ranking, while known-unavailable products are removed
-  // before price comparison so a pending product cannot block the launch set.
-  if (
-    sharedFit.some(
-      (candidate) =>
-        candidate.purchaseLinkStatus === null || candidate.purchaseLinkStatus === undefined,
-    )
-  ) {
+  const candidates = [...sharedFit].sort(compareRecommendationCandidates)
+  if (candidates.length === 0) return null
+  if (candidates.length > 1 && compareRecommendationCandidates(candidates[0], candidates[1]) === 0) {
     return null
   }
-
-  const available = sharedFit.filter((candidate) => candidate.purchaseLinkStatus === "available")
-  if (available.some((candidate) => !hasKnownBudget(candidate))) return null
-  available.sort(compareRecommendationCandidates)
-  if (available.length === 0) return null
-  if (available.length > 1 && compareRecommendationCandidates(available[0], available[1]) === 0) {
-    return null
-  }
-  return available[0]
+  return candidates[0]
 }
 
 function recommendation(candidate: Stage3HeatProtectantFacts, input: HeatInput) {

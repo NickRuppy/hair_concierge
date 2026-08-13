@@ -150,6 +150,21 @@ test("compiler builds canonical complete days, deduplicates a multi-role applica
   })
 })
 
+test("compiler carries a catalog image as presentation data without changing product sequencing", () => {
+  const result = compileApplicationView({
+    input: input([{ ...shampoo, imageUrl: "https://example.com/shampoo.webp" }]),
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+    ],
+  })
+
+  assert.equal(result.days[0]?.productBlocks[0]?.imageUrl, "https://example.com/shampoo.webp")
+  assert.deepEqual(
+    result.days[0]?.productBlocks.map((block) => block.productName),
+    ["Shampoo"],
+  )
+})
+
 test("compiler isolates products with conflicting conditioner relationships", () => {
   const shampooProtocol = protocol(
     "shampoo",

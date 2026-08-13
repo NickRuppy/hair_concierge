@@ -56,6 +56,7 @@ const refinedNeedSnapshot = {
       reasons: [{ id: "mask.not-needed.v1" }],
     },
   ],
+  renderedOrder: ["conditioner", "oil", "heat_protectant"],
 } as unknown as InitialNeedPlanSnapshot
 
 function portfolio(createdAt = "2026-08-08T08:00:00.000Z"): ProposedProductPortfolio {
@@ -239,6 +240,7 @@ test("freezes matching delegated exact cadence into the initial Routine and fing
         reasons: [{ id: "bond.protocol.v1" }],
       },
     ],
+    renderedOrder: ["bondbuilder"],
   } as unknown as InitialNeedPlanSnapshot
   const candidate = await compileInitialRoutineCandidate({
     ...compilerInput(),
@@ -283,11 +285,16 @@ test("initial Routine preserves Stage-3 choices and canonical Basis then Optiona
     {
       key: "optional",
       itemKeys: [
-        "item:heat_protectant:pre_heat_protection:captured-pending-a",
         "item:oil:dry_finish:planned-a",
+        "item:heat_protectant:pre_heat_protection:captured-pending-a",
       ],
     },
   ])
+  assert.deepEqual(payload.source.renderedOrder, ["conditioner", "oil", "heat_protectant"])
+  assert.deepEqual(
+    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),
+    ["conditioner", "oil", "heat_protectant"],
+  )
   assert.deepEqual(
     payload.items.map((item: Record<string, any>) => ({
       key: item.itemKey,
@@ -309,15 +316,6 @@ test("initial Routine preserves Stage-3 choices and canonical Basis then Optiona
         productKind: "owned",
       },
       {
-        key: "item:heat_protectant:pre_heat_protection:captured-pending-a",
-        assessment: "optional",
-        inclusion: "included",
-        availability: "pending_review",
-        fitDecision: "standard",
-        executable: false,
-        productKind: "pending_review",
-      },
-      {
         key: "item:oil:dry_finish:planned-a",
         assessment: "optional",
         inclusion: "included",
@@ -325,6 +323,15 @@ test("initial Routine preserves Stage-3 choices and canonical Basis then Optiona
         fitDecision: "standard",
         executable: false,
         productKind: "planned",
+      },
+      {
+        key: "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        assessment: "optional",
+        inclusion: "included",
+        availability: "pending_review",
+        fitDecision: "standard",
+        executable: false,
+        productKind: "pending_review",
       },
       {
         key: "item:mask:intensive_conditioning_mask:none",
@@ -364,7 +371,7 @@ test("compiler rejects a portfolio role without a resolved refined category deci
   )
 })
 
-test("compiler accepts a v2 portfolio with a frozen supplemental product-load decision", async () => {
+test("compiler fails closed on legacy supplemental product-load categories outside renderedOrder", async () => {
   const supplementalPortfolio = {
     ...portfolio(),
     schemaVersion: 2,
@@ -436,16 +443,15 @@ test("compiler accepts a v2 portfolio with a frozen supplemental product-load de
     },
   } as unknown as ProposedProductPortfolio
 
-  const candidate = await compileInitialRoutineCandidate({
-    ...compilerInput(),
-    portfolioSchemaVersion: 2,
-    portfolioSnapshot: supplementalPortfolio as never,
-  })
-  const payload = candidate.payload as Record<string, any>
-
-  assert.equal(payload.items[0]?.category, "deep_cleansing_shampoo")
-  assert.equal(payload.items[0]?.state.systemAssessment, "basis")
-  assert.equal(payload.items[0]?.cadence.recommended.every, 3)
+  await assert.rejects(
+    () =>
+      compileInitialRoutineCandidate({
+        ...compilerInput(),
+        portfolioSchemaVersion: 2,
+        portfolioSnapshot: supplementalPortfolio as never,
+      }),
+    /routine_candidate_category_outside_rendered_order:deep_cleansing_shampoo/,
+  )
 })
 
 test("compiler reads a frozen v3 planned replacement by decision key, not its shared role", async () => {
@@ -585,6 +591,45 @@ test("compiler gives a v3 selected replacement precedence over its pending sourc
     payload.items[0]?.assignmentKey,
     `assignment:heat_protectant:pre_heat_protection:planned:${decisionKey}`,
   )
+})
+
+test("compiler accepts v4 snapshots but never turns retained inventory into routine items", async () => {
+  const v4Portfolio = parseProposedProductPortfolio(
+    {
+      ...portfolio(),
+      schemaVersion: 4,
+      plannedPurchases: portfolio().plannedPurchases.map((purchase, index) => ({
+        ...purchase,
+        sourceDecisionKey: portfolio().categoryResolutions[index]!.decisionKey,
+      })),
+      retainedOwnedProducts: [],
+      inventoryDispositions: [],
+      retainedInventoryProducts: [
+        {
+          kind: "catalog_product",
+          capturedProductId: "inventory-captured-a",
+          userProductId: "inventory-user-a",
+          productId: "inventory-product-a",
+          displayName: "Nicht verwendetes Trockenshampoo",
+          category: "dry_shampoo",
+          role: null,
+          sourceDispositionKey: "inventory:dry-shampoo:a",
+          planStatus: "not_used",
+          reason: "category_not_in_final_plan",
+        },
+      ],
+    },
+    { includeV4: true },
+  )
+
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSchemaVersion: 4,
+    portfolioSnapshot: v4Portfolio as never,
+  })
+  const payload = candidate.payload as Record<string, any>
+
+  assert.equal(payload.items.some((item: { category: string }) => item.category === "dry_shampoo"), false)
 })
 
 test("compiler preserves a v1 pending assignment identity beside a same-role planned purchase", async () => {

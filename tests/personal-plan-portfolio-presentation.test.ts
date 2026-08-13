@@ -96,6 +96,47 @@ test("uses v3-only labels for a replacement and an informed override, preserving
   assert.equal(legacy.fitLabelFor("informed_override"), null)
 })
 
+test("presents v4 replacement metadata while leaving retained inventory display-only", async () => {
+  const snapshot = {
+    ...v3Snapshot(),
+    schemaVersion: 4 as const,
+    inventoryDispositions: [],
+    retainedInventoryProducts: [
+      {
+        kind: "catalog_product" as const,
+        capturedProductId: "inventory-captured-1",
+        userProductId: "inventory-user-product-1",
+        productId: "inventory-product-1",
+        displayName: "Nicht verwendetes Trockenshampoo",
+        category: "dry_shampoo" as const,
+        role: null,
+        sourceDispositionKey: "inventory:dry-shampoo:1",
+        planStatus: "not_used" as const,
+        reason: "category_not_in_final_plan" as const,
+      },
+    ],
+  }
+  const query = {
+    select: () => query,
+    eq: () => query,
+    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),
+  }
+
+  const presentation = await loadOwnerPortfolioPresentation(
+    { from: () => query },
+    ids.user,
+    ids.plan,
+    ids.portfolio,
+  )
+
+  assert.equal(presentation?.schemaVersion, 4)
+  assert.deepEqual(presentation?.retainedInventoryProducts, snapshot.retainedInventoryProducts)
+  assert.equal(
+    routinePresentationLabels(presentation).plannedLabelFor(["decision-replace"]),
+    "Noch kaufen",
+  )
+})
+
 test("fails closed when a stored portfolio snapshot is not strict", async () => {
   const query: any = {
     select: () => query,

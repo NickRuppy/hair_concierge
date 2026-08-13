@@ -81,6 +81,12 @@ function routeDeps(overrides: Record<string, unknown> = {}) {
           pending_routine_proposal_id: ids.proposal,
         },
         personal_plan_routine_versions: { id: ids.version, payload },
+        // The frozen Routine must remain aligned with its owner-scoped refined
+        // Bedarfsplan source, even when that source currently has no roles.
+        personal_plan_need_versions: {
+          id: ids.refined,
+          output_snapshot: { renderedOrder: [] },
+        },
         personal_plan_routine_proposals: {
           id: ids.proposal,
           candidate_routine_version_id: ids.version,

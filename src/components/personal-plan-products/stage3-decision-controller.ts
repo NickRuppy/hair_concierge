@@ -8,7 +8,13 @@ type DecisionSubject = ReturnType<typeof deriveStage3DecisionSubjects>[number]
 
 export function unresolvedDecisionSubjects(draft: Stage3ProductDraft): DecisionSubject[] {
   return deriveStage3DecisionSubjects(draft).filter(
-    (subject) => !draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
+    (subject) =>
+      subject.subjectKind === "inventory_disposition"
+        ? !draft.inventoryDispositions?.some(
+            (disposition) =>
+              disposition.dispositionKey === subject.decisionKey && disposition.acknowledged,
+          )
+        : !draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
   )
 }
 

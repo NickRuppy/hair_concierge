@@ -141,6 +141,7 @@ export const routinePayloadV1Schema = z
         sourceFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
         compilerVersion: boundedText,
         authorityVersions: z.record(boundedText, boundedText),
+        renderedOrder: z.array(personalPlanCategorySchema).max(128).optional(),
       })
       .strict(),
     intent: z
@@ -172,6 +173,16 @@ export const routineProposalDeltaV1Schema = z
 
 export type RoutinePayloadV1 = z.infer<typeof routinePayloadV1Schema>
 export type RoutineProposalDeltaV1 = z.infer<typeof routineProposalDeltaV1Schema>
+
+export type RoutineCatalogProductPresentation = {
+  productId: string
+  displayName: string | null
+  imageUrl: string | null
+}
+
+export type RoutineProductPresentation = {
+  catalogProducts: RoutineCatalogProductPresentation[]
+}
 
 export const routineEditOperationSchema = z.discriminatedUnion("kind", [
   z
@@ -219,7 +230,12 @@ export const routineProposalResolveRequestSchema = z
   .strict()
 
 export type PersonalPlanRoutineView = {
-  status: "active" | "proposal" | "personal_plan_incomplete" | "stage4_not_available"
+  status:
+    | "active"
+    | "proposal"
+    | "personal_plan_incomplete"
+    | "authority_repair_required"
+    | "stage4_not_available"
   personalPlanId: string
   planRevision: number
   sourceRevision: number
@@ -231,4 +247,10 @@ export type PersonalPlanRoutineView = {
     delta: RoutineProposalDeltaV1
     candidate: RoutinePayloadV1
   } | null
+  repair?: {
+    routineVersionId: string
+    refinedVersionId: string
+    href: string
+  } | null
+  productPresentation?: RoutineProductPresentation
 }

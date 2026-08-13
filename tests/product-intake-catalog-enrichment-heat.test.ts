@@ -100,7 +100,7 @@ test("Heat cohort fingerprint is independent of manifest input order", async () 
   assert.equal(HEAT_COHORT_INDEX_FINGERPRINT.length, 64)
 })
 
-test("seven real Heat manifests select deterministically without thickness facts", async () => {
+test("seven real Heat manifests select deterministically by semantic catalog order", async () => {
   const manifests = await loadHeatManifests()
   const candidates = manifests.map(({ manifest: rawManifest }, index) => {
     const manifest = asHeatManifest(rawManifest)
@@ -174,7 +174,7 @@ test("seven real Heat manifests select deterministically without thickness facts
   if (first.status !== "known" || swapped.status !== "known") return
   assert.ok(first.recommendation)
   assert.equal(first.recommendation?.displayName, swapped.recommendation?.displayName)
-  assert.equal(first.recommendation?.displayName, "Hitzeschutzspray Ultralight")
+  assert.equal(first.recommendation?.displayName, "Hitzeschutzspray")
 })
 
 test("Heat adapter routes only to the reviewed Heat executor RPC", async () => {
