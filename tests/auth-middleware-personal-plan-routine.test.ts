@@ -33,6 +33,9 @@ function createMiddleware({
   },
   throwsOnPlanLookup = false,
   useDefaultFrontier = false,
+  userAppMetadata = { access_kind: "field_test" },
+  observedTables,
+  frontierCalls,
 }: {
   currentAccess?: boolean
   frontierResult?: {
@@ -51,6 +54,9 @@ function createMiddleware({
   planResult?: RoutinePlanResult
   throwsOnPlanLookup?: boolean
   useDefaultFrontier?: boolean
+  userAppMetadata?: Record<string, unknown>
+  observedTables?: string[]
+  frontierCalls?: { count: number }
 } = {}) {
   const fakeSupabase = {
     auth: {
@@ -59,7 +65,7 @@ function createMiddleware({
           user: {
             id: fieldTestUserId,
             email: "field-test@example.com",
-            app_metadata: { access_kind: "field_test" },
+            app_metadata: userAppMetadata,
           },
         },
       }),
@@ -83,6 +89,7 @@ function createMiddleware({
       error: null,
     }),
     from(table: string) {
+      observedTables?.push(table)
       return {
         select(columns?: string) {
           return {
@@ -135,6 +142,7 @@ function createMiddleware({
       ? {}
       : {
           loadPersonalPlanRoutingFrontier: async () => {
+            if (frontierCalls) frontierCalls.count += 1
             if (frontierResult.error) throw frontierResult.error
             const data = frontierResult.data
             if (!data?.eligible) return { kind: "legacy" }
@@ -218,10 +226,65 @@ test("released routing ignores obsolete internal rollout environment", async () 
 })
 
 test("field-test user with current access and a pending proposal reaches /routine", async () => {
-  const response = await createMiddleware()(new NextRequest("https://chaarlie.de/routine"))
+  const observedTables: string[] = []
+  const response = await createMiddleware({ observedTables })(
+    new NextRequest("https://chaarlie.de/routine"),
+  )
 
   assert.equal(response.status, 200)
   assert.equal(response.headers.get("location"), null)
+  assert.ok(observedTables.includes("profiles"))
+  assert.ok(observedTables.includes("hair_profiles"))
+})
+
+test("tracker skips proxy intake and Personal Plan frontier reads", async () => {
+  const observedTables: string[] = []
+  const frontierCalls = { count: 0 }
+  const response = await createMiddleware({ observedTables, frontierCalls })(
+    new NextRequest("https://chaarlie.de/tracker"),
+  )
+
+  assert.equal(response.status, 200)
+  assert.ok(!observedTables.includes("profiles"))
+  assert.ok(!observedTables.includes("hair_profiles"))
+  assert.equal(frontierCalls.count, 0)
+})
+
+test("tracker still redirects an authenticated user without current access to reactivate", async () => {
+  const observedTables: string[] = []
+  const frontierCalls = { count: 0 }
+  const response = await createMiddleware({
+    currentAccess: false,
+    userAppMetadata: {},
+    observedTables,
+    frontierCalls,
+  })(new NextRequest("https://chaarlie.de/tracker"))
+
+  assert.equal(response.status, 307)
+  assert.equal(
+    response.headers.get("location"),
+    "https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker",
+  )
+  assert.ok(!observedTables.includes("profiles"))
+  assert.ok(!observedTables.includes("hair_profiles"))
+  assert.equal(frontierCalls.count, 0)
+})
+
+test("chat retains proxy intake and preserves redirect query parameters", async () => {
+  const observedTables: string[] = []
+  const frontierCalls = { count: 0 }
+  const response = await createMiddleware({ observedTables, frontierCalls })(
+    new NextRequest("https://chaarlie.de/chat?lead=lead-1&tab=history"),
+  )
+
+  assert.equal(response.status, 307)
+  assert.equal(
+    response.headers.get("location"),
+    "https://chaarlie.de/onboarding?lead=lead-1&tab=history",
+  )
+  assert.ok(observedTables.includes("profiles"))
+  assert.ok(observedTables.includes("hair_profiles"))
+  assert.equal(frontierCalls.count, 1)
 })
 
 test("a pending proposal does not grant /anwendung before an active routine exists", async () => {
