@@ -335,6 +335,40 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
   })
 }
 
+test("supportive owned-product verdicts retain explicit keep and uncovered actions", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  if (conditionerInput.productFacts?.category !== "conditioner") throw new Error("fixture")
+  conditionerInput.productFacts.spec.weight = "medium"
+  const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  if (leaveInInput.productFacts?.category !== "leave_in") throw new Error("fixture")
+  leaveInInput.productFacts.spec.weight = "medium"
+  const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  if (maskInput.productFacts?.category !== "mask") throw new Error("fixture")
+  maskInput.productFacts.spec.weight = "medium"
+  const bondbuilderInput = input("bondbuilder", "known") as Stage3AuthorityInput<"bondbuilder">
+  if (bondbuilderInput.productFacts?.category !== "bondbuilder") throw new Error("fixture")
+  bondbuilderInput.productFacts.spec.relationship = "add_on"
+  const oilInput = input("oil", "known") as Stage3AuthorityInput<"oil">
+  if (oilInput.productFacts?.category !== "oil") throw new Error("fixture")
+  oilInput.productFacts.spec.weight = "medium"
+
+  for (const authorityInput of [
+    conditionerInput,
+    leaveInInput,
+    maskInput,
+    bondbuilderInput,
+    oilInput,
+  ]) {
+    const result = evaluateStage3Authority(authorityInput as never)
+    assert.equal(result.status, "known")
+    if (result.status !== "known") continue
+    assert.equal(result.verdict, "supportive")
+    assert.ok(result.allowedActions.includes("keep_owned"))
+    assert.ok(result.allowedActions.includes("leave_uncovered"))
+    assert.ok(!result.allowedActions.includes("select_replacement"))
+  }
+})
+
 for (const category of [
   "shampoo",
   "conditioner",

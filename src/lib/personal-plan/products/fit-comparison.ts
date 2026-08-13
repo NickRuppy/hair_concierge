@@ -11,6 +11,7 @@ import type {
   Stage3AuthorityInput,
   Stage3AuthorityEvaluation,
   Stage3CategoryProductFacts,
+  Stage3EvaluationContext,
   Stage3KnownAuthorityEvaluation,
 } from "./authority/contracts"
 import { evaluateStage3Authority } from "./authority/evaluate"
@@ -55,6 +56,23 @@ export type Stage3FitComparisonDimension = {
   reason: string
 }
 
+export type Stage3FitEvidenceRelation = "in_target" | "outside_target" | "unknown" | "no_target"
+
+export type Stage3FitEvidenceRow = {
+  rowId: string
+  label: string
+  target: {
+    valueLabel: string
+    rationale: string
+    profileEvidenceLabels: string[]
+  } | null
+  productValues: Array<{
+    productId: string
+    valueLabel: string
+    relation: Stage3FitEvidenceRelation
+  }>
+}
+
 export type Stage3FitComparison =
   | {
       schemaVersion: 1
@@ -66,6 +84,7 @@ export type Stage3FitComparison =
       products: Stage3FitComparisonProduct[]
       alternatives: Stage3SelectedComparisonCandidate[]
       dimensions: Stage3FitComparisonDimension[]
+      evidenceRows?: Stage3FitEvidenceRow[]
     }
   | {
       schemaVersion: 1
@@ -77,6 +96,7 @@ export type Stage3FitComparison =
       products: Stage3FitComparisonProduct[]
       alternatives: Stage3SelectedComparisonCandidate[]
       dimensions: []
+      evidenceRows?: Stage3FitEvidenceRow[]
       reason: "specialist_category" | "no_exact_product"
     }
 
@@ -103,6 +123,7 @@ type ComparisonProductEntry = {
 export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   input: Stage3AuthorityInput<C>,
   subjectEvaluation?: Stage3AuthorityEvaluation,
+  context?: Stage3EvaluationContext,
 ): Stage3FitComparison {
   const authorityInput = input as unknown as Stage3AuthorityInput
   const authorityEvaluation = subjectEvaluation ?? evaluateStage3Authority(authorityInput)
@@ -117,6 +138,10 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   const products = entries.map((entry) => entry.product)
   const alternatives = selectedCandidates.map(publicSelectedCandidate)
   const dimensions = comparisonDimensions(authorityInput, entries)
+  const evidenceRows =
+    dimensions.length > 0
+      ? evidenceRowsFromDimensions(dimensions, context)
+      : compactEvidenceRows(authorityEvaluation, entries, selectedCandidates)
 
   if (dimensions.length > 0) {
     return {
@@ -129,6 +154,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
       products,
       alternatives,
       dimensions,
+      evidenceRows,
     }
   }
 
@@ -142,6 +168,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
     products,
     alternatives,
     dimensions: [],
+    evidenceRows,
     reason: products.length > 0 ? "specialist_category" : "no_exact_product",
   }
 }
@@ -399,6 +426,183 @@ function comparisonDimensions(
     case "deep_cleansing_shampoo":
       return []
   }
+}
+
+function evidenceRowsFromDimensions(
+  dimensions: readonly Stage3FitComparisonDimension[],
+  context?: Stage3EvaluationContext,
+): Stage3FitEvidenceRow[] {
+  return dimensions.slice(0, 3).map((dimension) => ({
+    rowId: dimension.dimensionId,
+    label: dimension.label,
+    target:
+      dimension.targetPosition && dimension.targetPosition.kind !== "unknown"
+        ? {
+            valueLabel: positionLabel(dimension.targetPosition, dimension.stops),
+            rationale: targetRationale(dimension.dimensionId),
+            profileEvidenceLabels: profileEvidenceLabels(dimension.dimensionId, context).slice(
+              0,
+              2,
+            ),
+          }
+        : null,
+    productValues: dimension.productPositions.map(({ productId, position }) => ({
+      productId,
+      valueLabel: positionLabel(position, dimension.stops),
+      relation: relationToTarget(position, dimension.targetPosition),
+    })),
+  }))
+}
+
+function compactEvidenceRows(
+  evaluation: Stage3AuthorityEvaluation,
+  entries: readonly ComparisonProductEntry[],
+  candidates: readonly CandidateAssessment[],
+): Stage3FitEvidenceRow[] {
+  const currentProductId = entries.find((entry) => entry.product.source === "current")?.product
+    .productId
+  const currentCriteria = evaluation.status === "known" ? evaluation.criteria : []
+  const criteriaByProduct = new Map<string, readonly Stage3CriterionResult[]>()
+  if (currentProductId) criteriaByProduct.set(currentProductId, currentCriteria)
+  for (const candidate of candidates) criteriaByProduct.set(candidate.productId, candidate.criteria)
+
+  const criterionIds = Array.from(
+    new Set(
+      Array.from(criteriaByProduct.values()).flatMap((criteria) =>
+        criteria.map((item) => item.criterionId),
+      ),
+    ),
+  ).slice(0, 3)
+
+  return criterionIds.map((criterionId) => {
+    const representative = Array.from(criteriaByProduct.values())
+      .flat()
+      .find((criterion) => criterion.criterionId === criterionId)!
+    return {
+      rowId: criterionId,
+      label: representative.label,
+      target: {
+        valueLabel: "erfüllt",
+        rationale: representative.explanation,
+        profileEvidenceLabels: [],
+      },
+      productValues: entries.map(({ product }) => {
+        const criterion = criteriaByProduct
+          .get(product.productId)
+          ?.find((item) => item.criterionId === criterionId)
+        return {
+          productId: product.productId,
+          valueLabel: criterionResultLabel(criterion?.result),
+          relation: criterionRelation(criterion?.result),
+        }
+      }),
+    }
+  })
+}
+
+function relationToTarget(
+  product: Stage3FitComparisonPosition,
+  target: Stage3FitComparisonPosition | null,
+): Stage3FitEvidenceRelation {
+  if (product.kind === "unknown") return "unknown"
+  if (!target || target.kind === "unknown") return "no_target"
+  return positionsOverlap(product, target) ? "in_target" : "outside_target"
+}
+
+function positionsOverlap(
+  left: Stage3FitComparisonPosition,
+  right: Stage3FitComparisonPosition,
+): boolean {
+  if (left.kind === "unknown" || right.kind === "unknown") return false
+  const leftStops = left.kind === "position" ? [left.stopId] : left.stopIds
+  const rightStops = new Set(right.kind === "position" ? [right.stopId] : right.stopIds)
+  return leftStops.some((stopId) => rightStops.has(stopId))
+}
+
+function positionLabel(
+  position: Stage3FitComparisonPosition,
+  stops: readonly Stage3FitComparisonStop[],
+): string {
+  if (position.kind === "unknown") return "nicht bestätigt"
+  const ids = position.kind === "position" ? [position.stopId] : position.stopIds
+  const labels = ids.map((id) => stops.find((stop) => stop.stopId === id)?.label ?? id)
+  return labels.join(", ")
+}
+
+function criterionRelation(
+  result: Stage3CriterionResult["result"] | undefined,
+): Stage3FitEvidenceRelation {
+  if (!result) return "unknown"
+  return result === "pass" ? "in_target" : "outside_target"
+}
+
+function criterionResultLabel(result: Stage3CriterionResult["result"] | undefined): string {
+  switch (result) {
+    case "pass":
+      return "erfüllt"
+    case "caution":
+      return "mit Einschränkung"
+    case "fail":
+      return "nicht erfüllt"
+    default:
+      return "nicht bestätigt"
+  }
+}
+
+function targetRationale(dimensionId: string): string {
+  if (dimensionId.endsWith(".weight"))
+    return "Dieses Pflegegewicht deckt deinen Bedarf ab, ohne dein Haar unnötig zu beschweren."
+  if (dimensionId.endsWith(".care_direction"))
+    return "Diese Pflegerichtung passt zu deinem aktuellen Feuchtigkeits- und Strukturbedarf."
+  if (dimensionId.endsWith(".repair_support"))
+    return "Diese Repair-Stufe entspricht der aktuell bestätigten Belastung deines Haares."
+  if (dimensionId === "shampoo.scalp_route")
+    return "Dieser Fokus passt zum bestätigten Zustand deiner Kopfhaut."
+  if (dimensionId.endsWith(".heat_protection"))
+    return "Vor Hitze ist ein bestätigter Schutz für diese Anwendung erforderlich."
+  if (dimensionId === "oil.role_support")
+    return "Das Produkt muss die ausgewählte Anwendung in deiner Routine ausdrücklich unterstützen."
+  return "Dieser Zielwert stammt aus deinem bestätigten Bedarfsprofil."
+}
+
+function profileEvidenceLabels(dimensionId: string, context?: Stage3EvaluationContext): string[] {
+  if (!context) return []
+  const profile = context.refinedNeedSnapshot.profile
+  if (dimensionId.endsWith(".weight")) {
+    const labels = [`${thicknessLabel(context.hairThickness)}es Haar`]
+    if (profile.concerns?.includes("low_volume_or_weighed_down"))
+      labels.push("wird schnell beschwert")
+    return labels
+  }
+  if (dimensionId.endsWith(".care_direction")) {
+    const labels: string[] = []
+    if (profile.goals?.includes("moisture")) labels.push("Ziel: mehr Feuchtigkeit")
+    if (profile.goals?.includes("strength_ends")) labels.push("Ziel: stärkere Längen")
+    if (profile.hair.surface === "rough") labels.push("raue Haaroberfläche")
+    return labels.length > 0 ? labels : ["bestätigtes Pflegeziel"]
+  }
+  if (dimensionId.endsWith(".repair_support")) {
+    const labels: string[] = []
+    if (profile.hair.chemicalTreatments?.some((treatment) => treatment !== "natural"))
+      labels.push("chemisch behandeltes Haar")
+    if (profile.concerns?.includes("breakage") || profile.concerns?.includes("split_ends"))
+      labels.push("Bruch oder Spliss")
+    return labels.length > 0 ? labels : ["aktuelle Belastung bestätigt"]
+  }
+  if (dimensionId === "shampoo.scalp_route")
+    return profile.scalp?.oiliness
+      ? [`${scalpOilinessLabel(profile.scalp.oiliness)}e Kopfhaut`]
+      : []
+  if (dimensionId.endsWith(".heat_protection")) return ["Hitzeanwendung bestätigt"]
+  return []
+}
+
+function thicknessLabel(thickness: Stage3EvaluationContext["hairThickness"]): string {
+  return thickness === "fine" ? "fein" : thickness === "coarse" ? "dick" : "mitteldick"
+}
+
+function scalpOilinessLabel(oiliness: "dry" | "balanced" | "oily"): string {
+  return oiliness === "dry" ? "trocken" : oiliness === "oily" ? "fettig" : "ausgeglichen"
 }
 
 function shampooDimensions(

@@ -342,7 +342,10 @@ export function Stage3ProductsFlow({
       bootstrap?.fitComparisons ?? [],
     ),
   )
-  const [displayedAlternativeIndex, setDisplayedAlternativeIndex] = useState(0)
+  const [displayedAlternative, setDisplayedAlternative] = useState<{
+    subjectKey: string | null
+    index: number
+  }>({ subjectKey: null, index: 0 })
   const [reviewHistory, setReviewHistory] = useState<string[]>([])
   const [currentReviewSubjectKey, setCurrentReviewSubjectKey] = useState<string | null>(null)
   const [authorityStatus, setAuthorityStatus] = useState<"idle" | "loading" | "ready">(
@@ -364,6 +367,19 @@ export function Stage3ProductsFlow({
   const bootstrapDecisionPreparationStarted = useRef(false)
   const routineOpenedAnalyticsRecorded = useRef(false)
   const viewedReviewSubjects = useRef(new Set<string>())
+
+  const decisionSubjects = useMemo(() => deriveStage3DecisionSubjects(draft), [draft])
+  const displayedReviewSubject = useMemo(() => {
+    if (phase !== "decisions") return null
+    return (
+      decisionSubjects.find((subject) => subject.decisionKey === currentReviewSubjectKey) ??
+      unresolvedDecisionSubjects(draft)[0] ??
+      null
+    )
+  }, [currentReviewSubjectKey, decisionSubjects, draft, phase])
+  const displayedReviewDecisionKey = displayedReviewSubject?.decisionKey ?? null
+  const displayedAlternativeIndex =
+    displayedAlternative.subjectKey === displayedReviewDecisionKey ? displayedAlternative.index : 0
 
   const currentRequirement =
     requirements[categoryIndex] ?? requirements[0] ?? DEFAULT_REQUIREMENTS[0]!
@@ -548,7 +564,7 @@ export function Stage3ProductsFlow({
     if (!heading) return
     heading.tabIndex = -1
     heading.focus({ preventScroll: true })
-  }, [categoryIndex, phase])
+  }, [categoryIndex, displayedReviewDecisionKey, phase])
 
   useEffect(() => {
     if (phase !== "handoff" || !completion) {
@@ -561,10 +577,7 @@ export function Stage3ProductsFlow({
 
   useEffect(() => {
     if (phase !== "decisions") return
-    const subject =
-      deriveStage3DecisionSubjects(draft).find(
-        (candidate) => candidate.decisionKey === currentReviewSubjectKey,
-      ) ?? unresolvedDecisionSubjects(draft)[0]
+    const subject = displayedReviewSubject
     if (!subject || viewedReviewSubjects.current.has(subject.decisionKey)) return
     const evaluation = reviewBundles.get(subject.decisionKey)?.authorityEvaluation
     if (!evaluation) return
@@ -573,9 +586,9 @@ export function Stage3ProductsFlow({
       category: subject.category,
       verdict: reviewVerdict(evaluation),
       position: reviewPosition(draft, subject.decisionKey),
-      count: deriveStage3DecisionSubjects(draft).length,
+      count: decisionSubjects.length,
     })
-  }, [analytics, currentReviewSubjectKey, draft, phase, reviewBundles])
+  }, [analytics, decisionSubjects.length, displayedReviewSubject, draft, phase, reviewBundles])
 
   const shellSaveStatus = systemIssue
     ? "error"
@@ -880,11 +893,7 @@ export function Stage3ProductsFlow({
   }
 
   if (phase === "decisions") {
-    const unresolvedSubjects = unresolvedDecisionSubjects(draft)
-    const nextSubject =
-      deriveStage3DecisionSubjects(draft).find(
-        (subject) => subject.decisionKey === currentReviewSubjectKey,
-      ) ?? unresolvedSubjects[0]
+    const nextSubject = displayedReviewSubject
     if (!nextSubject) {
       if (!completionInFlight.current) {
         void completeFlow(draft)
@@ -947,8 +956,14 @@ export function Stage3ProductsFlow({
       <ProductFitComparison
         comparison={reviewBundle.fitComparison}
         evaluation={reviewBundle.authorityEvaluation}
+        reviewPosition={reviewPosition(draft, nextSubject.decisionKey)}
+        reviewTotal={decisionSubjects.length}
+        categoryLabel={CATEGORY_COPY[nextSubject.category].label}
+        roleLabel={ROLE_COPY[nextSubject.role].label}
         displayedAlternativeIndex={displayedAlternativeIndex}
-        onDisplayedAlternativeChange={setDisplayedAlternativeIndex}
+        onDisplayedAlternativeChange={(index) =>
+          setDisplayedAlternative({ subjectKey: nextSubject.decisionKey, index })
+        }
         disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
         onRetry={() => void reloadDecisionBundle(draft)}
         onAction={(action, selectedCandidate) =>
@@ -988,7 +1003,7 @@ export function Stage3ProductsFlow({
       throw new Error("stage3_refined_version_mismatch")
     }
     setDraft(loadedDraft)
-    setDisplayedAlternativeIndex(0)
+    setDisplayedAlternative({ subjectKey: null, index: 0 })
     categoryCapture.setSaveLabel("Gespeichert")
     setDraftReadyForQueueReconciliation(true)
 
@@ -1088,7 +1103,7 @@ export function Stage3ProductsFlow({
     if (!requiresFitReviewBundles(sourceDraft)) {
       const bundles = new Map()
       setReviewBundles(bundles)
-      setDisplayedAlternativeIndex(0)
+      setDisplayedAlternative({ subjectKey: null, index: 0 })
       setAuthorityStatus("ready")
       return bundles
     }
@@ -1120,7 +1135,7 @@ export function Stage3ProductsFlow({
     if (!evaluations) throw new Stage3ProductsGatewayError("temporarily_unavailable")
     const bundles = decisionReviewBundlesBySubject(evaluations, comparisons)
     setReviewBundles(bundles)
-    setDisplayedAlternativeIndex(0)
+    setDisplayedAlternative({ subjectKey: null, index: 0 })
     setAuthorityStatus("ready")
     return bundles
   }
@@ -1820,7 +1835,7 @@ export function Stage3ProductsFlow({
       throw new Stage3ProductsGatewayError("stale_refined_source")
     }
     setDraft(response.draft)
-    setDisplayedAlternativeIndex(0)
+    setDisplayedAlternative({ subjectKey: null, index: 0 })
     categoryCapture.synchronizeRevision(response.draft.revision)
     categoryCapture.setSaveLabel("Gespeichert")
     return response
@@ -2082,7 +2097,7 @@ export function Stage3ProductsFlow({
     setReviewBundles(new Map())
     setReviewHistory([])
     setCurrentReviewSubjectKey(null)
-    setDisplayedAlternativeIndex(0)
+    setDisplayedAlternative({ subjectKey: null, index: 0 })
     setAuthorityStatus("idle")
     setCategoryIndex(cursorIndex)
     setQuery("")

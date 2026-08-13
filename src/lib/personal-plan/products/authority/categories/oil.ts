@@ -165,7 +165,9 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
           ]
         : []),
     ],
-    allowedActions: weightMatches ? ["keep_owned"] : ["keep_owned", "acknowledge_override"],
+    allowedActions: weightMatches
+      ? ["keep_owned"]
+      : ["keep_owned", "acknowledge_override", "leave_uncovered"],
     recommendation: null,
     productFactFingerprint: facts.factFingerprint,
     recommendationFactFingerprint: null,

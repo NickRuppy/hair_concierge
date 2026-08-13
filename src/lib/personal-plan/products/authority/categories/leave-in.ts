@@ -244,7 +244,11 @@ export const evaluateLeaveInAuthority: Stage3CategoryAuthorityAdapter<"leave_in"
     verdict: result.verdict,
     criteria: result.criteria,
     allowedActions:
-      result.verdict === "mismatch" ? ["acknowledge_override", "leave_uncovered"] : ["keep_owned"],
+      result.verdict === "mismatch"
+        ? ["acknowledge_override", "leave_uncovered"]
+        : result.verdict === "supportive"
+          ? ["keep_owned", "leave_uncovered"]
+          : ["keep_owned"],
     recommendation: null,
     productFactFingerprint: input.productFacts.factFingerprint,
     recommendationFactFingerprint: null,

@@ -61,6 +61,20 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
       assert.ok(comparison.products.length <= STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT + 1)
       assert.ok(comparison.alternatives.length <= STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
       assert.ok(comparison.dimensions.length <= 3)
+      assert.ok(comparison.evidenceRows!.length > 0)
+      assert.ok(comparison.evidenceRows!.length <= 3)
+      assert.ok(
+        comparison.evidenceRows!.every(
+          (row) => row.target === null || row.target.profileEvidenceLabels.length <= 2,
+        ),
+      )
+      assert.ok(
+        comparison
+          .evidenceRows!.flatMap((row) => row.productValues)
+          .every((value) =>
+            ["in_target", "outside_target", "unknown", "no_target"].includes(value.relation),
+          ),
+      )
       assert.equal(comparison.products[0]?.productId, "owned")
       assert.equal(comparison.products[0]?.source, "current")
       assert.equal(
@@ -391,6 +405,43 @@ test("targetless Shampoo dimension stays honest instead of inventing a cleansing
   assert.deepEqual(cleansing.productPositions, [
     { productId: "owned", position: { kind: "position", stopId: "regular" } },
     { productId: "candidate", position: { kind: "position", stopId: "clarifying" } },
+  ])
+  const cleansingEvidence = comparison.evidenceRows!.find(
+    (row) => row.rowId === "shampoo.cleansing_intensity",
+  )
+  assert.ok(cleansingEvidence)
+  assert.equal(cleansingEvidence.target, null)
+  assert.deepEqual(
+    cleansingEvidence.productValues.map(({ productId, valueLabel, relation }) => ({
+      productId,
+      valueLabel,
+      relation,
+    })),
+    [
+      { productId: "owned", valueLabel: "regulaer", relation: "no_target" },
+      { productId: "candidate", valueLabel: "klaerend", relation: "no_target" },
+    ],
+  )
+})
+
+test("evidence rows carry exact server-owned current and candidate target relations", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("conditioner", "conditioner_rinse_out", {
+      productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
+        weight: "rich",
+      }),
+      candidates: [
+        factsFor("conditioner", "conditioner_rinse_out", "candidate", { weight: "light" }),
+      ],
+    }),
+  )
+  const weight = comparison.evidenceRows!.find((row) => row.rowId === "conditioner.weight")
+  assert.ok(weight)
+  assert.equal(weight.target?.valueLabel, "leicht")
+  assert.ok(weight.target?.rationale.length)
+  assert.deepEqual(weight.productValues, [
+    { productId: "owned", valueLabel: "reichhaltig", relation: "outside_target" },
+    { productId: "candidate", valueLabel: "leicht", relation: "in_target" },
   ])
 })
 

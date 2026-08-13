@@ -166,7 +166,7 @@ export function evaluateBondbuilderAuthority(
         ? ["keep_owned"]
         : assessment.verdict === "mismatch"
           ? ["acknowledge_override"]
-          : ["leave_uncovered"],
+          : ["keep_owned", "leave_uncovered"],
     recommendation: null,
     productFactFingerprint: input.productFacts.factFingerprint,
     recommendationFactFingerprint: null,

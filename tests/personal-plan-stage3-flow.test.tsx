@@ -1896,7 +1896,14 @@ test("a successful recovery resend loads the next subject's current review bundl
   )
   assert.ok(firstReview)
   const firstDecisionKey = firstReview.props.comparison.subjectKey
-  await firstReview.props.onAction("keep_owned")
+  firstReview.props.onDisplayedAlternativeChange(2)
+  tree = await renderSettled(harness)
+  const focusedFirstReview = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.equal(focusedFirstReview?.props.displayedAlternativeIndex, 2)
+  await focusedFirstReview?.props.onAction("keep_owned")
   await new Promise<void>((resolve) => setTimeout(resolve, 1_050))
   tree = await renderSettled(harness)
 
@@ -1908,6 +1915,7 @@ test("a successful recovery resend loads the next subject's current review bundl
   assert.ok(reviewBundleLoads >= 2, "recovery reloads authority after the successful resend")
   assert.ok(nextReview)
   assert.notEqual(nextReview.props.comparison.subjectKey, firstDecisionKey)
+  assert.equal(nextReview.props.displayedAlternativeIndex, 0)
 })
 
 test("replacement recovery resends once at the canonical revision when the fingerprint is unchanged", async () => {
@@ -3238,6 +3246,20 @@ test("Oil roles remain individual decisions", async () => {
   )
   assert.ok(review)
   assert.equal(review.props.comparison.category, "oil")
+  assert.deepEqual(
+    {
+      categoryLabel: review.props.categoryLabel,
+      roleLabel: review.props.roleLabel,
+      reviewPosition: review.props.reviewPosition,
+      reviewTotal: review.props.reviewTotal,
+    },
+    {
+      categoryLabel: "Öl",
+      roleLabel: "Vor der Haarwäsche",
+      reviewPosition: 1,
+      reviewTotal: 3,
+    },
+  )
   assert.deepEqual(intents, [])
 })
 
