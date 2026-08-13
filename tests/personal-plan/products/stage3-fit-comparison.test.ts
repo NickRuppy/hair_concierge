@@ -8,6 +8,7 @@ import type {
   Stage3CategoryProductFacts,
 } from "../../../src/lib/personal-plan/products/authority/contracts"
 import { STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import { stage3AuthorityFactFingerprint } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import type {
   PersonalPlanCategory,
   Stage3FitVerdict,
@@ -189,6 +190,95 @@ test("selected candidate lookup returns exact current data for alternative numbe
     "role",
     "verdict",
   ])
+})
+
+test("comparison projects fresh price and structured size without changing authority facts", () => {
+  const checkedAt = new Date(Date.now() - 60_000).toISOString()
+  const input = authorityInput("conditioner", "conditioner_rinse_out", {
+    productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
+      recommendable: false,
+      priceEur: 4.29,
+      priceCheckedAt: checkedAt,
+      netContentValue: 300,
+      netContentUnit: "ml",
+    }),
+    candidates: [
+      factsFor("conditioner", "conditioner_rinse_out", "candidate", {
+        priceEur: 13.01,
+        priceCheckedAt: checkedAt,
+        netContentValue: 250,
+        netContentUnit: "ml",
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+  assert.deepEqual(
+    comparison.products.map((product) => product.presentation),
+    [
+      { netContentLabel: "300 ml", priceLabel: "4,29 €" },
+      { netContentLabel: "250 ml", priceLabel: "13,01 €" },
+    ],
+  )
+  const common = {
+    productId: "presentation-only",
+    displayName: "Produkt",
+    category: "conditioner" as const,
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: ["fine"],
+    knownReaction: false,
+    protocols: [],
+  }
+  assert.equal(
+    stage3AuthorityFactFingerprint({
+      common: {
+        ...common,
+        priceEur: 4.29,
+        priceCheckedAt: checkedAt,
+        netContentValue: 300,
+        netContentUnit: "ml",
+      },
+      spec: { weight: "light" },
+    }),
+    stage3AuthorityFactFingerprint({
+      common: {
+        ...common,
+        priceEur: 99.99,
+        priceCheckedAt: "2000-01-01T00:00:00.000Z",
+        netContentValue: 999,
+        netContentUnit: "g",
+      },
+      spec: { weight: "light" },
+    }),
+  )
+})
+
+test("comparison omits stale or incomplete commerce presentation metadata", () => {
+  const input = authorityInput("conditioner", "conditioner_rinse_out", {
+    productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
+      recommendable: false,
+      priceCheckedAt: "2000-01-01T00:00:00.000Z",
+      netContentValue: null,
+      netContentUnit: null,
+    }),
+    candidates: [
+      factsFor("conditioner", "conditioner_rinse_out", "candidate", {
+        priceCheckedAt: null,
+        netContentValue: null,
+        netContentUnit: null,
+      }),
+    ],
+  })
+  const comparison = buildStage3FitComparison(input)
+  assert.deepEqual(
+    comparison.products.map((product) => product.presentation),
+    [
+      { priceLabel: null, netContentLabel: null },
+      { priceLabel: null, netContentLabel: null },
+    ],
+  )
 })
 
 test("selected candidate lookup rejects eligible candidates outside the transported allowlist", () => {
@@ -644,6 +734,10 @@ function factsFor<C extends PersonalPlanCategory>(
     recommendable?: boolean
     sortOrder?: number | null
     suitableThicknesses?: string[] | null
+    priceEur?: number | null
+    priceCheckedAt?: string | null
+    netContentValue?: number | null
+    netContentUnit?: "ml" | "g" | null
     verdict?: Extract<Stage3FitVerdict, "ideal" | "supportive" | "mismatch" | "unknown">
     weight?: string | null
     repairSupportLevel?: string | null
@@ -800,6 +894,10 @@ function commonFacts(
     recommendable?: boolean
     sortOrder?: number | null
     suitableThicknesses?: string[] | null
+    priceEur?: number | null
+    priceCheckedAt?: string | null
+    netContentValue?: number | null
+    netContentUnit?: "ml" | "g" | null
   },
 ) {
   return {
@@ -817,8 +915,11 @@ function commonFacts(
     ],
     factFingerprint: overrides.fingerprint ?? `facts-${productId}`,
     catalogSortOrder: overrides.sortOrder ?? null,
-    priceEur: 9,
+    priceEur: overrides.priceEur ?? 9,
+    priceCheckedAt: overrides.priceCheckedAt ?? null,
     purchaseLinkStatus: "available" as const,
+    netContentValue: overrides.netContentValue ?? null,
+    netContentUnit: overrides.netContentUnit ?? null,
   }
 }
 

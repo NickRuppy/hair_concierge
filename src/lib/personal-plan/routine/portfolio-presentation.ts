@@ -1,5 +1,6 @@
 import {
   parseProposedProductPortfolio,
+  type Stage3RetainedInventoryProduct,
   type Stage3RetainedOwnedProduct,
 } from "../products/contracts"
 
@@ -12,9 +13,11 @@ type Query = {
 export type PortfolioPresentationReadClient = { from: (table: string) => Query }
 
 export type PortfolioPresentation = {
-  schemaVersion: 1 | 2 | 3
+  schemaVersion: 1 | 2 | 3 | 4
   plannedPurchaseDecisionKeys: string[]
   retainedOwnedProducts: Stage3RetainedOwnedProduct[]
+  /** Informational only; never used to construct Routine assignments. */
+  retainedInventoryProducts?: Stage3RetainedInventoryProduct[]
 }
 
 export async function loadOwnerPortfolioPresentation(
@@ -35,12 +38,14 @@ export async function loadOwnerPortfolioPresentation(
 
   const row = data as { id?: unknown; snapshot?: unknown }
   if (row.id !== portfolioVersionId) return null
-  const portfolio = parseProposedProductPortfolio(row.snapshot)
+  const portfolio = parseProposedProductPortfolio(row.snapshot, { includeV4: true })
   if (portfolio.portfolioVersionId !== portfolioVersionId || portfolio.personalPlanId !== planId) {
     return null
   }
   const retainedOwnedProductsByDecision =
-    portfolio.schemaVersion === 3 ? (portfolio.retainedOwnedProducts ?? []) : []
+    portfolio.schemaVersion === 3 || portfolio.schemaVersion === 4
+      ? (portfolio.retainedOwnedProducts ?? [])
+      : []
   const retainedOwnedProducts = [
     ...new Map(
       retainedOwnedProductsByDecision.map((product) => [product.userProductId, product]),
@@ -49,26 +54,31 @@ export async function loadOwnerPortfolioPresentation(
   return {
     schemaVersion: portfolio.schemaVersion,
     plannedPurchaseDecisionKeys:
-      portfolio.schemaVersion === 3
+      portfolio.schemaVersion === 3 || portfolio.schemaVersion === 4
         ? portfolio.plannedPurchases.flatMap((purchase) =>
             typeof purchase.sourceDecisionKey === "string" ? [purchase.sourceDecisionKey] : [],
           )
         : [],
     retainedOwnedProducts,
+    retainedInventoryProducts:
+      portfolio.schemaVersion === 4 ? portfolio.retainedInventoryProducts : [],
   }
 }
 
 export function routinePresentationLabels(presentation: PortfolioPresentation | null) {
-  const isV3 = presentation?.schemaVersion === 3
+  const hasReplacementPresentation =
+    presentation?.schemaVersion === 3 || presentation?.schemaVersion === 4
   return {
     plannedLabelFor(sourceDecisionKeys: readonly string[]) {
-      return isV3 &&
+      return hasReplacementPresentation &&
         sourceDecisionKeys.some((key) => presentation.plannedPurchaseDecisionKeys.includes(key))
         ? "Noch kaufen"
         : null
     },
     fitLabelFor(fitDecision: string) {
-      return isV3 && fitDecision === "informed_override" ? "Mit Einschränkung" : null
+      return hasReplacementPresentation && fitDecision === "informed_override"
+        ? "Mit Einschränkung"
+        : null
     },
   }
 }

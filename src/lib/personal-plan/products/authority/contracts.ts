@@ -54,8 +54,12 @@ export type Stage3AuthorityCommonProductFacts = {
   protocols: Stage3AuthorityProtocolFact[]
   factFingerprint: string
   catalogSortOrder?: number | null
+  /** Commerce/presentation fields never participate in fit authority. */
   priceEur?: number | null
+  priceCheckedAt?: string | null
   purchaseLinkStatus?: "available" | "unavailable" | null
+  netContentValue?: number | null
+  netContentUnit?: "ml" | "g" | null
 }
 
 export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {

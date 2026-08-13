@@ -1,4 +1,5 @@
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutineProductPresentation } from "@/lib/personal-plan/routine/contracts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
@@ -113,7 +114,29 @@ export function routineCategoryLabel(value: string) {
   return labelFor(categoryLabels, value)
 }
 
-function productName(item: RoutineItem) {
+function exactProductId(item: RoutineItem): string | null {
+  return item.product.kind === "owned" || item.product.kind === "planned"
+    ? (item.product.productId ?? null)
+    : null
+}
+
+function catalogPresentationFor(
+  item: RoutineItem,
+  productPresentation: RoutineProductPresentation | null = null,
+) {
+  const productId = exactProductId(item)
+  if (!productId) return null
+  return (
+    productPresentation?.catalogProducts.find((product) => product.productId === productId) ?? null
+  )
+}
+
+function productName(
+  item: RoutineItem,
+  productPresentation: RoutineProductPresentation | null = null,
+) {
+  const hydrated = catalogPresentationFor(item, productPresentation)?.displayName
+  if (hydrated) return hydrated
   const name = item.product.displayName
   return typeof name === "string" && name.length > 0 ? name : "Noch kein Produkt gewählt"
 }
@@ -175,16 +198,18 @@ export function RoutineItemCard({
   variant = "routine",
   onDetail,
   presentation = null,
+  productPresentation = null,
 }: {
   item: RoutineItem
   variant?: "routine" | "later"
   onDetail?: (item: RoutineItem) => void
   presentation?: PortfolioPresentation | null
+  productPresentation?: RoutineProductPresentation | null
 }) {
   const purpose = routinePurposeLabel(item.purposeKey)
   const category = routineCategoryLabel(item.category)
   const visibleCategory = variant === "later" ? `${category} optional` : category
-  const product = productName(item)
+  const product = productName(item, productPresentation)
   const cadence = routineCadenceLabel(item)
   const status = getRoutineStatus(item, presentation).label
   const fit = routineFitLabel(item, presentation)
@@ -258,6 +283,138 @@ export function RoutineItemCard({
             </Button>
           ) : null}
         </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+export function RoutineCategoryCard({
+  category,
+  items,
+  variant = "routine",
+  onDetail,
+  presentation = null,
+  productPresentation = null,
+}: {
+  category: string
+  items: RoutineItem[]
+  variant?: "routine" | "later"
+  onDetail?: (item: RoutineItem) => void
+  presentation?: PortfolioPresentation | null
+  productPresentation?: RoutineProductPresentation | null
+}) {
+  const primary = items[0]
+  const label = routineCategoryLabel(category)
+  const image = primary ? catalogPresentationFor(primary, productPresentation)?.imageUrl : null
+  const primaryName = primary
+    ? productName(primary, productPresentation)
+    : "Noch kein Produkt gewählt"
+  const activeCount = items.filter(
+    (item) => item.executable && item.state.inclusion === "included",
+  ).length
+  const summaryStatus = primary ? getRoutineStatus(primary, presentation).label : "Offen"
+
+  return (
+    <Card
+      className={cn(
+        "overflow-hidden border border-[rgba(107,80,160,0.14)] bg-white/95 shadow-sm shadow-[rgba(47,31,71,0.06)]",
+        variant === "routine" && "transition-shadow hover:shadow-md motion-reduce:transition-none",
+        variant === "later" && "border-dashed bg-[var(--surface-soft)] shadow-none",
+      )}
+      role="group"
+      aria-label={`Kategorie: ${label}`}
+    >
+      <CardHeader className="gap-3 p-4 pb-3 sm:p-5 sm:pb-3">
+        <div className="grid gap-4 sm:grid-cols-[5.5rem_1fr]">
+          <div
+            aria-hidden="true"
+            className={cn(
+              "flex aspect-[3/4] h-28 w-24 items-center justify-center overflow-hidden rounded-[18px] border border-[rgba(107,80,160,0.10)] bg-[#f8f5f2] text-2xl font-semibold text-[var(--brand-plum)] shadow-inner",
+              categoryAccentBorders[category] ?? "border-stone-200",
+            )}
+          >
+            {image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={image} alt="" className="h-full w-full object-contain p-2" />
+            ) : (
+              label.slice(0, 1)
+            )}
+          </div>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
+                {variant === "later" ? `${label} optional` : label}
+              </p>
+              <span className="rounded-full bg-[var(--surface-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--brand-plum)]">
+                {activeCount > 0 ? `${activeCount} aktiv` : summaryStatus}
+              </span>
+            </div>
+            <CardTitle className="mt-2 text-lg leading-tight sm:text-xl">{primaryName}</CardTitle>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {items.length > 1
+                ? `${items.length} Rollen aus deinem Bedarfsplan.`
+                : primary
+                  ? routinePurposeDescription(primary)
+                  : "Baustein aus deinem Bedarfsplan."}
+            </p>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3 p-4 pt-0 sm:p-5 sm:pt-0">
+        {items.map((item) => {
+          const purpose = routinePurposeLabel(item.purposeKey)
+          const product = productName(item, productPresentation)
+          const status = getRoutineStatus(item, presentation).label
+          const cadence = routineCadenceLabel(item)
+          const timing = routineTimingLabel(item)
+          return (
+            <div
+              key={item.itemKey}
+              className="rounded-[14px] border border-border bg-white px-3 py-3"
+              role="group"
+              aria-label={`Zweck: ${purpose}; Kategorie: ${label}; Produkt: ${product}; Status: ${status}; Rhythmus: ${cadence}`}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground">{purpose}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{product}</p>
+                </div>
+                <RoutineStatusBadge item={item} presentation={presentation} />
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                <div className="rounded-[12px] bg-[#f8f5f2] px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Rhythmus</p>
+                  <p className="mt-0.5 font-semibold text-foreground">{cadence}</p>
+                </div>
+                <div className="rounded-[12px] bg-[#f8f5f2] px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Wann</p>
+                  <p className="mt-0.5 font-semibold text-foreground">{timing}</p>
+                </div>
+              </div>
+              {item.state.availability === "none" && item.state.systemAssessment === "basis" ? (
+                <p className="mt-3 rounded-[12px] bg-[var(--status-danger-bg)] px-3 py-2 text-sm font-medium text-[var(--status-danger-text)]">
+                  Für diesen Basis-Baustein fehlt noch ein Produkt.
+                </p>
+              ) : null}
+              <details className="group mt-3 rounded-[12px] border border-border bg-white px-3 py-2 text-sm">
+                <summary className="cursor-pointer font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  Anwendungsdetails
+                </summary>
+                <p className="mt-2 leading-relaxed text-muted-foreground">{detailCopy(item)}</p>
+              </details>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <span className="rounded-full bg-[var(--surface-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--brand-plum)]">
+                  {routineFitLabel(item, presentation)}
+                </span>
+                {onDetail ? (
+                  <Button type="button" variant="ghost" size="sm" onClick={() => onDetail(item)}>
+                    Detail öffnen
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+          )
+        })}
       </CardContent>
     </Card>
   )

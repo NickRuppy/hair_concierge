@@ -13,6 +13,8 @@ function compiledView(): CompiledApplicationViewV1 {
   const shampoo = {
     productId: shampooId,
     productName: "Mildes Shampoo",
+    imageUrl:
+      "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/mildes-shampoo.webp",
     category: "shampoo" as const,
     roles: ["cleanse" as const],
     applicationInstanceKey: `${shampooId}:wet_cleanse`,
@@ -86,11 +88,16 @@ test("adapts compiler output into the product-led Anwendung view", () => {
     ],
   )
   assert.equal(view.days[0].cadenceDe, "Bei deiner nächsten Haarwäsche")
+  assert.equal(
+    view.days[0].steps.find((step) => step.kind === "product")?.imageUrl,
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/mildes-shampoo.webp",
+  )
   const overviewHtml = renderToStaticMarkup(createElement(ApplicationPage, { view }))
   const detailHtml = renderToStaticMarkup(
     createElement(ApplicationPage, { view: { ...view, selectedDayType: "wash_day" } }),
   )
   assert.match(overviewHtml, /Bei deiner nächsten Haarwäsche/)
+  assert.match(overviewHtml, /mildes-shampoo\.webp/)
   assert.match(detailHtml, /Bei deiner nächsten Haarwäsche/)
   assert.equal(view.days[0].steps[0].kind, "transition")
   assert.equal(view.days[0].steps[1].kind, "product")
@@ -172,6 +179,8 @@ test("adapts and renders provisional guidance plus a local unresolved product ga
     ...washDay.productBlocks[0]!,
     productId: "22222222-2222-4222-8222-222222222222",
     productName: "Vorgemerkter Conditioner",
+    imageUrl:
+      "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/vorgemerkter-conditioner.webp",
     category: "conditioner" as const,
     roles: ["condition" as const],
     applicationInstanceKey: "conditioner:application",
@@ -202,10 +211,19 @@ test("adapts and renders provisional guidance plus a local unresolved product ga
   )
   assert.equal(view.days[0]!.provisionalProductCount, 1)
   assert.equal(view.days[0]!.unresolvedProductCount, 1)
+  assert.deepEqual(
+    view.days[0]!.shelf?.map((slot) => (slot.kind === "product" ? slot.status : slot.kind)),
+    ["confirmed", "provisional", "open"],
+  )
 
   const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
-  assert.match(html, /Dein Plan wird noch vervollständigt/)
+  assert.match(html, /Plan teilweise bereit/)
   assert.match(html, /Teilweise bereit/)
+  assert.match(html, /data-application-shelf-scene="true"/)
+  assert.match(html, /data-application-shelf-slot="provisional"/)
+  assert.match(html, /vorgemerkter-conditioner\.webp/)
+  assert.match(html, /data-application-shelf-slot="open"/)
+  assert.doesNotMatch(html, /Du kannst die bekannten Schritte bereits nutzen/)
 
   const selectedHtml = renderToStaticMarkup(
     createElement(ApplicationPage, {
@@ -216,4 +234,19 @@ test("adapts and renders provisional guidance plus a local unresolved product ga
   assert.match(selectedHtml, /seine Anwendung ist bereits bekannt/)
   assert.match(selectedHtml, /Produkt noch offen/)
   assert.match(selectedHtml, /Für diese Kategorie fehlen noch ein bestätigtes Produkt/)
+})
+
+test("uses a neutral shelf fallback when a confirmed catalog image is missing", () => {
+  const compiled = compiledView()
+  compiled.days[0]!.productBlocks[0]!.imageUrl = null
+  const productStep = compiled.days[0]!.outerSequence.find((step) => step.kind === "product")
+  if (productStep?.kind === "product") productStep.block.imageUrl = null
+
+  const view = toApplicationPageView({ compiled, dayDefinitions: definitions })
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+
+  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.match(html, /data-application-shelf-slot="fallback"/)
+  assert.match(html, /Mildes Shampoo: Bild nicht verfügbar/)
 })

@@ -9,7 +9,7 @@ import type {
   Stage3ProductDecision,
   Stage3ProductDraft,
   Stage3RoleAssignment,
-  ProposedProductPortfolio,
+  AnyProposedProductPortfolio,
 } from "./contracts"
 import { deriveStage3DecisionSubjects } from "./contracts"
 import type {
@@ -39,7 +39,11 @@ import {
   replaceCaptureCategorySnapshot,
   replaceCategoryRoleAssignments,
   reopenCaptureCategory,
+  resolveStage3NeedRevision,
+  finalizeStage3CaptureWithoutInventoryAuthority,
+  acknowledgeStage3InventoryDisposition,
 } from "./state-machine"
+import { isPersonalPlanStage3InventoryAuthorityV2Enabled } from "@/lib/personal-plan/release"
 import type {
   RoutineCandidateCompiler,
   RoutineProposalStager,
@@ -87,6 +91,18 @@ export type Stage3ProductionPersistence = {
     userId: string
     draftId: string
     expectedRevision: number
+    draft: Stage3ProductDraft
+  }): Promise<
+    | { outcome: "saved"; draft: Stage3ProductDraft }
+    | { outcome: "revision_conflict"; draft: Stage3ProductDraft }
+    | { outcome: "stale_source"; draft: Stage3ProductDraft }
+  >
+  resolveNeedRevision(input: {
+    userId: string
+    draftId: string
+    expectedRevision: number
+    expectedProposalFingerprint: string
+    action: "accept" | "reject"
     draft: Stage3ProductDraft
   }): Promise<
     | { outcome: "saved"; draft: Stage3ProductDraft }
@@ -143,9 +159,9 @@ export type Stage3ProductionPersistence = {
   loadCompletedPortfolio(input: {
     userId: string
     draftId: string
-  }): Promise<ProposedProductPortfolio | null>
+  }): Promise<AnyProposedProductPortfolio | null>
   loadCompletionReceipt?(input: { userId: string; draftId: string }): Promise<{
-    portfolio: ProposedProductPortfolio
+    portfolio: AnyProposedProductPortfolio
     productPortfolioVersionId: string
     routineVersionId: string
     routineProposalId: string | null
@@ -178,6 +194,7 @@ export type Stage3ProductionGatewayOptions = {
   stager?: RoutineProposalStager
   cadenceAuthorityReader?: RoutineCadenceAuthorityReader
   now?: () => string
+  inventoryAuthorityV2Enabled?: boolean
 }
 
 export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
@@ -193,6 +210,17 @@ export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
     expectedRevision: number
     intents: Stage3AuthoritySemanticIntent[]
   }): Promise<Stage3MutationResponse>
+  resolveNeedRevision(input: {
+    draftId: string
+    expectedRevision: number
+    expectedProposalFingerprint: string
+    action: "accept" | "reject"
+  }): Promise<Stage3MutationResponse>
+  acknowledgeInventoryDisposition(input: {
+    draftId: string
+    expectedRevision: number
+    dispositionKey: string
+  }): Promise<Stage3MutationResponse>
 }
 
 export type Stage3DecisionReviewBundle = {
@@ -204,6 +232,8 @@ export function createProductionStage3ProductsGateway(
   options: Stage3ProductionGatewayOptions,
 ): Stage3AuthorityProductionGateway {
   const now = options.now ?? (() => new Date().toISOString())
+  const inventoryAuthorityV2Enabled =
+    options.inventoryAuthorityV2Enabled ?? isPersonalPlanStage3InventoryAuthorityV2Enabled()
   let cached: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] } | null = null
 
   async function repairLoadedDraft(input: {
@@ -212,7 +242,16 @@ export function createProductionStage3ProductsGateway(
   }) {
     let loaded = input
     for (let attempt = 0; attempt < 2; attempt += 1) {
-      const repaired = repairCursorlessCaptureDraft(loaded.draft, now())
+      const baseRefinedSnapshot = shouldLoadBaseRefinedSnapshotForCursorRepair(loaded.draft)
+        ? await options.persistence.loadRefinedNeedSnapshot({
+            userId: options.userId,
+            personalPlanId: loaded.draft.personalPlanId,
+            refinedVersionId: loaded.draft.refinedVersionId,
+          })
+        : undefined
+      const repaired = repairCursorlessCaptureDraft(loaded.draft, now(), {
+        baseRefinedSnapshot,
+      })
       if (repaired === loaded.draft) return loaded
       const saved = await options.persistence.save({
         userId: options.userId,
@@ -305,6 +344,15 @@ export function createProductionStage3ProductsGateway(
     }
   }
 
+  function authorityDecisionSubjects(draft: Stage3ProductDraft) {
+    // Inventory-only dispositions are deliberately outside the final refined
+    // plan. They have a server-owned acknowledgement transition, but no fit
+    // authority, recommendation, or executable alternative to evaluate.
+    return deriveStage3DecisionSubjects(draft).filter(
+      (subject) => subject.subjectKind !== "inventory_disposition",
+    )
+  }
+
   async function authoritativeEvaluation(
     draft: Stage3ProductDraft,
     subjectKey: string,
@@ -385,7 +433,7 @@ export function createProductionStage3ProductsGateway(
     context: Stage3EvaluationContext,
   ): Promise<boolean> {
     const reviews = await Promise.all(
-      deriveStage3DecisionSubjects(draft).map((subject) =>
+      authorityDecisionSubjects(draft).map((subject) =>
         authoritativeReview(draft, subject.decisionKey, context),
       ),
     )
@@ -426,6 +474,107 @@ export function createProductionStage3ProductsGateway(
   }
 
   return {
+    async acknowledgeInventoryDisposition(input): Promise<Stage3MutationResponse> {
+      const loaded = await current(input.draftId)
+      const draft = loaded.draft
+      if (draft.status !== "active") return { status: "conflict", latestDraft: draft }
+      await assertCurrentRefinedSource(draft)
+      const disposition = draft.inventoryDispositions?.find(
+        (candidate) => candidate.dispositionKey === input.dispositionKey,
+      )
+      if (!disposition) throw new Stage3AuthorityMutationError("stage3_inventory_disposition_invalid")
+      // Canonical acknowledgement is idempotent after a lost response.
+      if (disposition.acknowledged) return { status: "saved", draft }
+      if (draft.revision !== input.expectedRevision) return { status: "conflict", latestDraft: draft }
+      const next = acknowledgeStage3InventoryDisposition(draft, input.dispositionKey)
+      const saved = await options.persistence.save({
+        userId: options.userId,
+        draftId: draft.draftId,
+        expectedRevision: input.expectedRevision,
+        draft: next,
+      })
+      if (saved.outcome === "stale_source") {
+        cached = null
+        throw new Stage3AuthoritySnapshotError("stale_refined_source")
+      }
+      if (saved.outcome === "revision_conflict") {
+        cached = { ...loaded, draft: saved.draft }
+        return { status: "conflict", latestDraft: saved.draft }
+      }
+      cached = { ...loaded, draft: saved.draft }
+      return { status: "saved", draft: saved.draft }
+    },
+    async resolveNeedRevision(input): Promise<Stage3MutationResponse> {
+      const loaded = await current(input.draftId)
+      const draft = loaded.draft
+      if (draft.status !== "active" || draft.revision !== input.expectedRevision) {
+        return { status: "conflict", latestDraft: draft }
+      }
+      const authority = draft.inventoryAuthority
+      // Lost HTTP responses are reconciled by canonical state before any
+      // resend. A matching resolved receipt is idempotent; a different one
+      // remains a normal revision conflict rather than being overwritten.
+      if (
+        authority &&
+        authority.resolvedFingerprint === input.expectedProposalFingerprint &&
+        authority.status === (input.action === "accept" ? "accepted" : "rejected")
+      ) {
+        return { status: "saved", draft }
+      }
+      if (
+        !authority ||
+        authority.status !== "pending" ||
+        authority.proposalFingerprint !== input.expectedProposalFingerprint
+      ) {
+        throw new Stage3AuthorityMutationError("stage3_need_revision_invalid")
+      }
+      const acceptedContext =
+        input.action === "accept"
+          ? buildStage3EntryContext(authority.proposedOutputSnapshot!, {
+              personalPlanId: draft.personalPlanId,
+              // The transaction replaces this provisional source id with the
+              // immutable sibling id it inserts/reuses while holding the plan lock.
+              refinedVersionId: draft.refinedVersionId,
+            })
+          : null
+      const next = resolveStage3NeedRevision(draft,
+        input.action === "accept"
+          ? {
+              action: "accept",
+              expectedProposalFingerprint: input.expectedProposalFingerprint,
+              refinedVersionId: draft.refinedVersionId,
+              requirements: acceptedContext!.orderedCategories,
+              authoritySnapshot: acceptedContext!.authoritySnapshot,
+              updatedAt: now(),
+            }
+          : {
+              action: "reject",
+              expectedProposalFingerprint: input.expectedProposalFingerprint,
+              requirements: loaded.requirements,
+              updatedAt: now(),
+            },
+      )
+      const persisted = await options.persistence.resolveNeedRevision({
+        userId: options.userId,
+        draftId: draft.draftId,
+        expectedRevision: input.expectedRevision,
+        expectedProposalFingerprint: input.expectedProposalFingerprint,
+        action: input.action,
+        draft: next,
+      })
+      if (persisted.outcome === "stale_source") {
+        cached = null
+        throw new Stage3AuthoritySnapshotError("stale_refined_source")
+      }
+      if (persisted.outcome === "revision_conflict") {
+        cached = { ...loaded, draft: persisted.draft }
+        return { status: "conflict", latestDraft: persisted.draft }
+      }
+      const requirements =
+        input.action === "accept" ? acceptedContext!.orderedCategories : loaded.requirements
+      cached = { draft: persisted.draft, requirements }
+      return { status: "saved", draft: persisted.draft }
+    },
     async loadOrCreate(input): Promise<Stage3DraftResponse> {
       const loaded = await repairLoadedDraft(
         await options.persistence.loadOrCreate({
@@ -504,14 +653,34 @@ export function createProductionStage3ProductsGateway(
       // must still prove that this draft belongs to the plan's current refined
       // source before returning a canonical receipt.
       await assertCurrentRefinedSource(draft)
-      const next = await applyMutation(
+      const baseRefinedSnapshot = shouldLoadBaseRefinedSnapshotForMutation(
+        draft,
+        input.mutation,
+      )
+        ? await options.persistence.loadRefinedNeedSnapshot({
+            userId: options.userId,
+            personalPlanId: draft.personalPlanId,
+            refinedVersionId: draft.refinedVersionId,
+          })
+        : undefined
+      let next = await applyMutation(
         options.persistence,
         options.userId,
         draft,
         input.mutation,
         loaded.requirements,
         now,
+        baseRefinedSnapshot,
       )
+      // Existing envelopes are durable state, so rollback never strands a
+      // user in an invisible review. The gate only controls first entry.
+      if (
+        !inventoryAuthorityV2Enabled &&
+        !draft.inventoryAuthority &&
+        next.pass === "need_revision_review"
+      ) {
+        next = finalizeStage3CaptureWithoutInventoryAuthority(next)
+      }
       if (stage3DraftsSemanticallyEqual(draft, next)) return { status: "saved", draft }
       if (draft.revision !== input.expectedRevision)
         return { status: "conflict", latestDraft: draft }
@@ -640,7 +809,7 @@ export function createProductionStage3ProductsGateway(
         refinedNeedSnapshot = context.refinedNeedSnapshot
         expectedSourceRevision = sourceRevision
       }
-      let portfolio: ProposedProductPortfolio
+      let portfolio: AnyProposedProductPortfolio
       try {
         // Rebuild from the canonical server draft, never from completion flags
         // or a client portfolio payload.
@@ -741,7 +910,7 @@ export function createProductionStage3ProductsGateway(
       const loaded = await current(input.draftId)
       const context = await loadEvaluationContext(loaded.draft)
       return Promise.all(
-        deriveStage3DecisionSubjects(loaded.draft).map((subject) =>
+        authorityDecisionSubjects(loaded.draft).map((subject) =>
           authoritativeEvaluation(loaded.draft, subject.decisionKey, context),
         ),
       )
@@ -750,7 +919,7 @@ export function createProductionStage3ProductsGateway(
       const loaded = await current(input.draftId)
       const context = await loadEvaluationContext(loaded.draft)
       const reviews = await Promise.all(
-        deriveStage3DecisionSubjects(loaded.draft).map((subject) =>
+        authorityDecisionSubjects(loaded.draft).map((subject) =>
           authoritativeReview(loaded.draft, subject.decisionKey, context),
         ),
       )
@@ -900,7 +1069,9 @@ export class Stage3AuthorityMutationError extends Error {
       | "stage3_authority_subject_invalid"
       | "stage3_authority_action_invalid"
       | "stage3_authority_candidate_invalid"
-      | "stage3_replacement_candidate_invalid",
+      | "stage3_replacement_candidate_invalid"
+      | "stage3_need_revision_invalid"
+      | "stage3_inventory_disposition_invalid",
   ) {
     super(code)
     this.name = "Stage3AuthorityMutationError"
@@ -1051,6 +1222,7 @@ async function applyMutation(
   mutation: Stage3ProductsMutation,
   requirements: Stage3CategoryRequirement[],
   now: () => string,
+  baseRefinedSnapshot?: InitialNeedPlanSnapshot,
 ): Promise<Stage3ProductDraft> {
   const withUpdatedAt = (value: Stage3ProductDraft) => ({ ...value, updatedAt: now() })
   switch (mutation.type) {
@@ -1073,6 +1245,7 @@ async function applyMutation(
           mutation.candidates,
           mutation.uncoveredRoles,
           requirements,
+          { baseRefinedSnapshot },
         ),
       )
     }
@@ -1159,12 +1332,15 @@ async function applyMutation(
           mutation.assignments,
           mutation.uncoveredRoles,
           effectiveStage3Requirements(requirements, draft),
+          { baseRefinedSnapshot },
         ),
       )
     case "mark_role_uncovered":
       return withUpdatedAt(markRoleUncovered(draft, mutation.uncoveredRole))
     case "complete_capture_category":
-      return withUpdatedAt(completeCaptureCategory(draft, mutation.category, requirements))
+      return withUpdatedAt(
+        completeCaptureCategory(draft, mutation.category, requirements, { baseRefinedSnapshot }),
+      )
     case "reopen_capture_category":
       return withUpdatedAt(reopenCaptureCategory(draft, mutation.category))
     case "remove_captured_product":
@@ -1172,6 +1348,38 @@ async function applyMutation(
     case "record_decision":
       throw new Error("stage3_client_decision_rejected")
   }
+}
+
+function shouldLoadBaseRefinedSnapshotForCursorRepair(draft: Stage3ProductDraft): boolean {
+  return (
+    draft.status === "active" &&
+    draft.pass === "product_capture" &&
+    draft.categoryCursor === null &&
+    draft.orderedCategories.length > 0 &&
+    draft.orderedCategories.every((category) => draft.completedCaptureCategories.includes(category))
+  )
+}
+
+function shouldLoadBaseRefinedSnapshotForMutation(
+  draft: Stage3ProductDraft,
+  mutation: Stage3ProductsMutation,
+): boolean {
+  if (
+    mutation.type !== "replace_capture_category" &&
+    mutation.type !== "finalize_capture_category" &&
+    mutation.type !== "complete_capture_category"
+  ) {
+    return false
+  }
+  // Only the final unresolved category can construct a new authority envelope.
+  // Other capture mutations never need this immutable source read.
+  return (
+    draft.orderedCategories.includes(mutation.category) &&
+    draft.orderedCategories.every(
+      (category) =>
+        category === mutation.category || draft.completedCaptureCategories.includes(category),
+    )
+  )
 }
 
 async function rehydrateCaptureCategorySnapshot(
@@ -1182,6 +1390,7 @@ async function rehydrateCaptureCategorySnapshot(
   candidates: Stage3CategoryCaptureCandidate[],
   uncoveredRoles: Stage3CapturedUncoveredRole[],
   requirements: Stage3CategoryRequirement[],
+  options: { baseRefinedSnapshot?: InitialNeedPlanSnapshot } = {},
 ): Promise<Stage3ProductDraft> {
   if (!draft.orderedCategories.includes(category) || draft.categoryCursor !== category) {
     throw new Error("stage3_capture_category_unavailable")
@@ -1217,6 +1426,7 @@ async function rehydrateCaptureCategorySnapshot(
     assignments,
     uncoveredRoles,
     effectiveStage3Requirements(requirements, draft),
+    options,
   )
 }
 

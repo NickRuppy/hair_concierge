@@ -62,6 +62,7 @@ export function ProductFitComparison({
       ? {
           displayName: comparison.sourceIdentity.displayName,
           presentationImageUrl: comparison.sourceIdentity.imageUrl ?? null,
+          presentation: { priceLabel: null, netContentLabel: null },
         }
       : null)
   const allowedActions = new Set(evaluation.allowedActions)
@@ -288,7 +289,7 @@ function ProductCard({
 }: {
   product: Pick<
     Stage3FitComparison["products"][number],
-    "displayName" | "presentationImageUrl"
+    "displayName" | "presentationImageUrl" | "presentation"
   > | null
   label: string
   focused: boolean
@@ -310,6 +311,16 @@ function ProductCard({
           {candidate ? (
             <p className="mt-1 text-sm text-[var(--brand-plum)]">
               {candidate.recommendation.reason}
+            </p>
+          ) : null}
+          {product?.presentation?.priceLabel || product?.presentation?.netContentLabel ? (
+            <p className="mt-2 flex flex-wrap gap-x-2 text-xs text-muted-foreground">
+              {product.presentation?.netContentLabel ? (
+                <span>{product.presentation.netContentLabel}</span>
+              ) : null}
+              {product.presentation?.priceLabel ? (
+                <span>{product.presentation.priceLabel}</span>
+              ) : null}
             </p>
           ) : null}
         </div>

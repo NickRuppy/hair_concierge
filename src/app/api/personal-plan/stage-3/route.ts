@@ -12,7 +12,10 @@ import {
   STAGE3_AUTHORITY_DECISION_BATCH_LIMIT,
 } from "@/lib/personal-plan/products/authority/contracts"
 import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
-import type { Stage3ProductsGateway } from "@/lib/personal-plan/products/gateway"
+import type {
+  Stage3MutationResponse,
+  Stage3ProductsGateway,
+} from "@/lib/personal-plan/products/gateway"
 import {
   personalPlanCategorySchema,
   planProductRoleSchema,
@@ -21,6 +24,10 @@ import {
   stage3RoleAssignmentSchema,
 } from "@/lib/personal-plan/products/contracts"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
+import {
+  createSupabaseStage3RoutineAuthorityRepairService,
+  type Stage3RoutineAuthorityRepairService,
+} from "@/lib/personal-plan/products/stage3-routine-authority-repair-service"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -73,7 +80,11 @@ const categoryCaptureCandidateSchema = z.discriminatedUnion("kind", [
     .strict(),
 ])
 const loadQuerySchema = z
-  .object({ personalPlanId: identifier, refinedVersionId: identifier })
+  .object({
+    personalPlanId: identifier,
+    refinedVersionId: identifier,
+    repairRoutineVersionId: identifier.optional(),
+  })
   .strict()
 const clientMutationSchema = z
   .object({
@@ -189,16 +200,35 @@ const authorityIntentBatchSchema = z
       .max(STAGE3_AUTHORITY_DECISION_BATCH_LIMIT),
   })
   .strict()
+const needRevisionSchema = z
+  .object({
+    draftId: identifier,
+    expectedRevision: z.number().int().nonnegative(),
+    expectedProposalFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
+    action: z.enum(["accept", "reject"]),
+  })
+  .strict()
+const inventoryDispositionAcknowledgementSchema = z
+  .object({
+    draftId: identifier,
+    expectedRevision: z.number().int().nonnegative(),
+    action: z.literal("acknowledge_inventory_disposition"),
+    dispositionKey: domainIdentifier,
+  })
+  .strict()
 const mutationSchema = z.union([
   clientMutationSchema,
   authorityIntentSchema,
   authorityIntentBatchSchema,
+  needRevisionSchema,
+  inventoryDispositionAcknowledgementSchema,
 ])
 
 export type Stage3RouteDeps = {
   enabled: () => boolean
   getUserId: () => Promise<string | null>
   gatewayFor: (userId: string) => Stage3RouteGateway
+  repairServiceFor?: (userId: string) => Stage3RoutineAuthorityRepairService
   checkRateLimit: (
     identifier: string,
     config: RateLimitConfig,
@@ -261,7 +291,10 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
     phases: Record<string, number>,
   ) {
     const family =
-      "intent" in parsed || "intents" in parsed
+      "intent" in parsed ||
+      "intents" in parsed ||
+      "expectedProposalFingerprint" in parsed ||
+      ("action" in parsed && parsed.action === "acknowledge_inventory_disposition")
         ? STAGE3_DECISION_RATE_LIMIT
         : STAGE3_CAPTURE_RATE_LIMIT
     for (const config of [STAGE3_MUTATION_RATE_LIMIT, family]) {
@@ -283,21 +316,41 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
       if (!parsed.success) return response({ error: "invalid_request" }, 400)
       try {
         const gateway = deps.gatewayFor(auth.userId)
+        let repairRequirements: Awaited<
+          ReturnType<Stage3RoutineAuthorityRepairService["createOrLoad"]>
+        >["requirements"] | null = null
+        if (parsed.data.repairRoutineVersionId) {
+          if (!deps.repairServiceFor) throw new Error("stage3_repair_service_unavailable")
+          repairRequirements = (
+            await deps.repairServiceFor(auth.userId).createOrLoad({
+              userId: auth.userId,
+              personalPlanId: parsed.data.personalPlanId,
+              refinedVersionId: parsed.data.refinedVersionId,
+              routineVersionId: parsed.data.repairRoutineVersionId,
+            })
+          ).requirements
+        }
         const loaded = await gateway.loadOrCreate({
           draftId: "server-derived",
           userId: auth.userId,
           requirements: [],
-          ...parsed.data,
+          personalPlanId: parsed.data.personalPlanId,
+          refinedVersionId: parsed.data.refinedVersionId,
         })
+        if (repairRequirements) loaded.requirements = repairRequirements
         const usesReviewBundles =
-          loaded.draft.pass !== "product_capture" && Boolean(gateway.reviewDecisionBundles)
+          loaded.draft.pass !== "product_capture" &&
+          loaded.draft.pass !== "need_revision_review" &&
+          Boolean(gateway.reviewDecisionBundles)
         const reviewBundles =
           !usesReviewBundles || !gateway.reviewDecisionBundles
             ? []
             : await gateway.reviewDecisionBundles({ draftId: loaded.draft.draftId })
         const authorityEvaluations = usesReviewBundles
           ? reviewBundles.map((bundle) => bundle.authorityEvaluation)
-          : loaded.draft.pass === "product_capture" || !gateway.evaluateDecisions
+          : loaded.draft.pass === "product_capture" ||
+              loaded.draft.pass === "need_revision_review" ||
+              !gateway.evaluateDecisions
             ? []
             : await gateway.evaluateDecisions({ draftId: loaded.draft.draftId })
         return response(
@@ -350,7 +403,14 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
             ? await requireAuthorityDecisionGateway(gateway).resolveDecision(parsed.data)
             : "intents" in parsed.data
               ? await requireAuthorityBatchGateway(gateway).resolveDecisions(parsed.data)
-              : await gateway.mutate(parsed.data as never)
+              : "expectedProposalFingerprint" in parsed.data
+                ? await requireNeedRevisionGateway(gateway).resolveNeedRevision(parsed.data)
+                : "action" in parsed.data &&
+                    parsed.data.action === "acknowledge_inventory_disposition"
+                  ? await requireInventoryDispositionGateway(gateway).acknowledgeInventoryDisposition(
+                      parsed.data,
+                    )
+                : await gateway.mutate(parsed.data as never)
         auth.phases.gateway = Date.now() - gatewayStarted
         if (result.status === "conflict") {
           log("conflict", started, "revision_conflict", auth.phases)
@@ -365,7 +425,12 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
             ? "authority_batch"
             : "intent" in parsed.data
               ? "authority_single"
-              : "client_mutation",
+              : "expectedProposalFingerprint" in parsed.data
+                ? "need_revision"
+                : "action" in parsed.data &&
+                    parsed.data.action === "acknowledge_inventory_disposition"
+                  ? "inventory_disposition"
+                : "client_mutation",
           auth.phases,
         )
         return response(result, 200, { "Server-Timing": serverTiming(auth.phases) })
@@ -410,6 +475,33 @@ function requireAuthorityBatchGateway(
   return { resolveDecisions: gateway.resolveDecisions.bind(gateway) }
 }
 
+function requireNeedRevisionGateway(
+  gateway: Stage3RouteGateway,
+): Required<Pick<Stage3ProductsGateway, "resolveNeedRevision">> {
+  if (!gateway.resolveNeedRevision) throw new Error("stage3_need_revision_gateway_unavailable")
+  return { resolveNeedRevision: gateway.resolveNeedRevision.bind(gateway) }
+}
+
+function requireInventoryDispositionGateway(
+  gateway: Stage3RouteGateway,
+): {
+  acknowledgeInventoryDisposition(
+    input: z.infer<typeof inventoryDispositionAcknowledgementSchema>,
+  ): Promise<Stage3MutationResponse>
+} {
+  if (!gateway.acknowledgeInventoryDisposition) {
+    throw new Error("stage3_inventory_disposition_gateway_unavailable")
+  }
+  return {
+    acknowledgeInventoryDisposition: (input) =>
+      gateway.acknowledgeInventoryDisposition!({
+        draftId: input.draftId,
+        expectedRevision: input.expectedRevision,
+        dispositionKey: input.dispositionKey,
+      }),
+  }
+}
+
 type Stage3RouteGateway = Stage3ProductsGateway &
   Partial<
     Pick<
@@ -429,6 +521,7 @@ const handlers = createStage3RouteHandlers({
         createAdminClient(),
       ) as Stage3ProductionPersistence,
     }),
+  repairServiceFor: () => createSupabaseStage3RoutineAuthorityRepairService(createAdminClient()),
   checkRateLimit,
 })
 export const GET = handlers.GET

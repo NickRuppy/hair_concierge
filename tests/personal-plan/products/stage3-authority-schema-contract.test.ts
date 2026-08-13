@@ -125,3 +125,22 @@ test("Stage 3 product-draft saves lock and verify the current refined source", a
     /GRANT EXECUTE ON FUNCTION public\.personal_plan_save_product_draft\(uuid,uuid,bigint,text,jsonb,jsonb\) TO service_role;/,
   )
 })
+
+test("Stage 3 comparison metadata is additive, guarded, and remains outside authority persistence", async () => {
+  const source = await migration(
+    "20260813113000_personal_plan_stage3_comparison_presentation_metadata.sql",
+  )
+
+  assert.match(source, /ADD COLUMN IF NOT EXISTS net_content_value numeric/)
+  assert.match(source, /ADD COLUMN IF NOT EXISTS net_content_unit text/)
+  assert.match(source, /products_net_content_value_check/)
+  assert.match(source, /products_net_content_unit_check[\s\S]*'ml', 'g'/)
+  assert.match(source, /products_net_content_pair_check/)
+  assert.match(source, /products\.name = payload\.expected_name/)
+  assert.match(source, /product_intake_approve_reviewed_product_before_net_content/)
+  assert.match(
+    source,
+    /SET net_content_value = NULLIF\(p_final_payload#>>'\{product,net_content_value\}', ''\)::numeric/,
+  )
+  assert.match(source, /REVOKE ALL ON FUNCTION public\.product_intake_approve_reviewed_product\(/)
+})

@@ -163,6 +163,8 @@ export const productSchema = z
     purchase_link_status: z.enum(["available", "unavailable"]).nullable().optional(),
     purchase_link_checked_at: z.string().nullable().optional(),
     price_checked_at: z.string().nullable().optional(),
+    net_content_value: z.number().positive().nullable().optional(),
+    net_content_unit: z.enum(["ml", "g"]).nullable().optional(),
     image_url: nullableUrlField.default(null),
     price_eur: nullablePriceField.default(null),
     tags: z.array(z.string()).default([]),

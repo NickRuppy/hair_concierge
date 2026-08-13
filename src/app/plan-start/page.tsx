@@ -38,6 +38,10 @@ export type PlanStartPageDeps = {
   loadStage1Plan?: (userId: string) => Promise<PlanStartReadyViewModel | null>
 }
 
+export type PlanStartSearchParams = {
+  repairRoutineVersionId?: string | string[]
+}
+
 export type PlanStartPageState =
   | { state: "unavailable" }
   | { state: "paid_pending" }
@@ -51,6 +55,7 @@ export type PlanStartPageState =
 
 export async function resolvePlanStartPageState(
   deps: PlanStartPageDeps,
+  options: { repairRoutineVersionId?: string } = {},
 ): Promise<PlanStartPageState> {
   if (!deps.enabled()) return { state: "unavailable" }
   const userId = await deps.getUserId()
@@ -98,6 +103,23 @@ export async function resolvePlanStartPageState(
       ? refinement
       : undefined
     if (
+      options.repairRoutineVersionId &&
+      refinement.status === "complete" &&
+      access.allowed.stage3 &&
+      refinement.completedHandoff
+    ) {
+      return production(
+        {
+          stage: "stage3",
+          refinedVersionId: refinement.completedHandoff.refinedVersionId,
+          repairRoutineVersionId: options.repairRoutineVersionId,
+        },
+        initialRefinementSession
+          ? { personalPlanId: access.personalPlanId, initialRefinementSession }
+          : undefined,
+      )
+    }
+    if (
       refinement.status === "complete" &&
       access.frontier === "stage3" &&
       access.allowed.stage3 &&
@@ -136,7 +158,12 @@ function isUsableInitialRefinementSession(
   )
 }
 
-export default async function PlanStartPage() {
+export default async function PlanStartPage({
+  searchParams,
+}: {
+  searchParams?: Promise<PlanStartSearchParams>
+}) {
+  const params = (await searchParams) ?? {}
   const state = await resolvePlanStartPageState({
     enabled: isPersonalPlanAppV1Enabled,
     stage2Enabled: isPersonalPlanStage2Enabled,
@@ -155,7 +182,7 @@ export default async function PlanStartPage() {
       const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot)
       return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
     },
-  })
+  }, { repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId) })
   if (state.state === "paid_pending") redirect("/plan-bereit")
   if (state.state === "unavailable") return <PlanStartFlow state="unavailable" />
 
@@ -167,4 +194,11 @@ export default async function PlanStartPage() {
       initialRefinementSession={state.initialRefinementSession}
     />
   )
+}
+
+function parseUuidParam(value: string | string[] | undefined): string | undefined {
+  const candidate = Array.isArray(value) ? value[0] : value
+  return candidate && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)
+    ? candidate
+    : undefined
 }

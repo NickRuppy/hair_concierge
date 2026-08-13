@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Stage 4 · Fünf Routine-Konzepte</title>
+    <style>
+      :root { --ink:#2b1847; --plum:#6b50a0; --muted:#6f6966; --line:#e8e0e8; --paper:#fffdfb; --coral:#dc6471; --green:#3d7c52; --shampoo:#f5f0e5; --shampoo-line:#dfcfaa; --conditioner:#edf3f5; --conditioner-line:#c8dde4; --leave:#edf4f0; --leave-line:#c9dfd2; --mask:#f1eef5; --mask-line:#d8cce6; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:#f2efed; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+      h1,h2,h3,p { margin:0; }
+      .board { width:min(1540px,100%); margin:auto; padding:46px 34px 80px; }
+      .board-head { display:flex; align-items:end; justify-content:space-between; gap:32px; margin-bottom:28px; }
+      .eyebrow { color:var(--plum); font-weight:800; font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+      .board-head h1 { margin-top:8px; font-family:Georgia,serif; font-weight:500; font-size:50px; letter-spacing:-.035em; }
+      .board-head p { max-width:620px; color:var(--muted); font-size:16px; line-height:1.55; }
+      .rule { display:inline-flex; align-items:center; gap:8px; margin-top:12px; padding:8px 12px; border-radius:999px; background:#e9f3eb; color:#2e6941; font-size:13px; font-weight:750; }
+      .rule:before { content:"✓"; }
+      .concepts { display:grid; gap:30px; }
+      .concept { background:#fff; border:1px solid #ded8dc; border-radius:28px; overflow:hidden; box-shadow:0 22px 70px -56px rgba(42,24,69,.65); }
+      .concept-label { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:16px 22px; border-bottom:1px solid var(--line); background:#fff; }
+      .concept-label strong { font-size:15px; }
+      .concept-label span { color:var(--muted); font-size:13px; }
+      .app { background:linear-gradient(180deg,#fffaf7 0,#fff 42%); }
+      .appbar { height:62px; padding:0 28px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #eee8e5; background:#fffdfc; }
+      .logo { font-family:Georgia,serif; font-size:28px; letter-spacing:.01em; }
+      .logo:before { content:"▥"; margin-right:9px; color:var(--plum); font-family:system-ui; font-size:18px; }
+      .journey { display:flex; gap:7px; align-items:center; font-size:11px; color:#8c828c; }
+      .journey b { color:var(--ink); }
+      .journey i { width:38px; height:4px; display:block; border-radius:10px; background:#7654ac; }
+      .content { padding:28px; }
+      .topline { display:flex; justify-content:space-between; gap:18px; align-items:end; margin-bottom:26px; }
+      .topline h2 { font-family:Georgia,serif; font-size:36px; font-weight:500; letter-spacing:-.025em; }
+      .topline p { margin-top:7px; color:var(--muted); }
+      .btn { border:1px solid var(--plum); border-radius:12px; padding:11px 16px; color:var(--plum); font-weight:750; background:white; white-space:nowrap; }
+      .section-title { display:flex; align-items:center; justify-content:space-between; margin:26px 0 12px; }
+      .section-title h3 { font-size:18px; }
+      .section-title span { color:var(--muted); font-size:12px; }
+      .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+      .product { position:relative; min-width:0; border:1px solid var(--line); border-radius:20px; background:white; overflow:hidden; }
+      .product.tone-shampoo { background:var(--shampoo); border-color:var(--shampoo-line); }
+      .product.tone-conditioner { background:var(--conditioner); border-color:var(--conditioner-line); }
+      .product.tone-leave { background:var(--leave); border-color:var(--leave-line); }
+      .product.tone-mask { background:var(--mask); border-color:var(--mask-line); }
+      .image { width:92px; height:116px; object-fit:contain; background:rgba(255,255,255,.68); border-radius:14px; padding:7px; }
+      .tag { display:inline-flex; align-items:center; gap:6px; font-size:11px; text-transform:uppercase; letter-spacing:.11em; color:var(--plum); font-weight:850; }
+      .tag:before { content:""; width:7px; height:7px; border-radius:999px; background:currentColor; }
+      .name { margin-top:7px; font-size:18px; line-height:1.18; font-weight:750; }
+      .copy { margin-top:7px; color:var(--muted); line-height:1.45; font-size:13px; }
+      .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+      .chip { padding:6px 8px; border-radius:999px; background:rgba(255,255,255,.78); border:1px solid rgba(72,53,95,.08); color:#514858; font-size:11px; font-weight:700; }
+      .status { color:var(--green); font-weight:800; font-size:12px; }
+      .chev { color:var(--plum); font-weight:900; }
+      /* A */
+      .a .product { padding:16px; display:grid; grid-template-columns:92px minmax(0,1fr); gap:15px; min-height:170px; }
+      .a .foot { grid-column:1/-1; padding-top:12px; border-top:1px solid rgba(55,41,69,.08); display:flex; justify-content:space-between; }
+      .a .later { border-style:dashed; background:#faf8fb; }
+      /* B */
+      .b .content { padding-bottom:32px; }
+      .shelf { display:flex; gap:16px; overflow:hidden; }
+      .shelf .product { flex:1; min-height:250px; padding:18px; display:flex; flex-direction:column; }
+      .shelf .image { width:100%; height:128px; margin-bottom:14px; }
+      .shelf .product:first-child { flex:1.25; }
+      .shelf .meta { margin-top:auto; padding-top:12px; display:flex; justify-content:space-between; align-items:center; }
+      /* C */
+      .flow { display:grid; grid-template-columns:58px minmax(0,1fr); gap:0 16px; max-width:980px; }
+      .flow-no { display:flex; justify-content:center; position:relative; }
+      .flow-no:after { content:""; position:absolute; top:42px; bottom:-18px; width:2px; background:#ddd1ea; }
+      .flow-no span { z-index:1; width:36px; height:36px; display:grid; place-items:center; border-radius:50%; background:var(--plum); color:white; font-weight:850; }
+      .flow .product { margin-bottom:18px; padding:14px 16px; display:grid; grid-template-columns:72px minmax(0,1fr) auto; gap:14px; align-items:center; }
+      .flow .image { width:72px; height:84px; }
+      .flow .name { margin-top:4px; }
+      .flow .when { text-align:right; font-size:12px; color:var(--muted); }
+      .flow .when b { display:block; margin-bottom:4px; color:var(--ink); font-size:13px; }
+      /* D */
+      .d .content { display:grid; grid-template-columns:1fr 1fr; gap:26px; }
+      .compact-list { border:1px solid var(--line); border-radius:20px; overflow:hidden; background:#fff; }
+      .row { display:grid; grid-template-columns:64px minmax(0,1fr) auto; align-items:center; gap:13px; padding:13px; border-bottom:1px solid var(--line); }
+      .row:last-child { border:0; }
+      .row .image { width:64px; height:68px; border-radius:12px; }
+      .row .name { margin-top:3px; font-size:15px; }
+      .row .right { text-align:right; font-size:11px; color:var(--muted); }
+      .row .right b { color:var(--green); display:block; margin-bottom:4px; }
+      .summary { padding:22px; border-radius:22px; background:#f4eef8; align-self:start; }
+      .summary h2 { font-family:Georgia,serif; font-size:31px; font-weight:500; }
+      .summary p { margin-top:9px; color:var(--muted); line-height:1.5; }
+      .summary .metric { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+      .summary .metric div { background:white; padding:12px; border-radius:13px; }
+      .summary .metric b { display:block; font-size:22px; }
+      .summary .metric span { font-size:11px; color:var(--muted); }
+      /* E */
+      .mosaic { display:grid; grid-template-columns:1.4fr .8fr .8fr; grid-template-rows:auto auto; gap:14px; }
+      .mosaic .product { padding:17px; }
+      .mosaic .hero-product { grid-row:1/3; display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:center; }
+      .mosaic .hero-product .image { width:100%; height:230px; }
+      .mosaic .small .image { float:right; width:72px; height:86px; margin-left:10px; }
+      .mosaic .empty { border-style:dashed; background:#faf9fb; }
+      .mosaic .empty .image { display:grid; place-items:center; float:right; color:var(--plum); font-size:34px; }
+      .note { margin-top:18px; padding:11px 13px; border-left:3px solid var(--plum); background:#f6f2f8; color:#5e5364; font-size:12px; line-height:1.5; }
+      @media (max-width:900px) {
+        .board { padding:24px 12px 52px; }
+        .board-head { display:block; }
+        .board-head h1 { font-size:37px; }
+        .board-head p { margin-top:16px; }
+        .concept-label { display:block; }
+        .concept-label span { display:block; margin-top:5px; }
+        .appbar { padding:0 16px; }
+        .journey { display:none; }
+        .content { padding:20px 16px; }
+        .topline { align-items:start; }
+        .topline h2 { font-size:31px; }
+        .grid,.d .content,.mosaic { grid-template-columns:1fr; }
+        .shelf { overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:8px; }
+        .shelf .product { min-width:78vw; scroll-snap-align:start; }
+        .flow { grid-template-columns:42px minmax(0,1fr); gap:0 8px; }
+        .flow .product { grid-template-columns:58px minmax(0,1fr); }
+        .flow .image { width:58px; height:70px; }
+        .flow .when { grid-column:2; text-align:left; }
+        .mosaic .hero-product { grid-row:auto; grid-template-columns:100px 1fr; }
+        .mosaic .hero-product .image { height:145px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <header class="board-head">
+        <div><div class="eyebrow">Personal Plan · Stage 4</div><h1>Fünf Richtungen für deine Routine</h1><div class="rule">Nur Kategorien aus dem zuletzt gezeigten Bedarfsplan</div></div>
+        <p>Alle Varianten übernehmen die ruhigen Kategoriefarben, echten Produktbilder und die klare Basis/Optional-Hierarchie des Bedarfsplans. Der Unterschied ist, wie stark Produkt, Reihenfolge oder Übersicht im Vordergrund stehen.</p>
+      </header>
+      <div class="concepts">
+        <section class="concept a"><div class="concept-label"><strong>A · Bedarfsplan 1:1 — empfohlen</strong><span>Maximale Wiedererkennbarkeit; eine Karte pro Kategorie.</span></div><div class="app"><div class="appbar"><div class="logo">chaarlie</div><div class="journey"><i></i> Bedarf <i></i> Verfeinerung <i></i> Produkte <i></i> <b>Routine</b></div><span class="status">Gespeichert</span></div><div class="content"><div class="topline"><div><h2>Deine Routine</h2><p>Dein Bedarfsplan – jetzt mit deinen konkreten Produkten.</p></div><button class="btn">Routine anpassen</button></div><div class="section-title"><h3>Deine Basis</h3><span>1 Kategorie</span></div><div class="grid"><article class="product tone-shampoo"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp" alt="OGX Shampoo"><div><div class="tag">Shampoo · Basis</div><div class="name">OGX Renewing + Argan Oil of Morocco Shampoo</div><div class="chips"><span class="chip">3–4× pro Woche</span><span class="chip">Haarwäsche</span></div></div><div class="foot"><span class="status">✓ Passt</span><span class="chev">Details →</span></div></article></div><div class="section-title"><h3>Optional</h3><span>2 Kategorien</span></div><div class="grid"><article class="product tone-conditioner"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt="Bali Curls Conditioner"><div><div class="tag">Conditioner · Optional</div><div class="name">Bali Curls Moisturising Conditioner</div><div class="chips"><span class="chip">Nach jeder Wäsche</span></div></div><div class="foot"><span class="status">✓ Aktiv</span><span class="chev">Details →</span></div></article><article class="product tone-leave"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp" alt="It's a 10 Leave-In"><div><div class="tag">Leave-in · Optional</div><div class="name">It’s a 10 Miracle Leave-In</div><div class="chips"><span class="chip">Nach jeder Wäsche</span></div></div><div class="foot"><span class="status">✓ Aktiv</span><span class="chev">Details →</span></div></article></div><div class="note">Erster Aufruf: keine Bestätigung. Erst eine spätere Änderung öffnet eine einzige Vergleichsansicht „Vorher → Nachher“.</div></div></div></section>
+
+        <section class="concept b"><div class="concept-label"><strong>B · Produktregal</strong><span>Stärkster Bildfokus; besonders gut zum schnellen Wiedererkennen.</span></div><div class="app"><div class="appbar"><div class="logo">chaarlie</div><span class="status">Routine aktiv</span></div><div class="content"><div class="topline"><div><h2>Deine Produkte im Plan</h2><p>Von der Basis bis zur Ergänzung – alles auf einen Blick.</p></div><button class="btn">Ändern</button></div><div class="shelf"><article class="product tone-shampoo"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp" alt=""><div class="tag">Basis · Shampoo</div><div class="name">OGX Renewing + Argan Oil of Morocco</div><div class="copy">Reinigt Kopfhaut und Ansatz.</div><div class="meta"><span class="chip">3–4× / Woche</span><span class="chev">→</span></div></article><article class="product tone-conditioner"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt=""><div class="tag">Optional · Conditioner</div><div class="name">Bali Curls Moisturising</div><div class="copy">Pflegt Längen und Spitzen.</div><div class="meta"><span class="chip">Nach Shampoo</span><span class="chev">→</span></div></article><article class="product tone-leave"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp" alt=""><div class="tag">Optional · Leave-in</div><div class="name">It’s a 10 Miracle Leave-In</div><div class="copy">Bleibt nach der Wäsche im Haar.</div><div class="meta"><span class="chip">Im feuchten Haar</span><span class="chev">→</span></div></article></div></div></div></section>
+
+        <section class="concept c"><div class="concept-label"><strong>C · Routine-Ablauf</strong><span>Reihenfolge zuerst; Produkte bleiben bildstark und kompakt.</span></div><div class="app"><div class="appbar"><div class="logo">chaarlie</div><span class="status">Gespeichert</span></div><div class="content"><div class="topline"><div><h2>So ist deine Routine aufgebaut</h2><p>Die Bedarfsplan-Kategorien in ihrer späteren Anwendung.</p></div><button class="btn">Routine anpassen</button></div><div class="flow"><div class="flow-no"><span>1</span></div><article class="product tone-shampoo"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp" alt=""><div><div class="tag">Shampoo · Basis</div><div class="name">OGX Renewing + Argan Oil of Morocco</div><div class="copy">Deine regelmäßige Reinigung.</div></div><div class="when"><b>3–4× pro Woche</b>Haarwäsche</div></article><div class="flow-no"><span>2</span></div><article class="product tone-conditioner"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt=""><div><div class="tag">Conditioner · Optional</div><div class="name">Bali Curls Moisturising Conditioner</div><div class="copy">Pflege nach der Reinigung.</div></div><div class="when"><b>Nach Shampoo</b>Ausspülen</div></article><div class="flow-no"><span>3</span></div><article class="product tone-leave"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp" alt=""><div><div class="tag">Leave-in · Optional</div><div class="name">It’s a 10 Miracle Leave-In</div><div class="copy">Pflege, die im Haar bleibt.</div></div><div class="when"><b>Nach der Wäsche</b>Nicht ausspülen</div></article></div></div></div></section>
+
+        <section class="concept d"><div class="concept-label"><strong>D · Kompakt + Status</strong><span>Für häufige Nutzung: weniger Fläche, hoher Informationsnutzen.</span></div><div class="app"><div class="appbar"><div class="logo">chaarlie</div><span class="status">Routine aktiv</span></div><div class="content"><div><div class="section-title"><h3>Deine Basis & Ergänzungen</h3><span>3 aktive Produkte</span></div><div class="compact-list"><div class="row"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp" alt=""><div><div class="tag">Shampoo · Basis</div><div class="name">OGX Renewing + Argan Oil of Morocco</div></div><div class="right"><b>✓ Aktiv</b>3–4× / Woche</div></div><div class="row"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt=""><div><div class="tag">Conditioner · Optional</div><div class="name">Bali Curls Moisturising Conditioner</div></div><div class="right"><b>✓ Aktiv</b>Nach Shampoo</div></div><div class="row"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp" alt=""><div><div class="tag">Leave-in · Optional</div><div class="name">It’s a 10 Miracle Leave-In</div></div><div class="right"><b>✓ Aktiv</b>Nach der Wäsche</div></div><div class="row"><div class="image" style="display:grid;place-items:center;color:#8265ae;font-size:28px">M</div><div><div class="tag">Maske · Später</div><div class="name">Noch kein Produkt gewählt</div></div><div class="right">Bei Bedarf</div></div></div></div><aside class="summary"><div class="eyebrow">Dein Plan</div><h2>Ruhig, klar, bereit.</h2><p>Die Routine zeigt nur, was dein Bedarfsplan tatsächlich enthält. Offene Ergänzungen bleiben sichtbar, aber drängen sich nicht vor.</p><div class="metric"><div><b>3</b><span>aktive Produkte</span></div><div><b>1</b><span>später ergänzen</span></div></div><button class="btn" style="width:100%;margin-top:16px">Routine anpassen</button></aside></div></div></section>
+
+        <section class="concept e"><div class="concept-label"><strong>E · Editoriales Mosaik</strong><span>Emotionaler Premium-Look; Basis bekommt deutlich mehr Gewicht.</span></div><div class="app"><div class="appbar"><div class="logo">chaarlie</div><span class="status">Deine Routine ist bereit</span></div><div class="content"><div class="topline"><div><h2>Deine persönliche Auswahl</h2><p>Basis zuerst. Ergänzungen genau dort, wo sie helfen.</p></div><button class="btn">Ändern</button></div><div class="mosaic"><article class="product tone-shampoo hero-product"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp" alt=""><div><div class="tag">Deine Basis · Shampoo</div><div class="name" style="font-size:25px">OGX Renewing + Argan Oil of Morocco</div><div class="copy">Regelmäßige Reinigung für Kopfhaut und Ansatz.</div><div class="chips"><span class="chip">3–4× pro Woche</span><span class="chip">✓ Passt</span></div></div></article><article class="product tone-conditioner small"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" alt=""><div class="tag">Optional</div><div class="name">Bali Curls Conditioner</div><div class="copy">Nach Shampoo</div></article><article class="product tone-leave small"><img class="image" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp" alt=""><div class="tag">Optional</div><div class="name">It’s a 10 Leave-In</div><div class="copy">Nach der Wäsche</div></article><article class="product empty small"><div class="image">＋</div><div class="tag">Später</div><div class="name">Maske ergänzen</div><div class="copy">Wenn du eine intensive Pflege möchtest.</div></article><article class="product small" style="background:#fff8f3"><div class="tag">Nächster Schritt</div><div class="name">Anwendung ansehen</div><div class="copy">Deine Produkte in der richtigen Reihenfolge.</div><div class="chev" style="margin-top:12px">Öffnen →</div></article></div></div></div></section>
+      </div>
+    </main>
+  </body>
+</html>

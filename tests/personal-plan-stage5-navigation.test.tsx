@@ -170,8 +170,14 @@ test("journey access is request-cached for shell and guarded page composition", 
   assert.match(applicationSource, /loadPersonalPlanActiveRoutineVersion/)
 })
 
-test("chat input reserves bottom navigation space only inside the Personal Plan shell", () => {
-  const source = readFileSync("src/components/chat/chat-input.tsx", "utf8")
-  assert.match(source, /var\(--personal-plan-shell-bottom-padding,/)
-  assert.match(source, /env\(safe-area-inset-bottom\)/)
+test("regular Chat consumes Personal Plan clearance in the viewport once and keeps its own safe area", () => {
+  const containerSource = readFileSync("src/components/chat/chat-container.tsx", "utf8")
+  const inputSource = readFileSync("src/components/chat/chat-input.tsx", "utf8")
+
+  assert.match(
+    containerSource,
+    /h-\[calc\(100dvh-3\.5rem-var\(--personal-plan-shell-bottom-padding,0px\)\)\]/,
+  )
+  assert.match(inputSource, /env\(safe-area-inset-bottom\)/)
+  assert.doesNotMatch(inputSource, /personal-plan-shell-bottom-padding/)
 })

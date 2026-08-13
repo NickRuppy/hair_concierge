@@ -121,6 +121,9 @@ export const normalizedRoutineItemSchema = z
     itemId: z.string().min(1),
     productId: productIdSchema,
     productName: z.string().min(1),
+    // Current catalog presentation only. This is deliberately outside the
+    // accepted Routine payload and application guidance facts.
+    imageUrl: z.string().url().nullable().optional(),
     category: personalPlanCategorySchema,
     role: semanticRoleSchema,
     inclusion: z.literal("included"),

@@ -40,6 +40,7 @@ import {
   replaceCaptureCategorySnapshot,
   replaceCategoryRoleAssignments,
   reopenCaptureCategory,
+  finalizeStage3CaptureWithoutInventoryAuthority,
 } from "./state-machine"
 
 export type { Stage3CategoryRequirement } from "./contracts"
@@ -115,6 +116,8 @@ export type FixtureStage3GatewayOptions = {
   searchDelayMs?: number
   /** Each named operation rejects once, then returns to its normal fixture behavior. */
   failOnce?: readonly FixtureGatewayFailureOperation[]
+  /** Mirrors the server start gate; persisted envelopes are never hidden. */
+  inventoryAuthorityV2Enabled?: boolean
 }
 
 export class FixtureGatewaySimulatedError extends Error {
@@ -179,6 +182,7 @@ export function createFixtureStage3Gateway(
 ): FixtureStage3Gateway {
   const now = options.now ?? (() => new Date().toISOString())
   const searchDelayMs = options.searchDelayMs ?? DEFAULT_SEARCH_DELAY_MS
+  const inventoryAuthorityV2Enabled = options.inventoryAuthorityV2Enabled ?? false
   const drafts = new Map<string, Stage3ProductDraft>()
   const requirementsByDraftId = new Map<string, Stage3CategoryRequirement[]>()
   const completions = new Map<
@@ -247,7 +251,7 @@ export function createFixtureStage3Gateway(
     const requirements = requirementsByDraftId.get(input.draftId)
     if (!requirements) throw new Error(`missing requirements for draft ${input.draftId}`)
 
-    const next = {
+    let next = {
       ...applyMutation(
         draft,
         input.mutation,
@@ -255,6 +259,13 @@ export function createFixtureStage3Gateway(
         () => `fixture-captured-${nextCapturedProduct++}`,
       ),
       updatedAt: now(),
+    }
+    if (
+      !inventoryAuthorityV2Enabled &&
+      !draft.inventoryAuthority &&
+      next.pass === "need_revision_review"
+    ) {
+      next = finalizeStage3CaptureWithoutInventoryAuthority(next)
     }
     if (stage3DraftsSemanticallyEqual(draft, next)) return { status: "saved", draft }
     if (draft.revision !== input.expectedRevision) return { status: "conflict", latestDraft: draft }

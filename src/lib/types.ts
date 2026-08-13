@@ -257,6 +257,8 @@ export interface Product {
   purchase_link_status?: "available" | "unavailable" | null
   purchase_link_checked_at?: string | null
   price_checked_at?: string | null
+  net_content_value?: number | null
+  net_content_unit?: "ml" | "g" | null
   image_url: string | null
   price_eur: number | null
   currency: string
@@ -292,6 +294,8 @@ export type ProductSummary = Pick<
   | "purchase_link_status"
   | "purchase_link_checked_at"
   | "price_checked_at"
+  | "net_content_value"
+  | "net_content_unit"
   | "image_url"
   | "price_eur"
   | "currency"

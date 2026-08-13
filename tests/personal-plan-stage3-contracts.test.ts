@@ -467,6 +467,146 @@ test("decision subjects keep category and role authority order after a reopened 
   )
 })
 
+test("need-revision drafts and inventory-only dispositions are first-class schema contracts", () => {
+  const pendingAuthority = {
+    schemaVersion: 1,
+    stage2RefinedNeedVersionId: "refined-v1",
+    inventorySnapshotFingerprint: "a".repeat(64),
+    status: "pending" as const,
+    proposalFingerprint: "b".repeat(64),
+    proposedInputHash: "proposed-input-hash",
+    proposedOutputSnapshot: {
+      schemaVersion: 1,
+      snapshotKind: "initial_need",
+      computationVersion: "stage3.product_load.v1",
+      inputHash: "proposed-input-hash",
+      createdAt: now,
+      sourceQuiz: {
+        kind: "personal_plan",
+        version: 2,
+        answers: {},
+      },
+      profile: {},
+      assessments: {},
+      decisions: [],
+      coverage: [],
+      productPreviews: [],
+      renderedOrder: [],
+      deferredFacts: [],
+    },
+    materialDelta: [
+      {
+        kind: "category_added",
+        category: "deep_cleansing_shampoo",
+        before: null,
+        after: "basis",
+      },
+    ],
+    resolvedFingerprint: null,
+  }
+  const inventoryDisposition = {
+    schemaVersion: 1,
+    dispositionKey: "inventory:dry_shampoo:dry-shampoo-1",
+    capturedProductId: "dry-shampoo-1",
+    category: "dry_shampoo",
+    planStatus: "not_used",
+    reason: "category_not_in_final_plan",
+    acknowledged: false,
+    authorityFingerprint: "b".repeat(64),
+  }
+
+  assert.equal(
+    validateStage3Draft(
+      draft({
+        pass: "need_revision_review",
+        orderedCategories: ["oil", "dry_shampoo"],
+        products: [
+          ...draft().products,
+          {
+            capturedProductId: "dry-shampoo-1",
+            userProductId: "user-product-dry-shampoo-1",
+            identity: {
+              kind: "pending_submission",
+              submissionId: "submission-dry-shampoo-1",
+              displayName: "Trockenshampoo in Prüfung",
+              category: "dry_shampoo",
+              reviewStatus: "pending_review",
+            },
+            frequencyRange: "weekly_1x",
+            ownership: "owned",
+            source: "intake_fallback",
+          },
+        ],
+        inventoryAuthority: pendingAuthority,
+        inventoryDispositions: [inventoryDisposition],
+      } as unknown as Partial<Stage3ProductDraft>),
+    ).length,
+    0,
+  )
+})
+
+test("decision subjects cover unassigned captured inventory exactly once after role subjects", () => {
+  const subjects = deriveStage3DecisionSubjects({
+    ...draft(),
+    orderedCategories: ["oil", "dry_shampoo"],
+    products: [
+      ...draft().products,
+      {
+        capturedProductId: "dry-shampoo-1",
+        userProductId: "user-product-dry-shampoo-1",
+        identity: {
+          kind: "pending_submission",
+          submissionId: "submission-dry-shampoo-1",
+          displayName: "Trockenshampoo in Prüfung",
+          category: "dry_shampoo",
+          reviewStatus: "pending_review",
+        },
+        frequencyRange: "weekly_1x",
+        ownership: "owned",
+        source: "intake_fallback",
+      },
+    ],
+    inventoryDispositions: [
+      {
+        schemaVersion: 1,
+        dispositionKey: "inventory:dry_shampoo:dry-shampoo-1",
+        capturedProductId: "dry-shampoo-1",
+        category: "dry_shampoo",
+        planStatus: "not_used",
+        reason: "category_not_in_final_plan",
+        acknowledged: false,
+        authorityFingerprint: "c".repeat(64),
+      },
+    ],
+  } as Stage3ProductDraft)
+
+  assert.deepEqual(
+    subjects.map((subject) => ({
+      decisionKey: subject.decisionKey,
+      category: subject.category,
+      role: subject.role,
+      capturedProductId: subject.capturedProductId,
+      subjectKind: subject.subjectKind,
+    })),
+    [
+      {
+        decisionKey: "decision:oil:dry_finish:oil-1",
+        category: "oil",
+        role: "dry_finish",
+        capturedProductId: "oil-1",
+        subjectKind: "captured_product",
+      },
+      {
+        decisionKey: "inventory:dry_shampoo:dry-shampoo-1",
+        category: "dry_shampoo",
+        role: "root_refresh_bridge",
+        capturedProductId: "dry-shampoo-1",
+        subjectKind: "inventory_disposition",
+      },
+    ],
+  )
+})
+
 test("an uncovered role can carry only an unassigned or planned-purchase decision", () => {
   const gap = {
     ...draft(),

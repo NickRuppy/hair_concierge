@@ -28,10 +28,10 @@ type CategorySelectionContext = {
 export const STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT = 12
 
 export function stage3AuthorityFactFingerprint(input: {
-  common: Stage3AuthorityCommonFingerprintInput & { presentationImageUrl?: string | null }
+  common: Stage3AuthorityCommonFingerprintInput & Stage3AuthorityPresentationFields
   spec: unknown
 }): string {
-  const fingerprintCommon = omitPresentationImage(input.common)
+  const fingerprintCommon = omitPresentationFields(input.common)
   return fingerprint({ ...fingerprintCommon, spec: input.spec })
 }
 
@@ -42,8 +42,17 @@ export type Stage3AuthorityFactBundle = Pick<
 
 type Stage3AuthorityCommonFingerprintInput = Omit<
   Stage3CategoryProductFacts,
-  "spec" | "factFingerprint" | "presentationImageUrl"
+  "spec" | "factFingerprint" | keyof Stage3AuthorityPresentationFields
 >
+
+type Stage3AuthorityPresentationFields = {
+  presentationImageUrl?: string | null
+  priceEur?: number | null
+  priceCheckedAt?: string | null
+  purchaseLinkStatus?: "available" | "unavailable" | null
+  netContentValue?: number | null
+  netContentUnit?: "ml" | "g" | null
+}
 
 export async function loadStage3AuthorityFactBundle(
   client: AdminClient,
@@ -91,7 +100,7 @@ async function loadRecommendationCandidates(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,purchase_link_status",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit",
     )
     .eq("category_key", category)
     .eq("is_active", true)
@@ -120,7 +129,7 @@ async function loadOneProduct(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,purchase_link_status",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit",
     )
     .eq("id", productId)
     .eq("category_key", category)
@@ -159,12 +168,20 @@ async function normalizeProductFacts(
     protocols,
     catalogSortOrder: numberOrNull(product.sort_order),
     priceEur: numberOrNull(product.price_eur),
+    priceCheckedAt: text(product.price_checked_at),
     purchaseLinkStatus:
       product.purchase_link_status === "available" || product.purchase_link_status === "unavailable"
-        ? product.purchase_link_status
+        ? (product.purchase_link_status as "available" | "unavailable")
+        : null,
+    netContentValue: numberOrNull(product.net_content_value),
+    netContentUnit:
+      product.net_content_unit === "ml" || product.net_content_unit === "g"
+        ? (product.net_content_unit as "ml" | "g")
         : null,
   }
-  const fingerprintCommon = omitPresentationImage(common)
+  const fingerprintCommon = omitPresentationFields(
+    common as typeof common & Stage3AuthorityPresentationFields,
+  )
   const withoutFingerprint = { ...fingerprintCommon, spec }
   return {
     ...common,
@@ -173,12 +190,22 @@ async function normalizeProductFacts(
   } as Stage3CategoryProductFacts
 }
 
-function omitPresentationImage<T extends { presentationImageUrl?: string | null }>(
+function omitPresentationFields<T extends Stage3AuthorityPresentationFields>(
   value: T,
-): Omit<T, "presentationImageUrl"> {
+): Omit<T, keyof Stage3AuthorityPresentationFields> {
+  const presentationFields = new Set<keyof Stage3AuthorityPresentationFields>([
+    "presentationImageUrl",
+    "priceEur",
+    "priceCheckedAt",
+    "purchaseLinkStatus",
+    "netContentValue",
+    "netContentUnit",
+  ])
   return Object.fromEntries(
-    Object.entries(value).filter(([key]) => key !== "presentationImageUrl"),
-  ) as Omit<T, "presentationImageUrl">
+    Object.entries(value).filter(
+      ([key]) => !presentationFields.has(key as keyof Stage3AuthorityPresentationFields),
+    ),
+  ) as Omit<T, keyof Stage3AuthorityPresentationFields>
 }
 
 async function loadCategorySpec(

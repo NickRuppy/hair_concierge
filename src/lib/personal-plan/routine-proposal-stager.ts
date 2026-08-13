@@ -204,7 +204,6 @@ export type RoutineProposalRpcClient = {
  */
 export function createRoutineProposalStagerRpcAdapter(input: {
   client: RoutineProposalRpcClient
-  activateInitialRoutine?: boolean
 }): RoutineProposalStager {
   return {
     async stage(rawRequest) {
@@ -213,9 +212,7 @@ export function createRoutineProposalStagerRpcAdapter(input: {
 
       try {
         const response = await input.client.rpc(
-          input.activateInitialRoutine
-            ? "personal_plan_complete_draft_activate_initial_v1"
-            : "personal_plan_complete_product_draft_and_stage_routine",
+          "personal_plan_complete_draft_activate_initial_v1",
           {
             p_user_id: request.data.userId,
             p_personal_plan_id: request.data.personalPlanId,

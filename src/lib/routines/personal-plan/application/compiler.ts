@@ -30,6 +30,7 @@ export type CompiledProductlessStep = {
 export type CompiledProductBlock = {
   productId: string
   productName: string
+  imageUrl?: string | null
   category: PersonalPlanCategory
   roles: SemanticRole[]
   applicationInstanceKey: string
@@ -121,8 +122,15 @@ function transitionCopy(fromAnchor: string, toAnchor: string) {
 }
 
 function productBlockIncludesAnchorPreparation(block: CompiledProductBlock) {
-  if (block.anchor !== "wet_cleanse") return false
-  return block.steps.some(({ stepKey, action }) => stepKey === "wet" && action === "section")
+  if (block.anchor === "wet_cleanse") {
+    return block.steps.some(({ stepKey, action }) => stepKey === "wet" && action === "section")
+  }
+  if (block.anchor === "damp_leave_on") {
+    return block.steps.some(
+      ({ stepKey, action }) => stepKey === "towel-dry" && action === "section",
+    )
+  }
+  return false
 }
 
 type AnchorOrdering =
@@ -467,6 +475,7 @@ function compileDay(
     blocks.set(instanceKey, {
       productId: item.productId,
       productName: item.productName,
+      imageUrl: item.imageUrl ?? null,
       category: item.category,
       roles: [item.role],
       applicationInstanceKey: instanceKey,
@@ -497,6 +506,7 @@ function compileDay(
   ): CompiledProductBlock => ({
     productId: block.productId,
     productName: block.productName,
+    imageUrl: block.imageUrl ?? null,
     category: block.category,
     roles: [...block.roles].sort(),
     applicationInstanceKey: block.applicationInstanceKey,

@@ -18,7 +18,7 @@ export type RoutinePageProps = {
   view: PersonalPlanRoutineView
   stage5Reachable?: boolean
   onEdit?: () => void
-  onConfirm?: () => void
+  onReviewProposal?: () => void
   onItemDetail?: (item: RoutineItem) => void
   portfolioPresentation?: PortfolioPresentation | null
 }
@@ -44,13 +44,14 @@ export function RoutinePage({
   view,
   stage5Reachable = false,
   onEdit,
-  onConfirm,
+  onReviewProposal,
   onItemDetail,
   portfolioPresentation = null,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
   if (!payload) {
+    const needsRepair = view.status === "authority_repair_required" && view.repair
     return (
       <div className="min-h-dvh bg-[var(--background)]">
         <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
@@ -64,11 +65,12 @@ export function RoutinePage({
               Routine noch nicht verfügbar
             </h1>
             <p className="mt-3 text-muted-foreground">
-              Deine Routine kann noch nicht sicher angezeigt werden. Prüfe zuerst die
-              Produktauswahl, damit wir keine leere Anwendung erzeugen.
+              {needsRepair
+                ? "Deine bestätigte Routine bleibt unverändert. Prüfe einmal die Produktauswahl, damit keine Kategorie aus dem alten Stand in die Anwendung rutscht."
+                : "Deine Routine kann noch nicht sicher angezeigt werden. Prüfe zuerst die Produktauswahl, damit wir keine leere Anwendung erzeugen."}
             </p>
             <Link
-              href="/plan-start"
+              href={needsRepair ? view.repair!.href : "/plan-start"}
               className={`${buttonVariants({ variant: "funnelCta", size: null })} mt-5`}
             >
               Produkte prüfen
@@ -85,7 +87,8 @@ export function RoutinePage({
       .find((section) => section.key === key)
       ?.itemKeys.map((itemKey) => items.get(itemKey))
       .filter((item): item is RoutineItem => Boolean(item)) ?? []
-  const initialProposal = view.status === "proposal"
+  const initialProposal = view.status === "proposal" && !view.activeVersion
+  const successorProposal = Boolean(view.activeVersion && view.pendingProposal)
   const basisItems = sectionItems("basis")
   const optionalItems = sectionItems("optional").filter((item) => !isLaterOptional(item))
   const laterItems = sectionItems("optional").filter(isLaterOptional)
@@ -103,15 +106,25 @@ export function RoutinePage({
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
             <div className="space-y-3">
               <p className="inline-flex rounded-full bg-[var(--status-ok-bg)] px-3 py-1 text-xs font-bold text-[var(--status-ok-text)]">
-                {initialProposal ? "Vorschlag" : `✓ ${activeProductCount} aktive Produkte`}
+                {successorProposal
+                  ? "Änderungen verfügbar"
+                  : initialProposal
+                    ? "Vorschlag"
+                    : `✓ ${activeProductCount} aktive Produkte`}
               </p>
               <h1 className="text-4xl font-semibold tracking-tight text-[var(--brand-plum-darkest)] sm:text-5xl">
-                {initialProposal ? "Deine Routine steht." : "Deine Routine ist bereit."}
+                {successorProposal
+                  ? "Deine Routine bleibt aktiv."
+                  : initialProposal
+                    ? "Deine Routine wird vorbereitet."
+                    : "Deine Routine ist bereit."}
               </h1>
               <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
                 {initialProposal
-                  ? "Prüfe den Vorschlag als nächsten Routine-Entwurf."
-                  : "Dein Bedarfsplan – jetzt mit deinen Produkten, ihrem Rhythmus und den nächsten Anwendungsschritten."}
+                  ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
+                  : successorProposal
+                    ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
+                    : "Dein Bedarfsplan – jetzt mit deinen Produkten, ihrem Rhythmus und den nächsten Anwendungsschritten."}
               </p>
               {hasBlockingBasisGap ? (
                 <p
@@ -137,17 +150,13 @@ export function RoutinePage({
                   Routine anpassen
                 </Button>
               ) : null}
-            </div>
-          </div>
-          {initialProposal || onConfirm ? (
-            <div className="mt-5 flex flex-wrap gap-3">
-              {initialProposal && onConfirm ? (
-                <Button variant="funnelCta" onClick={onConfirm}>
-                  Routine bestätigen
+              {successorProposal && onReviewProposal ? (
+                <Button variant="outline" onClick={onReviewProposal}>
+                  Änderungen prüfen
                 </Button>
               ) : null}
             </div>
-          ) : null}
+          </div>
         </header>
         <RoutineSection
           title="Deine Basis"
@@ -155,6 +164,7 @@ export function RoutinePage({
           emptyLabel="Deine Basis wird aus deinem Bedarfsplan aufgebaut."
           onItemDetail={onItemDetail}
           presentation={portfolioPresentation}
+          productPresentation={view.productPresentation}
         />
         {optionalItems.length > 0 ? (
           <RoutineSection
@@ -162,6 +172,7 @@ export function RoutinePage({
             items={optionalItems}
             onItemDetail={onItemDetail}
             presentation={portfolioPresentation}
+            productPresentation={view.productPresentation}
           />
         ) : null}
         {laterItems.length > 0 ? (
@@ -171,18 +182,27 @@ export function RoutinePage({
             variant="later"
             onItemDetail={onItemDetail}
             presentation={portfolioPresentation}
+            productPresentation={view.productPresentation}
           />
         ) : null}
-        {portfolioPresentation?.schemaVersion === 3 &&
-        portfolioPresentation.retainedOwnedProducts.length > 0 ? (
+        {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
+        (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
           <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">
             <summary className="cursor-pointer text-sm font-semibold text-[var(--brand-plum-darkest)]">
-              Nicht verwendete Produkte ({portfolioPresentation.retainedOwnedProducts.length})
+              Nicht verwendete Produkte (
+              {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) +
+                (portfolioPresentation?.retainedInventoryProducts?.length ?? 0)}
+              )
             </summary>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              {portfolioPresentation.retainedOwnedProducts.map((product) => (
+              {portfolioPresentation?.retainedOwnedProducts.map((product) => (
                 <li key={product.capturedProductId}>
-                  {product.displayName} · {routineCategoryLabel(product.category)}
+                  {product.displayName} · {routineCategoryLabel(product.category)} · Nicht verwendet
+                </li>
+              ))}
+              {portfolioPresentation?.retainedInventoryProducts?.map((product) => (
+                <li key={product.capturedProductId}>
+                  {product.displayName} · {routineCategoryLabel(product.category)} · Nicht verwendet
                 </li>
               ))}
             </ul>

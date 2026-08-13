@@ -100,6 +100,8 @@ test("Stage 5 adapter bulk-reads products and exact protocols while preserving a
       category_key: "shampoo",
       is_active: true,
       lifecycle_status: "active",
+      image_url:
+        "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/shampoo.webp",
     },
   ])
   const result = await adaptAcceptedActiveRoutineForApplication({
@@ -116,6 +118,11 @@ test("Stage 5 adapter bulk-reads products and exact protocols while preserving a
     result.routineItems.map((item) => item.productId),
     [productId],
   )
+  assert.equal(
+    result.routineItems[0]?.imageUrl,
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/shampoo.webp",
+  )
+  assert.match(calls[0]!.select ?? "", /image_url/)
 })
 
 test("Stage 5 V2 adapter selects only typed pointer storage and ignores V1 manufacturer prose", async () => {

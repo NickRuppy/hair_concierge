@@ -79,7 +79,7 @@ test("Stage 3 search requires and forwards the owner draft context", async () =>
       `http://test/api/personal-plan/stage-3/search?draftId=${draft.draftId}&category=shampoo&q=ogx&requestToken=2`,
     ),
   )
-  assert.equal(response.status, 200)
+  assert.equal(response!.status, 200)
   assert.deepEqual(received, {
     draftId: draft.draftId,
     category: "shampoo",
@@ -497,6 +497,93 @@ test("Stage 3 GET exposes the authoritative refined requirements", async () => {
   const body = await response!.json()
   assert.deepEqual(body.requirements, requirements)
   assert.deepEqual(body.authorityEvaluations, [])
+})
+
+test("Stage 3 GET can create a server-owned Routine authority repair draft before bootstrap", async () => {
+  const repairRoutineVersionId = "44444444-4444-4444-8444-444444444444"
+  const repairRequirements = [
+    ...requirements,
+    {
+      category: "oil" as const,
+      requiredRoles: [],
+      needSummary: "legacy inventory",
+      authorityVersion: "personal-plan.oil.v2",
+    },
+  ]
+  const repairCalls: unknown[] = []
+  const loadCalls: unknown[] = []
+  const response = await createStage3RouteHandlers(
+    deps({
+      repairServiceFor: () => ({
+        createOrLoad: async (input) => {
+          repairCalls.push(input)
+          return { requirements: repairRequirements }
+        },
+      }),
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async (input) => {
+          loadCalls.push(input)
+          return {
+            status: "active",
+            draft: {
+              ...draft,
+              userId,
+              personalPlanId: input.personalPlanId,
+              refinedVersionId: input.refinedVersionId,
+            },
+            requirements,
+          }
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}&repairRoutineVersionId=${repairRoutineVersionId}`,
+    ),
+  )
+
+  const body = await response!.json()
+  assert.equal(response!.status, 200)
+  assert.deepEqual(repairCalls, [
+    {
+      userId: "owner-1",
+      personalPlanId: draft.personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+      routineVersionId: repairRoutineVersionId,
+    },
+  ])
+  assert.deepEqual(loadCalls, [
+    {
+      draftId: "server-derived",
+      userId: "owner-1",
+      requirements: [],
+      personalPlanId: draft.personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+    },
+  ])
+  assert.deepEqual(body.requirements, repairRequirements)
+})
+
+test("Stage 3 GET returns stale source when Routine repair source is not owner-current", async () => {
+  const response = await createStage3RouteHandlers(
+    deps({
+      repairServiceFor: () => ({
+        createOrLoad: async () => {
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}&repairRoutineVersionId=44444444-4444-4444-8444-444444444444`,
+    ),
+  )
+
+  assert.deepEqual([response!.status, await response!.json()], [
+    409,
+    { error: "stale_refined_source" },
+  ])
 })
 
 test("Stage 3 GET exposes server authority projections after capture", async () => {
@@ -1013,6 +1100,72 @@ test("Stage 3 PATCH rejects the legacy partial per-product role mutation", async
   assert.deepEqual([response!.status, await response!.json()], [400, { error: "invalid_request" }])
 })
 
+test("Stage 3 PATCH sends a fingerprinted need-revision decision only to the authority gateway", async () => {
+  let received: unknown = null
+  const handlers = createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        resolveNeedRevision: async (input: unknown) => {
+          received = input
+          return { status: "saved", draft: { ...draft, pass: "product_decisions" as const } }
+        },
+      }),
+    }),
+  )
+  const fingerprint = "a".repeat(64)
+  const response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        expectedProposalFingerprint: fingerprint,
+        action: "reject",
+      }),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    expectedProposalFingerprint: fingerprint,
+    action: "reject",
+  })
+})
+
+test("Stage 3 PATCH sends an inventory acknowledgement to the semantic gateway", async () => {
+  let received: unknown = null
+  const handlers = createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        acknowledgeInventoryDisposition: async (input: unknown) => {
+          received = input
+          return { status: "saved", draft }
+        },
+      }),
+    }),
+  )
+  const response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        action: "acknowledge_inventory_disposition",
+        dispositionKey: "inventory:dry-shampoo",
+      }),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    dispositionKey: "inventory:dry-shampoo",
+  })
+})
+
 test("production Stage 3 completion composes the deterministic compiler and one-RPC stager", async () => {
   const source = await readFile(
     new URL("../src/app/api/personal-plan/stage-3/complete/route.ts", import.meta.url),
@@ -1020,4 +1173,6 @@ test("production Stage 3 completion composes the deterministic compiler and one-
   )
   assert.match(source, /compiler:\s*createInitialRoutineCandidateCompiler\(\)/)
   assert.match(source, /stager:\s*createRoutineProposalStagerRpcAdapter\(\{\s*client:/)
+  assert.doesNotMatch(source, /activateInitialRoutine/)
+  assert.doesNotMatch(source, /Stage4AutoActivateInitial/)
 })

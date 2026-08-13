@@ -27,7 +27,7 @@ const request = {
   },
 }
 
-test("routine-proposal adapter performs one RPC with the frozen argument names", async () => {
+test("routine-proposal adapter always calls the initial-aware delegating RPC", async () => {
   const calls: Array<{ fn: string; args: Record<string, unknown> }> = []
   const client: RoutineProposalRpcClient = {
     async rpc(fn, args) {
@@ -56,7 +56,7 @@ test("routine-proposal adapter performs one RPC with the frozen argument names",
   })
   assert.deepEqual(calls, [
     {
-      fn: "personal_plan_complete_product_draft_and_stage_routine",
+      fn: "personal_plan_complete_draft_activate_initial_v1",
       args: {
         p_user_id: "user-1",
         p_personal_plan_id: "plan-1",
@@ -94,10 +94,9 @@ test("routine-proposal adapter carries the compiler's fresh source CAS token", a
   assert.equal(calls[0]?.p_expected_source_revision, 7)
 })
 
-test("initial activation selects the versioned RPC and permits no proposal pointer", async () => {
+test("initial-aware delegating RPC permits no proposal pointer for first activation", async () => {
   const calls: Array<{ fn: string; args: Record<string, unknown> }> = []
   const result = await createRoutineProposalStagerRpcAdapter({
-    activateInitialRoutine: true,
     client: {
       async rpc(fn, args) {
         calls.push({ fn, args })

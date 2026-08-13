@@ -1,14 +1,15 @@
 import { computeStage3PathState } from "./state-machine"
 import {
   isExecutableChoice,
-  type ProposedProductPortfolio,
   type Stage3CategoryRequirement,
+  type ProposedProductPortfolio,
   type Stage3CategoryResolution,
   type Stage3OwnedProduct,
   type Stage3PendingProduct,
   type Stage3PlannedPurchase,
   type Stage3ProductDecision,
   type Stage3ProductDraft,
+  type Stage3RetainedInventoryProduct,
   type Stage3RetainedOwnedProduct,
   type Stage3UncoveredRole,
 } from "./contracts"
@@ -42,8 +43,16 @@ export function createProposedProductPortfolio(
   const plannedPurchases: Stage3PlannedPurchase[] = []
   const pendingProducts: Stage3PendingProduct[] = []
   const retainedOwnedProducts: Stage3RetainedOwnedProduct[] = []
+  const retainedInventoryProducts: Stage3RetainedInventoryProduct[] = []
   const uncoveredRoles: Stage3UncoveredRole[] = []
-  const schemaVersion = hasV3ResolutionAction(draft) ? 3 : draft.productLoadResolution ? 2 : 1
+  const schemaVersion =
+    (draft.inventoryDispositions?.length ?? 0) > 0
+      ? 4
+      : hasV3ResolutionAction(draft)
+        ? 3
+        : draft.productLoadResolution
+          ? 2
+          : 1
 
   for (const decision of draft.decisions) {
     const product = decision.capturedProductId
@@ -102,11 +111,47 @@ export function createProposedProductPortfolio(
       draft,
       decision,
       product,
-      schemaVersion === 3,
+      schemaVersion === 3 || schemaVersion === 4,
       plannedPurchases,
       pendingProducts,
       uncoveredRoles,
     )
+  }
+
+  for (const disposition of draft.inventoryDispositions ?? []) {
+    if (!disposition.acknowledged) {
+      throw new Error("Cannot create portfolio from incomplete draft")
+    }
+    const product = productsById.get(disposition.capturedProductId)
+    if (!product) continue
+    if (product.identity.kind === "catalog_product") {
+      retainedInventoryProducts.push({
+        kind: "catalog_product",
+        capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
+        productId: product.identity.productId,
+        displayName: product.identity.displayName,
+        category: disposition.category,
+        role: null,
+        sourceDispositionKey: disposition.dispositionKey,
+        planStatus: "not_used",
+        reason: disposition.reason,
+      })
+    } else {
+      retainedInventoryProducts.push({
+        kind: "pending_submission",
+        capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
+        submissionId: product.identity.submissionId,
+        displayName: product.identity.displayName,
+        category: disposition.category,
+        role: null,
+        reviewStatus: product.identity.reviewStatus,
+        sourceDispositionKey: disposition.dispositionKey,
+        planStatus: "not_used",
+        reason: disposition.reason,
+      })
+    }
   }
 
   return {
@@ -121,9 +166,15 @@ export function createProposedProductPortfolio(
     pendingProducts,
     uncoveredRoles,
     ...(draft.productLoadResolution ? { productLoadResolution: draft.productLoadResolution } : {}),
-    ...(schemaVersion === 3 ? { retainedOwnedProducts } : {}),
+    ...(schemaVersion === 3 || schemaVersion === 4 ? { retainedOwnedProducts } : {}),
+    ...(schemaVersion === 4
+      ? {
+          inventoryDispositions: draft.inventoryDispositions ?? [],
+          retainedInventoryProducts,
+        }
+      : {}),
     createdAt: options.createdAt,
-  }
+  } as unknown as ProposedProductPortfolio
 }
 
 function isReplacementSelection(decision: Stage3ProductDecision): boolean {

@@ -31,7 +31,17 @@ function payload(
       compilerVersion: "v1",
       authorityVersions: {},
     },
-    intent: { schemaVersion: 1, categories: [] },
+    intent: {
+      schemaVersion: 1,
+      categories: [
+        {
+          category: "shampoo",
+          inclusion: "included",
+          inclusionSource: "stage3",
+          assignments: [],
+        },
+      ],
+    },
     sections: [
       { key: "basis", itemKeys: ["wash"] },
       { key: "optional", itemKeys: [] },
@@ -70,6 +80,12 @@ function client(input: { plan?: unknown; version?: unknown; product?: unknown })
   const valueFor = (table: string) => {
     if (table === "personal_plans") return input.plan ?? null
     if (table === "personal_plan_routine_versions") return input.version ?? null
+    if (table === "personal_plan_need_versions") {
+      return {
+        id: ids.refined,
+        output_snapshot: { renderedOrder: ["shampoo"] },
+      }
+    }
     if (table === "products") return input.product ?? null
     return null
   }

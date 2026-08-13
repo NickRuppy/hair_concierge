@@ -1,5 +1,6 @@
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import type {
+  InitialNeedPlanSnapshot,
   PlanCategoryDecision,
   PlanPortfolioCoverageFact,
   PlanProductRole,
@@ -13,6 +14,8 @@ import type {
   Stage3AuthorityDraftInput,
   Stage3AuthoritySnapshotV1,
   Stage3CategoryRequirement,
+  Stage3InventoryAuthorityV1,
+  Stage3NeedMaterialDelta,
   Stage3ProductDraft,
   Stage3ProductLoadResolutionV1,
 } from "./contracts"
@@ -132,6 +135,37 @@ function capturedFrequencyFingerprint(
         category: product.identity.category,
         identityKind: product.identity.kind,
         frequencyRange: product.frequencyRange,
+      }))
+      .sort((left, right) => left.capturedProductId.localeCompare(right.capturedProductId)),
+    roleAssignments: draft.roleAssignments
+      .map((assignment) => ({
+        capturedProductId: assignment.capturedProductId,
+        category: assignment.category,
+        roles: [...assignment.roles].sort(),
+      }))
+      .sort((left, right) => left.capturedProductId.localeCompare(right.capturedProductId)),
+  })
+}
+
+export function stage3InventorySnapshotFingerprint(
+  draft: Stage3AuthorityDraftInput,
+  snapshot: Stage3AuthoritySnapshotV1 = draft.authoritySnapshot!,
+): string {
+  return semanticHash({
+    computationVersion: "stage3.inventory_authority.v1",
+    refinedNeedVersionId: draft.refinedVersionId,
+    refinedInputHash: snapshot.refinedInputHash,
+    products: draft.products
+      .map((product) => ({
+        capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
+        category: product.identity.category,
+        identity:
+          product.identity.kind === "catalog_product"
+            ? { kind: product.identity.kind, productId: product.identity.productId }
+            : { kind: product.identity.kind, submissionId: product.identity.submissionId },
+        frequencyRange: product.frequencyRange,
+        source: product.source,
       }))
       .sort((left, right) => left.capturedProductId.localeCompare(right.capturedProductId)),
     roleAssignments: draft.roleAssignments
@@ -431,8 +465,12 @@ function coverage(decisions: readonly PlanCategoryDecision[]): PlanPortfolioCove
 function effectiveDecisions(
   snapshot: Stage3AuthoritySnapshotV1,
   overlayDecisions: readonly PlanCategoryDecision[],
+  baseDecisions: readonly PlanCategoryDecision[] = [],
 ): PlanCategoryDecision[] {
   const byCategory = new Map<PersonalPlanCategory, PlanCategoryDecision>()
+  for (const decision of baseDecisions) {
+    byCategory.set(decision.category as PersonalPlanCategory, decision)
+  }
   for (const decision of snapshot.categoryDecisions) {
     byCategory.set(decision.category as PersonalPlanCategory, decision)
   }
@@ -483,6 +521,254 @@ export function resolveStage3ProductLoadResolution(
     requirements: decisions.map(requirement),
     decisions,
     coverage: coverageDelta(snapshot, decisions),
+  }
+}
+
+function includedDecision(decision: PlanCategoryDecision | undefined): boolean {
+  return decision?.needTier === "basis" || decision?.needTier === "optional"
+}
+
+function decisionByCategory(decisions: readonly PlanCategoryDecision[]) {
+  return new Map(decisions.map((decision) => [decision.category as PersonalPlanCategory, decision]))
+}
+
+function materialComparableDecision(decision: PlanCategoryDecision | undefined) {
+  if (!decision) return null
+  return {
+    needTier: decision.needTier,
+    roles: [...decision.roles].sort(),
+    frequency: decision.frequency,
+    executionState: decision.executionState,
+    executionPauseReason: decision.executionPauseReason?.id ?? null,
+  }
+}
+
+function renderedOrderFromDecisions(decisions: readonly PlanCategoryDecision[]) {
+  return decisions
+    .filter(includedDecision)
+    .map((decision) => decision.category as PersonalPlanCategory)
+}
+
+export function compareStage3NeedMaterialDelta(
+  baseDecisions: readonly PlanCategoryDecision[],
+  proposedDecisions: readonly PlanCategoryDecision[],
+): Stage3NeedMaterialDelta[] {
+  const baseByCategory = decisionByCategory(baseDecisions)
+  const proposedByCategory = decisionByCategory(proposedDecisions)
+  const baseRenderedOrder = renderedOrderFromDecisions(baseDecisions)
+  const proposedRenderedOrder = renderedOrderFromDecisions(proposedDecisions)
+  const categories = new Set<PersonalPlanCategory>([
+    ...baseByCategory.keys(),
+    ...proposedByCategory.keys(),
+  ])
+  const delta: Stage3NeedMaterialDelta[] = []
+
+  for (const category of categories) {
+    const before = baseByCategory.get(category)
+    const after = proposedByCategory.get(category)
+    const beforeIncluded = includedDecision(before)
+    const afterIncluded = includedDecision(after)
+    if (!beforeIncluded && afterIncluded) {
+      delta.push({
+        kind: "category_added",
+        category,
+        before: before?.needTier ?? null,
+        after: after?.needTier ?? null,
+      })
+      continue
+    }
+    if (beforeIncluded && !afterIncluded) {
+      delta.push({
+        kind: "category_removed",
+        category,
+        before: before?.needTier ?? null,
+        after: after?.needTier ?? null,
+      })
+      continue
+    }
+    if (!before || !after) continue
+
+    const beforeComparable = materialComparableDecision(before)
+    const afterComparable = materialComparableDecision(after)
+    if (beforeComparable?.needTier !== afterComparable?.needTier) {
+      delta.push({
+        kind: "need_tier_changed",
+        category,
+        before: beforeComparable?.needTier ?? null,
+        after: afterComparable?.needTier ?? null,
+      })
+    }
+    if (semanticHash(beforeComparable?.roles ?? []) !== semanticHash(afterComparable?.roles ?? [])) {
+      delta.push({
+        kind: "roles_changed",
+        category,
+        before: beforeComparable?.roles ?? [],
+        after: afterComparable?.roles ?? [],
+      })
+    }
+    if (semanticHash(beforeComparable?.frequency) !== semanticHash(afterComparable?.frequency)) {
+      delta.push({
+        kind: "frequency_changed",
+        category,
+        before: beforeComparable?.frequency ?? null,
+        after: afterComparable?.frequency ?? null,
+      })
+    }
+    if (
+      beforeComparable?.executionState !== afterComparable?.executionState ||
+      beforeComparable?.executionPauseReason !== afterComparable?.executionPauseReason
+    ) {
+      delta.push({
+        kind: "execution_changed",
+        category,
+        before: {
+          state: beforeComparable?.executionState,
+          pauseReason: beforeComparable?.executionPauseReason,
+        },
+        after: {
+          state: afterComparable?.executionState,
+          pauseReason: afterComparable?.executionPauseReason,
+        },
+      })
+    }
+  }
+
+  for (const category of new Set([...baseRenderedOrder, ...proposedRenderedOrder])) {
+    const before = baseRenderedOrder.includes(category) ? baseRenderedOrder.indexOf(category) : null
+    const after = proposedRenderedOrder.includes(category)
+      ? proposedRenderedOrder.indexOf(category)
+      : null
+    if (before !== after) {
+      delta.push({ kind: "category_order_changed", category, before, after })
+    }
+  }
+
+  return delta
+}
+
+export function buildStage3ProposedRefinedSnapshot(
+  draft: Stage3AuthorityDraftInput,
+  baseSnapshot?: InitialNeedPlanSnapshot,
+): InitialNeedPlanSnapshot | null {
+  const snapshot = draft.authoritySnapshot
+  if (!snapshot || snapshot.refinedNeedVersionId !== draft.refinedVersionId) return null
+  if (baseSnapshot && baseSnapshot.inputHash !== snapshot.refinedInputHash) {
+    throw new Error("stage3_authority_base_snapshot_mismatch")
+  }
+  const resolution = resolveStage3ProductLoadResolution(draft)
+  if (!resolution) return null
+  const decisions = effectiveDecisions(snapshot, resolution.decisions, baseSnapshot?.decisions)
+  const coverageFacts = effectiveCoverage(snapshot, resolution.coverage)
+  const renderedOrder = renderedOrderFromDecisions(decisions)
+  const inputHash = semanticHash({
+    computationVersion: "stage3.product_load_refined_snapshot.v1",
+    refinedInputHash: snapshot.refinedInputHash,
+    inventorySnapshotFingerprint: stage3InventorySnapshotFingerprint(draft, snapshot),
+    decisions,
+    coverage: coverageFacts,
+  })
+
+  return {
+    ...(baseSnapshot ?? {
+      schemaVersion: 1,
+      snapshotKind: "initial_need",
+      sourceQuiz: {
+        kind: "personal_plan",
+        version: 2,
+        answers: {},
+      },
+      profile: {
+        source: { projection: "refined_post_plan" },
+        scalp: {
+          oiliness: snapshot.productLoadContext?.scalpOiliness ?? "balanced",
+          concerns: [],
+        },
+        concerns: [],
+        routine: null,
+      },
+      assessments: {},
+      productPreviews: [],
+      deferredFacts: [],
+    }),
+    schemaVersion: 1,
+    snapshotKind: "initial_need",
+    computationVersion: "stage3.product_load_refined_snapshot.v1",
+    inputHash,
+    createdAt: baseSnapshot?.createdAt ?? new Date(0).toISOString(),
+    decisions,
+    coverage: coverageFacts,
+    renderedOrder,
+  } as unknown as InitialNeedPlanSnapshot
+}
+
+function effectiveCoverage(
+  snapshot: Stage3AuthoritySnapshotV1,
+  overlayCoverage: readonly PlanPortfolioCoverageFact[],
+): PlanPortfolioCoverageFact[] {
+  const byKey = new Map<string, PlanPortfolioCoverageFact>()
+  for (const fact of snapshot.coverage) byKey.set(coverageKey(fact), fact)
+  for (const fact of overlayCoverage) byKey.set(coverageKey(fact), fact)
+  return Array.from(byKey.values())
+}
+
+export function resolveStage3InventoryAuthority(
+  draft: Stage3AuthorityDraftInput,
+  baseSnapshot?: InitialNeedPlanSnapshot,
+): Stage3InventoryAuthorityV1 | undefined {
+  const snapshot = draft.authoritySnapshot
+  if (!snapshot || snapshot.refinedNeedVersionId !== draft.refinedVersionId) return undefined
+  const inventorySnapshotFingerprint = stage3InventorySnapshotFingerprint(draft, snapshot)
+  const proposedOutputSnapshot = buildStage3ProposedRefinedSnapshot(draft, baseSnapshot)
+  if (!proposedOutputSnapshot) {
+    return {
+      schemaVersion: 1,
+      stage2RefinedNeedVersionId: draft.refinedVersionId,
+      inventorySnapshotFingerprint,
+      status: "not_needed",
+      proposalFingerprint: null,
+      proposedInputHash: null,
+      proposedOutputSnapshot: null,
+      materialDelta: [],
+      resolvedFingerprint: inventorySnapshotFingerprint,
+    }
+  }
+
+  const materialDelta = compareStage3NeedMaterialDelta(
+    snapshot.categoryDecisions,
+    proposedOutputSnapshot.decisions,
+  )
+  if (materialDelta.length === 0) {
+    return {
+      schemaVersion: 1,
+      stage2RefinedNeedVersionId: draft.refinedVersionId,
+      inventorySnapshotFingerprint,
+      status: "not_needed",
+      proposalFingerprint: null,
+      proposedInputHash: null,
+      proposedOutputSnapshot: null,
+      materialDelta: [],
+      resolvedFingerprint: inventorySnapshotFingerprint,
+    }
+  }
+
+  const proposalFingerprint = semanticHash({
+    inventorySnapshotFingerprint,
+    proposedInputHash: proposedOutputSnapshot.inputHash,
+    decisions: proposedOutputSnapshot.decisions.map(materialComparableDecision),
+    coverage: proposedOutputSnapshot.coverage,
+    renderedOrder: proposedOutputSnapshot.renderedOrder,
+  })
+
+  return {
+    schemaVersion: 1,
+    stage2RefinedNeedVersionId: draft.refinedVersionId,
+    inventorySnapshotFingerprint,
+    status: "pending",
+    proposalFingerprint,
+    proposedInputHash: proposedOutputSnapshot.inputHash,
+    proposedOutputSnapshot,
+    materialDelta,
+    resolvedFingerprint: null,
   }
 }
 

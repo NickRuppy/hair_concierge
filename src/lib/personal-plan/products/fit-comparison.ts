@@ -33,6 +33,10 @@ export type Stage3FitComparisonProduct = {
   productId: string
   displayName: string
   presentationImageUrl?: string | null
+  presentation?: {
+    priceLabel: string | null
+    netContentLabel: string | null
+  }
   category: PersonalPlanCategory
   role: PlanProductRole | null
   source: "current" | "alternative"
@@ -176,6 +180,7 @@ function currentComparisonProductEntries(
           input.subjectIdentity.kind === "catalog_product"
             ? (input.subjectIdentity.imageUrl ?? input.productFacts.presentationImageUrl ?? null)
             : (input.productFacts.presentationImageUrl ?? null),
+        presentation: presentationFor(input.productFacts),
         category: input.category,
         role: input.role,
         source: "current",
@@ -193,12 +198,50 @@ function alternativeProductEntries(
       productId: candidate.productId,
       displayName: candidate.recommendation.displayName,
       presentationImageUrl: candidate.facts.presentationImageUrl ?? null,
+      presentation: presentationFor(candidate.facts),
       category: candidate.category,
       role: candidate.role,
       source: "alternative",
     },
     facts: candidate.facts,
   }))
+}
+
+const STAGE3_COMMERCE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
+
+function presentationFor(
+  facts: Stage3CategoryProductFacts,
+): Stage3FitComparisonProduct["presentation"] {
+  return {
+    priceLabel: freshPriceLabel(facts),
+    netContentLabel:
+      facts.netContentValue !== null &&
+      facts.netContentValue !== undefined &&
+      (facts.netContentUnit === "ml" || facts.netContentUnit === "g")
+        ? `${formatNumber(facts.netContentValue)} ${facts.netContentUnit}`
+        : null,
+  }
+}
+
+function freshPriceLabel(facts: Stage3CategoryProductFacts): string | null {
+  if (
+    facts.priceEur === null ||
+    facts.priceEur === undefined ||
+    facts.purchaseLinkStatus !== "available" ||
+    !facts.priceCheckedAt
+  ) {
+    return null
+  }
+  const checkedAt = Date.parse(facts.priceCheckedAt)
+  if (!Number.isFinite(checkedAt) || Date.now() - checkedAt > STAGE3_COMMERCE_MAX_AGE_MS)
+    return null
+  return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(
+    facts.priceEur,
+  )
+}
+
+function formatNumber(value: number): string {
+  return new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(value)
 }
 
 function selectedComparisonCandidateAssessments(

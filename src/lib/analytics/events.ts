@@ -162,14 +162,19 @@ export type WaitlistSignupKind = "new" | "duplicate"
 export type WaitlistSurveyCompletion = "completed" | "skipped"
 export type WaitlistWhatsAppSurface = "thank_you"
 
-export type PersonalPlanStage3Pass = "product_capture" | "product_decisions"
+export type PersonalPlanStage3Pass =
+  | "product_capture"
+  | "need_revision_review"
+  | "product_decisions"
 export type PersonalPlanStage3StepKey =
   | "capture_orientation"
   | "product_search"
   | "frequency"
   | "role_assignment"
+  | "need_revision_review"
   | "fit_orientation"
   | "fit_decision"
+  | "inventory_disposition"
   | "stage4_handoff"
 export type PersonalPlanStage3SearchInteraction = "results_viewed" | "candidate_selected"
 export type PersonalPlanStage3ResultCountBand = "0" | "1_3" | "4_8"
@@ -205,6 +210,8 @@ export type PersonalPlanStage3HandoffOutcome =
   | "ready_with_pending"
   | "ready_with_gap"
 export type PersonalPlanStage3ReviewAction =
+  | "accept_need_revision"
+  | "reject_need_revision"
   | "keep_owned"
   | "acknowledge_override"
   | "select_replacement"
@@ -217,6 +224,8 @@ export type PersonalPlanStage3ReviewVerdict =
   | "unknown"
   | "pending"
   | "unsupported"
+  | "need_revision_review"
+  | "inventory_disposition"
 
 // Stage 4 telemetry is deliberately structural. It must never contain product,
 // proposal, plan, user, profile, price, URL, or free-text data.
@@ -475,7 +484,7 @@ export type AppEventMap = {
     outcome: PersonalPlanStage3HandoffOutcome
   }
   personal_plan_stage3_review_viewed: {
-    category: PersonalPlanCategory
+    category: PersonalPlanCategory | null
     verdict: PersonalPlanStage3ReviewVerdict
     position: number
     count: number
@@ -488,7 +497,7 @@ export type AppEventMap = {
   }
   personal_plan_stage3_review_completed: { count: number }
   personal_plan_stage3_review_action: {
-    category: PersonalPlanCategory
+    category: PersonalPlanCategory | null
     verdict: PersonalPlanStage3ReviewVerdict
     action: PersonalPlanStage3ReviewAction
     position: number

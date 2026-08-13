@@ -1,6 +1,6 @@
 import type {
   PersonalPlanCategory,
-  ProposedProductPortfolio,
+  AnyProposedProductPortfolio,
   Stage3CatalogSearchResult,
   Stage3CategoryCaptureCandidate,
   Stage3CapturedUncoveredRole,
@@ -118,7 +118,7 @@ export type Stage3CompleteResponse =
   | {
       status: "ready_for_routine"
       draft: Stage3ProductDraft
-      portfolio: ProposedProductPortfolio
+      portfolio: AnyProposedProductPortfolio
       personalPlanId: string
       refinedVersionId: string
       productPortfolioVersionId: string
@@ -141,6 +141,7 @@ export type Stage3ProductsGateway = {
     userId: string
     personalPlanId: string
     refinedVersionId: string
+    repairRoutineVersionId?: string
     requirements: Stage3CategoryRequirement[]
     authoritySnapshot?: Stage3AuthoritySnapshotV1
   }): Promise<Stage3DraftResponse>
@@ -165,6 +166,17 @@ export type Stage3ProductsGateway = {
     draftId: string
     expectedRevision: number
     intents: Stage3AuthoritySemanticIntent[]
+  }): Promise<Stage3MutationResponse>
+  resolveNeedRevision?(input: {
+    draftId: string
+    expectedRevision: number
+    expectedProposalFingerprint: string
+    action: "accept" | "reject"
+  }): Promise<Stage3MutationResponse>
+  acknowledgeInventoryDisposition?(input: {
+    draftId: string
+    expectedRevision: number
+    dispositionKey: string
   }): Promise<Stage3MutationResponse>
   invalidateForRefinedVersion(input: {
     draftId: string

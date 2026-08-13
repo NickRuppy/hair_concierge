@@ -21,6 +21,7 @@ import type {
   Stage3CategoryRequirement,
   Stage3ProductDraft,
 } from "../../../src/lib/personal-plan/products/contracts"
+import { stage3InventoryDispositionKey } from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import { Stage3AuthoritySnapshotError } from "../../../src/lib/personal-plan/products/authority/snapshot"
 
@@ -118,6 +119,7 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
       return { draft, requirements }
     },
     save: async (input) => ({ outcome: "saved", draft: input.draft }),
+    resolveNeedRevision: async (input) => ({ outcome: "saved", draft: input.draft }),
     search: async (input) => ({
       query: input.query,
       category: input.category,
@@ -230,6 +232,136 @@ test("catalog capture replay is idempotent after the first save committed", asyn
   assert.equal(replay.draft.revision, first.draft.revision)
   assert.equal(replay.draft.products.length, 1)
   assert.equal(saves, 1)
+})
+
+test("inventory disposition acknowledgement is server-applied, CAS guarded, and idempotent", async () => {
+  const draft: Stage3ProductDraft = {
+    ...readyDraft(),
+    roleAssignments: [],
+    decisions: [],
+    completedDecisionKeys: [],
+    inventoryDispositions: [
+      {
+        schemaVersion: 1,
+        dispositionKey: "inventory:conditioner:capture-a",
+        capturedProductId: "capture-a",
+        category: "conditioner",
+        planStatus: "not_used",
+        reason: "not_assigned_to_final_role",
+        acknowledged: false,
+        authorityFingerprint: "a".repeat(64),
+      },
+    ],
+  }
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved" as const, draft: input.draft }
+      },
+    },
+  })
+  await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: draft.personalPlanId,
+    refinedVersionId: draft.refinedVersionId,
+    requirements: [],
+  })
+  const input = {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    dispositionKey: "inventory:conditioner:capture-a",
+  }
+  const first = await gateway.acknowledgeInventoryDisposition(input)
+  assert.equal(first.status, "saved")
+  if (first.status !== "saved") return
+  assert.equal(first.draft.inventoryDispositions?.[0]?.acknowledged, true)
+  assert.equal(saves, 1)
+
+  const replay = await gateway.acknowledgeInventoryDisposition(input)
+  assert.equal(replay.status, "saved")
+  assert.equal(saves, 1)
+})
+
+test("mixed final-role and current-only inventory reviews skip fit authority for the disposition", async () => {
+  const base = readyDraft()
+  const draft: Stage3ProductDraft = {
+    ...base,
+    orderedCategories: ["conditioner", "dry_shampoo"],
+    products: [
+      ...base.products,
+      {
+        capturedProductId: "capture-current-only",
+        userProductId: "owned-current-only",
+        identity: {
+          kind: "pending_submission",
+          submissionId: "submission-current-only",
+          displayName: "Trockenshampoo außerhalb des Plans",
+          category: "dry_shampoo",
+          reviewStatus: "pending_review",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "existing_inventory",
+      },
+    ],
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      orderedCategories: ["conditioner", "dry_shampoo"],
+      inventoryOnlyCategories: ["dry_shampoo"],
+    },
+    inventoryDispositions: [
+      {
+        schemaVersion: 1,
+        dispositionKey: stage3InventoryDispositionKey("dry_shampoo", "capture-current-only"),
+        capturedProductId: "capture-current-only",
+        category: "dry_shampoo",
+        planStatus: "not_used",
+        reason: "category_not_in_final_plan",
+        acknowledged: false,
+        authorityFingerprint: "a".repeat(64),
+      },
+    ],
+  }
+  let authorityFactReads = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async (input) => {
+        authorityFactReads += 1
+        assert.equal(input.subject.category, "conditioner")
+        return conditionerFacts()
+      },
+    },
+  })
+  await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: draft.personalPlanId,
+    refinedVersionId: draft.refinedVersionId,
+    requirements: [],
+  })
+
+  const reviews = await gateway.reviewDecisionBundles({ draftId: draft.draftId })
+  assert.deepEqual(reviews.map((review) => review.authorityEvaluation.subjectKey), [
+    "decision:conditioner:conditioner_rinse_out:capture-a",
+  ])
+  assert.equal(authorityFactReads, 1)
+
+  const acknowledged = await gateway.acknowledgeInventoryDisposition({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    dispositionKey: stage3InventoryDispositionKey("dry_shampoo", "capture-current-only"),
+  })
+  assert.equal(acknowledged.status, "saved")
+  if (acknowledged.status === "saved") {
+    assert.equal(acknowledged.draft.inventoryDispositions?.[0]?.acknowledged, true)
+  }
 })
 
 test("atomic category replacement swaps the full category in one acknowledged revision", async () => {
@@ -2107,7 +2239,7 @@ test("production authority rejects a client-authored stale product-load overlay 
   assert.equal(saves, 0)
 })
 
-test("production authority evaluates a supplemental product-load subject appended after base order", async () => {
+test("production authority keeps fit evaluation suppressed while a need revision is pending", async () => {
   const dryShampooRequirement: Stage3CategoryRequirement = {
     category: "dry_shampoo",
     requiredRoles: [],
@@ -2175,7 +2307,8 @@ test("production authority evaluates a supplemental product-load subject appende
     source: "intake_fallback",
   })
   const draft = completeCaptureCategory(captured, "dry_shampoo", [dryShampooRequirement])
-  assert.equal(draft.productLoadResolution?.requirements[0]?.category, "deep_cleansing_shampoo")
+  assert.equal(draft.productLoadResolution, undefined)
+  assert.equal(draft.inventoryAuthority?.status, "pending")
 
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
@@ -2186,10 +2319,135 @@ test("production authority evaluates a supplemental product-load subject appende
   })
 
   const evaluations = await gateway.evaluateDecisions({ draftId: draft.draftId })
-  assert.equal(evaluations[0]?.subjectKey, "decision:deep_cleansing_shampoo:residue_reset:gap")
+  assert.deepEqual(evaluations, [])
 })
 
-test("production authority uses product-load coverage to suppress duplicate scalp care purchase", async () => {
+test("production repairs and accepts inventory authority from the owner-scoped refined snapshot", async () => {
+  const requirement: Stage3CategoryRequirement = {
+    category: "dry_shampoo",
+    requiredRoles: [],
+    needSummary: "Aktuelles Trockenshampoo erfassen",
+    authorityVersion: CATEGORY_ROLE_POLICIES.dry_shampoo.authorityVersion,
+  }
+  const baseSnapshot = {
+    inputHash: "refined-input-a",
+    profile: {
+      source: { projection: "refined_post_plan" },
+      hair: { thickness: "normal" },
+      retainedAnswer: "survives",
+    },
+    decisions: [],
+    coverage: [],
+    renderedOrder: ["dry_shampoo"],
+  } as never
+  const initial = createStage3Draft({
+    draftId: "draft-snapshot-wire",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements: [requirement],
+    now: "2026-08-08T00:00:00.000Z",
+    authoritySnapshot: {
+      schemaVersion: 1,
+      refinedNeedVersionId: "refined-a",
+      refinedInputHash: "refined-input-a",
+      productLoadContext: {
+        schemaVersion: 1,
+        scalpOiliness: "balanced",
+        deepCleansingScalpPause: false,
+        hasLowVolumeOrWeighedDown: false,
+        shampooFrequency: "weekly_2x",
+        oilPurposes: [],
+      },
+      categoryDecisions: [],
+      coverage: [],
+      orderedCategories: ["dry_shampoo"],
+      inventoryOnlyCategories: ["dry_shampoo"],
+      authorityVersions: Object.fromEntries(
+        Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+          category,
+          policy.authorityVersion,
+        ]),
+      ) as never,
+    },
+  })
+  const captured = addCapturedProduct(initial, {
+    capturedProductId: "dry-snapshot",
+    userProductId: "owned-dry-snapshot",
+    identity: {
+      kind: "pending_submission",
+      submissionId: "submission-dry-snapshot",
+      displayName: "Trockenshampoo",
+      category: "dry_shampoo",
+      reviewStatus: "pending_review",
+    },
+    frequencyRange: "weekly_3_4x",
+    ownership: "owned",
+    source: "existing_inventory",
+  })
+  // Simulates an older cursorless persisted capture that must be repaired.
+  let canonical: Stage3ProductDraft = {
+    ...captured,
+    pass: "product_capture",
+    categoryCursor: null,
+    completedCaptureCategories: ["dry_shampoo"],
+  }
+  let snapshotReads = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(canonical),
+      loadOrCreate: async () => ({ draft: canonical, requirements: [requirement] }),
+      loadDraft: async () => canonical,
+      loadRequirements: async () => [requirement],
+      loadRefinedNeedSnapshot: async () => {
+        snapshotReads += 1
+        return canonical.inventoryAuthority?.proposedOutputSnapshot ?? baseSnapshot
+      },
+      loadCurrentRefinedVersionId: async () => canonical.refinedVersionId,
+      save: async (input) => {
+        canonical = input.draft
+        return { outcome: "saved", draft: canonical }
+      },
+      resolveNeedRevision: async (input) => {
+        canonical = {
+          ...input.draft,
+          refinedVersionId: "refined-accepted",
+          authoritySnapshot: {
+            ...input.draft.authoritySnapshot!,
+            refinedNeedVersionId: "refined-accepted",
+            orderedCategories: input.draft.orderedCategories,
+            inventoryOnlyCategories: ["dry_shampoo"],
+          },
+        }
+        return { outcome: "saved", draft: canonical }
+      },
+    },
+  })
+  const repaired = await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements: [],
+  })
+  const authority = repaired.draft.inventoryAuthority
+  assert.equal(authority?.status, "pending")
+  assert.equal(authority?.proposedOutputSnapshot?.profile.hair.thickness, "normal")
+  assert.equal((authority?.proposedOutputSnapshot?.profile as { retainedAnswer?: string })?.retainedAnswer, "survives")
+  const accepted = await gateway.resolveNeedRevision({
+    draftId: repaired.draft.draftId,
+    expectedRevision: repaired.draft.revision,
+    expectedProposalFingerprint: authority!.proposalFingerprint!,
+    action: "accept",
+  })
+  assert.equal(accepted.status, "saved")
+  const evaluations = await gateway.evaluateDecisions({ draftId: repaired.draft.draftId })
+  assert.ok(evaluations.length > 0)
+  assert.ok(snapshotReads >= 2)
+})
+
+test("pending need authority retains the proposal delta instead of an executable coverage overlay", async () => {
   const dryShampooRequirement: Stage3CategoryRequirement = {
     category: "dry_shampoo",
     requiredRoles: [],
@@ -2257,10 +2515,9 @@ test("production authority uses product-load coverage to suppress duplicate scal
     source: "intake_fallback",
   })
   const draft = completeCaptureCategory(captured, "dry_shampoo", [dryShampooRequirement])
-  assert.equal(
-    draft.productLoadResolution?.coverage[0]?.ruleId,
-    "portfolio.reset.deep_cleansing_primary",
-  )
+  assert.equal(draft.productLoadResolution, undefined)
+  assert.equal(draft.inventoryAuthority?.status, "pending")
+  assert.ok(draft.inventoryAuthority?.materialDelta.length)
 
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
@@ -2303,13 +2560,7 @@ test("production authority uses product-load coverage to suppress duplicate scal
   })
 
   const evaluations = await gateway.evaluateDecisions({ draftId: draft.draftId })
-  const scalpEvaluation = evaluations.find(
-    (evaluation) => evaluation.subjectKey === "decision:scalp_care:scalp_exfoliant:gap",
-  )
-  assert.equal(scalpEvaluation?.status, "known")
-  assert.deepEqual(scalpEvaluation?.allowedActions, ["leave_uncovered"])
-  assert.equal(scalpEvaluation?.recommendation, null)
-  assert.deepEqual(scalpEvaluation?.coverageRuleIds, ["portfolio.reset.deep_cleansing_primary"])
+  assert.deepEqual(evaluations, [])
 })
 
 test("missing and stale authority snapshots fail closed", async () => {

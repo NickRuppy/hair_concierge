@@ -1,7 +1,7 @@
 import { CATEGORY_ROLE_POLICIES } from "./products/authorities"
 import type {
   PersonalPlanCategory,
-  ProposedProductPortfolio,
+  AnyProposedProductPortfolio,
   Stage3CategoryResolution,
 } from "./products/contracts"
 import type { JsonValue } from "./persistence"
@@ -10,7 +10,12 @@ import type {
   RoutineCandidateCompiler,
   RoutineCandidateCompilerInput,
 } from "./routine-proposal-stager"
-import { STAGE1_CATEGORY_ORDER, type PlanCategoryDecision, type PlanProductRole } from "./types"
+import {
+  STAGE1_CATEGORY_ORDER,
+  type InitialNeedPlanSnapshot,
+  type PlanCategoryDecision,
+  type PlanProductRole,
+} from "./types"
 import { semanticHash } from "./routine/canonicalize"
 import { applyRoutineEdits as applyEdits } from "./routine/editor"
 import { diffRoutinePayloads as diffPayloads } from "./routine/diff"
@@ -87,6 +92,7 @@ export type RoutineCompiledPayload = {
     sourceFingerprint: string
     compilerVersion: string
     authorityVersions: Record<string, string>
+    renderedOrder?: PersonalPlanCategory[]
   }
   intent: { schemaVersion: 1; categories: RoutineIntentCategory[] }
   sections: Array<{ key: "basis" | "optional"; itemKeys: string[] }>
@@ -137,6 +143,7 @@ export function hashRoutineSemantics(payload: RoutineCompiledPayload): string {
       refinedVersionId: payload.source.refinedVersionId,
       compilerVersion: payload.source.compilerVersion,
       authorityVersions: payload.source.authorityVersions,
+      renderedOrder: payload.source.renderedOrder,
     },
     intent: payload.intent,
     sections: payload.sections,
@@ -166,20 +173,36 @@ function categoryOrder(category: PersonalPlanCategory): number {
   return STAGE1_CATEGORY_ORDER.indexOf(category)
 }
 
+function refinedRenderedOrder(snapshot: InitialNeedPlanSnapshot): PersonalPlanCategory[] {
+  const raw = Array.isArray(snapshot.renderedOrder) ? snapshot.renderedOrder : []
+  const unique: PersonalPlanCategory[] = []
+  const seen = new Set<string>()
+  for (const category of raw) {
+    if (seen.has(category)) {
+      throw new Error(`routine_candidate_duplicate_rendered_category:${category}`)
+    }
+    seen.add(category)
+    unique.push(category as PersonalPlanCategory)
+  }
+  return unique.length > 0 ? unique : [...STAGE1_CATEGORY_ORDER]
+}
+
 function roleOrder(category: PersonalPlanCategory, role: PlanProductRole): number {
   return CATEGORY_ROLE_POLICIES[category].allowedRoles.indexOf(role as never)
 }
 
 function sourceIdentity(
   resolution: Stage3CategoryResolution,
-  portfolio: ProposedProductPortfolio,
+  portfolio: AnyProposedProductPortfolio,
 ): string {
   const owned = portfolio.ownedProducts.find(
     (product) => product.sourceDecisionKey === resolution.decisionKey,
   )
   if (owned) return owned.capturedProductId
   const decisionKeyedPlanned =
-    portfolio.schemaVersion === 3 ? findPlannedPurchase(portfolio, resolution) : undefined
+    portfolio.schemaVersion === 3 || portfolio.schemaVersion === 4
+      ? findPlannedPurchase(portfolio, resolution)
+      : undefined
   if (decisionKeyedPlanned) return decisionKeyedPlanned.plannedPurchaseId
   const pending = portfolio.pendingProducts.find(
     (product) => product.capturedProductId === resolution.capturedProductId,
@@ -189,10 +212,10 @@ function sourceIdentity(
 }
 
 function findPlannedPurchase(
-  portfolio: ProposedProductPortfolio,
+  portfolio: AnyProposedProductPortfolio,
   resolution: Stage3CategoryResolution,
 ) {
-  return portfolio.schemaVersion === 3
+  return portfolio.schemaVersion === 3 || portfolio.schemaVersion === 4
     ? portfolio.plannedPurchases.find(
         (product) => product.sourceDecisionKey === resolution.decisionKey,
       )
@@ -216,7 +239,7 @@ function inclusion(resolution: Stage3CategoryResolution): RoutineInclusion {
 function makeItem(input: {
   resolution: Stage3CategoryResolution
   decision: PlanCategoryDecision
-  portfolio: ProposedProductPortfolio
+  portfolio: AnyProposedProductPortfolio
   cadenceAuthorityFacts: readonly ProductCadenceAuthorityFact[]
 }): RoutineItem {
   const { resolution, decision, portfolio, cadenceAuthorityFacts } = input
@@ -315,12 +338,14 @@ function makeItem(input: {
   }
 }
 
-function sortItems(left: RoutineItem, right: RoutineItem): number {
-  return (
-    categoryOrder(left.category) - categoryOrder(right.category) ||
+function sortItemsForRenderedOrder(renderedOrder: readonly PersonalPlanCategory[]) {
+  const rank = new Map(renderedOrder.map((category, index) => [category, index]))
+  const fallback = renderedOrder.length
+  return (left: RoutineItem, right: RoutineItem): number =>
+    (rank.get(left.category) ?? fallback + categoryOrder(left.category)) -
+      (rank.get(right.category) ?? fallback + categoryOrder(right.category)) ||
     left.roleOrder - right.roleOrder ||
     left.assignmentKey.localeCompare(right.assignmentKey)
-  )
 }
 
 function productRef(item: RoutineItem): RoutineProductRef {
@@ -352,10 +377,10 @@ function productRef(item: RoutineItem): RoutineProductRef {
 export async function compileInitialRoutineCandidate(
   input: RoutineCandidateCompilerInput,
 ): Promise<RoutineCandidate> {
-  const portfolio = input.portfolioSnapshot as unknown as ProposedProductPortfolio
+  const portfolio = input.portfolioSnapshot as unknown as AnyProposedProductPortfolio
   if (
-    ![1, 2, 3].includes(input.portfolioSchemaVersion) ||
-    ![1, 2, 3].includes(portfolio.schemaVersion) ||
+    ![1, 2, 3, 4].includes(input.portfolioSchemaVersion) ||
+    ![1, 2, 3, 4].includes(portfolio.schemaVersion) ||
     input.portfolioSchemaVersion !== portfolio.schemaVersion ||
     portfolio.personalPlanId !== input.personalPlanId
   ) {
@@ -371,6 +396,8 @@ export async function compileInitialRoutineCandidate(
       ...(portfolio.productLoadResolution?.decisions ?? []),
     ].map((decision) => [decision.category, decision]),
   )
+  const renderedOrder = refinedRenderedOrder(input.refinedNeedSnapshot)
+  const renderedCategories = new Set(renderedOrder)
   const items = portfolio.categoryResolutions.map((resolution) => {
     const decision = decisions.get(resolution.category)
     if (!decision) {
@@ -383,7 +410,16 @@ export async function compileInitialRoutineCandidate(
       cadenceAuthorityFacts: input.cadenceAuthorityFacts ?? [],
     })
   })
-  items.sort(sortItems)
+  for (const item of items) {
+    const visibleInRoutine =
+      item.state.systemAssessment === "basis" ||
+      item.state.systemAssessment === "optional" ||
+      item.state.inclusion === "included"
+    if (visibleInRoutine && !renderedCategories.has(item.category)) {
+      throw new Error(`routine_candidate_category_outside_rendered_order:${item.category}`)
+    }
+  }
+  items.sort(sortItemsForRenderedOrder(renderedOrder))
 
   const authorityVersions: Record<string, string> = Object.fromEntries(
     [...new Set(items.map((item) => item.category))]
@@ -393,10 +429,8 @@ export async function compileInitialRoutineCandidate(
   authorityVersions.portfolio = PORTFOLIO_AUTHORITY_VERSION
   authorityVersions.routine = PERSONAL_PLAN_ROUTINE_COMPILER_VERSION
 
-  const categories: RoutineIntentCategory[] = Array.from(
-    new Set(items.map((item) => item.category)),
-  )
-    .sort((left, right) => categoryOrder(left) - categoryOrder(right))
+  const categories: RoutineIntentCategory[] = renderedOrder
+    .filter((category) => items.some((item) => item.category === category))
     .map((category) => {
       const categoryItems = items.filter((item) => item.category === category)
       return {
@@ -434,6 +468,7 @@ export async function compileInitialRoutineCandidate(
     refinedVersionId: portfolio.refinedVersionId,
     sourceDraftRevision: portfolio.sourceDraftRevision,
     authorityVersions,
+    renderedOrder,
     intent: { schemaVersion: 1, categories },
     sections,
     items,
@@ -451,6 +486,7 @@ export async function compileInitialRoutineCandidate(
       sourceFingerprint,
       compilerVersion: PERSONAL_PLAN_ROUTINE_COMPILER_VERSION,
       authorityVersions,
+      renderedOrder,
     },
     intent: { schemaVersion: 1, categories },
     sections,

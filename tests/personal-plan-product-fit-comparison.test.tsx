@@ -29,6 +29,7 @@ const comparison: Stage3FitComparison = {
       category: "shampoo",
       role: "shampoo_everyday",
       source: "current",
+      presentation: { netContentLabel: "300 ml", priceLabel: "4,29 €" },
     },
     {
       productId: "alternative-one",
@@ -36,6 +37,7 @@ const comparison: Stage3FitComparison = {
       category: "shampoo",
       role: "shampoo_everyday",
       source: "alternative",
+      presentation: { netContentLabel: "250 ml", priceLabel: "13,01 €" },
     },
     {
       productId: "alternative-two",
@@ -43,6 +45,7 @@ const comparison: Stage3FitComparison = {
       category: "shampoo",
       role: "shampoo_everyday",
       source: "alternative",
+      presentation: { netContentLabel: "200 ml", priceLabel: "8,99 €" },
     },
   ],
   alternatives: [
@@ -103,7 +106,7 @@ const comparison: Stage3FitComparison = {
       productPositions: [
         { productId: "owned-shampoo", position: { kind: "position", stopId: "strong" } },
         { productId: "alternative-one", position: { kind: "position", stopId: "gentle" } },
-        { productId: "alternative-two", position: { kind: "position", stopId: "gentle" } },
+        { productId: "alternative-two", position: { kind: "position", stopId: "strong" } },
       ],
       reason: "Sanft genug.",
     },
@@ -170,6 +173,8 @@ test("renders one focused server alternative and persists only an explicit exact
 
   assert.match(html, /Mein Shampoo/)
   assert.match(html, /Zweite Alternative/)
+  assert.match(html, /200 ml/)
+  assert.match(html, /8,99/)
   assert.match(html, /2 von 2/)
   assert.match(html, /Zweite Alternative trotz Einschränkung übernehmen/)
   assert.match(html, /aria-live="polite"/)
@@ -200,6 +205,42 @@ test("renders one focused server alternative and persists only an explicit exact
   assert.deepEqual(calls, [
     ["select_replacement", { productId: "alternative-two", factFingerprint: "fingerprint-two" }],
   ])
+})
+
+test("focused alternative keeps identity, facts, CTA, counter, and purple rail markers in one presentation state", () => {
+  const first = renderToStaticMarkup(
+    <ProductFitComparison
+      comparison={comparison}
+      evaluation={evaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+  const second = renderToStaticMarkup(
+    <ProductFitComparison
+      comparison={comparison}
+      evaluation={evaluation}
+      displayedAlternativeIndex={1}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(first, /Sanfte Alternative/)
+  assert.match(first, /250 ml/)
+  assert.match(first, /13,01/)
+  assert.match(first, /1 von 2/)
+  assert.match(first, /Sanfte Alternative als Ersatz übernehmen/)
+  assert.match(first, /left:8%/)
+  assert.match(second, /Zweite Alternative/)
+  assert.match(second, /200 ml/)
+  assert.match(second, /8,99/)
+  assert.match(second, /2 von 2/)
+  assert.match(second, /Zweite Alternative trotz Einschränkung übernehmen/)
+  assert.match(second, /left:92%/)
 })
 
 test("shows the truthful zero-action fallback with exactly one enabled primary action", () => {

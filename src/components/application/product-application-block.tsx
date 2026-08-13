@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react"
+import { ImageIcon } from "lucide-react"
 
 import type { ApplicationProductStepView } from "./application-types"
 
@@ -24,9 +24,21 @@ export function ProductApplicationBlock({
         }`}
       >
         <div className="flex min-w-0 items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-white text-[var(--brand-plum)]">
-            <Sparkles className="h-5 w-5" aria-hidden="true" />
-          </div>
+          {step.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={step.imageUrl}
+              alt=""
+              className="h-12 w-10 shrink-0 rounded-[10px] bg-white object-contain"
+            />
+          ) : (
+            <div
+              aria-label={`${step.productName}: Bild nicht verfügbar`}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-white text-[var(--brand-plum)]"
+            >
+              <ImageIcon className="h-5 w-5" aria-hidden="true" />
+            </div>
+          )}
           <div className="min-w-0">
             <p className="type-caption flex flex-wrap items-center gap-2 text-[var(--text-caption)]">
               {step.categoryLabelDe}

@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 import type {
+  InitialNeedPlanSnapshot,
   PlanCategoryDecision,
   PlanHeatToolRoute,
   PlanProfile,
@@ -62,6 +63,7 @@ export const PLAN_PRODUCT_ROLES = [
 
 export const STAGE3_PASS_VALUES = [
   "product_capture",
+  "need_revision_review",
   "product_decisions",
   "ready_for_routine",
 ] as const
@@ -130,6 +132,49 @@ export type Stage3ProductLoadResolutionV1 = {
   requirements: Stage3CategoryRequirement[]
   decisions: PlanCategoryDecision[]
   coverage: PlanPortfolioCoverageFact[]
+}
+
+export type Stage3NeedMaterialDelta =
+  | {
+      kind: "category_added" | "category_removed"
+      category: PersonalPlanCategory
+      before: PlanCategoryDecision["needTier"] | null
+      after: PlanCategoryDecision["needTier"] | null
+    }
+  | {
+      kind: "category_order_changed"
+      category: PersonalPlanCategory
+      before: number | null
+      after: number | null
+    }
+  | {
+      kind: "need_tier_changed" | "roles_changed" | "frequency_changed" | "execution_changed"
+      category: PersonalPlanCategory
+      before: unknown
+      after: unknown
+    }
+
+export type Stage3InventoryAuthorityV1 = {
+  schemaVersion: 1
+  stage2RefinedNeedVersionId: string
+  inventorySnapshotFingerprint: string
+  status: "not_needed" | "pending" | "accepted" | "rejected"
+  proposalFingerprint: string | null
+  proposedInputHash: string | null
+  proposedOutputSnapshot: InitialNeedPlanSnapshot | null
+  materialDelta: Stage3NeedMaterialDelta[]
+  resolvedFingerprint: string | null
+}
+
+export type Stage3InventoryDispositionV1 = {
+  schemaVersion: 1
+  dispositionKey: string
+  capturedProductId: string
+  category: PersonalPlanCategory
+  planStatus: "not_used"
+  reason: "category_not_in_final_plan" | "not_assigned_to_final_role"
+  acknowledged: boolean
+  authorityFingerprint: string
 }
 
 export type Stage3CategoryRequirement = {
@@ -243,7 +288,7 @@ export type Stage3DecisionSubject = {
   category: PersonalPlanCategory
   role: PlanProductRole
   capturedProductId: string | null
-  subjectKind: "captured_product" | "uncovered_role"
+  subjectKind: "captured_product" | "uncovered_role" | "inventory_disposition"
 }
 
 export type Stage3ProductDecision = {
@@ -294,6 +339,9 @@ export type Stage3ProductDraft = {
   createdAt: string
   updatedAt: string
   authoritySnapshot?: Stage3AuthoritySnapshotV1
+  inventoryAuthority?: Stage3InventoryAuthorityV1
+  inventoryDispositions?: Stage3InventoryDispositionV1[]
+  /** Frozen legacy authority overlay. New capture transitions must not write this. */
   productLoadResolution?: Stage3ProductLoadResolutionV1
 }
 
@@ -304,6 +352,8 @@ export type Stage3AuthorityDraftInput = Pick<
   | "orderedCategories"
   | "authorityVersions"
   | "authoritySnapshot"
+  | "inventoryAuthority"
+  | "inventoryDispositions"
   | "productLoadResolution"
   | "products"
   | "roleAssignments"
@@ -323,6 +373,8 @@ export type Stage3BlockingReason = {
     | "role_uncovered"
     | "decision_incomplete"
     | "draft_invalid"
+    | "need_revision_pending"
+    | "inventory_disposition_unacknowledged"
     | "stale_refined_version"
   category: PersonalPlanCategory | null
   role: PlanProductRole | null
@@ -390,6 +442,33 @@ export type Stage3RetainedOwnedProduct = {
   planStatus: "not_used"
 }
 
+export type Stage3RetainedInventoryProduct =
+  | {
+      kind: "catalog_product"
+      capturedProductId: string
+      userProductId: string
+      productId: string
+      displayName: string
+      category: PersonalPlanCategory
+      role: null
+      sourceDispositionKey: string
+      planStatus: "not_used"
+      reason: Stage3InventoryDispositionV1["reason"]
+    }
+  | {
+      kind: "pending_submission"
+      capturedProductId: string
+      userProductId: string
+      submissionId: string
+      displayName: string
+      category: PersonalPlanCategory
+      role: null
+      reviewStatus: "pending_review" | "needs_more_info"
+      sourceDispositionKey: string
+      planStatus: "not_used"
+      reason: Stage3InventoryDispositionV1["reason"]
+    }
+
 export type Stage3PendingProduct = {
   capturedProductId: string
   userProductId: string
@@ -429,6 +508,19 @@ export type ProposedProductPortfolio = {
   retainedOwnedProducts?: Stage3RetainedOwnedProduct[]
   createdAt: string
 }
+
+export type ProposedProductPortfolioV4 = Omit<
+  ProposedProductPortfolio,
+  "schemaVersion" | "retainedOwnedProducts"
+> & {
+  schemaVersion: 4
+  retainedOwnedProducts: Stage3RetainedOwnedProduct[]
+  /** Schema-v4 presentation data. Routine intentionally does not consume it. */
+  inventoryDispositions: Stage3InventoryDispositionV1[]
+  retainedInventoryProducts: Stage3RetainedInventoryProduct[]
+}
+
+export type AnyProposedProductPortfolio = ProposedProductPortfolio | ProposedProductPortfolioV4
 
 const idSchema = z.string().min(1)
 
@@ -718,6 +810,37 @@ const stage3ProductLoadResolutionSchema: z.ZodType<Stage3ProductLoadResolutionV1
   })
   .strict()
 
+const stage3InventoryAuthoritySchema: z.ZodType<Stage3InventoryAuthorityV1> = z
+  .object({
+    schemaVersion: z.literal(1),
+    stage2RefinedNeedVersionId: idSchema,
+    inventorySnapshotFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
+    status: z.enum(["not_needed", "pending", "accepted", "rejected"]),
+    proposalFingerprint: z.string().regex(/^[0-9a-f]{64}$/).nullable(),
+    proposedInputHash: idSchema.nullable(),
+    proposedOutputSnapshot: z
+      .record(z.string(), z.unknown())
+      .nullable() as unknown as z.ZodType<InitialNeedPlanSnapshot | null>,
+    materialDelta: z.array(z.record(z.string(), z.unknown())) as unknown as z.ZodType<
+      Stage3NeedMaterialDelta[]
+    >,
+    resolvedFingerprint: z.string().regex(/^[0-9a-f]{64}$/).nullable(),
+  })
+  .strict()
+
+const stage3InventoryDispositionSchema: z.ZodType<Stage3InventoryDispositionV1> = z
+  .object({
+    schemaVersion: z.literal(1),
+    dispositionKey: idSchema,
+    capturedProductId: idSchema,
+    category: personalPlanCategorySchema,
+    planStatus: z.literal("not_used"),
+    reason: z.enum(["category_not_in_final_plan", "not_assigned_to_final_role"]),
+    acknowledged: z.boolean(),
+    authorityFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
+  })
+  .strict()
+
 const stage3CategoryResolutionSchema: z.ZodType<Stage3CategoryResolution> = z
   .object({
     decisionKey: idSchema,
@@ -770,6 +893,39 @@ const stage3PendingProductSchema: z.ZodType<Stage3PendingProduct> = z
   })
   .strict()
 
+const stage3RetainedInventoryProductSchema: z.ZodType<Stage3RetainedInventoryProduct> =
+  z.discriminatedUnion("kind", [
+    z
+      .object({
+        kind: z.literal("catalog_product"),
+        capturedProductId: idSchema,
+        userProductId: idSchema,
+        productId: idSchema,
+        displayName: idSchema,
+        category: personalPlanCategorySchema,
+        role: z.null(),
+        sourceDispositionKey: idSchema,
+        planStatus: z.literal("not_used"),
+        reason: z.enum(["category_not_in_final_plan", "not_assigned_to_final_role"]),
+      })
+      .strict(),
+    z
+      .object({
+        kind: z.literal("pending_submission"),
+        capturedProductId: idSchema,
+        userProductId: idSchema,
+        submissionId: idSchema,
+        displayName: idSchema,
+        category: personalPlanCategorySchema,
+        role: z.null(),
+        reviewStatus: z.enum(["pending_review", "needs_more_info"]),
+        sourceDispositionKey: idSchema,
+        planStatus: z.literal("not_used"),
+        reason: z.enum(["category_not_in_final_plan", "not_assigned_to_final_role"]),
+      })
+      .strict(),
+  ])
+
 const stage3UncoveredRoleSchema: z.ZodType<Stage3UncoveredRole> = z
   .object({
     category: personalPlanCategorySchema,
@@ -799,7 +955,7 @@ const portfolioBaseSchema = {
 }
 
 /** Strict historical snapshot parser. Writers retain their existing v1/v2 derivation. */
-export const proposedProductPortfolioSchema: z.ZodType<ProposedProductPortfolio> = z.union([
+export const proposedProductPortfolioSchema: z.ZodType<AnyProposedProductPortfolio> = z.union([
   z
     .object({
       schemaVersion: z.literal(1),
@@ -839,10 +995,45 @@ export const proposedProductPortfolioSchema: z.ZodType<ProposedProductPortfolio>
       productLoadResolution: stage3ProductLoadResolutionSchema.optional(),
     })
     .strict(),
+  z
+    .object({
+      schemaVersion: z.literal(4),
+      ...portfolioBaseSchema,
+      plannedPurchases: z.array(
+        stage3PlannedPurchaseSchema.extend({ sourceDecisionKey: idSchema }),
+      ),
+      retainedOwnedProducts: z.array(
+        z
+          .object({
+            capturedProductId: idSchema,
+            userProductId: idSchema,
+            productId: idSchema,
+            displayName: idSchema,
+            category: personalPlanCategorySchema,
+            role: planProductRoleSchema.nullable(),
+            sourceDecisionKey: idSchema,
+            planStatus: z.literal("not_used"),
+          })
+          .strict(),
+      ),
+      inventoryDispositions: z.array(stage3InventoryDispositionSchema),
+      retainedInventoryProducts: z.array(stage3RetainedInventoryProductSchema),
+      productLoadResolution: stage3ProductLoadResolutionSchema.optional(),
+    })
+    .strict(),
 ])
 
-export function parseProposedProductPortfolio(value: unknown): ProposedProductPortfolio {
-  return proposedProductPortfolioSchema.parse(value)
+export function parseProposedProductPortfolio(value: unknown): ProposedProductPortfolio
+export function parseProposedProductPortfolio(
+  value: unknown,
+  options: { includeV4: true },
+): AnyProposedProductPortfolio
+export function parseProposedProductPortfolio(
+  value: unknown,
+  options?: { includeV4: true },
+): ProposedProductPortfolio | AnyProposedProductPortfolio {
+  if (options?.includeV4) return proposedProductPortfolioSchema.parse(value)
+  return proposedProductPortfolioSchema.parse(value) as ProposedProductPortfolio
 }
 
 export const stage3ProductDraftSchema: z.ZodType<Stage3ProductDraft> = z.object({
@@ -883,6 +1074,8 @@ export const stage3ProductDraftSchema: z.ZodType<Stage3ProductDraft> = z.object(
     })
     .strict()
     .optional() as z.ZodType<Stage3AuthoritySnapshotV1 | undefined>,
+  inventoryAuthority: stage3InventoryAuthoritySchema.optional(),
+  inventoryDispositions: z.array(stage3InventoryDispositionSchema).optional(),
   productLoadResolution: stage3ProductLoadResolutionSchema.optional(),
 })
 
@@ -900,9 +1093,19 @@ export function stage3DecisionKey(
   return `decision:${category}:${role}:${capturedProductId ?? "gap"}`
 }
 
+export function stage3InventoryDispositionKey(
+  category: PersonalPlanCategory,
+  capturedProductId: string,
+): string {
+  return `inventory:${category}:${capturedProductId}`
+}
+
 export function deriveStage3DecisionSubjects(draft: Stage3ProductDraft): Stage3DecisionSubject[] {
   const productsById = new Map(
     draft.products.map((product) => [product.capturedProductId, product]),
+  )
+  const assignedProductIds = new Set(
+    draft.roleAssignments.map((assignment) => assignment.capturedProductId),
   )
   const subjects: Stage3DecisionSubject[] = []
 
@@ -930,6 +1133,18 @@ export function deriveStage3DecisionSubjects(draft: Stage3ProductDraft): Stage3D
     })
   }
 
+  for (const disposition of draft.inventoryDispositions ?? []) {
+    const product = productsById.get(disposition.capturedProductId)
+    if (!product || assignedProductIds.has(disposition.capturedProductId)) continue
+    subjects.push({
+      decisionKey: disposition.dispositionKey,
+      category: disposition.category,
+      role: getCategoryRolePolicy(disposition.category).allowedRoles[0],
+      capturedProductId: disposition.capturedProductId,
+      subjectKind: "inventory_disposition",
+    })
+  }
+
   const categoryOrder = new Map(draft.orderedCategories.map((category, index) => [category, index]))
   const productOrder = new Map(
     draft.products.map((product, index) => [product.capturedProductId, index]),
@@ -941,6 +1156,12 @@ export function deriveStage3DecisionSubjects(draft: Stage3ProductDraft): Stage3D
   return subjects.toSorted((left, right) => {
     const categoryDifference = categoryIndex(left.category) - categoryIndex(right.category)
     if (categoryDifference !== 0) return categoryDifference
+
+    if (left.subjectKind === "inventory_disposition" || right.subjectKind === "inventory_disposition") {
+      if (left.subjectKind !== right.subjectKind) {
+        return left.subjectKind === "inventory_disposition" ? 1 : -1
+      }
+    }
 
     const allowedRoles = getCategoryRolePolicy(left.category).allowedRoles
     const roleDifference =
@@ -972,6 +1193,9 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
   const productsById = new Map(
     draft.products.map((product) => [product.capturedProductId, product]),
   )
+  const assignedProductIds = new Set(
+    draft.roleAssignments.map((assignment) => assignment.capturedProductId),
+  )
 
   for (const product of draft.products) {
     if (!orderedCategories.has(product.identity.category)) {
@@ -979,6 +1203,50 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
       issues.push(
         `identity category ${product.identity.category} does not match ordered category ${expected}`,
       )
+    }
+  }
+
+  const dispositionsByProductId = new Map<string, Stage3InventoryDispositionV1>()
+  for (const disposition of draft.inventoryDispositions ?? []) {
+    const existing = dispositionsByProductId.get(disposition.capturedProductId)
+    if (existing) {
+      issues.push(`product ${disposition.capturedProductId} has more than one inventory disposition`)
+    }
+    dispositionsByProductId.set(disposition.capturedProductId, disposition)
+    const product = productsById.get(disposition.capturedProductId)
+    if (!product) {
+      issues.push(`inventory disposition references unknown product ${disposition.capturedProductId}`)
+      continue
+    }
+    if (product.identity.category !== disposition.category) {
+      issues.push(
+        `inventory disposition category ${disposition.category} does not match product category ${product.identity.category}`,
+      )
+    }
+    if (
+      disposition.dispositionKey !==
+      stage3InventoryDispositionKey(disposition.category, disposition.capturedProductId)
+    ) {
+      issues.push(`inventory disposition ${disposition.dispositionKey} does not match its product`)
+    }
+    if (assignedProductIds.has(disposition.capturedProductId)) {
+      issues.push(
+        `assigned product ${disposition.capturedProductId} cannot also have an inventory-only disposition`,
+      )
+    }
+  }
+
+  if (
+    (draft.pass === "product_decisions" || draft.pass === "ready_for_routine") &&
+    (draft.inventoryAuthority || draft.inventoryDispositions)
+  ) {
+    for (const product of draft.products) {
+      if (
+        !assignedProductIds.has(product.capturedProductId) &&
+        !dispositionsByProductId.has(product.capturedProductId)
+      ) {
+        issues.push(`captured product ${product.capturedProductId} has no Stage 3 result`)
+      }
     }
   }
 
