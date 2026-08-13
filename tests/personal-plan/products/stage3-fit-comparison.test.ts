@@ -601,6 +601,14 @@ test("specialist categories use compact mode and empty inputs use unavailable mo
     )
     assert.equal(compact.mode, "compact", category)
     assert.deepEqual(compact.dimensions, [])
+    assert.ok(
+      compact.evidenceRows?.every(
+        (row) =>
+          row.target?.rationale ===
+          "Für eine passende Produktempfehlung muss dieser Prüfpunkt erfüllt sein.",
+      ),
+      `${category} must keep target rationale separate from product evidence`,
+    )
 
     const unavailable = buildStage3FitComparison(
       authorityInput(category, role, {

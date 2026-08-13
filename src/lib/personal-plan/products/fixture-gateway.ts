@@ -750,7 +750,7 @@ function fixtureCompactEvidenceRows(
       label: representative.label,
       target: {
         valueLabel: "erfüllt",
-        rationale: representative.explanation,
+        rationale: "Für eine passende Produktempfehlung muss dieser Prüfpunkt erfüllt sein.",
         profileEvidenceLabels: [],
       },
       productValues: products.map((product) => {

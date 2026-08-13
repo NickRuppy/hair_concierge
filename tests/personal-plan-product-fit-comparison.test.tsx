@@ -456,6 +456,38 @@ test("offers keep, exact replacement, and go-without for a partly fitting owned 
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
 })
 
+test("labels a supportive replacement as only partly fitting", () => {
+  const supportiveComparison: Stage3FitComparison = {
+    ...comparison,
+    evidenceRows: comparison.evidenceRows?.map((row) => ({
+      ...row,
+      productValues: row.productValues.map((value) =>
+        value.productId === "alternative-two"
+          ? { ...value, valueLabel: "stark", relation: "outside_target" as const }
+          : value,
+      ),
+    })),
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Shampoo"
+      roleLabel="Shampoo"
+      reviewPosition={1}
+      reviewTotal={1}
+      comparison={supportiveComparison}
+      evaluation={evaluation}
+      displayedAlternativeIndex={1}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Alternative · passt teilweise/)
+  assert.doesNotMatch(html, /Passende Alternative/)
+  assert.equal((html.match(/aria-label="Außerhalb des Ziels"/g) ?? []).length, 2)
+})
+
 test("explains a fitting product when no better verified alternative exists", () => {
   const fitComparison: Stage3FitComparison = {
     ...comparison,
@@ -566,6 +598,37 @@ test("keeps a partial verdict explicit when no verified alternative exists", () 
   assert.match(html, /Außerhalb des Ziels/)
   assert.match(html, /Mein Produkt behalten/)
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
+})
+
+test("keeps a mismatch explicit when no verified alternative exists", () => {
+  const mismatchComparison: Stage3FitComparison = {
+    ...comparison,
+    products: comparison.products.filter((product) => product.source === "current"),
+    alternatives: [],
+  }
+  const mismatchEvaluation: Stage3AuthorityEvaluation = {
+    ...evaluation,
+    verdict: "mismatch",
+    allowedActions: ["acknowledge_override", "leave_uncovered"],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Shampoo"
+      roleLabel="Shampoo"
+      reviewPosition={1}
+      reviewTotal={1}
+      comparison={mismatchComparison}
+      evaluation={mismatchEvaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Dein Shampoo passt nicht/)
+  assert.match(html, /außerhalb deines Ziels/)
+  assert.doesNotMatch(html, /passt grundsätzlich/)
 })
 
 test("does not show a misleading target count when any relevant row is unknown", () => {

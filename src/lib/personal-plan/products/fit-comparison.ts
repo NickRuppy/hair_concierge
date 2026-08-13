@@ -483,7 +483,7 @@ function compactEvidenceRows(
       label: representative.label,
       target: {
         valueLabel: "erfüllt",
-        rationale: representative.explanation,
+        rationale: compactCriterionTargetRationale(),
         profileEvidenceLabels: [],
       },
       productValues: entries.map(({ product }) => {
@@ -563,6 +563,10 @@ function targetRationale(dimensionId: string): string {
   if (dimensionId === "oil.role_support")
     return "Das Produkt muss die ausgewählte Anwendung in deiner Routine ausdrücklich unterstützen."
   return "Dieser Zielwert stammt aus deinem bestätigten Bedarfsprofil."
+}
+
+function compactCriterionTargetRationale(): string {
+  return "Für eine passende Produktempfehlung muss dieser Prüfpunkt erfüllt sein."
 }
 
 function profileEvidenceLabels(dimensionId: string, context?: Stage3EvaluationContext): string[] {

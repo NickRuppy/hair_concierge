@@ -311,7 +311,15 @@ function ComparisonReview({
       />
       <div className="grid min-w-0 grid-cols-2 gap-2">
         <ProductCard product={currentProduct} label="Dein Produkt" />
-        <ProductCard product={alternativeProduct} label="Passende Alternative" alternative />
+        <ProductCard
+          product={alternativeProduct}
+          label={
+            selectedAlternative?.verdict === "supportive"
+              ? "Alternative · passt teilweise"
+              : "Passende Alternative"
+          }
+          alternativeVerdict={selectedAlternative?.verdict ?? null}
+        />
       </div>
       {alternatives.length > 1 ? (
         <AlternativeNavigation
@@ -323,7 +331,6 @@ function ComparisonReview({
       ) : null}
       {(comparison.evidenceRows?.length ?? 0) > 0 && selectedAlternative ? (
         <EvidenceMatrix
-          key={selectedAlternative.productId}
           rows={comparison.evidenceRows ?? []}
           currentProductId={ownedProductId}
           alternativeProductId={selectedAlternative.productId}
@@ -350,24 +357,45 @@ function FitOnlyReview({
   evidenceRows: Stage3FitEvidenceRow[]
   productId?: string
 }) {
-  const positive = evaluation.status === "known" && evaluation.verdict === "ideal"
+  const verdict = evaluation.status === "known" ? evaluation.verdict : "unknown"
+  const presentation =
+    verdict === "ideal"
+      ? {
+          title: `Dein ${categoryLabel || "Produkt"} passt`,
+          description: "Dein Produkt liegt in den relevanten bestätigten Punkten im Ziel.",
+        }
+      : verdict === "supportive"
+        ? {
+            title: `Dein ${categoryLabel || "Produkt"} passt teilweise`,
+            description: "Dein Produkt passt grundsätzlich zu deinem Bedarf.",
+          }
+        : {
+            title: `Dein ${categoryLabel || "Produkt"} passt nicht`,
+            description:
+              "Dein Produkt liegt in mindestens einem bestätigten Prüfpunkt außerhalb deines Ziels.",
+          }
   return (
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={`Dein ${categoryLabel || "Produkt"} ${positive ? "passt" : "passt teilweise"}`}
-        description={
-          positive
-            ? "Dein Produkt liegt in den relevanten bestätigten Punkten im Ziel."
-            : "Dein Produkt passt grundsätzlich zu deinem Bedarf."
-        }
+        title={presentation.title}
+        description={presentation.description}
       />
       <ProductCard product={product} label="Dein Produkt" />
       {evidenceRows.length > 0 && productId ? (
         <CompactOwnedEvidence rows={evidenceRows} productId={productId} />
       ) : null}
-      <p className="mt-4 rounded-xl bg-[var(--status-ok-bg)] px-4 py-3 text-sm font-medium text-[var(--status-ok-text)]">
-        Aktuell ist keine klar bessere verifizierte Alternative verfügbar.
+      <p
+        className={cn(
+          "mt-4 rounded-xl px-4 py-3 text-sm font-medium",
+          verdict === "mismatch"
+            ? "bg-muted text-muted-foreground"
+            : "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
+        )}
+      >
+        {verdict === "mismatch"
+          ? "Aktuell ist keine verifizierte Alternative verfügbar."
+          : "Aktuell ist keine klar bessere verifizierte Alternative verfügbar."}
       </p>
     </>
   )
@@ -408,7 +436,11 @@ function PendingReview({
       <div className={cn("grid min-w-0 gap-2", selectedAlternative && "grid-cols-2")}>
         <ProductCard product={currentProduct} label="Dein Produkt" />
         {selectedAlternative ? (
-          <ProductCard product={alternativeProduct} label="Verifizierte Alternative" alternative />
+          <ProductCard
+            product={alternativeProduct}
+            label="Verifizierte Alternative"
+            alternativeVerdict={selectedAlternative.verdict}
+          />
         ) : null}
       </div>
       {alternatives.length > 1 ? (
@@ -461,7 +493,11 @@ function UnassessableReview({
       <div className={cn("grid min-w-0 gap-2", selectedAlternative && "grid-cols-2")}>
         <ProductCard product={currentProduct} label={`Dein ${categoryLabel || "Produkt"}`} />
         {selectedAlternative ? (
-          <ProductCard product={alternativeProduct} label="Verifizierte Alternative" alternative />
+          <ProductCard
+            product={alternativeProduct}
+            label="Verifizierte Alternative"
+            alternativeVerdict={selectedAlternative.verdict}
+          />
         ) : null}
       </div>
       {alternatives.length > 1 ? (
@@ -545,23 +581,30 @@ function OverallVerdict({
 function ProductCard({
   product,
   label,
-  alternative = false,
+  alternativeVerdict = null,
 }: {
   product: ReviewProduct | null
   label: string
-  alternative?: boolean
+  alternativeVerdict?: Stage3SelectedComparisonCandidate["verdict"] | null
 }) {
+  const idealAlternative = alternativeVerdict === "ideal"
+  const supportiveAlternative = alternativeVerdict === "supportive"
   return (
     <article
       className={cn(
         "min-w-0 rounded-2xl border bg-card p-3",
-        alternative ? "border-[var(--status-ok-text)]/45" : "border-[var(--brand-plum)]",
+        idealAlternative
+          ? "border-[var(--status-ok-text)]/45"
+          : supportiveAlternative
+            ? "border-[var(--status-pending-text)]/45"
+            : "border-[var(--brand-plum)]",
       )}
     >
       <p
         className={cn(
           "text-[10px] font-bold uppercase tracking-wide text-muted-foreground",
-          alternative && "text-[var(--status-ok-text)]",
+          idealAlternative && "text-[var(--status-ok-text)]",
+          supportiveAlternative && "text-[var(--status-pending-text)]",
         )}
       >
         {label}
@@ -694,7 +737,7 @@ function EvidenceMatrix({
               <th className="w-[34%] px-2 py-2 text-left">Prüfpunkt</th>
               <th className="px-1 py-2">Deins</th>
               <th className="bg-[var(--brand-plum)]/5 px-1 py-2">Ziel</th>
-              <th className="bg-[var(--status-ok-bg)] px-1 py-2">Alternative</th>
+              <th className="bg-[var(--brand-plum)]/5 px-1 py-2">Alternative</th>
             </tr>
           </thead>
           <tbody>
@@ -702,6 +745,7 @@ function EvidenceMatrix({
               const current = valueFor(row, currentProductId)
               const alternative = valueFor(row, alternativeProductId)
               const relation = current?.relation ?? "unknown"
+              const alternativeRelation = alternative?.relation ?? "unknown"
               const knownStatus = relation === "in_target" || relation === "outside_target"
               const selected = row.rowId === selectedRow?.rowId
               return (
@@ -740,8 +784,24 @@ function EvidenceMatrix({
                   <td className="break-words bg-[var(--brand-plum)]/5 px-1 py-3 text-[var(--brand-plum)]">
                     {row.target?.valueLabel ?? "kein Ziel"}
                   </td>
-                  <td className="break-words bg-[var(--status-ok-bg)] px-1 py-3 text-[var(--status-ok-text)]">
-                    {alternative?.valueLabel ?? "–"}
+                  <td
+                    className={cn(
+                      "break-words px-1 py-3",
+                      alternativeRelation === "in_target" &&
+                        "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
+                      alternativeRelation === "outside_target" &&
+                        "bg-[var(--status-danger-bg)]/35 text-[var(--status-danger-text)]",
+                      (alternativeRelation === "unknown" || alternativeRelation === "no_target") &&
+                        "bg-muted/40 text-muted-foreground",
+                    )}
+                  >
+                    <span className="grid justify-items-center gap-1">
+                      {alternative?.valueLabel ?? "–"}
+                      {alternativeRelation === "in_target" ||
+                      alternativeRelation === "outside_target" ? (
+                        <RelationMark relation={alternativeRelation} />
+                      ) : null}
+                    </span>
                   </td>
                 </tr>
               )
