@@ -1,4 +1,5 @@
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { RoutineItemCard } from "./routine-item-card"
 
@@ -10,12 +11,14 @@ export function RoutineSection({
   variant = "routine",
   emptyLabel,
   onItemDetail,
+  presentation = null,
 }: {
   title: "Deine Basis" | "Optional" | "Später ergänzen"
   items: RoutineItem[]
   variant?: "routine" | "later"
   emptyLabel?: string
   onItemDetail?: (item: RoutineItem) => void
+  presentation?: PortfolioPresentation | null
 }) {
   const headingId = `${title.toLowerCase().replaceAll(" ", "-").replaceAll("ä", "ae")}-heading`
 
@@ -39,6 +42,7 @@ export function RoutineSection({
             item={item}
             variant={variant}
             onDetail={onItemDetail}
+            presentation={presentation}
           />
         ))}
       </div>

@@ -11,6 +11,7 @@ import type {
   Stage3RoleAssignment,
 } from "./contracts"
 import type { Stage3AuthoritySemanticIntent } from "./authority/contracts"
+import type { Stage3FitComparison } from "./fit-comparison"
 
 export type Stage3ProductsGatewayErrorCode =
   | "temporarily_unavailable"
@@ -99,6 +100,8 @@ export type Stage3DraftResponse = {
   draft: Stage3ProductDraft
   /** Server-derived from the immutable refined need; never reconstructed from category policy. */
   requirements: Stage3CategoryRequirement[]
+  /** Bounded server-authored fit bundle, keyed by decision subject. */
+  fitComparisons?: Stage3FitComparison[]
 }
 
 export type Stage3SearchResponse = {
@@ -182,11 +185,17 @@ export type Stage3PhotoIntakeInput = {
   intake_method: "photo"
   front_image_path: string
   front_image_validation_status?:
-    "valid_product_front" | "uncertain" | "not_a_product_photo" | "unsafe_or_inappropriate"
+    | "valid_product_front"
+    | "uncertain"
+    | "not_a_product_photo"
+    | "unsafe_or_inappropriate"
   front_image_validation_metadata?: Record<string, unknown>
   barcode_image_path?: string
   barcode_image_validation_status?:
-    "valid_barcode" | "uncertain" | "not_a_product_photo" | "unsafe_or_inappropriate"
+    | "valid_barcode"
+    | "uncertain"
+    | "not_a_product_photo"
+    | "unsafe_or_inappropriate"
   barcode_image_validation_metadata?: Record<string, unknown>
   brand_text?: string
   product_name_text?: string

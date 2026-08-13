@@ -9,13 +9,7 @@ import {
   type Stage3ProductDraft,
 } from "../src/lib/personal-plan/products/contracts"
 import { createStage3Draft } from "../src/lib/personal-plan/products/state-machine"
-import {
-  automaticAuthorityOutcomes,
-  automaticOutcomeIntents,
-  authorityDecisionIntent,
-  clearFitDecisions,
-  hasUnresolvedDecisionSubjects,
-} from "../src/components/personal-plan-products/stage3-decision-controller"
+import { authorityDecisionIntent } from "../src/components/personal-plan-products/stage3-decision-controller"
 
 function oilDecisionDraft(): Stage3ProductDraft {
   const requirements: Stage3EntryContext["orderedCategories"] = [
@@ -65,7 +59,7 @@ function oilDecisionDraft(): Stage3ProductDraft {
   }
 }
 
-test("Stage 3 decision controller separates automatic Oil outcomes from user-facing clear fits", () => {
+test("Stage 3 decision controller keeps every Oil role for explicit review", () => {
   const draft = oilDecisionDraft()
   const evaluations = deriveStage3DecisionSubjects(draft).map(
     (subject): Stage3AuthorityEvaluation =>
@@ -96,19 +90,10 @@ test("Stage 3 decision controller separates automatic Oil outcomes from user-fac
           },
   )
 
-  const automatic = automaticAuthorityOutcomes(draft, evaluations)
-  assert.equal(hasUnresolvedDecisionSubjects(draft), true)
+  assert.equal(evaluations.length, 2)
   assert.deepEqual(
-    automatic.map(({ action }) => action),
-    ["leave_uncovered", "keep_owned"],
-  )
-  assert.deepEqual(
-    automaticOutcomeIntents(automatic).map((intent) => intent.action),
-    ["leave_uncovered", "keep_owned"],
-  )
-  assert.deepEqual(
-    clearFitDecisions(draft, evaluations).map(({ subject }) => subject.role),
-    ["dry_finish"],
+    deriveStage3DecisionSubjects(draft).map((subject) => subject.role),
+    ["pre_wash_fibre_treatment", "dry_finish"],
   )
 })
 

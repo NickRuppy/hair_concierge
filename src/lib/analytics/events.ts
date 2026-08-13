@@ -1,6 +1,7 @@
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import type { EmailDeliverabilityFailure } from "@/lib/email-deliverability-shared"
+import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 
 export type AnalyticsValue = string | number | boolean | null | string[] | number[] | boolean[]
 export type AnalyticsPayload = Record<string, AnalyticsValue | undefined>
@@ -203,6 +204,19 @@ export type PersonalPlanStage3HandoffOutcome =
   | "ready_for_routine"
   | "ready_with_pending"
   | "ready_with_gap"
+export type PersonalPlanStage3ReviewAction =
+  | "keep_owned"
+  | "acknowledge_override"
+  | "select_replacement"
+  | "keep_pending"
+  | "leave_uncovered"
+export type PersonalPlanStage3ReviewVerdict =
+  | "ideal"
+  | "supportive"
+  | "mismatch"
+  | "unknown"
+  | "pending"
+  | "unsupported"
 
 // Stage 4 telemetry is deliberately structural. It must never contain product,
 // proposal, plan, user, profile, price, URL, or free-text data.
@@ -459,6 +473,26 @@ export type AppEventMap = {
   }
   personal_plan_stage3_handoff: {
     outcome: PersonalPlanStage3HandoffOutcome
+  }
+  personal_plan_stage3_review_viewed: {
+    category: PersonalPlanCategory
+    verdict: PersonalPlanStage3ReviewVerdict
+    position: number
+    count: number
+  }
+  personal_plan_stage3_review_back: {
+    category: PersonalPlanCategory
+    destination: "previous_review" | "product_capture"
+    position: number
+    count: number
+  }
+  personal_plan_stage3_review_completed: { count: number }
+  personal_plan_stage3_review_action: {
+    category: PersonalPlanCategory
+    verdict: PersonalPlanStage3ReviewVerdict
+    action: PersonalPlanStage3ReviewAction
+    position: number
+    count: number
   }
   personal_plan_stage4_routine_viewed: {
     surface: "routine_page"

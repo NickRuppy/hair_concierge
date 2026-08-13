@@ -26,7 +26,18 @@ const baselineStage3EventNames = [
   "personal_plan_stage3_routine_opened",
 ] as const
 
-const stage3EventNames = [...baselineStage3EventNames, ...verboseStage3EventNames] as const
+const reviewStage3EventNames = [
+  "personal_plan_stage3_review_viewed",
+  "personal_plan_stage3_review_back",
+  "personal_plan_stage3_review_completed",
+  "personal_plan_stage3_review_action",
+] as const
+
+const stage3EventNames = [
+  ...baselineStage3EventNames,
+  ...reviewStage3EventNames,
+  ...verboseStage3EventNames,
+] as const
 
 test("Stage 3 structural analytics is PostHog-only", () => {
   for (const eventName of stage3EventNames) {
@@ -52,6 +63,12 @@ test("Stage 3 baseline analytics is consent-aware and suppresses verbose events"
   })
   consentedAnalytics.track("personal_plan_stage3_journey_started", {})
   consentedAnalytics.track("personal_plan_stage3_routine_opened", {})
+  consentedAnalytics.track("personal_plan_stage3_review_viewed", {
+    category: "conditioner",
+    verdict: "ideal",
+    position: 1,
+    count: 1,
+  })
   consentedAnalytics.track("personal_plan_stage3_flow_viewed", {
     pass: "product_capture",
     stepKey: "product_search",
@@ -60,6 +77,10 @@ test("Stage 3 baseline analytics is consent-aware and suppresses verbose events"
   assert.deepEqual(calls, [
     { eventName: "personal_plan_stage3_journey_started", payload: {} },
     { eventName: "personal_plan_stage3_routine_opened", payload: {} },
+    {
+      eventName: "personal_plan_stage3_review_viewed",
+      payload: { category: "conditioner", verdict: "ideal", position: 1, count: 1 },
+    },
   ])
 })
 
@@ -156,6 +177,67 @@ test("Stage 3 baseline events map to PostHog with empty payloads", () => {
   assert.deepEqual(calls, [
     ["personal_plan_stage3_journey_started", {}],
     ["personal_plan_stage3_routine_opened", {}],
+  ])
+})
+
+test("Stage 3 review events map their bounded payloads to PostHog", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("personal_plan_stage3_review_viewed", {
+      category: "conditioner",
+      verdict: "mismatch",
+      position: 2,
+      count: 4,
+    })
+    postHogDestination.track("personal_plan_stage3_review_action", {
+      category: "conditioner",
+      verdict: "mismatch",
+      action: "select_replacement",
+      position: 2,
+      count: 4,
+    })
+    postHogDestination.track("personal_plan_stage3_review_back", {
+      category: "conditioner",
+      destination: "previous_review",
+      position: 2,
+      count: 4,
+    })
+    postHogDestination.track("personal_plan_stage3_review_completed", { count: 4 })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "personal_plan_stage3_review_viewed",
+      { category: "conditioner", verdict: "mismatch", position: 2, count: 4 },
+    ],
+    [
+      "personal_plan_stage3_review_action",
+      {
+        category: "conditioner",
+        verdict: "mismatch",
+        action: "select_replacement",
+        position: 2,
+        count: 4,
+      },
+    ],
+    [
+      "personal_plan_stage3_review_back",
+      {
+        category: "conditioner",
+        destination: "previous_review",
+        position: 2,
+        count: 4,
+      },
+    ],
+    ["personal_plan_stage3_review_completed", { count: 4 }],
   ])
 })
 

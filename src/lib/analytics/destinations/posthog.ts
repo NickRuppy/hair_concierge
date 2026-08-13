@@ -316,6 +316,38 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     case "personal_plan_stage3_journey_started":
     case "personal_plan_stage3_routine_opened":
       return {}
+    case "personal_plan_stage3_review_viewed": {
+      const data = payload as AppEventMap["personal_plan_stage3_review_viewed"]
+      return {
+        category: data.category,
+        verdict: data.verdict,
+        position: data.position,
+        count: data.count,
+      }
+    }
+    case "personal_plan_stage3_review_back": {
+      const data = payload as AppEventMap["personal_plan_stage3_review_back"]
+      return {
+        category: data.category,
+        destination: data.destination,
+        position: data.position,
+        count: data.count,
+      }
+    }
+    case "personal_plan_stage3_review_completed": {
+      const data = payload as AppEventMap["personal_plan_stage3_review_completed"]
+      return { count: data.count }
+    }
+    case "personal_plan_stage3_review_action": {
+      const data = payload as AppEventMap["personal_plan_stage3_review_action"]
+      return {
+        category: data.category,
+        verdict: data.verdict,
+        action: data.action,
+        position: data.position,
+        count: data.count,
+      }
+    }
     case "personal_plan_stage3_flow_viewed": {
       const data = payload as AppEventMap["personal_plan_stage3_flow_viewed"]
       return { pass: data.pass, step_key: data.stepKey }

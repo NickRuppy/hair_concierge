@@ -6,6 +6,10 @@ import { RetryRefreshButton } from "@/components/ui/retry-refresh-button"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import {
+  loadOwnerPortfolioPresentation,
+  type PortfolioPresentation,
+} from "@/lib/personal-plan/routine/portfolio-presentation"
+import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
 } from "@/lib/personal-plan/release"
@@ -30,6 +34,11 @@ export type RoutinePageResolverDeps = {
     enabled: boolean
   }) => ReturnType<typeof loadPersonalPlanRoutineView>
   stage4Enabled: () => boolean
+  readPortfolioPresentation?: (
+    userId: string,
+    planId: string,
+    portfolioVersionId: string,
+  ) => Promise<PortfolioPresentation | null>
 }
 
 export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
@@ -45,14 +54,29 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
 
     const enabled = deps.stage4Enabled()
     const view = await deps.readView({ userId, enabled })
-    return view.status === "no_personal_plan"
-      ? { kind: "legacy" as const }
-      : {
-          kind: "personal_plan" as const,
-          view,
-          enabled,
-          stage5Reachable: canAccessPersonalPlanJourneyStage(journey, "stage5"),
-        }
+    if (view.status === "no_personal_plan") return { kind: "legacy" as const }
+    const routinePayload =
+      view.status === "proposal" ? view.pendingProposal?.candidate : view.activeVersion?.payload
+    const portfolioVersionId = routinePayload?.source.productPortfolioVersionId
+    let portfolioPresentation: PortfolioPresentation | null = null
+    if (portfolioVersionId && deps.readPortfolioPresentation) {
+      try {
+        portfolioPresentation = await deps.readPortfolioPresentation(
+          userId,
+          view.personalPlanId,
+          portfolioVersionId,
+        )
+      } catch {
+        // Presentation must not substitute or hide an otherwise valid Routine.
+      }
+    }
+    return {
+      kind: "personal_plan" as const,
+      view,
+      enabled,
+      portfolioPresentation,
+      stage5Reachable: canAccessPersonalPlanJourneyStage(journey, "stage5"),
+    }
   } catch {
     // The legacy Routine is not a safe substitute once a Personal Plan exists.
     // Preserve the scoped recovery state instead of silently presenting it as confirmed.
@@ -70,6 +94,13 @@ const defaultDeps: RoutinePageResolverDeps = {
       enabled,
     }),
   stage4Enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
+  readPortfolioPresentation: (userId, planId, portfolioVersionId) =>
+    loadOwnerPortfolioPresentation(
+      createAdminClient() as unknown as PersonalPlanRoutineReadClient,
+      userId,
+      planId,
+      portfolioVersionId,
+    ),
 }
 
 export function RoutineUnavailableState({
@@ -115,6 +146,7 @@ export default async function RoutinePage() {
       initialView={resolved.view}
       enabled={resolved.enabled}
       stage5Reachable={resolved.stage5Reachable}
+      portfolioPresentation={resolved.portfolioPresentation}
     />
   )
 }

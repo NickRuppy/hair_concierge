@@ -3,6 +3,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
+import {
+  routinePresentationLabels,
+  type PortfolioPresentation,
+} from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { getRoutineStatus, RoutineStatusBadge } from "./routine-status"
 
@@ -135,12 +139,19 @@ function routineTimingLabel(item: RoutineItem) {
   return timingLabelsByRole[item.role] ?? timingLabelsByRole[item.purposeKey] ?? "Im Plan"
 }
 
-export function routineFitLabel(item: RoutineItem) {
+export function routineFitLabel(
+  item: RoutineItem,
+  presentation: PortfolioPresentation | null = null,
+) {
   if (item.state.availability === "none") {
     return item.state.systemAssessment === "basis" ? "Basis-Lücke" : "Optional offen"
   }
   if (item.state.availability === "pending_review") return "Analyse läuft"
-  if (item.state.fitDecision === "informed_override") return "Bewusste Wahl"
+  if (item.state.fitDecision === "informed_override") {
+    return (
+      routinePresentationLabels(presentation).fitLabelFor(item.state.fitDecision) ?? "Bewusste Wahl"
+    )
+  }
   if (item.state.systemAssessment === "not_recommended") return "Bewusste Wahl"
   if (!item.executable) return "Nicht einsatzbereit"
   return "✓ Passt"
@@ -163,18 +174,20 @@ export function RoutineItemCard({
   item,
   variant = "routine",
   onDetail,
+  presentation = null,
 }: {
   item: RoutineItem
   variant?: "routine" | "later"
   onDetail?: (item: RoutineItem) => void
+  presentation?: PortfolioPresentation | null
 }) {
   const purpose = routinePurposeLabel(item.purposeKey)
   const category = routineCategoryLabel(item.category)
   const visibleCategory = variant === "later" ? `${category} optional` : category
   const product = productName(item)
   const cadence = routineCadenceLabel(item)
-  const status = getRoutineStatus(item).label
-  const fit = routineFitLabel(item)
+  const status = getRoutineStatus(item, presentation).label
+  const fit = routineFitLabel(item, presentation)
   const timing = routineTimingLabel(item)
   const accessibleName = `Zweck: ${purpose}; Kategorie: ${category}; Produkt: ${product}; Status: ${status}; Rhythmus: ${cadence}`
 
@@ -238,7 +251,7 @@ export function RoutineItemCard({
           <p className="mt-2 leading-relaxed text-muted-foreground">{detailCopy(item)}</p>
         </details>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <RoutineStatusBadge item={item} />
+          <RoutineStatusBadge item={item} presentation={presentation} />
           {onDetail ? (
             <Button type="button" variant="ghost" size="sm" onClick={() => onDetail(item)}>
               Detail öffnen

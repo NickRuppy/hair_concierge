@@ -14,6 +14,10 @@ import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
+import {
+  filterRetainedPersonalPlanProductRows,
+  RetainedPersonalPlanProducts,
+} from "@/components/profile/retained-personal-plan-products"
 import type { MembershipManagementState } from "@/lib/billing/types"
 import { formatBillingDate } from "@/lib/billing/display"
 import { intervalLabel } from "@/lib/billing/plan-change-client"
@@ -48,11 +52,14 @@ import { CHEMICAL_TREATMENTS, fehler, HAIR_LENGTH_OPTIONS } from "@/lib/vocabula
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
+import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 type MemoryApiResponse = {
   settings: { memory_enabled: boolean }
   entries: UserMemoryEntry[]
 }
+
+type PortfolioPresentationApiResponse = { presentation: PortfolioPresentation | null }
 
 function membershipStatusLabel(state: MembershipManagementState) {
   if (state.kind === "payment_problem") return "Zahlung ausstehend"
@@ -483,6 +490,9 @@ export default function ProfilePage() {
   const [profileLoading, setProfileLoading] = useState(true)
   const [productUsage, setProductUsage] = useState<UserProductUsageRow[]>([])
   const [productsLoading, setProductsLoading] = useState(true)
+  const [portfolioPresentation, setPortfolioPresentation] = useState<PortfolioPresentation | null>(
+    null,
+  )
   const [quizEditing, setQuizEditing] = useState(false)
   const [quizSaving, setQuizSaving] = useState(false)
   const [quizDraft, setQuizDraft] = useState<QuizDraft>(() => createQuizDraft(null))
@@ -546,6 +556,32 @@ export default function ProfilePage() {
       active = false
     }
   }, [supabase, userId])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadPortfolioPresentation() {
+      if (!userId) {
+        if (active) setPortfolioPresentation(null)
+        return
+      }
+      try {
+        const response = await fetch("/api/personal-plan/portfolio-presentation", {
+          cache: "no-store",
+        })
+        if (!response.ok) throw new Error("portfolio presentation request failed")
+        const body = (await response.json()) as PortfolioPresentationApiResponse
+        if (active) setPortfolioPresentation(body.presentation ?? null)
+      } catch {
+        if (active) setPortfolioPresentation(null)
+      }
+    }
+
+    loadPortfolioPresentation()
+    return () => {
+      active = false
+    }
+  }, [userId])
 
   useEffect(() => {
     let active = true
@@ -735,7 +771,19 @@ export default function ProfilePage() {
   const routineFields = structuredFields.filter((field) => field.sectionKey === "routine")
   const goalsFields = structuredFields.filter((field) => field.sectionKey === "goals")
   const goalsField = goalsFields[0] ?? null
-  const productRows = useMemo(() => createProductRows(productUsage), [productUsage])
+  const retainedPersonalPlanProducts = useMemo(
+    () =>
+      portfolioPresentation?.schemaVersion === 3 ? portfolioPresentation.retainedOwnedProducts : [],
+    [portfolioPresentation],
+  )
+  const productRows = useMemo(
+    () =>
+      filterRetainedPersonalPlanProductRows(
+        createProductRows(productUsage),
+        retainedPersonalPlanProducts,
+      ),
+    [productUsage, retainedPersonalPlanProducts],
+  )
 
   const quizFilled = quizFields.filter((field) => hasProfileFieldValue(field.value))
   const stylingFilled = stylingFields.filter((field) => hasProfileFieldValue(field.value))
@@ -1663,6 +1711,7 @@ export default function ProfilePage() {
                   }
                 />
               ) : null}
+              <RetainedPersonalPlanProducts products={retainedPersonalPlanProducts} />
             </CardContent>
           </Card>
 

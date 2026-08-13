@@ -5,6 +5,10 @@ import { loadConsent } from "@/lib/cookie-consent"
 export type Stage3AnalyticsEventName =
   | "personal_plan_stage3_journey_started"
   | "personal_plan_stage3_routine_opened"
+  | "personal_plan_stage3_review_viewed"
+  | "personal_plan_stage3_review_back"
+  | "personal_plan_stage3_review_completed"
+  | "personal_plan_stage3_review_action"
   | "personal_plan_stage3_flow_viewed"
   | "personal_plan_stage3_search_interacted"
   | "personal_plan_stage3_fallback_opened"
@@ -24,10 +28,18 @@ export const noOpStage3Analytics: Stage3AnalyticsPort = {
 type Stage3BaselineAnalyticsEventName =
   | "personal_plan_stage3_journey_started"
   | "personal_plan_stage3_routine_opened"
+  | "personal_plan_stage3_review_viewed"
+  | "personal_plan_stage3_review_back"
+  | "personal_plan_stage3_review_completed"
+  | "personal_plan_stage3_review_action"
 
 const stage3BaselineEvents = new Set<Stage3BaselineAnalyticsEventName>([
   "personal_plan_stage3_journey_started",
   "personal_plan_stage3_routine_opened",
+  "personal_plan_stage3_review_viewed",
+  "personal_plan_stage3_review_back",
+  "personal_plan_stage3_review_completed",
+  "personal_plan_stage3_review_action",
 ])
 
 type ConsentAwareStage3BaselineAnalyticsDeps = {
@@ -40,16 +52,10 @@ export function createConsentAwareStage3BaselineAnalytics(
   deps: ConsentAwareStage3BaselineAnalyticsDeps = { loadConsent, trackAppEvent },
 ): Stage3AnalyticsPort {
   return {
-    track(eventName) {
+    track(eventName, payload) {
       if (!stage3BaselineEvents.has(eventName as Stage3BaselineAnalyticsEventName)) return
       if (deps.loadConsent()?.analytics !== true) return
-      if (eventName === "personal_plan_stage3_journey_started") {
-        deps.trackAppEvent("personal_plan_stage3_journey_started", {})
-        return
-      }
-      if (eventName === "personal_plan_stage3_routine_opened") {
-        deps.trackAppEvent("personal_plan_stage3_routine_opened", {})
-      }
+      deps.trackAppEvent(eventName, payload)
     },
   }
 }

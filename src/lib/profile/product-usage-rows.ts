@@ -43,6 +43,8 @@ export type UserProductUsageRow = {
 export type ProductDetailRow = {
   key: string
   category: string
+  productId: string | null
+  matchStatus: ProductUsageMatchStatus | null
   categoryLabel: string
   productName: string | null
   frequencyLabel: string | null
@@ -166,6 +168,8 @@ export function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow
       return {
         key: row.id,
         category: row.category,
+        productId: row.product_id,
+        matchStatus: row.match_status,
         categoryLabel: PRODUCT_CATEGORY_LABELS[row.category] ?? row.category,
         productName,
         frequencyLabel,
