@@ -11,13 +11,19 @@ export const personalPlanFieldTestUnavailable = (): PersonalPlanFieldTestUnavail
 })
 
 export function isMissingPersonalPlanFieldTestRelation(error: unknown): boolean {
+  return isMissingFieldTestRelation(error, "personal_plan_test_enrollments")
+}
+
+export function isMissingRegularQuizFieldTestRelation(error: unknown): boolean {
+  return isMissingFieldTestRelation(error, "regular_quiz_test_enrollments")
+}
+
+function isMissingFieldTestRelation(error: unknown, relation: string): boolean {
   if (!error || typeof error !== "object") return false
   const candidate = error as { code?: unknown; message?: unknown }
   const code = typeof candidate.code === "string" ? candidate.code : ""
   const message = typeof candidate.message === "string" ? candidate.message : ""
-  return (
-    (code === "PGRST205" || code === "42P01") && message.includes("personal_plan_test_enrollments")
-  )
+  return (code === "PGRST205" || code === "42P01") && message.includes(relation)
 }
 
 export function isMissingPersonalPlanFieldTestFunnelColumn(error: unknown): boolean {

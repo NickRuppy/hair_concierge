@@ -72,6 +72,29 @@ test("an active field-test enrollment uses its activation time without inventing
   })
 })
 
+test("an active regular-quiz field test enters the Personal Plan with legacy source provenance", async () => {
+  const enrollment = await findPersonalPlanEnrollmentForUser(
+    client({
+      billing_one_time_purchases: [],
+      billing_subscriptions: [],
+      personal_plan_test_enrollments: [],
+      regular_quiz_test_enrollments: [activeEnrollment],
+    }) as never,
+    "user-1",
+    now,
+  )
+
+  assert.deepEqual(enrollment, {
+    accessState: "active",
+    sourceId: activeEnrollment.id,
+    paidAt: null,
+    qualifiedAt: activeEnrollment.activated_at,
+    artifactLeadId: activeEnrollment.lead_id,
+    quizSourceKind: "legacy",
+    sourceKind: "field_test",
+  })
+})
+
 test("expired, revoked, or manually revoked field-test enrollment fails closed", async () => {
   for (const row of [
     { ...activeEnrollment, expires_at: "2026-08-10T11:59:59.999Z" },
@@ -104,12 +127,20 @@ test("field-test activation qualifies Stage 1 and the journey without a payment 
     enrollmentSourceId: activeEnrollment.id,
     qualifiedAt: activeEnrollment.activated_at,
     artifactLeadId: activeEnrollment.lead_id,
+    quizSourceKind: "legacy" as const,
+    sourceKind: "field_test" as const,
   }
   const stage1 = createStage1PersistenceService({
     isEnabled: () => true,
-    cohortCutoff: () => new Date("2026-08-01T00:00:00.000Z"),
+    cohortCutoff: () => new Date("2026-08-11T00:00:00.000Z"),
     findEntitlement: async () => fieldTestEntitlement,
-    loadArtifact: async () => ({ id: "artifact-1", quizAnswers: {} }),
+    loadArtifact: async () => {
+      throw new Error("legacy field tests must not load a Personal Plan artifact")
+    },
+    loadLegacyLead: async () => ({
+      id: activeEnrollment.lead_id,
+      quizAnswers: {} as never,
+    }),
     createOrReuseInitialNeed: async () => ({ outcome: "invalid_source" as const }),
   })
   assert.deepEqual(await stage1.loadOrCreate({ userId: "user-1" }), { status: "invalid_source" })
@@ -120,8 +151,10 @@ test("field-test activation qualifies Stage 1 and the journey without a payment 
         accessState: "active",
         qualifiedAt: activeEnrollment.activated_at,
         artifactLeadId: activeEnrollment.lead_id,
+        quizSourceKind: "legacy",
+        sourceKind: "field_test",
       }),
-      cohortCutoff: () => new Date("2026-08-01T00:00:00.000Z"),
+      cohortCutoff: () => new Date("2026-08-11T00:00:00.000Z"),
       appEnabled: () => true,
       appRollout: () => "all",
       stage2Enabled: () => false,

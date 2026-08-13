@@ -28,6 +28,7 @@ const releaseDefaults: RoutingReleaseDependencies = {
 type RoutingSource = {
   qualifiedAt: string
   quizSourceKind: "legacy" | "personal_plan"
+  sourceKind: "paid" | "field_test"
   plan: {
     currentInitialNeedVersionId: string | null
     currentRefinedNeedVersionId: string | null
@@ -50,12 +51,16 @@ export async function loadPersonalPlanRoutingFrontierForUser(
 
   const cutoff = release.cohortCutoff()
   const qualifiedAt = new Date(source.qualifiedAt)
-  const eligible = Boolean(
-    cutoff &&
-    !Number.isNaN(qualifiedAt.getTime()) &&
-    qualifiedAt.getTime() >= cutoff.getTime() &&
-    (source.quizSourceKind === "personal_plan" || release.legacyQuizCutoverEnabled()),
-  )
+  const qualifiedAtIsValid = !Number.isNaN(qualifiedAt.getTime())
+  const eligible =
+    qualifiedAtIsValid && source.sourceKind === "field_test"
+      ? true
+      : Boolean(
+          cutoff &&
+          qualifiedAtIsValid &&
+          qualifiedAt.getTime() >= cutoff.getTime() &&
+          (source.quizSourceKind === "personal_plan" || release.legacyQuizCutoverEnabled()),
+        )
 
   return resolvePersonalPlanRoutingFrontier({
     eligible,
@@ -75,10 +80,18 @@ function parseRoutingSource(value: unknown): RoutingSource | null {
   ) {
     return null
   }
+  const sourceKind =
+    row.source_kind === undefined || row.source_kind === "paid"
+      ? "paid"
+      : row.source_kind === "field_test"
+        ? "field_test"
+        : null
+  if (!sourceKind) return null
   if (row.plan === null || row.plan === undefined) {
     return {
       qualifiedAt: row.qualified_at,
       quizSourceKind: row.quiz_source_kind,
+      sourceKind,
       plan: null,
     }
   }
@@ -99,6 +112,7 @@ function parseRoutingSource(value: unknown): RoutingSource | null {
   return {
     qualifiedAt: row.qualified_at,
     quizSourceKind: row.quiz_source_kind,
+    sourceKind,
     plan: {
       currentInitialNeedVersionId,
       currentRefinedNeedVersionId,

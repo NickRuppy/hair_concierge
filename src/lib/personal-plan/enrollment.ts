@@ -7,7 +7,10 @@ import {
 import { PERSONAL_PLAN_LAUNCH_PRICING_CATALOG } from "@/lib/billing/pricing-catalog"
 import { findCurrentBillingSubscriptionsForUser } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState, SupabaseBillingClient } from "@/lib/billing/types"
-import { isMissingPersonalPlanFieldTestRelation } from "@/lib/personal-plan-field-test/errors"
+import {
+  isMissingPersonalPlanFieldTestRelation,
+  isMissingRegularQuizFieldTestRelation,
+} from "@/lib/personal-plan-field-test/errors"
 import {
   getPersonalPlanNewBuyerCohortCutoff,
   isPersonalPlanLegacyQuizCutoverEnabled,
@@ -103,6 +106,7 @@ function resolveActiveFieldTestEnrollment(
   row: FieldTestEnrollmentRow | null,
   userId: string,
   now: Date,
+  quizSourceKind: "personal_plan" | "legacy",
 ): PersonalPlanEnrollment | null {
   if (!row || row.status !== "active" || row.revoked_at !== null) return null
   const sourceId = typeof row.id === "string" ? row.id : null
@@ -132,7 +136,7 @@ function resolveActiveFieldTestEnrollment(
     paidAt: null,
     qualifiedAt: activatedAt,
     artifactLeadId: leadId,
-    quizSourceKind: "personal_plan",
+    quizSourceKind,
     sourceKind: "field_test",
   }
 }
@@ -242,11 +246,34 @@ export async function findPersonalPlanEnrollmentForUser(
     if (isMissingPersonalPlanFieldTestRelation(fieldTestError)) return emptyEnrollment(oneTimeState)
     throw fieldTestError
   }
+  const personalPlanFieldTest = resolveActiveFieldTestEnrollment(
+    (fieldTestData as FieldTestEnrollmentRow | null) ?? null,
+    userId,
+    now,
+    "personal_plan",
+  )
+  if (personalPlanFieldTest) return personalPlanFieldTest
+
+  const { data: regularFieldTestData, error: regularFieldTestError } = await enrollmentClient
+    .from("regular_quiz_test_enrollments")
+    .select(
+      "id,user_id,lead_id,manual_access_grant_id,status,activated_at,expires_at,revoked_at,manual_access_grants!inner(id,user_id,reason,expires_at,revoked_at)",
+    )
+    .eq("user_id", userId)
+    .eq("status", "active")
+    .maybeSingle()
+  if (regularFieldTestError) {
+    if (isMissingRegularQuizFieldTestRelation(regularFieldTestError)) {
+      return emptyEnrollment(oneTimeState)
+    }
+    throw regularFieldTestError
+  }
   return (
     resolveActiveFieldTestEnrollment(
-      (fieldTestData as FieldTestEnrollmentRow | null) ?? null,
+      (regularFieldTestData as FieldTestEnrollmentRow | null) ?? null,
       userId,
       now,
+      "legacy",
     ) ?? emptyEnrollment(oneTimeState)
   )
 }

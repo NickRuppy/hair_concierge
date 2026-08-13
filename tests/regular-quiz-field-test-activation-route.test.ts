@@ -93,7 +93,7 @@ test("regular activation establishes a recoverable guest before atomic ownership
 
   const response = await handler(request())
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { destination: `/onboarding?lead=${leadId}` })
+  assert.deepEqual(await response.json(), { destination: `/plan-bereit?lead=${leadId}` })
   assert.deepEqual(calls, ["create-guest", "sign-in", "activate", "project"])
   assert.match(response.headers.get("set-cookie") ?? "", /sb-test-auth=opaque/)
 })
