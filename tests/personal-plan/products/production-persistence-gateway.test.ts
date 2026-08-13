@@ -18,10 +18,14 @@ import {
 } from "../../../src/lib/personal-plan/products/state-machine"
 import { createProposedProductPortfolio } from "../../../src/lib/personal-plan/products/portfolio"
 import type {
+  PersonalPlanCategory,
   Stage3CategoryRequirement,
   Stage3ProductDraft,
 } from "../../../src/lib/personal-plan/products/contracts"
-import { stage3InventoryDispositionKey } from "../../../src/lib/personal-plan/products/contracts"
+import {
+  PERSONAL_PLAN_PRODUCT_CATEGORIES,
+  stage3InventoryDispositionKey,
+} from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import { Stage3AuthoritySnapshotError } from "../../../src/lib/personal-plan/products/authority/snapshot"
 
@@ -348,9 +352,10 @@ test("mixed final-role and current-only inventory reviews skip fit authority for
   })
 
   const reviews = await gateway.reviewDecisionBundles({ draftId: draft.draftId })
-  assert.deepEqual(reviews.map((review) => review.authorityEvaluation.subjectKey), [
-    "decision:conditioner:conditioner_rinse_out:capture-a",
-  ])
+  assert.deepEqual(
+    reviews.map((review) => review.authorityEvaluation.subjectKey),
+    ["decision:conditioner:conditioner_rinse_out:capture-a"],
+  )
   assert.equal(authorityFactReads, 1)
 
   const acknowledged = await gateway.acknowledgeInventoryDisposition({
@@ -819,6 +824,123 @@ test("catalog search derives assessment context from the signed owner draft", as
     shampooTargets: [],
     conditionerTarget: { thickness: "normal", careDirection: "moisture" },
   })
+})
+
+test("catalog search permits every signed inventory-only category without a refined category decision", async () => {
+  for (const category of PERSONAL_PLAN_PRODUCT_CATEGORIES) {
+    const requirement: Stage3CategoryRequirement = {
+      category,
+      requiredRoles: [],
+      needSummary: `Aktuelles ${category} erfassen`,
+      authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
+    }
+    const base = authorityDraft()
+    const draft: Stage3ProductDraft = {
+      ...base,
+      draftId: `draft-inventory-only-${category}`,
+      orderedCategories: [category],
+      authoritySnapshot: {
+        ...base.authoritySnapshot!,
+        categoryDecisions: [],
+        orderedCategories: [category],
+        inventoryOnlyCategories: [category],
+      },
+    }
+    const received: Array<Parameters<Stage3ProductionPersistence["search"]>[0]> = []
+    const gateway = createProductionStage3ProductsGateway({
+      userId: "owner-a",
+      persistence: {
+        ...persistence(draft),
+        loadOrCreate: async () => ({ draft, requirements: [requirement] }),
+        loadRequirements: async () => [requirement],
+        search: async (input) => {
+          received.push(input)
+          return {
+            query: input.query,
+            category: input.category,
+            candidates: [],
+            totalCapped: false,
+          }
+        },
+      },
+    })
+
+    await gateway.search({
+      draftId: draft.draftId,
+      category,
+      query: "produkt",
+      requestToken: 1,
+    })
+
+    assert.deepEqual(received[0]?.assessmentContext, {
+      hairThickness: "normal",
+      requiredRoles: [],
+      shampooTargets: [],
+      conditionerTarget: null,
+    })
+  }
+})
+
+test("catalog search rejects unsigned inventory-only access and missing canonical requirements", async () => {
+  const category: PersonalPlanCategory = "conditioner"
+  const requirement: Stage3CategoryRequirement = {
+    category,
+    requiredRoles: [],
+    needSummary: "Aktuellen Conditioner erfassen",
+    authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
+  }
+  const base = authorityDraft()
+  const inventoryOnlyDraft: Stage3ProductDraft = {
+    ...base,
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      categoryDecisions: [],
+      orderedCategories: [category],
+      inventoryOnlyCategories: [category],
+    },
+  }
+
+  const unsignedGateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence({
+        ...inventoryOnlyDraft,
+        authoritySnapshot: {
+          ...inventoryOnlyDraft.authoritySnapshot!,
+          inventoryOnlyCategories: [],
+        },
+      }),
+      loadRequirements: async () => [requirement],
+    },
+  })
+  await assert.rejects(
+    () =>
+      unsignedGateway.search({
+        draftId: inventoryOnlyDraft.draftId,
+        category,
+        query: "produkt",
+        requestToken: 1,
+      }),
+    /stale_authority_snapshot/,
+  )
+
+  const missingRequirementGateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(inventoryOnlyDraft),
+      loadRequirements: async () => [],
+    },
+  })
+  await assert.rejects(
+    () =>
+      missingRequirementGateway.search({
+        draftId: inventoryOnlyDraft.draftId,
+        category,
+        query: "produkt",
+        requestToken: 1,
+      }),
+    /stale_authority_snapshot/,
+  )
 })
 
 function pendingAuthorityDraft(): Stage3ProductDraft {
@@ -2434,7 +2556,10 @@ test("production repairs and accepts inventory authority from the owner-scoped r
   const authority = repaired.draft.inventoryAuthority
   assert.equal(authority?.status, "pending")
   assert.equal(authority?.proposedOutputSnapshot?.profile.hair.thickness, "normal")
-  assert.equal((authority?.proposedOutputSnapshot?.profile as { retainedAnswer?: string })?.retainedAnswer, "survives")
+  assert.equal(
+    (authority?.proposedOutputSnapshot?.profile as { retainedAnswer?: string })?.retainedAnswer,
+    "survives",
+  )
   const accepted = await gateway.resolveNeedRevision({
     draftId: repaired.draft.draftId,
     expectedRevision: repaired.draft.revision,

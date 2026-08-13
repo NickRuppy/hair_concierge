@@ -88,6 +88,71 @@ test("Stage 3 search requires and forwards the owner draft context", async () =>
   })
 })
 
+test("Stage 3 search logs a whitelisted authority snapshot code without request data", async (context) => {
+  const info = context.mock.method(console, "info", () => {})
+  const handler = createStage3SearchRouteHandler({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
+    checkRateLimit: async () => ({ allowed: true }),
+    search: async () => {
+      throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+    },
+  })
+
+  const response = await handler(
+    new Request(
+      `http://test/api/personal-plan/stage-3/search?draftId=${draft.draftId}&category=conditioner&q=private-product&requestToken=7`,
+    ),
+  )
+
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.equal(info.mock.calls.length, 1)
+  const [event, details] = info.mock.calls[0].arguments
+  assert.equal(event, "personal_plan_stage3_api")
+  assert.deepEqual(Object.keys(details as object).sort(), ["code", "duration_ms", "event"])
+  assert.equal((details as { event: string }).event, "unavailable")
+  assert.equal((details as { code: string }).code, "stale_authority_snapshot")
+  assert.equal(typeof (details as { duration_ms: unknown }).duration_ms, "number")
+  const serialized = JSON.stringify(details)
+  assert.equal(serialized.includes("conditioner"), false)
+  assert.equal(serialized.includes("private-product"), false)
+  assert.equal(serialized.includes(draft.draftId), false)
+})
+
+test("Stage 3 search logs an unknown failure as temporarily unavailable", async (context) => {
+  const info = context.mock.method(console, "info", () => {})
+  const handler = createStage3SearchRouteHandler({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
+    checkRateLimit: async () => ({ allowed: true }),
+    search: async () => {
+      throw new Error("private product private-product for owner-1")
+    },
+  })
+
+  const response = await handler(
+    new Request(
+      `http://test/api/personal-plan/stage-3/search?draftId=${draft.draftId}&category=conditioner&q=private-product&requestToken=8`,
+    ),
+  )
+
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.equal(info.mock.calls.length, 1)
+  const [event, details] = info.mock.calls[0].arguments
+  assert.equal(event, "personal_plan_stage3_api")
+  assert.deepEqual(Object.keys(details as object).sort(), ["code", "duration_ms", "event"])
+  assert.equal((details as { code: string }).code, "temporarily_unavailable")
+  const serialized = JSON.stringify(details)
+  assert.equal(serialized.includes("conditioner"), false)
+  assert.equal(serialized.includes("private-product"), false)
+  assert.equal(serialized.includes("owner-1"), false)
+  assert.equal(serialized.includes(draft.draftId), false)
+})
+
 function deps(overrides: Partial<Stage3RouteDeps> = {}): Stage3RouteDeps {
   return {
     enabled: () => true,
@@ -580,10 +645,10 @@ test("Stage 3 GET returns stale source when Routine repair source is not owner-c
     ),
   )
 
-  assert.deepEqual([response!.status, await response!.json()], [
-    409,
-    { error: "stale_refined_source" },
-  ])
+  assert.deepEqual(
+    [response!.status, await response!.json()],
+    [409, { error: "stale_refined_source" }],
+  )
 })
 
 test("Stage 3 GET exposes server authority projections after capture", async () => {
