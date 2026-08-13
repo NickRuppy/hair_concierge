@@ -95,3 +95,18 @@ export async function loadPersonalPlanRoutineView(input: {
     },
   }
 }
+
+export async function loadPersonalPlanActiveRoutineVersion(input: {
+  client: PersonalPlanRoutineReadClient
+  userId: string
+  planId: string
+  activeRoutineVersionId: string
+}): Promise<{ id: string; payload: ReturnType<typeof routinePayloadV1Schema.parse> } | null> {
+  const active = await loadOwnerRoutineVersion(
+    input.client,
+    input.userId,
+    input.planId,
+    input.activeRoutineVersionId,
+  )
+  return active ? { id: active.id, payload: routinePayloadV1Schema.parse(active.payload) } : null
+}

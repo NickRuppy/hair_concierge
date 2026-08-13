@@ -32,6 +32,7 @@ export const protocolResearchProductSchema = z
     role: z.string().min(1),
     research_status: z.enum([
       "verified",
+      "retired",
       "blocked_missing_direction",
       "blocked_identity_or_commercial",
     ]),
@@ -42,26 +43,26 @@ export const protocolResearchProductSchema = z
   })
   .strict()
   .superRefine((value, context) => {
-    if (value.research_status === "verified") {
+    if (value.research_status === "verified" || value.research_status === "retired") {
       if (!value.product_id) {
         context.addIssue({
           code: "custom",
           path: ["product_id"],
-          message: "Verified product needs an ID",
+          message: "Verified or retired product needs an ID",
         })
       }
       if (value.sources.length === 0) {
         context.addIssue({
           code: "custom",
           path: ["sources"],
-          message: "Verified product needs evidence",
+          message: "Verified or retired product needs evidence",
         })
       }
       if (value.blockers.length > 0) {
         context.addIssue({
           code: "custom",
           path: ["blockers"],
-          message: "Verified product cannot retain blockers",
+          message: "Verified or retired product cannot retain blockers",
         })
       }
     } else {
@@ -311,6 +312,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       },
       {
         verified: 0,
+        retired: 0,
         blocked_missing_direction: 0,
         blocked_identity_or_commercial: 0,
       },

@@ -478,6 +478,7 @@
           "applicationArea": "lengths_ends",
           "rinse": "rinse_out",
           "contactTimeSeconds": 60,
+          "sharedTemplateContactTime": "include",
           "conditionerRelationship": "not_applicable",
           "reapplication": "none",
           "amount": {

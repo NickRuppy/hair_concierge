@@ -20,8 +20,9 @@ export function ApplicationDay({ day }: { day: ApplicationDayView }) {
         <h1 id="application-day-title" className="type-h1 text-[var(--text-heading)]">
           {day.labelDe}
         </h1>
+        <p className="type-body mt-2 text-[var(--text-sub)]">{day.summaryDe}</p>
         {day.cadenceDe && (
-          <p className="type-body-sm mt-2 text-[var(--text-sub)]">{day.cadenceDe}</p>
+          <p className="type-body-sm mt-3 text-[var(--text-caption)]">{day.cadenceDe}</p>
         )}
       </header>
 

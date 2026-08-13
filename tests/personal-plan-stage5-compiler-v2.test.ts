@@ -98,7 +98,9 @@ test("V2 compiler renders OGX through canonical shampoo copy only", () => {
   })
 
   assert.deepEqual(result.pointerIssues, [])
-  const block = result.days.find(({ key }) => key === "wash_day")?.productBlocks[0]
+  const washDay = result.days.find(({ key }) => key === "wash_day")
+  assert.ok(washDay)
+  const block = washDay.productBlocks[0]
   assert.ok(block)
   assert.deepEqual(
     block.steps.map(({ copyDe }) => copyDe),
@@ -109,6 +111,51 @@ test("V2 compiler renders OGX through canonical shampoo copy only", () => {
     ],
   )
   assert.doesNotMatch(JSON.stringify(block.steps), /OGX|Conditioner/i)
+  const visibleWettingSteps = washDay.outerSequence
+    .flatMap((step) =>
+      step.kind === "state_transition"
+        ? [step.copyDe]
+        : step.kind === "product"
+          ? step.block.steps.map(({ copyDe }) => copyDe)
+          : [],
+    )
+    .filter((copyDe) => /anfeuchten/.test(copyDe))
+  assert.deepEqual(visibleWettingSteps, ["Haare und Kopfhaut vollständig anfeuchten."])
+})
+
+test("V2 compiler keeps the wetting fallback for an exact shampoo workflow without one", () => {
+  const result = compileApplicationViewV2({
+    input: input(),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      pointer({
+        applicationFamily: "targeted_treatment_shampoo",
+        facts: {
+          ...pointer().facts,
+          contactTime: { kind: "seconds", seconds: 180 },
+        },
+        workflowId: "swiss_o_par_tea_tree_two_pass",
+        exactSteps: [
+          {
+            stepKey: "first-cleanse",
+            action: "apply_product",
+            copyDe: "Das Haar mit dem Kurshampoo einschäumen und durchwaschen.",
+          },
+          { stepKey: "rinse", action: "rinse", copyDe: "Ausspülen." },
+        ],
+      }),
+    ],
+  })
+
+  assert.deepEqual(result.pointerIssues, [])
+  const washDay = result.days.find(({ key }) => key === "wash_day")
+  assert.ok(washDay)
+  assert.deepEqual(washDay.outerSequence[0], {
+    kind: "state_transition",
+    fromAnchor: "dry",
+    toAnchor: "wet_cleanse",
+    copyDe: "Haare gründlich mit Wasser anfeuchten.",
+  })
 })
 
 test("V2 compiler interpolates a reviewed contact time without product prose", () => {

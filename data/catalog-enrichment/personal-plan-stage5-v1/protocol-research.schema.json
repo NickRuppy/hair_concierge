@@ -28,7 +28,7 @@
           "product_name": { "type": "string", "minLength": 1 },
           "role": { "type": "string", "minLength": 1 },
           "research_status": {
-            "enum": ["verified", "blocked_missing_direction", "blocked_identity_or_commercial"]
+            "enum": ["verified", "retired", "blocked_missing_direction", "blocked_identity_or_commercial"]
           },
           "sources": {
             "type": "array",

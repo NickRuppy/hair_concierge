@@ -34,7 +34,7 @@ test("application compute timing is exposed only behind the diagnostic marker", 
 
 test("route source composes the accepted Stage 4 Routine adapter", () => {
   const source = readFileSync("src/app/anwendung/page.tsx", "utf8")
-  assert.match(source, /loadPersonalPlanRoutineView/)
+  assert.match(source, /loadPersonalPlanActiveRoutineVersion/)
   assert.match(source, /adaptAcceptedActiveRoutineForApplication/)
   assert.match(source, /canAccessPersonalPlanJourneyStage/)
   assert.match(source, /loadCachedPersonalPlanJourneyAccessForUser/)
@@ -171,20 +171,14 @@ function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungRes
     loadJourneyAccess: async () => ({
       kind: "personal_plan" as const,
       personalPlanId: "plan-1",
+      activeRoutineVersionId: "routine-1",
       frontier: "stage5" as const,
       nextHref: "/anwendung" as const,
       allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
     }),
-    loadRoutine: async () => ({
-      status: "active",
-      personalPlanId: "plan-1",
-      planRevision: 1,
-      sourceRevision: 1,
-      pendingProposal: null,
-      activeVersion: {
-        id: "routine-1",
-        payload: { source: { refinedVersionId: "refined-1" } } as never,
-      },
+    loadRoutineVersion: async () => ({
+      id: "routine-1",
+      payload: { source: { refinedVersionId: "refined-1" } } as never,
     }),
     adaptRoutine: async () => ({
       routineVersionId: "routine-1",
@@ -227,7 +221,7 @@ test("journey denial happens before any Routine, profile, catalog, or content re
         nextHref: "/routine" as const,
         allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
       }),
-      loadRoutine: async () => {
+      loadRoutineVersion: async () => {
         privilegedReads += 1
         throw new Error("must not read")
       },
@@ -260,7 +254,7 @@ test("journey frontier denial happens before any Routine, profile, catalog, or c
         nextHref: "/routine",
         allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
       }),
-      loadRoutine: async () => {
+      loadRoutineVersion: async () => {
         privilegedReads += 1
         throw new Error("must not read")
       },
@@ -282,10 +276,56 @@ test("journey frontier denial happens before any Routine, profile, catalog, or c
   assert.equal(privilegedReads, 0)
 })
 
+test("authorized Stage 5 overlaps the active Routine and shared content reads", async () => {
+  const calls: string[] = []
+  let releaseRoutine!: (value: {
+    id: string
+    payload: { source: { refinedVersionId: string } }
+  }) => void
+  const routinePending = new Promise<{
+    id: string
+    payload: { source: { refinedVersionId: string } }
+  }>((resolve) => {
+    releaseRoutine = resolve
+  })
+  const base = readyDeps()
+  const viewPending = resolveAnwendungPage(
+    readyDeps({
+      loadJourneyAccess: async (userId: string) => {
+        calls.push("journey")
+        return base.loadJourneyAccess(userId)
+      },
+      loadRoutineVersion: async () => {
+        calls.push("routine")
+        return routinePending as never
+      },
+      loadContent: () => ({
+        loadActiveDayTypeDefinitions: async () => {
+          calls.push("days")
+          return (await base.loadContent(2).loadActiveDayTypeDefinitions()) as never
+        },
+        loadActiveGuidanceProtocols: async () => {
+          calls.push("protocols")
+          return (await base.loadContent(2).loadActiveGuidanceProtocols()) as never
+        },
+      }),
+    } as never),
+  )
+
+  await new Promise((resolve) => setImmediate(resolve))
+  assert.deepEqual(calls, ["journey", "routine", "days", "protocols"])
+
+  releaseRoutine({
+    id: "routine-1",
+    payload: { source: { refinedVersionId: "refined-1" } },
+  })
+  assert.equal((await viewPending).state, "ready")
+})
+
 test("route has explicit no-active recovery, active success, unavailable direct day, and database recovery", async () => {
   const noActive = await resolveAnwendungPage(
     readyDeps({
-      loadRoutine: async () => ({ status: "no_personal_plan" }),
+      loadRoutineVersion: async () => null,
     }),
   )
   assert.deepEqual(noActive, { state: "no_active_routine" })
@@ -306,7 +346,7 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   const failures: unknown[] = []
   const database = await resolveAnwendungPage(
     readyDeps({
-      loadRoutine: async () => {
+      loadRoutineVersion: async () => {
         throw new Error("database query failed")
       },
       reportFailure: (details) => failures.push(details),

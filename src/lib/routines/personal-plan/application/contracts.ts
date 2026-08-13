@@ -84,11 +84,31 @@ export const APPLICATION_SEQUENCE_ANCHORS = [
   "dry_finish",
 ] as const
 
+export const APPLICATION_CAUTION_CODES_V2 = [
+  "avoid_broken_skin",
+  "avoid_eye_contact",
+  "cosmetic_claim_only",
+  "external_use_only",
+  "flammable_aerosol",
+  "follow_label_time",
+  "stop_on_irritation",
+  "use_in_ventilated_area",
+] as const
+
+export const EXACT_APPLICATION_WORKFLOW_IDS_V2 = [
+  "swiss_o_par_tea_tree_two_pass",
+  "epres_bond_repair",
+  "k18_leave_in_molecular_repair",
+  "olaplex_no3plus_complete_repair",
+] as const
+
 export const applicationDayTypeKeySchema = z.enum(APPLICATION_DAY_TYPE_KEYS)
 export const personalPlanCategorySchema = z.enum(PERSONAL_PLAN_CATEGORIES)
 export const semanticRoleSchema = z.enum(SEMANTIC_ROLES)
 export const applicationFamilySchema = z.enum(APPLICATION_FAMILIES)
 export const applicationSequenceAnchorSchema = z.enum(APPLICATION_SEQUENCE_ANCHORS)
+export const applicationCautionCodeV2Schema = z.enum(APPLICATION_CAUTION_CODES_V2)
+export const exactApplicationWorkflowIdV2Schema = z.enum(EXACT_APPLICATION_WORKFLOW_IDS_V2)
 
 const productIdSchema = z.string().uuid()
 const copyTemplateSchema = z
@@ -237,6 +257,7 @@ export const applicationGuidanceProtocolSchema = z
         applicationArea: z.enum(["scalp_roots", "lengths_ends", "ends", "all_hair"]).nullable(),
         rinse: z.enum(["rinse_out", "leave_in"]).nullable(),
         contactTimeSeconds: z.number().int().nonnegative().nullable(),
+        sharedTemplateContactTime: z.enum(["include", "omit"]).optional(),
         conditionerRelationship: z
           .enum([
             "not_applicable",
@@ -248,9 +269,22 @@ export const applicationGuidanceProtocolSchema = z
           .nullable(),
         reapplication: z.enum(["none", "each_separate_heat_event"]).nullable(),
         amount: z
-          .object({ kind: z.literal("qualitative"), copyDe: copyTemplateSchema })
-          .strict()
+          .discriminatedUnion("kind", [
+            z.object({ kind: z.literal("qualitative"), copyDe: copyTemplateSchema }).strict(),
+            z
+              .object({
+                kind: z.literal("pumps"),
+                minimum: z.number().int().positive(),
+                maximum: z.number().int().positive(),
+              })
+              .strict()
+              .refine((value) => value.maximum >= value.minimum, {
+                message: "Pump range must be ordered",
+              }),
+          ])
           .nullable(),
+        workflowId: exactApplicationWorkflowIdV2Schema.nullable().optional(),
+        cautionCodes: z.array(applicationCautionCodeV2Schema).optional(),
         // V1 keeps safety-relevant guidance inside the ordered step copy. Keep
         // this reserved field empty until the signed-off UI has a caution slot.
         cautions: z
@@ -288,6 +322,13 @@ export const applicationGuidanceProtocolSchema = z
   })
   .strict()
   .superRefine((value, context) => {
+    if (value.protocolFacts.workflowId && !value.exactGuidanceRequired) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Exact workflow metadata requires exact product guidance",
+        path: ["exactGuidanceRequired"],
+      })
+    }
     if (
       (value.applicationFamily === "standard_rinse_out_cleanse" ||
         value.applicationFamily === "reset_cleanse") &&

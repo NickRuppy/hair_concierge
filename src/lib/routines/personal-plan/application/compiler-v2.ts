@@ -44,10 +44,6 @@ const EXACT_WORKFLOW_RUNTIME = {
     compatibleDayTypes: ["bond_repair_day"],
     anchor: "timed_treatment",
   },
-  olaplex_no0_companion: {
-    compatibleDayTypes: ["bond_repair_day"],
-    anchor: "pre_wash",
-  },
   olaplex_no3plus_complete_repair: {
     compatibleDayTypes: ["bond_repair_day"],
     anchor: "pre_wash",

@@ -41,7 +41,7 @@
     },
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-04-bondbuilder-primary-protocols.json",
-      "sha256": "dcc1db7852a5b16fa4482c9f3fce1ff2f8c4ab6e51fd5bbbea9fdc0e90ab0b5c"
+      "sha256": "b84ebae0d37225563565f2f7e9f8e78f23ec960369a926a41a69114d95825b45"
     },
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-05-oil-role-coverage.json",
@@ -61,34 +61,34 @@
     },
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-09-scalp-canonical-protocols.json",
-      "sha256": "a33c87ec687bcb19c9d654545bca49493ef1c9338c242549fc564d4c06b85859"
+      "sha256": "ef9f890ac52e000574308c888fcfb4b5a494a6f21c0331ab5fe211776b6446df"
     },
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-10-shampoo-exact-01.json",
-      "sha256": "ed99a65c3b753f9b5a79eb58ff0f3b52f588c7fcf6ab0b6fa80a4a8cbe4d61e6"
+      "sha256": "a7a012d4d6789825f6d7e65ceb94fbb28abfd8ff0830a4cfc24f0b123318e738"
     },
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-11-shampoo-exact-02.json",
-      "sha256": "30a75c5618556fb924962bbc8b45b61e5f05bf42852f64c759fd094a5086008f"
+      "sha256": "c61e30b97078895c0a32c0c43e685967eee5cad845e6dffdf101ac8874513123"
     },
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-12-conditioner-exact-01.json",
-      "sha256": "41bc2e4b2d6c6a4fc0bec34c76f7cc3907472e5d8df286d9f655f04cff822c96"
+      "sha256": "9984be456f19234851a89701f5b194e839828a728e5ecc013670a504ae133dc3"
     },
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-13-conditioner-exact-02.json",
-      "sha256": "7728999c93bdce68625c159a55de1df893c7c15604bee4626188a5114fcc031a"
+      "sha256": "5dc95f89358b970eb16f3dc5bb50e286727a36df52d540ea77a47b86c786684d"
     }
   ],
   "observed_counts": {
-    "rows": 273,
-    "products": 224,
-    "exact_workflows": 5,
+    "rows": 272,
+    "products": 223,
+    "exact_workflows": 4,
     "family_templates": 23,
     "composable_rows": 272,
-    "blocked_rows": 1,
+    "blocked_rows": 0,
     "by_category": {
-      "bondbuilder": 4,
+      "bondbuilder": 3,
       "conditioner": 41,
       "deep_cleansing_shampoo": 6,
       "dry_shampoo": 10,
@@ -2835,7 +2835,7 @@
       "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23",
       "product_name": "Nivea Power Repair Conditioner",
       "source_role": "conditioner_rinse_out",
-      "source_fingerprint": "da49a2b7288dbe99fd48b52cd7138c9ff2629d2d2e041794059840356c6675f6",
+      "source_fingerprint": "1f0f02d729d29fd2c22aebf722962982148891eaccfcb5923b837dce2c2f8af9",
       "template_keys": [
         "conditioner.standard-rinse-out.v2"
       ],
@@ -4071,10 +4071,10 @@
       "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
       "product_name": "K18 Leave-In Molecular Repair Hair Mask",
       "source_role": "specialized_bond_treatment",
-      "source_fingerprint": "8e067daa1f733ca02c4a1446c00ab4976ec9f70334e28c961c082b60f0e4b01a",
+      "source_fingerprint": "2c7d902f90ef3b4012c79d080b81e1b86fb9181fff2ad25fd55b7084beb58ac6",
       "template_keys": [],
       "exact_workflow_id": "k18_leave_in_molecular_repair",
-      "before_visible_step_fingerprint": "da9c6f737692686a1aa27d3625c3469099a4fb7a33414d7dfffd0400dd487072",
+      "before_visible_step_fingerprint": "5c9d02305338e68fcb4206e5c7cd02c597f86fdb496fb05cb2918b2c3dfbf812",
       "after_visible_step_fingerprint": "c3b90f6ccee49fc986d690e03bb2d2ba134396d1673bd31983754935dc22183a",
       "guidance_payload_v2": {
         "schemaVersion": 2,
@@ -4385,7 +4385,7 @@
       "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
       "product_name": "OLAPLEX No.3PLUS Complete Repair Treatment",
       "source_role": "specialized_bond_treatment",
-      "source_fingerprint": "812301b0d8f144e25931e54aa9cc4164be3693647cfd32ad4896239e753fd13f",
+      "source_fingerprint": "ce483d7de547b168a1f36d80ba1387609067889720d6e8886aebe946f7856717",
       "template_keys": [],
       "exact_workflow_id": "olaplex_no3plus_complete_repair",
       "before_visible_step_fingerprint": "6cb534f2c489475a49bbc67d7152cd482ad8c00479c0939e2f3a43979eabd922",
@@ -4448,7 +4448,7 @@
       "product_id": "3f3542c0-e82b-4306-a9e0-85df313a78cf",
       "product_name": "L'Oréal Paris Elvital Fiber Booster Anti-Haarverlust Serum",
       "source_role": "density_claim_tonic",
-      "source_fingerprint": "1cf521ebc6f3043cfa43e13b18529602ebb4fee524b418a960d0c4bc7631791d",
+      "source_fingerprint": "73aa89cebf8b8fa705c13a589b325d95106433db076f97b7a6dcd6ad1e2765b8",
       "template_keys": [
         "scalp.leave-on.v2"
       ],
@@ -5453,7 +5453,7 @@
       "product_id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
       "product_name": "Swiss-O-Par Teebaumöl",
       "source_role": "shampoo_everyday",
-      "source_fingerprint": "bc7e8dfc29a8370734003a00a69995f8ddcd87134d12ffba4ae521ac4938895b",
+      "source_fingerprint": "52fc64d76f418870ec2aab50a2df3d63f182ec818919345cc0376a955e4098e4",
       "template_keys": [],
       "exact_workflow_id": "swiss_o_par_tea_tree_two_pass",
       "before_visible_step_fingerprint": "8406f68557f1827b262cc8fa98c5e85a325c4f331b61497c33cb73f7f2a680d0",
@@ -6101,7 +6101,7 @@
       "product_id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e",
       "product_name": "The Ordinary Multi-Peptide Serum for Hair Density",
       "source_role": "density_claim_tonic",
-      "source_fingerprint": "0d71f05c1be3d50050022172821abb15fbf40f9b48e64db31ca2126ec376a9a4",
+      "source_fingerprint": "2948641a8978bfd0d2e37efbc99762d490ed5e6ebf3d2f311bf94cb42a8cc266",
       "template_keys": [
         "scalp.leave-on.v2"
       ],
@@ -7495,7 +7495,7 @@
       "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
       "product_name": "Pantene Pro-V Grow Abundant Anti-Haarverlust Shampoo",
       "source_role": "shampoo_everyday",
-      "source_fingerprint": "3e430bb6b7b273144a6d6dd475c57e3d5c5f917270eb1f51d05fff137113d5d3",
+      "source_fingerprint": "9673fc144574061f3a09ca33c6d3a84fc8ffc9cac6e9547233fb12d919bbe82c",
       "template_keys": [
         "shampoo.standard-scalp-cleanse.v2"
       ],
@@ -10570,79 +10570,6 @@
       }
     },
     {
-      "key": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d:specialized_bond_treatment",
-      "product_id": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
-      "product_name": "OLAPLEX No.0 Intensive Bond Building Treatment",
-      "source_role": "specialized_bond_treatment",
-      "source_fingerprint": "b5fd632b2621866e3f570841962f7d709d0df2100005d92e88f5e58772e58f77",
-      "template_keys": [],
-      "exact_workflow_id": "olaplex_no0_companion",
-      "before_visible_step_fingerprint": "e708cb4dee14c73e98b18fa3fcf80e0199dfaf60c00a85c3a6605b2c127b4fb1",
-      "after_visible_step_fingerprint": "8233069e19733567ce9cec2dbe15cbf540ba734715c115b4e3116713f9701f23",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "bondbuilder",
-          "productId": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d"
-        },
-        "sourceRole": "specialized_bond_treatment",
-        "role": "bond_repair",
-        "applicationFamily": "pre_shampoo_booster_plus_treatment",
-        "facts": {
-          "applicationState": "pre_wash_dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "rinse_out",
-          "contactTime": {
-            "kind": "seconds",
-            "seconds": 600
-          },
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "conditioner_after"
-        },
-        "workflowId": "olaplex_no0_companion",
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": "missing_verified_companion",
-        "exactSteps": [
-          {
-            "stepKey": "apply-olaplex-0",
-            "action": "apply_product",
-            "copyDe": "Auf trockenem Haar gleichmäßig vom Ansatz bis in die Spitzen verteilen."
-          },
-          {
-            "stepKey": "wait-olaplex-0",
-            "action": "wait",
-            "copyDe": "10 Minuten einwirken lassen und noch nicht ausspülen."
-          },
-          {
-            "stepKey": "apply-olaplex-3",
-            "action": "apply_product",
-            "copyDe": "Olaplex No.3 Hair Perfector darüber geben und durchkämmen."
-          },
-          {
-            "stepKey": "wait-olaplex-3",
-            "action": "wait",
-            "copyDe": "Weitere 10 Minuten einwirken lassen."
-          },
-          {
-            "stepKey": "rinse-olaplex-0",
-            "action": "rinse",
-            "copyDe": "Gründlich ausspülen und danach Shampoo und Conditioner verwenden."
-          }
-        ],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://olaplex.de/products/olaplex-no-0-intensive-bond-building-hair-treatment",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-10"
-          }
-        ]
-      }
-    },
-    {
       "key": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18:residue_reset",
       "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
       "product_name": "Professional Shampoo Tiefenreinigung",
@@ -11951,7 +11878,7 @@
       "product_id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
       "product_name": "Elvital Fiber Booster Conditioner",
       "source_role": "conditioner_rinse_out",
-      "source_fingerprint": "ef3fc0888fa3a86e0ecb3d7ec20517c85c107d2315f0ea3bda9d4b0c2c8ded1e",
+      "source_fingerprint": "6000344aba4c2ef9cc6cf5bfdc429e67081ffd32bd2cdb7743261b2fba976556",
       "template_keys": [
         "conditioner.standard-rinse-out.v2"
       ],
@@ -13712,7 +13639,7 @@
       "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
       "product_name": "Epres Bond Repair Treatment",
       "source_role": "specialized_bond_treatment",
-      "source_fingerprint": "2985c3c4c6a56933316dbd927c044c8d4434f9e54bcb54efbeddd2f547d710eb",
+      "source_fingerprint": "796694ec55f97ff236cfe4d6ebe29e4c8b353ce7bb57803255489394706a8fd8",
       "template_keys": [],
       "exact_workflow_id": "epres_bond_repair",
       "before_visible_step_fingerprint": "2019a760f43d04ec5e9f2d0e4bb8a0eb99f82e457a10f7cc2d9d58c9e3653614",

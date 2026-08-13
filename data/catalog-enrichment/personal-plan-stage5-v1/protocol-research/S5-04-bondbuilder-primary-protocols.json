@@ -57,6 +57,7 @@
           "conditionerRelationship": "conditioner_after",
           "reapplication": "none",
           "amount": null,
+          "workflowId": "epres_bond_repair",
           "cautions": []
         },
         "steps": [
@@ -147,7 +148,12 @@
           "contactTimeSeconds": 240,
           "conditionerRelationship": null,
           "reapplication": "none",
-          "amount": null,
+          "amount": {
+            "kind": "pumps",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "workflowId": "k18_leave_in_molecular_repair",
           "cautions": []
         },
         "steps": [
@@ -159,7 +165,7 @@
           {
             "stepKey": "apply-k18",
             "action": "apply_product",
-            "copyTemplateDe": "Mit drei Pumpstößen beginnen und gleichmäßig von den mittleren Längen bis in die Spitzen verteilen."
+            "copyTemplateDe": "1–3 Pumpstöße für das gesamte Haar verwenden und von den Spitzen nach oben gleichmäßig einarbeiten."
           },
           {
             "stepKey": "wait-k18",
@@ -186,7 +192,7 @@
       "product_id": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
       "product_name": "OLAPLEX No.0 Intensive Bond Building Treatment",
       "role": "specialized_bond_treatment",
-      "research_status": "verified",
+      "research_status": "retired",
       "sources": [
         {
           "label": "Herstelleranleitung",
@@ -329,6 +335,7 @@
           "conditionerRelationship": "conditioner_after",
           "reapplication": "none",
           "amount": null,
+          "workflowId": "olaplex_no3plus_complete_repair",
           "cautions": []
         },
         "steps": [

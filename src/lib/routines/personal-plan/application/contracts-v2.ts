@@ -1,7 +1,10 @@
 import { z } from "zod"
 
 import {
+  EXACT_APPLICATION_WORKFLOW_IDS_V2,
+  applicationCautionCodeV2Schema,
   applicationDayTypeKeySchema,
+  exactApplicationWorkflowIdV2Schema,
   applicationFamilySchema,
   applicationSequenceAnchorSchema,
   personalPlanCategorySchema,
@@ -10,30 +13,16 @@ import {
   type PersonalPlanCategory,
 } from "./contracts"
 
+export {
+  APPLICATION_CAUTION_CODES_V2,
+  EXACT_APPLICATION_WORKFLOW_IDS_V2,
+  applicationCautionCodeV2Schema,
+  exactApplicationWorkflowIdV2Schema,
+} from "./contracts"
+
 export const APPLICATION_TEMPLATE_VARIABLES_V2 = ["contact_time_de", "max_temperature_c"] as const
 
-export const APPLICATION_CAUTION_CODES_V2 = [
-  "avoid_broken_skin",
-  "avoid_eye_contact",
-  "cosmetic_claim_only",
-  "external_use_only",
-  "flammable_aerosol",
-  "follow_label_time",
-  "stop_on_irritation",
-  "use_in_ventilated_area",
-] as const
-
-export const EXACT_APPLICATION_WORKFLOW_IDS_V2 = [
-  "swiss_o_par_tea_tree_two_pass",
-  "epres_bond_repair",
-  "k18_leave_in_molecular_repair",
-  "olaplex_no0_companion",
-  "olaplex_no3plus_complete_repair",
-] as const
-
 export const applicationTemplateVariableV2Schema = z.enum(APPLICATION_TEMPLATE_VARIABLES_V2)
-export const applicationCautionCodeV2Schema = z.enum(APPLICATION_CAUTION_CODES_V2)
-export const exactApplicationWorkflowIdV2Schema = z.enum(EXACT_APPLICATION_WORKFLOW_IDS_V2)
 
 const FAMILY_CATEGORIES = {
   standard_rinse_out_cleanse: ["shampoo"],
@@ -72,7 +61,6 @@ const EXACT_WORKFLOW_FAMILIES = {
   swiss_o_par_tea_tree_two_pass: "targeted_treatment_shampoo",
   epres_bond_repair: "pre_shampoo_single_treatment",
   k18_leave_in_molecular_repair: "post_shampoo_timed_leave_in",
-  olaplex_no0_companion: "pre_shampoo_booster_plus_treatment",
   olaplex_no3plus_complete_repair: "pre_shampoo_single_treatment",
 } as const satisfies Record<(typeof EXACT_APPLICATION_WORKFLOW_IDS_V2)[number], ApplicationFamily>
 
@@ -298,25 +286,20 @@ export const productApplicationPointerV2Schema = z
         })
       }
     }
-    if (value.workflowId === "olaplex_no0_companion") {
-      if (value.requiredCompanionProductId === null && value.runtimeBlockerCode === null) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "The OLAPLEX No.0 workflow needs a verified companion or an explicit blocker",
-          path: ["requiredCompanionProductId"],
-        })
-      }
-      if (value.requiredCompanionProductId !== null && value.runtimeBlockerCode !== null) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "A blocked workflow cannot name an executable companion",
-          path: ["runtimeBlockerCode"],
-        })
-      }
-    } else if (value.requiredCompanionProductId !== null || value.runtimeBlockerCode !== null) {
+    if (value.requiredCompanionProductId !== null && value.runtimeBlockerCode !== null) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Only the OLAPLEX No.0 workflow may carry a companion relationship",
+        message: "A blocked workflow cannot name an executable companion",
+        path: ["runtimeBlockerCode"],
+      })
+    }
+    if (
+      value.workflowId === null &&
+      (value.requiredCompanionProductId !== null || value.runtimeBlockerCode !== null)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Ordinary product pointers cannot carry workflow dependencies",
         path: ["requiredCompanionProductId"],
       })
     }

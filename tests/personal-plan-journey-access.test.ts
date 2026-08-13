@@ -29,6 +29,7 @@ test("the server-derived frontier admits only contiguous persisted Personal Plan
   assert.deepEqual(access, {
     kind: "personal_plan",
     personalPlanId: "plan-1",
+    activeRoutineVersionId: "routine-1",
     frontier: "stage5",
     nextHref: "/anwendung",
     hasPendingRoutineProposal: true,

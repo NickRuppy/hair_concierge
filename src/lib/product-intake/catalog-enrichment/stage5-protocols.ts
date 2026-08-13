@@ -11,7 +11,11 @@ type ProtocolResearchManifest = {
     product_id: string | null
     product_name: string
     role: string
-    research_status: "verified" | "blocked_missing_direction" | "blocked_identity_or_commercial"
+    research_status:
+      | "verified"
+      | "retired"
+      | "blocked_missing_direction"
+      | "blocked_identity_or_commercial"
     sources: Array<{
       label: string
       url: string

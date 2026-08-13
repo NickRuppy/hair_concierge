@@ -135,7 +135,7 @@ test("V2 rejects category-incompatible family pointers", () => {
   )
 })
 
-test("V2 exact visible steps require one of the five reviewed workflow IDs", () => {
+test("V2 exact visible steps require one of the four reviewed workflow IDs", () => {
   const exact = {
     ...ogxPointer,
     applicationFamily: "targeted_treatment_shampoo",

@@ -11,6 +11,44 @@ import { dryRunProductIntakeReadyForReview } from "../src/lib/product-intake/rev
 const PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__"
 
 function exactProtocol(category: ProductIntakeReviewCategoryKey, role: string) {
+  const semanticRoleBySourceRole: Record<string, string> = {
+    shampoo_everyday: "cleanse",
+    shampoo_dandruff: "cleanse",
+    conditioner_rinse_out: "condition",
+    intensive_conditioning_mask: "intensive_care",
+    post_wash_leave_in: "leave_in",
+    pre_heat_protection: "heat_protection",
+    pre_wash_fibre_treatment: "intensive_care",
+    leave_on_fibre_conditioning: "leave_in",
+    dry_finish: "finish",
+    root_refresh_bridge: "refresh",
+    residue_reset: "reset_cleanse",
+    mineral_reset: "reset_cleanse",
+    specialized_bond_treatment: "bond_repair",
+    scalp_comfort: "scalp_care",
+    scalp_flake_oil_adjunct: "scalp_care",
+    density_claim_tonic: "scalp_care",
+    scalp_exfoliant: "scalp_care",
+  }
+  const familyBySourceRole: Record<string, string> = {
+    shampoo_everyday: "standard_rinse_out_cleanse",
+    shampoo_dandruff: "targeted_treatment_shampoo",
+    conditioner_rinse_out: "standard_rinse_out_conditioning",
+    intensive_conditioning_mask: "post_shampoo_rinse_out_mask",
+    post_wash_leave_in: "post_wash_booster",
+    pre_heat_protection: "pre_heat_damp",
+    pre_wash_fibre_treatment: "pre_wash_lengths_treatment",
+    leave_on_fibre_conditioning: "post_wash_damp_conditioning",
+    dry_finish: "dry_finish",
+    root_refresh_bridge: "aerosol_spray",
+    residue_reset: "reset_cleanse",
+    mineral_reset: "reset_cleanse",
+    specialized_bond_treatment: "pre_shampoo_single_treatment",
+    scalp_comfort: "leave_on_scalp_care",
+    scalp_flake_oil_adjunct: "leave_on_scalp_care",
+    density_claim_tonic: "leave_on_scalp_care",
+    scalp_exfoliant: "rinse_off_scalp_care",
+  }
   return {
     category,
     role,
@@ -31,8 +69,8 @@ function exactProtocol(category: ProductIntakeReviewCategoryKey, role: string) {
       protocolVersion: 1,
       locale: "de",
       scope: { kind: "product", category, productId: PRODUCT_ID_PLACEHOLDER },
-      role: null,
-      applicationFamily: "post_wash_booster",
+      role: semanticRoleBySourceRole[role],
+      applicationFamily: familyBySourceRole[role],
       compatibleDayTypes: ["wash_day"],
       exactGuidanceRequired: true,
       sequence: { anchor: "damp_leave_on", before: [], after: [], conflictsWith: [] },
@@ -599,6 +637,19 @@ test("each supported category emits expected target table operation shapes", () 
       assert.equal(operation.type, "upsert")
       assert.ok(operation.rows.length > 0)
       assert.ok(operation.rows.every((row) => row.product_id === PRODUCT_ID_PLACEHOLDER))
+      if (operation.table === "product_application_protocols") {
+        for (const row of operation.rows) {
+          const pointer = row.guidance_payload_v2 as {
+            schemaVersion?: unknown
+            scope?: { productId?: unknown; category?: unknown }
+            sourceRole?: unknown
+          }
+          assert.equal(pointer.schemaVersion, 2, categoryKey)
+          assert.equal(pointer.scope?.productId, PRODUCT_ID_PLACEHOLDER, categoryKey)
+          assert.equal(pointer.scope?.category, categoryKey, categoryKey)
+          assert.equal(pointer.sourceRole, row.role, categoryKey)
+        }
+      }
     }
   }
 })

@@ -166,7 +166,8 @@ test("journey access is request-cached for shell and guarded page composition", 
   assert.match(routineSource, /getUserId: loadCachedAuthenticatedAppUserId/)
   assert.match(applicationSource, /loadCachedPersonalPlanJourneyAccessForUser/)
   assert.match(applicationSource, /getUserId: loadCachedAuthenticatedAppUserId/)
-  assert.match(applicationSource, /includePendingProposal: false/)
+  assert.match(applicationSource, /journey\.activeRoutineVersionId/)
+  assert.match(applicationSource, /loadPersonalPlanActiveRoutineVersion/)
 })
 
 test("chat input reserves bottom navigation space only inside the Personal Plan shell", () => {
