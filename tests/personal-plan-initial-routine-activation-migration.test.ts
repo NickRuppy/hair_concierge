@@ -15,6 +15,10 @@ const legacyNormalizationFixMigrationPath = new URL(
   "../supabase/migrations/20260813150104_fix_personal_plan_stage4_legacy_normalizer.sql",
   import.meta.url,
 )
+const legacyNormalizationBoundsFixMigrationPath = new URL(
+  "../supabase/migrations/20260813150449_fix_personal_plan_stage4_legacy_normalizer_bounds.sql",
+  import.meta.url,
+)
 
 test("initial activation migration is additive, service-only, and preserves newer outbox work", async () => {
   const source = await readFile(migrationPath, "utf8")
@@ -92,6 +96,42 @@ test("legacy initial normalization correction keeps coalesce as PostgreSQL synta
   )
   assert.match(source, /COALESCE\(p_limit, 100\)/)
   assert.doesNotMatch(source, /pg_catalog\.coalesce/i)
+  assert.match(source, /active_routine_version_id IS NULL/)
+  assert.match(source, /proposal\.status = 'pending'/)
+  assert.match(source, /proposal\.origin = 'stage3_completion'/)
+  assert.match(source, /proposal\.base_routine_version_id IS NULL/)
+  assert.match(source, /proposal\.source_revision = plan\.source_revision/)
+  assert.match(
+    source,
+    /candidate\.source_refined_need_version_id = plan\.current_refined_need_version_id/,
+  )
+  assert.match(
+    source,
+    /portfolio\.refined_need_version_id = candidate\.source_refined_need_version_id/,
+  )
+  assert.match(source, /proposal\.source_fingerprint = candidate\.source_fingerprint/)
+  assert.match(source, /FOR UPDATE OF plan, proposal/)
+  assert.match(source, /pending_routine_proposal_id = accepted\.proposal_id/)
+  assert.match(source, /SET search_path = ''/)
+  assert.match(
+    source,
+    /REVOKE ALL ON FUNCTION public\.personal_plan_stage4_normalize_legacy_initial_proposals_v1[\s\S]*FROM PUBLIC, anon, authenticated/,
+  )
+  assert.match(
+    source,
+    /GRANT EXECUTE ON FUNCTION public\.personal_plan_stage4_normalize_legacy_initial_proposals_v1[\s\S]*TO service_role/,
+  )
+  assert.doesNotMatch(
+    source,
+    /SELECT public\.personal_plan_stage4_normalize_legacy_initial_proposals_v1/,
+  )
+})
+
+test("effective legacy normalizer keeps all conditional expressions unqualified", async () => {
+  const source = await readFile(legacyNormalizationBoundsFixMigrationPath, "utf8")
+
+  assert.match(source, /GREATEST\(1, LEAST\(COALESCE\(p_limit, 100\), 500\)\)/i)
+  assert.doesNotMatch(source, /pg_catalog\.(coalesce|least|greatest)/i)
   assert.match(source, /active_routine_version_id IS NULL/)
   assert.match(source, /proposal\.status = 'pending'/)
   assert.match(source, /proposal\.origin = 'stage3_completion'/)
