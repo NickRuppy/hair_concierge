@@ -201,30 +201,39 @@ function projectAuthorityActions(
   productName?: string,
   recommendationName?: string,
 ): Stage3DecisionAction[] {
-  return evaluation.allowedActions.map((action) => {
+  return evaluation.allowedActions.flatMap<Stage3DecisionAction>((action) => {
     switch (action) {
       case "keep_owned":
-        return { kind: "keep", label: `${productName ?? "Produkt"} weiterverwenden`, productName }
+        return [{ kind: "keep", label: `${productName ?? "Produkt"} weiterverwenden`, productName }]
       case "acknowledge_override":
-        return {
-          kind: "override",
-          label: `${productName ?? "Produkt"} trotzdem behalten`,
-          productName,
-        }
+        return [
+          {
+            kind: "override",
+            label: `${productName ?? "Produkt"} trotzdem behalten`,
+            productName,
+          },
+        ]
       case "plan_recommendation":
-        return {
-          kind: "plan_purchase",
-          label: `${recommendationName ?? "Empfehlung"} einplanen`,
-          productName: recommendationName,
-        }
+        return [
+          {
+            kind: "plan_purchase",
+            label: `${recommendationName ?? "Empfehlung"} einplanen`,
+            productName: recommendationName,
+          },
+        ]
+      case "select_replacement":
+        // This server-only action is intentionally not part of the legacy UI contract.
+        return []
       case "keep_pending":
-        return { kind: "pending", label: "Auf Analyse warten", productName }
+        return [{ kind: "pending", label: "Auf Analyse warten", productName }]
       case "leave_uncovered":
-        return {
-          kind: "skip",
-          label: productName ? `${productName} nicht einplanen` : "Ohne Produkt fortfahren",
-          productName,
-        }
+        return [
+          {
+            kind: "skip",
+            label: productName ? `${productName} nicht einplanen` : "Ohne Produkt fortfahren",
+            productName,
+          },
+        ]
     }
   })
 }

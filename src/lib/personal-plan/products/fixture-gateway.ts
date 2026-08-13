@@ -339,23 +339,48 @@ export function createFixtureStage3Gateway(
     )
     if (!subject) throw new Error("fixture authority subject is unavailable")
     const evaluation = evaluateFixtureDecision(draft, subject)
-    if (!evaluation.allowedActions.includes(input.intent.action as never)) {
+    if (
+      input.intent.action !== "select_replacement" &&
+      !evaluation.allowedActions.includes(input.intent.action as never)
+    ) {
       throw new Error("fixture authority action is unavailable")
     }
     if (
       input.intent.action === "plan_recommendation" &&
       (evaluation.status !== "known" ||
         !evaluation.recommendation ||
+        input.intent.selectedCandidateFactFingerprint !== undefined ||
         input.intent.selectedCandidateId !== evaluation.recommendation.productId)
     ) {
       throw new Error("fixture recommendation candidate is unavailable")
     }
-    if (input.intent.action !== "plan_recommendation" && input.intent.selectedCandidateId) {
+    const selectedReplacement =
+      input.intent.action === "select_replacement"
+        ? (fixtureReplacementCandidates(subject).find(
+            (candidate) => candidate.productId === input.intent.selectedCandidateId,
+          ) ?? null)
+        : null
+    if (
+      input.intent.action === "select_replacement" &&
+      (!selectedReplacement ||
+        input.intent.selectedCandidateFactFingerprint !==
+          `fixture-facts:${selectedReplacement.productId}`)
+    ) {
+      throw new Stage3ProductsGatewayError("stage3_replacement_candidate_invalid", undefined, 409)
+    }
+    if (
+      input.intent.action !== "select_replacement" &&
+      (input.intent.selectedCandidateFactFingerprint !== undefined ||
+        (input.intent.action !== "plan_recommendation" && input.intent.selectedCandidateId))
+    ) {
       throw new Error("fixture recommendation candidate is unexpected")
     }
 
     const next = {
-      ...recordProductDecision(draft, fixtureAuthorityDecision(subject, evaluation, input.intent)),
+      ...recordProductDecision(
+        draft,
+        fixtureAuthorityDecision(draft, subject, evaluation, input.intent, selectedReplacement),
+      ),
       updatedAt: now(),
     }
     drafts.set(next.draftId, next)
@@ -457,9 +482,11 @@ function evaluateFixtureDecision(
 }
 
 function fixtureAuthorityDecision(
+  draft: Stage3ProductDraft,
   subject: Stage3DecisionSubject,
   evaluation: Stage3AuthorityEvaluation,
   intent: Stage3AuthoritySemanticIntent,
+  selectedReplacement: Stage3ProductDecision["recommendation"] = null,
 ): Stage3ProductDecision {
   const known = evaluation.status === "known" ? evaluation : null
   const criteria =
@@ -478,14 +505,69 @@ function fixtureAuthorityDecision(
           ? "owned_override"
           : intent.action === "plan_recommendation"
             ? "planned_purchase"
-            : intent.action === "keep_pending"
-              ? "pending_review"
-              : "unassigned",
+            : intent.action === "select_replacement"
+              ? "planned_purchase"
+              : intent.action === "keep_pending"
+                ? "pending_review"
+                : "unassigned",
     criterionResults: criteria,
     recommendation:
-      intent.action === "plan_recommendation" ? (known?.recommendation ?? null) : null,
+      intent.action === "select_replacement"
+        ? selectedReplacement
+        : intent.action === "plan_recommendation"
+          ? (known?.recommendation ?? null)
+          : null,
     limitationAcknowledged: intent.action === "acknowledge_override",
+    resolutionAction: intent.action,
+    authorityEvidence: {
+      schemaVersion: 1,
+      subjectKey: subject.decisionKey,
+      refinedNeedVersionId: draft.refinedVersionId,
+      refinedInputHash: `fixture-refined:${draft.refinedVersionId}`,
+      authorityVersion: draft.authorityVersions[subject.category]!,
+      productFactFingerprint: known?.productFactFingerprint ?? null,
+      recommendationFactFingerprint:
+        intent.action === "select_replacement" && selectedReplacement
+          ? `fixture-facts:${selectedReplacement.productId}`
+          : (known?.recommendationFactFingerprint ?? null),
+      coverageRuleIds: evaluation.coverageRuleIds,
+    },
   }
+}
+
+function fixtureReplacementCandidates(
+  subject: Stage3DecisionSubject,
+): NonNullable<Stage3ProductDecision["recommendation"]>[] {
+  if (subject.category !== "conditioner") return []
+  return [
+    {
+      recommendationId: `fixture-recommendation:${subject.decisionKey}`,
+      productId: `fixture-recommended:${subject.decisionKey}`,
+      category: subject.category,
+      role: subject.role,
+      displayName: "Leichter Pflege-Conditioner",
+      reason: "Passt besser zum Bedarf.",
+      authorityRuleId: "fixture.conditioner_balance",
+    },
+    {
+      recommendationId: `fixture-replacement-2:${subject.decisionKey}`,
+      productId: `fixture-replacement-2:${subject.decisionKey}`,
+      category: subject.category,
+      role: subject.role,
+      displayName: "Pflege-Conditioner Balance",
+      reason: "Passt besser zum Bedarf.",
+      authorityRuleId: "fixture.conditioner_balance",
+    },
+    {
+      recommendationId: `fixture-replacement-3:${subject.decisionKey}`,
+      productId: `fixture-replacement-3:${subject.decisionKey}`,
+      category: subject.category,
+      role: subject.role,
+      displayName: "Conditioner Leichte Pflege",
+      reason: "Passt besser zum Bedarf.",
+      authorityRuleId: "fixture.conditioner_balance",
+    },
+  ]
 }
 
 function applyMutation(

@@ -14,6 +14,7 @@ import {
   Stage3Shell,
   Stage3SystemState,
   Stage3Transition,
+  type Stage3DecisionAction,
   type Stage3ProductDecisionProjection,
 } from "../src/components/personal-plan-products"
 import { FrequencySliderField } from "../src/components/ui/frequency-slider-field"
@@ -707,4 +708,32 @@ test("unknown and unsupported server evaluations stay explicit and do not acquir
   assert.equal(unknown.criteria?.[0]?.result, "Noch offen")
   assert.equal(unsupported.verdictLabel, "Prüfung nicht verfügbar")
   assert.deepEqual(unsupported.actions, [])
+})
+
+test("server-only replacement selection stays outside the legacy decision action contract", () => {
+  const draft = { products: [] } as unknown as Stage3ProductDraft
+  const subject = {
+    decisionKey: "decision:conditioner:conditioner_rinse_out:capture-1",
+    category: "conditioner" as const,
+    role: "conditioner_rinse_out" as const,
+    capturedProductId: "capture-1",
+    subjectKind: "captured_product" as const,
+  }
+  const projection = authorityEvaluationProjection(draft, subject, {
+    status: "known",
+    category: "conditioner",
+    subjectKey: subject.decisionKey,
+    verdict: "mismatch",
+    criteria: [],
+    allowedActions: ["select_replacement"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  })
+
+  assert.deepEqual(projection.actions, [])
+  // @ts-expect-error select_replacement is server-only and cannot be emitted by legacy UI callers.
+  const legacyAction: Stage3DecisionAction = { kind: "select_replacement", label: "Ersatz wählen" }
+  void legacyAction
 })

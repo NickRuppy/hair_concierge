@@ -539,3 +539,120 @@ test("compiler reads a frozen v3 planned replacement by decision key, not its sh
     ],
   )
 })
+
+test("compiler gives a v3 selected replacement precedence over its pending source identity", async () => {
+  const decisionKey = "decision:heat_protectant:pre_heat_protection:pending-a"
+  const v3Portfolio = parseProposedProductPortfolio({
+    ...portfolio(),
+    schemaVersion: 3,
+    categoryResolutions: [
+      {
+        ...portfolio().categoryResolutions[2]!,
+        decisionKey,
+      },
+    ],
+    ownedProducts: [],
+    plannedPurchases: [
+      {
+        plannedPurchaseId: `planned:${decisionKey}`,
+        sourceDecisionKey: decisionKey,
+        category: "heat_protectant",
+        role: "pre_heat_protection",
+        recommendationId: "replacement-a",
+        productId: "replacement-product-a",
+        displayName: "Hitzeschutz Ersatz",
+        reason: "Verifizierte Auswahl",
+        authorityRuleId: "heat.replacement.v1",
+      },
+    ],
+    retainedOwnedProducts: [],
+  })
+
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSchemaVersion: 3,
+    portfolioSnapshot: v3Portfolio as never,
+  })
+  const payload = candidate.payload as Record<string, any>
+
+  assert.deepEqual(payload.items[0]?.product, {
+    kind: "planned",
+    plannedPurchaseId: `planned:${decisionKey}`,
+    productId: "replacement-product-a",
+    displayName: "Hitzeschutz Ersatz",
+  })
+  assert.equal(
+    payload.items[0]?.assignmentKey,
+    `assignment:heat_protectant:pre_heat_protection:planned:${decisionKey}`,
+  )
+})
+
+test("compiler preserves a v1 pending assignment identity beside a same-role planned purchase", async () => {
+  const pendingDecisionKey = "decision:conditioner:conditioner_rinse_out:pending-a"
+  const plannedDecisionKey = "decision:conditioner:conditioner_rinse_out:planned-b"
+  const legacyPortfolio = parseProposedProductPortfolio({
+    ...portfolio(),
+    categoryResolutions: [
+      {
+        decisionKey: pendingDecisionKey,
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        verdict: "unknown",
+        choiceState: "pending_review",
+        capturedProductId: "captured-pending-a",
+        executable: false,
+        gapPreserved: true,
+      },
+      {
+        decisionKey: plannedDecisionKey,
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        verdict: "ideal",
+        choiceState: "planned_purchase",
+        capturedProductId: null,
+        executable: false,
+        gapPreserved: true,
+      },
+    ],
+    ownedProducts: [],
+    plannedPurchases: [
+      {
+        plannedPurchaseId: "planned-conditioner-b",
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        recommendationId: "recommendation-conditioner-b",
+        productId: "product-conditioner-b",
+        displayName: "Conditioner B",
+        reason: "Geplant",
+        authorityRuleId: "conditioner.v1",
+      },
+    ],
+    pendingProducts: [
+      {
+        capturedProductId: "captured-pending-a",
+        userProductId: "user-pending-a",
+        submissionId: "submission-pending-a",
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        displayName: "Conditioner in Prüfung",
+        reviewStatus: "pending_review",
+      },
+    ],
+    uncoveredRoles: [],
+  })
+
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSnapshot: legacyPortfolio as never,
+  })
+  const items = (candidate.payload as Record<string, any>).items as Array<{
+    sourceDecisionKeys: string[]
+    assignmentKey: string
+  }>
+  const pendingItem = items.find((item) => item.sourceDecisionKeys.includes(pendingDecisionKey))
+
+  assert.equal(
+    pendingItem?.assignmentKey,
+    "assignment:conditioner:conditioner_rinse_out:captured-pending-a",
+  )
+})

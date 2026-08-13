@@ -8,7 +8,10 @@ import {
   type Stage3CategoryRequirement,
   type Stage3ProductDraft,
 } from "../src/lib/personal-plan/products"
-import type { Stage3AuthoritySnapshotV1 } from "../src/lib/personal-plan/products/contracts"
+import {
+  parseProposedProductPortfolio,
+  type Stage3AuthoritySnapshotV1,
+} from "../src/lib/personal-plan/products/contracts"
 
 const now = "2026-08-07T10:00:00.000Z"
 const requirements: Stage3CategoryRequirement[] = [
@@ -32,6 +35,19 @@ const requirements: Stage3CategoryRequirement[] = [
     authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
   },
 ]
+
+function replacementEvidence(decisionKey: string) {
+  return {
+    schemaVersion: 1 as const,
+    subjectKey: decisionKey,
+    refinedNeedVersionId: "refined-v1",
+    refinedInputHash: "refined-input-v1",
+    authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    productFactFingerprint: "facts-current-conditioner",
+    recommendationFactFingerprint: "facts-catalog-conditioner-replacement",
+    coverageRuleIds: ["conditioner.fixture.replacement"],
+  }
+}
 
 function completedDraft(): Stage3ProductDraft {
   return {
@@ -355,6 +371,219 @@ test("pending products enter the portfolio only when the user keeps the pending 
   assert.equal(kept.uncoveredRoles[0]?.reason, "pending_review")
   assert.deepEqual(skipped.pendingProducts, [])
   assert.equal(skipped.uncoveredRoles[0]?.reason, "unassigned")
+})
+
+test("portfolio v3 keeps a pending submission while projecting its selected verified replacement", () => {
+  const base = completedDraft()
+  const pendingProduct = {
+    capturedProductId: "pending-conditioner",
+    userProductId: "user-product-pending-conditioner",
+    identity: {
+      kind: "pending_submission" as const,
+      submissionId: "submission-pending-conditioner",
+      displayName: "Conditioner in Prüfung",
+      category: "conditioner" as const,
+      reviewStatus: "pending_review" as const,
+    },
+    frequencyRange: "weekly_2x" as const,
+    ownership: "owned" as const,
+    source: "intake_fallback" as const,
+  }
+  const decisionKey = "decision:conditioner:conditioner_rinse_out:pending-conditioner"
+  const draft = {
+    ...base,
+    orderedCategories: ["conditioner"],
+    categoryCursor: null,
+    products: [pendingProduct],
+    roleAssignments: [
+      {
+        capturedProductId: pendingProduct.capturedProductId,
+        category: "conditioner" as const,
+        roles: ["conditioner_rinse_out" as const],
+      },
+    ],
+    uncoveredRoles: [],
+    decisions: [
+      {
+        decisionKey,
+        category: "conditioner" as const,
+        role: "conditioner_rinse_out" as const,
+        capturedProductId: pendingProduct.capturedProductId,
+        verdict: "mismatch" as const,
+        choiceState: "planned_purchase" as const,
+        resolutionAction: "select_replacement" as const,
+        authorityEvidence: replacementEvidence(decisionKey),
+        criterionResults: [],
+        recommendation: {
+          recommendationId: "rec-conditioner-replacement",
+          productId: "catalog-conditioner-replacement",
+          category: "conditioner" as const,
+          role: "conditioner_rinse_out" as const,
+          displayName: "Conditioner Ersatz",
+          reason: "Deckt die geplante Routine ab",
+          authorityRuleId: "conditioner.fixture.replacement",
+        },
+        limitationAcknowledged: false,
+      },
+    ],
+    completedCaptureCategories: ["conditioner"],
+    completedDecisionKeys: [decisionKey],
+  } as unknown as Stage3ProductDraft
+
+  const portfolio = createProposedProductPortfolio(draft, [requirements[0]], {
+    portfolioVersionId: "portfolio-pending-replacement",
+    createdAt: now,
+  })
+
+  assert.equal(portfolio.schemaVersion, 3)
+  assert.equal(portfolio.categoryResolutions.length, 1)
+  assert.deepEqual(portfolio.pendingProducts, [
+    {
+      capturedProductId: "pending-conditioner",
+      userProductId: "user-product-pending-conditioner",
+      submissionId: "submission-pending-conditioner",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      displayName: "Conditioner in Prüfung",
+      reviewStatus: "pending_review",
+    },
+  ])
+  assert.deepEqual(portfolio.plannedPurchases, [
+    {
+      plannedPurchaseId: `planned:${decisionKey}`,
+      sourceDecisionKey: decisionKey,
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      recommendationId: "rec-conditioner-replacement",
+      productId: "catalog-conditioner-replacement",
+      displayName: "Conditioner Ersatz",
+      reason: "Deckt die geplante Routine ab",
+      authorityRuleId: "conditioner.fixture.replacement",
+    },
+  ])
+  assert.deepEqual(portfolio.uncoveredRoles, [
+    {
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      reason: "planned_purchase_not_acquired",
+      linkedDecisionKey: decisionKey,
+    },
+    {
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      reason: "pending_review",
+      linkedDecisionKey: decisionKey,
+    },
+  ])
+})
+
+test("portfolio v3 moves a replaced catalog product to retained inventory", () => {
+  const base = completedDraft()
+  const decisionKey = "decision:conditioner:conditioner_rinse_out:conditioner-1"
+  const draft = {
+    ...base,
+    orderedCategories: ["conditioner"],
+    categoryCursor: null,
+    products: [base.products[0]!],
+    roleAssignments: [base.roleAssignments[0]!],
+    uncoveredRoles: [],
+    decisions: [
+      {
+        ...base.decisions[0]!,
+        verdict: "mismatch" as const,
+        choiceState: "planned_purchase" as const,
+        resolutionAction: "select_replacement" as const,
+        authorityEvidence: replacementEvidence(decisionKey),
+        recommendation: {
+          recommendationId: "rec-conditioner-replacement",
+          productId: "catalog-conditioner-replacement",
+          category: "conditioner" as const,
+          role: "conditioner_rinse_out" as const,
+          displayName: "Conditioner Ersatz",
+          reason: "Deckt die geplante Routine ab",
+          authorityRuleId: "conditioner.fixture.replacement",
+        },
+      },
+    ],
+    completedCaptureCategories: ["conditioner"],
+    completedDecisionKeys: [decisionKey],
+  } as unknown as Stage3ProductDraft
+
+  const portfolio = createProposedProductPortfolio(draft, [requirements[0]], {
+    portfolioVersionId: "portfolio-retained-replacement",
+    createdAt: now,
+  })
+
+  assert.equal(portfolio.schemaVersion, 3)
+  assert.deepEqual(portfolio.ownedProducts, [])
+  assert.deepEqual(portfolio.retainedOwnedProducts, [
+    {
+      capturedProductId: "conditioner-1",
+      userProductId: "user-product-conditioner-1",
+      productId: "conditioner-product-1",
+      displayName: "Conditioner A",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      sourceDecisionKey: decisionKey,
+      planStatus: "not_used",
+    },
+  ])
+  assert.deepEqual(
+    portfolio.plannedPurchases.map((purchase) => purchase.plannedPurchaseId),
+    [`planned:${decisionKey}`],
+  )
+})
+
+test("portfolio v3 round-trips a selected replacement beside a legacy planned recommendation", () => {
+  const base = completedDraft()
+  const replacementDecisionKey = "decision:conditioner:conditioner_rinse_out:conditioner-1"
+  const draft = {
+    ...base,
+    decisions: base.decisions.map((decision) =>
+      decision.decisionKey === replacementDecisionKey
+        ? {
+            ...decision,
+            verdict: "mismatch" as const,
+            choiceState: "planned_purchase" as const,
+            resolutionAction: "select_replacement" as const,
+            authorityEvidence: replacementEvidence(replacementDecisionKey),
+            recommendation: {
+              recommendationId: "rec-conditioner-replacement",
+              productId: "catalog-conditioner-replacement",
+              category: "conditioner" as const,
+              role: "conditioner_rinse_out" as const,
+              displayName: "Conditioner Ersatz",
+              reason: "Deckt die geplante Routine ab",
+              authorityRuleId: "conditioner.fixture.replacement",
+            },
+          }
+        : decision,
+    ),
+  } as Stage3ProductDraft
+
+  const portfolio = createProposedProductPortfolio(draft, requirements, {
+    portfolioVersionId: "portfolio-mixed-v3",
+    createdAt: now,
+  })
+  const parsed = parseProposedProductPortfolio(portfolio)
+
+  assert.equal(parsed.schemaVersion, 3)
+  assert.deepEqual(
+    parsed.plannedPurchases.map((purchase) => ({
+      productId: purchase.productId,
+      sourceDecisionKey: purchase.sourceDecisionKey,
+    })),
+    [
+      {
+        productId: "catalog-conditioner-replacement",
+        sourceDecisionKey: replacementDecisionKey,
+      },
+      {
+        productId: "catalog-oil-recommended",
+        sourceDecisionKey: "decision:oil:pre_wash_fibre_treatment:oil-1",
+      },
+    ],
+  )
 })
 
 function productLoadSnapshot(): Stage3AuthoritySnapshotV1 {

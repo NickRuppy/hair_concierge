@@ -8,12 +8,15 @@ import {
   clearPendingStage3RecoveryForOwner,
   classifyPendingStage3RecoveryError,
   createMemoryPendingStage3RecoveryStorage,
+  pendingIntentToAuthorityIntents,
   readPendingStage3Recovery,
   recordPendingStage3RecoveryResend,
   writePendingStage3Recovery,
   type PendingStage3RecoveryIntent,
   type PendingStage3RecoveryScope,
 } from "../../../src/lib/personal-plan/products/pending-recovery"
+import type { Stage3ProductDraft } from "../../../src/lib/personal-plan/products/contracts"
+import { classifyStage3DesiredState } from "../../../src/lib/personal-plan/products/recovery-desired-state"
 
 test("only uncertain transport outcomes enter canonical write recovery", () => {
   assert.equal(
@@ -83,6 +86,12 @@ test("pending recovery serialization stores only opaque ids and bounded actions"
         subjectKey: "oil:gap:pre_wash_fibre_treatment",
         action: "leave_uncovered",
       },
+      {
+        subjectKey: "oil:captured-a:dry_finish",
+        action: "select_replacement",
+        selectedCandidateId: "catalog-oil-replacement",
+        selectedCandidateFactFingerprint: "facts-oil-replacement",
+      },
     ],
   })
 
@@ -91,7 +100,29 @@ test("pending recovery serialization stores only opaque ids and bounded actions"
     .map((key) => storage.getItem(key))
     .find(Boolean)
   assert.ok(raw)
-  assert.doesNotMatch(raw, /display|name|image|fact|explanation|Shampoo|Conditioner|Öl/i)
+  assert.doesNotMatch(raw, /display|name|image|explanation|Shampoo|Conditioner|Öl/i)
+  assert.match(raw, /selectedCandidateFactFingerprint/)
+  assert.deepEqual(readPendingStage3Recovery(storage, scope, 2_001)?.intent, {
+    operation: "decision_batch",
+    expectedRevision: 7,
+    createdAt: 2_000,
+    intents: [
+      {
+        subjectKey: "oil:captured-a:dry_finish",
+        action: "keep_owned",
+      },
+      {
+        subjectKey: "oil:gap:pre_wash_fibre_treatment",
+        action: "leave_uncovered",
+      },
+      {
+        subjectKey: "oil:captured-a:dry_finish",
+        action: "select_replacement",
+        selectedCandidateId: "catalog-oil-replacement",
+        selectedCandidateFactFingerprint: "facts-oil-replacement",
+      },
+    ],
+  })
   assert.deepEqual(Object.keys(JSON.parse(raw)).sort(), [
     "intent",
     "resendAttemptedAt",
@@ -104,6 +135,66 @@ test("pending recovery serialization stores only opaque ids and bounded actions"
     "intents",
     "operation",
   ])
+
+  const recovered = readPendingStage3Recovery(storage, scope, 2_001)?.intent
+  assert.ok(recovered && recovered.operation === "decision_batch")
+  assert.deepEqual(pendingIntentToAuthorityIntents(recovered), [
+    {
+      type: "resolve_decision",
+      subjectKey: "oil:captured-a:dry_finish",
+      action: "keep_owned",
+    },
+    {
+      type: "resolve_decision",
+      subjectKey: "oil:gap:pre_wash_fibre_treatment",
+      action: "leave_uncovered",
+    },
+    {
+      type: "resolve_decision",
+      subjectKey: "oil:captured-a:dry_finish",
+      action: "select_replacement",
+      selectedCandidateId: "catalog-oil-replacement",
+      selectedCandidateFactFingerprint: "facts-oil-replacement",
+    },
+  ])
+})
+
+test("lost replacement responses do not replay after the candidate facts change", () => {
+  const storage = createMemoryPendingStage3RecoveryStorage()
+  writePendingStage3Recovery(storage, scope, {
+    operation: "decision",
+    subjectKey: "decision:oil:dry_finish:owned-oil",
+    action: "select_replacement",
+    selectedCandidateId: "catalog-oil-replacement",
+    selectedCandidateFactFingerprint: "facts-oil-viewed",
+    expectedRevision: 7,
+    createdAt: 2_000,
+  })
+
+  const recovered = readPendingStage3Recovery(storage, scope, 2_001)?.intent
+  assert.ok(recovered && recovered.operation === "decision")
+  const canonicalAfterCatalogChange = {
+    status: "active",
+    decisions: [
+      {
+        decisionKey: recovered.subjectKey,
+        choiceState: "planned_purchase",
+        resolutionAction: "select_replacement",
+        recommendation: { productId: "catalog-oil-replacement" },
+        authorityEvidence: {
+          recommendationFactFingerprint: "facts-oil-current",
+        },
+      },
+    ],
+  } as Stage3ProductDraft
+
+  assert.equal(
+    classifyStage3DesiredState(
+      canonicalAfterCatalogChange,
+      pendingIntentToAuthorityIntents(recovered),
+    ),
+    "different",
+  )
 })
 
 test("pending recovery owner clear does not remove another owner's latest tab intent", () => {

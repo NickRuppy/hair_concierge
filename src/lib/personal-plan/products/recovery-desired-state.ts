@@ -63,6 +63,15 @@ function decisionMatchesIntent(
 ) {
   const action = actionForDecision(decision)
   if (action !== intent.action) return false
+  if (intent.action === "select_replacement") {
+    return (
+      intent.selectedCandidateId !== undefined &&
+      decision.recommendation?.productId === intent.selectedCandidateId &&
+      intent.selectedCandidateFactFingerprint !== undefined &&
+      decision.authorityEvidence?.recommendationFactFingerprint ===
+        intent.selectedCandidateFactFingerprint
+    )
+  }
   return (
     intent.action !== "plan_recommendation" ||
     intent.selectedCandidateId === undefined ||
@@ -73,6 +82,7 @@ function decisionMatchesIntent(
 function actionForDecision(
   decision: Stage3ProductDecision,
 ): Stage3AuthoritySemanticIntent["action"] {
+  if (decision.resolutionAction) return decision.resolutionAction
   switch (decision.choiceState) {
     case "owned_active":
       return "keep_owned"

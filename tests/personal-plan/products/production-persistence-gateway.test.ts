@@ -4,6 +4,7 @@ import test from "node:test"
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
 import {
   createProductionStage3ProductsGateway,
+  Stage3AuthorityMutationError,
   Stage3ProductionUnavailableError,
   type Stage3ProductionPersistence,
 } from "../../../src/lib/personal-plan/products/production-persistence-gateway"
@@ -763,6 +764,105 @@ function conditionerRecommendationFacts(): Stage3AuthorityFactBundle {
     recommendationCandidates: [
       { ...facts.productFacts!, recommendable: true, productId: "recommended-conditioner" },
     ],
+  }
+}
+
+function conditionerReplacementFacts(): Stage3AuthorityFactBundle {
+  return {
+    productFacts: conditionerProductFacts("catalog-a", {
+      displayName: "Zu reichhaltige Pflege",
+      fingerprint: "facts-owned-mismatch",
+      recommendable: false,
+      weight: "rich",
+      proteinMoistureBalance: "protein",
+    }),
+    recommendationCandidates: [
+      conditionerProductFacts("replacement-1", { sortOrder: 1 }),
+      conditionerProductFacts("replacement-2", { sortOrder: 2 }),
+      conditionerProductFacts("replacement-3", { sortOrder: 3 }),
+      conditionerProductFacts("replacement-4", { sortOrder: 4, weight: "medium" }),
+    ],
+    heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
+  }
+}
+
+function conditionerProductFacts(
+  productId: string,
+  overrides: {
+    displayName?: string
+    fingerprint?: string
+    recommendable?: boolean
+    sortOrder?: number
+    weight?: string
+    proteinMoistureBalance?: string
+  } = {},
+) {
+  return {
+    productId,
+    displayName: overrides.displayName ?? productId,
+    category: "conditioner" as const,
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: overrides.recommendable ?? true,
+    suitableThicknesses: ["normal"],
+    knownReaction: false,
+    protocols: [
+      {
+        role: "conditioner_rinse_out" as const,
+        status: "verified_complete" as const,
+        fingerprint: `protocol-${productId}`,
+      },
+    ],
+    factFingerprint: overrides.fingerprint ?? `facts-${productId}`,
+    catalogSortOrder: overrides.sortOrder ?? null,
+    spec: {
+      thickness: "normal",
+      proteinMoistureBalance: overrides.proteinMoistureBalance ?? "moisture",
+      weight: overrides.weight ?? "light",
+      repairSupportLevel: "medium",
+      balanceDirection: "moisture",
+      targetFit: "matched" as const,
+    },
+  }
+}
+
+function selectedReplacementDraft(recommendationFactFingerprint: string): Stage3ProductDraft {
+  const draft = authorityDraft()
+  const decision = {
+    decisionKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+    category: "conditioner" as const,
+    role: "conditioner_rinse_out" as const,
+    capturedProductId: "capture-a",
+    verdict: "mismatch" as const,
+    choiceState: "planned_purchase" as const,
+    resolutionAction: "select_replacement" as const,
+    criterionResults: [],
+    recommendation: {
+      recommendationId: "recommend:replacement-2:conditioner_rinse_out",
+      productId: "replacement-2",
+      category: "conditioner" as const,
+      role: "conditioner_rinse_out" as const,
+      displayName: "replacement-2",
+      reason: "Passt zum Conditioner-Zielprofil.",
+      authorityRuleId: "conditioner.selection.core_fit",
+    },
+    limitationAcknowledged: false,
+    authorityEvidence: {
+      schemaVersion: 1 as const,
+      subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+      refinedNeedVersionId: draft.refinedVersionId,
+      refinedInputHash: draft.authoritySnapshot!.refinedInputHash,
+      authorityVersion: draft.authoritySnapshot!.authorityVersions.conditioner,
+      productFactFingerprint: "facts-owned-mismatch",
+      recommendationFactFingerprint,
+      coverageRuleIds: [],
+    },
+  }
+  return {
+    ...draft,
+    decisions: [decision],
+    completedDecisionKeys: [decision.decisionKey],
+    revision: draft.revision + 1,
   }
 }
 
@@ -1638,6 +1738,182 @@ test("a server-selected conditioner recommendation persists as a planned purchas
   assert.equal(saved[0]?.decisions[0]?.choiceState, "planned_purchase")
   assert.equal(saved[0]?.decisions[0]?.recommendation?.productId, "recommended-conditioner")
   assert.equal(saved[0]?.decisions[0]?.authorityEvidence?.recommendationFactFingerprint, "facts-a")
+})
+
+test("selected replacement candidate #2 and #3 persist exact recommendation evidence", async () => {
+  for (const selectedCandidateId of ["replacement-2", "replacement-3"] as const) {
+    const draft = authorityDraft()
+    const saved: Stage3ProductDraft[] = []
+    const gateway = createProductionStage3ProductsGateway({
+      userId: "owner-a",
+      persistence: {
+        ...persistence(draft),
+        loadAuthorityFacts: async () => conditionerReplacementFacts(),
+        save: async (input) => {
+          saved.push(input.draft)
+          return { outcome: "saved", draft: input.draft }
+        },
+      },
+    })
+
+    const result = await gateway.resolveDecision({
+      draftId: draft.draftId,
+      expectedRevision: draft.revision,
+      intent: {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+        action: "select_replacement",
+        selectedCandidateId,
+        selectedCandidateFactFingerprint: `facts-${selectedCandidateId}`,
+      },
+    })
+
+    assert.equal(result.status, "saved")
+    const decision = saved[0]?.decisions[0]
+    assert.equal(decision?.choiceState, "planned_purchase")
+    assert.equal(decision?.resolutionAction, "select_replacement")
+    assert.equal(decision?.recommendation?.productId, selectedCandidateId)
+    assert.equal(
+      decision?.authorityEvidence?.recommendationFactFingerprint,
+      `facts-${selectedCandidateId}`,
+    )
+    assert.equal(decision?.authorityEvidence?.productFactFingerprint, "facts-owned-mismatch")
+  }
+})
+
+test("selected replacement must be present in the bounded current comparison before save", async () => {
+  const draft = authorityDraft()
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async () => conditionerReplacementFacts(),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  for (const selectedCandidateId of ["replacement-4", "forged"]) {
+    await assert.rejects(
+      () =>
+        gateway.resolveDecision({
+          draftId: draft.draftId,
+          expectedRevision: draft.revision,
+          intent: {
+            type: "resolve_decision",
+            subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+            action: "select_replacement",
+            selectedCandidateId,
+            selectedCandidateFactFingerprint: `facts-${selectedCandidateId}`,
+          },
+        }),
+      (error: unknown) =>
+        error instanceof Stage3AuthorityMutationError &&
+        error.code === "stage3_replacement_candidate_invalid",
+    )
+  }
+  assert.equal(saves, 0)
+})
+
+test("selected replacement rejects changed facts for the same viewed candidate", async () => {
+  const draft = authorityDraft()
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async () => conditionerReplacementFacts(),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.resolveDecision({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+          action: "select_replacement",
+          selectedCandidateId: "replacement-2",
+          selectedCandidateFactFingerprint: "facts-replacement-2-viewed",
+        },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3AuthorityMutationError &&
+      error.code === "stage3_replacement_candidate_invalid",
+  )
+  assert.equal(saves, 0)
+})
+
+test("replacement completion rejects stale recommendation fingerprints before compile", async () => {
+  const draft = selectedReplacementDraft("facts-replacement-2-old")
+  let compileCalls = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadCurrentCatalogProduct: async () => ({
+        userProductId: "owned-a",
+        productId: "catalog-a",
+        displayName: "Current Conditioner",
+        imageUrl: null,
+        category: "conditioner" as const,
+      }),
+      loadAuthorityFacts: async () => conditionerReplacementFacts(),
+    } as unknown as Stage3ProductionPersistence,
+    compiler: {
+      compile: async () => {
+        compileCalls += 1
+        throw new Error("compile must not run for stale replacement")
+      },
+    },
+    stager: {
+      stage: async () => {
+        throw new Error("stage must not run for stale replacement")
+      },
+    },
+  })
+
+  const result = await gateway.complete({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+  })
+
+  assert.equal(result.status, "not_ready")
+  assert.equal(compileCalls, 0)
+})
+
+test("review bundles reuse one authority fact read for evaluation and comparison", async () => {
+  const draft = authorityDraft()
+  let factReads = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async () => {
+        factReads += 1
+        return conditionerReplacementFacts()
+      },
+    },
+  })
+
+  const bundles = await gateway.reviewDecisionBundles({ draftId: draft.draftId })
+
+  assert.equal(factReads, 1)
+  assert.equal(bundles.length, 1)
+  assert.equal(bundles[0]?.authorityEvaluation.subjectKey, bundles[0]?.fitComparison.subjectKey)
+  assert.deepEqual(
+    bundles[0]?.fitComparison.alternatives.map((candidate) => candidate.productId),
+    ["replacement-1", "replacement-2", "replacement-3"],
+  )
 })
 
 test("pending authority decisions distinguish keep_pending from leave_uncovered", async () => {

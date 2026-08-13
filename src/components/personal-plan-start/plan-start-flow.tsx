@@ -13,6 +13,7 @@ import {
   createHttpStage3IntakeClient,
   createHttpStage3ProductsGateway,
 } from "@/lib/personal-plan/products/http-gateway"
+import { stage3BaselineAnalytics } from "@/lib/personal-plan/products/stage3-analytics"
 import type { Stage3AuthorityEvaluation } from "@/lib/personal-plan/products/authority/contracts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import {
@@ -343,6 +344,7 @@ export function PlanStartCustomerJourney({
   const stage2SeedRef = useRef(initialRefinementSession)
   const pendingStage2CompletionRef = useRef<Stage2RefinementSession | null>(null)
   const pendingStage3BootstrapRef = useRef<Stage2RefinementSession | null>(null)
+  const stage3JourneyStartedRef = useRef(false)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
   const [returningToRefinement, setReturningToRefinement] = useState(false)
   const [stage3LoadState, setStage3LoadState] = useState<
@@ -361,6 +363,12 @@ export function PlanStartCustomerJourney({
     },
     [personalPlanId, stage3Gateway],
   )
+  const installNewStage3Bootstrap = useCallback((bootstrap: Stage3Bootstrap) => {
+    setStage3Bootstrap(bootstrap)
+    if (stage3JourneyStartedRef.current) return
+    stage3JourneyStartedRef.current = true
+    stage3BaselineAnalytics.track("personal_plan_stage3_journey_started", {})
+  }, [])
   const handleHandoff = useCallback(
     async ({ handoff, session }: Stage2HandoffPayload) => {
       const bootstrap = await loadPlanStartStage2HandoffBootstrap({
@@ -369,13 +377,13 @@ export function PlanStartCustomerJourney({
         reloadServerFrontier,
       })
       if (!bootstrap) return
-      setStage3Bootstrap(bootstrap)
+      installNewStage3Bootstrap(bootstrap)
       stage2SeedRef.current = session
       setStage3LoadState("idle")
       setReturningToRefinement(false)
       setStage("stage3")
     },
-    [loadStage3Bootstrap, reloadServerFrontier],
+    [installNewStage3Bootstrap, loadStage3Bootstrap, reloadServerFrontier],
   )
 
   const handleProductKindsCorrection = useCallback(
@@ -397,7 +405,7 @@ export function PlanStartCustomerJourney({
         pendingStage2CompletionRef.current = result.pendingCompletionSession
         pendingStage3BootstrapRef.current = result.pendingBootstrapSession
         stage2SeedRef.current = result.session
-        setStage3Bootstrap(result.bootstrap)
+        installNewStage3Bootstrap(result.bootstrap)
         setStage3LoadState("idle")
       } catch (error) {
         if (error instanceof Stage3ProductKindCorrectionError) {
@@ -426,19 +434,19 @@ export function PlanStartCustomerJourney({
         throw new Stage3ProductKindCorrectionError("save_failed")
       }
     },
-    [loadStage3Bootstrap, stage2Gateway],
+    [installNewStage3Bootstrap, loadStage3Bootstrap, stage2Gateway],
   )
 
   const resumeStage3 = useCallback(async () => {
     if (initialJourney.stage !== "stage3") return
     setStage3LoadState("loading")
     try {
-      setStage3Bootstrap(await loadStage3Bootstrap(initialJourney.refinedVersionId))
+      installNewStage3Bootstrap(await loadStage3Bootstrap(initialJourney.refinedVersionId))
       setStage3LoadState("idle")
     } catch (error) {
       setStage3LoadState(stage3LoadRecoveryMode(error))
     }
-  }, [initialJourney, loadStage3Bootstrap])
+  }, [initialJourney, installNewStage3Bootstrap, loadStage3Bootstrap])
 
   useEffect(() => {
     if (initialJourney.stage !== "stage3") return
@@ -446,7 +454,7 @@ export function PlanStartCustomerJourney({
     void loadStage3Bootstrap(initialJourney.refinedVersionId).then(
       (loaded) => {
         if (cancelled) return
-        setStage3Bootstrap(loaded)
+        installNewStage3Bootstrap(loaded)
         setStage3LoadState("idle")
       },
       (error) => {
@@ -456,7 +464,7 @@ export function PlanStartCustomerJourney({
     return () => {
       cancelled = true
     }
-  }, [initialJourney, loadStage3Bootstrap])
+  }, [initialJourney, installNewStage3Bootstrap, loadStage3Bootstrap])
 
   const enterStage1 = useCallback(async () => {
     setStage("stage1")
@@ -517,6 +525,7 @@ export function PlanStartCustomerJourney({
         userId="client-derived"
         gateway={stage3Gateway}
         intakeClient={intakeClient}
+        analytics={stage3BaselineAnalytics}
         onProductKindsCorrection={handleProductKindsCorrection}
         onBackToRefinement={() => {
           setReturningToRefinement(true)

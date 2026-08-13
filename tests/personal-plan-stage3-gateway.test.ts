@@ -482,6 +482,116 @@ test("Labs fixture evaluates and resolves only semantic Stage 3 decision intents
   assert.equal(resolved.draft.decisions[0]?.decisionKey, evaluation?.subjectKey)
 })
 
+test("Labs fixture validates exact replacement candidates without exposing the action to legacy UI", async () => {
+  const subject = gateway()
+  await createDraft(subject)
+  const search = await subject.search({
+    category: "conditioner",
+    query: "condition",
+    requestToken: 1,
+  })
+  assert.equal(search.status, "ready")
+  const firstCapture = await subject.mutate({
+    draftId: "draft-1",
+    expectedRevision: 0,
+    mutation: {
+      type: "capture_catalog_candidate",
+      candidateId: search.result.candidates[0]!.candidateId,
+      frequencyRange: "weekly_2x",
+    },
+  })
+  assert.equal(firstCapture.status, "saved")
+  const captured = await subject.mutate({
+    draftId: "draft-1",
+    expectedRevision: firstCapture.draft.revision,
+    mutation: {
+      type: "capture_catalog_candidate",
+      candidateId: search.result.candidates[1]!.candidateId,
+      frequencyRange: "weekly_2x",
+    },
+  })
+  assert.equal(captured.status, "saved")
+  const assigned = await subject.mutate({
+    draftId: "draft-1",
+    expectedRevision: captured.draft.revision,
+    mutation: {
+      type: "assign_roles",
+      capturedProductId: captured.draft.products[1]!.capturedProductId,
+      category: "conditioner",
+      roles: ["conditioner_rinse_out"],
+    },
+  })
+  assert.equal(assigned.status, "saved")
+  const captureComplete = await subject.mutate({
+    draftId: "draft-1",
+    expectedRevision: assigned.draft.revision,
+    mutation: { type: "complete_capture_category", category: "conditioner" },
+  })
+  assert.equal(captureComplete.status, "saved")
+
+  const [evaluation] = await subject.evaluateDecisions({ draftId: "draft-1" })
+  assert.equal(evaluation?.status, "known")
+  assert.equal(evaluation?.status === "known" ? evaluation.verdict : null, "mismatch")
+  assert.equal(evaluation?.allowedActions.includes("select_replacement"), false)
+  const replacementId = `fixture-replacement-2:${evaluation!.subjectKey}`
+
+  await assert.rejects(
+    subject.resolveDecision({
+      draftId: "draft-1",
+      expectedRevision: captureComplete.draft.revision,
+      intent: {
+        type: "resolve_decision",
+        subjectKey: evaluation!.subjectKey,
+        action: "select_replacement",
+        selectedCandidateId: "fixture-forged-product",
+        selectedCandidateFactFingerprint: "fixture-facts:fixture-forged-product",
+      },
+    }),
+    (error: unknown) =>
+      error instanceof Stage3ProductsGatewayError &&
+      error.code === "stage3_replacement_candidate_invalid" &&
+      error.status === 409,
+  )
+
+  await assert.rejects(
+    subject.resolveDecision({
+      draftId: "draft-1",
+      expectedRevision: captureComplete.draft.revision,
+      intent: {
+        type: "resolve_decision",
+        subjectKey: evaluation!.subjectKey,
+        action: "select_replacement",
+        selectedCandidateId: replacementId,
+        selectedCandidateFactFingerprint: `fixture-facts:${replacementId}:changed`,
+      },
+    }),
+    (error: unknown) =>
+      error instanceof Stage3ProductsGatewayError &&
+      error.code === "stage3_replacement_candidate_invalid" &&
+      error.status === 409,
+  )
+
+  const resolved = await subject.resolveDecision({
+    draftId: "draft-1",
+    expectedRevision: captureComplete.draft.revision,
+    intent: {
+      type: "resolve_decision",
+      subjectKey: evaluation!.subjectKey,
+      action: "select_replacement",
+      selectedCandidateId: replacementId,
+      selectedCandidateFactFingerprint: `fixture-facts:${replacementId}`,
+    },
+  })
+  assert.equal(resolved.status, "saved")
+  assert.equal(resolved.draft.decisions[0]?.choiceState, "planned_purchase")
+  assert.equal(resolved.draft.decisions[0]?.resolutionAction, "select_replacement")
+  assert.equal(resolved.draft.decisions[0]?.recommendation?.productId, replacementId)
+  assert.equal(
+    resolved.draft.decisions[0]?.authorityEvidence?.recommendationFactFingerprint,
+    `fixture-facts:${replacementId}`,
+  )
+})
+
 test("invalidates the whole unfinished draft when the refined version changes", async () => {
   const subject = gateway()
   await createDraft(subject)
