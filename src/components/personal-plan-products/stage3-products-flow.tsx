@@ -33,9 +33,23 @@ import {
 } from "@/lib/personal-plan/products/gateway"
 import {
   createHttpStage3ProductsGateway,
-  parseStage3GatewayErrorCode,
   parseStage3RevisionConflict,
+  stage3GatewayErrorFromResponse,
 } from "@/lib/personal-plan/products/http-gateway"
+import {
+  clearPendingStage3Recovery as clearPendingStage3RecoveryEntry,
+  classifyPendingStage3RecoveryError,
+  createBrowserPendingStage3RecoveryStorage,
+  PendingStage3RecoveryRetryLimitedError,
+  pendingIntentToAuthorityIntents,
+  readPendingStage3Recovery,
+  recordPendingStage3RecoveryResend,
+  writePendingStage3Recovery,
+  type PendingStage3RecoveryIntent,
+  type PendingStage3RecoveryScope,
+  type PendingStage3RecoveryStorage,
+} from "@/lib/personal-plan/products/pending-recovery"
+import { classifyStage3DesiredState } from "@/lib/personal-plan/products/recovery-desired-state"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import type { Stage3Bootstrap } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import {
@@ -184,6 +198,7 @@ export function Stage3ProductsFlow({
   onBackToRefinement,
   onProductKindsCorrection,
   onOpenRoutine,
+  pendingRecoveryStorage: providedPendingRecoveryStorage,
 }: {
   searchDebounceMs?: number
   handoffRecoveryDelayMs?: number
@@ -197,17 +212,19 @@ export function Stage3ProductsFlow({
   onBackToRefinement?: () => void
   onProductKindsCorrection?: (categories: PersonalPlanCategory[]) => Promise<void>
   onOpenRoutine?: (handoff: Stage3RoutineHandoff) => void
+  pendingRecoveryStorage?: PendingStage3RecoveryStorage
 } = {}) {
   const resolvedEntryContext = bootstrap?.entryContext ?? entryContext
   const requirements =
     bootstrap?.requirements ?? resolvedEntryContext?.orderedCategories ?? DEFAULT_REQUIREMENTS
   const personalPlanId = resolvedEntryContext?.personalPlanId ?? "fixture-personal-plan"
   const refinedVersionId = resolvedEntryContext?.refinedVersionId ?? "fixture-refined-version"
-  const gatewayRef = useRef<Stage3UiGateway | null>(null)
-  if (!gatewayRef.current) {
-    gatewayRef.current = providedGateway ?? createHttpStage3ProductsGateway()
-  }
-  const gateway = gatewayRef.current
+  const [gateway] = useState<Stage3UiGateway>(
+    () => providedGateway ?? createHttpStage3ProductsGateway(),
+  )
+  const [pendingRecoveryStorage] = useState<PendingStage3RecoveryStorage>(
+    () => providedPendingRecoveryStorage ?? createBrowserPendingStage3RecoveryStorage(),
+  )
 
   const canReviewProductKinds = Boolean(bootstrap?.entryContext.authoritySnapshot)
   const initialDraft = useMemo(
@@ -248,6 +265,14 @@ export function Stage3ProductsFlow({
       : "decisions",
   )
   const [draft, setDraft] = useState<Stage3ProductDraft>(initialDraft)
+  const recoveryScope = useMemo(
+    () => pendingRecoveryScopeForDraft(initialDraft, personalPlanId),
+    [initialDraft, personalPlanId],
+  )
+  const [pendingRecoveryMode, setPendingRecoveryMode] = useState<"checking" | "manual" | null>(
+    () => (readPendingStage3Recovery(pendingRecoveryStorage, recoveryScope) ? "checking" : null),
+  )
+  const [pendingRecoveryRetryAt, setPendingRecoveryRetryAt] = useState<number | null>(null)
   const [categoryIndex, setCategoryIndex] = useState(() =>
     Math.max(
       0,
@@ -318,6 +343,27 @@ export function Stage3ProductsFlow({
   })
   const currentProducts = categoryCapture.currentProducts
   const localCatalogCaptures = categoryCapture.localCatalogCaptures
+
+  useEffect(() => {
+    const pending = readPendingStage3Recovery(pendingRecoveryStorage, recoveryScope)
+    if (!pending) return
+    let active = true
+    void Promise.resolve().then(async () => {
+      if (!active) return
+      setPendingRecoveryRetryAt(null)
+      setPendingRecoveryMode("checking")
+      try {
+        await recoverPendingIntent(pending.intent, activeDraft)
+      } catch {
+        if (active) setPendingRecoveryMode("manual")
+      }
+    })
+    return () => {
+      active = false
+    }
+    // Pending recovery is intentionally resolved before controls are re-enabled.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (
@@ -461,13 +507,17 @@ export function Stage3ProductsFlow({
 
   const shellSaveStatus = systemIssue
     ? "error"
-    : categoryCapture.queuedCategoryCount > 0
-      ? "saving"
-      : categoryCapture.saveLabel === "Gespeichert"
-        ? "saved"
-        : categoryCapture.saveLabel === "Wird geladen"
-          ? "idle"
-          : "saving"
+    : pendingRecoveryMode
+      ? pendingRecoveryMode === "manual"
+        ? "error"
+        : "saving"
+      : categoryCapture.queuedCategoryCount > 0
+        ? "saving"
+        : categoryCapture.saveLabel === "Gespeichert"
+          ? "saved"
+          : categoryCapture.saveLabel === "Wird geladen"
+            ? "idle"
+            : "saving"
 
   const shell = (children: React.ReactNode, stepLabel: string, onBack?: () => void) => (
     <Stage3Shell
@@ -477,13 +527,42 @@ export function Stage3ProductsFlow({
       totalSteps={requirements.length + 3}
       saveState={{
         status: shellSaveStatus,
-        label: systemIssue ? "Nicht gespeichert" : categoryCapture.saveLabel,
+        label: pendingRecoveryMode
+          ? "Speicherstatus wird geprüft"
+          : systemIssue
+            ? "Nicht gespeichert"
+            : categoryCapture.saveLabel,
       }}
-      onBack={onBack}
+      onBack={pendingRecoveryMode ? undefined : onBack}
     >
       {children}
     </Stage3Shell>
   )
+
+  if (pendingRecoveryMode) {
+    return shell(
+      pendingRecoveryMode === "checking" ? (
+        <Stage3SystemState
+          state="loading"
+          title="Speicherstatus wird geprüft."
+          message="Wir gleichen deinen letzten Schritt mit dem aktuellen Stand ab."
+        />
+      ) : (
+        <Stage3SystemState
+          state="error"
+          title="Speicherstatus noch offen."
+          message={
+            pendingRecoveryRetryAt
+              ? "Der letzte Schritt bleibt gesichert. Prüfe den Status gleich erneut."
+              : "Prüfe den aktuellen Stand erneut, bevor du weiter machst."
+          }
+          actionLabel="Speicherstatus erneut prüfen"
+          onAction={() => void retryPendingRecovery()}
+        />
+      ),
+      "Speichern",
+    )
+  }
 
   if (systemIssue) {
     return shell(
@@ -1026,7 +1105,7 @@ export function Stage3ProductsFlow({
       const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
       if (conflict) return conflict
       if (!response.ok) {
-        throw new Stage3ProductsGatewayError(parseStage3GatewayErrorCode(body))
+        throw stage3GatewayErrorFromResponse(response, body)
       }
       if (!body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
@@ -1106,7 +1185,7 @@ export function Stage3ProductsFlow({
       const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
       if (conflict) return conflict
       if (!response.ok) {
-        throw new Stage3ProductsGatewayError(parseStage3GatewayErrorCode(body))
+        throw stage3GatewayErrorFromResponse(response, body)
       }
       if (!body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
@@ -1133,7 +1212,7 @@ export function Stage3ProductsFlow({
       !ready.refinedVersionId ||
       !ready.productPortfolioVersionId
     ) {
-      handleMutationError(new Error("stage3_routine_handoff_invalid"), () => openRoutine(ready))
+      handleMutationError(new Error("stage3_routine_handoff_invalid"))
       return
     }
     const handoff: Stage3RoutineHandoff = {
@@ -1169,14 +1248,7 @@ export function Stage3ProductsFlow({
       interaction: "candidate_selected",
       resultCountBand: searchResults.length <= 3 ? "1_3" : "4_8",
       selectedCandidatePosition: Math.min(8, candidatePosition + 1) as
-        | 1
-        | 2
-        | 3
-        | 4
-        | 5
-        | 6
-        | 7
-        | 8,
+        1 | 2 | 3 | 4 | 5 | 6 | 7 | 8,
     })
   }
 
@@ -1391,6 +1463,446 @@ export function Stage3ProductsFlow({
     setRoleAssignments({})
   }
 
+  function clearPendingStage3Recovery(sourceDraft: Stage3ProductDraft) {
+    clearPendingStage3RecoveryEntry(
+      pendingRecoveryStorage,
+      pendingRecoveryScopeForDraft(sourceDraft, personalPlanId),
+    )
+  }
+
+  async function retryPendingRecovery() {
+    if (pendingRecoveryRetryAt && pendingRecoveryRetryAt > Date.now()) {
+      setPendingRecoveryMode("manual")
+      return
+    }
+    const pending = readPendingStage3Recovery(pendingRecoveryStorage, recoveryScope)
+    if (!pending) {
+      setPendingRecoveryMode(null)
+      return
+    }
+    setPendingRecoveryRetryAt(null)
+    setPendingRecoveryMode("checking")
+    try {
+      await recoverPendingIntent(pending.intent, activeDraft)
+    } catch (error) {
+      if (error instanceof PendingStage3RecoveryRetryLimitedError) {
+        setPendingRecoveryRetryAt(error.retryAt)
+      }
+      setPendingRecoveryMode("manual")
+    }
+  }
+
+  async function handlePendingRecoveryError(error: unknown, sourceDraft: Stage3ProductDraft) {
+    if (error instanceof Stage3ProductsGatewayError) {
+      const disposition = classifyPendingStage3RecoveryError(error.code)
+      if (disposition !== "reconcile_unknown_outcome") {
+        clearPendingStage3Recovery(sourceDraft)
+        setPendingRecoveryMode(null)
+        if (disposition === "reopen_incomplete_decision") {
+          setPhase("decisions")
+          return
+        }
+        presentTerminalRecoveryError(error, disposition)
+        return
+      }
+    }
+    const pending = readPendingStage3Recovery(
+      pendingRecoveryStorage,
+      pendingRecoveryScopeForDraft(sourceDraft, personalPlanId),
+    )
+    if (!pending) {
+      handleMutationError(error)
+      return
+    }
+    setPendingRecoveryMode("checking")
+    if (error instanceof Stage3ProductsGatewayError && error.code === "rate_limited") {
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation: recoveryAnalyticsOperation(pending.intent),
+        outcome: "rate_limit_wait",
+      })
+      await delay((error.retryAfterSeconds ?? 1) * 1_000)
+    }
+    try {
+      await recoverPendingIntent(pending.intent, sourceDraft)
+    } catch (error) {
+      if (error instanceof PendingStage3RecoveryRetryLimitedError) {
+        setPendingRecoveryRetryAt(error.retryAt)
+      }
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation: recoveryAnalyticsOperation(pending.intent),
+        outcome: "manual_check_required",
+        failurePhase: "response",
+      })
+      setPendingRecoveryMode("manual")
+    }
+  }
+
+  function presentTerminalRecoveryError(
+    error: Stage3ProductsGatewayError,
+    disposition: Exclude<
+      ReturnType<typeof classifyPendingStage3RecoveryError>,
+      "reconcile_unknown_outcome" | "reopen_incomplete_decision"
+    >,
+  ) {
+    if (disposition === "reauthenticate") {
+      setSystemIssue({
+        kind: "error",
+        title: "Deine Sitzung ist abgelaufen.",
+        message: "Melde dich erneut an, bevor du deine Auswahl fortsetzt.",
+        actionLabel: "Erneut anmelden",
+        retry: () => {
+          window.location.href = "/auth"
+        },
+      })
+      return
+    }
+    if (
+      disposition === "reload_authority" ||
+      disposition === "reload_checkpoint" ||
+      disposition === "reconfirm_current_choice"
+    ) {
+      setSystemIssue({
+        kind: "conflict",
+        title:
+          disposition === "reconfirm_current_choice"
+            ? "Die passenden Optionen wurden aktualisiert."
+            : "Dein Plan wurde aktualisiert.",
+        message:
+          disposition === "reconfirm_current_choice"
+            ? "Lade den aktuellen Vergleich und wähle erneut."
+            : "Wir laden den aktuellen Stand, bevor du weitermachst.",
+        actionLabel: "Aktuellen Stand laden",
+        retry: () => window.location.reload(),
+      })
+      return
+    }
+    handleMutationError(error)
+  }
+
+  async function recoverPendingIntent(
+    intent: PendingStage3RecoveryIntent,
+    sourceDraft: Stage3ProductDraft,
+  ) {
+    const canonical = await loadCanonicalStage3Draft(sourceDraft)
+    const canonicalDraft = canonical.draft
+    const operation = recoveryAnalyticsOperation(intent)
+    if (intent.operation === "completion") {
+      if (canonicalDraft.status === "completed") {
+        setPendingRecoveryRetryAt(null)
+        analytics.track("personal_plan_stage3_recovery_outcome", {
+          operation,
+          outcome: "canonical_satisfied",
+        })
+        await resendPendingCompletion(intent, canonicalDraft, { receiptOnly: true })
+        return
+      }
+      await resendPendingCompletion(intent, canonicalDraft)
+      return
+    }
+    const desiredState = classifyRecoveredDesiredState(canonicalDraft, intent)
+    if (desiredState === "satisfied" || desiredState === "completed") {
+      clearPendingStage3Recovery(canonicalDraft)
+      setPendingRecoveryRetryAt(null)
+      setPendingRecoveryMode(null)
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation,
+        outcome: "canonical_satisfied",
+      })
+      await continueAfterRecoveredIntent(intent, canonical)
+      return
+    }
+    if (desiredState === "different") {
+      clearPendingStage3Recovery(canonicalDraft)
+      setPendingRecoveryRetryAt(null)
+      setPendingRecoveryMode(null)
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation,
+        outcome: "canonical_conflict",
+      })
+      await continueAfterRecoveredIntent(intent, canonical)
+      return
+    }
+    if (canonicalDraft.revision > intent.expectedRevision) {
+      if (intent.operation === "decision" || intent.operation === "decision_batch") {
+        const evaluations = await loadAuthorityEvaluations(
+          canonicalDraft,
+          canonical.authorityEvaluations,
+        )
+        if (!pendingDecisionIntentsStillAllowed(canonicalDraft, evaluations, intent)) {
+          clearPendingStage3Recovery(canonicalDraft)
+          setPendingRecoveryMode(null)
+          analytics.track("personal_plan_stage3_recovery_outcome", {
+            operation,
+            outcome: "authority_changed",
+          })
+          setPhase("decisions")
+          return
+        }
+      }
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation,
+        outcome: "authority_changed",
+      })
+    }
+    await resendPendingIntent(intent, canonicalDraft)
+  }
+
+  async function loadCanonicalStage3Draft(sourceDraft: Stage3ProductDraft) {
+    const response = (await gateway.loadOrCreate({
+      draftId: sourceDraft.draftId,
+      userId: sourceDraft.userId,
+      personalPlanId,
+      refinedVersionId,
+      requirements,
+      authoritySnapshot: resolvedEntryContext?.authoritySnapshot,
+    })) as Stage3AuthorityDraftResponse
+    if (
+      response.draft.personalPlanId !== personalPlanId ||
+      response.draft.refinedVersionId !== refinedVersionId
+    ) {
+      throw new Stage3ProductsGatewayError("stale_refined_source")
+    }
+    setDraft(response.draft)
+    categoryCapture.synchronizeRevision(response.draft.revision)
+    categoryCapture.setSaveLabel("Gespeichert")
+    return response
+  }
+
+  async function resendPendingIntent(
+    intent: PendingStage3RecoveryIntent,
+    canonicalDraft: Stage3ProductDraft,
+  ) {
+    if (intent.operation === "decision" || intent.operation === "decision_batch") {
+      const unresolvedKeys = new Set(
+        unresolvedDecisionSubjects(canonicalDraft).map((subject) => subject.decisionKey),
+      )
+      const intents = pendingIntentToAuthorityIntents(intent).filter((item) =>
+        unresolvedKeys.has(item.subjectKey),
+      )
+      if (intents.length === 0) {
+        clearPendingStage3Recovery(canonicalDraft)
+        setPendingRecoveryMode(null)
+        await continueAfterRecoveredIntent(intent, {
+          status: canonicalDraft.status,
+          draft: canonicalDraft,
+          requirements,
+        })
+        return
+      }
+      const nextIntent: PendingStage3RecoveryIntent =
+        intent.operation === "decision"
+          ? {
+              ...intent,
+              expectedRevision: canonicalDraft.revision,
+              createdAt: Date.now(),
+            }
+          : {
+              ...intent,
+              intents: intents.map((item) => ({
+                subjectKey: item.subjectKey,
+                action: item.action,
+                ...(item.selectedCandidateId
+                  ? { selectedCandidateId: item.selectedCandidateId }
+                  : {}),
+              })),
+              expectedRevision: canonicalDraft.revision,
+              createdAt: Date.now(),
+            }
+      const scope = pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId)
+      recordPendingStage3RecoveryResend(pendingRecoveryStorage, scope)
+      writePendingStage3Recovery(pendingRecoveryStorage, scope, nextIntent)
+      const response =
+        intents.length === 1
+          ? await resolveAuthorityDecision({
+              draftId: canonicalDraft.draftId,
+              expectedRevision: canonicalDraft.revision,
+              intent: intents[0]!,
+            })
+          : await resolveAuthorityDecisions({
+              draftId: canonicalDraft.draftId,
+              expectedRevision: canonicalDraft.revision,
+              intents,
+            })
+      if (response.status === "conflict") {
+        clearPendingStage3Recovery(canonicalDraft)
+        handleConflict(response.latestDraft)
+        return
+      }
+      clearPendingStage3Recovery(response.draft)
+      setPendingRecoveryMode(null)
+      setDraft(response.draft)
+      categoryCapture.synchronizeRevision(response.draft.revision)
+      categoryCapture.setSaveLabel("Gespeichert")
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation: recoveryAnalyticsOperation(intent),
+        outcome: "resend_succeeded",
+      })
+      if (hasUnresolvedDecisionSubjects(response.draft)) setPhase("decisions")
+      else void completeFlow(response.draft)
+      return
+    }
+    if (intent.operation === "mutation") {
+      const scope = pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId)
+      recordPendingStage3RecoveryResend(pendingRecoveryStorage, scope)
+      writePendingStage3Recovery(pendingRecoveryStorage, scope, {
+        ...intent,
+        expectedRevision: canonicalDraft.revision,
+        createdAt: Date.now(),
+      })
+      const response = await gateway.mutate({
+        draftId: canonicalDraft.draftId,
+        expectedRevision: canonicalDraft.revision,
+        mutation: { type: "reopen_capture_category", category: intent.subjectKey },
+      })
+      if (response.status === "conflict") {
+        clearPendingStage3Recovery(canonicalDraft)
+        handleConflict(response.latestDraft)
+        return
+      }
+      clearPendingStage3Recovery(response.draft)
+      setPendingRecoveryMode(null)
+      applyReopenedDraft(response.draft, intent.subjectKey)
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation: "reopen",
+        outcome: "resend_succeeded",
+      })
+      return
+    }
+    await resendPendingCompletion(intent, canonicalDraft)
+  }
+
+  async function resendPendingCompletion(
+    intent: Extract<PendingStage3RecoveryIntent, { operation: "completion" }>,
+    canonicalDraft: Stage3ProductDraft,
+    options: { receiptOnly?: boolean } = {},
+  ) {
+    const scope = pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId)
+    if (options.receiptOnly) {
+      if (!gateway.loadCompletionReceipt) {
+        throw new Stage3ProductsGatewayError("temporarily_unavailable")
+      }
+      const response = await gateway.loadCompletionReceipt({ draftId: canonicalDraft.draftId })
+      clearPendingStage3Recovery(response.draft)
+      setPendingRecoveryMode(null)
+      setDraft(response.draft)
+      setCompletion(response)
+      setPhase("handoff")
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation: "completion",
+        outcome: "resend_succeeded",
+      })
+      openRoutine(response)
+      return
+    }
+    if (!options.receiptOnly) {
+      recordPendingStage3RecoveryResend(pendingRecoveryStorage, scope)
+      writePendingStage3Recovery(pendingRecoveryStorage, scope, {
+        ...intent,
+        expectedRevision: canonicalDraft.revision,
+        createdAt: Date.now(),
+      })
+    }
+    const response = await gateway.complete({
+      draftId: canonicalDraft.draftId,
+      expectedRevision: canonicalDraft.revision,
+    })
+    if (response.status === "conflict") {
+      clearPendingStage3Recovery(canonicalDraft)
+      handleConflict(response.latestDraft)
+      return
+    }
+    if (response.status === "not_ready") {
+      clearPendingStage3Recovery(canonicalDraft)
+      setPendingRecoveryMode(null)
+      setPhase("decisions")
+      return
+    }
+    clearPendingStage3Recovery(response.draft)
+    setPendingRecoveryMode(null)
+    setDraft(response.draft)
+    setCompletion(response)
+    setPhase("handoff")
+    analytics.track("personal_plan_stage3_recovery_outcome", {
+      operation: "completion",
+      outcome: "resend_succeeded",
+    })
+    openRoutine(response)
+  }
+
+  async function continueAfterRecoveredIntent(
+    intent: PendingStage3RecoveryIntent,
+    response: Stage3AuthorityDraftResponse,
+  ) {
+    if (intent.operation === "mutation") {
+      applyReopenedDraft(response.draft, intent.subjectKey)
+      return
+    }
+    if (intent.operation === "decision" || intent.operation === "decision_batch") {
+      if (hasUnresolvedDecisionSubjects(response.draft)) {
+        await loadAuthorityEvaluations(response.draft, response.authorityEvaluations)
+        setPhase("decisions")
+      } else {
+        void completeFlow(response.draft)
+      }
+    }
+  }
+
+  function classifyRecoveredDesiredState(
+    canonicalDraft: Stage3ProductDraft,
+    intent: PendingStage3RecoveryIntent,
+  ) {
+    if (intent.operation === "decision" || intent.operation === "decision_batch") {
+      return classifyStage3DesiredState(canonicalDraft, pendingIntentToAuthorityIntents(intent))
+    }
+    if (intent.operation === "mutation") {
+      return classifyStage3DesiredState(canonicalDraft, {
+        type: "reopen_capture_category",
+        category: intent.subjectKey,
+      })
+    }
+    return canonicalDraft.status === "completed" ? "completed" : "missing"
+  }
+
+  function pendingDecisionIntentsStillAllowed(
+    canonicalDraft: Stage3ProductDraft,
+    evaluations: Stage3AuthorityEvaluation[],
+    intent: Extract<PendingStage3RecoveryIntent, { operation: "decision" | "decision_batch" }>,
+  ) {
+    const unresolvedKeys = new Set(
+      unresolvedDecisionSubjects(canonicalDraft).map((subject) => subject.decisionKey),
+    )
+    return pendingIntentToAuthorityIntents(intent).every((item) => {
+      if (!unresolvedKeys.has(item.subjectKey)) return false
+      const evaluation = evaluations.find((candidate) => candidate.subjectKey === item.subjectKey)
+      if (!evaluation?.allowedActions.includes(item.action as never)) return false
+      if (item.action !== "plan_recommendation" || !item.selectedCandidateId) return true
+      return (
+        evaluation.status === "known" &&
+        evaluation.recommendation?.productId === item.selectedCandidateId
+      )
+    })
+  }
+
+  function applyReopenedDraft(nextDraft: Stage3ProductDraft, category: PersonalPlanCategory) {
+    const cursorIndex = requirements.findIndex(
+      (requirement) => requirement.category === nextDraft.categoryCursor,
+    )
+    if (cursorIndex < 0 || nextDraft.categoryCursor !== category) {
+      handleMutationError(new Error("stage3_category_cursor_invalid"))
+      return
+    }
+    setDraft(nextDraft)
+    categoryCapture.synchronizeRevision(nextDraft.revision)
+    categoryCapture.setSaveLabel("Gespeichert")
+    setAuthorityEvaluations([])
+    setAuthorityStatus("idle")
+    setCategoryIndex(cursorIndex)
+    setQuery("")
+    setSearchResults([])
+    setSearchStatus("idle")
+    setPhase("capture")
+  }
+
   async function chooseDecision(
     decisionKey: string,
     action: Stage3DecisionAction,
@@ -1418,10 +1930,7 @@ export function Stage3ProductsFlow({
       !semanticAction ||
       !evaluation.allowedActions.includes(semanticAction as never)
     ) {
-      handleMutationError(
-        new Error("stage3_authority_action_unavailable"),
-        () => void chooseDecision(decisionKey, action, sourceDraft),
-      )
+      handleMutationError(new Error("stage3_authority_action_unavailable"))
       finishDecisionSubmission()
       return
     }
@@ -1432,6 +1941,18 @@ export function Stage3ProductsFlow({
         ? evaluation.recommendation.productId
         : undefined,
     )
+    writePendingStage3Recovery(
+      pendingRecoveryStorage,
+      pendingRecoveryScopeForDraft(sourceDraft, personalPlanId),
+      {
+        operation: "decision",
+        subjectKey: intent.subjectKey,
+        action: intent.action,
+        ...(intent.selectedCandidateId ? { selectedCandidateId: intent.selectedCandidateId } : {}),
+        expectedRevision: sourceDraft.revision,
+        createdAt: Date.now(),
+      },
+    )
     try {
       const response = await resolveAuthorityDecision({
         draftId: sourceDraft.draftId,
@@ -1440,12 +1961,11 @@ export function Stage3ProductsFlow({
       })
       if (response.status === "conflict") {
         finishDecisionSubmission()
-        return handleConflict(
-          response.latestDraft,
-          () => void chooseDecision(decisionKey, action, response.latestDraft),
-        )
+        clearPendingStage3Recovery(sourceDraft)
+        return handleConflict(response.latestDraft)
       }
       const nextDraft = response.draft
+      clearPendingStage3Recovery(sourceDraft)
       setDraft(nextDraft)
       categoryCapture.setSaveLabel("Gespeichert")
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
@@ -1463,7 +1983,7 @@ export function Stage3ProductsFlow({
       finishDecisionSubmission()
     } catch (error) {
       finishDecisionSubmission()
-      handleMutationError(error, () => void chooseDecision(decisionKey, action, sourceDraft))
+      await handlePendingRecoveryError(error, sourceDraft)
     }
   }
 
@@ -1476,21 +1996,37 @@ export function Stage3ProductsFlow({
         offset < clearFits.length;
         offset += STAGE3_AUTHORITY_DECISION_BATCH_LIMIT
       ) {
+        const intents = clearFits
+          .slice(offset, offset + STAGE3_AUTHORITY_DECISION_BATCH_LIMIT)
+          .map(({ subject }) => ({
+            type: "resolve_decision" as const,
+            subjectKey: subject.decisionKey,
+            action: "keep_owned" as const,
+          }))
+        writePendingStage3Recovery(
+          pendingRecoveryStorage,
+          pendingRecoveryScopeForDraft(nextDraft, personalPlanId),
+          {
+            operation: "decision_batch",
+            intents: intents.map((intent) => ({
+              subjectKey: intent.subjectKey,
+              action: intent.action,
+            })),
+            expectedRevision: nextDraft.revision,
+            createdAt: Date.now(),
+          },
+        )
         const response = await resolveAuthorityDecisions({
           draftId: nextDraft.draftId,
           expectedRevision: nextDraft.revision,
-          intents: clearFits
-            .slice(offset, offset + STAGE3_AUTHORITY_DECISION_BATCH_LIMIT)
-            .map(({ subject }) => ({
-              type: "resolve_decision",
-              subjectKey: subject.decisionKey,
-              action: "keep_owned",
-            })),
+          intents,
         })
         if (response.status === "conflict") {
           finishDecisionSubmission()
-          return handleConflict(response.latestDraft, () => setPhase("decisions"))
+          clearPendingStage3Recovery(nextDraft)
+          return handleConflict(response.latestDraft)
         }
+        clearPendingStage3Recovery(nextDraft)
         nextDraft = response.draft
         setDraft(nextDraft)
       }
@@ -1501,7 +2037,7 @@ export function Stage3ProductsFlow({
       finishDecisionSubmission()
     } catch (error) {
       finishDecisionSubmission()
-      handleMutationError(error, () => setPhase("decisions"))
+      await handlePendingRecoveryError(error, nextDraft)
     }
   }
 
@@ -1518,21 +2054,37 @@ export function Stage3ProductsFlow({
         offset += STAGE3_AUTHORITY_DECISION_BATCH_LIMIT
       ) {
         const batch = outcomes.slice(offset, offset + STAGE3_AUTHORITY_DECISION_BATCH_LIMIT)
+        const intents = automaticOutcomeIntents(batch)
         categoryCapture.setSaveLabel(
           `${Math.min(offset + batch.length, outcomes.length)} von ${outcomes.length} gespeichert`,
+        )
+        writePendingStage3Recovery(
+          pendingRecoveryStorage,
+          pendingRecoveryScopeForDraft(nextDraft, personalPlanId),
+          {
+            operation: "decision_batch",
+            intents: intents.map((intent) => ({
+              subjectKey: intent.subjectKey,
+              action: intent.action,
+              ...(intent.selectedCandidateId
+                ? { selectedCandidateId: intent.selectedCandidateId }
+                : {}),
+            })),
+            expectedRevision: nextDraft.revision,
+            createdAt: Date.now(),
+          },
         )
         const response = await resolveAuthorityDecisions({
           draftId: nextDraft.draftId,
           expectedRevision: nextDraft.revision,
-          intents: automaticOutcomeIntents(batch),
+          intents,
         })
         if (response.status === "conflict") {
           finishDecisionSubmission()
-          return handleConflict(
-            response.latestDraft,
-            () => void prepareDecisionPhase(response.latestDraft),
-          )
+          clearPendingStage3Recovery(nextDraft)
+          return handleConflict(response.latestDraft)
         }
+        clearPendingStage3Recovery(nextDraft)
         nextDraft = response.draft
         setDraft(nextDraft)
       }
@@ -1544,7 +2096,7 @@ export function Stage3ProductsFlow({
       else void completeFlow(nextDraft)
     } catch (error) {
       finishDecisionSubmission()
-      handleMutationError(error, () => void prepareDecisionPhase(nextDraft))
+      await handlePendingRecoveryError(error, nextDraft)
     }
   }
 
@@ -1566,25 +2118,38 @@ export function Stage3ProductsFlow({
   }
 
   async function reopenCategory(category: PersonalPlanCategory) {
-    await saveMutation({ type: "reopen_capture_category", category }, (nextDraft) => {
-      const cursorIndex = requirements.findIndex(
-        (requirement) => requirement.category === nextDraft.categoryCursor,
-      )
-      if (cursorIndex < 0) {
-        handleMutationError(
-          new Error("stage3_category_cursor_invalid"),
-          () => void reopenCategory(category),
-        )
-        return
+    if (saveMutationInFlight.current) return
+    saveMutationInFlight.current = true
+    categoryCapture.setSaveLabel("Wird gespeichert")
+    writePendingStage3Recovery(
+      pendingRecoveryStorage,
+      pendingRecoveryScopeForDraft(activeDraft, personalPlanId),
+      {
+        operation: "mutation",
+        action: "reopen_capture_category",
+        subjectKey: category,
+        expectedRevision: activeDraft.revision,
+        createdAt: Date.now(),
+      },
+    )
+    try {
+      const response = await gateway.mutate({
+        draftId: activeDraft.draftId,
+        expectedRevision: activeDraft.revision,
+        mutation: { type: "reopen_capture_category", category },
+      })
+      if (response.status === "conflict") {
+        clearPendingStage3Recovery(activeDraft)
+        return handleConflict(response.latestDraft)
       }
-      setAuthorityEvaluations([])
-      setAuthorityStatus("idle")
-      setCategoryIndex(cursorIndex)
-      setQuery("")
-      setSearchResults([])
-      setSearchStatus("idle")
-      setPhase("capture")
-    })
+      clearPendingStage3Recovery(activeDraft)
+      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
+      applyReopenedDraft(response.draft, category)
+    } catch (error) {
+      await handlePendingRecoveryError(error, activeDraft)
+    } finally {
+      saveMutationInFlight.current = false
+    }
   }
 
   async function reopenPreviousCategory(category: PersonalPlanCategory) {
@@ -1606,16 +2171,27 @@ export function Stage3ProductsFlow({
     completionInFlight.current = true
     try {
       await categoryCapture.drainQueuedCategories()
+      writePendingStage3Recovery(
+        pendingRecoveryStorage,
+        pendingRecoveryScopeForDraft(sourceDraft, personalPlanId),
+        {
+          operation: "completion",
+          expectedRevision: sourceDraft.revision,
+          createdAt: Date.now(),
+        },
+      )
       const response = await gateway.complete({
         draftId: sourceDraft.draftId,
         expectedRevision: sourceDraft.revision,
       })
       if (response.status === "conflict") {
         completionInFlight.current = false
-        return handleConflict(response.latestDraft, () => void completeFlow(response.latestDraft))
+        clearPendingStage3Recovery(sourceDraft)
+        return handleConflict(response.latestDraft)
       }
       if (response.status === "not_ready") {
         completionInFlight.current = false
+        clearPendingStage3Recovery(sourceDraft)
         setSystemIssue({
           kind: "error",
           title: "Deine Auswahl ist noch nicht vollständig.",
@@ -1627,6 +2203,7 @@ export function Stage3ProductsFlow({
         })
         return
       }
+      clearPendingStage3Recovery(sourceDraft)
       setDraft(response.draft)
       categoryCapture.clearCompletedDraftQueue(sourceDraft, response.draft)
       setCompletion(response)
@@ -1643,7 +2220,7 @@ export function Stage3ProductsFlow({
       openRoutine(response)
     } catch (error) {
       completionInFlight.current = false
-      handleMutationError(error, () => void completeFlow(sourceDraft))
+      await handlePendingRecoveryError(error, sourceDraft)
     }
   }
 
@@ -1661,38 +2238,35 @@ export function Stage3ProductsFlow({
         expectedRevision: sourceDraft.revision,
         mutation,
       })
-      if (response.status === "conflict")
-        return handleConflict(
-          response.latestDraft,
-          () => void saveMutation(mutation, afterSave, response.latestDraft),
-        )
+      if (response.status === "conflict") return handleConflict(response.latestDraft)
       setDraft(response.draft)
       categoryCapture.synchronizeRevision(response.draft.revision)
       categoryCapture.setSaveLabel("Gespeichert")
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       afterSave?.(response.draft)
     } catch (error) {
-      handleMutationError(error, () => void saveMutation(mutation, afterSave, sourceDraft))
+      handleMutationError(error)
     } finally {
       saveMutationInFlight.current = false
     }
   }
 
-  function handleConflict(latestDraft: Stage3ProductDraft, retry: () => void) {
+  function handleConflict(latestDraft: Stage3ProductDraft) {
     setDraft(latestDraft)
+    analytics.track("personal_plan_stage3_save_outcome", { outcome: "conflict" })
     setSystemIssue({
       kind: "conflict",
       title: "Deine Auswahl wurde zwischenzeitlich aktualisiert.",
       message: "Wir haben den neuesten Stand geladen. Versuche deine letzte Auswahl erneut.",
+      actionLabel: "Weiter prüfen",
       retry: () => {
         setSystemIssue(null)
-        analytics.track("personal_plan_stage3_save_outcome", { outcome: "conflict" })
-        retry()
+        setPhase(latestDraft.pass === "product_capture" ? "capture" : "decisions")
       },
     })
   }
 
-  function handleMutationError(error: unknown, retry: () => void) {
+  function handleMutationError(error: unknown) {
     if (error instanceof Stage3ProductsGatewayError && error.code === "stale_refined_source") {
       setSystemIssue({
         kind: "conflict",
@@ -1703,6 +2277,18 @@ export function Stage3ProductsFlow({
       })
       return
     }
+    if (isCategoryCaptureRetryLimitedError(error)) {
+      setSystemIssue({
+        kind: "error",
+        title: "Speicherstatus noch offen.",
+        message: "Der letzte Produkt-Schritt bleibt gesichert. Prüfe den Status gleich erneut.",
+        actionLabel: "Speicherstatus erneut prüfen",
+        retry: () => {
+          if (Date.now() >= error.retryAt) window.location.reload()
+        },
+      })
+      return
+    }
     const message = "Die Auswahl konnte nicht gespeichert werden."
     setSystemIssue({
       kind: "error",
@@ -1710,8 +2296,6 @@ export function Stage3ProductsFlow({
       message,
       retry: () => {
         setSystemIssue(null)
-        analytics.track("personal_plan_stage3_save_outcome", { outcome: "retry" })
-        retry()
       },
     })
   }
@@ -1795,6 +2379,37 @@ function sameProductKinds(
     normalizedLeft.length === normalizedRight.length &&
     normalizedLeft.every((category, index) => category === normalizedRight[index])
   )
+}
+
+function pendingRecoveryScopeForDraft(
+  draft: Stage3ProductDraft,
+  personalPlanId: string,
+): PendingStage3RecoveryScope {
+  return {
+    ownerId: draft.userId,
+    personalPlanId,
+    draftId: draft.draftId,
+  }
+}
+
+function recoveryAnalyticsOperation(
+  intent: PendingStage3RecoveryIntent,
+): "reopen" | "decision" | "decision_batch" | "completion" {
+  if (intent.operation === "mutation") return "reopen"
+  return intent.operation
+}
+
+function isCategoryCaptureRetryLimitedError(error: unknown): error is Error & { retryAt: number } {
+  return (
+    error instanceof Error &&
+    error.name === "CategoryCaptureRetryLimitedError" &&
+    "retryAt" in error &&
+    typeof error.retryAt === "number"
+  )
+}
+
+function delay(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms))
 }
 
 function createStableIdempotencyKey(): string {

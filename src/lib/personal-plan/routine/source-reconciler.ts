@@ -34,7 +34,7 @@ export type RoutineSourceReconciliationResult =
 
 function plannedAssignmentOperations(input: {
   routine: RoutineCompiledPayload
-  plannedPurchaseId: string
+  plannedPurchaseIds: ReadonlySet<string>
   userProduct: RoutineSourceUserProduct
 }): RoutineEditOperation[] {
   const capturedProductId = `acquired:${input.userProduct.id}`
@@ -43,7 +43,7 @@ function plannedAssignmentOperations(input: {
       .filter(
         (assignment) =>
           assignment.productRef.kind === "planned" &&
-          assignment.productRef.plannedPurchaseId === input.plannedPurchaseId,
+          input.plannedPurchaseIds.has(assignment.productRef.plannedPurchaseId),
       )
       .map(
         (assignment) =>
@@ -61,8 +61,8 @@ function plannedAssignmentOperations(input: {
 }
 
 /**
- * Reconciles only the safe V1 automatic transition: an exact planned catalog
- * recommendation that the owner explicitly declared as acquired. Product
+ * Reconciles only the safe automatic transition: exact planned catalog
+ * recommendations that the owner explicitly declared as acquired. Product
  * review resolution still needs its own fit-decision authority and is not
  * guessed here.
  */
@@ -81,11 +81,12 @@ export function reconcileRoutineUserProductSource(input: {
     // retryable until the authoritative review resolves it.
     return { status: "invalid_source", reason: "unresolved_product_review" }
   }
-  const planned = catalogProductId
-    ? input.portfolio.plannedPurchases.find((entry) => entry.productId === catalogProductId)
-    : undefined
-  if (!planned) return { status: "no_semantic_change" }
-  if (planned.category !== input.userProduct.category) {
+  const productMatches = catalogProductId
+    ? input.portfolio.plannedPurchases.filter((entry) => entry.productId === catalogProductId)
+    : []
+  if (productMatches.length === 0) return { status: "no_semantic_change" }
+  const planned = productMatches.filter((entry) => entry.category === input.userProduct.category)
+  if (planned.length === 0) {
     return { status: "invalid_source", reason: "category_mismatch" }
   }
   if (
@@ -98,7 +99,7 @@ export function reconcileRoutineUserProductSource(input: {
 
   const operations = plannedAssignmentOperations({
     routine: input.routine,
-    plannedPurchaseId: planned.plannedPurchaseId,
+    plannedPurchaseIds: new Set(planned.map((entry) => entry.plannedPurchaseId)),
     userProduct: input.userProduct,
   })
   if (operations.length === 0) return { status: "no_semantic_change" }
@@ -132,10 +133,31 @@ export function reconcileRoutineUserProductSource(input: {
   )
   const capturedProductId = `acquired:${input.userProduct.id}`
   const portfolio = structuredClone(input.portfolio)
+  const appliedAssignmentKeys = new Set(
+    operations
+      .filter(
+        (operation): operation is Extract<RoutineEditOperation, { kind: "assignment_replace" }> =>
+          operation.kind === "assignment_replace",
+      )
+      .map((operation) => operation.assignmentKey),
+  )
+  const appliedPlannedPurchaseIds = new Set(
+    input.routine.intent.categories.flatMap((category) =>
+      category.assignments.flatMap((assignment) => {
+        if (
+          !appliedAssignmentKeys.has(assignment.assignmentKey) ||
+          assignment.productRef.kind !== "planned"
+        ) {
+          return []
+        }
+        return [assignment.productRef.plannedPurchaseId]
+      }),
+    ),
+  )
   portfolio.portfolioVersionId = "pending-sql-assignment"
   portfolio.createdAt = "pending-sql-assignment"
   portfolio.plannedPurchases = portfolio.plannedPurchases.filter(
-    (entry) => entry.plannedPurchaseId !== planned.plannedPurchaseId,
+    (entry) => !appliedPlannedPurchaseIds.has(entry.plannedPurchaseId),
   )
   portfolio.uncoveredRoles = portfolio.uncoveredRoles.filter(
     (entry) => !decisionKeys.has(entry.linkedDecisionKey),
@@ -151,19 +173,31 @@ export function reconcileRoutineUserProductSource(input: {
         }
       : resolution,
   )
-  portfolio.ownedProducts.push({
-    capturedProductId,
-    userProductId: input.userProduct.id,
-    productId: catalogProductId,
-    displayName: input.userProduct.displayName,
-    category: planned.category,
-    role: planned.role,
-    // Acquisition establishes ownership, not a reported usage cadence. The
-    // Routine cadence remains separately frozen in the immutable intent.
-    frequencyRange: null,
-    choiceState: "owned_active",
-    sourceDecisionKey: [...decisionKeys][0] ?? `acquisition:${planned.plannedPurchaseId}`,
-  })
+  for (const decisionKey of decisionKeys) {
+    const plannedEntry = planned.find((entry) =>
+      input.portfolio.schemaVersion === 3
+        ? entry.sourceDecisionKey === decisionKey
+        : entry.category === input.userProduct.category &&
+          entry.role ===
+            input.portfolio.categoryResolutions.find(
+              (resolution) => resolution.decisionKey === decisionKey,
+            )?.role,
+    )
+    if (!plannedEntry) continue
+    portfolio.ownedProducts.push({
+      capturedProductId,
+      userProductId: input.userProduct.id,
+      productId: catalogProductId,
+      displayName: input.userProduct.displayName,
+      category: plannedEntry.category,
+      role: plannedEntry.role,
+      // Acquisition establishes ownership, not a reported usage cadence. The
+      // Routine cadence remains separately frozen in the immutable intent.
+      frequencyRange: null,
+      choiceState: "owned_active",
+      sourceDecisionKey: decisionKey,
+    })
+  }
 
   return {
     status: "changed",

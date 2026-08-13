@@ -1,0 +1,1018 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 · Produktvergleich und sichere Wiederherstellung</title>
+    <style>
+      :root {
+        --ink: #342c32;
+        --sub: #7b7479;
+        --line: #e8e0e4;
+        --soft: #f8f4f6;
+        --plum: #4d2d70;
+        --violet: #7654aa;
+        --green: #3e7d56;
+        --green-soft: #edf7f0;
+        --coral: #df6070;
+        --coral-dark: #c84f60;
+        --warning: #a36a18;
+        --warning-soft: #fff8e8;
+        --danger: #a84852;
+        --danger-soft: #fff3f4;
+        --shadow: 0 18px 55px rgba(53, 38, 49, 0.12);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: linear-gradient(135deg, #f8f2f5, #f4f0f8);
+        font:
+          15px/1.45 Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button {
+        color: inherit;
+        font: inherit;
+      }
+      .board {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 34px 20px 50px;
+      }
+      .intro {
+        max-width: 850px;
+        margin: 0 auto 24px;
+      }
+      .eyebrow {
+        color: var(--violet);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 8px 0 8px;
+        font:
+          700 clamp(28px, 4vw, 46px)/1.06 Georgia,
+          serif;
+        color: #2f183f;
+      }
+      .intro p {
+        margin: 0;
+        color: var(--sub);
+        max-width: 760px;
+      }
+      .states {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      .state-button {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: white;
+        padding: 9px 13px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 750;
+      }
+      .state-button[aria-pressed="true"] {
+        color: white;
+        border-color: var(--plum);
+        background: var(--plum);
+      }
+      .stage {
+        display: grid;
+        grid-template-columns: minmax(0, 430px) minmax(280px, 1fr);
+        gap: 28px;
+        align-items: start;
+        justify-content: center;
+      }
+      .phone {
+        position: relative;
+        width: 100%;
+        min-height: 770px;
+        overflow: hidden;
+        border: 1px solid rgba(52, 44, 50, 0.14);
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: var(--shadow);
+      }
+      .topbar {
+        height: 68px;
+        display: grid;
+        grid-template-columns: 48px 1fr 95px;
+        align-items: center;
+        gap: 8px;
+        padding: 0 18px;
+        border-bottom: 1px solid var(--line);
+        background: #fffdfd;
+      }
+      .back {
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: white;
+        font-size: 27px;
+        cursor: pointer;
+      }
+      .back:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .brand {
+        text-align: center;
+        color: var(--plum);
+        font:
+          700 27px/1 Georgia,
+          serif;
+      }
+      .save {
+        text-align: right;
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 7px;
+        padding: 14px 20px 8px;
+      }
+      .steps i {
+        height: 4px;
+        border-radius: 999px;
+        background: #ded7dc;
+      }
+      .steps i:nth-child(-n + 2) {
+        background: #805cad;
+      }
+      .steps i:nth-child(3) {
+        background: var(--plum);
+      }
+      .content {
+        padding: 18px 20px 112px;
+      }
+      .category {
+        color: var(--violet);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin: 5px 0 5px;
+        font:
+          700 31px/1.08 Georgia,
+          serif;
+        color: #30272d;
+      }
+      .lead {
+        margin: 0 0 17px;
+        color: var(--sub);
+      }
+      .notice {
+        display: none;
+        margin: 0 0 13px;
+        padding: 11px 12px;
+        border: 1px solid #ead6a6;
+        border-radius: 13px;
+        background: var(--warning-soft);
+        color: #765019;
+        font-size: 13px;
+        font-weight: 680;
+      }
+      .products {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .product {
+        min-height: 132px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+        padding: 13px;
+        text-align: left;
+        cursor: pointer;
+      }
+      .product[aria-pressed="true"] {
+        box-shadow: 0 8px 22px rgba(53, 38, 49, 0.09);
+        transform: translateY(-1px);
+      }
+      .product.mine[aria-pressed="true"] {
+        border-color: rgba(62, 125, 86, 0.48);
+      }
+      .product.ideal[aria-pressed="true"] {
+        border-color: rgba(77, 45, 112, 0.45);
+      }
+      .bottle {
+        display: grid;
+        width: 44px;
+        height: 58px;
+        margin-bottom: 9px;
+        place-items: center;
+        border-radius: 9px 9px 14px 14px;
+        color: white;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+      }
+      .mine .bottle {
+        background: linear-gradient(#e4a64c, #bd6a32);
+      }
+      .ideal .bottle {
+        background: linear-gradient(#87c9dc, #4f9db8);
+      }
+      .identity {
+        display: block;
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .ideal .identity {
+        color: var(--plum);
+      }
+      .product strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 13px;
+        line-height: 1.18;
+      }
+      .product small {
+        color: var(--sub);
+        font-size: 11px;
+      }
+      .alt-nav {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+        margin: 9px 2px 13px;
+        color: var(--sub);
+        font-size: 11px;
+        font-weight: 750;
+      }
+      .alt-nav button {
+        display: grid;
+        width: 25px;
+        height: 25px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+      }
+      .comparison {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+      }
+      .compare-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .compare-head strong {
+        font-size: 14px;
+      }
+      .legend {
+        display: flex;
+        gap: 10px;
+        color: var(--sub);
+        font-size: 10px;
+      }
+      .legend i {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        margin-right: 4px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .legend span:last-child i {
+        border-radius: 2px;
+        background: var(--plum);
+        transform: rotate(45deg);
+      }
+      .row {
+        padding: 13px 14px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .row:last-child {
+        border-bottom: 0;
+      }
+      .row-title {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .row-title span {
+        color: var(--green);
+        font-size: 11px;
+      }
+      .rail {
+        position: relative;
+        height: 19px;
+        margin: 12px 0 3px;
+      }
+      .track {
+        position: absolute;
+        inset: 5px 0;
+        border-radius: 999px;
+        background: #eee9ec;
+      }
+      .target {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        left: 21%;
+        width: 49%;
+        border: 1px solid rgba(77, 45, 112, 0.28);
+        border-radius: 999px;
+        background: rgba(118, 84, 170, 0.18);
+      }
+      .marker {
+        position: absolute;
+        top: 0;
+        display: grid;
+        width: 19px;
+        height: 19px;
+        place-items: center;
+        color: white;
+        font-size: 9px;
+        font-weight: 900;
+        box-shadow: 0 0 0 3px white;
+      }
+      .marker.mine {
+        left: 58%;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .marker.ideal {
+        left: 42%;
+        border-radius: 4px;
+        background: var(--plum);
+        transform: rotate(45deg);
+      }
+      .marker.ideal b {
+        transform: rotate(-45deg);
+      }
+      .labels {
+        display: flex;
+        justify-content: space-between;
+        color: #938b91;
+        font-size: 9px;
+        font-weight: 700;
+      }
+      .reason {
+        margin-top: 7px;
+        color: var(--sub);
+        font-size: 11px;
+      }
+      .summary {
+        padding: 12px 14px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 12px;
+        font-weight: 780;
+      }
+      .quiet-action {
+        width: 100%;
+        margin-top: 12px;
+        border: 0;
+        background: transparent;
+        color: var(--violet);
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .dock {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding: 13px 18px 17px;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+      }
+      .primary {
+        width: 100%;
+        min-height: 52px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--coral);
+        color: white;
+        font-size: 15px;
+        font-weight: 850;
+        cursor: pointer;
+      }
+      .primary:hover {
+        background: var(--coral-dark);
+      }
+      .status-view {
+        display: none;
+        min-height: 590px;
+        padding: 70px 8px 20px;
+        align-items: center;
+        justify-content: center;
+      }
+      .status-card {
+        width: 100%;
+        padding: 28px 20px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: white;
+        text-align: center;
+        box-shadow: 0 14px 38px rgba(53, 38, 49, 0.08);
+      }
+      .status-icon {
+        display: grid;
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 16px;
+        place-items: center;
+        border-radius: 50%;
+        background: #f2ebfa;
+        color: var(--violet);
+        font-size: 24px;
+        font-weight: 800;
+      }
+      .spinner {
+        border: 3px solid #e6d9f3;
+        border-top-color: var(--violet);
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .status-card h3 {
+        margin: 0 0 8px;
+        font:
+          700 28px/1.08 Georgia,
+          serif;
+      }
+      .status-card p {
+        margin: 0;
+        color: var(--sub);
+      }
+      .status-card .primary {
+        margin-top: 20px;
+      }
+      .hint {
+        margin-top: 12px;
+        color: var(--sub);
+        font-size: 11px;
+      }
+      .countdown {
+        margin: 18px auto 0;
+        width: max-content;
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: var(--warning);
+        background: var(--warning-soft);
+        font-weight: 800;
+        font-size: 12px;
+      }
+      .notes {
+        padding: 8px 0;
+      }
+      .notes h3 {
+        margin: 0 0 12px;
+        font:
+          700 25px/1.1 Georgia,
+          serif;
+        color: #321d43;
+      }
+      .notes ol {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--sub);
+      }
+      .notes li {
+        margin: 0 0 12px;
+        padding-left: 4px;
+      }
+      .notes strong {
+        color: var(--ink);
+      }
+      .rule {
+        margin-top: 19px;
+        padding: 15px;
+        border: 1px solid rgba(77, 45, 112, 0.15);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.68);
+        color: #654c78;
+      }
+      .outcomes {
+        max-width: 940px;
+        margin: 34px auto 0;
+      }
+      .outcomes h3 {
+        margin: 0 0 6px;
+        font:
+          700 28px/1.1 Georgia,
+          serif;
+        color: #321d43;
+      }
+      .outcomes > p {
+        margin: 0 0 16px;
+        color: var(--sub);
+      }
+      .outcome-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .outcome-card {
+        min-height: 170px;
+        padding: 17px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 10px 28px rgba(53, 38, 49, 0.06);
+      }
+      .outcome-card .tag {
+        display: inline-block;
+        margin-bottom: 9px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: #f2ebfa;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .outcome-card h4 {
+        margin: 0 0 5px;
+        font-size: 16px;
+      }
+      .outcome-card p {
+        margin: 0;
+        color: var(--sub);
+        font-size: 13px;
+      }
+      .outcome-card .status {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+        color: var(--green);
+        font-weight: 850;
+      }
+      .outcome-card .status.warning {
+        color: var(--warning);
+      }
+      .outcome-card .mini-action {
+        margin-top: 12px;
+        border: 0;
+        background: transparent;
+        color: var(--violet);
+        font-size: 12px;
+        font-weight: 850;
+      }
+      .confirm-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .confirm-actions button {
+        flex: 1;
+        min-height: 38px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .confirm-actions .keep {
+        border: 0;
+        background: var(--coral);
+        color: white;
+      }
+      .confirm-actions .cancel {
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--violet);
+      }
+      body[data-state="checking"] .decision-view,
+      body[data-state="rate"] .decision-view,
+      body[data-state="manual"] .decision-view {
+        display: none;
+      }
+      body[data-state="checking"] .status-view.checking,
+      body[data-state="rate"] .status-view.rate,
+      body[data-state="manual"] .status-view.manual {
+        display: flex;
+      }
+      body[data-state="checking"] .dock,
+      body[data-state="rate"] .dock,
+      body[data-state="manual"] .dock {
+        display: none;
+      }
+      body[data-state="checking"] .back,
+      body[data-state="rate"] .back,
+      body[data-state="manual"] .back {
+        opacity: 0.35;
+        pointer-events: none;
+      }
+      body[data-state="updated"] .notice {
+        display: block;
+      }
+      body[data-state="updated"] .summary {
+        color: var(--warning);
+        background: var(--warning-soft);
+      }
+      @media (max-width: 820px) {
+        .stage {
+          grid-template-columns: minmax(0, 430px);
+        }
+        .notes {
+          max-width: 430px;
+        }
+        .outcome-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 460px) {
+        .board {
+          padding: 18px 0 35px;
+        }
+        .intro,
+        .notes {
+          padding-right: 16px;
+          padding-left: 16px;
+        }
+        .states {
+          padding-right: 16px;
+          padding-left: 16px;
+        }
+        .phone {
+          min-height: 770px;
+          border-right: 0;
+          border-left: 0;
+          border-radius: 0;
+        }
+        .outcomes {
+          padding-right: 16px;
+          padding-left: 16px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner {
+          animation: none;
+        }
+        .product[aria-pressed="true"] {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body data-state="normal">
+    <main class="board">
+      <section class="intro">
+        <div class="eyebrow">Konsolidiertes Planungsartefakt</div>
+        <h1>Eine Entscheidung. Ein sicherer Speicherweg.</h1>
+        <p>
+          Der detaillierte Produktvergleich bleibt die Entscheidungsoberfläche. Sobald der
+          Speicherstatus unklar ist, übernimmt eine einzige gesperrte Wiederherstellung – ohne
+          doppeltes Speichern oder veraltete Empfehlung.
+        </p>
+        <div class="states" role="group" aria-label="Zustand auswählen">
+          <button class="state-button" data-state="normal" aria-pressed="true">
+            Bereit zur Auswahl
+          </button>
+          <button class="state-button" data-state="checking" aria-pressed="false">
+            Status wird geprüft
+          </button>
+          <button class="state-button" data-state="rate" aria-pressed="false">Kurz warten</button>
+          <button class="state-button" data-state="manual" aria-pressed="false">
+            Status noch offen
+          </button>
+          <button class="state-button" data-state="updated" aria-pressed="false">
+            Alternativen aktualisiert
+          </button>
+        </div>
+      </section>
+
+      <section class="stage">
+        <article class="phone" aria-label="Mobiler Stage-3-Entwurf">
+          <header class="topbar">
+            <button class="back" aria-label="Zurück">‹</button>
+            <div class="brand">chaarlie</div>
+            <div class="save" id="save-label">Gespeichert</div>
+          </header>
+          <div class="steps" aria-label="Schritt 3 von 5"><i></i><i></i><i></i><i></i><i></i></div>
+
+          <div class="content decision-view">
+            <div class="category">Shampoo · Vergleich</div>
+            <h2>Deins neben dem Ideal.</h2>
+            <p class="lead">Tippe auf ein Produkt, um seine Position hervorzuheben.</p>
+            <div class="notice">
+              Die passenden Alternativen wurden aktualisiert. Bitte wähle erneut.
+            </div>
+
+            <div class="products" role="group" aria-label="Produkt hervorheben">
+              <button class="product mine" data-product="mine" aria-pressed="true">
+                <span class="bottle">OGX</span>
+                <span class="identity">● Dein Produkt</span>
+                <strong>Renewing + Argan Oil of Morocco Shampoo</strong>
+                <small>OGX</small>
+              </button>
+              <button class="product ideal" data-product="ideal" aria-pressed="false">
+                <span class="bottle" id="alt-bottle">BALEA</span>
+                <span class="identity" id="alt-fit">◆ Ideal für dich</span>
+                <strong id="alt-name">Med Ultra Sensitive Shampoo</strong>
+                <small id="alt-brand">Balea</small>
+              </button>
+            </div>
+
+            <div class="alt-nav" aria-label="Weitere passende Alternativen">
+              <button type="button" id="prev" aria-label="Vorherige Alternative">‹</button>
+              <span id="counter" aria-live="polite">1 von 3</span>
+              <button type="button" id="next" aria-label="Nächste Alternative">›</button>
+            </div>
+
+            <section class="comparison" aria-label="Produkteigenschaften">
+              <div class="compare-head">
+                <strong>3 Eigenschaften</strong>
+                <div class="legend">
+                  <span><i></i>Deins</span><span><i></i>Alternative</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="row-title">Reinigungsstärke <span>im Ziel</span></div>
+                <div class="rail">
+                  <div class="track"></div>
+                  <div class="target"></div>
+                  <div class="marker mine">D</div>
+                  <div class="marker ideal"><b>I</b></div>
+                </div>
+                <div class="labels"><span>sanft</span><span>regulär</span><span>klärend</span></div>
+                <div class="reason">
+                  Für dein Zielprofil ist eine sanfte bis reguläre Reinigung vorgesehen.
+                </div>
+              </div>
+              <div class="row">
+                <div class="row-title">Kopfhaut-Fokus <span>im Ziel</span></div>
+                <div class="rail">
+                  <div class="track"></div>
+                  <div class="target" style="left: 7%; width: 44%"></div>
+                  <div class="marker mine" style="left: 31%">D</div>
+                  <div class="marker ideal" style="left: 18%"><b>I</b></div>
+                </div>
+                <div class="labels">
+                  <span>trocken</span><span>ausgeglichen</span><span>ölig</span>
+                </div>
+                <div class="reason">
+                  Für dein Zielprofil ist ein Shampoo für trockene Kopfhaut vorgesehen.
+                </div>
+              </div>
+              <div class="row">
+                <div class="row-title">Geeignete Haardicke <span>beide passend</span></div>
+                <div class="rail">
+                  <div class="track"></div>
+                  <div class="marker mine" style="left: 50%">D</div>
+                  <div class="marker ideal" style="left: 50%"><b>I</b></div>
+                </div>
+                <div class="labels">
+                  <span>fein</span><span>mittel · dein Profil</span><span>dick</span>
+                </div>
+                <div class="reason">Du hast deine Haardicke als mittel angegeben.</div>
+              </div>
+              <div class="summary" id="summary">
+                Dein Shampoo liegt in allen drei relevanten Punkten im Ziel.
+              </div>
+            </section>
+            <button class="quiet-action" id="replacement">
+              Balea Med Shampoo als Ersatz übernehmen
+            </button>
+          </div>
+
+          <div class="content status-view checking">
+            <section class="status-card">
+              <div class="status-icon spinner" aria-label="Wird geprüft"></div>
+              <h3>Wir prüfen deine Auswahl.</h3>
+              <p>Einen Moment – wir schauen zuerst nach, ob sie bereits gespeichert wurde.</p>
+              <div class="hint">Währenddessen ist keine zweite Entscheidung möglich.</div>
+            </section>
+          </div>
+
+          <div class="content status-view rate">
+            <section class="status-card">
+              <div class="status-icon">…</div>
+              <h3>Wir versuchen es gleich noch einmal.</h3>
+              <p>
+                Der Server hat uns gebeten, kurz zu warten. Danach prüfen wir automatisch den
+                gespeicherten Stand.
+              </p>
+              <div class="countdown">Neuer Check in 12 Sekunden</div>
+              <div class="hint">Es wird nicht wiederholt gespeichert, ohne vorher nachzusehen.</div>
+            </section>
+          </div>
+
+          <div class="content status-view manual">
+            <section class="status-card">
+              <div class="status-icon">!</div>
+              <h3>Speicherstatus noch offen.</h3>
+              <p>
+                Wir konnten gerade nicht sicher prüfen, ob deine Auswahl gespeichert wurde. Deine
+                Auswahl bleibt erhalten.
+              </p>
+              <button class="primary">Speicherstatus erneut prüfen</button>
+              <div class="hint">Dabei wird nichts doppelt gespeichert.</div>
+            </section>
+          </div>
+
+          <footer class="dock">
+            <button class="primary" id="primary">OGX Shampoo weiterverwenden</button>
+          </footer>
+        </article>
+
+        <aside class="notes">
+          <h3>Was zusammengeführt wurde</h3>
+          <ol>
+            <li>
+              <strong>Bereit:</strong> Der signierte Vergleich bleibt unverändert klar. Karten und
+              Pfeile speichern nichts.
+            </li>
+            <li>
+              <strong>Prüfen:</strong> Nach Timeout oder 503 wird zuerst der kanonische Stand
+              geladen. Zurück und neue Aktionen sind gesperrt.
+            </li>
+            <li>
+              <strong>Rate Limit:</strong> Die App wartet sichtbar bis Retry-After und beginnt dann
+              automatisch mit dem Lese-Check.
+            </li>
+            <li>
+              <strong>Noch offen:</strong> Nur wenn der Check selbst scheitert, wird ein manueller
+              Status-Check angeboten.
+            </li>
+            <li>
+              <strong>Aktualisiert:</strong> Eine veraltete Alternative führt zurück in denselben
+              detaillierten Vergleich. Die neue Auswahl muss ausdrücklich bestätigt werden.
+            </li>
+          </ol>
+          <div class="rule">
+            <strong>Grundsatz:</strong> Chaarlie sagt nie „nicht gespeichert“, solange der Ausgang
+            unbekannt ist, und plant nie ein anderes Produkt ein als das, das gerade ausdrücklich
+            bestätigt wurde.
+          </div>
+        </aside>
+      </section>
+
+      <section class="outcomes">
+        <h3>Was die Entscheidung danach bedeutet</h3>
+        <p>
+          Diese Zustände gehören zum gleichen Vertrag. Sie werden nicht als Besitz oder
+          Einsatzbereitschaft verwechselt.
+        </p>
+        <div class="outcome-grid">
+          <article class="outcome-card">
+            <span class="tag">Routine</span>
+            <h4>Balea Med Ultra Sensitive Shampoo</h4>
+            <p>
+              Die gewählte Alternative steht bereits im idealen Ablauf, ist aber noch nicht als
+              gekauft markiert.
+            </p>
+            <div class="status warning">Noch kaufen</div>
+            <button class="mini-action">Ich habe es schon gekauft</button>
+          </article>
+          <article class="outcome-card">
+            <span class="tag">Deine Produkte</span>
+            <h4>OGX Renewing + Argan Oil Shampoo</h4>
+            <p>
+              Das Produkt bleibt als dein Besitz erhalten, wird aber nicht in Routine oder Anwendung
+              eingesetzt.
+            </p>
+            <div class="status">Nicht verwendet</div>
+          </article>
+          <article class="outcome-card">
+            <span class="tag">Bewusste Wahl</span>
+            <h4>OGX Shampoo</h4>
+            <p>
+              Du hast dich trotz der gezeigten Abweichung ausdrücklich für dein vorhandenes Produkt
+              entschieden.
+            </p>
+            <div class="status warning">Mit Einschränkung</div>
+          </article>
+          <article class="outcome-card">
+            <span class="tag">Optionaler Schritt</span>
+            <h4>Ohne Produkt fortfahren?</h4>
+            <p>
+              Dieser Routine-Schritt bleibt offen. Du kannst später ein passendes Produkt ergänzen.
+            </p>
+            <div class="confirm-actions">
+              <button class="cancel">Zurück zur Auswahl</button>
+              <button class="keep">Vorerst ohne Produkt weiter</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const body = document.body
+      const stateButtons = Array.from(document.querySelectorAll(".state-button"))
+      const saveLabel = document.querySelector("#save-label")
+      const primary = document.querySelector("#primary")
+      const replacement = document.querySelector("#replacement")
+      const summary = document.querySelector("#summary")
+      const alternatives = [
+        {
+          name: "Med Ultra Sensitive Shampoo",
+          brand: "Balea",
+          short: "BALEA",
+          fit: "◆ Ideal für dich",
+        },
+        { name: "Every-Day Shampoo", brand: "sebamed", short: "SEBAMED", fit: "◆ Ideal für dich" },
+        {
+          name: "Sensitive Dermo-Protect Shampoo",
+          brand: "Eubos",
+          short: "EUBOS",
+          fit: "◆ Sehr passend",
+        },
+      ]
+      let alternativeIndex = 0
+
+      function showAlternative(index) {
+        alternativeIndex = (index + alternatives.length) % alternatives.length
+        const alternative = alternatives[alternativeIndex]
+        document.querySelector("#alt-name").textContent = alternative.name
+        document.querySelector("#alt-brand").textContent = alternative.brand
+        document.querySelector("#alt-bottle").textContent = alternative.short
+        document.querySelector("#alt-fit").textContent = alternative.fit
+        document.querySelector("#counter").textContent =
+          String(alternativeIndex + 1) + " von " + String(alternatives.length)
+        replacement.textContent = alternative.fit.includes("Sehr passend")
+          ? alternative.brand + " trotz Einschränkung übernehmen"
+          : alternative.brand + " " + alternative.name + " als Ersatz übernehmen"
+      }
+
+      function setState(state) {
+        body.dataset.state = state
+        stateButtons.forEach(function (button) {
+          button.setAttribute("aria-pressed", String(button.dataset.state === state))
+        })
+        const labels = {
+          normal: "Gespeichert",
+          checking: "Status wird geprüft",
+          rate: "Kurze Wartezeit",
+          manual: "Noch nicht bestätigt",
+          updated: "Bitte erneut prüfen",
+        }
+        saveLabel.textContent = labels[state]
+        if (state === "updated") {
+          alternativeIndex = 1
+          showAlternative(alternativeIndex)
+          primary.textContent = "OGX Shampoo weiterverwenden"
+          replacement.textContent = "sebamed Every-Day Shampoo als Ersatz übernehmen"
+          summary.textContent =
+            "Dein Shampoo liegt weiterhin im Ziel. Die Ersatzoption wurde aktualisiert."
+        } else {
+          alternativeIndex = 0
+          showAlternative(alternativeIndex)
+          primary.textContent = "OGX Shampoo weiterverwenden"
+          summary.textContent = "Dein Shampoo liegt in allen drei relevanten Punkten im Ziel."
+        }
+      }
+
+      stateButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          setState(button.dataset.state)
+        })
+      })
+      document.querySelector("#prev").addEventListener("click", function () {
+        showAlternative(alternativeIndex - 1)
+      })
+      document.querySelector("#next").addEventListener("click", function () {
+        showAlternative(alternativeIndex + 1)
+      })
+      document.querySelectorAll(".product").forEach(function (button) {
+        button.addEventListener("click", function () {
+          document.querySelectorAll(".product").forEach(function (candidate) {
+            candidate.setAttribute("aria-pressed", String(candidate === button))
+          })
+        })
+      })
+    </script>
+  </body>
+</html>

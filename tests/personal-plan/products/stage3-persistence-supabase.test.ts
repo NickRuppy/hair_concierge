@@ -12,6 +12,85 @@ const shampooSearchContext = {
   conditionerTarget: null,
 }
 
+test("completed receipt selects the earliest routine when successors share its portfolio", async () => {
+  const filtersByTable = new Map<string, Map<string, unknown>>()
+  const limitedTables = new Set<string>()
+  const orderByTable = new Map<string, { column: string; ascending: boolean }>()
+  const portfolio = {
+    schemaVersion: 1,
+    portfolioVersionId: "portfolio-initial",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+    sourceDraftRevision: 5,
+    categoryResolutions: [],
+    ownedProducts: [],
+    plannedPurchases: [],
+    pendingProducts: [],
+    uncoveredRoles: [],
+    createdAt: "2026-08-08T00:00:00.000Z",
+  }
+  const client = {
+    from(table: string) {
+      const filters = new Map<string, unknown>()
+      filtersByTable.set(table, filters)
+      const chain = {
+        select: () => chain,
+        eq: (column: string, value: unknown) => {
+          filters.set(column, value)
+          return chain
+        },
+        order: (column: string, options: { ascending: boolean }) => {
+          orderByTable.set(table, { column, ascending: options.ascending })
+          return chain
+        },
+        limit: () => {
+          limitedTables.add(table)
+          return chain
+        },
+        maybeSingle: async () => {
+          if (table === "personal_plan_portfolio_versions") {
+            return { data: { id: "portfolio-initial", snapshot: portfolio }, error: null }
+          }
+          if (table === "personal_plan_routine_versions") {
+            return filters.get("source_portfolio_version_id") === "portfolio-initial" &&
+              limitedTables.has(table)
+              ? { data: { id: "routine-initial" }, error: null }
+              : { data: null, error: { message: "multiple routines share the portfolio" } }
+          }
+          if (table === "personal_plan_routine_proposals") {
+            return { data: { id: "proposal-initial" }, error: null }
+          }
+          throw new Error(`unexpected table ${table}`)
+        },
+      }
+      return chain
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  const receipt = await persistence.loadCompletionReceipt?.({
+    userId: "owner-1",
+    draftId: "draft-shared-by-successor",
+  })
+
+  assert.equal(receipt?.productPortfolioVersionId, "portfolio-initial")
+  assert.equal(receipt?.routineVersionId, "routine-initial")
+  assert.equal(receipt?.routineProposalId, "proposal-initial")
+  assert.equal(
+    filtersByTable.get("personal_plan_routine_versions")?.get("source_portfolio_version_id"),
+    "portfolio-initial",
+  )
+  assert.equal(
+    filtersByTable.get("personal_plan_routine_versions")?.has("source_product_draft_id"),
+    false,
+  )
+  assert.deepEqual(orderByTable.get("personal_plan_routine_versions"), {
+    column: "created_at",
+    ascending: true,
+  })
+  assert.equal(limitedTables.has("personal_plan_routine_versions"), true)
+})
+
 test("draft creation persists the server-created immutable authority snapshot in CAS JSON", async () => {
   const createPayloads: Record<string, unknown>[] = []
   const refinedSnapshot = {

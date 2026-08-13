@@ -7,6 +7,7 @@ import {
   createHttpStage3ProductsGateway,
   parseStage3RevisionConflict,
 } from "../src/lib/personal-plan/products/http-gateway"
+import { classifyStage3DesiredState } from "../src/lib/personal-plan/products/recovery-desired-state"
 import {
   createFixtureStage3Gateway,
   type FixtureStage3Gateway,
@@ -118,6 +119,58 @@ test("the HTTP gateway fails closed when a revision conflict lacks a valid canon
   )
 })
 
+test("the HTTP gateway preserves typed status and Retry-After on retryable failures", async () => {
+  const subject = createHttpStage3ProductsGateway({
+    fetch: async () =>
+      new Response(JSON.stringify({ error: "rate_limited" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json", "Retry-After": "17" },
+      }),
+  })
+
+  await assert.rejects(
+    () =>
+      subject.mutate({
+        draftId: "11111111-1111-4111-8111-111111111111",
+        expectedRevision: 0,
+        mutation: { type: "complete_capture_category", category: "conditioner" },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3ProductsGatewayError &&
+      error.code === "rate_limited" &&
+      error.status === 429 &&
+      error.retryAfterSeconds === 17,
+  )
+})
+
+test("the HTTP decision gateway preserves Retry-After instead of using the raw-fetch fallback", async () => {
+  const subject = createHttpStage3ProductsGateway({
+    fetch: async () =>
+      new Response(JSON.stringify({ error: "rate_limited" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json", "Retry-After": "23" },
+      }),
+  })
+
+  await assert.rejects(
+    () =>
+      subject.resolveDecision!({
+        draftId: "11111111-1111-4111-8111-111111111111",
+        expectedRevision: 4,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+          action: "keep_owned",
+        },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3ProductsGatewayError &&
+      error.code === "rate_limited" &&
+      error.status === 429 &&
+      error.retryAfterSeconds === 23,
+  )
+})
+
 async function createDraft(subject: FixtureStage3Gateway) {
   return subject.loadOrCreate({
     draftId: "draft-1",
@@ -140,6 +193,44 @@ test("loads or creates a draft from fixture authority requirements and resumes i
   })
   assert.equal(resumed.status, "active")
   assert.equal(resumed.draft, first.draft)
+})
+
+test("desired-state classification recognises an already-open category and completed draft", async () => {
+  const loaded = await createDraft(gateway())
+  assert.equal(
+    classifyStage3DesiredState(loaded.draft, {
+      type: "reopen_capture_category",
+      category: "conditioner",
+    }),
+    "satisfied",
+  )
+  assert.equal(
+    classifyStage3DesiredState(
+      { ...loaded.draft, status: "completed" },
+      {
+        type: "reopen_capture_category",
+        category: "conditioner",
+      },
+    ),
+    "completed",
+  )
+})
+
+test("fixture accepts an already-open category with a stale revision as canonical success", async () => {
+  const subject = gateway()
+  const loaded = await createDraft(subject)
+  const saved = await subject.mutate({
+    draftId: loaded.draft.draftId,
+    expectedRevision: loaded.draft.revision,
+    mutation: { type: "reopen_capture_category", category: "conditioner" },
+  })
+  assert.equal(saved.status, "saved")
+  const replay = await subject.mutate({
+    draftId: loaded.draft.draftId,
+    expectedRevision: loaded.draft.revision,
+    mutation: { type: "reopen_capture_category", category: "conditioner" },
+  })
+  assert.deepEqual(replay, saved)
 })
 
 test("search trims and requires two characters, caps at eight, and echoes request tokens", async () => {

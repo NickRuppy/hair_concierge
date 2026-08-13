@@ -3,7 +3,11 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import { cleanProductDisplayName } from "@/lib/product-identity"
-import type { PersonalPlanCategory, Stage3ProductDraft } from "./contracts"
+import {
+  parseProposedProductPortfolio,
+  type PersonalPlanCategory,
+  type Stage3ProductDraft,
+} from "./contracts"
 import type { Stage3ProductionPersistence } from "./production-persistence-gateway"
 import { normalizeOwnedProductSearchQuery } from "./inventory-search"
 import { createStage3Draft } from "./state-machine"
@@ -266,6 +270,46 @@ export function createSupabaseStage3ProductionPersistence(
         .maybeSingle()
       if (error) throw new Error("stage3_portfolio_load_failed")
       return data?.snapshot ? (data.snapshot as never) : null
+    },
+    async loadCompletionReceipt(input) {
+      const portfolioResult = await client
+        .from("personal_plan_portfolio_versions")
+        .select("id,snapshot")
+        .eq("source_product_draft_id", input.draftId)
+        .eq("user_id", input.userId)
+        .maybeSingle()
+      if (portfolioResult.error) {
+        throw new Error("stage3_completion_receipt_load_failed")
+      }
+      if (!portfolioResult.data?.snapshot || !portfolioResult.data.id) return null
+      const routineResult = await client
+        .from("personal_plan_routine_versions")
+        .select("id")
+        .eq("source_portfolio_version_id", portfolioResult.data.id)
+        .eq("user_id", input.userId)
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle()
+      if (routineResult.error) throw new Error("stage3_completion_receipt_load_failed")
+      if (!routineResult.data?.id) return null
+      const { data: proposal, error: proposalError } = await client
+        .from("personal_plan_routine_proposals")
+        .select("id")
+        .eq("candidate_routine_version_id", routineResult.data.id)
+        .eq("user_id", input.userId)
+        .limit(1)
+        .maybeSingle()
+      if (proposalError) throw new Error("stage3_completion_receipt_load_failed")
+      const portfolio = parseProposedProductPortfolio(portfolioResult.data.snapshot)
+      return {
+        portfolio: {
+          ...portfolio,
+          portfolioVersionId: String(portfolioResult.data.id),
+        },
+        productPortfolioVersionId: String(portfolioResult.data.id),
+        routineVersionId: String(routineResult.data.id),
+        routineProposalId: proposal?.id ? String(proposal.id) : null,
+      }
     },
     async loadRefinedNeedSnapshot(input) {
       const { data, error } = await client

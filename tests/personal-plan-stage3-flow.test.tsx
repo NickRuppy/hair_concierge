@@ -1251,6 +1251,269 @@ test("role finalization shows saving immediately and suppresses duplicate action
   await renderSettled(harness)
 })
 
+test("uncertain decision save confirms canonical state before showing manual recovery", async () => {
+  let resolveCalls = 0
+  const gateway = createAuthorityTestGateway()
+  const originalResolveDecision = gateway.resolveDecision.bind(gateway)
+  gateway.resolveDecision = async (input) => {
+    resolveCalls += 1
+    await originalResolveDecision(input)
+    throw new Stage3ProductsGatewayError("temporarily_unavailable")
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-decision-canonical-satisfied",
+    refinedVersionId: "refined-decision-canonical-satisfied",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  await chooseDecision(harness, "keep")
+  tree = await renderSettled(harness)
+
+  assert.equal(resolveCalls, 1)
+  assert.doesNotMatch(textContent(tree), /Speichern fehlgeschlagen|Speicherstatus noch offen/)
+})
+
+test("completed canonical recovery opens Routine from receipt without replaying completion", async () => {
+  let completeCalls = 0
+  let receiptCalls = 0
+  const gateway = createAuthorityTestGateway()
+  const originalComplete = gateway.complete.bind(gateway)
+  const originalReceipt = gateway.loadCompletionReceipt?.bind(gateway)
+  assert.ok(originalReceipt)
+  gateway.complete = async (input) => {
+    completeCalls += 1
+    await originalComplete(input)
+    throw new Stage3ProductsGatewayError("temporarily_unavailable", undefined, 503)
+  }
+  gateway.loadCompletionReceipt = async (input) => {
+    receiptCalls += 1
+    return originalReceipt(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-completion-receipt-recovery",
+    refinedVersionId: "refined-completion-receipt-recovery",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const handoffs: Stage3RoutineHandoff[] = []
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      gateway,
+      searchDebounceMs: 0,
+      onOpenRoutine: (handoff) => handoffs.push(handoff),
+    }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  await chooseDecision(harness, "keep")
+  tree = await renderSettled(harness)
+
+  assert.equal(completeCalls, 1)
+  assert.equal(receiptCalls, 1)
+  assert.equal(handoffs.length, 1)
+  assert.doesNotMatch(textContent(tree), /Speichern fehlgeschlagen|Speicherstatus noch offen/)
+})
+
+test("terminal stage-not-ready decision errors reload the checkpoint without canonical resend", async () => {
+  let resolveCalls = 0
+  let canonicalLoads = 0
+  const gateway = createAuthorityTestGateway()
+  const originalLoadOrCreate = gateway.loadOrCreate.bind(gateway)
+  gateway.loadOrCreate = async (input) => {
+    canonicalLoads += 1
+    return originalLoadOrCreate(input)
+  }
+  gateway.resolveDecision = async () => {
+    resolveCalls += 1
+    throw new Stage3ProductsGatewayError("stage_not_ready", undefined, 409)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-decision-stage-not-ready",
+    refinedVersionId: "refined-decision-stage-not-ready",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  const loadsBeforeDecision = canonicalLoads
+  await chooseDecision(harness, "keep")
+  tree = await renderSettled(harness)
+
+  const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    tree,
+    Stage3SystemState,
+  )
+  assert.equal(resolveCalls, 1)
+  assert.equal(canonicalLoads, loadsBeforeDecision)
+  assert.equal(recovery?.props.actionLabel, "Aktuellen Stand laden")
+})
+
+test("rate-limited decision save waits, checks canonical state, and resends once when missing", async () => {
+  let resolveCalls = 0
+  const gateway = createAuthorityTestGateway()
+  const originalResolveDecision = gateway.resolveDecision.bind(gateway)
+  gateway.resolveDecision = async (input) => {
+    resolveCalls += 1
+    if (resolveCalls === 1) {
+      throw new Stage3ProductsGatewayError("rate_limited", undefined, 429, 1)
+    }
+    return originalResolveDecision(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-decision-rate-limited",
+    refinedVersionId: "refined-decision-rate-limited",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  await chooseDecision(harness, "keep")
+  await new Promise<void>((resolve) => setTimeout(resolve, 1_050))
+  tree = await renderSettled(harness)
+
+  assert.equal(resolveCalls, 2)
+  assert.doesNotMatch(textContent(tree), /Speichern fehlgeschlagen/)
+})
+
+test("uncertain decision save does not resend when canonical state has a different choice", async () => {
+  let resolveCalls = 0
+  const gateway = createAuthorityTestGateway()
+  const originalLoadOrCreate = gateway.loadOrCreate.bind(gateway)
+  let canonicalDifferentDraft: Stage3ProductDraft | null = null
+  gateway.loadOrCreate = async (input) => {
+    if (canonicalDifferentDraft) {
+      return {
+        status: canonicalDifferentDraft.status,
+        draft: canonicalDifferentDraft,
+        requirements: input.requirements,
+      }
+    }
+    return originalLoadOrCreate(input)
+  }
+  gateway.resolveDecision = async (input) => {
+    resolveCalls += 1
+    const capturedProductId = input.intent.subjectKey.split(":").slice(3).join(":")
+    const response = await gateway.mutate({
+      draftId: input.draftId,
+      expectedRevision: input.expectedRevision,
+      mutation: {
+        type: "record_decision",
+        decision: {
+          decisionKey: input.intent.subjectKey,
+          category: "shampoo",
+          role: "shampoo_everyday",
+          capturedProductId: capturedProductId === "gap" ? null : capturedProductId,
+          verdict: "unknown",
+          choiceState: "unassigned",
+          criterionResults: [],
+          recommendation: null,
+          limitationAcknowledged: false,
+        },
+      },
+    })
+    if (response.status === "saved") canonicalDifferentDraft = response.draft
+    throw new Stage3ProductsGatewayError("temporarily_unavailable")
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-decision-canonical-different",
+    refinedVersionId: "refined-decision-canonical-different",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  await chooseDecision(harness, "keep")
+  tree = await renderSettled(harness)
+
+  assert.equal(resolveCalls, 1)
+  assert.doesNotMatch(textContent(tree), /Speicherstatus noch offen/)
+})
+
 test("global inventory review keeps server-authored no-owned gaps local without client mutation", async () => {
   const recordedMutationTypes: string[] = []
   const gateway = createAuthorityTestGateway()
@@ -1476,7 +1739,7 @@ test("catalog selection and frequency stay editable until one explicit category 
   await renderSettled(harness)
 })
 
-test("an authority decision retry uses the canonical revision only after the user retries", async () => {
+test("an authority decision conflict installs the canonical draft without replaying", async () => {
   const requirements: Stage3EntryContext["orderedCategories"] = [
     {
       category: "conditioner",
@@ -1576,16 +1839,16 @@ test("an authority decision retry uses the canonical revision only after the use
     Stage3SystemState,
   )
   assert.equal(conflict?.props.state, "conflict")
+  assert.equal(conflict?.props.actionLabel, "Weiter prüfen")
   assert.deepEqual(expectedRevisions, [0])
-  const retry = conflict?.props.onAction
-  assert.ok(retry)
-  retry()
-  await renderSettled(harness)
+  conflict?.props.onAction?.()
+  tree = await renderSettled(harness)
 
-  assert.deepEqual(expectedRevisions, [0, 1])
+  assert.deepEqual(expectedRevisions, [0])
+  assert.ok(findByType(tree, ProductDecisionScreen))
 })
 
-test("a generic product mutation conflict adopts the latest draft and retries deliberately", async () => {
+test("a generic product mutation conflict adopts the latest draft without captured retry", async () => {
   const revisions: number[] = []
   const gateway = createAuthorityTestGateway()
   const originalMutate = gateway.mutate.bind(gateway)
@@ -1650,12 +1913,12 @@ test("a generic product mutation conflict adopts the latest draft and retries de
   )
   assert.equal(revisions[0], 0)
   assert.equal(recovery?.props.state, "conflict")
-  assert.equal(recovery?.props.actionLabel, "Erneut versuchen")
+  assert.equal(recovery?.props.actionLabel, "Weiter prüfen")
 
   recovery?.props.onAction?.()
   await new Promise((resolve) => setImmediate(resolve))
 
-  assert.deepEqual(revisions, [0, 1])
+  assert.deepEqual(revisions, [0])
 })
 
 test("a stale refined source offers a current-state reload instead of retrying the obsolete mutation", async () => {
@@ -1810,7 +2073,7 @@ test("direct authority decision requests preserve stale refined-source recovery"
   }
 })
 
-test("a decision conflict retries with the latest draft revision", async () => {
+test("a decision conflict installs the latest committed draft as the receipt", async () => {
   const revisions: number[] = []
   const gateway = createAuthorityTestGateway()
   const originalResolveDecision = gateway.resolveDecision.bind(gateway)
@@ -1865,10 +2128,11 @@ test("a decision conflict retries with the latest draft revision", async () => {
     Stage3SystemState,
   )
   assert.equal(recovery?.props.state, "conflict")
+  assert.equal(recovery?.props.actionLabel, "Weiter prüfen")
   recovery?.props.onAction?.()
   await new Promise((resolve) => setImmediate(resolve))
 
-  assert.deepEqual(revisions, [1, 2])
+  assert.deepEqual(revisions, [1])
 })
 
 test("unsupported authority offers a non-decision recovery exit to refinement", async () => {

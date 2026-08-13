@@ -228,7 +228,7 @@ test("catalog capture replay is idempotent after the first save committed", asyn
   if (replay.status !== "saved") return
   assert.equal(replay.draft.revision, first.draft.revision)
   assert.equal(replay.draft.products.length, 1)
-  assert.equal(saves, 2)
+  assert.equal(saves, 1)
 })
 
 test("atomic category replacement swaps the full category in one acknowledged revision", async () => {
@@ -479,7 +479,7 @@ test("canonical category snapshot replacement prunes stale decisions and finaliz
   assert.deepEqual(replaced.completedDecisionKeys, [])
 })
 
-test("catalog capture replay retains the current-refined-source save guard", async () => {
+test("catalog capture replay verifies the current refined source before returning its receipt", async () => {
   const initial = createStage3Draft({
     draftId: "draft-catalog-replay-stale",
     userId: "owner-a",
@@ -489,6 +489,7 @@ test("catalog capture replay retains the current-refined-source save guard", asy
     now: "2026-08-08T00:00:00.000Z",
   })
   let saves = 0
+  let currentRefinedVersionId = initial.refinedVersionId
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
     persistence: {
@@ -502,10 +503,9 @@ test("catalog capture replay retains the current-refined-source save guard", asy
       }),
       save: async (input) => {
         saves += 1
-        return saves === 1
-          ? { outcome: "saved" as const, draft: input.draft }
-          : { outcome: "stale_source" as const, draft: input.draft }
+        return { outcome: "saved" as const, draft: input.draft }
       },
+      loadCurrentRefinedVersionId: async () => currentRefinedVersionId,
     },
   })
 
@@ -529,16 +529,18 @@ test("catalog capture replay retains the current-refined-source save guard", asy
   assert.equal(first.status, "saved")
   if (first.status !== "saved") return
 
+  currentRefinedVersionId = "refined-new"
   await assert.rejects(
-    gateway.mutate({
-      draftId: initial.draftId,
-      expectedRevision: first.draft.revision,
-      mutation,
-    }),
+    () =>
+      gateway.mutate({
+        draftId: initial.draftId,
+        expectedRevision: first.draft.revision,
+        mutation,
+      }),
     (error: unknown) =>
       error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
   )
-  assert.equal(saves, 2)
+  assert.equal(saves, 1)
 })
 
 test("loadOrCreate CAS-repairs a persisted cursorless capture draft", async () => {
@@ -1078,6 +1080,53 @@ test("lost-response completion replays the same atomic stager without creating a
   assert.equal(stageCalls, 1)
 })
 
+test("completed draft returns its canonical receipt without compiling or staging again", async () => {
+  const completed = {
+    ...readyDraft(),
+    status: "completed" as const,
+    pass: "ready_for_routine" as const,
+    revision: 5,
+  }
+  const portfolio = createProposedProductPortfolio(
+    { ...completed, status: "active", pass: "ready_for_routine" },
+    requirements,
+    { portfolioVersionId: "portfolio-a", createdAt: "2026-08-08T00:01:00.000Z" },
+  )
+  let compileCalls = 0
+  let stageCalls = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(completed),
+      loadCompletionReceipt: async () => ({
+        portfolio,
+        productPortfolioVersionId: "portfolio-a",
+        routineVersionId: "routine-a",
+        routineProposalId: "proposal-a",
+      }),
+    },
+    compiler: {
+      compile: async () => {
+        compileCalls += 1
+        throw new Error("receipt replay must not compile")
+      },
+    },
+    stager: {
+      stage: async () => {
+        stageCalls += 1
+        throw new Error("receipt replay must not stage")
+      },
+    },
+  })
+
+  const result = await gateway.complete({ draftId: "draft-a", expectedRevision: 4 })
+  assert.equal(result.status, "ready_for_routine")
+  assert.equal(result.productPortfolioVersionId, "portfolio-a")
+  assert.equal(result.routineProposalId, "proposal-a")
+  assert.equal(compileCalls, 0)
+  assert.equal(stageCalls, 0)
+})
+
 test("owner isolation is enforced by the injected persistence boundary", async () => {
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-b",
@@ -1101,7 +1150,7 @@ test("CAS conflicts return the persistence canonical draft without overwriting i
   const result = await gateway.mutate({
     draftId: "draft-a",
     expectedRevision: 4,
-    mutation: { type: "complete_capture_category", category: "conditioner" },
+    mutation: { type: "remove_captured_product", capturedProductId: "capture-a" },
   })
   assert.equal(result.status, "conflict")
   if (result.status === "conflict") assert.equal(result.latestDraft.revision, 9)
@@ -1128,7 +1177,7 @@ test("a save rejected after the refined pointer moves restarts Stage 3 instead o
       gateway.mutate({
         draftId: staleDraft.draftId,
         expectedRevision: staleDraft.revision,
-        mutation: { type: "complete_capture_category", category: "conditioner" },
+        mutation: { type: "remove_captured_product", capturedProductId: "capture-a" },
       }),
     (error: unknown) =>
       error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
@@ -1330,6 +1379,61 @@ test("semantic decision intent is evaluated and persisted as a server-authored d
     recommendationFactFingerprint: null,
     coverageRuleIds: [],
   })
+})
+
+test("a committed semantic decision is its receipt even when authority facts later become unavailable", async () => {
+  const source = authorityDraft()
+  const decision = {
+    decisionKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+    category: "conditioner" as const,
+    role: "conditioner_rinse_out" as const,
+    capturedProductId: "capture-a",
+    verdict: "ideal" as const,
+    choiceState: "owned_active" as const,
+    criterionResults: [],
+    recommendation: null,
+    limitationAcknowledged: false,
+    authorityEvidence: {
+      schemaVersion: 1 as const,
+      subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+      refinedNeedVersionId: source.refinedVersionId,
+      refinedInputHash: source.authoritySnapshot!.refinedInputHash,
+      authorityVersion: source.authoritySnapshot!.authorityVersions.conditioner,
+      productFactFingerprint: "facts-a",
+      recommendationFactFingerprint: null,
+      coverageRuleIds: [],
+    },
+  }
+  const committed = {
+    ...source,
+    decisions: [decision],
+    completedDecisionKeys: [decision.decisionKey],
+    revision: source.revision + 1,
+  }
+  let factReads = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(committed),
+      loadAuthorityFacts: async () => {
+        factReads += 1
+        throw new Error("authority facts unavailable")
+      },
+    },
+  })
+
+  const result = await gateway.resolveDecision({
+    draftId: committed.draftId,
+    expectedRevision: source.revision,
+    intent: {
+      type: "resolve_decision",
+      subjectKey: decision.decisionKey,
+      action: "keep_owned",
+    },
+  })
+
+  assert.deepEqual(result, { status: "saved", draft: committed })
+  assert.equal(factReads, 0)
 })
 
 test("semantic decision batch evaluates every subject and persists one CAS revision", async () => {

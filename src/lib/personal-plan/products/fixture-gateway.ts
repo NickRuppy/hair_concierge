@@ -6,6 +6,7 @@ import type {
   Stage3ProductsMutation,
   Stage3SearchResponse,
 } from "./gateway"
+import { Stage3ProductsGatewayError } from "./gateway"
 import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
@@ -24,6 +25,7 @@ import {
   type Stage3RoleAssignment,
 } from "./contracts"
 import { createProposedProductPortfolio } from "./portfolio"
+import { stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
 import {
   addCapturedProduct,
   assignProductRoles,
@@ -233,9 +235,7 @@ export function createFixtureStage3Gateway(
     mutation: FixtureMutation
   }): Promise<FixtureMutationResponse> {
     const draft = requireDraft(drafts, input.draftId)
-    if (draft.revision !== input.expectedRevision) return { status: "conflict", latestDraft: draft }
     if (draft.status !== "active") return { status: "conflict", latestDraft: draft }
-    failOnceIfConfigured(pendingFailures, "mutate")
     const requirements = requirementsByDraftId.get(input.draftId)
     if (!requirements) throw new Error(`missing requirements for draft ${input.draftId}`)
 
@@ -248,6 +248,9 @@ export function createFixtureStage3Gateway(
       ),
       updatedAt: now(),
     }
+    if (stage3DraftsSemanticallyEqual(draft, next)) return { status: "saved", draft }
+    if (draft.revision !== input.expectedRevision) return { status: "conflict", latestDraft: draft }
+    failOnceIfConfigured(pendingFailures, "mutate")
     drafts.set(next.draftId, next)
     return { status: "saved", draft: next }
   }
@@ -364,6 +367,11 @@ export function createFixtureStage3Gateway(
     search,
     mutate,
     invalidateForRefinedVersion,
+    loadCompletionReceipt: async ({ draftId }) => {
+      const completed = completions.get(draftId)
+      if (!completed) throw new Stage3ProductsGatewayError("temporarily_unavailable")
+      return completed
+    },
     complete,
     evaluateDecisions,
     resolveDecision,

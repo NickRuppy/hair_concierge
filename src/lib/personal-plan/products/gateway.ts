@@ -10,10 +10,20 @@ import type {
   Stage3ProductDraft,
   Stage3RoleAssignment,
 } from "./contracts"
+import type { Stage3AuthoritySemanticIntent } from "./authority/contracts"
 
 export type Stage3ProductsGatewayErrorCode =
   | "temporarily_unavailable"
+  | "invalid_request"
+  | "unauthorized"
+  | "personal_plan_not_available"
+  | "stage_not_ready"
   | "stale_refined_source"
+  | "stale_authority_snapshot"
+  | "stage3_replacement_candidate_invalid"
+  | "revision_conflict"
+  | "rate_limited"
+  | "completion_not_ready"
   | "unsupported_snapshot_version"
   | "snapshot_too_large"
   | "compensation_pending"
@@ -24,6 +34,8 @@ export class Stage3ProductsGatewayError extends Error {
   constructor(
     public readonly code: Stage3ProductsGatewayErrorCode,
     message: string = code,
+    public readonly status?: number,
+    public readonly retryAfterSeconds?: number,
   ) {
     super(message)
     this.name = "Stage3ProductsGatewayError"
@@ -112,7 +124,13 @@ export type Stage3CompleteResponse =
       next: { stage: 4; href: string }
     }
   | { status: "conflict"; latestDraft: Stage3ProductDraft }
+  /** Internal service result; the HTTP gateway converts this to completion_not_ready. */
   | { status: "not_ready"; draft: Stage3ProductDraft }
+
+export type Stage3CompletionReceiptResponse = Extract<
+  Stage3CompleteResponse,
+  { status: "ready_for_routine" }
+>
 
 export type Stage3ProductsGateway = {
   loadOrCreate(input: {
@@ -135,10 +153,21 @@ export type Stage3ProductsGateway = {
     expectedRevision: number
     mutation: Stage3ProductsMutation
   }): Promise<Stage3MutationResponse>
+  resolveDecision?(input: {
+    draftId: string
+    expectedRevision: number
+    intent: Stage3AuthoritySemanticIntent
+  }): Promise<Stage3MutationResponse>
+  resolveDecisions?(input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
+  }): Promise<Stage3MutationResponse>
   invalidateForRefinedVersion(input: {
     draftId: string
     refinedVersionId: string
   }): Promise<Stage3DraftResponse>
+  loadCompletionReceipt?(input: { draftId: string }): Promise<Stage3CompletionReceiptResponse>
   complete(input: { draftId: string; expectedRevision: number }): Promise<Stage3CompleteResponse>
 }
 
@@ -153,17 +182,11 @@ export type Stage3PhotoIntakeInput = {
   intake_method: "photo"
   front_image_path: string
   front_image_validation_status?:
-    | "valid_product_front"
-    | "uncertain"
-    | "not_a_product_photo"
-    | "unsafe_or_inappropriate"
+    "valid_product_front" | "uncertain" | "not_a_product_photo" | "unsafe_or_inappropriate"
   front_image_validation_metadata?: Record<string, unknown>
   barcode_image_path?: string
   barcode_image_validation_status?:
-    | "valid_barcode"
-    | "uncertain"
-    | "not_a_product_photo"
-    | "unsafe_or_inappropriate"
+    "valid_barcode" | "uncertain" | "not_a_product_photo" | "unsafe_or_inappropriate"
   barcode_image_validation_metadata?: Record<string, unknown>
   brand_text?: string
   product_name_text?: string

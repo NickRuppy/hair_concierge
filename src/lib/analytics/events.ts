@@ -13,11 +13,7 @@ export type FunnelAnalyticsEnvelope = {
 }
 
 export type OfferEntryContext =
-  | "quiz_completion"
-  | "quiz_return"
-  | "saved_result"
-  | "routine_return"
-  | "result_email"
+  "quiz_completion" | "quiz_return" | "saved_result" | "routine_return" | "result_email"
 export type CheckoutContext = "membership_reactivation"
 export type CheckoutPresentation = "inline" | "overlay"
 export type CheckoutStartTrigger = "automatic_mount" | "explicit_provider_action"
@@ -126,12 +122,7 @@ export type CheckoutLifecycleTransition =
   | "attempt_ended"
 
 export type CheckoutLifecycleDismissalReason =
-  | "close_button"
-  | "backdrop"
-  | "drag_handle"
-  | "escape"
-  | "system_back"
-  | "plan_changed"
+  "close_button" | "backdrop" | "drag_handle" | "escape" | "system_back" | "plan_changed"
 
 export type CheckoutLifecycleRecoveryReason =
   | "provider_timeout"
@@ -150,10 +141,7 @@ export type CheckoutLifecycleFailureReason =
   | "unexpected_route"
 
 export type CheckoutLifecycleEndReason =
-  | "customer_aborted"
-  | "plan_changed"
-  | "page_teardown"
-  | "unexpected_navigation"
+  "customer_aborted" | "plan_changed" | "page_teardown" | "unexpected_navigation"
 
 export type CheckoutLifecycleLastState = "none" | CheckoutLifecycleTransition
 
@@ -173,16 +161,26 @@ export type PersonalPlanStage3StepKey =
 export type PersonalPlanStage3SearchInteraction = "results_viewed" | "candidate_selected"
 export type PersonalPlanStage3ResultCountBand = "0" | "1_3" | "4_8"
 export type PersonalPlanStage3DecisionType =
-  | "keep"
-  | "override"
-  | "plan_purchase"
-  | "pending_review"
-  | "uncovered"
+  "keep" | "override" | "plan_purchase" | "pending_review" | "uncovered"
 export type PersonalPlanStage3SaveOutcome = "saved" | "retry" | "conflict"
+export type PersonalPlanStage3RecoveryOperation =
+  "capture" | "reopen" | "decision" | "decision_batch" | "completion"
+export type PersonalPlanStage3RecoveryOutcome =
+  | "canonical_satisfied"
+  | "resend_succeeded"
+  | "manual_check_required"
+  | "canonical_conflict"
+  | "authority_changed"
+  | "rate_limit_wait"
+export type PersonalPlanStage3RecoveryFailurePhase =
+  | "journey_access"
+  | "canonical_draft"
+  | "source_context"
+  | "authority_facts"
+  | "cas_save"
+  | "response"
 export type PersonalPlanStage3HandoffOutcome =
-  | "ready_for_routine"
-  | "ready_with_pending"
-  | "ready_with_gap"
+  "ready_for_routine" | "ready_with_pending" | "ready_with_gap"
 
 // Stage 4 telemetry is deliberately structural. It must never contain product,
 // proposal, plan, user, profile, price, URL, or free-text data.
@@ -191,15 +189,10 @@ export type PersonalPlanStage4Origin = "routine_page" | "proposal" | "editor" | 
 export type PersonalPlanStage4RoutineVariant = "active" | "proposal" | "empty"
 export type PersonalPlanStage4ChangeCountBand = "0" | "1" | "2_4" | "5_plus"
 export type PersonalPlanStage4ProposalInteraction =
-  | "displayed"
-  | "dismissed"
-  | "accepted"
-  | "rejected"
+  "displayed" | "dismissed" | "accepted" | "rejected"
 export type PersonalPlanStage4EditorInteraction = "opened" | "submitted"
 export type PersonalPlanStage4ItemInteraction =
-  | "product_detail_opened"
-  | "shop_link_opened"
-  | "acquisition_declared"
+  "product_detail_opened" | "shop_link_opened" | "acquisition_declared"
 export type PersonalPlanStage4Outcome = "no_change" | "conflict" | "error"
 
 export function claimCheckoutFailure(
@@ -234,8 +227,7 @@ export type OneTimePersonalPlanCommerceProperties = {
 }
 
 export type OfferCommerceProperties =
-  | MembershipCommerceProperties
-  | OneTimePersonalPlanCommerceProperties
+  MembershipCommerceProperties | OneTimePersonalPlanCommerceProperties
 
 export type AppEventMap = {
   chat_product_recommendation_shown: {
@@ -429,6 +421,11 @@ export type AppEventMap = {
   }
   personal_plan_stage3_save_outcome: {
     outcome: PersonalPlanStage3SaveOutcome
+  }
+  personal_plan_stage3_recovery_outcome: {
+    operation: PersonalPlanStage3RecoveryOperation
+    outcome: PersonalPlanStage3RecoveryOutcome
+    failurePhase?: PersonalPlanStage3RecoveryFailurePhase
   }
   personal_plan_stage3_handoff: {
     outcome: PersonalPlanStage3HandoffOutcome

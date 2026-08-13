@@ -1,6 +1,14 @@
 "use client"
 
 import { signOutAction } from "@/app/auth/actions"
+import {
+  createBrowserCategoryCaptureQueueStorage,
+  createCategoryCaptureQueue,
+} from "@/lib/personal-plan/products/category-capture-queue"
+import {
+  clearPendingStage3RecoveryForOwner,
+  createBrowserPendingStage3RecoveryStorage,
+} from "@/lib/personal-plan/products/pending-recovery"
 import { createClient } from "@/lib/supabase/client"
 import type { Profile } from "@/lib/types"
 import { type User } from "@supabase/supabase-js"
@@ -21,6 +29,15 @@ const AuthContext = createContext<AuthContextType>({
   refreshProfile: async () => {},
   signOut: async () => {},
 })
+
+function clearPersonalPlanStage3RecoveryForOwner(ownerId: string | null | undefined) {
+  if (!ownerId) return
+  const categoryStorage = createBrowserCategoryCaptureQueueStorage()
+  if (categoryStorage) {
+    createCategoryCaptureQueue({ storage: categoryStorage }).clearOnLogout(ownerId)
+  }
+  clearPendingStage3RecoveryForOwner(createBrowserPendingStage3RecoveryStorage(), ownerId)
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -48,13 +65,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, loadProfile])
 
   const signOut = useCallback(async () => {
+    clearPersonalPlanStage3RecoveryForOwner(user?.id)
     setUser(null)
     setProfile(null)
     await signOutAction()
-  }, [])
+  }, [user?.id])
 
   useEffect(() => {
     let resolved = false
+    let currentOwnerId: string | undefined
     let profileFetchGeneration = 0
     let profileFetchTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -63,11 +82,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       resolved = true
       const next = session?.user ?? null
-
-      setUser((prev) => {
-        if (prev?.id === next?.id) return prev
-        return next
-      })
+      if (currentOwnerId !== next?.id) {
+        clearPersonalPlanStage3RecoveryForOwner(currentOwnerId)
+        currentOwnerId = next?.id
+      }
+      setUser(next)
 
       if (profileFetchTimer) clearTimeout(profileFetchTimer)
 

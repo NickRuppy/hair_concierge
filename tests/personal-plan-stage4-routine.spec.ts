@@ -437,7 +437,7 @@ test("initial confirmation and non-blocking successor review preserve the active
   await page.locator('input[type="email"]:visible').fill(email)
   await page.locator('input[type="password"]:visible').fill(password)
   await page.getByRole("button", { name: "Anmelden", exact: true }).click()
-  await page.waitForURL("**/routine")
+  await page.waitForURL((url) => url.pathname === "/routine")
   await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toBeVisible()
   expect(attentionRequestCount).toBe(0)
   expect(routineSyncRequestCount).toBe(0)

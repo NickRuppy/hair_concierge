@@ -18,7 +18,10 @@ import type {
   Stage3EntryContext,
   Stage3ProductDraft,
 } from "@/lib/personal-plan/products/contracts"
-import { type Stage3ProductsGateway } from "@/lib/personal-plan/products/gateway"
+import {
+  Stage3ProductsGatewayError,
+  type Stage3ProductsGateway,
+} from "@/lib/personal-plan/products/gateway"
 import type { Stage3AnalyticsPort } from "@/lib/personal-plan/products/stage3-analytics"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
@@ -44,7 +47,7 @@ type Stage3CategoryCaptureControllerOptions = {
   currentCategory: PersonalPlanCategory
   categoryIndex: number
   authoritySnapshot?: Stage3EntryContext["authoritySnapshot"]
-  gateway: Pick<Stage3ProductsGateway, "mutate">
+  gateway: Pick<Stage3ProductsGateway, "loadOrCreate" | "mutate">
   analytics: Stage3AnalyticsPort
   readyToReconcile: boolean
   queue?: CategoryCaptureQueue
@@ -52,8 +55,8 @@ type Stage3CategoryCaptureControllerOptions = {
   onDraftChange: (draft: Stage3ProductDraft) => void
   onOpenCaptureCategory: (categoryIndex: number) => void
   onPrepareDecisionPhase: (draft: Stage3ProductDraft) => Promise<void>
-  onMutationError: (error: unknown, retry: () => void) => void
-  onConflict: (latestDraft: Stage3ProductDraft, retry: () => void) => void
+  onMutationError: (error: unknown) => void
+  onConflict: (latestDraft: Stage3ProductDraft) => void
 }
 
 export function useStage3CategoryCaptureController({
@@ -113,7 +116,7 @@ export function useStage3CategoryCaptureController({
     queueReconciliationStarted.current = true
     if (pending.length === 0) return
     void reconcileQueuedCategories(draft, pending).catch((error) => {
-      onMutationError(error, () => window.location.reload())
+      onMutationError(error)
     })
     // Reconciliation must run once against the first authoritative loaded draft.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -147,39 +150,35 @@ export function useStage3CategoryCaptureController({
 
   function workingCategoryCaptures(localCaptures = localCatalogCaptures): WorkingCategoryCapture[] {
     return [
-      ...currentProducts.map(
-        (product): WorkingCategoryCapture => ({
-          key: product.capturedProductId,
-          displayName: product.identity.displayName,
-          candidate:
-            product.identity.kind === "catalog_product"
-              ? {
-                  kind: "catalog",
-                  candidateId: product.identity.productId,
-                  frequencyRange: product.frequencyRange,
-                  roles: [],
-                }
-              : {
-                  kind: "pending",
-                  userProductId: product.userProductId,
-                  submissionId: product.identity.submissionId,
-                  frequencyRange: product.frequencyRange,
-                  roles: [],
-                },
-        }),
-      ),
-      ...localCaptures.map(
-        ({ candidate, frequencyRange }): WorkingCategoryCapture => ({
-          key: `local:${candidate.candidateId}`,
-          displayName: completeCandidateIdentity(candidate),
-          candidate: {
-            kind: "catalog",
-            candidateId: candidate.candidateId,
-            frequencyRange,
-            roles: [],
-          },
-        }),
-      ),
+      ...currentProducts.map((product): WorkingCategoryCapture => ({
+        key: product.capturedProductId,
+        displayName: product.identity.displayName,
+        candidate:
+          product.identity.kind === "catalog_product"
+            ? {
+                kind: "catalog",
+                candidateId: product.identity.productId,
+                frequencyRange: product.frequencyRange,
+                roles: [],
+              }
+            : {
+                kind: "pending",
+                userProductId: product.userProductId,
+                submissionId: product.identity.submissionId,
+                frequencyRange: product.frequencyRange,
+                roles: [],
+              },
+      })),
+      ...localCaptures.map(({ candidate, frequencyRange }): WorkingCategoryCapture => ({
+        key: `local:${candidate.candidateId}`,
+        displayName: completeCandidateIdentity(candidate),
+        candidate: {
+          kind: "catalog",
+          candidateId: candidate.candidateId,
+          frequencyRange,
+          roles: [],
+        },
+      })),
     ]
   }
 
@@ -285,29 +284,7 @@ export function useStage3CategoryCaptureController({
     }
 
     try {
-      const result = await categoryQueue.enqueue(scope, command, async (queuedCommand) => {
-        const response = await gateway.mutate({
-          draftId: draft.draftId,
-          expectedRevision: queuedCommand.expectedRevision,
-          mutation: {
-            type: "replace_capture_category",
-            category,
-            refinedNeedVersionId: scope.refinedNeedVersionId,
-            refinedInputHash: scope.refinedInputHash,
-            categoryAuthorityVersion: scope.categoryAuthorityVersion,
-            candidates: queuedCommand.candidates,
-            uncoveredRoles: queuedCommand.uncoveredRoles,
-          },
-        })
-        if (response.status === "conflict") {
-          const conflict = new Error("stage3_revision_conflict") as Error & {
-            latestDraft?: Stage3ProductDraft
-          }
-          conflict.latestDraft = response.latestDraft
-          throw conflict
-        }
-        return { response, acknowledgedRevision: response.draft.revision }
-      })
+      const result = await enqueuePersistedCategoryCapture(scope, command)
       onDraftChange(result.response.draft)
       queuedCategoriesInFlight.current.delete(category)
       setQueuedCategoryCount((count) => Math.max(0, count - 1))
@@ -333,17 +310,158 @@ export function useStage3CategoryCaptureController({
       queuedCategoriesInFlight.current.delete(category)
       setQueuedCategoryCount((count) => Math.max(0, count - 1))
       finishCategoryFinalization()
+      if (error instanceof Stage3ProductsGatewayError && error.code === "stale_refined_source") {
+        onMutationError(error)
+        return
+      }
       const latestDraft = (error as Error & { latestDraft?: Stage3ProductDraft }).latestDraft
       if (latestDraft) {
         categoryQueue.synchronizeRevision(latestDraft.revision)
-        onConflict(
-          latestDraft,
-          () =>
-            void enqueueCategoryReplacement({ ...input, expectedRevision: latestDraft.revision }),
-        )
+        onDraftChange(latestDraft)
+        try {
+          await reconcileCanonicalCategoryReplacement({
+            canonical: latestDraft,
+            scope,
+            isLastCategory,
+            nextCategoryIndex,
+          })
+        } catch (recoveryError) {
+          onMutationError(recoveryError)
+        }
       } else {
-        onMutationError(error, () => void enqueueCategoryReplacement(input))
+        try {
+          await recoverUncertainCategoryReplacement({
+            scope,
+            isLastCategory,
+            nextCategoryIndex,
+          })
+        } catch (recoveryError) {
+          const recoveredConflict = (recoveryError as Error & { latestDraft?: Stage3ProductDraft })
+            .latestDraft
+          if (recoveredConflict) {
+            categoryQueue.synchronizeRevision(recoveredConflict.revision)
+            categoryQueue.acknowledge(scope)
+            onDraftChange(recoveredConflict)
+            onConflict(recoveredConflict)
+          } else {
+            onMutationError(recoveryError)
+          }
+        }
       }
+    }
+  }
+
+  async function enqueuePersistedCategoryCapture(
+    scope: CategoryCaptureQueueScope,
+    command: CategoryCaptureCommand,
+  ) {
+    return categoryQueue.enqueue(scope, command, async (queuedCommand) => {
+      const response = await gateway.mutate({
+        draftId: scope.draftId,
+        expectedRevision: queuedCommand.expectedRevision,
+        mutation: {
+          type: "replace_capture_category",
+          category: scope.category,
+          refinedNeedVersionId: scope.refinedNeedVersionId,
+          refinedInputHash: scope.refinedInputHash,
+          categoryAuthorityVersion: scope.categoryAuthorityVersion,
+          candidates: queuedCommand.candidates,
+          uncoveredRoles: queuedCommand.uncoveredRoles,
+        },
+      })
+      if (response.status === "conflict") {
+        const conflict = new Error("stage3_revision_conflict") as Error & {
+          latestDraft?: Stage3ProductDraft
+        }
+        conflict.latestDraft = response.latestDraft
+        throw conflict
+      }
+      return { response, acknowledgedRevision: response.draft.revision }
+    })
+  }
+
+  async function recoverUncertainCategoryReplacement({
+    scope,
+    isLastCategory,
+    nextCategoryIndex,
+  }: {
+    scope: CategoryCaptureQueueScope
+    isLastCategory: boolean
+    nextCategoryIndex: number
+  }) {
+    const response = await gateway.loadOrCreate({
+      draftId: draft.draftId,
+      userId: draft.userId,
+      personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+      requirements,
+      authoritySnapshot,
+    })
+    const canonical = response.draft
+    categoryQueue.synchronizeRevision(canonical.revision)
+    onDraftChange(canonical)
+    await reconcileCanonicalCategoryReplacement({
+      canonical,
+      scope,
+      isLastCategory,
+      nextCategoryIndex,
+    })
+  }
+
+  async function reconcileCanonicalCategoryReplacement({
+    canonical,
+    scope,
+    isLastCategory,
+    nextCategoryIndex,
+  }: {
+    canonical: Stage3ProductDraft
+    scope: CategoryCaptureQueueScope
+    isLastCategory: boolean
+    nextCategoryIndex: number
+  }) {
+    const persisted = categoryQueue.load(scope)
+    if (!persisted) {
+      onConflict(canonical)
+      return
+    }
+    const desired = { ...persisted, expectedRevision: canonical.revision }
+    const canonicalCategory = commandFromDraft(canonical, scope, canonical.revision)
+    if (canonical.completedCaptureCategories.includes(scope.category)) {
+      if (!categoryCaptureCommandsEqual(scope, canonicalCategory, desired)) {
+        categoryQueue.acknowledge(scope)
+        onConflict(canonical)
+        return
+      }
+      categoryQueue.acknowledge(scope)
+      setSaveLabel("Gespeichert")
+      if (isLastCategory) {
+        await onPrepareDecisionPhase(canonical)
+        finishCategoryFinalization()
+      }
+      return
+    }
+    if (canonical.categoryCursor !== scope.category) {
+      categoryQueue.acknowledge(scope)
+      onConflict(canonical)
+      return
+    }
+    const result = await enqueuePersistedCategoryCapture(scope, desired)
+    onDraftChange(result.response.draft)
+    setSaveLabel("Gespeichert")
+    analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
+    if (isLastCategory) {
+      await categoryQueue.drain()
+      await onPrepareDecisionPhase(result.response.draft)
+      finishCategoryFinalization()
+    } else if (
+      result.response.draft.pass === "product_capture" &&
+      result.response.draft.categoryCursor
+    ) {
+      const canonicalNextIndex = requirements.findIndex(
+        (requirement) => requirement.category === result.response.draft.categoryCursor,
+      )
+      if (canonicalNextIndex < 0) throw new Error("stage3_category_cursor_invalid")
+      if (canonicalNextIndex !== nextCategoryIndex) onOpenCaptureCategory(canonicalNextIndex)
     }
   }
 

@@ -13,6 +13,7 @@ const stage3EventNames = [
   "personal_plan_stage3_fallback_opened",
   "personal_plan_stage3_decision_selected",
   "personal_plan_stage3_save_outcome",
+  "personal_plan_stage3_recovery_outcome",
   "personal_plan_stage3_handoff",
 ] as const
 
@@ -39,6 +40,11 @@ test("Stage 3 structural analytics maps only its bounded privacy-safe contract",
     personal_plan_stage3_flow_viewed: { pass: "product_capture", stepKey: "product_search" },
     personal_plan_stage3_handoff: { outcome: "ready_for_routine" },
     personal_plan_stage3_save_outcome: { outcome: "retry" },
+    personal_plan_stage3_recovery_outcome: {
+      operation: "decision",
+      outcome: "canonical_satisfied",
+      failurePhase: "response",
+    },
     personal_plan_stage3_search_interacted: {
       interaction: "candidate_selected",
       resultCountBand: "4_8",
@@ -76,6 +82,14 @@ test("Stage 3 structural analytics maps only its bounded privacy-safe contract",
       { decision_type: "override", step_key: "fit_decision" },
     ],
     ["personal_plan_stage3_save_outcome", { outcome: "retry" }],
+    [
+      "personal_plan_stage3_recovery_outcome",
+      {
+        operation: "decision",
+        outcome: "canonical_satisfied",
+        failure_phase: "response",
+      },
+    ],
     ["personal_plan_stage3_handoff", { outcome: "ready_for_routine" }],
   ])
 

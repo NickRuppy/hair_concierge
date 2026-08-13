@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { PersonalPlanRoutineTerminalSourceDetails } from "@/lib/observability/personal-plan-application"
 
-import type { ProposedProductPortfolio } from "../products/contracts"
+import { parseProposedProductPortfolio, type ProposedProductPortfolio } from "../products/contracts"
 import {
   diffRoutinePayloads,
   hashRoutineSemantics,
@@ -41,6 +41,24 @@ type RoutineSourceBase = {
   portfolio: ProposedProductPortfolio
   sourceProductDraftId: string
   sourceProductDraftRevision: number
+}
+
+export function parseRoutineSourceBaseSnapshots(input: {
+  routine: unknown
+  portfolio: unknown
+  sourceProductDraftId: unknown
+  sourceProductDraftRevision: unknown
+}): RoutineSourceBase | null {
+  try {
+    return {
+      routine: routinePayloadV1Schema.parse(input.routine) as RoutineCompiledPayload,
+      portfolio: parseProposedProductPortfolio(input.portfolio),
+      sourceProductDraftId: String(input.sourceProductDraftId),
+      sourceProductDraftRevision: Number(input.sourceProductDraftRevision),
+    }
+  } catch {
+    return null
+  }
 }
 
 type SourceTransitionOutcome =
@@ -460,12 +478,12 @@ export function createSupabaseRoutineSourceSyncRepository(
         .eq("personal_plan_id", plan.id)
         .maybeSingle()
       if (portfolioError || !portfolio?.snapshot) return null
-      return {
-        routine: routinePayloadV1Schema.parse(version.payload) as RoutineCompiledPayload,
-        portfolio: portfolio.snapshot as ProposedProductPortfolio,
-        sourceProductDraftId: String(version.source_product_draft_id),
-        sourceProductDraftRevision: Number(version.source_product_draft_revision),
-      }
+      return parseRoutineSourceBaseSnapshots({
+        routine: version.payload,
+        portfolio: portfolio.snapshot,
+        sourceProductDraftId: version.source_product_draft_id,
+        sourceProductDraftRevision: version.source_product_draft_revision,
+      })
     },
     async loadUserProduct(userId, sourceKey) {
       const { data, error } = await client

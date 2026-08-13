@@ -6,7 +6,10 @@ import {
   createStage3RouteHandlers,
   type Stage3RouteDeps,
 } from "../src/app/api/personal-plan/stage-3/route"
-import { createStage3CompleteRouteHandler } from "../src/app/api/personal-plan/stage-3/complete/route"
+import {
+  createStage3CompleteRouteHandler,
+  createStage3CompleteRouteHandlers,
+} from "../src/app/api/personal-plan/stage-3/complete/route"
 import { createStage3SearchRouteHandler } from "../src/app/api/personal-plan/stage-3/search/route"
 import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
 import { Stage3AuthoritySnapshotError } from "../src/lib/personal-plan/products/authority/snapshot"
@@ -187,7 +190,158 @@ test("Stage 3 main boundary preserves flag, auth, validation and per-owner rate-
     }),
   )
   assert.equal(response!.status, 429)
-  assert.equal(response!.headers.get("Retry-After"), "60")
+  assert.match(response!.headers.get("Retry-After") ?? "", /^[1-9][0-9]?$/)
+})
+
+test("Stage 3 PATCH applies aggregate and parsed-family limits with fixed-window retry timing", async () => {
+  const configs: Array<{ prefix: string; limit: number }> = []
+  const response = await createStage3RouteHandlers(
+    deps({
+      checkRateLimit: async (_id, config) => {
+        configs.push({ prefix: config.prefix, limit: config.limit })
+        return { allowed: false }
+      },
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: { type: "reopen_capture_category", category: "shampoo" },
+      }),
+    }),
+  )
+  assert.equal(response!.status, 429)
+  assert.deepEqual(configs, [{ prefix: "personal-plan-stage3-mutation", limit: 90 }])
+  assert.match(response!.headers.get("Retry-After") ?? "", /^[1-9][0-9]?$/)
+  assert.match(response!.headers.get("Server-Timing") ?? "", /rate_limit;dur=/)
+})
+
+test("Stage 3 PATCH consumes the capture and decision family budgets after the aggregate", async () => {
+  const configs: Array<{ prefix: string; limit: number }> = []
+  const handlers = createStage3RouteHandlers(
+    deps({
+      checkRateLimit: async (_id, config) => {
+        configs.push({ prefix: config.prefix, limit: config.limit })
+        return { allowed: true }
+      },
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          resolveDecision: async () => ({ status: "saved", draft }),
+        }) as never,
+    }),
+  )
+  let response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: { type: "reopen_capture_category", category: "shampoo" },
+      }),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+          action: "keep_owned",
+        },
+      }),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  assert.deepEqual(configs, [
+    { prefix: "personal-plan-stage3-mutation", limit: 90 },
+    { prefix: "personal-plan-stage3-capture", limit: 30 },
+    { prefix: "personal-plan-stage3-mutation", limit: 90 },
+    { prefix: "personal-plan-stage3-decision", limit: 60 },
+  ])
+})
+
+test("Stage 3 completion translates internal not_ready and includes timing on early rate limits", async () => {
+  const rateLimited = createStage3CompleteRouteHandler({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
+    checkRateLimit: async () => ({ allowed: false }),
+    complete: async () => ({ status: "not_ready", draft }),
+  } as never)
+  let response = await rateLimited(
+    new Request("http://test/api/personal-plan/stage-3/complete", { method: "POST", body: "{}" }),
+  )
+  assert.equal(response.status, 429)
+  assert.match(response.headers.get("Server-Timing") ?? "", /rate_limit;dur=/)
+  assert.match(response.headers.get("Retry-After") ?? "", /^[1-9][0-9]?$/)
+
+  const notReady = createStage3CompleteRouteHandler({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
+    checkRateLimit: async () => ({ allowed: true }),
+    complete: async () => ({ status: "not_ready", draft }),
+  } as never)
+  response = await notReady(
+    new Request("http://test/api/personal-plan/stage-3/complete", {
+      method: "POST",
+      body: JSON.stringify({ draftId: draft.draftId, expectedRevision: draft.revision }),
+    }),
+  )
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [409, { error: "completion_not_ready" }],
+  )
+})
+
+test("Stage 3 completion receipt is read-only and not mutation rate limited", async () => {
+  let rateChecks = 0
+  let receivedOwner = ""
+  let receivedDraftId = ""
+  const handlers = createStage3CompleteRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
+    checkRateLimit: async () => {
+      rateChecks += 1
+      return { allowed: false }
+    },
+    loadCompletionReceipt: async (userId, input) => {
+      receivedOwner = userId
+      receivedDraftId = input.draftId
+      return {
+        status: "ready_for_routine",
+        draft: { ...draft, status: "completed", pass: "ready_for_routine" },
+        portfolio: { schemaVersion: 1, portfolioVersionId: "portfolio-1" },
+        personalPlanId: draft.personalPlanId,
+        refinedVersionId: draft.refinedVersionId,
+        productPortfolioVersionId: "portfolio-1",
+        routineProposalId: "routine-proposal-1",
+        next: { stage: 4, href: "/routine" },
+      } as never
+    },
+    complete: async () => {
+      throw new Error("not used")
+    },
+  })
+
+  const response = await handlers.GET(
+    new Request(`http://test/api/personal-plan/stage-3/complete?draftId=${draft.draftId}`),
+  )
+  const body = (await response.json()) as Record<string, unknown>
+
+  assert.equal(response.status, 200)
+  assert.equal(body.status, "ready_for_routine")
+  assert.equal(receivedOwner, "owner-1")
+  assert.equal(receivedDraftId, draft.draftId)
+  assert.equal(rateChecks, 0)
 })
 
 test("Stage 3 main boundary derives owner server-side and maps conflicts", async () => {
@@ -308,7 +462,7 @@ test("Stage 3 GET is not mutation-rate-limited and PATCH rejects forged/server-o
     }),
   )
   assert.deepEqual([response!.status, await response!.json()], [400, { error: "invalid_request" }])
-  assert.equal(rateChecks, 1)
+  assert.equal(rateChecks, 0)
 
   response = await handlers.PATCH(
     new Request(url, {

@@ -3,6 +3,7 @@ import test from "node:test"
 
 import {
   CATEGORY_CAPTURE_QUEUE_STORAGE_VERSION,
+  CategoryCaptureRetryLimitedError,
   categoryCaptureCommandsEqual,
   createCategoryCaptureQueue,
   createMemoryCategoryCaptureQueueStorage,
@@ -75,6 +76,9 @@ test("persists only the versioned scoped command data in deterministic order", (
   assert.ok(raw)
   assert.equal(raw.includes("displayName"), false)
   assert.equal(raw.includes("brand"), false)
+  assert.equal(raw.includes("imageUrl"), false)
+  assert.equal(raw.includes("facts"), false)
+  assert.equal(raw.includes("freeText"), false)
 
   const parsed = JSON.parse(raw ?? "{}")
   assert.equal(parsed.version, CATEGORY_CAPTURE_QUEUE_STORAGE_VERSION)
@@ -175,6 +179,18 @@ test("discards malformed, expired, completed, and mismatched stored envelopes", 
     JSON.stringify({
       version: CATEGORY_CAPTURE_QUEUE_STORAGE_VERSION,
       savedAt: 100_000,
+      scope,
+      command: command(),
+      retryAttemptedAt: ["not-a-timestamp"],
+    }),
+  )
+  assert.equal(queue.load(scope), null)
+
+  storage.setItem(
+    key,
+    JSON.stringify({
+      version: CATEGORY_CAPTURE_QUEUE_STORAGE_VERSION,
+      savedAt: 100_000,
       completed: true,
       scope,
       command: command(),
@@ -244,10 +260,11 @@ test("synchronizes an authoritative revision after an external intake write", as
   assert.throws(() => queue.synchronizeRevision(-1), /category_capture_acknowledgement_invalid/)
 })
 
-test("limits a category to two attempts inside sixty seconds and retains failed work for reconciliation", async () => {
+test("persists retry attempts across a reload and returns a typed retry limit with retryAt", async () => {
   let now = 10_000
+  const storage = createMemoryCategoryCaptureQueueStorage()
   const queue = createCategoryCaptureQueue({
-    storage: createMemoryCategoryCaptureQueueStorage(),
+    storage,
     now: () => now,
   })
   let attempts = 0
@@ -257,13 +274,26 @@ test("limits a category to two attempts inside sixty seconds and retains failed 
   }
 
   await assert.rejects(queue.enqueue(scope, command(), fail), /offline/)
+  now = 10_001
   await assert.rejects(queue.enqueue(scope, command(), fail), /offline/)
-  await assert.rejects(queue.enqueue(scope, command(), fail), /category_capture_retry_limited/)
-  assert.equal(attempts, 2)
-  assert.deepEqual(queue.load(scope), command())
+  assert.deepEqual(
+    JSON.parse(storage.getItem(queue.storageKey(scope)) ?? "{}").retryAttemptedAt,
+    [10_000, 10_001],
+  )
 
-  now += 60_001
-  const saved = await queue.enqueue(scope, command(), async () => ({ acknowledgedRevision: 5 }))
+  const reloadedQueue = createCategoryCaptureQueue({ storage, now: () => now })
+  await assert.rejects(reloadedQueue.enqueue(scope, command(), fail), (error: unknown) => {
+    assert.ok(error instanceof CategoryCaptureRetryLimitedError)
+    assert.equal(error.retryAt, 70_000)
+    return true
+  })
+  assert.equal(attempts, 2)
+  assert.deepEqual(reloadedQueue.load(scope), command())
+
+  now = 70_000
+  const saved = await reloadedQueue.enqueue(scope, command(), async () => ({
+    acknowledgedRevision: 5,
+  }))
   assert.equal(saved.acknowledgedRevision, 5)
 })
 

@@ -182,10 +182,21 @@ function sourceIdentity(
     (product) => product.capturedProductId === resolution.capturedProductId,
   )
   if (pending) return pending.capturedProductId
-  const planned = portfolio.plannedPurchases.find(
-    (product) => product.category === resolution.category && product.role === resolution.role,
-  )
+  const planned = findPlannedPurchase(portfolio, resolution)
   return planned?.plannedPurchaseId ?? "none"
+}
+
+function findPlannedPurchase(
+  portfolio: ProposedProductPortfolio,
+  resolution: Stage3CategoryResolution,
+) {
+  return portfolio.schemaVersion === 3
+    ? portfolio.plannedPurchases.find(
+        (product) => product.sourceDecisionKey === resolution.decisionKey,
+      )
+    : portfolio.plannedPurchases.find(
+        (product) => product.category === resolution.category && product.role === resolution.role,
+      )
 }
 
 function assessment(decision: PlanCategoryDecision): RoutineSystemAssessment {
@@ -225,9 +236,7 @@ function makeItem(input: {
   const pending = portfolio.pendingProducts.find(
     (product) => product.capturedProductId === resolution.capturedProductId,
   )
-  const planned = portfolio.plannedPurchases.find(
-    (product) => product.category === resolution.category && product.role === resolution.role,
-  )
+  const planned = findPlannedPurchase(portfolio, resolution)
   const included = inclusion(resolution)
 
   let availability: RoutineItem["state"]["availability"] = "none"
@@ -343,8 +352,8 @@ export async function compileInitialRoutineCandidate(
 ): Promise<RoutineCandidate> {
   const portfolio = input.portfolioSnapshot as unknown as ProposedProductPortfolio
   if (
-    ![1, 2].includes(input.portfolioSchemaVersion) ||
-    ![1, 2].includes(portfolio.schemaVersion) ||
+    ![1, 2, 3].includes(input.portfolioSchemaVersion) ||
+    ![1, 2, 3].includes(portfolio.schemaVersion) ||
     input.portfolioSchemaVersion !== portfolio.schemaVersion ||
     portfolio.personalPlanId !== input.personalPlanId
   ) {
