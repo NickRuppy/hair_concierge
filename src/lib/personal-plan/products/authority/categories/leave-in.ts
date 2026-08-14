@@ -17,15 +17,14 @@ import {
   unknownEvaluation,
   unsupportedEvaluation,
 } from "../shared"
+import {
+  careDirectionAxisFitResult,
+  orderedAxisFitResult,
+  repairSupportAxisFitResult,
+} from "./axis-fit"
 
 const WEIGHTS = ["light", "medium", "rich"] as const
 const REPAIR_LEVELS: PlanRepairSupportLevel[] = ["low", "medium", "high"]
-
-function repairDistance(product: string, target: PlanRepairSupportLevel) {
-  return Math.abs(
-    REPAIR_LEVELS.indexOf(product as PlanRepairSupportLevel) - REPAIR_LEVELS.indexOf(target),
-  )
-}
 
 function supportsPostWashApplication(stages: readonly string[]) {
   return stages.some((stage) => stage === "towel_dry" || stage === "damp" || stage === "wet")
@@ -128,10 +127,12 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
         ),
       ],
     }
-  const weightDistance = Math.abs(
-    WEIGHTS.indexOf(facts.spec.weight as (typeof WEIGHTS)[number]) - WEIGHTS.indexOf(target.weight),
+  const weightResult = orderedAxisFitResult(
+    facts.spec.weight as (typeof WEIGHTS)[number],
+    target.weight,
+    WEIGHTS,
   )
-  if (weightDistance >= 2)
+  if (weightResult === "fail")
     return {
       verdict: "mismatch" as const,
       criteria: [
@@ -143,15 +144,12 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
         ),
       ],
     }
-  const repairLevelDistance = repairDistance(
-    facts.spec.repairSupportLevel!,
+  const repairResult = repairSupportAxisFitResult(
+    facts.spec.repairSupportLevel as PlanRepairSupportLevel,
     target.repairSupportLevel,
+    REPAIR_LEVELS,
   )
-  if (
-    REPAIR_LEVELS.indexOf(facts.spec.repairSupportLevel as PlanRepairSupportLevel) <
-      REPAIR_LEVELS.indexOf(target.repairSupportLevel) &&
-    repairLevelDistance >= 2
-  )
+  if (repairResult === "fail")
     return {
       verdict: "mismatch" as const,
       criteria: [
@@ -163,8 +161,11 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
         ),
       ],
     }
-  const opposite = new Set(["moisture:protein", "protein:moisture"])
-  if (opposite.has(`${facts.spec.careDirection}:${target.careDirection}`))
+  const careDirectionResult = careDirectionAxisFitResult(
+    facts.spec.careDirection!,
+    target.careDirection,
+  )
+  if (careDirectionResult === "fail")
     return {
       verdict: "mismatch" as const,
       criteria: [
@@ -177,11 +178,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
       ],
     }
   const supportive =
-    weightDistance === 1 ||
-    repairLevelDistance === 1 ||
-    (facts.spec.repairSupportLevel === "high" && target.repairSupportLevel !== "high") ||
-    facts.spec.careDirection === "balanced" ||
-    target.careDirection === "balanced"
+    weightResult === "caution" || repairResult === "caution" || careDirectionResult === "caution"
   return {
     verdict: supportive ? ("supportive" as const) : ("ideal" as const),
     criteria: [

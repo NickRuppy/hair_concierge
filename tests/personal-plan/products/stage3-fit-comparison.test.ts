@@ -16,6 +16,7 @@ import type {
 import {
   buildStage3FitComparison,
   findStage3SelectedComparisonCandidate,
+  stage3CriterionEvidenceRelation,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
 } from "../../../src/lib/personal-plan/products/fit-comparison"
 import type { PlanProductRole } from "../../../src/lib/personal-plan/types"
@@ -41,6 +42,14 @@ const SPECIALIST_CATEGORIES = new Set<PersonalPlanCategory>([
   "deep_cleansing_shampoo",
 ])
 
+test("criterion evidence preserves pass, caution, fail, and unknown as distinct relations", () => {
+  assert.equal(stage3CriterionEvidenceRelation("pass"), "in_target")
+  assert.equal(stage3CriterionEvidenceRelation("caution"), "supportive")
+  assert.equal(stage3CriterionEvidenceRelation("fail"), "outside_target")
+  assert.equal(stage3CriterionEvidenceRelation("unknown"), "unknown")
+  assert.equal(stage3CriterionEvidenceRelation(undefined), "unknown")
+})
+
 for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCategory[]) {
   for (const role of CATEGORY_ROLE_POLICIES[category].allowedRoles) {
     test(`${category}/${role} builds a bounded exact comparison contract`, () => {
@@ -62,7 +71,7 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
       assert.ok(comparison.alternatives.length <= STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
       assert.ok(comparison.dimensions.length <= 3)
       assert.ok(comparison.evidenceRows!.length > 0)
-      assert.ok(comparison.evidenceRows!.length <= 3)
+      assert.ok(comparison.evidenceRows!.length <= 4)
       assert.ok(
         comparison.evidenceRows!.every(
           (row) => row.target === null || row.target.profileEvidenceLabels.length <= 2,
@@ -72,7 +81,9 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
         comparison
           .evidenceRows!.flatMap((row) => row.productValues)
           .every((value) =>
-            ["in_target", "outside_target", "unknown", "no_target"].includes(value.relation),
+            ["in_target", "supportive", "outside_target", "unknown", "no_target"].includes(
+              value.relation,
+            ),
           ),
       )
       assert.equal(comparison.products[0]?.productId, "owned")
@@ -587,6 +598,103 @@ test("evidence rows carry exact server-owned current and candidate target relati
   ])
 })
 
+test("Conditioner keeps confirmed rerank direction visible beside an explicit target-fit mismatch", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("conditioner", "conditioner_rinse_out", {
+      productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
+        targetFit: "known_mismatch",
+        balanceDirection: "balanced",
+      }),
+      candidates: [factsFor("conditioner", "conditioner_rinse_out", "candidate")],
+    }),
+  )
+
+  assert.equal(comparison.mode, "comparison")
+  assert.equal(comparison.evidenceRows?.length, 4)
+  assert.deepEqual(
+    comparison.evidenceRows?.find((row) => row.rowId === "conditioner.target_fit")
+      ?.productValues[0],
+    { productId: "owned", valueLabel: "nicht vollständig", relation: "outside_target" },
+  )
+  assert.deepEqual(
+    comparison.evidenceRows?.find((row) => row.rowId === "conditioner.care_direction")
+      ?.productValues[0],
+    { productId: "owned", valueLabel: "ausgeglichen", relation: "supportive" },
+  )
+})
+
+test("Shampoo keeps confirmed route observations neutral beside an explicit target-fit mismatch", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("shampoo", "shampoo_everyday", {
+      productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
+        targetFit: "known_mismatch",
+        shampooObservations: {
+          cleansingIntensity: "gentle",
+          supportedScalpRoutes: ["dry"],
+        },
+      }),
+      candidates: [factsFor("shampoo", "shampoo_everyday", "candidate")],
+    }),
+  )
+
+  assert.equal(
+    comparison.evidenceRows
+      ?.find((row) => row.rowId === "shampoo.target_fit")
+      ?.productValues.find((value) => value.productId === "owned")?.relation,
+    "outside_target",
+  )
+  assert.deepEqual(
+    comparison.evidenceRows
+      ?.find((row) => row.rowId === "shampoo.scalp_route")
+      ?.productValues.find((value) => value.productId === "owned"),
+    { productId: "owned", valueLabel: "trocken", relation: "no_target" },
+  )
+})
+
+for (const scenario of [
+  {
+    name: "Conditioner adjacent weight",
+    category: "conditioner" as const,
+    role: "conditioner_rinse_out" as const,
+    rowId: "conditioner.weight",
+    overrides: { weight: "medium" },
+  },
+  {
+    name: "Leave-in balanced care direction",
+    category: "leave_in" as const,
+    role: "post_wash_leave_in" as const,
+    rowId: "leave_in.care_direction",
+    overrides: { careDirection: "balanced" },
+  },
+  {
+    name: "Mask adjacent weight",
+    category: "mask" as const,
+    role: "intensive_conditioning_mask" as const,
+    rowId: "mask.weight",
+    overrides: { weight: "medium" },
+  },
+  {
+    name: "Oil adjacent leave-on weight",
+    category: "oil" as const,
+    role: "dry_finish" as const,
+    rowId: "oil.weight",
+    overrides: { weight: "medium" },
+  },
+]) {
+  test(`${scenario.name} remains supportive instead of being flattened to outside`, () => {
+    const comparison = buildStage3FitComparison(
+      authorityInput(scenario.category, scenario.role, {
+        productFacts: factsFor(scenario.category, scenario.role, "owned", scenario.overrides),
+        candidates: [factsFor(scenario.category, scenario.role, "candidate")],
+      }),
+    )
+    const value = comparison.evidenceRows
+      ?.find((row) => row.rowId === scenario.rowId)
+      ?.productValues.find((candidate) => candidate.productId === "owned")
+    assert.equal(value?.relation, "supportive")
+  })
+}
+
 test("set-valued and exact-overlap dimensions preserve equality without inventing distance", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
     productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
@@ -940,6 +1048,13 @@ function factsFor<C extends PersonalPlanCategory>(
     netContentValue?: number | null
     netContentUnit?: "ml" | "g" | null
     verdict?: Extract<Stage3FitVerdict, "ideal" | "supportive" | "mismatch" | "unknown">
+    targetFit?: "matched" | "known_mismatch" | "unknown"
+    balanceDirection?: string | null
+    careDirection?: string | null
+    shampooObservations?: {
+      cleansingIntensity: string | null
+      supportedScalpRoutes: string[]
+    }
     weight?: string | null
     repairSupportLevel?: string | null
     cleansingIntensity?: string | null
@@ -952,12 +1067,16 @@ function factsFor<C extends PersonalPlanCategory>(
       return {
         ...common,
         category,
+        ...(overrides.shampooObservations
+          ? { comparisonObservations: overrides.shampooObservations }
+          : {}),
         spec: {
           thickness: "normal",
           shampooBucket: role === "shampoo_dandruff" ? "schuppen" : "normal",
           scalpRoute: "balanced",
           cleansingIntensity: overrides.cleansingIntensity ?? "regular",
-          targetFit: overrides.verdict === "unknown" ? "unknown" : "matched",
+          targetFit:
+            overrides.targetFit ?? (overrides.verdict === "unknown" ? "unknown" : "matched"),
         },
       } as never
     case "conditioner":
@@ -977,8 +1096,10 @@ function factsFor<C extends PersonalPlanCategory>(
                 : "light",
           ),
           repairSupportLevel: overrideOrDefault(overrides, "repairSupportLevel", "medium"),
-          balanceDirection: "moisture",
-          targetFit: overrides.verdict === "unknown" ? "unknown" : "matched",
+          balanceDirection:
+            overrides.balanceDirection === undefined ? "moisture" : overrides.balanceDirection,
+          targetFit:
+            overrides.targetFit ?? (overrides.verdict === "unknown" ? "unknown" : "matched"),
         },
       } as never
     case "leave_in":
@@ -992,7 +1113,8 @@ function factsFor<C extends PersonalPlanCategory>(
             "weight",
             overrides.verdict === "supportive" ? "medium" : "light",
           ),
-          careDirection: "moisture",
+          careDirection:
+            overrides.careDirection === undefined ? "moisture" : overrides.careDirection,
           repairSupportLevel: overrideOrDefault(overrides, "repairSupportLevel", "medium"),
           roles: [role],
           providesHeatProtection:
@@ -1036,7 +1158,8 @@ function factsFor<C extends PersonalPlanCategory>(
             "weight",
             overrides.verdict === "supportive" ? "medium" : "light",
           ),
-          careDirection: "moisture",
+          careDirection:
+            overrides.careDirection === undefined ? "moisture" : overrides.careDirection,
           repairSupportLevel: overrideOrDefault(overrides, "repairSupportLevel", "medium"),
           functionalBenefits: [],
         },

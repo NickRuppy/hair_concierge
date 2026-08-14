@@ -146,10 +146,11 @@ async function normalizeProductFacts(
 ): Promise<Stage3CategoryProductFacts | null> {
   const productId = text(product.id)
   if (!productId || product.category_key !== category) return null
-  const [spec, protocols] = await Promise.all([
+  const [loadedSpec, protocols] = await Promise.all([
     loadCategorySpec(client, category, productId, selectionContext),
     loadProtocols(client, category, productId),
   ])
+  const { comparisonObservations, ...spec } = loadedSpec
   const common = {
     productId,
     displayName: text(product.name) ?? productId,
@@ -187,6 +188,7 @@ async function normalizeProductFacts(
     ...common,
     spec,
     factFingerprint: fingerprint(withoutFingerprint),
+    ...(category === "shampoo" && comparisonObservations ? { comparisonObservations } : {}),
   } as Stage3CategoryProductFacts
 }
 
@@ -213,11 +215,21 @@ async function loadCategorySpec(
   category: PersonalPlanCategory,
   productId: string,
   selectionContext: CategorySelectionContext,
-): Promise<Stage3CategoryProductFacts["spec"]> {
+): Promise<
+  Stage3CategoryProductFacts["spec"] & {
+    comparisonObservations?: {
+      cleansingIntensity: string | null
+      supportedScalpRoutes: string[]
+    }
+  }
+> {
   switch (category) {
     case "shampoo": {
       const rows = await many(client, "product_shampoo_specs", productId)
-      return selectShampooSpec(rows, selectionContext)
+      return {
+        ...selectShampooSpec(rows, selectionContext),
+        comparisonObservations: shampooComparisonObservations(rows),
+      }
     }
     case "conditioner": {
       const [base, rerank] = await Promise.all([
@@ -324,6 +336,29 @@ async function loadCategorySpec(
         colorTreatedSuitability: text(row?.color_treated_suitability),
       }
     }
+  }
+}
+
+function shampooComparisonObservations(rows: Row[]): {
+  cleansingIntensity: string | null
+  supportedScalpRoutes: string[]
+} {
+  const complete = rows
+    .map((row) => ({
+      scalpRoute: text(row.scalp_route),
+      cleansingIntensity: text(row.cleansing_intensity),
+    }))
+    .filter(
+      (row): row is { scalpRoute: string; cleansingIntensity: string } =>
+        row.scalpRoute !== null && row.cleansingIntensity !== null,
+    )
+  if (complete.length === 0 || complete.length !== rows.length) {
+    return { cleansingIntensity: null, supportedScalpRoutes: [] }
+  }
+  const intensities = new Set(complete.map((row) => row.cleansingIntensity))
+  return {
+    cleansingIntensity: intensities.size === 1 ? complete[0]!.cleansingIntensity : null,
+    supportedScalpRoutes: [...new Set(complete.map((row) => row.scalpRoute))].sort(),
   }
 }
 

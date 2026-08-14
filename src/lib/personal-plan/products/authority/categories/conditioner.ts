@@ -15,6 +15,11 @@ import {
   unknownEvaluation,
   unsupportedEvaluation,
 } from "../shared"
+import {
+  careDirectionAxisFitResult,
+  orderedAxisFitResult,
+  repairSupportAxisFitResult,
+} from "./axis-fit"
 
 const LEVELS = ["low", "medium", "high"] as const
 const WEIGHTS = ["light", "medium", "rich"] as const
@@ -78,10 +83,12 @@ function evaluateFacts(input: Stage3AuthorityInput<"conditioner">, facts: Stage3
   }))
     if (value === null) missing.push(key)
   if (missing.length) return { verdict: "unknown" as const, criteria, missing }
-  const weightDistance = Math.abs(
-    WEIGHTS.indexOf(facts.spec.weight as (typeof WEIGHTS)[number]) - WEIGHTS.indexOf(target.weight),
+  const weightResult = orderedAxisFitResult(
+    facts.spec.weight as (typeof WEIGHTS)[number],
+    target.weight,
+    WEIGHTS,
   )
-  if (weightDistance >= 2)
+  if (weightResult === "fail")
     return {
       verdict: "mismatch" as const,
       criteria: [
@@ -93,8 +100,11 @@ function evaluateFacts(input: Stage3AuthorityInput<"conditioner">, facts: Stage3
         ),
       ],
     }
-  const opposite = new Set(["moisture:protein", "protein:moisture"])
-  if (opposite.has(`${facts.spec.proteinMoistureBalance}:${target.careDirection}`))
+  const careDirectionResult = careDirectionAxisFitResult(
+    facts.spec.proteinMoistureBalance!,
+    target.careDirection,
+  )
+  if (careDirectionResult === "fail")
     return {
       verdict: "mismatch" as const,
       criteria: [
@@ -106,10 +116,12 @@ function evaluateFacts(input: Stage3AuthorityInput<"conditioner">, facts: Stage3
         ),
       ],
     }
-  const repairDistance =
-    LEVELS.indexOf(target.repairSupportLevel) -
-    LEVELS.indexOf(facts.spec.repairSupportLevel as (typeof LEVELS)[number])
-  if (repairDistance >= 2)
+  const repairResult = repairSupportAxisFitResult(
+    facts.spec.repairSupportLevel as (typeof LEVELS)[number],
+    target.repairSupportLevel,
+    LEVELS,
+  )
+  if (repairResult === "fail")
     return {
       verdict: "mismatch" as const,
       criteria: [
@@ -121,7 +133,9 @@ function evaluateFacts(input: Stage3AuthorityInput<"conditioner">, facts: Stage3
         ),
       ],
     }
-  const supportive = weightDistance === 1 || repairDistance !== 0
+  // Balanced Conditioner direction is display-compatible, but it has never
+  // changed decision authority. Preserve that boundary here.
+  const supportive = weightResult === "caution" || repairResult === "caution"
   return {
     verdict: supportive ? ("supportive" as const) : ("ideal" as const),
     criteria: [

@@ -64,6 +64,11 @@ export type Stage3AuthorityCommonProductFacts = {
 
 export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
   category: "shampoo"
+  /** Display-only observations from the complete contextual catalog rows. */
+  comparisonObservations?: {
+    cleansingIntensity: string | null
+    supportedScalpRoutes: string[]
+  }
   spec: {
     thickness: string | null
     shampooBucket: string | null
