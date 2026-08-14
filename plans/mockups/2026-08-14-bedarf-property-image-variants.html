@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Bedarfsplan – eigenschaftsspezifische Beispielbilder</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --plum: #291a43;
+        --purple: #6b50a0;
+        --muted: #706a65;
+        --paper: #fdfbf9;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #f4f0ec;
+        color: var(--plum);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .page { max-width: 1240px; margin: 0 auto; padding: 28px 18px 56px; }
+      .intro { max-width: 850px; margin: 0 auto 24px; }
+      .eyebrow { color: var(--purple); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      h1 { margin: 8px 0 10px; font-family: Georgia, serif; font-size: clamp(30px, 5vw, 48px); line-height: 1.05; }
+      .intro p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+      .decision {
+        margin-top: 18px; padding: 14px 16px; border: 1px solid #ded4eb; border-radius: 14px;
+        background: #f6f1fb; color: #4d3a6b; font-size: 13px; line-height: 1.5;
+      }
+      .profiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: start; }
+      .profile { background: white; border: 1px solid #e7dfd8; border-radius: 22px; overflow: hidden; box-shadow: 0 12px 28px rgba(45, 30, 25, .06); }
+      .annotation { min-height: 112px; padding: 16px; background: #2f2147; color: white; }
+      .annotation strong { display: block; margin-bottom: 7px; font-size: 14px; }
+      .annotation p { margin: 0; color: #e4dced; font-size: 12px; line-height: 1.45; }
+      .phone { background: var(--paper); padding: 18px 14px 20px; }
+      .brand { text-align: center; font-family: Georgia, serif; font-size: 22px; }
+      .steps { display: flex; justify-content: space-between; margin: 13px 0 20px; color: #847e79; font-size: 8px; font-weight: 700; }
+      .steps b { color: var(--plum); }
+      .overline { color: #77716c; font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      h2 { margin: 4px 0 6px; font-family: Georgia, serif; font-size: 27px; }
+      .lead { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+      .progress { height: 4px; margin: 14px 0 17px; overflow: hidden; border-radius: 99px; background: #e7e0d9; }
+      .progress span { display: block; width: 100%; height: 100%; background: var(--purple); }
+      .section-head { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px; font-weight: 800; }
+      .section-head span { color: var(--purple); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; }
+      .cards { display: grid; gap: 10px; }
+      .card { display: grid; grid-template-columns: 66px minmax(0, 1fr) 14px; gap: 10px; align-items: center; padding: 11px; border: 1px solid; border-radius: 18px; }
+      .card.blue { background: #edf3f5; border-color: #cfdee3; }
+      .card.green { background: #edf4f0; border-color: #cedfd5; }
+      .card.rose { background: #f5edef; border-color: #e2d0d4; }
+      .card.mint { background: #ebf3f2; border-color: #cadeDB; }
+      .card.gold { background: #f5f0e5; border-color: #e2d4b8; }
+      .image { position: relative; display: grid; width: 66px; height: 82px; place-items: center; overflow: hidden; border-radius: 14px; background: #f3efe8; }
+      .image img { width: 78%; height: 94%; object-fit: contain; }
+      .badge { position: absolute; bottom: 4px; left: 4px; padding: 3px 6px; border-radius: 99px; background: rgba(41,26,67,.82); color: white; font-size: 7px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+      .meta { color: var(--purple); font-size: 8px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+      .copy strong { display: block; margin-top: 4px; font-size: 13px; }
+      .copy p { margin: 3px 0 6px; color: #5f5954; font-size: 9px; line-height: 1.35; }
+      .pill { display: inline-block; padding: 3px 7px; border: 1px solid rgba(107,80,160,.18); border-radius: 99px; background: rgba(255,255,255,.75); color: #62507e; font-size: 8px; font-weight: 800; }
+      .arrow { color: #8c8782; font-size: 18px; }
+      .timeline { max-width: 850px; margin: 24px auto 0; padding: 18px; border-radius: 18px; background: white; border: 1px solid #e7dfd8; }
+      .timeline h3 { margin: 0 0 14px; font-size: 14px; }
+      .rail { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: center; }
+      .rail div { padding: 12px; border-radius: 12px; background: #f7f3ef; color: #594f49; font-size: 12px; line-height: 1.4; }
+      .rail b { color: var(--plum); }
+      .rail span { color: var(--purple); font-weight: 900; }
+      @media (max-width: 900px) { .profiles { grid-template-columns: 1fr; max-width: 430px; margin: 0 auto; } .annotation { min-height: auto; } }
+      @media (max-width: 620px) { .rail { grid-template-columns: 1fr; } .rail span { transform: rotate(90deg); justify-self: center; } }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro">
+        <div class="eyebrow">Planungsnachweis · Bildlogik</div>
+        <h1>Das Bild folgt dem Bedarf – nicht nur der Kategorie.</h1>
+        <p>Die Oberfläche bleibt unverändert. Diese drei realistischen Zustände zeigen, wie ein kleiner geprüfter Bilderpool Rolle, Pflegegewicht und Pflegerichtung sichtbar näher an den jeweiligen Bedarfsplan bringt.</p>
+        <div class="decision"><strong>Vorgeschlagene Priorität:</strong> Kategorie muss passen → Rolle muss passen → Pflegegewicht → Pflegerichtung → Reparatur-/Funktionsschwerpunkt. Das Bild bleibt ausdrücklich ein <em>Beispiel</em>; das konkrete Produkt wird weiterhin erst später gewählt.</div>
+      </section>
+
+      <section class="profiles" aria-label="Vergleich von drei Bedarfsplan-Zuständen">
+        <article class="profile">
+          <div class="annotation"><strong>Fall A · leicht + Hitzeschutz-Rolle</strong><p>Conditioner zeigt eine leichte, ausgewogene Pflege. Das Leave-in zeigt ein leichtes Spray, das die Rolle vor Hitze abdecken kann.</p></div>
+          <div class="phone">
+            <div class="brand">chaarlie</div><div class="steps"><b>Bedarf</b><span>Verfeinerung</span><span>Produkte</span><span>Routine</span><span>Anwendung</span></div>
+            <div class="overline">Optionale Empfehlungen</div><h2>Zusätzlich sinnvoll</h2><p class="lead">Bilder zeigen passende Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.</p>
+            <div class="progress"><span></span></div><div class="section-head">Für deine Ziele <span>2 Vorschläge</span></div>
+            <div class="cards">
+              <div class="card blue"><div class="image"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/483b41d6-632c-4efe-9bcc-488c80bf5bb7/09-483b41d6-632c-4efe-9bcc-488c80bf5bb7-balea-balea-ultra-med-sensitive-59115f28323b.webp" alt="Leichter Conditioner als Beispiel" /><span class="badge">Beispiel</span></div><div class="copy"><div class="meta">Conditioner · optional</div><strong>Leicht pflegend</strong><p>Glättet deine Längen, ohne unnötig zu beschweren.</p><span class="pill">leichte Pflege</span></div><div class="arrow">⌄</div></div>
+              <div class="card green"><div class="image"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/5dc2fae3-a0ca-4e6c-9c30-02dd192772f0/16-5dc2fae3-a0ca-4e6c-9c30-02dd192772f0-gliss-gliss-ultimate-repair-spruh-conditioner-e4d12ef3de4d.webp" alt="Leichtes Spray-Leave-in als Beispiel" /><span class="badge">Beispiel</span></div><div class="copy"><div class="meta">Leave-in · optional</div><strong>Leicht schützend</strong><p>Gibt zusätzlichen Schutz vor Trockenheit, Reibung und passender Hitze.</p><span class="pill">vor Hitze</span></div><div class="arrow">⌄</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="profile">
+          <div class="annotation"><strong>Fall B · reichhaltig + Vorwäsche</strong><p>Die gleiche Kategorie bekommt ein sichtbar anderes, metadata-geprüftes Beispiel. Beim Öl hat die Vorwäsche-Rolle Vorrang vor einem generischen Finish-Bild.</p></div>
+          <div class="phone">
+            <div class="brand">chaarlie</div><div class="steps"><b>Bedarf</b><span>Verfeinerung</span><span>Produkte</span><span>Routine</span><span>Anwendung</span></div>
+            <div class="overline">Optionale Empfehlungen</div><h2>Zusätzlich sinnvoll</h2><p class="lead">Bilder zeigen passende Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.</p>
+            <div class="progress"><span></span></div><div class="section-head">Für deine Ziele <span>2 Vorschläge</span></div>
+            <div class="cards">
+              <div class="card blue"><div class="image"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/c2d7eb89-9a2e-4476-bb89-c0f33a2aa501/40-c2d7eb89-9a2e-4476-bb89-c0f33a2aa501-ogx-ogx-renewing-argan-oil-9862ee69062e.webp" alt="Reichhaltiger Conditioner als Beispiel" /><span class="badge">Beispiel</span></div><div class="copy"><div class="meta">Conditioner · optional</div><strong>Reichhaltig pflegend</strong><p>Pflegt trockenere Längen mit mehr Gewicht und Feuchtigkeitsfokus.</p><span class="pill">reichhaltige Pflege</span></div><div class="arrow">⌄</div></div>
+              <div class="card rose"><div class="image"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/ff13bc3a-8bc6-49df-85a0-7a67add26926/25-ff13bc3a-8bc6-49df-85a0-7a67add26926-nanoil-nanoil-avocadool-7007106f3ec4.webp" alt="Reichhaltiges Vorwäscheöl als Beispiel" /><span class="badge">Beispiel</span></div><div class="copy"><div class="meta">Haaröl · optional</div><strong>Reichhaltige Vorwäsche</strong><p>Unterstützt beanspruchte Längen gezielt vor der Haarwäsche.</p><span class="pill">Vorwäsche</span></div><div class="arrow">⌄</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="profile">
+          <div class="annotation"><strong>Fall C · Kopfhaut-Rollen</strong><p>Rollen sind harte Grenzen: reizkompatibles Shampoo und Kopfhautpeeling dürfen nicht dasselbe generische Kopfhautbild erhalten.</p></div>
+          <div class="phone">
+            <div class="brand">chaarlie</div><div class="steps"><b>Bedarf</b><span>Verfeinerung</span><span>Produkte</span><span>Routine</span><span>Anwendung</span></div>
+            <div class="overline">Optionale Empfehlungen</div><h2>Zusätzlich sinnvoll</h2><p class="lead">Bilder zeigen passende Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.</p>
+            <div class="progress"><span></span></div><div class="section-head">Für deine Ziele <span>2 Vorschläge</span></div>
+            <div class="cards">
+              <div class="card gold"><div class="image"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1ef2be82-259c-4a1f-af2e-3ac3403f9731/37-1ef2be82-259c-4a1f-af2e-3ac3403f9731-salthouse-salthouse-anti-juckreiz-d55447789e9c.webp" alt="Sanftes Shampoo für gereizte Kopfhaut als Beispiel" /><span class="badge">Beispiel</span></div><div class="copy"><div class="meta">Shampoo · optional</div><strong>Sanft reinigend</strong><p>Reinigt, ohne empfindliche Kopfhaut unnötig zu reizen.</p><span class="pill">Kopfhautkomfort</span></div><div class="arrow">⌄</div></div>
+              <div class="card mint"><div class="image"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/scalp/isana-professional-aha-pha-scalp-peeling/isana-professional-aha-pha-scalp-peeling-cf3f6d227eeb.webp" alt="Kopfhautpeeling als Beispiel" /><span class="badge">Beispiel</span></div><div class="copy"><div class="meta">Kopfhautpflege · optional</div><strong>Gezielter Kopfhaut-Reset</strong><p>Ergänzt die Reinigung gelegentlich, ohne Shampoo zu ersetzen.</p><span class="pill">Kopfhaut-Reset</span></div><div class="arrow">⌄</div></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="timeline">
+        <h3>Unsichtbare Ladeverbesserung</h3>
+        <div class="rail"><div><b>Basis sichtbar</b><br />Nur die tatsächlich folgenden optionalen Bilder werden bestimmt.</div><span>→</span><div><b>Im Hintergrund</b><br />Die aufgelösten lokalen WebPs werden vorgeladen.</div><span>→</span><div><b>Klick auf „Optional“</b><br />Karten und Bilder erscheinen gemeinsam – ohne nachträgliches Pop-in.</div></div>
+      </section>
+    </main>
+  </body>
+</html>

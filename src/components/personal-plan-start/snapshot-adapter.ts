@@ -7,6 +7,7 @@ import type {
   PlanProductRole,
   Stage1Category,
 } from "@/lib/personal-plan/types"
+import type { Stage1ProductExamplePreviewResponse } from "@/lib/personal-plan/product-preview-contract"
 
 import type { NeedCardViewModel } from "./need-card"
 import type { NeedPlanScreenViewModel } from "./need-plan-screen"
@@ -24,27 +25,6 @@ const CATEGORY_LABELS: Record<Stage1Category, string> = {
   bondbuilder: "Bondbuilder",
   deep_cleansing_shampoo: "Tiefenreinigung",
 }
-
-const CATEGORY_EXAMPLE_IMAGES = {
-  shampoo:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1ef2be82-259c-4a1f-af2e-3ac3403f9731/37-1ef2be82-259c-4a1f-af2e-3ac3403f9731-salthouse-salthouse-anti-juckreiz-d55447789e9c.webp",
-  conditioner:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/007a0b35-2372-4836-9aa5-fd089cd588d4/05-007a0b35-2372-4836-9aa5-fd089cd588d4-balea-balea-natural-beauty-hibiskus-78479c0a7a2f.webp",
-  leave_in:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/5dc2fae3-a0ca-4e6c-9c30-02dd192772f0/16-5dc2fae3-a0ca-4e6c-9c30-02dd192772f0-gliss-gliss-ultimate-repair-spruh-conditioner-e4d12ef3de4d.webp",
-  heat_protectant:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/heat/jean-len-beat-the-heat-100ml/manufacturer-front.webp",
-  oil: "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/4a95e1de-54e9-4fcd-b227-72a5824d13c1/11-4a95e1de-54e9-4fcd-b227-72a5824d13c1-dr-scheller-dr-scheller-jojobaol-18ac55078631.webp",
-  mask: "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/9e1442c9-4ab8-4819-a851-66859a98ed80/13-9e1442c9-4ab8-4819-a851-66859a98ed80-fructis-fructis-hair-food-papaya-00daf3210708.webp",
-  scalp_care:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/6b01025d-9e72-4514-b42e-bbb6065fbe1c/13-6b01025d-9e72-4514-b42e-bbb6065fbe1c-elvital-elvital-ol-magique-midnight-serum-ae5a315dc466.webp",
-  dry_shampoo:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-05/786a1396-914e-4739-a32c-1c3ead39a3d1/03-786a1396-914e-4739-a32c-1c3ead39a3d1-batiste-trockenshampoo-original-43040f50c097.webp",
-  bondbuilder:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/38dace91-0fba-49ee-a93f-ac36e488fe4b/17-38dace91-0fba-49ee-a93f-ac36e488fe4b-k18-k18-leave-in-molecular-repair-hair-mask-8595971dcd08.webp",
-  deep_cleansing_shampoo:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-additions/2026-07-03/deep-cleansing/balea-professional-shampoo-tiefenreinigung.webp",
-} satisfies Record<Stage1Category, string>
 
 const ROLE_PILLS: Partial<Record<PlanProductRole, string>> = {
   shampoo_everyday: "sanft",
@@ -273,7 +253,7 @@ function cardFromDecision(decision: PlanCategoryDecision): NeedCardViewModel | n
     purpose: presentation.purpose,
     pills: [...new Set(pills)].slice(0, 2),
     frequency: cadence,
-    imageUrl: CATEGORY_EXAMPLE_IMAGES[decision.category] ?? null,
+    imageUrl: null,
     imageAlt: `Beispielbild für ${CATEGORY_LABELS[decision.category]}; kein ausgewähltes Produkt.`,
     paused: decision.executionState === "paused",
     detailBlocks: [
@@ -360,7 +340,41 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
   const visibleOptionalCards = pausedOnlyOptional ? [] : optionalCards
   const hasOptionalPage = visibleOptionalCards.length > 0
   return {
+    sourceInputHash: snapshot.inputHash,
     basis: screenFor("basis", visibleBasisCards, hasOptionalPage),
     optional: hasOptionalPage ? screenFor("optional", visibleOptionalCards, hasOptionalPage) : null,
+  }
+}
+
+export function applyStage1ProductExamplePreviews(
+  plan: PlanStartReadyViewModel,
+  response: Stage1ProductExamplePreviewResponse,
+): PlanStartReadyViewModel {
+  if (
+    !plan.personalPlanId ||
+    plan.personalPlanId !== response.personalPlanId ||
+    !plan.sourceInputHash ||
+    plan.sourceInputHash !== response.sourceInputHash
+  ) {
+    return plan
+  }
+  const previews = new Map(response.previews.map((preview) => [preview.category, preview]))
+  const apply = (screen: NeedPlanScreenViewModel): NeedPlanScreenViewModel => ({
+    ...screen,
+    cards: screen.cards.map((card) => {
+      const preview = previews.get(card.id as Stage1Category)
+      return preview
+        ? {
+            ...card,
+            imageUrl: preview.imageUrl,
+            imageAlt: `Beispielprodukt ${preview.productName} für ${card.categoryLabel}; die finale Produktauswahl folgt später.`,
+          }
+        : { ...card, imageUrl: null }
+    }),
+  })
+  return {
+    ...plan,
+    basis: apply(plan.basis),
+    optional: plan.optional ? apply(plan.optional) : null,
   }
 }

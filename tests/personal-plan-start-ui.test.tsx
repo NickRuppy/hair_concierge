@@ -3,7 +3,10 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { resolvePlanStartPageState } from "../src/app/plan-start/page"
+import {
+  resolvePlanStartPageState,
+  Stage1ProductExamplePreviewWarmup,
+} from "../src/app/plan-start/page"
 import {
   NeedCard,
   PlanStartFlow,
@@ -11,11 +14,16 @@ import {
   PlanStartRetryableError,
   PlanStartUnavailable,
   adaptInitialNeedSnapshotToPlanStartViewModel,
+  applyStage1ProductExamplePreviews,
   interpretPlanStartApiResponse,
   type NeedCardViewModel,
   type PlanStartReadyViewModel,
 } from "../src/components/personal-plan-start"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
+import {
+  STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL,
+  stage1ProductExamplePreviewRequestUrl,
+} from "../src/lib/personal-plan/product-preview-contract"
 import type { InitialNeedPlanSnapshot, InitialProductPreview } from "../src/lib/personal-plan/types"
 import type { PersonalPlanQuizSubmissionEnvelope } from "../src/lib/personal-plan-quiz/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
@@ -50,6 +58,8 @@ function card(overrides: Partial<NeedCardViewModel> = {}): NeedCardViewModel {
 }
 
 const readyPlan: PlanStartReadyViewModel = {
+  personalPlanId: "plan-1",
+  sourceInputHash: "input-1",
   basis: {
     kind: "basis",
     overline: "Dein persönlicher Plan",
@@ -82,6 +92,67 @@ const readyPlan: PlanStartReadyViewModel = {
     ],
   },
 }
+
+test("warms the source-keyed preview request in server-rendered Stage 1 HTML", () => {
+  const previewUrl = stage1ProductExamplePreviewRequestUrl({
+    personalPlanId: "plan-1",
+    sourceInputHash: "input-1",
+  })
+  const html = renderToStaticMarkup(
+    <Stage1ProductExamplePreviewWarmup
+      initialJourney={{ stage: "stage1" }}
+      initialPlan={readyPlan}
+    />,
+  )
+
+  assert.equal(
+    previewUrl,
+    "/api/personal-plan/stage-1/previews?personalPlanId=plan-1&sourceInputHash=input-1",
+  )
+  assert.match(html, /rel="preconnect" href="https:\/\/pqdkhefxsxkyeqelqegq\.supabase\.co"/)
+  assert.match(
+    html,
+    /rel="preload" as="fetch" href="\/api\/personal-plan\/stage-1\/previews\?personalPlanId=plan-1&amp;sourceInputHash=input-1" type="application\/json" crossorigin="anonymous" fetchPriority="low"/,
+  )
+  assert.equal(STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL, "private, max-age=60, must-revalidate")
+})
+
+test("binds only source-matched authority previews to their exact category cards", () => {
+  const response = {
+    schemaVersion: 1 as const,
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    sourceInputHash: "input-1",
+    previews: [
+      {
+        category: "conditioner" as const,
+        role: "conditioner_rinse_out" as const,
+        productId: "conditioner-light",
+        productName: "Leichter Conditioner",
+        imageUrl: "https://example.com/conditioner-light.webp",
+        verdict: "ideal" as const,
+        authorityVersion: "personal-plan.conditioner.v3",
+      },
+    ],
+  }
+
+  const applied = applyStage1ProductExamplePreviews(readyPlan, response)
+  assert.equal(
+    applied.basis.cards.find((item) => item.id === "conditioner")?.imageUrl,
+    "https://example.com/conditioner-light.webp",
+  )
+  assert.match(
+    applied.basis.cards.find((item) => item.id === "conditioner")?.imageAlt ?? "",
+    /Leichter Conditioner.*finale Produktauswahl/,
+  )
+  assert.equal(
+    applyStage1ProductExamplePreviews(readyPlan, {
+      ...response,
+      sourceInputHash: "stale-input",
+    }),
+    readyPlan,
+  )
+})
 
 function computedSnapshot(
   answers: PersonalPlanQuizSubmissionEnvelope["answers"] = COMPLETE_V3_PLAN_ENVELOPE.answers,
@@ -121,6 +192,10 @@ test("renders the signed-off Basis shell with folded cards and example-preview g
   assert.match(html, /data-plan-start-card-preview="absent"/)
   assert.match(html, /aria-expanded="false"/)
   assert.doesNotMatch(html, /Zusätzlich sinnvoll/)
+  assert.match(
+    html,
+    /<link rel="preload" as="image" href="https:\/\/pqdkhefxsxkyeqelqegq\.supabase\.co\/storage\/v1\/object\/public\/product-images\/test\.webp"/,
+  )
 })
 
 test("omits the Optional page and progress step when no optional categories exist", () => {
@@ -371,7 +446,7 @@ test("the enabled production gate maps ineligible API responses to unavailable H
   )
 })
 
-test("adapts a valid saved Stage-1 snapshot into catalog-independent example cards", () => {
+test("does not substitute category-only images for live authority previews", () => {
   const snapshot = withPreviews(
     computedSnapshot({
       ...COMPLETE_V3_PLAN_ENVELOPE.answers,
@@ -406,11 +481,8 @@ test("adapts a valid saved Stage-1 snapshot into catalog-independent example car
   assert.equal(plan.basis.title, "Deine Basis")
   const shampoo = plan.basis.cards.find((item) => item.categoryLabel === "Shampoo")
   const conditioner = plan.basis.cards.find((item) => item.categoryLabel === "Conditioner")
-  assert.ok(shampoo?.imageUrl)
-  assert.match(shampoo.imageUrl, /salthouse-anti-juckreiz/)
-  assert.doesNotMatch(shampoo.imageUrl, /test-shampoo/)
-  assert.match(shampoo.imageAlt ?? "", /Beispielbild/)
-  assert.match(conditioner?.imageUrl ?? "", /balea-natural-beauty-hibiskus/)
+  assert.equal(shampoo?.imageUrl, null)
+  assert.equal(conditioner?.imageUrl, null)
   assert.ok(plan.optional)
   assert.ok(plan.optional.cards.some((item) => item.id === "bondbuilder"))
   assert.ok(plan.optional.cards.some((item) => item.paused))
@@ -423,8 +495,8 @@ test("adapts a valid saved Stage-1 snapshot into catalog-independent example car
   if (interpreted.state !== "ready") return
   const html = renderToStaticMarkup(<PlanStartFlow state="ready" plan={interpreted.plan} />)
   assert.match(html, /Deine Basis/)
-  assert.match(html, /data-plan-start-card-preview="example"/)
-  assert.doesNotMatch(html, /data-plan-start-card-preview="absent"/)
+  assert.doesNotMatch(html, /data-plan-start-card-preview="example"/)
+  assert.match(html, /data-plan-start-card-preview="absent"/)
 })
 
 test("adapts Basis-only snapshots without an empty Optional page", () => {

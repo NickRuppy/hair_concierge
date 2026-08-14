@@ -14,4 +14,7 @@ export {
   type PlanStartFlowProps,
   type PlanStartReadyViewModel,
 } from "./plan-start-flow"
-export { adaptInitialNeedSnapshotToPlanStartViewModel } from "./snapshot-adapter"
+export {
+  adaptInitialNeedSnapshotToPlanStartViewModel,
+  applyStage1ProductExamplePreviews,
+} from "./snapshot-adapter"

@@ -18,12 +18,15 @@ type AdminClient = SupabaseClient
 type Row = Record<string, unknown>
 type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
 type ConditionerTarget = Extract<PlanCategoryTarget, { category: "conditioner" }>
-type CategorySelectionContext = {
+export type Stage3RecommendationCandidateSelection = {
+  category: PersonalPlanCategory
   hairThickness: string
   role: Stage3DecisionSubject["role"]
   shampooTarget: ShampooTarget | null
   conditionerTarget: ConditionerTarget | null
 }
+
+type CategorySelectionContext = Omit<Stage3RecommendationCandidateSelection, "category">
 
 export const STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT = 12
 
@@ -118,6 +121,14 @@ async function loadRecommendationCandidates(
   return facts
     .filter((value): value is Stage3CategoryProductFacts => value !== null)
     .sort(compareRecommendationFacts)
+}
+
+export async function loadStage3RecommendationCandidates(
+  client: AdminClient,
+  input: Stage3RecommendationCandidateSelection,
+): Promise<Stage3CategoryProductFacts[]> {
+  const { category, ...selectionContext } = input
+  return loadRecommendationCandidates(client, category, selectionContext)
 }
 
 async function loadOneProduct(

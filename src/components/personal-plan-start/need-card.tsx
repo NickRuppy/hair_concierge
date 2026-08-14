@@ -57,10 +57,10 @@ const NEUTRAL_CARD_STYLE = {
 
 export function NeedCard({ card }: { card: NeedCardViewModel }) {
   const [open, setOpen] = useState(Boolean(card.initiallyOpen))
-  const [imageAvailable, setImageAvailable] = useState(Boolean(card.imageUrl))
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const fallbackId = useId()
   const panelId = `need-card-${card.id || fallbackId}-detail`
-  const hasImage = Boolean(card.imageUrl) && imageAvailable
+  const hasImage = Boolean(card.imageUrl) && failedImageUrl !== card.imageUrl
   const categoryStyle = CATEGORY_CARD_STYLES[card.id as Stage1Category] ?? NEUTRAL_CARD_STYLE
 
   return (
@@ -102,7 +102,7 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
               height={78}
               unoptimized
               className="h-[94%] w-[78%] object-contain"
-              onError={() => setImageAvailable(false)}
+              onError={() => setFailedImageUrl(card.imageUrl)}
             />
             <span className="absolute bottom-1 left-1 rounded-full bg-[#291a43]/80 px-1.5 py-0.5 text-[7px] font-extrabold uppercase tracking-[0.08em] text-white">
               Beispiel
