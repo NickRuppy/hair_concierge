@@ -1,4 +1,7 @@
-import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
+import type {
+  ApplicationDayTypeKey,
+  PersonalPlanCategory,
+} from "@/lib/routines/personal-plan/application/contracts"
 
 export type ApplicationProductActionView = {
   actionKey: string
@@ -50,7 +53,7 @@ export type ApplicationDayView = {
   isPartial: boolean
   provisionalProductCount: number
   unresolvedProductCount: number
-  shelf?: ApplicationShelfSlotView[]
+  shelf: ApplicationShelfSlotView[]
 }
 
 export type ApplicationShelfSlotView =
@@ -59,9 +62,10 @@ export type ApplicationShelfSlotView =
       productId: string
       productName: string
       imageUrl: string | null
+      category: PersonalPlanCategory
       status: "confirmed" | "provisional"
     }
-  | { kind: "open"; categoryLabelDe: string }
+  | { kind: "open"; category: PersonalPlanCategory; categoryLabelDe: string }
 
 export type ApplicationRecoveryKind =
   | "feature_disabled"

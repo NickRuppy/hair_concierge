@@ -1508,6 +1508,236 @@ test("submitting an unchecked role deliberately records an open not-ready gap", 
   ])
 })
 
+test("multiple Conditioners auto-assign to their sole multi-product role", async () => {
+  let finalization:
+    | Extract<
+        Parameters<Stage3ProductsGateway["mutate"]>[0]["mutation"],
+        { type: "replace_capture_category" }
+      >
+    | undefined
+  const gateway = createAuthorityTestGateway()
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    if (input.mutation.type === "replace_capture_category") finalization = input.mutation
+    return originalMutate(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-conditioner-auto-role",
+    refinedVersionId: "refined-conditioner-auto-role",
+    orderedCategories: [
+      {
+        category: "conditioner",
+        requiredRoles: ["conditioner_rinse_out"],
+        needSummary: "Pflege nach der Wäsche",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Conditioner", "condition", 0)
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onAddAnotherProduct()
+  await captureCatalogProduct(harness, "Conditioner", "condition", 1)
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+
+  assert.equal(findByType(tree, SemanticRoleAssignment), null)
+  assert.equal(finalization?.candidates.length, 2)
+  assert.ok(
+    finalization?.candidates.every(
+      (candidate) => candidate.roles.length === 1 && candidate.roles[0] === "conditioner_rinse_out",
+    ),
+  )
+})
+
+test("an uncovered role saves the explicitly selected third strict recommendation", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "conditioner",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Pflege nach der Wäsche",
+      authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    },
+  ]
+  const initialDraft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-uncovered-third-recommendation",
+      userId: "user-uncovered-third-recommendation",
+      personalPlanId: "plan-uncovered-third-recommendation",
+      refinedVersionId: "refined-uncovered-third-recommendation",
+      requirements,
+      now: "2026-08-13T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    completedCaptureCategories: ["conditioner"],
+    uncoveredRoles: [
+      {
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        reason: "no_product_owned",
+      },
+    ],
+  }
+  const subject = deriveStage3DecisionSubjects(initialDraft)[0]!
+  const candidates: Stage3SelectedComparisonCandidate[] = [1, 2, 3].map((position) => ({
+    productId: `catalog-strict-conditioner-${position}`,
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    verdict: "ideal",
+    criteria: [],
+    recommendation: {
+      recommendationId: `recommendation-strict-conditioner-${position}`,
+      productId: `catalog-strict-conditioner-${position}`,
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      displayName: `Strenger Conditioner ${position}`,
+      reason: "Erfüllt alle bestätigten Ziele.",
+      authorityRuleId: "test.strict_conditioner",
+    },
+    factFingerprint: `facts:strict-conditioner-${position}`,
+  }))
+  const evaluation: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "conditioner",
+    subjectKey: subject.decisionKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+  const comparison: Stage3FitComparison = {
+    schemaVersion: 1,
+    mode: "compact",
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    subjectKey: subject.decisionKey,
+    sourceIdentity: null,
+    products: candidates.map((candidate) => ({
+      productId: candidate.productId,
+      displayName: candidate.recommendation.displayName,
+      category: candidate.category,
+      role: candidate.role,
+      source: "alternative" as const,
+    })),
+    alternatives: candidates,
+    dimensions: [],
+    evidenceRows: [],
+    reason: "specialist_category",
+  }
+  const emittedIntents: Stage3AuthoritySemanticIntent[] = []
+  let canonicalDraft = initialDraft
+  const gateway = {
+    ...createAuthorityTestGateway(),
+    loadOrCreate: async () => ({
+      status: "active" as const,
+      draft: canonicalDraft,
+      requirements,
+      authorityEvaluations: [],
+      fitComparisons: [],
+    }),
+    reviewDecisionBundles: async () => [],
+    resolveDecision: async (input: {
+      intent: Stage3AuthoritySemanticIntent
+    }): Promise<Stage3MutationResponse> => {
+      emittedIntents.push(input.intent)
+      const selected = candidates.find(
+        (candidate) => candidate.productId === input.intent.selectedCandidateId,
+      )
+      assert.ok(selected)
+      assert.equal(input.intent.action, "select_replacement")
+      assert.equal(input.intent.selectedCandidateFactFingerprint, selected.factFingerprint)
+      canonicalDraft = {
+        ...initialDraft,
+        revision: 1,
+        decisions: [
+          {
+            ...testAuthorityDecision(subject, evaluation, input.intent),
+            choiceState: "planned_purchase",
+            recommendation: selected.recommendation,
+            authorityEvidence: {
+              schemaVersion: 1,
+              subjectKey: subject.decisionKey,
+              refinedNeedVersionId: initialDraft.refinedVersionId,
+              refinedInputHash: "test-refined-input",
+              authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+              productFactFingerprint: null,
+              recommendationFactFingerprint: selected.factFingerprint,
+              coverageRuleIds: [],
+            },
+          },
+        ],
+      }
+      return { status: "saved", draft: canonicalDraft }
+    },
+  }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: initialDraft.personalPlanId,
+      refinedVersionId: initialDraft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [
+        { category: "conditioner", allowsMultiple: true, allowsExplicitNone: true },
+      ],
+    },
+    draft: initialDraft,
+    requirements,
+    authorityEvaluations: [evaluation],
+    fitComparisons: [comparison],
+  }
+  const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
+
+  let tree = await renderSettled(harness)
+  let review = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(review)
+  review.props.onDisplayedAlternativeChange(2)
+  tree = await renderSettled(harness)
+  review = findByType<React.ComponentProps<typeof ProductFitComparison>>(tree, ProductFitComparison)
+  assert.equal(review?.props.displayedAlternativeIndex, 2)
+  review?.props.onSelectedRecommendationChange?.(candidates[2]!.productId)
+  tree = await renderSettled(harness)
+  review = findByType<React.ComponentProps<typeof ProductFitComparison>>(tree, ProductFitComparison)
+  await review?.props.onAction("select_replacement", {
+    productId: candidates[2]!.productId,
+    factFingerprint: candidates[2]!.factFingerprint,
+  })
+
+  assert.deepEqual(emittedIntents, [
+    {
+      type: "resolve_decision",
+      subjectKey: subject.decisionKey,
+      action: "select_replacement",
+      selectedCandidateId: candidates[2]!.productId,
+      selectedCandidateFactFingerprint: candidates[2]!.factFingerprint,
+    },
+  ])
+  assert.equal(canonicalDraft.decisions[0]?.choiceState, "planned_purchase")
+  assert.deepEqual(canonicalDraft.decisions[0]?.recommendation, candidates[2]!.recommendation)
+  assert.equal(
+    canonicalDraft.decisions[0]?.authorityEvidence?.recommendationFactFingerprint,
+    candidates[2]!.factFingerprint,
+  )
+})
+
 test("role finalization shows saving immediately and suppresses duplicate actions", async () => {
   let finalizationCalls = 0
   let blockMutations = false
@@ -3144,29 +3374,9 @@ test("individual clear-fit acceptance shows saving and suppresses a second immed
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
-  )?.props.onAddAnotherProduct()
-  await captureCatalogProduct(harness, "Conditioner", "condition", 1)
-  tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
-    tree,
-    ProductCaptureScreen,
   )?.props.onContinue()
   tree = await renderSettled(harness)
-  let roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
-    tree,
-    SemanticRoleAssignment,
-  )
-  assert.ok(roles)
-  for (const product of roles.props.products) {
-    roles.props.onToggleRole(product.capturedProductId, "conditioner_rinse_out", true)
-  }
-  tree = await renderSettled(harness)
-  roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
-    tree,
-    SemanticRoleAssignment,
-  )
-  roles?.props.onContinue()
-  tree = await renderSettled(harness)
+  assert.equal(findByType(tree, SemanticRoleAssignment), null)
   const review = findByType<React.ComponentProps<typeof ProductFitComparison>>(
     tree,
     ProductFitComparison,
@@ -3504,20 +3714,7 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   )
   capture?.props.onContinue()
   tree = await renderSettled(harness)
-  let roleScreen = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
-    tree,
-    SemanticRoleAssignment,
-  )
-  assert.equal(roleScreen?.props.category, "conditioner")
-  for (const product of roleScreen.props.products) {
-    roleScreen.props.onToggleRole(product.capturedProductId, "conditioner_rinse_out", true)
-  }
-  tree = await renderSettled(harness)
-  roleScreen = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
-    tree,
-    SemanticRoleAssignment,
-  )
-  roleScreen?.props.onContinue()
+  assert.equal(findByType(tree, SemanticRoleAssignment), null)
 
   await captureCatalogProduct(harness, "Öl", "oil")
   tree = await renderSettled(harness)

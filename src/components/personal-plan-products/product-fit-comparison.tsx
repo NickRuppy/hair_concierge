@@ -42,6 +42,8 @@ type ProductFitComparisonProps = {
   /** Parent-owned, presentation-only candidate focus. It is never a pending intent. */
   displayedAlternativeIndex: number
   onDisplayedAlternativeChange: (index: number) => void
+  selectedRecommendationProductId?: string | null
+  onSelectedRecommendationChange?: (productId: string) => void
   disabled?: boolean
   recoveryMessage?: string
   onAction: (
@@ -49,6 +51,7 @@ type ProductFitComparisonProps = {
     selectedCandidate?: ProductFitComparisonSelection,
   ) => void
   onRetry?: () => void
+  onSearch?: () => void
   onBack: () => void
 }
 
@@ -61,15 +64,18 @@ export function ProductFitComparison({
   reviewTotal = 1,
   displayedAlternativeIndex,
   onDisplayedAlternativeChange,
+  selectedRecommendationProductId = null,
+  onSelectedRecommendationChange,
   disabled = false,
   recoveryMessage,
   onAction,
   onRetry,
+  onSearch,
   onBack,
 }: ProductFitComparisonProps): ReactElement {
   const alternatives = comparison.alternatives.slice(0, 3)
   const selectedIndex = normalizeIndex(displayedAlternativeIndex, alternatives.length)
-  const selectedAlternative = alternatives[selectedIndex] ?? null
+  const displayedAlternative = alternatives[selectedIndex] ?? null
   const ownedProduct = comparison.products.find((product) => product.source === "current") ?? null
   const currentProduct =
     ownedProduct ??
@@ -81,17 +87,27 @@ export function ProductFitComparison({
         }
       : null)
   const allowedActions = new Set(evaluation.allowedActions)
+  const isUncoveredReview = currentProduct === null
+  const selectedRecommendation =
+    alternatives.find((candidate) => candidate.productId === selectedRecommendationProductId) ??
+    alternatives[0] ??
+    null
+  const selectedAlternative = isUncoveredReview ? selectedRecommendation : displayedAlternative
   // The bounded comparison bundle is the server's replacement allowlist. Adapters deliberately
   // do not expose select_replacement through allowedActions.
   const replacementAllowed = selectedAlternative !== null
-  const primaryAction = primaryActionFor({ evaluation, replacementAllowed })
+  const authorityPrimaryAction = primaryActionFor({ evaluation, replacementAllowed })
+  const searchIsPrimary = isUncoveredReview && !selectedAlternative && Boolean(onSearch)
+  const primaryAction = searchIsPrimary ? null : authorityPrimaryAction
   const quietActions = quietActionsFor({
     allowedActions,
     selectedAlternative,
     replacementAllowed,
     primaryAction,
   })
-  const hasTruthfulAction = primaryAction !== null || quietActions.length > 0
+  const searchIsQuiet = isUncoveredReview && Boolean(selectedAlternative && onSearch)
+  const hasTruthfulAction =
+    searchIsPrimary || primaryAction !== null || quietActions.length > 0 || searchIsQuiet
   const contextLabel = `${categoryLabel} · ${roleLabel} · Produkt ${reviewPosition} von ${reviewTotal}`
   const evidenceRows = comparison.evidenceRows ?? []
   const isUnknownFit =
@@ -115,8 +131,20 @@ export function ProductFitComparison({
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
       />
     )
-  } else if (!currentProduct && !selectedAlternative) {
-    content = <UncoveredReview contextLabel={contextLabel} categoryLabel={categoryLabel} />
+  } else if (isUncoveredReview) {
+    content = (
+      <UncoveredRecommendationReview
+        contextLabel={contextLabel}
+        categoryLabel={categoryLabel}
+        comparison={comparison}
+        alternatives={alternatives}
+        selectedIndex={selectedIndex}
+        selectedProductId={selectedRecommendation?.productId ?? null}
+        disabled={disabled}
+        onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        onSelect={onSelectedRecommendationChange ?? (() => undefined)}
+      />
+    )
   } else if (isUnknownFit) {
     content = (
       <UnassessableReview
@@ -195,7 +223,7 @@ export function ProductFitComparison({
 
       {evaluation.status !== "unsupported" && hasTruthfulAction ? (
         <>
-          {quietActions.length > 0 ? (
+          {quietActions.length > 0 || searchIsQuiet ? (
             <section
               className="mt-5 rounded-2xl border border-border bg-card p-4"
               aria-labelledby="other-decisions-title"
@@ -204,6 +232,17 @@ export function ProductFitComparison({
                 Andere Möglichkeit
               </h2>
               <div className="mt-2 grid gap-1">
+                {searchIsQuiet ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="h-auto justify-start whitespace-normal px-2 py-3 text-left text-muted-foreground hover:text-foreground"
+                    disabled={disabled}
+                    onClick={onSearch}
+                  >
+                    Produkt suchen
+                  </Button>
+                ) : null}
                 {quietActions.map((action) => (
                   <Button
                     key={action.kind}
@@ -220,17 +259,31 @@ export function ProductFitComparison({
             </section>
           ) : null}
 
-          {primaryAction ? (
+          {searchIsPrimary || primaryAction ? (
             <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
               <Button
                 type="button"
                 variant="funnelCta"
                 className="h-auto min-h-14 w-full whitespace-normal px-5 py-3 text-center leading-tight"
                 disabled={disabled}
-                onClick={() => invokeAction(primaryAction.kind, selectedAlternative, onAction)}
-                aria-label={primaryAction.label}
+                onClick={() => {
+                  if (searchIsPrimary) onSearch?.()
+                  else if (primaryAction)
+                    invokeAction(primaryAction.kind, selectedAlternative, onAction)
+                }}
+                aria-label={
+                  searchIsPrimary
+                    ? "Produkt suchen"
+                    : selectedAlternative && isUncoveredReview
+                      ? `${selectedAlternative.recommendation.displayName} auswählen`
+                      : primaryAction?.label
+                }
               >
-                {primaryAction.label}
+                {searchIsPrimary
+                  ? "Produkt suchen"
+                  : selectedAlternative && isUncoveredReview
+                    ? `${selectedAlternative.recommendation.displayName} auswählen`
+                    : primaryAction?.label}
               </Button>
             </div>
           ) : null}
@@ -332,8 +385,10 @@ function ComparisonReview({
       {(comparison.evidenceRows?.length ?? 0) > 0 && selectedAlternative ? (
         <EvidenceMatrix
           rows={comparison.evidenceRows ?? []}
-          currentProductId={ownedProductId}
-          alternativeProductId={selectedAlternative.productId}
+          firstProductId={ownedProductId}
+          secondProductId={selectedAlternative.productId}
+          firstLabel="Deins"
+          secondLabel="Alternative"
         />
       ) : (
         <CompactEvidence evaluation={evaluation} selectedAlternative={selectedAlternative} />
@@ -515,21 +570,95 @@ function UnassessableReview({
   )
 }
 
-function UncoveredReview({
+function UncoveredRecommendationReview({
   contextLabel,
   categoryLabel,
+  comparison,
+  alternatives,
+  selectedIndex,
+  selectedProductId,
+  disabled,
+  onDisplayedAlternativeChange,
+  onSelect,
 }: {
   contextLabel: string
   categoryLabel: string
+  comparison: Stage3FitComparison
+  alternatives: readonly Stage3SelectedComparisonCandidate[]
+  selectedIndex: number
+  selectedProductId: string | null
+  disabled: boolean
+  onDisplayedAlternativeChange: (index: number) => void
+  onSelect: (productId: string) => void
 }) {
+  const first = alternatives[0] ?? null
+  const secondaryIndex = alternatives.length > 1 ? (selectedIndex > 0 ? selectedIndex : 1) : null
+  const secondary = secondaryIndex === null ? null : (alternatives[secondaryIndex] ?? null)
+  const firstProduct = first
+    ? (comparison.products.find((product) => product.productId === first.productId) ?? null)
+    : null
+  const secondaryProduct = secondary
+    ? (comparison.products.find((product) => product.productId === secondary.productId) ?? null)
+    : null
+
   return (
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={`Noch kein ${categoryLabel || "Produkt"}`}
-        description="Aktuell ist keine verifizierte Empfehlung verfügbar. Das bedeutet nicht, dass es grundsätzlich kein passendes Produkt gibt."
+        title={`Du hast noch kein ${categoryLabel || "Produkt"}`}
+        description={
+          first
+            ? "Diese Produkte erfüllen alle bestätigten Ziele für diese Aufgabe."
+            : "Aktuell erfüllt keine verifizierte Empfehlung alle bestätigten Ziele. Du kannst gezielt suchen oder vorerst ohne Produkt fortfahren."
+        }
       />
-      <ProductCard product={null} label="Dein Produkt" />
+      {first ? (
+        <>
+          <div className={cn("grid min-w-0 gap-2", secondary && "grid-cols-2")}>
+            <ProductCard
+              product={firstProduct}
+              label="Empfehlung 1"
+              alternativeVerdict="ideal"
+              selected={selectedProductId === first.productId}
+              disabled={disabled}
+              onSelect={() => onSelect(first.productId)}
+            />
+            {secondary && secondaryIndex !== null ? (
+              <ProductCard
+                product={secondaryProduct}
+                label={`Alternative ${secondaryIndex + 1}`}
+                alternativeVerdict="ideal"
+                selected={selectedProductId === secondary.productId}
+                disabled={disabled}
+                onSelect={() => onSelect(secondary.productId)}
+              />
+            ) : null}
+          </div>
+          {alternatives.length > 2 && secondaryIndex !== null ? (
+            <RecommendationNavigation
+              alternatives={alternatives}
+              secondaryIndex={secondaryIndex}
+              disabled={disabled}
+              onChange={onDisplayedAlternativeChange}
+            />
+          ) : null}
+          {(comparison.evidenceRows?.length ?? 0) > 0 && secondary ? (
+            <EvidenceMatrix
+              rows={comparison.evidenceRows ?? []}
+              firstProductId={first.productId}
+              secondProductId={secondary.productId}
+              firstLabel="Empfehlung 1"
+              secondLabel={`Alternative ${secondaryIndex! + 1}`}
+            />
+          ) : (
+            <CompactRecommendationEvidence first={first} second={secondary} />
+          )}
+        </>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-[var(--brand-plum)]/35 bg-muted/30 p-5 text-center text-sm text-muted-foreground">
+          Noch keine streng passende Produktempfehlung im verifizierten Katalog.
+        </div>
+      )}
     </>
   )
 }
@@ -582,24 +711,75 @@ function ProductCard({
   product,
   label,
   alternativeVerdict = null,
+  selected = false,
+  disabled = false,
+  onSelect,
 }: {
   product: ReviewProduct | null
   label: string
   alternativeVerdict?: Stage3SelectedComparisonCandidate["verdict"] | null
+  selected?: boolean
+  disabled?: boolean
+  onSelect?: () => void
 }) {
   const idealAlternative = alternativeVerdict === "ideal"
   const supportiveAlternative = alternativeVerdict === "supportive"
   return (
     <article
       className={cn(
-        "min-w-0 rounded-2xl border bg-card p-3",
+        "relative min-w-0 rounded-2xl border bg-card p-3",
         idealAlternative
           ? "border-[var(--status-ok-text)]/45"
           : supportiveAlternative
             ? "border-[var(--status-pending-text)]/45"
             : "border-[var(--brand-plum)]",
+        selected && "ring-2 ring-[var(--brand-plum)] ring-offset-2",
       )}
     >
+      {onSelect ? (
+        <>
+          <ProductCardContent
+            product={product}
+            label={label}
+            idealAlternative={idealAlternative}
+            supportiveAlternative={supportiveAlternative}
+          />
+          <button
+            type="button"
+            className="absolute inset-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-label={`${product?.displayName ?? label} als Auswahl markieren`}
+            aria-pressed={selected}
+            disabled={disabled}
+            onClick={onSelect}
+          >
+            <span className="sr-only">{product?.displayName ?? label} als Auswahl markieren</span>
+          </button>
+        </>
+      ) : (
+        <ProductCardContent
+          product={product}
+          label={label}
+          idealAlternative={idealAlternative}
+          supportiveAlternative={supportiveAlternative}
+        />
+      )}
+    </article>
+  )
+}
+
+function ProductCardContent({
+  product,
+  label,
+  idealAlternative,
+  supportiveAlternative,
+}: {
+  product: ReviewProduct | null
+  label: string
+  idealAlternative: boolean
+  supportiveAlternative: boolean
+}) {
+  return (
+    <>
       <p
         className={cn(
           "text-[10px] font-bold uppercase tracking-wide text-muted-foreground",
@@ -630,7 +810,7 @@ function ProductCard({
           ) : null}
         </div>
       </div>
-    </article>
+    </>
   )
 }
 
@@ -704,17 +884,74 @@ function AlternativeNavigation({
   )
 }
 
+function RecommendationNavigation({
+  alternatives,
+  secondaryIndex,
+  disabled,
+  onChange,
+}: {
+  alternatives: readonly Stage3SelectedComparisonCandidate[]
+  secondaryIndex: number
+  disabled: boolean
+  onChange: (index: number) => void
+}) {
+  const secondaryIndexes = alternatives.map((_, index) => index).filter((index) => index > 0)
+  const position = Math.max(0, secondaryIndexes.indexOf(secondaryIndex))
+  const move = (delta: number) => {
+    const next = secondaryIndexes[normalizeIndex(position + delta, secondaryIndexes.length)]
+    if (next !== undefined) onChange(next)
+  }
+  return (
+    <nav
+      className="mt-3 flex items-center justify-center gap-3"
+      aria-label="Weitere passende Empfehlungen"
+    >
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        aria-label="Vorherige Empfehlung"
+        disabled={disabled}
+        onClick={() => move(-1)}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+      <p
+        role="status"
+        aria-live="polite"
+        className="min-w-32 text-center text-xs text-muted-foreground"
+      >
+        Alternative {secondaryIndex + 1} von {alternatives.length}
+      </p>
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        aria-label="Nächste Empfehlung"
+        disabled={disabled}
+        onClick={() => move(1)}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+    </nav>
+  )
+}
+
 function EvidenceMatrix({
   rows,
-  currentProductId,
-  alternativeProductId,
+  firstProductId,
+  secondProductId,
+  firstLabel,
+  secondLabel,
 }: {
   rows: Stage3FitEvidenceRow[]
-  currentProductId?: string
-  alternativeProductId: string
+  firstProductId?: string
+  secondProductId: string
+  firstLabel: string
+  secondLabel: string
 }) {
   const initialRow =
-    rows.find((row) => relationFor(row, currentProductId) === "outside_target") ?? rows[0]
+    rows.find((row) => relationFor(row, firstProductId) === "outside_target") ?? rows[0]
   const [selectedRowId, setSelectedRowId] = useState(initialRow?.rowId ?? "")
   const selectedRow = rows.find((row) => row.rowId === selectedRowId) ?? initialRow
   const choose = (rowId: string) => setSelectedRowId(rowId)
@@ -735,15 +972,15 @@ function EvidenceMatrix({
           <thead>
             <tr className="text-muted-foreground">
               <th className="w-[34%] px-2 py-2 text-left">Prüfpunkt</th>
-              <th className="px-1 py-2">Deins</th>
+              <th className="px-1 py-2">{firstLabel}</th>
               <th className="bg-[var(--brand-plum)]/5 px-1 py-2">Ziel</th>
-              <th className="bg-[var(--brand-plum)]/5 px-1 py-2">Alternative</th>
+              <th className="bg-[var(--brand-plum)]/5 px-1 py-2">{secondLabel}</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row) => {
-              const current = valueFor(row, currentProductId)
-              const alternative = valueFor(row, alternativeProductId)
+              const current = valueFor(row, firstProductId)
+              const alternative = valueFor(row, secondProductId)
               const relation = current?.relation ?? "unknown"
               const alternativeRelation = alternative?.relation ?? "unknown"
               const knownStatus = relation === "in_target" || relation === "outside_target"
@@ -812,8 +1049,10 @@ function EvidenceMatrix({
       {selectedRow ? (
         <SelectedEvidencePanel
           row={selectedRow}
-          currentProductId={currentProductId}
-          alternativeProductId={alternativeProductId}
+          firstProductId={firstProductId}
+          secondProductId={secondProductId}
+          firstLabel={firstLabel}
+          secondLabel={secondLabel}
         />
       ) : null}
     </>
@@ -840,16 +1079,20 @@ function RelationMark({ relation }: { relation: Stage3FitEvidenceRelation }) {
 
 function SelectedEvidencePanel({
   row,
-  currentProductId,
-  alternativeProductId,
+  firstProductId,
+  secondProductId,
+  firstLabel,
+  secondLabel,
 }: {
   row: Stage3FitEvidenceRow
-  currentProductId?: string
-  alternativeProductId: string
+  firstProductId?: string
+  secondProductId: string
+  firstLabel: string
+  secondLabel: string
 }) {
-  const relation = relationFor(row, currentProductId)
-  const currentValue = valueFor(row, currentProductId)?.valueLabel ?? "nicht bestätigt"
-  const alternativeValue = valueFor(row, alternativeProductId)?.valueLabel ?? "nicht bestätigt"
+  const relation = relationFor(row, firstProductId)
+  const currentValue = valueFor(row, firstProductId)?.valueLabel ?? "nicht bestätigt"
+  const alternativeValue = valueFor(row, secondProductId)?.valueLabel ?? "nicht bestätigt"
   const eyebrow =
     relation === "in_target"
       ? "Im Ziel"
@@ -868,8 +1111,8 @@ function SelectedEvidencePanel({
       {row.target ? (
         <div className="mt-2 space-y-2 text-sm leading-relaxed text-muted-foreground">
           <p>
-            <strong className="text-foreground">Deins:</strong> {currentValue}.{" "}
-            <strong className="text-foreground">Alternative:</strong> {alternativeValue}.{" "}
+            <strong className="text-foreground">{firstLabel}:</strong> {currentValue}.{" "}
+            <strong className="text-foreground">{secondLabel}:</strong> {alternativeValue}.{" "}
             <strong className="text-foreground">Ziel:</strong> {row.target.valueLabel}.
           </p>
           <p>
@@ -948,6 +1191,43 @@ function CompactEvidence({
           </li>
         ))}
       </ul>
+    </section>
+  )
+}
+
+function CompactRecommendationEvidence({
+  first,
+  second,
+}: {
+  first: Stage3SelectedComparisonCandidate
+  second: Stage3SelectedComparisonCandidate | null
+}) {
+  const candidates = [first, second].filter(
+    (candidate): candidate is Stage3SelectedComparisonCandidate => candidate !== null,
+  )
+  return (
+    <section
+      className="mt-5 rounded-2xl border border-border bg-card p-4"
+      aria-label="Bestätigte Empfehlungskriterien"
+    >
+      <h2 className="text-sm font-semibold text-foreground">Warum diese Produkte passen</h2>
+      <div className={cn("mt-3 grid gap-4", candidates.length > 1 && "sm:grid-cols-2")}>
+        {candidates.map((candidate, index) => (
+          <div key={candidate.productId}>
+            <h3 className="text-xs font-semibold text-[var(--brand-plum)]">
+              {index === 0 ? "Empfehlung 1" : "Alternative"}
+            </h3>
+            <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
+              {candidate.criteria.slice(0, 3).map((criterion) => (
+                <li key={criterion.criterionId}>
+                  <strong className="text-foreground">{criterion.label}:</strong>{" "}
+                  {criterion.explanation}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }

@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import type { CompiledApplicationViewV1 } from "../src/lib/routines/personal-plan/application/compiler"
 import { ApplicationPage } from "../src/components/application/application-page"
+import type { ApplicationPageView } from "../src/components/application/application-types"
 import { toApplicationPageView } from "../src/components/application/application-view-adapter"
 
 const shampooId = "11111111-1111-4111-8111-111111111111"
@@ -88,6 +89,7 @@ test("adapts compiler output into the product-led Anwendung view", () => {
     ],
   )
   assert.equal(view.days[0].cadenceDe, "Bei deiner nächsten Haarwäsche")
+  assert.equal(view.days[0].shelf[0]?.category, "shampoo")
   assert.equal(
     view.days[0].steps.find((step) => step.kind === "product")?.imageUrl,
     "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/mildes-shampoo.webp",
@@ -98,6 +100,8 @@ test("adapts compiler output into the product-led Anwendung view", () => {
   )
   assert.match(overviewHtml, /Bei deiner nächsten Haarwäsche/)
   assert.match(overviewHtml, /mildes-shampoo\.webp/)
+  assert.match(overviewHtml, /data-application-silhouette="shampoo"/)
+  assert.doesNotMatch(overviewHtml, /snap-x|overflow-x-auto|w-\[82vw\]/)
   assert.match(detailHtml, /Bei deiner nächsten Haarwäsche/)
   assert.equal(view.days[0].steps[0].kind, "transition")
   assert.equal(view.days[0].steps[1].kind, "product")
@@ -212,17 +216,26 @@ test("adapts and renders provisional guidance plus a local unresolved product ga
   assert.equal(view.days[0]!.provisionalProductCount, 1)
   assert.equal(view.days[0]!.unresolvedProductCount, 1)
   assert.deepEqual(
-    view.days[0]!.shelf?.map((slot) => (slot.kind === "product" ? slot.status : slot.kind)),
+    view.days[0]!.shelf.map((slot) => (slot.kind === "product" ? slot.status : slot.kind)),
     ["confirmed", "provisional", "open"],
+  )
+  assert.deepEqual(
+    view.days[0]!.shelf.map((slot) => slot.category),
+    ["shampoo", "conditioner", "leave_in"],
   )
 
   const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
-  assert.match(html, /Plan teilweise bereit/)
+  assert.match(html, /teilweise bereit/i)
+  assert.doesNotMatch(html, /rounded-full[^>]*>Plan teilweise bereit/)
   assert.match(html, /Teilweise bereit/)
   assert.match(html, /data-application-shelf-scene="true"/)
   assert.match(html, /data-application-shelf-slot="provisional"/)
   assert.match(html, /vorgemerkter-conditioner\.webp/)
   assert.match(html, /data-application-shelf-slot="open"/)
+  assert.match(
+    html,
+    /Regal: Shampoo: Mildes Shampoo \(bestätigt\); Conditioner: Vorgemerkter Conditioner \(vorläufig\); Leave-in: Produkt noch offen/,
+  )
   assert.doesNotMatch(html, /Du kannst die bekannten Schritte bereits nutzen/)
 
   const selectedHtml = renderToStaticMarkup(
@@ -247,6 +260,91 @@ test("uses a neutral shelf fallback when a confirmed catalog image is missing", 
   if (view.state !== "ready") return
 
   const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
-  assert.match(html, /data-application-shelf-slot="fallback"/)
-  assert.match(html, /Mildes Shampoo: Bild nicht verfügbar/)
+  assert.match(html, /data-application-image-treatment="fallback"/)
+  assert.match(html, /Regal: Shampoo: Mildes Shampoo \(bestätigt\)/)
+})
+
+test("uses a neutral contained fallback for nonstandard product imagery", () => {
+  const compiled = compiledView()
+  compiled.days[0]!.productBlocks[0]!.imageUrl = "https://owner.example/uploads/shampoo.jpg"
+  const productStep = compiled.days[0]!.outerSequence.find((step) => step.kind === "product")
+  if (productStep?.kind === "product") {
+    productStep.block.imageUrl = "https://owner.example/uploads/shampoo.jpg"
+  }
+
+  const view = toApplicationPageView({ compiled, dayDefinitions: definitions })
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+
+  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.match(html, /data-application-image-treatment="fallback"/)
+  assert.match(html, /src="https:\/\/owner\.example\/uploads\/shampoo\.jpg"/)
+  assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
+})
+
+test("keeps provisional semantics accessible for nonstandard product imagery", () => {
+  const compiled = compiledView()
+  compiled.days[0]!.productBlocks[0]!.status = "provisional"
+  compiled.days[0]!.productBlocks[0]!.provisionalReason = "product_selection"
+  compiled.days[0]!.productBlocks[0]!.imageUrl = "https://owner.example/uploads/shampoo.jpg"
+  const productStep = compiled.days[0]!.outerSequence.find((step) => step.kind === "product")
+  if (productStep?.kind === "product") {
+    productStep.block.status = "provisional"
+    productStep.block.provisionalReason = "product_selection"
+    productStep.block.imageUrl = "https://owner.example/uploads/shampoo.jpg"
+  }
+
+  const view = toApplicationPageView({ compiled, dayDefinitions: definitions })
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+
+  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.match(html, /data-application-shelf-slot="provisional"/)
+  assert.match(html, /Regal: Shampoo: Mildes Shampoo \(vorläufig\)/)
+})
+
+test("renders the ten approved category-specific product silhouettes", () => {
+  const categories = [
+    "shampoo",
+    "conditioner",
+    "leave_in",
+    "heat_protectant",
+    "oil",
+    "mask",
+    "scalp_care",
+    "dry_shampoo",
+    "bondbuilder",
+    "deep_cleansing_shampoo",
+  ] as const
+  const imageUrl =
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-product.webp"
+  const view: ApplicationPageView = {
+    state: "ready",
+    days: [
+      {
+        dayType: "wash_day",
+        sortOrder: 10,
+        labelDe: "Waschtag",
+        summaryDe: "Alle Produktformen",
+        cadenceDe: null,
+        steps: [],
+        isPartial: false,
+        provisionalProductCount: 0,
+        unresolvedProductCount: 0,
+        shelf: categories.map((category, index) => ({
+          kind: "product" as const,
+          productId: `product-${index}`,
+          productName: category,
+          imageUrl,
+          category,
+          status: "confirmed" as const,
+        })),
+      },
+    ],
+  }
+
+  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  for (const category of categories) {
+    assert.match(html, new RegExp(`data-application-silhouette="${category}"`))
+  }
 })

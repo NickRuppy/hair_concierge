@@ -313,109 +313,136 @@ export function RoutineCategoryCard({
     (item) => item.executable && item.state.inclusion === "included",
   ).length
   const summaryStatus = primary ? getRoutineStatus(primary, presentation).label : "Offen"
+  const purposeChips = Array.from(
+    new Set(items.map((item) => routinePurposeLabel(item.purposeKey))),
+  )
+  const categoryTint: Record<string, string> = {
+    shampoo: "bg-amber-50/70",
+    conditioner: "bg-sky-50/70",
+    mask: "bg-violet-50/70",
+    oil: "bg-rose-50/70",
+    leave_in: "bg-emerald-50/70",
+    heat_protectant: "bg-orange-50/70",
+    scalp_care: "bg-teal-50/70",
+    dry_shampoo: "bg-lime-50/70",
+    bondbuilder: "bg-fuchsia-50/70",
+    deep_cleansing_shampoo: "bg-yellow-50/70",
+  }
 
   return (
     <Card
       className={cn(
-        "overflow-hidden border border-[rgba(107,80,160,0.14)] bg-white/95 shadow-sm shadow-[rgba(47,31,71,0.06)]",
+        "overflow-hidden border border-[rgba(107,80,160,0.14)] shadow-sm shadow-[rgba(47,31,71,0.06)]",
+        categoryTint[category] ?? "bg-white/95",
         variant === "routine" && "transition-shadow hover:shadow-md motion-reduce:transition-none",
         variant === "later" && "border-dashed bg-[var(--surface-soft)] shadow-none",
       )}
       role="group"
       aria-label={`Kategorie: ${label}`}
     >
-      <CardHeader className="gap-3 p-4 pb-3 sm:p-5 sm:pb-3">
-        <div className="grid gap-4 sm:grid-cols-[5.5rem_1fr]">
-          <div
-            aria-hidden="true"
-            className={cn(
-              "flex aspect-[3/4] h-28 w-24 items-center justify-center overflow-hidden rounded-[18px] border border-[rgba(107,80,160,0.10)] bg-[#f8f5f2] text-2xl font-semibold text-[var(--brand-plum)] shadow-inner",
-              categoryAccentBorders[category] ?? "border-stone-200",
-            )}
-          >
-            {image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={image} alt="" className="h-full w-full object-contain p-2" />
-            ) : (
-              label.slice(0, 1)
-            )}
-          </div>
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
-                {variant === "later" ? `${label} optional` : label}
-              </p>
-              <span className="rounded-full bg-[var(--surface-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--brand-plum)]">
-                {activeCount > 0 ? `${activeCount} aktiv` : summaryStatus}
-              </span>
-            </div>
-            <CardTitle className="mt-2 text-lg leading-tight sm:text-xl">{primaryName}</CardTitle>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {items.length > 1
-                ? `${items.length} Rollen aus deinem Bedarfsplan.`
-                : primary
-                  ? routinePurposeDescription(primary)
-                  : "Baustein aus deinem Bedarfsplan."}
-            </p>
-          </div>
+      <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 p-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4 sm:p-4">
+        <div
+          aria-hidden="true"
+          className={cn(
+            "flex aspect-square h-24 w-24 items-center justify-center overflow-hidden rounded-[18px] border border-[rgba(107,80,160,0.10)] bg-[#f3f0e8] text-2xl font-semibold text-[var(--brand-plum)] shadow-inner sm:h-28 sm:w-28",
+            categoryAccentBorders[category] ?? "border-stone-200",
+          )}
+        >
+          {image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={image} alt="" className="h-full w-full object-contain" />
+          ) : (
+            label.slice(0, 1)
+          )}
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3 p-4 pt-0 sm:p-5 sm:pt-0">
-        {items.map((item) => {
-          const purpose = routinePurposeLabel(item.purposeKey)
-          const product = productName(item, productPresentation)
-          const status = getRoutineStatus(item, presentation).label
-          const cadence = routineCadenceLabel(item)
-          const timing = routineTimingLabel(item)
-          return (
-            <div
-              key={item.itemKey}
-              className="rounded-[14px] border border-border bg-white px-3 py-3"
-              role="group"
-              aria-label={`Zweck: ${purpose}; Kategorie: ${label}; Produkt: ${product}; Status: ${status}; Rhythmus: ${cadence}`}
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
+              {variant === "later" ? `${label} optional` : label}
+            </p>
+            <span className="text-xs font-semibold text-[var(--brand-plum)]">
+              {activeCount > 0 ? `${activeCount} aktiv` : summaryStatus}
+            </span>
+          </div>
+          <CardTitle className="mt-1 text-base leading-tight sm:text-lg">{primaryName}</CardTitle>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {purposeChips.map((purpose) => (
+              <span
+                key={purpose}
+                className="rounded-full bg-white/75 px-2 py-1 text-xs font-medium text-[var(--brand-plum)]"
+              >
+                {purpose}
+              </span>
+            ))}
+          </div>
+          <div className="mt-3 divide-y divide-border/60 border-t border-border/60">
+            {items.map((item) => {
+              const purpose = routinePurposeLabel(item.purposeKey)
+              const product = productName(item, productPresentation)
+              const status = getRoutineStatus(item, presentation).label
+              const cadence = routineCadenceLabel(item)
+              const timing = routineTimingLabel(item)
+              return (
+                <div
+                  key={item.itemKey}
+                  className="py-2"
+                  role="group"
+                  aria-label={`Zweck: ${purpose}; Kategorie: ${label}; Produkt: ${product}; Status: ${status}; Rhythmus: ${cadence}`}
+                >
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                    <div className="min-w-0">
+                      {items.length > 1 ? (
+                        <p className="text-xs font-semibold text-foreground">{purpose}</p>
+                      ) : null}
+                      {items.length > 1 ? (
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">{product}</p>
+                      ) : null}
+                      <p
+                        className={cn("text-xs text-muted-foreground", items.length > 1 && "mt-1")}
+                      >
+                        {cadence} · {timing}
+                      </p>
+                    </div>
+                    <div className="grid justify-items-end gap-1">
+                      <RoutineStatusBadge item={item} presentation={presentation} />
+                      <span className="text-xs font-semibold text-[var(--brand-plum)]">
+                        {routineFitLabel(item, presentation)}
+                      </span>
+                    </div>
+                  </div>
+                  {item.state.availability === "none" && item.state.systemAssessment === "basis" ? (
+                    <p className="mt-2 rounded-[10px] bg-[var(--status-danger-bg)] px-2 py-1.5 text-xs font-medium text-[var(--status-danger-text)]">
+                      Für diesen Basis-Baustein fehlt noch ein Produkt.
+                    </p>
+                  ) : null}
+                  {onDetail && items.length > 1 ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="mt-1 h-auto px-0 py-1"
+                      onClick={() => onDetail(item)}
+                    >
+                      Details
+                    </Button>
+                  ) : null}
+                </div>
+              )
+            })}
+          </div>
+          {onDetail && primary && items.length === 1 ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="mt-1 px-0"
+              onClick={() => onDetail(primary)}
             >
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-foreground">{purpose}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{product}</p>
-                </div>
-                <RoutineStatusBadge item={item} presentation={presentation} />
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-                <div className="rounded-[12px] bg-[#f8f5f2] px-3 py-2">
-                  <p className="text-xs text-muted-foreground">Rhythmus</p>
-                  <p className="mt-0.5 font-semibold text-foreground">{cadence}</p>
-                </div>
-                <div className="rounded-[12px] bg-[#f8f5f2] px-3 py-2">
-                  <p className="text-xs text-muted-foreground">Wann</p>
-                  <p className="mt-0.5 font-semibold text-foreground">{timing}</p>
-                </div>
-              </div>
-              {item.state.availability === "none" && item.state.systemAssessment === "basis" ? (
-                <p className="mt-3 rounded-[12px] bg-[var(--status-danger-bg)] px-3 py-2 text-sm font-medium text-[var(--status-danger-text)]">
-                  Für diesen Basis-Baustein fehlt noch ein Produkt.
-                </p>
-              ) : null}
-              <details className="group mt-3 rounded-[12px] border border-border bg-white px-3 py-2 text-sm">
-                <summary className="cursor-pointer font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  Anwendungsdetails
-                </summary>
-                <p className="mt-2 leading-relaxed text-muted-foreground">{detailCopy(item)}</p>
-              </details>
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                <span className="rounded-full bg-[var(--surface-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--brand-plum)]">
-                  {routineFitLabel(item, presentation)}
-                </span>
-                {onDetail ? (
-                  <Button type="button" variant="ghost" size="sm" onClick={() => onDetail(item)}>
-                    Detail öffnen
-                  </Button>
-                ) : null}
-              </div>
-            </div>
-          )
-        })}
-      </CardContent>
+              Details
+            </Button>
+          ) : null}
+        </div>
+      </div>
     </Card>
   )
 }

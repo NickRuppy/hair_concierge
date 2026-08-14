@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 — nicht vorhanden, strikte Empfehlungen</title>
+    <style>
+      :root {
+        --plum: #2d164d;
+        --purple: #704bab;
+        --rose: #da626e;
+        --ink: #332f32;
+        --muted: #756f6c;
+        --line: #e7e0e5;
+        --paper: #fffdfc;
+        --lilac: #f6f1fb;
+        --green: #347451;
+        --green-bg: #edf8f1;
+        --amber: #9a5b22;
+        --amber-bg: #fff5e5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #e9e6e7;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      .board {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+      .board h1 {
+        margin: 0 0 6px;
+        color: var(--plum);
+        font:
+          700 28px/1.1 Georgia,
+          serif;
+      }
+      .board > p {
+        margin: 0 0 22px;
+        color: #686164;
+      }
+      .states {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 390px));
+        justify-content: center;
+        gap: 28px;
+      }
+      .case {
+        min-width: 0;
+      }
+      .case-label {
+        min-height: 62px;
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 4px 18px #2d164d15;
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      .case-label strong {
+        display: block;
+        color: var(--plum);
+        font-size: 14px;
+      }
+      .phone {
+        min-height: 760px;
+        overflow: hidden;
+        border-radius: 30px;
+        border: 1px solid #d9d1d7;
+        background: var(--paper);
+        box-shadow: 0 22px 52px #321d4028;
+      }
+      .appbar {
+        padding: 20px 22px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--plum);
+        font:
+          700 28px/1 Georgia,
+          serif;
+      }
+      .saved {
+        color: var(--green);
+        font:
+          700 12px/1 Inter,
+          sans-serif;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        margin-top: 18px;
+      }
+      .progress i {
+        height: 5px;
+        border-radius: 999px;
+        background: #d8cce7;
+      }
+      .progress i:nth-child(-n + 3) {
+        background: var(--purple);
+      }
+      .stage-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: #857d82;
+        font-size: 9px;
+      }
+      .stage-labels b {
+        color: var(--plum);
+      }
+      main {
+        padding: 20px 20px 110px;
+      }
+      .topline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #716a6d;
+        font-size: 12px;
+      }
+      .back {
+        color: var(--plum);
+        font-size: 22px;
+      }
+      .kicker {
+        margin: 22px 0 8px;
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin: 0;
+        color: var(--plum);
+        font:
+          700 33px/1.04 Georgia,
+          serif;
+      }
+      .lead {
+        margin: 10px 0 18px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.45;
+      }
+      .truth {
+        padding: 14px;
+        border-radius: 16px;
+        background: var(--lilac);
+        color: #4b3a5f;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .truth strong {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--plum);
+      }
+      .compare-products {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .product {
+        min-width: 0;
+        padding: 12px;
+        border: 1.5px solid #b79fd9;
+        border-radius: 16px;
+        background: #fff;
+      }
+      .product.alt-product {
+        border-color: #d0bfdc;
+      }
+      .product small {
+        display: block;
+        color: var(--green);
+        font-size: 8px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .product b {
+        display: block;
+        margin-top: 7px;
+        color: var(--plum);
+        font-size: 12px;
+        line-height: 1.22;
+      }
+      .product-visual {
+        display: grid;
+        place-items: center;
+        height: 62px;
+        margin-top: 8px;
+        border-radius: 12px;
+        background: #f0e9f7;
+      }
+      .product-visual::before {
+        content: "";
+        width: 22px;
+        height: 50px;
+        border-radius: 6px 6px 9px 9px;
+        background: linear-gradient(#7e62ad, #3c2162);
+        box-shadow: inset 0 0 0 2px #ffffff88;
+      }
+      .product.alt-product .product-visual::before {
+        background: linear-gradient(#d2b98f, #8b623d);
+      }
+      .switcher {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin: 10px 0;
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .switcher i {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border: 1px solid #b79fd9;
+        border-radius: 10px;
+        color: var(--purple);
+        font-style: normal;
+      }
+      .matrix {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+      }
+      .matrix-title {
+        padding: 10px 11px;
+        border-bottom: 1px solid var(--line);
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 800;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        text-align: center;
+        font-size: 9px;
+      }
+      th,
+      td {
+        padding: 9px 5px;
+        border-top: 1px solid #eee8ec;
+      }
+      thead th {
+        border-top: 0;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      thead th:first-child,
+      tbody th {
+        width: 28%;
+        text-align: left;
+      }
+      tbody th {
+        color: var(--ink);
+        font-weight: 700;
+      }
+      td.target {
+        background: #f6f1fb;
+        color: var(--purple);
+      }
+      td.pass {
+        background: var(--green-bg);
+        color: var(--green);
+        font-weight: 800;
+      }
+      .reco {
+        margin-top: 16px;
+        border: 1.5px solid #b79fd9;
+        border-radius: 20px;
+        background: #fff;
+        overflow: hidden;
+      }
+      .reco-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 15px;
+      }
+      .bottle {
+        display: grid;
+        place-items: center;
+        width: 70px;
+        height: 90px;
+        flex: 0 0 70px;
+        border-radius: 16px;
+        background: #f0e9f7;
+      }
+      .bottle::before {
+        content: "";
+        width: 26px;
+        height: 62px;
+        border-radius: 7px 7px 10px 10px;
+        background: linear-gradient(#7e62ad, #3c2162);
+        box-shadow: inset 0 0 0 2px #ffffff88;
+      }
+      .label {
+        color: var(--green);
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .name {
+        margin-top: 3px;
+        color: var(--plum);
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+      .checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 9px;
+      }
+      .check {
+        padding: 5px 7px;
+        border-radius: 999px;
+        background: var(--green-bg);
+        color: var(--green);
+        font-size: 9px;
+        font-weight: 800;
+      }
+      .alternatives {
+        padding: 13px 15px;
+        border-top: 1px solid var(--line);
+      }
+      .alternatives > strong {
+        display: block;
+        margin-bottom: 9px;
+        color: var(--plum);
+        font-size: 12px;
+      }
+      .alt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 0;
+        border-top: 1px solid #eee8ec;
+        font-size: 12px;
+      }
+      .alt:first-of-type {
+        border-top: 0;
+      }
+      .alt span:last-child {
+        color: var(--green);
+        font-weight: 800;
+      }
+      .search-card {
+        margin-top: 16px;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+      }
+      .search-card strong {
+        display: block;
+        color: var(--plum);
+        font-size: 14px;
+      }
+      .search-card p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .secondary {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+        padding: 12px;
+        border: 1.5px solid var(--purple);
+        border-radius: 999px;
+        background: white;
+        color: var(--purple);
+        font-weight: 800;
+      }
+      .empty-visual {
+        display: grid;
+        place-items: center;
+        height: 150px;
+        margin-top: 16px;
+        border: 1px dashed #bea9d7;
+        border-radius: 20px;
+        background: linear-gradient(145deg, #fbf8fe, #f4edf9);
+        color: var(--purple);
+      }
+      .empty-visual span {
+        display: grid;
+        place-items: center;
+        width: 62px;
+        height: 78px;
+        border: 2px solid #9f85c2;
+        border-radius: 13px;
+        font-size: 28px;
+      }
+      .why {
+        margin-top: 14px;
+        padding: 14px;
+        border-left: 3px solid var(--purple);
+        background: #faf7fc;
+        color: #655d62;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 12px 20px 18px;
+        border-top: 1px solid var(--line);
+        background: #fffdfceb;
+        backdrop-filter: blur(10px);
+      }
+      .phone {
+        position: relative;
+      }
+      .primary {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--rose);
+        color: white;
+        font-size: 15px;
+        font-weight: 850;
+      }
+      .quiet {
+        margin-top: 9px;
+        text-align: center;
+        color: #6f686c;
+        font-size: 11px;
+      }
+      @media (max-width: 850px) {
+        .board {
+          padding: 14px;
+        }
+        .states {
+          grid-template-columns: minmax(0, 390px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <h1>Stage 3 · Kategorie empfohlen, Produkt noch nicht vorhanden</h1>
+      <p>
+        Strikte Trefferlogik: Nur Produkte, die alle kritischen Ziele erfüllen, erscheinen als
+        Empfehlung.
+      </p>
+      <div class="states">
+        <section class="case">
+          <div class="case-label">
+            <strong>A · Strikte Treffer vorhanden</strong>Eine klare Empfehlung plus zwei weitere
+            verifizierte Optionen. Suche bleibt verfügbar.
+          </div>
+          <div class="phone">
+            <header class="appbar">
+              <div class="brand">chaarlie <span class="saved">Gespeichert</span></div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="stage-labels">
+                <span>Bedarf</span><span>Feinschliff</span><b>Produkte</b><span>Routine</span
+                ><span>Anwendung</span>
+              </div>
+            </header>
+            <main>
+              <div class="topline"><span class="back">←</span><span>Produkte prüfen</span></div>
+              <div class="kicker">Leave-in · Produkt 2 von 5</div>
+              <h2>Dir fehlt noch ein Leave-in.</h2>
+              <p class="lead">
+                Diese Produkte erfüllen alle wichtigen Ziele für dein Haar. Vergleiche sie direkt
+                und plane eines ein.
+              </p>
+              <div class="compare-products">
+                <article class="product">
+                  <small>Empfehlung 1 · alle Ziele erfüllt</small>
+                  <div class="product-visual"></div>
+                  <b>Verifiziertes Leave-in A</b>
+                </article>
+                <article class="product alt-product">
+                  <small>Alternative 2 · alle Ziele erfüllt</small>
+                  <div class="product-visual"></div>
+                  <b>Verifiziertes Leave-in B</b>
+                </article>
+              </div>
+              <div class="switcher"><i>‹</i><span>Alternative 2 von 3</span><i>›</i></div>
+              <section class="matrix">
+                <div class="matrix-title">Eigenschaft für Eigenschaft</div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Prüfpunkt</th>
+                      <th>Empf. 1</th>
+                      <th>Ziel</th>
+                      <th>Alt. 2</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>Pflegegewicht</th>
+                      <td class="pass">mittel ✓</td>
+                      <td class="target">mittel</td>
+                      <td class="pass">mittel ✓</td>
+                    </tr>
+                    <tr>
+                      <th>Pflege</th>
+                      <td class="pass">Feuchtigkeit ✓</td>
+                      <td class="target">Feuchtigkeit</td>
+                      <td class="pass">Feuchtigkeit ✓</td>
+                    </tr>
+                    <tr>
+                      <th>Repair</th>
+                      <td class="pass">hoch ✓</td>
+                      <td class="target">hoch</td>
+                      <td class="pass">hoch ✓</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <div class="search-card">
+                <strong>Lieber ein anderes Produkt?</strong>
+                <p>Durchsuche den Katalog oder füge dein Wunschprodukt hinzu.</p>
+                <button class="secondary">Produkt suchen</button>
+              </div>
+            </main>
+            <div class="footer">
+              <button class="primary">Empfehlung 1 einplanen</button>
+              <div class="quiet">Vorerst ohne Leave-in fortfahren</div>
+            </div>
+          </div>
+        </section>
+        <section class="case">
+          <div class="case-label">
+            <strong>B · Kein strikter Treffer</strong>Keine schlechte Ersatzempfehlung. Die Lücke
+            bleibt ehrlich und handlungsfähig.
+          </div>
+          <div class="phone">
+            <header class="appbar">
+              <div class="brand">chaarlie <span class="saved">Gespeichert</span></div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="stage-labels">
+                <span>Bedarf</span><span>Feinschliff</span><b>Produkte</b><span>Routine</span
+                ><span>Anwendung</span>
+              </div>
+            </header>
+            <main>
+              <div class="topline"><span class="back">←</span><span>Produkte prüfen</span></div>
+              <div class="kicker">Öl · Im feuchten Haar · Produkt 3 von 5</div>
+              <h2>Dir fehlt noch ein passendes Öl.</h2>
+              <p class="lead">
+                Aktuell erfüllt kein geprüftes Produkt alle wichtigen Ziele für diese Aufgabe.
+              </p>
+              <div class="empty-visual"><span>＋</span></div>
+              <div class="why">
+                <strong>Warum zeigen wir keine Empfehlung?</strong><br />Die geprüften Produkte
+                verfehlen mindestens ein kritisches Ziel. Wir empfehlen dir lieber nichts als ein
+                unpassendes Produkt.
+              </div>
+              <div class="search-card">
+                <strong>Produkt suchen</strong>
+                <p>
+                  Suche nach einem Produkt, das diese Aufgabe übernehmen kann. Wir prüfen es
+                  anschließend gegen deinen Bedarf.
+                </p>
+              </div>
+            </main>
+            <div class="footer">
+              <button class="primary">Produkt suchen</button>
+              <div class="quiet">Vorerst ohne Öl fortfahren</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
