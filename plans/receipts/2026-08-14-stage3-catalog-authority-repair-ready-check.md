@@ -4,8 +4,8 @@
 
 - Branch: `codex/stage3-catalog-authority-repair`
 - Worktree: `.worktrees/stage3-catalog-authority-repair`
-- Base: `f7d614b8`
-- Canonical content fingerprint: `PENDING_MANIFEST_REFRESH`
+- Base: `0b5945f3`
+- Canonical content fingerprint: `4b01055057fb229837371b86bb0b357ba7b01ad1105d1577b74f3f273df94fbd`
 - Fingerprint scope: 24 task-owned implementation, test, workflow, plan, and approved mockup files. Receipts and the manifest are excluded from their own recursive fingerprint.
 - Manifest: `plans/receipts/2026-08-14-stage3-catalog-authority-repair-manifest.sha256`
 
@@ -25,7 +25,7 @@
 - Test-first comparison red proof: four intended failures for complete Shampoo targets and supportive Mask/Oil/Bondbuilder alternatives before implementation.
 - Focused authority, comparison, persistence, and audit suites: 227/227 passed before the final supportive-Shampoo delta; final focused Shampoo authority/comparison suite: 137/137 passed.
 - Recommendation/chat isolation suite — 164/164 passed; CI scope reports `chat_eval=false`, and the recommendation-engine Shampoo file is byte-identical to `origin/main`.
-- `npm run test:personal-plan` — 1577/1577 passed on the final tree.
+- `npm run test:personal-plan` — 1575/1575 passed on the final tree.
 - Complete-mode Stage 3 Playwright lane — 16/16 passed (3 Labs + 13 production-journey scenarios).
 - Flag-off `npm run ci:verify` — typecheck, lint, and production build passed; 127 routes generated.
 - Final `npm run typecheck` — passed.

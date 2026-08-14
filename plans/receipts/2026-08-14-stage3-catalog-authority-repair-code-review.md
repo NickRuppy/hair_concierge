@@ -2,9 +2,9 @@
 
 ## Review identity
 
-- Scope: the complete task tree at canonical content fingerprint `PENDING_MANIFEST_REFRESH`.
+- Scope: the complete task tree at canonical content fingerprint `4b01055057fb229837371b86bb0b357ba7b01ad1105d1577b74f3f273df94fbd`.
 - Branch: `codex/stage3-catalog-authority-repair`
-- Base: `f7d614b8`
+- Base: `0b5945f3`
 - Counterpart: one read-only Claude Opus 4.8 whole-branch review and one successful focused delta review at high effort. The exact-head rerun could not start because the reviewer account reached its weekly limit; the final delta was reviewed locally and is limited to current-main integration, the behavior-equivalent chat-file restoration, and receipt refreshes.
 
 ## Findings and rulings
@@ -40,7 +40,7 @@ Accepted bounded risk:
 ## Verification considered
 
 - Recommendation/chat isolation suite: 164/164; `chat_eval=false`; shared chat Shampoo file byte-identical to `origin/main`.
-- Full Personal Plan suite: 1577/1577.
+- Full Personal Plan suite: 1575/1575.
 - Complete-mode browser journey: 16/16.
 - Flag-off typecheck, lint, and production build: passed.
 - Focused comparison/authority/persistence/audit regressions: passed.
