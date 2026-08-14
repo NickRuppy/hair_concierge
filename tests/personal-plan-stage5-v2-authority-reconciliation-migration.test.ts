@@ -13,7 +13,7 @@ const artifactPath =
 const migrationPath =
   "supabase/migrations/20260814191843_20260814122000_personal_plan_stage5_v2_authority_reconciliation.sql"
 const executorFixPath =
-  "supabase/migrations/20260814193000_personal_plan_stage5_v2_executor_product_key_fix.sql"
+  "supabase/migrations/20260814193326_20260814193000_personal_plan_stage5_v2_executor_product_key_fix.sql"
 const preconditionsPath =
   "plans/evidence/2026-08-14-application-guidance-authority-live-preconditions.json"
 const sourceRoot = "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research"
