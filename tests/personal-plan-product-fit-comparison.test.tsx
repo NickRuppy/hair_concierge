@@ -516,6 +516,7 @@ test("explains a fitting product when no better verified alternative exists", ()
 
   assert.match(html, /Shampoo · Produkt 2 von 3/)
   assert.match(html, /Dein Shampoo passt/)
+  assert.equal((html.match(/aria-label="Bestätigte Prüfpunkte"/g) ?? []).length, 1)
   assert.match(html, /keine klar bessere verifizierte Alternative verfügbar/)
   assert.match(html, /Mein Produkt behalten/)
   assert.doesNotMatch(html, /Passende Alternative/)
@@ -558,14 +559,185 @@ test("renders an explicit uncovered state instead of an empty review", () => {
       displayedAlternativeIndex={0}
       onDisplayedAlternativeChange={() => {}}
       onAction={() => {}}
+      onSearch={() => {}}
       onBack={() => {}}
     />,
   )
 
-  assert.match(html, /Noch kein Leave-in/)
-  assert.match(html, /keine verifizierte Empfehlung verfügbar/)
-  assert.match(html, /Noch kein Produkt/)
+  assert.match(html, /Du hast noch kein Leave-in/)
+  assert.match(html, /keine verifizierte Empfehlung alle bestätigten Ziele/)
+  assert.match(html, /Produkt suchen/)
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
+})
+
+test("compares strict recommendations without judging an absent owned product", () => {
+  const recommendationComparison: Stage3FitComparison = {
+    ...comparison,
+    subjectKey: "subject:uncovered-shampoo",
+    sourceIdentity: null,
+    products: comparison.products.filter((product) => product.source === "alternative"),
+    alternatives: comparison.alternatives.map((candidate) => ({
+      ...candidate,
+      verdict: "ideal" as const,
+    })),
+    evidenceRows: comparison.evidenceRows?.map((row) => ({
+      ...row,
+      productValues: row.productValues.filter((value) => value.productId !== "owned-shampoo"),
+    })),
+  }
+  const uncoveredEvaluation: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "shampoo",
+    subjectKey: "subject:uncovered-shampoo",
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Shampoo"
+      roleLabel="Hauptreinigung"
+      comparison={recommendationComparison}
+      evaluation={uncoveredEvaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Du hast noch kein Shampoo/)
+  assert.match(html, /Empfehlung 1/)
+  assert.match(html, /Alternative 2/)
+  assert.doesNotMatch(html, /Dein Produkt/)
+  assert.doesNotMatch(html, /passt teilweise/i)
+})
+
+test("keeps browsing separate from selecting and saves the exact selected recommendation", () => {
+  const thirdCandidate = {
+    ...comparison.alternatives[0]!,
+    productId: "alternative-three",
+    recommendation: {
+      ...comparison.alternatives[0]!.recommendation,
+      recommendationId: "recommendation-three",
+      productId: "alternative-three",
+      displayName: "Dritte Alternative",
+    },
+    factFingerprint: "fingerprint-three",
+  }
+  const recommendationComparison: Stage3FitComparison = {
+    ...comparison,
+    subjectKey: "subject:uncovered-shampoo-selection",
+    sourceIdentity: null,
+    products: [
+      ...comparison.products.filter((product) => product.source === "alternative"),
+      {
+        ...comparison.products.find((product) => product.productId === "alternative-one")!,
+        productId: "alternative-three",
+        displayName: "Dritte Alternative",
+      },
+    ],
+    alternatives: [
+      { ...comparison.alternatives[0]!, verdict: "ideal" as const },
+      { ...comparison.alternatives[1]!, verdict: "ideal" as const },
+      thirdCandidate,
+    ],
+    evidenceRows: [],
+  }
+  const uncoveredEvaluation: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "shampoo",
+    subjectKey: recommendationComparison.subjectKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+  const browseChanges: number[] = []
+  const selectionChanges: string[] = []
+  const calls: Array<[ProductFitComparisonAction, unknown]> = []
+  const tree = ProductFitComparison({
+    comparison: recommendationComparison,
+    evaluation: uncoveredEvaluation,
+    displayedAlternativeIndex: 2,
+    selectedRecommendationProductId: "alternative-one",
+    onDisplayedAlternativeChange: (index) => browseChanges.push(index),
+    onSelectedRecommendationChange: (productId) => selectionChanges.push(productId),
+    onAction: (action, selectedCandidate) => calls.push([action, selectedCandidate]),
+    onBack: () => {},
+  })
+
+  ;(findByAriaLabel(tree, "Nächste Empfehlung").props.onClick as (() => void) | undefined)?.()
+  assert.deepEqual(browseChanges, [1])
+  assert.equal(selectionChanges.length, 0)
+  ;(
+    findByAriaLabel(tree, "Sanfte Alternative auswählen").props.onClick as (() => void) | undefined
+  )?.()
+  assert.deepEqual(calls, [
+    ["select_replacement", { productId: "alternative-one", factFingerprint: "fingerprint-one" }],
+  ])
+
+  const thirdSelectedTree = ProductFitComparison({
+    comparison: recommendationComparison,
+    evaluation: uncoveredEvaluation,
+    displayedAlternativeIndex: 2,
+    selectedRecommendationProductId: "alternative-three",
+    onDisplayedAlternativeChange: () => {},
+    onSelectedRecommendationChange: (productId) => selectionChanges.push(productId),
+    onAction: (action, selectedCandidate) => calls.push([action, selectedCandidate]),
+    onBack: () => {},
+  })
+  ;(
+    findByAriaLabel(thirdSelectedTree, "Dritte Alternative als Auswahl markieren").props.onClick as
+      | (() => void)
+      | undefined
+  )?.()
+  ;(
+    findByAriaLabel(thirdSelectedTree, "Dritte Alternative auswählen").props.onClick as
+      | (() => void)
+      | undefined
+  )?.()
+  assert.equal(selectionChanges.at(-1), "alternative-three")
+  assert.deepEqual(calls.at(-1), [
+    "select_replacement",
+    { productId: "alternative-three", factFingerprint: "fingerprint-three" },
+  ])
+})
+
+test("uses product search as the primary uncovered action when no strict candidate exists", () => {
+  let searchCalls = 0
+  const tree = ProductFitComparison({
+    comparison: {
+      ...comparison,
+      sourceIdentity: null,
+      products: [],
+      alternatives: [],
+      evidenceRows: [],
+    },
+    evaluation: {
+      ...evaluation,
+      verdict: "unknown",
+      allowedActions: ["leave_uncovered"],
+    },
+    displayedAlternativeIndex: 0,
+    onDisplayedAlternativeChange: () => {},
+    onAction: () => {},
+    onSearch: () => {
+      searchCalls += 1
+    },
+    onBack: () => {},
+  })
+
+  ;(findByAriaLabel(tree, "Produkt suchen").props.onClick as (() => void) | undefined)?.()
+  assert.equal(searchCalls, 1)
 })
 
 test("keeps a partial verdict explicit when no verified alternative exists", () => {

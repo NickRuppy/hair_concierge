@@ -118,11 +118,18 @@ export function toApplicationPageView({
               productId: step.block.productId,
               productName: step.block.productName,
               imageUrl: step.block.imageUrl ?? null,
+              category: step.block.category,
               status: step.block.status,
             },
           ]
         if (step.kind === "unresolved_product")
-          return [{ kind: "open" as const, categoryLabelDe: categoryLabelDe(step.block.category) }]
+          return [
+            {
+              kind: "open" as const,
+              category: step.block.category,
+              categoryLabelDe: categoryLabelDe(step.block.category),
+            },
+          ]
         return []
       }),
     }

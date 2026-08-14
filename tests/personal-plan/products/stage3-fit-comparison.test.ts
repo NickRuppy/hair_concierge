@@ -111,6 +111,26 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
         assert.deepEqual(comparison.dimensions, [])
       }
     })
+
+    test(`${category}/${role} never recommends a non-ideal uncovered-role candidate`, () => {
+      const comparison = buildStage3FitComparison(
+        authorityInput(category, role, {
+          productFacts: null,
+          capturedProductId: null,
+          subjectIdentity: null,
+          candidates: [factsFor(category, role, "uncovered-candidate")],
+        }),
+      )
+
+      assert.ok(comparison.alternatives.every((candidate) => candidate.verdict === "ideal"))
+      assert.ok(
+        comparison.alternatives.every((candidate) =>
+          candidate.criteria.every(
+            (criterion) => criterion.result !== "fail" && criterion.result !== "unknown",
+          ),
+        ),
+      )
+    })
   }
 }
 
@@ -204,6 +224,44 @@ test("selected candidate lookup returns exact current data for alternative numbe
     "role",
     "verdict",
   ])
+})
+
+test("uncovered roles expose only ideal candidates before applying the transport cap", () => {
+  const input = authorityInput("conditioner", "conditioner_rinse_out", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      factsFor("conditioner", "conditioner_rinse_out", "supportive-1", {
+        sortOrder: 1,
+        weight: "medium",
+      }),
+      factsFor("conditioner", "conditioner_rinse_out", "supportive-2", {
+        sortOrder: 2,
+        weight: "medium",
+      }),
+      factsFor("conditioner", "conditioner_rinse_out", "supportive-3", {
+        sortOrder: 3,
+        weight: "medium",
+      }),
+      factsFor("conditioner", "conditioner_rinse_out", "ideal-after-supportive", {
+        sortOrder: 9,
+        weight: "light",
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["ideal-after-supportive", "ideal"]],
+  )
+  assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-1"), null)
+  assert.equal(
+    findStage3SelectedComparisonCandidate(input, "ideal-after-supportive")?.productId,
+    "ideal-after-supportive",
+  )
 })
 
 test("comparison projects fresh price and structured size without changing authority facts", () => {

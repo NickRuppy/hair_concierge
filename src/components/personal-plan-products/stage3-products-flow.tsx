@@ -3,7 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
+import {
+  allowsMultipleProductsForRole,
+  CATEGORY_ROLE_POLICIES,
+} from "@/lib/personal-plan/products/authorities"
 import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
@@ -346,6 +349,10 @@ export function Stage3ProductsFlow({
     subjectKey: string | null
     index: number
   }>({ subjectKey: null, index: 0 })
+  const [selectedRecommendation, setSelectedRecommendation] = useState<{
+    subjectKey: string | null
+    productId: string | null
+  }>({ subjectKey: null, productId: null })
   const [reviewHistory, setReviewHistory] = useState<string[]>([])
   const [currentReviewSubjectKey, setCurrentReviewSubjectKey] = useState<string | null>(null)
   const [authorityStatus, setAuthorityStatus] = useState<"idle" | "loading" | "ready">(
@@ -380,6 +387,10 @@ export function Stage3ProductsFlow({
   const displayedReviewDecisionKey = displayedReviewSubject?.decisionKey ?? null
   const displayedAlternativeIndex =
     displayedAlternative.subjectKey === displayedReviewDecisionKey ? displayedAlternative.index : 0
+  const selectedRecommendationProductId =
+    selectedRecommendation.subjectKey === displayedReviewDecisionKey
+      ? selectedRecommendation.productId
+      : null
 
   const currentRequirement =
     requirements[categoryIndex] ?? requirements[0] ?? DEFAULT_REQUIREMENTS[0]!
@@ -964,8 +975,13 @@ export function Stage3ProductsFlow({
         onDisplayedAlternativeChange={(index) =>
           setDisplayedAlternative({ subjectKey: nextSubject.decisionKey, index })
         }
+        selectedRecommendationProductId={selectedRecommendationProductId}
+        onSelectedRecommendationChange={(productId) =>
+          setSelectedRecommendation({ subjectKey: nextSubject.decisionKey, productId })
+        }
         disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
         onRetry={() => void reloadDecisionBundle(draft)}
+        onSearch={() => void reopenCategory(nextSubject.category)}
         onAction={(action, selectedCandidate) =>
           void chooseFitDecision(nextSubject.decisionKey, action, selectedCandidate)
         }
@@ -1560,6 +1576,12 @@ export function Stage3ProductsFlow({
     current: Record<string, string[]>,
     working = categoryCapture.workingCategoryCaptures(),
   ) {
+    if (currentRequirement.requiredRoles.length === 1) {
+      const role = currentRequirement.requiredRoles[0]!
+      if (allowsMultipleProductsForRole(currentCategory, role)) {
+        return Object.fromEntries(working.map((product) => [product.key, [role]]))
+      }
+    }
     if (working.length !== 1) return current
     const productId = working[0].key
     if (currentRequirement.requiredRoles.length === 1) {
@@ -1583,8 +1605,16 @@ export function Stage3ProductsFlow({
     assignments: Record<string, string[]>,
     working = categoryCapture.workingCategoryCaptures(),
   ) {
+    if (currentRequirement.requiredRoles.length === 1) {
+      const role = currentRequirement.requiredRoles[0]!
+      if (working.length === 0) return false
+      if (working.length === 1) return assignments[working[0]!.key]?.includes(role) ?? false
+      return (
+        allowsMultipleProductsForRole(currentCategory, role) &&
+        working.every((product) => assignments[product.key]?.includes(role))
+      )
+    }
     if (working.length !== 1) return false
-    if (currentRequirement.requiredRoles.length === 1) return true
     if (currentCategory !== "oil") return false
     return (assignments[working[0].key]?.length ?? 0) > 0
   }

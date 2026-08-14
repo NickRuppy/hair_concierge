@@ -104,13 +104,16 @@ test("renders Basis before Optional and groups multiple roles into one Bedarfspl
       { key: "optional", itemKeys: ["mask"] },
     ],
   )
-  const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} onItemDetail={() => undefined} />,
+  )
 
   assert.ok(html.indexOf("Deine Basis") < html.indexOf("Optional"))
   assert.equal((html.match(/aria-label="Kategorie: Shampoo/g) ?? []).length, 1)
   assert.match(html, /Regelmäßige Reinigung/)
   assert.match(html, /Schuppenpflege/)
   assert.ok(html.indexOf("Sanftes Shampoo") < html.indexOf("Kopfhautserum"))
+  assert.equal((html.match(/>Details</g) ?? []).length, 3)
   assert.match(html, /Geplant/)
 })
 
@@ -255,28 +258,35 @@ test("renders active routine as product-led result with separated later addition
   }
 
   const html = renderToStaticMarkup(
-    <RoutinePage view={view} stage5Reachable onEdit={() => undefined} />,
+    <RoutinePage
+      view={view}
+      stage5Reachable
+      onEdit={() => undefined}
+      onItemDetail={() => undefined}
+    />,
   )
 
-  assert.match(html, /Deine Routine ist bereit/)
-  assert.match(html, /2 aktive Produkte/)
+  assert.match(html, /Routine aktiv/)
+  assert.match(html, /Deine Routine/)
+  assert.doesNotMatch(html, /Deine Routine ist bereit/)
   assert.match(html, /OGX Renewing \+ Argan Oil of Morocco Shampoo/)
   assert.match(html, /Bali Curls Moisturising Conditioner/)
-  assert.match(html, /Regelmäßige Reinigung für deine Kopfhaut/)
-  assert.match(html, /Pflegt und entwirrt die Längen nach der Haarwäsche/)
+  assert.doesNotMatch(html, /Regelmäßige Reinigung für deine Kopfhaut/)
+  assert.doesNotMatch(html, /Pflegt und entwirrt die Längen nach der Haarwäsche/)
   assert.match(html, /3–4× pro Woche/)
   assert.match(html, /Nach jeder passenden Haarwäsche/)
   assert.match(html, /Haarwäsche/)
   assert.match(html, /Nach Shampoo/)
   assert.match(html, /✓ Passt/)
   assert.match(html, /Bewusste Wahl/)
-  assert.match(html, /Anwendungsdetails/)
+  assert.doesNotMatch(html, /Anwendungsdetails/)
+  assert.match(html, />Details</)
   assert.match(html, /Später ergänzen/)
   assert.match(html, /Maske optional/)
-  assert.match(html, /Kein Bestandteil deiner aktiven Routine/)
+  assert.doesNotMatch(html, /Kein Bestandteil deiner aktiven Routine/)
   assert.ok(html.indexOf("Bali Curls Moisturising Conditioner") < html.indexOf("Später ergänzen"))
   assert.match(html, /Anwendung ansehen/)
-  assert.match(html, /Routine anpassen/)
+  assert.match(html, />Anpassen</)
   assert.doesNotMatch(html, /Routine bestätigen/)
   assert.doesNotMatch(html, /Kein Produkt ausgewählt/)
 })
@@ -480,7 +490,7 @@ test("states non-executable conditions plainly and keeps editing global", () => 
   assert.match(html, /Noch in Prüfung/)
   assert.match(html, /Nicht empfohlen · von dir eingeplant/)
   assert.match(html, /Offen/)
-  assert.match(html, /Routine anpassen/)
+  assert.match(html, />Anpassen</)
   assert.doesNotMatch(html, />Bearbeiten</)
   assert.match(
     html,

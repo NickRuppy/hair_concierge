@@ -101,57 +101,57 @@ export function RoutinePage({
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
       <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
-      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-5xl space-y-8 px-4 py-8 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:px-6 sm:py-10 lg:pb-12">
-        <header className="overflow-hidden rounded-[32px] border border-[rgba(107,80,160,0.14)] bg-[linear-gradient(135deg,#f5effa_0%,#fff9f7_100%)] px-5 py-6 shadow-sm sm:px-8 sm:py-8">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
-            <div className="space-y-3">
-              <p className="inline-flex rounded-full bg-[var(--status-ok-bg)] px-3 py-1 text-xs font-bold text-[var(--status-ok-text)]">
+      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-4xl space-y-6 px-4 py-5 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:px-6 sm:py-7 lg:pb-12">
+        <header className="border-b border-[rgba(107,80,160,0.14)] pb-5">
+          <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--status-ok-text)]">
                 {successorProposal
                   ? "Änderungen verfügbar"
                   : initialProposal
                     ? "Vorschlag"
-                    : `✓ ${activeProductCount} aktive Produkte`}
+                    : "✓ Routine aktiv"}
               </p>
-              <h1 className="text-4xl font-semibold tracking-tight text-[var(--brand-plum-darkest)] sm:text-5xl">
+              <h1 className="mt-1 text-3xl font-semibold tracking-tight text-[var(--brand-plum-darkest)] sm:text-4xl">
                 {successorProposal
                   ? "Deine Routine bleibt aktiv."
                   : initialProposal
                     ? "Deine Routine wird vorbereitet."
-                    : "Deine Routine ist bereit."}
+                    : "Deine Routine"}
               </h1>
-              <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 {initialProposal
                   ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
                   : successorProposal
                     ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
-                    : "Dein Bedarfsplan – jetzt mit deinen Produkten, ihrem Rhythmus und den nächsten Anwendungsschritten."}
+                    : `Dein Bedarfsplan mit ${activeProductCount} aktiven ${activeProductCount === 1 ? "Produkt" : "Produkten"}, Rhythmus und Anwendung.`}
               </p>
               {hasBlockingBasisGap ? (
                 <p
                   role="status"
-                  className="rounded-[16px] bg-[var(--status-danger-bg)] px-4 py-3 text-sm font-medium text-[var(--status-danger-text)]"
+                  className="mt-3 rounded-[14px] bg-[var(--status-danger-bg)] px-3 py-2 text-sm font-medium text-[var(--status-danger-text)]"
                 >
                   Mindestens ein Basis-Baustein fehlt noch. Ergänze ihn, bevor du zur Anwendung
                   wechselst.
                 </p>
               ) : null}
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap gap-2 sm:max-w-56 sm:flex-col">
               {canOpenApplication ? (
                 <Link
                   href="/anwendung"
-                  className={buttonVariants({ variant: "funnelCta", size: null })}
+                  className={buttonVariants({ variant: "funnelCta", size: "sm" })}
                 >
                   Anwendung ansehen
                 </Link>
               ) : null}
               {onEdit ? (
-                <Button variant="outline" onClick={onEdit}>
-                  Routine anpassen
+                <Button variant="outline" size="sm" onClick={onEdit}>
+                  Anpassen
                 </Button>
               ) : null}
               {successorProposal && onReviewProposal ? (
-                <Button variant="outline" onClick={onReviewProposal}>
+                <Button variant="outline" size="sm" onClick={onReviewProposal}>
                   Änderungen prüfen
                 </Button>
               ) : null}

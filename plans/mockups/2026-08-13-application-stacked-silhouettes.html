@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anwendung — gestapelte Tage mit Produkt-Silhouetten</title>
+    <style>
+      :root {
+        --plum: #2d164d;
+        --purple: #704bab;
+        --ink: #332f32;
+        --muted: #746d6b;
+        --line: #e6dfe4;
+        --paper: #fffdfc;
+        --green: #347451;
+        --amber: #9a5b22;
+        --shampoo: #fbf3df;
+        --shampoo-line: #d8bc6c;
+        --conditioner: #ecf7fb;
+        --conditioner-line: #92c6d8;
+        --leave: #eef8f3;
+        --leave-line: #95c9aa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #ebe8e9;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      .board {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        color: var(--plum);
+        font:
+          700 28px/1.1 Georgia,
+          serif;
+      }
+      .board > p {
+        margin: 0 0 18px;
+        color: #686164;
+      }
+      .review {
+        display: grid;
+        grid-template-columns: 390px minmax(0, 300px);
+        justify-content: center;
+        gap: 24px;
+        align-items: start;
+      }
+      .note {
+        padding: 16px;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 4px 18px #2d164d15;
+        color: #655e62;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .note strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--plum);
+      }
+      .note ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+      .phone {
+        min-height: 850px;
+        overflow: hidden;
+        border: 1px solid #d9d1d7;
+        border-radius: 30px;
+        background: var(--paper);
+        box-shadow: 0 22px 52px #321d4028;
+      }
+      header {
+        padding: 20px 22px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--plum);
+        font:
+          700 28px/1 Georgia,
+          serif;
+      }
+      .saved {
+        color: var(--green);
+        font:
+          700 12px/1 Inter,
+          sans-serif;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        margin-top: 18px;
+      }
+      .progress i {
+        height: 5px;
+        border-radius: 999px;
+        background: var(--purple);
+      }
+      .labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: #756d73;
+        font-size: 9px;
+      }
+      .labels b {
+        color: var(--plum);
+      }
+      main {
+        padding: 22px 18px 36px;
+      }
+      h2 {
+        margin: 0;
+        color: var(--plum);
+        font:
+          700 36px/1.03 Georgia,
+          serif;
+      }
+      .lead {
+        margin: 7px 0 6px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .summary {
+        margin: 0 0 18px;
+        color: #675e64;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .summary strong {
+        color: var(--amber);
+      }
+      .days {
+        display: grid;
+        gap: 14px;
+      }
+      .day {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 21px;
+        background: #fff;
+      }
+      .day-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .day h3 {
+        margin: 0;
+        color: var(--plum);
+        font-size: 21px;
+      }
+      .day p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .state {
+        color: var(--amber);
+        font-size: 10px;
+        font-weight: 850;
+        text-align: right;
+      }
+      .shelf {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 10px;
+        min-height: 190px;
+        margin-top: 13px;
+        padding: 18px 12px 28px;
+        overflow: hidden;
+        border-radius: 17px;
+        background: linear-gradient(145deg, #fdfaf8, #f4eef5);
+      }
+      .shelf::after {
+        content: "";
+        position: absolute;
+        left: 26px;
+        right: 26px;
+        bottom: 18px;
+        height: 7px;
+        border-radius: 999px;
+        background: #d7b591;
+        box-shadow: 0 8px 15px #2d164d15;
+      }
+      .silhouette {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border: 1.5px solid;
+        box-shadow: 0 12px 18px -16px #2d164d99;
+      }
+      .silhouette::before {
+        content: "";
+        position: absolute;
+        z-index: 2;
+        top: -7px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 1.5px solid;
+        border-bottom: 0;
+        background: inherit;
+      }
+      .silhouette.shampoo {
+        width: 78px;
+        height: 138px;
+        border-color: var(--shampoo-line);
+        border-radius: 28px 28px 15px 15px;
+        background: #f3f0e8;
+      }
+      .silhouette.shampoo::before {
+        width: 30px;
+        height: 13px;
+        border-color: var(--shampoo-line);
+        border-radius: 6px 6px 0 0;
+      }
+      .silhouette.conditioner {
+        width: 78px;
+        height: 122px;
+        border-color: var(--conditioner-line);
+        border-radius: 18px 18px 13px 13px;
+        background: #f3f0e8;
+      }
+      .silhouette.conditioner::before {
+        width: 40px;
+        height: 12px;
+        border-color: var(--conditioner-line);
+        border-radius: 4px 4px 0 0;
+      }
+      .silhouette.leave {
+        width: 64px;
+        height: 108px;
+        border-color: var(--leave-line);
+        border-radius: 18px 18px 12px 12px;
+        background: #f3f0e8;
+      }
+      .silhouette.leave::before {
+        width: 24px;
+        height: 13px;
+        border-color: var(--leave-line);
+        border-radius: 6px 6px 0 0;
+      }
+      .silhouette img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        padding: 0;
+      }
+      .silhouette.provisional {
+        border: 2px dashed #c68a49;
+      }
+      .clock {
+        position: absolute;
+        z-index: 4;
+        top: 5px;
+        right: 5px;
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: #fff5e5;
+        color: var(--amber);
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .day-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+      .facts {
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .open {
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 850;
+      }
+      .single-shelf {
+        min-height: 150px;
+      }
+      .single-shelf .silhouette {
+        height: 104px;
+      }
+      .rest-visual {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        width: 92px;
+        height: 92px;
+        border: 1px solid #cdbbdd;
+        border-radius: 50%;
+        background: #f4eef8;
+        color: var(--purple);
+        font-size: 34px;
+      }
+      @media (max-width: 760px) {
+        .board {
+          padding: 14px;
+        }
+        .review {
+          grid-template-columns: minmax(0, 390px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <h1>Stage 5 · gestapelte Tage, alte Silhouetten verbessert</h1>
+      <p>
+        Die unterschiedlichen Produktformen bleiben; das vollständige Quellbild und die Silhouette
+        verwenden denselben gemessenen Hintergrundton (#f3f0e8).
+      </p>
+      <div class="review">
+        <div class="phone">
+          <header>
+            <div class="brand">chaarlie <span class="saved">Gespeichert</span></div>
+            <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="labels">
+              <span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><span>Routine</span
+              ><b>Anwendung</b>
+            </div>
+          </header>
+          <main>
+            <h2>Anwendung</h2>
+            <p class="lead">Wähle, was heute passt.</p>
+            <p class="summary">
+              <strong>Teilweise bereit:</strong> 1 Produkt ist vorläufig, 2 Details sind noch offen.
+            </p>
+            <div class="days">
+              <article class="day">
+                <div class="day-head">
+                  <div>
+                    <h3>Waschtag</h3>
+                    <p>Deine Produkte in der richtigen Reihenfolge</p>
+                  </div>
+                  <div class="state">Teilweise bereit</div>
+                </div>
+                <div class="shelf">
+                  <div class="silhouette shampoo">
+                    <img
+                      src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp"
+                      alt=""
+                    />
+                  </div>
+                  <div class="silhouette conditioner provisional">
+                    <span class="clock">◷</span
+                    ><img
+                      src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp"
+                      alt=""
+                    />
+                  </div>
+                  <div class="silhouette leave provisional">
+                    <span class="clock">◷</span
+                    ><img
+                      src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp"
+                      alt=""
+                    />
+                  </div>
+                </div>
+                <div class="day-foot">
+                  <span class="facts">3 Produkte · 6 Schritte</span
+                  ><span class="open">Öffnen →</span>
+                </div>
+              </article>
+              <article class="day">
+                <div class="day-head">
+                  <div>
+                    <h3>Auffrischung</h3>
+                    <p>Dein Produkt für zwischendurch</p>
+                  </div>
+                  <div class="state">Bereit</div>
+                </div>
+                <div class="shelf single-shelf">
+                  <div class="silhouette leave">
+                    <img
+                      src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp"
+                      alt=""
+                    />
+                  </div>
+                </div>
+                <div class="day-foot">
+                  <span class="facts">1 Produkt · 3 Schritte</span
+                  ><span class="open">Öffnen →</span>
+                </div>
+              </article>
+              <article class="day">
+                <div class="day-head">
+                  <div>
+                    <h3>Pausentag</h3>
+                    <p>Heute sind keine Produkte nötig</p>
+                  </div>
+                  <div class="state">Bereit</div>
+                </div>
+                <div class="shelf single-shelf"><div class="rest-visual">☾</div></div>
+                <div class="day-foot">
+                  <span class="facts">Erholung für Haar und Kopfhaut</span
+                  ><span class="open">Öffnen →</span>
+                </div>
+              </article>
+            </div>
+          </main>
+        </div>
+        <aside class="note">
+          <strong>Festgehaltene Regeln</strong>
+          <ul>
+            <li>Alle Tage stehen vollständig untereinander.</li>
+            <li>Jeder Tag nutzt dieselbe vollständige Produktregal-Komponente.</li>
+            <li>Shampoo, Conditioner und Leave-in haben eigene Höhen/Formen.</li>
+            <li>Bild und Silhouettenfläche nutzen exakt denselben gemessenen Hintergrundton.</li>
+            <li>Vorläufig bleibt über gestrichelten Rand + Uhr sichtbar.</li>
+            <li>Die drei Status-Pills werden nicht wieder eingeführt.</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </body>
+</html>

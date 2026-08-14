@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Routine — kompakte Bedarfsplan-Optionen</title>
+    <style>
+      :root {
+        --plum: #2d164d;
+        --purple: #704bab;
+        --rose: #da626e;
+        --ink: #332f32;
+        --muted: #746d6b;
+        --line: #e6dfe4;
+        --paper: #fffdfc;
+        --green: #347451;
+        --green-bg: #edf8f1;
+        --shampoo: #fbf3df;
+        --shampoo-line: #dcc78e;
+        --conditioner: #ecf7fb;
+        --conditioner-line: #b8d8e5;
+        --leave: #eef8f3;
+        --leave-line: #bfdccb;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #ebe8e9;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      .board {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        color: var(--plum);
+        font:
+          700 28px/1.1 Georgia,
+          serif;
+      }
+      .board > p {
+        margin: 0 0 22px;
+        color: #686164;
+      }
+      .options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 390px));
+        justify-content: center;
+        gap: 28px;
+      }
+      .option-label {
+        min-height: 68px;
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 4px 18px #2d164d15;
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      .option-label strong {
+        display: block;
+        color: var(--plum);
+        font-size: 14px;
+      }
+      .phone {
+        min-height: 820px;
+        overflow: hidden;
+        border: 1px solid #d9d1d7;
+        border-radius: 30px;
+        background: var(--paper);
+        box-shadow: 0 22px 52px #321d4028;
+      }
+      header {
+        padding: 20px 22px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--plum);
+        font:
+          700 28px/1 Georgia,
+          serif;
+      }
+      .saved {
+        color: var(--green);
+        font:
+          700 12px/1 Inter,
+          sans-serif;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        margin-top: 18px;
+      }
+      .progress i {
+        height: 5px;
+        border-radius: 999px;
+        background: #d8cce7;
+      }
+      .progress i:nth-child(-n + 4) {
+        background: var(--purple);
+      }
+      .labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: #857d82;
+        font-size: 9px;
+      }
+      .labels b {
+        color: var(--plum);
+      }
+      main {
+        padding: 20px 18px 34px;
+      }
+      .intro {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: start;
+        gap: 12px;
+      }
+      .eyebrow {
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin: 5px 0 4px;
+        color: var(--plum);
+        font:
+          700 34px/1.03 Georgia,
+          serif;
+      }
+      .intro p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .edit {
+        padding: 9px 12px;
+        border: 1px solid var(--purple);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .primary {
+        display: block;
+        width: 100%;
+        margin: 16px 0 22px;
+        padding: 13px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--rose);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 850;
+      }
+      .section {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin: 18px 2px 9px;
+      }
+      .section strong {
+        color: var(--plum);
+        font-size: 17px;
+      }
+      .section span {
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .cards {
+        display: grid;
+        gap: 11px;
+      }
+      .card {
+        min-height: 142px;
+        border: 1px solid;
+        border-radius: 19px;
+        padding: 12px;
+      }
+      .card.shampoo {
+        background: var(--shampoo);
+        border-color: var(--shampoo-line);
+      }
+      .card.conditioner {
+        background: var(--conditioner);
+        border-color: var(--conditioner-line);
+      }
+      .card.leave {
+        background: var(--leave);
+        border-color: var(--leave-line);
+      }
+      .row-card {
+        display: grid;
+        grid-template-columns: 84px minmax(0, 1fr);
+        gap: 13px;
+        align-items: center;
+      }
+      .right-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 104px;
+        gap: 12px;
+        align-items: center;
+      }
+      .image {
+        display: grid;
+        place-items: center;
+        height: 112px;
+        overflow: hidden;
+        border-radius: 15px;
+        background: #ffffffb5;
+      }
+      .right-card .image {
+        height: 132px;
+      }
+      .image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 5px;
+        mix-blend-mode: multiply;
+      }
+      .meta {
+        color: var(--purple);
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .name {
+        margin: 5px 0 8px;
+        color: var(--plum);
+        font-size: 15px;
+        font-weight: 850;
+        line-height: 1.18;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .chip {
+        padding: 5px 7px;
+        border-radius: 999px;
+        background: #fff;
+        color: #5f5858;
+        font-size: 9px;
+        font-weight: 750;
+      }
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding-top: 9px;
+        border-top: 1px solid #6f62621a;
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 850;
+      }
+      .foot a {
+        color: var(--purple);
+        text-decoration: none;
+      }
+      .retained {
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      @media (max-width: 850px) {
+        .board {
+          padding: 14px;
+        }
+        .options {
+          grid-template-columns: minmax(0, 390px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <h1>Stage 4 · Routine näher am Bedarfsplan</h1>
+      <p>Beide Optionen entfernen den großen Erfolgs-Hero und die verschachtelten Detailkarten.</p>
+      <div class="options">
+        <section>
+          <div class="option-label">
+            <strong>A · Bedarfsplan-Zeile — empfohlen</strong>Gleiche Leserichtung wie Stage 1:
+            größeres Bild links, kompakte Produktinformation rechts.
+          </div>
+          <div class="phone">
+            <header>
+              <div class="brand">chaarlie <span class="saved">Gespeichert</span></div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="labels">
+                <span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><b>Routine</b
+                ><span>Anwendung</span>
+              </div>
+            </header>
+            <main>
+              <div class="intro">
+                <div>
+                  <div class="eyebrow">✓ Routine aktiv</div>
+                  <h2>Deine Routine</h2>
+                  <p>Dein Bedarfsplan mit deinen konkreten Produkten.</p>
+                </div>
+                <button class="edit">Anpassen</button>
+              </div>
+              <button class="primary">Anwendung ansehen</button>
+              <div class="section"><strong>Deine Basis</strong><span>1 Kategorie</span></div>
+              <div class="cards">
+                <article class="card shampoo">
+                  <div class="row-card">
+                    <div class="image">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp"
+                        alt=""
+                      />
+                    </div>
+                    <div>
+                      <div class="meta">Shampoo · Basis</div>
+                      <div class="name">OGX Renewing + Argan Oil of Morocco Shampoo</div>
+                      <div class="chips">
+                        <span class="chip">3–4× pro Woche</span><span class="chip">Haarwäsche</span>
+                      </div>
+                      <div class="foot"><span>✓ Aktiv</span><a>Details →</a></div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="section"><strong>Optional</strong><span>2 Kategorien</span></div>
+              <div class="cards">
+                <article class="card conditioner">
+                  <div class="row-card">
+                    <div class="image">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp"
+                        alt=""
+                      />
+                    </div>
+                    <div>
+                      <div class="meta">Conditioner · Optional</div>
+                      <div class="name">Bali Curls Moisturising Conditioner</div>
+                      <div class="chips"><span class="chip">Nach jeder Wäsche</span></div>
+                      <div class="foot"><span>◷ Noch kaufen</span><a>Details →</a></div>
+                    </div>
+                  </div>
+                </article>
+                <article class="card leave">
+                  <div class="row-card">
+                    <div class="image">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp"
+                        alt=""
+                      />
+                    </div>
+                    <div>
+                      <div class="meta">Leave-in · Optional</div>
+                      <div class="name">It’s a 10 Miracle Leave-In</div>
+                      <div class="chips"><span class="chip">Nach jeder Wäsche</span></div>
+                      <div class="foot"><span>◷ Noch kaufen</span><a>Details →</a></div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </main>
+          </div>
+        </section>
+        <section>
+          <div class="option-label">
+            <strong>B · Produkt rechts</strong>Gleiche kompakte Karten, aber die größeren
+            Produktbilder bilden eine rechte visuelle Kante statt einer linken Spalte.
+          </div>
+          <div class="phone">
+            <header>
+              <div class="brand">chaarlie <span class="saved">Gespeichert</span></div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="labels">
+                <span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><b>Routine</b
+                ><span>Anwendung</span>
+              </div>
+            </header>
+            <main>
+              <div class="intro">
+                <div>
+                  <div class="eyebrow">✓ Routine aktiv</div>
+                  <h2>Deine Routine</h2>
+                  <p>Dein Bedarfsplan mit deinen konkreten Produkten.</p>
+                </div>
+                <button class="edit">Anpassen</button>
+              </div>
+              <button class="primary">Anwendung ansehen</button>
+              <div class="section"><strong>Deine Basis</strong><span>1 Kategorie</span></div>
+              <div class="cards">
+                <article class="card shampoo">
+                  <div class="right-card">
+                    <div>
+                      <div class="meta">Shampoo · Basis</div>
+                      <div class="name">OGX Renewing + Argan Oil of Morocco Shampoo</div>
+                      <div class="chips">
+                        <span class="chip">3–4× pro Woche</span><span class="chip">Haarwäsche</span>
+                      </div>
+                      <div class="foot"><span>✓ Aktiv</span><a>Details →</a></div>
+                    </div>
+                    <div class="image">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="section"><strong>Optional</strong><span>2 Kategorien</span></div>
+              <div class="cards">
+                <article class="card conditioner">
+                  <div class="right-card">
+                    <div>
+                      <div class="meta">Conditioner · Optional</div>
+                      <div class="name">Bali Curls Moisturising Conditioner</div>
+                      <div class="chips"><span class="chip">Nach jeder Wäsche</span></div>
+                      <div class="foot"><span>◷ Noch kaufen</span><a>Details →</a></div>
+                    </div>
+                    <div class="image">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </article>
+                <article class="card leave">
+                  <div class="right-card">
+                    <div>
+                      <div class="meta">Leave-in · Optional</div>
+                      <div class="name">It’s a 10 Miracle Leave-In</div>
+                      <div class="chips"><span class="chip">Nach jeder Wäsche</span></div>
+                      <div class="foot"><span>◷ Noch kaufen</span><a>Details →</a></div>
+                    </div>
+                    <div class="image">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </main>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

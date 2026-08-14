@@ -36,7 +36,7 @@ export function RoutineSection({
   ]
 
   return (
-    <section aria-labelledby={headingId} className="space-y-3">
+    <section aria-labelledby={headingId} className="space-y-2.5">
       <h2
         id={headingId}
         className="text-lg font-semibold tracking-tight text-[var(--brand-plum-darkest)]"
@@ -48,7 +48,7 @@ export function RoutineSection({
           {emptyLabel}
         </p>
       ) : null}
-      <div className="grid gap-3 lg:grid-cols-2">
+      <div className="grid gap-3">
         {categoryGroups.map(([category, groupedItems]) => (
           <RoutineCategoryCard
             key={category}

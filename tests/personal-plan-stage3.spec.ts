@@ -35,17 +35,6 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: /Weiteres Conditioner hinzufügen/ }).click()
     await searchAndSelect(page, "Soft Care", "Chaarlie Fixture Conditioner Soft Care")
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
-    await expect(
-      page.getByRole("heading", { name: /Welche Aufgabe hat dein Conditioner/ }),
-    ).toBeVisible()
-    await page
-      .getByRole("checkbox", { name: /Conditioner Balance: Pflege nach der Wäsche/ })
-      .check()
-    await page
-      .getByRole("checkbox", { name: /Conditioner Soft Care: Pflege nach der Wäsche/ })
-      .check()
-    await page.getByRole("button", { name: "Auswahl übernehmen" }).click()
-
     await expect(page.getByRole("heading", { name: /Dein Öl/ })).toBeVisible()
     await searchAndSelect(page, "Length Seal", "Chaarlie Fixture Oil Length Seal")
     await page.getByRole("button", { name: "Weiter", exact: true }).click()

@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anwendung — vertikale Tage und Produktbilder</title>
+    <style>
+      :root {
+        --plum: #2d164d;
+        --purple: #704bab;
+        --rose: #da626e;
+        --ink: #332f32;
+        --muted: #746d6b;
+        --line: #e6dfe4;
+        --paper: #fffdfc;
+        --green: #347451;
+        --amber: #9a5b22;
+        --shampoo: #fbf3df;
+        --shampoo-line: #dcc78e;
+        --conditioner: #ecf7fb;
+        --conditioner-line: #b8d8e5;
+        --leave: #eef8f3;
+        --leave-line: #bfdccb;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #ebe8e9;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      .board {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        color: var(--plum);
+        font:
+          700 28px/1.1 Georgia,
+          serif;
+      }
+      .board > p {
+        margin: 0 0 22px;
+        color: #686164;
+      }
+      .options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 390px));
+        justify-content: center;
+        gap: 28px;
+      }
+      .option-label {
+        min-height: 68px;
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 4px 18px #2d164d15;
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      .option-label strong {
+        display: block;
+        color: var(--plum);
+        font-size: 14px;
+      }
+      .phone {
+        min-height: 850px;
+        overflow: hidden;
+        border: 1px solid #d9d1d7;
+        border-radius: 30px;
+        background: var(--paper);
+        box-shadow: 0 22px 52px #321d4028;
+      }
+      header {
+        padding: 20px 22px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--plum);
+        font:
+          700 28px/1 Georgia,
+          serif;
+      }
+      .saved {
+        color: var(--green);
+        font:
+          700 12px/1 Inter,
+          sans-serif;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        margin-top: 18px;
+      }
+      .progress i {
+        height: 5px;
+        border-radius: 999px;
+        background: var(--purple);
+      }
+      .labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: #756d73;
+        font-size: 9px;
+      }
+      .labels b {
+        color: var(--plum);
+      }
+      main {
+        padding: 22px 18px 36px;
+      }
+      h2 {
+        margin: 0;
+        color: var(--plum);
+        font:
+          700 36px/1.03 Georgia,
+          serif;
+      }
+      .lead {
+        margin: 7px 0 6px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .summary {
+        margin: 0 0 18px;
+        color: #675e64;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .summary strong {
+        color: var(--amber);
+      }
+      .days {
+        display: grid;
+        gap: 14px;
+      }
+      .day {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 21px;
+        background: #fff;
+      }
+      .day-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .day h3 {
+        margin: 0;
+        color: var(--plum);
+        font-size: 21px;
+      }
+      .day p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .state {
+        color: var(--amber);
+        font-size: 10px;
+        font-weight: 850;
+        text-align: right;
+      }
+      .shelf {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 9px;
+        min-height: 175px;
+        margin-top: 13px;
+        padding: 16px 12px 26px;
+        overflow: hidden;
+        border-radius: 17px;
+        background: linear-gradient(145deg, #fdfaf8, #f3edf4);
+      }
+      .shelf::after {
+        content: "";
+        position: absolute;
+        left: 28px;
+        right: 28px;
+        bottom: 17px;
+        height: 7px;
+        border-radius: 999px;
+        background: #d7b591;
+        box-shadow: 0 8px 15px #2d164d15;
+      }
+      .slot {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        width: 84px;
+        height: 128px;
+        overflow: hidden;
+        border: 1px solid;
+        border-radius: 18px 18px 12px 12px;
+      }
+      .slot.shampoo {
+        background: var(--shampoo);
+        border-color: var(--shampoo-line);
+      }
+      .slot.conditioner {
+        background: var(--conditioner);
+        border-color: var(--conditioner-line);
+      }
+      .slot.leave {
+        background: var(--leave);
+        border-color: var(--leave-line);
+      }
+      .slot img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 4px;
+        mix-blend-mode: multiply;
+      }
+      .slot.pending {
+        border: 2px dashed #c68a49;
+      }
+      .clock {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: #fff5e5;
+        color: var(--amber);
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .open-shelf .slot {
+        width: 82px;
+        height: 126px;
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+      }
+      .open-shelf .slot img {
+        filter: drop-shadow(0 8px 8px #2d164d22);
+      }
+      .open-shelf .slot::after {
+        content: "";
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: -4px;
+        height: 7px;
+        border-radius: 999px;
+      }
+      .open-shelf .slot.shampoo::after {
+        background: var(--shampoo-line);
+      }
+      .open-shelf .slot.conditioner::after {
+        background: var(--conditioner-line);
+      }
+      .open-shelf .slot.leave::after {
+        background: var(--leave-line);
+      }
+      .open-shelf .slot.pending {
+        outline: 2px dashed #c68a49;
+        outline-offset: 2px;
+        border-radius: 14px;
+      }
+      .day-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+      .facts {
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .open {
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 850;
+      }
+      .simple-day {
+        display: grid;
+        grid-template-columns: 90px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+      }
+      .mini-shelf {
+        display: grid;
+        place-items: center;
+        height: 90px;
+        border-radius: 15px;
+        background: #f4eef8;
+        color: var(--purple);
+        font-size: 30px;
+      }
+      @media (max-width: 850px) {
+        .board {
+          padding: 14px;
+        }
+        .options {
+          grid-template-columns: minmax(0, 390px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <h1>Stage 5 · Tage untereinander, Status im Kontext</h1>
+      <p>
+        Beide Optionen entfernen Carousel und Status-Pills. Der Status bleibt als ruhige Textzeile
+        und direkt am betroffenen Tag erhalten.
+      </p>
+      <div class="options">
+        <section>
+          <div class="option-label">
+            <strong>A · Kategorie-Flächen — empfohlen</strong>Größere Produktbilder in klar
+            gefärbten Slots; vorläufige Produkte bleiben mit gestricheltem Rand ehrlich.
+          </div>
+          <div class="phone">
+            <header>
+              <div class="brand">chaarlie <span class="saved">Gespeichert</span></div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="labels">
+                <span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><span>Routine</span
+                ><b>Anwendung</b>
+              </div>
+            </header>
+            <main>
+              <h2>Anwendung</h2>
+              <p class="lead">Wähle, was heute passt.</p>
+              <p class="summary">
+                <strong>Teilweise bereit:</strong> 1 Produkt ist vorläufig, 2 Details sind noch
+                offen.
+              </p>
+              <div class="days">
+                <article class="day">
+                  <div class="day-head">
+                    <div>
+                      <h3>Waschtag</h3>
+                      <p>Deine Produkte in der richtigen Reihenfolge</p>
+                    </div>
+                    <div class="state">Teilweise bereit</div>
+                  </div>
+                  <div class="shelf">
+                    <div class="slot shampoo">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp"
+                        alt=""
+                      />
+                    </div>
+                    <div class="slot conditioner pending">
+                      <span class="clock">◷</span
+                      ><img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp"
+                        alt=""
+                      />
+                    </div>
+                    <div class="slot leave pending">
+                      <span class="clock">◷</span
+                      ><img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                  <div class="day-foot">
+                    <span class="facts">3 Produkte · 6 Schritte</span
+                    ><span class="open">Öffnen →</span>
+                  </div>
+                </article>
+                <article class="day simple-day">
+                  <div class="mini-shelf">↻</div>
+                  <div>
+                    <h3>Auffrischung</h3>
+                    <p>1 Produkt · 3 Schritte</p>
+                    <div class="day-foot">
+                      <span class="state">Bereit</span><span class="open">Öffnen →</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </main>
+          </div>
+        </section>
+        <section>
+          <div class="option-label">
+            <strong>B · Freie Produktstapel</strong>Keine Produktboxen: Bilder stehen frei auf
+            farbigen Kategorie-Linien. Visuell leichter, aber weniger klar als Slot.
+          </div>
+          <div class="phone">
+            <header>
+              <div class="brand">chaarlie <span class="saved">Gespeichert</span></div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="labels">
+                <span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><span>Routine</span
+                ><b>Anwendung</b>
+              </div>
+            </header>
+            <main>
+              <h2>Anwendung</h2>
+              <p class="lead">Wähle, was heute passt.</p>
+              <p class="summary">
+                <strong>Teilweise bereit:</strong> 1 Produkt ist vorläufig, 2 Details sind noch
+                offen.
+              </p>
+              <div class="days">
+                <article class="day">
+                  <div class="day-head">
+                    <div>
+                      <h3>Waschtag</h3>
+                      <p>Deine Produkte in der richtigen Reihenfolge</p>
+                    </div>
+                    <div class="state">Teilweise bereit</div>
+                  </div>
+                  <div class="shelf open-shelf">
+                    <div class="slot shampoo">
+                      <img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp"
+                        alt=""
+                      />
+                    </div>
+                    <div class="slot conditioner pending">
+                      <span class="clock">◷</span
+                      ><img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp"
+                        alt=""
+                      />
+                    </div>
+                    <div class="slot leave pending">
+                      <span class="clock">◷</span
+                      ><img
+                        src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/696401be-16b5-4261-836f-28b57c1ecd59/23-696401be-16b5-4261-836f-28b57c1ecd59-it-s-it-s-a-10-miracle-leave-in-00924211e6cc.webp"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                  <div class="day-foot">
+                    <span class="facts">3 Produkte · 6 Schritte</span
+                    ><span class="open">Öffnen →</span>
+                  </div>
+                </article>
+                <article class="day simple-day">
+                  <div class="mini-shelf">↻</div>
+                  <div>
+                    <h3>Auffrischung</h3>
+                    <p>1 Produkt · 3 Schritte</p>
+                    <div class="day-foot">
+                      <span class="state">Bereit</span><span class="open">Öffnen →</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </main>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

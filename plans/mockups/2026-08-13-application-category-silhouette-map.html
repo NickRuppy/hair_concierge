@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anwendung — Silhouetten für alle Kategorien</title>
+    <style>
+      :root {
+        --plum: #2d164d;
+        --purple: #704bab;
+        --canvas: #f3f0e8;
+        --line: #d8ccd6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #ebe8e9;
+        color: #332f32;
+        font-family: Inter, system-ui, sans-serif;
+      }
+      main {
+        max-width: 1050px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+      h1 {
+        margin: 0;
+        color: var(--plum);
+        font:
+          700 30px/1.1 Georgia,
+          serif;
+      }
+      p {
+        color: #665f63;
+      }
+      .atlas {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(140px, 1fr));
+        gap: 14px;
+        margin-top: 22px;
+      }
+      article {
+        display: grid;
+        justify-items: center;
+        min-height: 220px;
+        padding: 18px 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 10px 28px -25px #2d164d;
+      }
+      .shape-svg {
+        width: 112px;
+        height: 150px;
+        align-self: end;
+        overflow: visible;
+      }
+      .shape-svg .body {
+        fill: var(--canvas);
+        stroke: currentColor;
+        stroke-width: 2.5;
+        stroke-linejoin: round;
+      }
+      .shape-svg .detail {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .shampoo {
+        color: #d4ae51;
+      }
+      .conditioner {
+        color: #76b8ce;
+      }
+      .leave {
+        color: #73b78f;
+      }
+      .heat {
+        color: #dd836e;
+      }
+      .oil {
+        color: #c8a35f;
+      }
+      .mask {
+        color: #bd83c7;
+      }
+      .scalp {
+        color: #839ecb;
+      }
+      .dry {
+        color: #8eb9b3;
+      }
+      .bond {
+        color: #a98ed0;
+      }
+      .reset {
+        color: #7f9eb3;
+      }
+      h2 {
+        align-self: end;
+        margin: 18px 0 2px;
+        color: var(--plum);
+        font-size: 13px;
+        text-align: center;
+      }
+      small {
+        color: #7a7277;
+        font-size: 10px;
+        text-align: center;
+      }
+      .rule {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border-left: 3px solid var(--purple);
+        background: #fff;
+        color: #5f575c;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      @media (max-width: 760px) {
+        .atlas {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        main {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Silhouetten-Mapping für alle 10 Produktkategorien</h1>
+      <p>
+        Zehn klar getrennte Packungsfamilien. Das Produktbild wird später in die jeweilige Form
+        gesetzt; die Fläche nutzt den standardisierten Bildhintergrund #f3f0e8.
+      </p>
+      <section class="atlas">
+        <article>
+          <svg class="shape-svg shampoo" viewBox="0 0 120 180" aria-label="Shampoo: Kopfstandtube">
+            <path
+              class="body"
+              d="M25 17 Q60 5 95 17 L104 132 Q103 146 88 151 H32 Q17 146 16 132Z"
+            />
+            <path class="body" d="M40 151 H80 V170 Q80 175 75 175 H45 Q40 175 40 170Z" />
+            <path class="detail" d="M45 158 H75" />
+          </svg>
+          <h2>Shampoo</h2>
+          <small>große Kopfstandtube</small>
+        </article>
+        <article>
+          <svg
+            class="shape-svg conditioner"
+            viewBox="0 0 120 180"
+            aria-label="Conditioner: breite Pumpflasche"
+          >
+            <path
+              class="body"
+              d="M9 74 Q9 57 26 57 H94 Q111 57 111 74 V157 Q111 169 99 169 H21 Q9 169 9 157Z"
+            />
+            <path class="body" d="M47 39 H69 V57 H47Z" />
+            <path class="detail" d="M58 39 V26 H100 Q110 26 110 35 H69" />
+          </svg>
+          <h2>Conditioner</h2>
+          <small>extrabreite Pumpflasche</small>
+        </article>
+        <article>
+          <svg class="shape-svg leave" viewBox="0 0 120 180" aria-label="Leave-in: Trigger-Spray">
+            <path
+              class="body"
+              d="M28 72 Q28 58 42 58 H81 Q94 58 94 72 V160 Q94 170 84 170 H38 Q28 170 28 160Z"
+            />
+            <path class="body" d="M47 42 H72 V58 H47Z" />
+            <path class="body" d="M43 20 H86 L112 30 L104 43 H74 L69 54 H55 L58 40 H43Z" />
+            <path class="detail" d="M76 43 L86 66" />
+          </svg>
+          <h2>Leave-in</h2>
+          <small>ausladender Trigger-Spray</small>
+        </article>
+        <article>
+          <svg
+            class="shape-svg heat"
+            viewBox="0 0 120 180"
+            aria-label="Hitzeschutz: teardrop Atomiser"
+          >
+            <path
+              class="body"
+              d="M60 36 C34 45 23 76 31 109 L22 157 Q60 174 98 157 L89 109 C97 76 86 45 60 36Z"
+            />
+            <path class="body" d="M51 17 H69 V37 H51Z" />
+            <path class="detail" d="M60 17 V8 M54 8 H66" />
+          </svg>
+          <h2>Hitzeschutz</h2>
+          <small>teardrop Atomiser</small>
+        </article>
+        <article>
+          <svg class="shape-svg oil" viewBox="0 0 120 180" aria-label="Öl: Pipettenvial">
+            <path
+              class="body"
+              d="M27 95 Q27 76 46 70 H74 Q93 76 93 95 V155 Q93 171 77 171 H43 Q27 171 27 155Z"
+            />
+            <path class="body" d="M47 49 H73 V72 H47Z" />
+            <path class="body" d="M42 20 Q42 9 53 9 H67 Q78 9 78 20 L72 49 H48Z" />
+            <path class="detail" d="M60 49 V92" />
+          </svg>
+          <h2>Öl</h2>
+          <small>kleines Pipettenvial</small>
+        </article>
+        <article>
+          <svg class="shape-svg mask" viewBox="0 0 120 180" aria-label="Maske: niedriger Tiegel">
+            <path class="body" d="M9 94 H111 L102 158 Q100 171 87 171 H33 Q20 171 18 158Z" />
+            <path class="body" d="M5 73 Q5 66 12 66 H108 Q115 66 115 73 V94 H5Z" />
+            <path class="detail" d="M16 82 H104" />
+          </svg>
+          <h2>Maske</h2>
+          <small>niedriger XL-Tiegel</small>
+        </article>
+        <article>
+          <svg
+            class="shape-svg scalp"
+            viewBox="0 0 120 180"
+            aria-label="Kopfhautpflege: Winkelapplikator"
+          >
+            <path
+              class="body"
+              d="M25 82 Q25 70 37 70 H83 Q95 70 95 82 V160 Q95 171 84 171 H36 Q25 171 25 160Z"
+            />
+            <path class="body" d="M45 51 H69 V71 H45Z" />
+            <path class="body" d="M47 51 L78 10 L88 17 L68 51Z" />
+            <path class="detail" d="M79 10 L91 4" />
+          </svg>
+          <h2>Kopfhautpflege</h2>
+          <small>langer Winkelapplikator</small>
+        </article>
+        <article>
+          <svg class="shape-svg dry" viewBox="0 0 120 180" aria-label="Trockenshampoo: Aerosoldose">
+            <path class="body" d="M37 31 Q37 18 50 18 H70 Q83 18 83 31 V166 H37Z" />
+            <path class="detail" d="M37 46 H83 M42 162 H78" />
+            <path class="body" d="M45 8 H75 V18 H45Z" />
+            <circle class="body" cx="91" cy="30" r="3" />
+          </svg>
+          <h2>Trockenshampoo</h2>
+          <small>gerade Aerosoldose</small>
+        </article>
+        <article>
+          <svg
+            class="shape-svg bond"
+            viewBox="0 0 120 180"
+            aria-label="Bondbuilder: invertierte Behandlungstube"
+          >
+            <path class="body" d="M17 16 H103 L94 132 Q92 145 79 149 H41 Q28 145 26 132Z" />
+            <path class="body" d="M40 149 H80 V169 Q80 175 74 175 H46 Q40 175 40 169Z" />
+            <path class="detail" d="M26 31 H94" />
+          </svg>
+          <h2>Bondbuilder</h2>
+          <small>keilförmige Behandlungstube</small>
+        </article>
+        <article>
+          <svg
+            class="shape-svg reset"
+            viewBox="0 0 120 180"
+            aria-label="Tiefenreinigung: Apotheker-Pumpe"
+          >
+            <path class="body" d="M22 65 H98 V165 Q98 173 90 173 H30 Q22 173 22 165Z" />
+            <path class="body" d="M47 42 H70 V65 H47Z" />
+            <path class="detail" d="M58 42 V24 H23 Q12 24 12 34 H47" />
+            <path class="detail" d="M32 82 H88 V153 H32Z" />
+          </svg>
+          <h2>Tiefenreinigung</h2>
+          <small>kantige Apotheker-Pumpe</small>
+        </article>
+      </section>
+      <div class="rule">
+        <strong>Fallback:</strong> offene Lücke, fehlendes Bild oder nicht standardisiertes
+        Nutzerbild nutzt einen neutralen abgerundeten Rahmen. Es wird nicht in eine erfundene
+        Produktform gezwungen.
+      </div>
+    </main>
+  </body>
+</html>

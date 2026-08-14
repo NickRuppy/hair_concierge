@@ -19,6 +19,7 @@ test("Anwendung view owns German day labels, summaries, and sort order", () => {
       isPartial: false,
       provisionalProductCount: 0,
       unresolvedProductCount: 0,
+      shelf: [],
     },
     {
       dayType: "wash_day",
@@ -30,6 +31,7 @@ test("Anwendung view owns German day labels, summaries, and sort order", () => {
       isPartial: false,
       provisionalProductCount: 0,
       unresolvedProductCount: 0,
+      shelf: [],
     },
   ]
 
@@ -61,6 +63,7 @@ test("no-complete-day state retains visible Pausentag plus recovery explanation"
     isPartial: false,
     provisionalProductCount: 0,
     unresolvedProductCount: 0,
+    shelf: [],
   }
 
   const html = renderToStaticMarkup(

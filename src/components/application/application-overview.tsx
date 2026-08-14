@@ -14,6 +14,15 @@ export function ApplicationOverview({
     0,
   )
   const unresolvedProductCount = days.reduce((total, day) => total + day.unresolvedProductCount, 0)
+  const summaryParts = [
+    hasPartialGuidance ? "Der Plan ist teilweise bereit" : null,
+    provisionalProductCount > 0
+      ? `${provisionalProductCount} ${provisionalProductCount === 1 ? "Produkt ist" : "Produkte sind"} vorläufig`
+      : null,
+    unresolvedProductCount > 0
+      ? `${unresolvedProductCount} ${unresolvedProductCount === 1 ? "Detail ist" : "Details sind"} noch offen`
+      : null,
+  ].filter(Boolean)
 
   return (
     <section
@@ -30,29 +39,14 @@ export function ApplicationOverview({
         </header>
       ) : null}
       {showHeader && hasPartialGuidance ? (
-        <div className="mt-4 flex flex-wrap gap-2" aria-label="Status der Anwendung">
-          <span className="type-caption rounded-full bg-[#fff0f1] px-3 py-1.5 font-bold text-[#a4404a]">
-            Plan teilweise bereit
-          </span>
-          {provisionalProductCount > 0 ? (
-            <span className="type-caption rounded-full bg-[#fff6e9] px-3 py-1.5 font-bold text-[#9b642c]">
-              {provisionalProductCount}{" "}
-              {provisionalProductCount === 1 ? "Produkt" : "Produkte"} vorläufig
-            </span>
-          ) : null}
-          {unresolvedProductCount > 0 ? (
-            <span className="type-caption rounded-full bg-[var(--brand-plum-ice)] px-3 py-1.5 font-bold text-[var(--brand-plum)]">
-              {unresolvedProductCount}{" "}
-              {unresolvedProductCount === 1 ? "Detail" : "Details"} offen
-            </span>
-          ) : null}
-        </div>
+        <section
+          className="mt-4 border-l-2 border-[var(--brand-plum)] pl-3 text-sm leading-relaxed text-muted-foreground"
+          aria-label="Status der Anwendung"
+        >
+          <p>{summaryParts.join(". ")}.</p>
+        </section>
       ) : null}
-      <ol
-        className={`${
-          showHeader ? "mt-5 " : ""
-        }flex snap-x gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-2 md:overflow-visible md:pb-0 xl:grid-cols-3`}
-      >
+      <ol className={`${showHeader ? "mt-5 " : ""}grid gap-4`}>
         {days.map((day) => (
           <ApplicationDayCard key={day.dayType} day={day} />
         ))}
