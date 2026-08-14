@@ -249,7 +249,7 @@ test("quality work is divided into independently scheduled lanes", () => {
   assert.doesNotMatch(qualityPersonalPlan, /personal-plan-stage4|personal-plan-stage5/)
 })
 
-test("the Stage 3 CI browser suite fails a stuck guarded-route preflight within one minute", () => {
+test("the Stage 3 CI browser suite bounds a neutral readiness probe within one minute", () => {
   const command = packageManifest.scripts["test:playwright:personal-plan-stage3"]
   const qualityPersonalPlan = jobSource(ciWorkflow, "quality-personal-plan-browser")
 
@@ -257,7 +257,8 @@ test("the Stage 3 CI browser suite fails a stuck guarded-route preflight within 
     command,
     /^WAIT_ON_TIMEOUT=60000 .*start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true npm run dev/,
   )
-  assert.match(command, /http:\/\/127\.0\.0\.1:3217\/labs\/personal-plan\/stage-3/)
+  assert.match(command, /start-server-and-test '[^']+' http:\/\/127\.0\.0\.1:3217 'playwright test/)
+  assert.doesNotMatch(command, /start-server-and-test '[^']+' [^']*\/labs\/personal-plan\/stage-3/)
   assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
 })
 
