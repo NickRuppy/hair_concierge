@@ -882,12 +882,14 @@ test.describe.serial("@ci tracker page regressions", () => {
       waitUntil: "domcontentloaded",
       timeout: 30_000,
     })
-    const chatInput = page.getByTestId("chat-input")
-    await expect(chatInput).toBeVisible({ timeout: 30_000 })
-    await chatInput.fill("Zeig mir ein passendes Produkt")
-    await expect(chatInput).toHaveValue("Zeig mir ein passendes Produkt")
-    await expect(page.getByTestId("chat-send")).toBeEnabled()
-    await page.getByTestId("chat-send").click()
+    const chatInput = page.locator('[data-testid="chat-input"]:visible').last()
+    const chatSend = page.locator('[data-testid="chat-send"]:visible').last()
+    await expect(async () => {
+      await chatInput.fill("Zeig mir ein passendes Produkt")
+      await expect(chatInput).toHaveValue("Zeig mir ein passendes Produkt")
+      await expect(chatSend).toBeEnabled({ timeout: 1_000 })
+    }).toPass({ timeout: 30_000 })
+    await chatSend.click()
     const trigger = page.getByRole("button", { name: /Test Leave-in.*Produktdetails öffnen/ })
     await expect(trigger).toBeVisible()
     await trigger.click()
