@@ -196,6 +196,7 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
   coverage: PlanPortfolioCoverageFact[]
   productFacts: Extract<Stage3CategoryProductFacts, { category: C }> | null
   recommendationCandidates: Array<Extract<Stage3CategoryProductFacts, { category: C }>>
+  candidateCatalogComplete?: boolean
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     verifiedRoutes: string[]

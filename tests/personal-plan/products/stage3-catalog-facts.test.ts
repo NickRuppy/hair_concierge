@@ -4,12 +4,7 @@ import test from "node:test"
 import {
   classifyBondbuilderRelationship,
   stage3AuthorityFactFingerprint,
-  STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT,
 } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
-
-test("exports the Stage 3 authority candidate query limit for comparison allowlists", () => {
-  assert.equal(STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT, 12)
-})
 
 test("authority fact fingerprints ignore presentation-only image changes", () => {
   const common = {

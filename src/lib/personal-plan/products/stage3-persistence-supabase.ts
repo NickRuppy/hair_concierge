@@ -11,15 +11,33 @@ import {
 import type { Stage3ProductionPersistence } from "./production-persistence-gateway"
 import { normalizeOwnedProductSearchQuery } from "./inventory-search"
 import { createStage3Draft } from "./state-machine"
-import { loadStage3AuthorityFactBundle } from "./authority/catalog-facts"
+import {
+  loadStage3AuthorityFactBundle,
+  loadStage3HeatCarrierCoverage,
+  loadStage3RecommendationCandidates,
+} from "./authority/catalog-facts"
 import { Stage3AuthoritySnapshotError } from "./authority/snapshot"
+import { effectiveStage3CategoryDecisions } from "./product-load-resolution"
+import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
+import { isPersonalPlanStage3CompleteCatalogEnabled } from "@/lib/personal-plan/release"
 
 type AdminClient = SupabaseClient
 
 /** Server-only adapter for the Stage-3 service primitives. */
 export function createSupabaseStage3ProductionPersistence(
   client: AdminClient,
+  options: { completeCatalogEnabled?: boolean } = {},
 ): Stage3ProductionPersistence {
+  const completeCatalogEnabled =
+    options.completeCatalogEnabled ?? isPersonalPlanStage3CompleteCatalogEnabled()
+  const recommendationCandidateCache = new Map<
+    string,
+    ReturnType<typeof loadStage3RecommendationCandidates>
+  >()
+  const heatCarrierCoverageCache = new Map<
+    string,
+    ReturnType<typeof loadStage3HeatCarrierCoverage>
+  >()
   async function loadRequirements(input: {
     userId: string
     personalPlanId: string
@@ -330,7 +348,9 @@ export function createSupabaseStage3ProductionPersistence(
         .limit(1)
         .maybeSingle()
       if (proposalError) throw new Error("stage3_completion_receipt_load_failed")
-      const portfolio = parseProposedProductPortfolio(portfolioResult.data.snapshot, { includeV4: true })
+      const portfolio = parseProposedProductPortfolio(portfolioResult.data.snapshot, {
+        includeV4: true,
+      })
       return {
         portfolio: {
           ...portfolio,
@@ -376,11 +396,52 @@ export function createSupabaseStage3ProductionPersistence(
         : null
     },
     async loadAuthorityFacts(input) {
+      const categoryDecision = effectiveStage3CategoryDecisions(input.draft).find(
+        (decision) => decision.category === input.subject.category,
+      )
+      const cacheKey = semanticHash({
+        category: input.subject.category,
+        role: input.subject.role,
+        hairThickness: input.context.hairThickness,
+        authorityVersion: input.draft.authorityVersions[input.subject.category],
+        categoryDecision: categoryDecision ?? null,
+      })
+      let recommendationCandidates = recommendationCandidateCache.get(cacheKey)
+      if (!recommendationCandidates) {
+        recommendationCandidates = loadStage3RecommendationCandidates(client, {
+          draft: input.draft,
+          subject: input.subject,
+          context: input.context,
+          categoryDecision,
+          completeCatalog: completeCatalogEnabled,
+        })
+        recommendationCandidateCache.set(cacheKey, recommendationCandidates)
+      }
+      const heatCacheKey = semanticHash({
+        draftId: input.draft.draftId,
+        revision: input.draft.revision,
+        products: input.draft.products,
+        roleAssignments: input.draft.roleAssignments,
+        heatRoutes: input.heatRoutes,
+      })
+      let heatCarrierCoverage = heatCarrierCoverageCache.get(heatCacheKey)
+      if (!heatCarrierCoverage) {
+        heatCarrierCoverage = loadStage3HeatCarrierCoverage(client, input.draft, input.heatRoutes)
+        heatCarrierCoverageCache.set(heatCacheKey, heatCarrierCoverage)
+      }
+      const [resolvedRecommendationCandidates, resolvedHeatCarrierCoverage] = await Promise.all([
+        recommendationCandidates,
+        heatCarrierCoverage,
+      ])
       return loadStage3AuthorityFactBundle(client, {
         draft: input.draft,
         subject: input.subject,
         heatRoutes: input.heatRoutes,
         context: input.context,
+        categoryDecision,
+        recommendationCandidates: resolvedRecommendationCandidates,
+        heatCarrierCoverage: resolvedHeatCarrierCoverage,
+        candidateCatalogComplete: completeCatalogEnabled,
       })
     },
     async loadDraft(input) {
@@ -506,6 +567,7 @@ function mapStage3Draft(raw: unknown): Stage3ProductDraft {
     updatedAt: String(row.updated_at ?? payload.updatedAt),
     authoritySnapshot: payload.authoritySnapshot as Stage3ProductDraft["authoritySnapshot"],
     inventoryAuthority: payload.inventoryAuthority as Stage3ProductDraft["inventoryAuthority"],
-    inventoryDispositions: payload.inventoryDispositions as Stage3ProductDraft["inventoryDispositions"],
+    inventoryDispositions:
+      payload.inventoryDispositions as Stage3ProductDraft["inventoryDispositions"],
   }
 }

@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 · Tabellenkontinuität ohne Alternative</title>
+    <style>
+      :root {
+        --ink: #393532;
+        --muted: #716b67;
+        --plum: #6c4baa;
+        --plumwash: #f5f0fb;
+        --okbg: #edf7ef;
+        --ok: #347248;
+        --line: #e4dfdc;
+        --wash: #faf8f7;
+        --coral: #d45f6d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--wash);
+        color: var(--ink);
+        font-family: Inter, system-ui, sans-serif;
+      }
+      header {
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--line);
+        background: white;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      header p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      main {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        max-width: 1240px;
+        margin: auto;
+        padding: 24px;
+      }
+      .label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 9px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .label b {
+        color: var(--ink);
+      }
+      .screen {
+        min-height: 790px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: white;
+        box-shadow: 0 10px 35px #2e231f14;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .progress i {
+        height: 5px;
+        border-radius: 5px;
+        background: #ded9d5;
+      }
+      .progress i:nth-child(-n + 3) {
+        background: var(--plum);
+      }
+      .content {
+        padding: 28px 26px 105px;
+      }
+      .context {
+        margin: 0;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin: 12px 0 7px;
+        font:
+          500 31px/1.08 Georgia,
+          serif;
+      }
+      .lead {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .verdict {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: var(--okbg);
+        color: var(--ok);
+        font-size: 13px;
+      }
+      .verdict b {
+        display: block;
+        margin-bottom: 2px;
+      }
+      .products {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+      }
+      .products.single {
+        grid-template-columns: 1fr;
+      }
+      .product {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-height: 78px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+      .product.alt {
+        border-color: #cdbbea;
+        background: var(--plumwash);
+      }
+      .thumb {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 64px;
+        flex: none;
+        border-radius: 12px;
+        background: #f5f1ec;
+      }
+      .bottle {
+        position: relative;
+        display: block;
+        width: 22px;
+        height: 44px;
+        border-radius: 5px 5px 7px 7px;
+        box-shadow: 0 2px 6px #2e231f24;
+      }
+      .bottle::before {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: 5px;
+        width: 12px;
+        height: 7px;
+        border-radius: 3px 3px 1px 1px;
+        background: inherit;
+      }
+      .bottle::after {
+        content: "";
+        position: absolute;
+        inset: 14px 4px 8px;
+        border-radius: 3px;
+        background: #ffffffc9;
+      }
+      .thumb.owned .bottle {
+        background: linear-gradient(180deg, #70d7ea, #16a9cb);
+      }
+      .thumb.alternative .bottle {
+        width: 20px;
+        background: linear-gradient(180deg, #e7ebb0, #a9c765 65%, #e7a9ba);
+      }
+      .product small {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .product strong {
+        display: block;
+        font-size: 12px;
+        line-height: 1.25;
+      }
+      .alternative-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .alternative-nav button {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border: 1.5px solid var(--plum);
+        border-radius: 12px;
+        background: white;
+        color: var(--plum);
+        font: inherit;
+        font-size: 22px;
+      }
+      .alternative-nav span {
+        min-width: 112px;
+        text-align: center;
+      }
+      .matrix {
+        margin-top: 15px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+      .matrix-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .matrix-head span:last-child {
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 500;
+      }
+      table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        text-align: center;
+        font-size: 10px;
+      }
+      th,
+      td {
+        padding: 10px 6px;
+        border-top: 1px solid var(--line);
+        overflow-wrap: anywhere;
+      }
+      thead th {
+        border-top: 0;
+        color: var(--muted);
+        font-weight: 650;
+      }
+      th:first-child,
+      td:first-child {
+        width: 31%;
+        text-align: left;
+      }
+      thead th.target,
+      td.target {
+        background: var(--plumwash);
+        color: var(--plum);
+      }
+      td.good {
+        background: var(--okbg);
+        color: var(--ok);
+        font-weight: 700;
+      }
+      .tick {
+        display: block;
+        margin-top: 3px;
+        font-size: 11px;
+      }
+      .coverage {
+        margin: 12px 2px 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .coverage b {
+        color: var(--ink);
+      }
+      .cta {
+        position: absolute;
+        inset: auto 0 0;
+        padding: 18px;
+        background: var(--coral);
+        color: white;
+        text-align: center;
+        font-weight: 750;
+      }
+      @media (max-width: 780px) {
+        header {
+          display: none;
+        }
+        main {
+          display: block;
+          padding: 0;
+        }
+        .example:first-child {
+          display: none;
+        }
+        .label {
+          padding: 12px 14px 7px;
+          margin: 0;
+        }
+        .screen {
+          min-height: 820px;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
+        .content {
+          padding: 25px 16px 100px;
+        }
+        .products {
+          grid-template-columns: 1fr 1fr;
+        }
+        .product {
+          align-items: flex-start;
+        }
+        .thumb {
+          width: 64px;
+          height: 64px;
+        }
+        .matrix table {
+          font-size: 9px;
+        }
+        th,
+        td {
+          padding: 10px 4px;
+        }
+      }
+    </style>
+    <style>
+      .secondary {
+        display: block;
+        width: 100%;
+        min-height: 44px;
+        margin: 14px 0 0;
+        border: 1.5px solid var(--plum);
+        border-radius: 13px;
+        background: white;
+        color: var(--plum);
+        font: inherit;
+        font-size: 13px;
+        font-weight: 750;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Stage 3 · Vergleich mit ehrlichen Entscheidungen</h1>
+      <p>
+        Links sind Behalten und Ersetzen verfügbar. Rechts bleibt nach vollständiger Katalogprüfung
+        nur die tatsächlich erfüllbare Entscheidung.
+      </p>
+    </header>
+    <main>
+      <section class="example">
+        <div class="label"><b>Normalfall</b><span>drei verifizierte Alternativen</span></div>
+        <article class="screen">
+          <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="content">
+            <p class="context">Shampoo · Hauptreinigung · Produkt 1 von 5</p>
+            <h2>Dein Shampoo im Vergleich</h2>
+            <p class="lead">
+              Sieh Eigenschaft für Eigenschaft, wie beide Produkte zu deinem Ziel passen.
+            </p>
+            <div class="verdict">
+              <span>✓</span>
+              <div>
+                <b>Beide Produkte passen.</b
+                ><span>Die Alternative ist ebenfalls vollständig verifiziert.</span>
+              </div>
+            </div>
+            <div class="products">
+              <article class="product">
+                <div class="thumb owned" aria-label="Produktbild"><span class="bottle"></span></div>
+                <div>
+                  <small>Dein Produkt</small
+                  ><strong>OGX Renewing + Argan Oil of Morocco Shampoo</strong>
+                </div>
+              </article>
+              <article class="product alt">
+                <div class="thumb alternative" aria-label="Produktbild">
+                  <span class="bottle"></span>
+                </div>
+                <div>
+                  <small>Passende Alternative</small
+                  ><strong>Balea Med Ultra Sensitive Shampoo</strong>
+                </div>
+              </article>
+            </div>
+            <nav class="alternative-nav" aria-label="Weitere passende Alternativen">
+              <button type="button" aria-label="Vorherige Alternative">‹</button>
+              <span>Alternative 1 von 3</span>
+              <button type="button" aria-label="Nächste Alternative">›</button>
+            </nav>
+            <section class="matrix">
+              <div class="matrix-head">
+                <span>Eigenschaft für Eigenschaft</span><span>Zeile antippen</span>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Prüfpunkt</th>
+                    <th>Deins</th>
+                    <th class="target">Ziel</th>
+                    <th>Alternative</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Reinigungsintensität</td>
+                    <td>sanft <span class="tick">✓</span></td>
+                    <td class="target">sanft</td>
+                    <td class="good">sanft <span class="tick">✓</span></td>
+                  </tr>
+                  <tr>
+                    <td>Kopfhaut-Fokus</td>
+                    <td>ausgeglichen <span class="tick">✓</span></td>
+                    <td class="target">ausgeglichen</td>
+                    <td class="good">ausgeglichen <span class="tick">✓</span></td>
+                  </tr>
+                  <tr>
+                    <td>Haardicke</td>
+                    <td>mittel <span class="tick">✓</span></td>
+                    <td class="target">mittel</td>
+                    <td class="good">mittel <span class="tick">✓</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+            <button class="secondary" type="button">Diese Alternative wählen</button>
+          </div>
+          <div class="cta">Mein Produkt behalten</div>
+        </article>
+      </section>
+      <section class="example">
+        <div class="label">
+          <b>Seltener Ausnahmefall</b><span>nach vollständiger Katalogprüfung</span>
+        </div>
+        <article class="screen">
+          <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="content">
+            <p class="context">Shampoo · Hauptreinigung · Produkt 1 von 5</p>
+            <h2>Dein Shampoo im Vergleich</h2>
+            <p class="lead">
+              Sieh Eigenschaft für Eigenschaft, wie dein Produkt zu deinem Ziel passt.
+            </p>
+            <div class="verdict">
+              <span>✓</span>
+              <div>
+                <b>Dein Produkt passt.</b
+                ><span>Alle bestätigten Prüfpunkte liegen in deinem Ziel.</span>
+              </div>
+            </div>
+            <div class="products single">
+              <article class="product">
+                <div class="thumb owned" aria-label="Produktbild"><span class="bottle"></span></div>
+                <div>
+                  <small>Dein Produkt</small
+                  ><strong>OGX Renewing + Argan Oil of Morocco Shampoo</strong>
+                </div>
+              </article>
+            </div>
+            <section class="matrix">
+              <div class="matrix-head">
+                <span>Eigenschaft für Eigenschaft</span>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Prüfpunkt</th>
+                    <th>Deins</th>
+                    <th class="target">Ziel</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Reinigungsintensität</td>
+                    <td>sanft <span class="tick">✓</span></td>
+                    <td class="target">sanft</td>
+                  </tr>
+                  <tr>
+                    <td>Kopfhaut-Fokus</td>
+                    <td>ausgeglichen <span class="tick">✓</span></td>
+                    <td class="target">ausgeglichen</td>
+                  </tr>
+                  <tr>
+                    <td>Haardicke</td>
+                    <td>mittel <span class="tick">✓</span></td>
+                    <td class="target">mittel</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+            <p class="coverage">
+              <b>Vollständiger Katalog geprüft.</b> Aktuell erfüllt kein weiteres verifiziertes
+              Shampoo diese Anforderungen.
+            </p>
+          </div>
+          <div class="cta">Mein Produkt behalten</div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

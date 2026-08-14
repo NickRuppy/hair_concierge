@@ -702,16 +702,32 @@ test("Stage 3 GET transports aligned fit reviews without evaluating authority tw
   }
   const fitComparison = {
     schemaVersion: 1 as const,
-    mode: "unavailable" as const,
+    mode: "comparison" as const,
     category: "shampoo" as const,
     role: "shampoo_everyday" as const,
     subjectKey: authorityEvaluation.subjectKey,
     sourceIdentity: null,
-    authorityEvaluation,
     products: [],
     alternatives: [],
-    dimensions: [] as [],
-    reason: "no_exact_product" as const,
+    dimensions: [
+      {
+        dimensionId: "shampoo.cleansing_intensity",
+        label: "Reinigung",
+        presentationKind: "ordered" as const,
+        stops: [{ stopId: "gentle", label: "sanft" }],
+        targetPosition: { kind: "position" as const, stopId: "gentle" },
+        productPositions: [],
+        reason: "Redundant after evidence rows are built.",
+      },
+    ],
+    evidenceRows: [
+      {
+        rowId: "shampoo.cleansing_intensity",
+        label: "Reinigung",
+        target: { valueLabel: "sanft", rationale: "Ziel", profileEvidenceLabels: [] },
+        productValues: [],
+      },
+    ],
   }
   const response = await createStage3RouteHandlers(
     deps({
@@ -740,6 +756,8 @@ test("Stage 3 GET transports aligned fit reviews without evaluating authority tw
   assert.equal(fallbackEvaluations, 0)
   assert.equal(body.authorityEvaluations[0]?.subjectKey, authorityEvaluation.subjectKey)
   assert.equal(body.fitComparisons[0]?.subjectKey, authorityEvaluation.subjectKey)
+  assert.deepEqual(body.fitComparisons[0]?.dimensions, [])
+  assert.equal(body.fitComparisons[0]?.evidenceRows[0]?.label, "Reinigung")
 })
 
 test("Stage 3 GET preserves stale refined authority as a recoverable conflict", async () => {

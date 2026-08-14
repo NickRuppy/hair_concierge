@@ -126,7 +126,6 @@ export function ProductFitComparison({
   const isUnknownFit =
     evaluation.status === "unknown" ||
     (evaluation.status === "known" && evaluation.verdict === "unknown")
-
   let content: ReactElement
   if (evaluation.status === "unsupported") {
     content = <AnalysisUnavailable disabled={disabled} onRetry={onRetry} onBack={onBack} />
@@ -186,6 +185,7 @@ export function ProductFitComparison({
         evaluation={evaluation}
         evidenceRows={evidenceRows}
         productId={ownedProduct?.productId}
+        candidateCatalogComplete={comparison.candidateCatalogComplete === true}
       />
     )
   } else {
@@ -245,6 +245,9 @@ export function ProductFitComparison({
                     key={action.kind}
                     type="button"
                     variant="outline"
+                    aria-label={
+                      action.kind === "select_replacement" ? "Diese Alternative wählen" : undefined
+                    }
                     className="h-auto min-h-12 w-full whitespace-normal px-5 py-3 text-center leading-tight md:w-auto md:min-w-56"
                     disabled={disabled}
                     onClick={() => invokeAction(action.kind, selectedAlternative, onAction)}
@@ -411,6 +414,7 @@ function FitOnlyReview({
   evaluation,
   evidenceRows,
   productId,
+  candidateCatalogComplete,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -418,6 +422,7 @@ function FitOnlyReview({
   evaluation: Stage3AuthorityEvaluation
   evidenceRows: Stage3FitEvidenceRow[]
   productId?: string
+  candidateCatalogComplete: boolean
 }) {
   const verdict = evaluation.status === "known" ? evaluation.verdict : "unknown"
   const presentation =
@@ -445,19 +450,18 @@ function FitOnlyReview({
       />
       <ProductCard product={product} label="Dein Produkt" />
       {evidenceRows.length > 0 && productId ? (
-        <CompactOwnedEvidence rows={evidenceRows} productId={productId} />
+        <OwnedEvidenceMatrix rows={evidenceRows} productId={productId} />
       ) : null}
-      <p
-        className={cn(
-          "mt-4 rounded-xl px-4 py-3 text-sm font-medium",
-          verdict === "mismatch"
-            ? "bg-muted text-muted-foreground"
-            : "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
+      <p className="mt-3 px-1 text-xs leading-relaxed text-muted-foreground">
+        {candidateCatalogComplete ? (
+          <>
+            <span className="font-semibold text-foreground">Vollständiger Katalog geprüft.</span>{" "}
+            Aktuell erfüllt kein weiteres verifiziertes {categoryLabel || "Produkt"} diese
+            Anforderungen.
+          </>
+        ) : (
+          <>Aktuell ist keine klar bessere verifizierte Alternative verfügbar.</>
         )}
-      >
-        {verdict === "mismatch"
-          ? "Aktuell ist keine verifizierte Alternative verfügbar."
-          : "Aktuell ist keine klar bessere verifizierte Alternative verfügbar."}
       </p>
     </>
   )
@@ -884,16 +888,16 @@ function ProductImage({ imageUrl, label }: { imageUrl?: string | null; label: st
       <img
         src={imageUrl}
         alt=""
-        className="h-12 w-12 shrink-0 rounded-xl border border-border object-cover"
+        className="h-16 w-16 shrink-0 rounded-xl border border-border object-cover"
       />
     )
   }
   return (
     <div
       aria-label={`${label}: Bild nicht verfügbar`}
-      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"
+      className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"
     >
-      <ImageIcon className="h-5 w-5" aria-hidden="true" />
+      <ImageIcon className="h-7 w-7" aria-hidden="true" />
     </div>
   )
 }
@@ -1255,7 +1259,7 @@ function SelectedEvidencePanel({
   )
 }
 
-function CompactOwnedEvidence({
+function OwnedEvidenceMatrix({
   rows,
   productId,
 }: {
@@ -1264,24 +1268,58 @@ function CompactOwnedEvidence({
 }) {
   return (
     <section
-      className="mt-4 rounded-2xl border border-border bg-card p-4"
-      aria-label="Bestätigte Prüfpunkte"
+      className="mt-5 overflow-hidden rounded-2xl border border-border bg-card"
+      aria-label="Eigenschaft für Eigenschaft"
     >
-      <h2 className="text-sm font-semibold text-foreground">Bestätigte Prüfpunkte</h2>
-      <ul className="mt-3 space-y-2 text-sm">
-        {rows.map((row) => {
-          const value = valueFor(row, productId)
-          return (
-            <li key={row.rowId} className="flex items-center justify-between gap-3">
-              <span>{row.label}</span>
-              <span className="flex min-w-32 items-center gap-2 text-muted-foreground">
-                <span className="min-w-0">{value?.valueLabel ?? "nicht bestätigt"}</span>
-                <RelationMark relation={value?.relation ?? "unknown"} />
-              </span>
-            </li>
-          )
-        })}
-      </ul>
+      <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-3">
+        <h2 className="text-sm font-semibold text-foreground">Eigenschaft für Eigenschaft</h2>
+      </div>
+      <table className="w-full table-fixed border-collapse text-center text-[10px] sm:text-xs">
+        <thead>
+          <tr className="text-muted-foreground">
+            <th className="w-[42%] px-2 py-2 text-left">Prüfpunkt</th>
+            <th className="px-1 py-2">Deins</th>
+            <th className="bg-[var(--brand-plum)]/5 px-1 py-2">Ziel</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => {
+            const value = valueFor(row, productId)
+            const relation = value?.relation ?? "unknown"
+            const knownStatus = relation === "in_target" || relation === "outside_target"
+            return (
+              <tr
+                key={row.rowId}
+                className={cn(
+                  "border-t border-border",
+                  relation === "in_target" && "bg-[var(--status-ok-bg)]/35",
+                  relation === "outside_target" && "bg-[var(--status-danger-bg)]/35",
+                )}
+              >
+                <th
+                  scope="row"
+                  className={cn(
+                    "break-words border-l-2 border-transparent px-2 py-3 text-left text-[11px] font-semibold leading-tight text-foreground",
+                    relation === "in_target" && "border-l-[var(--status-ok-text)]",
+                    relation === "outside_target" && "border-l-[var(--status-danger-text)]",
+                  )}
+                >
+                  {row.label}
+                </th>
+                <td className="break-words px-1 py-3 text-foreground">
+                  <span className="grid justify-items-center gap-1">
+                    {value?.valueLabel ?? "nicht bestätigt"}
+                    {knownStatus ? <RelationMark relation={relation} /> : null}
+                  </span>
+                </td>
+                <td className="break-words bg-[var(--brand-plum)]/5 px-1 py-3 text-[var(--brand-plum)]">
+                  {row.target?.valueLabel ?? "kein Ziel"}
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     </section>
   )
 }

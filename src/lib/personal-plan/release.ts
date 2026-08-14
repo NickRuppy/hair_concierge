@@ -4,6 +4,7 @@ type PersonalPlanAppReleaseEnvironment = {
   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
   PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2?: string
+  PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG?: string
 }
 
 export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
@@ -54,6 +55,13 @@ export function isPersonalPlanStage3InventoryAuthorityV2Enabled(
   environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
   return environment.PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2 === "true"
+}
+
+/** Default-off rollback gate for complete Stage 3 category-catalog hydration. */
+export function isPersonalPlanStage3CompleteCatalogEnabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG === "true"
 }
 
 export function isPersonalPlanStage4Enabled(

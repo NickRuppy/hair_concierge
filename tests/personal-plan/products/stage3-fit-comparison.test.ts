@@ -7,7 +7,6 @@ import type {
   Stage3AuthorityInput,
   Stage3CategoryProductFacts,
 } from "../../../src/lib/personal-plan/products/authority/contracts"
-import { STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import { stage3AuthorityFactFingerprint } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import type {
   PersonalPlanCategory,
@@ -99,6 +98,7 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
         )
       }
       assert.ok(comparison.alternatives.every((candidate) => candidate.productId !== "owned"))
+      assert.ok(comparison.alternatives.length > 0, `${category}/${role} needs an alternative`)
       assert.ok(
         comparison.alternatives.every(
           (candidate) => candidate.verdict === "ideal" || candidate.verdict === "supportive",
@@ -110,6 +110,19 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
             candidate.recommendation.productId === candidate.productId &&
             candidate.recommendation.role === role,
         ),
+      )
+      assert.ok(
+        comparison.alternatives.every((candidate) =>
+          comparison.evidenceRows?.some(
+            (row) =>
+              row.target !== null &&
+              row.productValues.some(
+                (value) =>
+                  value.productId === candidate.productId && value.relation === "in_target",
+              ),
+          ),
+        ),
+        `${category}/${role} must not transport a zero-target-match alternative`,
       )
       assertNoRawFactsOrPresentationFields(comparison)
       assertPayloadFits(comparison)
@@ -792,7 +805,7 @@ test("Shampoo dandruff stays compact instead of using the everyday scalp rail", 
   assert.deepEqual(comparison.dimensions, [])
 })
 
-test("Leave-in pre-heat keeps Repair unless heat capability is the changing authority fact", () => {
+test("Leave-in pre-heat always uses heat capability as its canonical third target row", () => {
   const ordinary = buildStage3FitComparison(
     authorityInput("leave_in", "pre_heat_application", {
       productFacts: factsFor("leave_in", "pre_heat_application", "owned"),
@@ -802,7 +815,7 @@ test("Leave-in pre-heat keeps Repair unless heat capability is the changing auth
   assert.equal(ordinary.mode, "comparison")
   assert.deepEqual(
     ordinary.dimensions.map((dimension) => dimension.dimensionId),
-    ["leave_in.weight", "leave_in.care_direction", "leave_in.repair_support"],
+    ["leave_in.weight", "leave_in.care_direction", "leave_in.heat_protection"],
   )
 
   const heatFailure = buildStage3FitComparison(
@@ -874,8 +887,7 @@ test("specialist categories use compact mode and empty inputs use unavailable mo
   }
 })
 
-test("query and transport limits stay intentionally small", () => {
-  assert.equal(STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT, 12)
+test("transport stays capped only after the complete candidate set is ranked", () => {
   assert.equal(STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT, 3)
 
   const comparison = buildStage3FitComparison(
@@ -883,7 +895,7 @@ test("query and transport limits stay intentionally small", () => {
       productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
         recommendable: false,
       }),
-      candidates: Array.from({ length: STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT }, (_, index) =>
+      candidates: Array.from({ length: 25 }, (_, index) =>
         factsFor("conditioner", "conditioner_rinse_out", `candidate-${index}`, {
           sortOrder: index,
         }),
@@ -893,6 +905,71 @@ test("query and transport limits stay intentionally small", () => {
 
   assert.equal(comparison.alternatives.length, 3)
   assertPayloadFits(comparison)
+})
+
+test("comparison ranks target coverage before recommendation and verdict tie-breakers", () => {
+  const input = authorityInput("conditioner", "conditioner_rinse_out", {
+    productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
+      recommendable: false,
+      weight: "rich",
+    }),
+    candidates: [
+      factsFor("conditioner", "conditioner_rinse_out", "one-of-three", {
+        sortOrder: 1,
+        weight: "medium",
+        balanceDirection: "balanced",
+      }),
+      factsFor("conditioner", "conditioner_rinse_out", "two-of-three-a", {
+        sortOrder: 2,
+        weight: "light",
+        balanceDirection: "balanced",
+      }),
+      factsFor("conditioner", "conditioner_rinse_out", "two-of-three-b", {
+        sortOrder: 3,
+        weight: "light",
+        repairSupportLevel: "low",
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => candidate.productId),
+    ["two-of-three-a", "two-of-three-b", "one-of-three"],
+  )
+  assert.equal(
+    findStage3SelectedComparisonCandidate(input, "two-of-three-a")?.productId,
+    "two-of-three-a",
+  )
+})
+
+test("comparison excludes a known Leave-in candidate with zero displayed target matches", () => {
+  const input = authorityInput("leave_in", "post_wash_leave_in", {
+    productFacts: factsFor("leave_in", "post_wash_leave_in", "owned", {
+      recommendable: false,
+    }),
+    candidates: [
+      factsFor("leave_in", "post_wash_leave_in", "zero-of-three", {
+        weight: "medium",
+        careDirection: "balanced",
+        repairSupportLevel: "high",
+      }),
+      factsFor("leave_in", "post_wash_leave_in", "one-of-three", {
+        weight: "medium",
+        careDirection: "balanced",
+        repairSupportLevel: "medium",
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => candidate.productId),
+    ["one-of-three"],
+  )
+  assert.equal(findStage3SelectedComparisonCandidate(input, "zero-of-three"), null)
 })
 
 function authorityInput<C extends PersonalPlanCategory>(
@@ -1085,7 +1162,11 @@ function factsFor<C extends PersonalPlanCategory>(
         category,
         spec: {
           thickness: "normal",
-          proteinMoistureBalance: overrides.verdict === "mismatch" ? "protein" : "moisture",
+          proteinMoistureBalance: overrideOrDefault(
+            overrides,
+            "careDirection",
+            overrides.verdict === "mismatch" ? "protein" : "moisture",
+          ),
           weight: overrideOrDefault(
             overrides,
             "weight",
@@ -1248,8 +1329,12 @@ function commonFacts(
 }
 
 function overrideOrDefault<T extends string | null>(
-  overrides: { weight?: string | null; repairSupportLevel?: string | null },
-  key: "weight" | "repairSupportLevel",
+  overrides: {
+    weight?: string | null
+    repairSupportLevel?: string | null
+    careDirection?: string | null
+  },
+  key: "weight" | "repairSupportLevel" | "careDirection",
   fallback: T,
 ): string | null {
   return Object.prototype.hasOwnProperty.call(overrides, key) ? (overrides[key] ?? null) : fallback

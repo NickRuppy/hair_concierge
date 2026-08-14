@@ -8,6 +8,7 @@ import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanLegacyQuizCutoverEnabled,
   isPersonalPlanStage2Enabled,
+  isPersonalPlanStage3CompleteCatalogEnabled,
   isPersonalPlanStage3Enabled,
   resolvePersonalPlanAppV1Rollout,
   resolvePersonalPlanAppV1InternalEmails,
@@ -87,6 +88,22 @@ test("released Stage 2 and Stage 3 ignore obsolete launch flags", () => {
     assert.equal(reader({ [key]: "TRUE" }), true)
     assert.equal(reader({ [key]: "true" }), true)
   }
+})
+
+test("complete Stage 3 catalog hydration is a strict default-off rollback gate", () => {
+  assert.equal(isPersonalPlanStage3CompleteCatalogEnabled({}), false)
+  assert.equal(
+    isPersonalPlanStage3CompleteCatalogEnabled({
+      PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG: "TRUE",
+    }),
+    false,
+  )
+  assert.equal(
+    isPersonalPlanStage3CompleteCatalogEnabled({
+      PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG: "true",
+    }),
+    true,
+  )
 })
 
 test("new-buyer cutoff accepts only real ISO-8601 UTC instants", () => {

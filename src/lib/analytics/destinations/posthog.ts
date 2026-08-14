@@ -321,6 +321,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       return {
         category: data.category,
         verdict: data.verdict,
+        alternative_state: data.alternativeState,
         position: data.position,
         count: data.count,
       }

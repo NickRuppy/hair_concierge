@@ -24,6 +24,7 @@ import {
   stage3RoleAssignmentSchema,
 } from "@/lib/personal-plan/products/contracts"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
+import { stage3FitComparisonForTransport } from "@/lib/personal-plan/products/fit-comparison"
 import {
   createSupabaseStage3RoutineAuthorityRepairService,
   type Stage3RoutineAuthorityRepairService,
@@ -316,9 +317,9 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
       if (!parsed.success) return response({ error: "invalid_request" }, 400)
       try {
         const gateway = deps.gatewayFor(auth.userId)
-        let repairRequirements: Awaited<
-          ReturnType<Stage3RoutineAuthorityRepairService["createOrLoad"]>
-        >["requirements"] | null = null
+        let repairRequirements:
+          | Awaited<ReturnType<Stage3RoutineAuthorityRepairService["createOrLoad"]>>["requirements"]
+          | null = null
         if (parsed.data.repairRoutineVersionId) {
           if (!deps.repairServiceFor) throw new Error("stage3_repair_service_unavailable")
           repairRequirements = (
@@ -357,7 +358,9 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
           {
             ...loaded,
             authorityEvaluations,
-            fitComparisons: reviewBundles.map((bundle) => bundle.fitComparison),
+            fitComparisons: reviewBundles.map((bundle) =>
+              stage3FitComparisonForTransport(bundle.fitComparison),
+            ),
           },
           200,
           {
@@ -407,10 +410,10 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
                 ? await requireNeedRevisionGateway(gateway).resolveNeedRevision(parsed.data)
                 : "action" in parsed.data &&
                     parsed.data.action === "acknowledge_inventory_disposition"
-                  ? await requireInventoryDispositionGateway(gateway).acknowledgeInventoryDisposition(
-                      parsed.data,
-                    )
-                : await gateway.mutate(parsed.data as never)
+                  ? await requireInventoryDispositionGateway(
+                      gateway,
+                    ).acknowledgeInventoryDisposition(parsed.data)
+                  : await gateway.mutate(parsed.data as never)
         auth.phases.gateway = Date.now() - gatewayStarted
         if (result.status === "conflict") {
           log("conflict", started, "revision_conflict", auth.phases)
@@ -430,7 +433,7 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
                 : "action" in parsed.data &&
                     parsed.data.action === "acknowledge_inventory_disposition"
                   ? "inventory_disposition"
-                : "client_mutation",
+                  : "client_mutation",
           auth.phases,
         )
         return response(result, 200, { "Server-Timing": serverTiming(auth.phases) })
@@ -482,9 +485,7 @@ function requireNeedRevisionGateway(
   return { resolveNeedRevision: gateway.resolveNeedRevision.bind(gateway) }
 }
 
-function requireInventoryDispositionGateway(
-  gateway: Stage3RouteGateway,
-): {
+function requireInventoryDispositionGateway(gateway: Stage3RouteGateway): {
   acknowledgeInventoryDisposition(
     input: z.infer<typeof inventoryDispositionAcknowledgementSchema>,
   ): Promise<Stage3MutationResponse>
