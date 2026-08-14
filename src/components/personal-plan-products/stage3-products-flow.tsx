@@ -677,6 +677,31 @@ export function Stage3ProductsFlow({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allDecisionSubjects.length, authorityStatus, decisionSubjects.length, draft, phase])
 
+  useEffect(() => {
+    if (
+      phase !== "decisions" ||
+      authorityStatus !== "ready" ||
+      decisionSubmitStatus !== "idle" ||
+      pendingRecoveryMode ||
+      systemIssue ||
+      decisionSubjects.length === 0 ||
+      !decisionSubjects.every((subject) => localReviewChoices[subject.decisionKey])
+    ) {
+      return
+    }
+    void submitReviewedDecisions()
+    // A complete locally restored review should resume the same finalization triggered by the last choice.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    authorityStatus,
+    decisionSubmitStatus,
+    decisionSubjects,
+    localReviewChoices,
+    pendingRecoveryMode,
+    phase,
+    systemIssue,
+  ])
+
   const shellSaveStatus = systemIssue
     ? "error"
     : pendingRecoveryMode
@@ -989,11 +1014,10 @@ export function Stage3ProductsFlow({
     if (!nextSubject) {
       if (decisionSubjects.length > 0) {
         return shell(
-          <Stage3ReviewCompletion
-            decisionCount={decisionSubjects.length}
-            disabled={decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)}
-            onBack={backFromReviewCompletion}
-            onSubmit={submitReviewedDecisions}
+          <Stage3SystemState
+            state="loading"
+            title="Dein Plan wird vorbereitet."
+            message="Wir speichern deine Entscheidungen und öffnen danach direkt deine Routine."
           />,
           "Abschluss",
         )
@@ -2396,12 +2420,6 @@ export function Stage3ProductsFlow({
     await reopenCategory(subject.category)
   }
 
-  function backFromReviewCompletion() {
-    const previousKey = reviewHistory[reviewHistory.length - 1]
-    if (!previousKey) return
-    setCurrentReviewSubjectKey(previousKey)
-  }
-
   function rememberLocalReviewChoice(decisionKey: string, choice: Stage3LocalReviewChoice) {
     const nextChoices = { ...localReviewChoices, [decisionKey]: choice }
     const nextOrder = [
@@ -3097,64 +3115,6 @@ export function Stage3InventoryDispositionReview({
           onClick={onAcknowledge}
         >
           Verstanden, weiter
-        </Button>
-      </div>
-    </section>
-  )
-}
-
-export function Stage3ReviewCompletion({
-  decisionCount,
-  disabled,
-  onBack,
-  onSubmit,
-}: {
-  decisionCount: number
-  disabled?: boolean
-  onBack: () => void
-  onSubmit: () => void | Promise<void>
-}) {
-  return (
-    <section className="min-w-0 pb-28" aria-labelledby="stage3-review-completion-title">
-      <header className="mb-6">
-        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">Produkte geprüft</p>
-        <h1
-          id="stage3-review-completion-title"
-          className="font-header text-3xl leading-tight text-foreground"
-        >
-          Deine Auswahl ist bereit.
-        </h1>
-        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-          Du hast {decisionCount} {decisionCount === 1 ? "Entscheidung" : "Entscheidungen"} geprüft.
-          Wir speichern sie gemeinsam und öffnen danach direkt deine Routine.
-        </p>
-      </header>
-
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <p className="font-semibold text-foreground">Deine Auswahl ist auf diesem Gerät gemerkt.</p>
-        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-          Erst mit „Plan fertigstellen“ wird sie verbindlich in deinen persönlichen Plan übernommen.
-        </p>
-      </div>
-
-      <div className="fixed inset-x-0 bottom-0 z-20 grid gap-2 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
-        <Button
-          type="button"
-          variant="funnelCta"
-          className="w-full"
-          disabled={disabled}
-          onClick={onSubmit}
-        >
-          Plan fertigstellen
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          disabled={disabled}
-          onClick={onBack}
-        >
-          Letzte Auswahl prüfen
         </Button>
       </div>
     </section>

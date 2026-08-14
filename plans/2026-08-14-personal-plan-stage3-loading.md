@@ -18,7 +18,7 @@ Use a locally durable review session followed by one server-validated batch subm
 1. Keep non-final category captures on the existing persisted background queue.
 2. Do not replace the last category with a save interstitial. Keep the stable product surface visible with an inline `Wird gespeichert` state until the server-authoritative fit review is ready.
 3. During product-fit review, record each choice locally, advance immediately to the next already-loaded review bundle, and allow Back to revise choices. Do not issue a mutation per choice.
-4. After the last choice, write one durable `decision_batch` recovery intent, submit fit choices through the existing batch endpoint, acknowledge any inventory dispositions through their existing idempotent action, and keep one final `Dein Plan wird vorbereitet` screen visible while those final mutations, canonical completion, and Routine handoff finish.
+4. The last product choice is the user's confirmation. Immediately after that choice, write one durable `decision_batch` recovery intent, submit fit choices through the existing batch endpoint, acknowledge any inventory dispositions through their existing idempotent action, and keep one final `Dein Plan wird vorbereitet` screen visible while those final mutations, canonical completion, and Routine handoff finish. Do not insert a separate summary or `Plan fertigstellen` confirmation screen.
 5. If final submission fails or conflicts, retain the local choices and show an actionable retry/review state. Full-page recovery checking remains valid only for an uncertain request outcome or reload recovery.
 
 This removes repeated interruptions and also removes the current serial `PATCH` + canonical `GET` from each fit decision. It does not claim a specific millisecond improvement before a browser/network benchmark is run.
@@ -54,13 +54,13 @@ This removes repeated interruptions and also removes the current serial `PATCH` 
 
 ## Designed user journey
 
-Status: confirmed by Nick on 2026-08-14 (`I like the proposed journey` / `Okay let's go. Sounds nice.`).
+Status: corrected and reconfirmed by Nick on 2026-08-14 after reviewing the shipped confirmation screen (`remove it, not needed to confirm this -> it is clear when users select it - worst case they can go back`).
 
 1. An authenticated Personal Plan user enters **Produkte** with a current refined Bedarfsplan.
 2. The user identifies products category by category. After confirming a non-final category, the next category appears immediately; the journey header briefly says `Wird gespeichert` and then `Gespeichert`.
 3. After the last category, the stable category surface remains visible with its CTA disabled and inline `Wird gespeichert`. There is no dedicated `Produkte werden gespeichert` page. As soon as the authoritative review bundle is ready, the first fit review replaces it.
-4. The user reviews one exact product at a time. Choosing `Passt – behalten`, an informed override, a replacement, a planned product, or an uncovered disposition records that choice locally and immediately shows the next review. The header says `Auswahl gemerkt`; Back restores the prior card and selected choice.
-5. After the last review, the user selects `Plan fertigstellen`. Only now does the journey show one full-page state: `Dein Plan wird vorbereitet.` It covers batch validation/save, portfolio completion, and Routine navigation rather than flashing separate save, preparation, and Routine loaders.
+4. The user reviews one exact product at a time. Choosing `Passt – behalten`, an informed override, a replacement, a planned product, or an uncovered disposition records that choice locally and immediately shows the next review. The header says `Auswahl gemerkt`; Back restores the prior card and selected choice. The existing Back action is the correction path before the user makes the final choice.
+5. The last product choice immediately shows the one full-page state: `Dein Plan wird vorbereitet.` There is no intervening summary or confirmation screen. The preparation state covers batch validation/save, portfolio completion, and Routine navigation rather than flashing separate save, preparation, and Routine loaders.
 6. On success, Routine opens. If navigation does not occur, the existing recovery action `Routine öffnen` appears.
 7. If final submission fails before a confirmed response, the reviewed choices remain available. The user sees `Deine Auswahl ist noch nicht gespeichert` with `Erneut versuchen` and `Auswahl prüfen`; no choice is silently discarded.
 8. On a revision conflict, the canonical draft is loaded, invalidated choices are named for re-review, and still-valid local choices remain selected where their signed review facts are unchanged.
@@ -77,8 +77,8 @@ Meaningful variants:
 
 - `plans/mockups/2026-08-14-personal-plan-stage3-loading.html`
   - Question: can the journey communicate safe persistence without interrupting every product choice?
-  - Selected direction: inline background-save status during capture, locally remembered fit choices, one final preparation screen.
-  - Evidence review: confirmed by Nick on 2026-08-14; selected direction accepted without visual corrections.
+  - Selected direction: inline background-save status during capture, locally remembered fit choices, and an immediate transition from the last choice to one final preparation screen. The mockup contains no separate confirmation page.
+  - Evidence review: corrected and reconfirmed by Nick on 2026-08-14 after the shipped extra confirmation page was compared with the selected three-frame mockup.
   - Disposition: commit with the plan.
 - User-provided current screenshot
   - Finding: the existing full-page save state dominates the surface and gives no useful progress or next action.
@@ -116,7 +116,7 @@ Consumes: validated local intent array from Task 2.
 
 Produces: saved canonical Stage 3 draft and the existing Stage 4 handoff receipt.
 
-Completion criterion: one final CTA produces one continuous final preparation screen for both ordinary fit reviews and journeys containing inventory dispositions. A journey with fit reviews and one inventory disposition produces one decision-batch request, one existing idempotent disposition-acknowledgement request, and one completion request; errors remain retryable without lost choices. The one-loader user contract does not require collapsing different server mutation families into one request.
+Completion criterion: the last decision CTA produces one continuous final preparation screen, with no intermediate confirmation page, for both ordinary fit reviews and journeys containing inventory dispositions. A journey with fit reviews and one inventory disposition produces one decision-batch request, one existing idempotent disposition-acknowledgement request, and one completion request; errors remain retryable without lost choices. The one-loader user contract does not require collapsing different server mutation families into one request.
 
 The final submit is revision-guarded and idempotent. A network timeout, authentication interruption, or `409` preserves the reviewed local draft; retry must neither duplicate a decision nor overwrite a newer canonical plan.
 
@@ -134,7 +134,7 @@ Completion criterion: capture a display snapshot of the submitted last-category 
 
 Run the focused component suite and the Stage 3 browser journey with delayed requests on desktop and mobile. Record request counts and client/server transition timing for a representative multi-product case.
 
-Completion criterion: no full-page loader appears between individual product choices; only the final preparation/recovery phase can block the full surface. Against the real HTTP gateway (not the per-intent fallback), the representative fixture with three fit reviews, one replacement, and one inventory disposition has exactly one decision-batch `PATCH /api/personal-plan/stage-3`, one disposition-acknowledgement `PATCH /api/personal-plan/stage-3`, one `POST /api/personal-plan/stage-3/complete`, and zero decision `GET`/`PATCH` requests between review cards. Category-capture and search requests are asserted separately from this post-review budget.
+Completion criterion: no full-page loader appears between individual product choices, no confirmation page appears after the last choice, and only the final preparation/recovery phase can block the full surface. Against the real HTTP gateway (not the per-intent fallback), the representative fixture with three fit reviews, one replacement, and one inventory disposition has exactly one decision-batch `PATCH /api/personal-plan/stage-3`, one disposition-acknowledgement `PATCH /api/personal-plan/stage-3`, one `POST /api/personal-plan/stage-3/complete`, and zero decision `GET`/`PATCH` requests between review cards. Category-capture and search requests are asserted separately from this post-review budget.
 
 ## Verification
 
