@@ -28,12 +28,22 @@ test("regular shampoo has one canonical technique with no product or conditioner
   assert.doesNotMatch(JSON.stringify(template), /OGX|Conditioner/i)
 })
 
-test("ordinary templates contain only the two reviewed interpolation variables", () => {
+test("ordinary templates contain only reviewed typed interpolation variables", () => {
   const variables = SHARED_APPLICATION_TEMPLATES_V2.flatMap((template) =>
     template.steps.flatMap((step) =>
       [...step.copyTemplateDe.matchAll(/{{\s*([^}]+?)\s*}}/g)].map((match) => match[1]),
     ),
   )
 
-  assert.deepEqual([...new Set(variables)].sort(), ["contact_time_de"])
+  assert.deepEqual([...new Set(variables)].sort(), ["application_area_de", "contact_time_de"])
+})
+
+test("researched Leave-in finishing has a conservative shared post-style method", () => {
+  const template = SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.get("leave-in.post-style-finish.v2")
+
+  assert.ok(template)
+  assert.equal(template.scope.category, "leave_in")
+  assert.equal(template.applicationFamily, "post_style_finish")
+  assert.deepEqual(template.compatibleDayTypes, ["styling_day"])
+  assert.match(template.steps[0]!.copyTemplateDe, /nach dem Styling/)
 })

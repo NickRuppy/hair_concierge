@@ -155,6 +155,47 @@ function hasEquivalentVisibleSteps(
   )
 }
 
+function dryBetweenWashSteps(
+  block: {
+    steps: CompiledProductStep[]
+    sourceItems: NormalizedRoutineItem[]
+  },
+  profile: NormalizedApplicationInput["profile"],
+): CompiledProductStep[] {
+  const format = block.sourceItems
+    .map((item) => item.catalogFacts.format)
+    .find((value): value is string => typeof value === "string")
+  const oilWeight = block.sourceItems
+    .map((item) => item.catalogFacts.weight)
+    .find((value): value is string => typeof value === "string")
+  const isOil = block.sourceItems.some((item) => item.category === "oil")
+  const dryArea = block.sourceItems.some(
+    (item) => item.catalogFacts.applicationArea === "hair_ends",
+  )
+    ? "trockene Spitzen"
+    : "trockene Längen und Spitzen"
+  const easilyWeighedDown = profile.thickness === "fine" || profile.density === "low"
+  const copyDe = isOil
+    ? `Mit 1 Tropfen oder einer sehr kleinen Menge beginnen, vollständig zwischen den Handflächen verteilen und nur in ${dryArea} streichen.${easilyWeighedDown || oilWeight === "rich" ? ` Bei ${easilyWeighedDown ? "feinem oder wenig dichtem Haar" : "einem reichhaltigen Öl"}${easilyWeighedDown && oilWeight === "rich" ? " beziehungsweise einem reichhaltigen Öl" : ""} besonders sparsam dosieren.` : " Nur bei Bedarf ergänzen."}`
+    : format === "cream"
+      ? `Eine sehr kleine Menge vollständig zwischen den Handflächen verreiben und nur in ${dryArea} drücken.${easilyWeighedDown ? " Bei feinem oder wenig dichtem Haar besonders sparsam dosieren." : " Nur bei Bedarf ergänzen."}`
+      : format === "spray"
+        ? easilyWeighedDown
+          ? `Eine sehr kleine Menge zuerst in die Hände sprühen und gezielt über ${dryArea} streichen. Besonders sparsam dosieren.`
+          : `Sparsam über ${dryArea} sprühen und mit den Händen gleichmäßig verteilen. Nur bei Bedarf ergänzen.`
+        : format === "milk" || format === "lotion"
+          ? `Eine sehr kleine Menge in den Händen verteilen und gezielt in ${dryArea} einarbeiten. Nur bei Bedarf ergänzen.`
+          : format === "serum"
+            ? `Eine sehr kleine Menge in den Händen verteilen und gezielt über ${dryArea} streichen. Nur bei Bedarf ergänzen.`
+            : `Mit einer sehr kleinen Menge in ${dryArea} beginnen und nur bei Bedarf ergänzen.`
+  let adapted = false
+  return block.steps.map((step) => {
+    if (adapted || step.action !== "apply_product") return step
+    adapted = true
+    return { ...step, copyDe }
+  })
+}
+
 function orderAnchors(
   items: readonly ResolvedItem[],
   conditionerRelationship: ConditionerRelationship,
@@ -307,6 +348,13 @@ function compileDay(
     )
     .map((item) => ({ ...item, productId: null, productName: null }))
   for (const item of routineItemsForDay(key, items)) {
+    const supportedApplicationDayTypes = item.catalogFacts.supportedApplicationDayTypes
+    if (
+      Array.isArray(supportedApplicationDayTypes) &&
+      !supportedApplicationDayTypes.includes(key)
+    ) {
+      continue
+    }
     const hasCompatibleProtocol = protocols.some(
       (protocol) =>
         protocol.compatibleDayTypes.includes(key) &&
@@ -411,6 +459,7 @@ function compileDay(
       scopeKind: "application_family" | "product"
       routineOrder?: number
       sourceItems: NormalizedRoutineItem[]
+      applicationFamilies: string[]
     }
   >()
   const conflictedInstanceKeys = new Set<string>()
@@ -421,11 +470,20 @@ function compileDay(
   )) {
     // Stage 4 assignment keys are role-specific. Merge one physical application
     // only when the product shares an anchor; separate heat events stay separate.
-    const instanceKey =
+    const baseInstanceKey =
       protocol.protocolFacts.reapplication === "each_separate_heat_event"
         ? (item.applicationInstanceKey ??
           `${item.productId}:${protocol.sequence.anchor}:${item.itemId}`)
         : `${item.productId}:${protocol.sequence.anchor}`
+    const existingAtBase = blocks.get(baseInstanceKey)
+    const distinctRoleAtSharedAnchor =
+      existingAtBase !== undefined &&
+      !existingAtBase.roles.includes(item.role) &&
+      existingAtBase.guidanceKey !== protocol.guidanceKey &&
+      !hasEquivalentVisibleSteps(existingAtBase.steps, protocol.steps)
+    const instanceKey = distinctRoleAtSharedAnchor
+      ? `${baseInstanceKey}:${item.role}`
+      : baseInstanceKey
     if (conflictedInstanceKeys.has(instanceKey)) {
       addUnresolvedPosition(unresolvedRelevantItems, item)
       continue
@@ -456,6 +514,9 @@ function compileDay(
         existing.scopeKind = "product"
       }
       if (!existing.roles.includes(item.role)) existing.roles.push(item.role)
+      if (!existing.applicationFamilies.includes(protocol.applicationFamily)) {
+        existing.applicationFamilies.push(protocol.applicationFamily)
+      }
       existing.sourceItems.push(item)
       if (item.heatEventId && !existing.heatEventIds?.includes(item.heatEventId)) {
         existing.heatEventIds = [...(existing.heatEventIds ?? []), item.heatEventId]
@@ -498,9 +559,87 @@ function compileDay(
       scopeKind: protocol.scope.kind,
       routineOrder: item.routineOrder,
       sourceItems: [item],
+      applicationFamilies: [protocol.applicationFamily],
     })
   }
-  const internalProductBlocks = [...blocks.values()]
+  let internalProductBlocks = [...blocks.values()]
+  if (key === "refresh_day" || key === "between_wash_care_day") {
+    const betweenWashFamilies = new Set(["between_wash_dry_care", "between_wash_damp_refresh"])
+    const grouped = new Map<string, typeof internalProductBlocks>()
+    for (const block of internalProductBlocks) {
+      if (
+        block.applicationFamilies.length === 1 &&
+        betweenWashFamilies.has(block.applicationFamilies[0]!)
+      ) {
+        grouped.set(block.productId, [...(grouped.get(block.productId) ?? []), block])
+      }
+    }
+    const consumed = new Set<string>()
+    const replacements = new Map<string, (typeof internalProductBlocks)[number]>()
+    for (const candidates of grouped.values()) {
+      const families = new Set(candidates.flatMap((candidate) => candidate.applicationFamilies))
+      if (
+        candidates.length !== 2 ||
+        !families.has("between_wash_dry_care") ||
+        !families.has("between_wash_damp_refresh")
+      ) {
+        continue
+      }
+      const dry = candidates.find((candidate) =>
+        candidate.applicationFamilies.includes("between_wash_dry_care"),
+      )!
+      const damp = candidates.find((candidate) =>
+        candidate.applicationFamilies.includes("between_wash_damp_refresh"),
+      )!
+      const primary = dry.category === "oil" ? dry : damp
+      consumed.add(dry.applicationInstanceKey)
+      consumed.add(damp.applicationInstanceKey)
+      replacements.set(primary.applicationInstanceKey, {
+        ...primary,
+        applicationInstanceKey: `${primary.productId}:between-wash-methods`,
+        steps:
+          dry.category === "oil"
+            ? [
+                {
+                  stepKey: "method-dry",
+                  action: "section",
+                  copyDe: "Auf trockenem Haar (empfohlen)",
+                },
+                ...dryBetweenWashSteps(dry, profile),
+                {
+                  stepKey: "method-damp",
+                  action: "section",
+                  copyDe: "Nach leichtem Anfeuchten",
+                },
+                ...damp.steps,
+              ]
+            : [
+                {
+                  stepKey: "method-damp",
+                  action: "section",
+                  copyDe: "Nach dem Anfeuchten (empfohlen)",
+                },
+                ...damp.steps,
+                { stepKey: "method-dry", action: "section", copyDe: "Auf trockenem Haar" },
+                ...dryBetweenWashSteps(dry, profile),
+              ],
+        roles: [...new Set([...dry.roles, ...damp.roles])],
+        sourceItems: [...dry.sourceItems, ...damp.sourceItems],
+        applicationFamilies: ["between_wash_dry_care", "between_wash_damp_refresh"],
+        routineOrder:
+          dry.routineOrder === undefined
+            ? damp.routineOrder
+            : damp.routineOrder === undefined
+              ? dry.routineOrder
+              : Math.min(dry.routineOrder, damp.routineOrder),
+      })
+    }
+    internalProductBlocks = internalProductBlocks.flatMap((block) => {
+      const replacement = replacements.get(block.applicationInstanceKey)
+      if (replacement) return [replacement]
+      return consumed.has(block.applicationInstanceKey) ? [] : [block]
+    })
+  }
   const publicProductBlock = (
     block: (typeof internalProductBlocks)[number],
   ): CompiledProductBlock => ({

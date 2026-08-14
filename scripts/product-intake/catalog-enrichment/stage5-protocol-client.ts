@@ -59,10 +59,11 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
           product_id: string
           category: string
           role: string
+          application_family: string
           cadence: unknown
           source_url: string | null
           guidance_payload: unknown
-        }>("product_id,category,role,cadence,source_url,guidance_payload")
+        }>("product_id,category,role,application_family,cadence,source_url,guidance_payload")
         .in("product_id", productIds)
       if (error) throw new Error(`Stage 5 protocol preflight failed: ${error.message}`)
       return data ?? []
@@ -74,9 +75,10 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
           product_id: string
           category: string
           role: string
+          application_family: string
           guidance_payload: unknown
         }>(
-          "product_id,category,role,guidance_payload,products!inner(origin,is_active,lifecycle_status)",
+          "product_id,category,role,application_family,guidance_payload,products!inner(origin,is_active,lifecycle_status)",
         )
         .eq("products.origin", "curated")
         .eq("products.is_active", true)
@@ -258,8 +260,9 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
             product_id: string
             category: string
             role: string
+            application_family: string
             guidance_payload_v2: unknown
-          }>("product_id,category,role,guidance_payload_v2")
+          }>("product_id,category,role,application_family,guidance_payload_v2")
           .in("product_id", productIds)
         if (error) throw new Error(`Stage 5 V2 pointer verification failed: ${error.message}`)
         return data ?? []

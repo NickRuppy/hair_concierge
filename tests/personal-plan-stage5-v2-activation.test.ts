@@ -23,7 +23,7 @@ test("Stage 5 V2 activation fingerprints the exact artifact bytes", () => {
   )
   assert.equal(
     stage5V2ArtifactFingerprint(artifactText),
-    "65fc9ec1d157def58b5c34da527fe7487284357c568f8a761e220cfd4c340b82",
+    "c6afa7d2a7e6af41ad0bf6db067664a1eb950fc80b64463e2a05c031796b5324",
   )
   assert.notEqual(
     stage5V2ArtifactFingerprint(`${artifactText}\n`),
@@ -102,11 +102,12 @@ test("Stage 5 V2 post-apply verification requires every exact family and product
         (item: {
           product_id: string
           source_role: string
-          guidance_payload_v2: { scope: { category: string } }
+          guidance_payload_v2: { scope: { category: string }; applicationFamily: string }
         }) => ({
           product_id: item.product_id,
           category: item.guidance_payload_v2.scope.category,
           role: item.source_role,
+          application_family: item.guidance_payload_v2.applicationFamily,
           guidance_payload_v2: item.guidance_payload_v2,
         }),
       ),
@@ -114,5 +115,5 @@ test("Stage 5 V2 post-apply verification requires every exact family and product
 
   assert.equal(result.ok, true)
   assert.deepEqual(result.blockers, [])
-  assert.deepEqual(result.observed, { familyRows: 23, productRows: 272 })
+  assert.deepEqual(result.observed, { familyRows: 28, productRows: 289 })
 })

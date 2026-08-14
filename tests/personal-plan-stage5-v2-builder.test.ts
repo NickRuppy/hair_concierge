@@ -159,3 +159,27 @@ test("Product Intake placeholder is validated through a UUID sentinel and restor
 
   assert.equal(pointer.scope.productId, PRODUCT_INTAKE_V2_PRODUCT_ID_PLACEHOLDER)
 })
+
+test("reviewed Leave-in post-style use remains a distinct dry-hair pointer", () => {
+  const pointer = buildProductApplicationPointerV2({
+    sourceRole: "post_wash_leave_in",
+    guidancePayload: protocol({
+      scope: {
+        kind: "product",
+        category: "leave_in",
+        productId: "50000000-0000-4000-8000-000000000005",
+      },
+      role: "leave_in",
+      applicationFamily: "post_style_finish",
+      compatibleDayTypes: ["styling_day"],
+      sequence: { anchor: "dry_finish", before: [], after: [], conflictsWith: [] },
+      protocolFacts: {
+        applicationArea: "lengths_ends",
+        rinse: "leave_in",
+      },
+    }),
+  })
+
+  assert.equal(pointer.applicationFamily, "post_style_finish")
+  assert.equal(pointer.facts.applicationState, "dry_hair")
+})

@@ -71,6 +71,7 @@ const ALLOWED_FAMILIES_BY_SOURCE_ROLE: Record<
     "post_wash_damp_conditioning",
     "between_wash_damp_refresh",
     "between_wash_dry_care",
+    "post_style_finish",
   ],
   pre_heat_protection: ["pre_heat_damp", "pre_heat_dry", "either_state_protection"],
   pre_wash_fibre_treatment: ["pre_wash_lengths_treatment"],
@@ -151,6 +152,7 @@ function applicationState(
     [
       "between_wash_dry_care",
       "dry_finish",
+      "post_style_finish",
       "pre_heat_dry",
       "aerosol_spray",
       "foam",

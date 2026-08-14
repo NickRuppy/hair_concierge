@@ -44,12 +44,15 @@ export function createExactCatalogBundleRead(client: Client): ExactCatalogBundle
           product_id: string
           category: string
           role: string
+          application_family: string | null
           cadence: unknown
           source_label: string | null
           source_url: string | null
           source_text: string | null
           guidance_payload: unknown
-        }>("product_id,category,role,cadence,source_label,source_url,source_text,guidance_payload")
+        }>(
+          "product_id,category,role,application_family,cadence,source_label,source_url,source_text,guidance_payload",
+        )
         .in("product_id", ids)
       if (error) throw new Error(`catalog_bundle_protocol_preflight_failed:${error.message}`)
       return data ?? []

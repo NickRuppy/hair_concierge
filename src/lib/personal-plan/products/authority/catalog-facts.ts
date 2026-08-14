@@ -405,15 +405,15 @@ function batchSources(category: PersonalPlanCategory): BatchSource[] {
       key: "product_id",
       cardinality: "many",
       select:
-        "product_id,role,guidance_payload,application_stage,application_state,placement,contact_time_seconds,rinse_action,reapplication,source_label,source_url,updated_at",
-      orderBy: ["product_id", "role"],
+        "product_id,role,application_family,guidance_payload,application_stage,application_state,placement,contact_time_seconds,rinse_action,reapplication,source_label,source_url,updated_at",
+      orderBy: ["product_id", "role", "application_family"],
     },
     {
       table: "application_guidance_protocols",
       key: "product_id",
       cardinality: "many",
       select: "product_id,id,role_key,protocol_version,verified_at,updated_at",
-      orderBy: ["product_id", "id"],
+      orderBy: ["product_id", "role_key", "id"],
       filters: [
         { column: "scope_kind", value: "product" },
         { column: "status", value: "active" },
@@ -641,16 +641,20 @@ async function loadProtocols(
       client
         .from("product_application_protocols")
         .select(
-          "role,guidance_payload,application_stage,application_state,placement,contact_time_seconds,rinse_action,reapplication,source_label,source_url,updated_at",
+          "role,application_family,guidance_payload,application_stage,application_state,placement,contact_time_seconds,rinse_action,reapplication,source_label,source_url,updated_at",
         )
-        .eq("product_id", productId),
+        .eq("product_id", productId)
+        .order("role", { ascending: true })
+        .order("application_family", { ascending: true }),
       client
         .from("application_guidance_protocols")
         .select("id,role_key,protocol_version,verified_at,updated_at")
         .eq("product_id", productId)
         .eq("scope_kind", "product")
         .eq("status", "active")
-        .eq("locale", "de"),
+        .eq("locale", "de")
+        .order("role_key", { ascending: true })
+        .order("id", { ascending: true }),
     ])
   if (protocolError || guidanceError) throw new Error("stage3_authority_protocol_unavailable")
   return protocolsFromRows(
@@ -671,37 +675,49 @@ function protocolsFromRows(
   if (category === "leave_in" || category === "oil") roles.add("pre_heat_protection")
 
   return [...roles].map((role) => {
-    const guidanceRow = guidanceRows.find((row) => row.role_key === role || row.role_key === null)
-    if (guidanceRow) {
+    const exactGuidanceRows = guidanceRows.filter((row) => row.role_key === role)
+    const matchingGuidanceRows =
+      exactGuidanceRows.length > 0
+        ? exactGuidanceRows
+        : guidanceRows.filter((row) => row.role_key === null)
+    if (matchingGuidanceRows.length > 0) {
       return {
         role: role as never,
         status: "verified_complete" as const,
-        fingerprint: fingerprintProtocolRow(guidanceRow),
+        fingerprint: fingerprintProtocolRows(matchingGuidanceRows),
       }
     }
     const sourceRole = role === "pre_heat_application" ? "pre_heat_protection" : role
-    const row = protocolRows.find((candidate) => candidate.role === sourceRole)
-    if (!row) return { role: role as never, status: "missing" as const, fingerprint: null }
-    const canonicalGuidance = applicationGuidanceProtocolSchema.safeParse(row.guidance_payload)
-    const hasMatchingCanonicalGuidance =
-      canonicalGuidance.success &&
-      canonicalGuidance.data.scope.kind === "product" &&
-      canonicalGuidance.data.scope.productId === productId &&
-      canonicalGuidance.data.scope.category === category
+    const matchingProtocolRows = protocolRows.filter((candidate) => candidate.role === sourceRole)
+    if (matchingProtocolRows.length === 0)
+      return { role: role as never, status: "missing" as const, fingerprint: null }
+    const hasMatchingCanonicalGuidance = matchingProtocolRows.some((row) => {
+      const canonicalGuidance = applicationGuidanceProtocolSchema.safeParse(row.guidance_payload)
+      return (
+        canonicalGuidance.success &&
+        canonicalGuidance.data.scope.kind === "product" &&
+        canonicalGuidance.data.scope.productId === productId &&
+        canonicalGuidance.data.scope.category === category
+      )
+    })
     return {
       role: role as never,
       status: hasMatchingCanonicalGuidance
         ? ("verified_complete" as const)
         : ("verified_incomplete" as const),
-      fingerprint: fingerprintProtocolRow(row),
+      fingerprint: fingerprintProtocolRows(matchingProtocolRows),
     }
   }) as Stage3CategoryProductFacts["protocols"]
 }
 
-function fingerprintProtocolRow(row: Row): string {
-  const authorityFields = { ...row }
-  delete authorityFields.product_id
-  return fingerprint(authorityFields)
+function fingerprintProtocolRows(rows: Row[]): string {
+  return fingerprint(
+    rows.map((row) => {
+      const authorityFields = { ...row }
+      delete authorityFields.product_id
+      return authorityFields
+    }),
+  )
 }
 
 export async function loadStage3HeatCarrierCoverage(

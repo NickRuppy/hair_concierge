@@ -126,6 +126,167 @@ test("exact catalog bundle is byte-stable and its default preflight is read-only
   })
 })
 
+test("exact catalog bundle accepts same-role Leave-in variants only when their application families differ", async () => {
+  const leaveInProtocol = (
+    applicationFamily: "post_wash_damp_conditioning" | "between_wash_dry_care",
+  ) => ({
+    ...protocol("post_wash_leave_in"),
+    guidance_payload: {
+      ...protocol("post_wash_leave_in").guidance_payload,
+      guidanceKey: `fixture:${applicationFamily}`,
+      scope: { kind: "product" as const, category: "leave_in" as const, productId: id },
+      role: "leave_in" as const,
+      applicationFamily,
+      compatibleDayTypes:
+        applicationFamily === "post_wash_damp_conditioning"
+          ? (["wash_day"] as const)
+          : (["refresh_day", "between_wash_care_day"] as const),
+    },
+  })
+  const leaveInBundle = {
+    ...bundle,
+    batch_id: "S5-98-leave-in-variants",
+    items: [
+      {
+        product_id: id,
+        product_name: "Fixture Leave-in",
+        expected_current_category: "leave_in",
+        target_category: "leave_in" as const,
+        facts: {
+          category: "leave_in" as const,
+          values: {
+            care_direction: "moisture" as const,
+            repair_support_level: "low" as const,
+            plan_roles: ["post_wash_leave_in" as const],
+            functional_benefits: ["moisture_softness" as const],
+          },
+          sources: [source],
+        },
+        protocols: [
+          leaveInProtocol("between_wash_dry_care"),
+          leaveInProtocol("post_wash_damp_conditioning"),
+        ],
+      },
+    ],
+  }
+
+  const built = buildExactCatalogBundle(leaveInBundle)
+  assert.deepEqual(
+    built.bundle.items[0]!.protocols.map(
+      ({ guidance_payload }) => guidance_payload.applicationFamily,
+    ),
+    ["between_wash_dry_care", "post_wash_damp_conditioning"],
+  )
+
+  const duplicateFamily = structuredClone(leaveInBundle)
+  duplicateFamily.items[0]!.protocols[1] = leaveInProtocol("between_wash_dry_care")
+  assert.throws(
+    () => buildExactCatalogBundle(duplicateFamily),
+    /Duplicate product role and application family/,
+  )
+
+  const existingPostWash = built.bundle.items[0]!.protocols[1]!
+  const preflight = await preflightExactCatalogBundle(built, {
+    async listProducts() {
+      return [
+        {
+          id,
+          category_key: "leave_in",
+          origin: "curated",
+          is_active: true,
+          lifecycle_status: "active",
+        },
+      ]
+    },
+    async listProtocols() {
+      return [
+        {
+          product_id: id,
+          category: "leave_in",
+          role: "post_wash_leave_in",
+          application_family: "post_wash_damp_conditioning",
+          cadence: existingPostWash.cadence,
+          source_label: existingPostWash.source.label,
+          source_url: existingPostWash.source.url,
+          source_text: existingPostWash.source.text,
+          guidance_payload: existingPostWash.guidance_payload,
+        },
+      ]
+    },
+  })
+  assert.deepEqual(preflight.blockers, [])
+})
+
+test("exact catalog bundle compares a legacy Leave-in V1 family against its derived V2 identity", async () => {
+  const base = protocol("post_wash_leave_in")
+  const built = buildExactCatalogBundle({
+    ...bundle,
+    batch_id: "S5-97-derived-family",
+    items: [
+      {
+        product_id: id,
+        product_name: "Legacy-family Leave-in",
+        expected_current_category: "leave_in",
+        target_category: "leave_in",
+        facts: {
+          category: "leave_in",
+          values: {
+            care_direction: "moisture",
+            repair_support_level: "low",
+            plan_roles: ["post_wash_leave_in"],
+            functional_benefits: ["moisture_softness"],
+          },
+          sources: [source],
+        },
+        protocols: [
+          {
+            ...base,
+            guidance_payload: {
+              ...base.guidance_payload,
+              scope: { kind: "product", category: "leave_in", productId: id },
+              role: "leave_in",
+              applicationFamily: "damp_hair_protection",
+            },
+          },
+        ],
+      },
+    ],
+  })
+  const incoming = built.bundle.items[0]!.protocols[0]!
+  const result = await preflightExactCatalogBundle(built, {
+    async listProducts() {
+      return [
+        {
+          id,
+          category_key: "leave_in",
+          origin: "curated",
+          is_active: true,
+          lifecycle_status: "active",
+        },
+      ]
+    },
+    async listProtocols() {
+      return [
+        {
+          product_id: id,
+          category: "leave_in",
+          role: "post_wash_leave_in",
+          application_family: "post_wash_damp_conditioning",
+          cadence: incoming.cadence,
+          source_label: "Drifted",
+          source_url: incoming.source.url,
+          source_text: incoming.source.text,
+          guidance_payload: incoming.guidance_payload,
+        },
+      ]
+    },
+  })
+
+  assert.deepEqual(result.blockers, [
+    `protocol_conflict:${id}:post_wash_leave_in:post_wash_damp_conditioning`,
+  ])
+})
+
 test("exact catalog bundle preflight refuses any persisted protocol authority drift and accepts identical replay", async () => {
   const built = buildExactCatalogBundle({
     ...bundle,
@@ -174,7 +335,7 @@ test("exact catalog bundle preflight refuses any persisted protocol authority dr
     })
     assert.deepEqual(
       drifted.blockers,
-      [`protocol_conflict:${id}:intensive_conditioning_mask`],
+      [`protocol_conflict:${id}:intensive_conditioning_mask:post_shampoo_rinse_out_mask`],
       field,
     )
   }
@@ -221,7 +382,9 @@ test("exact catalog bundle preflight accepts only the deterministic legacy Mask 
       return [{ ...legacyExisting, source_label: "Drifted label" }]
     },
   })
-  assert.deepEqual(immutableDrift.blockers, [`protocol_conflict:${id}:intensive_conditioning_mask`])
+  assert.deepEqual(immutableDrift.blockers, [
+    `protocol_conflict:${id}:intensive_conditioning_mask:post_shampoo_rinse_out_mask`,
+  ])
 })
 
 test("exact catalog bundle migration keeps the apply path atomic, conflict-safe, and private", async () => {

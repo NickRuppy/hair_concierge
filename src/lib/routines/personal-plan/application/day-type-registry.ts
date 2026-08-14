@@ -74,7 +74,7 @@ export const CANONICAL_APPLICATION_DAY_RULES: Record<
   styling_day: {
     requiredRoles: ["styling", "heat_protection"],
     alwaysRelevantRoles: ["styling", "heat_protection"],
-    acceptedRoles: ["styling", "heat_protection", "finish"],
+    acceptedRoles: ["styling", "heat_protection", "leave_in", "finish"],
   },
   rest_day: { requiredRoles: [], alwaysRelevantRoles: [], acceptedRoles: [] },
 }

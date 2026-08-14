@@ -113,7 +113,7 @@ export function renderStage5InstructionReviewHtml(artifactText: string) {
     <div class="eyebrow">Review-Artefakt · 13. August 2026</div>
     <h1>Anwendung: kanonisch, wo möglich. Spezifisch, wo nötig.</h1>
     <p class="lede">Jede Familienanweisung wird genau einmal gezeigt. Produktspezifische Abläufe stehen separat. Dieses Dokument ändert keine Inhalte; es bindet die Review an das exakt generierte Katalog-Artefakt.</p>
-    <div class="stats"><span class="pill">${templates.length} kanonische Familien</span><span class="pill">${exactItems.length} produktspezifische Abläufe</span><span class="pill">${artifact.observed_counts.rows} Produkt-Rollen</span><span class="pill">0 Blocker</span></div>
+    <div class="stats"><span class="pill">${templates.length} kanonische Familien</span><span class="pill">${exactItems.length} produktspezifische Abläufe</span><span class="pill">${artifact.observed_counts.rows} Produkt-Anwendungsfamilien</span><span class="pill">0 Blocker</span></div>
     <p class="fingerprint"><strong>SHA-256:</strong> ${fingerprint}</p>
   </header>
   <section><h2>Kanonische Familien</h2><div class="grid">${familySections}</div></section>

@@ -207,7 +207,7 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
         stepKey: "refresh",
         action: "apply_product",
         copyTemplateDe:
-          "Die betroffenen Längen leicht anfeuchten, sparsam verteilen und nicht ausspülen.",
+          "Die betroffenen {{application_area_de}} leicht anfeuchten. Eine sehr kleine Menge in den Händen verteilen und gezielt in {{application_area_de}} einarbeiten. Ansatz und Kopfhaut aussparen. Nicht ausspülen.",
       },
     ],
   }),
@@ -223,7 +223,87 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
         stepKey: "dry-care",
         action: "apply_product",
         copyTemplateDe:
-          "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen.",
+          "Mit einer sehr kleinen Menge in trockenen {{application_area_de}} beginnen und nur bei Bedarf ergänzen.",
+      },
+    ],
+  }),
+  template({
+    guidanceKey: "oil.finish.damp-refresh.v2",
+    category: "oil",
+    role: "finish",
+    applicationFamily: "between_wash_damp_refresh",
+    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    anchor: "damp_leave_on",
+    steps: [
+      {
+        stepKey: "oil-damp-care",
+        action: "apply_product",
+        copyTemplateDe:
+          "Die betroffenen {{application_area_de}} mit feuchten Händen leicht anfeuchten. Einen Tropfen oder eine sehr kleine Menge vollständig in den Handflächen verteilen und nur in {{application_area_de}} drücken. Ansatz und Kopfhaut aussparen. Nicht ausspülen.",
+      },
+    ],
+  }),
+  template({
+    guidanceKey: "oil.finish.dry-care.v2",
+    category: "oil",
+    role: "finish",
+    applicationFamily: "between_wash_dry_care",
+    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    anchor: "dry_finish",
+    steps: [
+      {
+        stepKey: "dry-care",
+        action: "apply_product",
+        copyTemplateDe:
+          "Mit 1 Tropfen oder einer sehr kleinen Menge in trockenen {{application_area_de}} beginnen und nur bei Bedarf ergänzen.",
+      },
+    ],
+  }),
+  template({
+    guidanceKey: "oil.leave-in.damp-refresh.v2",
+    category: "oil",
+    role: "leave_in",
+    applicationFamily: "between_wash_damp_refresh",
+    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    anchor: "damp_leave_on",
+    steps: [
+      {
+        stepKey: "oil-damp-care",
+        action: "apply_product",
+        copyTemplateDe:
+          "Die betroffenen {{application_area_de}} mit feuchten Händen leicht anfeuchten. Einen Tropfen oder eine sehr kleine Menge vollständig in den Handflächen verteilen und nur in {{application_area_de}} drücken. Ansatz und Kopfhaut aussparen. Nicht ausspülen.",
+      },
+    ],
+  }),
+  template({
+    guidanceKey: "oil.leave-in.dry-care.v2",
+    category: "oil",
+    role: "leave_in",
+    applicationFamily: "between_wash_dry_care",
+    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    anchor: "dry_finish",
+    steps: [
+      {
+        stepKey: "dry-care",
+        action: "apply_product",
+        copyTemplateDe:
+          "Mit 1 Tropfen oder einer sehr kleinen Menge in trockenen {{application_area_de}} beginnen und nur bei Bedarf ergänzen.",
+      },
+    ],
+  }),
+  template({
+    guidanceKey: "leave-in.post-style-finish.v2",
+    category: "leave_in",
+    role: "leave_in",
+    applicationFamily: "post_style_finish",
+    compatibleDayTypes: ["styling_day"],
+    anchor: "dry_finish",
+    steps: [
+      {
+        stepKey: "post-style-finish",
+        action: "apply_product",
+        copyTemplateDe:
+          "Mit einer sehr kleinen Menge beginnen und nach dem Styling sparsam über Längen und Spitzen geben.",
       },
     ],
   }),

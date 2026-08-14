@@ -12,13 +12,34 @@ export type ProductPointerIssueV2 = {
   role: string
   reason:
     | "missing_pointer"
-    | "ambiguous_pointer"
     | "missing_family_template"
     | "missing_contact_time"
     | "invalid_heat_facts"
     | "blocked_missing_verified_companion"
     | "required_companion_not_in_routine"
 }
+
+const BETWEEN_WASH_LEAVE_IN_EVIDENCE = [
+  {
+    sourceUrl:
+      "https://www.aad.org/public/everyday-care/hair-scalp-care/hair/leave-in-conditioner-tips",
+    sourceType: "professional_authority" as const,
+    checkedAt: "2026-08-14",
+  },
+  {
+    sourceUrl: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9921463/",
+    sourceType: "professional_authority" as const,
+    checkedAt: "2026-08-14",
+  },
+]
+
+const BETWEEN_WASH_OIL_EVIDENCE = [
+  {
+    sourceUrl: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4387693/",
+    sourceType: "professional_authority" as const,
+    checkedAt: "2026-08-14",
+  },
+]
 
 const CAUTION_COPY_DE = {
   avoid_broken_skin: "Nicht auf verletzter oder gereizter Haut anwenden.",
@@ -76,6 +97,12 @@ function interpolateStep(copy: string, facts: ProductApplicationPointerV2["facts
     const maximum = facts.heat?.maximumClaimedTemperatureC
     if (maximum === null || maximum === undefined) return null
     copy = copy.replaceAll("{{max_temperature_c}}", String(maximum))
+  }
+  if (copy.includes("{{application_area_de}}")) {
+    copy = copy.replaceAll(
+      "{{application_area_de}}",
+      facts.applicationArea === "hair_ends" ? "Spitzen" : "Längen und Spitzen",
+    )
   }
   return copy
 }
@@ -312,15 +339,29 @@ export function composeProductApplicationProtocolsV2(
 function itemWithPointerFacts(
   item: NormalizedRoutineItem,
   pointer: ProductApplicationPointerV2,
+  compatibleDayTypes:
+    | readonly ApplicationGuidanceProtocolV1["compatibleDayTypes"][number][]
+    | null = null,
+  useCaseCoverageEnabled = true,
+  disambiguateVariant = false,
 ): NormalizedRoutineItem {
+  const variantIdentity = useCaseCoverageEnabled || disambiguateVariant
   return {
     ...item,
+    itemId: variantIdentity ? `${item.itemId}:${pointer.applicationFamily}` : item.itemId,
+    applicationInstanceKey: variantIdentity
+      ? `${item.applicationInstanceKey ?? item.itemId}:${pointer.applicationFamily}`
+      : item.applicationInstanceKey,
     catalogFacts: {
       ...item.catalogFacts,
+      ...(compatibleDayTypes !== null
+        ? { supportedApplicationDayTypes: [...new Set(compatibleDayTypes)] }
+        : {}),
       formatResolution: {
         status: "resolved",
         applicationFamily: pointer.applicationFamily,
       },
+      applicationArea: pointer.facts.applicationArea,
       applicationState:
         pointer.facts.heat?.supportedStates.length === 2
           ? "either"
@@ -337,58 +378,143 @@ function itemWithPointerFacts(
   }
 }
 
+function withUniversalBetweenWashMethods(
+  item: NormalizedRoutineItem,
+  pointers: readonly ProductApplicationPointerV2[],
+): ProductApplicationPointerV2[] {
+  const isLeaveIn = item.category === "leave_in" && item.role === "leave_in"
+  const isConventionalOilRole =
+    item.category === "oil" && (item.role === "finish" || item.role === "leave_in")
+  if (!isLeaveIn && !isConventionalOilRole) return [...pointers]
+  const conventional = pointers.find(
+    (pointer) =>
+      (isLeaveIn
+        ? pointer.role === "leave_in"
+        : pointer.role === "finish" || pointer.role === "leave_in") &&
+      pointer.facts.rinse === "leave_in" &&
+      (pointer.facts.applicationArea === "hair_lengths_ends" ||
+        pointer.facts.applicationArea === "hair_ends") &&
+      pointer.workflowId === null &&
+      pointer.requiredCompanionProductId === null &&
+      pointer.runtimeBlockerCode === null,
+  )
+  if (!conventional) return [...pointers]
+
+  const result = [...pointers]
+  const addMethod = (
+    applicationFamily: "between_wash_damp_refresh" | "between_wash_dry_care",
+    applicationState: "damp_hair" | "dry_hair",
+  ) => {
+    if (result.some((pointer) => pointer.applicationFamily === applicationFamily)) return
+    result.push({
+      ...conventional,
+      applicationFamily,
+      facts: {
+        ...conventional.facts,
+        applicationState,
+        applicationArea: conventional.facts.applicationArea,
+        rinse: "leave_in",
+        contactTime: null,
+        amount: {
+          kind: "qualitative",
+          value: item.category === "oil" ? "one_drop" : "very_small_amount",
+        },
+        heat: null,
+        conditionerPolicy: "not_applicable",
+      },
+      evidence:
+        item.category === "oil" ? BETWEEN_WASH_OIL_EVIDENCE : BETWEEN_WASH_LEAVE_IN_EVIDENCE,
+    })
+  }
+  addMethod("between_wash_damp_refresh", "damp_hair")
+  addMethod("between_wash_dry_care", "dry_hair")
+  return result.sort((left, right) => left.applicationFamily.localeCompare(right.applicationFamily))
+}
+
 export function compileApplicationViewV2({
   input,
   familyTemplates,
   productPointers,
+  useCaseCoverageEnabled,
 }: {
   input: NormalizedApplicationInput
   familyTemplates: readonly ApplicationFamilyTemplateV2[]
   productPointers: readonly ProductApplicationPointerV2[]
+  useCaseCoverageEnabled: boolean
 }) {
   const pointerIssues: ProductPointerIssueV2[] = []
   const protocols: ApplicationGuidanceProtocolV1[] = []
-  const routineItems = input.routineItems.map((item) => {
-    const matches = productPointers.filter(
-      (pointer) =>
-        pointer.scope.productId === item.productId &&
-        pointer.scope.category === item.category &&
-        pointer.role === item.role &&
-        (item.sourceRoutineRole === undefined || pointer.sourceRole === item.sourceRoutineRole),
-    )
-    if (matches.length !== 1) {
-      pointerIssues.push({
-        productId: item.productId,
-        role: item.role,
-        reason: matches.length === 0 ? "missing_pointer" : "ambiguous_pointer",
-      })
-      return item
-    }
-    const pointer = matches[0]!
-    if (
-      pointer.requiredCompanionProductId !== null &&
-      !input.routineItems.some(
-        (candidate) => candidate.productId === pointer.requiredCompanionProductId,
+  const routineItems = input.routineItems.flatMap((item) => {
+    let matches = productPointers
+      .filter(
+        (pointer) =>
+          pointer.scope.productId === item.productId &&
+          pointer.scope.category === item.category &&
+          pointer.role === item.role &&
+          (item.sourceRoutineRole === undefined || pointer.sourceRole === item.sourceRoutineRole),
       )
-    ) {
+      .sort((left, right) => left.applicationFamily.localeCompare(right.applicationFamily))
+    if (matches.length === 0) {
       pointerIssues.push({
         productId: item.productId,
         role: item.role,
-        reason: "required_companion_not_in_routine",
+        reason: "missing_pointer",
       })
-      return itemWithPointerFacts(item, pointer)
+      return useCaseCoverageEnabled ? [] : [item]
     }
-    const composition = composeProductApplicationProtocolsV2(pointer, familyTemplates)
-    if (composition.status === "unresolved") {
-      pointerIssues.push({
-        productId: item.productId,
-        role: item.role,
-        reason: composition.reason,
-      })
-      return itemWithPointerFacts(item, pointer)
+    const hasStoredVariants = matches.length > 1
+    if (useCaseCoverageEnabled) {
+      matches = withUniversalBetweenWashMethods(item, matches)
     }
-    protocols.push(...composition.protocols)
-    return itemWithPointerFacts(item, pointer)
+    return matches.flatMap((pointer) => {
+      if (
+        pointer.requiredCompanionProductId !== null &&
+        !input.routineItems.some(
+          (candidate) => candidate.productId === pointer.requiredCompanionProductId,
+        )
+      ) {
+        pointerIssues.push({
+          productId: item.productId,
+          role: item.role,
+          reason: "required_companion_not_in_routine",
+        })
+        return useCaseCoverageEnabled
+          ? []
+          : [itemWithPointerFacts(item, pointer, null, useCaseCoverageEnabled, hasStoredVariants)]
+      }
+      const composition = composeProductApplicationProtocolsV2(pointer, familyTemplates)
+      if (composition.status === "unresolved") {
+        pointerIssues.push({
+          productId: item.productId,
+          role: item.role,
+          reason: composition.reason,
+        })
+        return useCaseCoverageEnabled
+          ? []
+          : [itemWithPointerFacts(item, pointer, null, useCaseCoverageEnabled, hasStoredVariants)]
+      }
+      protocols.push(...composition.protocols)
+      const compatibleDayTypes = composition.protocols.flatMap(
+        (protocol) => protocol.compatibleDayTypes,
+      )
+      const effectiveCompatibleDayTypes =
+        useCaseCoverageEnabled &&
+        item.category === "oil" &&
+        pointer.applicationFamily === "dry_finish"
+          ? compatibleDayTypes.filter(
+              (dayType) => dayType !== "refresh_day" && dayType !== "between_wash_care_day",
+            )
+          : compatibleDayTypes
+      return [
+        itemWithPointerFacts(
+          item,
+          pointer,
+          effectiveCompatibleDayTypes,
+          useCaseCoverageEnabled,
+          hasStoredVariants,
+        ),
+      ]
+    })
   })
 
   return {
