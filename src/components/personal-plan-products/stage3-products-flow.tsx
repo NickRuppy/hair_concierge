@@ -634,12 +634,29 @@ export function Stage3ProductsFlow({
     if (phase !== "decisions") return
     const subject = displayedReviewSubject
     if (!subject || viewedReviewSubjects.current.has(subject.decisionKey)) return
-    const evaluation = reviewBundles.get(subject.decisionKey)?.authorityEvaluation
-    if (!evaluation) return
+    const bundle = reviewBundles.get(subject.decisionKey)
+    const evaluation = bundle?.authorityEvaluation
+    if (!evaluation || !bundle) return
+    const hasOwnedProduct = bundle.fitComparison.products.some(
+      (product) => product.source === "current",
+    )
+    const assessableOwnedReview =
+      hasOwnedProduct &&
+      evaluation.status === "known" &&
+      (evaluation.verdict === "ideal" ||
+        evaluation.verdict === "supportive" ||
+        evaluation.verdict === "mismatch")
     viewedReviewSubjects.current.add(subject.decisionKey)
     analytics.track("personal_plan_stage3_review_viewed", {
       category: subject.category,
       verdict: reviewVerdict(evaluation),
+      alternativeState: assessableOwnedReview
+        ? bundle.fitComparison.alternatives.length > 0
+          ? "available"
+          : bundle.fitComparison.candidateCatalogComplete
+            ? "exhausted"
+            : "not_applicable"
+        : "not_applicable",
       position: reviewPosition(draft, subject.decisionKey),
       count: decisionSubjects.length,
     })

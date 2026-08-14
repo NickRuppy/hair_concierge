@@ -66,6 +66,7 @@ test("Stage 3 baseline analytics is consent-aware and suppresses verbose events"
   consentedAnalytics.track("personal_plan_stage3_review_viewed", {
     category: "conditioner",
     verdict: "ideal",
+    alternativeState: "available",
     position: 1,
     count: 1,
   })
@@ -79,7 +80,13 @@ test("Stage 3 baseline analytics is consent-aware and suppresses verbose events"
     { eventName: "personal_plan_stage3_routine_opened", payload: {} },
     {
       eventName: "personal_plan_stage3_review_viewed",
-      payload: { category: "conditioner", verdict: "ideal", position: 1, count: 1 },
+      payload: {
+        category: "conditioner",
+        verdict: "ideal",
+        alternativeState: "available",
+        position: 1,
+        count: 1,
+      },
     },
   ])
 })
@@ -192,6 +199,7 @@ test("Stage 3 review events map their bounded payloads to PostHog", () => {
     postHogDestination.track("personal_plan_stage3_review_viewed", {
       category: "conditioner",
       verdict: "mismatch",
+      alternativeState: "exhausted",
       position: 2,
       count: 4,
     })
@@ -216,7 +224,13 @@ test("Stage 3 review events map their bounded payloads to PostHog", () => {
   assert.deepEqual(calls, [
     [
       "personal_plan_stage3_review_viewed",
-      { category: "conditioner", verdict: "mismatch", position: 2, count: 4 },
+      {
+        category: "conditioner",
+        verdict: "mismatch",
+        alternative_state: "exhausted",
+        position: 2,
+        count: 4,
+      },
     ],
     [
       "personal_plan_stage3_review_action",

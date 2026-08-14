@@ -2,7 +2,11 @@ import { createHash } from "node:crypto"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import type { PlanCategoryTarget, PlanProductRole } from "@/lib/personal-plan/types"
+import type {
+  PlanCategoryDecision,
+  PlanCategoryTarget,
+  PlanProductRole,
+} from "@/lib/personal-plan/types"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
@@ -13,9 +17,17 @@ import type {
   Stage3CategoryProductFacts,
   Stage3EvaluationContext,
 } from "./contracts"
+import {
+  chunkValues as chunks,
+  loadCatalogBatchSnapshot,
+  pagedCatalogRows as pagedRows,
+  type AwaitableCatalogQuery as AwaitableQuery,
+  type CatalogBatchSnapshot as BatchSnapshot,
+  type CatalogBatchSource as BatchSource,
+  type CatalogRow as Row,
+} from "./catalog-batching"
 
 type AdminClient = SupabaseClient
-type Row = Record<string, unknown>
 type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
 type ConditionerTarget = Extract<PlanCategoryTarget, { category: "conditioner" }>
 export type Stage3RecommendationCandidateSelection = {
@@ -28,7 +40,16 @@ export type Stage3RecommendationCandidateSelection = {
 
 type CategorySelectionContext = Omit<Stage3RecommendationCandidateSelection, "category">
 
-export const STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT = 12
+export const STAGE3_AUTHORITY_PRODUCT_PAGE_SIZE = 500
+export const STAGE3_AUTHORITY_FACT_CHUNK_SIZE = 100
+const STAGE3_AUTHORITY_LEGACY_CANDIDATE_LIMIT = 12
+
+type LoadedCategorySpec = Stage3CategoryProductFacts["spec"] & {
+  comparisonObservations?: {
+    cleansingIntensity: string | null
+    supportedScalpRoutes: string[]
+  }
+}
 
 export function stage3AuthorityFactFingerprint(input: {
   common: Stage3AuthorityCommonFingerprintInput & Stage3AuthorityPresentationFields
@@ -41,7 +62,7 @@ export function stage3AuthorityFactFingerprint(input: {
 export type Stage3AuthorityFactBundle = Pick<
   Stage3AuthorityInput,
   "productFacts" | "recommendationCandidates" | "heatCarrierCoverage"
->
+> & { candidateCatalogComplete?: boolean }
 
 type Stage3AuthorityCommonFingerprintInput = Omit<
   Stage3CategoryProductFacts,
@@ -64,13 +85,21 @@ export async function loadStage3AuthorityFactBundle(
     subject: Stage3DecisionSubject
     heatRoutes: string[]
     context: Stage3EvaluationContext
+    categoryDecision?: PlanCategoryDecision
+    recommendationCandidates?: Stage3CategoryProductFacts[]
+    heatCarrierCoverage?: Stage3AuthorityFactBundle["heatCarrierCoverage"]
+    candidateCatalogComplete?: boolean
   },
 ): Promise<Stage3AuthorityFactBundle> {
   const selectionContext: CategorySelectionContext = {
     hairThickness: input.context.hairThickness,
     role: input.subject.role,
-    shampooTarget: signedShampooTarget(input.draft, input.subject.category),
-    conditionerTarget: signedConditionerTarget(input.draft, input.subject.category),
+    shampooTarget: shampooTargetFor(input.categoryDecision, input.draft, input.subject.category),
+    conditionerTarget: conditionerTargetFor(
+      input.categoryDecision,
+      input.draft,
+      input.subject.category,
+    ),
   }
   const captured = input.subject.capturedProductId
     ? input.draft.products.find(
@@ -84,18 +113,55 @@ export async function loadStage3AuthorityFactBundle(
     productId
       ? loadOneProduct(client, input.subject.category, productId, selectionContext)
       : Promise.resolve(null),
-    loadRecommendationCandidates(client, input.subject.category, selectionContext),
-    resolveHeatCarrierCoverage(client, input.draft, input.heatRoutes),
+    input.recommendationCandidates
+      ? Promise.resolve(input.recommendationCandidates)
+      : loadRecommendationCandidates(client, input.subject.category, selectionContext),
+    input.heatCarrierCoverage
+      ? Promise.resolve(input.heatCarrierCoverage)
+      : loadStage3HeatCarrierCoverage(client, input.draft, input.heatRoutes),
   ])
 
   return {
     productFacts,
     recommendationCandidates,
     heatCarrierCoverage,
+    candidateCatalogComplete: input.candidateCatalogComplete,
   } as Stage3AuthorityFactBundle
 }
 
-async function loadRecommendationCandidates(
+type Stage3RecommendationCandidateAuthorityInput = {
+  draft: Stage3ProductDraft
+  subject: Stage3DecisionSubject
+  context: Stage3EvaluationContext
+  categoryDecision?: PlanCategoryDecision
+  completeCatalog?: boolean
+}
+
+export async function loadStage3RecommendationCandidates(
+  client: AdminClient,
+  input: Stage3RecommendationCandidateSelection | Stage3RecommendationCandidateAuthorityInput,
+): Promise<Stage3CategoryProductFacts[]> {
+  const directSelection = "category" in input
+  const category = directSelection ? input.category : input.subject.category
+  const selectionContext: CategorySelectionContext = directSelection
+    ? {
+        hairThickness: input.hairThickness,
+        role: input.role,
+        shampooTarget: input.shampooTarget,
+        conditionerTarget: input.conditionerTarget,
+      }
+    : {
+        hairThickness: input.context.hairThickness,
+        role: input.subject.role,
+        shampooTarget: shampooTargetFor(input.categoryDecision, input.draft, category),
+        conditionerTarget: conditionerTargetFor(input.categoryDecision, input.draft, category),
+      }
+  return !directSelection && input.completeCatalog === false
+    ? loadLegacyRecommendationCandidates(client, category, selectionContext)
+    : loadRecommendationCandidates(client, category, selectionContext)
+}
+
+async function loadLegacyRecommendationCandidates(
   client: AdminClient,
   category: PersonalPlanCategory,
   selectionContext: CategorySelectionContext,
@@ -111,11 +177,11 @@ async function loadRecommendationCandidates(
     .eq("is_chaarlie_recommended", true)
     .order("sort_order", { ascending: true })
     .order("id", { ascending: true })
-    .limit(STAGE3_AUTHORITY_CANDIDATE_QUERY_LIMIT)
+    .limit(STAGE3_AUTHORITY_LEGACY_CANDIDATE_LIMIT)
   if (error) throw new Error("stage3_authority_catalog_unavailable")
   const facts = await Promise.all(
-    (data ?? []).map((row) =>
-      normalizeProductFacts(client, category, row as Row, selectionContext),
+    ((data ?? []) as Row[]).map((row) =>
+      normalizeProductFacts(client, category, row, selectionContext),
     ),
   )
   return facts
@@ -123,12 +189,40 @@ async function loadRecommendationCandidates(
     .sort(compareRecommendationFacts)
 }
 
-export async function loadStage3RecommendationCandidates(
+async function loadRecommendationCandidates(
   client: AdminClient,
-  input: Stage3RecommendationCandidateSelection,
+  category: PersonalPlanCategory,
+  selectionContext: CategorySelectionContext,
 ): Promise<Stage3CategoryProductFacts[]> {
-  const { category, ...selectionContext } = input
-  return loadRecommendationCandidates(client, category, selectionContext)
+  const products = await pagedRows(
+    () =>
+      client
+        .from("products")
+        .select(
+          "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit",
+          { count: "exact" },
+        )
+        .eq("category_key", category)
+        .eq("is_active", true)
+        .eq("lifecycle_status", "active")
+        .eq("is_chaarlie_recommended", true)
+        .order("sort_order", { ascending: true })
+        .order("id", { ascending: true }) as unknown as AwaitableQuery,
+    STAGE3_AUTHORITY_PRODUCT_PAGE_SIZE,
+    "stage3_authority_catalog_unavailable",
+  )
+  const productIds = products.map((row) => text(row.id)).filter((id): id is string => Boolean(id))
+  const snapshot = await loadBatchSnapshot(client, category, productIds)
+  const facts = snapshot
+    ? products.map((row) =>
+        normalizeProductFactsFromSnapshot(category, row, selectionContext, snapshot),
+      )
+    : await Promise.all(
+        products.map((row) => normalizeProductFacts(client, category, row, selectionContext)),
+      )
+  return facts
+    .filter((value): value is Stage3CategoryProductFacts => value !== null)
+    .sort(compareRecommendationFacts)
 }
 
 async function loadOneProduct(
@@ -161,6 +255,34 @@ async function normalizeProductFacts(
     loadCategorySpec(client, category, productId, selectionContext),
     loadProtocols(client, category, productId),
   ])
+  return assembleProductFacts(category, product, productId, loadedSpec, protocols)
+}
+
+function normalizeProductFactsFromSnapshot(
+  category: PersonalPlanCategory,
+  product: Row,
+  selectionContext: CategorySelectionContext,
+  snapshot: BatchSnapshot,
+): Stage3CategoryProductFacts | null {
+  const productId = text(product.id)
+  if (!productId || product.category_key !== category) return null
+  const loadedSpec = categorySpecFromSnapshot(category, productId, selectionContext, snapshot)
+  const protocols = protocolsFromRows(
+    category,
+    productId,
+    snapshot.get("product_application_protocols")?.get(productId) ?? [],
+    snapshot.get("application_guidance_protocols")?.get(productId) ?? [],
+  )
+  return assembleProductFacts(category, product, productId, loadedSpec, protocols)
+}
+
+function assembleProductFacts(
+  category: PersonalPlanCategory,
+  product: Row,
+  productId: string,
+  loadedSpec: LoadedCategorySpec,
+  protocols: Stage3CategoryProductFacts["protocols"],
+): Stage3CategoryProductFacts {
   const { comparisonObservations, ...spec } = loadedSpec
   const common = {
     productId,
@@ -221,33 +343,173 @@ function omitPresentationFields<T extends Stage3AuthorityPresentationFields>(
   ) as Omit<T, keyof Stage3AuthorityPresentationFields>
 }
 
+function categorySpecSources(category: PersonalPlanCategory): BatchSource[] {
+  const source = (
+    table: string,
+    cardinality: BatchSource["cardinality"],
+    key: BatchSource["key"] = "product_id",
+    orderBy: readonly string[] = [key],
+  ): BatchSource => ({ table, cardinality, key, select: "*", orderBy })
+  switch (category) {
+    case "shampoo":
+      return [
+        source("product_shampoo_specs", "many", "product_id", [
+          "product_id",
+          "thickness",
+          "shampoo_bucket",
+        ]),
+      ]
+    case "conditioner":
+      return [
+        source("product_conditioner_specs", "many", "product_id", [
+          "product_id",
+          "thickness",
+          "protein_moisture_balance",
+        ]),
+        source("product_conditioner_rerank_specs", "one"),
+      ]
+    case "leave_in":
+      return [source("product_leave_in_specs", "one")]
+    case "heat_protectant":
+      return [source("product_heat_protectant_specs", "one")]
+    case "oil":
+      return [
+        source("product_oil_specs", "one"),
+        source("product_oil_eligibility", "many", "product_id", [
+          "product_id",
+          "thickness",
+          "oil_subtype",
+        ]),
+      ]
+    case "mask":
+      return [source("product_mask_specs", "one")]
+    case "scalp_care":
+      return [source("product_scalp_care_specs", "one")]
+    case "dry_shampoo":
+      return [source("product_dry_shampoo_specs", "one")]
+    case "bondbuilder":
+      return [
+        source("product_bondbuilder_specs", "one"),
+        source("product_relationships", "many", "source_product_id", ["source_product_id", "id"]),
+      ]
+    case "deep_cleansing_shampoo":
+      return [source("product_deep_cleansing_shampoo_specs", "one")]
+  }
+}
+
+function batchSources(category: PersonalPlanCategory): BatchSource[] {
+  return [
+    ...categorySpecSources(category),
+    {
+      table: "product_application_protocols",
+      key: "product_id",
+      cardinality: "many",
+      select:
+        "product_id,role,guidance_payload,application_stage,application_state,placement,contact_time_seconds,rinse_action,reapplication,source_label,source_url,updated_at",
+      orderBy: ["product_id", "role"],
+    },
+    {
+      table: "application_guidance_protocols",
+      key: "product_id",
+      cardinality: "many",
+      select: "product_id,id,role_key,protocol_version,verified_at,updated_at",
+      orderBy: ["product_id", "id"],
+      filters: [
+        { column: "scope_kind", value: "product" },
+        { column: "status", value: "active" },
+        { column: "locale", value: "de" },
+      ],
+    },
+  ]
+}
+
+async function loadBatchSnapshot(
+  client: AdminClient,
+  category: PersonalPlanCategory,
+  productIds: string[],
+): Promise<BatchSnapshot | null> {
+  return loadCatalogBatchSnapshot(client, batchSources(category), productIds, {
+    chunkSize: STAGE3_AUTHORITY_FACT_CHUNK_SIZE,
+    pageSize: STAGE3_AUTHORITY_PRODUCT_PAGE_SIZE,
+  })
+}
+
+async function loadProductsByIds(
+  client: AdminClient,
+  category: PersonalPlanCategory,
+  productIds: string[],
+): Promise<Row[] | null> {
+  if (productIds.length === 0) return []
+  const probe = client.from("products").select("id") as unknown as { in?: unknown }
+  if (typeof probe.in !== "function") return null
+  const rows: Row[] = []
+  for (const ids of chunks(productIds, STAGE3_AUTHORITY_FACT_CHUNK_SIZE)) {
+    rows.push(
+      ...(await pagedRows(
+        () =>
+          (
+            client
+              .from("products")
+              .select(
+                "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit",
+                { count: "exact" },
+              )
+              .eq("category_key", category) as unknown as {
+              in(column: string, values: string[]): AwaitableQuery
+            }
+          ).in("id", ids),
+        STAGE3_AUTHORITY_PRODUCT_PAGE_SIZE,
+        "stage3_authority_catalog_unavailable",
+      )),
+    )
+  }
+  return rows
+}
+
 async function loadCategorySpec(
   client: AdminClient,
   category: PersonalPlanCategory,
   productId: string,
   selectionContext: CategorySelectionContext,
-): Promise<
-  Stage3CategoryProductFacts["spec"] & {
-    comparisonObservations?: {
-      cleansingIntensity: string | null
-      supportedScalpRoutes: string[]
-    }
+): Promise<LoadedCategorySpec> {
+  const snapshot: BatchSnapshot = new Map()
+  await Promise.all(
+    categorySpecSources(category).map(async (source) => {
+      const rows =
+        source.key === "source_product_id"
+          ? await loadOutgoingProductRelationships(client, productId)
+          : source.cardinality === "one"
+            ? [await one(client, source.table, productId)].filter((row): row is Row => row !== null)
+            : await many(client, source.table, productId)
+      snapshot.set(source.table, new Map([[productId, rows]]))
+    }),
+  )
+  return categorySpecFromSnapshot(category, productId, selectionContext, snapshot)
+}
+
+function categorySpecFromSnapshot(
+  category: PersonalPlanCategory,
+  productId: string,
+  selectionContext: CategorySelectionContext,
+  snapshot: BatchSnapshot,
+): LoadedCategorySpec {
+  const rows = (table: string) => snapshot.get(table)?.get(productId) ?? []
+  const singleton = (table: string) => {
+    const matches = rows(table)
+    if (matches.length > 1) throw new Error("stage3_authority_spec_unavailable")
+    return matches[0] ?? null
   }
-> {
   switch (category) {
     case "shampoo": {
-      const rows = await many(client, "product_shampoo_specs", productId)
+      const shampooRows = rows("product_shampoo_specs")
       return {
-        ...selectShampooSpec(rows, selectionContext),
-        comparisonObservations: shampooComparisonObservations(rows),
+        ...selectShampooSpec(shampooRows, selectionContext),
+        comparisonObservations: shampooComparisonObservations(shampooRows),
       }
     }
     case "conditioner": {
-      const [base, rerank] = await Promise.all([
-        many(client, "product_conditioner_specs", productId),
-        one(client, "product_conditioner_rerank_specs", productId),
-      ])
-      const selected = selectConditionerSpec(base, selectionContext)
+      const rerank = singleton("product_conditioner_rerank_specs")
+      const selected = selectConditionerSpec(rows("product_conditioner_specs"), selectionContext)
       return {
         thickness: selected.thickness,
         proteinMoistureBalance: selected.proteinMoistureBalance,
@@ -258,7 +520,7 @@ async function loadCategorySpec(
       }
     }
     case "leave_in": {
-      const row = await one(client, "product_leave_in_specs", productId)
+      const row = singleton("product_leave_in_specs")
       return {
         format: text(row?.format),
         weight: text(row?.weight),
@@ -271,17 +533,15 @@ async function loadCategorySpec(
       }
     }
     case "heat_protectant": {
-      const row = await one(client, "product_heat_protectant_specs", productId)
+      const row = singleton("product_heat_protectant_specs")
       return {
         format: text(row?.format),
         providesHeatProtection: booleanOrNull(row?.provides_heat_protection),
       }
     }
     case "oil": {
-      const [row, eligibility] = await Promise.all([
-        one(client, "product_oil_specs", productId),
-        many(client, "product_oil_eligibility", productId),
-      ])
+      const row = singleton("product_oil_specs")
+      const eligibility = rows("product_oil_eligibility")
       const explicitRoles = textArray(row?.role_support)
       const roleSupport = explicitOilRoleSupport(explicitRoles)
       return {
@@ -292,7 +552,7 @@ async function loadCategorySpec(
       }
     }
     case "mask": {
-      const row = await one(client, "product_mask_specs", productId)
+      const row = singleton("product_mask_specs")
       return {
         weight: text(row?.weight),
         careDirection: text(row?.balance_direction),
@@ -301,7 +561,7 @@ async function loadCategorySpec(
       }
     }
     case "scalp_care": {
-      const row = await one(client, "product_scalp_care_specs", productId)
+      const row = singleton("product_scalp_care_specs")
       return {
         primaryRole: text(row?.primary_role),
         presentationFormat: text(row?.presentation_format),
@@ -309,7 +569,7 @@ async function loadCategorySpec(
       }
     }
     case "dry_shampoo": {
-      const row = await one(client, "product_dry_shampoo_specs", productId)
+      const row = singleton("product_dry_shampoo_specs")
       return {
         primaryEffect: text(row?.primary_effect),
         hairColorFit: text(row?.hair_color_fit),
@@ -318,10 +578,8 @@ async function loadCategorySpec(
       }
     }
     case "bondbuilder": {
-      const [row, relationships] = await Promise.all([
-        one(client, "product_bondbuilder_specs", productId),
-        loadOutgoingProductRelationships(client, productId),
-      ])
+      const row = singleton("product_bondbuilder_specs")
+      const relationships = rows("product_relationships")
       return {
         applicationMode: text(row?.application_mode),
         treatmentMode: text(row?.treatment_mode),
@@ -331,7 +589,7 @@ async function loadCategorySpec(
       }
     }
     case "deep_cleansing_shampoo": {
-      const row = await one(client, "product_deep_cleansing_shampoo_specs", productId)
+      const row = singleton("product_deep_cleansing_shampoo_specs")
       const resetFocus = text(row?.reset_focus)
       const supportedResetRoles =
         resetFocus === "product_sebum_buildup"
@@ -395,8 +653,20 @@ async function loadProtocols(
         .eq("locale", "de"),
     ])
   if (protocolError || guidanceError) throw new Error("stage3_authority_protocol_unavailable")
-  const protocolRows = (rawProtocols ?? []) as Row[]
-  const guidanceRows = (guidance ?? []) as Row[]
+  return protocolsFromRows(
+    category,
+    productId,
+    (rawProtocols ?? []) as Row[],
+    (guidance ?? []) as Row[],
+  )
+}
+
+function protocolsFromRows(
+  category: PersonalPlanCategory,
+  productId: string,
+  protocolRows: Row[],
+  guidanceRows: Row[],
+): Stage3CategoryProductFacts["protocols"] {
   const roles = new Set<string>(CATEGORY_ROLE_POLICIES[category].allowedRoles)
   if (category === "leave_in" || category === "oil") roles.add("pre_heat_protection")
 
@@ -406,7 +676,7 @@ async function loadProtocols(
       return {
         role: role as never,
         status: "verified_complete" as const,
-        fingerprint: fingerprint(guidanceRow),
+        fingerprint: fingerprintProtocolRow(guidanceRow),
       }
     }
     const sourceRole = role === "pre_heat_application" ? "pre_heat_protection" : role
@@ -423,12 +693,18 @@ async function loadProtocols(
       status: hasMatchingCanonicalGuidance
         ? ("verified_complete" as const)
         : ("verified_incomplete" as const),
-      fingerprint: fingerprint(row),
+      fingerprint: fingerprintProtocolRow(row),
     }
-  })
+  }) as Stage3CategoryProductFacts["protocols"]
 }
 
-async function resolveHeatCarrierCoverage(
+function fingerprintProtocolRow(row: Row): string {
+  const authorityFields = { ...row }
+  delete authorityFields.product_id
+  return fingerprint(authorityFields)
+}
+
+export async function loadStage3HeatCarrierCoverage(
   client: AdminClient,
   draft: Stage3ProductDraft,
   heatRoutes: string[],
@@ -439,19 +715,50 @@ async function resolveHeatCarrierCoverage(
         .filter((assignment) => assignment.category === category)
         .map((assignment) => assignment.capturedProductId),
     )
-    for (const captured of draft.products) {
-      if (
-        !assignedIds.has(captured.capturedProductId) ||
-        captured.identity.kind !== "catalog_product"
-      ) {
-        continue
-      }
-      const facts = await loadOneProduct(client, category, captured.identity.productId, {
-        hairThickness: "",
-        role: "pre_heat_protection",
-        shampooTarget: null,
-        conditionerTarget: null,
-      })
+    const productIds = draft.products
+      .filter(
+        (captured) =>
+          assignedIds.has(captured.capturedProductId) &&
+          captured.identity.kind === "catalog_product",
+      )
+      .map((captured) =>
+        captured.identity.kind === "catalog_product" ? captured.identity.productId : null,
+      )
+      .filter((productId): productId is string => Boolean(productId))
+    const products = await loadProductsByIds(client, category, productIds)
+    const selectionContext: CategorySelectionContext = {
+      hairThickness: "",
+      role: "pre_heat_protection",
+      shampooTarget: null,
+      conditionerTarget: null,
+    }
+    const batchedSnapshot =
+      products === null ? null : await loadBatchSnapshot(client, category, productIds)
+    const factsByProductId =
+      products === null || batchedSnapshot === null
+        ? null
+        : new Map(
+            products
+              .map((product) =>
+                normalizeProductFactsFromSnapshot(
+                  category,
+                  product,
+                  selectionContext,
+                  batchedSnapshot,
+                ),
+              )
+              .filter((facts): facts is Stage3CategoryProductFacts => facts !== null)
+              .map((facts) => [facts.productId, facts]),
+          )
+    for (const productId of productIds) {
+      const facts = factsByProductId
+        ? (factsByProductId.get(productId) ?? null)
+        : await loadOneProduct(client, category, productId, {
+            hairThickness: "",
+            role: "pre_heat_protection",
+            shampooTarget: null,
+            conditionerTarget: null,
+          })
       if (!facts || !facts.isActive || facts.lifecycleStatus !== "active") continue
       const capability =
         facts.category === "leave_in" ||
@@ -506,25 +813,33 @@ export function classifyBondbuilderRelationship(
     : "standalone"
 }
 
-function signedConditionerTarget(
+function conditionerTargetFor(
+  effectiveDecision: PlanCategoryDecision | undefined,
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
 ): ConditionerTarget | null {
   if (category !== "conditioner") return null
-  const target = draft.authoritySnapshot?.categoryDecisions.find(
-    (decision) => decision.category === "conditioner",
-  )?.target
+  const target =
+    effectiveDecision?.category === "conditioner"
+      ? effectiveDecision.target
+      : draft.authoritySnapshot?.categoryDecisions.find(
+          (decision) => decision.category === "conditioner",
+        )?.target
   return target?.category === "conditioner" ? target : null
 }
 
-function signedShampooTarget(
+function shampooTargetFor(
+  effectiveDecision: PlanCategoryDecision | undefined,
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
 ): ShampooTarget | null {
   if (category !== "shampoo") return null
-  const target = draft.authoritySnapshot?.categoryDecisions.find(
-    (decision) => decision.category === "shampoo",
-  )?.target
+  const target =
+    effectiveDecision?.category === "shampoo"
+      ? effectiveDecision.target
+      : draft.authoritySnapshot?.categoryDecisions.find(
+          (decision) => decision.category === "shampoo",
+        )?.target
   return target?.category === "shampoo" ? target : null
 }
 

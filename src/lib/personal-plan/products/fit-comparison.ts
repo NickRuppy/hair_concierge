@@ -20,6 +20,7 @@ import {
   repairSupportAxisFitResult,
 } from "./authority/categories/axis-fit"
 import { evaluateStage3Authority } from "./authority/evaluate"
+import { compactCriterionSchema } from "./fit-comparison-schema"
 
 export const STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT = 3
 
@@ -93,6 +94,7 @@ export type Stage3FitComparison =
       sourceIdentity: Stage3ProductIdentity | null
       products: Stage3FitComparisonProduct[]
       alternatives: Stage3SelectedComparisonCandidate[]
+      candidateCatalogComplete?: boolean
       dimensions: Stage3FitComparisonDimension[]
       evidenceRows?: Stage3FitEvidenceRow[]
     }
@@ -105,6 +107,7 @@ export type Stage3FitComparison =
       sourceIdentity: Stage3ProductIdentity | null
       products: Stage3FitComparisonProduct[]
       alternatives: Stage3SelectedComparisonCandidate[]
+      candidateCatalogComplete?: boolean
       dimensions: []
       evidenceRows?: Stage3FitEvidenceRow[]
       reason: "specialist_category" | "no_exact_product"
@@ -120,9 +123,20 @@ export type Stage3SelectedComparisonCandidate = {
   factFingerprint: string
 }
 
+export function stage3FitComparisonForTransport(
+  comparison: Stage3FitComparison,
+): Stage3FitComparison {
+  if (comparison.dimensions.length === 0) return comparison
+  // evidenceRows is the complete UI projection. The raw rail model is only needed while
+  // building that projection server-side and otherwise duplicates labels, targets, and values.
+  return { ...comparison, dimensions: [] }
+}
+
 type CandidateAssessment = Stage3SelectedComparisonCandidate & {
   catalogSortOrder: number | null | undefined
   facts: Stage3CategoryProductFacts
+  targetMatchCount: number
+  targetCount: number
 }
 
 type ComparisonProductEntry = {
@@ -158,7 +172,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
           selectedCandidates,
           context,
         )
-      : compactEvidenceRows(authorityEvaluation, entries, selectedCandidates)
+      : compactEvidenceRows(authorityInput, authorityEvaluation, entries, selectedCandidates)
 
   if (dimensions.length > 0) {
     return {
@@ -170,6 +184,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
       sourceIdentity: input.subjectIdentity,
       products,
       alternatives,
+      candidateCatalogComplete: authorityInput.candidateCatalogComplete === true,
       dimensions,
       evidenceRows,
     }
@@ -184,6 +199,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
     sourceIdentity: input.subjectIdentity,
     products,
     alternatives,
+    candidateCatalogComplete: authorityInput.candidateCatalogComplete === true,
     dimensions: [],
     evidenceRows,
     reason: products.length > 0 ? "specialist_category" : "no_exact_product",
@@ -305,15 +321,33 @@ function selectedComparisonCandidateAssessments(
     )
     .map((candidate) => assessCandidate(input, candidate))
     .filter((candidate): candidate is CandidateAssessment => candidate !== null)
+    .filter((candidate) => candidate.targetCount > 0 && candidate.targetMatchCount > 0)
     .sort((left, right) => {
+      const uncoveredRole = isUncoveredRoleInput(input)
       const recommendationOrder =
         Number(right.productId === currentRecommendationProductId) -
         Number(left.productId === currentRecommendationProductId)
-      if (recommendationOrder !== 0) return recommendationOrder
       const verdictOrder = verdictRank(left.verdict) - verdictRank(right.verdict)
-      if (verdictOrder !== 0) return verdictOrder
+      const coverageOrder = right.targetMatchCount - left.targetMatchCount
+      if (uncoveredRole) {
+        if (recommendationOrder !== 0) return recommendationOrder
+        if (verdictOrder !== 0) return verdictOrder
+        if (coverageOrder !== 0) return coverageOrder
+      } else {
+        if (coverageOrder !== 0) return coverageOrder
+        if (recommendationOrder !== 0) return recommendationOrder
+        if (verdictOrder !== 0) return verdictOrder
+      }
       return compareCatalogOrder(left, right)
     })
+}
+
+function isUncoveredRoleInput(input: Stage3AuthorityInput): boolean {
+  return (
+    input.productFacts === null &&
+    input.capturedProductId === null &&
+    input.subjectIdentity === null
+  )
 }
 
 function boundedSelectedComparisonCandidateAssessments(
@@ -342,6 +376,7 @@ function assessCandidate(
   if (!detached || (detached.verdict !== "ideal" && detached.verdict !== "supportive")) return null
   const recommendation = recommendationForCandidate(input, candidate)
   if (!recommendation) return null
+  const coverage = candidateTargetCoverage(input, candidate, detached.criteria)
   return {
     productId: candidate.productId,
     category: candidate.category,
@@ -352,6 +387,47 @@ function assessCandidate(
     factFingerprint: candidate.factFingerprint,
     catalogSortOrder: candidate.catalogSortOrder,
     facts: candidate,
+    targetMatchCount: coverage.matches,
+    targetCount: coverage.total,
+  }
+}
+
+function candidateTargetCoverage(
+  input: Stage3AuthorityInput,
+  candidate: Stage3CategoryProductFacts,
+  criteria: readonly Stage3CriterionResult[],
+): { matches: number; total: number } {
+  const entry: ComparisonProductEntry = {
+    product: {
+      productId: candidate.productId,
+      displayName: candidate.displayName,
+      category: candidate.category,
+      role: input.role,
+      source: "alternative",
+    },
+    facts: candidate,
+  }
+  const dimensions = comparisonDimensions(input, [entry])
+  if (dimensions.length > 0) {
+    const targetDimensions = dimensions.filter(
+      (dimension) => dimension.targetPosition && dimension.targetPosition.kind !== "unknown",
+    )
+    return {
+      total: targetDimensions.length,
+      matches: targetDimensions.filter((dimension) => {
+        const position = dimension.productPositions[0]?.position ?? { kind: "unknown" as const }
+        return positionsOverlap(position, dimension.targetPosition!)
+      }).length,
+    }
+  }
+
+  const schema = compactCriterionSchema(input.category, input.role)
+  return {
+    total: schema.length,
+    matches: schema.filter(
+      ({ criterionId }) =>
+        criteria.find((criterion) => criterion.criterionId === criterionId)?.result === "pass",
+    ).length,
   }
 }
 
@@ -599,6 +675,7 @@ function positionAxisRelation(
 }
 
 function compactEvidenceRows(
+  input: Stage3AuthorityInput,
   evaluation: Stage3AuthorityEvaluation,
   entries: readonly ComparisonProductEntry[],
   candidates: readonly CandidateAssessment[],
@@ -611,21 +688,10 @@ function compactEvidenceRows(
   if (currentProductId) criteriaByProduct.set(currentProductId, currentCriteria)
   for (const candidate of candidates) criteriaByProduct.set(candidate.productId, candidate.criteria)
 
-  const criterionIds = Array.from(
-    new Set(
-      Array.from(criteriaByProduct.values()).flatMap((criteria) =>
-        criteria.map((item) => item.criterionId),
-      ),
-    ),
-  ).slice(0, 3)
-
-  return criterionIds.map((criterionId) => {
-    const representative = Array.from(criteriaByProduct.values())
-      .flat()
-      .find((criterion) => criterion.criterionId === criterionId)!
+  return compactCriterionSchema(input.category, input.role).map(({ criterionId, label }) => {
     return {
       rowId: criterionId,
-      label: representative.label,
+      label,
       target: {
         valueLabel: "erfüllt",
         rationale: compactCriterionTargetRationale(),
@@ -874,12 +940,7 @@ function leaveInDimensions(
   entries: readonly ComparisonProductEntry[],
 ): Stage3FitComparisonDimension[] {
   const target = input.categoryDecision.target
-  const includeHeatDimension =
-    input.role === "pre_heat_application" &&
-    entries.some(
-      (entry) =>
-        entry.facts.category === "leave_in" && entry.facts.spec.providesHeatProtection !== true,
-    )
+  const includeHeatDimension = input.role === "pre_heat_application"
   const third = includeHeatDimension
     ? dimension(
         "leave_in.heat_protection",

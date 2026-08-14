@@ -463,6 +463,28 @@ test("offers keep, exact replacement, and go-without for a partly fitting owned 
   assert.match(String(leaveAction.props.className), /underline/)
 })
 
+test("shows exact replacement as a direct secondary action when the owned product fits", () => {
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Shampoo"
+      roleLabel="Shampoo"
+      reviewPosition={1}
+      reviewTotal={1}
+      comparison={comparison}
+      evaluation={{ ...evaluation, verdict: "ideal", allowedActions: ["keep_owned"] }}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Mein Produkt behalten/)
+  assert.match(html, /aria-label="Diese Alternative wählen"/)
+  assert.doesNotMatch(html, /Andere Möglichkeit/)
+  assert.match(html, /h-16 w-16/)
+})
+
 test("labels a supportive replacement as only partly fitting", () => {
   const supportiveComparison: Stage3FitComparison = {
     ...comparison,
@@ -495,11 +517,12 @@ test("labels a supportive replacement as only partly fitting", () => {
   assert.equal((html.match(/aria-label="Passt mit Einschränkung"/g) ?? []).length, 1)
 })
 
-test("explains a fitting product when no better verified alternative exists", () => {
+test("keeps the comparison matrix without promising search when no alternative exists", () => {
   const fitComparison: Stage3FitComparison = {
     ...comparison,
     products: comparison.products.filter((product) => product.source === "current"),
     alternatives: [],
+    candidateCatalogComplete: true,
   }
   const fitEvaluation: Stage3AuthorityEvaluation = {
     ...evaluation,
@@ -523,10 +546,38 @@ test("explains a fitting product when no better verified alternative exists", ()
 
   assert.match(html, /Shampoo · Produkt 2 von 3/)
   assert.match(html, /Dein Shampoo passt/)
-  assert.equal((html.match(/aria-label="Bestätigte Prüfpunkte"/g) ?? []).length, 1)
-  assert.match(html, /keine klar bessere verifizierte Alternative verfügbar/)
+  assert.match(html, /Eigenschaft für Eigenschaft/)
+  assert.match(html, />Prüfpunkt</)
+  assert.match(html, />Deins</)
+  assert.match(html, />Ziel</)
+  assert.doesNotMatch(html, /Bestätigte Prüfpunkte/)
+  assert.match(html, /Vollständiger Katalog geprüft/)
+  assert.match(html, /kein weiteres verifiziertes Shampoo/)
   assert.match(html, /Mein Produkt behalten/)
+  assert.doesNotMatch(html, /Produkt suchen/)
   assert.doesNotMatch(html, /Passende Alternative/)
+  assert.doesNotMatch(html, /Weitere passende Alternativen/)
+})
+
+test("does not claim exhaustive catalog coverage on the rollback path", () => {
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      comparison={{
+        ...comparison,
+        products: comparison.products.filter((product) => product.source === "current"),
+        alternatives: [],
+        candidateCatalogComplete: false,
+      }}
+      evaluation={{ ...evaluation, verdict: "ideal", allowedActions: ["keep_owned"] }}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.doesNotMatch(html, /Vollständiger Katalog geprüft/)
+  assert.match(html, /keine klar bessere verifizierte Alternative verfügbar/)
 })
 
 test("renders an explicit uncovered state instead of an empty review", () => {

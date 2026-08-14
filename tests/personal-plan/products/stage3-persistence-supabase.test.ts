@@ -1,7 +1,12 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { loadStage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import {
+  loadStage3AuthorityFactBundle,
+  loadStage3HeatCarrierCoverage,
+  loadStage3RecommendationCandidates,
+} from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import { loadCatalogBatchSnapshot } from "../../../src/lib/personal-plan/products/authority/catalog-batching"
 import type { Stage3ProductDraft } from "../../../src/lib/personal-plan/products/contracts"
 import { createSupabaseStage3ProductionPersistence } from "../../../src/lib/personal-plan/products/stage3-persistence-supabase"
 
@@ -890,6 +895,903 @@ function shampooAuthorityFactClient(
     },
   }
 }
+
+function completeCatalogFactClient(
+  rowsByTable: Record<string, readonly Record<string, unknown>[]>,
+  calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }>,
+  options: {
+    countOffsetByTable?: Partial<Record<string, number>>
+    errorTables?: readonly string[]
+  } = {},
+) {
+  return {
+    from(table: string) {
+      const filters = new Map<string, unknown>()
+      let inFilter: { column: string; values: string[] } | null = null
+      let exactCount = false
+      let selectedColumns = "*"
+      let limit: number | null = null
+      const materialize = (range: [number, number] | null) => {
+        let rows = [...(rowsByTable[table] ?? [])]
+        for (const [column, value] of filters) {
+          rows = rows.filter((row) => row[column] === value)
+        }
+        if (inFilter) {
+          const activeFilter = inFilter
+          rows = rows.filter((row) =>
+            activeFilter.values.includes(String(row[activeFilter.column])),
+          )
+        }
+        const count = rows.length + (options.countOffsetByTable?.[table] ?? 0)
+        const bounded = range
+          ? rows.slice(range[0], range[1] + 1)
+          : limit === null
+            ? rows
+            : rows.slice(0, limit)
+        const selected =
+          selectedColumns === "*"
+            ? bounded
+            : bounded.map((row) =>
+                Object.fromEntries(
+                  selectedColumns
+                    .split(",")
+                    .map((column) => column.trim())
+                    .filter((column) => column in row)
+                    .map((column) => [column, row[column]]),
+                ),
+              )
+        calls.push({
+          table,
+          range,
+          inIds: inFilter ? [...inFilter.values] : null,
+          exactCount,
+        })
+        return {
+          data: selected,
+          error: options.errorTables?.includes(table) ? { code: "fixture_error" } : null,
+          count: exactCount ? count : null,
+        }
+      }
+      const chain = {
+        select: (columns: string, options?: { count?: string }) => {
+          selectedColumns = columns
+          exactCount = options?.count === "exact"
+          return chain
+        },
+        eq: (column: string, value: unknown) => {
+          filters.set(column, value)
+          return chain
+        },
+        in: (column: string, values: string[]) => {
+          inFilter = { column, values: [...values] }
+          return chain
+        },
+        order: () => chain,
+        limit: (value: number) => {
+          limit = value
+          return chain
+        },
+        range: async (from: number, to: number) => materialize([from, to]),
+        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) =>
+          Promise.resolve(materialize(null)).then(resolve),
+      }
+      return chain
+    },
+  }
+}
+
+test("multi-row batch sources page to exact completion", async () => {
+  const calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }> = []
+  const rows = Array.from({ length: 550 }, (_, index) => ({
+    product_id: "candidate-1",
+    sequence: index,
+  }))
+
+  const snapshot = await loadCatalogBatchSnapshot(
+    completeCatalogFactClient({ product_shampoo_specs: rows }, calls) as never,
+    [
+      {
+        table: "product_shampoo_specs",
+        key: "product_id",
+        select: "*",
+        cardinality: "many",
+        orderBy: ["product_id", "sequence"],
+      },
+    ],
+    ["candidate-1"],
+    { chunkSize: 100, pageSize: 500 },
+  )
+
+  assert.equal(snapshot?.get("product_shampoo_specs")?.get("candidate-1")?.length, 550)
+  assert.deepEqual(
+    calls.map((call) => call.range),
+    [
+      [0, 499],
+      [500, 999],
+    ],
+  )
+})
+
+test("complete candidate hydration crosses product pages and bounded fact chunks", async () => {
+  const productCount = 505
+  const products = Array.from({ length: productCount }, (_, index) => {
+    const id = `shampoo-${String(index + 1).padStart(4, "0")}`
+    return {
+      id,
+      name: `Shampoo ${index + 1}`,
+      image_url: null,
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "active",
+      is_chaarlie_recommended: true,
+      suitable_thicknesses: ["normal"],
+      sort_order: index + 1,
+      price_eur: null,
+      price_checked_at: null,
+      purchase_link_status: null,
+      net_content_value: null,
+      net_content_unit: null,
+    }
+  })
+  const rowsByTable = {
+    products,
+    product_shampoo_specs: products.map((product) => ({
+      product_id: product.id,
+      thickness: "normal",
+      shampoo_bucket: "normal",
+      scalp_route: "balanced",
+      cleansing_intensity: "gentle",
+    })),
+    product_application_protocols: [],
+    application_guidance_protocols: products.map((product) => ({
+      product_id: product.id,
+      id: `guidance-${product.id}`,
+      role_key: "shampoo_everyday",
+      protocol_version: 1,
+      verified_at: "2026-08-14T00:00:00.000Z",
+      updated_at: "2026-08-14T00:00:00.000Z",
+      scope_kind: "product",
+      status: "active",
+      locale: "de",
+    })),
+  }
+  const calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }> = []
+  const draft = shampooAuthorityDraft()
+  const candidates = await loadStage3RecommendationCandidates(
+    completeCatalogFactClient(rowsByTable, calls) as never,
+    {
+      draft,
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      context: normalRefinedContext as never,
+    },
+  )
+
+  assert.equal(candidates.length, productCount)
+  assert.equal(candidates.at(-1)?.productId, "shampoo-0505")
+  assert.deepEqual(
+    calls.filter((call) => call.table === "products").map((call) => call.range),
+    [
+      [0, 499],
+      [500, 999],
+    ],
+  )
+  assert.deepEqual(
+    calls
+      .filter((call) => call.table === "product_shampoo_specs")
+      .map((call) => call.inIds?.length),
+    [100, 100, 100, 100, 100, 5],
+  )
+  assert.equal(
+    calls.every((call) => call.exactCount),
+    true,
+  )
+})
+
+test("complete and rollback loaders preserve identical authority fingerprints", async () => {
+  const rowsByTable = {
+    products: [
+      {
+        id: "candidate-1",
+        name: "Candidate",
+        image_url: null,
+        category_key: "shampoo",
+        is_active: true,
+        lifecycle_status: "active",
+        is_chaarlie_recommended: true,
+        suitable_thicknesses: ["normal"],
+        sort_order: 1,
+      },
+    ],
+    product_shampoo_specs: [
+      {
+        product_id: "candidate-1",
+        thickness: "normal",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "gentle",
+      },
+    ],
+    product_application_protocols: [
+      {
+        product_id: "candidate-1",
+        role: "shampoo_dandruff",
+        guidance_payload: null,
+        application_stage: null,
+        application_state: null,
+        placement: null,
+        contact_time_seconds: null,
+        rinse_action: null,
+        reapplication: null,
+        source_label: "Manufacturer",
+        source_url: "https://example.com/shampoo",
+        updated_at: "2026-08-14T00:00:00.000Z",
+      },
+    ],
+    application_guidance_protocols: [
+      {
+        product_id: "candidate-1",
+        id: "guidance-1",
+        role_key: "shampoo_everyday",
+        protocol_version: 1,
+        verified_at: "2026-08-14T00:00:00.000Z",
+        updated_at: "2026-08-14T00:00:00.000Z",
+        scope_kind: "product",
+        status: "active",
+        locale: "de",
+      },
+    ],
+  }
+  const input = {
+    draft: shampooAuthorityDraft(),
+    subject: {
+      decisionKey: "decision:shampoo:shampoo_everyday:owned-1",
+      category: "shampoo",
+      role: "shampoo_everyday",
+      capturedProductId: null,
+      subjectKind: "uncovered_role",
+    },
+    context: normalRefinedContext,
+  } as const
+
+  const [complete, rollback] = await Promise.all([
+    loadStage3RecommendationCandidates(
+      completeCatalogFactClient(rowsByTable, []) as never,
+      {
+        ...input,
+        completeCatalog: true,
+      } as never,
+    ),
+    loadStage3RecommendationCandidates(
+      completeCatalogFactClient(rowsByTable, []) as never,
+      {
+        ...input,
+        completeCatalog: false,
+      } as never,
+    ),
+  ])
+
+  assert.equal(complete.length, 1)
+  assert.equal(rollback.length, 1)
+  assert.equal(complete[0]?.factFingerprint, rollback[0]?.factFingerprint)
+  assert.deepEqual(complete[0]?.protocols, rollback[0]?.protocols)
+})
+
+test("complete hydration fails closed when exact product cardinality is not satisfied", async () => {
+  await assert.rejects(
+    () =>
+      loadStage3RecommendationCandidates(
+        completeCatalogFactClient(
+          {
+            products: [
+              {
+                id: "candidate-1",
+                name: "Candidate",
+                category_key: "shampoo",
+                is_active: true,
+                lifecycle_status: "active",
+                is_chaarlie_recommended: true,
+                suitable_thicknesses: ["normal"],
+                sort_order: 1,
+              },
+            ],
+          },
+          [],
+          { countOffsetByTable: { products: 1 } },
+        ) as never,
+        {
+          draft: shampooAuthorityDraft(),
+          subject: {
+            decisionKey: "decision:shampoo:shampoo_everyday:owned-1",
+            category: "shampoo",
+            role: "shampoo_everyday",
+            capturedProductId: null,
+            subjectKind: "uncovered_role",
+          },
+          context: normalRefinedContext,
+        } as never,
+      ),
+    /stage3_authority_catalog_unavailable/,
+  )
+})
+
+test("complete hydration uses the category-specific batch source for every category", async () => {
+  const scenarios = [
+    {
+      category: "shampoo",
+      role: "shampoo_everyday",
+      table: "product_shampoo_specs",
+      rows: {
+        product_shampoo_specs: [
+          {
+            product_id: "candidate-1",
+            thickness: "normal",
+            shampoo_bucket: "normal",
+            scalp_route: "balanced",
+            cleansing_intensity: "gentle",
+          },
+        ],
+      },
+      categoryDecision: shampooAuthorityDraft().authoritySnapshot!.categoryDecisions[0],
+    },
+    {
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      table: "product_conditioner_specs",
+      rows: {
+        product_conditioner_specs: [
+          {
+            product_id: "candidate-1",
+            thickness: "normal",
+            protein_moisture_balance: "balanced",
+          },
+        ],
+        product_conditioner_rerank_specs: [
+          {
+            product_id: "candidate-1",
+            weight: "light",
+            repair_level: "medium",
+            balance_direction: "balanced",
+          },
+        ],
+      },
+      categoryDecision: conditionerAuthorityDraft().authoritySnapshot!.categoryDecisions[0],
+    },
+    {
+      category: "leave_in",
+      role: "post_wash_leave_in",
+      table: "product_leave_in_specs",
+      rows: {
+        product_leave_in_specs: [
+          {
+            product_id: "candidate-1",
+            format: "spray",
+            weight: "light",
+            care_direction: "balanced",
+            repair_support_level: "medium",
+            plan_roles: ["post_wash_leave_in"],
+            provides_heat_protection: false,
+            functional_benefits: ["conditioning"],
+            application_stage: ["post_wash"],
+          },
+        ],
+      },
+    },
+    {
+      category: "heat_protectant",
+      role: "pre_heat_protection",
+      table: "product_heat_protectant_specs",
+      rows: {
+        product_heat_protectant_specs: [
+          { product_id: "candidate-1", format: "spray", provides_heat_protection: true },
+        ],
+      },
+    },
+    {
+      category: "oil",
+      role: "dry_finish",
+      table: "product_oil_specs",
+      rows: {
+        product_oil_specs: [
+          {
+            product_id: "candidate-1",
+            role_support: ["dry_finish"],
+            weight: "light",
+            provides_heat_protection: false,
+          },
+        ],
+        product_oil_eligibility: [{ product_id: "candidate-1", thickness: "normal" }],
+      },
+    },
+    {
+      category: "mask",
+      role: "intensive_conditioning_mask",
+      table: "product_mask_specs",
+      rows: {
+        product_mask_specs: [
+          {
+            product_id: "candidate-1",
+            weight: "medium",
+            balance_direction: "balanced",
+            repair_support_level: "medium",
+            functional_benefits: ["conditioning"],
+          },
+        ],
+      },
+    },
+    {
+      category: "scalp_care",
+      role: "scalp_comfort",
+      table: "product_scalp_care_specs",
+      rows: {
+        product_scalp_care_specs: [
+          {
+            product_id: "candidate-1",
+            primary_role: "scalp_comfort",
+            presentation_format: "serum",
+            rinse_mode: "leave_in",
+          },
+        ],
+      },
+    },
+    {
+      category: "dry_shampoo",
+      role: "root_refresh_bridge",
+      table: "product_dry_shampoo_specs",
+      rows: {
+        product_dry_shampoo_specs: [
+          {
+            product_id: "candidate-1",
+            primary_effect: "oil_absorption",
+            hair_color_fit: "all",
+            scalp_sensitivity_fit: "standard",
+            format: "aerosol",
+          },
+        ],
+      },
+    },
+    {
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      table: "product_bondbuilder_specs",
+      rows: {
+        product_bondbuilder_specs: [
+          {
+            product_id: "candidate-1",
+            application_mode: "rinse_out",
+            treatment_mode: "standalone",
+            product_format: "treatment",
+            usage_protocol: "weekly",
+          },
+        ],
+        product_relationships: [],
+      },
+    },
+    {
+      category: "deep_cleansing_shampoo",
+      role: "residue_reset",
+      table: "product_deep_cleansing_shampoo_specs",
+      rows: {
+        product_deep_cleansing_shampoo_specs: [
+          {
+            product_id: "candidate-1",
+            reset_focus: "product_sebum_buildup",
+            scalp_type_focus: "balanced",
+            color_treated_suitability: "suitable",
+          },
+        ],
+      },
+    },
+  ] as const
+
+  for (const scenario of scenarios) {
+    const calls: Array<{
+      table: string
+      range: [number, number] | null
+      inIds: string[] | null
+      exactCount: boolean
+    }> = []
+    const product = {
+      id: "candidate-1",
+      name: "Candidate",
+      category_key: scenario.category,
+      is_active: true,
+      lifecycle_status: "active",
+      is_chaarlie_recommended: true,
+      suitable_thicknesses: ["normal"],
+      sort_order: 1,
+    }
+    const candidates = await loadStage3RecommendationCandidates(
+      completeCatalogFactClient(
+        {
+          products: [product],
+          ...scenario.rows,
+          product_application_protocols: [],
+          application_guidance_protocols: [
+            {
+              product_id: "candidate-1",
+              id: "guidance-1",
+              role_key: scenario.role,
+              scope_kind: "product",
+              status: "active",
+              locale: "de",
+            },
+          ],
+        },
+        calls,
+      ) as never,
+      {
+        draft: shampooAuthorityDraft(),
+        subject: {
+          decisionKey: `decision:${scenario.category}:${scenario.role}:owned-1`,
+          category: scenario.category,
+          role: scenario.role,
+          capturedProductId: null,
+          subjectKind: "uncovered_role",
+        } as never,
+        context: normalRefinedContext as never,
+        categoryDecision: "categoryDecision" in scenario ? scenario.categoryDecision : undefined,
+      },
+    )
+
+    assert.equal(candidates.length, 1, scenario.category)
+    assert.equal(
+      calls.some((call) => call.table === scenario.table && call.inIds?.[0] === "candidate-1"),
+      true,
+      scenario.category,
+    )
+    assert.equal(
+      candidates[0]?.protocols.some((protocol) => protocol.status === "verified_complete"),
+      true,
+    )
+  }
+})
+
+test("heat-carrier coverage batches assigned product facts and protocols", async () => {
+  const calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }> = []
+  const coverage = await loadStage3HeatCarrierCoverage(
+    completeCatalogFactClient(
+      {
+        products: [
+          {
+            id: "leave-in-carrier",
+            name: "Leave-in Carrier",
+            category_key: "leave_in",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 1,
+          },
+        ],
+        product_leave_in_specs: [
+          {
+            product_id: "leave-in-carrier",
+            format: "spray",
+            weight: "light",
+            care_direction: "moisture",
+            repair_support_level: "medium",
+            plan_roles: ["pre_heat_application"],
+            provides_heat_protection: true,
+            functional_benefits: [],
+            application_stage: ["pre_heat"],
+          },
+        ],
+        product_application_protocols: [],
+        application_guidance_protocols: [
+          {
+            product_id: "leave-in-carrier",
+            id: "guidance-1",
+            role_key: "pre_heat_application",
+            scope_kind: "product",
+            status: "active",
+            locale: "de",
+          },
+        ],
+      },
+      calls,
+    ) as never,
+    {
+      ...shampooAuthorityDraft(),
+      products: [
+        {
+          capturedProductId: "captured-carrier",
+          identity: {
+            kind: "catalog_product",
+            productId: "leave-in-carrier",
+            displayName: "Leave-in Carrier",
+            category: "leave_in",
+          },
+        },
+      ],
+      roleAssignments: [
+        {
+          capturedProductId: "captured-carrier",
+          category: "leave_in",
+          roles: ["pre_heat_application"],
+        },
+      ],
+    } as never,
+    ["direct_contact_heat"],
+  )
+
+  assert.deepEqual(coverage, {
+    carrierCategory: "leave_in",
+    verifiedRoutes: ["direct_contact_heat"],
+  })
+  assert.equal(
+    calls.filter((call) => call.table === "products" && call.inIds?.[0] === "leave-in-carrier")
+      .length,
+    1,
+  )
+  assert.equal(
+    calls.some(
+      (call) => call.table === "product_leave_in_specs" && call.inIds?.[0] === "leave-in-carrier",
+    ),
+    true,
+  )
+})
+
+test("batched singleton specs preserve maybeSingle duplicate failure semantics", async () => {
+  const product = {
+    id: "candidate-1",
+    name: "Duplicate Leave-in",
+    category_key: "leave_in",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
+    suitable_thicknesses: ["normal"],
+    sort_order: 1,
+  }
+  await assert.rejects(
+    () =>
+      loadStage3RecommendationCandidates(
+        completeCatalogFactClient(
+          {
+            products: [product],
+            product_leave_in_specs: [
+              { product_id: "candidate-1", format: "spray" },
+              { product_id: "candidate-1", format: "cream" },
+            ],
+            product_application_protocols: [],
+            application_guidance_protocols: [],
+          },
+          [],
+        ) as never,
+        {
+          draft: shampooAuthorityDraft(),
+          subject: {
+            decisionKey: "decision:leave_in:post_wash_leave_in:owned-1",
+            category: "leave_in",
+            role: "post_wash_leave_in",
+            capturedProductId: null,
+            subjectKind: "uncovered_role",
+          },
+          context: normalRefinedContext,
+        } as never,
+      ),
+    /stage3_authority_spec_unavailable/,
+  )
+})
+
+test("request-scoped persistence coalesces identical complete-catalog candidate loads", async () => {
+  const calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }> = []
+  const client = completeCatalogFactClient(
+    {
+      products: [
+        {
+          id: "candidate-1",
+          name: "Candidate",
+          category_key: "shampoo",
+          is_active: true,
+          lifecycle_status: "active",
+          is_chaarlie_recommended: true,
+          suitable_thicknesses: ["normal"],
+          sort_order: 1,
+        },
+      ],
+      product_shampoo_specs: [
+        {
+          product_id: "candidate-1",
+          thickness: "normal",
+          shampoo_bucket: "normal",
+          scalp_route: "balanced",
+          cleansing_intensity: "gentle",
+        },
+      ],
+      product_application_protocols: [],
+      application_guidance_protocols: [
+        {
+          product_id: "candidate-1",
+          id: "guidance-1",
+          role_key: "shampoo_everyday",
+          scope_kind: "product",
+          status: "active",
+          locale: "de",
+        },
+      ],
+    },
+    calls,
+  )
+  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
+    completeCatalogEnabled: true,
+  })
+  const draft = {
+    ...shampooAuthorityDraft(),
+    products: [],
+    roleAssignments: [],
+  }
+  const input = {
+    userId: draft.userId,
+    draft,
+    subject: {
+      decisionKey: "decision:shampoo:shampoo_everyday:uncovered",
+      category: "shampoo",
+      role: "shampoo_everyday",
+      capturedProductId: null,
+      subjectKind: "uncovered_role",
+    },
+    heatRoutes: [],
+    context: normalRefinedContext,
+  } as unknown as Parameters<typeof persistence.loadAuthorityFacts>[0]
+
+  const [first, second] = await Promise.all([
+    persistence.loadAuthorityFacts(input),
+    persistence.loadAuthorityFacts(input),
+  ])
+
+  assert.equal(first.recommendationCandidates.length, 1)
+  assert.equal(second.recommendationCandidates.length, 1)
+  assert.equal(calls.filter((call) => call.table === "products").length, 1)
+
+  const fineInput = {
+    ...input,
+    context: { ...normalRefinedContext, hairThickness: "fine" },
+  } as unknown as Parameters<typeof persistence.loadAuthorityFacts>[0]
+  await persistence.loadAuthorityFacts(fineInput)
+  assert.equal(
+    calls.filter((call) => call.table === "products").length,
+    2,
+    "a distinct authority context must not reuse the candidate snapshot",
+  )
+})
+
+test("flag-off persistence keeps the twelve-row rollback loader explicitly incomplete", async () => {
+  const products = Array.from({ length: 13 }, (_, index) => ({
+    id: `candidate-${String(index + 1).padStart(2, "0")}`,
+    name: `Candidate ${index + 1}`,
+    category_key: "shampoo",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
+    suitable_thicknesses: ["normal"],
+    sort_order: index + 1,
+  }))
+  const client = completeCatalogFactClient(
+    {
+      products,
+      product_shampoo_specs: products.map((product) => ({
+        product_id: product.id,
+        thickness: "normal",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "gentle",
+      })),
+      product_application_protocols: [],
+      application_guidance_protocols: products.map((product) => ({
+        product_id: product.id,
+        id: `guidance-${product.id}`,
+        role_key: "shampoo_everyday",
+        scope_kind: "product",
+        status: "active",
+        locale: "de",
+      })),
+    },
+    [],
+  )
+  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
+    completeCatalogEnabled: false,
+  })
+  const draft = {
+    ...shampooAuthorityDraft(),
+    products: [],
+    roleAssignments: [],
+  }
+
+  const bundle = await persistence.loadAuthorityFacts({
+    userId: draft.userId,
+    draft,
+    subject: {
+      decisionKey: "decision:shampoo:shampoo_everyday:uncovered",
+      category: "shampoo",
+      role: "shampoo_everyday",
+      capturedProductId: null,
+      subjectKind: "uncovered_role",
+    },
+    heatRoutes: [],
+    context: normalRefinedContext,
+  } as never)
+
+  assert.equal(bundle.recommendationCandidates.length, 12)
+  assert.equal(bundle.candidateCatalogComplete, false)
+})
+
+test("candidate and heat-carrier failures are observed together without an orphaned rejection", async () => {
+  const client = completeCatalogFactClient({}, [], { errorTables: ["products"] })
+  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
+    completeCatalogEnabled: true,
+  })
+  const draft = {
+    ...shampooAuthorityDraft(),
+    products: [
+      {
+        capturedProductId: "captured-carrier",
+        identity: {
+          kind: "catalog_product",
+          productId: "leave-in-carrier",
+          displayName: "Leave-in Carrier",
+          category: "leave_in",
+        },
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "captured-carrier",
+        category: "leave_in",
+        roles: ["pre_heat_application"],
+      },
+    ],
+  }
+
+  await assert.rejects(
+    () =>
+      persistence.loadAuthorityFacts({
+        userId: draft.userId,
+        draft,
+        subject: {
+          decisionKey: "decision:shampoo:shampoo_everyday:uncovered",
+          category: "shampoo",
+          role: "shampoo_everyday",
+          capturedProductId: null,
+          subjectKind: "uncovered_role",
+        },
+        heatRoutes: ["direct_contact_heat"],
+        context: normalRefinedContext,
+      } as never),
+    /stage3_authority_catalog_unavailable|stage3_authority_spec_unavailable/,
+  )
+  await new Promise((resolve) => setImmediate(resolve))
+})
 
 test("canonical exact guidance makes the matching Stage 3 product role protocol-complete", async () => {
   const productId = "11111111-1111-4111-8111-111111111111"

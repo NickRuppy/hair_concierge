@@ -227,6 +227,7 @@ export type PersonalPlanStage3ReviewVerdict =
   | "unsupported"
   | "need_revision_review"
   | "inventory_disposition"
+export type PersonalPlanStage3AlternativeState = "available" | "exhausted" | "not_applicable"
 
 // Stage 4 telemetry is deliberately structural. It must never contain product,
 // proposal, plan, user, profile, price, URL, or free-text data.
@@ -487,6 +488,7 @@ export type AppEventMap = {
   personal_plan_stage3_review_viewed: {
     category: PersonalPlanCategory | null
     verdict: PersonalPlanStage3ReviewVerdict
+    alternativeState: PersonalPlanStage3AlternativeState
     position: number
     count: number
   }
