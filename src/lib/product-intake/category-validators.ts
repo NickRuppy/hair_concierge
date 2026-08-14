@@ -37,7 +37,7 @@ import {
 } from "@/lib/leave-in/constants"
 import { MASK_CONCENTRATIONS, MASK_INGREDIENT_FLAGS, MASK_WEIGHTS } from "@/lib/mask/constants"
 import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/constants"
-import { SHAMPOO_BUCKETS } from "@/lib/shampoo/constants"
+import { SHAMPOO_BUCKETS, SHAMPOO_SCALP_ROUTES_BY_BUCKET } from "@/lib/shampoo/constants"
 import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import { buildProductApplicationPointerV2 } from "@/lib/product-intake/catalog-enrichment/stage5-v2-builder"
@@ -457,18 +457,7 @@ function scalpRouteMatchesShampooBucket(
   bucket: (typeof SHAMPOO_BUCKETS)[number],
   route: z.infer<typeof scalpRouteSchema>,
 ): boolean {
-  switch (bucket) {
-    case "dehydriert-fettig":
-      return route === "oily"
-    case "irritationen":
-      return route === "irritated"
-    case "normal":
-      return route === "balanced"
-    case "schuppen":
-      return route === "dandruff" || route === "dry_flakes"
-    case "trocken":
-      return route === "dry"
-  }
+  return (SHAMPOO_SCALP_ROUTES_BY_BUCKET[bucket] as readonly string[]).includes(route)
 }
 
 const shampooRowSchema = z

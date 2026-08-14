@@ -286,6 +286,7 @@ function input(
       deferredFacts: [],
     } as never,
     coverage: [],
+    hairThickness: "normal",
     productFacts:
       state === "known"
         ? (knownFacts(category) as never)
@@ -1180,3 +1181,91 @@ for (const route of [
     assert.equal(result.verdict, "ideal")
   })
 }
+
+for (const route of [
+  {
+    name: "dandruff",
+    scalpRoute: "oily" as const,
+    everydayConstraint: "standard" as const,
+    role: "shampoo_dandruff" as const,
+    bucket: "schuppen",
+    catalogScalpRoute: "dandruff",
+    catalogCleansingIntensity: "regular",
+  },
+  {
+    name: "irritation",
+    scalpRoute: "balanced" as const,
+    everydayConstraint: "irritation_compatible" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "irritationen",
+    catalogScalpRoute: "irritated",
+    catalogCleansingIntensity: "gentle",
+  },
+  {
+    name: "dry-scalp override",
+    scalpRoute: "oily" as const,
+    everydayConstraint: "gentle_dry_scalp" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "trocken",
+    catalogScalpRoute: "dry",
+    catalogCleansingIntensity: "gentle",
+  },
+]) {
+  test(`complete Shampoo authority translates ${route.name} into catalogue route semantics`, () => {
+    const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+    shampooInput.candidateCatalogComplete = true
+    shampooInput.role = route.role
+    shampooInput.categoryDecision = {
+      ...shampooInput.categoryDecision,
+      roles: [route.role],
+      target: {
+        category: "shampoo",
+        roles: [route.role],
+        scalpRoute: route.scalpRoute,
+        everydayConstraint: route.everydayConstraint,
+        requiresTargetedDandruffCapability: route.role === "shampoo_dandruff",
+      },
+    }
+    if (!shampooInput.productFacts) throw new Error("expected Shampoo facts")
+    shampooInput.productFacts.spec.shampooBucket = route.bucket
+    shampooInput.productFacts.spec.scalpRoute = route.catalogScalpRoute
+    shampooInput.productFacts.spec.cleansingIntensity = route.catalogCleansingIntensity
+    shampooInput.productFacts.protocols = [
+      { role: route.role, status: "verified_complete", fingerprint: `protocol-${route.name}` },
+    ]
+
+    const result = evaluateStage3Authority(shampooInput as never)
+
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.equal(result.verdict, "ideal")
+  })
+}
+
+test("complete Shampoo authority treats a non-target cleansing intensity as supportive", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.candidateCatalogComplete = true
+  shampooInput.categoryDecision = {
+    ...shampooInput.categoryDecision,
+    target: {
+      category: "shampoo",
+      roles: ["shampoo_everyday"],
+      scalpRoute: "balanced",
+      everydayConstraint: "irritation_compatible",
+      requiresTargetedDandruffCapability: false,
+    },
+  }
+  if (!shampooInput.productFacts) throw new Error("expected Shampoo facts")
+  shampooInput.productFacts.spec.shampooBucket = "irritationen"
+  shampooInput.productFacts.spec.scalpRoute = "irritated"
+  shampooInput.productFacts.spec.cleansingIntensity = "regular"
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.criteria[0]?.criterionId, "shampoo.fit")
+  assert.equal(result.criteria[0]?.result, "caution")
+  assert.deepEqual(result.allowedActions, ["keep_owned", "acknowledge_override", "leave_uncovered"])
+})

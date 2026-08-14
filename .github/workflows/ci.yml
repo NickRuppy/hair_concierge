@@ -196,6 +196,22 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run Stage 3 production lab contracts
         run: npm run test:playwright:personal-plan-stage3:lab
+
+  quality-personal-plan-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [detect-ci-scope]
+    if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
       - name: Run Personal Plan development journeys
         run: npm run test:playwright:personal-plan-stage3:journey
 
@@ -209,17 +225,20 @@ jobs:
       - quality-node
       - quality-browser-contracts
       - quality-personal-plan-browser
+      - quality-personal-plan-journey
     steps:
       - uses: actions/checkout@v6
       - name: Require successful quality lanes
         run: >-
           node scripts/ci/require-job-results.mjs
           --allow-skipped=quality-personal-plan-browser
+          --allow-skipped=quality-personal-plan-journey
           detect-ci-scope=${{ needs.detect-ci-scope.result }}
           quality-static=${{ needs.quality-static.result }}
           quality-node=${{ needs.quality-node.result }}
           quality-browser-contracts=${{ needs.quality-browser-contracts.result }}
           quality-personal-plan-browser=${{ needs.quality-personal-plan-browser.result }}
+          quality-personal-plan-journey=${{ needs.quality-personal-plan-journey.result }}
 
   playwright-smoke:
     runs-on: ubuntu-latest

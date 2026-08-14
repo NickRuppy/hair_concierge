@@ -14,6 +14,40 @@ export const SHAMPOO_BUCKETS = [
 ] as const
 
 export type ShampooBucket = (typeof SHAMPOO_BUCKETS)[number]
+export type ShampooScalpRoute =
+  | "oily"
+  | "balanced"
+  | "dry"
+  | "dandruff"
+  | "dry_flakes"
+  | "irritated"
+export type ShampooCleansingIntensity = "gentle" | "regular" | "clarifying"
+
+export const SHAMPOO_SCALP_ROUTES_BY_BUCKET = {
+  schuppen: ["dandruff", "dry_flakes"],
+  irritationen: ["irritated"],
+  normal: ["balanced"],
+  "dehydriert-fettig": ["oily"],
+  trocken: ["dry"],
+} as const satisfies Record<ShampooBucket, readonly ShampooScalpRoute[]>
+
+export const SHAMPOO_CLEANSING_INTENSITY_BY_BUCKET = {
+  schuppen: "regular",
+  irritationen: "gentle",
+  normal: "regular",
+  "dehydriert-fettig": "regular",
+  trocken: "gentle",
+} as const satisfies Record<ShampooBucket, ShampooCleansingIntensity>
+
+export function primaryShampooScalpRoute(bucket: ShampooBucket | null): ShampooScalpRoute | null {
+  return bucket ? SHAMPOO_SCALP_ROUTES_BY_BUCKET[bucket][0] : null
+}
+
+export function shampooCleansingIntensity(
+  bucket: ShampooBucket | null,
+): ShampooCleansingIntensity | null {
+  return bucket ? SHAMPOO_CLEANSING_INTENSITY_BY_BUCKET[bucket] : null
+}
 export interface ShampooBucketPair {
   thickness: HairThickness
   shampoo_bucket: ShampooBucket

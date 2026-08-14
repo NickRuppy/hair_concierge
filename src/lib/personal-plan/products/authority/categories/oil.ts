@@ -19,6 +19,7 @@ type OilRole = Extract<
   "pre_wash_fibre_treatment" | "leave_on_fibre_conditioning" | "dry_finish"
 >
 type OilInput = Stage3AuthorityInput<"oil">
+const OIL_WEIGHTS = ["light", "medium", "rich"] as const
 
 function targetForRole(input: OilInput) {
   const target = input.categoryDecision.target as Extract<
@@ -59,16 +60,34 @@ function candidateForRole(input: OilInput, targetWeight: string | null): Stage3O
   )
 }
 
-function recommendation(candidate: Stage3OilFacts, input: OilInput) {
+export function recommendationForOil(
+  candidate: Stage3OilFacts,
+  input: OilInput,
+  supportive = false,
+) {
   return {
     recommendationId: `oil:${input.role}:${candidate.productId}`,
     productId: candidate.productId,
     category: candidate.category,
     role: input.role,
     displayName: candidate.displayName,
-    reason: "Verifiziert für diese Öl-Rolle mit vollständigem Anwendungsprotokoll.",
-    authorityRuleId: "oil.recommendation.role_verified",
+    reason: supportive
+      ? "Verifiziert für diese Öl-Rolle; das Formelgewicht liegt nur angrenzend am Ziel."
+      : "Verifiziert für diese Öl-Rolle mit vollständigem Anwendungsprotokoll.",
+    authorityRuleId: supportive
+      ? "oil.recommendation.role_verified_supportive_weight"
+      : "oil.recommendation.role_verified",
   }
+}
+
+export function recommendationForSupportiveOil(candidate: Stage3OilFacts, input: OilInput) {
+  const targetWeight = targetForRole(input)?.weight ?? null
+  if (!candidate.spec.weight || !targetWeight) return null
+  const candidateIndex = OIL_WEIGHTS.indexOf(candidate.spec.weight as (typeof OIL_WEIGHTS)[number])
+  const targetIndex = OIL_WEIGHTS.indexOf(targetWeight as (typeof OIL_WEIGHTS)[number])
+  if (candidateIndex < 0 || targetIndex < 0) return null
+  const distance = Math.abs(candidateIndex - targetIndex)
+  return distance === 1 ? recommendationForOil(candidate, input, true) : null
 }
 
 export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation {
@@ -87,7 +106,7 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
         criterion("oil.role", "Öl-Rolle", "fail", "Für diese Rolle ist kein Produkt zugeordnet."),
       ],
       allowedActions: candidate ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: candidate ? recommendation(candidate, input) : null,
+      recommendation: candidate ? recommendationForOil(candidate, input) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: candidate?.factFingerprint ?? null,
     })
@@ -136,7 +155,7 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
       allowedActions: candidate
         ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
         : ["acknowledge_override", "leave_uncovered"],
-      recommendation: candidate ? recommendation(candidate, input) : null,
+      recommendation: candidate ? recommendationForOil(candidate, input) : null,
       productFactFingerprint: facts.factFingerprint,
       recommendationFactFingerprint: candidate?.factFingerprint ?? null,
     })

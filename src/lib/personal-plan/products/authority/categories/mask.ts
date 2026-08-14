@@ -22,15 +22,19 @@ import {
 const WEIGHTS: PlanCareWeight[] = ["light", "medium", "rich"]
 const REPAIR_LEVELS: PlanRepairSupportLevel[] = ["low", "medium", "high"]
 
-function recommendationFor(product: Stage3MaskFacts) {
+export function recommendationForMask(product: Stage3MaskFacts, supportive = false) {
   return {
     recommendationId: `recommendation:mask:${product.productId}`,
     productId: product.productId,
     category: "mask" as const,
     role: "intensive_conditioning_mask" as const,
     displayName: product.displayName,
-    reason: "Deckt die bestätigten Masken-Ziele ab.",
-    authorityRuleId: "mask.stage3.validated_candidate",
+    reason: supportive
+      ? "Deckt die Masken-Rolle mit einer begrenzten Abweichung vom Ziel ab."
+      : "Deckt die bestätigten Masken-Ziele ab.",
+    authorityRuleId: supportive
+      ? "mask.stage3.validated_supportive_candidate"
+      : "mask.stage3.validated_candidate",
   }
 }
 
@@ -88,13 +92,26 @@ function evaluateProduct(input: Stage3AuthorityInput<"mask">, product: Stage3Mas
         "Eine bekannte Reaktion verhindert die Empfehlung.",
       ),
     )
-  if (product.suitableThicknesses === null || product.suitableThicknesses.length === 0)
+  if (
+    product.suitableThicknesses === null ||
+    product.suitableThicknesses.length === 0 ||
+    !input.hairThickness
+  )
     criteria.push(
       criterion(
         "mask.thickness",
         "Haarstärke",
         "unknown",
         "Die Eignung für die Haarstärke ist nicht verifiziert.",
+      ),
+    )
+  else if (!product.suitableThicknesses.includes(input.hairThickness))
+    criteria.push(
+      criterion(
+        "mask.thickness",
+        "Haarstärke",
+        "fail",
+        "Das Produkt ist für die bestätigte Haarstärke nicht geeignet.",
       ),
     )
   else
@@ -241,7 +258,7 @@ export function evaluateMaskAuthority(
       verdict: eligible ? "ideal" : "unknown",
       criteria: [],
       allowedActions: eligible ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: eligible ? recommendationFor(eligible.candidate) : null,
+      recommendation: eligible ? recommendationForMask(eligible.candidate) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: eligible?.candidate.factFingerprint ?? null,
     })
@@ -264,7 +281,7 @@ export function evaluateMaskAuthority(
     !isInactiveOrRetired(sharedInput) &&
     assessment.verdict === "ideal" &&
     protocolForRole(sharedInput)?.status === "verified_complete"
-      ? recommendationFor(input.productFacts)
+      ? recommendationForMask(input.productFacts)
       : null
   return knownEvaluation(sharedInput, {
     verdict: assessment.verdict,

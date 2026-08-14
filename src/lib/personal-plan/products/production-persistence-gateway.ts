@@ -43,7 +43,10 @@ import {
   finalizeStage3CaptureWithoutInventoryAuthority,
   acknowledgeStage3InventoryDisposition,
 } from "./state-machine"
-import { isPersonalPlanStage3InventoryAuthorityV2Enabled } from "@/lib/personal-plan/release"
+import {
+  isPersonalPlanStage3CompleteCatalogEnabled,
+  isPersonalPlanStage3InventoryAuthorityV2Enabled,
+} from "@/lib/personal-plan/release"
 import type {
   RoutineCandidateCompiler,
   RoutineProposalStager,
@@ -61,7 +64,7 @@ import type {
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { requireCurrentAuthoritySnapshot, Stage3AuthoritySnapshotError } from "./authority/snapshot"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
-import { expectedShampooBucket } from "./authority/categories/shampoo"
+import { expectedShampooBucket, expectedShampooSpecTarget } from "./authority/categories/shampoo"
 import { classifyStage3DesiredState, stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
 import {
   buildStage3FitComparison,
@@ -195,6 +198,7 @@ export type Stage3ProductionGatewayOptions = {
   cadenceAuthorityReader?: RoutineCadenceAuthorityReader
   now?: () => string
   inventoryAuthorityV2Enabled?: boolean
+  completeCatalogEnabled?: boolean
 }
 
 export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
@@ -234,6 +238,8 @@ export function createProductionStage3ProductsGateway(
   const now = options.now ?? (() => new Date().toISOString())
   const inventoryAuthorityV2Enabled =
     options.inventoryAuthorityV2Enabled ?? isPersonalPlanStage3InventoryAuthorityV2Enabled()
+  const completeCatalogEnabled =
+    options.completeCatalogEnabled ?? isPersonalPlanStage3CompleteCatalogEnabled()
   let cached: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] } | null = null
 
   async function repairLoadedDraft(input: {
@@ -334,6 +340,7 @@ export function createProductionStage3ProductsGateway(
       subjectIdentity: captured?.identity ?? null,
       categoryDecision,
       coverage: effectiveStage3Coverage(draft),
+      hairThickness: context.hairThickness,
       ...facts,
     } as Stage3AuthorityInput
     const authorityEvaluation = evaluateStage3Authority(authorityInput)
@@ -622,7 +629,10 @@ export function createProductionStage3ProductsGateway(
                     {
                       thickness: context.hairThickness,
                       shampooBucket,
-                      scalpRoute: target.scalpRoute,
+                      scalpRoute: completeCatalogEnabled
+                        ? (expectedShampooSpecTarget({ role, target })?.scalpRoute ??
+                          target.scalpRoute)
+                        : target.scalpRoute,
                     },
                   ]
                 : []

@@ -1264,6 +1264,72 @@ test("direct preview candidate loading remains bounded to the legacy catalog pat
   )
 })
 
+test("explicit direct audit loading reads the complete catalogue with exact cardinality", async () => {
+  const products = Array.from({ length: 13 }, (_, index) => ({
+    id: `audit-shampoo-${String(index + 1).padStart(2, "0")}`,
+    name: `Audit Shampoo ${index + 1}`,
+    image_url: null,
+    category_key: "shampoo",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
+    suitable_thicknesses: ["normal"],
+    sort_order: index + 1,
+  }))
+  const calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }> = []
+  const candidates = await loadStage3RecommendationCandidates(
+    completeCatalogFactClient(
+      {
+        products,
+        product_shampoo_specs: products.map((product) => ({
+          product_id: product.id,
+          thickness: "normal",
+          shampoo_bucket: "normal",
+          scalp_route: "balanced",
+          cleansing_intensity: "gentle",
+        })),
+        product_application_protocols: [],
+        application_guidance_protocols: products.map((product) => ({
+          product_id: product.id,
+          id: `guidance-${product.id}`,
+          role_key: "shampoo_everyday",
+          protocol_version: 1,
+          verified_at: "2026-08-14T00:00:00.000Z",
+          updated_at: "2026-08-14T00:00:00.000Z",
+          scope_kind: "product",
+          status: "active",
+          locale: "de",
+        })),
+      },
+      calls,
+    ) as never,
+    {
+      category: "shampoo",
+      hairThickness: "normal",
+      role: "shampoo_everyday",
+      shampooTarget: {
+        category: "shampoo",
+        roles: ["shampoo_everyday"],
+        scalpRoute: "balanced",
+        everydayConstraint: "standard",
+        requiresTargetedDandruffCapability: false,
+      },
+      conditionerTarget: null,
+      completeCatalog: true,
+    },
+  )
+
+  assert.equal(candidates.length, 13)
+  assert.equal(candidates.at(-1)?.productId, "audit-shampoo-13")
+  assert.equal(calls.find((call) => call.table === "products")?.exactCount, true)
+  assert.ok(calls.some((call) => call.inIds?.length === 13))
+})
+
 test("complete hydration fails closed when exact product cardinality is not satisfied", async () => {
   await assert.rejects(
     () =>
@@ -2005,6 +2071,45 @@ test("authority facts select a contextual Shampoo row without PGRST116", async (
     shampooBucket: "normal",
     scalpRoute: "balanced",
     cleansingIntensity: "regular",
+    targetFit: "matched",
+  })
+})
+
+test("complete authority facts translate an irritation need into the stored irritated route", async () => {
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([
+      {
+        thickness: "normal",
+        shampoo_bucket: "irritationen",
+        scalp_route: "irritated",
+        cleansing_intensity: "gentle",
+      },
+    ]) as never,
+    {
+      draft: shampooAuthorityDraft({
+        scalpRoute: "balanced",
+        everydayConstraint: "irritation_compatible",
+      }),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+      candidateCatalogComplete: true,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.deepEqual(bundle.productFacts.spec, {
+    thickness: "normal",
+    shampooBucket: "irritationen",
+    scalpRoute: "irritated",
+    cleansingIntensity: "gentle",
     targetFit: "matched",
   })
 })

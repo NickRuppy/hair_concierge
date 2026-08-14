@@ -11,7 +11,7 @@ import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/
 
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
 import type { PersonalPlanCategory, Stage3DecisionSubject, Stage3ProductDraft } from "../contracts"
-import { expectedShampooBucket } from "./categories/shampoo"
+import { expectedShampooBucket, expectedShampooSpecTarget } from "./categories/shampoo"
 import type {
   Stage3AuthorityInput,
   Stage3CategoryProductFacts,
@@ -36,9 +36,12 @@ export type Stage3RecommendationCandidateSelection = {
   role: Stage3DecisionSubject["role"]
   shampooTarget: ShampooTarget | null
   conditionerTarget: ConditionerTarget | null
+  completeCatalog?: boolean
 }
 
-type CategorySelectionContext = Omit<Stage3RecommendationCandidateSelection, "category">
+type CategorySelectionContext = Omit<Stage3RecommendationCandidateSelection, "category"> & {
+  candidateCatalogComplete?: boolean
+}
 
 export const STAGE3_AUTHORITY_PRODUCT_PAGE_SIZE = 500
 export const STAGE3_AUTHORITY_FACT_CHUNK_SIZE = 100
@@ -100,6 +103,7 @@ export async function loadStage3AuthorityFactBundle(
       input.draft,
       input.subject.category,
     ),
+    candidateCatalogComplete: input.candidateCatalogComplete,
   }
   const captured = input.subject.capturedProductId
     ? input.draft.products.find(
@@ -149,14 +153,17 @@ export async function loadStage3RecommendationCandidates(
         role: input.role,
         shampooTarget: input.shampooTarget,
         conditionerTarget: input.conditionerTarget,
+        candidateCatalogComplete: input.completeCatalog,
       }
     : {
         hairThickness: input.context.hairThickness,
         role: input.subject.role,
         shampooTarget: shampooTargetFor(input.categoryDecision, input.draft, category),
         conditionerTarget: conditionerTargetFor(input.categoryDecision, input.draft, category),
+        candidateCatalogComplete: input.completeCatalog,
       }
-  return directSelection || input.completeCatalog === false
+  return (directSelection && input.completeCatalog !== true) ||
+    (!directSelection && input.completeCatalog === false)
     ? loadLegacyRecommendationCandidates(client, category, selectionContext)
     : loadRecommendationCandidates(client, category, selectionContext)
 }
@@ -882,6 +889,14 @@ function selectShampooSpec(
     target: context.shampooTarget,
   })
   if (!expectedBucket) return empty
+  const expectedScalpRoute =
+    context.candidateCatalogComplete === true
+      ? expectedShampooSpecTarget({
+          role: context.role,
+          target: context.shampooTarget,
+        })?.scalpRoute
+      : context.shampooTarget.scalpRoute
+  if (!expectedScalpRoute) return empty
   const completeRows = rows
     .map((row) => ({
       thickness: text(row.thickness),
@@ -902,7 +917,7 @@ function selectShampooSpec(
       (row) =>
         text(row.thickness) === context.hairThickness &&
         text(row.shampoo_bucket) === expectedBucket &&
-        text(row.scalp_route) === context.shampooTarget?.scalpRoute,
+        text(row.scalp_route) === expectedScalpRoute,
     )
     .map((row) => ({
       thickness: text(row.thickness),

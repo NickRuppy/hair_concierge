@@ -20,6 +20,8 @@ import {
   repairSupportAxisFitResult,
 } from "./authority/categories/axis-fit"
 import { evaluateStage3Authority } from "./authority/evaluate"
+import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
+import { expectedShampooSpecTarget } from "./authority/categories/shampoo"
 import { compactCriterionSchema } from "./fit-comparison-schema"
 
 export const STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT = 3
@@ -374,7 +376,7 @@ function assessCandidate(
 ): CandidateAssessment | null {
   const detached = evaluateDetachedCandidate(input, candidate)
   if (!detached || (detached.verdict !== "ideal" && detached.verdict !== "supportive")) return null
-  const recommendation = recommendationForCandidate(input, candidate)
+  const recommendation = recommendationForCandidate(input, candidate, detached)
   if (!recommendation) return null
   const coverage = candidateTargetCoverage(input, candidate, detached.criteria)
   return {
@@ -453,6 +455,7 @@ function evaluateDetachedCandidate(
 function recommendationForCandidate(
   input: Stage3AuthorityInput,
   candidate: Stage3CategoryProductFacts,
+  detached: Stage3KnownAuthorityEvaluation,
 ): Stage3Recommendation | null {
   const evaluation = evaluateStage3Authority({
     ...input,
@@ -466,7 +469,7 @@ function recommendationForCandidate(
     evaluation.recommendation?.productId !== candidate.productId ||
     evaluation.recommendation.role !== input.role
   ) {
-    return null
+    return supportiveOwnedRecommendation(input, candidate, detached)
   }
   return evaluation.recommendation
 }
@@ -582,6 +585,7 @@ function targetFitEvidenceRow(
   entries: readonly ComparisonProductEntry[],
 ): Stage3FitEvidenceRow | null {
   if (input.category !== "shampoo" && input.category !== "conditioner") return null
+  if (input.category === "shampoo" && input.candidateCatalogComplete === true) return null
   if (!input.categoryDecision.target) return null
   return {
     rowId: `${input.category}.target_fit`,
@@ -834,6 +838,22 @@ function shampooDimensions(
   entries: readonly ComparisonProductEntry[],
 ): Stage3FitComparisonDimension[] {
   const target = input.categoryDecision.target
+  const completeTarget =
+    input.candidateCatalogComplete === true && target?.category === "shampoo"
+      ? expectedShampooSpecTarget({ role: input.role, target })
+      : null
+  const scalpRouteStops = [
+    { stopId: "oily", label: "fettig" },
+    { stopId: "balanced", label: "ausgeglichen" },
+    { stopId: "dry", label: "trocken" },
+    ...(input.candidateCatalogComplete === true
+      ? [
+          { stopId: "dandruff", label: "Schuppen" },
+          { stopId: "dry_flakes", label: "trockene Schuppen" },
+          { stopId: "irritated", label: "gereizt" },
+        ]
+      : []),
+  ]
   return [
     dimension(
       "shampoo.cleansing_intensity",
@@ -844,7 +864,7 @@ function shampooDimensions(
         { stopId: "regular", label: "regulaer" },
         { stopId: "clarifying", label: "klaerend" },
       ],
-      null,
+      completeTarget?.cleansingIntensity ?? null,
       entries,
       (facts) =>
         facts.category === "shampoo"
@@ -856,12 +876,8 @@ function shampooDimensions(
       "shampoo.scalp_route",
       "Kopfhaut-Fokus",
       "set",
-      [
-        { stopId: "oily", label: "fettig" },
-        { stopId: "balanced", label: "ausgeglichen" },
-        { stopId: "dry", label: "trocken" },
-      ],
-      target?.category === "shampoo" ? target.scalpRoute : null,
+      scalpRouteStops,
+      completeTarget?.scalpRoute ?? (target?.category === "shampoo" ? target.scalpRoute : null),
       entries,
       (facts) =>
         facts.category === "shampoo"
@@ -876,7 +892,7 @@ function shampooDimensions(
       "Geeignete Haardicke",
       "set",
       THICKNESS_STOPS,
-      null,
+      input.candidateCatalogComplete === true ? (input.hairThickness ?? null) : null,
       entries,
       (facts) => facts.suitableThicknesses,
       "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
