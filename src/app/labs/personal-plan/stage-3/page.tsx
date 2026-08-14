@@ -3,7 +3,11 @@ import { notFound } from "next/navigation"
 import { isPersonalPlanStage3LabEnabled } from "@/lib/labs/personal-plan-stage3-access"
 import { PersonalPlanStage3LabClient } from "./lab-client"
 
-export default function PersonalPlanStage3LabPage() {
+export default async function PersonalPlanStage3LabPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ scenario?: string }>
+}) {
   if (
     !isPersonalPlanStage3LabEnabled({
       CI: process.env.CI,
@@ -15,5 +19,6 @@ export default function PersonalPlanStage3LabPage() {
     notFound()
   }
 
-  return <PersonalPlanStage3LabClient />
+  const { scenario } = await searchParams
+  return <PersonalPlanStage3LabClient scenario={scenario} />
 }

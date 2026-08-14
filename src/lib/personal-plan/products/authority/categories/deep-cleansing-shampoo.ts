@@ -14,12 +14,15 @@ import {
   unsupportedEvaluation,
 } from "../shared"
 
-function recommendationFor(product: Stage3DeepCleansingFacts) {
+function recommendationFor(
+  product: Stage3DeepCleansingFacts,
+  role: Stage3AuthorityInput<"deep_cleansing_shampoo">["role"],
+) {
   return {
-    recommendationId: `recommendation:deep-cleansing:${product.productId}`,
+    recommendationId: `recommendation:deep-cleansing:${role}:${product.productId}`,
     productId: product.productId,
     category: "deep_cleansing_shampoo" as const,
-    role: "residue_reset" as const,
+    role,
     displayName: product.displayName,
     reason: "Unterstützt die benötigte Reset-Rolle.",
     authorityRuleId: "deep_cleansing.stage3.validated_reset_role",
@@ -117,7 +120,7 @@ export function evaluateDeepCleansingAuthority(
       verdict: candidate ? "ideal" : "unknown",
       criteria: [],
       allowedActions: candidate ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: candidate ? recommendationFor(candidate) : null,
+      recommendation: candidate ? recommendationFor(candidate, input.role) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: candidate?.factFingerprint ?? null,
     })

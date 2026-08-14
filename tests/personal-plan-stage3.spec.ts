@@ -13,6 +13,16 @@ async function openStage3Lab(page: Page) {
   }
 }
 
+async function openUncoveredConditionerLab(page: Page) {
+  await page.goto(`${baseUrl}${labPath}?scenario=uncovered-conditioner`)
+  await expect(page.getByRole("heading", { name: "Wähle deinen Conditioner" })).toBeVisible()
+  const cookieDialog = page.getByRole("dialog", { name: "Cookie-Einstellungen" })
+  await cookieDialog.waitFor({ state: "visible", timeout: 2_000 }).catch(() => undefined)
+  if (await cookieDialog.isVisible()) {
+    await cookieDialog.getByRole("button", { name: "Nur essentielle" }).click()
+  }
+}
+
 async function searchAndSelect(page: Page, query: string, productName: string) {
   const search = page.getByRole("searchbox", { name: "Produkt suchen" })
   await search.fill(query)
@@ -20,6 +30,21 @@ async function searchAndSelect(page: Page, query: string, productName: string) {
   await expect(option).toBeVisible()
   await option.click()
   await page.getByRole("button", { name: /2x\/Woche/ }).click()
+}
+
+async function expectUncoveredChooserToFitViewport(page: Page) {
+  const viewport = page.viewportSize()
+  expect(viewport).not.toBeNull()
+  const noHorizontalOverflow = await page
+    .locator("html")
+    .evaluate((element: HTMLElement) => element.scrollWidth <= element.clientWidth)
+  expect(noHorizontalOverflow).toBe(true)
+
+  const cta = page.getByRole("button", { name: "Dieses Produkt einplanen" })
+  const box = await cta.boundingBox()
+  expect(box).not.toBeNull()
+  expect(box!.x).toBeGreaterThanOrEqual(0)
+  expect(box!.x + box!.width).toBeLessThanOrEqual(viewport!.width)
 }
 
 test.describe("Personal Plan products lab", () => {
@@ -110,5 +135,37 @@ test.describe("Personal Plan products lab", () => {
       .locator("html")
       .evaluate((element) => element.scrollWidth <= element.clientWidth)
     expect(hasNoHorizontalOverflow).toBe(true)
+  })
+
+  test("offers a missing Conditioner directly and plans the third verified product", async ({
+    page,
+  }) => {
+    await openUncoveredConditionerLab(page)
+
+    const choiceCards = page
+      .getByRole("region", { name: "Wähle deinen Conditioner" })
+      .locator("article")
+    await expect(choiceCards.nth(0).getByText("Beste Passung", { exact: true })).toBeVisible()
+    await expect(choiceCards.nth(1).getByText("Alternative 1", { exact: true })).toBeVisible()
+    await expect(page.getByText("Produkt suchen", { exact: true })).not.toBeVisible()
+    await expect(page.getByText("Alternative 1 von 2", { exact: true })).toBeVisible()
+
+    await expectUncoveredChooserToFitViewport(page)
+    await page.setViewportSize({ width: 400, height: 844 })
+    await expectUncoveredChooserToFitViewport(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await expectUncoveredChooserToFitViewport(page)
+    await page.setViewportSize({ width: 375, height: 844 })
+
+    await page.getByRole("button", { name: "Nächste Alternative" }).click()
+    await expect(page.getByText("Alternative 2 von 2", { exact: true })).toBeVisible()
+    await page
+      .getByRole("button", { name: "Conditioner Leichte Pflege als Auswahl markieren" })
+      .click()
+    await page.getByRole("button", { name: "Dieses Produkt einplanen" }).click()
+
+    await page.waitForURL(
+      (url) => url.pathname === "/auth" && url.searchParams.get("next") === "/routine",
+    )
   })
 })

@@ -523,6 +523,7 @@ test("explains a fitting product when no better verified alternative exists", ()
 })
 
 test("renders an explicit uncovered state instead of an empty review", () => {
+  let retryCalls = 0
   const uncoveredComparison: Stage3FitComparison = {
     schemaVersion: 1,
     mode: "unavailable",
@@ -559,15 +560,36 @@ test("renders an explicit uncovered state instead of an empty review", () => {
       displayedAlternativeIndex={0}
       onDisplayedAlternativeChange={() => {}}
       onAction={() => {}}
-      onSearch={() => {}}
+      onRetry={() => {
+        retryCalls += 1
+      }}
       onBack={() => {}}
     />,
   )
 
-  assert.match(html, /Du hast noch kein Leave-in/)
-  assert.match(html, /keine verifizierte Empfehlung alle bestätigten Ziele/)
-  assert.match(html, /Produkt suchen/)
+  assert.match(html, /Wähle dein Leave-in/)
+  assert.match(html, /Gerade ist keine geprüfte Empfehlung verfügbar/)
+  assert.match(html, /Erneut prüfen/)
+  assert.doesNotMatch(html, /Produkt suchen/)
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
+
+  const tree = ProductFitComparison({
+    categoryLabel: "Leave-in",
+    roleLabel: "Leave-in",
+    reviewPosition: 3,
+    reviewTotal: 3,
+    comparison: uncoveredComparison,
+    evaluation: uncoveredEvaluation,
+    displayedAlternativeIndex: 0,
+    onDisplayedAlternativeChange: () => {},
+    onAction: () => {},
+    onRetry: () => {
+      retryCalls += 1
+    },
+    onBack: () => {},
+  })
+  ;(findByAriaLabel(tree, "Erneut prüfen").props.onClick as (() => void) | undefined)?.()
+  assert.equal(retryCalls, 1)
 })
 
 test("compares strict recommendations without judging an absent owned product", () => {
@@ -576,13 +598,16 @@ test("compares strict recommendations without judging an absent owned product", 
     subjectKey: "subject:uncovered-shampoo",
     sourceIdentity: null,
     products: comparison.products.filter((product) => product.source === "alternative"),
-    alternatives: comparison.alternatives.map((candidate) => ({
-      ...candidate,
-      verdict: "ideal" as const,
-    })),
+    alternatives: comparison.alternatives,
     evidenceRows: comparison.evidenceRows?.map((row) => ({
       ...row,
-      productValues: row.productValues.filter((value) => value.productId !== "owned-shampoo"),
+      productValues: row.productValues
+        .filter((value) => value.productId !== "owned-shampoo")
+        .map((value) =>
+          value.productId === "alternative-two"
+            ? { ...value, valueLabel: "stark", relation: "outside_target" as const }
+            : value,
+        ),
     })),
   }
   const uncoveredEvaluation: Stage3AuthorityEvaluation = {
@@ -611,11 +636,13 @@ test("compares strict recommendations without judging an absent owned product", 
     />,
   )
 
-  assert.match(html, /Du hast noch kein Shampoo/)
-  assert.match(html, /Empfehlung 1/)
-  assert.match(html, /Alternative 2/)
+  assert.match(html, /Wähle dein Shampoo/)
+  assert.match(html, /Beste Passung/)
+  assert.match(html, /Alternative 1 · passt teilweise/)
+  assert.match(html, /Alternative 1:[\s\S]*stark/)
+  assert.match(html, /Außerhalb des Ziels/)
   assert.doesNotMatch(html, /Dein Produkt/)
-  assert.doesNotMatch(html, /passt teilweise/i)
+  assert.doesNotMatch(html, /Du hast noch kein Shampoo/)
 })
 
 test("keeps browsing separate from selecting and saves the exact selected recommendation", () => {
@@ -675,12 +702,13 @@ test("keeps browsing separate from selecting and saves the exact selected recomm
     onBack: () => {},
   })
 
-  ;(findByAriaLabel(tree, "Nächste Empfehlung").props.onClick as (() => void) | undefined)?.()
+  const html = renderToStaticMarkup(tree)
+  assert.match(html, /Alternative 2 von 2/)
+  assert.match(html, /Dieses Produkt einplanen/)
+  ;(findByAriaLabel(tree, "Nächste Alternative").props.onClick as (() => void) | undefined)?.()
   assert.deepEqual(browseChanges, [1])
   assert.equal(selectionChanges.length, 0)
-  ;(
-    findByAriaLabel(tree, "Sanfte Alternative auswählen").props.onClick as (() => void) | undefined
-  )?.()
+  ;(findByAriaLabel(tree, "Dieses Produkt einplanen").props.onClick as (() => void) | undefined)?.()
   assert.deepEqual(calls, [
     ["select_replacement", { productId: "alternative-one", factFingerprint: "fingerprint-one" }],
   ])
@@ -701,7 +729,7 @@ test("keeps browsing separate from selecting and saves the exact selected recomm
       | undefined
   )?.()
   ;(
-    findByAriaLabel(thirdSelectedTree, "Dritte Alternative auswählen").props.onClick as
+    findByAriaLabel(thirdSelectedTree, "Dieses Produkt einplanen").props.onClick as
       | (() => void)
       | undefined
   )?.()
@@ -712,8 +740,8 @@ test("keeps browsing separate from selecting and saves the exact selected recomm
   ])
 })
 
-test("uses product search as the primary uncovered action when no strict candidate exists", () => {
-  let searchCalls = 0
+test("does not expose product search for zero-candidate uncovered decisions", () => {
+  let retryCalls = 0
   const tree = ProductFitComparison({
     comparison: {
       ...comparison,
@@ -730,14 +758,100 @@ test("uses product search as the primary uncovered action when no strict candida
     displayedAlternativeIndex: 0,
     onDisplayedAlternativeChange: () => {},
     onAction: () => {},
-    onSearch: () => {
-      searchCalls += 1
+    onRetry: () => {
+      retryCalls += 1
     },
     onBack: () => {},
   })
 
-  ;(findByAriaLabel(tree, "Produkt suchen").props.onClick as (() => void) | undefined)?.()
-  assert.equal(searchCalls, 1)
+  const html = renderToStaticMarkup(tree)
+  assert.match(html, /Erneut prüfen/)
+  assert.doesNotMatch(html, /Produkt suchen/)
+  ;(findByAriaLabel(tree, "Erneut prüfen").props.onClick as (() => void) | undefined)?.()
+  assert.equal(retryCalls, 1)
+})
+
+test("labels an all-supportive uncovered recommendation as the best available option", () => {
+  const supportiveComparison: Stage3FitComparison = {
+    ...comparison,
+    subjectKey: "subject:uncovered-supportive-leave-in",
+    sourceIdentity: null,
+    products: comparison.products.filter((product) => product.source === "alternative"),
+    alternatives: comparison.alternatives.map((candidate) => ({
+      ...candidate,
+      category: "leave_in",
+      role: "post_wash_leave_in",
+      verdict: "supportive" as const,
+      criteria: [
+        {
+          criterionId: "moisture",
+          label: "Pflege",
+          result: "caution" as const,
+          explanation: "Unterstützt den Bedarf, bleibt aber nicht die strengste Passung.",
+        },
+      ],
+    })),
+    evidenceRows: [],
+  }
+  const supportiveEvaluation: Stage3AuthorityEvaluation = {
+    ...evaluation,
+    category: "leave_in",
+    subjectKey: supportiveComparison.subjectKey,
+    verdict: "unknown",
+    allowedActions: ["leave_uncovered"],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Leave-in"
+      roleLabel="Pflege im feuchten Haar"
+      comparison={supportiveComparison}
+      evaluation={supportiveEvaluation}
+      displayedAlternativeIndex={1}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Beste verfügbare Option/)
+  assert.match(html, /Alternative 1 · passt teilweise/)
+  assert.match(html, /Unterstützt den Bedarf/)
+  assert.doesNotMatch(html, /Beste Passung/)
+})
+
+test("renders one uncovered candidate without an empty second slot or carousel", () => {
+  const singleCandidateComparison: Stage3FitComparison = {
+    ...comparison,
+    subjectKey: "subject:uncovered-single-leave-in",
+    sourceIdentity: null,
+    products: [comparison.products.find((product) => product.productId === "alternative-one")!],
+    alternatives: [comparison.alternatives[0]!],
+    evidenceRows: [],
+  }
+  const uncoveredEvaluation: Stage3AuthorityEvaluation = {
+    ...evaluation,
+    subjectKey: singleCandidateComparison.subjectKey,
+    verdict: "unknown",
+    allowedActions: ["leave_uncovered"],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Leave-in"
+      roleLabel="Pflege im feuchten Haar"
+      comparison={singleCandidateComparison}
+      evaluation={uncoveredEvaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Wähle dein Leave-in/)
+  assert.match(html, /Beste Passung/)
+  assert.match(html, /Dieses Produkt einplanen/)
+  assert.doesNotMatch(html, /Noch kein Produkt/)
+  assert.doesNotMatch(html, /Alternative 1 von/)
 })
 
 test("keeps a partial verdict explicit when no verified alternative exists", () => {

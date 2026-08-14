@@ -1,0 +1,15 @@
+plans/2026-08-14-personal-plan-uncovered-product-choices.md  d2918bd0bc80399da923a2e151accb033251cbf0de3e577f4f227b5bffb14b45
+plans/mockups/2026-08-14-uncovered-product-choices.html  979653421bbddeb34d9dcb038094cc2a565716501159272fef696f244d0c0c98
+src/app/labs/personal-plan/stage-3/lab-client.tsx  5760f5e8818abf22e4e4dea13f2f6d253a1e09e1615b3ae5a9eedb194837c18b
+src/app/labs/personal-plan/stage-3/page.tsx  d21c6451502cca41d02744531984a5978888cb8e4c76f944f705c485de3c1aef
+src/components/personal-plan-products/product-fit-comparison.tsx  a92623521faf515e193e7d0ab574a0da86ab1b2c64c9bfeb3f9e3c0312bbc593
+src/components/personal-plan-products/stage3-product-copy.ts  4d3f007e514cf883836372239d8e911d28e2948fb1a0d678951191b14ddbb75f
+src/components/personal-plan-products/stage3-products-flow.tsx  4779f485305acb1b884c83455fb0475d0374d873705020a29f028532cd6afed9
+src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts  755c8081e2a3ebf6b9a2cbd705f8bfb607882da70d963fe6d62a74cb6bb7d2da
+src/lib/personal-plan/products/fit-comparison.ts  778e4dbaba5421181d3141e112718f4eb98ea55272dd6aea73d0767de1c3885a
+src/lib/personal-plan/products/fixture-scenarios.ts  681027e74c53ec419d157a2423765c25ec83ee9f2f9fdd5871cc4b57b5c4e50e
+tests/personal-plan-product-fit-comparison.test.tsx  a438f2ee9a5e7be81a03f6179c92c3b7270782fe35f3220b7939ad41bff35999
+tests/personal-plan-stage3-flow.test.tsx  94e8fe939feee6e37eed3df6bee8702b92680f716311e164f187ca66ff6491e2
+tests/personal-plan-stage3.spec.ts  225337ef8bf5467d49d8ee293b184bb0d70edf799cda4db69b4ef7c1bef70980
+tests/personal-plan/products/production-persistence-gateway.test.ts  2aeb90bf838011579e75e18310cb5dd505b5242a56c1a3993f70a47ac0e0102e
+tests/personal-plan/products/stage3-fit-comparison.test.ts  6aab43a3499a365a4f1559c73478e6a710063b6ca1f528a551b40147d84aa36d

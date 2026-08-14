@@ -112,7 +112,7 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
       }
     })
 
-    test(`${category}/${role} never recommends a non-ideal uncovered-role candidate`, () => {
+    test(`${category}/${role} carries only an adapter-authorized exact uncovered-role candidate`, () => {
       const comparison = buildStage3FitComparison(
         authorityInput(category, role, {
           productFacts: null,
@@ -130,9 +130,49 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
           ),
         ),
       )
+      assert.ok(
+        comparison.alternatives.every(
+          (candidate) =>
+            candidate.recommendation.productId === candidate.productId &&
+            candidate.recommendation.role === role,
+        ),
+      )
     })
   }
 }
+
+test("supported uncovered-role fixtures expose three exact selectable candidates", () => {
+  const coverage = [] as Array<{ targetKey: string; candidateCount: number }>
+
+  for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCategory[]) {
+    for (const role of CATEGORY_ROLE_POLICIES[category].allowedRoles) {
+      const comparison = buildStage3FitComparison(
+        authorityInput(category, role, {
+          productFacts: null,
+          capturedProductId: null,
+          subjectIdentity: null,
+          candidates: [1, 2, 3].map((index) =>
+            factsFor(category, role, `coverage-${category}-${role}-${index}`, {
+              sortOrder: index,
+            }),
+          ),
+        }),
+      )
+
+      coverage.push({
+        targetKey: `${category}/${role}`,
+        candidateCount: comparison.alternatives.length,
+      })
+    }
+  }
+
+  const failingTargets = coverage.filter(({ candidateCount }) => candidateCount !== 3)
+  assert.deepEqual(
+    failingTargets,
+    [],
+    `uncovered launch coverage gaps: ${JSON.stringify(failingTargets)}`,
+  )
+})
 
 test("comparison orders current product first, then current recommendation, ideal, supportive, sort order, product ID", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
@@ -226,7 +266,38 @@ test("selected candidate lookup returns exact current data for alternative numbe
   ])
 })
 
-test("uncovered roles expose only ideal candidates before applying the transport cap", () => {
+for (const [category, role] of [
+  ["conditioner", "conditioner_rinse_out"],
+  ["leave_in", "post_wash_leave_in"],
+] as const) {
+  test(`${category}/${role} retains an adapter-authorized supportive uncovered recommendation`, () => {
+    const input = authorityInput(category, role, {
+      productFacts: null,
+      capturedProductId: null,
+      subjectIdentity: null,
+      candidates: [
+        factsFor(category, role, "supportive-uncovered", {
+          fingerprint: `facts-${category}-supportive-uncovered`,
+          sortOrder: 1,
+          weight: "medium",
+        }),
+      ],
+    })
+
+    const comparison = buildStage3FitComparison(input)
+    const selected = findStage3SelectedComparisonCandidate(input, "supportive-uncovered")
+
+    assert.deepEqual(
+      comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+      [["supportive-uncovered", "supportive"]],
+    )
+    assert.equal(selected?.recommendation.productId, "supportive-uncovered")
+    assert.equal(selected?.recommendation.role, role)
+    assert.equal(selected?.factFingerprint, `facts-${category}-supportive-uncovered`)
+  })
+}
+
+test("uncovered roles rank the authority recommendation before ideal, supportive, and catalog order", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
     productFacts: null,
     capturedProductId: null,
@@ -255,12 +326,15 @@ test("uncovered roles expose only ideal candidates before applying the transport
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
-    [["ideal-after-supportive", "ideal"]],
+    [
+      ["ideal-after-supportive", "ideal"],
+      ["supportive-1", "supportive"],
+      ["supportive-2", "supportive"],
+    ],
   )
-  assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-1"), null)
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "ideal-after-supportive")?.productId,
-    "ideal-after-supportive",
+    findStage3SelectedComparisonCandidate(input, "supportive-1")?.productId,
+    "supportive-1",
   )
 })
 
@@ -375,7 +449,7 @@ test("selected candidate lookup rejects eligible candidates outside the transpor
   assert.equal(findStage3SelectedComparisonCandidate(input, "candidate-4"), null)
 })
 
-test("comparison excludes a candidate when authority cannot author a role-correct recommendation", () => {
+test("Deep Cleansing preserves the exact mineral-reset role in selectable recommendations", () => {
   const input = authorityInput("deep_cleansing_shampoo", "mineral_reset", {
     productFacts: factsFor("deep_cleansing_shampoo", "mineral_reset", "owned", {
       recommendable: false,
@@ -389,12 +463,22 @@ test("comparison excludes a candidate when authority cannot author a role-correc
 
   const comparison = buildStage3FitComparison(input)
 
-  assert.deepEqual(comparison.alternatives, [])
-  assert.equal(
-    comparison.products.some((product) => product.source === "alternative"),
-    false,
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [
+      candidate.productId,
+      candidate.recommendation.role,
+    ]),
+    [["mineral-alternative", "mineral_reset"]],
   )
-  assert.equal(findStage3SelectedComparisonCandidate(input, "mineral-alternative"), null)
+  assert.equal(
+    findStage3SelectedComparisonCandidate(input, "mineral-alternative")?.recommendation.role,
+    "mineral_reset",
+  )
+  assert.equal(
+    findStage3SelectedComparisonCandidate(input, "mineral-alternative")?.recommendation
+      .recommendationId,
+    "recommendation:deep-cleansing:mineral_reset:mineral-alternative",
+  )
 })
 
 test("pending identity can only compare against verified exact alternatives", () => {
