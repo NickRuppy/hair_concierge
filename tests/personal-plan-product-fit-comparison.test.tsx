@@ -454,7 +454,8 @@ test("offers keep, exact replacement, and go-without for a partly fitting owned 
   assert.doesNotMatch(html, /Mein Produkt trotzdem behalten/)
   assert.match(html, /Diese Alternative wählen/)
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
-  assert.match(html, /md:static/)
+  assert.match(html, /fixed/)
+  assert.doesNotMatch(html, /md:static/)
   assert.doesNotMatch(html, /md:absolute/)
   const leaveAction = findByAriaLabel(
     treeFor(supportiveEvaluation),
@@ -483,6 +484,7 @@ test("shows exact replacement as a direct secondary action when the owned produc
   assert.match(html, /aria-label="Diese Alternative wählen"/)
   assert.doesNotMatch(html, /Andere Möglichkeit/)
   assert.match(html, /h-16 w-16/)
+  assert.match(html, /Diese Alternative wählen[\s\S]*Eigenschaft für Eigenschaft/)
 })
 
 test("labels a supportive replacement as only partly fitting", () => {
@@ -578,6 +580,27 @@ test("does not claim exhaustive catalog coverage on the rollback path", () => {
 
   assert.doesNotMatch(html, /Vollständiger Katalog geprüft/)
   assert.match(html, /keine klar bessere verifizierte Alternative verfügbar/)
+})
+
+test("keeps mismatch fallback copy truthful on the rollback path", () => {
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      comparison={{
+        ...comparison,
+        products: comparison.products.filter((product) => product.source === "current"),
+        alternatives: [],
+        candidateCatalogComplete: false,
+      }}
+      evaluation={{ ...evaluation, verdict: "mismatch", allowedActions: ["keep_owned"] }}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Aktuell ist keine verifizierte Alternative verfügbar/)
+  assert.doesNotMatch(html, /keine klar bessere verifizierte Alternative verfügbar/)
 })
 
 test("renders an explicit uncovered state instead of an empty review", () => {
