@@ -88,6 +88,9 @@ export function useStage3CategoryCaptureController({
   const [saveLabel, setSaveLabel] = useState(initialSaveLabel)
   const [categoryFinalizeStatus, setCategoryFinalizeStatus] = useState<"idle" | "saving">("idle")
   const [categoryFinalizeAction, setCategoryFinalizeAction] = useState<"roles" | "gap" | null>(null)
+  const [finalizingCategoryProducts, setFinalizingCategoryProducts] = useState<
+    Array<{ key: string; displayName: string }>
+  >([])
   const [localCatalogCaptures, setLocalCatalogCaptures] = useState<LocalCatalogCapture[]>([])
   const [removedCapturedProductIds, setRemovedCapturedProductIds] = useState<Set<string>>(
     () => new Set(),
@@ -150,35 +153,39 @@ export function useStage3CategoryCaptureController({
 
   function workingCategoryCaptures(localCaptures = localCatalogCaptures): WorkingCategoryCapture[] {
     return [
-      ...currentProducts.map((product): WorkingCategoryCapture => ({
-        key: product.capturedProductId,
-        displayName: product.identity.displayName,
-        candidate:
-          product.identity.kind === "catalog_product"
-            ? {
-                kind: "catalog",
-                candidateId: product.identity.productId,
-                frequencyRange: product.frequencyRange,
-                roles: [],
-              }
-            : {
-                kind: "pending",
-                userProductId: product.userProductId,
-                submissionId: product.identity.submissionId,
-                frequencyRange: product.frequencyRange,
-                roles: [],
-              },
-      })),
-      ...localCaptures.map(({ candidate, frequencyRange }): WorkingCategoryCapture => ({
-        key: `local:${candidate.candidateId}`,
-        displayName: completeCandidateIdentity(candidate),
-        candidate: {
-          kind: "catalog",
-          candidateId: candidate.candidateId,
-          frequencyRange,
-          roles: [],
-        },
-      })),
+      ...currentProducts.map(
+        (product): WorkingCategoryCapture => ({
+          key: product.capturedProductId,
+          displayName: product.identity.displayName,
+          candidate:
+            product.identity.kind === "catalog_product"
+              ? {
+                  kind: "catalog",
+                  candidateId: product.identity.productId,
+                  frequencyRange: product.frequencyRange,
+                  roles: [],
+                }
+              : {
+                  kind: "pending",
+                  userProductId: product.userProductId,
+                  submissionId: product.identity.submissionId,
+                  frequencyRange: product.frequencyRange,
+                  roles: [],
+                },
+        }),
+      ),
+      ...localCaptures.map(
+        ({ candidate, frequencyRange }): WorkingCategoryCapture => ({
+          key: `local:${candidate.candidateId}`,
+          displayName: completeCandidateIdentity(candidate),
+          candidate: {
+            kind: "catalog",
+            candidateId: candidate.candidateId,
+            frequencyRange,
+            roles: [],
+          },
+        }),
+      ),
     ]
   }
 
@@ -277,6 +284,9 @@ export function useStage3CategoryCaptureController({
     setSaveLabel("Wird im Hintergrund gespeichert")
     resetLocalCategoryState()
     if (isLastCategory) {
+      setFinalizingCategoryProducts(
+        input.working.map((product) => ({ key: product.key, displayName: product.displayName })),
+      )
       setCategoryFinalizeStatus("saving")
       setCategoryFinalizeAction(input.working.length > 0 ? "roles" : "gap")
     } else {
@@ -473,6 +483,7 @@ export function useStage3CategoryCaptureController({
   function finishCategoryFinalization() {
     setCategoryFinalizeStatus("idle")
     setCategoryFinalizeAction(null)
+    setFinalizingCategoryProducts([])
   }
 
   function synchronizeRevision(revision: number) {
@@ -499,6 +510,7 @@ export function useStage3CategoryCaptureController({
   return {
     categoryFinalizeAction,
     categoryFinalizeStatus,
+    finalizingCategoryProducts,
     commitLocalCatalogCapture,
     currentProducts,
     localCatalogCaptures,

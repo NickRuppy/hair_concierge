@@ -7,10 +7,11 @@ import { cn } from "@/lib/utils"
 const JOURNEY_STAGES = ["Bedarf", "Verfeinerung", "Produkte", "Routine", "Anwendung"] as const
 
 export type PersonalPlanJourneyStage = 1 | 2 | 3 | 4 | 5
-export type PersonalPlanSaveStatus = "idle" | "saving" | "saved" | "error"
+export type PersonalPlanSaveStatus = "idle" | "local" | "saving" | "saved" | "error"
 
 const SAVE_COPY: Record<PersonalPlanSaveStatus, string> = {
   idle: "",
+  local: "Auswahl gemerkt",
   saving: "Wird gespeichert",
   saved: "Gespeichert",
   error: "Nicht gespeichert",

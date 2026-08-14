@@ -171,6 +171,78 @@ test("the HTTP decision gateway preserves Retry-After instead of using the raw-f
   )
 })
 
+test("the HTTP gateway keeps the reviewed journey to one grouped decision request before acknowledgement and completion", async () => {
+  const requests: Array<{ url: string; init?: RequestInit }> = []
+  const subject = createHttpStage3ProductsGateway({
+    fetch: async (url, init) => {
+      requests.push({ url: String(url), init })
+      return new Response(
+        JSON.stringify({ status: "saved", draft: { revision: requests.length } }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        },
+      )
+    },
+  })
+
+  await subject.resolveDecisions!({
+    draftId: "11111111-1111-4111-8111-111111111111",
+    expectedRevision: 4,
+    intents: [
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+        action: "keep_owned",
+      },
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-b",
+        action: "keep_owned",
+      },
+    ],
+  })
+  await subject.acknowledgeInventoryDisposition!({
+    draftId: "11111111-1111-4111-8111-111111111111",
+    expectedRevision: 5,
+    dispositionKey: "inventory:conditioner:capture-c",
+  })
+  await subject.complete({
+    draftId: "11111111-1111-4111-8111-111111111111",
+    expectedRevision: 6,
+  })
+
+  assert.deepEqual(
+    requests.map(({ url, init }) => [url, init?.method]),
+    [
+      ["/api/personal-plan/stage-3", "PATCH"],
+      ["/api/personal-plan/stage-3", "PATCH"],
+      ["/api/personal-plan/stage-3/complete", "POST"],
+    ],
+  )
+  assert.deepEqual(JSON.parse(String(requests[0]?.init?.body)), {
+    draftId: "11111111-1111-4111-8111-111111111111",
+    expectedRevision: 4,
+    intents: [
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+        action: "keep_owned",
+      },
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-b",
+        action: "keep_owned",
+      },
+    ],
+  })
+  assert.equal(
+    requests.filter(({ init }) => init?.method === "GET").length,
+    0,
+    "review choices must not trigger per-choice reads",
+  )
+})
+
 async function createDraft(subject: FixtureStage3Gateway) {
   return subject.loadOrCreate({
     draftId: "draft-1",
