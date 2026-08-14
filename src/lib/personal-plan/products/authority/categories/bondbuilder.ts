@@ -44,13 +44,26 @@ function evaluateProduct(
         "Eine bekannte Reaktion verhindert die Empfehlung.",
       ),
     )
-  if (product.suitableThicknesses === null || product.suitableThicknesses.length === 0)
+  if (
+    product.suitableThicknesses === null ||
+    product.suitableThicknesses.length === 0 ||
+    !input.hairThickness
+  )
     criteria.push(
       criterion(
         "bondbuilder.thickness",
         "Haarstärke",
         "unknown",
         "Die Eignung für die Haarstärke ist nicht verifiziert.",
+      ),
+    )
+  else if (!product.suitableThicknesses.includes(input.hairThickness))
+    criteria.push(
+      criterion(
+        "bondbuilder.thickness",
+        "Haarstärke",
+        "fail",
+        "Das Produkt ist für die bestätigte Haarstärke nicht geeignet.",
       ),
     )
   else

@@ -286,6 +286,7 @@ function input(
       deferredFacts: [],
     } as never,
     coverage: [],
+    hairThickness: "normal",
     productFacts:
       state === "known"
         ? (knownFacts(category) as never)

@@ -715,6 +715,39 @@ test("complete comparison excludes a two-step Oil weight gap from supportive alt
   assert.equal(findStage3SelectedComparisonCandidate(input, "far-weight-candidate"), null)
 })
 
+for (const scenario of [
+  {
+    name: "Mask",
+    category: "mask" as const,
+    role: "intensive_conditioning_mask" as const,
+    overrides: { weight: "medium" },
+  },
+  {
+    name: "Bondbuilder",
+    category: "bondbuilder" as const,
+    role: "specialized_bond_treatment" as const,
+    overrides: { relationship: "add_on" as const },
+  },
+]) {
+  test(`complete comparison rejects a ${scenario.name} candidate that excludes the confirmed thickness`, () => {
+    const input = authorityInput(scenario.category, scenario.role, {
+      candidateCatalogComplete: true,
+      productFacts: factsFor(scenario.category, scenario.role, "owned", {
+        recommendable: false,
+      }),
+      candidates: [
+        factsFor(scenario.category, scenario.role, "wrong-thickness-candidate", {
+          ...scenario.overrides,
+          suitableThicknesses: ["coarse"],
+        }),
+      ],
+    })
+
+    assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
+    assert.equal(findStage3SelectedComparisonCandidate(input, "wrong-thickness-candidate"), null)
+  })
+}
+
 test("rollback Shampoo comparison does not expose complete-mode route stops", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
     candidateCatalogComplete: false,

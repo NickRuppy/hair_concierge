@@ -92,13 +92,26 @@ function evaluateProduct(input: Stage3AuthorityInput<"mask">, product: Stage3Mas
         "Eine bekannte Reaktion verhindert die Empfehlung.",
       ),
     )
-  if (product.suitableThicknesses === null || product.suitableThicknesses.length === 0)
+  if (
+    product.suitableThicknesses === null ||
+    product.suitableThicknesses.length === 0 ||
+    !input.hairThickness
+  )
     criteria.push(
       criterion(
         "mask.thickness",
         "Haarstärke",
         "unknown",
         "Die Eignung für die Haarstärke ist nicht verifiziert.",
+      ),
+    )
+  else if (!product.suitableThicknesses.includes(input.hairThickness))
+    criteria.push(
+      criterion(
+        "mask.thickness",
+        "Haarstärke",
+        "fail",
+        "Das Produkt ist für die bestätigte Haarstärke nicht geeignet.",
       ),
     )
   else
