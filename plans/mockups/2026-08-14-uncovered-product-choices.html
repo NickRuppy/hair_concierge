@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 — drei Produktoptionen bei neuer Kategorie</title>
+    <style>
+      :root {
+        --plum: #32164f;
+        --violet: #7350ab;
+        --rose: #d85f6d;
+        --ink: #3d383b;
+        --muted: #756f72;
+        --line: #e7e1e4;
+        --paper: #fffdfc;
+        --lilac: #f6f1fa;
+        --green: #33714f;
+        --green-bg: #edf7f1;
+        --amber: #94591f;
+        --amber-bg: #fff5e8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #e9e6e7;
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .board { max-width: 1480px; margin: 0 auto; padding: 28px; }
+      .intro { margin: 0 auto 24px; max-width: 1060px; }
+      .intro h1 { margin: 0 0 8px; color: var(--plum); font: 700 30px/1.1 Georgia, serif; }
+      .intro p { margin: 0; color: #696165; line-height: 1.45; }
+      .variants { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; }
+      .variant-label { min-height: 96px; margin-bottom: 10px; padding: 14px; border-radius: 14px; background: white; box-shadow: 0 4px 18px #2d164d12; }
+      .variant-label strong { display: block; margin-bottom: 5px; color: var(--plum); }
+      .variant-label span { color: var(--muted); font-size: 13px; line-height: 1.4; }
+      .recommended .variant-label { box-shadow: inset 0 0 0 2px var(--violet), 0 4px 18px #2d164d16; }
+      .badge { float: right; padding: 4px 8px; border-radius: 999px; background: var(--plum); color: white; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+      .phone { min-height: 850px; overflow: hidden; border: 1px solid #d8d1d5; border-radius: 28px; background: var(--paper); box-shadow: 0 20px 48px #321d4024; position: relative; }
+      .appbar { padding: 17px 18px 13px; border-bottom: 1px solid var(--line); }
+      .brand { display: flex; justify-content: space-between; align-items: baseline; color: var(--plum); font: 700 25px/1 Georgia, serif; }
+      .saved { color: var(--green); font: 700 11px/1 Inter, sans-serif; }
+      .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 16px; }
+      .progress i { height: 5px; border-radius: 999px; background: #ded8dc; }
+      .progress i:nth-child(-n + 3) { background: var(--violet); }
+      .labels { display: flex; justify-content: space-between; margin-top: 6px; color: #8a8287; font-size: 8px; }
+      .labels b { color: var(--plum); }
+      main { padding: 18px 18px 112px; }
+      .topline { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; }
+      .back { color: var(--plum); font-size: 22px; }
+      .kicker { margin: 20px 0 8px; color: var(--violet); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      h2 { margin: 0; color: var(--plum); font: 700 31px/1.05 Georgia, serif; }
+      .lead { margin: 9px 0 16px; color: var(--muted); font-size: 14px; line-height: 1.42; }
+      .choice-list { display: grid; gap: 9px; }
+      .choice { position: relative; display: grid; grid-template-columns: 62px 1fr 24px; gap: 11px; align-items: center; padding: 11px; border: 1.5px solid var(--line); border-radius: 16px; background: white; }
+      .choice.selected { border-color: var(--violet); box-shadow: 0 0 0 2px #7350ab1f; }
+      .bottle { display: grid; place-items: center; height: 76px; border-radius: 12px; background: var(--lilac); }
+      .bottle::before { content: ""; width: 26px; height: 58px; border-radius: 5px 5px 9px 9px; background: linear-gradient(#9a77c7, #422361); box-shadow: inset 0 0 0 2px #ffffff8c; }
+      .gold::before { background: linear-gradient(#f1d29b, #9c6839); }
+      .aqua::before { background: linear-gradient(#a6d9df, #3c7b84); }
+      .choice small, .feature small { display: block; margin-bottom: 4px; color: var(--green); font-size: 8px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+      .choice b { display: block; color: var(--plum); font-size: 12px; line-height: 1.25; }
+      .choice p { margin: 4px 0 0; color: var(--muted); font-size: 10px; line-height: 1.35; }
+      .radio { display: grid; place-items: center; width: 20px; height: 20px; border: 1.5px solid #9d9299; border-radius: 50%; }
+      .selected .radio { border: 6px solid var(--violet); }
+      .truth { margin-top: 12px; padding: 11px 12px; border-radius: 13px; background: var(--green-bg); color: #365d48; font-size: 10px; line-height: 1.4; }
+      .quiet { margin-top: 12px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 13px; color: var(--muted); font-size: 11px; }
+      .footer { position: absolute; inset: auto 0 0; padding: 12px 18px; border-top: 1px solid var(--line); background: #fffdfced; backdrop-filter: blur(8px); }
+      .cta { padding: 15px; border-radius: 999px; background: var(--rose); color: white; text-align: center; font-size: 14px; font-weight: 800; }
+      .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .mini { min-width: 0; padding: 10px; border: 1.5px solid #cbb9df; border-radius: 15px; background: white; }
+      .mini.selected { border-color: var(--violet); box-shadow: 0 0 0 2px #7350ab1f; }
+      .mini .bottle { height: 70px; }
+      .mini b { display: block; margin-top: 8px; color: var(--plum); font-size: 10px; line-height: 1.25; }
+      .switcher { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px 0; color: var(--muted); font-size: 10px; }
+      .switcher i { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #cbb9df; border-radius: 9px; color: var(--violet); font-style: normal; }
+      .matrix { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: white; }
+      .row { display: grid; grid-template-columns: 1.15fr .85fr .85fr; gap: 6px; padding: 9px; border-top: 1px solid var(--line); font-size: 9px; }
+      .row:first-child { border-top: 0; background: #faf7fb; color: var(--plum); font-weight: 800; }
+      .ok { color: var(--green); font-weight: 800; }
+      .feature { padding: 13px; border: 1.5px solid var(--violet); border-radius: 17px; background: white; box-shadow: 0 0 0 2px #7350ab15; }
+      .feature-top { display: grid; grid-template-columns: 78px 1fr; gap: 12px; align-items: center; }
+      .feature .bottle { height: 92px; }
+      .feature h3 { margin: 0; color: var(--plum); font-size: 14px; line-height: 1.25; }
+      .feature p { margin: 6px 0 0; color: var(--muted); font-size: 10px; line-height: 1.4; }
+      .compact-alts { display: grid; gap: 8px; margin-top: 10px; }
+      .compact-alt { display: grid; grid-template-columns: 38px 1fr 18px; gap: 9px; align-items: center; padding: 9px 10px; border: 1px solid var(--line); border-radius: 13px; background: white; }
+      .compact-alt .bottle { height: 44px; border-radius: 8px; }
+      .compact-alt .bottle::before { width: 17px; height: 34px; border-radius: 4px 4px 6px 6px; }
+      .compact-alt b { color: var(--plum); font-size: 10px; line-height: 1.25; }
+      .compact-alt span { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; }
+      .desktop-proof { margin: 28px auto 0; max-width: 1060px; padding: 18px; border-radius: 18px; background: white; box-shadow: 0 5px 20px #2d164d12; }
+      .desktop-proof h3 { margin: 0 0 12px; color: var(--plum); }
+      .desktop-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .desktop-card { display: grid; grid-template-columns: 54px 1fr; gap: 12px; padding: 13px; border: 1px solid var(--line); border-radius: 15px; }
+      .desktop-card.selected { border: 2px solid var(--violet); }
+      .desktop-card .bottle { height: 68px; }
+      .desktop-card b { color: var(--plum); font-size: 12px; }
+      .desktop-card p { margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.35; }
+      .state-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+      .state { padding: 15px; border: 1px solid var(--line); border-radius: 15px; background: white; }
+      .state strong { display: block; color: var(--plum); font-size: 13px; }
+      .state p { margin: 6px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+      .state .small-cta { display: inline-block; margin-top: 12px; padding: 9px 14px; border-radius: 999px; background: var(--rose); color: white; font-size: 11px; font-weight: 800; }
+      @media (max-width: 1000px) { .variants { grid-template-columns: minmax(0, 430px); justify-content: center; } .variant-label { min-height: 0; } }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <div class="intro">
+        <h1>Neue Kategorie: Chaarlie empfiehlt das konkrete Produkt</h1>
+        <p>Entscheidung: Wie zeigen wir drei serverseitig geprüfte Optionen, ohne die Kundin zurück in eine selbstgesteuerte Produktsuche zu schicken? Produktnamen dienen hier nur als realistische Mockup-Inhalte.</p>
+      </div>
+      <div class="variants">
+        <section>
+          <div class="variant-label"><strong>A · Drei vollständige Auswahlkarten</strong><span>Alle drei Optionen sind sofort sichtbar. Auf Mobile untereinander, auf Desktop nebeneinander. Klarste Wahl ohne versteckte Alternative.</span></div>
+          <div class="phone">
+            <div class="appbar"><div class="brand">chaarlie <span class="saved">Gespeichert</span></div><div class="progress"><i></i><i></i><i></i><i></i><i></i></div><div class="labels"><span>Bedarf</span><span>Verfeinerung</span><b>Produkte</b><span>Routine</span><span>Anwendung</span></div></div>
+            <main><div class="topline"><span class="back">←</span><span>Produkte prüfen</span></div><div class="kicker">Leave-in · Pflege im feuchten Haar · Produkt 3 von 5</div><h2>Wähle dein Leave-in</h2><p class="lead">Diese drei geprüften Produkte passen zu deinem Bedarf. Unsere beste Empfehlung steht zuerst.</p>
+              <div class="choice-list">
+                <div class="choice selected"><div class="bottle"></div><div><small>Beste Passung</small><b>alverde Leave-In Sprühkur Express 7in1</b><p>Leicht und feuchtigkeitsspendend · passt zu deinen feinen Längen</p></div><div class="radio"></div></div>
+                <div class="choice"><div class="bottle aqua"></div><div><small>Leichte Alternative</small><b>Isana Feuchtigkeits Leave-In</b><p>Ähnlich leicht · stärker auf Feuchtigkeit ausgerichtet</p></div><div class="radio"></div></div>
+                <div class="choice"><div class="bottle gold"></div><div><small>Alternative mit mehr Pflege</small><b>Wella Ultimate Repair Protective Leave-In</b><p>Mehr Reparaturunterstützung · etwas reichhaltiger</p></div><div class="radio"></div></div>
+              </div>
+              <div class="truth">Alle drei Optionen erfüllen die sicheren Pflichtkriterien. Unterschiede zeigen wir als ehrlichen Trade-off – nicht als versteckten Fehlfit.</div>
+              <div class="quiet">Andere Möglichkeit · Vorerst ohne Leave-in fortfahren</div>
+            </main><div class="footer"><div class="cta">Dieses Produkt einplanen</div></div>
+          </div>
+        </section>
+
+        <section class="recommended">
+          <div class="variant-label"><span class="badge">Ausgewählt</span><strong>B · Zwei Karten plus Wechsel zur dritten</strong><span>Bleibt sehr nah am heutigen Vergleich. Die dritte Option ist platzsparend, aber auf dem ersten Blick verborgen.</span></div>
+          <div class="phone">
+            <div class="appbar"><div class="brand">chaarlie <span class="saved">Gespeichert</span></div><div class="progress"><i></i><i></i><i></i><i></i><i></i></div><div class="labels"><span>Bedarf</span><span>Verfeinerung</span><b>Produkte</b><span>Routine</span><span>Anwendung</span></div></div>
+            <main><div class="topline"><span class="back">←</span><span>Produkte prüfen</span></div><div class="kicker">Leave-in · Pflege im feuchten Haar · Produkt 3 von 5</div><h2>Wähle dein Leave-in</h2><p class="lead">Vergleiche unsere beste Empfehlung mit zwei passenden Alternativen.</p>
+              <div class="pair"><div class="mini selected"><small>Beste Passung</small><div class="bottle"></div><b>alverde Leave-In Sprühkur Express 7in1</b></div><div class="mini"><small>Alternative 1</small><div class="bottle aqua"></div><b>Isana Feuchtigkeits Leave-In</b></div></div>
+              <div class="switcher"><i>‹</i><span>Alternative 1 von 2</span><i>›</i></div>
+              <div class="matrix"><div class="row"><span>Prüfpunkt</span><span>Empfehlung</span><span>Alternative</span></div><div class="row"><span>Gewicht</span><span class="ok">Leicht ✓</span><span class="ok">Leicht ✓</span></div><div class="row"><span>Pflege</span><span class="ok">Feuchtigkeit ✓</span><span class="ok">Feuchtigkeit ✓</span></div><div class="row"><span>Reparatur</span><span>Mittel</span><span>Niedrig</span></div></div>
+              <div class="quiet">Andere Möglichkeit · Vorerst ohne Leave-in fortfahren</div>
+            </main><div class="footer"><div class="cta">Dieses Produkt einplanen</div></div>
+          </div>
+        </section>
+
+        <section>
+          <div class="variant-label"><strong>C · Eine Empfehlung im Fokus</strong><span>Gibt Chaarlie die stärkste Stimme. Die beiden Alternativen bleiben sichtbar, erhalten aber deutlich weniger Vergleichstiefe.</span></div>
+          <div class="phone">
+            <div class="appbar"><div class="brand">chaarlie <span class="saved">Gespeichert</span></div><div class="progress"><i></i><i></i><i></i><i></i><i></i></div><div class="labels"><span>Bedarf</span><span>Verfeinerung</span><b>Produkte</b><span>Routine</span><span>Anwendung</span></div></div>
+            <main><div class="topline"><span class="back">←</span><span>Produkte prüfen</span></div><div class="kicker">Leave-in · Pflege im feuchten Haar · Produkt 3 von 5</div><h2>Unser Leave-in für dich</h2><p class="lead">Das ist unsere beste Passung. Zwei geprüfte Alternativen geben dir Auswahl.</p>
+              <div class="feature"><div class="feature-top"><div class="bottle"></div><div><small>Unsere Empfehlung</small><h3>alverde Leave-In Sprühkur Express 7in1</h3><p>Leicht, feuchtigkeitsspendend und passend für deine feinen Längen.</p></div></div></div>
+              <div class="compact-alts"><div class="compact-alt"><div class="bottle aqua"></div><div><b>Isana Feuchtigkeits Leave-In</b><span>Leichte Feuchtigkeits-Alternative</span></div><div class="radio"></div></div><div class="compact-alt"><div class="bottle gold"></div><div><b>Wella Ultimate Repair Protective Leave-In</b><span>Mehr Reparatur, etwas reichhaltiger</span></div><div class="radio"></div></div></div>
+              <div class="truth">Warum zuerst? Es trifft Gewicht, Pflegeziel und Anwendung ohne dokumentierte Einschränkung.</div>
+              <div class="quiet">Andere Möglichkeit · Vorerst ohne Leave-in fortfahren</div>
+            </main><div class="footer"><div class="cta">Dieses Produkt einplanen</div></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="desktop-proof">
+        <h3>Ausgewählte Richtung B · Kandidatenumfang auf Desktop</h3>
+        <div class="desktop-cards">
+          <div class="desktop-card selected"><div class="bottle"></div><div><small>Beste Passung</small><b>alverde Leave-In Sprühkur Express 7in1</b><p>Leicht und feuchtigkeitsspendend</p></div></div>
+          <div class="desktop-card"><div class="bottle aqua"></div><div><small>Leichte Alternative</small><b>Isana Feuchtigkeits Leave-In</b><p>Stärker auf Feuchtigkeit ausgerichtet</p></div></div>
+          <div class="desktop-card"><div class="bottle gold"></div><div><small>Mehr Pflege</small><b>Wella Ultimate Repair Protective Leave-In</b><p>Reichhaltiger mit Reparaturunterstützung</p></div></div>
+        </div>
+        <div class="state-grid">
+          <div class="state"><strong>Wenn alle geprüften Produkte nur teilweise passen</strong><p>Die erste Karte sagt ehrlich <b>Beste verfügbare Option</b> und nennt direkt den dokumentierten Trade-off. Sie wird nicht als ideale Passung ausgegeben.</p></div>
+          <div class="state"><strong>Wenn gerade keine geprüfte Option verfügbar ist</strong><p>Der gespeicherte Bedarf bleibt erhalten. Die Seite bietet keine blinde Produktsuche an.</p><span class="small-cta">Erneut prüfen</span></div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

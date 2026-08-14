@@ -981,7 +981,6 @@ export function Stage3ProductsFlow({
         }
         disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
         onRetry={() => void reloadDecisionBundle(draft)}
-        onSearch={() => void reopenCategory(nextSubject.category)}
         onAction={(action, selectedCandidate) =>
           void chooseFitDecision(nextSubject.decisionKey, action, selectedCandidate)
         }

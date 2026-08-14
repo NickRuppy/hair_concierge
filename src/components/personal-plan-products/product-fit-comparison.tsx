@@ -15,6 +15,7 @@ import type {
   Stage3SelectedComparisonCandidate,
 } from "@/lib/personal-plan/products/fit-comparison"
 import { cn } from "@/lib/utils"
+import { categorySelectionHeading } from "./stage3-product-copy"
 
 type ReviewProduct = {
   displayName: string
@@ -51,7 +52,6 @@ type ProductFitComparisonProps = {
     selectedCandidate?: ProductFitComparisonSelection,
   ) => void
   onRetry?: () => void
-  onSearch?: () => void
   onBack: () => void
 }
 
@@ -70,7 +70,6 @@ export function ProductFitComparison({
   recoveryMessage,
   onAction,
   onRetry,
-  onSearch,
   onBack,
 }: ProductFitComparisonProps): ReactElement {
   const alternatives = comparison.alternatives.slice(0, 3)
@@ -97,17 +96,16 @@ export function ProductFitComparison({
   // do not expose select_replacement through allowedActions.
   const replacementAllowed = selectedAlternative !== null
   const authorityPrimaryAction = primaryActionFor({ evaluation, replacementAllowed })
-  const searchIsPrimary = isUncoveredReview && !selectedAlternative && Boolean(onSearch)
-  const primaryAction = searchIsPrimary ? null : authorityPrimaryAction
+  const uncoveredRetryIsPrimary = isUncoveredReview && !selectedAlternative && Boolean(onRetry)
+  const primaryAction = isUncoveredReview && !selectedAlternative ? null : authorityPrimaryAction
   const quietActions = quietActionsFor({
     allowedActions,
     selectedAlternative,
     replacementAllowed,
     primaryAction,
   })
-  const searchIsQuiet = isUncoveredReview && Boolean(selectedAlternative && onSearch)
   const hasTruthfulAction =
-    searchIsPrimary || primaryAction !== null || quietActions.length > 0 || searchIsQuiet
+    uncoveredRetryIsPrimary || primaryAction !== null || quietActions.length > 0
   const contextLabel = `${categoryLabel} · ${roleLabel} · Produkt ${reviewPosition} von ${reviewTotal}`
   const evidenceRows = comparison.evidenceRows ?? []
   const isUnknownFit =
@@ -143,6 +141,7 @@ export function ProductFitComparison({
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
         onSelect={onSelectedRecommendationChange ?? (() => undefined)}
+        onRetry={onRetry}
       />
     )
   } else if (isUnknownFit) {
@@ -223,7 +222,7 @@ export function ProductFitComparison({
 
       {evaluation.status !== "unsupported" && hasTruthfulAction ? (
         <>
-          {quietActions.length > 0 || searchIsQuiet ? (
+          {quietActions.length > 0 ? (
             <section
               className="mt-5 rounded-2xl border border-border bg-card p-4"
               aria-labelledby="other-decisions-title"
@@ -232,17 +231,6 @@ export function ProductFitComparison({
                 Andere Möglichkeit
               </h2>
               <div className="mt-2 grid gap-1">
-                {searchIsQuiet ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="h-auto justify-start whitespace-normal px-2 py-3 text-left text-muted-foreground hover:text-foreground"
-                    disabled={disabled}
-                    onClick={onSearch}
-                  >
-                    Produkt suchen
-                  </Button>
-                ) : null}
                 {quietActions.map((action) => (
                   <Button
                     key={action.kind}
@@ -259,7 +247,7 @@ export function ProductFitComparison({
             </section>
           ) : null}
 
-          {searchIsPrimary || primaryAction ? (
+          {primaryAction ? (
             <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
               <Button
                 type="button"
@@ -267,23 +255,17 @@ export function ProductFitComparison({
                 className="h-auto min-h-14 w-full whitespace-normal px-5 py-3 text-center leading-tight"
                 disabled={disabled}
                 onClick={() => {
-                  if (searchIsPrimary) onSearch?.()
-                  else if (primaryAction)
-                    invokeAction(primaryAction.kind, selectedAlternative, onAction)
+                  invokeAction(primaryAction.kind, selectedAlternative, onAction)
                 }}
                 aria-label={
-                  searchIsPrimary
-                    ? "Produkt suchen"
-                    : selectedAlternative && isUncoveredReview
-                      ? `${selectedAlternative.recommendation.displayName} auswählen`
-                      : primaryAction?.label
+                  selectedAlternative && isUncoveredReview
+                    ? "Dieses Produkt einplanen"
+                    : primaryAction?.label
                 }
               >
-                {searchIsPrimary
-                  ? "Produkt suchen"
-                  : selectedAlternative && isUncoveredReview
-                    ? `${selectedAlternative.recommendation.displayName} auswählen`
-                    : primaryAction?.label}
+                {selectedAlternative && isUncoveredReview
+                  ? "Dieses Produkt einplanen"
+                  : primaryAction?.label}
               </Button>
             </div>
           ) : null}
@@ -580,6 +562,7 @@ function UncoveredRecommendationReview({
   disabled,
   onDisplayedAlternativeChange,
   onSelect,
+  onRetry,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -590,6 +573,7 @@ function UncoveredRecommendationReview({
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
   onSelect: (productId: string) => void
+  onRetry?: () => void
 }) {
   const first = alternatives[0] ?? null
   const secondaryIndex = alternatives.length > 1 ? (selectedIndex > 0 ? selectedIndex : 1) : null
@@ -600,16 +584,22 @@ function UncoveredRecommendationReview({
   const secondaryProduct = secondary
     ? (comparison.products.find((product) => product.productId === secondary.productId) ?? null)
     : null
+  const firstLabel = first?.verdict === "ideal" ? "Beste Passung" : "Beste verfügbare Option"
+  const secondaryBaseLabel = secondaryIndex === null ? null : `Alternative ${secondaryIndex}`
+  const secondaryLabel =
+    secondary && secondaryBaseLabel ? recommendationCardLabel(secondaryBaseLabel, secondary) : null
 
   return (
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={`Du hast noch kein ${categoryLabel || "Produkt"}`}
+        title={categorySelectionHeading(categoryLabel)}
         description={
           first
-            ? "Diese Produkte erfüllen alle bestätigten Ziele für diese Aufgabe."
-            : "Aktuell erfüllt keine verifizierte Empfehlung alle bestätigten Ziele. Du kannst gezielt suchen oder vorerst ohne Produkt fortfahren."
+            ? first.verdict === "ideal"
+              ? "Chaarlie hat geprüfte Produkte für diesen Bedarf ausgewählt. Du entscheidest, welches davon in deine Routine kommt."
+              : "Das sind die besten geprüften Optionen im Katalog. Wir zeigen die Einschränkung offen."
+            : "Dein gespeicherter Bedarf bleibt erhalten. Prüfe später erneut oder fahre ohne Produkt fort, wenn das hier erlaubt ist."
         }
       />
       {first ? (
@@ -617,8 +607,8 @@ function UncoveredRecommendationReview({
           <div className={cn("grid min-w-0 gap-2", secondary && "grid-cols-2")}>
             <ProductCard
               product={firstProduct}
-              label="Empfehlung 1"
-              alternativeVerdict="ideal"
+              label={firstLabel}
+              alternativeVerdict={first.verdict}
               selected={selectedProductId === first.productId}
               disabled={disabled}
               onSelect={() => onSelect(first.productId)}
@@ -626,8 +616,8 @@ function UncoveredRecommendationReview({
             {secondary && secondaryIndex !== null ? (
               <ProductCard
                 product={secondaryProduct}
-                label={`Alternative ${secondaryIndex + 1}`}
-                alternativeVerdict="ideal"
+                label={secondaryLabel ?? "Alternative"}
+                alternativeVerdict={secondary.verdict}
                 selected={selectedProductId === secondary.productId}
                 disabled={disabled}
                 onSelect={() => onSelect(secondary.productId)}
@@ -647,20 +637,46 @@ function UncoveredRecommendationReview({
               rows={comparison.evidenceRows ?? []}
               firstProductId={first.productId}
               secondProductId={secondary.productId}
-              firstLabel="Empfehlung 1"
-              secondLabel={`Alternative ${secondaryIndex! + 1}`}
+              firstLabel={firstLabel}
+              secondLabel={secondaryBaseLabel ?? "Alternative"}
             />
           ) : (
-            <CompactRecommendationEvidence first={first} second={secondary} />
+            <CompactRecommendationEvidence
+              first={first}
+              firstLabel={firstLabel}
+              second={secondary}
+              secondLabel={secondaryLabel}
+            />
           )}
         </>
       ) : (
-        <div className="rounded-2xl border border-dashed border-[var(--brand-plum)]/35 bg-muted/30 p-5 text-center text-sm text-muted-foreground">
-          Noch keine streng passende Produktempfehlung im verifizierten Katalog.
-        </div>
+        <section className="rounded-2xl border border-dashed border-[var(--brand-plum)]/35 bg-muted/30 p-5 text-center">
+          <h2 className="text-base font-semibold text-foreground">
+            Gerade ist keine geprüfte Empfehlung verfügbar.
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Dein Bedarf bleibt gespeichert. Wir planen kein generisches Produkt ein.
+          </p>
+          {onRetry ? (
+            <Button
+              type="button"
+              variant="funnelCta"
+              className="mt-4 w-full"
+              disabled={disabled}
+              onClick={onRetry}
+              aria-label="Erneut prüfen"
+            >
+              Erneut prüfen
+            </Button>
+          ) : null}
+        </section>
       )}
     </>
   )
+}
+
+function recommendationCardLabel(baseLabel: string, candidate: Stage3SelectedComparisonCandidate) {
+  return candidate.verdict === "supportive" ? `${baseLabel} · passt teilweise` : baseLabel
 }
 
 function OverallVerdict({
@@ -897,6 +913,7 @@ function RecommendationNavigation({
 }) {
   const secondaryIndexes = alternatives.map((_, index) => index).filter((index) => index > 0)
   const position = Math.max(0, secondaryIndexes.indexOf(secondaryIndex))
+  const secondaryCount = Math.max(0, alternatives.length - 1)
   const move = (delta: number) => {
     const next = secondaryIndexes[normalizeIndex(position + delta, secondaryIndexes.length)]
     if (next !== undefined) onChange(next)
@@ -904,13 +921,13 @@ function RecommendationNavigation({
   return (
     <nav
       className="mt-3 flex items-center justify-center gap-3"
-      aria-label="Weitere passende Empfehlungen"
+      aria-label="Weitere passende Alternativen"
     >
       <Button
         type="button"
         variant="outline"
         size="icon"
-        aria-label="Vorherige Empfehlung"
+        aria-label="Vorherige Alternative"
         disabled={disabled}
         onClick={() => move(-1)}
       >
@@ -921,13 +938,13 @@ function RecommendationNavigation({
         aria-live="polite"
         className="min-w-32 text-center text-xs text-muted-foreground"
       >
-        Alternative {secondaryIndex + 1} von {alternatives.length}
+        Alternative {secondaryIndex} von {secondaryCount}
       </p>
       <Button
         type="button"
         variant="outline"
         size="icon"
-        aria-label="Nächste Empfehlung"
+        aria-label="Nächste Alternative"
         disabled={disabled}
         onClick={() => move(1)}
       >
@@ -1197,14 +1214,19 @@ function CompactEvidence({
 
 function CompactRecommendationEvidence({
   first,
+  firstLabel,
   second,
+  secondLabel,
 }: {
   first: Stage3SelectedComparisonCandidate
+  firstLabel: string
   second: Stage3SelectedComparisonCandidate | null
+  secondLabel: string | null
 }) {
-  const candidates = [first, second].filter(
-    (candidate): candidate is Stage3SelectedComparisonCandidate => candidate !== null,
-  )
+  const candidates = [
+    { candidate: first, label: firstLabel },
+    ...(second ? [{ candidate: second, label: secondLabel ?? "Alternative" }] : []),
+  ]
   return (
     <section
       className="mt-5 rounded-2xl border border-border bg-card p-4"
@@ -1212,11 +1234,9 @@ function CompactRecommendationEvidence({
     >
       <h2 className="text-sm font-semibold text-foreground">Warum diese Produkte passen</h2>
       <div className={cn("mt-3 grid gap-4", candidates.length > 1 && "sm:grid-cols-2")}>
-        {candidates.map((candidate, index) => (
+        {candidates.map(({ candidate, label }) => (
           <div key={candidate.productId}>
-            <h3 className="text-xs font-semibold text-[var(--brand-plum)]">
-              {index === 0 ? "Empfehlung 1" : "Alternative"}
-            </h3>
+            <h3 className="text-xs font-semibold text-[var(--brand-plum)]">{label}</h3>
             <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
               {candidate.criteria.slice(0, 3).map((criterion) => (
                 <li key={criterion.criterionId}>

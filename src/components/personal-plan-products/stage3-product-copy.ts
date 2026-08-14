@@ -1,17 +1,67 @@
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 
-export const CATEGORY_COPY: Record<PersonalPlanCategory, { label: string; need: string }> = {
-  shampoo: { label: "Shampoo", need: "Reinigung passend zu deiner Kopfhaut" },
-  conditioner: { label: "Conditioner", need: "Pflege nach jeder Wäsche" },
-  leave_in: { label: "Leave-in", need: "Pflege, die im Haar bleibt" },
-  heat_protectant: { label: "Hitzeschutz", need: "Schutz bei Styling mit Hitze" },
-  oil: { label: "Öl", need: "Schutz und Finish für deine Längen" },
-  mask: { label: "Maske", need: "Zusätzliche intensive Pflege" },
-  scalp_care: { label: "Kopfhautprodukt", need: "Beruhigende Pflege für deine Kopfhaut" },
-  dry_shampoo: { label: "Trockenshampoo", need: "Frische zwischen den Haarwäschen" },
-  bondbuilder: { label: "Bondbuilder", need: "Unterstützung für beanspruchtes Haar" },
-  deep_cleansing_shampoo: { label: "Tiefenreinigung", need: "Gezielte Entfernung von Rückständen" },
+export const CATEGORY_COPY: Record<
+  PersonalPlanCategory,
+  { label: string; need: string; selectionHeading: string }
+> = {
+  shampoo: {
+    label: "Shampoo",
+    need: "Reinigung passend zu deiner Kopfhaut",
+    selectionHeading: "Wähle dein Shampoo",
+  },
+  conditioner: {
+    label: "Conditioner",
+    need: "Pflege nach jeder Wäsche",
+    selectionHeading: "Wähle deinen Conditioner",
+  },
+  leave_in: {
+    label: "Leave-in",
+    need: "Pflege, die im Haar bleibt",
+    selectionHeading: "Wähle dein Leave-in",
+  },
+  heat_protectant: {
+    label: "Hitzeschutz",
+    need: "Schutz bei Styling mit Hitze",
+    selectionHeading: "Wähle deinen Hitzeschutz",
+  },
+  oil: {
+    label: "Öl",
+    need: "Schutz und Finish für deine Längen",
+    selectionHeading: "Wähle dein Öl",
+  },
+  mask: {
+    label: "Maske",
+    need: "Zusätzliche intensive Pflege",
+    selectionHeading: "Wähle deine Maske",
+  },
+  scalp_care: {
+    label: "Kopfhautprodukt",
+    need: "Beruhigende Pflege für deine Kopfhaut",
+    selectionHeading: "Wähle dein Kopfhautprodukt",
+  },
+  dry_shampoo: {
+    label: "Trockenshampoo",
+    need: "Frische zwischen den Haarwäschen",
+    selectionHeading: "Wähle dein Trockenshampoo",
+  },
+  bondbuilder: {
+    label: "Bondbuilder",
+    need: "Unterstützung für beanspruchtes Haar",
+    selectionHeading: "Wähle deinen Bondbuilder",
+  },
+  deep_cleansing_shampoo: {
+    label: "Tiefenreinigung",
+    need: "Gezielte Entfernung von Rückständen",
+    selectionHeading: "Wähle deine Tiefenreinigung",
+  },
+}
+
+export function categorySelectionHeading(categoryLabel: string): string {
+  return (
+    Object.values(CATEGORY_COPY).find((category) => category.label === categoryLabel)
+      ?.selectionHeading ?? `Wähle dein ${categoryLabel || "Produkt"}`
+  )
 }
 
 export const ROLE_COPY: Record<PlanProductRole, { label: string; description: string }> = {

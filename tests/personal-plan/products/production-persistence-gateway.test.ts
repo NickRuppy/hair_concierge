@@ -1011,13 +1011,15 @@ function recommendationGapDraft(): Stage3ProductDraft {
 }
 
 function conditionerRecommendationFacts(): Stage3AuthorityFactBundle {
-  const facts = conditionerFacts()
   return {
-    ...facts,
     productFacts: null,
     recommendationCandidates: [
-      { ...facts.productFacts!, recommendable: true, productId: "recommended-conditioner" },
+      conditionerProductFacts("recommended-conditioner", {
+        fingerprint: "facts-supportive-conditioner",
+        weight: "medium",
+      }),
     ],
+    heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
   }
 }
 
@@ -1962,7 +1964,7 @@ test("one immutable refined context is shared across multiple owned-product eval
   assert.equal(saves, 0)
 })
 
-test("a server-selected conditioner recommendation persists as a planned purchase", async () => {
+test("an uncovered supportive conditioner alternative is allowlisted, persists, and remains completion-current", async () => {
   const draft = recommendationGapDraft()
   const saved: Stage3ProductDraft[] = []
   const gateway = createProductionStage3ProductsGateway({
@@ -1976,6 +1978,22 @@ test("a server-selected conditioner recommendation persists as a planned purchas
       },
     },
   })
+
+  const reviews = await gateway.reviewDecisionBundles({ draftId: draft.draftId })
+  assert.deepEqual(
+    reviews[0]?.fitComparison.alternatives.map((candidate) => ({
+      productId: candidate.productId,
+      verdict: candidate.verdict,
+      factFingerprint: candidate.factFingerprint,
+    })),
+    [
+      {
+        productId: "recommended-conditioner",
+        verdict: "supportive",
+        factFingerprint: "facts-supportive-conditioner",
+      },
+    ],
+  )
 
   const result = await gateway.resolveDecision({
     draftId: draft.draftId,
@@ -1991,7 +2009,56 @@ test("a server-selected conditioner recommendation persists as a planned purchas
   assert.equal(result.status, "saved")
   assert.equal(saved[0]?.decisions[0]?.choiceState, "planned_purchase")
   assert.equal(saved[0]?.decisions[0]?.recommendation?.productId, "recommended-conditioner")
-  assert.equal(saved[0]?.decisions[0]?.authorityEvidence?.recommendationFactFingerprint, "facts-a")
+  assert.equal(
+    saved[0]?.decisions[0]?.authorityEvidence?.recommendationFactFingerprint,
+    "facts-supportive-conditioner",
+  )
+  if (result.status !== "saved") return
+
+  let stageCalls = 0
+  const completionGateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(result.draft),
+      loadAuthorityFacts: async () => conditionerRecommendationFacts(),
+    },
+    compiler: {
+      compile: async () => ({
+        schemaVersion: 1,
+        compilerVersion: "test",
+        authorityVersions: {},
+        sourceFingerprint: "source",
+        payload: {},
+        proposalDelta: {},
+      }),
+    },
+    stager: {
+      stage: async () => {
+        stageCalls += 1
+        return {
+          status: "completed",
+          portfolioVersionId: "portfolio-supportive",
+          routineVersionId: "routine-supportive",
+          routineProposalId: "proposal-supportive",
+          revision: result.draft.revision + 1,
+        }
+      },
+    },
+  })
+
+  const completion = await completionGateway.complete({
+    draftId: result.draft.draftId,
+    expectedRevision: result.draft.revision,
+  })
+
+  assert.equal(completion.status, "ready_for_routine")
+  assert.equal(stageCalls, 1)
+  assert.deepEqual(
+    completion.status === "ready_for_routine"
+      ? completion.portfolio.plannedPurchases.map((product) => product.productId)
+      : [],
+    ["recommended-conditioner"],
+  )
 })
 
 test("selected replacement candidate #2 and #3 persist exact recommendation evidence", async () => {

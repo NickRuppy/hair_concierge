@@ -288,7 +288,6 @@ function selectedComparisonCandidateAssessments(
     )
     .map((candidate) => assessCandidate(input, candidate))
     .filter((candidate): candidate is CandidateAssessment => candidate !== null)
-    .filter((candidate) => !isUncoveredRoleInput(input) || candidate.verdict === "ideal")
     .sort((left, right) => {
       const recommendationOrder =
         Number(right.productId === currentRecommendationProductId) -
@@ -298,14 +297,6 @@ function selectedComparisonCandidateAssessments(
       if (verdictOrder !== 0) return verdictOrder
       return compareCatalogOrder(left, right)
     })
-}
-
-function isUncoveredRoleInput(input: Stage3AuthorityInput): boolean {
-  return (
-    input.productFacts === null &&
-    input.capturedProductId === null &&
-    input.subjectIdentity === null
-  )
 }
 
 function boundedSelectedComparisonCandidateAssessments(
