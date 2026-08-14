@@ -1,0 +1,49 @@
+{
+  "schema_version": "personal-plan-stage5-v2-authority-preconditions-v1",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "captured_on": "2026-08-14",
+  "mode": "read_only",
+  "preflight": {
+    "rows": 289,
+    "products": 223,
+    "family_templates": 28,
+    "blockers": [
+      "source_protocol_diverged:215522e5-95a6-469f-bc34-1fa74b311a23:conditioner_rinse_out:standard_rinse_out_conditioning",
+      "source_protocol_diverged:38dace91-0fba-49ee-a93f-ac36e488fe4b:specialized_bond_treatment:post_shampoo_timed_leave_in",
+      "source_protocol_diverged:3dc24d67-e6c0-4239-a273-058a87d13553:specialized_bond_treatment:pre_shampoo_single_treatment",
+      "source_protocol_diverged:3f3542c0-e82b-4306-a9e0-85df313a78cf:density_claim_tonic:leave_on_scalp_care",
+      "source_protocol_diverged:515de93c-1c77-465d-ae0d-2a8d6ddb3d73:shampoo_everyday:targeted_treatment_shampoo",
+      "source_protocol_diverged:58aa2f19-b23a-4e09-ab0f-68c359371c9e:density_claim_tonic:leave_on_scalp_care",
+      "source_protocol_diverged:7373656d-5fd7-46e8-81a3-2ef29e3c4c18:shampoo_everyday:standard_rinse_out_cleanse",
+      "source_protocol_diverged:d0180955-c3a0-4f53-8744-fbeb2c241688:conditioner_rinse_out:standard_rinse_out_conditioning",
+      "source_protocol_diverged:f8a63590-9d80-454a-8008-e2a56321e64c:specialized_bond_treatment:pre_shampoo_single_treatment"
+    ]
+  },
+  "product_protocols": [
+    { "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23", "observed_source_fingerprint": "da49a2b7288dbe99fd48b52cd7138c9ff2629d2d2e041794059840356c6675f6" },
+    { "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b", "observed_source_fingerprint": "8e067daa1f733ca02c4a1446c00ab4976ec9f70334e28c961c082b60f0e4b01a", "observed_step_1_copy_de": "Mit drei Pumpstößen beginnen und gleichmäßig von den mittleren Längen bis in die Spitzen verteilen." },
+    { "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553", "observed_source_fingerprint": "812301b0d8f144e25931e54aa9cc4164be3693647cfd32ad4896239e753fd13f" },
+    { "product_id": "3f3542c0-e82b-4306-a9e0-85df313a78cf", "observed_source_fingerprint": "1cf521ebc6f3043cfa43e13b18529602ebb4fee524b418a960d0c4bc7631791d" },
+    { "product_id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73", "observed_source_fingerprint": "bc7e8dfc29a8370734003a00a69995f8ddcd87134d12ffba4ae521ac4938895b" },
+    { "product_id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e", "observed_source_fingerprint": "0d71f05c1be3d50050022172821abb15fbf40f9b48e64db31ca2126ec376a9a4" },
+    { "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18", "observed_source_fingerprint": "3e430bb6b7b273144a6d6dd475c57e3d5c5f917270eb1f51d05fff137113d5d3" },
+    { "product_id": "d0180955-c3a0-4f53-8744-fbeb2c241688", "observed_source_fingerprint": "ef3fc0888fa3a86e0ecb3d7ec20517c85c107d2315f0ea3bda9d4b0c2c8ded1e" },
+    { "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c", "observed_source_fingerprint": "2985c3c4c6a56933316dbd927c044c8d4434f9e54bcb54efbeddd2f547d710eb" }
+  ],
+  "family_templates": [
+    {
+      "guidance_key": "leave-in.damp-refresh.v2",
+      "id": "c0e024fc-95be-54e1-8d24-9250b088714e",
+      "verified_at": "2026-08-12T00:00:00+00:00",
+      "observed_payload_fingerprint": "58df652414df48684bd6ee1add2b6264d3adf0dfcc57c7083fea19650bc31aa3",
+      "observed_step_0_copy_de": "Die betroffenen Längen leicht anfeuchten, sparsam verteilen und nicht ausspülen."
+    },
+    {
+      "guidance_key": "leave-in.dry-care.v2",
+      "id": "2bc335e3-7121-5a80-832e-d9fed97073c2",
+      "verified_at": "2026-08-12T00:00:00+00:00",
+      "observed_payload_fingerprint": "899f78a3a9627265b954ab269cfd93c79778b58277fbbf3bf119bb2b58b47d28",
+      "observed_step_0_copy_de": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
+    }
+  ]
+}
