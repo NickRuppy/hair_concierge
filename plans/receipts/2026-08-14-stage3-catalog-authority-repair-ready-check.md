@@ -4,8 +4,8 @@
 
 - Branch: `codex/stage3-catalog-authority-repair`
 - Worktree: `.worktrees/stage3-catalog-authority-repair`
-- Base: `53c15176`
-- Canonical content fingerprint: `f3ebf5d36d0dac6bbb664dd432e0099a4008054990e2a498566e6be37cddbf7a`
+- Base: `f7d614b8`
+- Canonical content fingerprint: `129cbdefebe19baffa378cace421e394b1b1427c5aa566d511374774a0f8f626`
 - Fingerprint scope: 22 task-owned implementation, test, plan, and approved mockup files. Receipts and the manifest are excluded from their own recursive fingerprint.
 - Manifest: `plans/receipts/2026-08-14-stage3-catalog-authority-repair-manifest.sha256`
 
@@ -23,20 +23,21 @@
 
 - Test-first comparison red proof: four intended failures for complete Shampoo targets and supportive Mask/Oil/Bondbuilder alternatives before implementation.
 - Focused authority, comparison, persistence, and audit suites: 227/227 passed before the final supportive-Shampoo delta; final focused Shampoo authority/comparison suite: 137/137 passed.
-- `npm run test:personal-plan` — 1573/1573 passed on the final tree.
+- Recommendation/chat isolation suite — 164/164 passed; CI scope reports `chat_eval=false`, and the recommendation-engine Shampoo file is byte-identical to `origin/main`.
+- `npm run test:personal-plan` — 1577/1577 passed on the final tree.
 - Complete-mode Stage 3 Playwright lane — 16/16 passed (3 Labs + 13 production-journey scenarios).
 - Flag-off `npm run ci:verify` — typecheck, lint, and production build passed; 127 routes generated.
 - Final `npm run typecheck` — passed.
 - Final `npm run lint` — zero errors and five unrelated existing warnings.
 - `git diff --check` — passed.
-- Production-shaped benchmark — warm p95 202.65 ms, 57,106-byte response, 45/45 catalogue queries completed.
+- Production-shaped benchmark — warm p95 200 ms, 57,106-byte response, 45/45 catalogue queries completed.
 - Live read-only coverage audit — every supported category/role and five Shampoo contexts passed with at least one verified alternative. Observed candidate counts include Shampoo 49, Conditioner 43, Leave-in 42, Oil 41, Mask 34, and specialist catalogues 3–10.
 - Live Shampoo property audit — 57 stored rows: `normal/balanced` 20, `irritationen/irritated` 10, `dehydriert-fettig/oily` 10, `trocken/dry` 8, `schuppen/dandruff` 9; no live `dry_flakes` row exists.
 
 ## Artifact disposition and residual risk
 
 - Commit: implementation, tests, approved plan, HTML mockup, rendered PNG, manifest, and receipts.
-- Transient Claude reports remain outside the repository.
+- The exact-head Claude rerun was unavailable because the reviewer account reached its weekly limit. The prior whole-branch review findings remain resolved; the new delta was reviewed locally and is limited to rebasing onto `f7d614b8`, preserving the behavior-equivalent chat mapping, and refreshing receipts.
 - No schema migration or catalogue write is required. Production activation remains guarded by `PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG` and must deploy off first, pass the live audit, then deploy on and pass the same audit again.
 - The validator permits the secondary `dry_flakes` route for a future dandruff record, while the current complete selection uses the deterministic primary `dandruff` route. There is no live affected record; supporting multiple alternative route rows in the set-based assessment RPC is a separate schema-contract change, not hidden in this release.
 

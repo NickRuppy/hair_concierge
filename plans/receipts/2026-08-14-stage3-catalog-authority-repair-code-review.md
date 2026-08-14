@@ -2,10 +2,10 @@
 
 ## Review identity
 
-- Scope: the complete task tree at canonical content fingerprint `f3ebf5d36d0dac6bbb664dd432e0099a4008054990e2a498566e6be37cddbf7a`.
+- Scope: the complete task tree at canonical content fingerprint `129cbdefebe19baffa378cace421e394b1b1427c5aa566d511374774a0f8f626`.
 - Branch: `codex/stage3-catalog-authority-repair`
-- Base: `53c15176`
-- Counterpart: one read-only Claude Opus 4.8 whole-branch review and one successful focused delta review at high effort. A final micro-review of the supportive-Shampoo follow-up could not start because the reviewer account reached its weekly limit; that bounded delta was reviewed locally and is covered by 137 focused and 1,573 full-suite tests.
+- Base: `f7d614b8`
+- Counterpart: one read-only Claude Opus 4.8 whole-branch review and one successful focused delta review at high effort. The exact-head rerun could not start because the reviewer account reached its weekly limit; the final delta was reviewed locally and is limited to current-main integration, the behavior-equivalent chat-file restoration, and receipt refreshes.
 
 ## Findings and rulings
 
@@ -34,7 +34,8 @@ Accepted bounded risk:
 
 ## Verification considered
 
-- Full Personal Plan suite: 1573/1573.
+- Recommendation/chat isolation suite: 164/164; `chat_eval=false`; shared chat Shampoo file byte-identical to `origin/main`.
+- Full Personal Plan suite: 1577/1577.
 - Complete-mode browser journey: 16/16.
 - Flag-off typecheck, lint, and production build: passed.
 - Focused comparison/authority/persistence/audit regressions: passed.
