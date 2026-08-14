@@ -14,15 +14,19 @@ import {
   unsupportedEvaluation,
 } from "../shared"
 
-function recommendationFor(product: Stage3BondbuilderFacts) {
+export function recommendationForBondbuilder(product: Stage3BondbuilderFacts, supportive = false) {
   return {
     recommendationId: `recommendation:bondbuilder:${product.productId}`,
     productId: product.productId,
     category: "bondbuilder" as const,
     role: "specialized_bond_treatment" as const,
     displayName: product.displayName,
-    reason: "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
-    authorityRuleId: "bondbuilder.stage3.validated_standalone",
+    reason: supportive
+      ? "Ist ein verifiziertes Ergänzungsprodukt und erfüllt die Bondbuilder-Rolle nicht allein."
+      : "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
+    authorityRuleId: supportive
+      ? "bondbuilder.stage3.validated_add_on"
+      : "bondbuilder.stage3.validated_standalone",
   }
 }
 
@@ -147,7 +151,7 @@ export function evaluateBondbuilderAuthority(
         : [],
       allowedActions:
         ideal.length === 1 ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: ideal.length === 1 ? recommendationFor(ideal[0]) : null,
+      recommendation: ideal.length === 1 ? recommendationForBondbuilder(ideal[0]) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: ideal.length === 1 ? ideal[0].factFingerprint : null,
     })

@@ -1,5 +1,10 @@
 import type { PlanCategoryTarget, PlanProductRole } from "@/lib/personal-plan/types"
-import { deriveShampooBucket, type ShampooBucket } from "@/lib/shampoo/constants"
+import {
+  deriveShampooBucket,
+  primaryShampooScalpRoute,
+  shampooCleansingIntensity,
+  type ShampooBucket,
+} from "@/lib/shampoo/constants"
 
 import type {
   Stage3AuthorityInput,
@@ -21,6 +26,26 @@ import {
 
 type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
 
+export function recommendationForShampoo(
+  candidate: Stage3ShampooFacts,
+  input: Stage3AuthorityInput<"shampoo">,
+  supportive = false,
+) {
+  return {
+    recommendationId: `recommend:${candidate.productId}:${input.role}`,
+    productId: candidate.productId,
+    category: "shampoo" as const,
+    role: input.role,
+    displayName: candidate.displayName,
+    reason: supportive
+      ? "Rolle und Kopfhautroute passen; die Reinigungsintensität liegt nur außerhalb des Idealziels."
+      : "Passt zur erforderlichen Shampoo-Aufgabe.",
+    authorityRuleId: supportive
+      ? "shampoo.selection.verified_supportive_intensity"
+      : "shampoo.selection.verified_role_fit",
+  }
+}
+
 export function expectedShampooBucket(input: {
   role: PlanProductRole
   target: ShampooTarget
@@ -36,6 +61,16 @@ export function expectedShampooBucket(input: {
       ? "dry_flakes"
       : null
   return deriveShampooBucket(input.target.scalpRoute, condition)
+}
+
+export function expectedShampooSpecTarget(input: { role: PlanProductRole; target: ShampooTarget }) {
+  const shampooBucket = expectedShampooBucket(input)
+  if (!shampooBucket) return null
+  return {
+    shampooBucket,
+    scalpRoute: primaryShampooScalpRoute(shampooBucket),
+    cleansingIntensity: shampooCleansingIntensity(shampooBucket),
+  }
 }
 
 function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3ShampooFacts) {
@@ -138,7 +173,11 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
       ],
     }
   }
-  if (facts.spec.scalpRoute !== target.scalpRoute) {
+  const expectedScalpRoute =
+    input.candidateCatalogComplete === true
+      ? expectedShampooSpecTarget({ role: input.role, target })?.scalpRoute
+      : target.scalpRoute
+  if (!expectedScalpRoute || facts.spec.scalpRoute !== expectedScalpRoute) {
     return {
       verdict: "mismatch" as const,
       criteria: [
@@ -147,6 +186,23 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
           "Kopfhautroute",
           "fail",
           "Die bestätigte Kopfhautroute passt nicht.",
+        ),
+      ],
+    }
+  }
+  const expectedCleansingIntensity =
+    input.candidateCatalogComplete === true
+      ? expectedShampooSpecTarget({ role: input.role, target })?.cleansingIntensity
+      : null
+  if (expectedCleansingIntensity && facts.spec.cleansingIntensity !== expectedCleansingIntensity) {
+    return {
+      verdict: "supportive" as const,
+      criteria: [
+        criterion(
+          "shampoo.fit",
+          "Shampoo-Passung",
+          "caution",
+          "Rolle und Kopfhautroute passen, die Reinigungsintensität liegt aber außerhalb des Ziels.",
         ),
       ],
     }
@@ -198,15 +254,7 @@ export const evaluateShampooAuthority: Stage3CategoryAuthorityAdapter<"shampoo">
         ),
       ],
       allowedActions: ["plan_recommendation", "leave_uncovered"],
-      recommendation: {
-        recommendationId: `recommend:${candidate.productId}:${input.role}`,
-        productId: candidate.productId,
-        category: "shampoo",
-        role: input.role,
-        displayName: candidate.displayName,
-        reason: "Passt zur erforderlichen Shampoo-Aufgabe.",
-        authorityRuleId: "shampoo.selection.verified_role_fit",
-      },
+      recommendation: recommendationForShampoo(candidate, input),
       productFactFingerprint: null,
       recommendationFactFingerprint: candidate.factFingerprint,
     })
@@ -219,7 +267,9 @@ export const evaluateShampooAuthority: Stage3CategoryAuthorityAdapter<"shampoo">
     verdict: result.verdict,
     criteria: result.criteria,
     allowedActions:
-      result.verdict === "ideal" ? ["keep_owned"] : ["acknowledge_override", "leave_uncovered"],
+      result.verdict === "ideal"
+        ? ["keep_owned"]
+        : ["keep_owned", "acknowledge_override", "leave_uncovered"],
     recommendation: null,
     productFactFingerprint: input.productFacts.factFingerprint,
     recommendationFactFingerprint: null,

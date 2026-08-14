@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Stage 3 Shampoo-Zielsemantik</title>
+    <style>
+      :root {
+        --ink: #3f3a38;
+        --muted: #756f6b;
+        --purple: #6d4bab;
+        --line: #dedad6;
+        --paper: #fbfaf9;
+        --ok: #2f6f46;
+        --bad: #a24b4b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f5f2f0;
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+      main {
+        width: min(1240px, calc(100% - 36px));
+        margin: 34px auto;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-family: Georgia, serif;
+        font-size: 36px;
+        font-weight: 500;
+      }
+      .intro {
+        margin: 0 0 24px;
+        color: var(--muted);
+        font-size: 17px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1.08fr;
+        gap: 22px;
+      }
+      .panel {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 22px;
+        box-shadow: 0 8px 28px #493b3212;
+      }
+      .eyebrow {
+        margin: 0 0 9px;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .wrong .eyebrow {
+        color: var(--bad);
+      }
+      .right .eyebrow {
+        color: var(--ok);
+      }
+      h2 {
+        margin: 0 0 6px;
+        font-family: Georgia, serif;
+        font-size: 28px;
+        font-weight: 500;
+      }
+      .subtitle {
+        margin: 0 0 16px;
+        color: var(--muted);
+        line-height: 1.45;
+        min-height: 44px;
+      }
+      .products {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .product {
+        border: 1.5px solid var(--purple);
+        border-radius: 15px;
+        padding: 13px;
+      }
+      .product small {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--muted);
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .product strong {
+        font-size: 14px;
+      }
+      .table {
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        overflow: hidden;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1.28fr repeat(var(--values), 0.75fr);
+        align-items: center;
+        min-height: 56px;
+        border-top: 1px solid var(--line);
+      }
+      .row:first-child {
+        border-top: 0;
+        background: var(--paper);
+        font-weight: 800;
+      }
+      .cell {
+        padding: 13px 12px;
+      }
+      .value {
+        text-align: right;
+      }
+      .target {
+        background: #6d4bab0b;
+        font-weight: 800;
+      }
+      .target-bad {
+        color: var(--bad);
+      }
+      .target-ok {
+        color: var(--ok);
+      }
+      .empty {
+        color: #aaa39e;
+      }
+      .good {
+        color: var(--ok);
+      }
+      .note {
+        margin: 14px 0 0;
+        padding: 13px 15px;
+        border-radius: 14px;
+        line-height: 1.42;
+        font-size: 14px;
+      }
+      .wrong .note {
+        background: #faeeee;
+        color: #7e3838;
+      }
+      .right .note {
+        background: #eaf5ed;
+        color: #285d3b;
+      }
+      @media (max-width: 850px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        main {
+          width: min(100% - 20px, 650px);
+          margin: 16px auto;
+        }
+        .panel {
+          padding: 16px;
+        }
+        .cell {
+          padding: 11px 7px;
+          font-size: 12px;
+        }
+        .subtitle {
+          min-height: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Gleiche Tabelle, vollständiges Ziel</h1>
+      <p class="intro">
+        Irritationskompatibles Alltagsshampoo · Zielwerte aus derselben Autorität wie Suche und
+        Produktprüfung
+      </p>
+      <div class="grid">
+        <section class="panel wrong">
+          <p class="eyebrow">Aktueller Fehler</p>
+          <h2>Keine Alternative</h2>
+          <p class="subtitle">
+            Zwei Zielwerte fehlen; der dritte benutzt die Öllichkeitsroute statt des bestätigten
+            Irritations-Buckets.
+          </p>
+          <div class="products" style="grid-template-columns: 1fr">
+            <div class="product"><small>Deins</small><strong>Dein Shampoo</strong></div>
+          </div>
+          <div class="table" style="--values: 2">
+            <div class="row">
+              <div class="cell">Prüfpunkt</div>
+              <div class="cell value">Deins</div>
+              <div class="cell value target">Ziel</div>
+            </div>
+            <div class="row">
+              <div class="cell">Reinigungsintensität</div>
+              <div class="cell value">regulär</div>
+              <div class="cell value target empty">kein Ziel</div>
+            </div>
+            <div class="row">
+              <div class="cell">Kopfhaut-Fokus</div>
+              <div class="cell value">ausgeglichen</div>
+              <div class="cell value target target-bad">ausgeglichen</div>
+            </div>
+            <div class="row">
+              <div class="cell">Geeignete Haardicke</div>
+              <div class="cell value">mittel</div>
+              <div class="cell value target empty">kein Ziel</div>
+            </div>
+          </div>
+          <p class="note">
+            Ein korrekt als <strong>irritiert</strong> gespeichertes Shampoo wird aussortiert,
+            obwohl die Eigenschaften vollständig sind.
+          </p>
+        </section>
+        <section class="panel right">
+          <p class="eyebrow">Korrektur</p>
+          <h2>Alternative prüfen</h2>
+          <p class="subtitle">
+            Alle drei Zielwerte sind belegt. Der normale Vergleich behält die vereinbarten vier
+            Spalten.
+          </p>
+          <div class="products">
+            <div class="product"><small>Deins</small><strong>Dein Shampoo</strong></div>
+            <div class="product">
+              <small>Alternative</small><strong>Balea med Ultra Sensitive Shampoo</strong>
+            </div>
+          </div>
+          <div class="table" style="--values: 3">
+            <div class="row">
+              <div class="cell">Prüfpunkt</div>
+              <div class="cell value">Deins</div>
+              <div class="cell value target">Ziel</div>
+              <div class="cell value">Alternative</div>
+            </div>
+            <div class="row">
+              <div class="cell">Reinigungsintensität</div>
+              <div class="cell value">regulär</div>
+              <div class="cell value target target-ok">sanft</div>
+              <div class="cell value good">sanft ✓</div>
+            </div>
+            <div class="row">
+              <div class="cell">Kopfhaut-Fokus</div>
+              <div class="cell value">ausgeglichen</div>
+              <div class="cell value target target-ok">gereizt</div>
+              <div class="cell value good">gereizt ✓</div>
+            </div>
+            <div class="row">
+              <div class="cell">Geeignete Haardicke</div>
+              <div class="cell value">mittel</div>
+              <div class="cell value target target-ok">mittel</div>
+              <div class="cell value good">mittel ✓</div>
+            </div>
+          </div>
+          <p class="note">
+            Nur wenn wirklich keine passende Alternative existiert, fällt die vierte Spalte weg. Die
+            Zielspalte bleibt trotzdem vollständig.
+          </p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

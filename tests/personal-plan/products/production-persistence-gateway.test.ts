@@ -826,6 +826,140 @@ test("catalog search derives assessment context from the signed owner draft", as
   })
 })
 
+test("complete catalog search translates Shampoo constraints into stored route semantics", async () => {
+  const base = authorityDraft()
+  const shampooRequirement: Stage3CategoryRequirement = {
+    category: "shampoo",
+    requiredRoles: ["shampoo_everyday"],
+    needSummary: "Sanfte Reinigung für gereizte Kopfhaut",
+    authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+  }
+  const draft: Stage3ProductDraft = {
+    ...base,
+    authorityVersions: {
+      ...base.authorityVersions,
+      shampoo: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+    },
+    orderedCategories: ["shampoo"],
+    categoryCursor: "shampoo",
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      orderedCategories: ["shampoo"],
+      categoryDecisions: [
+        {
+          category: "shampoo",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["shampoo_everyday"],
+          target: {
+            category: "shampoo",
+            roles: ["shampoo_everyday"],
+            scalpRoute: "balanced",
+            everydayConstraint: "irritation_compatible",
+            requiresTargetedDandruffCapability: false,
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+    },
+  }
+  const received: Array<Parameters<Stage3ProductionPersistence["search"]>[0]> = []
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    completeCatalogEnabled: true,
+    persistence: {
+      ...persistence(draft),
+      loadOrCreate: async () => ({ draft, requirements: [shampooRequirement] }),
+      loadRequirements: async () => [shampooRequirement],
+      search: async (input) => {
+        received.push(input)
+        return { query: input.query, category: input.category, candidates: [], totalCapped: false }
+      },
+    },
+  })
+
+  await gateway.search({
+    draftId: draft.draftId,
+    category: "shampoo",
+    query: "shampoo",
+    requestToken: 1,
+  })
+
+  assert.deepEqual(received[0]?.assessmentContext.shampooTargets, [
+    { thickness: "normal", shampooBucket: "irritationen", scalpRoute: "irritated" },
+  ])
+})
+
+test("rollback catalog search preserves the legacy Shampoo oiliness route", async () => {
+  const base = authorityDraft()
+  const shampooRequirement: Stage3CategoryRequirement = {
+    category: "shampoo",
+    requiredRoles: ["shampoo_everyday"],
+    needSummary: "Sanfte Reinigung für gereizte Kopfhaut",
+    authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+  }
+  const draft: Stage3ProductDraft = {
+    ...base,
+    authorityVersions: {
+      ...base.authorityVersions,
+      shampoo: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+    },
+    orderedCategories: ["shampoo"],
+    categoryCursor: "shampoo",
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      orderedCategories: ["shampoo"],
+      categoryDecisions: [
+        {
+          category: "shampoo",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["shampoo_everyday"],
+          target: {
+            category: "shampoo",
+            roles: ["shampoo_everyday"],
+            scalpRoute: "balanced",
+            everydayConstraint: "irritation_compatible",
+            requiresTargetedDandruffCapability: false,
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+    },
+  }
+  const received: Array<Parameters<Stage3ProductionPersistence["search"]>[0]> = []
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    completeCatalogEnabled: false,
+    persistence: {
+      ...persistence(draft),
+      loadOrCreate: async () => ({ draft, requirements: [shampooRequirement] }),
+      loadRequirements: async () => [shampooRequirement],
+      search: async (input) => {
+        received.push(input)
+        return { query: input.query, category: input.category, candidates: [], totalCapped: false }
+      },
+    },
+  })
+
+  await gateway.search({
+    draftId: draft.draftId,
+    category: "shampoo",
+    query: "shampoo",
+    requestToken: 1,
+  })
+
+  assert.equal(received[0]?.assessmentContext.shampooTargets[0]?.scalpRoute, "balanced")
+})
+
 test("catalog search permits every signed inventory-only category without a refined category decision", async () => {
   for (const category of PERSONAL_PLAN_PRODUCT_CATEGORIES) {
     const requirement: Stage3CategoryRequirement = {
