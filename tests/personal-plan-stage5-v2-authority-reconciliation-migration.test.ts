@@ -12,6 +12,8 @@ const artifactPath =
   "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json"
 const migrationPath =
   "supabase/migrations/20260814191843_20260814122000_personal_plan_stage5_v2_authority_reconciliation.sql"
+const executorFixPath =
+  "supabase/migrations/20260814193000_personal_plan_stage5_v2_executor_product_key_fix.sql"
 const preconditionsPath =
   "plans/evidence/2026-08-14-application-guidance-authority-live-preconditions.json"
 const sourceRoot = "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research"
@@ -240,4 +242,17 @@ test("authority reconciliation is exact-cohort guarded and verifies every transi
   )
   assert.doesNotMatch(sql, /guidance_payload_v2\s*=/i)
   assert.doesNotMatch(sql, /PERSONAL_PLAN_STAGE5_USE_CASE_COVERAGE_ENABLED/)
+})
+
+test("the V2 executor repair parenthesizes the JSON path before product-key concatenation", async () => {
+  const sql = await readFile(executorFixPath, "utf8")
+
+  assert.match(sql, /^BEGIN;/m)
+  assert.match(sql, /COMMIT;\s*$/)
+  assert.match(
+    sql,
+    /v_new_expression constant text := .* \|\| \(v_item#>>'\{guidance_payload_v2,applicationFamily\}'\);/,
+  )
+  assert.match(sql, /expected exactly one unparenthesized Stage 5 V2 product key expression/i)
+  assert.match(sql, /installed Stage 5 V2 product key precedence verification failed/i)
 })
