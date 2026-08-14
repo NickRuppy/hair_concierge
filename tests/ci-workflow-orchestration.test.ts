@@ -208,6 +208,7 @@ test("quality core preserves its required name as a fail-closed parallel aggrega
     "quality-browser-contracts",
     "quality-node",
     "quality-personal-plan-browser",
+    "quality-personal-plan-journey",
     "quality-static",
   ]
 
@@ -215,7 +216,7 @@ test("quality core preserves its required name as a fail-closed parallel aggrega
   assert.match(qualityCore, /^    if: \$\{\{ always\(\) \}\}$/m)
   assert.match(
     qualityCore,
-    /node scripts\/ci\/require-job-results\.mjs[\s\S]*--allow-skipped=quality-personal-plan-browser[\s\S]*detect-ci-scope=\$\{\{ needs\.detect-ci-scope\.result \}\}[\s\S]*quality-static=\$\{\{ needs\.quality-static\.result \}\}[\s\S]*quality-node=\$\{\{ needs\.quality-node\.result \}\}[\s\S]*quality-browser-contracts=\$\{\{ needs\.quality-browser-contracts\.result \}\}[\s\S]*quality-personal-plan-browser=\$\{\{ needs\.quality-personal-plan-browser\.result \}\}/m,
+    /node scripts\/ci\/require-job-results\.mjs[\s\S]*--allow-skipped=quality-personal-plan-browser[\s\S]*--allow-skipped=quality-personal-plan-journey[\s\S]*detect-ci-scope=\$\{\{ needs\.detect-ci-scope\.result \}\}[\s\S]*quality-static=\$\{\{ needs\.quality-static\.result \}\}[\s\S]*quality-node=\$\{\{ needs\.quality-node\.result \}\}[\s\S]*quality-browser-contracts=\$\{\{ needs\.quality-browser-contracts\.result \}\}[\s\S]*quality-personal-plan-browser=\$\{\{ needs\.quality-personal-plan-browser\.result \}\}[\s\S]*quality-personal-plan-journey=\$\{\{ needs\.quality-personal-plan-journey\.result \}\}/m,
   )
   assert.doesNotMatch(qualityCore, /npm ci|npm run build|playwright install|test:contracts/)
 })
@@ -225,6 +226,7 @@ test("quality work is divided into independently scheduled lanes", () => {
   const qualityNode = jobSource(ciWorkflow, "quality-node")
   const qualityBrowser = jobSource(ciWorkflow, "quality-browser-contracts")
   const qualityPersonalPlan = jobSource(ciWorkflow, "quality-personal-plan-browser")
+  const qualityPersonalPlanJourney = jobSource(ciWorkflow, "quality-personal-plan-journey")
 
   assert.match(qualityStatic, /run: npm run typecheck/)
   assert.match(qualityStatic, /run: npm run lint/)
@@ -246,8 +248,21 @@ test("quality work is divided into independently scheduled lanes", () => {
     /^    if: needs\.detect-ci-scope\.outputs\.personal_plan_journey == 'true'$/m,
   )
   assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage3:lab/)
-  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage3:journey/)
+  assert.doesNotMatch(qualityPersonalPlan, /test:playwright:personal-plan-stage3:journey/)
+  assert.deepEqual(jobDependencyNames(ciWorkflow, "quality-personal-plan-journey"), [
+    "detect-ci-scope",
+  ])
+  assert.match(
+    qualityPersonalPlanJourney,
+    /^    if: needs\.detect-ci-scope\.outputs\.personal_plan_journey == 'true'$/m,
+  )
+  assert.match(
+    qualityPersonalPlanJourney,
+    /run: npm run test:playwright:personal-plan-stage3:journey/,
+  )
+  assert.doesNotMatch(qualityPersonalPlanJourney, /npm run build|personal-plan-stage3:lab/)
   assert.doesNotMatch(qualityPersonalPlan, /personal-plan-stage4|personal-plan-stage5/)
+  assert.doesNotMatch(qualityPersonalPlanJourney, /personal-plan-stage4|personal-plan-stage5/)
 })
 
 test("the Stage 3 CI browser suite isolates the production lab from development journeys", () => {
@@ -255,6 +270,7 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   const labCommand = packageManifest.scripts["test:playwright:personal-plan-stage3:lab"]
   const journeyCommand = packageManifest.scripts["test:playwright:personal-plan-stage3:journey"]
   const qualityPersonalPlan = jobSource(ciWorkflow, "quality-personal-plan-browser")
+  const qualityPersonalPlanJourney = jobSource(ciWorkflow, "quality-personal-plan-journey")
 
   assert.equal(
     aggregateCommand,
@@ -306,11 +322,14 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
     qualityPersonalPlan,
     /- name: Run Stage 3 production lab contracts\n        run: npm run test:playwright:personal-plan-stage3:lab/,
   )
+  assert.doesNotMatch(qualityPersonalPlan, /test:playwright:personal-plan-stage3:journey/)
+  assert.doesNotMatch(qualityPersonalPlanJourney, /npm run build|personal-plan-stage3:lab/)
   assert.match(
-    qualityPersonalPlan,
+    qualityPersonalPlanJourney,
     /- name: Run Personal Plan development journeys\n        run: npm run test:playwright:personal-plan-stage3:journey/,
   )
   assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
+  assert.match(qualityPersonalPlanJourney, /^    timeout-minutes: 10$/m)
 })
 
 test("the tracker product drawer smoke does not wait for network silence", () => {

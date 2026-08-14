@@ -23,6 +23,7 @@ Repair the semantic boundaries rather than editing valid catalogue data:
 - Add shared `SHAMPOO_SCALP_ROUTES_BY_BUCKET` and `SHAMPOO_CLEANSING_INTENSITY_BY_BUCKET` contracts in `src/lib/shampoo/constants.ts`. Product Intake and Stage 3 reuse the same target properties. The recommendation engine retains its behavior-equivalent private projection so this Personal Plan-only release does not unnecessarily enter the paid chat-evaluation path. For the currently reachable targeted dandruff role, `schuppen` uses `dandruff`; `dry_flakes` remains allowed intake data but is not treated as an oily-dandruff equivalent.
 - Use the derived catalogue route and cleansing intensity consistently in complete-catalogue fact selection, Shampoo authority, visible everyday-Shampoo targets, and Stage 3 search assessment. Add confirmed hair thickness to the authority input so the table and pre-slice coverage selector use the same third target. The dandruff comparison remains compact and keeps the existing `Shampoo-Passung` row; no new dandruff display axis is added.
 - Add a category-neutral owned-supportive replacement authorization seam. It delegates to the existing category-correct recommendation builders for Mask, Oil, and Bondbuilder only. Conditioner and Leave-in already authorize supportive recommendations; categories without supportive verdicts remain unchanged. Uncovered Mask/Oil/Bondbuilder retain their previously approved stricter rules.
+- Enforce the confirmed hair thickness against stored `suitableThicknesses` for Mask and Bondbuilder instead of treating any non-empty thickness metadata as a match. A candidate whose verified property set excludes the user is a mismatch and cannot appear as an alternative.
 - Gate every semantic repair on `candidateCatalogComplete === true` or the equivalent request-level complete-catalogue mode. Flag-off must reproduce legacy facts, recommendation authorization, search targets, and fingerprints.
 
 ## Scope and non-goals
@@ -42,6 +43,7 @@ Non-goals:
 - No new product, duplicate table, property reclassification, schema migration, or customer replay.
 - No supportive uncovered recommendation for Mask, Oil, or Bondbuilder.
 - No production chat-engine behavior change. The existing chat Shampoo mapping remains byte-identical; this release uses the shared mapping only inside the Personal Plan authority path.
+- No weakening of paid chat evaluation scope. This branch no longer changes a chat-runtime file, so chat evaluation is correctly skipped; the independent production OpenAI credit exhaustion remains a separate operational incident.
 
 ## Target map
 
@@ -101,6 +103,7 @@ Add red complete-mode regressions for:
 - Stage 3 search targets for these same contexts;
 - all three everyday Shampoo target rows populated and used by pre-slice coverage;
 - owned supportive Mask (2/3), Oil (role pass plus adjacent weight), and Bondbuilder (verified add-on relationship);
+- Mask and Bondbuilder candidates whose verified suitable-thickness set excludes the confirmed thickness;
 - uncovered equivalents remaining strict;
 - flag-off retaining legacy results and fingerprints.
 
@@ -143,6 +146,8 @@ Consumes: green Tasks 1-4.
 Run focused suites, `npm run test:personal-plan`, Stage 3 Playwright, `npm run typecheck`, lint/Prettier/diff-check, flags-off production build, `npm run ci:verify`, and the production-shaped benchmark. Run `ready-check` and `request-code-review` as Codex workflow skills, including one read-only Claude whole-branch review. Refresh stale receipts after any content change.
 
 Complete when exact-content verification/review receipts agree and no blocking finding remains.
+
+Release-gate correction: the first exact-head run passed the production Stage 3 lab, then the same `quality-personal-plan-browser` runner returned 404 for development-only Lab routes and timed out. A production build followed by `next dev` is not an isolated environment boundary. CI now runs the production build/lab and development journeys as separate required jobs on separate runners; `quality-core` requires both and permits either to skip only through the existing path scope. The regression contract proves that neither job can silently absorb the other mode again.
 
 ### Task 6 - publish, merge, and deploy flag-off
 

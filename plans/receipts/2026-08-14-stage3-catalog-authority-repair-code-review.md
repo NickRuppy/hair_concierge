@@ -2,7 +2,7 @@
 
 ## Review identity
 
-- Scope: the complete task tree at canonical content fingerprint `129cbdefebe19baffa378cace421e394b1b1427c5aa566d511374774a0f8f626`.
+- Scope: the complete task tree at canonical content fingerprint `PENDING_MANIFEST_REFRESH`.
 - Branch: `codex/stage3-catalog-authority-repair`
 - Base: `f7d614b8`
 - Counterpart: one read-only Claude Opus 4.8 whole-branch review and one successful focused delta review at high effort. The exact-head rerun could not start because the reviewer account reached its weekly limit; the final delta was reviewed locally and is limited to current-main integration, the behavior-equivalent chat-file restoration, and receipt refreshes.
@@ -11,6 +11,10 @@
 
 No blocking findings remain.
 
+Release-gate finding:
+
+- The failed exact-head `quality-personal-plan-browser` run was not evidence of a Stage 3 product regression. Its production lab passed, after which development-only pages returned 404 in the same runner and the journey waited until the ten-minute job timeout. The workflow now assigns production build/lab and development journeys to separate runners, and the fail-closed `quality-core` aggregate requires both results. The classifier and chat-evaluation rules were not weakened.
+
 Resolved findings:
 
 1. Oil supportive copy claimed an adjacent weight while the router could previously authorize a two-step `light` to `rich` gap. The router now requires an exact one-step distance and tests reject the two-step gap.
@@ -18,6 +22,7 @@ Resolved findings:
 3. The audit carried a dead hard-coded completeness field. It is removed; every remaining failure code is reachable and tested.
 4. Complete Shampoo authority originally translated route but did not enforce cleansing intensity. It now grades a route-correct intensity deviation as supportive and tests both ideal and supportive paths.
 5. A supportive intensity-only owned Shampoo was not keepable and could not serve as a fallback alternative. It now has explicit `keep_owned` authority and a fingerprinted supportive recommendation rule, while uncovered roles remain strict and ideal candidates retain ranking priority.
+6. Mask and Bondbuilder treated any non-empty `suitableThicknesses` list as a pass. Both now require the list to include the confirmed evaluation thickness; wrong-thickness candidates are rejected before comparison selection.
 
 Accepted bounded risk:
 
@@ -41,6 +46,8 @@ Accepted bounded risk:
 - Focused comparison/authority/persistence/audit regressions: passed.
 - Production-shaped benchmark: passed within the recorded readiness budget.
 - Live read-only all-category coverage and Shampoo property audits: passed.
+- CI orchestration regression: 12/12; aggregate/path/job-result contract suite: 29/29.
+- Final authority/comparison regression suite: 139/139.
 
 ## Bottom line
 
