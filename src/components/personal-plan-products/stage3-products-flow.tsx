@@ -2034,6 +2034,34 @@ export function Stage3ProductsFlow({
       else void completeFlow(canonical.draft)
       return
     }
+    if (intent.operation === "inventory_disposition") {
+      const scope = pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId)
+      recordPendingStage3RecoveryResend(pendingRecoveryStorage, scope)
+      writePendingStage3Recovery(pendingRecoveryStorage, scope, {
+        ...intent,
+        expectedRevision: canonicalDraft.revision,
+        createdAt: Date.now(),
+      })
+      const response = await resolveInventoryDisposition({
+        draftId: canonicalDraft.draftId,
+        expectedRevision: canonicalDraft.revision,
+        dispositionKey: intent.dispositionKey,
+      })
+      if (response.status === "conflict") {
+        clearPendingStage3Recovery(canonicalDraft)
+        handleConflict(response.latestDraft)
+        return
+      }
+      const canonical = await loadCanonicalStage3Draft(response.draft)
+      clearPendingStage3Recovery(canonical.draft)
+      setPendingRecoveryMode(null)
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation: "inventory_disposition",
+        outcome: "resend_succeeded",
+      })
+      await continueAfterRecoveredIntent(intent, canonical)
+      return
+    }
     if (intent.operation === "mutation") {
       const scope = pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId)
       recordPendingStage3RecoveryResend(pendingRecoveryStorage, scope)
@@ -2141,6 +2169,24 @@ export function Stage3ProductsFlow({
       } else {
         void completeFlow(response.draft)
       }
+      return
+    }
+    if (intent.operation === "inventory_disposition") {
+      if (hasUnresolvedDecisionSubjects(response.draft)) {
+        const reviews = await loadDecisionReviewBundles(
+          response.draft,
+          response.authorityEvaluations,
+          response.fitComparisons,
+        )
+        restoreStage3ReviewDraft(
+          response.draft,
+          reviews,
+          readStage3ReviewDraft(pendingRecoveryStorage, recoveryScope),
+        )
+        setPhase("decisions")
+      } else {
+        void completeFlow(response.draft)
+      }
     }
   }
 
@@ -2156,6 +2202,13 @@ export function Stage3ProductsFlow({
         type: "reopen_capture_category",
         category: intent.subjectKey,
       })
+    }
+    if (intent.operation === "inventory_disposition") {
+      const disposition = canonicalDraft.inventoryDispositions?.find(
+        (candidate) => candidate.dispositionKey === intent.dispositionKey,
+      )
+      if (!disposition) return "different"
+      return disposition.acknowledged ? "satisfied" : "missing"
     }
     return canonicalDraft.status === "completed" ? "completed" : "missing"
   }
@@ -2509,16 +2562,31 @@ export function Stage3ProductsFlow({
         clearPendingStage3Recovery(canonicalDraft)
       }
       for (const dispositionKey of dispositionKeys) {
-        const response = await resolveInventoryDisposition({
-          draftId: canonicalDraft.draftId,
-          expectedRevision: canonicalDraft.revision,
-          dispositionKey,
-        })
+        writePendingStage3Recovery(
+          pendingRecoveryStorage,
+          pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId),
+          {
+            operation: "inventory_disposition",
+            dispositionKey,
+            expectedRevision: canonicalDraft.revision,
+            createdAt: Date.now(),
+          },
+        )
+        const response = await withStage3FinalizationTimeout(
+          resolveInventoryDisposition({
+            draftId: canonicalDraft.draftId,
+            expectedRevision: canonicalDraft.revision,
+            dispositionKey,
+          }),
+          finalizationTimeoutMs,
+        )
         if (response.status === "conflict") {
+          clearPendingStage3Recovery(canonicalDraft)
           finishDecisionSubmission()
           return reconcileReviewedChoicesAfterConflict(response.latestDraft)
         }
         canonicalDraft = response.draft
+        clearPendingStage3Recovery(canonicalDraft)
       }
       setDraft(canonicalDraft)
       categoryCapture.synchronizeRevision(canonicalDraft.revision)
@@ -3239,7 +3307,7 @@ function pendingRecoveryScopeForDraft(
 
 function recoveryAnalyticsOperation(
   intent: PendingStage3RecoveryIntent,
-): "reopen" | "decision" | "decision_batch" | "completion" {
+): "reopen" | "decision" | "decision_batch" | "inventory_disposition" | "completion" {
   if (intent.operation === "mutation") return "reopen"
   return intent.operation
 }
@@ -3319,7 +3387,8 @@ function decisionIntentStillAllowed(
   if (!evaluation?.allowedActions.some((allowedAction) => allowedAction === intent.action)) {
     return false
   }
-  if (intent.action !== "plan_recommendation" || !intent.selectedCandidateId) return true
+  if (intent.action !== "plan_recommendation") return true
+  if (!intent.selectedCandidateId) return false
   return (
     evaluation.status === "known" &&
     evaluation.recommendation?.productId === intent.selectedCandidateId

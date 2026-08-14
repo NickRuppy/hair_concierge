@@ -50,10 +50,18 @@ export type PendingStage3RecoveryCompletionIntent = {
   createdAt: number
 }
 
+export type PendingStage3RecoveryInventoryDispositionIntent = {
+  operation: "inventory_disposition"
+  dispositionKey: string
+  expectedRevision: number
+  createdAt: number
+}
+
 export type PendingStage3RecoveryIntent =
   | PendingStage3RecoveryDecisionIntent
   | PendingStage3RecoveryDecisionBatchIntent
   | PendingStage3RecoveryMutationIntent
+  | PendingStage3RecoveryInventoryDispositionIntent
   | PendingStage3RecoveryCompletionIntent
 
 export type PendingStage3RecoveryEntry = {
@@ -299,6 +307,15 @@ function parseIntent(value: unknown): PendingStage3RecoveryIntent | null {
   if (candidate.operation === "completion") {
     return {
       operation: "completion",
+      expectedRevision: candidate.expectedRevision,
+      createdAt: candidate.createdAt,
+    }
+  }
+  if (candidate.operation === "inventory_disposition") {
+    if (typeof candidate.dispositionKey !== "string") return null
+    return {
+      operation: "inventory_disposition",
+      dispositionKey: candidate.dispositionKey,
       expectedRevision: candidate.expectedRevision,
       createdAt: candidate.createdAt,
     }
