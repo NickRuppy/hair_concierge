@@ -6,15 +6,7 @@ import { APPLICATION_DAY_TYPE_KEYS } from "../src/lib/routines/personal-plan/app
 import type { ProductApplicationPointerV2 } from "../src/lib/routines/personal-plan/application/contracts-v2"
 import { SHARED_APPLICATION_TEMPLATES_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 
-const compileApplicationViewV2 = (
-  args: Omit<Parameters<typeof compileApplicationViewV2Impl>[0], "useCaseCoverageEnabled"> & {
-    useCaseCoverageEnabled?: boolean
-  },
-) =>
-  compileApplicationViewV2Impl({
-    ...args,
-    useCaseCoverageEnabled: args.useCaseCoverageEnabled ?? true,
-  })
+const compileApplicationViewV2 = compileApplicationViewV2Impl
 
 const productId = "30000000-0000-4000-8000-000000000001"
 const shampooProductId = "30000000-0000-4000-8000-000000000002"
@@ -661,40 +653,6 @@ test("V2 compiler does not generalize pre-wash-only, heat-only, or scalp-only Oi
   )
 })
 
-test("the rollback path keeps the legacy Oil dry-finish between-wash method", () => {
-  const result = compileApplicationViewV2({
-    input: input("oil", "finish"),
-    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
-    productPointers: [
-      supportingShampooPointer(),
-      pointer({
-        scope: { kind: "product", category: "oil", productId },
-        sourceRole: "dry_finish",
-        role: "finish",
-        applicationFamily: "dry_finish",
-        facts: {
-          ...pointer().facts,
-          applicationState: "dry_hair",
-          applicationArea: "hair_lengths_ends",
-          rinse: "leave_in",
-        },
-      }),
-    ],
-    useCaseCoverageEnabled: false,
-  })
-
-  assert.deepEqual(result.pointerIssues, [])
-  const blocks =
-    result.days
-      .find(({ key }) => key === "between_wash_care_day")
-      ?.productBlocks.filter((block) => block.productId === productId) ?? []
-  assert.equal(blocks.length, 1)
-  assert.equal(
-    blocks[0]?.steps.some(({ action }) => action === "section"),
-    false,
-  )
-})
-
 test("V2 compiler does not generalize a companion-bound Leave-in protocol", () => {
   const result = compileApplicationViewV2({
     input: input("leave_in", "leave_in"),
@@ -723,92 +681,6 @@ test("V2 compiler does not generalize a companion-bound Leave-in protocol", () =
       ?.productBlocks.some((block) => block.productId === productId) ?? false,
     false,
   )
-})
-
-test("the rollback path keeps independently researched stored variants without universal synthesis", () => {
-  const postWash = pointer({
-    scope: { kind: "product", category: "leave_in", productId },
-    sourceRole: "post_wash_leave_in",
-    role: "leave_in",
-    applicationFamily: "post_wash_damp_conditioning",
-    facts: {
-      ...pointer().facts,
-      applicationState: "damp_hair",
-      applicationArea: "hair_lengths_ends",
-      rinse: "leave_in",
-    },
-  })
-  const result = compileApplicationViewV2({
-    input: input("leave_in", "leave_in"),
-    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
-    productPointers: [
-      supportingShampooPointer(),
-      postWash,
-      {
-        ...postWash,
-        applicationFamily: "between_wash_dry_care",
-        facts: { ...postWash.facts, applicationState: "dry_hair" },
-      },
-    ],
-    useCaseCoverageEnabled: false,
-  })
-
-  assert.deepEqual(result.pointerIssues, [])
-  assert.equal(
-    result.days
-      .find(({ key }) => key === "refresh_day")
-      ?.productBlocks.some((block) => block.productId === productId),
-    true,
-  )
-  assert.equal(
-    result.days
-      .find(({ key }) => key === "wash_day")
-      ?.productBlocks.some((block) => block.productId === productId),
-    true,
-  )
-})
-
-test("the rollback path keeps a failed stored variant visible beside a composable variant", () => {
-  const postWash = pointer({
-    scope: { kind: "product", category: "leave_in", productId },
-    sourceRole: "post_wash_leave_in",
-    role: "leave_in",
-    applicationFamily: "post_wash_damp_conditioning",
-    facts: {
-      ...pointer().facts,
-      applicationState: "damp_hair",
-      applicationArea: "hair_lengths_ends",
-      rinse: "leave_in",
-    },
-  })
-  const result = compileApplicationViewV2({
-    input: input("leave_in", "leave_in"),
-    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
-    productPointers: [
-      supportingShampooPointer(),
-      postWash,
-      { ...postWash, applicationFamily: "unsupported_test_family" as never },
-    ],
-    useCaseCoverageEnabled: false,
-  })
-
-  assert.equal(
-    result.days
-      .find(({ key }) => key === "wash_day")
-      ?.productBlocks.some((block) => block.productId === productId),
-    true,
-  )
-  assert.equal(
-    result.days
-      .find(({ key }) => key === "refresh_day")
-      ?.outerSequence.some(
-        (entry) => entry.kind === "unresolved_product" && entry.block.productId === productId,
-      ),
-    true,
-  )
-  assert.deepEqual(result.pointerIssues, [
-    { productId, role: "leave_in", reason: "missing_family_template" },
-  ])
 })
 
 test("V2 compiler renders one Leave-in across each researched application context", () => {

@@ -3,7 +3,6 @@ import type { ApplicationPageView } from "@/components/application/application-t
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
 import {
   PERSONAL_PLAN_STAGE5_CONTRACT_VERSION,
-  isPersonalPlanStage5UseCaseCoverageEnabled,
   type PersonalPlanStage5ContractVersion,
 } from "@/lib/personal-plan/stage5-access"
 import {
@@ -57,7 +56,6 @@ export type AnwendungResolverDeps = {
   createReadClient: () => AdminReadClient
   appEnabled: () => boolean
   stage4Enabled: () => boolean
-  useCaseCoverageEnabled: () => boolean
   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
 }
 
@@ -131,7 +129,6 @@ export async function resolveAnwendungPage(
       input: applicationInput,
       familyTemplates: familyPayloads,
       productPointers: accepted.applicationPointersV2,
-      useCaseCoverageEnabled: deps.useCaseCoverageEnabled(),
     })
     const pointerIssues = compiled.pointerIssues
     if (pointerIssues.length > 0) {
@@ -205,7 +202,6 @@ const defaultDeps: AnwendungResolverDeps = {
   createReadClient: createAdminReadClient,
   appEnabled: isPersonalPlanAppV1Enabled,
   stage4Enabled: isPersonalPlanStage4Enabled,
-  useCaseCoverageEnabled: isPersonalPlanStage5UseCaseCoverageEnabled,
   reportFailure: capturePersonalPlanApplicationFailure,
 }
 
