@@ -41,6 +41,7 @@ Non-goals:
 - No change to verdict definitions or 3/3 -> 2/3 -> 1/3 -> never 0/3 ordering.
 - No new product, duplicate table, property reclassification, schema migration, or customer replay.
 - No supportive uncovered recommendation for Mask, Oil, or Bondbuilder.
+- No production chat-engine behavior change. The existing chat Shampoo mapping remains byte-identical; this release uses the shared mapping only inside the Personal Plan authority path.
 
 ## Target map
 
@@ -48,7 +49,6 @@ Non-goals:
 | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/lib/shampoo/constants.ts`                                                                                | Single bucket-to-allowed-routes and bucket-to-cleansing-intensity contracts.                                                                        |
 | `src/lib/product-intake/category-validators.ts`                                                               | Validate Shampoo rows against the shared route set.                                                                                                 |
-| `src/lib/recommendation-engine/categories/shampoo.ts`                                                         | Reuse the shared primary route; remove the local duplicate map.                                                                                     |
 | `src/lib/personal-plan/products/authority/categories/shampoo.ts`                                              | Derive complete-catalogue expected spec route and use it during authority evaluation.                                                               |
 | `src/lib/personal-plan/products/authority/catalog-facts.ts`                                                   | Select exact complete-catalogue Shampoo facts with the derived spec route; keep legacy flag-off semantics.                                          |
 | `src/lib/personal-plan/products/authority/contracts.ts` and production gateway assembly                       | Carry confirmed hair thickness into the exact authority input and fingerprints/caches where required.                                               |
