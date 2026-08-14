@@ -1,0 +1,157 @@
+{
+  "schema_version": "personal-plan-leave-in-use-cases-v1",
+  "snapshot_date": "2026-08-14",
+  "baseline": {
+    "path": "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-baseline-2026-08-12.json",
+    "sha256": "db2e7bbef4d5e64afa9adbbfe05acbb1c43fc5624f5baeecfe1ee85ec2fb3886"
+  },
+  "between_wash_policy": {
+    "eligibility": "all_true_leave_ins",
+    "methods": ["between_wash_damp_refresh", "between_wash_dry_care"],
+    "preferred_method": "between_wash_damp_refresh",
+    "adaptation_facts": ["format", "thickness", "density"],
+    "source_urls": [
+      "https://www.aad.org/public/everyday-care/hair-scalp-care/hair/leave-in-conditioner-tips",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC9921463/"
+    ]
+  },
+  "reviewed_product_ids": [
+    "9b664b11-fd11-47e3-9b7e-76e34736b43e", "f9595d2c-d86d-4bdb-9758-c98d1e213f3c", "43cb9fbf-4b04-4554-a86a-7cb168536233", "c6e80f39-20ba-401e-b041-6ee7c89a5996", "e3c4b607-8f81-462c-8a2b-e45c8b3a2976", "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4", "648ba537-5180-440e-81ad-2b310b447d87", "2bafeb7e-6610-4efc-a8e8-a402071b2ed9", "8715f0f5-9104-46ec-b450-e73f1441c1fa", "6b01025d-9e72-4514-b42e-bbb6065fbe1c", "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec", "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe", "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc", "0307c903-84f9-46b4-8f1f-a51c2b1f38ff", "a72d630d-547a-465f-9846-3006b38af0a2", "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0", "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3", "0b21f996-bb42-4b10-89bd-4881c4346d53", "696401be-16b5-4261-836f-28b57c1ecd59", "7d65ed50-898c-40c3-8865-ebe5688774c8", "6ad82861-d68e-4e70-a976-78c0f35d087b", "0756a919-5fab-4b6c-a5da-8cb810869b6f", "50951ef2-e16a-4a51-85c5-a709aa64c03a", "695414e1-3435-4304-943b-76677408980c", "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6", "9f94c225-61ec-455d-b303-f39e885e222a", "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd", "e6896862-523b-42b3-967d-41cbd16acf64", "4827c174-92e9-4121-ab70-843d5c037ad0", "4e99706a-2232-4ee6-ba1b-9ca1029a7364", "993f0e55-2450-4557-853d-e6e23ec0d1a9", "35a372b6-c7ef-45cb-be0b-99cef476f247", "e781ca9e-886d-40a1-bfe1-48177cfbf381", "f8f3b51d-8e64-487d-bad5-4a47c58862ed", "915aa362-6479-41f2-bb59-0260493b3d58", "a3b21686-fe35-46f1-b560-b8a563dc96ae", "0d5a4af5-d046-4378-b608-515c9d1d66ec", "2b7db7e3-2058-4178-8a03-7d05f4a1d447", "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530", "45f4fe15-c439-476d-8a86-3b2aac5053bd", "94cf6959-a53b-421b-9f0f-05efc239171c"
+  ],
+  "overrides": [
+    {
+      "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c", "product_name": "alverde Leave-In Sprühkur Express 7in1",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express", "source_type": "retailer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "post_wash_damp", "status": "supported", "reason": "Directions explicitly permit damp hair as well as dry hair." }]
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996", "product_name": "Balea Aqua Hyaluron 3in1",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.dm.at/p/d/1417521/balea-professional-3in1-haarmaske-aqua-hyaluron", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.dm.at/p/d/1417521/balea-professional-3in1-haarmaske-aqua-hyaluron", "source_type": "retailer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_dry", "status": "supported", "reason": "Directions explicitly permit use in dry hair." }]
+    },
+    {
+      "product_id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4", "product_name": "Color WOW Money Mist",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://colorwowhair.com/products/money-mist-leave-in-conditioner", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "pre_heat_damp", "source_url": "https://colorwowhair.com/products/money-mist-leave-in-conditioner", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_damp", "status": "supported", "reason": "Category-level professional evidence supports a minimal damp between-wash refresh for true Leave-ins; this is not a manufacturer-specific claim." }, { "use_case": "between_wash_dry", "status": "supported", "reason": "Category-level professional evidence supports a minimal targeted dry-hair method for true Leave-ins; damp remains preferred." }]
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c", "product_name": "Elvital Öl Magique Midnight Serum",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "post_wash_damp", "status": "supported", "reason": "Manufacturer directions permit wet or dry hair." }]
+    },
+    {
+      "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc", "product_name": "EVO Head Mistress",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.evohair.com/en-au/products/39268-evo-head-mistress-cuticle-sealer-150ml", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "post_style_finish", "source_url": "https://www.evohair.com/en-au/products/39268-evo-head-mistress-cuticle-sealer-150ml", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "post_style", "status": "supported", "reason": "Manufacturer directions explicitly include application after styling." }]
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff", "product_name": "Garnier Hair Food Aloe Vera",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.garnier.com.au/tips-and-how-tos/hair-care/~/link.aspx?_id=549DF96773B246F78B2B8AB15C393FE1&_z=z", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.garnier.com.au/tips-and-how-tos/hair-care/~/link.aspx?_id=549DF96773B246F78B2B8AB15C393FE1&_z=z", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_dry", "status": "supported", "reason": "Manufacturer Leave-in directions permit wet or dry hair." }]
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2", "product_name": "Garnier Hair Food Macadamia",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.garnier.com.au/about-our-brands/fructis/hair-food/fructis-hair-food-smoothing-macadamia", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.garnier.com.au/about-our-brands/fructis/hair-food/fructis-hair-food-smoothing-macadamia", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_dry", "status": "supported", "reason": "Manufacturer Leave-in directions permit wet or dry hair." }]
+    },
+    {
+      "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0", "product_name": "Gliss Ultimate Repair Sprüh-Conditioner",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/ultimate-repair/ultimate-repair-express-repair-spuelung-200-ml.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/ultimate-repair/ultimate-repair-express-repair-spuelung-200-ml.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "either_state_protection", "source_url": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/ultimate-repair/ultimate-repair-express-repair-spuelung-200-ml.html", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_dry", "status": "supported", "reason": "Manufacturer directions permit towel-dried or dry hair." }]
+    },
+    {
+      "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3", "product_name": "HASK Keratin 5-in-1 Spray",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://haskbeauty.com/products/smooth-keratin-jojobaoil-5-in-1-leave-in-spray", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://haskbeauty.com/products/smooth-keratin-jojobaoil-5-in-1-leave-in-spray", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "either_state_protection", "source_url": "https://haskbeauty.com/products/smooth-keratin-jojobaoil-5-in-1-leave-in-spray", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_dry", "status": "supported", "reason": "Manufacturer directions explicitly permit wet or dry hair." }]
+    },
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b", "product_name": "Kevin Murphy Young Again",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "post_style_finish", "source_url": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "either_state_protection", "source_url": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_dry", "status": "supported", "reason": "Manufacturer directions permit damp or dry use and touch-ups between washes." }, { "use_case": "post_style", "status": "supported", "reason": "Manufacturer directions explicitly permit finishing on dry hair." }, { "use_case": "pre_heat", "status": "supported", "reason": "Manufacturer states heat protection for damp and dry application." }]
+    },
+    {
+      "product_id": "0756a919-5fab-4b6c-a5da-8cb810869b6f", "product_name": "Living Proof Restore Repair Leave-In",
+      "uses": [{ "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.livingproof.com/products/restore-repair-leave-in", "source_type": "manufacturer", "checked_at": "2026-08-14" }],
+      "candidate_dispositions": [{ "use_case": "between_wash_damp", "status": "supported", "reason": "Category-level professional evidence supports a minimal damp between-wash refresh for true Leave-ins." }, { "use_case": "between_wash_dry", "status": "supported", "reason": "Category-level guidance permits a minimal targeted dry-hair method; this does not reinterpret the manufacturer's dry-hair-condition wording." }]
+    },
+    {
+      "product_id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd", "product_name": "Neqi Leave-In Moisturizing Mist",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://en.neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "pre_heat_damp", "source_url": "https://en.neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist", "source_type": "manufacturer", "checked_at": "2026-08-14", "maximum_claimed_temperature_c": 230 }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_damp", "status": "supported", "reason": "Category-level professional evidence supports a minimal damp between-wash refresh for true Leave-ins." }, { "use_case": "between_wash_dry", "status": "supported", "reason": "Category-level professional evidence supports a minimal targeted dry-hair method; damp remains preferred." }, { "use_case": "pre_heat", "status": "supported", "reason": "Manufacturer confirms heat protection to 230 C on towel-dried hair." }]
+    },
+    {
+      "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247", "product_name": "Pantene Bonding Leave-In",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.boots.com/pantene-molecular-bond-repair-leave-in-cream-90ml-for-damaged-hair-10355757", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.boots.com/pantene-molecular-bond-repair-leave-in-cream-90ml-for-damaged-hair-10355757", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "pre_heat_damp", "source_url": "https://www.boots.com/pantene-molecular-bond-repair-leave-in-cream-90ml-for-damaged-hair-10355757", "source_type": "retailer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "post_wash_damp", "status": "supported", "reason": "Reviewed directions explicitly permit wet or dry hair." }]
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381", "product_name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "pre_heat_damp", "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854", "source_type": "retailer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "between_wash_dry", "status": "supported", "reason": "Reviewed directions include dry-hair use between washes." }]
+    },
+    {
+      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed", "product_name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.haircode.uk/products-we-love/hair-oil/pantene-7-in-1-hair-oil-mist", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.haircode.uk/products-we-love/hair-oil/pantene-7-in-1-hair-oil-mist", "source_type": "retailer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "either_state_protection", "source_url": "https://www.haircode.uk/products-we-love/hair-oil/pantene-7-in-1-hair-oil-mist", "source_type": "retailer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "post_wash_damp", "status": "supported", "reason": "Reviewed directions permit damp or dry hair." }]
+    },
+    {
+      "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530", "product_name": "Redken One United",
+      "uses": [
+        { "source_role": "post_wash_leave_in", "application_family": "post_wash_damp_conditioning", "source_url": "https://www.redken.com/hair-styling/884486219336.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "between_wash_dry_care", "source_url": "https://www.redken.com/hair-styling/884486219336.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "post_wash_leave_in", "application_family": "post_style_finish", "source_url": "https://www.redken.com/hair-styling/884486219336.html", "source_type": "manufacturer", "checked_at": "2026-08-14" },
+        { "source_role": "pre_heat_protection", "application_family": "either_state_protection", "source_url": "https://www.redken.com/hair-styling/884486219336.html", "source_type": "manufacturer", "checked_at": "2026-08-14" }
+      ],
+      "candidate_dispositions": [{ "use_case": "post_wash_damp", "status": "supported", "reason": "Manufacturer directions include use after cleansing." }, { "use_case": "between_wash_dry", "status": "supported", "reason": "Manufacturer directions include dry-hair refresh between washes." }, { "use_case": "post_style", "status": "supported", "reason": "Manufacturer directions explicitly include use after styling." }]
+    }
+  ]
+}

@@ -487,7 +487,7 @@ test("refresh keeps roots and lengths independent, and dry care stays explicitly
   )
 })
 
-test("multi-role product dedupes once, preserves separately re-applied heat protection, and an incomplete day is isolated as partial", () => {
+test("multi-role product keeps distinct Leave-in and Heat guidance visible, and an incomplete day is isolated as partial", () => {
   const multitasker = item({
     itemId: "leave-in",
     productId: "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
@@ -567,18 +567,17 @@ test("multi-role product dedupes once, preserves separately re-applied heat prot
     ],
   })
 
-  const block = day(result, "wash_day").productBlocks.find(
+  const blocks = day(result, "wash_day").productBlocks.filter(
     (candidate) => candidate.productId === multitasker.productId,
   )
-  assert.ok(block)
-  assert.deepEqual(block.roles, ["heat_protection", "leave_in"])
-  assert.equal(
-    day(result, "wash_day").productBlocks.filter(
-      (candidate) => candidate.productId === multitasker.productId,
-    ).length,
-    1,
+  assert.equal(blocks.length, 2)
+  assert.deepEqual(
+    new Set(blocks.flatMap((block) => block.roles)),
+    new Set(["heat_protection", "leave_in"]),
   )
-  assert.match(block.steps.map((step) => step.copyDe).join(" "), /späteren Hot-Tool erneut/)
+  const heatBlock = blocks.find((block) => block.roles.includes("heat_protection"))
+  assert.ok(heatBlock)
+  assert.match(heatBlock.steps.map((step) => step.copyDe).join(" "), /späteren Hot-Tool erneut/)
   const partialClarifyingDay = day(result, "clarifying_wash_day")
   assert.equal(partialClarifyingDay.isPartial, true)
   assert.ok(

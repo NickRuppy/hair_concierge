@@ -61,7 +61,7 @@ type Query = {
 }
 export type ApplicationRoutineReadClient = { from(table: string): Query }
 const PRODUCT_SELECT =
-  "id,image_url,category,category_key,is_active,lifecycle_status,product_leave_in_specs(format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage),product_bondbuilder_specs(application_mode,treatment_mode,product_format,usage_protocol),product_mask_specs(weight,concentration,balance_direction),product_oil_specs(provides_heat_protection),product_heat_protectant_specs(provides_heat_protection),product_scalp_care_specs(primary_role,presentation_format,rinse_mode),product_dry_shampoo_specs(format)"
+  "id,image_url,category,category_key,is_active,lifecycle_status,product_leave_in_specs(format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage),product_bondbuilder_specs(application_mode,treatment_mode,product_format,usage_protocol),product_mask_specs(weight,concentration,balance_direction),product_oil_specs(weight,role_support,provides_heat_protection),product_heat_protectant_specs(provides_heat_protection),product_scalp_care_specs(primary_role,presentation_format,rinse_mode),product_dry_shampoo_specs(format)"
 const PRODUCT_PROTOCOL_SELECT =
   "product_id,category,role,guidance_payload,application_state,reapplication,source_url,source_text,updated_at"
 const PRODUCT_PROTOCOL_V2_SELECT =
@@ -222,16 +222,33 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       throw new Error("accepted_routine_product_unavailable")
     }
     const adapted = factsFor(category, product)
-    const reviewedProtocol = protocolRows.find(
+    const reviewedProtocols = protocolRows.filter(
       (row) => row.product_id === product.id && row.role === "pre_heat_protection",
     )
-    const catalogFacts = reviewedProtocol
-      ? {
-          ...adapted.facts,
-          applicationState: reviewedProtocol.application_state,
-          reapplication: reviewedProtocol.reapplication,
-        }
-      : adapted.facts
+    const reviewedStates = new Set(reviewedProtocols.map((row) => row.application_state))
+    const reviewedApplicationState =
+      reviewedStates.has("either") || (reviewedStates.has("damp") && reviewedStates.has("dry"))
+        ? "either"
+        : reviewedStates.has("damp")
+          ? "damp"
+          : reviewedStates.has("dry")
+            ? "dry"
+            : null
+    const reviewedReapplication = reviewedProtocols.some((row) => row.reapplication === "required")
+      ? "required"
+      : reviewedProtocols.some((row) => row.reapplication === "optional")
+        ? "optional"
+        : reviewedProtocols.length > 0
+          ? "not_stated"
+          : null
+    const catalogFacts =
+      reviewedProtocols.length > 0
+        ? {
+            ...adapted.facts,
+            applicationState: reviewedApplicationState,
+            reapplication: reviewedReapplication,
+          }
+        : adapted.facts
     return {
       itemId: item.itemKey,
       productId: product.id,

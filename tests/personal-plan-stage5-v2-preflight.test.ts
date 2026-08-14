@@ -59,6 +59,7 @@ function reads(payload: unknown = sourcePayload) {
         product_id: item.product_id,
         category: "shampoo",
         role: item.source_role,
+        application_family: item.guidance_payload_v2.applicationFamily,
         guidance_payload: payload,
       },
     ],
@@ -110,6 +111,7 @@ test("Stage 5 V2 preflight rejects an active curated protocol omitted from the a
         product_id: item.product_id,
         category: "shampoo",
         role: item.source_role,
+        application_family: item.guidance_payload_v2.applicationFamily,
         guidance_payload: sourcePayload,
       },
       {
@@ -123,6 +125,24 @@ test("Stage 5 V2 preflight rejects an active curated protocol omitted from the a
 
   assert.equal(result.ok, false)
   assert.deepEqual(result.blockers, [
-    "active_protocol_missing_from_artifact:20000000-0000-4000-8000-000000000001:shampoo_everyday",
+    "active_protocol_missing_from_artifact:20000000-0000-4000-8000-000000000001:shampoo_everyday:unknown",
   ])
+})
+
+test("Stage 5 V2 preflight binds a source row to its exact family when one role has variants", async () => {
+  const result = await preflightStage5V2ApplicationArtifact(artifact, {
+    ...reads(),
+    listProtocols: async () => [
+      {
+        product_id: item.product_id,
+        category: "shampoo",
+        role: item.source_role,
+        application_family: "targeted_treatment_shampoo",
+        guidance_payload: sourcePayload,
+      },
+    ],
+  })
+
+  assert.equal(result.ok, false)
+  assert.deepEqual(result.blockers, [`source_protocol_missing:${item.key}`])
 })

@@ -3,6 +3,7 @@ import { createHash } from "node:crypto"
 import { z } from "zod"
 
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
+import { buildProductApplicationPointerV2 } from "@/lib/product-intake/catalog-enrichment/stage5-v2-builder"
 
 const sourceSchema = z
   .object({
@@ -141,15 +142,16 @@ export const exactCatalogBundleSchema = z
           path: ["items", index],
           message: "Only the approved Deep Cleansing repair may start with a NULL category",
         })
-      const roles = new Set<string>()
+      const roleFamilies = new Set<string>()
       for (const protocol of item.protocols) {
-        if (roles.has(protocol.role))
+        const roleFamily = `${protocol.role}:${protocol.guidance_payload.applicationFamily}`
+        if (roleFamilies.has(roleFamily))
           context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["items", index, "protocols"],
-            message: "Duplicate product role",
+            message: "Duplicate product role and application family",
           })
-        roles.add(protocol.role)
+        roleFamilies.add(roleFamily)
         const guidance = protocol.guidance_payload
         if (
           guidance.scope.kind !== "product" ||
@@ -179,7 +181,7 @@ export const exactCatalogBundleSchema = z
               ? item.facts.values.role_support
               : []
       for (const role of required)
-        if (!roles.has(role))
+        if (![...roleFamilies].some((roleFamily) => roleFamily.startsWith(`${role}:`)))
           context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["items", index, "protocols"],
@@ -244,7 +246,13 @@ export function buildExactCatalogBundle(input: unknown): BuiltExactCatalogBundle
                     },
                   }
                 : item.facts,
-        protocols: [...item.protocols].sort((a, b) => a.role.localeCompare(b.role)),
+        protocols: [...item.protocols].sort(
+          (a, b) =>
+            a.role.localeCompare(b.role) ||
+            a.guidance_payload.applicationFamily.localeCompare(
+              b.guidance_payload.applicationFamily,
+            ),
+        ),
       })),
   }
   const bundle = exactCatalogBundleSchema.parse(normalized)
@@ -271,6 +279,7 @@ export type ExactCatalogBundleRead = {
       product_id: string
       category: string
       role: string
+      application_family?: string | null
       cadence: unknown
       source_label: string | null
       source_url: string | null
@@ -286,6 +295,19 @@ function stableJson(value: unknown) {
 
 type ExactCatalogProtocol = ExactCatalogBundle["items"][number]["protocols"][number]
 type PersistedProtocol = Awaited<ReturnType<ExactCatalogBundleRead["listProtocols"]>>[number]
+
+function persistedApplicationFamily(protocol: PersistedProtocol) {
+  if (protocol.application_family) return protocol.application_family
+  const parsed = applicationGuidanceProtocolSchema.safeParse(protocol.guidance_payload)
+  return parsed.success ? parsed.data.applicationFamily : null
+}
+
+function incomingApplicationFamily(protocol: ExactCatalogProtocol) {
+  return buildProductApplicationPointerV2({
+    sourceRole: protocol.role,
+    guidancePayload: protocol.guidance_payload,
+  }).applicationFamily
+}
 
 function isLegacyMaskSourceTextUpgrade(
   productId: string,
@@ -341,7 +363,8 @@ export async function preflightExactCatalogBundle(
         (row) =>
           row.product_id === item.product_id &&
           row.category === item.target_category &&
-          row.role === protocol.role,
+          row.role === protocol.role &&
+          persistedApplicationFamily(row) === incomingApplicationFamily(protocol),
       )
       if (
         existing &&
@@ -352,7 +375,9 @@ export async function preflightExactCatalogBundle(
           stableJson(existing.guidance_payload) !== stableJson(protocol.guidance_payload)) &&
         !isLegacyMaskSourceTextUpgrade(item.product_id, item.target_category, existing, protocol)
       )
-        blockers.push(`protocol_conflict:${item.product_id}:${protocol.role}`)
+        blockers.push(
+          `protocol_conflict:${item.product_id}:${protocol.role}:${incomingApplicationFamily(protocol)}`,
+        )
     }
   }
   return {

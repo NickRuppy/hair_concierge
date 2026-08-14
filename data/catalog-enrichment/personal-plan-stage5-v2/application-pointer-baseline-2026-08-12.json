@@ -1,7 +1,7 @@
 {
   "schema_version": "personal-plan-stage5-application-pointer-backfill-v2",
-  "snapshot_date": "2026-08-14",
-  "source_kind": "reviewed_stage5_v1_and_use_case_artifacts",
+  "snapshot_date": "2026-08-12",
+  "source_kind": "reviewed_stage5_v1_artifacts",
   "source_files": [
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-14-leave-in-exact-01.json",
@@ -78,18 +78,14 @@
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-13-conditioner-exact-02.json",
       "sha256": "5dc95f89358b970eb16f3dc5bb50e286727a36df52d540ea77a47b86c786684d"
-    },
-    {
-      "path": "data/catalog-enrichment/personal-plan-stage5-v2/leave-in-use-cases-2026-08-14.json",
-      "sha256": "c6e6c3df65142b96b4a091017ec35d64bff0fa38956abd5cd5f33ec634002104"
     }
   ],
   "observed_counts": {
-    "rows": 289,
+    "rows": 272,
     "products": 223,
     "exact_workflows": 4,
     "family_templates": 28,
-    "composable_rows": 289,
+    "composable_rows": 272,
     "blocked_rows": 0,
     "by_category": {
       "bondbuilder": 3,
@@ -97,7 +93,7 @@
       "deep_cleansing_shampoo": 6,
       "dry_shampoo": 10,
       "heat_protectant": 7,
-      "leave_in": 78,
+      "leave_in": 61,
       "mask": 34,
       "oil": 54,
       "scalp_care": 8,
@@ -370,7 +366,7 @@
         {
           "stepKey": "refresh",
           "action": "apply_product",
-          "copyTemplateDe": "Die betroffenen {{application_area_de}} leicht anfeuchten. Eine sehr kleine Menge in den Händen verteilen und gezielt in {{application_area_de}} einarbeiten. Ansatz und Kopfhaut aussparen. Nicht ausspülen."
+          "copyTemplateDe": "Die betroffenen Längen leicht anfeuchten. Eine sehr kleine Menge in den Händen verteilen und gezielt in Längen und Spitzen einarbeiten. Ansatz und Kopfhaut aussparen. Nicht ausspülen."
         }
       ],
       "evidence": [
@@ -407,7 +403,7 @@
         {
           "stepKey": "dry-care",
           "action": "apply_product",
-          "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen {{application_area_de}} beginnen und nur bei Bedarf ergänzen."
+          "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
         }
       ],
       "evidence": [
@@ -444,7 +440,7 @@
         {
           "stepKey": "oil-damp-care",
           "action": "apply_product",
-          "copyTemplateDe": "Die betroffenen {{application_area_de}} mit feuchten Händen leicht anfeuchten. Einen Tropfen oder eine sehr kleine Menge vollständig in den Handflächen verteilen und nur in {{application_area_de}} drücken. Ansatz und Kopfhaut aussparen. Nicht ausspülen."
+          "copyTemplateDe": "Die betroffenen Längen mit feuchten Händen leicht anfeuchten. Einen Tropfen oder eine sehr kleine Menge vollständig in den Handflächen verteilen und nur in Längen und Spitzen drücken. Ansatz und Kopfhaut aussparen. Nicht ausspülen."
         }
       ],
       "evidence": [
@@ -481,7 +477,7 @@
         {
           "stepKey": "dry-care",
           "action": "apply_product",
-          "copyTemplateDe": "Mit 1 Tropfen oder einer sehr kleinen Menge in trockenen {{application_area_de}} beginnen und nur bei Bedarf ergänzen."
+          "copyTemplateDe": "Mit 1 Tropfen oder einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
         }
       ],
       "evidence": [
@@ -518,7 +514,7 @@
         {
           "stepKey": "oil-damp-care",
           "action": "apply_product",
-          "copyTemplateDe": "Die betroffenen {{application_area_de}} mit feuchten Händen leicht anfeuchten. Einen Tropfen oder eine sehr kleine Menge vollständig in den Handflächen verteilen und nur in {{application_area_de}} drücken. Ansatz und Kopfhaut aussparen. Nicht ausspülen."
+          "copyTemplateDe": "Die betroffenen Längen mit feuchten Händen leicht anfeuchten. Einen Tropfen oder eine sehr kleine Menge vollständig in den Handflächen verteilen und nur in Längen und Spitzen drücken. Ansatz und Kopfhaut aussparen. Nicht ausspülen."
         }
       ],
       "evidence": [
@@ -555,7 +551,7 @@
         {
           "stepKey": "dry-care",
           "action": "apply_product",
-          "copyTemplateDe": "Mit 1 Tropfen oder einer sehr kleinen Menge in trockenen {{application_area_de}} beginnen und nur bei Bedarf ergänzen."
+          "copyTemplateDe": "Mit 1 Tropfen oder einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
         }
       ],
       "evidence": [
@@ -1477,52 +1473,6 @@
       }
     },
     {
-      "key": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff:post_wash_leave_in:between_wash_dry_care",
-      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
-      "product_name": "Garnier Hair Food Aloe Vera",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "9d0f4c4d082ad0af36d8ca0d38338f2c18680033af4a3f1d94761bb501f32877",
-      "template_keys": [
-        "leave-in.dry-care.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.garnier.com.au/tips-and-how-tos/hair-care/~/link.aspx?_id=549DF96773B246F78B2B8AB15C393FE1&_z=z",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff:post_wash_leave_in:post_wash_damp_conditioning",
       "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
       "product_name": "Garnier Hair Food Aloe Vera",
@@ -2189,52 +2139,6 @@
             "sourceUrl": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
             "sourceType": "retailer",
             "checkedAt": "2026-08-11"
-          }
-        ]
-      }
-    },
-    {
-      "key": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc:post_wash_leave_in:post_style_finish",
-      "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
-      "product_name": "EVO Head Mistress",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "c561f62703ef148c4905b94e21146b3734976f41ddee1eb33b915f115a4f3658",
-      "template_keys": [
-        "leave-in.post-style-finish.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "bae192d921b0f8c356cfbd259626e69c178c53ed530fd03e844774df1a8836c5",
-      "after_visible_step_fingerprint": "e30c58070570338da2dd13ac4398acbd55273e617356f8124a97bc2fbddec872",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_style_finish",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.evohair.com/en-au/products/39268-evo-head-mistress-cuticle-sealer-150ml",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
           }
         ]
       }
@@ -4064,52 +3968,6 @@
       }
     },
     {
-      "key": "35a372b6-c7ef-45cb-be0b-99cef476f247:post_wash_leave_in:post_wash_damp_conditioning",
-      "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
-      "product_name": "Pantene Bonding Leave-In",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "0de1e3939718ef85bef2b0526fb4c2a508753cc0b12b09687afe7077812963ca",
-      "template_keys": [
-        "leave-in.damp-conditioning.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "eccdcd36288b92944b41718f719958462a5adbccf4be4a791ccbc39fef81584b",
-      "after_visible_step_fingerprint": "b43fa8419d2e2a3c48910717d92b347a3d4082c18c35bafab2565081ee68f831",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "35a372b6-c7ef-45cb-be0b-99cef476f247"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_wash_damp_conditioning",
-        "facts": {
-          "applicationState": "damp_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.boots.com/pantene-molecular-bond-repair-leave-in-cream-90ml-for-damaged-hair-10355757",
-            "sourceType": "retailer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "35a372b6-c7ef-45cb-be0b-99cef476f247:pre_heat_protection:pre_heat_damp",
       "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
       "product_name": "Pantene Bonding Leave-In",
@@ -4511,17 +4369,17 @@
       }
     },
     {
-      "key": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530:post_wash_leave_in:between_wash_dry_care",
+      "key": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530:post_wash_leave_in:between_wash_damp_refresh",
       "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
       "product_name": "Redken One United",
       "source_role": "post_wash_leave_in",
-      "source_fingerprint": "62515ecf3ed8b05d749f6557d276993adfee7fbf98c54b482df5b7b0106cacfe",
+      "source_fingerprint": "71cfd14c9488d78c69d5f0bec24212964aa2009c04d1ca07653741764161e1f0",
       "template_keys": [
-        "leave-in.dry-care.v2"
+        "leave-in.damp-refresh.v2"
       ],
       "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
+      "before_visible_step_fingerprint": "043c6d5499e30fe393be9ede5556ee6ee24cc7f83fdb594460d0c6aaa9905739",
+      "after_visible_step_fingerprint": "64e1e529553f2c2fb694af6edb97a8f9821175a3a6ca7c993bc33f0900491bc5",
       "guidance_payload_v2": {
         "schemaVersion": 2,
         "contractKind": "product_pointer",
@@ -4532,99 +4390,7 @@
         },
         "sourceRole": "post_wash_leave_in",
         "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.redken.com/hair-styling/884486219336.html",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
-      "key": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530:post_wash_leave_in:post_style_finish",
-      "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
-      "product_name": "Redken One United",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "c8bf129928a46f8fa7aec9005a244166290e1886301aed3a4bf78bf318eb8796",
-      "template_keys": [
-        "leave-in.post-style-finish.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "bae192d921b0f8c356cfbd259626e69c178c53ed530fd03e844774df1a8836c5",
-      "after_visible_step_fingerprint": "e30c58070570338da2dd13ac4398acbd55273e617356f8124a97bc2fbddec872",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_style_finish",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.redken.com/hair-styling/884486219336.html",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
-      "key": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530:post_wash_leave_in:post_wash_damp_conditioning",
-      "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
-      "product_name": "Redken One United",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "dfb22fed6145924c2b9671a493a5c519662ec16ce537b1cf586291502605d755",
-      "template_keys": [
-        "leave-in.damp-conditioning.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "eccdcd36288b92944b41718f719958462a5adbccf4be4a791ccbc39fef81584b",
-      "after_visible_step_fingerprint": "b43fa8419d2e2a3c48910717d92b347a3d4082c18c35bafab2565081ee68f831",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_wash_damp_conditioning",
+        "applicationFamily": "between_wash_damp_refresh",
         "facts": {
           "applicationState": "damp_hair",
           "applicationArea": "hair_lengths_ends",
@@ -4641,9 +4407,9 @@
         "cautionCodes": [],
         "evidence": [
           {
-            "sourceUrl": "https://www.redken.com/hair-styling/884486219336.html",
+            "sourceUrl": "https://www.redken.com/hair-styling/one-united-leave-in-conditioner.html",
             "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
+            "checkedAt": "2026-08-11"
           }
         ]
       }
@@ -6564,52 +6330,6 @@
       }
     },
     {
-      "key": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3:post_wash_leave_in:between_wash_dry_care",
-      "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
-      "product_name": "HASK Keratin 5-in-1 Spray",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "8ece645b260aa8a51b686c83ea0c943153b62844e3a5660dab1ab1f8b5195fb3",
-      "template_keys": [
-        "leave-in.dry-care.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://haskbeauty.com/products/smooth-keratin-jojobaoil-5-in-1-leave-in-spray",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3:post_wash_leave_in:post_wash_damp_conditioning",
       "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
       "product_name": "HASK Keratin 5-in-1 Spray",
@@ -6853,52 +6573,6 @@
             "sourceUrl": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
             "sourceType": "manufacturer",
             "checkedAt": "2026-08-11"
-          }
-        ]
-      }
-    },
-    {
-      "key": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0:post_wash_leave_in:between_wash_dry_care",
-      "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
-      "product_name": "Gliss Ultimate Repair Sprüh-Conditioner",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "a28133a7306472918c731301cbe8d7a3b910b0e42001cb17cb162531ebbbb4f6",
-      "template_keys": [
-        "leave-in.dry-care.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/ultimate-repair/ultimate-repair-express-repair-spuelung-200-ml.html",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
           }
         ]
       }
@@ -7530,98 +7204,6 @@
       }
     },
     {
-      "key": "6ad82861-d68e-4e70-a976-78c0f35d087b:post_wash_leave_in:between_wash_dry_care",
-      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
-      "product_name": "Kevin Murphy Young Again",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "7b8d29a3a820891437d32f3082e878b1a0d2d55e08c5b94b820464f0b22092af",
-      "template_keys": [
-        "leave-in.dry-care.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
-      "key": "6ad82861-d68e-4e70-a976-78c0f35d087b:post_wash_leave_in:post_style_finish",
-      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
-      "product_name": "Kevin Murphy Young Again",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "44fb5ae2c1c38359f77975bfdbd17980849ebb669bfaee8aba8b84baa08e3a95",
-      "template_keys": [
-        "leave-in.post-style-finish.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "bae192d921b0f8c356cfbd259626e69c178c53ed530fd03e844774df1a8836c5",
-      "after_visible_step_fingerprint": "e30c58070570338da2dd13ac4398acbd55273e617356f8124a97bc2fbddec872",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_style_finish",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "6ad82861-d68e-4e70-a976-78c0f35d087b:post_wash_leave_in:post_wash_damp_conditioning",
       "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
       "product_name": "Kevin Murphy Young Again",
@@ -7668,61 +7250,6 @@
       }
     },
     {
-      "key": "6ad82861-d68e-4e70-a976-78c0f35d087b:pre_heat_protection:either_state_protection",
-      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
-      "product_name": "Kevin Murphy Young Again",
-      "source_role": "pre_heat_protection",
-      "source_fingerprint": "1919c307ca9c975761287358e8e60344a1d1b9970aa9eaa3416b8c189b2744f8",
-      "template_keys": [
-        "heat.damp.leave-in.v2",
-        "heat.dry.leave-in.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "166ef015a870295b65c7991452f21682ecd36fe03d34d47a1ff5fd8dcee22dba",
-      "after_visible_step_fingerprint": "ab5a7e156ec608dcba67179df0d81474b0c66f039a7d14089eb1ff7f358317d4",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
-        },
-        "sourceRole": "pre_heat_protection",
-        "role": "heat_protection",
-        "applicationFamily": "either_state_protection",
-        "facts": {
-          "applicationState": "damp_or_dry_hair",
-          "applicationArea": "root_to_tip_hair",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": {
-            "supportedStates": [
-              "damp_hair",
-              "dry_hair"
-            ],
-            "activationRequired": false,
-            "maximumClaimedTemperatureC": null,
-            "reapplication": "none"
-          },
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "6b01025d-9e72-4514-b42e-bbb6065fbe1c:post_wash_leave_in:between_wash_dry_care",
       "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
       "product_name": "Elvital Öl Magique Midnight Serum",
@@ -7764,52 +7291,6 @@
             "sourceUrl": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
             "sourceType": "manufacturer",
             "checkedAt": "2026-08-11"
-          }
-        ]
-      }
-    },
-    {
-      "key": "6b01025d-9e72-4514-b42e-bbb6065fbe1c:post_wash_leave_in:post_wash_damp_conditioning",
-      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
-      "product_name": "Elvital Öl Magique Midnight Serum",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "3b3ebfc9f78d8b2cc86de65bf80c4ca0c7cc4d2c8b53c2c5440cac3afb212c57",
-      "template_keys": [
-        "leave-in.damp-conditioning.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "eccdcd36288b92944b41718f719958462a5adbccf4be4a791ccbc39fef81584b",
-      "after_visible_step_fingerprint": "b43fa8419d2e2a3c48910717d92b347a3d4082c18c35bafab2565081ee68f831",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "6b01025d-9e72-4514-b42e-bbb6065fbe1c"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_wash_damp_conditioning",
-        "facts": {
-          "applicationState": "damp_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
           }
         ]
       }
@@ -11089,52 +10570,6 @@
       }
     },
     {
-      "key": "a72d630d-547a-465f-9846-3006b38af0a2:post_wash_leave_in:between_wash_dry_care",
-      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
-      "product_name": "Garnier Hair Food Macadamia",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "b3f5e9ed02fbfa5e4adae09c2c8510bdf21ef2aff8a63ad200bac132bab2e8ef",
-      "template_keys": [
-        "leave-in.dry-care.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "a72d630d-547a-465f-9846-3006b38af0a2"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.garnier.com.au/about-our-brands/fructis/hair-food/fructis-hair-food-smoothing-macadamia",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "a72d630d-547a-465f-9846-3006b38af0a2:post_wash_leave_in:post_wash_damp_conditioning",
       "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
       "product_name": "Garnier Hair Food Macadamia",
@@ -11846,59 +11281,6 @@
       }
     },
     {
-      "key": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd:pre_heat_protection:pre_heat_damp",
-      "product_id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
-      "product_name": "Neqi Leave-In Moisturizing Mist",
-      "source_role": "pre_heat_protection",
-      "source_fingerprint": "f7d289d6c68b90e5c9cd068d7040f90589f10df68db7b279f4cd711a1ef9839d",
-      "template_keys": [
-        "heat.damp.leave-in.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "166ef015a870295b65c7991452f21682ecd36fe03d34d47a1ff5fd8dcee22dba",
-      "after_visible_step_fingerprint": "99457aa2f0cf54faef4de68774efad9ccb86bd30d94564e7a9c878f903672df7",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd"
-        },
-        "sourceRole": "pre_heat_protection",
-        "role": "heat_protection",
-        "applicationFamily": "pre_heat_damp",
-        "facts": {
-          "applicationState": "damp_hair",
-          "applicationArea": "root_to_tip_hair",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": {
-            "supportedStates": [
-              "damp_hair"
-            ],
-            "activationRequired": false,
-            "maximumClaimedTemperatureC": 230,
-            "reapplication": "none"
-          },
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://en.neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d:intensive_conditioning_mask:post_shampoo_rinse_out_mask",
       "product_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
       "product_name": "Neqi Build Boost",
@@ -12335,52 +11717,6 @@
             "sourceUrl": "https://www.garnier.com.au/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
             "sourceType": "manufacturer",
             "checkedAt": "2026-08-11"
-          }
-        ]
-      }
-    },
-    {
-      "key": "c6e80f39-20ba-401e-b041-6ee7c89a5996:post_wash_leave_in:between_wash_dry_care",
-      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
-      "product_name": "Balea Aqua Hyaluron 3in1",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "f3aa371f307b30208cc548a9f1c3360cef837ab795918419057ca295a29e9c0e",
-      "template_keys": [
-        "leave-in.dry-care.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "c6e80f39-20ba-401e-b041-6ee7c89a5996"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.dm.at/p/d/1417521/balea-professional-3in1-haarmaske-aqua-hyaluron",
-            "sourceType": "retailer",
-            "checkedAt": "2026-08-14"
           }
         ]
       }
@@ -13715,52 +13051,6 @@
       }
     },
     {
-      "key": "e781ca9e-886d-40a1-bfe1-48177cfbf381:post_wash_leave_in:between_wash_dry_care",
-      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
-      "product_name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "806e7e3976d0ff123d106c05e6863acf4a44530583e2c3a7d227422056db01a9",
-      "template_keys": [
-        "leave-in.dry-care.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "766e0b80d2653b3a7b36186a01e84324f026840c6fee4226f0666998b1a4a7c5",
-      "after_visible_step_fingerprint": "7d8dc8eabfb27a3a626134cdf0fd35b094888c4deb7d5a012fda8938615899bb",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "between_wash_dry_care",
-        "facts": {
-          "applicationState": "dry_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
-            "sourceType": "retailer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "e781ca9e-886d-40a1-bfe1-48177cfbf381:post_wash_leave_in:post_wash_damp_conditioning",
       "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
       "product_name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
@@ -14698,52 +13988,6 @@
       }
     },
     {
-      "key": "f8f3b51d-8e64-487d-bad5-4a47c58862ed:post_wash_leave_in:post_wash_damp_conditioning",
-      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
-      "product_name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "7c7d81cd659f5299eac6ed3c4de71ddf3375965daecb1957b27210318548a783",
-      "template_keys": [
-        "leave-in.damp-conditioning.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "eccdcd36288b92944b41718f719958462a5adbccf4be4a791ccbc39fef81584b",
-      "after_visible_step_fingerprint": "b43fa8419d2e2a3c48910717d92b347a3d4082c18c35bafab2565081ee68f831",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "f8f3b51d-8e64-487d-bad5-4a47c58862ed"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_wash_damp_conditioning",
-        "facts": {
-          "applicationState": "damp_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.haircode.uk/products-we-love/hair-oil/pantene-7-in-1-hair-oil-mist",
-            "sourceType": "retailer",
-            "checkedAt": "2026-08-14"
-          }
-        ]
-      }
-    },
-    {
       "key": "f8f3b51d-8e64-487d-bad5-4a47c58862ed:pre_heat_protection:either_state_protection",
       "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
       "product_name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
@@ -14840,52 +14084,6 @@
             "sourceUrl": "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express",
             "sourceType": "retailer",
             "checkedAt": "2026-08-11"
-          }
-        ]
-      }
-    },
-    {
-      "key": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c:post_wash_leave_in:post_wash_damp_conditioning",
-      "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
-      "product_name": "alverde Leave-In Sprühkur Express 7in1",
-      "source_role": "post_wash_leave_in",
-      "source_fingerprint": "e4b3fabe3eb9280b511d95f0a713d9c07f0cc2e5470b9f9400ba5bf422732f90",
-      "template_keys": [
-        "leave-in.damp-conditioning.v2"
-      ],
-      "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "eccdcd36288b92944b41718f719958462a5adbccf4be4a791ccbc39fef81584b",
-      "after_visible_step_fingerprint": "b43fa8419d2e2a3c48910717d92b347a3d4082c18c35bafab2565081ee68f831",
-      "guidance_payload_v2": {
-        "schemaVersion": 2,
-        "contractKind": "product_pointer",
-        "scope": {
-          "kind": "product",
-          "category": "leave_in",
-          "productId": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c"
-        },
-        "sourceRole": "post_wash_leave_in",
-        "role": "leave_in",
-        "applicationFamily": "post_wash_damp_conditioning",
-        "facts": {
-          "applicationState": "damp_hair",
-          "applicationArea": "hair_lengths_ends",
-          "rinse": "leave_in",
-          "contactTime": null,
-          "amount": null,
-          "heat": null,
-          "conditionerPolicy": "not_applicable"
-        },
-        "workflowId": null,
-        "requiredCompanionProductId": null,
-        "runtimeBlockerCode": null,
-        "exactSteps": [],
-        "cautionCodes": [],
-        "evidence": [
-          {
-            "sourceUrl": "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express",
-            "sourceType": "retailer",
-            "checkedAt": "2026-08-14"
           }
         ]
       }

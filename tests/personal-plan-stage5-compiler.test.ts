@@ -283,7 +283,7 @@ test("an intensive-care Mask with replacement guidance suppresses Conditioner an
   ])
 })
 
-test("compiler keeps separately reapplied heat events distinct and fails closed on incompatible exact product steps", () => {
+test("compiler keeps separately reapplied heat events and distinct Leave-in/Heat roles visible", () => {
   const heatRole = {
     ...leaveInAndHeat,
     itemId: "heat",
@@ -353,12 +353,15 @@ test("compiler keeps separately reapplied heat events distinct and fails closed 
   })
   const conflictedDay = conflicted.days.find((day) => day.key === "wash_day")
   assert.ok(conflictedDay)
-  assert.equal(conflictedDay.isPartial, true)
-  assert.equal(
-    conflictedDay.outerSequence.some(
-      (step) => step.kind === "unresolved_product" && step.block.productId === ids[2],
+  assert.equal(conflictedDay.isPartial, false)
+  assert.equal(conflictedDay.productBlocks.filter((block) => block.productId === ids[2]).length, 2)
+  assert.deepEqual(
+    new Set(
+      conflictedDay.productBlocks
+        .filter((block) => block.productId === ids[2])
+        .flatMap((block) => block.roles),
     ),
-    true,
+    new Set(["leave_in", "heat_protection"]),
   )
   assert.equal(
     conflicted.failures.some((failure) => failure.dayType === "wash_day"),

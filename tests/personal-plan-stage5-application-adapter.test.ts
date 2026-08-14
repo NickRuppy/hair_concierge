@@ -190,6 +190,37 @@ test("Stage 5 V2 adapter selects only typed pointer storage and ignores V1 manuf
   assert.deepEqual(result.exactGuidanceProtocols, [])
 })
 
+test("Stage 5 adapter carries reviewed Oil weight into application dosage facts", async () => {
+  const oilPayload = activePayload()
+  oilPayload.items[0] = {
+    ...oilPayload.items[0]!,
+    category: "oil",
+    role: "dry_finish",
+  } as never
+  const { client, calls } = productClient([
+    {
+      id: productId,
+      category: "oil",
+      category_key: "oil",
+      is_active: true,
+      lifecycle_status: "active",
+      product_oil_specs: { weight: "rich", role_support: ["dry_finish"] },
+    },
+  ])
+
+  const result = await adaptAcceptedActiveRoutineForApplication({
+    client,
+    activeVersion: { id: "routine-v1", payload: oilPayload },
+  })
+
+  assert.match(
+    calls[0]!.select!,
+    /product_oil_specs\(weight,role_support,provides_heat_protection\)/,
+  )
+  assert.equal(result.routineItems[0]?.catalogFacts.weight, "rich")
+  assert.equal(result.routineItems[0]?.catalogFactProvenance?.weight, "catalog_spec")
+})
+
 test("Stage 5 adapter preserves a canonical planned product as provisional guidance input", async () => {
   const { client } = productClient([
     {
@@ -353,8 +384,18 @@ test("Stage 5 adapter joins reviewed exact Heat guidance for the same canonical 
                 product_id: productId,
                 category: "heat_protectant",
                 role: "pre_heat_protection",
-                application_state: "either",
+                application_state: "damp",
                 reapplication: "not_stated",
+                source_url: "https://example.com/heat",
+                source_text: "Vor dem bestätigten Wärmeschritt gleichmäßig auftragen.",
+                updated_at: "2026-08-10T09:00:00.000Z",
+              },
+              {
+                product_id: productId,
+                category: "heat_protectant",
+                role: "pre_heat_protection",
+                application_state: "dry",
+                reapplication: "required",
                 source_url: "https://example.com/heat",
                 source_text: "Vor dem bestätigten Wärmeschritt gleichmäßig auftragen.",
                 updated_at: "2026-08-10T09:00:00.000Z",
@@ -385,7 +426,7 @@ test("Stage 5 adapter joins reviewed exact Heat guidance for the same canonical 
   assert.deepEqual(calls, ["products", "product_application_protocols"])
   assert.equal(result.exactGuidanceProtocols.length, 2)
   assert.equal(result.routineItems[0]?.catalogFacts.applicationState, "either")
-  assert.equal(result.routineItems[0]?.catalogFacts.reapplication, "not_stated")
+  assert.equal(result.routineItems[0]?.catalogFacts.reapplication, "required")
 })
 
 test("Stage 5 adapter accepts a canonical exact Mask guidance payload", async () => {

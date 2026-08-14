@@ -97,7 +97,10 @@ export const stage5V2ApplicationArtifactSchema = z
   .object({
     schema_version: z.literal("personal-plan-stage5-application-pointer-backfill-v2"),
     snapshot_date: z.string().date(),
-    source_kind: z.literal("reviewed_stage5_v1_artifacts"),
+    source_kind: z.enum([
+      "reviewed_stage5_v1_artifacts",
+      "reviewed_stage5_v1_and_use_case_artifacts",
+    ]),
     source_files: z.array(
       z.object({ path: z.string().min(1), sha256: z.string().regex(/^[a-f0-9]{64}$/) }).strict(),
     ),
@@ -134,12 +137,31 @@ export type Stage5V2ApplicationPreflightRead = {
       product_id: string
       category: string
       role: string
+      application_family?: string
       guidance_payload: unknown
     }>
   >
   listActiveCuratedProtocols?(): Promise<
-    Array<{ product_id: string; category: string; role: string; guidance_payload: unknown }>
+    Array<{
+      product_id: string
+      category: string
+      role: string
+      application_family?: string
+      guidance_payload: unknown
+    }>
   >
+}
+
+function protocolFamily(protocol: {
+  application_family?: string | null
+  guidance_payload?: unknown
+  guidance_payload_v2?: unknown
+}): string | null {
+  if (protocol.application_family) return protocol.application_family
+  const v2 = protocol.guidance_payload_v2 as { applicationFamily?: unknown } | null
+  if (typeof v2?.applicationFamily === "string") return v2.applicationFamily
+  const v1 = protocol.guidance_payload as { applicationFamily?: unknown } | null
+  return typeof v1?.applicationFamily === "string" ? v1.applicationFamily : null
 }
 
 export async function preflightStage5V2ApplicationArtifact(
@@ -154,11 +176,18 @@ export async function preflightStage5V2ApplicationArtifact(
     read.listProtocols(productIds),
   ])
   const productById = new Map(products.map((product) => [product.id, product]))
-  const protocolByKey = new Map(
-    protocols.map((protocol) => [
-      `${protocol.product_id}:${protocol.category}:${protocol.role}`,
-      protocol,
-    ]),
+  const protocolByKey = new Map<string, (typeof protocols)[number]>(
+    protocols.flatMap((protocol) => {
+      const family = protocolFamily(protocol)
+      return family
+        ? [
+            [
+              `${protocol.product_id}:${protocol.category}:${protocol.role}:${family}`,
+              protocol,
+            ] as const,
+          ]
+        : []
+    }),
   )
   const itemKeys = artifact.items.map((item) => item.key)
   if (new Set(itemKeys).size !== itemKeys.length) blockers.push("duplicate_artifact_key")
@@ -208,9 +237,8 @@ export async function preflightStage5V2ApplicationArtifact(
       blockers.push(`product_state_diverged:${item.key}`)
       continue
     }
-    const protocol = protocolByKey.get(
-      `${item.product_id}:${pointer.scope.category}:${item.source_role}`,
-    )
+    const roleKey = `${item.product_id}:${pointer.scope.category}:${item.source_role}`
+    const protocol = protocolByKey.get(`${roleKey}:${pointer.applicationFamily}`)
     if (!protocol) {
       blockers.push(`source_protocol_missing:${item.key}`)
       continue
@@ -227,17 +255,19 @@ export async function preflightStage5V2ApplicationArtifact(
     const artifactProtocolKeys = new Set(
       artifact.items.map(
         (item) =>
-          `${item.product_id}:${item.guidance_payload_v2.scope.category}:${item.source_role}`,
+          `${item.product_id}:${item.guidance_payload_v2.scope.category}:${item.source_role}:${item.guidance_payload_v2.applicationFamily}`,
       ),
     )
     const activeProtocols = await read.listActiveCuratedProtocols()
     for (const protocol of activeProtocols) {
       if (
         protocol.guidance_payload !== null &&
-        !artifactProtocolKeys.has(`${protocol.product_id}:${protocol.category}:${protocol.role}`)
+        !artifactProtocolKeys.has(
+          `${protocol.product_id}:${protocol.category}:${protocol.role}:${protocolFamily(protocol) ?? "unknown"}`,
+        )
       ) {
         blockers.push(
-          `active_protocol_missing_from_artifact:${protocol.product_id}:${protocol.role}`,
+          `active_protocol_missing_from_artifact:${protocol.product_id}:${protocol.role}:${protocolFamily(protocol) ?? "unknown"}`,
         )
       }
     }
@@ -264,10 +294,14 @@ export type Stage5V2ApplicationAppliedRead = {
   ): Promise<
     Array<{ guidance_key: string; contract_version: number; payload: unknown; status: string }>
   >
-  listV2Protocols(
-    productIds: string[],
-  ): Promise<
-    Array<{ product_id: string; category: string; role: string; guidance_payload_v2: unknown }>
+  listV2Protocols(productIds: string[]): Promise<
+    Array<{
+      product_id: string
+      category: string
+      role: string
+      application_family?: string | null
+      guidance_payload_v2: unknown
+    }>
   >
 }
 
@@ -283,11 +317,18 @@ export async function verifyStage5V2AppliedArtifact(
     read.listV2Protocols(productIds),
   ])
   const familyByKey = new Map(families.map((family) => [family.guidance_key, family]))
-  const protocolByKey = new Map(
-    protocols.map((protocol) => [
-      `${protocol.product_id}:${protocol.category}:${protocol.role}`,
-      protocol,
-    ]),
+  const protocolByKey = new Map<string, (typeof protocols)[number]>(
+    protocols.flatMap((protocol) => {
+      const family = protocolFamily(protocol)
+      return family
+        ? [
+            [
+              `${protocol.product_id}:${protocol.category}:${protocol.role}:${family}`,
+              protocol,
+            ] as const,
+          ]
+        : []
+    }),
   )
   const blockers: string[] = []
   for (const template of artifact.family_templates) {
@@ -303,7 +344,7 @@ export async function verifyStage5V2AppliedArtifact(
   for (const item of artifact.items) {
     const pointer = item.guidance_payload_v2
     const protocol = protocolByKey.get(
-      `${item.product_id}:${pointer.scope.category}:${item.source_role}`,
+      `${item.product_id}:${pointer.scope.category}:${item.source_role}:${pointer.applicationFamily}`,
     )
     if (!protocol || canonicalJson(protocol.guidance_payload_v2) !== canonicalJson(pointer)) {
       blockers.push(`v2_product_pointer_mismatch:${item.key}`)

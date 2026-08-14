@@ -135,6 +135,29 @@ test("V2 rejects category-incompatible family pointers", () => {
   )
 })
 
+test("V2 permits researched post-style finishing for Leave-ins", () => {
+  assert.equal(
+    productApplicationPointerV2Schema.safeParse({
+      ...ogxPointer,
+      scope: {
+        kind: "product",
+        category: "leave_in",
+        productId: "30000000-0000-4000-8000-000000000001",
+      },
+      sourceRole: "post_wash_leave_in",
+      role: "leave_in",
+      applicationFamily: "post_style_finish",
+      facts: {
+        ...ogxPointer.facts,
+        applicationState: "dry_hair",
+        applicationArea: "hair_lengths_ends",
+        rinse: "leave_in",
+      },
+    }).success,
+    true,
+  )
+})
+
 test("V2 exact visible steps require one of the four reviewed workflow IDs", () => {
   const exact = {
     ...ogxPointer,

@@ -14,9 +14,9 @@ test("instruction review renders every family and exact workflow against the exa
   const html = renderStage5InstructionReviewHtml(artifactText)
 
   assert.equal(html, renderStage5InstructionReviewHtml(artifactText))
-  assert.match(html, /23 kanonische Familien/)
+  assert.match(html, /28 kanonische Familien/)
   assert.match(html, /4 produktspezifische Abläufe/)
-  assert.match(html, /272 Produkt-Rollen/)
+  assert.match(html, /289 Produkt-Anwendungsfamilien/)
   assert.match(html, new RegExp(createHash("sha256").update(artifactText).digest("hex")))
   for (const template of artifact.family_templates) {
     assert.match(html, new RegExp(template.guidanceKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))

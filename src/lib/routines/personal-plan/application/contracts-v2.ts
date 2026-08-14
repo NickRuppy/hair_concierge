@@ -20,7 +20,11 @@ export {
   exactApplicationWorkflowIdV2Schema,
 } from "./contracts"
 
-export const APPLICATION_TEMPLATE_VARIABLES_V2 = ["contact_time_de", "max_temperature_c"] as const
+export const APPLICATION_TEMPLATE_VARIABLES_V2 = [
+  "application_area_de",
+  "contact_time_de",
+  "max_temperature_c",
+] as const
 
 export const applicationTemplateVariableV2Schema = z.enum(APPLICATION_TEMPLATE_VARIABLES_V2)
 
@@ -31,11 +35,11 @@ const FAMILY_CATEGORIES = {
   post_shampoo_rinse_out_mask: ["mask"],
   post_wash_booster: ["leave_in"],
   conditioner_replacement: ["leave_in"],
-  between_wash_damp_refresh: ["leave_in"],
-  between_wash_dry_care: ["leave_in"],
+  between_wash_damp_refresh: ["leave_in", "oil"],
+  between_wash_dry_care: ["leave_in", "oil"],
   pre_heat_damp: ["leave_in", "oil", "heat_protectant"],
   pre_heat_dry: ["leave_in", "oil", "heat_protectant"],
-  post_style_finish: ["oil"],
+  post_style_finish: ["leave_in", "oil"],
   pre_wash_lengths_treatment: ["oil"],
   post_wash_damp_conditioning: ["leave_in", "oil"],
   dry_finish: ["oil"],
