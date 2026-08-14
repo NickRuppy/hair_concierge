@@ -146,7 +146,53 @@ WITH candidates(
       'protocolFacts', pg_catalog.jsonb_build_object('applicationArea', CASE WHEN semantic_role = 'heat_protection' THEN 'all_hair' ELSE 'lengths_ends' END, 'rinse', 'leave_in', 'contactTimeSeconds', null, 'conditionerRelationship', 'not_applicable', 'reapplication', 'none', 'amount', null, 'cautions', '[]'::jsonb),
       'steps', steps,
       'evidence', pg_catalog.jsonb_build_array(pg_catalog.jsonb_build_object('sourceUrl', source_url, 'sourceType', source_type, 'checkedAt', '2026-08-14'))
-    ) AS guidance_v1
+    ) AS guidance_v1,
+    pg_catalog.jsonb_build_object(
+      'schemaVersion', 2,
+      'contractKind', 'product_pointer',
+      'scope', pg_catalog.jsonb_build_object(
+        'kind', 'product',
+        'category', 'leave_in',
+        'productId', product_id::text
+      ),
+      'sourceRole', source_role,
+      'role', semantic_role,
+      'applicationFamily', application_family,
+      'facts', pg_catalog.jsonb_build_object(
+        'applicationState', physical_state,
+        'applicationArea', CASE WHEN semantic_role = 'heat_protection' THEN 'root_to_tip_hair' ELSE 'hair_lengths_ends' END,
+        'rinse', 'leave_in',
+        'contactTime', null,
+        'amount', null,
+        'heat', CASE
+          WHEN semantic_role <> 'heat_protection' THEN null
+          ELSE pg_catalog.jsonb_build_object(
+            'supportedStates', CASE
+              WHEN physical_state = 'damp_hair' THEN '["damp_hair"]'::jsonb
+              WHEN physical_state = 'dry_hair' THEN '["dry_hair"]'::jsonb
+              ELSE '["damp_hair","dry_hair"]'::jsonb
+            END,
+            'activationRequired', false,
+            'maximumClaimedTemperatureC', CASE
+              WHEN product_id = 'bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd'::uuid THEN 230
+              ELSE null
+            END,
+            'reapplication', 'none'
+          )
+        END,
+        'conditionerPolicy', 'not_applicable'
+      ),
+      'workflowId', null,
+      'requiredCompanionProductId', null,
+      'runtimeBlockerCode', null,
+      'exactSteps', '[]'::jsonb,
+      'cautionCodes', '[]'::jsonb,
+      'evidence', pg_catalog.jsonb_build_array(pg_catalog.jsonb_build_object(
+        'sourceUrl', source_url,
+        'sourceType', source_type,
+        'checkedAt', '2026-08-14'
+      ))
+    ) AS guidance_v2
   FROM payloads
 )
 INSERT INTO public.product_application_protocols (
@@ -166,7 +212,7 @@ SELECT product_id, 'leave_in', source_role, NULL,
   CASE WHEN semantic_role = 'heat_protection' THEN 'all_hair' ELSE 'lengths_ends' END,
   NULL, 'do_not_rinse', 'not_stated', '[]'::jsonb,
   CASE WHEN source_type = 'manufacturer' THEN 'Hersteller' ELSE 'Händler' END,
-  source_url, direction_summary, guidance_v1, NULL
+  source_url, direction_summary, guidance_v1, guidance_v2
 FROM documents;
 
 DELETE FROM public.product_application_protocols
@@ -202,6 +248,24 @@ BEGIN
     )
   ) <> 18 THEN
     RAISE EXCEPTION 'expected 18 reviewed Leave-in use-case protocol inserts';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM public.product_application_protocols
+    WHERE category = 'leave_in'
+      AND guidance_payload->>'guidanceKey' LIKE 'leave-in-use-case-2026-08-14-%'
+      AND (
+        guidance_payload_v2 IS NULL
+        OR guidance_payload_v2->>'schemaVersion' IS DISTINCT FROM '2'
+        OR guidance_payload_v2->>'contractKind' IS DISTINCT FROM 'product_pointer'
+        OR guidance_payload_v2#>>'{scope,productId}' IS DISTINCT FROM product_id::text
+        OR guidance_payload_v2#>>'{scope,category}' IS DISTINCT FROM category
+        OR guidance_payload_v2->>'sourceRole' IS DISTINCT FROM role
+        OR guidance_payload_v2->>'applicationFamily' IS DISTINCT FROM application_family
+      )
+  ) THEN
+    RAISE EXCEPTION 'reviewed Leave-in use-case inserts require exact V2 pointer identity';
   END IF;
 
   IF EXISTS (

@@ -30,7 +30,11 @@ test("reviewed Leave-in coverage migration is exact-cohort guarded and inserts t
   // Money Mist has no reviewed between-wash delta and must remain absent.
   assert.doesNotMatch(sql, /11a099f7-eabe-4bdb-bfd3-995f35cb6ee4/)
   assert.doesNotMatch(sql, /UPDATE public\.product_leave_in_specs/)
-  assert.match(sql, /direction_summary, guidance_v1, NULL/)
+  assert.match(sql, /direction_summary, guidance_v1, guidance_v2/)
+  assert.match(sql, /'contractKind', 'product_pointer'/)
+  assert.match(sql, /'applicationFamily', application_family/)
+  assert.match(sql, /'sourceRole', source_role/)
+  assert.match(sql, /reviewed Leave-in use-case inserts require exact V2 pointer identity/)
 })
 
 test("Product Intake upserts variants by their exact application family", async () => {

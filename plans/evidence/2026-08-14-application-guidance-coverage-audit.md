@@ -36,7 +36,7 @@ The audit distinguishes:
 
 The full frozen cohort of 41 active Leave-ins was rechecked and is fingerprint-bound in `data/catalog-enrichment/personal-plan-stage5-v2/leave-in-use-cases-2026-08-14.json`. Existing reviewed authority is retained for 25 products; 16 products carry an explicit researched override or correction. The effective matrix contains 18 additional application-family pointers and one stale-family correction. Every planned pointer parses and composes against the reviewed shared templates.
 
-Implementation closure keeps the original 272-row source snapshot as a separately fingerprinted baseline and produces one 289-row final activation artifact. The final set contains all 18 reviewed inserts, excludes the corrected stale Redken family, composes without blockers, and remains inactive until the separately guarded V2 artifact apply.
+Implementation closure keeps the original 272-row source snapshot as a separately fingerprinted baseline and produces one 289-row final activation artifact. The exact-row migration writes complete V1 and V2 payloads for the 18 reviewed inserts in one transaction, because curated publication fails closed on incomplete rows. The final artifact verifies and idempotently reapplies the complete set, excludes the corrected stale Redken family, and composes without blockers; category-level synthesis remains inactive until its separate runtime switch is enabled.
 
 ### Color WOW Money Mist — corrected category conclusion
 

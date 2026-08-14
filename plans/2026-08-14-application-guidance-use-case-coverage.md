@@ -106,7 +106,7 @@ Checks:
 
 From the reviewed manifest, enumerate the exact additional rows required. Add a non-null `application_family` discriminator, backfill existing rows from validated V2 pointers, validate discriminator/payload equality, and replace uniqueness with `(product_id, category, role, application_family)` using an expand/backfill/validate/contract migration sequence.
 
-Each new row must carry its own authored V1 guidance payload and bind to one reviewed V2 pointer in the final activation artifact; the migration deliberately leaves the V2 column null so content activation remains a separate gate. No second variant may reuse a payload whose instructions describe another physical use. Verify enrichment executor set-equality behavior before changing any product covered by an existing manifest.
+Each new row must carry its own authored V1 guidance payload and its reviewed V2 pointer atomically because the curated-publication constraint rejects incomplete exact-product rows at transaction commit. The final 289-row artifact remains the exhaustive, fingerprint-guarded verification and idempotent apply for the complete cohort. No second variant may reuse a payload whose instructions describe another physical use. Verify enrichment executor set-equality behavior before changing any product covered by an existing manifest.
 
 Update the current adapter only where necessary: it already loads all rows. Fan out routine items per family in compiler V2, following `materializeHeatOccurrences`, rather than stamping several protocols onto one single-family item.
 
@@ -153,7 +153,7 @@ Phase B is complete when the refreshed active cohort has zero coverage blockers 
 
 - Refresh `information_schema`, constraints, indexes, active cohort IDs, and content fingerprints immediately before migration work.
 - The reviewed baseline remains separately fingerprinted at 272 rows. The final activation artifact contains 289 exact product/application-family rows: the baseline plus 18 reviewed inserts and one correction. Preflight and both guarded executors bind by `(product, category, role, application_family)`.
-- Apply order is explicit: schema/data migration first (new exact V1 rows only), then the separately authorized 289-row V2 artifact activation, then the separately authorized category-coverage switch. Disabling the switch removes universal synthesis but retains exact researched variants.
+- Apply order is explicit: schema migration first; exact-row migration second with complete V1 and V2 payloads for the 18 new variants; then the separately authorized 289-row artifact verification/idempotent apply; then the separately authorized category-coverage switch. Disabling the switch removes universal synthesis but retains exact researched variants.
 - Migration apply, catalog publication, deployment, contract activation, monitoring, and cleanup each require separate explicit approval.
 - After an approved apply, re-read the exact cohort, parse/compose all pointers, run authenticated production journeys, and retain the rollback switch until the observation gate passes.
 
