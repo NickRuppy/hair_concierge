@@ -31,6 +31,11 @@ import {
   type Stage2CompleteResult,
 } from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import {
+  isStage1ProductExamplePreviewResponse,
+  stage1ProductExamplePreviewRequestUrl,
+  type Stage1ProductExamplePreviewResponse,
+} from "@/lib/personal-plan/product-preview-contract"
 
 import {
   NeedPlanScreen,
@@ -38,12 +43,16 @@ import {
   Progress,
   type NeedPlanScreenViewModel,
 } from "./need-plan-screen"
-import { adaptInitialNeedSnapshotToPlanStartViewModel } from "./snapshot-adapter"
+import {
+  adaptInitialNeedSnapshotToPlanStartViewModel,
+  applyStage1ProductExamplePreviews,
+} from "./snapshot-adapter"
 
 export type PlanStartReadyViewModel = {
   basis: NeedPlanScreenViewModel
   optional: NeedPlanScreenViewModel | null
   personalPlanId?: string
+  sourceInputHash?: string
 }
 
 export type PlanStartInitialJourney =
@@ -291,6 +300,22 @@ async function requestPlanStart(): Promise<PlanStartApiState> {
   return interpretPlanStartApiResponse(response.status, body)
 }
 
+async function requestStage1ProductExamplePreviews(input: {
+  personalPlanId: string
+  sourceInputHash: string
+}): Promise<Stage1ProductExamplePreviewResponse> {
+  const response = await fetch(stage1ProductExamplePreviewRequestUrl(input), {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    cache: "default",
+  })
+  const body = await response.json().catch(() => null)
+  if (!response.ok || !isStage1ProductExamplePreviewResponse(body)) {
+    throw new Error("stage1_product_previews_unavailable")
+  }
+  return body
+}
+
 export async function loadPlanStartStage3Bootstrap(input: {
   gateway: Pick<Stage3ProductsGateway, "loadOrCreate">
   personalPlanId: string
@@ -344,6 +369,8 @@ export function PlanStartCustomerJourney({
 }) {
   const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
+  const [productExamplePreviews, setProductExamplePreviews] =
+    useState<Stage1ProductExamplePreviewResponse | null>(null)
   const [stage1LoadState, setStage1LoadState] = useState<"idle" | "loading" | "error">("idle")
   const stage2SeedRef = useRef(initialRefinementSession)
   const pendingStage2CompletionRef = useRef<Stage2RefinementSession | null>(null)
@@ -357,6 +384,38 @@ export function PlanStartCustomerJourney({
   const stage3Gateway = useMemo(() => createHttpStage3ProductsGateway(), [])
   const intakeClient = useMemo(() => createHttpStage3IntakeClient(), [])
   const stage2Gateway = useMemo(() => createHttpStage2RefinementGateway(), [])
+  const displayedPlan = useMemo(
+    () =>
+      plan && productExamplePreviews
+        ? applyStage1ProductExamplePreviews(plan, productExamplePreviews)
+        : plan,
+    [plan, productExamplePreviews],
+  )
+
+  useEffect(() => {
+    if (stage !== "stage1" || !plan?.personalPlanId || !plan.sourceInputHash) return
+    let cancelled = false
+    void requestStage1ProductExamplePreviews({
+      personalPlanId: plan.personalPlanId,
+      sourceInputHash: plan.sourceInputHash,
+    }).then(
+      (response) => {
+        if (
+          !cancelled &&
+          response.personalPlanId === plan.personalPlanId &&
+          response.sourceInputHash === plan.sourceInputHash
+        ) {
+          setProductExamplePreviews(response)
+        }
+      },
+      () => {
+        // Product previews are presentation-only. The signed plan and journey stay available.
+      },
+    )
+    return () => {
+      cancelled = true
+    }
+  }, [plan?.personalPlanId, plan?.sourceInputHash, stage])
   const loadStage3Bootstrap = useCallback(
     async (refinedVersionId: string): Promise<Stage3Bootstrap> => {
       return loadPlanStartStage3Bootstrap({
@@ -492,11 +551,14 @@ export function PlanStartCustomerJourney({
     }
   }, [personalPlanId, plan, stage1LoadState])
 
-  if (stage === "stage2")
+  if (stage === "stage2") {
+    // The ref deliberately retains the latest persisted seed across stage switches.
+    // eslint-disable-next-line react-hooks/refs
+    const initialStage2Session = stage2SeedRef.current
     return (
       <RefinementFlow
         gateway={stage2Gateway}
-        initialSession={stage2SeedRef.current}
+        initialSession={initialStage2Session}
         onSecondaryExit={() => {
           stage2SeedRef.current = undefined
           void enterStage1()
@@ -506,6 +568,7 @@ export function PlanStartCustomerJourney({
         directEntry
       />
     )
+  }
   if (stage === "stage3" && !stage3Bootstrap) {
     if (stage3LoadState === "retry_stage3" || stage3LoadState === "reload_server_frontier") {
       return (
@@ -539,7 +602,7 @@ export function PlanStartCustomerJourney({
         }}
       />
     )
-  if (!plan) {
+  if (!displayedPlan) {
     if (stage1LoadState === "error") {
       return <PlanStartRetryableError onRetry={() => void enterStage1()} />
     }
@@ -549,7 +612,7 @@ export function PlanStartCustomerJourney({
   return (
     <PlanStartFlow
       state="ready"
-      plan={plan}
+      plan={displayedPlan}
       refinementAvailable={
         initialJourney.stage === "stage3" || initialJourney.refinementAvailable !== false
       }
@@ -583,6 +646,14 @@ export function PlanStartFlow(
   const [step, setStep] = useState<FlowStep>("basis")
   const hasOptionalPage = props.state === "ready" && Boolean(props.plan.optional)
   const canRefine = props.refinementAvailable !== false
+  const optionalImageUrls =
+    props.state === "ready" && step === "basis" && props.plan.optional
+      ? [
+          ...new Set(
+            props.plan.optional.cards.flatMap((card) => (card.imageUrl ? [card.imageUrl] : [])),
+          ),
+        ]
+      : []
 
   const content = useMemo(() => {
     if (props.state !== "ready") return null
@@ -623,7 +694,17 @@ export function PlanStartFlow(
     return <PlanStartRetryableError onRetry={props.onRetry} />
   }
 
-  return content
+  return (
+    <>
+      {optionalImageUrls.length > 0 ? (
+        <link rel="preconnect" href="https://pqdkhefxsxkyeqelqegq.supabase.co" />
+      ) : null}
+      {optionalImageUrls.map((imageUrl) => (
+        <link key={imageUrl} rel="preload" as="image" href={imageUrl} />
+      ))}
+      {content}
+    </>
+  )
 }
 
 export function PlanStartLoading() {

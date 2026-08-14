@@ -12,6 +12,7 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
+import { stage1ProductExamplePreviewRequestUrl } from "@/lib/personal-plan/product-preview-contract"
 import { loadExistingStage2RefinementSession } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
@@ -164,41 +165,84 @@ export default async function PlanStartPage({
   searchParams?: Promise<PlanStartSearchParams>
 }) {
   const params = (await searchParams) ?? {}
-  const state = await resolvePlanStartPageState({
-    enabled: isPersonalPlanAppV1Enabled,
-    stage2Enabled: isPersonalPlanStage2Enabled,
-    getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
-    loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-    loadExistingRefinementSession: async (userId) =>
-      loadExistingStage2RefinementSession({
-        userId,
-        persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
-      }),
-    loadStage1Plan: async (userId) => {
-      const result = await createStage1PersistenceService(
-        createStage1SupabaseDependencies(createAdminClient() as never),
-      ).loadOrCreate({ userId })
-      if (result.status !== "completed") return null
-      const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot)
-      return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
+  const state = await resolvePlanStartPageState(
+    {
+      enabled: isPersonalPlanAppV1Enabled,
+      stage2Enabled: isPersonalPlanStage2Enabled,
+      getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+      loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
+      loadExistingRefinementSession: async (userId) =>
+        loadExistingStage2RefinementSession({
+          userId,
+          persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
+        }),
+      loadStage1Plan: async (userId) => {
+        const result = await createStage1PersistenceService(
+          createStage1SupabaseDependencies(createAdminClient() as never),
+        ).loadOrCreate({ userId })
+        if (result.status !== "completed") return null
+        const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot)
+        return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
+      },
     },
-  }, { repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId) })
+    { repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId) },
+  )
   if (state.state === "paid_pending") redirect("/plan-bereit")
   if (state.state === "unavailable") return <PlanStartFlow state="unavailable" />
 
   return (
-    <PlanStartProductionGate
-      initialJourney={state.initialJourney}
-      initialPlan={state.initialPlan}
-      personalPlanId={state.personalPlanId}
-      initialRefinementSession={state.initialRefinementSession}
-    />
+    <>
+      <Stage1ProductExamplePreviewWarmup
+        initialJourney={state.initialJourney}
+        initialPlan={state.initialPlan}
+      />
+      <PlanStartProductionGate
+        initialJourney={state.initialJourney}
+        initialPlan={state.initialPlan}
+        personalPlanId={state.personalPlanId}
+        initialRefinementSession={state.initialRefinementSession}
+      />
+    </>
+  )
+}
+
+export function Stage1ProductExamplePreviewWarmup({
+  initialJourney,
+  initialPlan,
+}: {
+  initialJourney: PlanStartInitialJourney
+  initialPlan?: PlanStartReadyViewModel
+}) {
+  if (
+    initialJourney.stage !== "stage1" ||
+    !initialPlan?.personalPlanId ||
+    !initialPlan.sourceInputHash
+  ) {
+    return null
+  }
+  const previewUrl = stage1ProductExamplePreviewRequestUrl({
+    personalPlanId: initialPlan.personalPlanId,
+    sourceInputHash: initialPlan.sourceInputHash,
+  })
+  return (
+    <>
+      <link rel="preconnect" href="https://pqdkhefxsxkyeqelqegq.supabase.co" />
+      <link
+        rel="preload"
+        as="fetch"
+        href={previewUrl}
+        type="application/json"
+        crossOrigin="anonymous"
+        fetchPriority="low"
+      />
+    </>
   )
 }
 
 function parseUuidParam(value: string | string[] | undefined): string | undefined {
   const candidate = Array.isArray(value) ? value[0] : value
-  return candidate && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)
+  return candidate &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)
     ? candidate
     : undefined
 }

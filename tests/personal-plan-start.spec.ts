@@ -2,7 +2,10 @@ import { expect, test } from "@playwright/test"
 
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "../src/app/labs/personal-plan-stage-1-2/fixture"
 import { prepareStage3EntryContextForLab } from "../src/app/labs/personal-plan-stage-1-2/integration"
+import { adaptInitialNeedSnapshotToPlanStartViewModel } from "../src/components/personal-plan-start/snapshot-adapter"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
+import type { Stage1ProductExamplePreviewResponse } from "../src/lib/personal-plan/product-preview-contract"
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 
 const labPath = "/labs/personal-plan-start"
@@ -19,6 +22,33 @@ const computed = computeNeedPlan({
   createdAt: "2026-08-08T12:00:00.000Z",
 })
 if (computed.status !== "ready") throw new Error("production browser fixture failed to compute")
+const computedPlan = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot)
+if (!computedPlan) throw new Error("production browser fixture failed to adapt")
+const previewResponse = {
+  schemaVersion: 1 as const,
+  personalPlanId,
+  sourceNeedVersionId: "10000000-0000-4000-8000-000000000002",
+  sourceInputHash: computed.snapshot.inputHash,
+  previews: computed.snapshot.renderedOrder.flatMap((category) => {
+    const decision = computed.snapshot.decisions.find((item) => item.category === category)
+    const role = decision?.roles.find((candidate) =>
+      CATEGORY_ROLE_POLICIES[category].allowedRoles.includes(candidate as never),
+    )
+    if (!role) return []
+    return [
+      {
+        category,
+        role,
+        productId: `fixture-${category}`,
+        productName: `Fixture ${category}`,
+        imageUrl: `http://127.0.0.1:3217/labs/product-images/${category}.svg`,
+        verdict: "ideal" as const,
+        authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
+      },
+    ]
+  }),
+} satisfies Stage1ProductExamplePreviewResponse
+const optionalCategories = computedPlan.optional?.cards.map((card) => card.id) ?? []
 
 const completedRefinement = createStage2RefinementSession({
   pathVersion: "stage2-fixture-v1",
@@ -80,6 +110,23 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
   test("preserves the signed mobile Basis and Optional journey with one direct Stage 2 handoff", async ({
     page,
   }) => {
+    const requestedImages = new Set<string>()
+    await page.route("**/api/personal-plan/stage-1/previews?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(previewResponse),
+      }),
+    )
+    await page.route("**/labs/product-images/*.svg", (route) => {
+      const category = new URL(route.request().url()).pathname.split("/").pop()?.replace(".svg", "")
+      if (category) requestedImages.add(category)
+      return route.fulfill({
+        status: 200,
+        contentType: "image/svg+xml",
+        body: '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="78"/>',
+      })
+    })
     const freshRefinement = createStage2RefinementSession({
       pathVersion: "stage2-fixture-v1",
       triggerContext: completedRefinement.triggerContext,
@@ -103,6 +150,9 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(basisCards.getByText("Beispiel", { exact: true })).toHaveCount(
       await basisCards.count(),
     )
+    await expect
+      .poll(() => optionalCategories.every((category) => requestedImages.has(category)))
+      .toBe(true)
     await basisCards.first().getByRole("button").click()
     await expect(basisCards.first().getByText("Warum das zu deinem Haar passt")).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
