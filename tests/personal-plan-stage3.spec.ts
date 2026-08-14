@@ -167,6 +167,9 @@ test.describe("Personal Plan products lab", () => {
       .click()
     await page.getByRole("button", { name: "Dieses Produkt einplanen" }).click()
 
+    await expect(page.getByRole("heading", { name: "Deine Auswahl ist bereit." })).toBeVisible()
+    await page.getByRole("button", { name: "Plan fertigstellen" }).click()
+
     await page.waitForURL(
       (url) => url.pathname === "/auth" && url.searchParams.get("next") === "/routine",
     )
