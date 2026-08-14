@@ -156,7 +156,7 @@ export async function loadStage3RecommendationCandidates(
         shampooTarget: shampooTargetFor(input.categoryDecision, input.draft, category),
         conditionerTarget: conditionerTargetFor(input.categoryDecision, input.draft, category),
       }
-  return !directSelection && input.completeCatalog === false
+  return directSelection || input.completeCatalog === false
     ? loadLegacyRecommendationCandidates(client, category, selectionContext)
     : loadRecommendationCandidates(client, category, selectionContext)
 }

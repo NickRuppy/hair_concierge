@@ -113,8 +113,13 @@ export function ProductFitComparison({
     replacementAllowed,
     primaryAction,
   })
+  const directReplacementAction = quietActions.find(
+    (action) => action.kind === "select_replacement",
+  )
   const visiblePrimaryAction = primaryAction?.kind === "leave_uncovered" ? null : primaryAction
-  const secondaryActions = quietActions.filter((action) => action.kind !== "leave_uncovered")
+  const otherQuietActions = quietActions.filter(
+    (action) => action.kind !== "select_replacement" && action.kind !== "leave_uncovered",
+  )
   const leaveUncoveredAction =
     primaryAction?.kind === "leave_uncovered"
       ? primaryAction
@@ -202,12 +207,17 @@ export function ProductFitComparison({
         selectedIndex={selectedIndex}
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        onSelectReplacement={
+          directReplacementAction
+            ? () => invokeAction(directReplacementAction.kind, selectedAlternative, onAction)
+            : null
+        }
       />
     )
   }
 
   return (
-    <section className="min-w-0 pb-40 md:pb-0" aria-labelledby="product-fit-comparison-title">
+    <section className="min-w-0 pb-40" aria-labelledby="product-fit-comparison-title">
       <div className="mb-4 flex items-center justify-between gap-3">
         <Button
           type="button"
@@ -237,59 +247,64 @@ export function ProductFitComparison({
 
       {evaluation.status !== "unsupported" && hasTruthfulAction ? (
         <>
-          {visiblePrimaryAction || secondaryActions.length > 0 || leaveUncoveredAction ? (
-            <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:static md:mt-6 md:rounded-2xl md:border md:bg-card md:p-4 md:shadow-sm md:backdrop-blur-none">
-              <div className="mx-auto flex max-w-3xl flex-col gap-2 md:flex-row md:flex-wrap md:justify-end">
-                {secondaryActions.map((action) => (
+          {otherQuietActions.length > 0 ? (
+            <section
+              className="mt-5 rounded-2xl border border-border bg-card p-4"
+              aria-labelledby="other-decisions-title"
+            >
+              <h2 id="other-decisions-title" className="text-sm font-semibold text-foreground">
+                Andere Möglichkeit
+              </h2>
+              <div className="mt-2 grid gap-1">
+                {otherQuietActions.map((action) => (
                   <Button
                     key={action.kind}
                     type="button"
-                    variant="outline"
-                    aria-label={
-                      action.kind === "select_replacement" ? "Diese Alternative wählen" : undefined
-                    }
-                    className="h-auto min-h-12 w-full whitespace-normal px-5 py-3 text-center leading-tight md:w-auto md:min-w-56"
+                    variant="ghost"
+                    className="h-auto justify-start whitespace-normal px-2 py-3 text-left text-muted-foreground hover:text-foreground"
                     disabled={disabled}
                     onClick={() => invokeAction(action.kind, selectedAlternative, onAction)}
                   >
                     {action.label}
                   </Button>
                 ))}
-                {visiblePrimaryAction ? (
-                  <Button
-                    type="button"
-                    variant="funnelCta"
-                    className="h-auto min-h-12 w-full whitespace-normal px-5 py-3 text-center leading-tight md:w-auto md:min-w-64"
-                    disabled={disabled}
-                    onClick={() =>
-                      invokeAction(visiblePrimaryAction.kind, selectedAlternative, onAction)
-                    }
-                    aria-label={
-                      selectedAlternative && isUncoveredReview
-                        ? "Dieses Produkt einplanen"
-                        : visiblePrimaryAction.label
-                    }
-                  >
-                    {selectedAlternative && isUncoveredReview
-                      ? "Dieses Produkt einplanen"
-                      : visiblePrimaryAction.label}
-                  </Button>
-                ) : null}
               </div>
-              {leaveUncoveredAction ? (
-                <Button
-                  type="button"
-                  variant="link"
-                  aria-label={leaveUncoveredAction.label}
-                  className="mx-auto mt-1 flex h-auto min-h-9 whitespace-normal text-center text-muted-foreground underline underline-offset-4"
-                  disabled={disabled}
-                  onClick={() =>
-                    invokeAction(leaveUncoveredAction.kind, selectedAlternative, onAction)
-                  }
-                >
-                  {leaveUncoveredAction.label}
-                </Button>
-              ) : null}
+            </section>
+          ) : null}
+
+          {leaveUncoveredAction ? (
+            <Button
+              type="button"
+              variant="link"
+              aria-label={leaveUncoveredAction.label}
+              className="mx-auto mt-3 flex h-auto min-h-9 whitespace-normal text-center text-muted-foreground underline underline-offset-4"
+              disabled={disabled}
+              onClick={() => invokeAction(leaveUncoveredAction.kind, selectedAlternative, onAction)}
+            >
+              {leaveUncoveredAction.label}
+            </Button>
+          ) : null}
+
+          {visiblePrimaryAction ? (
+            <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
+              <Button
+                type="button"
+                variant="funnelCta"
+                className="h-auto min-h-14 w-full whitespace-normal px-5 py-3 text-center leading-tight"
+                disabled={disabled}
+                onClick={() => {
+                  invokeAction(visiblePrimaryAction.kind, selectedAlternative, onAction)
+                }}
+                aria-label={
+                  selectedAlternative && isUncoveredReview
+                    ? "Dieses Produkt einplanen"
+                    : visiblePrimaryAction.label
+                }
+              >
+                {selectedAlternative && isUncoveredReview
+                  ? "Dieses Produkt einplanen"
+                  : visiblePrimaryAction.label}
+              </Button>
             </div>
           ) : null}
         </>
@@ -337,6 +352,7 @@ function ComparisonReview({
   selectedIndex,
   disabled,
   onDisplayedAlternativeChange,
+  onSelectReplacement,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -349,6 +365,7 @@ function ComparisonReview({
   selectedIndex: number
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
+  onSelectReplacement: (() => void) | null
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -386,6 +403,18 @@ function ComparisonReview({
           disabled={disabled}
           onChange={onDisplayedAlternativeChange}
         />
+      ) : null}
+      {onSelectReplacement ? (
+        <Button
+          type="button"
+          variant="outline"
+          aria-label="Diese Alternative wählen"
+          className="mt-4 h-auto min-h-12 w-full whitespace-normal rounded-xl px-5 py-3 text-center leading-tight"
+          disabled={disabled}
+          onClick={onSelectReplacement}
+        >
+          Diese Alternative wählen
+        </Button>
       ) : null}
       {(comparison.evidenceRows?.length ?? 0) > 0 && selectedAlternative ? (
         <EvidenceMatrix
@@ -460,7 +489,11 @@ function FitOnlyReview({
             Anforderungen.
           </>
         ) : (
-          <>Aktuell ist keine klar bessere verifizierte Alternative verfügbar.</>
+          <>
+            {verdict === "mismatch"
+              ? "Aktuell ist keine verifizierte Alternative verfügbar."
+              : "Aktuell ist keine klar bessere verifizierte Alternative verfügbar."}
+          </>
         )}
       </p>
     </>

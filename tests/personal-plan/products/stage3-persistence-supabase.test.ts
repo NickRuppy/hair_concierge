@@ -1197,6 +1197,73 @@ test("complete and rollback loaders preserve identical authority fingerprints", 
   assert.deepEqual(complete[0]?.protocols, rollback[0]?.protocols)
 })
 
+test("direct preview candidate loading remains bounded to the legacy catalog path", async () => {
+  const products = Array.from({ length: 13 }, (_, index) => ({
+    id: `preview-shampoo-${String(index + 1).padStart(2, "0")}`,
+    name: `Preview Shampoo ${index + 1}`,
+    image_url: null,
+    category_key: "shampoo",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
+    suitable_thicknesses: ["normal"],
+    sort_order: index + 1,
+  }))
+  const calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }> = []
+  const candidates = await loadStage3RecommendationCandidates(
+    completeCatalogFactClient(
+      {
+        products,
+        product_shampoo_specs: products.map((product) => ({
+          product_id: product.id,
+          thickness: "normal",
+          shampoo_bucket: "normal",
+          scalp_route: "balanced",
+          cleansing_intensity: "gentle",
+        })),
+        product_application_protocols: [],
+        application_guidance_protocols: products.map((product) => ({
+          product_id: product.id,
+          id: `guidance-${product.id}`,
+          role_key: "shampoo_everyday",
+          protocol_version: 1,
+          verified_at: "2026-08-14T00:00:00.000Z",
+          updated_at: "2026-08-14T00:00:00.000Z",
+          scope_kind: "product",
+          status: "active",
+          locale: "de",
+        })),
+      },
+      calls,
+    ) as never,
+    {
+      category: "shampoo",
+      hairThickness: "normal",
+      role: "shampoo_everyday",
+      shampooTarget: {
+        category: "shampoo",
+        roles: ["shampoo_everyday"],
+        scalpRoute: "balanced",
+        everydayConstraint: "standard",
+        requiresTargetedDandruffCapability: false,
+      },
+      conditionerTarget: null,
+    },
+  )
+
+  assert.equal(candidates.length, 12)
+  assert.equal(candidates.at(-1)?.productId, "preview-shampoo-12")
+  assert.equal(
+    calls.some((call) => call.range !== null || call.inIds !== null || call.exactCount),
+    false,
+  )
+})
+
 test("complete hydration fails closed when exact product cardinality is not satisfied", async () => {
   await assert.rejects(
     () =>
