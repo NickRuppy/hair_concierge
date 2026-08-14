@@ -18,7 +18,6 @@ import {
   Stage3CategoryFinalizing,
   Stage3NeedRevisionCheckpoint,
   Stage3ProductsFlow,
-  Stage3ReviewCompletion,
   type Stage3RoutineHandoff,
   updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
@@ -529,22 +528,11 @@ async function chooseDecision(
       ? { productId: selected.productId, factFingerprint: selected.factFingerprint }
       : undefined,
   )
-  const afterChoice = await renderSettled(harness)
-  const completion = findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
-    afterChoice,
-    Stage3ReviewCompletion,
-  )
-  if (completion) await completion.props.onSubmit()
+  await renderSettled(harness)
 }
 
-async function submitReviewedChoices(harness: ClientStateHarness) {
-  const tree = await renderSettled(harness)
-  const completion = findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
-    tree,
-    Stage3ReviewCompletion,
-  )
-  assert.ok(completion, "expected the reviewed-choice completion step")
-  await completion.props.onSubmit()
+async function waitForReviewedChoicesToSubmit(harness: ClientStateHarness) {
+  await renderSettled(harness)
 }
 
 test("stage 3 lab route is guarded and composed from the interactive flow", () => {
@@ -1016,9 +1004,6 @@ test("inventory-only products render acknowledgement-only and never enter fit co
 
   disposition.props.onAcknowledge()
   tree = await renderSettled(harness)
-  assert.deepEqual(acknowledgements, [], "acknowledgement remains local until final confirmation")
-  await submitReviewedChoices(harness)
-  tree = await renderSettled(harness)
   assert.deepEqual(acknowledgements, [dispositionKey])
   assert.equal(findByType(tree, Stage3InventoryDispositionReview), null)
   assert.equal(completeCalls, 1)
@@ -1137,10 +1122,6 @@ test("an unconfirmed inventory acknowledgement leaves a durable recovery action"
     Stage3InventoryDispositionReview,
   )?.props.onAcknowledge()
   tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
-    tree,
-    Stage3ReviewCompletion,
-  )?.props.onSubmit()
 
   await new Promise((resolve) => setTimeout(resolve, 10))
   tree = await renderSettled(harness)
@@ -1944,7 +1925,7 @@ test("an uncovered role saves the explicitly selected third strict recommendatio
     productId: candidates[2]!.productId,
     factFingerprint: candidates[2]!.factFingerprint,
   })
-  await submitReviewedChoices(harness)
+  await waitForReviewedChoicesToSubmit(harness)
 
   assert.deepEqual(emittedIntents, [
     {
@@ -2234,6 +2215,19 @@ test("rate-limited decision save waits, checks canonical state, and resends once
 
 test("replacement recovery requires the exact candidate fingerprint from the canonical bundle", async () => {
   let resolveCalls = 0
+  let releaseCanonicalReload!: () => void
+  let markCanonicalReloadStarted!: () => void
+  const canonicalReloadStarted = new Promise<void>((resolve) => {
+    markCanonicalReloadStarted = resolve
+  })
+  const canonicalReloadPending = new Promise<void>((resolve) => {
+    releaseCanonicalReload = resolve
+  })
+  let rejectFirstBatch!: () => void
+  const firstBatchPending = new Promise<void>((_resolve, reject) => {
+    rejectFirstBatch = () =>
+      reject(new Stage3ProductsGatewayError("stage3_replacement_candidate_invalid"))
+  })
   const gateway = createAuthorityTestGateway()
   const originalLoadOrCreate = gateway.loadOrCreate.bind(gateway)
   const originalReviewDecisionBundles = gateway.reviewDecisionBundles?.bind(gateway)
@@ -2241,6 +2235,8 @@ test("replacement recovery requires the exact candidate fingerprint from the can
   gateway.loadOrCreate = async (input) => {
     const response = await originalLoadOrCreate(input)
     if (resolveCalls === 0) return response
+    markCanonicalReloadStarted()
+    await canonicalReloadPending
     return {
       ...response,
       draft: { ...response.draft, revision: response.draft.revision + 1 },
@@ -2262,7 +2258,8 @@ test("replacement recovery requires the exact candidate fingerprint from the can
   }
   gateway.resolveDecision = async () => {
     resolveCalls += 1
-    throw new Stage3ProductsGatewayError("rate_limited", undefined, 429, 1)
+    if (resolveCalls === 1) await firstBatchPending
+    throw new Stage3ProductsGatewayError("stage3_replacement_candidate_invalid")
   }
   const entryContext: Stage3EntryContext = {
     schemaVersion: 1,
@@ -2290,7 +2287,12 @@ test("replacement recovery requires the exact candidate fingerprint from the can
   )?.props.onContinue()
   await assignEveryRoleToFirstProduct(harness)
   await chooseDecision(harness, "replacement")
-  await new Promise<void>((resolve) => setTimeout(resolve, 1_050))
+  await harness.render()
+  rejectFirstBatch()
+  await canonicalReloadStarted
+  await harness.render()
+  assert.equal(resolveCalls, 1, "canonical reconciliation must suppress automatic resubmission")
+  releaseCanonicalReload()
   tree = await renderSettled(harness)
 
   assert.equal(resolveCalls, 1)
@@ -2371,7 +2373,8 @@ test("a successful recovery resend restores and completes the reviewed decision 
   assert.ok(nextReview)
   assert.notEqual(nextReview.props.comparison.subjectKey, firstDecisionKey)
   await nextReview.props.onAction("keep_owned")
-  await submitReviewedChoices(harness)
+  await waitForReviewedChoicesToSubmit(harness)
+  await new Promise<void>((resolve) => setTimeout(resolve, 1_050))
   tree = await renderSettled(harness)
 
   assert.equal(resolveCalls, 3)
@@ -2826,7 +2829,7 @@ test("an authority decision conflict installs the canonical draft without replay
   )
   assert.ok(decisionScreen)
   await decisionScreen.props.onAction("keep_owned")
-  await submitReviewedChoices(harness)
+  await waitForReviewedChoicesToSubmit(harness)
   tree = await renderSettled(harness)
   const conflict = findByType<React.ComponentProps<typeof Stage3SystemState>>(
     tree,
@@ -2838,11 +2841,8 @@ test("an authority decision conflict installs the canonical draft without replay
   conflict?.props.onAction?.()
   tree = await renderSettled(harness)
 
-  assert.deepEqual(expectedRevisions, [0])
-  assert.ok(
-    findByType(tree, Stage3ReviewCompletion),
-    "a still-valid local choice remains ready for final confirmation",
-  )
+  assert.deepEqual(expectedRevisions, [0, 1])
+  assert.equal(findByType(tree, ProductFitComparison), null)
 })
 
 test("a generic product mutation conflict adopts the latest draft without captured retry", async () => {
@@ -3084,7 +3084,7 @@ test("direct authority decision requests preserve stale refined-source recovery"
     )
     assert.ok(decisionScreen)
     await decisionScreen.props.onAction("keep_owned")
-    await submitReviewedChoices(harness)
+    await waitForReviewedChoicesToSubmit(harness)
     tree = await renderSettled(harness)
 
     const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
@@ -3143,7 +3143,7 @@ test("a decision conflict installs the latest committed draft as the receipt", a
   )
   assert.ok(decision)
   await decision.props.onAction("keep_owned")
-  await submitReviewedChoices(harness)
+  await waitForReviewedChoicesToSubmit(harness)
 
   tree = await renderSettled(harness)
   const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
@@ -3477,7 +3477,7 @@ test("waiting for analysis advances a pending product without framing it as excl
   }
 })
 
-test("pending decision remains local and suppresses a second immediate intent", async () => {
+test("a final pending decision starts one batch and suppresses a duplicate intent", async () => {
   const intents: Stage3AuthoritySemanticIntent[] = []
   const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
   const originalResolveDecision = gateway.resolveDecision.bind(gateway)
@@ -3544,23 +3544,24 @@ test("pending decision remains local and suppresses a second immediate intent", 
 
   assert.equal(resolveCalls, 0)
   tree = await harness.render()
+  assert.equal(resolveCalls, 1)
   assert.equal(
-    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.status,
-    "local",
-  )
-  assert.equal(
-    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState),
-    null,
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .title,
+    "Dein Plan wird vorbereitet.",
   )
 
   releaseFirstDecision()
   await new Promise((resolve) => setImmediate(resolve))
   await renderSettled(harness)
-  assert.equal(resolveCalls, 0)
-  assert.deepEqual(intents, [])
+  assert.equal(resolveCalls, 1)
+  assert.deepEqual(
+    intents.map((intent) => intent.action),
+    ["keep_pending"],
+  )
 })
 
-test("individual clear-fit acceptance remains local and never opens a blocking save screen", async () => {
+test("a final clear-fit acceptance starts one batch under the preparation screen", async () => {
   const gateway = createAuthorityTestGateway({
     evaluate(draft, subject) {
       const evaluation = testAuthorityEvaluation(draft, subject)
@@ -3619,21 +3620,22 @@ test("individual clear-fit acceptance remains local and never opens a blocking s
   review.props.onAction("keep_owned")
   review.props.onAction("keep_owned")
 
-  assert.equal(singleCalls, 0, "a review choice must not persist before final confirmation")
+  assert.equal(singleCalls, 0, "finalization starts from the rendered final state")
   tree = await harness.render()
+  assert.equal(singleCalls, 1)
   assert.equal(
-    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState),
-    null,
-    "local review progression must keep the decision journey visible",
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .title,
+    "Dein Plan wird vorbereitet.",
   )
 
   releaseFirstDecision()
   await new Promise((resolve) => setImmediate(resolve))
   await renderSettled(harness)
-  assert.equal(singleCalls, 0)
+  assert.equal(singleCalls, 1)
 })
 
-test("final confirmation submits one decision batch under one preparation screen", async () => {
+test("the last product choice submits one decision batch under one preparation screen", async () => {
   const gateway = createAuthorityTestGateway({
     evaluate(draft, subject) {
       const evaluation = testAuthorityEvaluation(draft, subject)
@@ -3698,16 +3700,6 @@ test("final confirmation submits one decision batch under one preparation screen
   )
   assert.ok(review)
   review.props.onAction("keep_owned")
-
-  tree = await renderSettled(harness)
-  assert.equal(batchCalls, 0)
-  const completion = findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
-    tree,
-    Stage3ReviewCompletion,
-  )
-  assert.ok(completion)
-  completion.props.onSubmit()
-  completion.props.onSubmit()
 
   tree = await harness.render()
   assert.equal(batchCalls, 1)
@@ -3780,10 +3772,6 @@ test("an unconfirmed final request leaves the loader for a durable recovery acti
     ProductFitComparison,
   )?.props.onAction("keep_owned")
   tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
-    tree,
-    Stage3ReviewCompletion,
-  )?.props.onSubmit()
 
   await new Promise((resolve) => setTimeout(resolve, 10))
   tree = await renderSettled(harness)
@@ -3887,7 +3875,6 @@ test("an ordinary reload restores local review choices for the same canonical re
   )
 
   const tree = await renderSettled(harness)
-  assert.ok(findByType(tree, Stage3ReviewCompletion))
   assert.equal(findByType(tree, ProductFitComparison), null)
 
   writeStage3ReviewDraft(
@@ -3924,7 +3911,6 @@ test("an ordinary reload restores local review choices for the same canonical re
     findByType(staleTree, ProductFitComparison),
     "a stale replacement fingerprint must return to the affected review",
   )
-  assert.equal(findByType(staleTree, Stage3ReviewCompletion), null)
 
   if (evaluation.status !== "known") throw new Error("expected a known authority evaluation")
   const changedRecommendation = {
@@ -3978,7 +3964,6 @@ test("an ordinary reload restores local review choices for the same canonical re
     findByType(changedRecommendationTree, ProductFitComparison),
     "a recommendation choice without its reviewed product identity must be reviewed again",
   )
-  assert.equal(findByType(changedRecommendationTree, Stage3ReviewCompletion), null)
 })
 
 test("Oil roles remain individual decisions", async () => {
@@ -4274,7 +4259,7 @@ test("multiple individual reviews progress to one direct Routine handoff", async
     review.props.onAction("keep_owned")
     tree = await renderSettled(harness)
   }
-  await submitReviewedChoices(harness)
+  await waitForReviewedChoicesToSubmit(harness)
   await new Promise((resolve) => setImmediate(resolve))
   await renderSettled(harness)
 
