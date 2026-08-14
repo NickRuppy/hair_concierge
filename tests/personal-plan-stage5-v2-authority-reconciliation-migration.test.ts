@@ -11,7 +11,7 @@ import {
 const artifactPath =
   "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json"
 const migrationPath =
-  "supabase/migrations/20260814122000_personal_plan_stage5_v2_authority_reconciliation.sql"
+  "supabase/migrations/20260814191843_20260814122000_personal_plan_stage5_v2_authority_reconciliation.sql"
 const preconditionsPath =
   "plans/evidence/2026-08-14-application-guidance-authority-live-preconditions.json"
 const sourceRoot = "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research"
