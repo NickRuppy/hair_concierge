@@ -77,38 +77,41 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
       <button
         type="button"
         className={cn(
-          "grid w-full cursor-pointer items-center gap-3 bg-transparent p-3 text-left text-inherit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-3px]",
-          hasImage ? "grid-cols-[66px_minmax(0,1fr)_16px]" : "grid-cols-[minmax(0,1fr)_16px]",
+          "grid w-full grid-cols-[66px_minmax(0,1fr)_16px] cursor-pointer items-center gap-3 bg-transparent p-3 text-left text-inherit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-3px]",
           "max-[360px]:gap-2 max-[360px]:p-2.5",
         )}
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
       >
-        {hasImage ? (
-          <span
-            className={cn(
-              "relative grid h-[82px] w-[66px] shrink-0 place-items-center overflow-hidden rounded-[14px] bg-[#f3efe8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]",
-              "max-[360px]:h-[76px] max-[360px]:w-[58px]",
-            )}
-          >
-            <Image
-              src={card.imageUrl!}
-              alt={
-                card.imageAlt ??
-                `Beispielbild für ${card.categoryLabel}; kein ausgewähltes Produkt.`
-              }
-              width={56}
-              height={78}
-              unoptimized
-              className="h-[94%] w-[78%] object-contain"
-              onError={() => setFailedImageUrl(card.imageUrl)}
-            />
-            <span className="absolute bottom-1 left-1 rounded-full bg-[#291a43]/80 px-1.5 py-0.5 text-[7px] font-extrabold uppercase tracking-[0.08em] text-white">
-              Beispiel
-            </span>
-          </span>
-        ) : null}
+        <span
+          aria-hidden={hasImage ? undefined : true}
+          data-plan-start-card-image-slot={hasImage ? "loaded" : "reserved"}
+          className={cn(
+            "relative grid h-[82px] w-[66px] shrink-0 place-items-center overflow-hidden rounded-[14px] bg-[#f3efe8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]",
+            "max-[360px]:h-[76px] max-[360px]:w-[58px]",
+          )}
+        >
+          {hasImage ? (
+            <>
+              <Image
+                src={card.imageUrl!}
+                alt={
+                  card.imageAlt ??
+                  `Beispielbild für ${card.categoryLabel}; kein ausgewähltes Produkt.`
+                }
+                width={56}
+                height={78}
+                unoptimized
+                className="h-[94%] w-[78%] object-contain"
+                onError={() => setFailedImageUrl(card.imageUrl)}
+              />
+              <span className="absolute bottom-1 left-1 rounded-full bg-[#291a43]/80 px-1.5 py-0.5 text-[7px] font-extrabold uppercase tracking-[0.08em] text-white">
+                Beispiel
+              </span>
+            </>
+          ) : null}
+        </span>
 
         <span className="min-w-0">
           <span className="flex min-w-0 items-center gap-1.5 text-[8.5px] font-extrabold uppercase tracking-[0.11em] text-[#6B50A0]">

@@ -190,6 +190,7 @@ test("renders the signed-off Basis shell with folded cards and example-preview g
   )
   assert.match(html, />Beispiel<\/span>/)
   assert.match(html, /data-plan-start-card-preview="absent"/)
+  assert.match(html, /data-plan-start-card-image-slot="reserved"/)
   assert.match(html, /aria-expanded="false"/)
   assert.doesNotMatch(html, /Zusätzlich sinnvoll/)
   assert.match(

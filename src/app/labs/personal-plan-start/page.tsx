@@ -33,7 +33,7 @@ export default async function PersonalPlanStartLabPage({
 
   return (
     <PlanStartCustomerJourney
-      initialPlan={plan}
+      initialPlan={{ ...plan, personalPlanId: "20000000-0000-4000-8000-000000000001" }}
       initialJourney={{ stage: "stage1" }}
       personalPlanId="20000000-0000-4000-8000-000000000001"
     />
