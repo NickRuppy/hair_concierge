@@ -2590,8 +2590,12 @@ export function Stage3ProductsFlow({
         )
         if (response.status === "conflict") {
           clearPendingStage3Recovery(activeDraft)
-          finishDecisionSubmission()
-          return reconcileReviewedChoicesAfterConflict(response.latestDraft)
+          try {
+            await reconcileReviewedChoicesAfterConflict(response.latestDraft)
+          } finally {
+            finishDecisionSubmission()
+          }
+          return
         }
         canonicalDraft = response.draft
         clearPendingStage3Recovery(canonicalDraft)
@@ -2617,8 +2621,12 @@ export function Stage3ProductsFlow({
         )
         if (response.status === "conflict") {
           clearPendingStage3Recovery(canonicalDraft)
-          finishDecisionSubmission()
-          return reconcileReviewedChoicesAfterConflict(response.latestDraft)
+          try {
+            await reconcileReviewedChoicesAfterConflict(response.latestDraft)
+          } finally {
+            finishDecisionSubmission()
+          }
+          return
         }
         canonicalDraft = response.draft
         clearPendingStage3Recovery(canonicalDraft)
@@ -2632,8 +2640,8 @@ export function Stage3ProductsFlow({
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
       await completeFlow(canonicalDraft)
     } catch (error) {
-      finishDecisionSubmission()
       if (error instanceof Stage3FinalizationTimeoutError) {
+        finishDecisionSubmission()
         setPendingRecoveryMode("manual")
         return
       }
@@ -2653,9 +2661,12 @@ export function Stage3ProductsFlow({
           await reconcileReviewedChoicesAfterConflict(canonical.draft, reviews)
         } catch (reconciliationError) {
           await handlePendingRecoveryError(reconciliationError, canonicalDraft)
+        } finally {
+          finishDecisionSubmission()
         }
         return
       }
+      finishDecisionSubmission()
       await handlePendingRecoveryError(error, canonicalDraft)
     }
   }

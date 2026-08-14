@@ -2215,6 +2215,19 @@ test("rate-limited decision save waits, checks canonical state, and resends once
 
 test("replacement recovery requires the exact candidate fingerprint from the canonical bundle", async () => {
   let resolveCalls = 0
+  let releaseCanonicalReload!: () => void
+  let markCanonicalReloadStarted!: () => void
+  const canonicalReloadStarted = new Promise<void>((resolve) => {
+    markCanonicalReloadStarted = resolve
+  })
+  const canonicalReloadPending = new Promise<void>((resolve) => {
+    releaseCanonicalReload = resolve
+  })
+  let rejectFirstBatch!: () => void
+  const firstBatchPending = new Promise<void>((_resolve, reject) => {
+    rejectFirstBatch = () =>
+      reject(new Stage3ProductsGatewayError("stage3_replacement_candidate_invalid"))
+  })
   const gateway = createAuthorityTestGateway()
   const originalLoadOrCreate = gateway.loadOrCreate.bind(gateway)
   const originalReviewDecisionBundles = gateway.reviewDecisionBundles?.bind(gateway)
@@ -2222,6 +2235,8 @@ test("replacement recovery requires the exact candidate fingerprint from the can
   gateway.loadOrCreate = async (input) => {
     const response = await originalLoadOrCreate(input)
     if (resolveCalls === 0) return response
+    markCanonicalReloadStarted()
+    await canonicalReloadPending
     return {
       ...response,
       draft: { ...response.draft, revision: response.draft.revision + 1 },
@@ -2243,7 +2258,8 @@ test("replacement recovery requires the exact candidate fingerprint from the can
   }
   gateway.resolveDecision = async () => {
     resolveCalls += 1
-    throw new Stage3ProductsGatewayError("rate_limited", undefined, 429, 1)
+    if (resolveCalls === 1) await firstBatchPending
+    throw new Stage3ProductsGatewayError("stage3_replacement_candidate_invalid")
   }
   const entryContext: Stage3EntryContext = {
     schemaVersion: 1,
@@ -2271,7 +2287,12 @@ test("replacement recovery requires the exact candidate fingerprint from the can
   )?.props.onContinue()
   await assignEveryRoleToFirstProduct(harness)
   await chooseDecision(harness, "replacement")
-  await new Promise<void>((resolve) => setTimeout(resolve, 1_050))
+  await harness.render()
+  rejectFirstBatch()
+  await canonicalReloadStarted
+  await harness.render()
+  assert.equal(resolveCalls, 1, "canonical reconciliation must suppress automatic resubmission")
+  releaseCanonicalReload()
   tree = await renderSettled(harness)
 
   assert.equal(resolveCalls, 1)
