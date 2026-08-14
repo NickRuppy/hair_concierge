@@ -179,7 +179,7 @@ jobs:
 
   quality-personal-plan-browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     needs: [detect-ci-scope]
     if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
     steps:
