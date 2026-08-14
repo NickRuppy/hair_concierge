@@ -190,6 +190,7 @@ export type PersonalPlanStage3RecoveryOperation =
   | "reopen"
   | "decision"
   | "decision_batch"
+  | "inventory_disposition"
   | "completion"
 export type PersonalPlanStage3RecoveryOutcome =
   | "canonical_satisfied"

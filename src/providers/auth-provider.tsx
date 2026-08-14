@@ -9,6 +9,7 @@ import {
   clearPendingStage3RecoveryForOwner,
   createBrowserPendingStage3RecoveryStorage,
 } from "@/lib/personal-plan/products/pending-recovery"
+import { clearStage3ReviewDraftsForOwner } from "@/lib/personal-plan/products/review-draft"
 import { createClient } from "@/lib/supabase/client"
 import type { Profile } from "@/lib/types"
 import { type User } from "@supabase/supabase-js"
@@ -36,7 +37,9 @@ function clearPersonalPlanStage3RecoveryForOwner(ownerId: string | null | undefi
   if (categoryStorage) {
     createCategoryCaptureQueue({ storage: categoryStorage }).clearOnLogout(ownerId)
   }
-  clearPendingStage3RecoveryForOwner(createBrowserPendingStage3RecoveryStorage(), ownerId)
+  const recoveryStorage = createBrowserPendingStage3RecoveryStorage()
+  clearPendingStage3RecoveryForOwner(recoveryStorage, ownerId)
+  clearStage3ReviewDraftsForOwner(recoveryStorage, ownerId)
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {

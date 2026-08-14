@@ -16,5 +16,6 @@ test("auth provider clears owner-scoped Stage 3 recovery on signout and owner sw
     /createCategoryCaptureQueue\(\{[\s\S]*storage:\s*categoryStorage[\s\S]*\}\)\.clearOnLogout\(ownerId\)/,
   )
   assert.match(source, /clearPendingStage3RecoveryForOwner\([^,]+,\s*ownerId\)/)
+  assert.match(source, /clearStage3ReviewDraftsForOwner\([^,]+,\s*ownerId\)/)
   assert.doesNotMatch(source, /clearPendingStage3Recovery\([^)]*\)/)
 })

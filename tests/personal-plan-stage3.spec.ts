@@ -119,6 +119,9 @@ test.describe("Personal Plan products lab", () => {
     await expect(page.getByText("Hitzeschutz Spray", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /Auf Analyse warten/ }).click()
 
+    await expect(page.getByRole("heading", { name: "Deine Auswahl ist bereit." })).toBeVisible()
+    await page.getByRole("button", { name: "Plan fertigstellen" }).click()
+
     await page.waitForURL((url) => url.pathname !== labPath)
     await expect(page).not.toHaveURL(new RegExp(`${labPath}$`))
   })
@@ -163,6 +166,9 @@ test.describe("Personal Plan products lab", () => {
       .getByRole("button", { name: "Conditioner Leichte Pflege als Auswahl markieren" })
       .click()
     await page.getByRole("button", { name: "Dieses Produkt einplanen" }).click()
+
+    await expect(page.getByRole("heading", { name: "Deine Auswahl ist bereit." })).toBeVisible()
+    await page.getByRole("button", { name: "Plan fertigstellen" }).click()
 
     await page.waitForURL(
       (url) => url.pathname === "/auth" && url.searchParams.get("next") === "/routine",

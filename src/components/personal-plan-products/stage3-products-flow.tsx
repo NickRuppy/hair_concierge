@@ -56,6 +56,13 @@ import {
   type PendingStage3RecoveryStorage,
 } from "@/lib/personal-plan/products/pending-recovery"
 import { classifyStage3DesiredState } from "@/lib/personal-plan/products/recovery-desired-state"
+import {
+  clearStage3ReviewDraft,
+  readStage3ReviewDraft,
+  writeStage3ReviewDraft,
+  type Stage3ReviewDraft,
+  type Stage3ReviewDraftChoice,
+} from "@/lib/personal-plan/products/review-draft"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import type { Stage3Bootstrap } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import type { Stage3FitComparison } from "@/lib/personal-plan/products/fit-comparison"
@@ -114,6 +121,8 @@ type Stage3DecisionReviewBundle = {
 }
 
 type Stage3DecisionReviewBundles = ReadonlyMap<string, Stage3DecisionReviewBundle>
+
+type Stage3LocalReviewChoice = Stage3ReviewDraftChoice
 
 function decisionReviewBundlesBySubject(
   evaluations: readonly Stage3AuthorityEvaluation[],
@@ -237,6 +246,7 @@ export function updateStage3RoleAssignments(
 export function Stage3ProductsFlow({
   searchDebounceMs = 250,
   handoffRecoveryDelayMs = 4_000,
+  finalizationTimeoutMs = 12_000,
   entryContext,
   bootstrap,
   draftId = "fixture-stage3-draft",
@@ -251,6 +261,7 @@ export function Stage3ProductsFlow({
 }: {
   searchDebounceMs?: number
   handoffRecoveryDelayMs?: number
+  finalizationTimeoutMs?: number
   entryContext?: Stage3EntryContext
   bootstrap?: Stage3Bootstrap
   draftId?: string
@@ -314,6 +325,25 @@ export function Stage3ProductsFlow({
     () => pendingRecoveryScopeForDraft(initialDraft, personalPlanId),
     [initialDraft, personalPlanId],
   )
+  const initialReviewDraft = useMemo(
+    () => readStage3ReviewDraft(pendingRecoveryStorage, recoveryScope),
+    [pendingRecoveryStorage, recoveryScope],
+  )
+  const initialReviewBundles = useMemo(
+    () =>
+      decisionReviewBundlesBySubject(
+        bootstrap?.authorityEvaluations ?? [],
+        bootstrap?.fitComparisons ?? [],
+      ),
+    [bootstrap?.authorityEvaluations, bootstrap?.fitComparisons],
+  )
+  const initialReviewPartition = useMemo(
+    () =>
+      initialReviewDraft?.expectedRevision === initialDraft.revision
+        ? partitionStage3ReviewDraft(initialDraft, initialReviewBundles, initialReviewDraft)
+        : { choices: {}, order: [], invalidKeys: [] },
+    [initialDraft, initialReviewBundles, initialReviewDraft],
+  )
   const [pendingRecoveryMode, setPendingRecoveryMode] = useState<"checking" | "manual" | null>(
     () => (readPendingStage3Recovery(pendingRecoveryStorage, recoveryScope) ? "checking" : null),
   )
@@ -337,14 +367,12 @@ export function Stage3ProductsFlow({
   const [fallbackError, setFallbackError] = useState<string>()
   const [manualProductName, setManualProductName] = useState("")
   const [roleAssignments, setRoleAssignments] = useState<Record<string, string[]>>({})
-  const [decisionSubmitStatus, setDecisionSubmitStatus] = useState<"idle" | "saving">("idle")
+  const [decisionSubmitStatus, setDecisionSubmitStatus] = useState<
+    "idle" | "saving" | "finalizing"
+  >("idle")
   const [systemIssue, setSystemIssue] = useState<SystemIssue | null>(null)
-  const [reviewBundles, setReviewBundles] = useState<Stage3DecisionReviewBundles>(() =>
-    decisionReviewBundlesBySubject(
-      bootstrap?.authorityEvaluations ?? [],
-      bootstrap?.fitComparisons ?? [],
-    ),
-  )
+  const [reviewBundles, setReviewBundles] =
+    useState<Stage3DecisionReviewBundles>(initialReviewBundles)
   const [displayedAlternative, setDisplayedAlternative] = useState<{
     subjectKey: string | null
     index: number
@@ -353,8 +381,13 @@ export function Stage3ProductsFlow({
     subjectKey: string | null
     productId: string | null
   }>({ subjectKey: null, productId: null })
-  const [reviewHistory, setReviewHistory] = useState<string[]>([])
-  const [currentReviewSubjectKey, setCurrentReviewSubjectKey] = useState<string | null>(null)
+  const [reviewHistory, setReviewHistory] = useState<string[]>(() => initialReviewPartition.order)
+  const [localReviewChoices, setLocalReviewChoices] = useState<
+    Record<string, Stage3LocalReviewChoice>
+  >(() => initialReviewPartition.choices)
+  const [currentReviewSubjectKey, setCurrentReviewSubjectKey] = useState<string | null>(
+    () => initialReviewPartition.invalidKeys[0] ?? null,
+  )
   const [authorityStatus, setAuthorityStatus] = useState<"idle" | "loading" | "ready">(
     bootstrap ? "ready" : "idle",
   )
@@ -375,15 +408,16 @@ export function Stage3ProductsFlow({
   const routineOpenedAnalyticsRecorded = useRef(false)
   const viewedReviewSubjects = useRef(new Set<string>())
 
-  const decisionSubjects = useMemo(() => deriveStage3DecisionSubjects(draft), [draft])
+  const allDecisionSubjects = useMemo(() => deriveStage3DecisionSubjects(draft), [draft])
+  const decisionSubjects = useMemo(() => unresolvedDecisionSubjects(draft), [draft])
   const displayedReviewSubject = useMemo(() => {
     if (phase !== "decisions") return null
     return (
       decisionSubjects.find((subject) => subject.decisionKey === currentReviewSubjectKey) ??
-      unresolvedDecisionSubjects(draft)[0] ??
+      decisionSubjects.find((subject) => !localReviewChoices[subject.decisionKey]) ??
       null
     )
-  }, [currentReviewSubjectKey, decisionSubjects, draft, phase])
+  }, [currentReviewSubjectKey, decisionSubjects, localReviewChoices, phase])
   const displayedReviewDecisionKey = displayedReviewSubject?.decisionKey ?? null
   const displayedAlternativeIndex =
     displayedAlternative.subjectKey === displayedReviewDecisionKey ? displayedAlternative.index : 0
@@ -414,12 +448,20 @@ export function Stage3ProductsFlow({
       setCategoryIndex(nextIndex)
       setPhase("capture")
     },
-    onPrepareDecisionPhase: prepareDecisionPhase,
+    onPrepareDecisionPhase: async (nextDraft) => {
+      await prepareDecisionPhase(nextDraft)
+    },
     onMutationError: handleMutationError,
     onConflict: handleConflict,
   })
   const currentProducts = categoryCapture.currentProducts
   const localCatalogCaptures = categoryCapture.localCatalogCaptures
+
+  useEffect(() => {
+    if (initialReviewDraft && initialReviewDraft.expectedRevision !== initialDraft.revision) {
+      clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
+    }
+  }, [initialDraft.revision, initialReviewDraft, pendingRecoveryStorage, recoveryScope])
 
   useEffect(() => {
     const pending = readPendingStage3Recovery(pendingRecoveryStorage, recoveryScope)
@@ -515,15 +557,17 @@ export function Stage3ProductsFlow({
     if (!reviewedProductKinds) return
     const trimmed = query.trim()
     if (trimmed.length < 2) {
-      setSearchStatus("idle")
-      setSearchResults([])
-      setSearchMessage(undefined)
-      return
+      const reset = setTimeout(() => {
+        setSearchStatus("idle")
+        setSearchResults([])
+        setSearchMessage(undefined)
+      }, 0)
+      return () => clearTimeout(reset)
     }
 
     const requestToken = ++searchToken.current
-    setSearchStatus("loading")
     const timeout = setTimeout(() => {
+      setSearchStatus("loading")
       void gateway
         .search({
           draftId: draft.draftId,
@@ -579,8 +623,8 @@ export function Stage3ProductsFlow({
 
   useEffect(() => {
     if (phase !== "handoff" || !completion) {
-      setShowHandoffRecovery(false)
-      return
+      const reset = setTimeout(() => setShowHandoffRecovery(false), 0)
+      return () => clearTimeout(reset)
     }
     const timeout = setTimeout(() => setShowHandoffRecovery(true), handoffRecoveryDelayMs)
     return () => clearTimeout(timeout)
@@ -601,6 +645,21 @@ export function Stage3ProductsFlow({
     })
   }, [analytics, decisionSubjects.length, displayedReviewSubject, draft, phase, reviewBundles])
 
+  useEffect(() => {
+    if (
+      phase !== "decisions" ||
+      authorityStatus !== "ready" ||
+      allDecisionSubjects.length !== 0 ||
+      decisionSubjects.length !== 0 ||
+      completionInFlight.current
+    ) {
+      return
+    }
+    void completeFlow(draft)
+    // Completion is keyed to the authoritative no-decision state; completeFlow owns deduplication.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allDecisionSubjects.length, authorityStatus, decisionSubjects.length, draft, phase])
+
   const shellSaveStatus = systemIssue
     ? "error"
     : pendingRecoveryMode
@@ -609,11 +668,13 @@ export function Stage3ProductsFlow({
         : "saving"
       : categoryCapture.queuedCategoryCount > 0
         ? "saving"
-        : categoryCapture.saveLabel === "Gespeichert"
-          ? "saved"
-          : categoryCapture.saveLabel === "Wird geladen"
-            ? "idle"
-            : "saving"
+        : categoryCapture.saveLabel === "Auswahl gemerkt"
+          ? "local"
+          : categoryCapture.saveLabel === "Gespeichert"
+            ? "saved"
+            : categoryCapture.saveLabel === "Wird geladen"
+              ? "idle"
+              : "saving"
 
   const shell = (children: React.ReactNode, stepLabel: string, onBack?: () => void) => (
     <Stage3Shell
@@ -690,18 +751,10 @@ export function Stage3ProductsFlow({
 
   if (categoryCapture.categoryFinalizeStatus === "saving") {
     return shell(
-      <Stage3SystemState
-        state="loading"
-        title={
-          categoryCapture.categoryFinalizeAction === "gap"
-            ? "Alles klar – dafür hast du noch kein Produkt."
-            : "Produkte werden gespeichert."
-        }
-        message={
-          categoryCapture.categoryFinalizeAction === "gap"
-            ? "Wird gespeichert"
-            : "Deine Auswahl wird sicher übernommen."
-        }
+      <Stage3CategoryFinalizing
+        categoryLabel={currentCopy.label}
+        products={categoryCapture.finalizingCategoryProducts}
+        isGap={categoryCapture.categoryFinalizeAction === "gap"}
       />,
       currentCopy.label,
     )
@@ -715,6 +768,17 @@ export function Stage3ProductsFlow({
         message="Deine Auswahl wird sicher übernommen. Danach geht es direkt mit dem nächsten offenen Schritt weiter."
       />,
       "Speichern",
+    )
+  }
+
+  if (decisionSubmitStatus === "finalizing") {
+    return shell(
+      <Stage3SystemState
+        state="loading"
+        title="Dein Plan wird vorbereitet."
+        message="Wir speichern deine Entscheidungen und öffnen danach direkt deine Routine."
+      />,
+      "Abschluss",
     )
   }
 
@@ -894,7 +958,7 @@ export function Stage3ProductsFlow({
     return shell(
       <Stage3NeedRevisionCheckpoint
         authority={authority}
-        disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
+        disabled={decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)}
         onAccept={() => void chooseNeedRevision("accept", authority)}
         onReject={() => void chooseNeedRevision("reject", authority)}
       />,
@@ -906,8 +970,16 @@ export function Stage3ProductsFlow({
   if (phase === "decisions") {
     const nextSubject = displayedReviewSubject
     if (!nextSubject) {
-      if (!completionInFlight.current) {
-        void completeFlow(draft)
+      if (decisionSubjects.length > 0) {
+        return shell(
+          <Stage3ReviewCompletion
+            decisionCount={decisionSubjects.length}
+            disabled={decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)}
+            onBack={backFromReviewCompletion}
+            onSubmit={submitReviewedDecisions}
+          />,
+          "Abschluss",
+        )
       }
       return shell(
         <Stage3SystemState
@@ -942,7 +1014,7 @@ export function Stage3ProductsFlow({
           <Stage3InventoryDispositionReview
             disposition={disposition}
             product={product}
-            disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
+            disabled={decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)}
             onAcknowledge={() => void acknowledgeInventoryDisposition(disposition.dispositionKey)}
             onBack={() => void backFromReview(nextSubject)}
           />,
@@ -979,7 +1051,7 @@ export function Stage3ProductsFlow({
         onSelectedRecommendationChange={(productId) =>
           setSelectedRecommendation({ subjectKey: nextSubject.decisionKey, productId })
         }
-        disabled={decisionSubmitInFlight.current || Boolean(pendingRecoveryMode)}
+        disabled={decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)}
         onRetry={() => void reloadDecisionBundle(draft)}
         onAction={(action, selectedCandidate) =>
           void chooseFitDecision(nextSubject.decisionKey, action, selectedCandidate)
@@ -1002,8 +1074,8 @@ export function Stage3ProductsFlow({
     ) : (
       <Stage3SystemState
         state="loading"
-        title="Routine wird vorbereitet."
-        message="Einen Moment bitte."
+        title="Dein Plan wird vorbereitet."
+        message="Wir öffnen danach direkt deine Routine."
       />
     ),
     "Bereit für deine Routine",
@@ -1016,6 +1088,13 @@ export function Stage3ProductsFlow({
       loadedDraft.refinedVersionId !== refinedVersionId
     ) {
       throw new Error("stage3_refined_version_mismatch")
+    }
+    const reviewDraftToRestore =
+      initialReviewDraft?.expectedRevision === loadedDraft.revision ? initialReviewDraft : null
+    if (initialReviewDraft && !reviewDraftToRestore) {
+      setLocalReviewChoices({})
+      setReviewHistory([])
+      clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setDraft(loadedDraft)
     setDisplayedAlternative({ subjectKey: null, index: 0 })
@@ -1038,11 +1117,12 @@ export function Stage3ProductsFlow({
     }
 
     if (loadedDraft.pass === "product_decisions") {
-      await prepareDecisionPhase(
+      const reviews = await prepareDecisionPhase(
         loadedDraft,
         response.authorityEvaluations,
         response.fitComparisons,
       )
+      restoreStage3ReviewDraft(loadedDraft, reviews, reviewDraftToRestore)
       analytics.track("personal_plan_stage3_flow_viewed", {
         pass: "product_decisions",
         stepKey: "fit_decision",
@@ -1055,12 +1135,18 @@ export function Stage3ProductsFlow({
     )
     if (cursorIndex >= 0) setCategoryIndex(cursorIndex)
     if (!loadedDraft.categoryCursor) {
-      await prepareDecisionPhase(
+      const reviews = await prepareDecisionPhase(
         loadedDraft,
         response.authorityEvaluations,
         response.fitComparisons,
       )
+      restoreStage3ReviewDraft(loadedDraft, reviews, reviewDraftToRestore)
       return
+    }
+    if (reviewDraftToRestore) {
+      setLocalReviewChoices({})
+      setReviewHistory([])
+      clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setPhase("capture")
     analytics.track("personal_plan_stage3_flow_viewed", {
@@ -1173,10 +1259,11 @@ export function Stage3ProductsFlow({
     if (sourceDraft.pass === "need_revision_review") {
       setAuthorityStatus("ready")
       setPhase("need_revision_review")
-      return
+      return new Map() as Stage3DecisionReviewBundles
     }
-    await loadDecisionReviewBundles(sourceDraft, preloaded, preloadedComparisons)
+    const bundles = await loadDecisionReviewBundles(sourceDraft, preloaded, preloadedComparisons)
     setPhase("decisions")
+    return bundles
   }
 
   async function resolveNeedRevision(input: {
@@ -1829,14 +1916,7 @@ export function Stage3ProductsFlow({
             operation,
             outcome: "authority_changed",
           })
-          setSystemIssue({
-            kind: "conflict",
-            title: "Die passenden Optionen wurden aktualisiert.",
-            message: "Bitte prüfe den aktuellen Vergleich und wähle erneut.",
-            actionLabel: "Aktuellen Vergleich ansehen",
-            retry: () => setSystemIssue(null),
-          })
-          setPhase("decisions")
+          await reconcileReviewedChoicesAfterConflict(canonicalDraft, reviews)
           return
         }
       }
@@ -1954,6 +2034,34 @@ export function Stage3ProductsFlow({
       else void completeFlow(canonical.draft)
       return
     }
+    if (intent.operation === "inventory_disposition") {
+      const scope = pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId)
+      recordPendingStage3RecoveryResend(pendingRecoveryStorage, scope)
+      writePendingStage3Recovery(pendingRecoveryStorage, scope, {
+        ...intent,
+        expectedRevision: canonicalDraft.revision,
+        createdAt: Date.now(),
+      })
+      const response = await resolveInventoryDisposition({
+        draftId: canonicalDraft.draftId,
+        expectedRevision: canonicalDraft.revision,
+        dispositionKey: intent.dispositionKey,
+      })
+      if (response.status === "conflict") {
+        clearPendingStage3Recovery(canonicalDraft)
+        handleConflict(response.latestDraft)
+        return
+      }
+      const canonical = await loadCanonicalStage3Draft(response.draft)
+      clearPendingStage3Recovery(canonical.draft)
+      setPendingRecoveryMode(null)
+      analytics.track("personal_plan_stage3_recovery_outcome", {
+        operation: "inventory_disposition",
+        outcome: "resend_succeeded",
+      })
+      await continueAfterRecoveredIntent(intent, canonical)
+      return
+    }
     if (intent.operation === "mutation") {
       const scope = pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId)
       recordPendingStage3RecoveryResend(pendingRecoveryStorage, scope)
@@ -2061,6 +2169,24 @@ export function Stage3ProductsFlow({
       } else {
         void completeFlow(response.draft)
       }
+      return
+    }
+    if (intent.operation === "inventory_disposition") {
+      if (hasUnresolvedDecisionSubjects(response.draft)) {
+        const reviews = await loadDecisionReviewBundles(
+          response.draft,
+          response.authorityEvaluations,
+          response.fitComparisons,
+        )
+        restoreStage3ReviewDraft(
+          response.draft,
+          reviews,
+          readStage3ReviewDraft(pendingRecoveryStorage, recoveryScope),
+        )
+        setPhase("decisions")
+      } else {
+        void completeFlow(response.draft)
+      }
     }
   }
 
@@ -2077,6 +2203,13 @@ export function Stage3ProductsFlow({
         category: intent.subjectKey,
       })
     }
+    if (intent.operation === "inventory_disposition") {
+      const disposition = canonicalDraft.inventoryDispositions?.find(
+        (candidate) => candidate.dispositionKey === intent.dispositionKey,
+      )
+      if (!disposition) return "different"
+      return disposition.acknowledged ? "satisfied" : "missing"
+    }
     return canonicalDraft.status === "completed" ? "completed" : "missing"
   }
 
@@ -2088,28 +2221,9 @@ export function Stage3ProductsFlow({
     const unresolvedKeys = new Set(
       unresolvedDecisionSubjects(canonicalDraft).map((subject) => subject.decisionKey),
     )
-    return pendingIntentToAuthorityIntents(intent).every((item) => {
-      if (!unresolvedKeys.has(item.subjectKey)) return false
-      const review = reviews.get(item.subjectKey)
-      const evaluation = review?.authorityEvaluation
-      if (item.action === "select_replacement") {
-        return Boolean(
-          review?.fitComparison.alternatives.some(
-            (candidate) =>
-              candidate.productId === item.selectedCandidateId &&
-              candidate.factFingerprint === item.selectedCandidateFactFingerprint,
-          ),
-        )
-      }
-      if (!evaluation?.allowedActions.some((allowedAction) => allowedAction === item.action)) {
-        return false
-      }
-      if (item.action !== "plan_recommendation" || !item.selectedCandidateId) return true
-      return (
-        evaluation.status === "known" &&
-        evaluation.recommendation?.productId === item.selectedCandidateId
-      )
-    })
+    return pendingIntentToAuthorityIntents(intent).every(
+      (item) => unresolvedKeys.has(item.subjectKey) && decisionIntentStillAllowed(reviews, item),
+    )
   }
 
   function applyReopenedDraft(nextDraft: Stage3ProductDraft, category: PersonalPlanCategory) {
@@ -2125,6 +2239,8 @@ export function Stage3ProductsFlow({
     categoryCapture.setSaveLabel("Gespeichert")
     setReviewBundles(new Map())
     setReviewHistory([])
+    setLocalReviewChoices({})
+    clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     setCurrentReviewSubjectKey(null)
     setDisplayedAlternative({ subjectKey: null, index: 0 })
     setAuthorityStatus("idle")
@@ -2174,7 +2290,6 @@ export function Stage3ProductsFlow({
       handleMutationError(error)
       return
     }
-    if (!beginDecisionSubmission()) return
     analytics.track("personal_plan_stage3_review_action", {
       category: subject.category,
       verdict: reviewVerdict(evaluation),
@@ -2182,53 +2297,7 @@ export function Stage3ProductsFlow({
       position: reviewPosition(activeDraft, decisionKey),
       count: deriveStage3DecisionSubjects(activeDraft).length,
     })
-    writePendingStage3Recovery(
-      pendingRecoveryStorage,
-      pendingRecoveryScopeForDraft(activeDraft, personalPlanId),
-      {
-        operation: "decision",
-        subjectKey: intent.subjectKey,
-        action: intent.action,
-        ...(intent.selectedCandidateId ? { selectedCandidateId: intent.selectedCandidateId } : {}),
-        ...(intent.selectedCandidateFactFingerprint
-          ? { selectedCandidateFactFingerprint: intent.selectedCandidateFactFingerprint }
-          : {}),
-        expectedRevision: activeDraft.revision,
-        createdAt: Date.now(),
-      },
-    )
-    try {
-      const response = await resolveAuthorityDecision({
-        draftId: activeDraft.draftId,
-        expectedRevision: activeDraft.revision,
-        intent,
-      })
-      if (response.status === "conflict") {
-        finishDecisionSubmission()
-        clearPendingStage3Recovery(activeDraft)
-        return handleConflict(response.latestDraft)
-      }
-      const canonical = await loadCanonicalStage3Draft(response.draft)
-      await loadDecisionReviewBundles(
-        canonical.draft,
-        canonical.authorityEvaluations,
-        canonical.fitComparisons,
-      )
-      clearPendingStage3Recovery(canonical.draft)
-      categoryCapture.setSaveLabel("Gespeichert")
-      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
-      const remaining = hasUnresolvedDecisionSubjects(canonical.draft)
-      setReviewHistory((current) => [...current, decisionKey])
-      setCurrentReviewSubjectKey(
-        unresolvedDecisionSubjects(canonical.draft)[0]?.decisionKey ?? null,
-      )
-      finishDecisionSubmission()
-      if (remaining) setPhase("decisions")
-      else void completeFlow(canonical.draft)
-    } catch (error) {
-      finishDecisionSubmission()
-      await handlePendingRecoveryError(error, activeDraft)
-    }
+    rememberLocalReviewChoice(decisionKey, { kind: "decision", intent })
   }
 
   async function chooseNeedRevision(
@@ -2270,7 +2339,6 @@ export function Stage3ProductsFlow({
   }
 
   async function acknowledgeInventoryDisposition(dispositionKey: string) {
-    if (!beginDecisionSubmission()) return
     analytics.track("personal_plan_stage3_review_action", {
       category: null,
       verdict: "inventory_disposition",
@@ -2278,32 +2346,10 @@ export function Stage3ProductsFlow({
       position: reviewPosition(activeDraft, dispositionKey),
       count: deriveStage3DecisionSubjects(activeDraft).length,
     })
-    try {
-      const response = await resolveInventoryDisposition({
-        draftId: activeDraft.draftId,
-        expectedRevision: activeDraft.revision,
-        dispositionKey,
-      })
-      if (response.status === "conflict") {
-        finishDecisionSubmission()
-        return handleConflict(response.latestDraft)
-      }
-      const canonical = await loadCanonicalStage3Draft(response.draft)
-      clearPendingStage3Recovery(canonical.draft)
-      categoryCapture.setSaveLabel("Gespeichert")
-      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
-      const remaining = hasUnresolvedDecisionSubjects(canonical.draft)
-      setReviewHistory((current) => [...current, dispositionKey])
-      setCurrentReviewSubjectKey(
-        unresolvedDecisionSubjects(canonical.draft)[0]?.decisionKey ?? null,
-      )
-      finishDecisionSubmission()
-      if (remaining) await prepareDecisionPhase(canonical.draft)
-      else void completeFlow(canonical.draft)
-    } catch (error) {
-      finishDecisionSubmission()
-      handleNeedRevisionError(error)
-    }
+    rememberLocalReviewChoice(dispositionKey, {
+      kind: "inventory_disposition",
+      dispositionKey,
+    })
   }
 
   async function backFromReview(subject: ReturnType<typeof deriveStage3DecisionSubjects>[number]) {
@@ -2315,17 +2361,268 @@ export function Stage3ProductsFlow({
       count: deriveStage3DecisionSubjects(draft).length,
     })
     if (reviewHistory.length > 0) {
-      const previousKey = reviewHistory[reviewHistory.length - 1]!
-      setReviewHistory((current) => current.slice(0, -1))
+      const currentIndex = reviewHistory.indexOf(subject.decisionKey)
+      const previousKey =
+        currentIndex > 0
+          ? reviewHistory[currentIndex - 1]
+          : currentIndex < 0
+            ? reviewHistory[reviewHistory.length - 1]
+            : undefined
       const previousSubject = deriveStage3DecisionSubjects(draft).find(
         (candidate) => candidate.decisionKey === previousKey,
       )
-      if (previousSubject) {
-        await reopenCategory(previousSubject.category)
+      if (previousKey && previousSubject) {
+        setCurrentReviewSubjectKey(previousKey)
         return
       }
     }
     await reopenCategory(subject.category)
+  }
+
+  function backFromReviewCompletion() {
+    const previousKey = reviewHistory[reviewHistory.length - 1]
+    if (!previousKey) return
+    setCurrentReviewSubjectKey(previousKey)
+  }
+
+  function rememberLocalReviewChoice(decisionKey: string, choice: Stage3LocalReviewChoice) {
+    const nextChoices = { ...localReviewChoices, [decisionKey]: choice }
+    const nextOrder = [
+      ...reviewHistory.filter((candidate) => candidate !== decisionKey),
+      decisionKey,
+    ]
+    setLocalReviewChoices(nextChoices)
+    setReviewHistory(nextOrder)
+    persistLocalReviewDraft(nextChoices, nextOrder)
+    const nextSubject = decisionSubjects.find(
+      (subject) => subject.decisionKey !== decisionKey && !localReviewChoices[subject.decisionKey],
+    )
+    setCurrentReviewSubjectKey(nextSubject?.decisionKey ?? null)
+    categoryCapture.setSaveLabel("Auswahl gemerkt")
+  }
+
+  function persistLocalReviewDraft(
+    choices: Record<string, Stage3LocalReviewChoice>,
+    order: string[],
+  ) {
+    if (order.length === 0) {
+      clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
+      return
+    }
+    writeStage3ReviewDraft(pendingRecoveryStorage, recoveryScope, {
+      expectedRevision: activeDraft.revision,
+      choices,
+      order,
+      updatedAt: Date.now(),
+    })
+  }
+
+  function restoreStage3ReviewDraft(
+    sourceDraft: Stage3ProductDraft,
+    reviews: Stage3DecisionReviewBundles,
+    reviewDraft: Stage3ReviewDraft | null,
+  ) {
+    if (!reviewDraft) return
+    const restored = partitionStage3ReviewDraft(sourceDraft, reviews, reviewDraft)
+    setLocalReviewChoices(restored.choices)
+    setReviewHistory(restored.order)
+    setCurrentReviewSubjectKey(restored.invalidKeys[0] ?? null)
+    if (restored.order.length === 0) {
+      clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
+      return
+    }
+    writeStage3ReviewDraft(pendingRecoveryStorage, recoveryScope, {
+      expectedRevision: sourceDraft.revision,
+      choices: restored.choices,
+      order: restored.order,
+      updatedAt: Date.now(),
+    })
+  }
+
+  async function reconcileReviewedChoicesAfterConflict(
+    latestDraft: Stage3ProductDraft,
+    preloadedReviews?: Stage3DecisionReviewBundles,
+  ) {
+    setDraft(latestDraft)
+    categoryCapture.synchronizeRevision(latestDraft.revision)
+    const reviews = preloadedReviews ?? (await loadDecisionReviewBundles(latestDraft))
+    const unresolvedKeys = new Set(
+      unresolvedDecisionSubjects(latestDraft).map((subject) => subject.decisionKey),
+    )
+    const retainedChoices: Record<string, Stage3LocalReviewChoice> = {}
+    const invalidKeys: string[] = []
+
+    for (const decisionKey of reviewHistory) {
+      const choice = localReviewChoices[decisionKey]
+      if (!choice) continue
+      if (choice.kind === "decision") {
+        if (!unresolvedKeys.has(decisionKey)) continue
+        if (decisionIntentStillAllowed(reviews, choice.intent))
+          retainedChoices[decisionKey] = choice
+        else invalidKeys.push(decisionKey)
+        continue
+      }
+      const disposition = latestDraft.inventoryDispositions?.find(
+        (candidate) => candidate.dispositionKey === choice.dispositionKey,
+      )
+      if (disposition?.acknowledged) continue
+      if (disposition) retainedChoices[decisionKey] = choice
+      else invalidKeys.push(decisionKey)
+    }
+
+    const retainedOrder = reviewHistory.filter((key) => retainedChoices[key])
+    setLocalReviewChoices(retainedChoices)
+    setReviewHistory(retainedOrder)
+    if (retainedOrder.length > 0) {
+      writeStage3ReviewDraft(pendingRecoveryStorage, recoveryScope, {
+        expectedRevision: latestDraft.revision,
+        choices: retainedChoices,
+        order: retainedOrder,
+        updatedAt: Date.now(),
+      })
+    } else {
+      clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
+    }
+    setCurrentReviewSubjectKey(
+      invalidKeys[0] ??
+        unresolvedDecisionSubjects(latestDraft).find(
+          (subject) => !retainedChoices[subject.decisionKey],
+        )?.decisionKey ??
+        null,
+    )
+    analytics.track("personal_plan_stage3_save_outcome", { outcome: "conflict" })
+    setSystemIssue({
+      kind: "conflict",
+      title: "Die passenden Optionen wurden aktualisiert.",
+      message:
+        invalidKeys.length > 0
+          ? `${invalidKeys.length === 1 ? "Eine Auswahl passt" : `${invalidKeys.length} Auswahlen passen`} nicht mehr zum aktuellen Stand. Deine übrigen Entscheidungen bleiben gemerkt.`
+          : "Wir haben den aktuellen Stand geladen. Deine weiterhin passenden Entscheidungen bleiben gemerkt.",
+      actionLabel: "Auswahl prüfen",
+      retry: () => {
+        setSystemIssue(null)
+        setPhase("decisions")
+      },
+    })
+  }
+
+  async function submitReviewedDecisions() {
+    if (decisionSubmitInFlight.current) return
+    const orderedChoices = decisionSubjects.flatMap((subject) => {
+      const choice = localReviewChoices[subject.decisionKey]
+      return choice ? [choice] : []
+    })
+    if (orderedChoices.length !== decisionSubjects.length) return
+    decisionSubmitInFlight.current = true
+    setDecisionSubmitStatus("finalizing")
+    const decisionIntents = orderedChoices.flatMap((choice) =>
+      choice.kind === "decision" ? [choice.intent] : [],
+    )
+    const dispositionKeys = orderedChoices.flatMap((choice) =>
+      choice.kind === "inventory_disposition" ? [choice.dispositionKey] : [],
+    )
+    let canonicalDraft = activeDraft
+    try {
+      if (decisionIntents.length > 0) {
+        writePendingStage3Recovery(
+          pendingRecoveryStorage,
+          pendingRecoveryScopeForDraft(activeDraft, personalPlanId),
+          {
+            operation: "decision_batch",
+            intents: decisionIntents.map((intent) => ({
+              subjectKey: intent.subjectKey,
+              action: intent.action,
+              ...(intent.selectedCandidateId
+                ? { selectedCandidateId: intent.selectedCandidateId }
+                : {}),
+              ...(intent.selectedCandidateFactFingerprint
+                ? {
+                    selectedCandidateFactFingerprint: intent.selectedCandidateFactFingerprint,
+                  }
+                : {}),
+            })),
+            expectedRevision: canonicalDraft.revision,
+            createdAt: Date.now(),
+          },
+        )
+        const response = await withStage3FinalizationTimeout(
+          resolveAuthorityDecisions({
+            draftId: canonicalDraft.draftId,
+            expectedRevision: canonicalDraft.revision,
+            intents: decisionIntents,
+          }),
+          finalizationTimeoutMs,
+        )
+        if (response.status === "conflict") {
+          clearPendingStage3Recovery(activeDraft)
+          finishDecisionSubmission()
+          return reconcileReviewedChoicesAfterConflict(response.latestDraft)
+        }
+        canonicalDraft = response.draft
+        clearPendingStage3Recovery(canonicalDraft)
+      }
+      for (const dispositionKey of dispositionKeys) {
+        writePendingStage3Recovery(
+          pendingRecoveryStorage,
+          pendingRecoveryScopeForDraft(canonicalDraft, personalPlanId),
+          {
+            operation: "inventory_disposition",
+            dispositionKey,
+            expectedRevision: canonicalDraft.revision,
+            createdAt: Date.now(),
+          },
+        )
+        const response = await withStage3FinalizationTimeout(
+          resolveInventoryDisposition({
+            draftId: canonicalDraft.draftId,
+            expectedRevision: canonicalDraft.revision,
+            dispositionKey,
+          }),
+          finalizationTimeoutMs,
+        )
+        if (response.status === "conflict") {
+          clearPendingStage3Recovery(canonicalDraft)
+          finishDecisionSubmission()
+          return reconcileReviewedChoicesAfterConflict(response.latestDraft)
+        }
+        canonicalDraft = response.draft
+        clearPendingStage3Recovery(canonicalDraft)
+      }
+      setDraft(canonicalDraft)
+      categoryCapture.synchronizeRevision(canonicalDraft.revision)
+      categoryCapture.setSaveLabel("Gespeichert")
+      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
+      setLocalReviewChoices({})
+      setReviewHistory([])
+      clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
+      await completeFlow(canonicalDraft)
+    } catch (error) {
+      finishDecisionSubmission()
+      if (error instanceof Stage3FinalizationTimeoutError) {
+        setPendingRecoveryMode("manual")
+        return
+      }
+      if (
+        error instanceof Stage3ProductsGatewayError &&
+        (error.code === "stage3_replacement_candidate_invalid" ||
+          error.code === "stale_authority_snapshot")
+      ) {
+        clearPendingStage3Recovery(canonicalDraft)
+        try {
+          const canonical = await loadCanonicalStage3Draft(canonicalDraft)
+          const reviews = await loadDecisionReviewBundles(
+            canonical.draft,
+            canonical.authorityEvaluations,
+            canonical.fitComparisons,
+          )
+          await reconcileReviewedChoicesAfterConflict(canonical.draft, reviews)
+        } catch (reconciliationError) {
+          await handlePendingRecoveryError(reconciliationError, canonicalDraft)
+        }
+        return
+      }
+      await handlePendingRecoveryError(error, canonicalDraft)
+    }
   }
 
   function beginDecisionSubmission() {
@@ -2408,17 +2705,22 @@ export function Stage3ProductsFlow({
           createdAt: Date.now(),
         },
       )
-      const response = await gateway.complete({
-        draftId: sourceDraft.draftId,
-        expectedRevision: sourceDraft.revision,
-      })
+      const response = await withStage3FinalizationTimeout(
+        gateway.complete({
+          draftId: sourceDraft.draftId,
+          expectedRevision: sourceDraft.revision,
+        }),
+        finalizationTimeoutMs,
+      )
       if (response.status === "conflict") {
         completionInFlight.current = false
+        finishDecisionSubmission()
         clearPendingStage3Recovery(sourceDraft)
         return handleConflict(response.latestDraft)
       }
       if (response.status === "not_ready") {
         completionInFlight.current = false
+        finishDecisionSubmission()
         clearPendingStage3Recovery(sourceDraft)
         setSystemIssue({
           kind: "error",
@@ -2435,6 +2737,7 @@ export function Stage3ProductsFlow({
       setDraft(response.draft)
       categoryCapture.clearCompletedDraftQueue(sourceDraft, response.draft)
       setCompletion(response)
+      finishDecisionSubmission()
       setPhase("handoff")
       const hasPending = response.portfolio.pendingProducts.length > 0
       const hasGap = response.portfolio.uncoveredRoles.length > 0
@@ -2451,6 +2754,11 @@ export function Stage3ProductsFlow({
       openRoutine(response)
     } catch (error) {
       completionInFlight.current = false
+      finishDecisionSubmission()
+      if (error instanceof Stage3FinalizationTimeoutError) {
+        setPendingRecoveryMode("manual")
+        return
+      }
       await handlePendingRecoveryError(error, sourceDraft)
     }
   }
@@ -2778,6 +3086,106 @@ export function Stage3InventoryDispositionReview({
   )
 }
 
+export function Stage3ReviewCompletion({
+  decisionCount,
+  disabled,
+  onBack,
+  onSubmit,
+}: {
+  decisionCount: number
+  disabled?: boolean
+  onBack: () => void
+  onSubmit: () => void | Promise<void>
+}) {
+  return (
+    <section className="min-w-0 pb-28" aria-labelledby="stage3-review-completion-title">
+      <header className="mb-6">
+        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">Produkte geprüft</p>
+        <h1
+          id="stage3-review-completion-title"
+          className="font-header text-3xl leading-tight text-foreground"
+        >
+          Deine Auswahl ist bereit.
+        </h1>
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+          Du hast {decisionCount} {decisionCount === 1 ? "Entscheidung" : "Entscheidungen"} geprüft.
+          Wir speichern sie gemeinsam und öffnen danach direkt deine Routine.
+        </p>
+      </header>
+
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <p className="font-semibold text-foreground">Deine Auswahl ist auf diesem Gerät gemerkt.</p>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          Erst mit „Plan fertigstellen“ wird sie verbindlich in deinen persönlichen Plan übernommen.
+        </p>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-20 grid gap-2 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
+        <Button
+          type="button"
+          variant="funnelCta"
+          className="w-full"
+          disabled={disabled}
+          onClick={onSubmit}
+        >
+          Plan fertigstellen
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          disabled={disabled}
+          onClick={onBack}
+        >
+          Letzte Auswahl prüfen
+        </Button>
+      </div>
+    </section>
+  )
+}
+
+export function Stage3CategoryFinalizing({
+  categoryLabel,
+  products,
+  isGap,
+}: {
+  categoryLabel: string
+  products: Array<{ key: string; displayName: string }>
+  isGap: boolean
+}) {
+  return (
+    <section className="min-w-0 pb-28" aria-labelledby="stage3-category-finalizing-title">
+      <header className="mb-5">
+        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">{categoryLabel}</p>
+        <h1
+          id="stage3-category-finalizing-title"
+          className="font-header text-3xl leading-tight text-foreground"
+        >
+          {isGap ? "Dafür hast du noch kein Produkt." : "Deine Produkte sind ausgewählt."}
+        </h1>
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+          Wir speichern diese Auswahl im Hintergrund. Danach prüfst du direkt die Passung.
+        </p>
+      </header>
+
+      {products.length > 0 ? (
+        <div className="grid gap-3">
+          {products.map((product) => (
+            <article key={product.key} className="rounded-2xl border border-border bg-card p-4">
+              <p className="font-semibold text-foreground">{product.displayName}</p>
+              <p className="mt-1 text-sm text-muted-foreground">Für deinen Plan ausgewählt</p>
+            </article>
+          ))}
+        </div>
+      ) : null}
+
+      <p className="mt-5 text-sm font-semibold text-[var(--brand-plum)]" role="status">
+        Wird gespeichert …
+      </p>
+    </section>
+  )
+}
+
 function ProductIdentityImage({ product }: { product: Stage3CapturedProduct }) {
   const imageUrl = product.identity.imageUrl
   if (imageUrl) {
@@ -2899,7 +3307,7 @@ function pendingRecoveryScopeForDraft(
 
 function recoveryAnalyticsOperation(
   intent: PendingStage3RecoveryIntent,
-): "reopen" | "decision" | "decision_batch" | "completion" {
+): "reopen" | "decision" | "decision_batch" | "inventory_disposition" | "completion" {
   if (intent.operation === "mutation") return "reopen"
   return intent.operation
 }
@@ -2923,6 +3331,70 @@ function requiresFitReviewBundles(draft: Stage3ProductDraft) {
   )
 }
 
+function partitionStage3ReviewDraft(
+  sourceDraft: Stage3ProductDraft,
+  reviews: Stage3DecisionReviewBundles,
+  reviewDraft: Stage3ReviewDraft,
+): {
+  choices: Record<string, Stage3LocalReviewChoice>
+  order: string[]
+  invalidKeys: string[]
+} {
+  const unresolvedKeys = new Set(
+    unresolvedDecisionSubjects(sourceDraft).map((subject) => subject.decisionKey),
+  )
+  const choices: Record<string, Stage3LocalReviewChoice> = {}
+  const invalidKeys: string[] = []
+  for (const decisionKey of reviewDraft.order) {
+    const choice = reviewDraft.choices[decisionKey]
+    if (!choice) continue
+    if (choice.kind === "decision") {
+      if (unresolvedKeys.has(decisionKey) && decisionIntentStillAllowed(reviews, choice.intent)) {
+        choices[decisionKey] = choice
+      } else if (unresolvedKeys.has(decisionKey)) {
+        invalidKeys.push(decisionKey)
+      }
+      continue
+    }
+    const disposition = sourceDraft.inventoryDispositions?.find(
+      (candidate) => candidate.dispositionKey === choice.dispositionKey,
+    )
+    if (disposition && !disposition.acknowledged) choices[decisionKey] = choice
+    else if (unresolvedKeys.has(decisionKey)) invalidKeys.push(decisionKey)
+  }
+  return {
+    choices,
+    order: reviewDraft.order.filter((decisionKey) => choices[decisionKey]),
+    invalidKeys,
+  }
+}
+
+function decisionIntentStillAllowed(
+  reviews: Stage3DecisionReviewBundles,
+  intent: Stage3AuthoritySemanticIntent,
+) {
+  const review = reviews.get(intent.subjectKey)
+  const evaluation = review?.authorityEvaluation
+  if (intent.action === "select_replacement") {
+    return Boolean(
+      review?.fitComparison.alternatives.some(
+        (candidate) =>
+          candidate.productId === intent.selectedCandidateId &&
+          candidate.factFingerprint === intent.selectedCandidateFactFingerprint,
+      ),
+    )
+  }
+  if (!evaluation?.allowedActions.some((allowedAction) => allowedAction === intent.action)) {
+    return false
+  }
+  if (intent.action !== "plan_recommendation") return true
+  if (!intent.selectedCandidateId) return false
+  return (
+    evaluation.status === "known" &&
+    evaluation.recommendation?.productId === intent.selectedCandidateId
+  )
+}
+
 function isCategoryCaptureRetryLimitedError(error: unknown): error is Error & { retryAt: number } {
   return (
     error instanceof Error &&
@@ -2930,6 +3402,30 @@ function isCategoryCaptureRetryLimitedError(error: unknown): error is Error & { 
     "retryAt" in error &&
     typeof error.retryAt === "number"
   )
+}
+
+class Stage3FinalizationTimeoutError extends Error {
+  constructor() {
+    super("stage3_finalization_timeout")
+    this.name = "Stage3FinalizationTimeoutError"
+  }
+}
+
+function withStage3FinalizationTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) return promise
+  return new Promise<T>((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Stage3FinalizationTimeoutError()), timeoutMs)
+    void promise.then(
+      (value) => {
+        clearTimeout(timeout)
+        resolve(value)
+      },
+      (error: unknown) => {
+        clearTimeout(timeout)
+        reject(error)
+      },
+    )
+  })
 }
 
 function delay(ms: number) {

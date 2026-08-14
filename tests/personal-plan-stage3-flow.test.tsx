@@ -15,8 +15,10 @@ import {
 } from "../src/components/personal-plan-products"
 import {
   Stage3InventoryDispositionReview,
+  Stage3CategoryFinalizing,
   Stage3NeedRevisionCheckpoint,
   Stage3ProductsFlow,
+  Stage3ReviewCompletion,
   type Stage3RoutineHandoff,
   updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
@@ -44,6 +46,14 @@ import {
   type Stage3ProductsGateway,
 } from "../src/lib/personal-plan/products/gateway"
 import type { Stage3Bootstrap } from "../src/lib/personal-plan/products/stage2-entry-adapter"
+import {
+  createMemoryPendingStage3RecoveryStorage,
+  readPendingStage3Recovery,
+} from "../src/lib/personal-plan/products/pending-recovery"
+import {
+  readStage3ReviewDraft,
+  writeStage3ReviewDraft,
+} from "../src/lib/personal-plan/products/review-draft"
 import type {
   Stage3FitComparison,
   Stage3SelectedComparisonCandidate,
@@ -54,6 +64,23 @@ import { createStage3Draft } from "../src/lib/personal-plan/products/state-machi
 type ClientStateHarness = {
   render: () => Promise<ReactElement | null>
 }
+
+test("the journey header labels local review choices without claiming a server save", () => {
+  const html = renderToStaticMarkup(
+    <Stage3Shell
+      title="Produkte"
+      currentStepLabel="Prüfen"
+      completedSteps={2}
+      totalSteps={5}
+      saveState={{ status: "local", label: "Auswahl gemerkt" }}
+    >
+      <div>Review</div>
+    </Stage3Shell>,
+  )
+
+  assert.match(html, /Auswahl gemerkt/)
+  assert.doesNotMatch(html, />Gespeichert</)
+})
 
 function createAuthorityTestGateway(
   options: {
@@ -502,6 +529,22 @@ async function chooseDecision(
       ? { productId: selected.productId, factFingerprint: selected.factFingerprint }
       : undefined,
   )
+  const afterChoice = await renderSettled(harness)
+  const completion = findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
+    afterChoice,
+    Stage3ReviewCompletion,
+  )
+  if (completion) await completion.props.onSubmit()
+}
+
+async function submitReviewedChoices(harness: ClientStateHarness) {
+  const tree = await renderSettled(harness)
+  const completion = findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
+    tree,
+    Stage3ReviewCompletion,
+  )
+  assert.ok(completion, "expected the reviewed-choice completion step")
+  await completion.props.onSubmit()
 }
 
 test("stage 3 lab route is guarded and composed from the interactive flow", () => {
@@ -973,9 +1016,188 @@ test("inventory-only products render acknowledgement-only and never enter fit co
 
   disposition.props.onAcknowledge()
   tree = await renderSettled(harness)
+  assert.deepEqual(acknowledgements, [], "acknowledgement remains local until final confirmation")
+  await submitReviewedChoices(harness)
+  tree = await renderSettled(harness)
   assert.deepEqual(acknowledgements, [dispositionKey])
   assert.equal(findByType(tree, Stage3InventoryDispositionReview), null)
   assert.equal(completeCalls, 1)
+})
+
+test("an unconfirmed inventory acknowledgement leaves a durable recovery action", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "dry_shampoo",
+      requiredRoles: [],
+      needSummary: "Aktuell verwendetes Trockenshampoo erfassen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.dry_shampoo.authorityVersion,
+    },
+  ]
+  const dispositionKey = "inventory:dry_shampoo:timeout-product"
+  const draft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-inventory-disposition-timeout",
+      userId: "user-inventory-disposition-timeout",
+      personalPlanId: "plan-inventory-disposition-timeout",
+      refinedVersionId: "refined-inventory-disposition-timeout",
+      requirements,
+      now: "2026-08-14T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [
+      {
+        capturedProductId: "timeout-product",
+        userProductId: "user-timeout-product",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-timeout-product",
+          displayName: "Trockenshampoo",
+          category: "dry_shampoo",
+        },
+        frequencyRange: "weekly_1x",
+        ownership: "owned",
+        source: "existing_inventory",
+      },
+    ],
+    inventoryDispositions: [
+      {
+        schemaVersion: 1,
+        dispositionKey,
+        capturedProductId: "timeout-product",
+        category: "dry_shampoo",
+        planStatus: "not_used",
+        reason: "category_not_in_final_plan",
+        acknowledged: false,
+        authorityFingerprint: "e".repeat(64),
+      },
+    ],
+  }
+  let releaseAcknowledgement!: () => void
+  const pendingAcknowledgement = new Promise<void>((resolve) => {
+    releaseAcknowledgement = resolve
+  })
+  const acknowledgedDraft: Stage3ProductDraft = {
+    ...draft,
+    revision: draft.revision + 1,
+    inventoryDispositions: draft.inventoryDispositions?.map((disposition) => ({
+      ...disposition,
+      acknowledged: true,
+    })),
+  }
+  let latestDraft = draft
+  let acknowledgementCalls = 0
+  const gateway = {
+    ...createAuthorityTestGateway(),
+    loadOrCreate: async () => ({
+      status: "active" as const,
+      draft: latestDraft,
+      requirements,
+      authorityEvaluations: [],
+      fitComparisons: [],
+    }),
+    acknowledgeInventoryDisposition: async (): Promise<Stage3MutationResponse> => {
+      acknowledgementCalls += 1
+      if (acknowledgementCalls === 1) {
+        await pendingAcknowledgement
+        throw new Error("released after timeout")
+      }
+      latestDraft = acknowledgedDraft
+      return { status: "saved", draft: acknowledgedDraft }
+    },
+    complete: async () => ({ status: "not_ready" as const, draft: latestDraft }),
+  }
+  const storage = createMemoryPendingStage3RecoveryStorage()
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      bootstrap: {
+        entryContext: {
+          schemaVersion: 1,
+          personalPlanId: draft.personalPlanId,
+          refinedVersionId: draft.refinedVersionId,
+          orderedCategories: requirements,
+          inventoryPrompts: [
+            { category: "dry_shampoo", allowsMultiple: true, allowsExplicitNone: true },
+          ],
+        },
+        draft,
+        requirements,
+        authorityEvaluations: [],
+        fitComparisons: [],
+      },
+      gateway,
+      pendingRecoveryStorage: storage,
+      finalizationTimeoutMs: 5,
+    }),
+  )
+
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof Stage3InventoryDispositionReview>>(
+    tree,
+    Stage3InventoryDispositionReview,
+  )?.props.onAcknowledge()
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
+    tree,
+    Stage3ReviewCompletion,
+  )?.props.onSubmit()
+
+  await new Promise((resolve) => setTimeout(resolve, 10))
+  tree = await renderSettled(harness)
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .title,
+    "Speicherstatus noch offen.",
+  )
+  const pending = readPendingStage3Recovery(storage, {
+    ownerId: draft.userId,
+    personalPlanId: draft.personalPlanId,
+    draftId: draft.draftId,
+  })
+  assert.equal(pending?.intent.operation, "inventory_disposition")
+  assert.equal(
+    pending?.intent.operation === "inventory_disposition"
+      ? pending.intent.dispositionKey
+      : undefined,
+    dispositionKey,
+  )
+  assert.equal(pending?.intent.expectedRevision, draft.revision)
+  assert.equal(typeof pending?.intent.createdAt, "number")
+
+  await renderSettled(
+    createClientStateHarness(() =>
+      Stage3ProductsFlow({
+        bootstrap: {
+          entryContext: {
+            schemaVersion: 1,
+            personalPlanId: draft.personalPlanId,
+            refinedVersionId: draft.refinedVersionId,
+            orderedCategories: requirements,
+            inventoryPrompts: [
+              { category: "dry_shampoo", allowsMultiple: true, allowsExplicitNone: true },
+            ],
+          },
+          draft,
+          requirements,
+          authorityEvaluations: [],
+          fitComparisons: [],
+        },
+        gateway,
+        pendingRecoveryStorage: storage,
+      }),
+    ),
+  )
+  assert.equal(acknowledgementCalls, 2)
+  assert.equal(
+    readPendingStage3Recovery(storage, {
+      ownerId: draft.userId,
+      personalPlanId: draft.personalPlanId,
+      draftId: draft.draftId,
+    }),
+    null,
+  )
+
+  releaseAcknowledgement()
 })
 
 test("bootstrap Stage 3 opens capture directly and keeps product-kind correction available", async () => {
@@ -1722,6 +1944,7 @@ test("an uncovered role saves the explicitly selected third strict recommendatio
     productId: candidates[2]!.productId,
     factFingerprint: candidates[2]!.factFingerprint,
   })
+  await submitReviewedChoices(harness)
 
   assert.deepEqual(emittedIntents, [
     {
@@ -1805,10 +2028,14 @@ test("role finalization shows saving immediately and suppresses duplicate action
   readyRoles.props.onContinue()
 
   tree = await harness.render()
-  const saving = findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)
+  const saving = findByType<React.ComponentProps<typeof Stage3CategoryFinalizing>>(
+    tree,
+    Stage3CategoryFinalizing,
+  )
   assert.equal(finalizationCalls, 1)
-  assert.equal(saving?.props.state, "loading")
-  assert.match(saving?.props.title ?? "", /gespeichert/i)
+  assert.ok(saving)
+  assert.equal(findByType(tree, Stage3SystemState), null)
+  assert.equal(saving.props.products.length, 2)
   release()
   await renderSettled(harness)
 })
@@ -2073,13 +2300,13 @@ test("replacement recovery requires the exact candidate fingerprint from the can
   )
   assert.equal(updatedOptions?.props.state, "conflict")
   assert.equal(updatedOptions?.props.title, "Die passenden Optionen wurden aktualisiert.")
-  assert.match(updatedOptions?.props.message ?? "", /wähle erneut/i)
+  assert.match(updatedOptions?.props.message ?? "", /passt nicht mehr/i)
   updatedOptions?.props.onAction?.()
   tree = await renderSettled(harness)
   assert.ok(findByType(tree, ProductFitComparison), "the changed candidate requires confirmation")
 })
 
-test("a successful recovery resend loads the next subject's current review bundle", async () => {
+test("a successful recovery resend restores and completes the reviewed decision batch", async () => {
   let resolveCalls = 0
   let reviewBundleLoads = 0
   const gateway = createAuthorityTestGateway()
@@ -2136,18 +2363,20 @@ test("a successful recovery resend loads the next subject's current review bundl
   )
   assert.equal(focusedFirstReview?.props.displayedAlternativeIndex, 2)
   await focusedFirstReview?.props.onAction("keep_owned")
-  await new Promise<void>((resolve) => setTimeout(resolve, 1_050))
   tree = await renderSettled(harness)
-
   const nextReview = findByType<React.ComponentProps<typeof ProductFitComparison>>(
     tree,
     ProductFitComparison,
   )
-  assert.equal(resolveCalls, 2)
-  assert.ok(reviewBundleLoads >= 2, "recovery reloads authority after the successful resend")
   assert.ok(nextReview)
   assert.notEqual(nextReview.props.comparison.subjectKey, firstDecisionKey)
-  assert.equal(nextReview.props.displayedAlternativeIndex, 0)
+  await nextReview.props.onAction("keep_owned")
+  await submitReviewedChoices(harness)
+  tree = await renderSettled(harness)
+
+  assert.equal(resolveCalls, 3)
+  assert.ok(reviewBundleLoads >= 2, "recovery reloads authority after the successful resend")
+  assert.equal(findByType(tree, ProductFitComparison), null)
 })
 
 test("replacement recovery resends once at the canonical revision when the fingerprint is unchanged", async () => {
@@ -2549,6 +2778,12 @@ test("an authority decision conflict installs the canonical draft without replay
   const gateway = {
     ...base,
     evaluateDecisions: async () => [evaluation],
+    reviewDecisionBundles: async () => [
+      {
+        authorityEvaluation: evaluation,
+        fitComparison: testFitComparisons(canonicalDraft)[0]!,
+      },
+    ],
     resolveDecision: async (input: {
       draftId: string
       expectedRevision: number
@@ -2591,19 +2826,23 @@ test("an authority decision conflict installs the canonical draft without replay
   )
   assert.ok(decisionScreen)
   await decisionScreen.props.onAction("keep_owned")
+  await submitReviewedChoices(harness)
   tree = await renderSettled(harness)
   const conflict = findByType<React.ComponentProps<typeof Stage3SystemState>>(
     tree,
     Stage3SystemState,
   )
   assert.equal(conflict?.props.state, "conflict")
-  assert.equal(conflict?.props.actionLabel, "Weiter prüfen")
+  assert.equal(conflict?.props.actionLabel, "Auswahl prüfen")
   assert.deepEqual(expectedRevisions, [0])
   conflict?.props.onAction?.()
   tree = await renderSettled(harness)
 
   assert.deepEqual(expectedRevisions, [0])
-  assert.ok(findByType(tree, ProductFitComparison))
+  assert.ok(
+    findByType(tree, Stage3ReviewCompletion),
+    "a still-valid local choice remains ready for final confirmation",
+  )
 })
 
 test("a generic product mutation conflict adopts the latest draft without captured retry", async () => {
@@ -2845,6 +3084,7 @@ test("direct authority decision requests preserve stale refined-source recovery"
     )
     assert.ok(decisionScreen)
     await decisionScreen.props.onAction("keep_owned")
+    await submitReviewedChoices(harness)
     tree = await renderSettled(harness)
 
     const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
@@ -2903,6 +3143,7 @@ test("a decision conflict installs the latest committed draft as the receipt", a
   )
   assert.ok(decision)
   await decision.props.onAction("keep_owned")
+  await submitReviewedChoices(harness)
 
   tree = await renderSettled(harness)
   const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
@@ -2910,7 +3151,7 @@ test("a decision conflict installs the latest committed draft as the receipt", a
     Stage3SystemState,
   )
   assert.equal(recovery?.props.state, "conflict")
-  assert.equal(recovery?.props.actionLabel, "Weiter prüfen")
+  assert.equal(recovery?.props.actionLabel, "Auswahl prüfen")
   recovery?.props.onAction?.()
   await new Promise((resolve) => setImmediate(resolve))
 
@@ -3236,7 +3477,7 @@ test("waiting for analysis advances a pending product without framing it as excl
   }
 })
 
-test("pending decision shows saving synchronously and suppresses a second immediate intent", async () => {
+test("pending decision remains local and suppresses a second immediate intent", async () => {
   const intents: Stage3AuthoritySemanticIntent[] = []
   const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
   const originalResolveDecision = gateway.resolveDecision.bind(gateway)
@@ -3301,34 +3542,25 @@ test("pending decision shows saving synchronously and suppresses a second immedi
   decisionScreen.props.onAction("keep_pending")
   decisionScreen.props.onAction("keep_pending")
 
-  assert.equal(resolveCalls, 1)
+  assert.equal(resolveCalls, 0)
   tree = await harness.render()
   assert.equal(
     findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.status,
-    "saving",
+    "local",
   )
   assert.equal(
-    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
-      .state,
-    "loading",
-  )
-  assert.match(
-    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
-      .message ?? "",
-    /nächsten offenen Schritt/i,
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState),
+    null,
   )
 
   releaseFirstDecision()
   await new Promise((resolve) => setImmediate(resolve))
   await renderSettled(harness)
-  assert.equal(resolveCalls, 1)
-  assert.deepEqual(
-    intents.map((intent) => intent.action),
-    ["keep_pending"],
-  )
+  assert.equal(resolveCalls, 0)
+  assert.deepEqual(intents, [])
 })
 
-test("individual clear-fit acceptance shows saving and suppresses a second immediate decision", async () => {
+test("individual clear-fit acceptance remains local and never opens a blocking save screen", async () => {
   const gateway = createAuthorityTestGateway({
     evaluate(draft, subject) {
       const evaluation = testAuthorityEvaluation(draft, subject)
@@ -3387,22 +3619,366 @@ test("individual clear-fit acceptance shows saving and suppresses a second immed
   review.props.onAction("keep_owned")
   review.props.onAction("keep_owned")
 
-  assert.equal(singleCalls, 1)
+  assert.equal(singleCalls, 0, "a review choice must not persist before final confirmation")
   tree = await harness.render()
   assert.equal(
-    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.status,
-    "saving",
-  )
-  assert.equal(
-    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
-      .state,
-    "loading",
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState),
+    null,
+    "local review progression must keep the decision journey visible",
   )
 
   releaseFirstDecision()
   await new Promise((resolve) => setImmediate(resolve))
   await renderSettled(harness)
-  assert.equal(singleCalls, 1)
+  assert.equal(singleCalls, 0)
+})
+
+test("final confirmation submits one decision batch under one preparation screen", async () => {
+  const gateway = createAuthorityTestGateway({
+    evaluate(draft, subject) {
+      const evaluation = testAuthorityEvaluation(draft, subject)
+      assert.equal(evaluation.status, "known")
+      return {
+        ...evaluation,
+        status: "known",
+        verdict: "ideal",
+        allowedActions: ["keep_owned"],
+        recommendation: null,
+        recommendationFactFingerprint: null,
+      }
+    },
+  })
+  const resolveOne = gateway.resolveDecision.bind(gateway)
+  let releaseBatch!: () => void
+  const batchPending = new Promise<void>((resolve) => {
+    releaseBatch = resolve
+  })
+  let batchCalls = 0
+  gateway.resolveDecisions = async (input) => {
+    batchCalls += 1
+    await batchPending
+    let expectedRevision = input.expectedRevision
+    let result: Stage3MutationResponse | null = null
+    for (const intent of input.intents) {
+      result = await resolveOne({ draftId: input.draftId, expectedRevision, intent })
+      if (result.status === "conflict") return result
+      expectedRevision = result.draft.revision
+    }
+    assert.ok(result)
+    return result
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-final-decision-batch",
+    refinedVersionId: "refined-final-decision-batch",
+    orderedCategories: [
+      {
+        category: "conditioner",
+        requiredRoles: ["conditioner_rinse_out"],
+        needSummary: "Pflege nach der Wäsche",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Conditioner", "condition", 0)
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  const review = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(review)
+  review.props.onAction("keep_owned")
+
+  tree = await renderSettled(harness)
+  assert.equal(batchCalls, 0)
+  const completion = findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
+    tree,
+    Stage3ReviewCompletion,
+  )
+  assert.ok(completion)
+  completion.props.onSubmit()
+  completion.props.onSubmit()
+
+  tree = await harness.render()
+  assert.equal(batchCalls, 1)
+  const preparing = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    tree,
+    Stage3SystemState,
+  )
+  assert.equal(preparing?.props.state, "loading")
+  assert.equal(preparing?.props.title, "Dein Plan wird vorbereitet.")
+
+  releaseBatch()
+  await renderSettled(harness)
+  assert.equal(batchCalls, 1)
+})
+
+test("an unconfirmed final request leaves the loader for a durable recovery action", async () => {
+  const gateway = createAuthorityTestGateway({
+    evaluate(draft, subject) {
+      const evaluation = testAuthorityEvaluation(draft, subject)
+      assert.equal(evaluation.status, "known")
+      return {
+        ...evaluation,
+        verdict: "ideal",
+        allowedActions: ["keep_owned"],
+        recommendation: null,
+        recommendationFactFingerprint: null,
+      }
+    },
+  })
+  let releaseBatch!: () => void
+  const batchPending = new Promise<void>((resolve) => {
+    releaseBatch = resolve
+  })
+  gateway.resolveDecisions = async () => {
+    await batchPending
+    throw new Error("released after timeout")
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-final-timeout",
+    refinedVersionId: "refined-final-timeout",
+    orderedCategories: [
+      {
+        category: "conditioner",
+        requiredRoles: ["conditioner_rinse_out"],
+        needSummary: "Pflege nach der Wäsche",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      gateway,
+      searchDebounceMs: 0,
+      finalizationTimeoutMs: 5,
+    }),
+  )
+
+  await captureCatalogProduct(harness, "Conditioner", "condition", 0)
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )?.props.onAction("keep_owned")
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof Stage3ReviewCompletion>>(
+    tree,
+    Stage3ReviewCompletion,
+  )?.props.onSubmit()
+
+  await new Promise((resolve) => setTimeout(resolve, 10))
+  tree = await renderSettled(harness)
+  const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    tree,
+    Stage3SystemState,
+  )
+  assert.equal(recovery?.props.state, "error")
+  assert.equal(recovery?.props.title, "Speicherstatus noch offen.")
+  assert.equal(recovery?.props.actionLabel, "Speicherstatus erneut prüfen")
+
+  releaseBatch()
+})
+
+test("an ordinary reload restores local review choices for the same canonical revision", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "conditioner",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Pflege nach der Wäsche",
+      authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    },
+  ]
+  const draft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-local-review-reload",
+      userId: "user-local-review-reload",
+      personalPlanId: "plan-local-review-reload",
+      refinedVersionId: "refined-local-review-reload",
+      requirements,
+      now: "2026-08-14T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [
+      {
+        capturedProductId: "capture-local-review-reload",
+        userProductId: "product-local-review-reload",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-local-review-reload",
+          displayName: "Pflege-Conditioner",
+          category: "conditioner",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "catalog_search",
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "capture-local-review-reload",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+    ],
+  }
+  const subject = deriveStage3DecisionSubjects(draft)[0]!
+  const evaluation = testAuthorityEvaluation(draft, subject)
+  const storage = createMemoryPendingStage3RecoveryStorage()
+  writeStage3ReviewDraft(
+    storage,
+    { ownerId: draft.userId, personalPlanId: draft.personalPlanId, draftId: draft.draftId },
+    {
+      expectedRevision: draft.revision,
+      choices: {
+        [subject.decisionKey]: {
+          kind: "decision",
+          intent: {
+            type: "resolve_decision",
+            subjectKey: subject.decisionKey,
+            action: "keep_owned",
+          },
+        },
+      },
+      order: [subject.decisionKey],
+      updatedAt: Date.now(),
+    },
+  )
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: draft.personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [
+        { category: "conditioner", allowsMultiple: true, allowsExplicitNone: true },
+      ],
+    },
+    draft,
+    requirements,
+    authorityEvaluations: [evaluation],
+    fitComparisons: testFitComparisons(draft),
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      bootstrap,
+      gateway: createAuthorityTestGateway(),
+      pendingRecoveryStorage: storage,
+    }),
+  )
+
+  const tree = await renderSettled(harness)
+  assert.ok(findByType(tree, Stage3ReviewCompletion))
+  assert.equal(findByType(tree, ProductFitComparison), null)
+
+  writeStage3ReviewDraft(
+    storage,
+    { ownerId: draft.userId, personalPlanId: draft.personalPlanId, draftId: draft.draftId },
+    {
+      expectedRevision: draft.revision,
+      choices: {
+        [subject.decisionKey]: {
+          kind: "decision",
+          intent: {
+            type: "resolve_decision",
+            subjectKey: subject.decisionKey,
+            action: "select_replacement",
+            selectedCandidateId: "stale-candidate",
+            selectedCandidateFactFingerprint: "stale-fingerprint",
+          },
+        },
+      },
+      order: [subject.decisionKey],
+      updatedAt: Date.now(),
+    },
+  )
+  const staleTree = await renderSettled(
+    createClientStateHarness(() =>
+      Stage3ProductsFlow({
+        bootstrap,
+        gateway: createAuthorityTestGateway(),
+        pendingRecoveryStorage: storage,
+      }),
+    ),
+  )
+  assert.ok(
+    findByType(staleTree, ProductFitComparison),
+    "a stale replacement fingerprint must return to the affected review",
+  )
+  assert.equal(findByType(staleTree, Stage3ReviewCompletion), null)
+
+  if (evaluation.status !== "known") throw new Error("expected a known authority evaluation")
+  const changedRecommendation = {
+    ...evaluation,
+    status: "known" as const,
+    verdict: "mismatch" as const,
+    allowedActions: ["plan_recommendation" as const],
+    recommendation: {
+      recommendationId: "recommendation-after-reload",
+      productId: "product-after-reload",
+      category: subject.category,
+      role: subject.role,
+      displayName: "Neue Empfehlung",
+      reason: "Die aktuelle Empfehlung hat sich geändert.",
+      authorityRuleId: "test.authority",
+    },
+    recommendationFactFingerprint: "facts:recommendation-after-reload",
+  }
+  writeStage3ReviewDraft(
+    storage,
+    { ownerId: draft.userId, personalPlanId: draft.personalPlanId, draftId: draft.draftId },
+    {
+      expectedRevision: draft.revision,
+      choices: {
+        [subject.decisionKey]: {
+          kind: "decision",
+          intent: {
+            type: "resolve_decision",
+            subjectKey: subject.decisionKey,
+            action: "plan_recommendation",
+          },
+        },
+      },
+      order: [subject.decisionKey],
+      updatedAt: Date.now(),
+    },
+  )
+  const changedRecommendationTree = await renderSettled(
+    createClientStateHarness(() =>
+      Stage3ProductsFlow({
+        bootstrap: {
+          ...bootstrap,
+          authorityEvaluations: [changedRecommendation],
+        },
+        gateway: createAuthorityTestGateway(),
+        pendingRecoveryStorage: storage,
+      }),
+    ),
+  )
+  assert.ok(
+    findByType(changedRecommendationTree, ProductFitComparison),
+    "a recommendation choice without its reviewed product identity must be reviewed again",
+  )
+  assert.equal(findByType(changedRecommendationTree, Stage3ReviewCompletion), null)
 })
 
 test("Oil roles remain individual decisions", async () => {
@@ -3475,7 +4051,90 @@ test("Oil roles remain individual decisions", async () => {
   assert.deepEqual(intents, [])
 })
 
-test("Back from a later review reopens the previous saved category instead of editing its decision", async () => {
+test("a canonical conflict never re-presents subjects that are already resolved", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "oil",
+      requiredRoles: ["leave_on_fibre_conditioning", "dry_finish"],
+      needSummary: "Pflege und Finish für deine Längen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+    },
+  ]
+  const draft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-mixed-conflict",
+      userId: "user-mixed-conflict",
+      personalPlanId: "plan-mixed-conflict",
+      refinedVersionId: "refined-mixed-conflict",
+      requirements,
+      now: "2026-08-14T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [
+      {
+        capturedProductId: "capture-mixed-conflict",
+        userProductId: "product-mixed-conflict",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-mixed-conflict",
+          displayName: "Pflegeöl",
+          category: "oil",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "catalog_search",
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "capture-mixed-conflict",
+        category: "oil",
+        roles: ["leave_on_fibre_conditioning", "dry_finish"],
+      },
+    ],
+  }
+  const subjects = deriveStage3DecisionSubjects(draft)
+  const evaluations = subjects.map((subject) => testAuthorityEvaluation(draft, subject))
+  const canonicalDraft: Stage3ProductDraft = {
+    ...draft,
+    revision: 1,
+    decisions: [
+      testAuthorityDecision(subjects[0]!, evaluations[0]!, {
+        type: "resolve_decision",
+        subjectKey: subjects[0]!.decisionKey,
+        action: "keep_owned",
+      }),
+    ],
+  }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: canonicalDraft.personalPlanId,
+      refinedVersionId: canonicalDraft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+    },
+    draft: canonicalDraft,
+    requirements,
+    authorityEvaluations: evaluations,
+    fitComparisons: testFitComparisons(canonicalDraft),
+  }
+
+  const tree = await renderSettled(
+    createClientStateHarness(() =>
+      Stage3ProductsFlow({ bootstrap, gateway: createAuthorityTestGateway() }),
+    ),
+  )
+  const review = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.equal(review?.props.comparison.subjectKey, subjects[1]!.decisionKey)
+  assert.equal(review?.props.reviewTotal, 1)
+})
+
+test("Back from a later review edits the previous local decision without reopening capture", async () => {
   const reviewEvents: string[] = []
   const analytics = {
     track(eventName: string) {
@@ -3505,12 +4164,14 @@ test("Back from a later review reopens the previous saved category instead of ed
     ],
     inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
   }
+  const storage = createMemoryPendingStage3RecoveryStorage()
   const harness = createClientStateHarness(() =>
     Stage3ProductsFlow({
       entryContext,
       gateway,
       searchDebounceMs: 0,
       analytics,
+      pendingRecoveryStorage: storage,
     }),
   )
 
@@ -3541,15 +4202,24 @@ test("Back from a later review reopens the previous saved category instead of ed
   await secondReview.props.onBack()
   tree = await renderSettled(harness)
 
-  assert.deepEqual(reopenedCategories, ["oil"])
+  assert.deepEqual(reopenedCategories, [])
   assert.ok(reviewEvents.includes("personal_plan_stage3_review_viewed"))
   assert.ok(reviewEvents.includes("personal_plan_stage3_review_action"))
   assert.ok(reviewEvents.includes("personal_plan_stage3_review_back"))
-  assert.equal(findByType(tree, ProductFitComparison), null)
   assert.equal(
-    findByType<React.ComponentProps<typeof ProductCaptureScreen>>(tree, ProductCaptureScreen)?.props
-      .categoryLabel,
-    "Öl",
+    findByType<React.ComponentProps<typeof ProductFitComparison>>(tree, ProductFitComparison)?.props
+      .comparison.subjectKey,
+    firstDecisionKey,
+  )
+  assert.equal(findByType(tree, ProductCaptureScreen), null)
+  assert.equal(
+    readStage3ReviewDraft(storage, {
+      ownerId: "fixture-user",
+      personalPlanId: entryContext.personalPlanId,
+      draftId: "fixture-stage3-draft",
+    })?.choices[firstDecisionKey]?.kind,
+    "decision",
+    "Back must retain the previous local choice while reopening it for editing",
   )
 })
 
@@ -3604,6 +4274,7 @@ test("multiple individual reviews progress to one direct Routine handoff", async
     review.props.onAction("keep_owned")
     tree = await renderSettled(harness)
   }
+  await submitReviewedChoices(harness)
   await new Promise((resolve) => setImmediate(resolve))
   await renderSettled(harness)
 

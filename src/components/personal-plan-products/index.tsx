@@ -20,7 +20,7 @@ export const STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE =
 export type Stage3TransitionContext = "product_capture" | "fit_check" | "routine_ready"
 
 export type Stage3SaveState = {
-  status: "saved" | "saving" | "error" | "conflict" | "idle"
+  status: "local" | "saved" | "saving" | "error" | "conflict" | "idle"
   label: string
 }
 

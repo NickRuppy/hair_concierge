@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Stage 3 – weniger Ladeunterbrechungen</title>
+    <style>
+      :root {
+        --ink: #2b1746;
+        --violet: #6f4caf;
+        --pale: #f4eefc;
+        --paper: #fffdfc;
+        --line: #e8e1ea;
+        --muted: #746f70;
+        --ok: #2e745d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f5f2f0;
+        color: #312d2c;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      .page {
+        max-width: 1440px;
+        margin: auto;
+        padding: 34px;
+      }
+      .intro {
+        max-width: 860px;
+        margin: 0 auto 30px;
+      }
+      .eyebrow {
+        color: var(--violet);
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 12px;
+      }
+      h1 {
+        font:
+          700 44px/1.05 Georgia,
+          serif;
+        color: var(--ink);
+        margin: 8px 0 12px;
+      }
+      .intro p {
+        font-size: 17px;
+        line-height: 1.5;
+        color: #5f5958;
+      }
+      .rail {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+        align-items: start;
+      }
+      .frame {
+        background: var(--paper);
+        border: 1px solid #ded7d4;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 14px 35px #442b6220;
+        min-height: 690px;
+        position: relative;
+      }
+      .frame.current {
+        opacity: 0.7;
+      }
+      .tag {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+        padding: 7px 10px;
+        border-radius: 99px;
+        background: var(--ink);
+        color: white;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+      .tag.bad {
+        background: #8a4a4a;
+      }
+      header {
+        padding: 24px 28px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brandline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .brand {
+        font:
+          700 25px Georgia,
+          serif;
+        color: var(--ink);
+      }
+      .save {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        color: var(--violet);
+        font-weight: 750;
+        font-size: 13px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--violet);
+        box-shadow: 0 0 0 5px var(--pale);
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 7px;
+        margin-top: 18px;
+      }
+      .step {
+        height: 5px;
+        border-radius: 99px;
+        background: #ded8dc;
+      }
+      .step.done,
+      .step.now {
+        background: var(--violet);
+      }
+      .main {
+        padding: 32px 28px 90px;
+      }
+      .kicker {
+        color: var(--violet);
+        font-weight: 800;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      h2 {
+        font:
+          700 33px/1.05 Georgia,
+          serif;
+        color: #3b3533;
+        margin: 10px 0 8px;
+      }
+      .sub {
+        color: var(--muted);
+        line-height: 1.45;
+        margin: 0 0 24px;
+      }
+      .product {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 18px;
+        background: white;
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        gap: 15px;
+      }
+      .bottle {
+        height: 86px;
+        border-radius: 15px 15px 10px 10px;
+        background: linear-gradient(150deg, #d7c7f3, #7b58b5);
+        position: relative;
+      }
+      .bottle:before {
+        content: "";
+        position: absolute;
+        width: 32px;
+        height: 10px;
+        border-radius: 5px 5px 0 0;
+        background: #4c3276;
+        left: 20px;
+        top: -7px;
+      }
+      .product h3 {
+        margin: 2px 0 5px;
+        font-size: 16px;
+      }
+      .product p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      .choice {
+        margin-top: 14px;
+        border: 2px solid #cbb9ea;
+        border-radius: 15px;
+        padding: 14px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-weight: 750;
+        color: var(--ink);
+        background: #faf7ff;
+      }
+      .check {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--violet);
+        color: white;
+        font-size: 13px;
+      }
+      .mini {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--ok);
+        font-weight: 750;
+      }
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 18px 28px;
+        border-top: 1px solid var(--line);
+        background: #fffdfceb;
+        backdrop-filter: blur(8px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+      button {
+        border: 0;
+        border-radius: 99px;
+        padding: 13px 20px;
+        font-weight: 800;
+        font-size: 14px;
+      }
+      .primary {
+        color: white;
+        background: var(--ink);
+      }
+      .secondary {
+        color: var(--ink);
+        background: var(--pale);
+      }
+      .loader {
+        min-height: 520px;
+        display: grid;
+        place-content: center;
+        text-align: center;
+        padding: 30px;
+      }
+      .spinner {
+        width: 54px;
+        height: 54px;
+        margin: 0 auto 24px;
+        border: 7px solid var(--pale);
+        border-top-color: var(--violet);
+        border-radius: 50%;
+      }
+      .loader h2 {
+        font-size: 38px;
+      }
+      .note {
+        margin-top: 25px;
+        padding: 14px 16px;
+        border-radius: 15px;
+        background: #efe9e5;
+        color: #5c5552;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .caption {
+        margin-top: 12px;
+        font-weight: 800;
+        color: var(--ink);
+      }
+      @media (max-width: 900px) {
+        .rail {
+          grid-template-columns: 1fr;
+        }
+        .frame {
+          min-height: 640px;
+        }
+        .page {
+          padding: 18px;
+        }
+        h1 {
+          font-size: 34px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro">
+        <div class="eyebrow">Entscheidungsvorlage · Stage 3</div>
+        <h1>Eine ruhige Strecke, ein echter Abschluss</h1>
+        <p>
+          Die Auswahl bleibt sichtbar, während Kategorien im Hintergrund gespeichert werden.
+          Produktentscheidungen werden lokal gemerkt und erst am Ende gemeinsam validiert. Nur der
+          Abschluss darf die ganze Fläche übernehmen.
+        </p>
+      </section>
+      <section class="rail">
+        <article>
+          <div class="frame current">
+            <span class="tag bad">Heute · wiederholt</span>
+            <header>
+              <div class="brandline">
+                <div class="brand">chaarlie</div>
+                <div class="save"><span class="dot"></span>Wird gespeichert</div>
+              </div>
+              <div class="steps">
+                <i class="step done"></i><i class="step done"></i><i class="step now"></i
+                ><i class="step"></i><i class="step"></i>
+              </div>
+            </header>
+            <div class="loader">
+              <div>
+                <div class="spinner"></div>
+                <h2>Produkte werden gespeichert.</h2>
+                <p class="sub">Deine Auswahl wird sicher übernommen.</p>
+              </div>
+            </div>
+          </div>
+          <div class="caption">1 · Problem: jede Antwort wird zur Unterbrechung</div>
+        </article>
+        <article>
+          <div class="frame">
+            <span class="tag">Neu · ohne Blockade</span>
+            <header>
+              <div class="brandline">
+                <div class="brand">chaarlie</div>
+                <div class="save"><span class="dot"></span>Auswahl gemerkt</div>
+              </div>
+              <div class="steps">
+                <i class="step done"></i><i class="step done"></i><i class="step now"></i
+                ><i class="step"></i><i class="step"></i>
+              </div>
+            </header>
+            <div class="main">
+              <div class="kicker">Produkt 2 von 4</div>
+              <h2>Passt dein Conditioner?</h2>
+              <p class="sub">
+                Prüfe die Passung und entscheide. Du kannst deine Auswahl vor dem Abschluss noch
+                ändern.
+              </p>
+              <div class="product">
+                <div class="bottle"></div>
+                <div>
+                  <h3>Balea Professional Oil Repair Spülung</h3>
+                  <p>Dein Produkt · 2–3× pro Woche</p>
+                  <div class="mini">✓ Passt zu deinem Bedarfsplan</div>
+                </div>
+              </div>
+              <div class="choice"><span class="check">✓</span>Passt – behalten</div>
+              <div class="note">
+                <b>Kein Request nach diesem Klick.</b><br />Die signierte Auswahl wird lokal
+                gemerkt; der nächste bereits geladene Produktvergleich erscheint sofort.
+              </div>
+            </div>
+            <div class="footer">
+              <button class="secondary">Zurück</button
+              ><button class="primary">Weiter zum nächsten Produkt</button>
+            </div>
+          </div>
+          <div class="caption">2 · Auswahl: sofort weiter, jederzeit zurück</div>
+        </article>
+        <article>
+          <div class="frame">
+            <span class="tag">Neu · einmal am Ende</span>
+            <header>
+              <div class="brandline">
+                <div class="brand">chaarlie</div>
+                <div class="save"><span class="dot"></span>Wird fertiggestellt</div>
+              </div>
+              <div class="steps">
+                <i class="step done"></i><i class="step done"></i><i class="step now"></i
+                ><i class="step"></i><i class="step"></i>
+              </div>
+            </header>
+            <div class="loader">
+              <div>
+                <div class="spinner"></div>
+                <h2>Dein Plan wird vorbereitet.</h2>
+                <p class="sub">
+                  Wir speichern deine 4 Entscheidungen und öffnen danach direkt deine Routine.
+                </p>
+                <div class="mini" style="justify-content: center">
+                  ✓ Deine Auswahl bleibt bei einem Fehler erhalten
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">3 · Abschluss: ein Batch, ein Loader, dann Routine</div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
