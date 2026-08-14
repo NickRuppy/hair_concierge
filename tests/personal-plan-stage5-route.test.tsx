@@ -205,7 +205,6 @@ function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungRes
     createReadClient: () => ({}) as never,
     appEnabled: () => true,
     stage4Enabled: () => true,
-    useCaseCoverageEnabled: () => true,
     reportFailure: () => undefined,
     ...overrides,
   }

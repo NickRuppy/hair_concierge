@@ -7,9 +7,7 @@ import { APPLICATION_DAY_TYPE_KEYS } from "../src/lib/routines/personal-plan/app
 import type { ProductApplicationPointerV2 } from "../src/lib/routines/personal-plan/application/contracts-v2"
 import { SHARED_APPLICATION_TEMPLATES_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 
-const compileApplicationViewV2 = (
-  args: Omit<Parameters<typeof compileApplicationViewV2Impl>[0], "useCaseCoverageEnabled">,
-) => compileApplicationViewV2Impl({ ...args, useCaseCoverageEnabled: true })
+const compileApplicationViewV2 = compileApplicationViewV2Impl
 
 type BackfillItem = {
   product_id: string
