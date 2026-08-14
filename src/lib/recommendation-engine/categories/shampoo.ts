@@ -1,8 +1,6 @@
 import {
   deriveScalpTypeBucket,
   deriveShampooBucket,
-  primaryShampooScalpRoute,
-  shampooCleansingIntensity,
   type ShampooBucket,
 } from "@/lib/shampoo/constants"
 import type {
@@ -17,6 +15,49 @@ export interface ShampooFitSpec {
   shampoo_bucket: ShampooBucket | null
   scalp_route: "oily" | "balanced" | "dry" | "dandruff" | "dry_flakes" | "irritated" | null
   cleansing_intensity: "gentle" | "regular" | "clarifying" | null
+}
+
+function mapBucketToScalpRoute(
+  bucket: ShampooBucket | null,
+): ShampooCategoryDecision["targetProfile"] extends infer T
+  ? T extends { scalpRoute: infer R }
+    ? R
+    : never
+  : never {
+  switch (bucket) {
+    case "dehydriert-fettig":
+      return "oily"
+    case "normal":
+      return "balanced"
+    case "trocken":
+      return "dry"
+    case "schuppen":
+      return "dandruff"
+    case "irritationen":
+      return "irritated"
+    default:
+      return null
+  }
+}
+
+function deriveCleansingIntensity(
+  shampooBucket: ShampooBucket | null,
+): ShampooCategoryDecision["targetProfile"] extends infer T
+  ? T extends { cleansingIntensity: infer C }
+    ? C
+    : never
+  : never {
+  switch (shampooBucket) {
+    case "trocken":
+    case "irritationen":
+      return "gentle"
+    case "schuppen":
+    case "normal":
+    case "dehydriert-fettig":
+      return "regular"
+    default:
+      return null
+  }
 }
 
 export function buildShampooCategoryDecision(
@@ -55,11 +96,11 @@ export function buildShampooCategoryDecision(
     planReasonCodes: step.reasonCodes,
     currentInventory: profile.routineInventory.shampoo,
     targetProfile: {
-      scalpRoute: primaryShampooScalpRoute(shampooBucket),
+      scalpRoute: mapBucketToScalpRoute(shampooBucket),
       shampooBucket,
       secondaryBucket:
         profile.scalpCondition === "dandruff" ? deriveScalpTypeBucket(profile.scalpType) : null,
-      cleansingIntensity: shampooCleansingIntensity(shampooBucket),
+      cleansingIntensity: deriveCleansingIntensity(shampooBucket),
     },
     notes,
   }
@@ -123,7 +164,7 @@ export function evaluateShampooFit(
     }
   }
 
-  const resolvedRoute = spec.scalp_route ?? primaryShampooScalpRoute(spec.shampoo_bucket)
+  const resolvedRoute = spec.scalp_route ?? mapBucketToScalpRoute(spec.shampoo_bucket)
 
   if (!target.scalpRoute) {
     return {
