@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie · Produktvergleich · finaler Kategorien-Vorschlag</title>
+    <style>
+      :root {
+        --ink: #352f31;
+        --muted: #7c7474;
+        --line: #e3ded9;
+        --paper: #fffdfb;
+        --canvas: #f5f1ed;
+        --plum: #4d286d;
+        --plum-soft: #f4eff8;
+        --coral: #d65f6d;
+        --coral-dark: #b94a58;
+        --green: #2f7547;
+        --green-bg: #edf7f0;
+        --amber: #98651b;
+        --amber-bg: #fff6df;
+        --red: #aa3e48;
+        --red-bg: #fff0f1;
+        --neutral: #756f6c;
+        --neutral-bg: #f3f1ef;
+        --shadow: 0 18px 50px rgba(65, 45, 35, 0.11);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      button { font: inherit; }
+      .review-bar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 14px 24px;
+        border-bottom: 1px solid #ded6d0;
+        background: rgba(245, 241, 237, 0.96);
+        backdrop-filter: blur(12px);
+      }
+      .review-bar strong { font-size: 14px; }
+      .review-bar span { color: var(--muted); font-size: 12px; }
+      .tabs { display: flex; flex-wrap: wrap; gap: 7px; }
+      .tab {
+        border: 1px solid #d3c9c2;
+        border-radius: 999px;
+        padding: 8px 12px;
+        background: white;
+        color: var(--ink);
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .tab[aria-selected="true"] { border-color: var(--plum); background: var(--plum); color: white; }
+      .shell { max-width: 1180px; margin: 0 auto; background: var(--paper); min-height: 100vh; box-shadow: var(--shadow); }
+      .brand { padding: 26px 40px 18px; text-align: center; font-family: Georgia, serif; font-size: 32px; color: #3c2355; }
+      .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 0 40px 22px; border-bottom: 1px solid var(--line); }
+      .progress span { text-align: center; color: var(--muted); font-size: 12px; font-weight: 700; }
+      .progress span::before { content: ""; display: block; height: 5px; margin-bottom: 8px; border-radius: 8px; background: #e4ded9; }
+      .progress .done, .progress .active { color: var(--plum); }
+      .progress .done::before, .progress .active::before { background: #7350a4; }
+      .progress .active::before { background: var(--plum); }
+      main { padding: 24px 40px 42px; }
+      .eyebrow { margin: 0; color: #6d4b9d; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      h1 { margin: 7px 0 18px; font: 44px/1.08 Georgia, serif; }
+      .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+      .legend span { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 9px; font-size: 11px; font-weight: 750; }
+      .legend .good { color: var(--green); background: var(--green-bg); }
+      .legend .support { color: var(--amber); background: var(--amber-bg); }
+      .legend .bad { color: var(--red); background: var(--red-bg); }
+      .legend .unknown { color: var(--neutral); background: var(--neutral-bg); }
+      .verdict { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 18px; border-radius: 18px; background: var(--plum-soft); }
+      .verdict strong { display: block; margin-bottom: 3px; font-size: 18px; }
+      .verdict p { margin: 0; color: var(--muted); font-size: 13px; }
+      .summary { flex: 0 0 auto; display: flex; gap: 6px; }
+      .summary b { border-radius: 999px; padding: 6px 8px; font-size: 10px; }
+      .summary .g { color: var(--green); background: var(--green-bg); }
+      .summary .a { color: var(--amber); background: var(--amber-bg); }
+      .summary .r { color: var(--red); background: var(--red-bg); }
+      .products { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+      .product { display: flex; align-items: center; gap: 14px; min-height: 108px; padding: 17px; border: 1.5px solid #8462b5; border-radius: 20px; }
+      .product.alt { border-color: #9bbda5; }
+      .product .image { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 16px; background: #f1eee9; font-size: 29px; }
+      .product small { display: block; margin-bottom: 5px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+      .product.alt small { color: var(--green); }
+      .product strong { display: block; line-height: 1.25; }
+      .product span { color: var(--muted); font-size: 12px; }
+      .matrix { overflow: hidden; margin-top: 18px; border: 1px solid var(--line); border-radius: 20px; }
+      .matrix-title { display: flex; justify-content: space-between; padding: 14px 17px; border-bottom: 1px solid var(--line); }
+      .matrix-title strong { font-size: 15px; }
+      .matrix-title span { color: var(--muted); font-size: 11px; }
+      .row { display: grid; grid-template-columns: 1.35fr 1fr .9fr 1fr; min-height: 64px; border-top: 1px solid var(--line); }
+      .row:first-of-type { border-top: 0; }
+      .row.head { min-height: 40px; color: var(--muted); font-size: 11px; font-weight: 800; }
+      .cell { display: flex; align-items: center; gap: 7px; padding: 12px 15px; }
+      .row:not(.head) .cell:first-child { font-size: 12px; font-weight: 760; }
+      .target { justify-content: center; background: #f8f5fb; color: var(--plum); text-align: center; }
+      .value { justify-content: flex-start; text-align: left; font-size: 12px; }
+      .value .mark { flex: 0 0 19px; margin-left: auto; }
+      .value.good { color: var(--green); background: var(--green-bg); }
+      .value.support { color: var(--amber); background: var(--amber-bg); }
+      .value.bad { color: var(--red); background: var(--red-bg); }
+      .value.unknown { color: var(--neutral); background: var(--neutral-bg); }
+      .mark { display: inline-grid; place-items: center; width: 19px; height: 19px; border: 1px solid currentColor; border-radius: 50%; font-size: 11px; font-weight: 900; }
+      .explain { margin-top: 13px; padding: 14px 16px; border: 1px solid #d8c9e6; border-radius: 16px; }
+      .explain small { color: #6d4b9d; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+      .explain strong { display: block; margin: 6px 0 3px; }
+      .explain p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .decision-strip { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 18px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 18px; background: white; box-shadow: 0 8px 22px rgba(54, 43, 37, .08); }
+      .decision-strip p { margin: 0 0 3px; font-weight: 800; }
+      .decision-strip span { color: var(--muted); font-size: 11px; }
+      .actions { display: flex; gap: 8px; min-width: 430px; }
+      .btn { flex: 1; min-height: 44px; border: 1px solid var(--plum); border-radius: 999px; padding: 10px 17px; background: white; color: var(--plum); font-weight: 800; cursor: pointer; }
+      .btn.primary { border-color: var(--coral); background: var(--coral); color: white; }
+      .btn.primary:hover { background: var(--coral-dark); }
+      .leave { display: block; margin: 10px auto 0; border: 0; background: transparent; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; }
+      .proposal { margin-top: 18px; padding: 16px 18px; border-radius: 18px; background: #f9f7f4; }
+      .proposal h2 { margin: 0 0 10px; font-size: 15px; }
+      .proposal ul { margin: 0; padding-left: 19px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+      .specialists { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+      .specialist { padding: 15px; border: 1px solid var(--line); border-radius: 16px; background: white; }
+      .specialist small { color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+      .specialist strong { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+      .specialist p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+      [hidden] { display: none !important; }
+      @media (max-width: 760px) {
+        .review-bar { align-items: flex-start; flex-direction: column; }
+        .shell { box-shadow: none; }
+        .brand { padding-inline: 18px; }
+        .progress { padding-inline: 18px; }
+        .progress span { font-size: 9px; }
+        main { padding: 20px 16px 120px; }
+        h1 { font-size: 34px; }
+        .verdict { align-items: flex-start; flex-direction: column; }
+        .products, .specialists { grid-template-columns: 1fr; }
+        .row { grid-template-columns: 1.3fr .95fr .85fr .95fr; }
+        .cell { padding: 10px 7px; }
+        .decision-strip { align-items: stretch; flex-direction: column; }
+        .actions { min-width: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="review-bar">
+      <div><strong>Finaler Kategorien-Vorschlag</strong><br /><span>Variante 5 · bestätigte Werte bleiben sichtbar</span></div>
+      <nav class="tabs" aria-label="Kategorie-Beispiele">
+        <button class="tab" data-view="conditioner" aria-selected="true">Conditioner</button>
+        <button class="tab" data-view="leavein" aria-selected="false">Leave-in</button>
+        <button class="tab" data-view="mask" aria-selected="false">Maske</button>
+        <button class="tab" data-view="oil" aria-selected="false">Öl</button>
+        <button class="tab" data-view="specialists" aria-selected="false">Spezialkategorien</button>
+      </nav>
+    </header>
+
+    <div class="shell">
+      <div class="brand">chaarlie</div>
+      <div class="progress"><span class="done">Bedarf</span><span class="done">Verfeinerung</span><span class="active">Produkte</span><span>Routine</span><span>Anwendung</span></div>
+      <main>
+        <p class="eyebrow" id="category-label">Conditioner · Produkt 2 von 5</p>
+        <h1>Dein Produkt im Vergleich</h1>
+        <div class="legend" aria-label="Statuslegende">
+          <span class="good">✓ Im Ziel</span><span class="support">~ Passt mit Einschränkung</span><span class="bad">× Außerhalb</span><span class="unknown">· Nicht bestätigt</span>
+        </div>
+
+        <section data-panel="conditioner">
+          <div class="verdict"><div><strong>Passt nicht optimal</strong><p>Das exakte Zielprofil wird nicht vollständig abgedeckt. Die bestätigten Produktwerte bleiben trotzdem sichtbar.</p></div><div class="summary"><b class="g">1 im Ziel</b><b class="a">2 mit Einschränkung</b><b class="r">2 außerhalb</b></div></div>
+          <div class="products"><article class="product"><div class="image">🧴</div><div><small>Dein Produkt</small><strong>Bali Curls Moisturising Conditioner</strong><span>250 ml</span></div></article><article class="product alt"><div class="image">🧴</div><div><small>Passende Alternative</small><strong>Sante Intense Hydration Conditioner</strong><span>150 ml</span></div></article></div>
+          <div class="matrix"><div class="matrix-title"><strong>Eigenschaft für Eigenschaft</strong><span>Wert und Passung werden getrennt gezeigt</span></div><div class="row head"><div class="cell">Prüfpunkt</div><div class="cell">Deins</div><div class="cell target">Ziel</div><div class="cell">Alternative</div></div><div class="row"><div class="cell">Zielprofil-Eignung</div><div class="cell value bad">nicht vollständig <i class="mark">×</i></div><div class="cell target">abgedeckt</div><div class="cell value good">abgedeckt <i class="mark">✓</i></div></div><div class="row"><div class="cell">Pflegegewicht</div><div class="cell value bad">reichhaltig <i class="mark">×</i></div><div class="cell target">mittel</div><div class="cell value good">mittel <i class="mark">✓</i></div></div><div class="row"><div class="cell">Pflegerichtung</div><div class="cell value support">ausgeglichen <i class="mark">~</i></div><div class="cell target">Feuchtigkeit</div><div class="cell value good">Feuchtigkeit <i class="mark">✓</i></div></div><div class="row"><div class="cell">Repair-Unterstützung</div><div class="cell value support">mittel <i class="mark">~</i></div><div class="cell target">niedrig</div><div class="cell value good">niedrig <i class="mark">✓</i></div></div></div>
+          <div class="explain"><small>Ausgewählter Prüfpunkt · Passt mit Einschränkung</small><strong>Pflegerichtung</strong><p>Deins: ausgeglichen. Ziel: Feuchtigkeit. Der Produktwert ist bestätigt; „ausgeglichen“ wird als kompatible, aber nicht identische Richtung dargestellt.</p></div>
+        </section>
+
+        <section data-panel="leavein" hidden>
+          <div class="verdict"><div><strong>Passt mit Einschränkung</strong><p>Die Pflege ist grundsätzlich passend; die ausgeglichene Pflegerichtung ist etwas breiter als dein Feuchtigkeitsziel.</p></div><div class="summary"><b class="g">2 im Ziel</b><b class="a">1 mit Einschränkung</b></div></div>
+          <div class="products"><article class="product"><div class="image">💧</div><div><small>Dein Produkt</small><strong>Curlsmith Weightless Air Dry Cream</strong><span>237 ml</span></div></article><article class="product alt"><div class="image">💧</div><div><small>Passende Alternative</small><strong>Giovanni Direct Leave-In</strong><span>250 ml</span></div></article></div>
+          <div class="matrix"><div class="matrix-title"><strong>Eigenschaft für Eigenschaft</strong><span>Amber statt falschem roten Fehler</span></div><div class="row head"><div class="cell">Prüfpunkt</div><div class="cell">Deins</div><div class="cell target">Ziel</div><div class="cell">Alternative</div></div><div class="row"><div class="cell">Pflegegewicht</div><div class="cell value good">leicht <i class="mark">✓</i></div><div class="cell target">leicht</div><div class="cell value good">leicht <i class="mark">✓</i></div></div><div class="row"><div class="cell">Pflegerichtung</div><div class="cell value support">ausgeglichen <i class="mark">~</i></div><div class="cell target">Feuchtigkeit</div><div class="cell value good">Feuchtigkeit <i class="mark">✓</i></div></div><div class="row"><div class="cell">Repair-Unterstützung</div><div class="cell value good">mittel <i class="mark">✓</i></div><div class="cell target">mittel</div><div class="cell value good">mittel <i class="mark">✓</i></div></div></div>
+          <div class="proposal"><h2>Vorschlag für Leave-in</h2><ul><li>Bestehende Fakten bleiben unverändert.</li><li>Ausgeglichen oder eine benachbarte Gewichtsstufe wird amber als „Passt mit Einschränkung“ gezeigt.</li><li>Nur echte Gegenrichtung oder klar unzureichende Repair-Stufe wird rot.</li></ul></div>
+        </section>
+
+        <section data-panel="mask" hidden>
+          <div class="verdict"><div><strong>Passt mit Einschränkung</strong><p>Die Maske unterstützt dein Ziel, ist aber reichhaltiger und breiter ausgerichtet.</p></div><div class="summary"><b class="g">1 im Ziel</b><b class="a">2 mit Einschränkung</b></div></div>
+          <div class="products"><article class="product"><div class="image">🫙</div><div><small>Dein Produkt</small><strong>Shea Moisture Manuka Honey Masque</strong><span>340 g</span></div></article><article class="product alt"><div class="image">🫙</div><div><small>Passende Alternative</small><strong>Briogeo Don't Despair, Repair!</strong><span>237 ml</span></div></article></div>
+          <div class="matrix"><div class="matrix-title"><strong>Eigenschaft für Eigenschaft</strong><span>Vorhandene Masken-Regeln werden direkt verwendet</span></div><div class="row head"><div class="cell">Prüfpunkt</div><div class="cell">Deins</div><div class="cell target">Ziel</div><div class="cell">Alternative</div></div><div class="row"><div class="cell">Pflegegewicht</div><div class="cell value support">reichhaltig <i class="mark">~</i></div><div class="cell target">mittel</div><div class="cell value good">mittel <i class="mark">✓</i></div></div><div class="row"><div class="cell">Pflegerichtung</div><div class="cell value support">ausgeglichen <i class="mark">~</i></div><div class="cell target">Feuchtigkeit</div><div class="cell value good">Feuchtigkeit <i class="mark">✓</i></div></div><div class="row"><div class="cell">Repair-Unterstützung</div><div class="cell value good">hoch <i class="mark">✓</i></div><div class="cell target">hoch</div><div class="cell value good">hoch <i class="mark">✓</i></div></div></div>
+          <div class="proposal"><h2>Vorschlag für Masken</h2><ul><li>Die bereits vorhandenen Achsen-Ergebnisse werden 1:1 dargestellt.</li><li>`caution` wird amber, `fail` rot, `unknown` neutral.</li><li>Keine neue Masken-Empfehlungsregel wird erfunden.</li></ul></div>
+        </section>
+
+        <section data-panel="oil" hidden>
+          <div class="verdict"><div><strong>Passt mit Einschränkung</strong><p>Der Einsatz ist bestätigt; das Öl ist für die Leave-on-Anwendung etwas reichhaltiger als dein Ziel.</p></div><div class="summary"><b class="g">1 im Ziel</b><b class="a">1 mit Einschränkung</b></div></div>
+          <div class="products"><article class="product"><div class="image">🧪</div><div><small>Dein Produkt</small><strong>Olaplex No.7 Bonding Oil</strong><span>30 ml</span></div></article><article class="product alt"><div class="image">🧪</div><div><small>Passende Alternative</small><strong>Moroccanoil Treatment Light</strong><span>25 ml</span></div></article></div>
+          <div class="matrix"><div class="matrix-title"><strong>Eigenschaft für Eigenschaft</strong><span>Rolle bleibt hart, Gewicht darf unterstützend sein</span></div><div class="row head"><div class="cell">Prüfpunkt</div><div class="cell">Deins</div><div class="cell target">Ziel</div><div class="cell">Alternative</div></div><div class="row"><div class="cell">Unterstützter Einsatz</div><div class="cell value good">Leave-on <i class="mark">✓</i></div><div class="cell target">Leave-on</div><div class="cell value good">Leave-on <i class="mark">✓</i></div></div><div class="row"><div class="cell">Pflegegewicht</div><div class="cell value support">reichhaltig <i class="mark">~</i></div><div class="cell target">mittel</div><div class="cell value good">mittel <i class="mark">✓</i></div></div><div class="row"><div class="cell">Geeignete Haardicke</div><div class="cell value unknown">fein, mittel</div><div class="cell target">kein Zielwert</div><div class="cell value unknown">fein, mittel</div></div></div>
+          <div class="proposal"><h2>Vorschlag für Öle</h2><ul><li>Eine nicht unterstützte Anwendung bleibt ein roter harter Fehler.</li><li>Ein benachbartes Leave-on-Gewicht wird amber statt rot.</li><li>Zielunabhängige Eignungsdaten bleiben sichtbar, aber ohne erfundene Bewertung.</li></ul></div>
+        </section>
+
+        <section data-panel="specialists" hidden>
+          <div class="verdict"><div><strong>Kompakte Kategorien, dieselbe Statussprache</strong><p>Diese Kategorien brauchen keine neue Datenlogik. Ihre vorhandenen Kriterien werden nur korrekt und vollständig dargestellt.</p></div><div class="summary"><b class="g">grün</b><b class="a">amber</b><b class="r">rot</b></div></div>
+          <div class="specialists"><article class="specialist"><small>Hitzeschutz</small><strong>Schutz bestätigt <i class="mark" style="color:var(--green)">✓</i></strong><p>Ein bestehendes `pass` bleibt grün.</p></article><article class="specialist"><small>Kopfhautpflege</small><strong>Passt mit Einschränkung <i class="mark" style="color:var(--amber)">~</i></strong><p>Ein bestehendes `caution` wird sichtbar amber, nicht rot.</p></article><article class="specialist"><small>Trockenshampoo</small><strong>Noch nicht bestätigt <i class="mark" style="color:var(--neutral)">·</i></strong><p>Ein unbekannter Wert bleibt neutral und wird nicht als Fehler ausgegeben.</p></article><article class="specialist"><small>Bondbuilder</small><strong>Behandlungsmodus passt <i class="mark" style="color:var(--green)">✓</i></strong><p>Das kompakte Kriterium bleibt verständlich und knapp.</p></article><article class="specialist"><small>Tiefenreinigung</small><strong>Reset-Rolle nicht erfüllt <i class="mark" style="color:var(--red)">×</i></strong><p>Nur ein echtes `fail` erhält die rote Fehlerdarstellung.</p></article></div>
+          <div class="proposal"><h2>Vorschlag für alle fünf Spezialkategorien</h2><ul><li>Keine Änderung an Datenbank, Empfehlung oder Autorität.</li><li>`pass`, `caution`, `fail` und `unknown` werden überall gleich übersetzt.</li><li>Die kompakte Darstellung bleibt auf wenige relevante Prüfpunkte begrenzt.</li></ul></div>
+        </section>
+
+        <div class="decision-strip"><div><p>Deine Entscheidung</p><span>Du kannst sie später in deinem Plan ändern.</span></div><div class="actions"><button class="btn">Produkt behalten</button><button class="btn primary">Alternative wählen</button></div></div>
+        <button class="leave">Vorerst ohne Produkt fortfahren</button>
+      </main>
+    </div>
+
+    <script>
+      const labels = { conditioner: "Conditioner · Produkt 2 von 5", leavein: "Leave-in · Produkt 3 von 5", mask: "Maske · Produkt 4 von 5", oil: "Öl · Produkt 5 von 5", specialists: "Spezialkategorien · kompakte Darstellung" };
+      document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
+        document.querySelectorAll("[data-panel]").forEach((panel) => panel.hidden = panel.dataset.panel !== tab.dataset.view);
+        document.getElementById("category-label").textContent = labels[tab.dataset.view];
+      }));
+    </script>
+  </body>
+</html>

@@ -1,6 +1,15 @@
 "use client"
 
-import { ArrowLeft, Check, ChevronLeft, ChevronRight, ImageIcon, X } from "lucide-react"
+import {
+  ArrowLeft,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  CircleHelp,
+  ImageIcon,
+  Minus,
+  X,
+} from "lucide-react"
 import { type ReactElement, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -104,6 +113,12 @@ export function ProductFitComparison({
     replacementAllowed,
     primaryAction,
   })
+  const visiblePrimaryAction = primaryAction?.kind === "leave_uncovered" ? null : primaryAction
+  const secondaryActions = quietActions.filter((action) => action.kind !== "leave_uncovered")
+  const leaveUncoveredAction =
+    primaryAction?.kind === "leave_uncovered"
+      ? primaryAction
+      : quietActions.find((action) => action.kind === "leave_uncovered")
   const hasTruthfulAction =
     uncoveredRetryIsPrimary || primaryAction !== null || quietActions.length > 0
   const contextLabel = `${categoryLabel} · ${roleLabel} · Produkt ${reviewPosition} von ${reviewTotal}`
@@ -192,7 +207,7 @@ export function ProductFitComparison({
   }
 
   return (
-    <section className="min-w-0 pb-40" aria-labelledby="product-fit-comparison-title">
+    <section className="min-w-0 pb-40 md:pb-0" aria-labelledby="product-fit-comparison-title">
       <div className="mb-4 flex items-center justify-between gap-3">
         <Button
           type="button"
@@ -222,51 +237,56 @@ export function ProductFitComparison({
 
       {evaluation.status !== "unsupported" && hasTruthfulAction ? (
         <>
-          {quietActions.length > 0 ? (
-            <section
-              className="mt-5 rounded-2xl border border-border bg-card p-4"
-              aria-labelledby="other-decisions-title"
-            >
-              <h2 id="other-decisions-title" className="text-sm font-semibold text-foreground">
-                Andere Möglichkeit
-              </h2>
-              <div className="mt-2 grid gap-1">
-                {quietActions.map((action) => (
+          {visiblePrimaryAction || secondaryActions.length > 0 || leaveUncoveredAction ? (
+            <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:static md:mt-6 md:rounded-2xl md:border md:bg-card md:p-4 md:shadow-sm md:backdrop-blur-none">
+              <div className="mx-auto flex max-w-3xl flex-col gap-2 md:flex-row md:flex-wrap md:justify-end">
+                {secondaryActions.map((action) => (
                   <Button
                     key={action.kind}
                     type="button"
-                    variant="ghost"
-                    className="h-auto justify-start whitespace-normal px-2 py-3 text-left text-muted-foreground hover:text-foreground"
+                    variant="outline"
+                    className="h-auto min-h-12 w-full whitespace-normal px-5 py-3 text-center leading-tight md:w-auto md:min-w-56"
                     disabled={disabled}
                     onClick={() => invokeAction(action.kind, selectedAlternative, onAction)}
                   >
                     {action.label}
                   </Button>
                 ))}
+                {visiblePrimaryAction ? (
+                  <Button
+                    type="button"
+                    variant="funnelCta"
+                    className="h-auto min-h-12 w-full whitespace-normal px-5 py-3 text-center leading-tight md:w-auto md:min-w-64"
+                    disabled={disabled}
+                    onClick={() =>
+                      invokeAction(visiblePrimaryAction.kind, selectedAlternative, onAction)
+                    }
+                    aria-label={
+                      selectedAlternative && isUncoveredReview
+                        ? "Dieses Produkt einplanen"
+                        : visiblePrimaryAction.label
+                    }
+                  >
+                    {selectedAlternative && isUncoveredReview
+                      ? "Dieses Produkt einplanen"
+                      : visiblePrimaryAction.label}
+                  </Button>
+                ) : null}
               </div>
-            </section>
-          ) : null}
-
-          {primaryAction ? (
-            <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
-              <Button
-                type="button"
-                variant="funnelCta"
-                className="h-auto min-h-14 w-full whitespace-normal px-5 py-3 text-center leading-tight"
-                disabled={disabled}
-                onClick={() => {
-                  invokeAction(primaryAction.kind, selectedAlternative, onAction)
-                }}
-                aria-label={
-                  selectedAlternative && isUncoveredReview
-                    ? "Dieses Produkt einplanen"
-                    : primaryAction?.label
-                }
-              >
-                {selectedAlternative && isUncoveredReview
-                  ? "Dieses Produkt einplanen"
-                  : primaryAction?.label}
-              </Button>
+              {leaveUncoveredAction ? (
+                <Button
+                  type="button"
+                  variant="link"
+                  aria-label={leaveUncoveredAction.label}
+                  className="mx-auto mt-1 flex h-auto min-h-9 whitespace-normal text-center text-muted-foreground underline underline-offset-4"
+                  disabled={disabled}
+                  onClick={() =>
+                    invokeAction(leaveUncoveredAction.kind, selectedAlternative, onAction)
+                  }
+                >
+                  {leaveUncoveredAction.label}
+                </Button>
+              ) : null}
             </div>
           ) : null}
         </>
@@ -350,7 +370,7 @@ function ComparisonReview({
           product={alternativeProduct}
           label={
             selectedAlternative?.verdict === "supportive"
-              ? "Alternative · passt teilweise"
+              ? "Alternative · passt mit Einschränkung"
               : "Passende Alternative"
           }
           alternativeVerdict={selectedAlternative?.verdict ?? null}
@@ -366,6 +386,11 @@ function ComparisonReview({
       ) : null}
       {(comparison.evidenceRows?.length ?? 0) > 0 && selectedAlternative ? (
         <EvidenceMatrix
+          key={evidenceMatrixKey(
+            comparison.evidenceRows ?? [],
+            ownedProductId,
+            selectedAlternative.productId,
+          )}
           rows={comparison.evidenceRows ?? []}
           firstProductId={ownedProductId}
           secondProductId={selectedAlternative.productId}
@@ -403,7 +428,7 @@ function FitOnlyReview({
         }
       : verdict === "supportive"
         ? {
-            title: `Dein ${categoryLabel || "Produkt"} passt teilweise`,
+            title: `Dein ${categoryLabel || "Produkt"} passt mit Einschränkung`,
             description: "Dein Produkt passt grundsätzlich zu deinem Bedarf.",
           }
         : {
@@ -634,6 +659,11 @@ function UncoveredRecommendationReview({
           ) : null}
           {(comparison.evidenceRows?.length ?? 0) > 0 && secondary ? (
             <EvidenceMatrix
+              key={evidenceMatrixKey(
+                comparison.evidenceRows ?? [],
+                first.productId,
+                secondary.productId,
+              )}
               rows={comparison.evidenceRows ?? []}
               firstProductId={first.productId}
               secondProductId={secondary.productId}
@@ -686,7 +716,7 @@ function OverallVerdict({
   currentProductId,
 }: {
   evaluation: Stage3AuthorityEvaluation
-  count: { inTarget: number; total: number } | null
+  count: ReturnType<typeof targetCount>
   rows: Stage3FitEvidenceRow[]
   currentProductId?: string
 }) {
@@ -695,7 +725,7 @@ function OverallVerdict({
     evaluation.verdict === "ideal"
       ? "Passt"
       : evaluation.verdict === "supportive"
-        ? "Passt teilweise"
+        ? "Passt mit Einschränkung"
         : "Passt nicht"
   const inTargetLabels = rows
     .filter((row) => relationFor(row, currentProductId) === "in_target")
@@ -703,20 +733,35 @@ function OverallVerdict({
   const outsideTargetLabels = rows
     .filter((row) => relationFor(row, currentProductId) === "outside_target")
     .map((row) => row.label)
+  const supportiveLabels = rows
+    .filter((row) => relationFor(row, currentProductId) === "supportive")
+    .map((row) => row.label)
+  const unknownLabels = rows
+    .filter((row) => relationFor(row, currentProductId) === "unknown")
+    .map((row) => row.label)
   return (
     <div className="mb-4 rounded-xl bg-muted/60 px-3 py-2">
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <strong className="text-sm text-foreground">{label}</strong>
         {count ? (
           <span className="text-xs text-muted-foreground">
-            {count.inTarget} von {count.total} im Ziel
+            {count.inTarget} im Ziel · {count.supportive} mit Einschränkung · {count.outsideTarget}{" "}
+            außerhalb{count.unknown ? ` · ${count.unknown} nicht bestätigt` : ""}
+            {count.noTarget ? ` · ${count.noTarget} ohne Einordnung` : ""}
           </span>
         ) : null}
       </div>
-      {inTargetLabels.length > 0 || outsideTargetLabels.length > 0 ? (
+      {inTargetLabels.length > 0 ||
+      supportiveLabels.length > 0 ||
+      outsideTargetLabels.length > 0 ||
+      unknownLabels.length > 0 ? (
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
           {inTargetLabels.length > 0 ? `Im Ziel: ${inTargetLabels.join(", ")}.` : null}{" "}
+          {supportiveLabels.length > 0
+            ? `Passt mit Einschränkung: ${supportiveLabels.join(", ")}.`
+            : null}{" "}
           {outsideTargetLabels.length > 0 ? `Außerhalb: ${outsideTargetLabels.join(", ")}.` : null}
+          {unknownLabels.length > 0 ? ` Nicht bestätigt: ${unknownLabels.join(", ")}.` : null}
         </p>
       ) : null}
     </div>
@@ -967,8 +1012,7 @@ function EvidenceMatrix({
   firstLabel: string
   secondLabel: string
 }) {
-  const initialRow =
-    rows.find((row) => relationFor(row, firstProductId) === "outside_target") ?? rows[0]
+  const initialRow = preferredEvidenceRow(rows, firstProductId)
   const [selectedRowId, setSelectedRowId] = useState(initialRow?.rowId ?? "")
   const selectedRow = rows.find((row) => row.rowId === selectedRowId) ?? initialRow
   const choose = (rowId: string) => setSelectedRowId(rowId)
@@ -1000,7 +1044,6 @@ function EvidenceMatrix({
               const alternative = valueFor(row, secondProductId)
               const relation = current?.relation ?? "unknown"
               const alternativeRelation = alternative?.relation ?? "unknown"
-              const knownStatus = relation === "in_target" || relation === "outside_target"
               const selected = row.rowId === selectedRow?.rowId
               return (
                 <tr
@@ -1008,6 +1051,7 @@ function EvidenceMatrix({
                   className={cn(
                     "border-t border-border",
                     relation === "in_target" && "bg-[var(--status-ok-bg)]/35",
+                    relation === "supportive" && "bg-[var(--status-pending-bg)]/35",
                     relation === "outside_target" && "bg-[var(--status-danger-bg)]/35",
                   )}
                 >
@@ -1016,6 +1060,7 @@ function EvidenceMatrix({
                     className={cn(
                       "break-words border-l-2 border-transparent px-2 py-3 text-left text-[11px] font-semibold leading-tight text-foreground",
                       relation === "in_target" && "border-l-[var(--status-ok-text)]",
+                      relation === "supportive" && "border-l-[var(--status-pending-text)]",
                       relation === "outside_target" && "border-l-[var(--status-danger-text)]",
                     )}
                   >
@@ -1030,9 +1075,9 @@ function EvidenceMatrix({
                     </button>
                   </th>
                   <td className="break-words px-1 py-3 text-foreground">
-                    <span className="grid justify-items-center gap-1">
-                      {current?.valueLabel ?? "–"}
-                      {knownStatus ? <RelationMark relation={relation} /> : null}
+                    <span className="flex items-center gap-1.5 text-left">
+                      <span className="min-w-0">{current?.valueLabel ?? "–"}</span>
+                      <RelationMark relation={relation} />
                     </span>
                   </td>
                   <td className="break-words bg-[var(--brand-plum)]/5 px-1 py-3 text-[var(--brand-plum)]">
@@ -1043,18 +1088,17 @@ function EvidenceMatrix({
                       "break-words px-1 py-3",
                       alternativeRelation === "in_target" &&
                         "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
+                      alternativeRelation === "supportive" &&
+                        "bg-[var(--status-pending-bg)]/60 text-[var(--status-pending-text)]",
                       alternativeRelation === "outside_target" &&
                         "bg-[var(--status-danger-bg)]/35 text-[var(--status-danger-text)]",
                       (alternativeRelation === "unknown" || alternativeRelation === "no_target") &&
                         "bg-muted/40 text-muted-foreground",
                     )}
                   >
-                    <span className="grid justify-items-center gap-1">
-                      {alternative?.valueLabel ?? "–"}
-                      {alternativeRelation === "in_target" ||
-                      alternativeRelation === "outside_target" ? (
-                        <RelationMark relation={alternativeRelation} />
-                      ) : null}
+                    <span className="flex items-center gap-1.5 text-left">
+                      <span className="min-w-0">{alternative?.valueLabel ?? "–"}</span>
+                      <RelationMark relation={alternativeRelation} />
                     </span>
                   </td>
                 </tr>
@@ -1076,22 +1120,77 @@ function EvidenceMatrix({
   )
 }
 
+function preferredEvidenceRow(rows: Stage3FitEvidenceRow[], productId?: string) {
+  return (
+    rows.find((row) => relationFor(row, productId) === "outside_target") ??
+    rows.find((row) => relationFor(row, productId) === "supportive") ??
+    rows.find((row) => relationFor(row, productId) === "unknown") ??
+    rows[0]
+  )
+}
+
+function evidenceMatrixKey(
+  rows: Stage3FitEvidenceRow[],
+  firstProductId: string | undefined,
+  secondProductId: string,
+) {
+  return `${firstProductId ?? "none"}:${secondProductId}:${rows
+    .map(
+      (row) =>
+        `${row.rowId}:${relationFor(row, firstProductId)}:${relationFor(row, secondProductId)}`,
+    )
+    .join("|")}`
+}
+
 function RelationMark({ relation }: { relation: Stage3FitEvidenceRelation }) {
-  const inTarget = relation === "in_target"
-  const Icon = inTarget ? Check : X
+  const presentation = relationPresentation(relation)
+  const Icon = presentation.Icon
   return (
     <span
-      aria-label={inTarget ? "Im Ziel" : "Außerhalb des Ziels"}
+      aria-label={presentation.ariaLabel}
       className={cn(
-        "inline-flex h-4 w-4 items-center justify-center rounded-full border",
-        inTarget
-          ? "border-[var(--status-ok-text)] text-[var(--status-ok-text)]"
-          : "border-[var(--status-danger-text)] text-[var(--status-danger-text)]",
+        "ml-auto inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+        presentation.className,
       )}
     >
       <Icon className="h-2.5 w-2.5" aria-hidden="true" />
     </span>
   )
+}
+
+function relationPresentation(relation: Stage3FitEvidenceRelation) {
+  switch (relation) {
+    case "in_target":
+      return {
+        ariaLabel: "Im Ziel",
+        Icon: Check,
+        className: "border-[var(--status-ok-text)] text-[var(--status-ok-text)]",
+      }
+    case "supportive":
+      return {
+        ariaLabel: "Passt mit Einschränkung",
+        Icon: Minus,
+        className: "border-[var(--status-pending-text)] text-[var(--status-pending-text)]",
+      }
+    case "outside_target":
+      return {
+        ariaLabel: "Außerhalb des Ziels",
+        Icon: X,
+        className: "border-[var(--status-danger-text)] text-[var(--status-danger-text)]",
+      }
+    case "unknown":
+      return {
+        ariaLabel: "Nicht bestätigt",
+        Icon: CircleHelp,
+        className: "border-muted-foreground text-muted-foreground",
+      }
+    case "no_target":
+      return {
+        ariaLabel: "Kein Zielwert",
+        Icon: Minus,
+        className: "border-muted-foreground/60 text-muted-foreground",
+      }
+  }
 }
 
 function SelectedEvidencePanel({
@@ -1113,9 +1212,13 @@ function SelectedEvidencePanel({
   const eyebrow =
     relation === "in_target"
       ? "Im Ziel"
-      : relation === "outside_target"
-        ? "Außerhalb des Ziels"
-        : "Noch nicht beurteilbar"
+      : relation === "supportive"
+        ? "Passt mit Einschränkung"
+        : relation === "outside_target"
+          ? "Außerhalb des Ziels"
+          : relation === "unknown"
+            ? "Nicht bestätigt"
+            : "Kein Zielwert"
   return (
     <section
       className="mt-3 min-h-28 rounded-2xl border border-[var(--brand-plum)]/35 bg-card p-4"
@@ -1171,11 +1274,9 @@ function CompactOwnedEvidence({
           return (
             <li key={row.rowId} className="flex items-center justify-between gap-3">
               <span>{row.label}</span>
-              <span className="flex items-center gap-2 text-muted-foreground">
-                {value?.valueLabel ?? "nicht bestätigt"}
-                {value?.relation === "in_target" || value?.relation === "outside_target" ? (
-                  <RelationMark relation={value.relation} />
-                ) : null}
+              <span className="flex min-w-32 items-center gap-2 text-muted-foreground">
+                <span className="min-w-0">{value?.valueLabel ?? "nicht bestätigt"}</span>
+                <RelationMark relation={value?.relation ?? "unknown"} />
               </span>
             </li>
           )
@@ -1333,14 +1434,13 @@ function targetCount(rows: Stage3FitEvidenceRow[], currentProductId?: string) {
   const relations = rows
     .filter((row) => row.target !== null)
     .map((row) => relationFor(row, currentProductId))
-  if (
-    !relations.length ||
-    relations.some((relation) => relation === "unknown" || relation === "no_target")
-  )
-    return null
+  if (!relations.length) return null
   return {
     inTarget: relations.filter((relation) => relation === "in_target").length,
-    total: relations.length,
+    supportive: relations.filter((relation) => relation === "supportive").length,
+    outsideTarget: relations.filter((relation) => relation === "outside_target").length,
+    unknown: relations.filter((relation) => relation === "unknown").length,
+    noTarget: relations.filter((relation) => relation === "no_target").length,
   }
 }
 

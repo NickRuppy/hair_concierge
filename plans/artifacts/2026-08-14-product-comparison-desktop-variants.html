@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Produktvergleich – fünf Desktop-Varianten</title>
+    <style>
+      :root {
+        --ink: #342f32;
+        --muted: #756f72;
+        --line: #ddd7dc;
+        --paper: #fffdfb;
+        --wash: #f7f3f9;
+        --plum: #6f4aad;
+        --plum-dark: #40235f;
+        --green: #327349;
+        --green-soft: #edf8f0;
+        --red: #b84e5b;
+        --red-soft: #fff3f4;
+        --amber: #986111;
+        --amber-soft: #fff7e8;
+        --shadow: 0 16px 44px rgba(62, 42, 55, 0.1);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #f4f1f2;
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      button { font: inherit; }
+      .reviewer {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: minmax(250px, 1fr) auto;
+        align-items: center;
+        gap: 20px;
+        min-height: 86px;
+        padding: 14px 28px;
+        color: white;
+        background: #2f2930;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
+      }
+      .reviewer strong { display: block; font-size: 15px; }
+      .reviewer span { color: #d8d0d7; font-size: 12px; }
+      .tabs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+      .tab {
+        min-width: 34px;
+        height: 34px;
+        border: 1px solid #6d646c;
+        border-radius: 999px;
+        color: white;
+        background: transparent;
+        cursor: pointer;
+      }
+      .tab[aria-selected="true"] { border-color: white; color: #2f2930; background: white; }
+
+      .journey {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 253, 251, 0.97);
+      }
+      .journey-inner {
+        width: min(1120px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 24px 0 20px;
+      }
+      .brand {
+        margin-bottom: 18px;
+        color: var(--plum-dark);
+        font: 700 32px/1 Georgia, serif;
+        text-align: center;
+      }
+      .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+      .step { color: #77706e; font-size: 13px; font-weight: 650; text-align: center; }
+      .step::before {
+        content: "";
+        display: block;
+        height: 7px;
+        margin-bottom: 10px;
+        border-radius: 999px;
+        background: #e4dfe3;
+      }
+      .step.done, .step.current { color: var(--plum); }
+      .step.done::before { background: #7d58b7; }
+      .step.current::before { background: var(--plum-dark); }
+
+      .variant { display: none; }
+      .variant.active { display: block; }
+      .variant-label {
+        width: min(1120px, calc(100% - 48px));
+        margin: 26px auto 14px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .variant-label p { margin: 0; color: var(--muted); font-size: 13px; }
+      .variant-label h2 { margin: 2px 0 0; font: 650 22px/1.2 Georgia, serif; }
+      .badge {
+        flex: none;
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: var(--plum-dark);
+        background: #ede4f6;
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .layout {
+        width: min(1120px, calc(100% - 48px));
+        margin: 0 auto 70px;
+      }
+      .single { width: min(760px, calc(100% - 48px)); }
+      .split { display: grid; grid-template-columns: minmax(0, 760px) 320px; align-items: start; gap: 24px; }
+      .page {
+        min-width: 0;
+        padding: 32px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+      .context {
+        margin: 0 0 10px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      h1 { margin: 0; font: 500 38px/1.12 Georgia, serif; color: #3b3537; }
+      .verdict {
+        margin: 22px 0;
+        padding: 15px 18px;
+        border-radius: 16px;
+        background: var(--wash);
+      }
+      .verdict strong { display: block; margin-bottom: 4px; font-size: 16px; }
+      .verdict span { color: var(--muted); font-size: 13px; }
+      .products { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .product {
+        display: grid;
+        grid-template-columns: 66px 1fr;
+        align-items: center;
+        gap: 13px;
+        min-height: 110px;
+        padding: 14px;
+        border: 1.5px solid #8f73bd;
+        border-radius: 18px;
+      }
+      .product, .product > div { min-width: 0; }
+      .product.alt { border-color: #8ab596; }
+      .product small { grid-column: 1 / -1; color: var(--plum); font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+      .product.alt small { color: var(--green); }
+      .thumb {
+        width: 62px;
+        height: 72px;
+        border: 1px solid #e1dcda;
+        border-radius: 15px;
+        object-fit: contain;
+        background: #f4f0eb;
+      }
+      .product-name { overflow-wrap: anywhere; font-size: 15px; font-weight: 680; line-height: 1.25; }
+      .product-meta { margin-top: 5px; color: var(--muted); font-size: 12px; }
+      .matrix {
+        margin-top: 18px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+      }
+      .matrix-title { padding: 14px 17px; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 750; }
+      .row { display: grid; grid-template-columns: 1.35fr repeat(3, 1fr); min-height: 57px; border-top: 1px solid #ebe6e9; }
+      .row:first-of-type { border-top: 0; }
+      .cell { display: flex; align-items: center; justify-content: center; padding: 10px; font-size: 12px; text-align: center; }
+      .cell:first-child { justify-content: flex-start; font-weight: 680; text-align: left; }
+      .head .cell { color: var(--muted); font-size: 11px; font-weight: 720; }
+      .target { color: var(--plum); background: #faf7fc; }
+      .good { color: var(--green); background: var(--green-soft); }
+      .bad { color: var(--red); background: var(--red-soft); }
+      .near { color: var(--amber); background: var(--amber-soft); }
+      .mark { margin-left: 5px; font-weight: 900; }
+      .fact {
+        margin-top: 14px;
+        padding: 14px 16px;
+        border: 1px solid #d9cae9;
+        border-radius: 16px;
+        background: #fff;
+      }
+      .fact strong { display: block; margin-bottom: 4px; font-size: 13px; }
+      .fact span { color: var(--muted); font-size: 12px; line-height: 1.45; }
+
+      .actions { margin-top: 20px; }
+      .action-title { margin: 0 0 10px; font-size: 14px; font-weight: 780; }
+      .button-grid { display: grid; gap: 9px; }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 11px 16px;
+        border: 1.5px solid var(--plum);
+        border-radius: 13px;
+        color: var(--plum-dark);
+        background: white;
+        font-size: 13px;
+        font-weight: 750;
+        text-align: center;
+      }
+      .btn.primary { border-color: #d65f6b; color: white; background: #d65f6b; }
+      .btn.subtle { border-color: #c9c1c6; color: var(--muted); }
+      .btn.danger-quiet { border-color: transparent; color: var(--muted); background: #f6f3f4; }
+
+      .contained-sticky {
+        position: sticky;
+        bottom: 16px;
+        margin: 20px -12px -12px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 253, 251, .96);
+        box-shadow: 0 10px 30px rgba(55, 40, 50, .15);
+        backdrop-filter: blur(10px);
+      }
+      .contained-sticky .button-grid { grid-template-columns: 1.4fr 1fr; }
+      .contained-sticky .wide { grid-column: 1 / -1; }
+
+      .rail {
+        position: sticky;
+        top: 112px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+      .rail .choice-summary { margin-bottom: 18px; padding: 13px; border-radius: 13px; background: var(--green-soft); }
+      .rail .choice-summary strong { display: block; color: var(--green); font-size: 13px; }
+      .rail .choice-summary span { color: var(--muted); font-size: 12px; }
+
+      .choice-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .choice-card {
+        min-height: 112px;
+        padding: 17px;
+        border: 1.5px solid #c8bbc9;
+        border-radius: 17px;
+        background: white;
+      }
+      .choice-card.recommended { border-color: #d65f6b; background: #fff8f8; }
+      .choice-card strong { display: block; margin-bottom: 7px; font-size: 14px; }
+      .choice-card span { color: var(--muted); font-size: 12px; line-height: 1.35; }
+      .choice-card .radio { float: right; width: 18px; height: 18px; border: 2px solid #a99ca4; border-radius: 50%; }
+      .choice-card.recommended .radio { border: 5px solid #d65f6b; }
+      .choice-cards .full { grid-column: 1 / -1; min-height: 72px; }
+
+      .decision-strip {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 16px;
+        margin-top: 20px;
+        padding: 14px;
+        border: 1px solid #d7c9e7;
+        border-radius: 16px;
+        background: #f8f3fb;
+      }
+      .decision-strip p { margin: 0; font-size: 13px; font-weight: 760; }
+      .decision-strip span { color: var(--muted); font-size: 11px; }
+      .decision-strip .strip-actions { display: flex; gap: 8px; }
+      .decision-strip .btn { min-height: 42px; }
+      .more-action { margin-top: 10px; color: var(--muted); font-size: 12px; text-align: center; text-decoration: underline; }
+
+      @media (max-width: 900px) {
+        .reviewer { grid-template-columns: 1fr; }
+        .tabs { justify-content: flex-start; }
+        .split { grid-template-columns: 1fr; }
+        .rail { position: static; }
+        .layout, .single, .variant-label, .journey-inner { width: min(100% - 24px, 760px); }
+        .page { padding: 20px; }
+      }
+      @media (max-width: 600px) {
+        .reviewer { padding: 14px 12px; }
+        .products, .choice-cards { grid-template-columns: 1fr; }
+        .choice-cards .full { grid-column: auto; }
+        .contained-sticky .button-grid { grid-template-columns: 1fr; }
+        .contained-sticky .wide { grid-column: auto; }
+        .decision-strip { grid-template-columns: 1fr; }
+        .decision-strip .strip-actions { display: grid; grid-template-columns: 1fr 1fr; }
+        .row { grid-template-columns: 1.15fr repeat(3, 1fr); }
+        .cell { padding: 8px 4px; font-size: 10px; }
+        h1 { font-size: 31px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="reviewer">
+      <div>
+        <strong>Mockup · Produktvergleich auf Desktop</strong>
+        <span>Alle Varianten zeigen bestätigte Pflegerichtung und klar erkennbare Entscheidungen.</span>
+      </div>
+      <nav class="tabs" aria-label="Mockup-Varianten">
+        <button class="tab" data-variant="1" aria-selected="true">1</button>
+        <button class="tab" data-variant="2" aria-selected="false">2</button>
+        <button class="tab" data-variant="3" aria-selected="false">3</button>
+        <button class="tab" data-variant="4" aria-selected="false">4</button>
+        <button class="tab" data-variant="5" aria-selected="false">5</button>
+      </nav>
+    </header>
+
+    <div class="journey">
+      <div class="journey-inner">
+        <div class="brand">chaarlie</div>
+        <div class="steps">
+          <div class="step done">Bedarf</div><div class="step done">Verfeinerung</div>
+          <div class="step current">Produkte</div><div class="step">Routine</div><div class="step">Anwendung</div>
+        </div>
+      </div>
+    </div>
+
+    <main id="variants"></main>
+
+    <template id="comparison-template">
+      <div class="comparison-core">
+        <p class="context">Conditioner · Pflege nach der Wäsche · Produkt 2 von 5</p>
+        <h1>Dein Conditioner im Vergleich</h1>
+        <div class="verdict"><strong>Passt nicht optimal</strong><span>Pflegegewicht und Repair-Unterstützung liegen außerhalb deines Ziels.</span></div>
+        <div class="products">
+          <article class="product">
+            <small>Dein Produkt</small>
+            <img class="thumb" alt="Bali Curls Moisturising Conditioner" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/63239c38-5633-4062-9e8d-d528ee71502a/11-63239c38-5633-4062-9e8d-d528ee71502a-bali-bali-curls-moisturising-d34bf514bf45.webp" />
+            <div><div class="product-name">Bali Curls Moisturising Conditioner</div><div class="product-meta">250 ml</div></div>
+          </article>
+          <article class="product alt">
+            <small>Passende Alternative</small>
+            <img class="thumb" alt="Sante Intense Hydration Conditioner" src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/d2bb79a8-add1-4b74-9d4f-c03449175147/46-d2bb79a8-add1-4b74-9d4f-c03449175147-sante-sante-intense-hydrating-conditioner-1f1b16fcd967.webp" />
+            <div><div class="product-name">Sante Intense Hydration Conditioner</div><div class="product-meta">200 ml</div></div>
+          </article>
+        </div>
+        <section class="matrix">
+          <div class="matrix-title">Eigenschaft für Eigenschaft</div>
+          <div class="row head"><div class="cell">Prüfpunkt</div><div class="cell">Deins</div><div class="cell target">Ziel</div><div class="cell">Alternative</div></div>
+          <div class="row"><div class="cell">Pflegegewicht</div><div class="cell bad">reichhaltig <b class="mark">×</b></div><div class="cell target">mittel</div><div class="cell good">mittel <b class="mark">✓</b></div></div>
+          <div class="row"><div class="cell">Pflegerichtung</div><div class="cell near">ausgewogen <b class="mark">~</b></div><div class="cell target">Feuchtigkeit</div><div class="cell good">Feuchtigkeit <b class="mark">✓</b></div></div>
+          <div class="row"><div class="cell">Repair-Unterstützung</div><div class="cell bad">mittel <b class="mark">×</b></div><div class="cell target">niedrig</div><div class="cell good">niedrig <b class="mark">✓</b></div></div>
+        </section>
+        <div class="fact"><strong>Pflegerichtung · bestätigt</strong><span>Deins: ausgewogen. Alternative: Feuchtigkeit. Ziel: Feuchtigkeit. „Ausgewogen“ ist bestätigt und wird nicht länger als fehlender Wert dargestellt.</span></div>
+      </div>
+    </template>
+
+    <script>
+      const variants = [
+        {
+          title: "1 · Ruhiger Abschluss im Seitenfluss",
+          note: "Keine schwebende Leiste. Drei klar gerahmte Entscheidungen direkt nach dem Vergleich.",
+          badge: "am ruhigsten",
+          type: "inline"
+        },
+        {
+          title: "2 · Enthaltene Sticky-Leiste",
+          note: "Bleibt beim Scrollen sichtbar, aber strikt innerhalb der 760-px-Karte.",
+          badge: "kleinste Änderung",
+          type: "sticky"
+        },
+        {
+          title: "3 · Desktop-Entscheidungsrail",
+          note: "Vergleich links, dauerhaft sichtbare Entscheidungen in einer 320-px-Seitenspalte.",
+          badge: "desktop-native",
+          type: "rail"
+        },
+        {
+          title: "4 · Entscheidungen als Karten",
+          note: "Die zwei Hauptwege werden als echte Auswahl gezeigt; ohne Produkt bleibt sichtbar darunter.",
+          badge: "am verständlichsten",
+          type: "cards"
+        },
+        {
+          title: "5 · Kompakte Entscheidungszeile",
+          note: "Zwei deutlich sichtbare Buttons auf einer Zeile; die seltene dritte Option bleibt darunter.",
+          badge: "am kompaktesten",
+          type: "strip"
+        }
+      ];
+
+      const core = () => document.querySelector("#comparison-template").content.cloneNode(true);
+      const buttons = (mode = "stack") => {
+        const wrap = document.createElement("section");
+        wrap.className = `actions ${mode === "sticky" ? "contained-sticky" : ""}`;
+        wrap.innerHTML = `<h3 class="action-title">Wie möchtest du weitermachen?</h3><div class="button-grid"><button class="btn primary">Diese Alternative wählen</button><button class="btn">Mein Produkt trotzdem behalten</button><button class="btn subtle ${mode === "sticky" ? "wide" : ""}">Vorerst ohne Produkt fortfahren</button></div>`;
+        return wrap;
+      };
+
+      variants.forEach((variant, index) => {
+        const section = document.createElement("section");
+        section.className = `variant ${index === 0 ? "active" : ""}`;
+        section.dataset.variant = String(index + 1);
+        section.innerHTML = `<div class="variant-label"><div><p>${variant.note}</p><h2>${variant.title}</h2></div><span class="badge">${variant.badge}</span></div>`;
+        const layout = document.createElement("div");
+        layout.className = `layout ${variant.type === "rail" ? "split" : "single"}`;
+        const page = document.createElement("article");
+        page.className = "page";
+        page.append(core());
+
+        if (variant.type === "inline") page.append(buttons());
+        if (variant.type === "sticky") page.append(buttons("sticky"));
+        if (variant.type === "rail") {
+          const rail = document.createElement("aside");
+          rail.className = "rail";
+          rail.innerHTML = `<p class="context">Deine Entscheidung</p><div class="choice-summary"><strong>Empfehlung</strong><span>Die Sante-Alternative liegt in allen drei gezeigten Punkten im Ziel.</span></div>`;
+          rail.append(buttons());
+          layout.append(page, rail);
+        }
+        if (variant.type === "cards") {
+          const choices = document.createElement("section");
+          choices.className = "actions";
+          choices.innerHTML = `<h3 class="action-title">Wähle deinen nächsten Schritt</h3><div class="choice-cards"><button class="choice-card recommended"><i class="radio"></i><strong>Sante wählen</strong><span>Als passende Alternative einplanen · noch kaufen</span></button><button class="choice-card"><i class="radio"></i><strong>Bali Curls behalten</strong><span>Trotz Abweichungen weiterverwenden</span></button><button class="choice-card full"><strong>Vorerst ohne Conditioner fortfahren</strong><span>Die Routine bleibt an dieser Stelle offen.</span></button></div>`;
+          page.append(choices);
+        }
+        if (variant.type === "strip") {
+          const strip = document.createElement("section");
+          strip.className = "decision-strip";
+          strip.innerHTML = `<div><p>Deine Entscheidung</p><span>Du kannst sie später in deinem Plan ändern.</span></div><div class="strip-actions"><button class="btn">Produkt behalten</button><button class="btn primary">Alternative wählen</button></div>`;
+          page.append(strip);
+          const more = document.createElement("div");
+          more.className = "more-action";
+          more.textContent = "Vorerst ohne Produkt fortfahren";
+          page.append(more);
+        }
+        if (variant.type !== "rail") layout.append(page);
+        section.append(layout);
+        document.querySelector("#variants").append(section);
+      });
+
+      function selectVariant(number) {
+        document.querySelectorAll(".variant").forEach((item) => item.classList.toggle("active", item.dataset.variant === number));
+        document.querySelectorAll(".tab").forEach((item) => item.setAttribute("aria-selected", String(item.dataset.variant === number)));
+        history.replaceState(null, "", `#variant-${number}`);
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+      document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => selectVariant(tab.dataset.variant)));
+      const initial = location.hash.match(/variant-(\d)/)?.[1];
+      if (initial) selectVariant(initial);
+    </script>
+  </body>
+</html>

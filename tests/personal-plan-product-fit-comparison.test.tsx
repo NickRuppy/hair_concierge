@@ -449,11 +449,18 @@ test("offers keep, exact replacement, and go-without for a partly fitting owned 
     />,
   )
 
-  assert.match(html, /Passt teilweise/)
+  assert.match(html, /Passt mit Einschränkung/)
   assert.match(html, /Mein Produkt behalten/)
   assert.doesNotMatch(html, /Mein Produkt trotzdem behalten/)
   assert.match(html, /Diese Alternative wählen/)
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
+  assert.match(html, /md:static/)
+  assert.doesNotMatch(html, /md:absolute/)
+  const leaveAction = findByAriaLabel(
+    treeFor(supportiveEvaluation),
+    "Vorerst ohne Produkt fortfahren",
+  )
+  assert.match(String(leaveAction.props.className), /underline/)
 })
 
 test("labels a supportive replacement as only partly fitting", () => {
@@ -463,7 +470,7 @@ test("labels a supportive replacement as only partly fitting", () => {
       ...row,
       productValues: row.productValues.map((value) =>
         value.productId === "alternative-two"
-          ? { ...value, valueLabel: "stark", relation: "outside_target" as const }
+          ? { ...value, valueLabel: "ausgeglichen", relation: "supportive" as const }
           : value,
       ),
     })),
@@ -483,9 +490,9 @@ test("labels a supportive replacement as only partly fitting", () => {
     />,
   )
 
-  assert.match(html, /Alternative · passt teilweise/)
+  assert.match(html, /Alternative · passt mit Einschränkung/)
   assert.doesNotMatch(html, /Passende Alternative/)
-  assert.equal((html.match(/aria-label="Außerhalb des Ziels"/g) ?? []).length, 2)
+  assert.equal((html.match(/aria-label="Passt mit Einschränkung"/g) ?? []).length, 1)
 })
 
 test("explains a fitting product when no better verified alternative exists", () => {
@@ -880,7 +887,7 @@ test("keeps a partial verdict explicit when no verified alternative exists", () 
     />,
   )
 
-  assert.match(html, /Dein Shampoo passt teilweise/)
+  assert.match(html, /Dein Shampoo passt mit Einschränkung/)
   assert.match(html, /Außerhalb des Ziels/)
   assert.match(html, /Mein Produkt behalten/)
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
@@ -917,7 +924,7 @@ test("keeps a mismatch explicit when no verified alternative exists", () => {
   assert.doesNotMatch(html, /passt grundsätzlich/)
 })
 
-test("does not show a misleading target count when any relevant row is unknown", () => {
+test("keeps confirmed relation counts visible while identifying unknown rows separately", () => {
   const incompleteComparison: Stage3FitComparison = {
     ...comparison,
     evidenceRows: [
@@ -932,6 +939,19 @@ test("does not show a misleading target count when any relevant row is unknown",
         },
         productValues: [
           { productId: "owned-shampoo", valueLabel: "nicht bestätigt", relation: "unknown" },
+          { productId: "alternative-one", valueLabel: "ausgeglichen", relation: "in_target" },
+        ],
+      },
+      {
+        rowId: "neutral-route",
+        label: "Kopfhaut-Route",
+        target: {
+          valueLabel: "ausgeglichen",
+          rationale: "Die Route bleibt bis zur exakten Zielprofil-Passung neutral.",
+          profileEvidenceLabels: [],
+        },
+        productValues: [
+          { productId: "owned-shampoo", valueLabel: "trocken", relation: "no_target" },
           { productId: "alternative-one", valueLabel: "ausgeglichen", relation: "in_target" },
         ],
       },
@@ -953,5 +973,20 @@ test("does not show a misleading target count when any relevant row is unknown",
   )
 
   assert.match(html, /Passt nicht/)
-  assert.doesNotMatch(html, /von 2 im Ziel/)
+  assert.match(html, /1 außerhalb · 1 nicht bestätigt · 1 ohne Einordnung/)
 })
+
+function treeFor(authorityEvaluation: Stage3AuthorityEvaluation) {
+  return ProductFitComparison({
+    categoryLabel: "Shampoo",
+    roleLabel: "Shampoo",
+    reviewPosition: 1,
+    reviewTotal: 1,
+    comparison,
+    evaluation: authorityEvaluation,
+    displayedAlternativeIndex: 0,
+    onDisplayedAlternativeChange: () => {},
+    onAction: () => {},
+    onBack: () => {},
+  })
+}

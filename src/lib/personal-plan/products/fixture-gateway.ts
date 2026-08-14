@@ -11,7 +11,11 @@ import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "./authority/contracts"
-import type { Stage3FitComparison, Stage3SelectedComparisonCandidate } from "./fit-comparison"
+import {
+  stage3CriterionEvidenceRelation,
+  type Stage3FitComparison,
+  type Stage3SelectedComparisonCandidate,
+} from "./fit-comparison"
 import {
   deriveStage3DecisionSubjects,
   stage3CategoryRequirementSchema,
@@ -735,7 +739,7 @@ function fixtureCompactEvidenceRows(
   const criteriaByProduct = new Map(
     alternatives.map((alternative) => [alternative.productId, alternative.criteria] as const),
   )
-  if (currentProductId && evaluation.status === "known") {
+  if (currentProductId && (evaluation.status === "known" || evaluation.status === "unknown")) {
     criteriaByProduct.set(currentProductId, evaluation.criteria)
   }
   const criteria = Array.from(criteriaByProduct.values()).flat()
@@ -763,16 +767,11 @@ function fixtureCompactEvidenceRows(
             result === "pass"
               ? "erfüllt"
               : result === "caution"
-                ? "mit Einschränkung"
+                ? "passt mit Einschränkung"
                 : result === "fail"
                   ? "nicht erfüllt"
                   : "nicht bestätigt",
-          relation:
-            result === "pass"
-              ? ("in_target" as const)
-              : result
-                ? ("outside_target" as const)
-                : ("unknown" as const),
+          relation: stage3CriterionEvidenceRelation(result),
         }
       }),
     }

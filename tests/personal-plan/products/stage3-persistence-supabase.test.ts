@@ -1168,6 +1168,58 @@ test("complete nonmatching Shampoo rows load as a known semantic mismatch", asyn
   assert.equal(bundle.productFacts?.category, "shampoo")
   if (bundle.productFacts?.category !== "shampoo") return
   assert.equal(bundle.productFacts.spec.targetFit, "known_mismatch")
+  assert.deepEqual(bundle.productFacts.comparisonObservations, {
+    cleansingIntensity: "gentle",
+    supportedScalpRoutes: ["dry"],
+  })
+})
+
+test("Shampoo comparison observations are row-order invariant and do not change authority fingerprints", async () => {
+  const rows = [
+    {
+      thickness: "normal",
+      shampoo_bucket: "trocken",
+      scalp_route: "dry",
+      cleansing_intensity: "gentle",
+    },
+    {
+      thickness: "fine",
+      shampoo_bucket: "normal",
+      scalp_route: "balanced",
+      cleansing_intensity: "gentle",
+    },
+  ]
+  const load = (specs: Record<string, unknown>[]) =>
+    loadStage3AuthorityFactBundle(
+      shampooAuthorityFactClient(specs) as never,
+      {
+        draft: shampooAuthorityDraft(),
+        subject: {
+          decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+          category: "shampoo",
+          role: "shampoo_everyday",
+          capturedProductId: "owned-shampoo-1",
+          subjectKind: "captured_product",
+        },
+        heatRoutes: [],
+        context: normalRefinedContext,
+      } as never,
+    )
+
+  const [first, second] = await Promise.all([load(rows), load([...rows].reverse())])
+  assert.equal(first.productFacts?.category, "shampoo")
+  assert.equal(second.productFacts?.category, "shampoo")
+  if (first.productFacts?.category !== "shampoo" || second.productFacts?.category !== "shampoo")
+    return
+  assert.deepEqual(first.productFacts.comparisonObservations, {
+    cleansingIntensity: "gentle",
+    supportedScalpRoutes: ["balanced", "dry"],
+  })
+  assert.deepEqual(
+    first.productFacts.comparisonObservations,
+    second.productFacts.comparisonObservations,
+  )
+  assert.equal(first.productFacts.factFingerprint, second.productFacts.factFingerprint)
 })
 
 test("semantically identical contextual Shampoo rows canonicalize to one fact", async () => {
@@ -1365,6 +1417,7 @@ test("complete nonmatching Conditioner rows load as a known semantic mismatch", 
   assert.equal(bundle.productFacts?.category, "conditioner")
   if (bundle.productFacts?.category !== "conditioner") return
   assert.equal(bundle.productFacts.spec.targetFit, "known_mismatch")
+  assert.equal(bundle.productFacts.spec.balanceDirection, "moisture")
 })
 
 function maskAuthorityDraft(): Stage3ProductDraft {
