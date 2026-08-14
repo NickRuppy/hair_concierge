@@ -245,19 +245,71 @@ test("quality work is divided into independently scheduled lanes", () => {
     qualityPersonalPlan,
     /^    if: needs\.detect-ci-scope\.outputs\.personal_plan_journey == 'true'$/m,
   )
-  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage3/)
+  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage3:lab/)
+  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage3:journey/)
   assert.doesNotMatch(qualityPersonalPlan, /personal-plan-stage4|personal-plan-stage5/)
 })
 
-test("the Stage 3 CI browser suite fails a stuck guarded-route preflight within one minute", () => {
-  const command = packageManifest.scripts["test:playwright:personal-plan-stage3"]
+test("the Stage 3 CI browser suite isolates the production lab from development journeys", () => {
+  const aggregateCommand = packageManifest.scripts["test:playwright:personal-plan-stage3"]
+  const labCommand = packageManifest.scripts["test:playwright:personal-plan-stage3:lab"]
+  const journeyCommand = packageManifest.scripts["test:playwright:personal-plan-stage3:journey"]
   const qualityPersonalPlan = jobSource(ciWorkflow, "quality-personal-plan-browser")
 
-  assert.match(
-    command,
-    /^WAIT_ON_TIMEOUT=60000 .*start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true npm run dev/,
+  assert.equal(
+    aggregateCommand,
+    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build && npm run test:playwright:personal-plan-stage3:lab && npm run test:playwright:personal-plan-stage3:journey",
   )
-  assert.match(command, /http:\/\/127\.0\.0\.1:3217\/labs\/personal-plan\/stage-3/)
+
+  assert.match(labCommand, /^WAIT_ON_TIMEOUT=60000 /)
+  assert.match(
+    labCommand,
+    /start-server-and-test 'CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true [^']*npm run start -- --hostname 127\.0\.0\.1 --port 3217'/,
+  )
+  assert.doesNotMatch(labCommand, /NODE_ENV=development/)
+  assert.match(labCommand, /PLAYWRIGHT_BASE_URL=http:\/\/127\.0\.0\.1:3217/)
+  assert.match(
+    labCommand,
+    /start-server-and-test '[^']+' http:\/\/127\.0\.0\.1:3217 'playwright test tests\/personal-plan-stage3\.spec\.ts --project=chromium'/,
+  )
+  assert.doesNotMatch(
+    labCommand,
+    /tests\/personal-plan-(?:start|stage2-refinement|stage1-2-3)\.spec\.ts/,
+  )
+
+  assert.match(journeyCommand, /^WAIT_ON_TIMEOUT=60000 /)
+  assert.match(
+    journeyCommand,
+    /start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true npm run dev -- --hostname 127\.0\.0\.1 --port 3217'/,
+  )
+  assert.match(journeyCommand, /PLAYWRIGHT_BASE_URL=http:\/\/127\.0\.0\.1:3217/)
+  assert.match(
+    journeyCommand,
+    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts --project=chromium/,
+  )
+  assert.doesNotMatch(journeyCommand, /tests\/personal-plan-stage3\.spec\.ts/)
+
+  assert.doesNotMatch(
+    labCommand,
+    /start-server-and-test '[^']+' [^']*\/labs\/personal-plan\/stage-3/,
+  )
+  assert.doesNotMatch(
+    journeyCommand,
+    /start-server-and-test '[^']+' [^']*\/labs\/personal-plan\/stage-3/,
+  )
+
+  assert.match(
+    qualityPersonalPlan,
+    /- name: Build Personal Plan browser app\n        run: CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build/,
+  )
+  assert.match(
+    qualityPersonalPlan,
+    /- name: Run Stage 3 production lab contracts\n        run: npm run test:playwright:personal-plan-stage3:lab/,
+  )
+  assert.match(
+    qualityPersonalPlan,
+    /- name: Run Personal Plan development journeys\n        run: npm run test:playwright:personal-plan-stage3:journey/,
+  )
   assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
 })
 

@@ -190,10 +190,14 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Build Personal Plan browser app
+        run: CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run Stage 3 browser contracts
-        run: npm run test:playwright:personal-plan-stage3
+      - name: Run Stage 3 production lab contracts
+        run: npm run test:playwright:personal-plan-stage3:lab
+      - name: Run Personal Plan development journeys
+        run: npm run test:playwright:personal-plan-stage3:journey
 
   quality-core:
     runs-on: ubuntu-latest
