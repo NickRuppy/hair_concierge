@@ -241,7 +241,6 @@ test("authority reconciliation is exact-cohort guarded and verifies every transi
     /UPDATE public\.product_(?:leave_in|oil|conditioner|shampoo|scalp_care)_specs/i,
   )
   assert.doesNotMatch(sql, /guidance_payload_v2\s*=/i)
-  assert.doesNotMatch(sql, /PERSONAL_PLAN_STAGE5_USE_CASE_COVERAGE_ENABLED/)
 })
 
 test("the V2 executor repair parenthesizes the JSON path before product-key concatenation", async () => {

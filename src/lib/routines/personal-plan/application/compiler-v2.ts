@@ -342,16 +342,11 @@ function itemWithPointerFacts(
   compatibleDayTypes:
     | readonly ApplicationGuidanceProtocolV1["compatibleDayTypes"][number][]
     | null = null,
-  useCaseCoverageEnabled = true,
-  disambiguateVariant = false,
 ): NormalizedRoutineItem {
-  const variantIdentity = useCaseCoverageEnabled || disambiguateVariant
   return {
     ...item,
-    itemId: variantIdentity ? `${item.itemId}:${pointer.applicationFamily}` : item.itemId,
-    applicationInstanceKey: variantIdentity
-      ? `${item.applicationInstanceKey ?? item.itemId}:${pointer.applicationFamily}`
-      : item.applicationInstanceKey,
+    itemId: `${item.itemId}:${pointer.applicationFamily}`,
+    applicationInstanceKey: `${item.applicationInstanceKey ?? item.itemId}:${pointer.applicationFamily}`,
     catalogFacts: {
       ...item.catalogFacts,
       ...(compatibleDayTypes !== null
@@ -435,12 +430,10 @@ export function compileApplicationViewV2({
   input,
   familyTemplates,
   productPointers,
-  useCaseCoverageEnabled,
 }: {
   input: NormalizedApplicationInput
   familyTemplates: readonly ApplicationFamilyTemplateV2[]
   productPointers: readonly ProductApplicationPointerV2[]
-  useCaseCoverageEnabled: boolean
 }) {
   const pointerIssues: ProductPointerIssueV2[] = []
   const protocols: ApplicationGuidanceProtocolV1[] = []
@@ -460,12 +453,9 @@ export function compileApplicationViewV2({
         role: item.role,
         reason: "missing_pointer",
       })
-      return useCaseCoverageEnabled ? [] : [item]
+      return []
     }
-    const hasStoredVariants = matches.length > 1
-    if (useCaseCoverageEnabled) {
-      matches = withUniversalBetweenWashMethods(item, matches)
-    }
+    matches = withUniversalBetweenWashMethods(item, matches)
     return matches.flatMap((pointer) => {
       if (
         pointer.requiredCompanionProductId !== null &&
@@ -478,9 +468,7 @@ export function compileApplicationViewV2({
           role: item.role,
           reason: "required_companion_not_in_routine",
         })
-        return useCaseCoverageEnabled
-          ? []
-          : [itemWithPointerFacts(item, pointer, null, useCaseCoverageEnabled, hasStoredVariants)]
+        return []
       }
       const composition = composeProductApplicationProtocolsV2(pointer, familyTemplates)
       if (composition.status === "unresolved") {
@@ -489,31 +477,19 @@ export function compileApplicationViewV2({
           role: item.role,
           reason: composition.reason,
         })
-        return useCaseCoverageEnabled
-          ? []
-          : [itemWithPointerFacts(item, pointer, null, useCaseCoverageEnabled, hasStoredVariants)]
+        return []
       }
       protocols.push(...composition.protocols)
       const compatibleDayTypes = composition.protocols.flatMap(
         (protocol) => protocol.compatibleDayTypes,
       )
       const effectiveCompatibleDayTypes =
-        useCaseCoverageEnabled &&
-        item.category === "oil" &&
-        pointer.applicationFamily === "dry_finish"
+        item.category === "oil" && pointer.applicationFamily === "dry_finish"
           ? compatibleDayTypes.filter(
               (dayType) => dayType !== "refresh_day" && dayType !== "between_wash_care_day",
             )
           : compatibleDayTypes
-      return [
-        itemWithPointerFacts(
-          item,
-          pointer,
-          effectiveCompatibleDayTypes,
-          useCaseCoverageEnabled,
-          hasStoredVariants,
-        ),
-      ]
+      return [itemWithPointerFacts(item, pointer, effectiveCompatibleDayTypes)]
     })
   })
 
