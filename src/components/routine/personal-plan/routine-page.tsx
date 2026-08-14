@@ -55,16 +55,18 @@ export function RoutinePage({
     return (
       <div className="min-h-dvh bg-[var(--background)]">
         <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
-        <main className="personal-plan-cookie-clearance mx-auto w-full max-w-2xl px-4 py-8 sm:py-12">
+        <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] px-3 py-8 sm:max-w-[560px] sm:px-5 sm:py-12">
           <section
             aria-live="polite"
-            className="rounded-[28px] border border-border bg-white px-5 py-6 shadow-sm sm:px-7"
+            className="rounded-[19px] border border-border bg-white px-4 py-5 shadow-sm sm:px-5"
           >
-            <p className="text-sm font-semibold text-primary">Persönlicher Plan</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-[#6e6863]">
+              Persönlicher Plan
+            </p>
+            <h1 className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
               Routine noch nicht verfügbar
             </h1>
-            <p className="mt-3 text-muted-foreground">
+            <p className="mt-2 text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
               {needsRepair
                 ? "Deine bestätigte Routine bleibt unverändert. Prüfe einmal die Produktauswahl, damit keine Kategorie aus dem alten Stand in die Anwendung rutscht."
                 : "Deine Routine kann noch nicht sicher angezeigt werden. Prüfe zuerst die Produktauswahl, damit wir keine leere Anwendung erzeugen."}
@@ -101,25 +103,25 @@ export function RoutinePage({
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
       <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
-      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-4xl space-y-6 px-4 py-5 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:px-6 sm:py-7 lg:pb-12">
-        <header className="border-b border-[rgba(107,80,160,0.14)] pb-5">
-          <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] space-y-5 px-3 py-4 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:max-w-[560px] sm:px-5 sm:py-5 lg:pb-12">
+        <header className="border-b border-[rgba(107,80,160,0.14)] pb-4">
+          <div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--status-ok-text)]">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-[var(--status-ok-text)]">
                 {successorProposal
                   ? "Änderungen verfügbar"
                   : initialProposal
                     ? "Vorschlag"
                     : "✓ Routine aktiv"}
               </p>
-              <h1 className="mt-1 text-3xl font-semibold tracking-tight text-[var(--brand-plum-darkest)] sm:text-4xl">
+              <h1 className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
                 {successorProposal
                   ? "Deine Routine bleibt aktiv."
                   : initialProposal
                     ? "Deine Routine wird vorbereitet."
                     : "Deine Routine"}
               </h1>
-              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
                 {initialProposal
                   ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
                   : successorProposal
@@ -136,22 +138,22 @@ export function RoutinePage({
                 </p>
               ) : null}
             </div>
-            <div className="flex flex-wrap gap-2 sm:max-w-56 sm:flex-col">
+            <div className="mt-4 flex flex-wrap gap-2">
               {canOpenApplication ? (
                 <Link
                   href="/anwendung"
-                  className={buttonVariants({ variant: "funnelCta", size: "sm" })}
+                  className={`${buttonVariants({ variant: "funnelCta", size: "sm" })} min-w-[12rem] flex-1`}
                 >
                   Anwendung ansehen
                 </Link>
               ) : null}
               {onEdit ? (
-                <Button variant="outline" size="sm" onClick={onEdit}>
+                <Button className="flex-1" variant="outline" size="sm" onClick={onEdit}>
                   Anpassen
                 </Button>
               ) : null}
               {successorProposal && onReviewProposal ? (
-                <Button variant="outline" size="sm" onClick={onReviewProposal}>
+                <Button className="flex-1" variant="outline" size="sm" onClick={onReviewProposal}>
                   Änderungen prüfen
                 </Button>
               ) : null}

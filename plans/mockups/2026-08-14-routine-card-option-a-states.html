@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Routine Option A – Einzel- und Mehrfachrolle</title>
+    <style>
+      :root {
+        --plum: #291a43;
+        --purple: #6b50a0;
+        --muted: #706a65;
+        --paper: #fdfbf9;
+        --tint: #f5f0e5;
+        --tint-line: #e2d4b8;
+        --green: #347352;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #efebed;
+        color: #3e3936;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+      .board {
+        max-width: 860px;
+        margin: auto;
+        padding: 24px 18px 40px;
+      }
+      h1 {
+        margin: 0;
+        color: var(--plum);
+        font-size: 23px;
+        line-height: 1.14;
+      }
+      .lead {
+        margin: 6px 0 20px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .states {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 360px));
+        justify-content: center;
+        gap: 24px;
+      }
+      .label {
+        min-height: 72px;
+        margin-bottom: 9px;
+        padding: 11px 12px;
+        border-radius: 14px;
+        background: white;
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .label strong {
+        display: block;
+        color: var(--plum);
+        font-size: 13px;
+      }
+      .phone {
+        min-height: 680px;
+        overflow: hidden;
+        border: 1px solid #d9d1d6;
+        border-radius: 28px;
+        background: var(--paper);
+        box-shadow: 0 20px 48px rgba(43, 26, 67, 0.13);
+      }
+      header {
+        padding: 17px 16px 12px;
+        border-bottom: 1px solid #ece6e8;
+      }
+      .brand {
+        color: var(--plum);
+        font:
+          700 25px/1 Georgia,
+          serif;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+        margin-top: 14px;
+      }
+      .progress i {
+        height: 4px;
+        border-radius: 99px;
+        background: #d9cfe4;
+      }
+      .progress i:nth-child(-n + 4) {
+        background: var(--purple);
+      }
+      .stages {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 6px;
+        color: #8a8380;
+        font-size: 8px;
+      }
+      .stages b {
+        color: var(--plum);
+      }
+      main {
+        padding: 13px 12px 28px;
+      }
+      .overline {
+        color: #6e6863;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin: 3px 0 0;
+        color: var(--plum);
+        font-size: 23px;
+        line-height: 1.14;
+      }
+      .intro {
+        margin: 4px 0 9px;
+        color: var(--muted);
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+      .actions {
+        display: flex;
+        gap: 7px;
+        margin-bottom: 15px;
+      }
+      .action {
+        display: grid;
+        min-height: 44px;
+        place-items: center;
+        padding: 0 12px;
+        border: 1px solid var(--purple);
+        border-radius: 12px;
+        background: white;
+        color: var(--purple);
+        font-size: 10.5px;
+        font-weight: 850;
+      }
+      .action.primary {
+        flex: 1;
+        border-color: #da626e;
+        background: #da626e;
+        color: white;
+      }
+      .section {
+        margin: 0 2px 8px;
+        color: var(--plum);
+        font-size: 13px;
+      }
+      .card {
+        overflow: hidden;
+        border: 1px solid var(--tint-line);
+        border-radius: 19px;
+        background: var(--tint);
+        box-shadow: 0 3px 11px rgba(43, 26, 67, 0.035);
+      }
+      button {
+        color: inherit;
+        font: inherit;
+      }
+      .single {
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr) 16px;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        min-height: 104px;
+        padding: 10px;
+        border: 0;
+        background: transparent;
+        text-align: left;
+      }
+      .image {
+        display: grid;
+        width: 58px;
+        height: 76px;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 14px;
+        background: #f3efe8;
+        box-shadow: inset 0 0 0 1px rgba(31, 26, 20, 0.04);
+      }
+      .image img {
+        width: 78%;
+        height: 94%;
+        object-fit: contain;
+        mix-blend-mode: multiply;
+      }
+      .content {
+        min-width: 0;
+      }
+      .category {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 99px;
+        background: #a77d31;
+      }
+      .name {
+        display: -webkit-box;
+        overflow: hidden;
+        margin-top: 4px;
+        color: var(--plum);
+        font-size: 13.5px;
+        font-weight: 750;
+        line-height: 1.18;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+      .purpose {
+        display: block;
+        overflow: hidden;
+        margin-top: 2px;
+        color: #5f5954;
+        font-size: 11.5px;
+        line-height: 1.32;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .meta {
+        display: block;
+        overflow: hidden;
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(67, 55, 48, 0.09);
+        color: #665e58;
+        font-size: 11px;
+        font-weight: 750;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .active {
+        color: var(--green);
+      }
+      .chevron {
+        color: rgba(31, 26, 20, 0.42);
+        font-size: 16px;
+      }
+      .group-head {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 10px 7px;
+        border-bottom: 1px solid rgba(67, 55, 48, 0.09);
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      .group-head span:last-child {
+        margin-left: auto;
+        color: #7b736e;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+      }
+      .role {
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr) 16px;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        min-height: 82px;
+        padding: 8px 10px;
+        border: 0;
+        border-bottom: 1px solid rgba(67, 55, 48, 0.09);
+        background: transparent;
+        text-align: left;
+      }
+      .role:last-child {
+        border-bottom: 0;
+      }
+      .role .image {
+        width: 46px;
+        height: 60px;
+        border-radius: 11px;
+      }
+      .role .purpose {
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+      .role .name {
+        margin-top: 2px;
+        font-size: 12.5px;
+      }
+      .role .meta {
+        margin-top: 4px;
+        padding-top: 4px;
+      }
+      .note {
+        max-width: 760px;
+        margin: 22px auto 0;
+        padding: 12px 14px;
+        border: 1px solid #ddd4da;
+        border-radius: 14px;
+        background: white;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.55;
+      }
+      @media (max-width: 780px) {
+        .states {
+          grid-template-columns: minmax(0, 370px);
+        }
+        .label {
+          min-height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <h1>Option A · vollständige Routine-Zustände</h1>
+      <p class="lead">
+        Die Einzelkarte bleibt ein geschlossenes Produktobjekt. Bei mehreren Rollen wird nur der
+        Kategorie-Rahmen gemeinsam; jedes Produkt behält seine eigene klare Detailaktion.
+      </p>
+      <div class="states">
+        <section>
+          <div class="label">
+            <strong>Ein Produkt in der Kategorie</strong>Die gesamte kompakte Karte öffnet das
+            bestehende Produktdetail.
+          </div>
+          <div class="phone">
+            <header>
+              <div class="brand">chaarlie</div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="stages">
+                <span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><b>Routine</b
+                ><span>Anwendung</span>
+              </div>
+            </header>
+            <main>
+              <div class="overline">Dein persönlicher Plan</div>
+              <h2>Deine Routine</h2>
+              <p class="intro">
+                Deine ausgewählten Produkte in der Reihenfolge deines Bedarfsplans.
+              </p>
+              <div class="actions">
+                <div class="action primary">Anwendung ansehen</div>
+                <div class="action">Anpassen</div>
+              </div>
+              <h3 class="section">Deine Basis</h3>
+              <article class="card">
+                <button class="single">
+                  <span class="image"
+                    ><img
+                      src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp"
+                      alt="" /></span
+                  ><span class="content"
+                    ><span class="category"><i class="dot"></i>Shampoo</span
+                    ><strong class="name">OGX Renewing + Argan Oil of Morocco Shampoo</strong
+                    ><span class="purpose">Regelmäßige Reinigung</span
+                    ><span class="meta"
+                      >3–4× pro Woche · Haarwäsche · <b class="active">Aktiv</b></span
+                    ></span
+                  ><span class="chevron">›</span>
+                </button>
+              </article>
+            </main>
+          </div>
+        </section>
+        <section>
+          <div class="label">
+            <strong>Mehrere Produkte/Rollen in einer Kategorie</strong>Der Rahmen gruppiert Shampoo;
+            zwei eigenständige 82-px-Zeilen öffnen jeweils ihr passendes Detail.
+          </div>
+          <div class="phone">
+            <header>
+              <div class="brand">chaarlie</div>
+              <div class="progress"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="stages">
+                <span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><b>Routine</b
+                ><span>Anwendung</span>
+              </div>
+            </header>
+            <main>
+              <div class="overline">Dein persönlicher Plan</div>
+              <h2>Deine Routine</h2>
+              <p class="intro">
+                Deine ausgewählten Produkte in der Reihenfolge deines Bedarfsplans.
+              </p>
+              <div class="actions">
+                <div class="action primary">Anwendung ansehen</div>
+                <div class="action">Anpassen</div>
+              </div>
+              <h3 class="section">Deine Basis</h3>
+              <article class="card">
+                <div class="group-head"><i class="dot"></i>Shampoo <span>2 Anwendungen</span></div>
+                <button class="role">
+                  <span class="image"
+                    ><img
+                      src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/2ecd3c9d-90f6-45a3-a72c-daefed50be10/30-2ecd3c9d-90f6-45a3-a72c-daefed50be10-ogx-ogx-renewing-5724833b4366.webp"
+                      alt="" /></span
+                  ><span class="content"
+                    ><span class="purpose">Regelmäßige Reinigung</span
+                    ><strong class="name">OGX Renewing + Argan Oil of Morocco Shampoo</strong
+                    ><span class="meta">3–4× pro Woche · <b class="active">Aktiv</b></span></span
+                  ><span class="chevron">›</span></button
+                ><button class="role">
+                  <span class="image"
+                    ><img
+                      src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1ef2be82-259c-4a1f-af2e-3ac3403f9731/37-1ef2be82-259c-4a1f-af2e-3ac3403f9731-salthouse-salthouse-anti-juckreiz-d55447789e9c.webp"
+                      alt="" /></span
+                  ><span class="content"
+                    ><span class="purpose">Schuppenpflege</span
+                    ><strong class="name">Salthouse Totes Meer Anti-Juckreiz Shampoo</strong
+                    ><span class="meta">Bei Bedarf · <b class="active">Aktiv</b></span></span
+                  ><span class="chevron">›</span>
+                </button>
+              </article>
+            </main>
+          </div>
+        </section>
+      </div>
+      <div class="note">
+        <strong>Interaction rule:</strong> a single-product card is one button. A multi-role
+        category shell is not interactive and contains separate product buttons. The chevron points
+        right because Routine opens the existing detail sheet; it does not expand inline like
+        Bedarfsplan.
+      </div>
+    </div>
+  </body>
+</html>

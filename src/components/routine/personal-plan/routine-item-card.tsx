@@ -2,6 +2,7 @@ import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 import type { RoutineProductPresentation } from "@/lib/personal-plan/routine/contracts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
 import {
@@ -100,6 +101,48 @@ const categoryAccentBorders: Record<string, string> = {
   dry_shampoo: "border-lime-300",
   bondbuilder: "border-fuchsia-300",
   deep_cleansing_shampoo: "border-yellow-300",
+}
+
+// Keep these presentation-only values aligned with the shipped Bedarfsplan NeedCard palette.
+// They are copied locally so Routine styling does not couple Stage 4 to a Stage 1 component.
+const routineCategoryCardStyles: Record<string, { shellClassName: string; dotClassName: string }> =
+  {
+    shampoo: { shellClassName: "border-[#E2D4B8] bg-[#F5F0E5]", dotClassName: "bg-[#A77D31]" },
+    conditioner: {
+      shellClassName: "border-[#CFDEE3] bg-[#EDF3F5]",
+      dotClassName: "bg-[#4C8EA8]",
+    },
+    leave_in: {
+      shellClassName: "border-[#CEDFD5] bg-[#EDF4F0]",
+      dotClassName: "bg-[#56866B]",
+    },
+    heat_protectant: {
+      shellClassName: "border-[#E5D6C8] bg-[#F5F0EA]",
+      dotClassName: "bg-[#B76A3E]",
+    },
+    oil: { shellClassName: "border-[#E2D0D4] bg-[#F5EDEF]", dotClassName: "bg-[#A85F70]" },
+    mask: { shellClassName: "border-[#DCD3E5] bg-[#F1EEF5]", dotClassName: "bg-[#7D67A8]" },
+    scalp_care: {
+      shellClassName: "border-[#CADEDB] bg-[#EBF3F2]",
+      dotClassName: "bg-[#2F817A]",
+    },
+    dry_shampoo: {
+      shellClassName: "border-[#DCE2C6] bg-[#F1F3E9]",
+      dotClassName: "bg-[#7D913F]",
+    },
+    bondbuilder: {
+      shellClassName: "border-[#E2D1DF] bg-[#F4EDF3]",
+      dotClassName: "bg-[#985D8F]",
+    },
+    deep_cleansing_shampoo: {
+      shellClassName: "border-[#E2DBC0] bg-[#F5F2E5]",
+      dotClassName: "bg-[#998323]",
+    },
+  }
+
+const neutralRoutineCategoryCardStyle = {
+  shellClassName: "border-[rgba(31,26,20,0.07)] bg-white",
+  dotClassName: "bg-[#6B50A0]",
 }
 
 function labelFor(labels: Record<string, string>, value: string) {
@@ -303,145 +346,167 @@ export function RoutineCategoryCard({
   presentation?: PortfolioPresentation | null
   productPresentation?: RoutineProductPresentation | null
 }) {
-  const primary = items[0]
   const label = routineCategoryLabel(category)
-  const image = primary ? catalogPresentationFor(primary, productPresentation)?.imageUrl : null
-  const primaryName = primary
-    ? productName(primary, productPresentation)
-    : "Noch kein Produkt gewählt"
-  const activeCount = items.filter(
-    (item) => item.executable && item.state.inclusion === "included",
-  ).length
-  const summaryStatus = primary ? getRoutineStatus(primary, presentation).label : "Offen"
-  const purposeChips = Array.from(
-    new Set(items.map((item) => routinePurposeLabel(item.purposeKey))),
-  )
-  const categoryTint: Record<string, string> = {
-    shampoo: "bg-amber-50/70",
-    conditioner: "bg-sky-50/70",
-    mask: "bg-violet-50/70",
-    oil: "bg-rose-50/70",
-    leave_in: "bg-emerald-50/70",
-    heat_protectant: "bg-orange-50/70",
-    scalp_care: "bg-teal-50/70",
-    dry_shampoo: "bg-lime-50/70",
-    bondbuilder: "bg-fuchsia-50/70",
-    deep_cleansing_shampoo: "bg-yellow-50/70",
+  const categoryStyle = routineCategoryCardStyles[category] ?? neutralRoutineCategoryCardStyle
+  const multipleItems = items.length > 1
+
+  function rowStatus(item: RoutineItem) {
+    const status = getRoutineStatus(item, presentation).label
+    if (status !== "Aktiv") return status
+    const fit = routineFitLabel(item, presentation)
+    return fit === "✓ Passt" ? status : fit
+  }
+
+  function statusClassName(item: RoutineItem, status: string) {
+    if (status === "Aktiv") return "text-[var(--status-ok-text)]"
+    if (status === "Basis-Lücke") return "text-[var(--status-danger-text)]"
+    if (item.state.inclusion === "excluded" || item.state.systemAssessment === "not_recommended") {
+      return "text-[var(--brand-plum)]"
+    }
+    if (item.state.availability === "planned" || !item.executable) {
+      return "text-[var(--status-pending-text)]"
+    }
+    if (item.state.availability === "pending_review") {
+      return "text-[var(--status-neutral-text)]"
+    }
+    return "text-[var(--brand-plum)]"
+  }
+
+  function rowFor(item: RoutineItem) {
+    const purpose = routinePurposeLabel(item.purposeKey)
+    const product = productName(item, productPresentation)
+    const cadence = routineCadenceLabel(item)
+    const timing = routineTimingLabel(item)
+    const status = rowStatus(item)
+    const image = catalogPresentationFor(item, productPresentation)?.imageUrl ?? null
+    const missingBasisProduct =
+      item.state.availability === "none" && item.state.systemAssessment === "basis"
+    const accessibleName = `Zweck: ${purpose}; Produkt: ${product}; Kategorie: ${label}; Status: ${status}; Rhythmus: ${cadence}${
+      missingBasisProduct ? "; Für diesen Basis-Baustein fehlt noch ein Produkt" : ""
+    }`
+    const content = (
+      <>
+        <span
+          aria-hidden="true"
+          className={cn(
+            "grid shrink-0 place-items-center overflow-hidden bg-[#f3efe8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]",
+            multipleItems ? "h-[60px] w-[46px] rounded-[11px]" : "h-[76px] w-[58px] rounded-[14px]",
+          )}
+        >
+          {image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={image} alt="" className="h-[94%] w-[78%] object-contain" />
+          ) : (
+            <span className="text-sm font-semibold text-[var(--brand-plum)]">
+              {label.slice(0, 1)}
+            </span>
+          )}
+        </span>
+        <span className="min-w-0">
+          <span
+            className={cn(
+              "min-w-0 font-extrabold text-[#6B50A0]",
+              multipleItems
+                ? "block text-[11px] leading-tight tracking-[0.03em]"
+                : "flex items-center gap-1.5 text-[11px] uppercase leading-tight tracking-[0.09em]",
+            )}
+          >
+            {!multipleItems ? (
+              <span
+                aria-hidden="true"
+                className={cn("h-1.5 w-1.5 shrink-0 rounded-full", categoryStyle.dotClassName)}
+              />
+            ) : null}
+            <span className="truncate">
+              {multipleItems ? purpose : variant === "later" ? `${label} optional` : label}
+            </span>
+          </span>
+          <strong
+            className={cn(
+              "mt-1 block text-[#291a43]",
+              multipleItems
+                ? "line-clamp-2 text-[12.5px] leading-[1.18]"
+                : "line-clamp-2 text-[13.5px] leading-[1.18]",
+            )}
+          >
+            {product}
+          </strong>
+          {!multipleItems ? (
+            <span className="mt-0.5 block truncate text-[11.5px] leading-[1.32] text-[#5f5954]">
+              {purpose}
+            </span>
+          ) : null}
+          <span className="mt-1.5 block border-t border-[rgba(67,55,48,0.09)] pt-1.5 text-[11px] font-bold leading-[1.35] text-[#665e58]">
+            {cadence} · {timing} · <span className={statusClassName(item, status)}>{status}</span>
+          </span>
+          {missingBasisProduct ? (
+            <span className="mt-1.5 block text-[11px] font-bold leading-snug text-[var(--status-danger-text)]">
+              Für diesen Basis-Baustein fehlt noch ein Produkt.
+            </span>
+          ) : null}
+        </span>
+        {onDetail ? (
+          <ChevronRight
+            className="h-4 w-4 shrink-0 text-[rgba(31,26,20,0.38)]"
+            aria-hidden="true"
+          />
+        ) : null}
+      </>
+    )
+
+    const rowClassName = cn(
+      "grid w-full items-center gap-2.5 bg-transparent text-left text-inherit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-3px]",
+      multipleItems
+        ? "min-h-[82px] grid-cols-[46px_minmax(0,1fr)_16px] px-2.5 py-2"
+        : "min-h-[104px] grid-cols-[58px_minmax(0,1fr)_16px] p-2.5",
+      !onDetail &&
+        (multipleItems ? "grid-cols-[46px_minmax(0,1fr)]" : "grid-cols-[58px_minmax(0,1fr)]"),
+    )
+
+    return onDetail ? (
+      <button
+        key={item.itemKey}
+        type="button"
+        className={rowClassName}
+        aria-label={accessibleName}
+        data-routine-detail-button="true"
+        onClick={() => onDetail(item)}
+      >
+        {content}
+      </button>
+    ) : (
+      <div key={item.itemKey} className={rowClassName} aria-label={accessibleName} role="group">
+        {content}
+      </div>
+    )
   }
 
   return (
     <Card
       className={cn(
-        "overflow-hidden border border-[rgba(107,80,160,0.14)] shadow-sm shadow-[rgba(47,31,71,0.06)]",
-        categoryTint[category] ?? "bg-white/95",
+        "overflow-hidden rounded-[19px] border shadow-[0_3px_11px_rgba(43,26,67,0.035)]",
+        categoryStyle.shellClassName,
         variant === "routine" && "transition-shadow hover:shadow-md motion-reduce:transition-none",
-        variant === "later" && "border-dashed bg-[var(--surface-soft)] shadow-none",
+        variant === "later" && "border-dashed shadow-none",
       )}
       role="group"
       aria-label={`Kategorie: ${label}`}
+      data-routine-category-card={category}
     >
-      <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 p-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4 sm:p-4">
-        <div
-          aria-hidden="true"
-          className={cn(
-            "flex aspect-square h-24 w-24 items-center justify-center overflow-hidden rounded-[18px] border border-[rgba(107,80,160,0.10)] bg-[#f3f0e8] text-2xl font-semibold text-[var(--brand-plum)] shadow-inner sm:h-28 sm:w-28",
-            categoryAccentBorders[category] ?? "border-stone-200",
-          )}
-        >
-          {image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={image} alt="" className="h-full w-full object-contain" />
-          ) : (
-            label.slice(0, 1)
-          )}
+      {multipleItems ? (
+        <div className="flex items-center gap-1.5 border-b border-[rgba(67,55,48,0.09)] px-2.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.09em] text-[#6B50A0]">
+          <span
+            aria-hidden="true"
+            className={cn("h-1.5 w-1.5 shrink-0 rounded-full", categoryStyle.dotClassName)}
+          />
+          <span>{variant === "later" ? `${label} optional` : label}</span>
+          <span className="ml-auto text-[11px] tracking-[0.04em] text-[#7b736e]">
+            {items.length} Anwendungen
+          </span>
         </div>
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
-              {variant === "later" ? `${label} optional` : label}
-            </p>
-            <span className="text-xs font-semibold text-[var(--brand-plum)]">
-              {activeCount > 0 ? `${activeCount} aktiv` : summaryStatus}
-            </span>
-          </div>
-          <CardTitle className="mt-1 text-base leading-tight sm:text-lg">{primaryName}</CardTitle>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {purposeChips.map((purpose) => (
-              <span
-                key={purpose}
-                className="rounded-full bg-white/75 px-2 py-1 text-xs font-medium text-[var(--brand-plum)]"
-              >
-                {purpose}
-              </span>
-            ))}
-          </div>
-          <div className="mt-3 divide-y divide-border/60 border-t border-border/60">
-            {items.map((item) => {
-              const purpose = routinePurposeLabel(item.purposeKey)
-              const product = productName(item, productPresentation)
-              const status = getRoutineStatus(item, presentation).label
-              const cadence = routineCadenceLabel(item)
-              const timing = routineTimingLabel(item)
-              return (
-                <div
-                  key={item.itemKey}
-                  className="py-2"
-                  role="group"
-                  aria-label={`Zweck: ${purpose}; Kategorie: ${label}; Produkt: ${product}; Status: ${status}; Rhythmus: ${cadence}`}
-                >
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-                    <div className="min-w-0">
-                      {items.length > 1 ? (
-                        <p className="text-xs font-semibold text-foreground">{purpose}</p>
-                      ) : null}
-                      {items.length > 1 ? (
-                        <p className="mt-0.5 truncate text-xs text-muted-foreground">{product}</p>
-                      ) : null}
-                      <p
-                        className={cn("text-xs text-muted-foreground", items.length > 1 && "mt-1")}
-                      >
-                        {cadence} · {timing}
-                      </p>
-                    </div>
-                    <div className="grid justify-items-end gap-1">
-                      <RoutineStatusBadge item={item} presentation={presentation} />
-                      <span className="text-xs font-semibold text-[var(--brand-plum)]">
-                        {routineFitLabel(item, presentation)}
-                      </span>
-                    </div>
-                  </div>
-                  {item.state.availability === "none" && item.state.systemAssessment === "basis" ? (
-                    <p className="mt-2 rounded-[10px] bg-[var(--status-danger-bg)] px-2 py-1.5 text-xs font-medium text-[var(--status-danger-text)]">
-                      Für diesen Basis-Baustein fehlt noch ein Produkt.
-                    </p>
-                  ) : null}
-                  {onDetail && items.length > 1 ? (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="mt-1 h-auto px-0 py-1"
-                      onClick={() => onDetail(item)}
-                    >
-                      Details
-                    </Button>
-                  ) : null}
-                </div>
-              )
-            })}
-          </div>
-          {onDetail && primary && items.length === 1 ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="mt-1 px-0"
-              onClick={() => onDetail(primary)}
-            >
-              Details
-            </Button>
-          ) : null}
-        </div>
+      ) : null}
+      <div className={cn(multipleItems && "divide-y divide-[rgba(67,55,48,0.09)]")}>
+        {items.map(rowFor)}
       </div>
     </Card>
   )

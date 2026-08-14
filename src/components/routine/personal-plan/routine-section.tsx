@@ -37,10 +37,7 @@ export function RoutineSection({
 
   return (
     <section aria-labelledby={headingId} className="space-y-2.5">
-      <h2
-        id={headingId}
-        className="text-lg font-semibold tracking-tight text-[var(--brand-plum-darkest)]"
-      >
+      <h2 id={headingId} className="px-0.5 text-[13px] font-bold text-[#291a43]">
         {title}
       </h2>
       {items.length === 0 && emptyLabel ? (
@@ -48,7 +45,7 @@ export function RoutineSection({
           {emptyLabel}
         </p>
       ) : null}
-      <div className="grid gap-3">
+      <div className="grid gap-2.5" data-routine-card-list>
         {categoryGroups.map(([category, groupedItems]) => (
           <RoutineCategoryCard
             key={category}

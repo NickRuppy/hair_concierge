@@ -113,7 +113,17 @@ test("renders Basis before Optional and groups multiple roles into one Bedarfspl
   assert.match(html, /Regelmäßige Reinigung/)
   assert.match(html, /Schuppenpflege/)
   assert.ok(html.indexOf("Sanftes Shampoo") < html.indexOf("Kopfhautserum"))
-  assert.equal((html.match(/>Details</g) ?? []).length, 3)
+  assert.equal((html.match(/data-routine-detail-button="true"/g) ?? []).length, 3)
+  assert.doesNotMatch(html, />Details</)
+  assert.match(
+    html,
+    /aria-label="Zweck: Regelmäßige Reinigung; Produkt: Sanftes Shampoo; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich"/,
+  )
+  assert.match(
+    html,
+    /aria-label="Zweck: Schuppenpflege; Produkt: Kopfhautserum; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich"/,
+  )
+  assert.match(html, />2 Anwendungen</)
   assert.match(html, /Geplant/)
 })
 
@@ -277,10 +287,11 @@ test("renders active routine as product-led result with separated later addition
   assert.match(html, /Nach jeder passenden Haarwäsche/)
   assert.match(html, /Haarwäsche/)
   assert.match(html, /Nach Shampoo/)
-  assert.match(html, /✓ Passt/)
+  assert.doesNotMatch(html, /✓ Passt/)
   assert.match(html, /Bewusste Wahl/)
   assert.doesNotMatch(html, /Anwendungsdetails/)
-  assert.match(html, />Details</)
+  assert.doesNotMatch(html, />Details</)
+  assert.equal((html.match(/data-routine-detail-button="true"/g) ?? []).length, 3)
   assert.match(html, /Später ergänzen/)
   assert.match(html, /Maske optional/)
   assert.doesNotMatch(html, /Kein Bestandteil deiner aktiven Routine/)
@@ -490,11 +501,15 @@ test("states non-executable conditions plainly and keeps editing global", () => 
   assert.match(html, /Noch in Prüfung/)
   assert.match(html, /Nicht empfohlen · von dir eingeplant/)
   assert.match(html, /Offen/)
+  assert.match(html, /Für diesen Basis-Baustein fehlt noch ein Produkt/)
+  assert.doesNotMatch(html, /Analyse läuft/)
+  assert.doesNotMatch(html, /Optional offen/)
+  assert.doesNotMatch(html, /Bewusste Wahl/)
   assert.match(html, />Anpassen</)
   assert.doesNotMatch(html, />Bearbeiten</)
   assert.match(
     html,
-    /aria-label="Zweck: Regelmäßige Reinigung; Kategorie: Shampoo; Produkt: Sanftes Shampoo; Status: Aktiv; Rhythmus: Täglich"/,
+    /aria-label="Zweck: Regelmäßige Reinigung; Produkt: Sanftes Shampoo; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich"/,
   )
 })
 
@@ -545,8 +560,8 @@ test("translates structured Personal Plan cadence without exposing internal keys
 
   const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)
 
-  assert.match(html, /Rhythmus: Etwa alle 2 Wochen/)
-  assert.match(html, /Rhythmus: Vor jeder passenden Haarwäsche/)
+  assert.match(html, /Etwa alle 2 Wochen · Nach Shampoo/)
+  assert.match(html, /Vor jeder passenden Haarwäsche · Vor der Haarwäsche/)
   assert.doesNotMatch(html, /personal_plan\.cadence\.mask_regular_interval/)
   assert.doesNotMatch(html, /personal_plan\.cadence\.role_based_wash_linked/)
 })
