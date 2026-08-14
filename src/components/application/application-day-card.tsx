@@ -8,59 +8,67 @@ import type { ApplicationDayView, ApplicationShelfSlotView } from "./application
 
 const CATALOG_IMAGE_CANVAS = "#f3f0e8"
 const STANDARD_PRODUCT_IMAGE_PATH = "/storage/v1/object/public/product-images/"
+const SHELF_SLOTS_PER_ROW = 5
+
+type SilhouetteImageBounds = {
+  x: number
+  y: number
+  width: number
+  height: number
+}
 
 const SILHOUETTES: Partial<
-  Record<PersonalPlanCategory, { path: string; color: string; label: string }>
+  Record<PersonalPlanCategory, { path: string; color: string; image: SilhouetteImageBounds }>
 > = {
   shampoo: {
-    path: "M25 17Q60 5 95 17L104 132Q103 146 88 151H80V170Q80 175 75 175H45Q40 175 40 170V151H32Q17 146 16 132Z",
-    color: "#d4ae51",
-    label: "Kopfstandtube",
+    path: "M2 178V76Q2 59 19 53L34 48V31H86V48L101 53Q118 59 118 76V178Z",
+    color: "#d0a43c",
+    image: { x: -5, y: 20, width: 130, height: 160 },
   },
   conditioner: {
-    path: "M9 74Q9 57 26 57H47V39H58V26H100Q110 26 110 35H69V57H94Q111 57 111 74V157Q111 169 99 169H21Q9 169 9 157Z",
-    color: "#76b8ce",
-    label: "breite Pumpflasche",
+    path: "M20 178L13 49Q12 31 30 25H90Q108 31 107 49L100 178Z",
+    color: "#67abc4",
+    image: { x: -4, y: 17, width: 128, height: 164 },
   },
   leave_in: {
-    path: "M28 72Q28 58 42 58H47V42H43V20H86L112 30L104 43H74L69 54H72V58H81Q94 58 94 72V160Q94 170 84 170H38Q28 170 28 160Z",
-    color: "#73b78f",
-    label: "Trigger-Spray",
+    path: "M28 178V73Q28 58 43 58H48V42H43V23H78L112 34L104 50H76L69 58H80Q94 58 94 73V178Z",
+    color: "#68ad88",
+    image: { x: 4, y: 16, width: 112, height: 166 },
   },
   heat_protectant: {
-    path: "M54 8H66V17H69V37C86 45 97 76 89 109L98 157Q60 174 22 157L31 109C23 76 34 45 51 37V17H54Z",
-    color: "#dd836e",
-    label: "Teardrop-Atomiser",
+    path: "M24 178L33 101Q28 70 45 54V31H75V54Q92 70 87 101L96 178Z",
+    color: "#d98271",
+    image: { x: 16, y: 24, width: 88, height: 158 },
   },
   oil: {
-    path: "M53 9H67Q78 9 78 20L72 49H73V72H74Q93 76 93 95V155Q93 171 77 171H43Q27 171 27 155V95Q27 76 46 70H47V49H48L42 20Q42 9 53 9Z",
-    color: "#c8a35f",
-    label: "Pipettenvial",
+    path: "M24 178V88Q24 70 43 62V49L36 22Q35 9 50 8H70Q85 9 84 22L77 49V62Q96 70 96 88V178Z",
+    color: "#bc914e",
+    image: { x: 3, y: 4, width: 114, height: 176 },
   },
   mask: {
-    path: "M12 66H108Q115 66 115 73V94H111L102 158Q100 171 87 171H33Q20 171 18 158L9 94H5V73Q5 66 12 66Z",
-    color: "#bd83c7",
-    label: "niedriger Tiegel",
+    path: "M10 178L17 91H23V72H97V91H103L110 178Z",
+    color: "#b47fbd",
+    image: { x: 14, y: 72, width: 92, height: 102 },
   },
   scalp_care: {
-    path: "M78 10L88 17L68 51H69V71H83Q95 71 95 82V160Q95 171 84 171H36Q25 171 25 160V82Q25 70 37 70H45V51H47Z",
-    color: "#839ecb",
-    label: "Winkelapplikator",
+    path: "M31 178V76Q31 61 46 61H50V46H48V28H69L92 10L101 18L78 49V61H84Q98 61 98 76V178Z",
+    color: "#788fc1",
+    image: { x: 16, y: 8, width: 88, height: 170 },
   },
   dry_shampoo: {
-    path: "M45 8H75V18Q83 18 83 31V166H37V31Q37 18 45 18Z",
-    color: "#8eb9b3",
-    label: "Aerosoldose",
+    path: "M28 178V42Q28 27 45 21V10H75V21Q92 27 92 42V178Z",
+    color: "#78a8a2",
+    image: { x: 18, y: 4, width: 84, height: 174 },
   },
   bondbuilder: {
-    path: "M17 16H103L94 132Q92 145 79 149H80V169Q80 175 74 175H46Q40 175 40 169V149H41Q28 145 26 132Z",
-    color: "#a98ed0",
-    label: "Behandlungstube",
+    path: "M18 25H102L94 148Q92 163 80 166V178H40V166Q28 163 26 148Z",
+    color: "#987bc3",
+    image: { x: 8, y: 12, width: 104, height: 168 },
   },
   deep_cleansing_shampoo: {
-    path: "M23 24H58V42H70V65H98V165Q98 173 90 173H30Q22 173 22 165V65H47V34H12Q12 24 23 24Z",
-    color: "#7f9eb3",
-    label: "Apotheker-Pumpe",
+    path: "M23 178V73Q23 58 38 58H46V41H58V25H96L110 31L103 45H74V58H84Q98 58 98 73V178Z",
+    color: "#708da2",
+    image: { x: 13, y: 18, width: 94, height: 160 },
   },
 }
 
@@ -137,7 +145,7 @@ function ProductSilhouette({
         data-application-shelf-slot={slot.status}
         data-application-image-treatment="fallback"
         className={cn(
-          "relative z-10 grid h-28 min-w-0 flex-1 max-w-20 place-items-center overflow-hidden rounded-[18px] bg-[#f3f0e8] text-[var(--text-caption)] shadow-[0_14px_26px_-24px_rgba(44,23,72,0.9)]",
+          "relative z-10 grid h-32 min-w-0 flex-1 max-w-24 place-items-center overflow-hidden rounded-[18px] bg-[#f3f0e8] text-[var(--text-caption)] shadow-[0_14px_26px_-24px_rgba(44,23,72,0.9)]",
           slot.status === "provisional" && "border-2 border-dashed border-[#c58b50]",
         )}
       >
@@ -158,8 +166,9 @@ function ProductSilhouette({
     <span
       data-application-shelf-slot={slot.status}
       data-application-silhouette={slot.category}
+      data-application-image-treatment="standardized"
       className={cn(
-        "relative z-10 h-28 min-w-0 flex-1 max-w-20",
+        "relative z-10 h-32 min-w-0 flex-1 max-w-24",
         slot.status === "provisional" && "rounded-xl border-2 border-dashed border-[#c58b50]",
       )}
     >
@@ -171,12 +180,13 @@ function ProductSilhouette({
         </defs>
         <path d={silhouette.path} fill={CATALOG_IMAGE_CANVAS} />
         <image
+          data-application-silhouette-image={slot.category}
           href={slot.imageUrl}
-          x="0"
-          y="0"
-          width="120"
-          height="180"
-          preserveAspectRatio="xMidYMid slice"
+          x={silhouette.image.x}
+          y={silhouette.image.y}
+          width={silhouette.image.width}
+          height={silhouette.image.height}
+          preserveAspectRatio="xMidYMid meet"
           clipPath={`url(#${clipId})`}
         />
         <path d={silhouette.path} fill="none" stroke={silhouette.color} strokeWidth="2.5" />
@@ -200,7 +210,7 @@ function OpenSilhouette({ slot }: { slot: Extract<ApplicationShelfSlotView, { ki
     <span
       data-application-shelf-slot="open"
       data-application-silhouette={silhouette ? slot.category : "fallback"}
-      className="relative z-10 grid h-28 min-w-0 flex-1 max-w-20 place-items-center text-[var(--brand-plum)]"
+      className="relative z-10 grid h-32 min-w-0 flex-1 max-w-24 place-items-center text-[var(--brand-plum)]"
     >
       {silhouette ? (
         <svg viewBox="0 0 120 180" className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -224,32 +234,47 @@ function OpenSilhouette({ slot }: { slot: Extract<ApplicationShelfSlotView, { ki
   )
 }
 
-function Shelf({ day }: { day: ApplicationDayView }) {
-  const shelf = day.shelf
+function chunkShelfSlots(shelf: ApplicationShelfSlotView[]) {
+  const rows: ApplicationShelfSlotView[][] = []
+  for (let index = 0; index < shelf.length; index += SHELF_SLOTS_PER_ROW) {
+    rows.push(shelf.slice(index, index + SHELF_SLOTS_PER_ROW))
+  }
+  return rows
+}
+
+function ShelfRail() {
+  return (
+    <>
+      <span
+        className="absolute inset-x-4 bottom-4 h-2 rounded-full bg-[#d9b99c] shadow-[0_10px_18px_-12px_rgba(61,43,72,0.75)] sm:inset-x-6"
+        aria-hidden="true"
+      />
+      <span
+        className="absolute inset-x-8 bottom-6 h-4 rounded-[50%] bg-[rgba(44,23,72,0.12)] blur-md sm:inset-x-12"
+        aria-hidden="true"
+      />
+    </>
+  )
+}
+
+function ShelfRow({
+  slots,
+  day,
+  offset,
+}: {
+  slots: ApplicationShelfSlotView[]
+  day: ApplicationDayView
+  offset: number
+}) {
   return (
     <span
-      data-application-shelf-scene="true"
-      className="relative mt-1 flex h-40 w-full items-end justify-center gap-1.5 overflow-hidden rounded-[18px] border border-border bg-[linear-gradient(180deg,#fffdfb_0%,#f7efe7_100%)] px-2 pb-6 pt-4 sm:gap-3 sm:px-4"
-      aria-hidden="true"
+      data-application-shelf-row="true"
+      className="relative flex h-40 w-full items-end justify-center gap-0 overflow-visible px-1 pb-6 pt-4 sm:px-2"
     >
-      <span
-        className="absolute inset-x-6 bottom-4 h-2 rounded-full bg-[#d9b99c] shadow-[0_10px_18px_-12px_rgba(61,43,72,0.75)]"
-        aria-hidden="true"
-      />
-      <span
-        className="absolute inset-x-12 bottom-6 h-4 rounded-[50%] bg-[rgba(44,23,72,0.12)] blur-md"
-        aria-hidden="true"
-      />
-      {!shelf.length ? (
-        <span
-          data-application-rest-day-visual="true"
-          className="relative z-10 grid h-24 w-24 place-items-center rounded-full border border-[#e4d8cc] bg-[#f3f0e8] text-[var(--brand-plum)]"
-        >
-          <Moon className="h-11 w-11" aria-hidden="true" />
-        </span>
-      ) : null}
-      {shelf.map((slot, index) =>
-        slot.kind === "open" ? (
+      <ShelfRail />
+      {slots.map((slot, rowIndex) => {
+        const index = offset + rowIndex
+        return slot.kind === "open" ? (
           <OpenSilhouette key={`open:${slot.category}:${index}`} slot={slot} />
         ) : (
           <ProductSilhouette
@@ -258,8 +283,47 @@ function Shelf({ day }: { day: ApplicationDayView }) {
             dayType={day.dayType}
             index={index}
           />
-        ),
-      )}
+        )
+      })}
+    </span>
+  )
+}
+
+function Shelf({ day }: { day: ApplicationDayView }) {
+  const shelf = day.shelf
+  if (!shelf.length) {
+    return (
+      <span
+        data-application-shelf-scene="true"
+        className="relative mt-1 flex h-40 w-full items-end justify-center overflow-hidden rounded-[18px] border border-border bg-[#e9e3ed] px-2 pb-6 pt-4"
+        aria-hidden="true"
+      >
+        <ShelfRail />
+        <span
+          data-application-rest-day-visual="true"
+          className="relative z-10 grid h-24 w-24 place-items-center rounded-full border border-[#e4d8cc] bg-[#f3f0e8] text-[var(--brand-plum)]"
+        >
+          <Moon className="h-11 w-11" aria-hidden="true" />
+        </span>
+      </span>
+    )
+  }
+
+  const rows = chunkShelfSlots(shelf)
+  return (
+    <span
+      data-application-shelf-scene="true"
+      className="relative mt-1 grid w-full gap-2 rounded-[18px] border border-border bg-[#e9e3ed] px-1 py-2 sm:px-2"
+      aria-hidden="true"
+    >
+      {rows.map((slots, rowIndex) => (
+        <ShelfRow
+          key={`shelf-row:${rowIndex}`}
+          slots={slots}
+          day={day}
+          offset={rowIndex * SHELF_SLOTS_PER_ROW}
+        />
+      ))}
     </span>
   )
 }

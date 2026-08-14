@@ -304,17 +304,59 @@ test("keeps provisional semantics accessible for nonstandard product imagery", (
 })
 
 test("renders the ten approved category-specific product silhouettes", () => {
-  const categories = [
-    "shampoo",
-    "conditioner",
-    "leave_in",
-    "heat_protectant",
-    "oil",
-    "mask",
-    "scalp_care",
-    "dry_shampoo",
-    "bondbuilder",
-    "deep_cleansing_shampoo",
+  // This table intentionally locks the signed-off geometry independently of production.
+  // A path or safe-area change must therefore be reviewed and updated in both places.
+  const silhouettes = [
+    {
+      category: "shampoo",
+      path: "M2 178V76Q2 59 19 53L34 48V31H86V48L101 53Q118 59 118 76V178Z",
+      image: { x: -5, y: 20, width: 130, height: 160 },
+    },
+    {
+      category: "conditioner",
+      path: "M20 178L13 49Q12 31 30 25H90Q108 31 107 49L100 178Z",
+      image: { x: -4, y: 17, width: 128, height: 164 },
+    },
+    {
+      category: "leave_in",
+      path: "M28 178V73Q28 58 43 58H48V42H43V23H78L112 34L104 50H76L69 58H80Q94 58 94 73V178Z",
+      image: { x: 4, y: 16, width: 112, height: 166 },
+    },
+    {
+      category: "heat_protectant",
+      path: "M24 178L33 101Q28 70 45 54V31H75V54Q92 70 87 101L96 178Z",
+      image: { x: 16, y: 24, width: 88, height: 158 },
+    },
+    {
+      category: "oil",
+      path: "M24 178V88Q24 70 43 62V49L36 22Q35 9 50 8H70Q85 9 84 22L77 49V62Q96 70 96 88V178Z",
+      image: { x: 3, y: 4, width: 114, height: 176 },
+    },
+    {
+      category: "mask",
+      path: "M10 178L17 91H23V72H97V91H103L110 178Z",
+      image: { x: 14, y: 72, width: 92, height: 102 },
+    },
+    {
+      category: "scalp_care",
+      path: "M31 178V76Q31 61 46 61H50V46H48V28H69L92 10L101 18L78 49V61H84Q98 61 98 76V178Z",
+      image: { x: 16, y: 8, width: 88, height: 170 },
+    },
+    {
+      category: "dry_shampoo",
+      path: "M28 178V42Q28 27 45 21V10H75V21Q92 27 92 42V178Z",
+      image: { x: 18, y: 4, width: 84, height: 174 },
+    },
+    {
+      category: "bondbuilder",
+      path: "M18 25H102L94 148Q92 163 80 166V178H40V166Q28 163 26 148Z",
+      image: { x: 8, y: 12, width: 104, height: 168 },
+    },
+    {
+      category: "deep_cleansing_shampoo",
+      path: "M23 178V73Q23 58 38 58H46V41H58V25H96L110 31L103 45H74V58H84Q98 58 98 73V178Z",
+      image: { x: 13, y: 18, width: 94, height: 160 },
+    },
   ] as const
   const imageUrl =
     "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-product.webp"
@@ -331,7 +373,7 @@ test("renders the ten approved category-specific product silhouettes", () => {
         isPartial: false,
         provisionalProductCount: 0,
         unresolvedProductCount: 0,
-        shelf: categories.map((category, index) => ({
+        shelf: silhouettes.map(({ category }, index) => ({
           kind: "product" as const,
           productId: `product-${index}`,
           productName: category,
@@ -344,7 +386,62 @@ test("renders the ten approved category-specific product silhouettes", () => {
   }
 
   const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
-  for (const category of categories) {
+  for (const { category, path, image } of silhouettes) {
     assert.match(html, new RegExp(`data-application-silhouette="${category}"`))
+    assert.ok(html.includes(`d="${path}"`), `${category} uses its approved path`)
+    const imageTag = html.match(
+      new RegExp(`<image\\b[^>]*data-application-silhouette-image="${category}"[^>]*>`),
+    )
+    assert.ok(imageTag, `${category} renders its standardized catalog image`)
+    for (const [attribute, value] of Object.entries({
+      x: image.x,
+      y: image.y,
+      width: image.width,
+      height: image.height,
+      preserveAspectRatio: "xMidYMid meet",
+    })) {
+      assert.match(imageTag[0], new RegExp(`${attribute}="${value}"`))
+    }
   }
+  assert.equal((html.match(/data-application-shelf-row="true"/g) ?? []).length, 2)
+  assert.match(html, /bg-\[#e9e3ed\]/)
+  assert.match(html, /fill="#f3f0e8"/)
+  assert.doesNotMatch(html, /#fffdfb_0%,#f7efe7_100%/)
+  assert.doesNotMatch(html, /preserveAspectRatio="xMidYMid slice"/)
+})
+
+test("counts open placeholders toward the five-slot shelf row cap", () => {
+  const categories = [
+    "shampoo",
+    "conditioner",
+    "leave_in",
+    "heat_protectant",
+    "oil",
+    "mask",
+  ] as const
+  const view: ApplicationPageView = {
+    state: "ready",
+    days: [
+      {
+        dayType: "wash_day",
+        sortOrder: 10,
+        labelDe: "Waschtag",
+        summaryDe: "Sechs offene Plätze",
+        cadenceDe: null,
+        steps: [],
+        isPartial: true,
+        provisionalProductCount: 0,
+        unresolvedProductCount: categories.length,
+        shelf: categories.map((category) => ({
+          kind: "open" as const,
+          category,
+          categoryLabelDe: category,
+        })),
+      },
+    ],
+  }
+
+  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.equal((html.match(/data-application-shelf-row="true"/g) ?? []).length, 2)
+  assert.equal((html.match(/data-application-shelf-slot="open"/g) ?? []).length, 6)
 })
