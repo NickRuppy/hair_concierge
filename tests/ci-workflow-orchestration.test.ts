@@ -6,6 +6,7 @@ const ciWorkflow = readFileSync(new URL("../.github/workflows/ci.yml", import.me
 const packageManifest = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url), "utf8"),
 ) as { scripts: Record<string, string> }
+const trackerPageSpec = readFileSync(new URL("./tracker-page.spec.ts", import.meta.url), "utf8")
 
 const JOBS_KEY = /^jobs:[ \t]*(?:#.*)?$/
 const TOP_LEVEL_KEY = /^[A-Za-z0-9_-]+:[ \t]*(?:#.*)?$/
@@ -248,14 +249,28 @@ test("quality work is divided into independently scheduled lanes", () => {
   assert.doesNotMatch(qualityPersonalPlan, /personal-plan-stage4|personal-plan-stage5/)
 })
 
-test("the Stage 3 CI browser suite pins its dev gate and prewarms the guarded lab route", () => {
+test("the Stage 3 CI browser suite fails a stuck guarded-route preflight within one minute", () => {
   const command = packageManifest.scripts["test:playwright:personal-plan-stage3"]
+  const qualityPersonalPlan = jobSource(ciWorkflow, "quality-personal-plan-browser")
 
   assert.match(
     command,
-    /start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true npm run dev/,
+    /^WAIT_ON_TIMEOUT=60000 .*start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true npm run dev/,
   )
   assert.match(command, /http:\/\/127\.0\.0\.1:3217\/labs\/personal-plan\/stage-3/)
+  assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
+})
+
+test("the tracker product drawer smoke does not wait for network silence", () => {
+  assert.doesNotMatch(trackerPageSpec, /waitUntil: "networkidle"/)
+  assert.match(
+    trackerPageSpec,
+    /page\.goto\(`\$\{baseUrl\}\/auth`, \{\s*waitUntil: "domcontentloaded",\s*timeout: 30_000,\s*\}\)/,
+  )
+  assert.match(
+    trackerPageSpec,
+    /page\.goto\(`\$\{baseUrl\}\/chat`, \{\s*waitUntil: "domcontentloaded",\s*timeout: 30_000,\s*\}\)/,
+  )
 })
 
 test("aggregate contracts keep focused Personal Plan coverage without duplicate top-level tests", () => {

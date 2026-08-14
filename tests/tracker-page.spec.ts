@@ -111,7 +111,10 @@ function trackerBody(fixture: TrackerFixture) {
 }
 
 async function login(page: Page, email: string, password: string) {
-  await page.goto(`${baseUrl}/auth`, { waitUntil: "networkidle" })
+  await page.goto(`${baseUrl}/auth`, {
+    waitUntil: "domcontentloaded",
+    timeout: 30_000,
+  })
   await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15_000 })
   const loginTab = page.getByRole("tab", { name: "Anmelden" })
   if (await loginTab.isVisible()) await loginTab.click()
@@ -119,10 +122,12 @@ async function login(page: Page, email: string, password: string) {
   const passwordInput = page.locator('input[type="password"]:visible')
   await expect(emailInput).toBeEditable()
   await expect(passwordInput).toBeEditable()
-  await emailInput.fill(email)
-  await passwordInput.fill(password)
   const submit = page.getByRole("button", { name: /^Anmelden$/ })
-  await expect(submit).toBeEnabled()
+  await expect(async () => {
+    await emailInput.fill(email)
+    await passwordInput.fill(password)
+    await expect(submit).toBeEnabled({ timeout: 1_000 })
+  }).toPass({ timeout: 30_000 })
   await submit.click()
   await page.waitForURL(/\/(chat|tracker)$/, { timeout: 30_000 })
 }
@@ -873,8 +878,12 @@ test.describe.serial("@ci tracker page regressions", () => {
       })
     })
 
-    await page.goto(`${baseUrl}/chat`, { waitUntil: "networkidle" })
+    await page.goto(`${baseUrl}/chat`, {
+      waitUntil: "domcontentloaded",
+      timeout: 30_000,
+    })
     const chatInput = page.getByTestId("chat-input")
+    await expect(chatInput).toBeVisible({ timeout: 30_000 })
     await chatInput.fill("Zeig mir ein passendes Produkt")
     await expect(chatInput).toHaveValue("Zeig mir ein passendes Produkt")
     await expect(page.getByTestId("chat-send")).toBeEnabled()
