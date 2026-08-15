@@ -115,7 +115,7 @@ test.describe("Personal Plan products lab", () => {
     await expect(page.locator("body")).not.toContainText(/\b(?:Pass\s*[12]|Stage\s*3|Part)\b/i)
 
     await searchAndSelect(page, "Balance", "Chaarlie Fixture Conditioner Balance")
-    await page.getByRole("button", { name: /Weiteres Conditioner hinzufügen/ }).click()
+    await page.getByRole("button", { name: /Weiteren Conditioner hinzufügen/ }).click()
     await searchAndSelect(page, "Soft Care", "Chaarlie Fixture Conditioner Soft Care")
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
     await expect(page.getByRole("heading", { name: /Dein Öl/ })).toBeVisible()
