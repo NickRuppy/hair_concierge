@@ -1,0 +1,16 @@
+{
+  "schemaObjects": [
+    {
+      "kind": "constraint",
+      "name": "products_category_key_fkey",
+      "valid": false,
+      "definition": "FOREIGN KEY (category_key) REFERENCES product_categories(key) ON UPDATE CASCADE ON DELETE RESTRICT NOT VALID"
+    },
+    {
+      "kind": "constraint",
+      "name": "products_origin_check",
+      "valid": false,
+      "definition": "CHECK ((origin = ANY (ARRAY['curated'::text, 'user_submitted'::text]))) NOT VALID"
+    }
+  ]
+}
