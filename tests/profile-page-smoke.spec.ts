@@ -293,7 +293,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     )
     await expect(page.getByText("Dein Shampoo", { exact: false })).toBeVisible()
     await page.locator('input[placeholder="z.B. Produktname oder Marke"]').fill("Edited Shampoo")
-    await page.getByRole("button", { name: "5-6x/Woche" }).click()
+    await page.getByRole("button", { name: "5–6×/Woche" }).click()
     await page.getByRole("button", { name: "Speichern und zurück zum Profil" }).click()
     await page.waitForURL(/\/profile$/, { timeout: 30000 })
     await expect(page.getByText("Edited Shampoo").first()).toBeVisible()
