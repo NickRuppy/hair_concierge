@@ -10,6 +10,7 @@ import {
 } from "../src/components/personal-plan-start/plan-start-flow"
 import { RefinementFlow } from "../src/components/personal-plan-refinement/refinement-flow"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
+import { acquireManualScrollRestoration } from "../src/components/personal-plan-journey/view-transition"
 import {
   PERSONAL_PLAN_STAGE_NAVIGATION_TTL_MS,
   consumePersonalPlanStageNavigationIntent,
@@ -142,6 +143,24 @@ test("stage navigation intent is destination-bound, single-use, and time-bounded
     ),
     false,
   )
+})
+
+test("manual scroll restoration ownership is nested, idempotent, and cleanup-safe", () => {
+  const history = { scrollRestoration: "auto" as History["scrollRestoration"] }
+  const releaseFirst = acquireManualScrollRestoration(history)
+  const releaseSecond = acquireManualScrollRestoration(history)
+
+  assert.equal(history.scrollRestoration, "manual")
+  releaseFirst()
+  releaseFirst()
+  assert.equal(history.scrollRestoration, "manual")
+  releaseSecond()
+  assert.equal(history.scrollRestoration, "auto")
+
+  history.scrollRestoration = "manual"
+  const releaseExistingManual = acquireManualScrollRestoration(history)
+  releaseExistingManual()
+  assert.equal(history.scrollRestoration, "manual")
 })
 
 test("stage navigation intent fails closed when storage is unavailable", () => {
