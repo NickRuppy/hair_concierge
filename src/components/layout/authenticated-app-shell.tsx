@@ -21,8 +21,9 @@ export function AuthenticatedAppShell({
     <div
       className={
         personalPlan
-          ? // Die Tab-Bar existiert nur mobil; ab md entfällt auch die Padding-Kompensation.
-            "min-h-dvh [--personal-plan-shell-bottom-padding:calc(4.5rem+env(safe-area-inset-bottom))] md:[--personal-plan-shell-bottom-padding:0px]"
+          ? // Die Variable bleibt auf allen Breiten konstant, weil application-state
+            // seine Höhe daraus ableitet; nur die Padding-Kompensation entfällt ab md.
+            "min-h-dvh [--personal-plan-shell-bottom-padding:calc(4.5rem+env(safe-area-inset-bottom))]"
           : "min-h-dvh"
       }
       data-personal-plan-shell={personalPlan || undefined}
@@ -39,7 +40,7 @@ export function AuthenticatedAppShell({
       {personalPlan ? (
         <div
           data-personal-plan-content="true"
-          className="pb-[var(--personal-plan-shell-bottom-padding)]"
+          className="pb-[var(--personal-plan-shell-bottom-padding)] md:pb-0"
         >
           {children}
         </div>

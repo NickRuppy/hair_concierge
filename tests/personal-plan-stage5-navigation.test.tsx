@@ -107,13 +107,15 @@ test("the signed navigation marks the current destination and the shell owns its
       pathname: "/anwendung/wash_day",
     }),
   )
+  // Die Navigation existiert doppelt: Header-Links (md+) und Tab-Bar (mobil, md:hidden).
   assert.match(navHtml, /aria-label="Personal-Plan-Navigation"/)
-  assert.equal((navHtml.match(/aria-current="page"/g) ?? []).length, 1)
+  assert.match(navHtml, /aria-label="Personal-Plan-Navigation \(mobil\)"/)
+  assert.equal((navHtml.match(/aria-current="page"/g) ?? []).length, 2)
   assert.match(navHtml, /aria-current="page"[^>]*href="\/anwendung"/)
-  assert.equal((navHtml.match(/>Chat</g) ?? []).length, 1)
-  assert.equal((navHtml.match(/>Routine</g) ?? []).length, 1)
-  assert.equal((navHtml.match(/>Anwendung</g) ?? []).length, 1)
-  assert.equal((navHtml.match(/>Profil</g) ?? []).length, 1)
+  assert.equal((navHtml.match(/>Chat</g) ?? []).length, 2)
+  assert.equal((navHtml.match(/>Routine</g) ?? []).length, 2)
+  assert.equal((navHtml.match(/>Anwendung</g) ?? []).length, 2)
+  assert.equal((navHtml.match(/>Profil</g) ?? []).length, 2)
 
   const shellHtml = renderToStaticMarkup(
     createElement(AuthenticatedAppShell, {
@@ -125,7 +127,10 @@ test("the signed navigation marks the current destination and the shell owns its
   )
   assert.match(shellHtml, /--personal-plan-shell-bottom-padding/)
   assert.match(shellHtml, /data-personal-plan-content="true"/)
-  assert.match(shellHtml, /style="padding-bottom:var\(--personal-plan-shell-bottom-padding\)"/)
+  // Padding jetzt als responsive Klasse (mobil aktiv, ab md entfällt die Tab-Bar-Kompensation);
+  // die Variable selbst bleibt konstant, weil application-state seine Höhe daraus ableitet.
+  assert.match(shellHtml, /pb-\[var\(--personal-plan-shell-bottom-padding\)\] md:pb-0/)
+  assert.doesNotMatch(shellHtml, /md:\[--personal-plan-shell-bottom-padding/)
   assert.doesNotMatch(shellHtml, /Legacy/)
 })
 
