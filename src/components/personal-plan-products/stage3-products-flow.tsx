@@ -70,7 +70,6 @@ import type { Stage3FitComparison } from "@/lib/personal-plan/products/fit-compa
 import {
   PRODUCT_FREQUENCIES,
   PRODUCT_FREQUENCY_LABELS,
-  productFrequencyShortLabel,
   type ProductFrequency,
 } from "@/lib/vocabulary/frequencies"
 
@@ -203,12 +202,12 @@ const DEFAULT_REQUIREMENTS: Stage3CategoryRequirement[] = [
   ]),
 ]
 
-const FREQUENCIES: Array<{ value: ProductFrequency; label: string; shortLabel: string }> =
-  PRODUCT_FREQUENCIES.map((value) => ({
+const FREQUENCIES: Array<{ value: ProductFrequency; label: string }> = PRODUCT_FREQUENCIES.map(
+  (value) => ({
     value,
     label: PRODUCT_FREQUENCY_LABELS[value],
-    shortLabel: productFrequencyShortLabel(value),
-  }))
+  }),
+)
 
 const PRODUCT_KIND_OPTIONS: Stage3ProductKindOption[] = (
   Object.entries(CATEGORY_COPY) as Array<

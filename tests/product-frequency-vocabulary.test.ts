@@ -9,6 +9,7 @@ import {
   PRODUCT_FREQUENCY_LABELS,
   PRODUCT_FREQUENCY_METADATA,
   PRODUCT_FREQUENCY_OPTIONS,
+  PRODUCT_FREQUENCY_SLIDER_LABEL_LINES,
 } from "../src/lib/vocabulary"
 
 test("product frequencies expose the canonical cadence stops in order", () => {
@@ -34,6 +35,19 @@ test("product frequency labels stay German and user-facing", () => {
     weekly_3_4x: "3-4x/Woche",
     weekly_5_6x: "5-6x/Woche",
     daily_1x: "Täglich",
+  })
+})
+
+test("product frequency slider labels expose the approved two-line presentation", () => {
+  assert.deepEqual(PRODUCT_FREQUENCY_SLIDER_LABEL_LINES, {
+    less_than_monthly: ["<1×/", "Monat"],
+    monthly_1x: ["1×/", "Monat"],
+    biweekly_1x: ["Alle 2", "Wochen"],
+    weekly_1x: ["1×/", "Woche"],
+    weekly_2x: ["2×/", "Woche"],
+    weekly_3_4x: ["3–4×/", "Woche"],
+    weekly_5_6x: ["5–6×/", "Woche"],
+    daily_1x: ["1×/", "Tag"],
   })
 })
 

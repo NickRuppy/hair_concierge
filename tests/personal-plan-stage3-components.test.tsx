@@ -302,8 +302,8 @@ test("pending analysis keeps cadence editable and names the temporary action", (
       ]}
       capturedProducts={[]}
       frequencyOptions={[
-        { value: "weekly_1x", label: "1x/Woche", shortLabel: "1x/W" },
-        { value: "weekly_2x", label: "2x/Woche", shortLabel: "2x/W" },
+        { value: "weekly_1x", label: "1x/Woche" },
+        { value: "weekly_2x", label: "2x/Woche" },
       ]}
       selectedFrequency="weekly_2x"
       selectedCandidateId="ogx-pending"
@@ -426,8 +426,11 @@ test("product frequency picker delegates the canonical 8-stop rare-to-daily slid
   assert.match(html, /aria-valuemax="7"/)
   assert.match(html, /aria-valuenow="4"/)
   assert.match(html, /aria-valuetext="2x\/Woche"/)
-  assert.match(html, /Seltener als 1x\/Monat/)
-  assert.match(html, /Täglich/)
+  assert.match(html, /aria-label="&lt;1×\/Monat"/)
+  assert.match(html, /aria-label="2×\/Woche"/)
+  assert.match(html, /aria-label="1×\/Tag"/)
+  assert.match(html, /data-slider-label-line="1"[^>]*>2×\/<\/span>/)
+  assert.match(html, /data-slider-label-line="2"[^>]*>Woche<\/span>/)
 })
 
 test("product frequency slider disables pointer, label buttons, and focus when saving", () => {

@@ -99,6 +99,7 @@ export {
   PRODUCT_FREQUENCY_METADATA,
   PRODUCT_FREQUENCY_LABELS,
   PRODUCT_FREQUENCY_OPTIONS,
+  PRODUCT_FREQUENCY_SLIDER_LABEL_LINES,
   normalizeProductFrequency,
   getProductFrequencyMetadata,
   compareProductFrequencies,
@@ -110,6 +111,7 @@ export type {
   ProductFrequencyInput,
   ProductFrequencyMetadata,
   ProductFrequencyComparison,
+  ProductFrequencySliderLabelLines,
 } from "./frequencies"
 
 export {

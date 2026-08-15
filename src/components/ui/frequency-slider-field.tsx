@@ -3,7 +3,7 @@
 import { DiscreteSlider, type SliderStop } from "@/components/ui/slider"
 import {
   PRODUCT_FREQUENCIES,
-  productFrequencyShortLabel,
+  PRODUCT_FREQUENCY_SLIDER_LABEL_LINES,
   type ProductFrequency,
 } from "@/lib/vocabulary/frequencies"
 
@@ -36,9 +36,9 @@ export function FrequencySliderField({
   const selectedLabel = stops.find((stop) => stop.value === value)?.label
   const sliderStops = stops.map((stop) => ({
     ...stop,
-    shortLabel: PRODUCT_FREQUENCIES.includes(stop.value as ProductFrequency)
-      ? productFrequencyShortLabel(stop.value as ProductFrequency)
-      : (stop.shortLabel ?? stop.label),
+    labelLines: PRODUCT_FREQUENCIES.includes(stop.value as ProductFrequency)
+      ? PRODUCT_FREQUENCY_SLIDER_LABEL_LINES[stop.value as ProductFrequency]
+      : stop.labelLines,
   }))
 
   return (
