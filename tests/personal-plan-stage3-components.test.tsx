@@ -99,23 +99,26 @@ test("stage 3 shell and transitions reuse onboarding language without internal n
 })
 
 test("stage 3 shell renders the supplied save state instead of a hard-coded saved label", () => {
-  const renderShell = (status: "idle" | "saving" | "saved" | "error") =>
+  const renderShell = (status: "idle" | "saving" | "saved" | "error", label: string) =>
     renderToStaticMarkup(
       <Stage3Shell
         title="Produkte"
         currentStepLabel="Produkte finden"
         completedSteps={2}
         totalSteps={8}
-        saveState={{ status, label: "Gespeichert" }}
+        saveState={{ status, label }}
       >
         <div>Inhalt</div>
       </Stage3Shell>,
     )
 
-  assert.match(renderShell("saving"), /Wird gespeichert/)
-  assert.match(renderShell("saved"), /Gespeichert/)
-  assert.match(renderShell("error"), /Nicht gespeichert/)
-  assert.doesNotMatch(renderShell("idle"), /Wird gespeichert|Gespeichert|Nicht gespeichert/)
+  assert.match(renderShell("saving", "Wird gespeichert"), /Wird gespeichert/)
+  assert.match(renderShell("saved", "Gespeichert"), /Gespeichert/)
+  assert.match(renderShell("error", "Nicht gespeichert"), /Nicht gespeichert/)
+  // A recovery label stays truthful instead of falling back to the status copy.
+  assert.match(renderShell("error", "Speicherstatus offen"), /Speicherstatus offen/)
+  assert.doesNotMatch(renderShell("error", "Speicherstatus offen"), /Nicht gespeichert/)
+  assert.doesNotMatch(renderShell("idle", ""), /Wird gespeichert|Gespeichert|Nicht gespeichert/)
 })
 
 test("product capture exposes controlled search, explicit result selection, frequency, fallback, and multi-product actions", () => {

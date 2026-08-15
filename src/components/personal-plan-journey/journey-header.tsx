@@ -18,6 +18,7 @@ const SAVE_COPY: Record<PersonalPlanSaveStatus, string> = {
 export function PersonalPlanJourneyHeader({
   currentStage,
   saveStatus = "idle",
+  saveLabel,
   onBack,
   backLabel = "Zurück",
   sticky = true,
@@ -25,6 +26,7 @@ export function PersonalPlanJourneyHeader({
 }: {
   currentStage: PersonalPlanJourneyStage
   saveStatus?: PersonalPlanSaveStatus
+  saveLabel?: string
   onBack?: () => void
   backLabel?: string
   sticky?: boolean
@@ -73,7 +75,7 @@ export function PersonalPlanJourneyHeader({
                   : "text-[var(--status-ok-text)]",
             )}
           >
-            {SAVE_COPY[saveStatus]}
+            {saveLabel || SAVE_COPY[saveStatus]}
           </span>
         </div>
 

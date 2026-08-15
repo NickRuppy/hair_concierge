@@ -93,7 +93,12 @@ export function Stage3Shell({
 
   return (
     <div className="min-h-[100dvh] bg-[var(--background)]">
-      <PersonalPlanJourneyHeader currentStage={3} saveStatus={saveStatus} onBack={onBack} />
+      <PersonalPlanJourneyHeader
+        currentStage={3}
+        saveStatus={saveStatus}
+        saveLabel={saveState.label || undefined}
+        onBack={onBack}
+      />
       <main
         className={`personal-plan-cookie-clearance mx-auto min-w-0 w-full max-w-[720px] px-5 pt-7 md:my-8 md:rounded-3xl md:border md:border-border md:bg-card md:px-10 md:pt-10 md:shadow-sm${contentEntrance ? " personal-plan-stage-target-fade" : ""}`}
         data-stage3-progress={`${completedSteps}/${totalSteps}`}
