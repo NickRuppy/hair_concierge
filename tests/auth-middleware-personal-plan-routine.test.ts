@@ -34,6 +34,7 @@ function createMiddleware({
   throwsOnPlanLookup = false,
   useDefaultFrontier = false,
   userAppMetadata = { access_kind: "field_test" },
+  hairProfile = completeQuizProfile as Record<string, unknown> | null,
   observedTables,
   frontierCalls,
 }: {
@@ -55,6 +56,7 @@ function createMiddleware({
   throwsOnPlanLookup?: boolean
   useDefaultFrontier?: boolean
   userAppMetadata?: Record<string, unknown>
+  hairProfile?: Record<string, unknown> | null
   observedTables?: string[]
   frontierCalls?: { count: number }
 } = {}) {
@@ -114,7 +116,7 @@ function createMiddleware({
                     }
                   }
                   if (table === "hair_profiles") {
-                    return { data: completeQuizProfile }
+                    return { data: hairProfile }
                   }
                   if (table === "personal_plans") {
                     if (throwsOnPlanLookup) throw new Error("personal plan lookup unavailable")
@@ -205,7 +207,7 @@ test("released routing ignores obsolete internal rollout environment", async () 
 
   try {
     const response = await createMiddleware({ useDefaultFrontier: true })(
-      new NextRequest("https://chaarlie.de/chat"),
+      new NextRequest("https://chaarlie.de/routine"),
     )
 
     assert.equal(response.status, 307)
@@ -273,9 +275,14 @@ test("tracker still redirects an authenticated user without current access to re
 test("chat retains proxy intake and preserves redirect query parameters", async () => {
   const observedTables: string[] = []
   const frontierCalls = { count: 0 }
-  const response = await createMiddleware({ observedTables, frontierCalls })(
-    new NextRequest("https://chaarlie.de/chat?lead=lead-1&tab=history"),
-  )
+  const response = await createMiddleware({
+    planResult: {
+      data: { pending_routine_proposal_id: null, active_routine_version_id: null },
+      error: null,
+    },
+    observedTables,
+    frontierCalls,
+  })(new NextRequest("https://chaarlie.de/chat?lead=lead-1&tab=history"))
 
   assert.equal(response.status, 307)
   assert.equal(
@@ -327,10 +334,22 @@ test("an eligible new buyer follows the Personal Plan frontier instead of legacy
       data: { eligible: true, source_ready: true, plan: null },
       error: null,
     },
-  })(new NextRequest("https://chaarlie.de/chat"))
+  })(new NextRequest("https://chaarlie.de/routine"))
 
   assert.equal(response.status, 307)
   assert.equal(response.headers.get("location"), "https://chaarlie.de/plan-start")
+})
+
+test("a Stage 1 frontier no longer bounces chat into the Personal Plan flow", async () => {
+  const response = await createMiddleware({
+    frontierResult: {
+      data: { eligible: true, source_ready: true, plan: null },
+      error: null,
+    },
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
 })
 
 test("an eligible buyer with an unready source stays in readiness recovery", async () => {
@@ -351,12 +370,115 @@ test("a routing-frontier outage cannot silently fall through to legacy onboardin
       data: null,
       error: { message: "routing source unavailable" },
     },
-  })(new NextRequest("https://chaarlie.de/chat"))
+  })(new NextRequest("https://chaarlie.de/routine"))
 
   assert.equal(response.status, 503)
   assert.equal(response.headers.get("location"), null)
   assert.equal(response.headers.get("cache-control"), "private, no-store")
   assert.match(await response.text(), /Bitte versuche es gleich noch einmal/)
+})
+
+test("a routing-frontier outage leaves chat to the intake gate", async () => {
+  const outage = {
+    frontierResult: {
+      data: null,
+      error: { message: "routing source unavailable" },
+    },
+  } as const
+
+  const withRoutine = await createMiddleware(outage)(new NextRequest("https://chaarlie.de/chat"))
+  assert.equal(withRoutine.status, 200)
+  assert.equal(withRoutine.headers.get("location"), null)
+
+  const withoutRoutine = await createMiddleware({
+    ...outage,
+    planResult: {
+      data: { pending_routine_proposal_id: null, active_routine_version_id: null },
+      error: null,
+    },
+  })(new NextRequest("https://chaarlie.de/chat"))
+  assert.equal(withoutRoutine.status, 307)
+  assert.equal(withoutRoutine.headers.get("location"), "https://chaarlie.de/onboarding")
+})
+
+test("chat stays reachable across the Personal Plan frontier", async () => {
+  const activeRoutinePlan = {
+    data: { pending_routine_proposal_id: null, active_routine_version_id: "routine-1" },
+    error: null,
+  } as const
+  const stage5Frontier = {
+    data: {
+      eligible: true,
+      source_ready: true,
+      plan: {
+        current_initial_need_version_id: "initial-1",
+        current_refined_need_version_id: "refined-1",
+        pending_routine_proposal_id: null,
+        active_routine_version_id: "routine-1",
+      },
+    },
+    error: null,
+  } as const
+  const stage4Frontier = {
+    data: {
+      eligible: true,
+      source_ready: true,
+      plan: {
+        current_initial_need_version_id: "initial-1",
+        current_refined_need_version_id: "refined-1",
+        pending_routine_proposal_id: "proposal-1",
+        active_routine_version_id: null,
+      },
+    },
+    error: null,
+  } as const
+
+  const activeRoutine = await createMiddleware({
+    frontierResult: stage5Frontier,
+    planResult: activeRoutinePlan,
+  })(new NextRequest("https://chaarlie.de/chat"))
+  assert.equal(activeRoutine.status, 200)
+  assert.equal(activeRoutine.headers.get("location"), null)
+
+  const pendingRoutine = await createMiddleware({ frontierResult: stage4Frontier })(
+    new NextRequest("https://chaarlie.de/chat"),
+  )
+  assert.equal(pendingRoutine.status, 200)
+  assert.equal(pendingRoutine.headers.get("location"), null)
+
+  const recoveryFrontier = await createMiddleware({
+    frontierResult: { data: { eligible: true, source_ready: false, plan: null }, error: null },
+    planResult: activeRoutinePlan,
+  })(new NextRequest("https://chaarlie.de/chat"))
+  assert.equal(recoveryFrontier.status, 200)
+  assert.equal(recoveryFrontier.headers.get("location"), null)
+})
+
+test("chat without a routine pointer, quiz or entitlement keeps the intake gate", async () => {
+  const entitledWithoutRoutine = await createMiddleware({
+    frontierResult: {
+      data: { eligible: true, source_ready: false, plan: null },
+      error: null,
+    },
+    planResult: {
+      data: { pending_routine_proposal_id: null, active_routine_version_id: null },
+      error: null,
+    },
+  })(new NextRequest("https://chaarlie.de/chat"))
+  assert.equal(entitledWithoutRoutine.status, 307)
+  assert.equal(entitledWithoutRoutine.headers.get("location"), "https://chaarlie.de/onboarding")
+
+  const needsQuiz = await createMiddleware({ hairProfile: null })(
+    new NextRequest("https://chaarlie.de/chat"),
+  )
+  assert.equal(needsQuiz.status, 307)
+  assert.equal(needsQuiz.headers.get("location"), "https://chaarlie.de/quiz")
+
+  const withoutEntitlement = await createMiddleware({ userAppMetadata: {} })(
+    new NextRequest("https://chaarlie.de/chat"),
+  )
+  assert.equal(withoutEntitlement.status, 307)
+  assert.equal(withoutEntitlement.headers.get("location"), "https://chaarlie.de/onboarding")
 })
 
 test("explicit legacy onboarding edits are not intercepted by the Personal Plan frontier", async () => {

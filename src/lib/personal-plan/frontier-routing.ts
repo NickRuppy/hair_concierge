@@ -47,7 +47,7 @@ export function getPersonalPlanFrontierRedirect(
     return isFrontierControlledRoute(pathname) ? frontier.nextHref : null
   }
 
-  if (pathname === "/auth" || isRoute(pathname, "/chat")) return frontier.nextHref
+  if (pathname === "/auth") return frontier.nextHref
   if (isRoute(pathname, "/routine")) {
     return frontier.frontier === "stage4" || frontier.frontier === "stage5"
       ? null
@@ -61,12 +61,7 @@ export function getPersonalPlanFrontierRedirect(
 }
 
 function isFrontierControlledRoute(pathname: string): boolean {
-  return (
-    pathname === "/auth" ||
-    isRoute(pathname, "/chat") ||
-    isRoute(pathname, "/routine") ||
-    isRoute(pathname, "/anwendung")
-  )
+  return pathname === "/auth" || isRoute(pathname, "/routine") || isRoute(pathname, "/anwendung")
 }
 
 function isRoute(pathname: string, prefix: string): boolean {

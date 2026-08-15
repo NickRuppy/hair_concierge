@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { NextResponse, type NextRequest } from "next/server"
 import {
   getAuthenticatedAppRedirect,
-  isPersonalPlanRoutineRoute,
+  isPersonalPlanOnboardingBypassRoute,
   resolveIntakeState,
   type PersonalPlanRoutineAccess,
 } from "@/lib/auth/intake-state"
@@ -434,7 +434,7 @@ export function createUpdateSession(
       if (
         intakeState === "needs_onboarding" &&
         hasActivePersonalPlanEntitlement &&
-        isPersonalPlanRoutineRoute(pathname)
+        isPersonalPlanOnboardingBypassRoute(pathname)
       ) {
         try {
           const { data: plan, error } = await supabase
