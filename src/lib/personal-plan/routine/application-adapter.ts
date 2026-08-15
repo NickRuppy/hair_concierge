@@ -130,6 +130,18 @@ function factsFor(category: string, row: ProductRow) {
   return spec ? { facts: spec, provenance: provenance(spec) } : { facts: {}, provenance: {} }
 }
 
+function sanitizeImageUrl(value: unknown): string | null {
+  if (typeof value !== "string") return null
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  try {
+    const parsed = new URL(trimmed)
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? trimmed : null
+  } catch {
+    return null
+  }
+}
+
 /** Owner-scoped active Routine in, verified catalog identities and exact Heat guidance out. */
 export async function adaptAcceptedActiveRoutineForApplication(input: {
   client: ApplicationRoutineReadClient
@@ -255,7 +267,7 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       itemId: item.itemKey,
       productId: product.id,
       productName: item.product.displayName,
-      imageUrl: product.image_url,
+      imageUrl: sanitizeImageUrl(product.image_url),
       category: item.category,
       role: semanticRoleByRoutineRole[item.role],
       sourceRoutineRole: item.role,

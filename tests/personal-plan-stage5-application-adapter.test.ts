@@ -158,6 +158,39 @@ test("Stage 5 adapter normalizes catalog read failures without retaining databas
   )
 })
 
+function inputWithProductImage(imageUrl: string) {
+  const { client } = productClient([
+    {
+      id: productId,
+      category: "shampoo",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "active",
+      image_url: imageUrl,
+    },
+  ])
+  return { client, activeVersion: { id: "routine-v1", payload: activePayload() } }
+}
+
+test("relative image_url is sanitized to null instead of failing", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(
+    inputWithProductImage("/images/foo.png"),
+  )
+  assert.equal(result.routineItems[0]?.imageUrl, null)
+})
+
+test("empty image_url is sanitized to null", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(inputWithProductImage(""))
+  assert.equal(result.routineItems[0]?.imageUrl, null)
+})
+
+test("absolute image_url passes through", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(
+    inputWithProductImage("https://cdn.example/x.png"),
+  )
+  assert.equal(result.routineItems[0]?.imageUrl, "https://cdn.example/x.png")
+})
+
 test("Stage 5 V2 adapter selects only typed pointer storage and ignores V1 manufacturer prose", async () => {
   const pointer = {
     schemaVersion: 2,
