@@ -519,17 +519,49 @@ test("labels a supportive replacement as only partly fitting", () => {
   assert.equal((html.match(/aria-label="Passt mit Einschränkung"/g) ?? []).length, 1)
 })
 
-test("keeps the comparison matrix without promising search when no alternative exists", () => {
+test("fails closed when unexpected targetless evidence reaches an otherwise known comparison", () => {
   const fitComparison: Stage3FitComparison = {
     ...comparison,
     products: comparison.products.filter((product) => product.source === "current"),
     alternatives: [],
-    candidateCatalogComplete: true,
+    evidenceRows: [
+      {
+        rowId: "shampoo.legacy_targetless",
+        label: "Veralteter leerer Prüfpunkt",
+        target: null,
+        productValues: [{ productId: "owned", valueLabel: "leer", relation: "no_target" }],
+      },
+      {
+        rowId: "shampoo.target_fit",
+        label: "Zielprofil-Eignung",
+        target: {
+          valueLabel: "abgedeckt",
+          rationale: "Das Zielprofil muss abgedeckt sein.",
+          profileEvidenceLabels: [],
+        },
+        productValues: [
+          { productId: "owned-shampoo", valueLabel: "abgedeckt", relation: "in_target" },
+        ],
+      },
+      {
+        rowId: "shampoo.cleansing_intensity",
+        label: "Reinigungsintensität",
+        target: {
+          valueLabel: "regulär",
+          rationale: "Bestätigtes Ziel.",
+          profileEvidenceLabels: [],
+        },
+        productValues: [
+          { productId: "owned-shampoo", valueLabel: "sanft", relation: "supportive" },
+        ],
+      },
+      ...comparison.evidenceRows!,
+    ],
   }
   const fitEvaluation: Stage3AuthorityEvaluation = {
     ...evaluation,
-    verdict: "ideal",
-    allowedActions: ["keep_owned"],
+    verdict: "supportive",
+    allowedActions: ["keep_owned", "acknowledge_override", "leave_uncovered"],
   }
   const html = renderToStaticMarkup(
     <ProductFitComparison
@@ -547,28 +579,110 @@ test("keeps the comparison matrix without promising search when no alternative e
   )
 
   assert.match(html, /Shampoo · Produkt 2 von 3/)
-  assert.match(html, /Dein Shampoo passt/)
-  assert.match(html, /Eigenschaft für Eigenschaft/)
-  assert.match(html, />Prüfpunkt</)
-  assert.match(html, />Deins</)
-  assert.match(html, />Ziel</)
-  assert.doesNotMatch(html, /Bestätigte Prüfpunkte/)
-  assert.match(html, /Vollständiger Katalog geprüft/)
-  assert.match(html, /kein weiteres verifiziertes Shampoo/)
-  assert.match(html, /Mein Produkt behalten/)
-  assert.doesNotMatch(html, /Produkt suchen/)
-  assert.doesNotMatch(html, /Passende Alternative/)
-  assert.doesNotMatch(html, /Weitere passende Alternativen/)
+  assert.match(html, /Noch nicht eindeutig beurteilbar/)
+  assert.match(html, /keine Zielmarken und kein Fit-Urteil/)
+  assert.doesNotMatch(html, /Dein Shampoo passt mit Einschränkung/)
+  assert.doesNotMatch(html, /Eigenschaft für Eigenschaft/)
+  assert.doesNotMatch(html, /Mein Produkt behalten/)
+  assert.doesNotMatch(html, /Mein Produkt trotzdem behalten/)
+  assert.doesNotMatch(html, /Vorerst ohne Produkt fortfahren/)
+  assert.doesNotMatch(html, /Diese Alternative wählen/)
 })
 
-test("does not claim exhaustive catalog coverage on the rollback path", () => {
+test("targetless evidence outranks pending review and suppresses every committing action", () => {
+  const targetlessComparison: Stage3FitComparison = {
+    ...comparison,
+    evidenceRows: [
+      {
+        rowId: "shampoo.unexpected_targetless",
+        label: "Unerwarteter Prüfpunkt",
+        target: null,
+        productValues: comparison.products.map((product) => ({
+          productId: product.productId,
+          valueLabel: "nicht einordenbar",
+          relation: "no_target" as const,
+        })),
+      },
+    ],
+  }
+  const pendingEvaluation: Stage3AuthorityEvaluation = {
+    status: "pending",
+    category: "shampoo",
+    subjectKey: comparison.subjectKey,
+    reason: "product_intake_pending",
+    allowedActions: ["keep_pending", "leave_uncovered"],
+    coverageRuleIds: [],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Shampoo"
+      roleLabel="Shampoo"
+      comparison={targetlessComparison}
+      evaluation={pendingEvaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Noch nicht eindeutig beurteilbar/)
+  assert.doesNotMatch(html, /Analyse läuft/)
+  assert.doesNotMatch(html, /Prüfung vormerken/)
+  assert.doesNotMatch(html, /Vorerst ohne Produkt fortfahren/)
+  assert.doesNotMatch(html, /Diese Alternative wählen/)
+})
+
+test("renders retained Conditioner target-fit evidence instead of globally filtering it", () => {
+  const conditionerComparison: Stage3FitComparison = {
+    ...comparison,
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    products: comparison.products.filter((product) => product.source === "current"),
+    alternatives: [],
+    evidenceRows: [
+      {
+        rowId: "conditioner.target_fit",
+        label: "Zielprofil-Eignung",
+        target: {
+          valueLabel: "abgedeckt",
+          rationale: "Das Zielprofil muss abgedeckt sein.",
+          profileEvidenceLabels: [],
+        },
+        productValues: [
+          {
+            productId: "owned-shampoo",
+            valueLabel: "nicht vollständig",
+            relation: "outside_target",
+          },
+        ],
+      },
+    ],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Conditioner"
+      roleLabel="Conditioner"
+      comparison={conditionerComparison}
+      evaluation={{ ...evaluation, category: "conditioner", allowedActions: ["keep_owned"] }}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Zielprofil-Eignung/)
+  assert.match(html, /nicht vollständig/)
+})
+
+test("claims canonical exhaustive catalog coverage when no alternative exists", () => {
   const html = renderToStaticMarkup(
     <ProductFitComparison
       comparison={{
         ...comparison,
         products: comparison.products.filter((product) => product.source === "current"),
         alternatives: [],
-        candidateCatalogComplete: false,
       }}
       evaluation={{ ...evaluation, verdict: "ideal", allowedActions: ["keep_owned"] }}
       displayedAlternativeIndex={0}
@@ -578,18 +692,17 @@ test("does not claim exhaustive catalog coverage on the rollback path", () => {
     />,
   )
 
-  assert.doesNotMatch(html, /Vollständiger Katalog geprüft/)
-  assert.match(html, /keine klar bessere verifizierte Alternative verfügbar/)
+  assert.match(html, /Vollständiger Katalog geprüft/)
+  assert.match(html, /Aktuell erfüllt kein weiteres verifiziertes/)
 })
 
-test("keeps mismatch fallback copy truthful on the rollback path", () => {
+test("keeps canonical exhaustive catalog copy for a mismatch without alternatives", () => {
   const html = renderToStaticMarkup(
     <ProductFitComparison
       comparison={{
         ...comparison,
         products: comparison.products.filter((product) => product.source === "current"),
         alternatives: [],
-        candidateCatalogComplete: false,
       }}
       evaluation={{ ...evaluation, verdict: "mismatch", allowedActions: ["keep_owned"] }}
       displayedAlternativeIndex={0}
@@ -599,8 +712,8 @@ test("keeps mismatch fallback copy truthful on the rollback path", () => {
     />,
   )
 
-  assert.match(html, /Aktuell ist keine verifizierte Alternative verfügbar/)
-  assert.doesNotMatch(html, /keine klar bessere verifizierte Alternative verfügbar/)
+  assert.match(html, /Vollständiger Katalog geprüft/)
+  assert.match(html, /Aktuell erfüllt kein weiteres verifiziertes/)
 })
 
 test("renders an explicit uncovered state instead of an empty review", () => {

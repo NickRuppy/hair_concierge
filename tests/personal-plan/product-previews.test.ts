@@ -196,6 +196,65 @@ test("selects the thirteenth injected complete-mode irritation Shampoo candidate
   )
 })
 
+test("does not use a merely supportive Shampoo as a Stage 1 product example", async () => {
+  const result = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "11111111-1111-4111-8111-111111111111",
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-14T10:00:00.000Z",
+  })
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("expected ready snapshot")
+  const sourceDecision = result.snapshot.decisions.find((item) => item.category === "shampoo")
+  assert.ok(sourceDecision?.target?.category === "shampoo")
+  const role = "shampoo_everyday" as const
+  const decision = {
+    ...sourceDecision,
+    roles: [role],
+    target: {
+      ...sourceDecision.target,
+      roles: [role],
+      scalpRoute: "balanced" as const,
+      everydayConstraint: "standard" as const,
+      requiresTargetedDandruffCapability: false,
+    },
+  }
+  const supportiveCandidate: Stage3ShampooFacts = {
+    productId: "supportive-shampoo",
+    displayName: "Nur teilweise passendes Shampoo",
+    category: "shampoo",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: [result.snapshot.profile.hair.thickness],
+    knownReaction: false,
+    protocols: [{ role, status: "verified_complete", fingerprint: "protocol-supportive" }],
+    presentationImageUrl: "https://example.com/supportive-shampoo.webp",
+    factFingerprint: "facts-supportive-shampoo",
+    spec: {
+      thickness: result.snapshot.profile.hair.thickness,
+      shampooBucket: "normal",
+      scalpRoute: "balanced",
+      cleansingIntensity: "gentle",
+      targetFit: "matched",
+    },
+  }
+
+  const response = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot: {
+      ...result.snapshot,
+      decisions: [decision],
+      renderedOrder: ["shampoo"],
+    },
+    loadCandidates: async () => [supportiveCandidate],
+  })
+
+  assert.deepEqual(response.previews, [])
+})
+
 test("evaluates the recommended Oil itself instead of rejecting the uncovered-slot verdict", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,

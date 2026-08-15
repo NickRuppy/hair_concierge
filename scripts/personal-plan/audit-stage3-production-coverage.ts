@@ -247,7 +247,6 @@ async function observeTarget(
     coverage: [],
     productFacts,
     recommendationCandidates: candidates,
-    candidateCatalogComplete: true,
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
   } as Stage3AuthorityInput

@@ -340,6 +340,7 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         })
         if (repairRequirements) loaded.requirements = repairRequirements
         const usesReviewBundles =
+          loaded.draft.status === "active" &&
           loaded.draft.pass !== "product_capture" &&
           loaded.draft.pass !== "need_revision_review" &&
           Boolean(gateway.reviewDecisionBundles)
@@ -349,7 +350,8 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
             : await gateway.reviewDecisionBundles({ draftId: loaded.draft.draftId })
         const authorityEvaluations = usesReviewBundles
           ? reviewBundles.map((bundle) => bundle.authorityEvaluation)
-          : loaded.draft.pass === "product_capture" ||
+          : loaded.draft.status !== "active" ||
+              loaded.draft.pass === "product_capture" ||
               loaded.draft.pass === "need_revision_review" ||
               !gateway.evaluateDecisions
             ? []

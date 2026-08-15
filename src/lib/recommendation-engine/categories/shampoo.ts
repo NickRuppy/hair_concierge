@@ -1,6 +1,7 @@
 import {
   deriveScalpTypeBucket,
   deriveShampooBucket,
+  shampooCleansingIntensity,
   type ShampooBucket,
 } from "@/lib/shampoo/constants"
 import type {
@@ -35,26 +36,6 @@ function mapBucketToScalpRoute(
       return "dandruff"
     case "irritationen":
       return "irritated"
-    default:
-      return null
-  }
-}
-
-function deriveCleansingIntensity(
-  shampooBucket: ShampooBucket | null,
-): ShampooCategoryDecision["targetProfile"] extends infer T
-  ? T extends { cleansingIntensity: infer C }
-    ? C
-    : never
-  : never {
-  switch (shampooBucket) {
-    case "trocken":
-    case "irritationen":
-      return "gentle"
-    case "schuppen":
-    case "normal":
-    case "dehydriert-fettig":
-      return "regular"
     default:
       return null
   }
@@ -100,7 +81,7 @@ export function buildShampooCategoryDecision(
       shampooBucket,
       secondaryBucket:
         profile.scalpCondition === "dandruff" ? deriveScalpTypeBucket(profile.scalpType) : null,
-      cleansingIntensity: deriveCleansingIntensity(shampooBucket),
+      cleansingIntensity: shampooCleansingIntensity(shampooBucket),
     },
     notes,
   }

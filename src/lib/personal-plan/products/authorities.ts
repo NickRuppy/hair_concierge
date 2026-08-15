@@ -17,7 +17,7 @@ const single = "single_product_per_role" as const
 export const CATEGORY_ROLE_POLICIES = {
   shampoo: {
     category: "shampoo",
-    authorityVersion: "personal-plan.shampoo.v3",
+    authorityVersion: "personal-plan.shampoo.v4",
     allowsMultiple: true,
     allowedRoles: ["shampoo_everyday", "shampoo_dandruff"],
     roleMultiplicity: { shampoo_everyday: single, shampoo_dandruff: single },

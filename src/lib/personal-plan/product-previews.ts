@@ -60,7 +60,6 @@ export async function computeStage1ProductExamplePreviews(input: {
           hairThickness: input.snapshot.profile.hair.thickness,
           productFacts: null,
           recommendationCandidates: candidates as never,
-          candidateCatalogComplete: true,
           heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
         }
         const evaluation = evaluateStage3Authority(authorityInput)
@@ -76,10 +75,7 @@ export async function computeStage1ProductExamplePreviews(input: {
           ...authorityInput,
           productFacts: selected as never,
         })
-        if (
-          selectedEvaluation.status !== "known" ||
-          (selectedEvaluation.verdict !== "ideal" && selectedEvaluation.verdict !== "supportive")
-        ) {
+        if (selectedEvaluation.status !== "known" || selectedEvaluation.verdict !== "ideal") {
           return null
         }
         return {

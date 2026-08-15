@@ -564,6 +564,79 @@ test("Stage 3 GET exposes the authoritative refined requirements", async () => {
   assert.deepEqual(body.authorityEvaluations, [])
 })
 
+test("Stage 3 GET returns the server-refreshed Shampoo v4 continuation", async () => {
+  const refreshedDraft = {
+    ...draft,
+    pass: "product_decisions" as const,
+    categoryCursor: null,
+    authorityVersions: { shampoo: "personal-plan.shampoo.v4" },
+  }
+  let reviewCalls = 0
+  const url = `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => ({
+          status: "active",
+          draft: refreshedDraft,
+          requirements: [{ ...requirements[0]!, authorityVersion: "personal-plan.shampoo.v4" }],
+        }),
+        reviewDecisionBundles: async () => {
+          reviewCalls += 1
+          return []
+        },
+      }),
+    }),
+  ).GET(new Request(url))
+  const body = await response!.json()
+
+  assert.equal(response!.status, 200)
+  assert.equal(body.draft.authorityVersions.shampoo, "personal-plan.shampoo.v4")
+  assert.equal(reviewCalls, 1)
+})
+
+test("Stage 3 GET keeps a completed Shampoo v3 draft immutable without re-evaluation", async () => {
+  const completedDraft = {
+    ...draft,
+    status: "completed" as const,
+    pass: "ready_for_routine" as const,
+    categoryCursor: null,
+    authorityVersions: { shampoo: "personal-plan.shampoo.v3" },
+  }
+  let reviewCalls = 0
+  let evaluationCalls = 0
+  const url = `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => ({
+          status: "completed",
+          draft: completedDraft,
+          requirements,
+        }),
+        reviewDecisionBundles: async () => {
+          reviewCalls += 1
+          throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+        },
+        evaluateDecisions: async () => {
+          evaluationCalls += 1
+          throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+        },
+      }),
+    }),
+  ).GET(new Request(url))
+  const body = await response!.json()
+
+  assert.equal(response!.status, 200)
+  assert.equal(body.draft.status, "completed")
+  assert.equal(body.draft.authorityVersions.shampoo, "personal-plan.shampoo.v3")
+  assert.deepEqual(body.authorityEvaluations, [])
+  assert.equal(reviewCalls, 0)
+  assert.equal(evaluationCalls, 0)
+})
+
 test("Stage 3 GET can create a server-owned Routine authority repair draft before bootstrap", async () => {
   const repairRoutineVersionId = "44444444-4444-4444-8444-444444444444"
   const repairRequirements = [

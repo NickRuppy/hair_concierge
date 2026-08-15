@@ -138,6 +138,8 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
   }
   const requiredBucket = expectedShampooBucket({ role: input.role, target })
   if (requiredBucket === null) missing.push("shampoo_bucket_target")
+  const expectedTarget = expectedShampooSpecTarget({ role: input.role, target })
+  if (expectedTarget === null) missing.push("shampoo_spec_target")
   if (facts.spec.targetFit === "unknown") missing.push("shampoo.target_fit")
   if (facts.spec.targetFit === "known_mismatch" && missing.length === 0) {
     return {
@@ -173,10 +175,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
       ],
     }
   }
-  const expectedScalpRoute =
-    input.candidateCatalogComplete === true
-      ? expectedShampooSpecTarget({ role: input.role, target })?.scalpRoute
-      : target.scalpRoute
+  const expectedScalpRoute = expectedTarget?.scalpRoute
   if (!expectedScalpRoute || facts.spec.scalpRoute !== expectedScalpRoute) {
     return {
       verdict: "mismatch" as const,
@@ -190,32 +189,24 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
       ],
     }
   }
-  const expectedCleansingIntensity =
-    input.candidateCatalogComplete === true
-      ? expectedShampooSpecTarget({ role: input.role, target })?.cleansingIntensity
-      : null
-  if (expectedCleansingIntensity && facts.spec.cleansingIntensity !== expectedCleansingIntensity) {
-    return {
-      verdict: "supportive" as const,
-      criteria: [
-        criterion(
-          "shampoo.fit",
-          "Shampoo-Passung",
-          "caution",
-          "Rolle und Kopfhautroute passen, die Reinigungsintensität liegt aber außerhalb des Ziels.",
-        ),
-      ],
-    }
-  }
-
+  const expectedCleansingIntensity = expectedTarget?.cleansingIntensity
+  const cleansingIntensityDiffers = facts.spec.cleansingIntensity !== expectedCleansingIntensity
   return {
-    verdict: "ideal" as const,
+    verdict: cleansingIntensityDiffers ? ("supportive" as const) : ("ideal" as const),
     criteria: [
       criterion(
-        "shampoo.fit",
-        "Shampoo-Passung",
+        input.role === "shampoo_dandruff" ? "shampoo.fit" : "shampoo.role",
+        input.role === "shampoo_dandruff" ? "Shampoo-Passung" : "Reinigungsaufgabe",
         "pass",
-        "Rolle, Kopfhautroute und Protokoll sind bestätigt.",
+        "Das Produkt deckt die bestätigte Shampoo-Aufgabe ab.",
+      ),
+      criterion(
+        "shampoo.cleansing_intensity",
+        "Reinigungsintensität",
+        cleansingIntensityDiffers ? "caution" : "pass",
+        cleansingIntensityDiffers
+          ? "Die Reinigungsintensität weicht vom bestätigten Ziel ab."
+          : "Die Reinigungsintensität entspricht dem bestätigten Ziel.",
       ),
     ],
   }
@@ -229,12 +220,11 @@ export const evaluateShampooAuthority: Stage3CategoryAuthorityAdapter<"shampoo">
     return unsupportedEvaluation(input as never, "shampoo_target_unavailable")
   if (!input.productFacts) {
     if (input.capturedProductId) return unknownEvaluation(input as never, ["catalog_product_facts"])
-    const candidate = input.recommendationCandidates.find((item) => {
-      if (!item.recommendable) return false
-      const result = evaluateFacts(input, item)
-      return result.verdict === "ideal"
-    })
-    if (!candidate)
+    const selected = input.recommendationCandidates
+      .filter((item) => item.recommendable)
+      .map((item) => ({ item, result: evaluateFacts(input, item) }))
+      .find(({ result }) => result.verdict === "ideal")
+    if (!selected)
       return knownEvaluation(input as never, {
         verdict: "unknown",
         criteria: [],
@@ -244,19 +234,12 @@ export const evaluateShampooAuthority: Stage3CategoryAuthorityAdapter<"shampoo">
         recommendationFactFingerprint: null,
       })
     return knownEvaluation(input as never, {
-      verdict: "ideal",
-      criteria: [
-        criterion(
-          "shampoo.recommendation",
-          "Empfehlung",
-          "pass",
-          "Eine passende aktive Empfehlung ist verifiziert.",
-        ),
-      ],
+      verdict: selected.result.verdict,
+      criteria: selected.result.criteria,
       allowedActions: ["plan_recommendation", "leave_uncovered"],
-      recommendation: recommendationForShampoo(candidate, input),
+      recommendation: recommendationForShampoo(selected.item, input),
       productFactFingerprint: null,
-      recommendationFactFingerprint: candidate.factFingerprint,
+      recommendationFactFingerprint: selected.item.factFingerprint,
     })
   }
 
@@ -267,9 +250,11 @@ export const evaluateShampooAuthority: Stage3CategoryAuthorityAdapter<"shampoo">
     verdict: result.verdict,
     criteria: result.criteria,
     allowedActions:
-      result.verdict === "ideal"
-        ? ["keep_owned"]
-        : ["keep_owned", "acknowledge_override", "leave_uncovered"],
+      result.verdict === "mismatch"
+        ? ["acknowledge_override", "leave_uncovered"]
+        : result.verdict === "supportive"
+          ? ["keep_owned", "leave_uncovered"]
+          : ["keep_owned"],
     recommendation: null,
     productFactFingerprint: input.productFacts.factFingerprint,
     recommendationFactFingerprint: null,

@@ -44,7 +44,6 @@ import {
   acknowledgeStage3InventoryDisposition,
 } from "./state-machine"
 import {
-  isPersonalPlanStage3CompleteCatalogEnabled,
   isPersonalPlanStage3InventoryAuthorityV2Enabled,
   isPersonalPlanStage3ThumbnailsEnabled,
 } from "@/lib/personal-plan/release"
@@ -63,7 +62,12 @@ import type {
   Stage3AuthoritySemanticIntent,
 } from "./authority/contracts"
 import { evaluateStage3Authority } from "./authority/evaluate"
-import { requireCurrentAuthoritySnapshot, Stage3AuthoritySnapshotError } from "./authority/snapshot"
+import {
+  authoritySnapshotMayNeedVersionRefresh,
+  authoritySnapshotNeedsVersionRefresh,
+  requireCurrentAuthoritySnapshot,
+  Stage3AuthoritySnapshotError,
+} from "./authority/snapshot"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { expectedShampooBucket, expectedShampooSpecTarget } from "./authority/categories/shampoo"
 import { classifyStage3DesiredState, stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
@@ -91,6 +95,16 @@ export type Stage3ProductionPersistence = {
     personalPlanId: string
     refinedVersionId: string
   }): Promise<{ draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] }>
+  refreshAuthorityDraft?(input: {
+    userId: string
+    draftId: string
+    expectedRevision: number
+    personalPlanId: string
+    refinedVersionId: string
+  }): Promise<
+    | { outcome: "saved" | "completed" | "revision_conflict"; draft: Stage3ProductDraft }
+    | { outcome: "stale_source"; draft: Stage3ProductDraft }
+  >
   save(input: {
     userId: string
     draftId: string
@@ -201,7 +215,6 @@ export type Stage3ProductionGatewayOptions = {
   cadenceAuthorityReader?: RoutineCadenceAuthorityReader
   now?: () => string
   inventoryAuthorityV2Enabled?: boolean
-  completeCatalogEnabled?: boolean
   thumbnailsEnabled?: boolean
 }
 
@@ -242,8 +255,6 @@ export function createProductionStage3ProductsGateway(
   const now = options.now ?? (() => new Date().toISOString())
   const inventoryAuthorityV2Enabled =
     options.inventoryAuthorityV2Enabled ?? isPersonalPlanStage3InventoryAuthorityV2Enabled()
-  const completeCatalogEnabled =
-    options.completeCatalogEnabled ?? isPersonalPlanStage3CompleteCatalogEnabled()
   const thumbnailsEnabled = options.thumbnailsEnabled ?? isPersonalPlanStage3ThumbnailsEnabled()
   let cached: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] } | null = null
 
@@ -252,7 +263,38 @@ export function createProductionStage3ProductsGateway(
     requirements: Stage3CategoryRequirement[]
   }) {
     let loaded = input
-    for (let attempt = 0; attempt < 2; attempt += 1) {
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      if (
+        authoritySnapshotMayNeedVersionRefresh(loaded.draft) &&
+        options.persistence.refreshAuthorityDraft
+      ) {
+        const refinedSnapshot = await options.persistence.loadRefinedNeedSnapshot({
+          userId: options.userId,
+          personalPlanId: loaded.draft.personalPlanId,
+          refinedVersionId: loaded.draft.refinedVersionId,
+        })
+        const currentAuthority = buildStage3EntryContext(refinedSnapshot, {
+          personalPlanId: loaded.draft.personalPlanId,
+          refinedVersionId: loaded.draft.refinedVersionId,
+        }).authoritySnapshot
+        if (!authoritySnapshotNeedsVersionRefresh(loaded.draft, currentAuthority)) {
+          return loaded
+        }
+        const refreshed = await options.persistence.refreshAuthorityDraft({
+          userId: options.userId,
+          draftId: loaded.draft.draftId,
+          expectedRevision: loaded.draft.revision,
+          personalPlanId: loaded.draft.personalPlanId,
+          refinedVersionId: loaded.draft.refinedVersionId,
+        })
+        if (refreshed.outcome === "stale_source") {
+          cached = null
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        }
+        loaded = { ...loaded, draft: refreshed.draft }
+        if (refreshed.outcome === "completed") return loaded
+        continue
+      }
       const baseRefinedSnapshot = shouldLoadBaseRefinedSnapshotForCursorRepair(loaded.draft)
         ? await options.persistence.loadRefinedNeedSnapshot({
             userId: options.userId,
@@ -319,7 +361,7 @@ export function createProductionStage3ProductsGateway(
       personalPlanId: draft.personalPlanId,
       refinedVersionId: draft.refinedVersionId,
     })
-    cached = { draft, requirements }
+    cached = await repairLoadedDraft({ draft, requirements })
     return cached
   }
 
@@ -662,10 +704,9 @@ export function createProductionStage3ProductsGateway(
                     {
                       thickness: context.hairThickness,
                       shampooBucket,
-                      scalpRoute: completeCatalogEnabled
-                        ? (expectedShampooSpecTarget({ role, target })?.scalpRoute ??
-                          target.scalpRoute)
-                        : target.scalpRoute,
+                      scalpRoute:
+                        expectedShampooSpecTarget({ role, target })?.scalpRoute ??
+                        target.scalpRoute,
                     },
                   ]
                 : []
@@ -953,6 +994,7 @@ export function createProductionStage3ProductsGateway(
     },
     async evaluateDecisions(input) {
       const loaded = await current(input.draftId)
+      if (loaded.draft.status !== "active") return []
       const context = await loadEvaluationContext(loaded.draft)
       return Promise.all(
         authorityDecisionSubjects(loaded.draft).map((subject) =>
@@ -962,6 +1004,7 @@ export function createProductionStage3ProductsGateway(
     },
     async reviewDecisionBundles(input) {
       const loaded = await current(input.draftId)
+      if (loaded.draft.status !== "active") return []
       const context = await loadEvaluationContext(loaded.draft)
       const reviews = await Promise.all(
         authorityDecisionSubjects(loaded.draft).map((subject) =>
