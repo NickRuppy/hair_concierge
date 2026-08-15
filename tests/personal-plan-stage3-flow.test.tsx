@@ -536,6 +536,27 @@ async function renderSettled(harness: ClientStateHarness): Promise<ReactElement 
   return harness.render()
 }
 
+/** Re-renders until the expectation holds, so real client timers cannot flake on slow runners. */
+async function renderUntil(
+  harness: ClientStateHarness,
+  matches: (tree: ReactElement | null) => boolean,
+  description: string,
+  timeoutMs = 10_000,
+): Promise<ReactElement | null> {
+  const deadline = Date.now() + timeoutMs
+  for (;;) {
+    const tree = await renderSettled(harness)
+    if (matches(tree)) return tree
+    if (Date.now() >= deadline) assert.fail(`timed out waiting for ${description}`)
+    await new Promise<void>((resolve) => setTimeout(resolve, 100))
+  }
+}
+
+function systemStateTitle(tree: ReactElement | null): string | undefined {
+  return findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+    .title
+}
+
 async function captureCatalogProduct(
   harness: ClientStateHarness,
   categoryLabel: string,
@@ -1534,9 +1555,11 @@ test("an unconfirmed inventory acknowledgement auto-reconciles from its durable 
   assert.equal(typeof pending?.intent.createdAt, "number")
 
   // The durable entry is reconciled in place, without a remount and without a manual action.
-  await new Promise((resolve) => setTimeout(resolve, 2_300))
-  const reconciled = await renderSettled(harness)
-  assert.equal(acknowledgementCalls, 2)
+  const reconciled = await renderUntil(
+    harness,
+    () => acknowledgementCalls === 2,
+    "the in-place acknowledgement resend",
+  )
   assert.equal(
     readPendingStage3Recovery(storage, {
       ownerId: draft.userId,
@@ -4223,21 +4246,26 @@ test("a finalization timeout auto-reconciles and reaches the handoff", async () 
 
   await submitFinalKeepOwnedDecision(harness)
 
-  await new Promise((resolve) => setTimeout(resolve, 50))
-  let tree = await harness.render()
-  const checking = findByType<React.ComponentProps<typeof Stage3SystemState>>(
-    tree,
-    Stage3SystemState,
+  let tree = await renderUntil(
+    harness,
+    (candidate) => systemStateTitle(candidate) === "Speicherstatus wird geprüft.",
+    "the transient recovery check",
   )
-  assert.equal(checking?.props.state, "loading")
-  assert.equal(checking?.props.title, "Speicherstatus wird geprüft.")
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .state,
+    "loading",
+  )
   assert.equal(
     findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.label,
     "Speicherstatus wird geprüft",
   )
 
-  await new Promise((resolve) => setTimeout(resolve, 2_300))
-  tree = await renderSettled(harness)
+  tree = await renderUntil(
+    harness,
+    (candidate) => findByType(candidate, PersonalPlanChapterTransition) !== null,
+    "the Routine chapter handoff",
+  )
   assert.equal(
     findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
       tree,
@@ -4250,6 +4278,97 @@ test("a finalization timeout auto-reconciles and reaches the handoff", async () 
   assert.ok(completeCalls <= 1, "the recovery must not complete the draft twice")
 
   stalledBatch.resolve()
+})
+
+test("a completion timeout without decisions never starts a second completion", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "dry_shampoo",
+      requiredRoles: [],
+      needSummary: "Aktuell verwendetes Trockenshampoo erfassen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.dry_shampoo.authorityVersion,
+    },
+  ]
+  const draft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-completion-timeout-race",
+      userId: "user-completion-timeout-race",
+      personalPlanId: "plan-completion-timeout-race",
+      refinedVersionId: "refined-completion-timeout-race",
+      requirements,
+      now: "2026-08-14T00:00:00.000Z",
+    }),
+    // No captured products and no required roles: the draft carries zero decision subjects,
+    // so the flow completes it from the no-decision effect instead of a user action.
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [],
+  }
+  // The server commits the completion the client never hears about.
+  const committedDraft: Stage3ProductDraft = { ...draft, status: "completed", revision: 1 }
+  const stalledCompletion = deferred<void>()
+  let completeCalls = 0
+  let receiptCalls = 0
+  let latestDraft = draft
+  const gateway = {
+    ...createAuthorityTestGateway(),
+    loadOrCreate: async () => ({
+      status: "active" as const,
+      draft: latestDraft,
+      requirements,
+      authorityEvaluations: [],
+      fitComparisons: [],
+    }),
+    complete: async () => {
+      completeCalls += 1
+      latestDraft = committedDraft
+      await stalledCompletion.promise
+      return { status: "not_ready" as const, draft: committedDraft }
+    },
+    loadCompletionReceipt: async () => {
+      receiptCalls += 1
+      // A slow receipt keeps the reconcile window open across several renders.
+      await new Promise<void>((resolve) => setTimeout(resolve, 200))
+      throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    },
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext: {
+        schemaVersion: 1,
+        personalPlanId: draft.personalPlanId,
+        refinedVersionId: draft.refinedVersionId,
+        orderedCategories: requirements,
+        inventoryPrompts: [
+          { category: "dry_shampoo", allowsMultiple: true, allowsExplicitNone: true },
+        ],
+      },
+      gateway,
+      searchDebounceMs: 0,
+      finalizationTimeoutMs: 5,
+    }),
+  )
+
+  await renderSettled(harness)
+  assert.equal(completeCalls, 1, "the no-decision draft completes exactly once on entry")
+
+  await renderUntil(harness, () => receiptCalls > 0, "the canonical completion receipt lookup")
+  const tree = await renderUntil(
+    harness,
+    (candidate) => systemStateTitle(candidate) === "Speicherstatus noch offen.",
+    "the manual recovery screen",
+  )
+  assert.equal(
+    completeCalls,
+    1,
+    "the canonical reload during recovery must not re-trigger the no-decision completion",
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.label,
+    "Speicherstatus offen",
+  )
+
+  stalledCompletion.resolve()
 })
 
 test("the manual screen appears only when the reconcile also fails", async () => {
@@ -4286,8 +4405,11 @@ test("the manual screen appears only when the reconcile also fails", async () =>
 
   await submitFinalKeepOwnedDecision(harness)
 
-  await new Promise((resolve) => setTimeout(resolve, 2_300))
-  const tree = await renderSettled(harness)
+  const tree = await renderUntil(
+    harness,
+    (candidate) => systemStateTitle(candidate) === "Speicherstatus noch offen.",
+    "the manual recovery screen",
+  )
   const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
     tree,
     Stage3SystemState,

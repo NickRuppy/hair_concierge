@@ -677,6 +677,9 @@ export function Stage3ProductsFlow({
       authorityStatus !== "ready" ||
       allDecisionSubjects.length !== 0 ||
       decisionSubjects.length !== 0 ||
+      // A running recovery installs the canonical draft, which would otherwise look like a fresh
+      // no-decision state and start a second completion next to the one being reconciled.
+      pendingRecoveryMode ||
       completionInFlight.current
     ) {
       return
@@ -684,7 +687,14 @@ export function Stage3ProductsFlow({
     void completeFlow(draft)
     // Completion is keyed to the authoritative no-decision state; completeFlow owns deduplication.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allDecisionSubjects.length, authorityStatus, decisionSubjects.length, draft, phase])
+  }, [
+    allDecisionSubjects.length,
+    authorityStatus,
+    decisionSubjects.length,
+    draft,
+    pendingRecoveryMode,
+    phase,
+  ])
 
   useEffect(() => {
     if (
@@ -735,13 +745,15 @@ export function Stage3ProductsFlow({
       totalSteps={requirements.length + 3}
       saveState={{
         status: shellSaveStatus,
+        // Only recovery and system states name themselves; every capture label stays the
+        // status copy so the narrow header slot keeps its one-line badge.
         label: pendingRecoveryMode
           ? pendingRecoveryMode === "manual"
             ? "Speicherstatus offen"
             : "Speicherstatus wird geprüft"
           : systemIssue
             ? "Nicht gespeichert"
-            : categoryCapture.saveLabel,
+            : "",
       }}
       onBack={pendingRecoveryMode ? undefined : onBack}
       contentEntrance={stageEntrance}
