@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import {
+  PersonalPlanChapterTransition,
   PersonalPlanJourneyHeader,
   PersonalPlanViewTransition,
   type PersonalPlanTransitionDirection,
@@ -664,39 +665,12 @@ function InvitationShell({
   onSecondaryExit?: () => void
 }) {
   return (
-    <div className="min-h-dvh bg-[var(--background)]">
-      <PersonalPlanJourneyHeader currentStage={2} onBack={onSecondaryExit} />
-      <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
-        <section className="rounded-[22px] border border-[rgba(var(--brand-plum-rgb),0.14)] bg-gradient-to-br from-[#f3edf8] to-[#fff8f3] px-5 py-7 text-center">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            Dein Idealplan steht
-          </p>
-          <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
-            Jetzt machen wir ihn zu deinem.
-          </h1>
-          <p className="mx-auto mt-3 max-w-[360px] text-sm leading-6 text-[var(--text-sub,#6a6560)]">
-            Ein kurzer Fragenfluss klärt, was du heute benutzt und wie du dein Haar behandelst.
-            Danach geht es direkt zur Produkterfassung.
-          </p>
-        </section>
-        <p className="mt-4 rounded-xl bg-[#f5f2ee] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub,#6a6560)]">
-          <span className="font-bold text-[#4f8058]">✓</span> Dein erster Idealplan bleibt
-          gespeichert. Danach führen wir dich direkt zu deinen konkreten Produkten.
-        </p>
-        <div className="mt-6 flex gap-2">
-          <button
-            type="button"
-            onClick={onSecondaryExit}
-            className="min-h-[52px] rounded-xl px-3 text-sm font-bold text-[var(--brand-plum)] hover:bg-[var(--brand-plum-ice)]"
-          >
-            Zum Idealplan
-          </button>
-          <Button type="button" onClick={onBegin} variant="funnelCta" className="flex-1">
-            Feinschliff starten&nbsp; →
-          </Button>
-        </div>
-      </main>
-    </div>
+    <PersonalPlanChapterTransition
+      currentStage={2}
+      onAction={onBegin}
+      onBack={onSecondaryExit}
+      backLabel="Zum Idealplan"
+    />
   )
 }
 

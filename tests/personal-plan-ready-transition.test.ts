@@ -76,6 +76,10 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
     new URL("../src/app/plan-bereit/readiness.ts", import.meta.url),
     "utf8",
   )
+  const journeyContent = readFileSync(
+    new URL("../src/components/personal-plan-journey/journey-content.ts", import.meta.url),
+    "utf8",
+  )
 
   assert.match(route, /\{ status: "transient_error" \}/)
   assert.match(route, /status: 500/)
@@ -86,14 +90,17 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(client, /takePersonalPlanReadyPollRequest/)
   assert.match(client, /\/plan-bereit\/status\?lead=/)
   assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
-  assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Idealplan ansehen/)
+  assert.match(
+    client,
+    /<PersonalPlanChapterTransition[\s\S]*currentStage=\{1\}[\s\S]*actionHref=\{nextHref\}/,
+  )
   assert.match(client, /missingHairLength\.question/)
   assert.match(readiness, /Wie lang sind deine Haare aktuell/)
   assert.match(client, /method: "PATCH"/)
   assert.doesNotMatch(client, /storyComplete && readiness === "ready"/)
   assert.doesNotMatch(client, /data-personal-plan-ready-preview/)
-  assert.match(client, /Wir haben deinen Idealplan erstellt\./)
-  assert.match(client, /wirklich zu deinem/)
+  assert.match(journeyContent, /Wir haben deinen Idealplan erstellt\./)
+  assert.match(journeyContent, /wirklich zu deinem/)
   assert.match(client, /Wir bereiten deinen Haarplan vor\./)
   assert.match(client, /Haarplan wird geprüft/)
   assert.match(client, /<noscript>/)

@@ -68,7 +68,8 @@ test("renders the German invitation and neutral bridge hierarchy without result 
     <RefinementBridge refinedVersionId="fixture-refined-stage2-v1-r9" nextHref="/plan-start" />,
   )
 
-  assert.match(bridgeHtml, /Jetzt schauen wir uns deine Produkte an\./)
+  assert.match(bridgeHtml, /Jetzt gleichen wir deine Produkte ab\./)
+  assert.match(bridgeHtml, /data-personal-plan-chapter="3"/)
   assert.match(bridgeHtml, /Produkte erfassen/)
   assert.match(bridgeHtml, /fixture-refined-stage2-v1-r9/)
   assert.match(bridgeHtml, /data-stage2-next-href="\/plan-start"/)

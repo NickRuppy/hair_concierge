@@ -226,7 +226,8 @@ test("automatic Stage 3 bootstrap keeps the meaningful Feinschliff bridge visibl
     />,
   )
 
-  assert.match(html, /Jetzt schauen wir uns deine Produkte an\./)
+  assert.match(html, /Jetzt gleichen wir deine Produkte ab\./)
+  assert.match(html, /data-personal-plan-chapter="3"/)
   assert.match(html, /Produkte erfassen/)
   assert.doesNotMatch(html, /Wir laden deinen Stand\./)
 })

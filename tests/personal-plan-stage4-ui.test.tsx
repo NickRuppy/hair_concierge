@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import React, { type ReactElement, type ReactNode } from "react"
 
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -10,6 +11,22 @@ import type {
   RoutinePayloadV1,
 } from "../src/lib/personal-plan/routine/contracts"
 import type { PortfolioPresentation } from "../src/lib/personal-plan/routine/portfolio-presentation"
+
+function findElement(
+  node: ReactNode,
+  predicate: (element: ReactElement<Record<string, unknown>>) => boolean,
+): ReactElement<Record<string, unknown>> | null {
+  if (!React.isValidElement(node)) return null
+  const element = node as ReactElement<Record<string, unknown>>
+  if (predicate(element)) return element
+  for (const child of React.Children.toArray(
+    (element.props as { children?: ReactNode }).children,
+  )) {
+    const match = findElement(child, predicate)
+    if (match) return match
+  }
+  return null
+}
 
 const item = (overrides: Record<string, unknown> = {}) => ({
   itemKey: "item:shampoo:shampoo_everyday:owned",
@@ -165,6 +182,60 @@ test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 
     renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
     /Anwendung ansehen/,
   )
+})
+
+test("the eligible Anwendung action opens the local chapter before route navigation", () => {
+  const routine = payload([item()])
+  const view: PersonalPlanRoutineView = {
+    status: "active",
+    personalPlanId: routine.planId,
+    planRevision: 1,
+    sourceRevision: 1,
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+  }
+  let opened = 0
+  const tree = RoutinePage({
+    view,
+    stage5Reachable: true,
+    onOpenApplication: () => {
+      opened += 1
+    },
+  })
+  const applicationLink = findElement(tree, (element) => element.props.href === "/anwendung")
+  assert.ok(applicationLink)
+  let prevented = false
+  const onClick = applicationLink.props.onClick as
+    | ((event: {
+        button: number
+        metaKey: boolean
+        ctrlKey: boolean
+        shiftKey: boolean
+        altKey: boolean
+        preventDefault: () => void
+      }) => void)
+    | undefined
+  onClick?.({
+    button: 0,
+    metaKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    altKey: false,
+    preventDefault: () => (prevented = true),
+  })
+
+  assert.equal(prevented, true)
+  assert.equal(opened, 1)
+
+  onClick?.({
+    button: 0,
+    metaKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    altKey: false,
+    preventDefault: () => assert.fail("modified clicks must preserve native link navigation"),
+  })
+  assert.equal(opened, 1)
 })
 
 test("uses presentation-only catalog image and name facts outside the Routine payload", () => {

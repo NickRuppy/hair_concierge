@@ -1,8 +1,6 @@
 "use client"
 
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
-import { Button } from "@/components/ui/button"
-import { Icon } from "@/components/ui/icon"
+import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey"
 
 export function RefinementBridge({
   refinedVersionId,
@@ -20,59 +18,16 @@ export function RefinementBridge({
   continueError?: string
 }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-[var(--background,#fdfbf9)] text-[var(--text-main,#3a3835)]">
-      <PersonalPlanJourneyHeader currentStage={3} sticky={false} />
-      <main
-        className="mx-auto flex w-full max-w-[540px] flex-1 flex-col justify-center px-5 py-8"
-        data-refined-version-id={refinedVersionId}
-      >
-        <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-          Nächster Schritt · Produkte erfassen
-        </p>
-        <div className="rounded-[22px] border border-[rgba(var(--brand-plum-rgb),0.14)] bg-gradient-to-br from-[#f3edf8] to-[#fff8f3] px-5 py-7 text-center shadow-[0_14px_40px_-34px_rgba(42,24,69,0.65)]">
-          <span className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-[18px] bg-white text-[var(--brand-plum)] shadow-[0_9px_24px_rgba(59,38,80,0.1)]">
-            <Icon name="arrow-right" size={24} />
-          </span>
-          <h1 className="font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
-            Jetzt schauen wir uns deine Produkte an.
-          </h1>
-          <p className="mx-auto mt-3 max-w-[360px] text-sm leading-6 text-[var(--text-sub,#6a6560)]">
-            Deine Antworten sind gespeichert. Ab hier beginnt die konkrete Produkterfassung ohne
-            weiteren Frageblock.
-          </p>
-        </div>
-        <p className="mt-4 rounded-xl bg-[#f5f2ee] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub,#6a6560)]">
-          <span className="font-bold text-[#4f8058]">✓</span> Deine Antworten sind gespeichert. Die
-          Produkterfassung kann mit diesem Stand beginnen.
-        </p>
-        <div className="mt-6 flex gap-2">
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              className="min-h-[52px] rounded-xl px-3 text-sm font-bold text-[var(--brand-plum)] transition hover:bg-[var(--brand-plum-ice)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]"
-            >
-              Zur letzten Frage
-            </button>
-          ) : null}
-          <Button
-            type="button"
-            data-stage2-next-href={nextHref}
-            onClick={onContinue}
-            disabled={isContinuing}
-            aria-busy={isContinuing}
-            variant="funnelCta"
-            className="flex-1"
-          >
-            {isContinuing ? "Produkte werden vorbereitet …" : "Produkte erfassen →"}
-          </Button>
-        </div>
-        {continueError ? (
-          <p role="alert" className="mt-3 text-sm text-[#a3434b]">
-            {continueError}
-          </p>
-        ) : null}
-      </main>
+    <div data-refined-version-id={refinedVersionId} data-stage2-next-href={nextHref}>
+      <PersonalPlanChapterTransition
+        currentStage={3}
+        onAction={onContinue}
+        actionPending={isContinuing}
+        actionPendingLabel="Produkte werden vorbereitet …"
+        onBack={onBack}
+        backLabel="Zur letzten Frage"
+        errorMessage={continueError}
+      />
     </div>
   )
 }

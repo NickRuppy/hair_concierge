@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 
+import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey"
 import {
   BottomSheet,
   BottomSheetContent,
@@ -35,7 +36,7 @@ import { RoutineProductDetail } from "./routine-product-detail"
 import { RoutineProposalSheet, type RoutineProposalSheetDeltaEntry } from "./routine-proposal-sheet"
 
 type RoutineViewResponse = PersonalPlanRoutineView | { status: "no_personal_plan" }
-type Mode = "overview" | "editor"
+type Mode = "overview" | "editor" | "application_transition"
 
 function readError(response: Response, fallback: string) {
   return response
@@ -210,8 +211,12 @@ export function PersonalPlanRoutineClient({
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const openApplication = React.useCallback(() => {
-    markPersonalPlanStageNavigation("/anwendung")
+    setMode("application_transition")
   }, [])
+  const enterApplication = React.useCallback(() => {
+    markPersonalPlanStageNavigation("/anwendung")
+    router.push("/anwendung")
+  }, [router])
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
   const [detail, setDetail] = React.useState<RoutineProductDetailData | null>(null)
   const [detailOpen, setDetailOpen] = React.useState(false)
@@ -504,6 +509,17 @@ export function PersonalPlanRoutineClient({
     },
     [reload],
   )
+
+  if (mode === "application_transition") {
+    return (
+      <PersonalPlanChapterTransition
+        currentStage={5}
+        onAction={enterApplication}
+        onBack={() => setMode("overview")}
+        backLabel="Zur Routine"
+      />
+    )
+  }
 
   if (mode === "editor" && seed) {
     return (

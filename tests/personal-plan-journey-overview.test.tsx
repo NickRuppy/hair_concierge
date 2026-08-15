@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import {
   PERSONAL_PLAN_JOURNEY_STAGES,
+  PersonalPlanChapterTransition,
   PersonalPlanJourneyHeader,
   PersonalPlanJourneyOverview,
 } from "../src/components/personal-plan-journey"
@@ -30,4 +31,33 @@ test("journey overview and progress header share the approved five-stage vocabul
   assert.match(overview, /Für schönes, gesundes Haar\./)
   assert.doesNotMatch(overview, /<a|<button/)
   assert.doesNotMatch(header, /Bedarf|Verfeinerung/)
+})
+
+test("journey overview distinguishes completed, current, and future chapters", () => {
+  const overview = renderToStaticMarkup(
+    React.createElement(PersonalPlanJourneyOverview, { currentStage: 4 }),
+  )
+
+  assert.equal((overview.match(/data-stage-state="complete"/g) ?? []).length, 3)
+  assert.equal((overview.match(/data-stage-state="current"/g) ?? []).length, 1)
+  assert.equal((overview.match(/data-stage-state="future"/g) ?? []).length, 1)
+  assert.match(overview, /aria-current="step"/)
+  assert.equal((overview.match(/>✓</g) ?? []).length, 3)
+})
+
+test("shared chapter transition renders the approved stage-specific copy and one primary action", () => {
+  const chapter = renderToStaticMarkup(
+    React.createElement(PersonalPlanChapterTransition, {
+      currentStage: 5,
+      onAction: () => {},
+    }),
+  )
+
+  assert.match(chapter, /Deine Routine steht\./)
+  assert.match(chapter, /Jetzt zeigen wir dir, wie du alles richtig anwendest\./)
+  assert.match(chapter, /Anwendung ansehen/)
+  assert.equal((chapter.match(/<button/g) ?? []).length, 1)
+  assert.match(chapter, /data-personal-plan-chapter="5"/)
+  assert.match(chapter, /h-dvh/)
+  assert.match(chapter, /max-height:519px[^\"]*overflow-y-auto/)
 })

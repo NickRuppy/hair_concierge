@@ -154,6 +154,14 @@ test.describe("Personal Plan products lab", () => {
 
     await expect(page.getByRole("button", { name: "Plan fertigstellen" })).toHaveCount(0)
 
+    const routineChapter = page.locator('[data-personal-plan-chapter="4"]')
+    await expect(routineChapter).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Deine Produktauswahl steht." })).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(
+      await page.evaluate(() => window.innerHeight),
+    )
+    await page.getByRole("button", { name: "Routine ansehen" }).click()
+
     await page.waitForURL((url) => url.pathname !== labPath)
     await expect(page).not.toHaveURL(new RegExp(`${labPath}$`))
   })
@@ -231,6 +239,9 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: "Dieses Produkt einplanen" }).click()
 
     await expect(page.getByRole("button", { name: "Plan fertigstellen" })).toHaveCount(0)
+
+    await expect(page.locator('[data-personal-plan-chapter="4"]')).toBeVisible()
+    await page.getByRole("button", { name: "Routine ansehen" }).click()
 
     await page.waitForURL(
       (url) => url.pathname === "/auth" && url.searchParams.get("next") === "/routine",

@@ -1,12 +1,11 @@
 "use client"
 
-import Link from "next/link"
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import {
+  PersonalPlanChapterTransition,
   PersonalPlanJourneyHeader,
-  PersonalPlanJourneyOverview,
 } from "@/components/personal-plan-journey"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { HairLength } from "@/lib/vocabulary/hair-length"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
@@ -82,7 +81,6 @@ export function PersonalPlanReadyClient({
   const [retryAction, setRetryAction] = useState<PlanBereitInitialAction | null>(null)
   const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
   const [isSavingFact, setIsSavingFact] = useState(false)
-  const actionDockRef = useRef<HTMLElement>(null)
 
   const currentLeadId = readiness.leadId ?? leadId
   const missingHairLength =
@@ -200,69 +198,13 @@ export function PersonalPlanReadyClient({
   const showMissingFact = readiness.status === "missing_source_facts" && missingHairLength !== null
   const showSupport = readiness.status === "invalid_source" || readiness.status === "forbidden"
 
-  useEffect(() => {
-    const dock = actionDockRef.current
-    if (!canContinue || !dock) return
-
-    const rootStyle = document.documentElement.style
-    const previous = {
-      priority: rootStyle.getPropertyPriority("--landing-sticky-cta-offset"),
-      value: rootStyle.getPropertyValue("--landing-sticky-cta-offset"),
-    }
-    let ownedOffset = ""
-    const updateOffset = () => {
-      ownedOffset = `${Math.ceil(dock.getBoundingClientRect().height)}px`
-      rootStyle.setProperty("--landing-sticky-cta-offset", ownedOffset)
-    }
-    updateOffset()
-    const observer = new ResizeObserver(updateOffset)
-    observer.observe(dock)
-
-    return () => {
-      observer.disconnect()
-      if (rootStyle.getPropertyValue("--landing-sticky-cta-offset") !== ownedOffset) return
-      if (previous.value) {
-        rootStyle.setProperty("--landing-sticky-cta-offset", previous.value, previous.priority)
-      } else {
-        rootStyle.removeProperty("--landing-sticky-cta-offset")
-      }
-    }
-  }, [canContinue])
-
   if (canContinue) {
     return (
-      <div className="min-h-dvh bg-[var(--background)] text-[var(--foreground)]">
-        <PersonalPlanJourneyHeader currentStage={1} sticky />
-        <main className="personal-plan-cookie-clearance mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[430px] flex-col px-3 pb-24 pt-2 sm:max-w-[560px] sm:px-5">
-          <section className="flex min-h-0 flex-1 flex-col">
-            <div className="px-2 pb-2 pt-1 text-center">
-              <h1 className="text-balance font-header text-[22px] leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[26px]">
-                Wir haben deinen Idealplan erstellt.
-              </h1>
-              <p className="mx-auto mt-1.5 max-w-[38ch] text-[11px] leading-[1.35] text-[var(--text-sub)] sm:text-[13px]">
-                Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem.
-              </p>
-            </div>
-
-            <PersonalPlanJourneyOverview />
-          </section>
-        </main>
-
-        <footer
-          ref={actionDockRef}
-          className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-2.5 backdrop-blur"
-        >
-          <div className="mx-auto max-w-[430px] sm:max-w-[560px]">
-            <Link
-              href={nextHref}
-              onClick={() => markPersonalPlanStageNavigation("/plan-start")}
-              className={cn(buttonVariants({ variant: "funnelCta", size: null }))}
-            >
-              Idealplan ansehen
-            </Link>
-          </div>
-        </footer>
-      </div>
+      <PersonalPlanChapterTransition
+        currentStage={1}
+        actionHref={nextHref}
+        onAction={() => markPersonalPlanStageNavigation("/plan-start")}
+      />
     )
   }
 
