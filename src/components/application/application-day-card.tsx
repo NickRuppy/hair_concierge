@@ -111,7 +111,11 @@ function shelfStatusSummary(day: ApplicationDayView) {
 
   return day.shelf
     .map((slot) => {
-      if (slot.kind === "open") return `${slot.categoryLabelDe}: Produkt noch offen`
+      // A demoted confirmed product is unavailable, not an open decision.
+      if (slot.kind === "open")
+        return slot.reason === "catalog_unavailable"
+          ? `${slot.categoryLabelDe}: Produkt gerade nicht verfügbar`
+          : `${slot.categoryLabelDe}: Produkt noch offen`
       const status = slot.status === "provisional" ? "vorläufig" : "bestätigt"
       return `${CATEGORY_LABELS_DE[slot.category] ?? slot.category}: ${slot.productName} (${status})`
     })

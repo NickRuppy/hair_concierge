@@ -203,6 +203,9 @@ test("names a demoted catalog product as temporarily unavailable, not as an open
       : undefined,
     "catalog_unavailable",
   )
+  const overviewHtml = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.match(overviewHtml, /Regal: Shampoo: Produkt gerade nicht verfügbar/)
+  assert.doesNotMatch(overviewHtml, /Produkt noch offen/)
   const detailHtml = renderToStaticMarkup(
     createElement(ApplicationPage, { view: { ...view, selectedDayType: "wash_day" } }),
   )
@@ -481,6 +484,7 @@ test("counts open placeholders toward the five-slot shelf row cap", () => {
           kind: "open" as const,
           category,
           categoryLabelDe: category,
+          reason: "no_product_chosen" as const,
         })),
       },
     ],

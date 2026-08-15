@@ -66,7 +66,12 @@ export type ApplicationShelfSlotView =
       category: PersonalPlanCategory
       status: "confirmed" | "provisional"
     }
-  | { kind: "open"; category: PersonalPlanCategory; categoryLabelDe: string }
+  | {
+      kind: "open"
+      category: PersonalPlanCategory
+      categoryLabelDe: string
+      reason: "no_product_chosen" | "catalog_unavailable"
+    }
 
 export type ApplicationRecoveryKind =
   | "feature_disabled"
