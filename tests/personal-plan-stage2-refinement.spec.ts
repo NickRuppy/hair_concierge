@@ -8,7 +8,7 @@ async function openLab(page: Page, scenario: string) {
 
 async function begin(page: Page, scenario = "ready") {
   await openLab(page, scenario)
-  await page.getByRole("button", { name: /Verfeinerung starten/ }).click()
+  await page.getByRole("button", { name: /Feinschliff starten/ }).click()
   await expect(page.getByRole("heading", { level: 2 })).toBeFocused()
 }
 

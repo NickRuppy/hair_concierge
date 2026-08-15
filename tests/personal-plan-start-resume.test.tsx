@@ -208,19 +208,16 @@ test("a server-validated Routine repair request re-enters Stage 3 from a later f
   }
   const repairRoutineVersionId = "44444444-4444-4444-8444-444444444444"
 
-  assert.deepEqual(
-    await resolvePlanStartPageState(deps, { repairRoutineVersionId }),
-    {
-      state: "production",
-      initialJourney: {
-        stage: "stage3",
-        refinedVersionId: "refined-1",
-        repairRoutineVersionId,
-      },
-      personalPlanId: "plan-1",
-      initialRefinementSession: refinementSession("complete", "refined-1"),
+  assert.deepEqual(await resolvePlanStartPageState(deps, { repairRoutineVersionId }), {
+    state: "production",
+    initialJourney: {
+      stage: "stage3",
+      refinedVersionId: "refined-1",
+      repairRoutineVersionId,
     },
-  )
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
 })
 
 test("completed refinement remains at the Stage 2 bridge until Stage 3 authority is ready", async () => {
@@ -353,9 +350,9 @@ test("the production gate bypasses Stage 1 for a valid server-selected Stage 2 r
     />,
   )
 
-  assert.match(html, /Wir laden deine Verfeinerung\./)
+  assert.match(html, /Wir laden deinen Feinschliff\./)
   assert.match(html, /Du machst bei der ersten offenen Frage weiter\./)
-  assert.doesNotMatch(html, /Dein Bedarfsplan entsteht/)
+  assert.doesNotMatch(html, /Dein Idealplan entsteht/)
 })
 
 test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstrap authority", async () => {

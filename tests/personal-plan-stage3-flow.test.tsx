@@ -1218,7 +1218,7 @@ test("material inventory authority opens a Bedarfsplan checkpoint before product
   assert.match(checkpointHtml, /Deine Produkte verändern einen Punkt/)
   assert.match(checkpointHtml, /Tiefenreinigung/)
   assert.match(checkpointHtml, /Ergänzung übernehmen/)
-  assert.match(checkpointHtml, /Bedarfsplan beibehalten/)
+  assert.match(checkpointHtml, /Idealplan beibehalten/)
 
   checkpoint.props.onAccept()
   tree = await renderSettled(harness)

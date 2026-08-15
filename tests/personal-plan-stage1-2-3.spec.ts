@@ -19,7 +19,7 @@ async function chooseNoneAndContinue(page: Page) {
 }
 
 async function completeRefinement(page: Page) {
-  await page.getByRole("button", { name: /Verfeinerung starten/ }).click()
+  await page.getByRole("button", { name: /Feinschliff starten/ }).click()
   await chooseAndContinue(page, "Shampoo")
   await chooseAndContinue(page, "2x/Woche")
   await chooseAndContinue(page, "Leicht empfindlich oder juckend")

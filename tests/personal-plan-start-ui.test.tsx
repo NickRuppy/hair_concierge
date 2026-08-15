@@ -308,7 +308,7 @@ test("renders loading and retry states without questions or legacy destinations"
   const loading = renderToStaticMarkup(<PlanStartLoading />)
   const retry = renderToStaticMarkup(<PlanStartRetryableError />)
 
-  assert.match(loading, /Dein Bedarfsplan entsteht/)
+  assert.match(loading, /Dein Idealplan entsteht/)
   assert.match(retry, /Dein Plan lädt gerade nicht/)
   assert.match(retry, /Erneut versuchen/)
   assert.doesNotMatch(`${loading}${retry}`, /Quiz starten|href="\/chat"|href="\/routine"/)

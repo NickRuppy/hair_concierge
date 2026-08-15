@@ -3,10 +3,8 @@
 import { ArrowLeft } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { PERSONAL_PLAN_JOURNEY_STAGES, type PersonalPlanJourneyStage } from "./journey-content"
 
-const JOURNEY_STAGES = ["Bedarf", "Verfeinerung", "Produkte", "Routine", "Anwendung"] as const
-
-export type PersonalPlanJourneyStage = 1 | 2 | 3 | 4 | 5
 export type PersonalPlanSaveStatus = "idle" | "local" | "saving" | "saved" | "error"
 
 const SAVE_COPY: Record<PersonalPlanSaveStatus, string> = {
@@ -78,12 +76,11 @@ export function PersonalPlanJourneyHeader({
           aria-valuenow={currentStage}
         >
           <ol className="mt-1 grid grid-cols-5 gap-1" aria-label="Stufen im Personal Plan">
-            {JOURNEY_STAGES.map((label, index) => {
-              const stage = (index + 1) as PersonalPlanJourneyStage
+            {PERSONAL_PLAN_JOURNEY_STAGES.map(({ stage, headerLabel }) => {
               const complete = stage < currentStage
               const current = stage === currentStage
               return (
-                <li key={label} aria-current={current ? "step" : undefined} className="min-w-0">
+                <li key={stage} aria-current={current ? "step" : undefined} className="min-w-0">
                   <span
                     className={cn(
                       "block h-1.5 rounded-full",
@@ -104,7 +101,7 @@ export function PersonalPlanJourneyHeader({
                           : "text-[var(--text-caption)]",
                     )}
                   >
-                    {label}
+                    {headerLabel}
                   </span>
                 </li>
               )
@@ -115,3 +112,5 @@ export function PersonalPlanJourneyHeader({
     </header>
   )
 }
+
+export type { PersonalPlanJourneyStage } from "./journey-content"

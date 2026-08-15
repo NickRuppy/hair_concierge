@@ -785,7 +785,7 @@ export function PlanStartFlow(
         <link key={imageUrl} rel="preload" as="image" href={imageUrl} />
       ))}
       <div className="min-h-dvh bg-[var(--background)]">
-        <PlanStartHeader stageLabel="Bedarfsplan" />
+        <PlanStartHeader stageLabel="Idealplan" />
         <PersonalPlanStageEntrance destination="/plan-start">
           <PersonalPlanViewTransition viewKey={step} direction={direction} variant="depth">
             {content}
@@ -801,13 +801,13 @@ export function PlanStartLoading() {
     <StateShell
       stageLabel="Dein Plan"
       overline="Dein persönlicher Plan"
-      title="Dein Bedarfsplan entsteht"
+      title="Dein Idealplan entsteht"
       lead="Wir bereiten die Empfehlungen aus deiner Haaranalyse vor."
       icon={<Loader2 className="h-7 w-7 animate-spin" aria-hidden="true" />}
       dataState="loading"
     >
       <div className="mx-auto mt-4 w-full max-w-[270px]">
-        <Progress value={50} label="Bedarfsplan wird vorbereitet" />
+        <Progress value={50} label="Idealplan wird vorbereitet" />
       </div>
     </StateShell>
   )
@@ -824,7 +824,7 @@ export function PlanStartRetryableError({ onRetry }: { onRetry?: () => void }) {
       dataState="retryable_error"
     >
       <p className="mx-auto mt-4 max-w-[270px] text-center text-sm leading-relaxed text-[#625d58]">
-        Wir konnten deinen Bedarfsplan nicht abrufen. Versuche es gleich noch einmal.
+        Wir konnten deinen Idealplan nicht abrufen. Versuche es gleich noch einmal.
       </p>
       <div className="mx-auto mt-5 flex w-full max-w-[280px] flex-col gap-1.5">
         <button
