@@ -4,6 +4,7 @@ import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
+import { PersonalPlanChapterTransition } from "../src/components/personal-plan-journey"
 import {
   IntakeFallbackBoundary,
   ProductCaptureScreen,
@@ -2414,7 +2415,7 @@ test("uncertain decision save confirms canonical state before showing manual rec
   assert.doesNotMatch(textContent(tree), /Speichern fehlgeschlagen|Speicherstatus noch offen/)
 })
 
-test("completed canonical recovery opens Routine from receipt without replaying completion", async () => {
+test("completed canonical recovery shows the Routine chapter without replaying completion", async () => {
   let completeCalls = 0
   let receiptCalls = 0
   const gateway = createAuthorityTestGateway()
@@ -2466,6 +2467,13 @@ test("completed canonical recovery opens Routine from receipt without replaying 
 
   assert.equal(completeCalls, 1)
   assert.equal(receiptCalls, 1)
+  assert.equal(handoffs.length, 0)
+  const chapter = findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
+    tree,
+    PersonalPlanChapterTransition,
+  )
+  assert.equal(chapter?.props.currentStage, 4)
+  chapter?.props.onAction?.()
   assert.equal(handoffs.length, 1)
   assert.doesNotMatch(textContent(tree), /Speichern fehlgeschlagen|Speicherstatus noch offen/)
 })
@@ -3776,7 +3784,6 @@ test("waiting for analysis advances a pending product without framing it as excl
         entryContext,
         gateway,
         searchDebounceMs: 0,
-        handoffRecoveryDelayMs: 0,
         onOpenRoutine: (handoff) => handoffs.push(handoff),
       }),
     )
@@ -3814,14 +3821,14 @@ test("waiting for analysis advances a pending product without framing it as excl
       null,
       `${actionKind} should advance past the final pending decision`,
     )
-    assert.equal(handoffs.length, 1)
-    const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    assert.equal(handoffs.length, 0)
+    const chapter = findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
       tree,
-      Stage3SystemState,
+      PersonalPlanChapterTransition,
     )
-    assert.equal(recovery?.props.actionLabel, "Routine öffnen")
-    recovery?.props.onAction?.()
-    assert.equal(handoffs.length, 2, "the delayed recovery retries the direct handoff")
+    assert.equal(chapter?.props.currentStage, 4)
+    chapter?.props.onAction?.()
+    assert.equal(handoffs.length, 1, "the chapter action opens the validated Routine handoff")
     assert.deepEqual(
       intents.map((intent) => intent.action),
       ["keep_pending"],
@@ -4560,7 +4567,7 @@ test("Back from a later review edits the previous local decision without reopeni
   )
 })
 
-test("multiple individual reviews progress to one direct Routine handoff", async () => {
+test("multiple individual reviews progress to one intentional Routine chapter handoff", async () => {
   const events: string[] = []
   const analytics = {
     track(eventName: string) {
@@ -4613,10 +4620,18 @@ test("multiple individual reviews progress to one direct Routine handoff", async
   }
   await waitForReviewedChoicesToSubmit(harness)
   await new Promise((resolve) => setImmediate(resolve))
-  await renderSettled(harness)
+  const completedTree = await renderSettled(harness)
 
-  assert.equal(handoffs.length, 1)
+  assert.equal(handoffs.length, 0)
   assert.ok(events.includes("personal_plan_stage3_review_completed"))
+  assert.ok(!events.includes("personal_plan_stage3_routine_opened"))
+  const chapter = findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
+    completedTree,
+    PersonalPlanChapterTransition,
+  )
+  assert.equal(chapter?.props.currentStage, 4)
+  chapter?.props.onAction?.()
+  assert.equal(handoffs.length, 1)
   assert.ok(events.includes("personal_plan_stage3_routine_opened"))
 })
 

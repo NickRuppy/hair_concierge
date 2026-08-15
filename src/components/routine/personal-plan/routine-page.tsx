@@ -149,7 +149,20 @@ export function RoutinePage({
                   <Link
                     href="/anwendung"
                     prefetch={true}
-                    onClick={onOpenApplication}
+                    onClick={(event) => {
+                      if (!onOpenApplication) return
+                      if (
+                        event.button !== 0 ||
+                        event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey
+                      ) {
+                        return
+                      }
+                      event.preventDefault()
+                      onOpenApplication()
+                    }}
                     className={`${buttonVariants({ variant: "funnelCta", size: "sm" })} min-w-[12rem] flex-1`}
                   >
                     Anwendung ansehen

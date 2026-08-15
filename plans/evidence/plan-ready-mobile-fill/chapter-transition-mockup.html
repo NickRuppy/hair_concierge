@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chaarlie – Fünf Kapitelübergänge</title>
+    <style>
+      :root {
+        --paper: #fdfbf9;
+        --ink: #2a1845;
+        --muted: #756e71;
+        --line: #e8e1dc;
+        --plum: #6b50a0;
+        --plum-soft: #eee5f8;
+        --complete: #f3edf7;
+        --future: #f5f2f3;
+        --goal: #f6efe7;
+        --coral: #d95f6d;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+      body { background: var(--paper); color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+      .page { display: grid; grid-template-rows: 92px minmax(0, 1fr) 84px; width: 100%; height: 100dvh; min-height: 0; }
+      .header { border-bottom: 1px solid var(--line); background: rgba(253, 251, 249, .98); }
+      .brand { display: grid; height: 54px; place-items: center; font: 700 25px/1 Georgia, serif; }
+      .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; padding: 0 16px 7px; }
+      .progress span { overflow: hidden; color: var(--muted); font-size: 8px; font-weight: 700; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+      .progress i { display: block; height: 5px; margin-bottom: 5px; border-radius: 6px; background: var(--line); }
+      .progress .past i { background: #a994be; }
+      .progress .current { color: var(--ink); }
+      .progress .current i { background: var(--plum); }
+      .content { display: flex; min-height: 0; flex-direction: column; padding: 12px 12px 10px; }
+      .hero { flex: none; padding: 0 8px 10px; text-align: center; }
+      .hero h1 { max-width: 23ch; margin: 0 auto; font: 500 24px/1.12 Georgia, serif; text-wrap: balance; }
+      .hero p { max-width: 38ch; margin: 6px auto 0; color: var(--muted); font-size: 12px; line-height: 1.35; text-wrap: balance; }
+      .overview { display: flex; min-height: 0; flex: 1; flex-direction: column; }
+      .journey { position: relative; display: grid; min-height: 0; flex: 1; grid-template-rows: repeat(5, minmax(56px, 1fr)); gap: 6px; padding: 0 4px; list-style: none; margin: 0; }
+      .journey::before { content: ""; position: absolute; top: 34px; bottom: 34px; left: 34px; width: 1px; background: #dcd0e6; }
+      .stage { position: relative; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 10px; align-items: center; min-height: 0; padding: 7px 12px; border: 1px solid transparent; border-radius: 16px; background: var(--future); }
+      .num { z-index: 1; display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #e9e4e8; color: #8c8288; font-size: 12px; font-weight: 800; }
+      .stage strong { display: block; font: 500 17px/1.08 Georgia, serif; }
+      .stage small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.2; }
+      .stage.past { background: var(--complete); }
+      .stage.past .num { background: white; color: var(--plum); font-size: 17px; }
+      .stage.current { border-color: #cbb0e4; background: var(--plum-soft); box-shadow: 0 8px 22px -20px rgba(42, 24, 69, .7); }
+      .stage.current .num { background: var(--plum); color: white; }
+      .goal { display: flex; min-height: 46px; flex: none; align-items: center; justify-content: center; gap: 8px; margin: 8px 4px 0; border-radius: 14px; background: var(--goal); color: #4a304d; font-size: 12px; font-weight: 800; }
+      .goal b { color: var(--plum); font-size: 18px; }
+      .action { padding: 10px 12px 12px; border-top: 1px solid var(--line); background: rgba(253, 251, 249, .98); }
+      .action button { display: grid; width: 100%; min-height: 58px; place-items: center; border: 0; border-radius: 999px; background: var(--coral); color: white; font: 850 17px/1 Inter, system-ui, sans-serif; }
+
+      @media (max-height: 730px) {
+        .page { grid-template-rows: 84px minmax(0, 1fr) 76px; }
+        .brand { height: 48px; font-size: 23px; }
+        .content { padding-top: 8px; padding-bottom: 7px; }
+        .hero { padding-bottom: 7px; }
+        .hero h1 { font-size: 21px; }
+        .hero p { margin-top: 4px; font-size: 10px; }
+        .journey { gap: 4px; grid-template-rows: repeat(5, minmax(52px, 1fr)); }
+        .stage { padding-block: 5px; }
+        .stage strong { font-size: 15px; }
+        .stage small { font-size: 9px; }
+        .goal { min-height: 40px; margin-top: 6px; font-size: 11px; }
+        .action { padding-block: 8px 10px; }
+        .action button { min-height: 50px; font-size: 15px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div class="brand">chaarlie</div>
+        <div class="progress" id="progress"></div>
+      </header>
+      <section class="content">
+        <div class="hero"><h1 id="title"></h1><p id="lead"></p></div>
+        <div class="overview">
+          <ol class="journey" id="journey" aria-label="Dein Weg zum persönlichen Haarplan"></ol>
+          <div class="goal"><b>✦</b> Für schönes, gesundes Haar.</div>
+        </div>
+      </section>
+      <footer class="action"><button id="cta" type="button"></button></footer>
+    </main>
+
+    <script>
+      const stages = [
+        { nav: "Idealplan", title: "Dein Idealplan", description: "Aus deinem Quiz erstellt." },
+        { nav: "Feinschliff", title: "Persönlicher Feinschliff", description: "An deinen Alltag angepasst." },
+        { nav: "Produkte", title: "Dein Produkt-Check", description: "Mit deinen Produkten abgeglichen." },
+        { nav: "Routine", title: "Deine Routine", description: "Konkrete Produkte für deine Ziele." },
+        { nav: "Anwendung", title: "Anwendung", description: "So setzt du alles richtig um." },
+      ];
+
+      const chapters = [
+        { title: "Wir haben deinen Idealplan erstellt.", lead: "Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem.", cta: "Idealplan ansehen" },
+        { title: "Jetzt geben wir deinem Plan den Feinschliff.", lead: "Ein paar kurze Fragen passen ihn an deinen Alltag an.", cta: "Feinschliff starten" },
+        { title: "Jetzt gleichen wir deine Produkte ab.", lead: "So wird aus dem Idealplan deine konkrete Produktauswahl.", cta: "Produkte erfassen" },
+        { title: "Deine Produktauswahl steht.", lead: "Jetzt ordnen wir alles zu deiner persönlichen Routine.", cta: "Routine ansehen" },
+        { title: "Deine Routine steht.", lead: "Jetzt zeigen wir dir, wie du alles richtig anwendest.", cta: "Anwendung ansehen" },
+      ];
+
+      const requestedStage = Number(new URLSearchParams(location.search).get("stage") || "1");
+      const currentStage = Math.min(5, Math.max(1, requestedStage));
+      const chapter = chapters[currentStage - 1];
+
+      document.getElementById("title").textContent = chapter.title;
+      document.getElementById("lead").textContent = chapter.lead;
+      document.getElementById("cta").textContent = chapter.cta;
+      document.getElementById("progress").innerHTML = stages.map((stage, index) => {
+        const number = index + 1;
+        const state = number < currentStage ? "past" : number === currentStage ? "current" : "";
+        return `<span class="${state}"><i></i>${stage.nav}</span>`;
+      }).join("");
+      document.getElementById("journey").innerHTML = stages.map((stage, index) => {
+        const number = index + 1;
+        const state = number < currentStage ? "past" : number === currentStage ? "current" : "";
+        const marker = number < currentStage ? "✓" : String(number).padStart(2, "0");
+        const current = number === currentStage ? ' aria-current="step"' : "";
+        return `<li class="stage ${state}"${current}><b class="num" aria-hidden="true">${marker}</b><div><strong>${stage.title}</strong><small>${stage.description}</small></div></li>`;
+      }).join("");
+    </script>
+  </body>
+</html>

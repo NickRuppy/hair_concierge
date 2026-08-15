@@ -21,12 +21,14 @@ export function PersonalPlanJourneyHeader({
   onBack,
   backLabel = "Zurück",
   sticky = true,
+  centeredBrand = false,
 }: {
   currentStage: PersonalPlanJourneyStage
   saveStatus?: PersonalPlanSaveStatus
   onBack?: () => void
   backLabel?: string
   sticky?: boolean
+  centeredBrand?: boolean
 }) {
   return (
     <header
@@ -37,7 +39,14 @@ export function PersonalPlanJourneyHeader({
       data-personal-plan-stage={currentStage}
     >
       <div className="mx-auto w-full max-w-[720px] px-4 pb-3 pt-2.5 sm:px-6">
-        <div className="grid min-h-10 grid-cols-[44px_minmax(0,1fr)_7rem] items-center gap-2">
+        <div
+          className={cn(
+            "grid min-h-10 items-center gap-2",
+            centeredBrand
+              ? "grid-cols-[44px_minmax(0,1fr)_44px]"
+              : "grid-cols-[44px_minmax(0,1fr)_7rem]",
+          )}
+        >
           {onBack ? (
             <button
               type="button"

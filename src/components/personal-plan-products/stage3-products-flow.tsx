@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 
+import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import {
   allowsMultipleProductsForRole,
@@ -245,7 +246,6 @@ export function updateStage3RoleAssignments(
 
 export function Stage3ProductsFlow({
   searchDebounceMs = 250,
-  handoffRecoveryDelayMs = 4_000,
   finalizationTimeoutMs = 12_000,
   entryContext,
   bootstrap,
@@ -261,7 +261,6 @@ export function Stage3ProductsFlow({
   pendingRecoveryStorage: providedPendingRecoveryStorage,
 }: {
   searchDebounceMs?: number
-  handoffRecoveryDelayMs?: number
   finalizationTimeoutMs?: number
   entryContext?: Stage3EntryContext
   bootstrap?: Stage3Bootstrap
@@ -401,7 +400,6 @@ export function Stage3ProductsFlow({
     Stage3CompleteResponse,
     { status: "ready_for_routine" }
   > | null>(null)
-  const [showHandoffRecovery, setShowHandoffRecovery] = useState(false)
   const [draftReadyForQueueReconciliation, setDraftReadyForQueueReconciliation] = useState(
     Boolean(bootstrap),
   )
@@ -641,15 +639,6 @@ export function Stage3ProductsFlow({
     heading.tabIndex = -1
     heading.focus({ preventScroll: true })
   }, [categoryIndex, displayedReviewDecisionKey, phase])
-
-  useEffect(() => {
-    if (phase !== "handoff" || !completion) {
-      const reset = setTimeout(() => setShowHandoffRecovery(false), 0)
-      return () => clearTimeout(reset)
-    }
-    const timeout = setTimeout(() => setShowHandoffRecovery(true), handoffRecoveryDelayMs)
-    return () => clearTimeout(timeout)
-  }, [completion, handoffRecoveryDelayMs, phase])
 
   useEffect(() => {
     if (phase !== "decisions") return
@@ -1138,22 +1127,18 @@ export function Stage3ProductsFlow({
     )
   }
 
+  if (completion) {
+    return (
+      <PersonalPlanChapterTransition currentStage={4} onAction={() => openRoutine(completion)} />
+    )
+  }
+
   return shell(
-    showHandoffRecovery && completion ? (
-      <Stage3SystemState
-        state="saved"
-        title="Deine Routine ist bereit."
-        message="Falls sie sich nicht automatisch geöffnet hat, kannst du es hier erneut versuchen."
-        actionLabel="Routine öffnen"
-        onAction={() => openRoutine(completion)}
-      />
-    ) : (
-      <Stage3SystemState
-        state="loading"
-        title="Dein Plan wird vorbereitet."
-        message="Wir öffnen danach direkt deine Routine."
-      />
-    ),
+    <Stage3SystemState
+      state="loading"
+      title="Dein Plan wird vorbereitet."
+      message="Wir bereiten danach deine Routine vor."
+    />,
     "Bereit für deine Routine",
   )
 
@@ -1189,7 +1174,7 @@ export function Stage3ProductsFlow({
     }
 
     if (loadedDraft.pass === "ready_for_routine" || loadedDraft.status === "completed") {
-      await completeFlow(loadedDraft)
+      await completeFlow(loadedDraft, { openOnSuccess: true })
       return
     }
 
@@ -2192,7 +2177,6 @@ export function Stage3ProductsFlow({
         operation: "completion",
         outcome: "resend_succeeded",
       })
-      openRoutine(response)
       return
     }
     if (!options.receiptOnly) {
@@ -2227,7 +2211,6 @@ export function Stage3ProductsFlow({
       operation: "completion",
       outcome: "resend_succeeded",
     })
-    openRoutine(response)
   }
 
   async function continueAfterRecoveredIntent(
@@ -2777,7 +2760,10 @@ export function Stage3ProductsFlow({
     else onBackToRefinement?.()
   }
 
-  async function completeFlow(sourceDraft: Stage3ProductDraft) {
+  async function completeFlow(
+    sourceDraft: Stage3ProductDraft,
+    options: { openOnSuccess?: boolean } = {},
+  ) {
     if (completion || completionInFlight.current) return
     completionInFlight.current = true
     try {
@@ -2837,7 +2823,7 @@ export function Stage3ProductsFlow({
       analytics.track("personal_plan_stage3_review_completed", {
         count: deriveStage3DecisionSubjects(response.draft).length,
       })
-      openRoutine(response)
+      if (options.openOnSuccess) openRoutine(response)
     } catch (error) {
       completionInFlight.current = false
       finishDecisionSubmission()

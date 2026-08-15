@@ -5,6 +5,7 @@ export {
 } from "./journey-header"
 export { PERSONAL_PLAN_JOURNEY_STAGES } from "./journey-content"
 export { PersonalPlanJourneyOverview } from "./journey-overview"
+export { PersonalPlanChapterTransition } from "./chapter-transition"
 export {
   PersonalPlanViewTransition,
   usePersonalPlanTransitionLayer,

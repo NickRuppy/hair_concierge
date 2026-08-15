@@ -39,3 +39,43 @@ export const PERSONAL_PLAN_JOURNEY_STAGES = [
     description: "So setzt du alles richtig um.",
   },
 ] as const satisfies readonly PersonalPlanJourneyStageContent[]
+
+export type PersonalPlanChapterContent = {
+  stage: PersonalPlanJourneyStage
+  title: string
+  description: string
+  actionLabel: string
+}
+
+export const PERSONAL_PLAN_CHAPTERS = [
+  {
+    stage: 1,
+    title: "Wir haben deinen Idealplan erstellt.",
+    description: "Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem.",
+    actionLabel: "Idealplan ansehen",
+  },
+  {
+    stage: 2,
+    title: "Jetzt geben wir deinem Plan den Feinschliff.",
+    description: "Ein paar kurze Fragen passen ihn an deinen Alltag an.",
+    actionLabel: "Feinschliff starten",
+  },
+  {
+    stage: 3,
+    title: "Jetzt gleichen wir deine Produkte ab.",
+    description: "So wird aus dem Idealplan deine konkrete Produktauswahl.",
+    actionLabel: "Produkte erfassen",
+  },
+  {
+    stage: 4,
+    title: "Deine Produktauswahl steht.",
+    description: "Jetzt ordnen wir alles zu deiner persönlichen Routine.",
+    actionLabel: "Routine ansehen",
+  },
+  {
+    stage: 5,
+    title: "Deine Routine steht.",
+    description: "Jetzt zeigen wir dir, wie du alles richtig anwendest.",
+    actionLabel: "Anwendung ansehen",
+  },
+] as const satisfies readonly PersonalPlanChapterContent[]
