@@ -132,6 +132,15 @@ export async function resolveAnwendungPage(
       familyTemplates: familyPayloads,
       productPointers: accepted.applicationPointersV2,
     })
+    for (const degraded of accepted.degradedItems) {
+      deps.reportFailure({
+        ...failureContext,
+        durationMs: Date.now() - startedAt,
+        reason: "product_guidance_unresolved",
+        productId: degraded.productId,
+        issueCode: degraded.issue,
+      })
+    }
     const pointerIssues = compiled.pointerIssues
     if (pointerIssues.length > 0) {
       for (const issue of pointerIssues) {
@@ -180,6 +189,8 @@ export async function resolveAnwendungPage(
       ...failureContext,
       durationMs: Date.now() - startedAt,
       reason: failureReason(error),
+      // One of our own stable throw codes, never user or catalog data.
+      failureCode: error instanceof Error ? error.message.slice(0, 64) : "unknown",
     })
     return { state: "unavailable" }
   }

@@ -9,6 +9,17 @@ export function UnresolvedProductBlock({
   step: ApplicationUnresolvedProductStepView
   position: number
 }) {
+  // A demoted confirmed product is not an open product decision, so it must not
+  // read as "noch offen".
+  const catalogUnavailable = step.reason === "catalog_unavailable"
+  const titleDe = catalogUnavailable
+    ? "Produkt gerade nicht verfügbar"
+    : (step.productName ?? "Produkt noch offen")
+  const bodyDe = catalogUnavailable
+    ? "Dein gewähltes Produkt ist im Katalog gerade nicht verfügbar. Deine Routine bleibt gespeichert."
+    : step.productName
+      ? "Die Anwendung für dieses Produkt wird noch geprüft. Sobald die fehlenden Details bestätigt sind, ergänzen wir sie an dieser Stelle."
+      : "Für diese Kategorie fehlen noch ein bestätigtes Produkt und geprüfte Anwendungsdetails."
   return (
     <li className="grid grid-cols-[34px_minmax(0,1fr)] gap-3">
       <span className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm font-semibold text-[var(--text-sub)]">
@@ -21,14 +32,8 @@ export function UnresolvedProductBlock({
           </div>
           <div className="min-w-0">
             <p className="type-caption text-[var(--text-caption)]">{step.categoryLabelDe}</p>
-            <h2 className="type-h3 break-words text-[var(--text-heading)]">
-              {step.productName ?? "Produkt noch offen"}
-            </h2>
-            <p className="type-body-sm mt-1 text-[var(--text-sub)]">
-              {step.productName
-                ? "Die Anwendung für dieses Produkt wird noch geprüft. Sobald die fehlenden Details bestätigt sind, ergänzen wir sie an dieser Stelle."
-                : "Für diese Kategorie fehlen noch ein bestätigtes Produkt und geprüfte Anwendungsdetails."}
-            </p>
+            <h2 className="type-h3 break-words text-[var(--text-heading)]">{titleDe}</h2>
+            <p className="type-body-sm mt-1 text-[var(--text-sub)]">{bodyDe}</p>
           </div>
         </div>
       </article>

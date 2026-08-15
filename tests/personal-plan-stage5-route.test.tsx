@@ -186,6 +186,7 @@ function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungRes
       planId: "plan-1",
       routineItems: [shampooItem],
       unresolvedRoutineItems: [],
+      degradedItems: [],
       exactGuidanceProtocols: [],
       applicationPointersV2: [shampooPointer],
     }),
@@ -357,6 +358,7 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   assert.equal(failures.length, 1)
   assert.equal((failures[0] as { reason: string }).reason, "database")
   assert.equal(typeof (failures[0] as { durationMs: unknown }).durationMs, "number")
+  assert.equal((failures[0] as { failureCode?: string }).failureCode, "database query failed")
 
   const normalizedFailures: unknown[] = []
   const normalizedDatabase = await resolveAnwendungPage(
@@ -371,6 +373,43 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   assert.equal((normalizedFailures[0] as { reason: string }).reason, "database")
 })
 
+test("a degraded catalog product keeps the page ready and reports one per-item warning", async () => {
+  const degradedProductId = "10000000-0000-4000-8000-000000000077"
+  const failures: Array<Record<string, unknown>> = []
+  const base = readyDeps()
+  const view = await resolveAnwendungPage(
+    readyDeps({
+      adaptRoutine: async (options) => ({
+        ...(await base.adaptRoutine(options)),
+        unresolvedRoutineItems: [
+          {
+            itemId: "item:leave-in",
+            category: "leave_in" as const,
+            role: "leave_in" as const,
+            routineOrder: 1,
+            applicationInstanceKey: "assignment:leave-in",
+            reason: "catalog_unavailable" as const,
+          },
+        ],
+        degradedItems: [
+          {
+            productId: degradedProductId,
+            category: "leave_in",
+            issue: "catalog_identity_mismatch" as const,
+          },
+        ],
+      }),
+      reportFailure: (details) => failures.push(details as unknown as Record<string, unknown>),
+    }),
+  )
+
+  assert.equal(view.state, "ready")
+  assert.equal(failures.length, 1, JSON.stringify(failures))
+  assert.equal(failures[0]?.reason, "product_guidance_unresolved")
+  assert.equal(failures[0]?.issueCode, "catalog_identity_mismatch")
+  assert.equal(failures[0]?.productId, degradedProductId)
+})
+
 test("a rendered partial day is usable and does not emit a route failure", async () => {
   const failures: unknown[] = []
   const view = await resolveAnwendungPage(
@@ -380,6 +419,7 @@ test("a rendered partial day is usable and does not emit a route failure", async
         planId: "plan-1",
         routineItems: [{ ...shampooItem, availability: "planned", executable: false }],
         unresolvedRoutineItems: [],
+        degradedItems: [],
         exactGuidanceProtocols: [],
         applicationPointersV2: [shampooPointer],
       }),
@@ -405,6 +445,7 @@ test("V2 route uses one generation for product and family reads and ignores V1 e
           planId: "plan-1",
           routineItems: [{ ...shampooItem, sourceRoutineRole: "shampoo_everyday" }],
           unresolvedRoutineItems: [],
+          degradedItems: [],
           exactGuidanceProtocols: [
             {
               ...shampooProtocol,
@@ -500,6 +541,7 @@ test("route composes a planned Heat item with its canonical family instructions"
           },
         ],
         unresolvedRoutineItems: [],
+        degradedItems: [],
         exactGuidanceProtocols: [],
         applicationPointersV2: [
           {

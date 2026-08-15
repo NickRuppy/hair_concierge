@@ -16,6 +16,8 @@ export type PersonalPlanApplicationFailureDetails = {
   refinedVersionId?: string
   productId?: string
   issueCode?: string
+  /** One of our own stable throw codes, truncated. Never raw error data. */
+  failureCode?: string
 }
 
 type Scope = {
@@ -65,6 +67,7 @@ export function capturePersonalPlanApplicationFailure(
     scope.setLevel(details.reason === "product_guidance_unresolved" ? "warning" : "error")
     scope.setTag("personal_plan.stage", "application")
     scope.setTag("personal_plan.failure_reason", details.reason)
+    scope.setTag("personal_plan.failure_code", details.failureCode ?? "unknown")
     scope.setContext("personal_plan_application", context)
     // Do not forward a caught database/Zod error: either can contain raw data.
     sink.captureException(new Error("personal_plan_application_unavailable"))

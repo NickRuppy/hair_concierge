@@ -43,6 +43,7 @@ test("Stage 5 failure observability only emits operational identifiers and never
   assert.deepEqual(tags, {
     "personal_plan.stage": "application",
     "personal_plan.failure_reason": "missing_protocol",
+    "personal_plan.failure_code": "unknown",
   })
   assert.deepEqual(context, {
     reason: "missing_protocol",
@@ -52,6 +53,30 @@ test("Stage 5 failure observability only emits operational identifiers and never
     refined_version_id: "refined-1",
   })
   assert.equal((captured as Error).message, "personal_plan_application_unavailable")
+})
+
+test("Stage 5 failure observability tags the stable throw code for diagnosability", () => {
+  const tags: Record<string, string> = {}
+  const sink: PersonalPlanApplicationSentrySink = {
+    withScope(callback) {
+      callback({
+        setTag(key, value) {
+          tags[key] = value
+        },
+        setContext() {},
+        setFingerprint() {},
+        setLevel() {},
+      })
+    },
+    captureException() {},
+  }
+
+  capturePersonalPlanApplicationFailure(
+    { reason: "unknown", durationMs: 1, failureCode: "accepted_routine_product_unavailable" },
+    sink,
+  )
+
+  assert.equal(tags["personal_plan.failure_code"], "accepted_routine_product_unavailable")
 })
 
 test("expected post-refinement lifecycle does not open a Sentry issue", () => {
