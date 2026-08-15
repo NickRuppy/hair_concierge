@@ -253,6 +253,7 @@ const reviewedProductSchema = z
     product_line: optionalNullableTrimmedString,
     clean_name: trimmedString,
     category_key: z.enum(PRODUCT_INTAKE_REVIEW_CATEGORY_KEYS),
+    suitable_thicknesses: z.array(z.enum(HAIR_THICKNESSES)).default([]),
     affiliate_link: urlString,
     image_url: urlString.nullable(),
     canonical_image_sha256: z
@@ -416,6 +417,7 @@ const REQUIRED_REVIEWED_PRODUCT_RATIONALES = [
   "product.canonical_brand",
   "product.clean_name",
   "product.category_key",
+  "product.suitable_thicknesses",
   "product.affiliate_link",
   "product.image_url",
   "product.price_eur",

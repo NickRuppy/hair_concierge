@@ -78,6 +78,38 @@ until all four lanes are complete:
 4. Commercial fields have an approval-safe purchase URL and current price, or a
    documented blocker after all preferred sources were searched.
 
+### Two Separate Readiness States
+
+Product Intake must report these states independently:
+
+1. **Catalog intake ready** means the customer's exact product can be approved,
+   linked to that customer, and stored with `origin = user_submitted` and
+   `is_chaarlie_recommended = false`.
+2. **Global recommendation ready** means a separately reviewed promotion may
+   set `is_chaarlie_recommended = true` without creating a blank or unverifiable
+   Personal Plan recommendation.
+
+A product is globally recommendation-ready only when all of the following are
+true:
+
+- `is_active = true` and `lifecycle_status = active`
+- `image_url` is the finalized Chaarlie-hosted asset in the `product-images`
+  bucket, not a retailer URL or an unprocessed candidate
+- every required category table below is present with current, non-placeholder
+  authority facts
+- every required role has an exact, source-backed
+  `product_application_protocols` row that passes the current protocol schema
+- `suitable_thicknesses` contains every verified compatible hair diameter for
+  Shampoo, Conditioner, Mask, Leave-in, Oil, Deep Cleansing Shampoo, and
+  Bondbuilder; it is intentionally empty for Heat Protectant, Dry Shampoo, and
+  Scalp Care because those authorities do not use hair thickness
+- the promotion dry-run passes on the live normalized catalog
+
+Do not block a customer's own catalog link merely because the product is not
+globally recommendation-ready. Keep it non-recommended and report the exact
+missing facts. Never label a package globally recommendation-ready merely
+because the required tables contain at least one row.
+
 ### Identity And Brand Review
 
 Resolve identity before researching properties or images:
@@ -190,7 +222,7 @@ example, heat protection is stored as boolean/integer fields.
 Every final payload must include:
 
 - `final.product`: `canonical_brand`, `product_line`, `clean_name`,
-  `category_key`, `affiliate_link`, `image_url`, `price_eur`, `currency: "EUR"`,
+  `category_key`, `suitable_thicknesses`, `affiliate_link`, `image_url`, `price_eur`, `currency: "EUR"`,
   `purchase_link_status`, `purchase_link_checked_at`, `price_checked_at`
 - `final.identifiers[]` with `type` in `ean`, `gtin`, `barcode`,
   `retailer_sku`, or `retailer_url`
@@ -206,12 +238,36 @@ Supported categories and required spec tables:
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `shampoo`                | `product_shampoo_specs[]`: one or more rows with `thickness` (`fine`, `normal`, `coarse`), `shampoo_bucket` (`schuppen`, `irritationen`, `normal`, `dehydriert-fettig`, `trocken`), `scalp_route` (`oily`, `balanced`, `dry`, `dandruff`, `dry_flakes`, `irritated`), optional `cleansing_intensity` (`gentle`, `regular`, `clarifying`)                                                                                                                       |
 | `conditioner`            | `product_conditioner_specs[]`: `thickness`, `protein_moisture_balance` (`snaps`, `stretches_bounces`, `stretches_stays`); plus `product_conditioner_rerank_specs`: `weight` (`light`, `medium`, `rich`), `repair_level` (`low`, `medium`, `high`), `balance_direction` (`protein`, `moisture`, `balanced`, or `null`), `ingredient_flags`                                                                                                                      |
-| `mask`                   | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags`                                                                                                                                                                                                                                                                                                                 |
+| `mask`                   | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags`, `repair_support_level` (`low`, `medium`, `high`), `functional_benefits` (`smoothing_frizz_control`, `detangling_slip`, `shine`)                                                                                                                                                                                  |
 | `leave_in`               | `product_leave_in_specs`: `format` (`spray`, `milk`, `lotion`, `cream`, `serum`), `weight`, `roles`, `provides_heat_protection`, `heat_protection_max_c`, `heat_activation_required`, `care_benefits`, `ingredient_flags`, `application_stage`; plus `product_leave_in_fit_specs`; plus `product_leave_in_eligibility[]`                                                                                                                                       |
-| `oil`                    | `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags`                                                                                                                                                                                                                                                 |
+| `oil`                    | `product_oil_specs`: `weight` (`light`, `medium`, `rich`) and `role_support` (`pre_wash_fibre_treatment`, `leave_on_fibre_conditioning`, `dry_finish`, `pre_heat_protection`); plus `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags` |
 | `dry_shampoo`            | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`)                                                                                                                                                                     |
 | `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`)                                                                                                                                                       |
 | `bondbuilder`            | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`) |
+| `heat_protectant`        | `product_heat_protectant_specs`: `format` (`spray`), `provides_heat_protection` (`true`, `false`, or `null` only while unresolved)                                                                                                                                                                                                                                                                                                                        |
+| `scalp_care`             | `product_scalp_care_specs`: `primary_role` (`scalp_comfort`, `scalp_flake_oil_adjunct`, `density_claim_tonic`, `scalp_exfoliant`), `presentation_format` (`serum`, `tonic`, `lotion_or_fluid`, `oil`, `scrub`, `other`, `unknown`), `rinse_mode` (`leave_on`, `rinse_off`), exact `application_instructions`                                                                                                                                            |
+
+Every category also requires `product_application_protocols`. The exact roles
+are derived from the stored category facts; the normal minimums are:
+
+| Category | Required role or role rule |
+| --- | --- |
+| Shampoo | `shampoo_everyday`; add `shampoo_dandruff` for the `schuppen` bucket |
+| Conditioner | `conditioner_rinse_out` |
+| Mask | `intensive_conditioning_mask` |
+| Leave-in | `post_wash_leave_in`; add `pre_heat_protection` when heat protection is claimed |
+| Oil | every role declared by `product_oil_specs.role_support` |
+| Dry Shampoo | `root_refresh_bridge` |
+| Deep Cleansing Shampoo | `residue_reset`, `mineral_reset`, or both, according to `reset_focus` |
+| Bondbuilder | `specialized_bond_treatment` |
+| Heat Protectant | `pre_heat_protection` |
+| Scalp Care | exactly the same role as `product_scalp_care_specs.primary_role` |
+
+For Mask in particular, a row containing only the older texture fields is not
+recommendation-ready. It also needs verified thickness eligibility, repair
+support, functional benefits, the exact Mask protocol, and the finalized image.
+For Scalp Care, thickness is not required, but exact role, non-`unknown` format,
+rinse mode, matching verified protocol, and the finalized image are required.
 
 Shared categorical values:
 
@@ -523,12 +579,20 @@ For every product, fill:
 - optional product line
 - clean product name
 - category key
+- verified `suitable_thicknesses` (`fine`, `normal`, `coarse`) for every
+  thickness-sensitive category; use an empty array only for Heat Protectant,
+  Dry Shampoo, and Scalp Care
 - `is_chaarlie_recommended = false` for user-submitted products
 - origin, currently `user_submitted` or `curated`
 - product URL and price when available
 - final image URL only after image finalization
 - category-specific properties and rerank specs
+- exact role-keyed application protocol(s) required by the category matrix
 - source reasoning for every non-obvious property
+
+Before returning a package or queue item, report both `catalog_intake_ready`
+and `global_recommendation_ready`. When the latter is false, list the exact
+missing image, eligibility, authority-fact, or protocol fields.
 
 For category-specific specs, the review app should show:
 

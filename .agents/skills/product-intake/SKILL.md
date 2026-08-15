@@ -42,6 +42,11 @@ is unavailable rather than improvising the workflow.
   Supabase, its final image URL points at the `product-images` bucket, the
   submitted user is linked/notified through the approved handoff path, and the
   review center marks the handoff complete.
+- Keep catalog-intake readiness separate from global-recommendation readiness.
+  A user-submitted product may be linked while remaining
+  `is_chaarlie_recommended = false`; only call it globally recommendation-ready
+  when the runbook's image, category facts, thickness eligibility, exact
+  protocol, lifecycle, and promotion checks all pass.
 - Never run Supabase publish/apply/upload writes unless Nick explicitly approves
   the exact final handoff for that product.
 - Preserve unrelated dirty files. Stage, commit, or patch only files that belong
@@ -97,6 +102,12 @@ Use this checklist before marking a product ready for review:
 - raw image candidate is exact, product-only, front-facing, and renderable
 - processed image passed finalizer and magenta QA
 - category specs include all required tables for the category
+- required category fields are current authority fields, not merely legacy
+  columns or the existence of a table row
+- `suitable_thicknesses` is complete for thickness-sensitive categories
+- every required category role has an exact verified application protocol
+- catalog-intake readiness and global-recommendation readiness are reported
+  separately, with exact missing facts for either state
 - review table values are exact DB payload values
 - field rationales exist for product fields and category spec tables
 - publish preflight passes before final handoff
