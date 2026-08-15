@@ -95,6 +95,8 @@ export function ProductFitComparison({
         }
       : null)
   const allowedActions = new Set(evaluation.allowedActions)
+  const evidenceRows = comparison.evidenceRows ?? []
+  const hasUnexpectedTargetlessEvidence = evidenceRows.some((row) => row.target === null)
   const isUncoveredReview = currentProduct === null
   const selectedRecommendation =
     alternatives.find((candidate) => candidate.productId === selectedRecommendationProductId) ??
@@ -125,15 +127,29 @@ export function ProductFitComparison({
       ? primaryAction
       : quietActions.find((action) => action.kind === "leave_uncovered")
   const hasTruthfulAction =
-    uncoveredRetryIsPrimary || primaryAction !== null || quietActions.length > 0
+    !hasUnexpectedTargetlessEvidence &&
+    (uncoveredRetryIsPrimary || primaryAction !== null || quietActions.length > 0)
   const contextLabel = `${categoryLabel} · ${roleLabel} · Produkt ${reviewPosition} von ${reviewTotal}`
-  const evidenceRows = comparison.evidenceRows ?? []
   const isUnknownFit =
     evaluation.status === "unknown" ||
     (evaluation.status === "known" && evaluation.verdict === "unknown")
   let content: ReactElement
   if (evaluation.status === "unsupported") {
     content = <AnalysisUnavailable disabled={disabled} onRetry={onRetry} onBack={onBack} />
+  } else if (hasUnexpectedTargetlessEvidence) {
+    content = (
+      <UnassessableReview
+        contextLabel={contextLabel}
+        categoryLabel={categoryLabel}
+        currentProduct={currentProduct}
+        alternatives={alternatives}
+        selectedAlternative={selectedAlternative}
+        selectedIndex={selectedIndex}
+        comparison={comparison}
+        disabled={disabled}
+        onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+      />
+    )
   } else if (evaluation.status === "pending") {
     content = (
       <PendingReview
@@ -190,7 +206,6 @@ export function ProductFitComparison({
         evaluation={evaluation}
         evidenceRows={evidenceRows}
         productId={ownedProduct?.productId}
-        candidateCatalogComplete={comparison.candidateCatalogComplete === true}
       />
     )
   } else {
@@ -443,7 +458,6 @@ function FitOnlyReview({
   evaluation,
   evidenceRows,
   productId,
-  candidateCatalogComplete,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -451,7 +465,6 @@ function FitOnlyReview({
   evaluation: Stage3AuthorityEvaluation
   evidenceRows: Stage3FitEvidenceRow[]
   productId?: string
-  candidateCatalogComplete: boolean
 }) {
   const verdict = evaluation.status === "known" ? evaluation.verdict : "unknown"
   const presentation =
@@ -482,19 +495,9 @@ function FitOnlyReview({
         <OwnedEvidenceMatrix rows={evidenceRows} productId={productId} />
       ) : null}
       <p className="mt-3 px-1 text-xs leading-relaxed text-muted-foreground">
-        {candidateCatalogComplete ? (
-          <>
-            <span className="font-semibold text-foreground">Vollständiger Katalog geprüft.</span>{" "}
-            Aktuell erfüllt kein weiteres verifiziertes {categoryLabel || "Produkt"} diese
-            Anforderungen.
-          </>
-        ) : (
-          <>
-            {verdict === "mismatch"
-              ? "Aktuell ist keine verifizierte Alternative verfügbar."
-              : "Aktuell ist keine klar bessere verifizierte Alternative verfügbar."}
-          </>
-        )}
+        <span className="font-semibold text-foreground">Vollständiger Katalog geprüft.</span>{" "}
+        Aktuell erfüllt kein weiteres verifiziertes {categoryLabel || "Produkt"} diese
+        Anforderungen.
       </p>
     </>
   )
@@ -1114,11 +1117,11 @@ function EvidenceMatrix({
                   <td className="break-words px-1 py-3 text-foreground">
                     <span className="flex items-center gap-1.5 text-left">
                       <span className="min-w-0">{current?.valueLabel ?? "–"}</span>
-                      <RelationMark relation={relation} />
+                      <RelationMark relation={relation} pushToEnd />
                     </span>
                   </td>
                   <td className="break-words bg-[var(--brand-plum)]/5 px-1 py-3 text-[var(--brand-plum)]">
-                    {row.target?.valueLabel ?? "kein Ziel"}
+                    {row.target?.valueLabel}
                   </td>
                   <td
                     className={cn(
@@ -1135,7 +1138,7 @@ function EvidenceMatrix({
                   >
                     <span className="flex items-center gap-1.5 text-left">
                       <span className="min-w-0">{alternative?.valueLabel ?? "–"}</span>
-                      <RelationMark relation={alternativeRelation} />
+                      <RelationMark relation={alternativeRelation} pushToEnd />
                     </span>
                   </td>
                 </tr>
@@ -1179,14 +1182,21 @@ function evidenceMatrixKey(
     .join("|")}`
 }
 
-function RelationMark({ relation }: { relation: Stage3FitEvidenceRelation }) {
+function RelationMark({
+  relation,
+  pushToEnd = false,
+}: {
+  relation: Stage3FitEvidenceRelation
+  pushToEnd?: boolean
+}) {
   const presentation = relationPresentation(relation)
   const Icon = presentation.Icon
   return (
     <span
       aria-label={presentation.ariaLabel}
       className={cn(
-        "ml-auto inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+        "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+        pushToEnd && "ml-auto",
         presentation.className,
       )}
     >
@@ -1319,7 +1329,7 @@ function OwnedEvidenceMatrix({
           {rows.map((row) => {
             const value = valueFor(row, productId)
             const relation = value?.relation ?? "unknown"
-            const knownStatus = relation === "in_target" || relation === "outside_target"
+            const showRelationMark = relation !== "unknown" && relation !== "no_target"
             return (
               <tr
                 key={row.rowId}
@@ -1342,11 +1352,11 @@ function OwnedEvidenceMatrix({
                 <td className="break-words px-1 py-3 text-foreground">
                   <span className="grid justify-items-center gap-1">
                     {value?.valueLabel ?? "nicht bestätigt"}
-                    {knownStatus ? <RelationMark relation={relation} /> : null}
+                    {showRelationMark ? <RelationMark relation={relation} /> : null}
                   </span>
                 </td>
                 <td className="break-words bg-[var(--brand-plum)]/5 px-1 py-3 text-[var(--brand-plum)]">
-                  {row.target?.valueLabel ?? "kein Ziel"}
+                  {row.target?.valueLabel}
                 </td>
               </tr>
             )

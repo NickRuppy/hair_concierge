@@ -19,20 +19,15 @@ import {
 import { Stage3AuthoritySnapshotError } from "./authority/snapshot"
 import { effectiveStage3CategoryDecisions } from "./product-load-resolution"
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
-import {
-  isPersonalPlanStage3CompleteCatalogEnabled,
-  isPersonalPlanStage3ThumbnailsEnabled,
-} from "@/lib/personal-plan/release"
+import { isPersonalPlanStage3ThumbnailsEnabled } from "@/lib/personal-plan/release"
 
 type AdminClient = SupabaseClient
 
 /** Server-only adapter for the Stage-3 service primitives. */
 export function createSupabaseStage3ProductionPersistence(
   client: AdminClient,
-  options: { completeCatalogEnabled?: boolean; thumbnailsEnabled?: boolean } = {},
+  options: { thumbnailsEnabled?: boolean } = {},
 ): Stage3ProductionPersistence {
-  const completeCatalogEnabled =
-    options.completeCatalogEnabled ?? isPersonalPlanStage3CompleteCatalogEnabled()
   const thumbnailsEnabled = options.thumbnailsEnabled ?? isPersonalPlanStage3ThumbnailsEnabled()
   const recommendationCandidateCache = new Map<
     string,
@@ -42,7 +37,7 @@ export function createSupabaseStage3ProductionPersistence(
     string,
     ReturnType<typeof loadStage3HeatCarrierCoverage>
   >()
-  async function loadRequirements(input: {
+  async function loadEntryContext(input: {
     userId: string
     personalPlanId: string
     refinedVersionId: string
@@ -62,9 +57,17 @@ export function createSupabaseStage3ProductionPersistence(
     })
   }
 
+  async function loadRequirements(input: {
+    userId: string
+    personalPlanId: string
+    refinedVersionId: string
+  }) {
+    return (await loadEntryContext(input)).orderedCategories
+  }
+
   return {
     async loadOrCreate(input) {
-      const context = await loadRequirements(input)
+      const context = await loadEntryContext(input)
       const seed = createStage3Draft({
         draftId: "pending-sql-assignment",
         userId: input.userId,
@@ -92,6 +95,49 @@ export function createSupabaseStage3ProductionPersistence(
         throw new Error("stage3_draft_create_rejected")
       }
       return { draft: mapStage3Draft(data), requirements: context.orderedCategories }
+    },
+    async refreshAuthorityDraft(input) {
+      const context = await loadEntryContext(input)
+      const seed = createStage3Draft({
+        draftId: input.draftId,
+        userId: input.userId,
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: input.refinedVersionId,
+        requirements: context.orderedCategories,
+        authoritySnapshot: context.authoritySnapshot,
+        now: new Date().toISOString(),
+      })
+      const payload = draftPayload(seed)
+      const cursor = {
+        categoryCursor: seed.categoryCursor,
+        completedCaptureCategories: seed.completedCaptureCategories,
+        completedDecisionKeys: seed.completedDecisionKeys,
+      }
+      const { data, error } = await client.rpc("personal_plan_refresh_product_draft_authority", {
+        p_user_id: input.userId,
+        p_draft_id: input.draftId,
+        p_expected_revision: input.expectedRevision,
+        p_contract_version: context.schemaVersion,
+        p_category_authority_versions: Object.fromEntries(
+          context.orderedCategories.map((item) => [item.category, item.authorityVersion]),
+        ),
+        p_pass: seed.pass,
+        p_cursor: cursor,
+        p_payload: payload,
+      })
+      if (error || !data) throw new Error("stage3_authority_refresh_failed")
+      const outcome = String((data as Record<string, unknown>).outcome)
+      if (outcome === "stale_source") return { outcome, draft: seed } as const
+      if (!["saved", "completed", "revision_conflict"].includes(outcome)) {
+        throw new Error("stage3_authority_refresh_rejected")
+      }
+      return {
+        outcome,
+        draft: mapStage3Draft((data as Record<string, unknown>).draft ?? data),
+      } as
+        | { outcome: "saved"; draft: Stage3ProductDraft }
+        | { outcome: "completed"; draft: Stage3ProductDraft }
+        | { outcome: "revision_conflict"; draft: Stage3ProductDraft }
     },
     async save(input) {
       const { data, error } = await client.rpc("personal_plan_save_product_draft", {
@@ -334,7 +380,7 @@ export function createSupabaseStage3ProductionPersistence(
       }
     },
     async loadRequirements(input) {
-      return (await loadRequirements(input)).orderedCategories
+      return loadRequirements(input)
     },
     async loadCompletedPortfolio(input) {
       const { data, error } = await client
@@ -440,7 +486,6 @@ export function createSupabaseStage3ProductionPersistence(
           subject: input.subject,
           context: input.context,
           categoryDecision,
-          completeCatalog: completeCatalogEnabled,
         })
         recommendationCandidateCache.set(cacheKey, recommendationCandidates)
       }
@@ -468,7 +513,6 @@ export function createSupabaseStage3ProductionPersistence(
         categoryDecision,
         recommendationCandidates: resolvedRecommendationCandidates,
         heatCarrierCoverage: resolvedHeatCarrierCoverage,
-        candidateCatalogComplete: completeCatalogEnabled,
       })
     },
     async loadDraft(input) {

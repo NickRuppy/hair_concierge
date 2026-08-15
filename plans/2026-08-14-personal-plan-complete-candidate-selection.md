@@ -23,7 +23,7 @@ Read-only production evidence gathered on 2026-08-14:
 
 ## Chosen direction
 
-Add a complete-catalog path beside the rollback-only legacy `.limit(STAGE3_AUTHORITY_LEGACY_CANDIDATE_LIMIT)` path, replacing N+1 hydration with a request-scoped, category/context-keyed batched fact snapshot when the existing rollout flag is enabled:
+Make complete-catalog hydration canonical for Stage 3, replacing N+1 hydration with a request-scoped, category/context-keyed batched fact snapshot. Retain the twelve-row loader only as the bounded default for explicit direct-preview callers:
 
 1. Page active recommended product rows for one category to exhaustion with a stable order and exact-count completeness check; no transport page size is a semantic cap.
 2. Batch-load category specs, both protocol sources, and category-specific auxiliary rows in bounded product-ID chunks, then verify every page/chunk is complete before merging it.
@@ -71,7 +71,7 @@ Constraints:
 - displayed target coverage is the primary presentation order even when that means a higher-covered `supportive` candidate appears before a lower-covered `ideal` candidate; the verdict remains visible and its definition is unchanged;
 - transport pagination and bounded `.in(...)` chunks are correctness-preserving only: all pages/chunks finish before authority ranks;
 - tables currently read with `.maybeSingle()` retain fail-closed multiplicity checks after grouping;
-- the complete-catalog hydrator is rollout-gated until production-shaped performance and live coverage evidence pass.
+- the complete-catalog hydrator is the canonical Stage 3 path; bounded direct-preview loading remains a distinct caller-owned boundary.
 
 Non-goals:
 
@@ -84,21 +84,21 @@ Non-goals:
 
 ## Target map
 
-| Surface                                                            | Responsibility                                                                                                                |
-| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| `src/lib/personal-plan/products/authority/catalog-facts.ts`        | Build category facts from complete product and batch snapshots; retain the twelve-row legacy path only for flag-off rollback. |
-| `src/lib/personal-plan/products/authority/catalog-batching.ts`     | Exact-count pagination, bounded set loading, grouping, and multiplicity guards.                                               |
-| `src/lib/personal-plan/products/fit-comparison.ts`                 | Project full-set candidate coverage; exclude zero matches and sort coverage-first before top three.                           |
-| `src/lib/personal-plan/products/fit-comparison-schema.ts`          | Deterministic category/role row schemas shared by ranking and rendering.                                                      |
-| `src/lib/personal-plan/products/stage3-persistence-supabase.ts`    | Request-local promise caches keyed by effective authority context.                                                            |
-| `src/lib/personal-plan/products/production-persistence-gateway.ts` | Preserve fresh revalidation and concurrent-subject correctness.                                                               |
-| `src/components/personal-plan-products/product-fit-comparison.tsx` | Preserve the legitimate-empty hierarchy with the Prüfpunkt, Deins, and Ziel columns while omitting alternative content.       |
-| `tests/personal-plan/products/stage3-persistence-supabase.test.ts` | Limit/set-aware doubles, all-category batching, cache behavior, exact starvation regression, and fingerprint parity.          |
-| `tests/personal-plan/products/stage3-catalog-facts.test.ts`        | Complete and unknown authority tests.                                                                                         |
-| `tests/personal-plan/products/stage3-fit-comparison.test.ts`       | Full-set target-coverage ranking, zero-match exclusion, owned exclusion, and top-three transport across every category/role.  |
-| `tests/personal-plan-product-fit-comparison.test.tsx`              | Exhaustive fallback wording, table structure, recovery, and unchanged normal comparison actions.                              |
-| `scripts/personal-plan/benchmark-stage3-review-readiness.ts`       | Production-shaped batch/query-count benchmark.                                                                                |
-| Stage 3 browser/API tests                                          | Existing desktop/mobile decision journey proof.                                                                               |
+| Surface                                                            | Responsibility                                                                                                               |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `src/lib/personal-plan/products/authority/catalog-facts.ts`        | Build canonical Stage 3 facts from complete product and batch snapshots; retain the bounded direct-preview default.          |
+| `src/lib/personal-plan/products/authority/catalog-batching.ts`     | Exact-count pagination, bounded set loading, grouping, and multiplicity guards.                                              |
+| `src/lib/personal-plan/products/fit-comparison.ts`                 | Project full-set candidate coverage; exclude zero matches and sort coverage-first before top three.                          |
+| `src/lib/personal-plan/products/fit-comparison-schema.ts`          | Deterministic category/role row schemas shared by ranking and rendering.                                                     |
+| `src/lib/personal-plan/products/stage3-persistence-supabase.ts`    | Request-local promise caches keyed by effective authority context.                                                           |
+| `src/lib/personal-plan/products/production-persistence-gateway.ts` | Preserve fresh revalidation and concurrent-subject correctness.                                                              |
+| `src/components/personal-plan-products/product-fit-comparison.tsx` | Preserve the legitimate-empty hierarchy with the Prüfpunkt, Deins, and Ziel columns while omitting alternative content.      |
+| `tests/personal-plan/products/stage3-persistence-supabase.test.ts` | Limit/set-aware doubles, all-category batching, cache behavior, exact starvation regression, and fingerprint parity.         |
+| `tests/personal-plan/products/stage3-catalog-facts.test.ts`        | Complete and unknown authority tests.                                                                                        |
+| `tests/personal-plan/products/stage3-fit-comparison.test.ts`       | Full-set target-coverage ranking, zero-match exclusion, owned exclusion, and top-three transport across every category/role. |
+| `tests/personal-plan-product-fit-comparison.test.tsx`              | Exhaustive fallback wording, table structure, recovery, and unchanged normal comparison actions.                             |
+| `scripts/personal-plan/benchmark-stage3-review-readiness.ts`       | Production-shaped batch/query-count benchmark.                                                                               |
+| Stage 3 browser/API tests                                          | Existing desktop/mobile decision journey proof.                                                                              |
 
 ## Category batch map
 
@@ -142,7 +142,7 @@ Variants:
 
 End-user evidence review: **confirmed by Nick on 2026-08-14** after revising the normal carousel/action controls, removing exceptional-state search, and visually checking the larger product imagery on desktop and mobile.
 
-User-journey sign-off: **confirmed by Nick on 2026-08-14**. The normal state preserves the existing up-to-three one-at-a-time carousel and binds the exact displayed alternative; the rare state preserves the same table without an alternative column or replacement search; the 0.5% alert/rollback threshold remains the activation gate.
+User-journey sign-off: **confirmed by Nick on 2026-08-14**. The normal state preserves the existing up-to-three one-at-a-time carousel and binds the exact displayed alternative; the rare state preserves the same table without an alternative column or replacement search. The historical 0.5% rarity threshold remains an observability signal, not a runtime mode switch.
 
 ## Planning evidence
 
@@ -171,7 +171,7 @@ Consumes: Task 1 red fixtures.
 
 Verify and complete the partially built set-based hydrator already in the worktree; do not recreate it. It must return a product-ID fact map, fetch products in stable exact-counted pages until the reported count is satisfied, and fetch specs, auxiliary rows, and both protocol sources in bounded product-ID chunks. Require the merged page/chunk cardinality to match the exact source result rather than accepting partial data. Preserve multi-row Shampoo/Conditioner/Oil semantics and fingerprints. For Leave-in, Heat Protectant, Mask, Scalp Care, Dry Shampoo, Bondbuilder, Deep Cleansing Shampoo, and Conditioner rerank rows, throw the existing unavailable error when grouping finds more than one row for a product where `.maybeSingle()` previously enforced uniqueness.
 
-Preserve `STAGE3_AUTHORITY_LEGACY_CANDIDATE_LIMIT = 12` and `loadLegacyRecommendationCandidates` solely as the existing feature-flag-off rollback path. The enabled complete path must have no pre-eligibility numeric cap. Retain `STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT = 3` only after evaluation. Preserve the already-independent owned-product loader and assert that behavior rather than rebuilding it.
+Preserve `STAGE3_AUTHORITY_LEGACY_CANDIDATE_LIMIT = 12` and `loadLegacyRecommendationCandidates` solely as the bounded default for direct preview callers. Canonical Stage 3 loading must have no pre-eligibility numeric cap. Retain `STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT = 3` only after evaluation. Preserve the already-independent owned-product loader and assert that behavior rather than rebuilding it.
 
 Complete when the completeness portion of Task 1 is green, exact counts prove there is no silent 1,000-row ceiling, duplicates still fail closed, the exact Shampoo case yields three alternatives after owned exclusion, existing category authority tests remain green, and typecheck is green at the task boundary.
 
@@ -215,11 +215,11 @@ Consumes: Tasks 2–4.
 
 Benchmark complete category counts with headroom, actual per-query latency multiplied by observed query count and returned-row volume, full candidate revalidation CPU, same-context coalescing, different-context separation, payload at or below 64 KiB, and warm p95 at or below 3,000 ms. Do not treat fewer persistence-method calls as a latency improvement. Run a migrated browser/API replay for the exact Shampoo case and a genuine empty case. Before release, perform a privacy-safe read-only production catalog coverage audit for every category/context fixture.
 
-Verify and extend the existing complete-catalog hydrator flag, telemetry, and tests for guarded rollout. Verify both the old and new paths before publication; activation is a separate production decision after the new-path evidence passes. The legacy twelve-row path exists only as the flag-off rollback state, not as the end state.
+Verify canonical complete-catalog hydration, telemetry, and tests before publication. The legacy twelve-row path exists only as the bounded default for direct preview callers, not as a Stage 3 runtime mode.
 
-Treat missing alternatives as a coverage exception, not a routine outcome. Before activation, require zero empty results across the canonical all-category/context coverage matrix; any non-zero fixture blocks release for explicit catalog-gap review. After guarded activation, emit privacy-safe reason-coded telemetry and alert/rollback if legitimate-empty exceeds the agreed rarity threshold (recommended: 0.5% of assessable owned-product reviews).
+Treat missing alternatives as a coverage exception, not a routine outcome. Require zero empty results across the canonical all-category/context coverage matrix before publication; any non-zero fixture blocks release for explicit catalog-gap review. Emit privacy-safe reason-coded telemetry when legitimate-empty exceeds the agreed rarity threshold (recommended: 0.5% of assessable owned-product reviews); recovery is a reviewed code revert and redeploy.
 
-Complete when focused suites, all Personal Plan tests, Stage 3 Chromium, typecheck, lint, flags-off build, migration checks/advisors, and ready-check pass on Node 22.
+Complete when focused suites, all Personal Plan tests, Stage 3 Chromium, typecheck, lint, canonical production build, migration checks/advisors, and ready-check pass on Node 22.
 
 ## Verification
 
@@ -257,12 +257,12 @@ Manual/browser:
 Snapshot reconciled after the 2026-08-14 counterpart review detected task-aligned files changing during its read-only pass. No live writer remained when checked; all unexpected edits are preserved for audit.
 
 - Task 1: **complete** — the set-aware harness proves 505 products across two exact-count pages and six URL-safe fact chunks, multi-page fact sources, all ten category sources, duplicate singleton failure, and exact-count mismatch failure.
-- Task 2: **complete** — the enabled path has no semantic candidate cap, batches category facts and protocols, preserves the independent owned-product loader, and fails closed on incomplete reads. The private twelve-row loader remains rollback-only.
+- Task 2: **complete** — canonical Stage 3 has no semantic candidate cap, batches category facts and protocols, preserves the independent owned-product loader, and fails closed on incomplete reads. The private twelve-row loader remains only for bounded direct-preview callers.
 - Task 2b: **complete** — one category/role schema drives both visible rows and pre-slice coverage; the Conditioner `[2,1,2]` regression is `[2,2,1]`, Leave-in pre-heat always uses the heat target, and 0/N alternatives are excluded across the category/role matrix.
 - Task 3: **complete for the approved request scope** — promise caches coalesce identical category contexts and separate different contexts; heat carrier facts use bounded product/spec/protocol batches. Fresh save/completion revalidation remains request-local through the existing gateway.
 - Task 4: **omitted by design** — the live representative guidance query completed in about 19 ms and the planner did not establish a justified new index; no speculative migration was added.
-- Task 5: **complete** — normal comparisons retain exact keep/replace actions; the rare state preserves `Prüfpunkt | Deins | Ziel`, omits the absent alternative, and distinguishes complete-catalog exhaustion from rollback uncertainty.
-- Task 6: **complete** — 1,519 Personal Plan tests and 16 Chromium journeys pass; the previously failing Tracker drawer check passes after inheriting PR #402; typecheck and the default-off build pass. The eight-review benchmark runs the production Supabase complete-catalog adapter with 20 ms query latency: 45 bounded queries, 232 returned rows, 57,106 response bytes against 65,536 bytes, and 206.31 ms warm p95 against 3,000 ms. HTTP transport omits the redundant raw rail model only after complete evidence rows are built; visible rows, rationales, values, products, and decision fingerprints remain intact.
+- Task 5: **complete** — normal comparisons retain exact keep/replace actions; the rare state preserves `Prüfpunkt | Deins | Ziel`, omits the absent alternative, and distinguishes exhaustive no-match evidence from unavailable authority.
+- Task 6: **complete** — 1,519 Personal Plan tests and 16 Chromium journeys pass; the previously failing Tracker drawer check passes after inheriting PR #402; typecheck and the canonical production build pass. The eight-review benchmark runs the production Supabase complete-catalog adapter with 20 ms query latency: 45 bounded queries, 232 returned rows, 57,106 response bytes against 65,536 bytes, and 206.31 ms warm p95 against 3,000 ms. HTTP transport omits the redundant raw rail model only after complete evidence rows are built; visible rows, rationales, values, products, and decision fingerprints remain intact.
 
 ## Review and handoff
 
@@ -280,6 +280,6 @@ Final review receipt:
 - `npm run test:personal-plan`: 1,519 passed; `npm run test:playwright:personal-plan-stage3`: 16 passed; the exact previously failing Tracker drawer test: 1 passed; `npx tsc --noEmit`: passed; targeted ESLint, Prettier check, `git diff --check`, and default-off production build: passed.
 - Benchmark: the production Supabase complete-catalog adapter exercised the paged products query and all four Conditioner batch sources with 20 ms/query; 45 bounded queries returned 232 rows, warm p95 was 206.31 ms versus 3,000 ms, and the response was 57,106 bytes versus 65,536 bytes. The transport regression test failed with the raw dimension present, then passed after the route projection removed it while preserving evidence rows.
 - Final selected evidence comprises the HTML review artifact plus two rare-state and two normal-comparison desktop/mobile renders. Superseded renders, browser scratch output, manifests, and Claude reports were discarded.
-- Review fingerprint after all code/test fixes and before this receipt-only plan update: `dbf9d3f0b8ccd86ebe9132868785559ba9eb0c2dfa02189428dafb3a9944f95b`. Activation refresh rebased the task onto `origin/main` at `de5d7751`; the final content fingerprint is recorded in the PR receipt.
+- Historical review fingerprint after all code/test fixes and before the receipt-only plan update: `dbf9d3f0b8ccd86ebe9132868785559ba9eb0c2dfa02189428dafb3a9944f95b`. The later canonical Stage 3 release fingerprint is recorded in its owning PR receipt.
 
-Status: recall, coverage-first selection, the reviewed comparison/rare-state UI, and response-payload reduction are complete in draft PR #401. Merge, deployment, full-catalog activation, and the privacy-safe production coverage audit remain the authorized release steps.
+Status refresh, 2026-08-15: recall, coverage-first selection, the reviewed comparison/rare-state UI, and response-payload reduction are historical inputs to canonical Stage 3. This document contains no current publication or runtime-toggle authorization; the active matrix task owns any new handoff.

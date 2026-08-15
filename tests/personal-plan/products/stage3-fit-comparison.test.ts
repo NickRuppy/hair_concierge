@@ -543,7 +543,7 @@ test("pending identity can only compare against verified exact alternatives", ()
   assertNoRawFactsOrPresentationFields(comparison)
 })
 
-test("legacy Shampoo comparison stays targetless while complete mode is disabled", () => {
+test("Shampoo comparison always projects the complete confirmed target matrix", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
     productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
       cleansingIntensity: "regular",
@@ -567,7 +567,7 @@ test("legacy Shampoo comparison stays targetless while complete mode is disabled
     cleansing.stops.map((stop) => stop.stopId),
     ["gentle", "regular", "clarifying"],
   )
-  assert.equal(cleansing.targetPosition, null)
+  assert.deepEqual(cleansing.targetPosition, { kind: "position", stopId: "regular" })
   assert.deepEqual(cleansing.productPositions, [
     { productId: "owned", position: { kind: "position", stopId: "regular" } },
     { productId: "candidate", position: { kind: "position", stopId: "clarifying" } },
@@ -576,7 +576,7 @@ test("legacy Shampoo comparison stays targetless while complete mode is disabled
     (row) => row.rowId === "shampoo.cleansing_intensity",
   )
   assert.ok(cleansingEvidence)
-  assert.equal(cleansingEvidence.target, null)
+  assert.equal(cleansingEvidence.target?.valueLabel, "regulär")
   assert.deepEqual(
     cleansingEvidence.productValues.map(({ productId, valueLabel, relation }) => ({
       productId,
@@ -584,15 +584,14 @@ test("legacy Shampoo comparison stays targetless while complete mode is disabled
       relation,
     })),
     [
-      { productId: "owned", valueLabel: "regulaer", relation: "no_target" },
-      { productId: "candidate", valueLabel: "klaerend", relation: "no_target" },
+      { productId: "owned", valueLabel: "regulär", relation: "in_target" },
+      { productId: "candidate", valueLabel: "klärend", relation: "supportive" },
     ],
   )
 })
 
 test("complete Shampoo comparison projects all three signed targets in catalogue vocabulary", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
-    candidateCatalogComplete: true,
     productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
       cleansingIntensity: "regular",
       shampooBucket: "irritationen",
@@ -632,6 +631,53 @@ test("complete Shampoo comparison projects all three signed targets in catalogue
   )
 })
 
+test("Shampoo cleansing evidence marks a displayed two-step intensity gap outside target", () => {
+  const input = authorityInput("shampoo", "shampoo_everyday", {
+    productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
+      cleansingIntensity: "clarifying",
+      shampooBucket: "irritationen",
+      scalpRoute: "irritated",
+    }),
+    candidates: [],
+  })
+  input.categoryDecision.target = {
+    category: "shampoo",
+    roles: ["shampoo_everyday"],
+    scalpRoute: "balanced",
+    everydayConstraint: "irritation_compatible",
+    requiresTargetedDandruffCapability: false,
+  }
+
+  const cleansing = buildStage3FitComparison(input).evidenceRows?.find(
+    (row) => row.rowId === "shampoo.cleansing_intensity",
+  )
+
+  assert.deepEqual(cleansing?.productValues, [
+    { productId: "owned", valueLabel: "klärend", relation: "outside_target" },
+  ])
+})
+
+test("Shampoo cleansing marker follows the displayed observation instead of the authority spec", () => {
+  const input = authorityInput("shampoo", "shampoo_everyday", {
+    productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
+      cleansingIntensity: "regular",
+      shampooObservations: {
+        cleansingIntensity: "gentle",
+        supportedScalpRoutes: ["balanced"],
+      },
+    }),
+    candidates: [],
+  })
+
+  const cleansing = buildStage3FitComparison(input).evidenceRows?.find(
+    (row) => row.rowId === "shampoo.cleansing_intensity",
+  )
+
+  assert.deepEqual(cleansing?.productValues, [
+    { productId: "owned", valueLabel: "sanft", relation: "supportive" },
+  ])
+})
+
 for (const scenario of [
   {
     name: "Shampoo",
@@ -664,7 +710,6 @@ for (const scenario of [
 ]) {
   test(`complete comparison authorizes a truthful supportive owned ${scenario.name} alternative`, () => {
     const input = authorityInput(scenario.category, scenario.role, {
-      candidateCatalogComplete: true,
       productFacts: factsFor(scenario.category, scenario.role, "owned", {
         recommendable: false,
       }),
@@ -687,7 +732,6 @@ for (const scenario of [
 
   test(`uncovered ${scenario.name} remains strict for the same supportive candidate`, () => {
     const input = authorityInput(scenario.category, scenario.role, {
-      candidateCatalogComplete: true,
       productFacts: null,
       capturedProductId: null,
       subjectIdentity: null,
@@ -697,12 +741,12 @@ for (const scenario of [
     })
 
     assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
+    assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
   })
 }
 
 test("complete comparison excludes a two-step Oil weight gap from supportive alternatives", () => {
   const input = authorityInput("oil", "dry_finish", {
-    candidateCatalogComplete: true,
     productFacts: factsFor("oil", "dry_finish", "owned", { recommendable: false }),
     candidates: [
       factsFor("oil", "dry_finish", "far-weight-candidate", {
@@ -731,7 +775,6 @@ for (const scenario of [
 ]) {
   test(`complete comparison rejects a ${scenario.name} candidate that excludes the confirmed thickness`, () => {
     const input = authorityInput(scenario.category, scenario.role, {
-      candidateCatalogComplete: true,
       productFacts: factsFor(scenario.category, scenario.role, "owned", {
         recommendable: false,
       }),
@@ -748,9 +791,8 @@ for (const scenario of [
   })
 }
 
-test("rollback Shampoo comparison does not expose complete-mode route stops", () => {
+test("Shampoo comparison keeps complete route targets independent of catalogue pagination", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
-    candidateCatalogComplete: false,
     productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
       targetFit: "known_mismatch",
       shampooObservations: {
@@ -766,11 +808,11 @@ test("rollback Shampoo comparison does not expose complete-mode route stops", ()
   )
   assert.equal(
     route?.stops.some((stop) => stop.stopId === "irritated"),
-    false,
+    true,
   )
   assert.deepEqual(route?.productPositions[0], {
     productId: "owned",
-    position: { kind: "unknown" },
+    position: { kind: "supported_stops", stopIds: ["irritated"] },
   })
 })
 
@@ -795,7 +837,7 @@ test("evidence rows carry exact server-owned current and candidate target relati
   ])
 })
 
-test("Conditioner keeps confirmed rerank direction visible beside an explicit target-fit mismatch", () => {
+test("Conditioner retains aggregate target-fit evidence until its concrete matrix is complete", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("conditioner", "conditioner_rinse_out", {
       productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
@@ -820,7 +862,7 @@ test("Conditioner keeps confirmed rerank direction visible beside an explicit ta
   )
 })
 
-test("Shampoo keeps confirmed route observations neutral beside an explicit target-fit mismatch", () => {
+test("Shampoo compares confirmed route observations against the derived route target", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("shampoo", "shampoo_everyday", {
       productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
@@ -835,16 +877,14 @@ test("Shampoo keeps confirmed route observations neutral beside an explicit targ
   )
 
   assert.equal(
-    comparison.evidenceRows
-      ?.find((row) => row.rowId === "shampoo.target_fit")
-      ?.productValues.find((value) => value.productId === "owned")?.relation,
-    "outside_target",
+    comparison.evidenceRows?.some((row) => row.rowId === "shampoo.target_fit"),
+    false,
   )
   assert.deepEqual(
     comparison.evidenceRows
       ?.find((row) => row.rowId === "shampoo.scalp_route")
       ?.productValues.find((value) => value.productId === "owned"),
-    { productId: "owned", valueLabel: "trocken", relation: "no_target" },
+    { productId: "owned", valueLabel: "trocken", relation: "outside_target" },
   )
 })
 
@@ -976,6 +1016,38 @@ test("Oil leave-on roles keep application, weight, and unaveraged thickness supp
     },
   ])
 })
+
+for (const role of [
+  "pre_wash_fibre_treatment",
+  "leave_on_fibre_conditioning",
+  "dry_finish",
+] as const) {
+  test(`Oil ${role} projects a target for every displayed property`, () => {
+    const comparison = buildStage3FitComparison(
+      authorityInput("oil", role, {
+        productFacts: factsFor("oil", role, "owned"),
+        candidates: [factsFor("oil", role, "candidate")],
+      }),
+    )
+
+    const evidenceRows = comparison.evidenceRows ?? []
+    assert.ok(evidenceRows.length > 0)
+    assert.equal(
+      evidenceRows.find((row) => row.rowId === "oil.suitable_thicknesses")?.target?.valueLabel,
+      "mittel",
+    )
+    assert.equal(
+      evidenceRows.every((row) => row.target !== null),
+      true,
+    )
+    assert.equal(
+      evidenceRows
+        .flatMap((row) => row.productValues)
+        .some((value) => value.relation === "no_target"),
+      false,
+    )
+  })
+}
 
 test("Shampoo dandruff stays compact instead of using the everyday scalp rail", () => {
   const comparison = buildStage3FitComparison(
@@ -1164,7 +1236,6 @@ function authorityInput<C extends PersonalPlanCategory>(
     candidates: Array<Extract<Stage3CategoryProductFacts, { category: C }>>
     capturedProductId?: string | null
     subjectIdentity?: Stage3AuthorityInput<C>["subjectIdentity"]
-    candidateCatalogComplete?: boolean
   },
 ): Stage3AuthorityInput<C> {
   const capturedProductId =
@@ -1210,7 +1281,6 @@ function authorityInput<C extends PersonalPlanCategory>(
     coverage: [],
     productFacts: options.productFacts,
     recommendationCandidates: options.candidates,
-    candidateCatalogComplete: options.candidateCatalogComplete,
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
   } as Stage3AuthorityInput<C>
@@ -1341,7 +1411,8 @@ function factsFor<C extends PersonalPlanCategory>(
           thickness: "normal",
           shampooBucket:
             overrides.shampooBucket ?? (role === "shampoo_dandruff" ? "schuppen" : "normal"),
-          scalpRoute: overrides.scalpRoute ?? "balanced",
+          scalpRoute:
+            overrides.scalpRoute ?? (role === "shampoo_dandruff" ? "dandruff" : "balanced"),
           cleansingIntensity: overrides.cleansingIntensity ?? "regular",
           targetFit:
             overrides.targetFit ?? (overrides.verdict === "unknown" ? "unknown" : "matched"),

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Owned Shampoo Matrix Fix</title>
+    <style>
+      :root {
+        --ink: #3e3937;
+        --muted: #736d69;
+        --line: #ddd8d4;
+        --plum: #6d4ab2;
+        --plum-soft: #f8f5fb;
+        --ok: #2f7048;
+        --ok-soft: #f5faf7;
+        --paper: #fff;
+        --canvas: #f5f2ef;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      main {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 52px 36px 64px;
+      }
+      .eyebrow {
+        color: var(--plum);
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 10px 0 8px;
+        font-family: Georgia, serif;
+        font-size: 46px;
+        line-height: 1.05;
+        font-weight: 500;
+      }
+      .intro {
+        margin: 0 0 30px;
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      .panel {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: var(--paper);
+        box-shadow: 0 10px 28px rgba(55, 45, 39, 0.06);
+      }
+      .panel-label {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .before .panel-label {
+        background: #f6eeee;
+        color: #8b3d3d;
+      }
+      .after .panel-label {
+        background: #edf7f0;
+        color: var(--ok);
+      }
+      .matrix-title {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+        font-size: 19px;
+        font-weight: 700;
+      }
+      .production-header {
+        padding: 22px 20px 16px;
+        background: #fff;
+      }
+      .production-header small {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .production-header strong {
+        display: block;
+        font-family: Georgia, serif;
+        color: var(--ink);
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 1.08;
+      }
+      .production-header span {
+        display: block;
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .product-mini {
+        margin: 0 20px 18px;
+        padding: 14px;
+        border: 1px solid var(--plum);
+        border-radius: 16px;
+        background: #fff;
+      }
+      .product-mini small {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .product-mini b {
+        display: block;
+        margin-top: 7px;
+        font-size: 15px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 42% 29% 29%;
+        min-height: 84px;
+        border-bottom: 1px solid var(--line);
+      }
+      .row:last-child {
+        border-bottom: 0;
+      }
+      .head {
+        min-height: 54px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        text-align: center;
+      }
+      .cell:first-child {
+        justify-content: flex-start;
+        text-align: left;
+        font-weight: 700;
+      }
+      .target {
+        background: var(--plum-soft);
+        color: var(--plum);
+      }
+      .head .target,
+      .head .cell {
+        color: var(--muted);
+      }
+      .good {
+        background: var(--ok-soft);
+        border-left: 3px solid var(--ok);
+      }
+      .support {
+        background: #fff9ed;
+        border-left: 3px solid #a66a17;
+      }
+      .value-stack {
+        display: grid;
+        justify-items: center;
+        gap: 6px;
+      }
+      .mark {
+        display: inline-grid;
+        width: 22px;
+        height: 22px;
+        place-items: center;
+        border: 2px solid var(--ok);
+        border-radius: 999px;
+        color: var(--ok);
+        font-size: 14px;
+        font-weight: 900;
+        line-height: 1;
+      }
+      .mark.supportive {
+        border-color: #a66a17;
+        color: #a66a17;
+      }
+      .before .value-stack .mark {
+        margin-left: auto;
+      }
+      .empty {
+        color: var(--plum);
+      }
+      .removed-note {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin: 18px 20px 22px;
+        padding: 13px 14px;
+        border-radius: 12px;
+        background: #f4f1ee;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .removed-note strong {
+        color: var(--ink);
+      }
+      .logic {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .logic article {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 18px;
+      }
+      .logic b {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--ink);
+      }
+      .logic span {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      @media (max-width: 850px) {
+        main {
+          padding: 28px 16px 44px;
+        }
+        h1 {
+          font-size: 36px;
+        }
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+        .logic {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Stage 3 · Planungsartefakt</div>
+      <h1>Kein Prüfpunkt ohne Ziel</h1>
+      <p class="intro">
+        Jede sichtbare Shampoo-Eigenschaft erhält ihren bestätigten Zielwert. Eine abweichende
+        Reinigungsintensität bleibt nicht länger unsichtbar, sondern ändert Urteil und Zeilenstatus
+        nachvollziehbar.
+      </p>
+
+      <section class="comparison" aria-label="Vorher-Nachher-Vergleich">
+        <article class="panel before">
+          <div class="panel-label">Vorher · verwirrend</div>
+          <div class="matrix-title">Eigenschaft für Eigenschaft</div>
+          <div class="row head">
+            <div class="cell">Prüfpunkt</div>
+            <div class="cell">Deins</div>
+            <div class="cell target">Ziel</div>
+          </div>
+          <div class="row good">
+            <div class="cell">Zielprofil-Eignung</div>
+            <div class="cell">
+              <span class="value-stack">abgedeckt <i class="mark">✓</i></span>
+            </div>
+            <div class="cell target">abgedeckt</div>
+          </div>
+          <div class="row">
+            <div class="cell">Reinigungsintensität</div>
+            <div class="cell">sanft</div>
+            <div class="cell target empty">kein Ziel</div>
+          </div>
+          <div class="row good">
+            <div class="cell">Kopfhaut-Fokus</div>
+            <div class="cell">
+              <span class="value-stack">ausgeglichen <i class="mark">✓</i></span>
+            </div>
+            <div class="cell target">ausgeglichen</div>
+          </div>
+          <div class="row">
+            <div class="cell">Geeignete Haardicke</div>
+            <div class="cell">mittel</div>
+            <div class="cell target empty">kein Ziel</div>
+          </div>
+        </article>
+
+        <article class="panel after">
+          <div class="panel-label">Vorgeschlagen · vollständig</div>
+          <div class="production-header">
+            <small>Shampoo · Produkt 1 von 1</small
+            ><strong>Dein Shampoo passt mit Einschränkung</strong
+            ><span>Dein Produkt passt grundsätzlich zu deinem Bedarf.</span>
+          </div>
+          <div class="product-mini">
+            <small>Dein Produkt</small><b>OGX Renewing + Argan Oil of Morocco Shampoo</b>
+          </div>
+          <div class="matrix-title">Eigenschaft für Eigenschaft</div>
+          <div class="row head">
+            <div class="cell">Prüfpunkt</div>
+            <div class="cell">Deins</div>
+            <div class="cell target">Ziel</div>
+          </div>
+          <div class="row support">
+            <div class="cell">Reinigungsintensität</div>
+            <div class="cell">
+              <span class="value-stack">sanft <i class="mark supportive">−</i></span>
+            </div>
+            <div class="cell target">regulär</div>
+          </div>
+          <div class="row good">
+            <div class="cell">Kopfhaut-Fokus</div>
+            <div class="cell">
+              <span class="value-stack">ausgeglichen <i class="mark">✓</i></span>
+            </div>
+            <div class="cell target">ausgeglichen</div>
+          </div>
+          <div class="row good">
+            <div class="cell">Geeignete Haardicke</div>
+            <div class="cell">
+              <span class="value-stack">mittel <i class="mark">✓</i></span>
+            </div>
+            <div class="cell target">mittel</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="logic" aria-label="Verhaltensregeln">
+        <article>
+          <b>Zielquelle</b
+          ><span
+            >Reinigungsintensität aus der bestätigten Shampoo-Aufgabe; Haardicke aus dem
+            verfeinerten Profil.</span
+          >
+        </article>
+        <article>
+          <b>Urteil</b
+          ><span
+            >Sanft statt regulär ist die bestehende Chaarlie-Einschränkung: unterstützend, nicht
+            ideal.</span
+          >
+        </article>
+        <article>
+          <b>Fail closed</b
+          ><span
+            >Fehlende Pflichtfakten ergeben „nicht bestätigt“ und dürfen weiterhin kein Urteil
+            „passt“ erzeugen.</span
+          >
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

@@ -96,7 +96,6 @@ export type Stage3FitComparison =
       sourceIdentity: Stage3ProductIdentity | null
       products: Stage3FitComparisonProduct[]
       alternatives: Stage3SelectedComparisonCandidate[]
-      candidateCatalogComplete?: boolean
       dimensions: Stage3FitComparisonDimension[]
       evidenceRows?: Stage3FitEvidenceRow[]
     }
@@ -109,7 +108,6 @@ export type Stage3FitComparison =
       sourceIdentity: Stage3ProductIdentity | null
       products: Stage3FitComparisonProduct[]
       alternatives: Stage3SelectedComparisonCandidate[]
-      candidateCatalogComplete?: boolean
       dimensions: []
       evidenceRows?: Stage3FitEvidenceRow[]
       reason: "specialist_category" | "no_exact_product"
@@ -186,7 +184,6 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
       sourceIdentity: input.subjectIdentity,
       products,
       alternatives,
-      candidateCatalogComplete: authorityInput.candidateCatalogComplete === true,
       dimensions,
       evidenceRows,
     }
@@ -201,7 +198,6 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
     sourceIdentity: input.subjectIdentity,
     products,
     alternatives,
-    candidateCatalogComplete: authorityInput.candidateCatalogComplete === true,
     dimensions: [],
     evidenceRows,
     reason: products.length > 0 ? "specialist_category" : "no_exact_product",
@@ -548,7 +544,6 @@ function evidenceRowsFromDimensions(
           }
         : null,
     productValues: dimension.productPositions.map(({ productId, position }) => {
-      const entry = entries.find((candidate) => candidate.product.productId === productId)
       return {
         productId,
         valueLabel: positionLabel(position, dimension.stops),
@@ -556,13 +551,12 @@ function evidenceRowsFromDimensions(
           input,
           dimension,
           position,
-          entry?.facts,
           criteriaByProduct.get(productId) ?? [],
         ),
       }
     }),
   }))
-  const targetFit = targetFitEvidenceRow(input, entries)
+  const targetFit = conditionerTargetFitEvidenceRow(input, entries)
   return targetFit ? [targetFit, ...dimensionRows] : dimensionRows
 }
 
@@ -580,15 +574,13 @@ function criteriaByProductId(
   return result
 }
 
-function targetFitEvidenceRow(
+function conditionerTargetFitEvidenceRow(
   input: Stage3AuthorityInput,
   entries: readonly ComparisonProductEntry[],
 ): Stage3FitEvidenceRow | null {
-  if (input.category !== "shampoo" && input.category !== "conditioner") return null
-  if (input.category === "shampoo" && input.candidateCatalogComplete === true) return null
-  if (!input.categoryDecision.target) return null
+  if (input.category !== "conditioner" || !input.categoryDecision.target) return null
   return {
-    rowId: `${input.category}.target_fit`,
+    rowId: "conditioner.target_fit",
     label: "Zielprofil-Eignung",
     target: {
       valueLabel: "abgedeckt",
@@ -596,10 +588,7 @@ function targetFitEvidenceRow(
       profileEvidenceLabels: [],
     },
     productValues: entries.map(({ product, facts }) => {
-      const targetFit =
-        facts.category === "shampoo" || facts.category === "conditioner"
-          ? facts.spec.targetFit
-          : "unknown"
+      const targetFit = facts.category === "conditioner" ? facts.spec.targetFit : "unknown"
       return {
         productId: product.productId,
         valueLabel:
@@ -623,19 +612,10 @@ function dimensionRelation(
   input: Stage3AuthorityInput,
   dimension: Stage3FitComparisonDimension,
   position: Stage3FitComparisonPosition,
-  facts: Stage3CategoryProductFacts | undefined,
   criteria: readonly Stage3CriterionResult[],
 ): Stage3FitEvidenceRelation {
   if (position.kind === "unknown") return "unknown"
   if (!dimension.targetPosition || dimension.targetPosition.kind === "unknown") return "no_target"
-
-  if (
-    input.category === "shampoo" &&
-    dimension.dimensionId === "shampoo.scalp_route" &&
-    facts?.category === "shampoo" &&
-    facts.spec.targetFit !== "matched"
-  )
-    return "no_target"
 
   const criterionId =
     dimension.dimensionId === "oil.role_support" ? "oil.role" : dimension.dimensionId
@@ -646,7 +626,10 @@ function dimensionRelation(
   if (dimension.dimensionId.endsWith(".care_direction"))
     return positionAxisRelation(position, dimension.targetPosition, careDirectionAxisFitResult)
 
-  if (dimension.dimensionId.endsWith(".weight"))
+  if (
+    dimension.dimensionId.endsWith(".weight") ||
+    dimension.dimensionId === "shampoo.cleansing_intensity"
+  )
     return positionAxisRelation(position, dimension.targetPosition, (product, target) =>
       orderedAxisFitResult(
         product,
@@ -839,20 +822,14 @@ function shampooDimensions(
 ): Stage3FitComparisonDimension[] {
   const target = input.categoryDecision.target
   const completeTarget =
-    input.candidateCatalogComplete === true && target?.category === "shampoo"
-      ? expectedShampooSpecTarget({ role: input.role, target })
-      : null
+    target?.category === "shampoo" ? expectedShampooSpecTarget({ role: input.role, target }) : null
   const scalpRouteStops = [
     { stopId: "oily", label: "fettig" },
     { stopId: "balanced", label: "ausgeglichen" },
     { stopId: "dry", label: "trocken" },
-    ...(input.candidateCatalogComplete === true
-      ? [
-          { stopId: "dandruff", label: "Schuppen" },
-          { stopId: "dry_flakes", label: "trockene Schuppen" },
-          { stopId: "irritated", label: "gereizt" },
-        ]
-      : []),
+    { stopId: "dandruff", label: "Schuppen" },
+    { stopId: "dry_flakes", label: "trockene Schuppen" },
+    { stopId: "irritated", label: "gereizt" },
   ]
   return [
     dimension(
@@ -861,8 +838,8 @@ function shampooDimensions(
       "ordered",
       [
         { stopId: "gentle", label: "sanft" },
-        { stopId: "regular", label: "regulaer" },
-        { stopId: "clarifying", label: "klaerend" },
+        { stopId: "regular", label: "regulär" },
+        { stopId: "clarifying", label: "klärend" },
       ],
       completeTarget?.cleansingIntensity ?? null,
       entries,
@@ -892,7 +869,7 @@ function shampooDimensions(
       "Geeignete Haardicke",
       "set",
       THICKNESS_STOPS,
-      input.candidateCatalogComplete === true ? (input.hairThickness ?? null) : null,
+      input.hairThickness ?? null,
       entries,
       (facts) => facts.suitableThicknesses,
       "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
@@ -1066,7 +1043,7 @@ function oilDimensions(
     "Geeignete Haardicke",
     "set",
     THICKNESS_STOPS,
-    null,
+    input.hairThickness ?? null,
     entries,
     (facts) => facts.suitableThicknesses,
     "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",

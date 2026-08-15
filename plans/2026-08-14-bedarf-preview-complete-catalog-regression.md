@@ -15,9 +15,9 @@ Source context:
 
 ## Chosen direction
 
-Let direct Stage 1 preview selection explicitly opt into the existing complete, paged, batched catalog loader and the matching complete-catalog authority semantics. Treat the first authority evaluation as recommendation selection, then re-evaluate that exact recommended product through the same authority before exposing its image. Preserve the 12-row loader as the default for direct callers and as the explicit Stage 3 rollback path; do not add a second matcher, generic fallback, UI swap, new cache, or persistence layer.
+Let direct Stage 1 preview selection explicitly opt into the existing complete, paged, batched catalog loader and canonical authority semantics. Treat the first authority evaluation as recommendation selection, then re-evaluate that exact recommended product through the same authority before exposing its image. Preserve the 12-row loader as the default for direct callers; Stage 3 itself is canonically complete. Do not add a second matcher, generic fallback, UI swap, new cache, or persistence layer.
 
-Refresh note, 2026-08-15: PR #408 is now the base authority for Stage 3. It evaluates the complete catalog before limiting visible alternatives, preserves the flag-off 12-row rollback, and exposes the typed explicit-complete mode used here. This branch must consume that mechanism rather than duplicate it.
+Refresh note, 2026-08-15: PR #408 is now the base authority for Stage 3. It evaluates the complete catalog before limiting visible alternatives and exposes the typed explicit-complete direct-loader mode used here. Stage 3's former environment rollback was subsequently retired; this distinct Stage 1 boundary remains.
 
 ## Scope and non-goals
 
@@ -25,7 +25,7 @@ In scope:
 
 - consume PR #408's explicit complete-catalog option for direct recommendation-candidate selection;
 - make the Stage 1 preview service opt into it at its loader boundary;
-- keep `completeCatalog` loading and `candidateCatalogComplete` evaluation paired, matching Stage 3;
+- keep Stage 1's explicit complete direct loading paired with canonical authority evaluation;
 - pass the profile hair thickness through both Stage 1 authority evaluations so thickness-sensitive Mask and Bondbuilder candidates can resolve;
 - prove candidates after row twelve can supply the exact authority-selected preview;
 - separate uncovered-slot verdicts from the selected recommendation's own fit verdict;
@@ -42,9 +42,9 @@ Non-goals:
 
 ## Target map
 
-- `src/lib/personal-plan/products/authority/catalog-facts.ts`: PR #408 base authority; unchanged here and verified for complete and rollback modes.
+- `src/lib/personal-plan/products/authority/catalog-facts.ts`: PR #408 base authority; unchanged here and verified for bounded direct callers plus explicit complete direct loading.
 - `src/lib/personal-plan/product-previews.ts`: Stage 1 Supabase preview loader opts into complete candidates.
-- `tests/personal-plan/products/stage3-persistence-supabase.test.ts`: inherited PR #408 coverage for default legacy/direct rollback plus explicit complete direct loading.
+- `tests/personal-plan/products/stage3-persistence-supabase.test.ts`: inherited PR #408 coverage for the bounded direct default plus explicit complete direct loading.
 - `tests/personal-plan/product-previews.test.ts`: authority-selected image after the legacy boundary and per-category failure behavior.
 - `tests/personal-plan-start.spec.ts`: existing production-shaped Basis/Optional journey remains the browser acceptance surface.
 
@@ -77,9 +77,9 @@ Produces: a typed direct-selection option whose default remains legacy and whose
 
 - Add a regression with thirteen ordered candidates proving default direct selection still stops at twelve.
 - Add the paired explicit-complete regression proving all thirteen are batched and available.
-- Keep Stage 3 `completeCatalog: false` rollback behavior unchanged.
+- Keep the direct-call default bounded while Stage 3 remains canonically complete.
 
-Completion: the loader mode is intentional at each call site and no existing rollback silently changes.
+Completion: the loader mode is intentional at each call site and no bounded direct caller silently widens.
 
 Refresh disposition: completed by PR #408 and retained unchanged on the refreshed branch.
 
@@ -87,7 +87,7 @@ Refresh disposition: completed by PR #408 and retained unchanged on the refreshe
 
 Consumes: the explicit direct-selection option.
 
-Produces: the preview candidate loader requests the complete catalog for every rendered category, evaluates its normalized facts with complete-catalog semantics, and only emits a recommendation after evaluating that exact product as `ideal` or `supportive`.
+Produces: the preview candidate loader requests the complete catalog for every rendered category, evaluates its normalized facts with canonical semantics, and only emits a recommendation after evaluating that exact product as `ideal`.
 
 - Add a preview regression where the first twelve products cannot match and a later image-backed product is the authority recommendation.
 - Make that Shampoo regression use a condition-derived route and valid cleansing intensity so loader and evaluator completeness cannot drift apart.
@@ -137,7 +137,7 @@ Live-state:
 
 - Worktree: `.worktrees/bedarfsplan-basis-image-regression`
 - Branch: `codex/bedarfsplan-basis-image-regression`
-- Counterpart plan review: completed read-only on 2026-08-15 with `claude-opus-4-8` at high effort. Its supported blocker found that Stage 1 paired complete loading with legacy evaluation semantics; the fix now passes `candidateCatalogComplete: true` and the regression uses derived irritation-route facts. The observability suggestion remains a non-blocking follow-up outside this focused repair.
+- Counterpart plan review: completed read-only on 2026-08-15 with `claude-opus-4-8` at high effort. Its supported blocker found that Stage 1 paired complete loading with legacy evaluation semantics; canonical evaluation and the derived irritation-route regression resolve that drift. The observability suggestion remains a non-blocking follow-up outside this focused repair.
 - Evidence review: confirmed.
 - User-journey sign-off: confirmed by Nick's explicit rejection of generic-first swapping and request for a sustainable fix.
 - Artifact disposition: plan, code, and regression tests commit; transient review output discard.
@@ -145,13 +145,13 @@ Live-state:
 
 ## Implementation evidence
 
-- Stage 3 base proof: PR #408 loads and evaluates the complete catalog before limiting visible alternatives, with an explicit 13th-candidate direct-loading regression and separate flag-off rollback coverage.
+- Stage 3 base proof: PR #408 loads and evaluates the complete catalog before limiting visible alternatives, with an explicit 13th-candidate direct-loading regression. Complete Stage 3 behavior is now canonical.
 - Refreshed Stage 1 red guard: removing `completeCatalog: true` made the focused service test fail with `undefined !== true`; restoring it passes.
-- Complete-semantics red guard: removing `candidateCatalogComplete: true` made the irritation Shampoo regression return no preview; restoring it passes.
+- Complete-semantics red guard: legacy evaluation semantics made the irritation Shampoo regression return no preview; canonical evaluation passes.
 - Thickness-context red guard: exact-fit, active, recommendable, image-backed Mask and Bondbuilder candidates both returned no preview while the shared authority input omitted `hairThickness`; adding the snapshot thickness made both pass, while unsuitable-thickness variants remain empty.
 - Red guard 2: a verified recommended Oil produced no preview because the uncovered-slot `mismatch` was rejected before evaluating the recommendation itself.
 - Focused Stage 1 proof: all 10 preview-service regressions passed, including complete-mode irritation, uncovered-slot Oil and Kopfhautpflege, and exact-fit/fail-closed Mask and Bondbuilder cases.
-- Focused integrated Stage 1/Stage 3 proof: 131 tests passed across preview, persistence, fit-comparison, rollback, and production-coverage contracts before the final focused additions; the full suite below contains the final regressions.
+- Focused integrated Stage 1/Stage 3 proof: 131 tests passed across preview, persistence, fit-comparison, direct-loader-boundary, and production-coverage contracts before the final focused additions; the full suite below contains the final regressions.
 - Full Personal Plan proof against PR #408 after the counterpart correction: 1,575 tests passed.
 - Live read-only Stage 3 coverage audit: all 21 category/role targets passed with complete candidate counts and zero failures.
 - Live read-only Stage 1 replay: the exact affected source returned image-backed `ideal` previews for Shampoo, Conditioner, Leave-in, and Oil; synthetic read-only irritation and dandruff variants also returned image-backed `ideal` Shampoo previews. The affected-plan cold run was 2,131 ms and the warm condition variants were 238-246 ms. No production data was written.

@@ -347,6 +347,7 @@ export function createFixtureStage3Gateway(
     draftId: string
   }): Promise<Stage3AuthorityEvaluation[]> {
     const draft = requireDraft(drafts, input.draftId)
+    if (draft.status !== "active") return []
     return deriveStage3DecisionSubjects(draft).map((subject) =>
       evaluateFixtureDecision(draft, subject),
     )
@@ -356,6 +357,7 @@ export function createFixtureStage3Gateway(
     draftId: string
   }): Promise<FixtureStage3DecisionReviewBundle[]> {
     const draft = requireDraft(drafts, input.draftId)
+    if (draft.status !== "active") return []
     return deriveStage3DecisionSubjects(draft).map((subject) => {
       const authorityEvaluation = evaluateFixtureDecision(draft, subject)
       return {
@@ -718,6 +720,21 @@ function fixtureFitComparison(
     }
   }
 
+  if (subject.category === "oil" && products.length > 0) {
+    return {
+      schemaVersion: 1,
+      mode: "comparison",
+      category: subject.category,
+      role: subject.role,
+      subjectKey: subject.decisionKey,
+      sourceIdentity: captured?.identity ?? null,
+      products,
+      alternatives,
+      dimensions: [],
+      evidenceRows: fixtureOilEvidenceRows(subject, products),
+    }
+  }
+
   return {
     schemaVersion: 1,
     mode: products.length > 0 ? "compact" : "unavailable",
@@ -731,6 +748,54 @@ function fixtureFitComparison(
     evidenceRows: fixtureCompactEvidenceRows(authorityEvaluation, products, alternatives),
     reason: products.length > 0 ? "specialist_category" : "no_exact_product",
   }
+}
+
+function fixtureOilEvidenceRows(
+  subject: Stage3DecisionSubject,
+  products: Stage3FitComparison["products"],
+): NonNullable<Stage3FitComparison["evidenceRows"]> {
+  const application =
+    subject.role === "pre_wash_fibre_treatment"
+      ? "Vor der Haarwäsche"
+      : subject.role === "leave_on_fibre_conditioning"
+        ? "Im feuchten Haar"
+        : "Im trockenen Haar"
+  const target = (valueLabel: string, rationale: string) => ({
+    valueLabel,
+    rationale,
+    profileEvidenceLabels: [],
+  })
+  const values = (valueLabel: string) =>
+    products.map((product) => ({
+      productId: product.productId,
+      valueLabel,
+      relation: "in_target" as const,
+    }))
+
+  return [
+    {
+      rowId: "oil.role_support",
+      label: "Anwendung",
+      target: target(application, "Die Anwendung entspricht der bestätigten Öl-Rolle."),
+      productValues: values(application),
+    },
+    ...(subject.role === "pre_wash_fibre_treatment"
+      ? []
+      : [
+          {
+            rowId: "oil.weight",
+            label: "Pflegegewicht",
+            target: target("mittel", "Das Pflegegewicht entspricht dem bestätigten Ziel."),
+            productValues: values("mittel"),
+          },
+        ]),
+    {
+      rowId: "oil.suitable_thicknesses",
+      label: "Geeignete Haardicke",
+      target: target("mittel", "Die Eignung entspricht deiner bestätigten Haardicke."),
+      productValues: values("mittel"),
+    },
+  ]
 }
 
 function fixtureCompactEvidenceRows(

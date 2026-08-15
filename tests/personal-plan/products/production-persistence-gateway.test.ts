@@ -27,6 +27,7 @@ import {
   stage3InventoryDispositionKey,
 } from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import { isValidPersistedCategoryDecision } from "../../../src/lib/personal-plan/products/authority/category-decision-schema"
 import { Stage3AuthoritySnapshotError } from "../../../src/lib/personal-plan/products/authority/snapshot"
 
 const requirements: Stage3CategoryRequirement[] = [
@@ -885,7 +886,7 @@ test("catalog search derives assessment context from the signed owner draft", as
   })
 })
 
-test("complete catalog search translates Shampoo constraints into stored route semantics", async () => {
+test("catalog search translates Shampoo constraints into stored route semantics", async () => {
   const base = authorityDraft()
   const shampooRequirement: Stage3CategoryRequirement = {
     category: "shampoo",
@@ -929,7 +930,6 @@ test("complete catalog search translates Shampoo constraints into stored route s
   const received: Array<Parameters<Stage3ProductionPersistence["search"]>[0]> = []
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
-    completeCatalogEnabled: true,
     persistence: {
       ...persistence(draft),
       loadOrCreate: async () => ({ draft, requirements: [shampooRequirement] }),
@@ -953,7 +953,7 @@ test("complete catalog search translates Shampoo constraints into stored route s
   ])
 })
 
-test("rollback catalog search preserves the legacy Shampoo oiliness route", async () => {
+test("catalog search consistently preserves the derived Shampoo target route", async () => {
   const base = authorityDraft()
   const shampooRequirement: Stage3CategoryRequirement = {
     category: "shampoo",
@@ -997,7 +997,6 @@ test("rollback catalog search preserves the legacy Shampoo oiliness route", asyn
   const received: Array<Parameters<Stage3ProductionPersistence["search"]>[0]> = []
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
-    completeCatalogEnabled: false,
     persistence: {
       ...persistence(draft),
       loadOrCreate: async () => ({ draft, requirements: [shampooRequirement] }),
@@ -1016,7 +1015,7 @@ test("rollback catalog search preserves the legacy Shampoo oiliness route", asyn
     requestToken: 1,
   })
 
-  assert.equal(received[0]?.assessmentContext.shampooTargets[0]?.scalpRoute, "balanced")
+  assert.equal(received[0]?.assessmentContext.shampooTargets[0]?.scalpRoute, "irritated")
 })
 
 test("catalog search permits every signed inventory-only category without a refined category decision", async () => {
@@ -2968,26 +2967,390 @@ test("missing and stale authority snapshots fail closed", async () => {
   }
 })
 
-test("v1 owned-fit snapshots fail closed after the authority semantic correction", async () => {
+test("loadOrCreate refreshes an active Shampoo v3 snapshot to v4 and leaves completed v3 immutable", async () => {
   const draft = authorityDraft()
   const authoritySnapshot = draft.authoritySnapshot!
   const stale = {
     ...draft,
+    orderedCategories: ["conditioner", "shampoo"] as PersonalPlanCategory[],
+    authorityVersions: {
+      ...draft.authorityVersions,
+      shampoo: "personal-plan.shampoo.v3",
+    },
     authoritySnapshot: {
       ...authoritySnapshot,
+      orderedCategories: ["conditioner", "shampoo"] as PersonalPlanCategory[],
+      inventoryOnlyCategories: [],
+      categoryDecisions: [
+        ...authoritySnapshot.categoryDecisions,
+        {
+          category: "shampoo" as const,
+          resolution: "resolved" as const,
+          needTier: "basis" as const,
+          roles: ["shampoo_everyday" as const],
+          target: {
+            category: "shampoo" as const,
+            roles: ["shampoo_everyday" as const],
+            scalpRoute: "balanced" as const,
+            everydayConstraint: "standard" as const,
+            requiresTargetedDandruffCapability: false,
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available" as const,
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
       authorityVersions: {
         ...authoritySnapshot.authorityVersions,
-        shampoo: "personal-plan.shampoo.v1",
+        shampoo: "personal-plan.shampoo.v3",
       },
     },
   }
+  const refreshed = {
+    ...stale,
+    revision: stale.revision + 1,
+    authorityVersions: {
+      ...stale.authorityVersions,
+      shampoo: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+    },
+    decisions: [],
+    completedDecisionKeys: [],
+    authoritySnapshot: {
+      ...stale.authoritySnapshot,
+      authorityVersions: {
+        ...stale.authoritySnapshot.authorityVersions,
+        shampoo: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    },
+  }
+  let refreshCalls = 0
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
-    persistence: persistence(stale),
+    persistence: {
+      ...persistence(stale),
+      loadRefinedNeedSnapshot: async () => refinedSnapshotForAuthority(refreshed),
+      refreshAuthorityDraft: async (input: { draftId: string; expectedRevision: number }) => {
+        refreshCalls += 1
+        assert.equal(input.draftId, stale.draftId)
+        assert.equal(input.expectedRevision, stale.revision)
+        return { outcome: "saved" as const, draft: refreshed }
+      },
+    } as never,
   })
 
-  await assert.rejects(
-    () => gateway.evaluateDecisions({ draftId: stale.draftId }),
-    /stale_authority_snapshot/,
+  const resumed = await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: stale.personalPlanId,
+    refinedVersionId: stale.refinedVersionId,
+    requirements,
+  })
+
+  assert.equal(refreshCalls, 1)
+  assert.equal(
+    resumed.draft.authoritySnapshot?.authorityVersions.shampoo,
+    CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
   )
+  assert.equal(
+    resumed.draft.authorityVersions.shampoo,
+    CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+  )
+  assert.deepEqual(resumed.draft.decisions, [])
+
+  const completed = { ...stale, status: "completed" as const }
+  const completedGateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(completed),
+      refreshAuthorityDraft: async () => {
+        throw new Error("completed draft must remain immutable")
+      },
+    } as never,
+  })
+  const frozen = await completedGateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: completed.personalPlanId,
+    refinedVersionId: completed.refinedVersionId,
+    requirements,
+  })
+  assert.equal(frozen.draft.status, "completed")
+  assert.equal(
+    frozen.draft.authoritySnapshot?.authorityVersions.shampoo,
+    "personal-plan.shampoo.v3",
+  )
+  assert.deepEqual(await completedGateway.evaluateDecisions({ draftId: completed.draftId }), [])
+  assert.deepEqual(await completedGateway.reviewDecisionBundles({ draftId: completed.draftId }), [])
 })
+
+test("authority refresh admits only an agreed Shampoo v3 snapshot with every other authority current", async () => {
+  const current = authorityDraft()
+  const exact = {
+    ...current,
+    orderedCategories: ["conditioner", "shampoo"] as PersonalPlanCategory[],
+    authorityVersions: {
+      ...current.authorityVersions,
+      shampoo: "personal-plan.shampoo.v3",
+    },
+    authoritySnapshot: {
+      ...current.authoritySnapshot!,
+      orderedCategories: ["conditioner", "shampoo"] as PersonalPlanCategory[],
+      inventoryOnlyCategories: [],
+      categoryDecisions: [
+        ...current.authoritySnapshot!.categoryDecisions,
+        {
+          category: "shampoo" as const,
+          resolution: "resolved" as const,
+          needTier: "basis" as const,
+          roles: ["shampoo_everyday" as const],
+          target: {
+            category: "shampoo" as const,
+            roles: ["shampoo_everyday" as const],
+            scalpRoute: "balanced" as const,
+            everydayConstraint: "standard" as const,
+            requiresTargetedDandruffCapability: false,
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available" as const,
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+      authorityVersions: {
+        ...current.authoritySnapshot!.authorityVersions,
+        shampoo: "personal-plan.shampoo.v3",
+      },
+    },
+  }
+  const invalidDrafts = [
+    {
+      name: "unknown Shampoo version",
+      draft: {
+        ...exact,
+        authorityVersions: { ...exact.authorityVersions, shampoo: "personal-plan.shampoo.v2" },
+        authoritySnapshot: {
+          ...exact.authoritySnapshot,
+          authorityVersions: {
+            ...exact.authoritySnapshot.authorityVersions,
+            shampoo: "personal-plan.shampoo.v2",
+          },
+        },
+      },
+    },
+    {
+      name: "draft and signed version disagreement",
+      draft: {
+        ...exact,
+        authoritySnapshot: {
+          ...exact.authoritySnapshot,
+          authorityVersions: {
+            ...exact.authoritySnapshot.authorityVersions,
+            shampoo: "personal-plan.shampoo.v2",
+          },
+        },
+      },
+    },
+    {
+      name: "non-Shampoo authority drift",
+      draft: {
+        ...exact,
+        authorityVersions: {
+          ...exact.authorityVersions,
+          conditioner: "personal-plan.conditioner.v2",
+        },
+        authoritySnapshot: {
+          ...exact.authoritySnapshot,
+          authorityVersions: {
+            ...exact.authoritySnapshot.authorityVersions,
+            conditioner: "personal-plan.conditioner.v2",
+          },
+        },
+      },
+    },
+    {
+      name: "missing required category decision",
+      draft: {
+        ...exact,
+        authoritySnapshot: { ...exact.authoritySnapshot, categoryDecisions: [] },
+      },
+    },
+    {
+      name: "malformed category decision",
+      draft: {
+        ...exact,
+        authoritySnapshot: {
+          ...exact.authoritySnapshot,
+          categoryDecisions: [
+            { ...exact.authoritySnapshot.categoryDecisions[0]!, roles: "shampoo_everyday" },
+          ],
+        },
+      },
+    },
+    {
+      name: "unknown draft authority category",
+      draft: {
+        ...exact,
+        authorityVersions: { ...exact.authorityVersions, mystery: "personal-plan.mystery.v1" },
+      },
+    },
+    {
+      name: "unknown signed authority category",
+      draft: {
+        ...exact,
+        authoritySnapshot: {
+          ...exact.authoritySnapshot,
+          authorityVersions: {
+            ...exact.authoritySnapshot.authorityVersions,
+            mystery: "personal-plan.mystery.v1",
+          },
+        },
+      },
+    },
+    {
+      name: "invalid but array-shaped role",
+      draft: tamperSnapshotDecision(exact, "shampoo", { roles: ["not_a_real_role"] }),
+    },
+    {
+      name: "non-object target",
+      draft: tamperSnapshotDecision(exact, "shampoo", { target: 7 }),
+    },
+    {
+      name: "target category and shape disagreement",
+      draft: tamperSnapshotDecision(exact, "shampoo", {
+        target: {
+          category: "conditioner",
+          roles: ["conditioner_rinse_out"],
+          weight: "light",
+          careDirection: "moisture",
+          repairSupportLevel: "medium",
+          functionalNeeds: [],
+        },
+      }),
+    },
+    {
+      name: "invalid need tier",
+      draft: tamperSnapshotDecision(exact, "shampoo", { needTier: 2 }),
+    },
+    {
+      name: "malformed frequency",
+      draft: tamperSnapshotDecision(exact, "shampoo", {
+        frequency: { kind: "wet_wash_total", target: "weekly_2x" },
+      }),
+    },
+    {
+      name: "malformed reason",
+      draft: tamperSnapshotDecision(exact, "shampoo", {
+        reasons: [{ id: 9, salience: "primary", evidence: [], values: {} }],
+      }),
+    },
+    {
+      name: "malformed execution pause reason",
+      draft: tamperSnapshotDecision(exact, "shampoo", {
+        executionState: "paused",
+        executionPauseReason: { id: "pause", salience: "invalid", evidence: [], values: {} },
+      }),
+    },
+    {
+      name: "schema-valid forged reason",
+      expectSchemaValid: true,
+      draft: tamperSnapshotDecision(exact, "shampoo", {
+        reasons: [
+          {
+            id: "forged_but_well_formed",
+            salience: "primary",
+            evidence: [{ source: "assessment", key: "hair.thickness" }],
+            values: { thickness: "normal" },
+          },
+        ],
+      }),
+    },
+    {
+      name: "schema-valid unrelated deferred fact",
+      expectSchemaValid: true,
+      draft: tamperSnapshotDecision(exact, "shampoo", {
+        deferredFacts: ["current_product_load"],
+      }),
+    },
+    {
+      name: "schema-valid not-needed tier with active Shampoo target",
+      expectSchemaValid: true,
+      draft: tamperSnapshotDecision(exact, "shampoo", { needTier: "not_needed" }),
+    },
+    {
+      name: "schema-valid Conditioner wash-total frequency",
+      expectSchemaValid: true,
+      draft: tamperSnapshotDecision(exact, "conditioner", {
+        frequency: {
+          kind: "wet_wash_total",
+          mode: "retained_current",
+          target: "weekly_2x",
+          allowedRange: { min: "weekly_1x", max: "weekly_3_4x" },
+          specialWashSubstitution: true,
+        },
+      }),
+    },
+  ]
+
+  for (const invalidDraft of invalidDrafts) {
+    const { name, draft } = invalidDraft
+    if ("expectSchemaValid" in invalidDraft && invalidDraft.expectSchemaValid) {
+      assert.equal(
+        draft.authoritySnapshot!.categoryDecisions.every(isValidPersistedCategoryDecision),
+        true,
+        `${name} must reach semantic-authenticity validation`,
+      )
+    }
+    let refreshCalls = 0
+    const gateway = createProductionStage3ProductsGateway({
+      userId: "owner-a",
+      persistence: {
+        ...persistence(draft as Stage3ProductDraft),
+        loadRefinedNeedSnapshot: async () => refinedSnapshotForAuthority(exact),
+        refreshAuthorityDraft: async () => {
+          refreshCalls += 1
+          return { outcome: "saved" as const, draft: current }
+        },
+      },
+    })
+
+    await assert.rejects(
+      () => gateway.evaluateDecisions({ draftId: draft.draftId }),
+      /stale_authority_snapshot/,
+      name,
+    )
+    assert.equal(refreshCalls, 0, name)
+  }
+})
+
+function refinedSnapshotForAuthority(source: Stage3ProductDraft) {
+  const snapshot = source.authoritySnapshot!
+  return {
+    inputHash: snapshot.refinedInputHash,
+    profile: {
+      source: { projection: "refined_post_plan" },
+      hair: { thickness: "normal" },
+    },
+    decisions: snapshot.categoryDecisions,
+    coverage: snapshot.coverage,
+    renderedOrder: snapshot.orderedCategories,
+  } as never
+}
+
+function tamperSnapshotDecision(
+  source: Stage3ProductDraft,
+  category: PersonalPlanCategory,
+  patch: Record<string, unknown>,
+): Stage3ProductDraft {
+  return {
+    ...source,
+    authoritySnapshot: {
+      ...source.authoritySnapshot!,
+      categoryDecisions: source.authoritySnapshot!.categoryDecisions.map((decision) =>
+        decision.category === category ? ({ ...decision, ...patch } as never) : decision,
+      ),
+    },
+  }
+}

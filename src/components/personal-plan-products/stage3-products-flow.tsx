@@ -674,9 +674,7 @@ export function Stage3ProductsFlow({
       alternativeState: assessableOwnedReview
         ? bundle.fitComparison.alternatives.length > 0
           ? "available"
-          : bundle.fitComparison.candidateCatalogComplete
-            ? "exhausted"
-            : "not_applicable"
+          : "exhausted"
         : "not_applicable",
       position: reviewPosition(draft, subject.decisionKey),
       count: decisionSubjects.length,
@@ -3356,6 +3354,7 @@ function reviewVerdict(evaluation: Stage3AuthorityEvaluation) {
 }
 
 function requiresFitReviewBundles(draft: Stage3ProductDraft) {
+  if (draft.status !== "active") return false
   return deriveStage3DecisionSubjects(draft).some(
     (subject) => subject.subjectKind !== "inventory_disposition",
   )

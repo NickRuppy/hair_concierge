@@ -267,7 +267,6 @@ function benchmarkPersistence(
 ): Stage3ProductionPersistence {
   const catalogPersistence = createSupabaseStage3ProductionPersistence(
     benchmarkCatalogClient(catalogCalls) as never,
-    { completeCatalogEnabled: true },
   )
   return {
     loadOrCreate: async () => {

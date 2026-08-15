@@ -1,4 +1,6 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
+import { resolve } from "node:path"
 import test from "node:test"
 
 import { isPersonalPlanStage3LabEnabled } from "../src/lib/labs/personal-plan-stage3-access"
@@ -8,7 +10,6 @@ import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanLegacyQuizCutoverEnabled,
   isPersonalPlanStage2Enabled,
-  isPersonalPlanStage3CompleteCatalogEnabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage3ThumbnailsEnabled,
   resolvePersonalPlanAppV1Rollout,
@@ -91,20 +92,48 @@ test("released Stage 2 and Stage 3 ignore obsolete launch flags", () => {
   }
 })
 
-test("complete Stage 3 catalog hydration is a strict default-off rollback gate", () => {
-  assert.equal(isPersonalPlanStage3CompleteCatalogEnabled({}), false)
-  assert.equal(
-    isPersonalPlanStage3CompleteCatalogEnabled({
-      PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG: "TRUE",
-    }),
-    false,
-  )
-  assert.equal(
-    isPersonalPlanStage3CompleteCatalogEnabled({
-      PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG: "true",
-    }),
-    true,
-  )
+test("complete Stage 3 catalogue authority has no retired environment or persistence branch", () => {
+  const retiredEnvironmentKey = ["PERSONAL", "PLAN", "STAGE3", "COMPLETE", "CATALOG"].join("_")
+  const retiredOption = ["complete", "Catalog", "Enabled"].join("")
+  const sources = [
+    "src/lib/personal-plan/release.ts",
+    "src/lib/personal-plan/products/production-persistence-gateway.ts",
+    "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+  ].map((path) => readFileSync(resolve(process.cwd(), path), "utf8"))
+
+  for (const source of sources) {
+    assert.equal(source.includes(retiredEnvironmentKey), false)
+    assert.equal(source.includes(retiredOption), false)
+  }
+})
+
+test("current Stage 3 plans contain no obsolete complete-catalogue activation instructions", () => {
+  const currentPlanPaths = [
+    "plans/2026-08-14-bedarf-preview-complete-catalog-regression.md",
+    "plans/2026-08-14-personal-plan-complete-candidate-selection.md",
+    "plans/2026-08-14-stage3-catalog-authority-repair.md",
+    "plans/2026-08-14-shampoo-target-completeness.md",
+  ]
+  const retiredEnvironmentKey = ["PERSONAL", "PLAN", "STAGE3", "COMPLETE", "CATALOG"].join("_")
+  const obsoleteInstructions = [
+    retiredEnvironmentKey,
+    "flag-off",
+    "rollback-only",
+    "rollout-gated",
+    "full-catalog activation",
+    "flag rollback",
+  ]
+
+  for (const path of currentPlanPaths) {
+    const source = readFileSync(resolve(process.cwd(), path), "utf8").toLocaleLowerCase()
+    for (const instruction of obsoleteInstructions) {
+      assert.equal(
+        source.includes(instruction.toLocaleLowerCase()),
+        false,
+        `${path}: ${instruction}`,
+      )
+    }
+  }
 })
 
 test("Stage 3 thumbnail delivery is a strict default-off rollback gate", () => {

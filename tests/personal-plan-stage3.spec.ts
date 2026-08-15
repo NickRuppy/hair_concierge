@@ -57,6 +57,15 @@ async function expectUncoveredChooserToFitViewport(page: Page) {
   expect(box!.x + box!.width).toBeLessThanOrEqual(viewport!.width)
 }
 
+async function expectCompleteOilMatrix(page: Page, application: string) {
+  await expect(page.getByRole("heading", { name: "Dein Öl passt" })).toBeVisible()
+  await expect(
+    page.getByRole("row", { name: new RegExp(`Anwendung.*${application}`) }),
+  ).toBeVisible()
+  await expect(page.getByRole("row", { name: /Geeignete Haardicke.*mittel.*mittel/ })).toBeVisible()
+  await expect(page.getByRole("main")).not.toContainText("kein Ziel")
+}
+
 test.describe("Personal Plan products lab", () => {
   test.use({ viewport: { width: 375, height: 844 }, hasTouch: true })
 
@@ -128,8 +137,11 @@ test.describe("Personal Plan products lab", () => {
     await expect(page.getByText("Conditioner Soft Care", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: "Diese Alternative wählen" }).click()
     await expect(page.getByText("Oil Length Seal", { exact: true })).toBeVisible()
+    await expectCompleteOilMatrix(page, "Vor der Haarwäsche")
     await page.getByRole("button", { name: "Mein Produkt behalten" }).click()
+    await expectCompleteOilMatrix(page, "Im feuchten Haar")
     await page.getByRole("button", { name: "Mein Produkt behalten" }).click()
+    await expectCompleteOilMatrix(page, "Im trockenen Haar")
     await page.getByRole("button", { name: "Mein Produkt behalten" }).click()
     await expect(page.getByText("Kopfhaut-Tonic", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /Auf Analyse warten/ }).click()

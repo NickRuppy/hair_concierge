@@ -106,7 +106,7 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
           thickness: "normal",
           shampooBucket: "normal",
           scalpRoute: "balanced",
-          cleansingIntensity: "medium",
+          cleansingIntensity: "regular",
           targetFit: "matched",
         },
       }
@@ -432,7 +432,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       ]),
     ),
     {
-      shampoo: "personal-plan.shampoo.v3",
+      shampoo: "personal-plan.shampoo.v4",
       conditioner: "personal-plan.conditioner.v3",
       leave_in: "personal-plan.leave-in.v3",
       heat_protectant: "personal-plan.heat-protectant.v1",
@@ -463,6 +463,25 @@ test("Shampoo with complete nonmatching semantic facts is a known mismatch, not 
   if (result.status !== "known") return
   assert.equal(result.verdict, "mismatch")
   assert.ok(result.criteria.some((criterion) => criterion.criterionId === "shampoo.role"))
+})
+
+test("Shampoo treats a confirmed cleansing-intensity difference as supportive, not ideal", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  if (shampooInput.productFacts?.category !== "shampoo") throw new Error("expected Shampoo fixture")
+  shampooInput.productFacts.spec.cleansingIntensity = "gentle"
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.deepEqual(result.allowedActions, ["keep_owned", "leave_uncovered"])
+  assert.ok(
+    result.criteria.some(
+      (criterion) =>
+        criterion.criterionId === "shampoo.cleansing_intensity" && criterion.result === "caution",
+    ),
+  )
 })
 
 test("Shampoo known mismatch can use its exact verified supported-role protocol", () => {
@@ -1118,6 +1137,7 @@ for (const route of [
     everydayConstraint: "standard" as const,
     role: "shampoo_everyday" as const,
     bucket: "dehydriert-fettig",
+    catalogScalpRoute: "oily",
   },
   {
     name: "dry",
@@ -1125,6 +1145,7 @@ for (const route of [
     everydayConstraint: "gentle_dry_scalp" as const,
     role: "shampoo_everyday" as const,
     bucket: "trocken",
+    catalogScalpRoute: "dry",
   },
   {
     name: "irritation",
@@ -1132,6 +1153,7 @@ for (const route of [
     everydayConstraint: "irritation_compatible" as const,
     role: "shampoo_everyday" as const,
     bucket: "irritationen",
+    catalogScalpRoute: "irritated",
   },
   {
     name: "balanced",
@@ -1139,6 +1161,7 @@ for (const route of [
     everydayConstraint: "standard" as const,
     role: "shampoo_everyday" as const,
     bucket: "normal",
+    catalogScalpRoute: "balanced",
   },
   {
     name: "dandruff",
@@ -1146,6 +1169,7 @@ for (const route of [
     everydayConstraint: "standard" as const,
     role: "shampoo_dandruff" as const,
     bucket: "schuppen",
+    catalogScalpRoute: "dandruff",
   },
 ]) {
   test(`Shampoo authority evaluates the exact signed ${route.name} bucket`, () => {
@@ -1164,7 +1188,9 @@ for (const route of [
     }
     if (shampooInput.productFacts) {
       shampooInput.productFacts.spec.shampooBucket = route.bucket
-      shampooInput.productFacts.spec.scalpRoute = route.scalpRoute
+      shampooInput.productFacts.spec.scalpRoute = route.catalogScalpRoute
+      shampooInput.productFacts.spec.cleansingIntensity =
+        route.bucket === "trocken" || route.bucket === "irritationen" ? "gentle" : "regular"
       shampooInput.productFacts.protocols = [
         {
           role: route.role,
@@ -1213,7 +1239,6 @@ for (const route of [
 ]) {
   test(`complete Shampoo authority translates ${route.name} into catalogue route semantics`, () => {
     const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
-    shampooInput.candidateCatalogComplete = true
     shampooInput.role = route.role
     shampooInput.categoryDecision = {
       ...shampooInput.categoryDecision,
@@ -1244,7 +1269,6 @@ for (const route of [
 
 test("complete Shampoo authority treats a non-target cleansing intensity as supportive", () => {
   const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
-  shampooInput.candidateCatalogComplete = true
   shampooInput.categoryDecision = {
     ...shampooInput.categoryDecision,
     target: {
@@ -1265,7 +1289,9 @@ test("complete Shampoo authority treats a non-target cleansing intensity as supp
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "supportive")
-  assert.equal(result.criteria[0]?.criterionId, "shampoo.fit")
-  assert.equal(result.criteria[0]?.result, "caution")
-  assert.deepEqual(result.allowedActions, ["keep_owned", "acknowledge_override", "leave_uncovered"])
+  assert.equal(result.criteria[0]?.criterionId, "shampoo.role")
+  assert.equal(result.criteria[0]?.result, "pass")
+  assert.equal(result.criteria[1]?.criterionId, "shampoo.cleansing_intensity")
+  assert.equal(result.criteria[1]?.result, "caution")
+  assert.deepEqual(result.allowedActions, ["keep_owned", "leave_uncovered"])
 })

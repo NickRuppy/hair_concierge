@@ -39,9 +39,10 @@ export type Stage3RecommendationCandidateSelection = {
   completeCatalog?: boolean
 }
 
-type CategorySelectionContext = Omit<Stage3RecommendationCandidateSelection, "category"> & {
-  candidateCatalogComplete?: boolean
-}
+type CategorySelectionContext = Omit<
+  Stage3RecommendationCandidateSelection,
+  "category" | "completeCatalog"
+>
 
 export const STAGE3_AUTHORITY_PRODUCT_PAGE_SIZE = 500
 export const STAGE3_AUTHORITY_FACT_CHUNK_SIZE = 100
@@ -65,7 +66,7 @@ export function stage3AuthorityFactFingerprint(input: {
 export type Stage3AuthorityFactBundle = Pick<
   Stage3AuthorityInput,
   "productFacts" | "recommendationCandidates" | "heatCarrierCoverage"
-> & { candidateCatalogComplete?: boolean }
+>
 
 type Stage3AuthorityCommonFingerprintInput = Omit<
   Stage3CategoryProductFacts,
@@ -91,7 +92,6 @@ export async function loadStage3AuthorityFactBundle(
     categoryDecision?: PlanCategoryDecision
     recommendationCandidates?: Stage3CategoryProductFacts[]
     heatCarrierCoverage?: Stage3AuthorityFactBundle["heatCarrierCoverage"]
-    candidateCatalogComplete?: boolean
   },
 ): Promise<Stage3AuthorityFactBundle> {
   const selectionContext: CategorySelectionContext = {
@@ -103,7 +103,6 @@ export async function loadStage3AuthorityFactBundle(
       input.draft,
       input.subject.category,
     ),
-    candidateCatalogComplete: input.candidateCatalogComplete,
   }
   const captured = input.subject.capturedProductId
     ? input.draft.products.find(
@@ -129,7 +128,6 @@ export async function loadStage3AuthorityFactBundle(
     productFacts,
     recommendationCandidates,
     heatCarrierCoverage,
-    candidateCatalogComplete: input.candidateCatalogComplete,
   } as Stage3AuthorityFactBundle
 }
 
@@ -138,7 +136,6 @@ type Stage3RecommendationCandidateAuthorityInput = {
   subject: Stage3DecisionSubject
   context: Stage3EvaluationContext
   categoryDecision?: PlanCategoryDecision
-  completeCatalog?: boolean
 }
 
 export async function loadStage3RecommendationCandidates(
@@ -153,17 +150,14 @@ export async function loadStage3RecommendationCandidates(
         role: input.role,
         shampooTarget: input.shampooTarget,
         conditionerTarget: input.conditionerTarget,
-        candidateCatalogComplete: input.completeCatalog,
       }
     : {
         hairThickness: input.context.hairThickness,
         role: input.subject.role,
         shampooTarget: shampooTargetFor(input.categoryDecision, input.draft, category),
         conditionerTarget: conditionerTargetFor(input.categoryDecision, input.draft, category),
-        candidateCatalogComplete: input.completeCatalog,
       }
-  return (directSelection && input.completeCatalog !== true) ||
-    (!directSelection && input.completeCatalog === false)
+  return directSelection && input.completeCatalog !== true
     ? loadLegacyRecommendationCandidates(client, category, selectionContext)
     : loadRecommendationCandidates(client, category, selectionContext)
 }
@@ -889,13 +883,10 @@ function selectShampooSpec(
     target: context.shampooTarget,
   })
   if (!expectedBucket) return empty
-  const expectedScalpRoute =
-    context.candidateCatalogComplete === true
-      ? expectedShampooSpecTarget({
-          role: context.role,
-          target: context.shampooTarget,
-        })?.scalpRoute
-      : context.shampooTarget.scalpRoute
+  const expectedScalpRoute = expectedShampooSpecTarget({
+    role: context.role,
+    target: context.shampooTarget,
+  })?.scalpRoute
   if (!expectedScalpRoute) return empty
   const completeRows = rows
     .map((row) => ({

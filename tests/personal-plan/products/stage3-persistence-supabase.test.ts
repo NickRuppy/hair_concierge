@@ -185,6 +185,171 @@ test("draft creation persists the server-created immutable authority snapshot in
   assert.deepEqual(result.draft.authoritySnapshot?.coverage, refinedSnapshot.coverage)
 })
 
+test("authority refresh persists a current server-owned seed through the dedicated CAS boundary", async () => {
+  const calls: Array<{ name: string; args: Record<string, unknown> }> = []
+  const refinedSnapshot = {
+    inputHash: "refined-input-hash",
+    profile: {
+      source: { projection: "refined_post_plan" },
+      hair: { thickness: "normal" },
+    },
+    renderedOrder: ["shampoo"],
+    decisions: [
+      {
+        category: "shampoo",
+        resolution: "resolved",
+        needTier: "basis",
+        roles: ["shampoo_everyday"],
+        target: {
+          category: "shampoo",
+          roles: ["shampoo_everyday"],
+          scalpRoute: "balanced",
+          everydayConstraint: "standard",
+          requiresTargetedDandruffCapability: false,
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: [],
+      },
+    ],
+    coverage: [],
+  }
+  const client = {
+    from(table: string) {
+      assert.equal(table, "personal_plan_need_versions")
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () => ({
+          data: { id: "refined-1", output_snapshot: refinedSnapshot },
+          error: null,
+        }),
+      }
+      return chain
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      return {
+        data: {
+          outcome: "saved",
+          draft: {
+            id: "draft-1",
+            user_id: "owner-1",
+            personal_plan_id: "plan-1",
+            refined_need_version_id: "refined-1",
+            status: "active",
+            revision: 5,
+            pass: (args.p_payload as Record<string, unknown>).pass,
+            category_authority_versions: args.p_category_authority_versions,
+            cursor: args.p_cursor,
+            payload: args.p_payload,
+            created_at: "2026-08-08T00:00:00.000Z",
+            updated_at: "2026-08-15T10:00:00.000Z",
+          },
+        },
+        error: null,
+      }
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never) as ReturnType<
+    typeof createSupabaseStage3ProductionPersistence
+  > & {
+    refreshAuthorityDraft(input: {
+      userId: string
+      draftId: string
+      expectedRevision: number
+      personalPlanId: string
+      refinedVersionId: string
+    }): Promise<{ outcome: string; draft: Stage3ProductDraft }>
+  }
+
+  const result = await persistence.refreshAuthorityDraft({
+    userId: "owner-1",
+    draftId: "draft-1",
+    expectedRevision: 4,
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+  })
+
+  assert.equal(result.outcome, "saved")
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0]?.name, "personal_plan_refresh_product_draft_authority")
+  assert.equal(calls[0]?.args.p_expected_revision, 4)
+  assert.equal(
+    (calls[0]?.args.p_category_authority_versions as Record<string, string>).shampoo,
+    "personal-plan.shampoo.v4",
+  )
+  assert.equal(
+    (
+      (calls[0]?.args.p_payload as Record<string, unknown>).authoritySnapshot as {
+        authorityVersions: Record<string, string>
+      }
+    ).authorityVersions.shampoo,
+    "personal-plan.shampoo.v4",
+  )
+  assert.deepEqual(result.draft.decisions, [])
+})
+
+test("authority refresh fails closed when SQL rejects a non-exact legacy transition", async () => {
+  const refinedSnapshot = {
+    inputHash: "refined-input-hash",
+    profile: { source: { projection: "refined_post_plan" }, hair: { thickness: "normal" } },
+    renderedOrder: ["shampoo"],
+    decisions: [
+      {
+        category: "shampoo",
+        resolution: "resolved",
+        needTier: "basis",
+        roles: ["shampoo_everyday"],
+        target: {
+          category: "shampoo",
+          roles: ["shampoo_everyday"],
+          scalpRoute: "balanced",
+          everydayConstraint: "standard",
+          requiresTargetedDandruffCapability: false,
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: [],
+      },
+    ],
+    coverage: [],
+  }
+  const client = {
+    from() {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () => ({
+          data: { id: "refined-1", output_snapshot: refinedSnapshot },
+          error: null,
+        }),
+      }
+      return chain
+    },
+    async rpc() {
+      return { data: { outcome: "invalid_source" }, error: null }
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  await assert.rejects(
+    () =>
+      persistence.refreshAuthorityDraft!({
+        userId: "owner-1",
+        draftId: "draft-1",
+        expectedRevision: 4,
+        personalPlanId: "plan-1",
+        refinedVersionId: "refined-1",
+      }),
+    /stage3_authority_refresh_rejected/,
+  )
+})
+
 test("draft creation turns an RPC stale source into a typed refined-source restart", async () => {
   const refinedSnapshot = {
     inputHash: "refined-input-hash",
@@ -1200,7 +1365,7 @@ test("complete candidate hydration crosses product pages and bounded fact chunks
   )
 })
 
-test("complete and rollback loaders preserve identical authority fingerprints", async () => {
+test("canonical authority loading preserves deterministic fingerprints", async () => {
   const rowsByTable = {
     products: [
       {
@@ -1266,27 +1431,25 @@ test("complete and rollback loaders preserve identical authority fingerprints", 
     context: normalRefinedContext,
   } as const
 
-  const [complete, rollback] = await Promise.all([
+  const [first, second] = await Promise.all([
     loadStage3RecommendationCandidates(
       completeCatalogFactClient(rowsByTable, []) as never,
       {
         ...input,
-        completeCatalog: true,
       } as never,
     ),
     loadStage3RecommendationCandidates(
       completeCatalogFactClient(rowsByTable, []) as never,
       {
         ...input,
-        completeCatalog: false,
       } as never,
     ),
   ])
 
-  assert.equal(complete.length, 1)
-  assert.equal(rollback.length, 1)
-  assert.equal(complete[0]?.factFingerprint, rollback[0]?.factFingerprint)
-  assert.deepEqual(complete[0]?.protocols, rollback[0]?.protocols)
+  assert.equal(first.length, 1)
+  assert.equal(second.length, 1)
+  assert.equal(first[0]?.factFingerprint, second[0]?.factFingerprint)
+  assert.deepEqual(first[0]?.protocols, second[0]?.protocols)
 })
 
 test("direct preview candidate loading remains bounded to the legacy catalog path", async () => {
@@ -1868,9 +2031,7 @@ test("request-scoped persistence coalesces identical complete-catalog candidate 
     },
     calls,
   )
-  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
-    completeCatalogEnabled: true,
-  })
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
   const draft = {
     ...shampooAuthorityDraft(),
     products: [],
@@ -1911,7 +2072,7 @@ test("request-scoped persistence coalesces identical complete-catalog candidate 
   )
 })
 
-test("flag-off persistence keeps the twelve-row rollback loader explicitly incomplete", async () => {
+test("default Stage 3 persistence loads the complete catalogue canonically", async () => {
   const products = Array.from({ length: 13 }, (_, index) => ({
     id: `candidate-${String(index + 1).padStart(2, "0")}`,
     name: `Candidate ${index + 1}`,
@@ -1944,9 +2105,7 @@ test("flag-off persistence keeps the twelve-row rollback loader explicitly incom
     },
     [],
   )
-  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
-    completeCatalogEnabled: false,
-  })
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
   const draft = {
     ...shampooAuthorityDraft(),
     products: [],
@@ -1967,15 +2126,12 @@ test("flag-off persistence keeps the twelve-row rollback loader explicitly incom
     context: normalRefinedContext,
   } as never)
 
-  assert.equal(bundle.recommendationCandidates.length, 12)
-  assert.equal(bundle.candidateCatalogComplete, false)
+  assert.equal(bundle.recommendationCandidates.length, 13)
 })
 
 test("candidate and heat-carrier failures are observed together without an orphaned rejection", async () => {
   const client = completeCatalogFactClient({}, [], { errorTables: ["products"] })
-  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
-    completeCatalogEnabled: true,
-  })
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
   const draft = {
     ...shampooAuthorityDraft(),
     products: [
@@ -2167,7 +2323,7 @@ test("authority facts select a contextual Shampoo row without PGRST116", async (
   })
 })
 
-test("complete authority facts translate an irritation need into the stored irritated route", async () => {
+test("authority facts translate an irritation need into the stored irritated route", async () => {
   const bundle = await loadStage3AuthorityFactBundle(
     shampooAuthorityFactClient([
       {
@@ -2191,7 +2347,44 @@ test("complete authority facts translate an irritation need into the stored irri
       },
       heatRoutes: [],
       context: normalRefinedContext,
-      candidateCatalogComplete: true,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.deepEqual(bundle.productFacts.spec, {
+    thickness: "normal",
+    shampooBucket: "irritationen",
+    scalpRoute: "irritated",
+    cleansingIntensity: "gentle",
+    targetFit: "matched",
+  })
+})
+
+test("authority facts consistently use the derived irritation route", async () => {
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([
+      {
+        thickness: "normal",
+        shampoo_bucket: "irritationen",
+        scalp_route: "irritated",
+        cleansing_intensity: "gentle",
+      },
+    ]) as never,
+    {
+      draft: shampooAuthorityDraft({
+        scalpRoute: "balanced",
+        everydayConstraint: "irritation_compatible",
+      }),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
     } as never,
   )
 
@@ -2213,6 +2406,7 @@ for (const route of [
     everydayConstraint: "standard" as const,
     role: "shampoo_everyday" as const,
     bucket: "dehydriert-fettig",
+    catalogScalpRoute: "oily",
   },
   {
     name: "dry",
@@ -2220,6 +2414,7 @@ for (const route of [
     everydayConstraint: "gentle_dry_scalp" as const,
     role: "shampoo_everyday" as const,
     bucket: "trocken",
+    catalogScalpRoute: "dry",
   },
   {
     name: "irritation",
@@ -2227,6 +2422,7 @@ for (const route of [
     everydayConstraint: "irritation_compatible" as const,
     role: "shampoo_everyday" as const,
     bucket: "irritationen",
+    catalogScalpRoute: "irritated",
   },
   {
     name: "balanced",
@@ -2234,6 +2430,7 @@ for (const route of [
     everydayConstraint: "standard" as const,
     role: "shampoo_everyday" as const,
     bucket: "normal",
+    catalogScalpRoute: "balanced",
   },
   {
     name: "dandruff",
@@ -2241,6 +2438,7 @@ for (const route of [
     everydayConstraint: "standard" as const,
     role: "shampoo_dandruff" as const,
     bucket: "schuppen",
+    catalogScalpRoute: "dandruff",
   },
 ]) {
   test(`Shampoo catalog selection uses the exact signed ${route.name} bucket`, async () => {
@@ -2249,7 +2447,7 @@ for (const route of [
         {
           thickness: "normal",
           shampoo_bucket: route.bucket,
-          scalp_route: route.scalpRoute,
+          scalp_route: route.catalogScalpRoute,
           cleansing_intensity: "regular",
         },
       ]) as never,

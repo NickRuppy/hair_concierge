@@ -15,7 +15,6 @@ export function supportiveOwnedRecommendation(
   evaluation: Stage3KnownAuthorityEvaluation,
 ): Stage3Recommendation | null {
   if (
-    input.candidateCatalogComplete !== true ||
     input.productFacts === null ||
     evaluation.verdict !== "supportive" ||
     candidate.category !== input.category
