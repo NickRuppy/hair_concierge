@@ -301,7 +301,7 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   assert.match(journeyCommand, /PLAYWRIGHT_BASE_URL=http:\/\/127\.0\.0\.1:3217/)
   assert.match(
     journeyCommand,
-    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts --project=chromium/,
+    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts --project=chromium/,
   )
   assert.doesNotMatch(journeyCommand, /tests\/personal-plan-stage3\.spec\.ts/)
 

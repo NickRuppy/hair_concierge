@@ -8,6 +8,7 @@ export {
   PlanStartFlow,
   PlanStartLoading,
   PlanStartProductionGate,
+  RouteAwarePlanStartProductionGate,
   PlanStartRetryableError,
   PlanStartUnavailable,
   interpretPlanStartApiResponse,

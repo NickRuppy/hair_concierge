@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import {
+  PersonalPlanJourneyHeader,
+  usePersonalPlanTransitionLayer,
+} from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { InfoTip } from "@/components/ui/info-tip"
 import { requiresStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
@@ -62,6 +65,8 @@ type RefinementQuestionProps = {
   onBack: () => void
   onSubmit: () => void
   onSecondaryExit: () => void
+  showJourneyHeader?: boolean
+  focusOnQuestionChange?: boolean
 }
 
 const HEAT_SOURCE_TITLES = {
@@ -130,16 +135,19 @@ export function RefinementQuestion({
   onBack,
   onSubmit,
   onSecondaryExit,
+  showJourneyHeader = true,
+  focusOnQuestionChange = true,
 }: RefinementQuestionProps) {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const answer = localAnswer ?? getAnswerForQuestion(session.answers, questionId)
   const complete = isLocalAnswerComplete(questionId, answer)
 
   useEffect(() => {
+    if (!focusOnQuestionChange) return
     window.scrollTo({ top: 0, behavior: "auto" })
     const frame = window.requestAnimationFrame(() => headingRef.current?.focus())
     return () => window.cancelAnimationFrame(frame)
-  }, [questionId])
+  }, [focusOnQuestionChange, questionId])
 
   const question = renderQuestionBody({
     session,
@@ -149,12 +157,19 @@ export function RefinementQuestion({
   })
 
   return (
-    <div className="personal-plan-cookie-clearance min-h-dvh bg-[var(--background)] text-[var(--text-body)]">
-      <PersonalPlanJourneyHeader
-        currentStage={2}
-        saveStatus={journeySaveStatus(status)}
-        onBack={canGoBack ? onBack : onSecondaryExit}
-      />
+    <div
+      className={cn(
+        "personal-plan-cookie-clearance bg-[var(--background)] text-[var(--text-body)]",
+        showJourneyHeader ? "min-h-dvh" : "min-h-[calc(100dvh-92px)]",
+      )}
+    >
+      {showJourneyHeader ? (
+        <PersonalPlanJourneyHeader
+          currentStage={2}
+          saveStatus={journeySaveStatus(status)}
+          onBack={canGoBack ? onBack : onSecondaryExit}
+        />
+      ) : null}
       <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[720px] min-w-0 flex-col">
         <section className="mx-auto w-full max-w-[600px] flex-1 px-5 pb-32 pt-6 md:pb-8 md:pt-9">
           {question.trigger ? (
@@ -169,6 +184,7 @@ export function RefinementQuestion({
             <h2
               ref={headingRef}
               tabIndex={-1}
+              data-personal-plan-transition-focus
               className="m-0 flex-1 font-serif text-[28px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)] outline-none"
             >
               {question.title}
@@ -548,7 +564,7 @@ function saveStatusText(status: RefinementQuestionStatus): string {
   return ""
 }
 
-function journeySaveStatus(status: RefinementQuestionStatus) {
+export function journeySaveStatus(status: RefinementQuestionStatus) {
   if (status === "saving") return "saving" as const
   if (status === "saved") return "saved" as const
   if (status === "save_failed" || status === "completion_failed") return "error" as const
@@ -568,11 +584,13 @@ function ActionDock({
   saving: boolean
   onSubmit: () => void
 }) {
+  const transitionLayer = usePersonalPlanTransitionLayer()
   const [dockTarget, setDockTarget] = useState<HTMLElement | null>(null)
   const [mobile, setMobile] = useState(false)
   const previousOffsetRef = useRef<{ priority: string; value: string } | null>(null)
 
   useEffect(() => {
+    if (transitionLayer === "outgoing") return
     const query = window.matchMedia("(max-width: 767px)")
     const update = (event: MediaQueryListEvent) => setMobile(event.matches)
     const frame = window.requestAnimationFrame(() => {
@@ -584,10 +602,10 @@ function ActionDock({
       window.cancelAnimationFrame(frame)
       query.removeEventListener("change", update)
     }
-  }, [])
+  }, [transitionLayer])
 
   useEffect(() => {
-    if (!dockTarget || !mobile) return
+    if (transitionLayer === "outgoing" || !dockTarget || !mobile) return
 
     const rootStyle = document.documentElement.style
     previousOffsetRef.current = {
@@ -617,7 +635,9 @@ function ActionDock({
         rootStyle.removeProperty("--landing-sticky-cta-offset")
       }
     }
-  }, [dockTarget, mobile])
+  }, [dockTarget, mobile, transitionLayer])
+
+  if (transitionLayer === "outgoing") return null
 
   const dock = (
     <div

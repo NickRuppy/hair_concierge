@@ -257,6 +257,7 @@ export function Stage3ProductsFlow({
   onBackToRefinement,
   onProductKindsCorrection,
   onOpenRoutine,
+  stageEntrance = false,
   pendingRecoveryStorage: providedPendingRecoveryStorage,
 }: {
   searchDebounceMs?: number
@@ -272,6 +273,7 @@ export function Stage3ProductsFlow({
   onBackToRefinement?: () => void
   onProductKindsCorrection?: (categories: PersonalPlanCategory[]) => Promise<void>
   onOpenRoutine?: (handoff: Stage3RoutineHandoff) => void
+  stageEntrance?: boolean
   pendingRecoveryStorage?: PendingStage3RecoveryStorage
 } = {}) {
   const resolvedEntryContext = bootstrap?.entryContext ?? entryContext
@@ -752,6 +754,7 @@ export function Stage3ProductsFlow({
             : categoryCapture.saveLabel,
       }}
       onBack={pendingRecoveryMode ? undefined : onBack}
+      contentEntrance={stageEntrance}
     >
       {children}
     </Stage3Shell>

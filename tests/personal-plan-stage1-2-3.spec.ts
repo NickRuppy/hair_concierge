@@ -1,15 +1,21 @@
 import { expect, test, type Page } from "@playwright/test"
 
 const labPath = "/labs/personal-plan-stage-1-2"
+const currentQuestion = (page: Page) =>
+  page.locator(".personal-plan-view-transition-layer:not(.personal-plan-view-transition-outgoing)")
+const visibleContinueButton = (page: Page) =>
+  page.getByRole("button", { name: "Weiter", exact: true })
 
 async function chooseAndContinue(page: Page, name: RegExp | string) {
-  await page.getByRole("button", { name, exact: typeof name === "string" }).click()
-  await page.getByRole("button", { name: "Weiter", exact: true }).click()
+  await currentQuestion(page)
+    .getByRole("button", { name, exact: typeof name === "string" })
+    .click()
+  await visibleContinueButton(page).click()
 }
 
 async function chooseNoneAndContinue(page: Page) {
-  await page.getByRole("button", { name: "Nichts davon", exact: true }).click()
-  await page.getByRole("button", { name: "Weiter" }).click()
+  await currentQuestion(page).getByRole("button", { name: "Nichts davon", exact: true }).click()
+  await visibleContinueButton(page).click()
 }
 
 async function completeRefinement(page: Page) {
@@ -61,7 +67,7 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
     await expect(bridge).toBeVisible()
     await page.getByRole("button", { name: "Zur letzten Frage" }).click()
     await page.getByRole("button", { name: "Seidenkissenbezug" }).click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await visibleContinueButton(page).click()
     await expect(bridge).toBeVisible()
     const successorVersion = await bridge.getAttribute("data-refined-version-id")
     expect(successorVersion).not.toBe(firstRefinedVersion)

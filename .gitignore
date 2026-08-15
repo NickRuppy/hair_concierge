@@ -95,6 +95,7 @@ test-screenshots*/
 !plans/evidence/2026-08-11-personal-plan-post-payment-remediation-v1-*.png
 !plans/evidence/2026-08-12-personal-plan-entry-current.png
 !plans/evidence/2026-08-12-post-payment-transition-mockup.png
+!plans/artifacts/application-day-transition/*.png
 !public/images/**/*.png
 /daily-briefing-*.md
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 
-import { PlanStartFlow, PlanStartProductionGate } from "@/components/personal-plan-start"
+import { PlanStartFlow, RouteAwarePlanStartProductionGate } from "@/components/personal-plan-start"
 import type {
   PlanStartInitialJourney,
   PlanStartReadyViewModel,
@@ -196,7 +196,7 @@ export default async function PlanStartPage({
         initialJourney={state.initialJourney}
         initialPlan={state.initialPlan}
       />
-      <PlanStartProductionGate
+      <RouteAwarePlanStartProductionGate
         initialJourney={state.initialJourney}
         initialPlan={state.initialPlan}
         personalPlanId={state.personalPlanId}

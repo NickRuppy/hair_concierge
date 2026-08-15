@@ -1,0 +1,213 @@
+import assert from "node:assert/strict"
+import test from "node:test"
+import { renderToStaticMarkup } from "react-dom/server"
+
+import { ApplicationPage } from "../src/components/application/application-page"
+import type { ApplicationDayView } from "../src/components/application/application-types"
+import {
+  PlanStartFlow,
+  performPersonalPlanRoutineHandoff,
+} from "../src/components/personal-plan-start/plan-start-flow"
+import { RefinementFlow } from "../src/components/personal-plan-refinement/refinement-flow"
+import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
+import {
+  PERSONAL_PLAN_STAGE_NAVIGATION_TTL_MS,
+  consumePersonalPlanStageNavigationIntent,
+  writePersonalPlanStageNavigationIntent,
+} from "../src/lib/personal-plan/stage-navigation-intent"
+
+const days: ApplicationDayView[] = [
+  {
+    dayType: "wash_day",
+    sortOrder: 10,
+    labelDe: "Waschtag",
+    summaryDe: "Waschen und pflegen.",
+    cadenceDe: "Nach deinem Rhythmus",
+    steps: [],
+    isPartial: false,
+    provisionalProductCount: 0,
+    unresolvedProductCount: 0,
+    shelf: [],
+  },
+  {
+    dayType: "rest_day",
+    sortOrder: 80,
+    labelDe: "Pausentag",
+    summaryDe: "Heute ist keine Anwendung nötig.",
+    cadenceDe: null,
+    steps: [],
+    isPartial: false,
+    provisionalProductCount: 0,
+    unresolvedProductCount: 0,
+    shelf: [],
+  },
+]
+
+test("Anwendung renders canonical links inside the bounded depth-transition surface", () => {
+  const overview = renderToStaticMarkup(<ApplicationPage view={{ state: "ready", days }} />)
+  assert.match(overview, /data-personal-plan-view-transition="depth"/)
+  assert.match(overview, /data-application-navigation="day"/)
+  assert.match(overview, /href="\/anwendung\/wash_day"/)
+
+  const detail = renderToStaticMarkup(
+    <ApplicationPage view={{ state: "ready", days, selectedDayType: "wash_day" }} />,
+  )
+  assert.match(detail, /data-personal-plan-view-transition="depth"/)
+  assert.match(detail, /data-application-navigation="overview"/)
+  assert.match(detail, /href="\/anwendung"/)
+})
+
+test("non-ready Anwendung surfaces never claim a successful view transition", () => {
+  const unavailable = renderToStaticMarkup(
+    <ApplicationPage view={{ state: "day_unavailable", overviewHref: "/anwendung" }} />,
+  )
+  assert.doesNotMatch(unavailable, /data-personal-plan-view-transition=/)
+})
+
+test("malformed Anwendung day segments fall back without throwing during render", () => {
+  const html = renderToStaticMarkup(
+    <ApplicationPage view={{ state: "ready", days }} currentPathname="/anwendung/%E0%A4%A" />,
+  )
+
+  assert.match(html, /application-overview-title/)
+  assert.doesNotMatch(html, /application-day-title/)
+})
+
+test("Bedarfsplan keeps its Journey header outside a bounded depth surface", () => {
+  const screen = {
+    overline: "Dein Plan",
+    title: "Deine Basis",
+    lead: "Das ist dein Ausgangspunkt.",
+    sectionTitle: "Basis",
+    countLabel: "0 Bausteine",
+    cards: [],
+  }
+  const html = renderToStaticMarkup(
+    <PlanStartFlow
+      state="ready"
+      plan={{
+        basis: { ...screen, kind: "basis", progress: 50 },
+        optional: { ...screen, kind: "optional", title: "Optional", progress: 100 },
+      }}
+    />,
+  )
+
+  assert.equal(html.match(/data-personal-plan-stage="1"/g)?.length, 1)
+  assert.match(html, /data-personal-plan-view-transition="depth"/)
+  assert.match(html, /data-plan-start-screen="basis"/)
+})
+
+test("Feinschliff keeps its Journey header outside the ordered-question depth surface", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "transition-test",
+    triggerContext: {
+      relevantCategories: ["shampoo"],
+      hasReportedIrritatedScalp: false,
+      dryShampooBridgeEligibility: "ineligible",
+    },
+  })
+  const html = renderToStaticMarkup(
+    <RefinementFlow gateway={{} as never} initialSession={session} directEntry />,
+  )
+
+  assert.equal(html.match(/data-personal-plan-stage="2"/g)?.length, 1)
+  assert.equal(html.match(/personal-plan-cookie-clearance/g)?.length, 1)
+  assert.match(html, /min-h-\[calc\(100dvh-92px\)\]/)
+  assert.match(html, /data-personal-plan-view-transition="depth"/)
+  assert.match(html, /data-personal-plan-transition-focus/)
+})
+
+test("stage navigation intent is destination-bound, single-use, and time-bounded", () => {
+  const values = new Map<string, string>()
+  const storage = {
+    getItem: (key: string) => values.get(key) ?? null,
+    setItem: (key: string, value: string) => values.set(key, value),
+    removeItem: (key: string) => values.delete(key),
+  }
+
+  assert.equal(writePersonalPlanStageNavigationIntent(storage, "/routine", 1_000), true)
+  assert.equal(consumePersonalPlanStageNavigationIntent(storage, "/routine", 1_001), true)
+  assert.equal(consumePersonalPlanStageNavigationIntent(storage, "/routine", 1_002), false)
+
+  writePersonalPlanStageNavigationIntent(storage, "/routine", 2_000)
+  assert.equal(consumePersonalPlanStageNavigationIntent(storage, "/anwendung", 2_001), false)
+  assert.equal(consumePersonalPlanStageNavigationIntent(storage, "/routine", 2_002), false)
+
+  writePersonalPlanStageNavigationIntent(storage, "/routine", 3_000)
+  assert.equal(
+    consumePersonalPlanStageNavigationIntent(
+      storage,
+      "/routine",
+      3_000 + PERSONAL_PLAN_STAGE_NAVIGATION_TTL_MS + 1,
+    ),
+    false,
+  )
+})
+
+test("stage navigation intent fails closed when storage is unavailable", () => {
+  const storage = {
+    getItem: () => {
+      throw new Error("blocked")
+    },
+    setItem: () => {
+      throw new Error("blocked")
+    },
+    removeItem: () => {
+      throw new Error("blocked")
+    },
+  }
+  assert.equal(writePersonalPlanStageNavigationIntent(storage, "/plan-start"), false)
+  assert.equal(consumePersonalPlanStageNavigationIntent(storage, "/plan-start"), false)
+})
+
+test("successful Stage 3 handoff marks Routine before invoking client route replacement", () => {
+  const calls: string[] = []
+  performPersonalPlanRoutineHandoff({ next: { href: "/routine" } } as never, {
+    markNavigation: (destination) => calls.push(`mark:${destination}`),
+    replaceRoute: (href) => calls.push(`replace:${href}`),
+  })
+
+  assert.deepEqual(calls, ["mark:/routine", "replace:/routine"])
+})
+
+test("automatic Stage 3 bootstrap keeps the meaningful Feinschliff bridge visible", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "transition-complete",
+    triggerContext: {
+      relevantCategories: ["shampoo"],
+      hasReportedIrritatedScalp: false,
+      dryShampooBridgeEligibility: "ineligible",
+    },
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+      dryingRoutes: [],
+      additionalHeatTools: [],
+      nightProtection: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+      "night_protection",
+    ],
+    completedHandoff: { refinedVersionId: "refined-transition", nextHref: "/plan-start" },
+    status: "complete",
+  })
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={{} as never}
+      initialSession={session}
+      onHandoff={() => new Promise(() => {})}
+      autoHandoff
+      directEntry
+    />,
+  )
+
+  assert.match(html, /Jetzt schauen wir uns deine Produkte an\./)
+  assert.match(html, /Produkte erfassen/)
+  assert.doesNotMatch(html, /Wir laden deinen Stand\./)
+})

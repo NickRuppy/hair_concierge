@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react"
 import Link from "next/link"
 import { Clock3, ImageIcon, Moon, PackageOpen } from "lucide-react"
 
@@ -328,7 +329,15 @@ function Shelf({ day }: { day: ApplicationDayView }) {
   )
 }
 
-export function ApplicationDayCard({ day }: { day: ApplicationDayView }) {
+export function ApplicationDayCard({
+  day,
+  onOpenDay,
+  navigationBasePath = "/anwendung",
+}: {
+  day: ApplicationDayView
+  onOpenDay?: (event: MouseEvent<HTMLAnchorElement>, dayType: ApplicationDayView["dayType"]) => void
+  navigationBasePath?: string
+}) {
   const fact = formatDayFact(day)
   const shelfSummary = shelfStatusSummary(day)
   const summary = day.summaryDe.replace(/[.!?]+$/, "")
@@ -336,7 +345,10 @@ export function ApplicationDayCard({ day }: { day: ApplicationDayView }) {
   return (
     <li className="w-full">
       <Link
-        href={`/anwendung/${day.dayType}`}
+        href={`${navigationBasePath}/${day.dayType}`}
+        prefetch={false}
+        data-application-navigation="day"
+        onClick={(event) => onOpenDay?.(event, day.dayType)}
         className="flex w-full flex-col rounded-[20px] border border-border bg-card p-3 text-left shadow-[0_12px_34px_-30px_rgba(var(--brand-plum-rgb),0.7)] transition-colors hover:border-[var(--brand-plum)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:p-4"
         aria-label={`${day.labelDe}: ${summary}${fact ? `. ${fact}` : ""}. Regal: ${shelfSummary}`}
       >

@@ -5,7 +5,10 @@ import type {
   RoutinePayloadV1,
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import {
+  PersonalPlanJourneyHeader,
+  PersonalPlanStageEntrance,
+} from "@/components/personal-plan-journey"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { routineCategoryLabel } from "./routine-item-card"
@@ -21,6 +24,7 @@ export type RoutinePageProps = {
   onReviewProposal?: () => void
   onItemDetail?: (item: RoutineItem) => void
   portfolioPresentation?: PortfolioPresentation | null
+  onOpenApplication?: () => void
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -47,6 +51,7 @@ export function RoutinePage({
   onReviewProposal,
   onItemDetail,
   portfolioPresentation = null,
+  onOpenApplication,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -103,114 +108,120 @@ export function RoutinePage({
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
       <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
-      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] space-y-5 px-3 py-4 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:max-w-[560px] sm:px-5 sm:py-5 lg:pb-12">
-        <header className="border-b border-[rgba(107,80,160,0.14)] pb-4">
-          <div>
+      <PersonalPlanStageEntrance destination="/routine">
+        <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] space-y-5 px-3 py-4 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:max-w-[560px] sm:px-5 sm:py-5 lg:pb-12">
+          <header className="border-b border-[rgba(107,80,160,0.14)] pb-4">
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-[var(--status-ok-text)]">
-                {successorProposal
-                  ? "Änderungen verfügbar"
-                  : initialProposal
-                    ? "Vorschlag"
-                    : "✓ Routine aktiv"}
-              </p>
-              <h1 className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
-                {successorProposal
-                  ? "Deine Routine bleibt aktiv."
-                  : initialProposal
-                    ? "Deine Routine wird vorbereitet."
-                    : "Deine Routine"}
-              </h1>
-              <p className="mt-1 text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
-                {initialProposal
-                  ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
-                  : successorProposal
-                    ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
-                    : `Dein Bedarfsplan mit ${activeProductCount} aktiven ${activeProductCount === 1 ? "Produkt" : "Produkten"}, Rhythmus und Anwendung.`}
-              </p>
-              {hasBlockingBasisGap ? (
-                <p
-                  role="status"
-                  className="mt-3 rounded-[14px] bg-[var(--status-danger-bg)] px-3 py-2 text-sm font-medium text-[var(--status-danger-text)]"
-                >
-                  Mindestens ein Basis-Baustein fehlt noch. Ergänze ihn, bevor du zur Anwendung
-                  wechselst.
+              <div>
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-[var(--status-ok-text)]">
+                  {successorProposal
+                    ? "Änderungen verfügbar"
+                    : initialProposal
+                      ? "Vorschlag"
+                      : "✓ Routine aktiv"}
                 </p>
-              ) : null}
+                <h1 className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
+                  {successorProposal
+                    ? "Deine Routine bleibt aktiv."
+                    : initialProposal
+                      ? "Deine Routine wird vorbereitet."
+                      : "Deine Routine"}
+                </h1>
+                <p className="mt-1 text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
+                  {initialProposal
+                    ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
+                    : successorProposal
+                      ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
+                      : `Dein Bedarfsplan mit ${activeProductCount} aktiven ${activeProductCount === 1 ? "Produkt" : "Produkten"}, Rhythmus und Anwendung.`}
+                </p>
+                {hasBlockingBasisGap ? (
+                  <p
+                    role="status"
+                    className="mt-3 rounded-[14px] bg-[var(--status-danger-bg)] px-3 py-2 text-sm font-medium text-[var(--status-danger-text)]"
+                  >
+                    Mindestens ein Basis-Baustein fehlt noch. Ergänze ihn, bevor du zur Anwendung
+                    wechselst.
+                  </p>
+                ) : null}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {canOpenApplication ? (
+                  <Link
+                    href="/anwendung"
+                    prefetch={true}
+                    onClick={onOpenApplication}
+                    className={`${buttonVariants({ variant: "funnelCta", size: "sm" })} min-w-[12rem] flex-1`}
+                  >
+                    Anwendung ansehen
+                  </Link>
+                ) : null}
+                {onEdit ? (
+                  <Button className="flex-1" variant="outline" size="sm" onClick={onEdit}>
+                    Anpassen
+                  </Button>
+                ) : null}
+                {successorProposal && onReviewProposal ? (
+                  <Button className="flex-1" variant="outline" size="sm" onClick={onReviewProposal}>
+                    Änderungen prüfen
+                  </Button>
+                ) : null}
+              </div>
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {canOpenApplication ? (
-                <Link
-                  href="/anwendung"
-                  className={`${buttonVariants({ variant: "funnelCta", size: "sm" })} min-w-[12rem] flex-1`}
-                >
-                  Anwendung ansehen
-                </Link>
-              ) : null}
-              {onEdit ? (
-                <Button className="flex-1" variant="outline" size="sm" onClick={onEdit}>
-                  Anpassen
-                </Button>
-              ) : null}
-              {successorProposal && onReviewProposal ? (
-                <Button className="flex-1" variant="outline" size="sm" onClick={onReviewProposal}>
-                  Änderungen prüfen
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        </header>
-        <RoutineSection
-          title="Deine Basis"
-          items={basisItems}
-          emptyLabel="Deine Basis wird aus deinem Bedarfsplan aufgebaut."
-          onItemDetail={onItemDetail}
-          presentation={portfolioPresentation}
-          productPresentation={view.productPresentation}
-        />
-        {optionalItems.length > 0 ? (
+          </header>
           <RoutineSection
-            title="Optional"
-            items={optionalItems}
+            title="Deine Basis"
+            items={basisItems}
+            emptyLabel="Deine Basis wird aus deinem Bedarfsplan aufgebaut."
             onItemDetail={onItemDetail}
             presentation={portfolioPresentation}
             productPresentation={view.productPresentation}
           />
-        ) : null}
-        {laterItems.length > 0 ? (
-          <RoutineSection
-            title="Später ergänzen"
-            items={laterItems}
-            variant="later"
-            onItemDetail={onItemDetail}
-            presentation={portfolioPresentation}
-            productPresentation={view.productPresentation}
-          />
-        ) : null}
-        {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
-        (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
-          <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">
-            <summary className="cursor-pointer text-sm font-semibold text-[var(--brand-plum-darkest)]">
-              Nicht verwendete Produkte (
-              {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) +
-                (portfolioPresentation?.retainedInventoryProducts?.length ?? 0)}
-              )
-            </summary>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              {portfolioPresentation?.retainedOwnedProducts.map((product) => (
-                <li key={product.capturedProductId}>
-                  {product.displayName} · {routineCategoryLabel(product.category)} · Nicht verwendet
-                </li>
-              ))}
-              {portfolioPresentation?.retainedInventoryProducts?.map((product) => (
-                <li key={product.capturedProductId}>
-                  {product.displayName} · {routineCategoryLabel(product.category)} · Nicht verwendet
-                </li>
-              ))}
-            </ul>
-          </details>
-        ) : null}
-      </main>
+          {optionalItems.length > 0 ? (
+            <RoutineSection
+              title="Optional"
+              items={optionalItems}
+              onItemDetail={onItemDetail}
+              presentation={portfolioPresentation}
+              productPresentation={view.productPresentation}
+            />
+          ) : null}
+          {laterItems.length > 0 ? (
+            <RoutineSection
+              title="Später ergänzen"
+              items={laterItems}
+              variant="later"
+              onItemDetail={onItemDetail}
+              presentation={portfolioPresentation}
+              productPresentation={view.productPresentation}
+            />
+          ) : null}
+          {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
+          (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
+            <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">
+              <summary className="cursor-pointer text-sm font-semibold text-[var(--brand-plum-darkest)]">
+                Nicht verwendete Produkte (
+                {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) +
+                  (portfolioPresentation?.retainedInventoryProducts?.length ?? 0)}
+                )
+              </summary>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                {portfolioPresentation?.retainedOwnedProducts.map((product) => (
+                  <li key={product.capturedProductId}>
+                    {product.displayName} · {routineCategoryLabel(product.category)} · Nicht
+                    verwendet
+                  </li>
+                ))}
+                {portfolioPresentation?.retainedInventoryProducts?.map((product) => (
+                  <li key={product.capturedProductId}>
+                    {product.displayName} · {routineCategoryLabel(product.category)} · Nicht
+                    verwendet
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ) : null}
+        </main>
+      </PersonalPlanStageEntrance>
     </div>
   )
 }

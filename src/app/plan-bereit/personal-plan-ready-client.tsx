@@ -7,6 +7,7 @@ import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { HairLength } from "@/lib/vocabulary/hair-length"
+import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 import {
   applyPersonalPlanReadyPollResponse,
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
@@ -229,6 +230,7 @@ export function PersonalPlanReadyClient({
 
                 <Link
                   href={nextHref}
+                  onClick={() => markPersonalPlanStageNavigation("/plan-start")}
                   className={cn(buttonVariants({ variant: "funnelCta", size: null }))}
                 >
                   Bedarfsplan ansehen
