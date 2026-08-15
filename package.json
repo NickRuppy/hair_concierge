@@ -49,6 +49,7 @@
     "personal-plan:application-v2-review": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-review.ts",
     "personal-plan:application-audit": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-generate.ts --check",
     "personal-plan:stage3:coverage-audit": "tsx scripts/personal-plan/audit-stage3-production-coverage.ts",
+    "catalog:authority:audit": "tsx scripts/catalog-authority/audit.ts",
     "products:intake:stage5-v2-application:preflight": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-preflight.ts",
     "products:intake:stage5-v2-application:apply": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-apply.ts",
     "bench:personal-plan-transitions": "tsx scripts/personal-plan/benchmark-transition-performance.ts",

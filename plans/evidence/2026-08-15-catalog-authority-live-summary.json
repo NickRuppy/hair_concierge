@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "mode": "read_only",
+  "productCount": 278,
+  "countsByCategory": {
+    "shampoo": 55,
+    "conditioner": 49,
+    "leave_in": 49,
+    "heat_protectant": 7,
+    "oil": 42,
+    "mask": 38,
+    "scalp_care": 8,
+    "dry_shampoo": 10,
+    "bondbuilder": 5,
+    "deep_cleansing_shampoo": 15
+  },
+  "countsByRelation": {
+    "application_guidance_protocols": 33,
+    "personal_plan_catalog_fact_evidence": 118,
+    "personal_plan_product_search_dispositions": 19,
+    "product_application_protocols": 290,
+    "product_bondbuilder_specs": 5,
+    "product_conditioner_rerank_specs": 49,
+    "product_conditioner_specs": 79,
+    "product_deep_cleansing_shampoo_specs": 15,
+    "product_dry_shampoo_specs": 10,
+    "product_heat_protectant_specs": 7,
+    "product_leave_in_eligibility": 239,
+    "product_leave_in_fit_specs": 49,
+    "product_leave_in_specs": 49,
+    "product_mask_specs": 38,
+    "product_oil_eligibility": 48,
+    "product_oil_specs": 26,
+    "product_scalp_care_specs": 8,
+    "product_shampoo_specs": 57,
+    "products": 278
+  },
+  "issueCountsWithoutSchemaInspection": {
+    "provenance_missing": 136,
+    "publication_incomplete": 242,
+    "legacy_thickness_divergence": 3,
+    "required_spec_missing": 28,
+    "overlapping_category_fact_authority": 49,
+    "required_protocol_missing": 34,
+    "contextual_matrix_empty": 204,
+    "contextual_matrix_incomplete": 3,
+    "exact_protocol_scope_mismatch": 1
+  },
+  "schemaIssueCounts": {
+    "required_index_or_constraint_missing": 17
+  },
+  "notes": [
+    "The receipt is a sanitized aggregate and contains no product IDs or user data.",
+    "All ten canonical category counts reconcile to the 278-product total.",
+    "Every relation count reconciles exactly with a separate direct SQL count on the same live database.",
+    "Issue counts describe target-contract migration debt; the audit performed no repair or write.",
+    "The publication roll-up includes defects found in every audit pass; all 242 gated products currently have target-state debt because normalized eligibility does not exist until Task 2.",
+    "Legacy thickness parity is independently observable only for Shampoo; trigger-derived Conditioner, Leave-in, and Oil projections are reported as missing target normalized eligibility rather than as parity evidence."
+  ]
+}
