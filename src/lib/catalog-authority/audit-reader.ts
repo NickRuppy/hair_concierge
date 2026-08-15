@@ -42,6 +42,8 @@ const FACT_TABLES = [
   "product_deep_cleansing_shampoo_specs",
 ] as const
 
+const ELIGIBILITY_TABLES = ["product_thickness_eligibility", "product_concern_eligibility"] as const
+
 const TABLE_CATEGORY: Record<(typeof FACT_TABLES)[number], PersonalPlanCategory> = {
   product_shampoo_specs: "shampoo",
   product_conditioner_specs: "conditioner",
@@ -78,6 +80,14 @@ const FACT_ORDER: Record<(typeof FACT_TABLES)[number], readonly string[]> = {
 
 const READ_REQUESTS: readonly CatalogAuditReadRequest[] = [
   { table: "products", orderBy: ["id"] },
+  {
+    table: "product_thickness_eligibility",
+    orderBy: ["product_id", "category_key", "thickness"],
+  },
+  {
+    table: "product_concern_eligibility",
+    orderBy: ["product_id", "category_key", "concern_key"],
+  },
   ...FACT_TABLES.map((table) => ({ table, orderBy: FACT_ORDER[table] })),
   {
     table: "product_application_protocols",
@@ -106,9 +116,14 @@ export async function readCatalogAuthorityAuditSnapshot(
   const factRowsByTable = new Map(
     FACT_TABLES.map((table) => [table, rows.get(table) ?? []] as const),
   )
-  const facts = FACT_TABLES.flatMap((table) =>
-    (factRowsByTable.get(table) ?? []).flatMap((row) => normalizeFactRow(table, row)),
-  )
+  const facts = [
+    ...FACT_TABLES.flatMap((table) =>
+      (factRowsByTable.get(table) ?? []).flatMap((row) => normalizeFactRow(table, row)),
+    ),
+    ...ELIGIBILITY_TABLES.flatMap((table) =>
+      (rows.get(table) ?? []).flatMap((row) => normalizeEligibilityRow(table, row)),
+    ),
+  ]
   const dispositionedIds = new Set(
     (rows.get("personal_plan_product_search_dispositions") ?? [])
       .map((row) => text(row.product_id))
@@ -187,8 +202,9 @@ function normalizeProduct(
       suitableThicknesses,
       suitableConcerns,
       canonicalThicknesses: canonicalThicknesses(productId, categoryKey, facts),
-      // Task 2 introduces normalized concern eligibility. Null is explicit: the
-      // current live audit must not claim parity by comparing a legacy field to itself.
+      // Task 2's normalized rows are expand-phase projections of this legacy
+      // field. Do not claim independent canonical parity until repair and the
+      // transactional publication boundary take ownership in later tasks.
       canonicalConcerns: null,
       requiredRoles: requiredRoles(productId, categoryKey, facts),
       dispositioned: dispositionedIds.has(productId),
@@ -207,6 +223,26 @@ function normalizeFactRow(table: (typeof FACT_TABLES)[number], row: Row): Catalo
       complete: factComplete(table, row),
       contextualKey: contextualKey(table, row),
       thickness: text(row.thickness),
+    },
+  ]
+}
+
+function normalizeEligibilityRow(
+  table: (typeof ELIGIBILITY_TABLES)[number],
+  row: Row,
+): CatalogAuditFactRow[] {
+  const productId = text(row.product_id)
+  const expectedCategory = category(text(row.category_key))
+  const value = text(table === "product_thickness_eligibility" ? row.thickness : row.concern_key)
+  if (!productId || !expectedCategory || !value) return []
+  return [
+    {
+      table,
+      productId,
+      expectedCategory,
+      complete: true,
+      contextualKey: value,
+      thickness: table === "product_thickness_eligibility" ? value : null,
     },
   ]
 }
@@ -301,11 +337,8 @@ function canonicalThicknesses(
   if (categoryKey === "heat_protectant") return null
   // Shampoo is the only current thickness fact whose legacy sync trigger has
   // been retired. Conditioner, Leave-in, and Oil still derive their rows from
-  // suitable_thicknesses, so comparing them would only compare a value to its projection.
+  // suitable_thicknesses, so comparing them would only compare a projection.
   const table = categoryKey === "shampoo" ? "product_shampoo_specs" : undefined
-  // Categories without a current contextual thickness relation become
-  // auditable when Task 2 adds normalized eligibility. Do not self-compare the
-  // legacy array and report a misleading clean parity result meanwhile.
   if (!table) return null
   const values = (facts.get(table) ?? [])
     .filter((row) => text(row.product_id) === productId)

@@ -139,24 +139,44 @@ export type CatalogAuthorityAuditReceipt = {
   clean: boolean
 }
 
+const CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES = [
+  "product_shampoo_specs",
+  "product_conditioner_specs",
+  "product_conditioner_rerank_specs",
+  "product_leave_in_specs",
+  "product_leave_in_eligibility",
+  "product_heat_protectant_specs",
+  "product_oil_specs",
+  "product_oil_eligibility",
+  "product_mask_specs",
+  "product_scalp_care_specs",
+  "product_dry_shampoo_specs",
+  "product_bondbuilder_specs",
+  "product_deep_cleansing_shampoo_specs",
+  "product_application_protocols",
+] as const
+
 export const CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS = [
   "products_origin_check",
   "products_category_key_fkey",
   "products_id_category_key_key",
-  ...[
-    "product_shampoo_specs",
-    "product_conditioner_specs",
-    "product_conditioner_rerank_specs",
-    "product_leave_in_specs",
-    "product_leave_in_eligibility",
-    "product_heat_protectant_specs",
-    "product_oil_specs",
-    "product_oil_eligibility",
-    "product_mask_specs",
-    "product_scalp_care_specs",
-    "product_dry_shampoo_specs",
-    "product_bondbuilder_specs",
-    "product_deep_cleansing_shampoo_specs",
-    "product_application_protocols",
-  ].map((table) => `${table}_product_category_fkey`),
+  "products_category_key_not_null_check",
+  "product_thickness_eligibility_product_category_fkey",
+  "product_concern_eligibility_product_category_fkey",
+  "product_shampoo_specs_thickness_eligibility_fkey",
+  "product_conditioner_specs_thickness_eligibility_fkey",
+  "product_leave_in_eligibility_thickness_eligibility_fkey",
+  "product_oil_eligibility_thickness_eligibility_fkey",
+  ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_fkey`),
+  ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_idx`),
+] as const
+
+// Task 2 installs the composite identity constraints as NOT VALID so they
+// protect new writes before historical repair. Task 3 promotes them here once
+// the audited backfill is clean and the constraints are validated.
+export const CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS = [
+  "products_origin_check",
+  "products_category_key_fkey",
+  "products_id_category_key_key",
+  ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_idx`),
 ] as const

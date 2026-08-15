@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process"
 import test from "node:test"
 
 import { parseCatalogAuthorityAuditArgs } from "../scripts/catalog-authority/audit"
+import { CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS } from "../src/lib/catalog-authority/contracts"
 
 test("catalogue audit arguments keep live mode read-only and explicit", () => {
   assert.deepEqual(parseCatalogAuthorityAuditArgs([]), {
@@ -75,7 +76,12 @@ test("catalogue audit replays a sanitized snapshot without credentials or writes
     const receipt = JSON.parse(result.stdout) as Record<string, unknown>
     assert.equal(receipt.mode, "read_only")
     assert.equal(receipt.clean, false)
-    assert.match(result.stderr, /0 products, 17 issues, mode=read_only/)
+    assert.match(
+      result.stderr,
+      new RegExp(
+        `0 products, ${CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS.length} issues, mode=read_only`,
+      ),
+    )
   } finally {
     rmSync(directory, { recursive: true, force: true })
   }

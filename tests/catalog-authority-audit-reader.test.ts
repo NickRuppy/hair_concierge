@@ -47,6 +47,14 @@ test("the snapshot reader exhaustively requests only the declared read relations
       ],
     ],
     [
+      "product_thickness_eligibility",
+      [{ product_id: PRODUCT_ID, category_key: "shampoo", thickness: "normal" }],
+    ],
+    [
+      "product_concern_eligibility",
+      [{ product_id: PRODUCT_ID, category_key: "shampoo", concern_key: "dryness" }],
+    ],
+    [
       "product_application_protocols",
       [
         {
@@ -94,7 +102,7 @@ test("the snapshot reader exhaustively requests only the declared read relations
   const snapshot = await readCatalogAuthorityAuditSnapshot(source, {
     inspectedAt: "2026-08-15T12:00:00.000Z",
     schemaObjects: CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS.map((name) => ({
-      kind: "constraint",
+      kind: name.endsWith("_idx") ? ("index" as const) : ("constraint" as const),
       name,
       valid: true,
       definition: "verified fixture constraint",
@@ -113,7 +121,58 @@ test("the snapshot reader exhaustively requests only the declared read relations
   assert.equal(receipt.countsByRelation.products, 1)
   assert.equal(receipt.countsByRelation.product_shampoo_specs, 1)
   assert.equal(receipt.countsByRelation.product_application_protocols, 1)
+  assert.equal(receipt.countsByRelation.product_thickness_eligibility, 1)
+  assert.deepEqual(snapshot.products[0]?.canonicalThicknesses, ["normal"])
+  assert.equal(snapshot.products[0]?.canonicalConcerns, null)
+  assert.equal(
+    snapshot.facts.some(
+      (fact) =>
+        fact.table === "product_thickness_eligibility" &&
+        fact.productId === PRODUCT_ID &&
+        fact.contextualKey === "normal",
+    ),
+    true,
+  )
   assert.equal(receipt.countsByRelation.product_oil_specs, 0)
+})
+
+test("expand-phase eligibility projections are counted without claiming canonical parity", async () => {
+  const source: CatalogAuditDataSource = {
+    async readAll(request) {
+      const rows: Record<string, unknown>[] =
+        request.table === "products"
+          ? [
+              {
+                id: PRODUCT_ID,
+                origin: "curated",
+                category_key: "oil",
+                category: "Öle",
+                is_active: false,
+                lifecycle_status: "active",
+                is_chaarlie_recommended: false,
+                suitable_thicknesses: ["fine", "coarse"],
+                suitable_concerns: ["dryness"],
+              },
+            ]
+          : request.table === "product_oil_eligibility"
+            ? [{ product_id: PRODUCT_ID, thickness: "normal", oil_subtype: "styling-oel" }]
+            : request.table === "product_thickness_eligibility"
+              ? [
+                  { product_id: PRODUCT_ID, category_key: "oil", thickness: "coarse" },
+                  { product_id: PRODUCT_ID, category_key: "shampoo", thickness: "fine" },
+                ]
+              : request.table === "product_concern_eligibility"
+                ? [{ product_id: PRODUCT_ID, category_key: "oil", concern_key: "repair" }]
+                : []
+      return { rows, exactCount: rows.length }
+    },
+  }
+
+  const snapshot = await readCatalogAuthorityAuditSnapshot(source)
+
+  assert.equal(snapshot.products[0]?.canonicalThicknesses, null)
+  assert.equal(snapshot.products[0]?.canonicalConcerns, null)
+  assert.equal(snapshot.facts.filter((fact) => fact.table.endsWith("_eligibility")).length, 4)
 })
 
 test("the Supabase read source follows every page with stable ordering and exposes no writer", async () => {

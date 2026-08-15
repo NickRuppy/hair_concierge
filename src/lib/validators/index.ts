@@ -51,6 +51,7 @@ import {
   RESET_FOCUSES,
   RESET_INTENSITIES,
 } from "@/lib/recommendation-engine/contracts"
+import { normalizeCategoryKey } from "@/lib/product-identity"
 
 const brushTypeSchema = z
   .union([
@@ -158,7 +159,11 @@ export const productSchema = z
     name: z.string().min(1, "Name ist erforderlich."),
     brand: nullableTextField.default(null),
     description: nullableTextField.default(null),
-    category: nullableTextField.default(null),
+    category: z
+      .string()
+      .trim()
+      .min(1, "Kategorie ist erforderlich.")
+      .refine((value) => normalizeCategoryKey(value) !== null, "Kategorie wird nicht unterstützt."),
     affiliate_link: nullableUrlField.default(null),
     purchase_link_status: z.enum(["available", "unavailable"]).nullable().optional(),
     purchase_link_checked_at: z.string().nullable().optional(),

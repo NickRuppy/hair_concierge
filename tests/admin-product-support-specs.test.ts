@@ -72,7 +72,7 @@ test("product schema accepts engine-native mask specs", () => {
 test("product schema preserves purchase-link health fields without category specs", () => {
   const parsed = productSchema.safeParse(
     buildBaseProduct({
-      category: null,
+      category: "Serum",
       purchase_link_status: "unavailable",
       purchase_link_checked_at: "2026-06-09T12:05:00.000Z",
       price_checked_at: "2026-06-09T12:10:00.000Z",
@@ -86,6 +86,16 @@ test("product schema preserves purchase-link health fields without category spec
   assert.equal(parsed.data.purchase_link_status, "unavailable")
   assert.equal(parsed.data.purchase_link_checked_at, "2026-06-09T12:05:00.000Z")
   assert.equal(parsed.data.price_checked_at, "2026-06-09T12:10:00.000Z")
+})
+
+test("product schema rejects missing and unmapped catalogue categories", () => {
+  for (const category of [null, "", "Freie Fantasiekategorie"]) {
+    const parsed = productSchema.safeParse(buildBaseProduct({ category }))
+
+    assert.equal(parsed.success, false)
+    if (parsed.success) throw new Error(`Expected category ${String(category)} to fail`)
+    assert.ok(parsed.error.flatten().fieldErrors.category)
+  }
 })
 
 test("product schema requires deep-cleansing specs for deep-cleansing products", () => {
