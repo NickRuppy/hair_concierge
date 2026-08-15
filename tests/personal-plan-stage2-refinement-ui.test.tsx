@@ -240,13 +240,19 @@ test("renders wet-wash frequency with the shared rare-to-daily slider and a sepa
   assert.match(html, /aria-label="Häufigkeit der Haarwäsche"/)
   assert.match(html, /aria-valuemin="0"/)
   assert.match(html, /aria-valuemax="7"/)
-  assert.match(html, /&lt; 1x\/M/)
-  assert.match(html, /2 Wo\./)
+  assert.match(html, /aria-label="&lt;1×\/Monat"/)
+  assert.match(html, /aria-label="Alle 2 Wochen"/)
+  assert.match(html, /data-slider-label-line="1"[^>]*>&lt;1×\/<\/span>/)
+  assert.match(html, /data-slider-label-line="2"[^>]*>Monat<\/span>/)
   assert.doesNotMatch(html, /data-wet-wash-frequency-rail/)
   assert.doesNotMatch(html, /data-wet-wash-frequency-rank/)
-  assert.ok(html.indexOf("Seltener als 1x\/Monat") < html.indexOf("Täglich"))
   assert.ok(
-    html.indexOf("Seltener als 1x/Monat") < html.indexOf("Ich wasche meine Haare nicht nass"),
+    html.indexOf('data-slider-stop-label="less_than_monthly"') <
+      html.indexOf('data-slider-stop-label="daily_1x"'),
+  )
+  assert.ok(
+    html.indexOf('data-slider-stop-label="less_than_monthly"') <
+      html.indexOf("Ich wasche meine Haare nicht nass"),
   )
 
   const resumedNoWashSession = createStage2RefinementSession({

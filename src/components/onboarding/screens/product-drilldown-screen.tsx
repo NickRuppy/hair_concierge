@@ -9,7 +9,7 @@ import {
 } from "@/components/product-intake/product-intake-form-fields"
 import { Button } from "@/components/ui/button"
 import { DiscreteSlider } from "@/components/ui/slider"
-import { PRODUCT_FREQUENCY_OPTIONS } from "@/lib/vocabulary"
+import { PRODUCT_FREQUENCY_OPTIONS, PRODUCT_FREQUENCY_SLIDER_LABEL_LINES } from "@/lib/vocabulary"
 import type { ProductFrequency } from "@/lib/vocabulary"
 import {
   canSubmitProductIntake,
@@ -21,15 +21,7 @@ import type { OnboardingProductIntakeMethod } from "@/lib/onboarding/store"
 
 const PRODUCT_FREQUENCY_SLIDER_STOPS = PRODUCT_FREQUENCY_OPTIONS.map((option) => ({
   ...option,
-  shortLabel: option.label
-    .replace("Seltener als 1x/Monat", "<1x/M")
-    .replace("Ca. 1x/Monat", "1x/M")
-    .replace("Ca. alle 2 Wochen", "2W")
-    .replace("1x/Woche", "1x/W")
-    .replace("2x/Woche", "2x/W")
-    .replace("3-4x/Woche", "3-4x/W")
-    .replace("5-6x/Woche", "5-6x/W")
-    .replace("Täglich", "tgl."),
+  labelLines: PRODUCT_FREQUENCY_SLIDER_LABEL_LINES[option.value],
 }))
 import { InfoTip } from "@/components/ui/info-tip"
 import { INFO_TIPS, type InfoTipId } from "@/lib/help/info-tips"

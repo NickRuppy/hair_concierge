@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 export interface SliderStop {
   value: string
   label: string
-  shortLabel?: string
+  labelLines?: readonly [line1: string, line2: string]
 }
 
 export interface DiscreteSliderProps {
@@ -26,6 +26,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
     const maxIndex = Math.max(stops.length - 1, 1)
     const selectedIndex = value ? stops.findIndex((s) => s.value === value) : -1
     const fillPercent = selectedIndex >= 0 ? (selectedIndex / maxIndex) * 100 : 0
+    const hasTwoLineLabels = stops.length > 0 && stops.every((stop) => stop.labelLines)
 
     const selectIndex = React.useCallback(
       (index: number) => {
@@ -97,6 +98,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
           ref={trackRef}
           className={cn(
             "relative h-10 flex items-center touch-none rounded-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+            hasTwoLineLabels && "mx-10",
             disabled ? "cursor-not-allowed" : "cursor-pointer",
           )}
           onPointerDown={handlePointerDown}
@@ -130,6 +132,8 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
             return (
               <div
                 key={i}
+                data-slider-stop-marker={stops[i].value}
+                data-slider-stop-index={i}
                 className={cn(
                   "absolute top-1/2 -translate-x-1/2 -translate-y-1/2 h-3 w-3 rounded-full border-2 transition-colors",
                   isActive
@@ -153,29 +157,74 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
         </div>
 
         {/* Labels row */}
-        <div className="relative mt-1 flex justify-between">
-          {stops.map((stop, i) => (
-            <button
-              key={stop.value}
-              type="button"
-              aria-label={stop.label}
-              disabled={disabled}
-              className={cn(
-                "text-[11px] leading-tight text-center transition-colors px-0.5 max-w-[20%]",
-                i === selectedIndex
-                  ? "text-primary font-semibold"
-                  : selectedIndex >= 0
-                    ? "text-muted-foreground"
-                    : "text-muted-foreground/60",
-                !disabled && "cursor-pointer hover:text-foreground",
-              )}
-              onClick={() => selectIndex(i)}
-            >
-              <span className="hidden sm:inline">{stop.label}</span>
-              <span className="sm:hidden">{stop.shortLabel || stop.label}</span>
-            </button>
-          ))}
-        </div>
+        {hasTwoLineLabels ? (
+          <div data-slider-label-lane="true" className="relative mx-10 mt-1 h-11">
+            {stops.map((stop, i) => {
+              const pos = (i / maxIndex) * 100
+              const labelLines = stop.labelLines
+              const visibleLabel = labelLines
+                ? `${labelLines[0]}${labelLines[0].endsWith("/") ? "" : " "}${labelLines[1]}`
+                : stop.label
+              return (
+                <button
+                  key={stop.value}
+                  type="button"
+                  aria-label={visibleLabel}
+                  data-slider-stop-label={stop.value}
+                  data-slider-stop-index={i}
+                  disabled={disabled}
+                  className={cn(
+                    "absolute top-0 -translate-x-1/2 whitespace-nowrap px-0 py-1 text-center text-[11px] font-medium leading-tight transition-colors",
+                    i === selectedIndex
+                      ? "font-semibold text-primary"
+                      : selectedIndex >= 0
+                        ? "text-muted-foreground"
+                        : "text-muted-foreground/60",
+                    !disabled && "cursor-pointer hover:text-foreground",
+                  )}
+                  style={{ left: `${pos}%`, width: "min(12%, 2.5rem)" }}
+                  onClick={() => selectIndex(i)}
+                >
+                  {labelLines ? (
+                    <>
+                      <span data-slider-label-line="1" className="block">
+                        {labelLines[0]}
+                      </span>
+                      <span data-slider-label-line="2" className="block">
+                        {labelLines[1]}
+                      </span>
+                    </>
+                  ) : (
+                    stop.label
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="relative mt-1 flex justify-between">
+            {stops.map((stop, i) => (
+              <button
+                key={stop.value}
+                type="button"
+                aria-label={stop.label}
+                disabled={disabled}
+                className={cn(
+                  "max-w-[20%] px-0.5 text-center text-[11px] leading-tight transition-colors",
+                  i === selectedIndex
+                    ? "font-semibold text-primary"
+                    : selectedIndex >= 0
+                      ? "text-muted-foreground"
+                      : "text-muted-foreground/60",
+                  !disabled && "cursor-pointer hover:text-foreground",
+                )}
+                onClick={() => selectIndex(i)}
+              >
+                <span>{stop.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     )
   },

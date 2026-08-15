@@ -28,10 +28,59 @@ async function chooseNoneAndContinue(page: Page, label = "Nichts davon") {
   await continueButton(page).click()
 }
 
+const frequencyLabelLines = [
+  ["<1×/", "Monat"],
+  ["1×/", "Monat"],
+  ["Alle 2", "Wochen"],
+  ["1×/", "Woche"],
+  ["2×/", "Woche"],
+  ["3–4×/", "Woche"],
+  ["5–6×/", "Woche"],
+  ["1×/", "Tag"],
+] as const
+
+async function expectFrequencyLabelsAligned(page: Page) {
+  await page.evaluate(async () => {
+    await Promise.all(
+      document.getAnimations().map((animation) => animation.finished.catch(() => {})),
+    )
+  })
+  const labels = page.locator("[data-slider-stop-label]")
+  await expect(labels).toHaveCount(frequencyLabelLines.length)
+
+  for (let index = 0; index < frequencyLabelLines.length; index += 1) {
+    const marker = page.locator(`[data-slider-stop-marker][data-slider-stop-index="${index}"]`)
+    const label = labels.nth(index)
+    const [markerBox, labelBox] = await Promise.all([marker.boundingBox(), label.boundingBox()])
+    expect(markerBox).not.toBeNull()
+    expect(labelBox).not.toBeNull()
+    expect(
+      Math.abs(markerBox!.x + markerBox!.width / 2 - (labelBox!.x + labelBox!.width / 2)),
+    ).toBeLessThanOrEqual(1)
+    expect(labelBox!.x).toBeGreaterThanOrEqual(0)
+    const labelRight = labelBox!.x + labelBox!.width
+    expect(
+      labelRight,
+      `frequency label ${index} ends at ${labelRight}px in a ${page.viewportSize()!.width}px viewport`,
+    ).toBeLessThanOrEqual(page.viewportSize()!.width)
+    await expect(label.locator('[data-slider-label-line="1"]')).toHaveText(
+      frequencyLabelLines[index][0],
+    )
+    await expect(label.locator('[data-slider-label-line="2"]')).toHaveText(
+      frequencyLabelLines[index][1],
+    )
+  }
+
+  const noHorizontalOverflow = await page
+    .locator("html")
+    .evaluate((element: HTMLElement) => element.scrollWidth <= element.clientWidth)
+  expect(noHorizontalOverflow).toBe(true)
+}
+
 async function finishNeutral(page: Page, shampooAlreadySelected = false) {
   if (shampooAlreadySelected) await continueButton(page).click()
   else await chooseAndContinue(page, "Shampoo")
-  await chooseAndContinue(page, "2x/Woche")
+  await chooseAndContinue(page, "2×/Woche")
   await chooseAndContinue(page, "Kein Handtuch oder Tuch")
   await chooseNoneAndContinue(page)
   await chooseNoneAndContinue(page)
@@ -81,12 +130,40 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(page).toHaveURL(/scenario=ready/)
   })
 
+  test("keeps every wet-wash label centered on its marker across mobile and desktop widths", async ({
+    page,
+  }) => {
+    await begin(page)
+    await chooseAndContinue(page, "Shampoo")
+
+    for (const width of [375, 390, 430, 1280]) {
+      await page.setViewportSize({ width, height: width === 1280 ? 900 : 844 })
+      await expectFrequencyLabelsAligned(page)
+    }
+
+    const slider = page.getByRole("slider", { name: "Häufigkeit der Haarwäsche" })
+    await page.getByRole("button", { name: "1×/Woche" }).click()
+    await expect(slider).toHaveAttribute("aria-valuetext", "1x/Woche")
+    await expect(page.getByText("1x/Woche", { exact: true })).toBeVisible()
+    await slider.press("ArrowRight")
+    await expect(slider).toHaveAttribute("aria-valuetext", "2x/Woche")
+    await slider.press("Home")
+    await expect(slider).toHaveAttribute("aria-valuetext", "Seltener als 1x/Monat")
+    await slider.press("End")
+    await expect(slider).toHaveAttribute("aria-valuetext", "Täglich")
+    await page.locator('[data-slider-stop-marker="weekly_1x"]').click()
+    await expect(slider).toHaveAttribute("aria-valuetext", "1x/Woche")
+
+    await page.getByRole("button", { name: /Ich wasche meine Haare nicht nass/ }).click()
+    await expect(slider).not.toHaveAttribute("aria-valuenow")
+  })
+
   test("conditional journey keeps ordered heat events separate and never renders a result", async ({
     page,
   }) => {
     await begin(page, "conditional")
     await chooseAndContinue(page, "Öl")
-    await chooseAndContinue(page, "2x/Woche")
+    await chooseAndContinue(page, "2×/Woche")
     await page.getByRole("button", { name: "Brennend, schmerzhaft oder entzündet" }).click()
     await expect(page.getByText(/kosmetische Kopfhaut-Empfehlungen pausieren/i)).toBeVisible()
     await continueButton(page).click()

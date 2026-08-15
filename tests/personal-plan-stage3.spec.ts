@@ -39,7 +39,36 @@ async function searchAndSelect(page: Page, query: string, productName: string) {
   const option = page.getByRole("option", { name: `${productName} auswählen`, exact: true })
   await expect(option).toBeVisible()
   await option.click()
-  await page.getByRole("button", { name: /2x\/Woche/ }).click()
+  await page.getByRole("button", { name: "2×/Woche" }).click()
+}
+
+async function expectProductFrequencyLabelsAligned(page: Page) {
+  await page.evaluate(async () => {
+    await Promise.all(
+      document.getAnimations().map((animation) => animation.finished.catch(() => {})),
+    )
+  })
+  const labels = page.locator("[data-slider-stop-label]")
+  await expect(labels).toHaveCount(8)
+
+  for (let index = 0; index < 8; index += 1) {
+    const marker = page.locator(`[data-slider-stop-marker][data-slider-stop-index="${index}"]`)
+    const label = labels.nth(index)
+    const [markerBox, labelBox] = await Promise.all([marker.boundingBox(), label.boundingBox()])
+    expect(markerBox).not.toBeNull()
+    expect(labelBox).not.toBeNull()
+    expect(
+      Math.abs(markerBox!.x + markerBox!.width / 2 - (labelBox!.x + labelBox!.width / 2)),
+    ).toBeLessThanOrEqual(1)
+    expect(labelBox!.x).toBeGreaterThanOrEqual(0)
+    expect(labelBox!.x + labelBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width)
+    await expect(label.locator("[data-slider-label-line]")).toHaveCount(2)
+  }
+
+  const noHorizontalOverflow = await page
+    .locator("html")
+    .evaluate((element: HTMLElement) => element.scrollWidth <= element.clientWidth)
+  expect(noHorizontalOverflow).toBe(true)
 }
 
 async function expectUncoveredChooserToFitViewport(page: Page) {
@@ -97,7 +126,7 @@ test.describe("Personal Plan products lab", () => {
     )
     await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
     await page.getByLabel("Produktname").fill("Kopfhaut-Tonic")
-    await page.getByRole("button", { name: "1x/Woche" }).click()
+    await page.getByRole("button", { name: "1×/Woche" }).click()
     await page.getByRole("button", { name: "Produkt speichern" }).click()
     await expect(page.getByText("Analyse läuft", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
@@ -107,7 +136,7 @@ test.describe("Personal Plan products lab", () => {
     await expect(page.getByRole("status")).toContainText(/Wir haben dein Produkt nicht gefunden/i)
     await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
     await page.getByLabel("Produktname").fill("Hitzeschutz Spray")
-    await page.getByRole("button", { name: "1x/Woche" }).click()
+    await page.getByRole("button", { name: "1×/Woche" }).click()
     await page.getByRole("button", { name: "Produkt speichern" }).click()
     await expect(page.getByText("Analyse läuft", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
@@ -164,6 +193,30 @@ test.describe("Personal Plan products lab", () => {
 
     await page.waitForURL((url) => url.pathname !== labPath)
     await expect(page).not.toHaveURL(new RegExp(`${labPath}$`))
+  })
+
+  test("keeps product-frequency labels centered on their markers at every target width", async ({
+    page,
+  }) => {
+    await openStage3Lab(page)
+    const search = page.getByRole("searchbox", { name: "Produkt suchen" })
+    await search.fill("Balance")
+    await page
+      .getByRole("option", {
+        name: "Chaarlie Fixture Conditioner Balance auswählen",
+        exact: true,
+      })
+      .click()
+
+    for (const width of [375, 390, 430, 1280]) {
+      await page.setViewportSize({ width, height: width === 1280 ? 900 : 844 })
+      await expectProductFrequencyLabelsAligned(page)
+    }
+
+    const slider = page.getByRole("slider", { name: "Nutzungshäufigkeit" })
+    await page.getByRole("button", { name: "3–4×/Woche" }).click()
+    await expect(slider).toHaveAttribute("aria-valuetext", "3-4x/Woche")
+    await expect(page.getByText("3-4x/Woche", { exact: true })).toBeVisible()
   })
 
   test("contains the Stage 3 surface on desktop", async ({ page }) => {

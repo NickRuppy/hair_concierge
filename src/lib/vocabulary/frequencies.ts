@@ -122,26 +122,18 @@ export const PRODUCT_FREQUENCY_LABELS = Object.fromEntries(
   PRODUCT_FREQUENCIES.map((value) => [value, PRODUCT_FREQUENCY_METADATA[value].label]),
 ) as Record<ProductFrequency, string>
 
-export function productFrequencyShortLabel(value: ProductFrequency): string {
-  switch (value) {
-    case "less_than_monthly":
-      return "< 1x/M"
-    case "monthly_1x":
-      return "1x/M"
-    case "biweekly_1x":
-      return "2 Wo."
-    case "weekly_1x":
-      return "1x/W"
-    case "weekly_2x":
-      return "2x/W"
-    case "weekly_3_4x":
-      return "3-4x/W"
-    case "weekly_5_6x":
-      return "5-6x/W"
-    case "daily_1x":
-      return "Täglich"
-  }
-}
+export type ProductFrequencySliderLabelLines = readonly [line1: string, line2: string]
+
+export const PRODUCT_FREQUENCY_SLIDER_LABEL_LINES = {
+  less_than_monthly: ["<1×/", "Monat"],
+  monthly_1x: ["1×/", "Monat"],
+  biweekly_1x: ["Alle 2", "Wochen"],
+  weekly_1x: ["1×/", "Woche"],
+  weekly_2x: ["2×/", "Woche"],
+  weekly_3_4x: ["3–4×/", "Woche"],
+  weekly_5_6x: ["5–6×/", "Woche"],
+  daily_1x: ["1×/", "Tag"],
+} as const satisfies Record<ProductFrequency, ProductFrequencySliderLabelLines>
 
 export const PRODUCT_FREQUENCY_OPTIONS = PRODUCT_FREQUENCIES.map((value) => ({
   value,

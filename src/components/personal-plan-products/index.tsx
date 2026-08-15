@@ -48,7 +48,6 @@ export type Stage3CapturedProductSummary = {
 export type Stage3FrequencyOption = {
   value: string
   label: string
-  shortLabel?: string
 }
 
 export type Stage3ProductKindOption = {
@@ -580,7 +579,6 @@ export function ProductFrequencyPicker({
   const stops = options.map((option) => ({
     value: option.value,
     label: option.label,
-    shortLabel: option.shortLabel ?? option.label,
   }))
 
   return (
