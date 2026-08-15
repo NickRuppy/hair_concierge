@@ -23,6 +23,7 @@ export function PersonalPlanJourneyHeader({
   backLabel = "Zurück",
   sticky = true,
   centeredBrand = false,
+  showWordmark = true,
 }: {
   currentStage: PersonalPlanJourneyStage
   saveStatus?: PersonalPlanSaveStatus
@@ -31,6 +32,8 @@ export function PersonalPlanJourneyHeader({
   backLabel?: string
   sticky?: boolean
   centeredBrand?: boolean
+  /** false auf Seiten, deren App-Shell die Wortmarke bereits zeigt (/routine, /anwendung). */
+  showWordmark?: boolean
 }) {
   return (
     <header
@@ -43,10 +46,13 @@ export function PersonalPlanJourneyHeader({
       <div className="mx-auto w-full max-w-[720px] px-4 pb-3 pt-2.5 sm:px-6">
         <div
           className={cn(
-            "grid min-h-10 items-center gap-2",
+            "grid items-center gap-2",
+            showWordmark ? "min-h-10" : "min-h-6",
             centeredBrand
               ? "grid-cols-[44px_minmax(0,1fr)_44px]"
-              : "grid-cols-[44px_minmax(0,1fr)_7rem]",
+              : showWordmark || onBack
+                ? "grid-cols-[44px_minmax(0,1fr)_7rem]"
+                : "grid-cols-[minmax(0,1fr)_7rem]",
           )}
         >
           {onBack ? (
@@ -58,12 +64,16 @@ export function PersonalPlanJourneyHeader({
             >
               <ArrowLeft className="h-5 w-5" aria-hidden="true" />
             </button>
+          ) : showWordmark || centeredBrand ? (
+            <span aria-hidden="true" />
+          ) : null}
+          {showWordmark ? (
+            <span className="text-center font-header text-xl text-[var(--brand-plum-darkest)]">
+              chaarlie
+            </span>
           ) : (
             <span aria-hidden="true" />
           )}
-          <span className="text-center font-header text-xl text-[var(--brand-plum-darkest)]">
-            chaarlie
-          </span>
           <span
             aria-live="polite"
             className={cn(

@@ -59,7 +59,7 @@ export function RoutinePage({
     const needsRepair = view.status === "authority_repair_required" && view.repair
     return (
       <div className="min-h-dvh bg-[var(--background)]">
-        <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
+        <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" showWordmark={false} />
         <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] px-3 py-8 sm:max-w-[560px] sm:px-5 sm:py-12">
           <section
             aria-live="polite"
@@ -102,12 +102,16 @@ export function RoutinePage({
   const activeProductCount = [...basisItems, ...optionalItems].filter(
     (item) => item.executable && item.state.inclusion === "included",
   ).length
+  // Für die Kopfzeile zählt die Routine-Größe, nicht nur schon vorhandene Produkte.
+  const includedProductCount = [...basisItems, ...optionalItems].filter(
+    (item) => item.state.inclusion === "included",
+  ).length
   const hasBlockingBasisGap = basisItems.some(isBlockingBasisGap)
   const canOpenApplication = Boolean(view.activeVersion && stage5Reachable && !hasBlockingBasisGap)
 
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
-      <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
+      <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" showWordmark={false} />
       <PersonalPlanStageEntrance destination="/routine">
         <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] space-y-5 px-3 py-4 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:max-w-[560px] sm:px-5 sm:py-5 lg:pb-12">
           <header className="border-b border-[rgba(107,80,160,0.14)] pb-4">
@@ -132,7 +136,11 @@ export function RoutinePage({
                     ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
                     : successorProposal
                       ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
-                      : `Dein Idealplan mit ${activeProductCount} aktiven ${activeProductCount === 1 ? "Produkt" : "Produkten"}, Rhythmus und Anwendung.`}
+                      : includedProductCount === 0
+                        ? "Deine Routine ist bereit."
+                        : activeProductCount > 0
+                          ? `Deine Routine mit ${includedProductCount} ${includedProductCount === 1 ? "Produkt" : "Produkten"} – ${activeProductCount} davon hast du schon.`
+                          : `Deine Routine mit ${includedProductCount} ${includedProductCount === 1 ? "Produkt" : "Produkten"}.`}
                 </p>
                 {hasBlockingBasisGap ? (
                   <p
