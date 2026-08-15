@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import {
   PersonalPlanChapterTransition,
   PersonalPlanJourneyHeader,
@@ -9,6 +9,10 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { HairLength } from "@/lib/vocabulary/hair-length"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
+import {
+  shouldStartStage1ProductPreviewWarmup,
+  warmStage1ProductExampleImages,
+} from "@/lib/personal-plan/product-preview-warmup"
 import {
   applyPersonalPlanReadyPollResponse,
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
@@ -81,6 +85,7 @@ export function PersonalPlanReadyClient({
   const [retryAction, setRetryAction] = useState<PlanBereitInitialAction | null>(null)
   const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
   const [isSavingFact, setIsSavingFact] = useState(false)
+  const previewWarmupStartedRef = useRef(false)
 
   const currentLeadId = readiness.leadId ?? leadId
   const missingHairLength =
@@ -197,6 +202,14 @@ export function PersonalPlanReadyClient({
   const showWaiting = readiness.status === "checking" || readiness.status === "source_pending"
   const showMissingFact = readiness.status === "missing_source_facts" && missingHairLength !== null
   const showSupport = readiness.status === "invalid_source" || readiness.status === "forbidden"
+
+  useEffect(() => {
+    if (!shouldStartStage1ProductPreviewWarmup(readiness.status, previewWarmupStartedRef.current)) {
+      return
+    }
+    previewWarmupStartedRef.current = true
+    void warmStage1ProductExampleImages()
+  }, [readiness.status])
 
   if (canContinue) {
     return (
