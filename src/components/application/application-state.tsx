@@ -89,17 +89,17 @@ export function ApplicationState({ view }: { view: ApplicationRecoveryView }) {
             {copy.actionLabel}
           </Link>
         ) : (
-          <>
+          <div className="mt-5 flex flex-col items-center gap-3">
             <ApplicationRetryButton label={copy.actionLabel} />
             {copy.secondaryHref && copy.secondaryLabel ? (
               <Link
                 href={copy.secondaryHref}
-                className="mt-3 inline-flex min-h-[44px] items-center justify-center rounded-[12px] border-[1.5px] border-primary px-5 text-sm font-semibold text-primary hover:bg-muted"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-[12px] border-[1.5px] border-primary px-5 text-sm font-semibold text-primary hover:bg-muted"
               >
                 {copy.secondaryLabel}
               </Link>
             ) : null}
-          </>
+          </div>
         )}
       </div>
     </section>
@@ -113,7 +113,7 @@ function ApplicationRetryButton({ label }: { label: string }) {
     <button
       type="button"
       onClick={() => router.refresh()}
-      className="mt-5 inline-flex min-h-[44px] items-center justify-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="inline-flex min-h-[44px] items-center justify-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       {label}
     </button>
