@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chaarlie – Idealplan Einstieg</title>
+    <style>
+      :root {
+        --paper: #fdfbf9;
+        --ink: #2a1845;
+        --muted: #756e71;
+        --line: #e8e1dc;
+        --plum: #6b50a0;
+        --active: #eee5f8;
+        --future: #f5f2f3;
+        --goal: #f6efe7;
+        --coral: #d95f6d;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body { display: grid; place-items: center; padding: 24px; background: #ebe7e4; color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+      .phone { display: grid; grid-template-rows: 50px 35px minmax(0,1fr) auto; width: 320px; height: 700px; overflow: hidden; border: 8px solid #211e21; border-radius: 38px; background: var(--paper); box-shadow: 0 20px 48px rgba(45,31,46,.16); }
+      .appbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 13px; border-bottom: 1px solid rgba(107,80,160,.1); }
+      .brand { grid-column: 2; font: 700 21px/1 Georgia, serif; }
+      .progress { display: grid; grid-template-columns: repeat(5,1fr); gap: 4px; padding: 7px 9px 5px; border-bottom: 1px solid var(--line); }
+      .progress span { overflow: hidden; color: var(--muted); font-size: 6px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+      .progress i { display: block; height: 4px; margin-bottom: 4px; border-radius: 6px; background: var(--line); }
+      .progress .active { color: var(--ink); }
+      .progress .active i { background: var(--plum); }
+      .content { min-height: 0; overflow: hidden; }
+      .hero { padding: 14px 15px 11px; text-align: center; background: linear-gradient(145deg,#fff,#faf6fc); }
+      .hero h1 { max-width: 19ch; margin: 0 auto; font: 500 23px/1.12 Georgia, serif; text-wrap: balance; }
+      .hero p { max-width: 36ch; margin: 7px auto 0; color: var(--muted); font-size: 12px; line-height: 1.35; }
+      .journey { position: relative; display: grid; gap: 4px; padding: 7px 10px 0; list-style: none; margin-block: 0; }
+      .journey::before { content: ""; position: absolute; top: 36px; bottom: 29px; left: 33px; width: 2px; background: #dcd0e6; }
+      .stage { position: relative; display: grid; grid-template-columns: 35px minmax(0,1fr); gap: 9px; align-items: center; min-height: 54px; padding: 6px 10px; border-radius: 14px; background: var(--future); }
+      .num { z-index: 1; display: grid; width: 30px; height: 30px; place-items: center; border-radius: 50%; background: #e9e4e8; color: #8c8288; font-size: 12px; font-weight: 800; }
+      .stage strong { display: block; font: 500 14.5px/1.04 Georgia, serif; }
+      .stage small { display: block; margin-top: 2px; color: var(--muted); font-size: 8.5px; }
+      .stage.active { background: var(--active); outline: 1px solid #d5c0e9; }
+      .stage.active .num { background: var(--plum); color: white; }
+      .goal { display: flex; min-height: 36px; align-items: center; justify-content: center; gap: 8px; margin: 6px 10px 0; border-radius: 13px; background: var(--goal); color: #4a304d; font-size: 10.5px; font-weight: 800; }
+      .goal b { color: var(--plum); }
+      .action { padding: 8px 10px 11px; border-top: 1px solid var(--line); background: rgba(253,251,249,.98); }
+      .action a { display: grid; min-height: 48px; place-items: center; border-radius: 999px; background: var(--coral); color: white; font-size: 13px; font-weight: 850; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <main class="phone">
+      <header class="appbar"><b class="brand">chaarlie</b></header>
+      <div class="progress">
+        <span class="active"><i></i>Idealplan</span><span><i></i>Feinschliff</span><span><i></i>Produkte</span><span><i></i>Routine</span><span><i></i>Anwendung</span>
+      </div>
+      <div class="content">
+        <section class="hero">
+          <h1>Wir haben deinen Idealplan erstellt.</h1>
+          <p>Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem.</p>
+        </section>
+        <ol class="journey">
+          <li class="stage active"><b class="num">01</b><div><strong>Dein Idealplan</strong><small>Aus deinem Quiz erstellt.</small></div></li>
+          <li class="stage"><b class="num">02</b><div><strong>Persönlicher Feinschliff</strong><small>An deinen Alltag angepasst.</small></div></li>
+          <li class="stage"><b class="num">03</b><div><strong>Dein Produkt-Check</strong><small>Mit deinen Produkten abgeglichen.</small></div></li>
+          <li class="stage"><b class="num">04</b><div><strong>Deine Routine</strong><small>Konkrete Produkte für deine Ziele.</small></div></li>
+          <li class="stage"><b class="num">05</b><div><strong>Anwendung</strong><small>So setzt du alles richtig um.</small></div></li>
+        </ol>
+        <div class="goal"><b>✦</b> Für schönes, gesundes Haar.</div>
+      </div>
+      <footer class="action"><a href="#">Idealplan ansehen</a></footer>
+    </main>
+  </body>
+</html>

@@ -47,7 +47,7 @@ export function Stage2PreviewClient({
       <RefinementFlow
         gateway={gateway}
         onSecondaryExit={() => {
-          // Preview-safe no-op: the customer component must not invent a Bedarfsplan href.
+          // Preview-safe no-op: the customer component must not invent an Idealplan href.
         }}
         onHandoff={onHandoff}
         autoHandoff={autoHandoff}

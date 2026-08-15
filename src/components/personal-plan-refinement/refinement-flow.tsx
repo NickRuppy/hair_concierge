@@ -229,7 +229,7 @@ export function RefinementFlow({
       })
       .catch(() => {
         if (cancelled || generationRef.current !== generation) return
-        setLiveMessage("Verfeinerung konnte nicht geladen werden.")
+        setLiveMessage("Feinschliff konnte nicht geladen werden.")
         setMode("loading")
         setStatus("save_failed")
       })
@@ -303,7 +303,7 @@ export function RefinementFlow({
       setBridge(handoff)
       setMode("bridge")
       setStatus("saved")
-      setLiveMessage("Verfeinerung gespeichert.")
+      setLiveMessage("Feinschliff gespeichert.")
       emit({ name: "personal_plan_stage2_completed" })
       emit({ name: "personal_plan_stage2_bridge_viewed" })
     },
@@ -637,7 +637,7 @@ function LoadingShell({
       <main className="grid min-h-[calc(100dvh-92px)] place-items-center px-5 text-center">
         <div>
           <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            Verfeinerung
+            Feinschliff
           </p>
           <h1 className="mt-2 font-serif text-3xl font-medium text-[var(--brand-plum-darkest,#2a1845)]">
             Wir laden deinen Stand.
@@ -669,7 +669,7 @@ function InvitationShell({
       <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
         <section className="rounded-[22px] border border-[rgba(var(--brand-plum-rgb),0.14)] bg-gradient-to-br from-[#f3edf8] to-[#fff8f3] px-5 py-7 text-center">
           <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            Dein Bedarfsplan steht
+            Dein Idealplan steht
           </p>
           <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
             Jetzt machen wir ihn zu deinem.
@@ -680,7 +680,7 @@ function InvitationShell({
           </p>
         </section>
         <p className="mt-4 rounded-xl bg-[#f5f2ee] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub,#6a6560)]">
-          <span className="font-bold text-[#4f8058]">✓</span> Dein erster Bedarfsplan bleibt
+          <span className="font-bold text-[#4f8058]">✓</span> Dein erster Idealplan bleibt
           gespeichert. Danach führen wir dich direkt zu deinen konkreten Produkten.
         </p>
         <div className="mt-6 flex gap-2">
@@ -689,10 +689,10 @@ function InvitationShell({
             onClick={onSecondaryExit}
             className="min-h-[52px] rounded-xl px-3 text-sm font-bold text-[var(--brand-plum)] hover:bg-[var(--brand-plum-ice)]"
           >
-            Zum Bedarfsplan
+            Zum Idealplan
           </button>
           <Button type="button" onClick={onBegin} variant="funnelCta" className="flex-1">
-            Verfeinerung starten&nbsp; →
+            Feinschliff starten&nbsp; →
           </Button>
         </div>
       </main>
@@ -712,7 +712,7 @@ function ResumeShell({
       <PersonalPlanJourneyHeader currentStage={2} saveStatus="saved" />
       <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-          Wir laden deine Verfeinerung.
+          Wir laden deinen Feinschliff.
         </p>
         <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
           Du machst bei der ersten offenen Frage weiter.

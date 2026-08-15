@@ -103,7 +103,7 @@ const categoryAccentBorders: Record<string, string> = {
   deep_cleansing_shampoo: "border-yellow-300",
 }
 
-// Keep these presentation-only values aligned with the shipped Bedarfsplan NeedCard palette.
+// Keep these presentation-only values aligned with the shipped Idealplan NeedCard palette.
 // They are copied locally so Routine styling does not couple Stage 4 to a Stage 1 component.
 const routineCategoryCardStyles: Record<string, { shellClassName: string; dotClassName: string }> =
   {
@@ -197,7 +197,7 @@ export function routineCadenceLabel(item: RoutineItem): string {
 function routinePurposeDescription(item: RoutineItem) {
   return (
     purposeDescriptions[item.purposeKey] ??
-    `${routineCategoryLabel(item.category)} passend zu deinem Bedarfsplan.`
+    `${routineCategoryLabel(item.category)} passend zu deinem Idealplan.`
   )
 }
 

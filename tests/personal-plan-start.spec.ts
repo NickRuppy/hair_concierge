@@ -168,7 +168,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(basisCards.first().getByText("Warum das zu deinem Haar passt")).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await page.waitForTimeout(100)
-    const actionNav = page.getByRole("navigation", { name: "Bedarfsplan-Seiten" })
+    const actionNav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
     await expect(actionNav).toHaveCount(1)
     expect(
       await actionNav.evaluate((element) => ({

@@ -61,7 +61,7 @@ export function NeedPlanScreen({
   const actionNav =
     transitionLayer === "outgoing" || (!onBack && !onNext) ? null : (
       <nav
-        aria-label="Bedarfsplan-Seiten"
+        aria-label="Idealplan-Seiten"
         className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 py-2.5 backdrop-blur"
       >
         <div
@@ -113,7 +113,7 @@ export function NeedPlanScreen({
       data-plan-start-screen={screen.kind}
       data-plan-start-has-optional={hasOptionalPage ? "true" : "false"}
     >
-      {showJourneyHeader ? <PlanStartHeader stageLabel="Bedarfsplan" /> : null}
+      {showJourneyHeader ? <PlanStartHeader stageLabel="Idealplan" /> : null}
       <main className="mx-auto flex w-full max-w-[430px] flex-1 flex-col px-3 pb-24 pt-3 sm:max-w-[560px] sm:px-5">
         <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#6e6863]">
           {screen.overline}
@@ -132,7 +132,7 @@ export function NeedPlanScreen({
           Bilder zeigen nur Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.
         </p>
 
-        <Progress value={hasOptionalPage ? screen.progress : 100} label="Bedarfsplan-Fortschritt" />
+        <Progress value={hasOptionalPage ? screen.progress : 100} label="Idealplan-Fortschritt" />
 
         <div className="mb-2 mt-1 flex items-baseline justify-between px-0.5">
           <strong className="text-[13px] text-[#291a43]">{screen.sectionTitle}</strong>

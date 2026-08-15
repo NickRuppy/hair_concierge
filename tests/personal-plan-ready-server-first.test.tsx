@@ -46,7 +46,7 @@ test("server-first pending envelope renders approved static copy and no-JS recov
   assert.doesNotMatch(html, /Bedarfsplan ansehen/)
 })
 
-test("server-first ready envelope renders the approved plan CTA without pending copy", () => {
+test("server-first ready envelope renders the approved five-stage Idealplan journey", () => {
   const html = renderToStaticMarkup(
     React.createElement(PersonalPlanReadyClient, {
       leadId: null,
@@ -62,16 +62,22 @@ test("server-first ready envelope renders the approved plan CTA without pending 
     }),
   )
 
-  assert.match(html, /Deine Angaben sind gespeichert/)
-  assert.match(html, /Dein Haarplan ist bereit\./)
+  assert.match(html, /Wir haben deinen Idealplan erstellt\./)
   assert.match(
     html,
-    /Starte mit deinem Bedarfsplan und verfeinere ihn danach Schritt für Schritt\./,
+    /Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem\./,
   )
-  assert.match(html, /Haaranalyse verbunden/)
-  assert.match(html, /Bereit/)
-  assert.match(html, /Bedarfsplan ansehen/)
+  assert.match(html, /Dein Idealplan/)
+  assert.match(html, /Persönlicher Feinschliff/)
+  assert.match(html, /Dein Produkt-Check/)
+  assert.match(html, /Deine Routine/)
+  assert.match(html, /Anwendung/)
+  assert.match(html, /Für schönes, gesundes Haar\./)
+  assert.match(html, /Idealplan ansehen/)
   assert.match(html, /href="\/plan-start"/)
+  assert.doesNotMatch(html, /Deine Angaben sind gespeichert/)
+  assert.doesNotMatch(html, /Dein Haarplan ist bereit\./)
+  assert.doesNotMatch(html, /Haaranalyse verbunden/)
   assert.doesNotMatch(html, /Wir bereiten deinen Haarplan vor\./)
   assert.doesNotMatch(html, /Haarplan wird geprüft/)
   assert.doesNotMatch(html, /data-personal-plan-ready-preview/)

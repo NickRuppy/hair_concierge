@@ -132,7 +132,7 @@ export function RoutinePage({
                     ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
                     : successorProposal
                       ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
-                      : `Dein Bedarfsplan mit ${activeProductCount} aktiven ${activeProductCount === 1 ? "Produkt" : "Produkten"}, Rhythmus und Anwendung.`}
+                      : `Dein Idealplan mit ${activeProductCount} aktiven ${activeProductCount === 1 ? "Produkt" : "Produkten"}, Rhythmus und Anwendung.`}
                 </p>
                 {hasBlockingBasisGap ? (
                   <p
@@ -171,7 +171,7 @@ export function RoutinePage({
           <RoutineSection
             title="Deine Basis"
             items={basisItems}
-            emptyLabel="Deine Basis wird aus deinem Bedarfsplan aufgebaut."
+            emptyLabel="Deine Basis wird aus deinem Idealplan aufgebaut."
             onItemDetail={onItemDetail}
             presentation={portfolioPresentation}
             productPresentation={view.productPresentation}

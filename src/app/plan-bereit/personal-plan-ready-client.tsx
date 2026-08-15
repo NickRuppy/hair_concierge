@@ -1,9 +1,11 @@
 "use client"
 
-import { Check } from "lucide-react"
 import Link from "next/link"
-import { FormEvent, useEffect, useState } from "react"
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { FormEvent, useEffect, useRef, useState } from "react"
+import {
+  PersonalPlanJourneyHeader,
+  PersonalPlanJourneyOverview,
+} from "@/components/personal-plan-journey"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { HairLength } from "@/lib/vocabulary/hair-length"
@@ -80,6 +82,7 @@ export function PersonalPlanReadyClient({
   const [retryAction, setRetryAction] = useState<PlanBereitInitialAction | null>(null)
   const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
   const [isSavingFact, setIsSavingFact] = useState(false)
+  const actionDockRef = useRef<HTMLElement>(null)
 
   const currentLeadId = readiness.leadId ?? leadId
   const missingHairLength =
@@ -197,6 +200,72 @@ export function PersonalPlanReadyClient({
   const showMissingFact = readiness.status === "missing_source_facts" && missingHairLength !== null
   const showSupport = readiness.status === "invalid_source" || readiness.status === "forbidden"
 
+  useEffect(() => {
+    const dock = actionDockRef.current
+    if (!canContinue || !dock) return
+
+    const rootStyle = document.documentElement.style
+    const previous = {
+      priority: rootStyle.getPropertyPriority("--landing-sticky-cta-offset"),
+      value: rootStyle.getPropertyValue("--landing-sticky-cta-offset"),
+    }
+    let ownedOffset = ""
+    const updateOffset = () => {
+      ownedOffset = `${Math.ceil(dock.getBoundingClientRect().height)}px`
+      rootStyle.setProperty("--landing-sticky-cta-offset", ownedOffset)
+    }
+    updateOffset()
+    const observer = new ResizeObserver(updateOffset)
+    observer.observe(dock)
+
+    return () => {
+      observer.disconnect()
+      if (rootStyle.getPropertyValue("--landing-sticky-cta-offset") !== ownedOffset) return
+      if (previous.value) {
+        rootStyle.setProperty("--landing-sticky-cta-offset", previous.value, previous.priority)
+      } else {
+        rootStyle.removeProperty("--landing-sticky-cta-offset")
+      }
+    }
+  }, [canContinue])
+
+  if (canContinue) {
+    return (
+      <div className="min-h-dvh bg-[var(--background)] text-[var(--foreground)]">
+        <PersonalPlanJourneyHeader currentStage={1} sticky />
+        <main className="personal-plan-cookie-clearance mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[430px] flex-col px-3 pb-24 pt-2 sm:max-w-[560px] sm:px-5">
+          <section className="flex min-h-0 flex-1 flex-col">
+            <div className="px-2 pb-2 pt-1 text-center">
+              <h1 className="text-balance font-header text-[22px] leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[26px]">
+                Wir haben deinen Idealplan erstellt.
+              </h1>
+              <p className="mx-auto mt-1.5 max-w-[38ch] text-[11px] leading-[1.35] text-[var(--text-sub)] sm:text-[13px]">
+                Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem.
+              </p>
+            </div>
+
+            <PersonalPlanJourneyOverview />
+          </section>
+        </main>
+
+        <footer
+          ref={actionDockRef}
+          className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-2.5 backdrop-blur"
+        >
+          <div className="mx-auto max-w-[430px] sm:max-w-[560px]">
+            <Link
+              href={nextHref}
+              onClick={() => markPersonalPlanStageNavigation("/plan-start")}
+              className={cn(buttonVariants({ variant: "funnelCta", size: null }))}
+            >
+              Idealplan ansehen
+            </Link>
+          </div>
+        </footer>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <PersonalPlanJourneyHeader currentStage={1} sticky />
@@ -204,208 +273,179 @@ export function PersonalPlanReadyClient({
         <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-lg flex-col">
           <section className="flex flex-1 flex-col items-center justify-center py-12 text-center">
             <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--brand-plum-ice)]">
-              {canContinue ? (
-                <Check className="h-9 w-9 text-[var(--brand-plum)]" aria-hidden="true" />
-              ) : (
-                <span className="h-3 w-3 rounded-full bg-[var(--brand-plum)]" aria-hidden="true" />
-              )}
+              <span className="h-3 w-3 rounded-full bg-[var(--brand-plum)]" aria-hidden="true" />
             </div>
 
             <p className="mb-3 text-sm font-medium text-[var(--brand-plum)]">
               Deine Angaben sind gespeichert
             </p>
 
-            {canContinue ? (
-              <div className="w-full space-y-7">
-                <div className="space-y-4">
-                  <h1 className="font-header text-4xl leading-tight">Dein Haarplan ist bereit.</h1>
-                  <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                    Starte mit deinem Bedarfsplan und verfeinere ihn danach Schritt für Schritt.
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-border bg-card px-4 py-3 text-left">
-                  <p className="text-sm font-semibold text-foreground">Haaranalyse verbunden</p>
-                  <p className="mt-1 text-sm text-[var(--text-sub)]">Bereit</p>
-                </div>
-
-                <Link
-                  href={nextHref}
-                  onClick={() => markPersonalPlanStageNavigation("/plan-start")}
-                  className={cn(buttonVariants({ variant: "funnelCta", size: null }))}
-                >
-                  Bedarfsplan ansehen
-                </Link>
-              </div>
-            ) : (
-              <div className="w-full space-y-6" aria-live="polite">
-                {showWaiting ? (
-                  <>
-                    <div className="space-y-4">
-                      <h1 className="font-header text-4xl leading-tight">
-                        Wir bereiten deinen Haarplan vor.
-                      </h1>
-                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                        Du musst nichts tun. Wir prüfen gerade, ob dein vollständiges Profil mit
-                        deinem Konto verbunden ist.
+            <div className="w-full space-y-6" aria-live="polite">
+              {showWaiting ? (
+                <>
+                  <div className="space-y-4">
+                    <h1 className="font-header text-4xl leading-tight">
+                      Wir bereiten deinen Haarplan vor.
+                    </h1>
+                    <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                      Du musst nichts tun. Wir prüfen gerade, ob dein vollständiges Profil mit
+                      deinem Konto verbunden ist.
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card px-4 py-3 text-left">
+                    <p className="text-sm font-semibold text-foreground">Haarplan wird geprüft</p>
+                    <p className="mt-1 text-sm text-[var(--text-sub)]">Bitte kurz warten</p>
+                  </div>
+                  <noscript>
+                    <div className="space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
+                      <p className="text-sm leading-6 text-[var(--text-sub)]">
+                        Ohne JavaScript aktualisiert sich dieser Status nicht automatisch.
                       </p>
-                    </div>
-                    <div className="rounded-2xl border border-border bg-card px-4 py-3 text-left">
-                      <p className="text-sm font-semibold text-foreground">Haarplan wird geprüft</p>
-                      <p className="mt-1 text-sm text-[var(--text-sub)]">Bitte kurz warten</p>
-                    </div>
-                    <noscript>
-                      <div className="space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
-                        <p className="text-sm leading-6 text-[var(--text-sub)]">
-                          Ohne JavaScript aktualisiert sich dieser Status nicht automatisch.
-                        </p>
-                        <div className="flex flex-col gap-2 sm:flex-row">
-                          <a
-                            href={readinessPath}
-                            className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
-                          >
-                            Status neu laden
-                          </a>
-                          <a
-                            href="/kontakt"
-                            className="inline-flex min-h-11 items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
-                          >
-                            Support kontaktieren
-                          </a>
-                        </div>
-                      </div>
-                    </noscript>
-                  </>
-                ) : null}
-
-                {showRetry ? (
-                  <>
-                    <div className="space-y-4">
-                      <h1 className="font-header text-4xl leading-tight">
-                        Die Prüfung dauert länger.
-                      </h1>
-                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                        Wir konnten den aktuellen Status gerade nicht bestätigen. Bitte prüfe ihn
-                        erneut.
-                      </p>
-                    </div>
-                    <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full rounded-full"
-                        onClick={() => {
-                          setReadiness((current) => ({ ...current, status: "checking" }))
-                          setRetryAction("poll")
-                          setRetryKey((value) => value + 1)
-                        }}
-                      >
-                        Erneut prüfen
-                      </Button>
-                      <noscript>
+                      <div className="flex flex-col gap-2 sm:flex-row">
                         <a
                           href={readinessPath}
-                          className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
+                          className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
                         >
                           Status neu laden
                         </a>
-                      </noscript>
-                    </div>
-                  </>
-                ) : null}
-
-                {showMissingFact ? (
-                  <>
-                    <div className="space-y-4">
-                      <h1 className="font-header text-4xl leading-tight">
-                        Eine Angabe fehlt noch.
-                      </h1>
-                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                        Beantworte noch eine kurze Frage, damit wir deinen Haarplan vorbereiten
-                        können.
-                      </p>
-                    </div>
-                    <form
-                      className="space-y-4 rounded-3xl border border-border bg-card p-5 text-left"
-                      onSubmit={submitMissingHairLength}
-                    >
-                      <div className="space-y-2">
-                        <h2 className="text-base font-semibold text-foreground">
-                          {missingHairLength.question}
-                        </h2>
-                        <p className="text-sm leading-6 text-[var(--text-sub)]">
-                          {missingHairLength.helper}
-                        </p>
-                      </div>
-                      <div className="grid gap-2">
-                        {missingHairLength.options.map((option) => (
-                          <label
-                            key={option.value}
-                            className={cn(
-                              "flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium",
-                              selectedHairLength === option.value
-                                ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
-                                : "border-border bg-background text-foreground",
-                            )}
-                          >
-                            <input
-                              type="radio"
-                              name="hair_length"
-                              value={option.value}
-                              checked={selectedHairLength === option.value}
-                              onChange={() => setSelectedHairLength(option.value)}
-                              className="h-4 w-4 accent-[var(--brand-plum)]"
-                            />
-                            <span>{option.label}</span>
-                          </label>
-                        ))}
-                      </div>
-                      <Button
-                        type="submit"
-                        variant="funnelCta"
-                        className="w-full"
-                        disabled={!selectedHairLength || isSavingFact}
-                      >
-                        {isSavingFact ? "Speichern..." : "Weiter"}
-                      </Button>
-                    </form>
-                    <noscript>
-                      <div className="space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
-                        <p className="text-sm leading-6 text-[var(--text-sub)]">
-                          Zum Speichern dieser Angabe muss JavaScript aktiviert sein.
-                        </p>
                         <a
                           href="/kontakt"
-                          className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
+                          className="inline-flex min-h-11 items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
                         >
                           Support kontaktieren
                         </a>
                       </div>
-                    </noscript>
-                  </>
-                ) : null}
+                    </div>
+                  </noscript>
+                </>
+              ) : null}
 
-                {showSupport ? (
-                  <>
-                    <div className="space-y-4">
-                      <h1 className="font-header text-4xl leading-tight">
-                        Wir können deinen Haarplan gerade nicht zuordnen.
-                      </h1>
-                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                        Bitte kontaktiere den Support. Wir prüfen die Zuordnung mit dir gemeinsam.
+              {showRetry ? (
+                <>
+                  <div className="space-y-4">
+                    <h1 className="font-header text-4xl leading-tight">
+                      Die Prüfung dauert länger.
+                    </h1>
+                    <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                      Wir konnten den aktuellen Status gerade nicht bestätigen. Bitte prüfe ihn
+                      erneut.
+                    </p>
+                  </div>
+                  <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full rounded-full"
+                      onClick={() => {
+                        setReadiness((current) => ({ ...current, status: "checking" }))
+                        setRetryAction("poll")
+                        setRetryKey((value) => value + 1)
+                      }}
+                    >
+                      Erneut prüfen
+                    </Button>
+                    <noscript>
+                      <a
+                        href={readinessPath}
+                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
+                      >
+                        Status neu laden
+                      </a>
+                    </noscript>
+                  </div>
+                </>
+              ) : null}
+
+              {showMissingFact ? (
+                <>
+                  <div className="space-y-4">
+                    <h1 className="font-header text-4xl leading-tight">Eine Angabe fehlt noch.</h1>
+                    <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                      Beantworte noch eine kurze Frage, damit wir deinen Haarplan vorbereiten
+                      können.
+                    </p>
+                  </div>
+                  <form
+                    className="space-y-4 rounded-3xl border border-border bg-card p-5 text-left"
+                    onSubmit={submitMissingHairLength}
+                  >
+                    <div className="space-y-2">
+                      <h2 className="text-base font-semibold text-foreground">
+                        {missingHairLength.question}
+                      </h2>
+                      <p className="text-sm leading-6 text-[var(--text-sub)]">
+                        {missingHairLength.helper}
                       </p>
                     </div>
-                    <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+                    <div className="grid gap-2">
+                      {missingHairLength.options.map((option) => (
+                        <label
+                          key={option.value}
+                          className={cn(
+                            "flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium",
+                            selectedHairLength === option.value
+                              ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
+                              : "border-border bg-background text-foreground",
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            name="hair_length"
+                            value={option.value}
+                            checked={selectedHairLength === option.value}
+                            onChange={() => setSelectedHairLength(option.value)}
+                            className="h-4 w-4 accent-[var(--brand-plum)]"
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <Button
+                      type="submit"
+                      variant="funnelCta"
+                      className="w-full"
+                      disabled={!selectedHairLength || isSavingFact}
+                    >
+                      {isSavingFact ? "Speichern..." : "Weiter"}
+                    </Button>
+                  </form>
+                  <noscript>
+                    <div className="space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
+                      <p className="text-sm leading-6 text-[var(--text-sub)]">
+                        Zum Speichern dieser Angabe muss JavaScript aktiviert sein.
+                      </p>
                       <a
                         href="/kontakt"
-                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
                       >
                         Support kontaktieren
                       </a>
                     </div>
-                  </>
-                ) : null}
-              </div>
-            )}
+                  </noscript>
+                </>
+              ) : null}
+
+              {showSupport ? (
+                <>
+                  <div className="space-y-4">
+                    <h1 className="font-header text-4xl leading-tight">
+                      Wir können deinen Haarplan gerade nicht zuordnen.
+                    </h1>
+                    <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                      Bitte kontaktiere den Support. Wir prüfen die Zuordnung mit dir gemeinsam.
+                    </p>
+                  </div>
+                  <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+                    <a
+                      href="/kontakt"
+                      className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                    >
+                      Support kontaktieren
+                    </a>
+                  </div>
+                </>
+              ) : null}
+            </div>
           </section>
         </div>
       </main>
