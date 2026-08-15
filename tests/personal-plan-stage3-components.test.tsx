@@ -186,6 +186,71 @@ test("search results expose one complete identity and distinguish temporary anal
   assert.match(html, /aria-selected="true"/)
 })
 
+test("capped ready search results disclose that a more specific query can reveal more products", () => {
+  const results = [
+    {
+      candidateId: "ogx-oil",
+      displayName: "Argan Oil of Morocco Penetrating Oil",
+      brandName: "OGX",
+      assessmentStatus: "ready" as const,
+    },
+  ]
+
+  const cappedHtml = renderToStaticMarkup(
+    <ProductCaptureScreen
+      categoryLabel="Öl"
+      needSummary="Pflege für Längen und Spitzen"
+      query="ogx"
+      searchStatus="ready"
+      searchResults={results}
+      searchTotalCapped
+      capturedProducts={[]}
+      frequencyOptions={[]}
+      selectedFrequency={null}
+      showFrequency={false}
+      showAddAnotherProduct={false}
+      canContinue={false}
+      intakeAvailable
+      onQueryChange={() => {}}
+      onSelectCandidate={() => {}}
+      onFrequencyChange={() => {}}
+      onAddAnotherProduct={() => {}}
+      onOpenFallbackIntake={() => {}}
+      onContinue={() => {}}
+    />,
+  )
+  const uncappedHtml = renderToStaticMarkup(
+    <ProductCaptureScreen
+      categoryLabel="Öl"
+      needSummary="Pflege für Längen und Spitzen"
+      query="ogx"
+      searchStatus="ready"
+      searchResults={results}
+      searchTotalCapped={false}
+      capturedProducts={[]}
+      frequencyOptions={[]}
+      selectedFrequency={null}
+      showFrequency={false}
+      showAddAnotherProduct={false}
+      canContinue={false}
+      intakeAvailable
+      onQueryChange={() => {}}
+      onSelectCandidate={() => {}}
+      onFrequencyChange={() => {}}
+      onAddAnotherProduct={() => {}}
+      onOpenFallbackIntake={() => {}}
+      onContinue={() => {}}
+    />,
+  )
+
+  assert.match(cappedHtml, /Weitere Treffer vorhanden/)
+  assert.match(cappedHtml, /Verfeinere deine Suche mit Marke oder Produktname\./)
+  assert.match(cappedHtml, /role="status"/)
+  assert.match(cappedHtml, /aria-live="polite"/)
+  assert.equal((cappedHtml.match(/role="listbox"/g) ?? []).length, 1)
+  assert.doesNotMatch(uncappedHtml, /Weitere Treffer vorhanden/)
+})
+
 test("pending analysis keeps cadence editable and names the temporary action", () => {
   const html = renderToStaticMarkup(
     <ProductCaptureScreen

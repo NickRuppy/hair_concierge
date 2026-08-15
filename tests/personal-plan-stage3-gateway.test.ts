@@ -334,6 +334,31 @@ test("search trims and requires two characters, caps at eight, and echoes reques
   assert.equal(stale.requestToken, 2)
 })
 
+test("fixture search reports capping only when a ninth matching product exists", async () => {
+  const catalog = Array.from({ length: 9 }, (_, index) => ({
+    candidateId: `candidate-${index + 1}`,
+    productId: `product-${index + 1}`,
+    displayName: `Boundary Conditioner ${index + 1}`,
+    category: "conditioner" as const,
+    brandName: "Fixture",
+    confidence: "exact" as const,
+  }))
+  const search = async (candidateCount: number) =>
+    createFixtureStage3Gateway({
+      now: () => now,
+      searchDelayMs: 0,
+      catalog: catalog.slice(0, candidateCount),
+    }).search({ category: "conditioner", query: "boundary", requestToken: candidateCount })
+
+  const exactBoundary = await search(8)
+  assert.equal(exactBoundary.result.candidates.length, 8)
+  assert.equal(exactBoundary.result.totalCapped, false)
+
+  const overflow = await search(9)
+  assert.equal(overflow.result.candidates.length, 8)
+  assert.equal(overflow.result.totalCapped, true)
+})
+
 test("fixture search covers Shampoo, Conditioner, Oil, Scalp Care, and Heat Protectant", async () => {
   const subject = gateway()
   const searches = [

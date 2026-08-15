@@ -171,6 +171,7 @@ export function ProductCaptureScreen({
   query,
   searchStatus,
   searchResults,
+  searchTotalCapped = false,
   capturedProducts,
   frequencyOptions,
   selectedFrequency,
@@ -198,6 +199,7 @@ export function ProductCaptureScreen({
   query: string
   searchStatus: "idle" | "loading" | "ready" | "empty" | "error"
   searchResults: Stage3CatalogCandidate[]
+  searchTotalCapped?: boolean
   capturedProducts: Stage3CapturedProductSummary[]
   frequencyOptions: Stage3FrequencyOption[]
   selectedFrequency: string | null
@@ -279,6 +281,21 @@ export function ProductCaptureScreen({
         selectedCandidateId={selectedCandidateId}
         disabled={disabled}
       />
+
+      {searchStatus === "ready" && searchTotalCapped ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className="mb-5 rounded-xl border border-[var(--brand-plum)]/25 bg-[var(--brand-plum-ice)] p-3"
+        >
+          <p className="text-sm font-semibold text-[var(--brand-plum-dark)]">
+            Weitere Treffer vorhanden
+          </p>
+          <p className="mt-1 text-sm leading-6 text-[var(--text-sub)]">
+            Verfeinere deine Suche mit Marke oder Produktname.
+          </p>
+        </div>
+      ) : null}
 
       {analysisPending ? (
         <div

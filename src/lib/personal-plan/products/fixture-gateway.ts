@@ -118,6 +118,8 @@ export type FixtureGatewayFailureOperation = "search" | "mutate" | "complete"
 export type FixtureStage3GatewayOptions = {
   now?: () => string
   searchDelayMs?: number
+  /** Optional Labs-only catalog for browser scenarios that need controlled search breadth. */
+  catalog?: readonly Stage3CatalogCandidate[]
   /** Each named operation rejects once, then returns to its normal fixture behavior. */
   failOnce?: readonly FixtureGatewayFailureOperation[]
   /** Mirrors the server start gate; persisted envelopes are never hidden. */
@@ -186,6 +188,7 @@ export function createFixtureStage3Gateway(
 ): FixtureStage3Gateway {
   const now = options.now ?? (() => new Date().toISOString())
   const searchDelayMs = options.searchDelayMs ?? DEFAULT_SEARCH_DELAY_MS
+  const catalog = options.catalog ?? FIXTURE_CATALOG
   const inventoryAuthorityV2Enabled = options.inventoryAuthorityV2Enabled ?? false
   const drafts = new Map<string, Stage3ProductDraft>()
   const requirementsByDraftId = new Map<string, Stage3CategoryRequirement[]>()
@@ -223,16 +226,17 @@ export function createFixtureStage3Gateway(
     const query = input.query.trim()
     await delay(searchDelayMs)
     failOnceIfConfigured(pendingFailures, "search")
-    const candidates =
+    const matches =
       query.length < 2
         ? []
-        : FIXTURE_CATALOG.filter(
+        : catalog.filter(
             (candidate) =>
               candidate.category === input.category &&
               `${candidate.brandName ?? ""} ${candidate.displayName}`
                 .toLowerCase()
                 .includes(query.toLowerCase()),
-          ).slice(0, MAX_SEARCH_CANDIDATES)
+          )
+    const candidates = matches.slice(0, MAX_SEARCH_CANDIDATES)
     return {
       status: "ready",
       requestToken: input.requestToken,
@@ -240,7 +244,7 @@ export function createFixtureStage3Gateway(
         category: input.category,
         query,
         candidates,
-        totalCapped: candidates.length === MAX_SEARCH_CANDIDATES,
+        totalCapped: matches.length > MAX_SEARCH_CANDIDATES,
       },
     }
   }
