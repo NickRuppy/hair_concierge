@@ -277,7 +277,7 @@ export function ProductFitComparison({
                     key={action.kind}
                     type="button"
                     variant="ghost"
-                    className="h-auto justify-start whitespace-normal px-2 py-3 text-left text-muted-foreground hover:text-foreground"
+                    className="h-auto justify-start whitespace-normal rounded-[12px] border border-border bg-muted/30 px-3 py-3 text-left text-foreground/80 hover:bg-muted/60"
                     disabled={disabled}
                     onClick={() => invokeAction(action.kind, selectedAlternative, onAction)}
                   >
@@ -338,10 +338,18 @@ function ReviewHeader({
   title: string
   description?: string
 }) {
+  // Der Zähler ("Produkt X von Y") darf nicht mitten im Ausdruck umbrechen.
+  const counterSplit = contextLabel.split(" · Produkt ")
   return (
     <header className="mb-4">
       <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
-        {contextLabel}
+        {counterSplit.length === 2 ? (
+          <>
+            {counterSplit[0]} · <span className="whitespace-nowrap">Produkt {counterSplit[1]}</span>
+          </>
+        ) : (
+          contextLabel
+        )}
       </p>
       <h1
         id="product-fit-comparison-title"
@@ -665,7 +673,7 @@ function UncoveredRecommendationReview({
             ? first.verdict === "ideal"
               ? "Chaarlie hat geprüfte Produkte für diesen Bedarf ausgewählt. Du entscheidest, welches davon in deine Routine kommt."
               : "Das sind die besten geprüften Optionen im Katalog. Wir zeigen die Einschränkung offen."
-            : "Dein gespeicherter Bedarf bleibt erhalten. Prüfe später erneut oder fahre ohne Produkt fort, wenn das hier erlaubt ist."
+            : "Dein gespeicherter Bedarf bleibt erhalten. Prüfe später erneut oder fahre vorerst ohne Produkt fort."
         }
       />
       {first ? (
@@ -1061,6 +1069,7 @@ function EvidenceMatrix({
   return (
     <>
       <section
+        lang="de"
         className="mt-5 overflow-hidden rounded-2xl border border-border bg-card"
         aria-labelledby="evidence-matrix-title"
       >
@@ -1073,10 +1082,10 @@ function EvidenceMatrix({
         <table className="w-full table-fixed border-collapse text-center text-[10px] sm:text-xs">
           <thead>
             <tr className="text-muted-foreground">
-              <th className="w-[34%] px-2 py-2 text-left">Prüfpunkt</th>
-              <th className="px-1 py-2">{firstLabel}</th>
-              <th className="bg-[var(--brand-plum)]/5 px-1 py-2">Ziel</th>
-              <th className="bg-[var(--brand-plum)]/5 px-1 py-2">{secondLabel}</th>
+              <th className="w-[34%] py-2 pl-2 pr-3 text-left">Prüfpunkt</th>
+              <th className="px-1.5 py-2">{firstLabel}</th>
+              <th className="bg-[var(--brand-plum)]/5 px-1.5 py-2">Ziel</th>
+              <th className="bg-[var(--brand-plum)]/5 px-1.5 py-2">{secondLabel}</th>
             </tr>
           </thead>
           <tbody>
@@ -1099,7 +1108,7 @@ function EvidenceMatrix({
                   <th
                     scope="row"
                     className={cn(
-                      "break-words border-l-2 border-transparent px-2 py-3 text-left text-[11px] font-semibold leading-tight text-foreground",
+                      "break-words py-3 pl-2 pr-3 text-left text-[11px] font-semibold leading-tight text-foreground [hyphens:auto] border-l-2 border-transparent",
                       relation === "in_target" && "border-l-[var(--status-ok-text)]",
                       relation === "supportive" && "border-l-[var(--status-pending-text)]",
                       relation === "outside_target" && "border-l-[var(--status-danger-text)]",
@@ -1115,18 +1124,18 @@ function EvidenceMatrix({
                       {row.label}
                     </button>
                   </th>
-                  <td className="break-words px-1 py-3 text-foreground">
+                  <td className="break-words px-1.5 py-3 text-foreground [hyphens:auto]">
                     <span className="flex items-center gap-1.5 text-left">
                       <span className="min-w-0">{current?.valueLabel ?? "–"}</span>
                       <RelationMark relation={relation} pushToEnd />
                     </span>
                   </td>
-                  <td className="break-words bg-[var(--brand-plum)]/5 px-1 py-3 text-[var(--brand-plum)]">
+                  <td className="break-words bg-[var(--brand-plum)]/5 px-1.5 py-3 text-[var(--brand-plum)] [hyphens:auto]">
                     {row.target?.valueLabel}
                   </td>
                   <td
                     className={cn(
-                      "break-words px-1 py-3",
+                      "break-words px-1.5 py-3 [hyphens:auto]",
                       alternativeRelation === "in_target" &&
                         "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
                       alternativeRelation === "supportive" &&
@@ -1312,6 +1321,7 @@ function OwnedEvidenceMatrix({
 }) {
   return (
     <section
+      lang="de"
       className="mt-5 overflow-hidden rounded-2xl border border-border bg-card"
       aria-label="Eigenschaft für Eigenschaft"
     >
@@ -1321,9 +1331,9 @@ function OwnedEvidenceMatrix({
       <table className="w-full table-fixed border-collapse text-center text-[10px] sm:text-xs">
         <thead>
           <tr className="text-muted-foreground">
-            <th className="w-[42%] px-2 py-2 text-left">Prüfpunkt</th>
-            <th className="px-1 py-2">Deins</th>
-            <th className="bg-[var(--brand-plum)]/5 px-1 py-2">Ziel</th>
+            <th className="w-[42%] py-2 pl-2 pr-3 text-left">Prüfpunkt</th>
+            <th className="px-1.5 py-2">Deins</th>
+            <th className="bg-[var(--brand-plum)]/5 px-1.5 py-2">Ziel</th>
           </tr>
         </thead>
         <tbody>
@@ -1343,20 +1353,20 @@ function OwnedEvidenceMatrix({
                 <th
                   scope="row"
                   className={cn(
-                    "break-words border-l-2 border-transparent px-2 py-3 text-left text-[11px] font-semibold leading-tight text-foreground",
+                    "break-words py-3 pl-2 pr-3 text-left text-[11px] font-semibold leading-tight text-foreground [hyphens:auto] border-l-2 border-transparent",
                     relation === "in_target" && "border-l-[var(--status-ok-text)]",
                     relation === "outside_target" && "border-l-[var(--status-danger-text)]",
                   )}
                 >
                   {row.label}
                 </th>
-                <td className="break-words px-1 py-3 text-foreground">
+                <td className="break-words px-1.5 py-3 text-foreground [hyphens:auto]">
                   <span className="grid justify-items-center gap-1">
                     {value?.valueLabel ?? "nicht bestätigt"}
                     {showRelationMark ? <RelationMark relation={relation} /> : null}
                   </span>
                 </td>
-                <td className="break-words bg-[var(--brand-plum)]/5 px-1 py-3 text-[var(--brand-plum)]">
+                <td className="break-words bg-[var(--brand-plum)]/5 px-1.5 py-3 text-[var(--brand-plum)] [hyphens:auto]">
                   {row.target?.valueLabel}
                 </td>
               </tr>
