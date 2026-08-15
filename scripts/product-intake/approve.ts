@@ -136,7 +136,8 @@ export async function approveSubmissionById(params: {
     await writeSuitableThicknessesForApprovedProduct({
       supabase,
       productId: approval.product_id,
-      reviewedThicknesses: validation.normalizedPayload.final.product.suitable_thicknesses,
+      reviewedThicknesses:
+        validation.normalizedPayload.final.product.suitable_thicknesses ?? [],
       specOperations: validation.targetSpecOperations,
     })
   } catch (error) {
