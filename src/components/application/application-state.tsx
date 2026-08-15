@@ -7,7 +7,14 @@ import type { ApplicationRecoveryKind, ApplicationRecoveryView } from "./applica
 
 const STATE_COPY: Record<
   ApplicationRecoveryKind,
-  { title: string; description: string; actionLabel: string; actionHref: string | null }
+  {
+    title: string
+    description: string
+    actionLabel: string
+    actionHref: string | null
+    secondaryHref?: string
+    secondaryLabel?: string
+  }
 > = {
   feature_disabled: {
     title: "Anwendung gerade nicht verfügbar",
@@ -33,9 +40,11 @@ const STATE_COPY: Record<
   unavailable: {
     title: "Anwendung gerade nicht verfügbar",
     description:
-      "Deine Routine ist unverändert. Lade die Seite neu, sobald die Anleitung wieder erreichbar ist.",
+      "Deine Routine ist unverändert. Du kannst es erneut versuchen oder zurück zu deiner Routine gehen.",
     actionLabel: "Erneut laden",
     actionHref: null,
+    secondaryHref: "/routine",
+    secondaryLabel: "Zur Routine",
   },
 }
 
@@ -44,6 +53,8 @@ const DAY_UNAVAILABLE_COPY = {
   description: "Deine Routine bleibt unverändert. Wähle einen verfügbaren Tag in der Übersicht.",
   actionLabel: "Zur Übersicht",
   actionHref: null,
+  secondaryHref: undefined,
+  secondaryLabel: undefined,
 } as const
 
 export function ApplicationState({ view }: { view: ApplicationRecoveryView }) {
@@ -78,7 +89,17 @@ export function ApplicationState({ view }: { view: ApplicationRecoveryView }) {
             {copy.actionLabel}
           </Link>
         ) : (
-          <ApplicationRetryButton label={copy.actionLabel} />
+          <>
+            <ApplicationRetryButton label={copy.actionLabel} />
+            {copy.secondaryHref && copy.secondaryLabel ? (
+              <Link
+                href={copy.secondaryHref}
+                className="mt-3 inline-flex min-h-[44px] items-center justify-center rounded-[12px] border-[1.5px] border-primary px-5 text-sm font-semibold text-primary hover:bg-muted"
+              >
+                {copy.secondaryLabel}
+              </Link>
+            ) : null}
+          </>
         )}
       </div>
     </section>
