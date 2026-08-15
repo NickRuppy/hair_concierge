@@ -16,7 +16,7 @@ export type PersonalPlanApplicationFailureDetails = {
   refinedVersionId?: string
   productId?: string
   issueCode?: string
-  /** One of our own stable throw codes, truncated. Never raw error data. */
+  /** One of our own stable throw codes from a fixed allowlist, or "unknown". */
   failureCode?: string
 }
 

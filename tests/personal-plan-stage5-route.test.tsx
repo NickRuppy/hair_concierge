@@ -358,7 +358,9 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   assert.equal(failures.length, 1)
   assert.equal((failures[0] as { reason: string }).reason, "database")
   assert.equal(typeof (failures[0] as { durationMs: unknown }).durationMs, "number")
-  assert.equal((failures[0] as { failureCode?: string }).failureCode, "database query failed")
+  // A driver or Zod message can carry key and received values, so it must never
+  // reach a Sentry tag.
+  assert.equal((failures[0] as { failureCode?: string }).failureCode, "unknown")
 
   const normalizedFailures: unknown[] = []
   const normalizedDatabase = await resolveAnwendungPage(
@@ -371,6 +373,31 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   )
   assert.deepEqual(normalizedDatabase, { state: "unavailable" })
   assert.equal((normalizedFailures[0] as { reason: string }).reason, "database")
+})
+
+test("only our own stable throw codes reach the failure-code tag", async () => {
+  for (const [thrown, expected] of [
+    ["accepted_routine_product_unavailable", "accepted_routine_product_unavailable"],
+    [
+      "accepted_routine_product_identity_unavailable",
+      "accepted_routine_product_identity_unavailable",
+    ],
+    ["refined_need_not_found", "refined_need_not_found"],
+    ['invalid input syntax for type uuid: "secret-value"', "unknown"],
+  ] as const) {
+    const failures: Array<{ failureCode?: string }> = []
+    const view = await resolveAnwendungPage(
+      readyDeps({
+        adaptRoutine: async () => {
+          throw new Error(thrown)
+        },
+        reportFailure: (details) => failures.push(details),
+      }),
+    )
+
+    assert.deepEqual(view, { state: "unavailable" })
+    assert.equal(failures[0]?.failureCode, expected, thrown)
+  }
 })
 
 test("a degraded catalog product keeps the page ready and reports one per-item warning", async () => {

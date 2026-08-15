@@ -206,6 +206,9 @@ test("names a demoted catalog product as temporarily unavailable, not as an open
   const overviewHtml = renderToStaticMarkup(createElement(ApplicationPage, { view }))
   assert.match(overviewHtml, /Regal: Shampoo: Produkt gerade nicht verfügbar/)
   assert.doesNotMatch(overviewHtml, /Produkt noch offen/)
+  // The sighted badge must agree with the aria-label, not read "Offen".
+  assert.match(overviewHtml, />Nicht verfügbar</)
+  assert.doesNotMatch(overviewHtml, />Offen</)
   const detailHtml = renderToStaticMarkup(
     createElement(ApplicationPage, { view: { ...view, selectedDayType: "wash_day" } }),
   )

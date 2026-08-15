@@ -60,6 +60,20 @@ export type AnwendungResolverDeps = {
   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
 }
 
+// Only Stage 5's own throw codes may become a Sentry tag. A database or Zod
+// message can carry key and received values, and its cardinality is unbounded.
+const STABLE_FAILURE_CODES = new Set([
+  "accepted_routine_product_unavailable",
+  "accepted_routine_product_identity_unavailable",
+  "application_v2_product_pointers_unavailable",
+  "refined_need_not_found",
+])
+
+function failureCode(error: unknown): string {
+  const message = error instanceof Error ? error.message : ""
+  return STABLE_FAILURE_CODES.has(message) ? message : "unknown"
+}
+
 function failureReason(error: unknown): PersonalPlanApplicationFailureDetails["reason"] {
   const message = error instanceof Error ? error.message : ""
   if (error instanceof CatalogDatabaseReadError) return "database"
@@ -189,8 +203,7 @@ export async function resolveAnwendungPage(
       ...failureContext,
       durationMs: Date.now() - startedAt,
       reason: failureReason(error),
-      // One of our own stable throw codes, never user or catalog data.
-      failureCode: error instanceof Error ? error.message.slice(0, 64) : "unknown",
+      failureCode: failureCode(error),
     })
     return { state: "unavailable" }
   }

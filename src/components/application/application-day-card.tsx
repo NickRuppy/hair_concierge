@@ -211,6 +211,8 @@ function ProvisionalMark() {
 
 function OpenSilhouette({ slot }: { slot: Extract<ApplicationShelfSlotView, { kind: "open" }> }) {
   const silhouette = SILHOUETTES[slot.category]
+  // Keep the sighted badge and the shelf aria-label telling the same story.
+  const catalogUnavailable = slot.reason === "catalog_unavailable"
   return (
     <span
       data-application-shelf-slot="open"
@@ -232,8 +234,12 @@ function OpenSilhouette({ slot }: { slot: Extract<ApplicationShelfSlotView, { ki
         <span className="absolute inset-0 rounded-[18px] border-2 border-dashed border-[var(--brand-plum-light)] bg-white/65" />
       )}
       <PackageOpen className="relative h-6 w-6" aria-hidden="true" />
-      <span className="absolute -right-0.5 -top-2 rounded-full bg-[var(--brand-plum-ice)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--brand-plum)]">
-        Offen
+      <span
+        className={`absolute -right-0.5 -top-2 whitespace-nowrap rounded-full bg-[var(--brand-plum-ice)] px-1.5 py-0.5 font-bold text-[var(--brand-plum)] ${
+          catalogUnavailable ? "text-[9px]" : "text-[10px]"
+        }`}
+      >
+        {catalogUnavailable ? "Nicht verfügbar" : "Offen"}
       </span>
     </span>
   )
