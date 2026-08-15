@@ -44,8 +44,9 @@ export async function computeStage1ProductExamplePreviews(input: {
           role,
           shampooTarget: decision.target.category === "shampoo" ? decision.target : null,
           conditionerTarget: decision.target.category === "conditioner" ? decision.target : null,
+          completeCatalog: true,
         })
-        const evaluation = evaluateStage3Authority({
+        const authorityInput = {
           category,
           authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
           refinedVersionId: input.sourceNeedVersionId,
@@ -56,29 +57,38 @@ export async function computeStage1ProductExamplePreviews(input: {
           subjectIdentity: null,
           categoryDecision: decision as never,
           coverage: input.snapshot.coverage,
+          hairThickness: input.snapshot.profile.hair.thickness,
           productFacts: null,
           recommendationCandidates: candidates as never,
+          candidateCatalogComplete: true,
           heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
-        })
-        if (
-          evaluation.status !== "known" ||
-          !evaluation.recommendation ||
-          (evaluation.verdict !== "ideal" && evaluation.verdict !== "supportive")
-        ) {
-          return null
         }
+        const evaluation = evaluateStage3Authority(authorityInput)
+        if (evaluation.status !== "known" || !evaluation.recommendation) return null
         const selected = candidates.find(
           (candidate) => candidate.productId === evaluation.recommendation?.productId,
         )
         const imageUrl = selected?.presentationImageUrl?.trim()
         if (!selected || !imageUrl) return null
+        // Some authorities use the first verdict to describe an uncovered portfolio slot.
+        // Evaluate the recommendation itself before exposing its presentation data.
+        const selectedEvaluation = evaluateStage3Authority({
+          ...authorityInput,
+          productFacts: selected as never,
+        })
+        if (
+          selectedEvaluation.status !== "known" ||
+          (selectedEvaluation.verdict !== "ideal" && selectedEvaluation.verdict !== "supportive")
+        ) {
+          return null
+        }
         return {
           category,
           role,
           productId: selected.productId,
           productName: selected.displayName,
           imageUrl,
-          verdict: evaluation.verdict,
+          verdict: selectedEvaluation.verdict,
           authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
         } satisfies Stage1ProductExamplePreview
       } catch {
