@@ -165,8 +165,11 @@ test("returns the refinement answers bound to the current refined need version",
       {
         id: ids.plan,
         user_id: ids.user,
+        revision: 1,
+        source_revision: 1,
         current_refined_need_version_id: ids.refined,
         active_routine_version_id: null,
+        pending_routine_proposal_id: null,
       },
     ],
     personal_plan_refinement_drafts: [
@@ -213,8 +216,11 @@ test("returns null answers when no complete draft matches the pointer", async ()
       {
         id: ids.plan,
         user_id: ids.user,
+        revision: 1,
+        source_revision: 1,
         current_refined_need_version_id: ids.refined,
         active_routine_version_id: null,
+        pending_routine_proposal_id: null,
       },
     ],
     personal_plan_refinement_drafts: [
@@ -242,14 +248,32 @@ test("returns null answers when no complete draft matches the pointer", async ()
   assert.equal(body.routineProducts, null)
 })
 
+// loadPersonalPlanRoutineView() only trusts the frozen active Routine version when its
+// intent category order still matches the immutable refined-need snapshot it was compiled
+// from (personal_plan_need_versions.output_snapshot.renderedOrder). Seeding a matching row
+// here is what keeps the "active version" test out of the authority_repair_required branch;
+// the repair-required test below deliberately omits it.
+function matchingRefinedNeedVersionRow(renderedOrder: string[]) {
+  return {
+    id: ids.refined,
+    user_id: ids.user,
+    personal_plan_id: ids.plan,
+    kind: "refined",
+    output_snapshot: { renderedOrder },
+  }
+}
+
 test("returns included routine products of the active version", async () => {
   const client = makeClient({
     personal_plans: [
       {
         id: ids.plan,
         user_id: ids.user,
+        revision: 1,
+        source_revision: 1,
         current_refined_need_version_id: null,
         active_routine_version_id: ids.routineVersion,
+        pending_routine_proposal_id: null,
       },
     ],
     personal_plan_routine_versions: [
@@ -263,6 +287,9 @@ test("returns included routine products of the active version", async () => {
           pendingReviewMask,
         ]),
       },
+    ],
+    personal_plan_need_versions: [
+      matchingRefinedNeedVersionRow(["conditioner", "shampoo", "mask"]),
     ],
   })
 
@@ -291,8 +318,48 @@ test("routineProducts is null without an active routine", async () => {
       {
         id: ids.plan,
         user_id: ids.user,
+        revision: 1,
+        source_revision: 1,
         current_refined_need_version_id: null,
         active_routine_version_id: null,
+        pending_routine_proposal_id: null,
+      },
+    ],
+  })
+
+  const res = await createRefinementPresentationRouteHandlers({
+    getUserId: async () => ids.user,
+    client: () => client as never,
+  }).GET()
+  const body = await res.json()
+
+  assert.equal(res.status, 200)
+  assert.equal(body.routineProducts, null)
+})
+
+test("routineProducts is null when the active routine is authority_repair_required", async () => {
+  // No personal_plan_need_versions row is seeded for ids.refined, so
+  // hasMatchingSourceCategoryOrder() cannot confirm the frozen Routine still matches its
+  // immutable source. /routine would show a repair prompt and hide items in this state;
+  // /profile must not show a possibly-stale product list either.
+  const client = makeClient({
+    personal_plans: [
+      {
+        id: ids.plan,
+        user_id: ids.user,
+        revision: 1,
+        source_revision: 1,
+        current_refined_need_version_id: null,
+        active_routine_version_id: ids.routineVersion,
+        pending_routine_proposal_id: null,
+      },
+    ],
+    personal_plan_routine_versions: [
+      {
+        id: ids.routineVersion,
+        user_id: ids.user,
+        personal_plan_id: ids.plan,
+        payload: routinePayload(ids.routineVersion, [ownedConditioner, plannedShampoo]),
       },
     ],
   })

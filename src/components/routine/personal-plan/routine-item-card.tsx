@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
+import { routineCategoryLabel, routinePurposeLabel } from "@/lib/personal-plan/routine/labels"
 import {
   routinePresentationLabels,
   type PortfolioPresentation,
@@ -14,26 +15,7 @@ import { getRoutineStatus, RoutineStatusBadge } from "./routine-status"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
 
-const purposeLabels: Record<string, string> = {
-  shampoo_everyday: "Regelmäßige Reinigung",
-  shampoo_dandruff: "Schuppenpflege",
-  conditioner_rinse_out: "Pflege nach der Reinigung",
-  post_wash_leave_in: "Pflege ohne Ausspülen",
-  pre_heat_application: "Pflege vor dem Hitzestyling",
-  intensive_conditioning_mask: "Intensivpflege",
-  pre_wash_fibre_treatment: "Pflege vor der Haarwäsche",
-  leave_on_fibre_conditioning: "Pflege ohne Ausspülen",
-  dry_finish: "Finish",
-  residue_reset: "Tiefenreinigung",
-  mineral_reset: "Mineralablagerungen entfernen",
-  root_refresh_bridge: "Ansatz auffrischen",
-  pre_heat_protection: "Hitzeschutz",
-  specialized_bond_treatment: "Strukturpflege",
-  scalp_comfort: "Kopfhaut beruhigen",
-  scalp_flake_oil_adjunct: "Kopfhautöl als Ergänzung",
-  density_claim_tonic: "Kopfhaut-Tonic",
-  scalp_exfoliant: "Kopfhaut-Peeling",
-}
+export { routineCategoryLabel, routinePurposeLabel }
 
 const purposeDescriptions: Record<string, string> = {
   shampoo_everyday: "Regelmäßige Reinigung für deine Kopfhaut.",
@@ -75,19 +57,6 @@ const timingLabelsByRole: Record<string, string> = {
   scalp_flake_oil_adjunct: "Vor der Wäsche",
   density_claim_tonic: "Auf der Kopfhaut",
   scalp_exfoliant: "Vor der Wäsche",
-}
-
-const categoryLabels: Record<string, string> = {
-  shampoo: "Shampoo",
-  conditioner: "Conditioner",
-  mask: "Maske",
-  oil: "Öl",
-  leave_in: "Leave-in",
-  heat_protectant: "Hitzeschutz",
-  scalp_care: "Kopfhautpflege",
-  dry_shampoo: "Trockenshampoo",
-  bondbuilder: "Bondbuilder",
-  deep_cleansing_shampoo: "Tiefenreinigendes Shampoo",
 }
 
 const categoryAccentBorders: Record<string, string> = {
@@ -143,18 +112,6 @@ const routineCategoryCardStyles: Record<string, { shellClassName: string; dotCla
 const neutralRoutineCategoryCardStyle = {
   shellClassName: "border-[rgba(31,26,20,0.07)] bg-white",
   dotClassName: "bg-[#6B50A0]",
-}
-
-function labelFor(labels: Record<string, string>, value: string) {
-  return labels[value] ?? value.replaceAll("_", " ")
-}
-
-export function routinePurposeLabel(value: string) {
-  return labelFor(purposeLabels, value)
-}
-
-export function routineCategoryLabel(value: string) {
-  return labelFor(categoryLabels, value)
 }
 
 function exactProductId(item: RoutineItem): string | null {
