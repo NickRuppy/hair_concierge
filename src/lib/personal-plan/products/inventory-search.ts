@@ -69,7 +69,7 @@ export async function searchOwnedProductCatalog(input: {
   requestToken: number
 }): Promise<Stage3CatalogSearchResult & { requestToken: number }> {
   const query = normalizeOwnedProductSearchQuery(input.query)
-  const candidates = (await input.catalog.listActiveProducts(input.category))
+  const matches = (await input.catalog.listActiveProducts(input.category))
     .filter(
       (product) =>
         product.category === input.category &&
@@ -78,6 +78,8 @@ export async function searchOwnedProductCatalog(input: {
         matchesQuery(product, query),
     )
     .sort(compareCatalogProducts)
+
+  const candidates = matches
     .slice(0, MAX_SEARCH_CANDIDATES)
     .map((product) => asCatalogCandidate(product, query))
 
@@ -86,7 +88,7 @@ export async function searchOwnedProductCatalog(input: {
     query,
     category: input.category,
     candidates,
-    totalCapped: candidates.length === MAX_SEARCH_CANDIDATES,
+    totalCapped: matches.length > MAX_SEARCH_CANDIDATES,
   }
 }
 

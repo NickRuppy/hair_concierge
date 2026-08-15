@@ -82,17 +82,23 @@ test("owned catalog search returns exact, no-result, and at-most-eight candidate
     ).candidates.length,
     0,
   )
-  assert.equal(
-    (
-      await searchOwnedProductCatalog({
-        catalog: source,
-        category: "shampoo",
-        query: "shampoo",
-        requestToken: 3,
-      })
-    ).candidates.length,
-    8,
-  )
+  const capped = await searchOwnedProductCatalog({
+    catalog: source,
+    category: "shampoo",
+    query: "shampoo",
+    requestToken: 3,
+  })
+  assert.equal(capped.candidates.length, 8)
+  assert.equal(capped.totalCapped, true)
+
+  const exactBoundary = await searchOwnedProductCatalog({
+    catalog: { listActiveProducts: async () => many.slice(0, 8) },
+    category: "shampoo",
+    query: "shampoo",
+    requestToken: 4,
+  })
+  assert.equal(exactBoundary.candidates.length, 8)
+  assert.equal(exactBoundary.totalCapped, false)
 })
 
 test("ownership creation requires an explicit confirmation", async () => {

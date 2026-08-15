@@ -359,6 +359,7 @@ export function Stage3ProductsFlow({
     "idle" | "loading" | "ready" | "empty" | "error"
   >("idle")
   const [searchResults, setSearchResults] = useState<Stage3CatalogCandidate[]>([])
+  const [searchTotalCapped, setSearchTotalCapped] = useState(false)
   const [searchMessage, setSearchMessage] = useState<string>()
   const [frequency, setFrequency] = useState<ProductFrequency | null>(null)
   const [pendingCandidate, setPendingCandidate] = useState<Stage3CatalogCandidate | null>(null)
@@ -553,6 +554,8 @@ export function Stage3ProductsFlow({
   ])
 
   useEffect(() => {
+    const requestToken = ++searchToken.current
+    let active = true
     if (phase !== "capture") return
     if (!reviewedProductKinds) return
     const trimmed = query.trim()
@@ -560,12 +563,12 @@ export function Stage3ProductsFlow({
       const reset = setTimeout(() => {
         setSearchStatus("idle")
         setSearchResults([])
+        setSearchTotalCapped(false)
         setSearchMessage(undefined)
       }, 0)
       return () => clearTimeout(reset)
     }
 
-    const requestToken = ++searchToken.current
     const timeout = setTimeout(() => {
       setSearchStatus("loading")
       void gateway
@@ -576,7 +579,13 @@ export function Stage3ProductsFlow({
           requestToken,
         })
         .then((response) => {
-          if (response.requestToken !== searchToken.current) return
+          if (
+            !active ||
+            requestToken !== searchToken.current ||
+            response.requestToken !== requestToken
+          ) {
+            return
+          }
           const results = response.result.candidates.map((candidate) => ({
             candidateId: candidate.candidateId,
             displayName: candidate.displayName,
@@ -586,6 +595,7 @@ export function Stage3ProductsFlow({
             assessmentReasonCodes: candidate.assessmentReasonCodes,
           }))
           setSearchResults(results)
+          setSearchTotalCapped(response.result.totalCapped)
           setSearchStatus(results.length > 0 ? "ready" : "empty")
           setSearchMessage(results.length > 0 ? undefined : STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE)
           analytics.track("personal_plan_stage3_search_interacted", {
@@ -594,13 +604,18 @@ export function Stage3ProductsFlow({
           })
         })
         .catch(() => {
+          if (!active || requestToken !== searchToken.current) return
           setSearchResults([])
+          setSearchTotalCapped(false)
           setSearchStatus("error")
           setSearchMessage("Die Suche ist gerade fehlgeschlagen. Versuche es erneut.")
         })
     }, searchDebounceMs)
 
-    return () => clearTimeout(timeout)
+    return () => {
+      active = false
+      clearTimeout(timeout)
+    }
   }, [
     analytics,
     currentCategory,
@@ -858,6 +873,7 @@ export function Stage3ProductsFlow({
         query={query}
         searchStatus={searchStatus}
         searchResults={searchResults}
+        searchTotalCapped={searchTotalCapped}
         capturedProducts={[
           ...currentProducts.map((product) => ({
             capturedProductId: product.capturedProductId,
@@ -913,6 +929,7 @@ export function Stage3ProductsFlow({
           setQuery("")
           setSearchStatus("idle")
           setSearchResults([])
+          setSearchTotalCapped(false)
           setPendingCandidate(null)
           setFrequency(null)
         }}
@@ -1643,6 +1660,7 @@ export function Stage3ProductsFlow({
     const working = categoryCapture.workingCategoryCaptures(localCaptures)
     if (working.length === 0) {
       setSearchStatus("empty")
+      setSearchTotalCapped(false)
       setSearchMessage(
         "Wähle ein Produkt aus dem Katalog oder füge es manuell hinzu. Wenn diese Produktart nicht stimmt, gehe zurück zu deinen Produktarten.",
       )
@@ -1776,6 +1794,7 @@ export function Stage3ProductsFlow({
   function resetCategoryInteractionState() {
     setQuery("")
     setSearchResults([])
+    setSearchTotalCapped(false)
     setSearchStatus("idle")
     setPendingCandidate(null)
     setFrequency(null)
@@ -2288,6 +2307,7 @@ export function Stage3ProductsFlow({
     setCategoryIndex(cursorIndex)
     setQuery("")
     setSearchResults([])
+    setSearchTotalCapped(false)
     setSearchStatus("idle")
     setPhase("capture")
   }

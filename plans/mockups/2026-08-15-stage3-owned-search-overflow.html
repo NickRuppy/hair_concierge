@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chaarlie — Produktsuche mit weiteren Treffern</title>
+  <style>
+    :root {
+      --paper: #fdfbf9;
+      --card: #fff;
+      --ink: #2d2431;
+      --sub: #6e6865;
+      --line: #e5dfdb;
+      --plum: #6c4ca0;
+      --plum-dark: #3b245e;
+      --plum-ice: #f4f0fa;
+      --coral: #d6656e;
+      --display: Georgia, "Times New Roman", serif;
+      --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f0ebf0; color: var(--ink); font: 14px/1.5 var(--sans); }
+    button, input { font: inherit; }
+    .artifact { width: min(1440px, 100%); margin: 0 auto; padding: 28px 22px 46px; }
+    .artifact > header { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 18px; }
+    .eyebrow { margin: 0 0 5px; color: var(--plum); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 0; font: 500 38px/1.1 var(--display); }
+    .intro { max-width: 780px; margin: 8px 0 0; color: var(--sub); }
+    .recommendation { max-width: 380px; padding: 12px 14px; border: 1px solid #ccbde1; border-radius: 14px; background: #fff; color: var(--sub); font-size: 12px; }
+    .recommendation strong { color: var(--plum-dark); }
+    .variants { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+    .variant { overflow: hidden; border: 1px solid rgba(62,36,94,.12); border-radius: 22px; background: var(--paper); box-shadow: 0 16px 45px rgba(45,36,49,.10); }
+    .variant-head { min-height: 92px; padding: 16px 18px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.82); }
+    .variant-head .label { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .variant-head strong { font-size: 15px; }
+    .badge { padding: 4px 8px; border-radius: 999px; background: var(--plum-ice); color: var(--plum-dark); font-size: 10px; font-weight: 800; }
+    .variant-head p { margin: 6px 0 0; color: var(--sub); font-size: 11px; }
+    .app { min-height: 760px; }
+    .journey { position: sticky; z-index: 3; top: 0; padding: 14px 18px 12px; border-bottom: 1px solid var(--line); background: rgba(253,251,249,.96); text-align: center; }
+    .journey strong { display: block; color: var(--plum-dark); font: 500 24px/1 var(--display); }
+    .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 12px; }
+    .progress i { height: 4px; border-radius: 99px; background: #ded8d4; }
+    .progress i:nth-child(-n+3) { background: var(--plum); }
+    .content { padding: 24px 20px 34px; }
+    .back { margin-bottom: 18px; color: var(--sub); font-size: 20px; }
+    h2 { margin: 0; font: 500 31px/1.12 var(--display); }
+    .need { margin: 8px 0 22px; color: var(--sub); font-size: 13px; }
+    label { display: block; margin-bottom: 7px; font-weight: 750; }
+    .search { display: flex; align-items: center; gap: 9px; height: 48px; padding: 0 12px; border: 1px solid #cfc5d5; border-radius: 13px; background: #fff; }
+    .search span { color: var(--sub); font-size: 17px; }
+    .search input { width: 100%; border: 0; outline: 0; color: var(--ink); background: transparent; }
+    .top-status { margin: 10px 0 0; color: var(--plum-dark); font-size: 12px; font-weight: 700; }
+    .results { display: grid; gap: 7px; margin-top: 10px; }
+    .result { display: grid; grid-template-columns: 40px minmax(0,1fr); gap: 10px; align-items: center; min-height: 60px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    .image { display: grid; place-items: center; width: 40px; height: 44px; border-radius: 9px; background: linear-gradient(145deg,#eee7f4,#fff); color: var(--plum); font-size: 18px; }
+    .result strong { display: block; overflow: hidden; color: var(--ink); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    .result small { display: block; margin-top: 2px; color: var(--sub); font-size: 10px; }
+    .overflow { margin-top: 10px; border-radius: 12px; font-size: 12px; }
+    .overflow strong { display: block; color: var(--plum-dark); }
+    .overflow p { margin: 3px 0 0; color: var(--sub); }
+    .a .overflow { padding: 11px 12px; border: 1px solid #d7cbe6; background: var(--plum-ice); }
+    .b .overflow { padding: 2px 2px 0; }
+    .b .overflow strong { display: none; }
+    .b .overflow p { color: var(--plum-dark); }
+    .c .overflow { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; padding: 11px 12px; border: 1px solid #d7cbe6; background: var(--plum-ice); }
+    .c .overflow button { min-height: 36px; padding: 0 11px; border: 1px solid #baa6d4; border-radius: 10px; background: #fff; color: var(--plum-dark); font-weight: 800; }
+    .manual { width: 100%; min-height: 44px; margin-top: 16px; border: 1px solid #cdbde0; border-radius: 12px; background: #fff; color: var(--plum-dark); font-weight: 800; }
+    .footer-note { margin: 18px 2px 0; color: var(--sub); font-size: 11px; }
+    @media (max-width: 980px) {
+      .artifact > header { display: block; }
+      .recommendation { max-width: none; margin-top: 14px; }
+      .variants { grid-template-columns: 1fr; }
+      .variant { width: min(390px, 100%); margin: 0 auto; }
+      .app { min-height: 720px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="artifact">
+    <header>
+      <div>
+        <p class="eyebrow">Stage 3 · bestehendes Produkt finden</p>
+        <h1>Wenn mehr als acht Treffer existieren</h1>
+        <p class="intro">Alle Varianten behalten die schnelle Top-8-Suche. Der bereits vorhandene Serverhinweis <code>totalCapped</code> wird sichtbar, damit kein weiterer Treffer still verborgen bleibt.</p>
+      </div>
+      <div class="recommendation"><strong>Empfehlung: A</strong><br>Eine ruhige Hinweiskarte direkt nach den Treffern erklärt den Zustand und die nächste sinnvolle Handlung – ohne zusätzliche Suche oder neue Datenbanklogik.</div>
+    </header>
+
+    <section class="variants">
+      <article class="variant a">
+        <header class="variant-head"><div class="label"><strong>A · Kontextkarte</strong><span class="badge">Empfohlen</span></div><p>Am klarsten, aber nicht alarmierend. Bleibt direkt am Ende der Ergebnisliste.</p></header>
+        <div class="app">
+          <div class="journey"><strong>chaarlie</strong><div class="progress"><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="content"><div class="back">←</div><h2>Dein Öl</h2><p class="need">Pflege und Schutz für deine Längen und Spitzen.</p><label>Produkt suchen</label><div class="search"><span>⌕</span><input value="OGX" readonly></div>
+            <div class="results"></div>
+            <div class="overflow"><strong>Weitere Treffer vorhanden</strong><p>Verfeinere deine Suche mit Marke oder Produktname.</p></div>
+            <button class="manual">Nicht dabei? Produkt hinzufügen</button><p class="footer-note">Die bestehende manuelle Aufnahme bleibt unverändert.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="variant b">
+        <header class="variant-head"><div class="label"><strong>B · Statuszeile</strong></div><p>Sehr kompakt, aber zwischen Suchfeld und Treffern leichter zu übersehen.</p></header>
+        <div class="app">
+          <div class="journey"><strong>chaarlie</strong><div class="progress"><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="content"><div class="back">←</div><h2>Dein Öl</h2><p class="need">Pflege und Schutz für deine Längen und Spitzen.</p><label>Produkt suchen</label><div class="search"><span>⌕</span><input value="OGX" readonly></div><p class="top-status">8 von mehreren Treffern werden angezeigt.</p>
+            <div class="results"></div>
+            <div class="overflow"><strong>Weitere Treffer vorhanden</strong><p>Suche genauer mit Marke oder Produktname.</p></div>
+            <button class="manual">Nicht dabei? Produkt hinzufügen</button><p class="footer-note">Die bestehende manuelle Aufnahme bleibt unverändert.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="variant c">
+        <header class="variant-head"><div class="label"><strong>C · Aktionskarte</strong></div><p>Am auffälligsten, erzeugt aber einen zusätzlichen Button ohne neue Fähigkeit.</p></header>
+        <div class="app">
+          <div class="journey"><strong>chaarlie</strong><div class="progress"><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="content"><div class="back">←</div><h2>Dein Öl</h2><p class="need">Pflege und Schutz für deine Längen und Spitzen.</p><label>Produkt suchen</label><div class="search"><span>⌕</span><input value="OGX" readonly></div>
+            <div class="results"></div>
+            <div class="overflow"><div><strong>Noch nicht gefunden?</strong><p>Es gibt weitere Treffer.</p></div><button>Suche verfeinern</button></div>
+            <button class="manual">Nicht dabei? Produkt hinzufügen</button><p class="footer-note">Die bestehende manuelle Aufnahme bleibt unverändert.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+    const products = [
+      ["Renewing + Argan Oil of Morocco", "OGX"],
+      ["Coconut Miracle Oil", "OGX"],
+      ["Weightless Hydration + Coconut Water", "OGX"],
+      ["Bonding Plex Leave-in Treatment", "OGX"],
+      ["Nourishing + Coconut Milk", "OGX"],
+      ["Protecting + Silk Blowout", "OGX"],
+      ["Brazilian Keratin Therapy", "OGX"],
+      ["Argan Oil of Morocco Penetrating Oil", "OGX"]
+    ];
+    document.querySelectorAll('.results').forEach((list) => {
+      list.innerHTML = products.map(([name, brand]) => `<div class="result"><div class="image">♙</div><div><strong>${name}</strong><small>${brand}</small></div></div>`).join('');
+    });
+  </script>
+</body>
+</html>

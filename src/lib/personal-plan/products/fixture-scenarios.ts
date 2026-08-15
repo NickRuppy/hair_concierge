@@ -1,13 +1,29 @@
 import { CATEGORY_ROLE_POLICIES } from "./authorities"
 import type {
   Stage3AuthoritySnapshotV1,
+  Stage3CatalogCandidate,
   Stage3CategoryRequirement,
   Stage3EntryContext,
 } from "./contracts"
 
 export const FIXTURE_STAGE3_SCENARIOS = {
   uncoveredConditioner: "uncovered-conditioner",
+  ownedSearchOverflow: "owned-search-overflow",
 } as const
+
+export function createFixtureOwnedSearchOverflowCatalog(): Stage3CatalogCandidate[] {
+  return Array.from({ length: 9 }, (_, index) => {
+    const position = index + 1
+    return {
+      candidateId: `fixture-candidate-conditioner-overflow-${position}`,
+      productId: `fixture-product-conditioner-overflow-${position}`,
+      displayName: `Overflow Conditioner ${position}`,
+      category: "conditioner" as const,
+      brandName: "Chaarlie Fixture",
+      confidence: "exact" as const,
+    }
+  })
+}
 
 /**
  * A Labs-only entry that follows the real Stage 2 ownership contract: the

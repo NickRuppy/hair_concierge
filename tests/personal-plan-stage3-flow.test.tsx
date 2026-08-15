@@ -43,6 +43,7 @@ import {
   Stage3ProductsGatewayError,
   type Stage3MutationResponse,
   type Stage3ProductsGateway,
+  type Stage3SearchResponse,
 } from "../src/lib/personal-plan/products/gateway"
 import type { Stage3Bootstrap } from "../src/lib/personal-plan/products/stage2-entry-adapter"
 import {
@@ -62,6 +63,64 @@ import { createStage3Draft } from "../src/lib/personal-plan/products/state-machi
 
 type ClientStateHarness = {
   render: () => Promise<ReactElement | null>
+}
+
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  let reject!: (reason?: unknown) => void
+  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise
+    reject = rejectPromise
+  })
+  return { promise, resolve, reject }
+}
+
+function searchResponse(input: {
+  requestToken: number
+  query: string
+  candidateId: string
+  totalCapped: boolean
+  category?: PersonalPlanCategory
+}): Stage3SearchResponse {
+  const category = input.category ?? "oil"
+  return {
+    status: "ready",
+    requestToken: input.requestToken,
+    result: {
+      category,
+      query: input.query,
+      candidates: [
+        {
+          candidateId: input.candidateId,
+          productId: input.candidateId,
+          displayName: input.candidateId,
+          brandName: "Race Fixture",
+          category,
+          confidence: "exact",
+          assessmentStatus: "ready",
+          assessmentReasonCodes: [],
+        },
+      ],
+      totalCapped: input.totalCapped,
+    },
+  }
+}
+
+function oilSearchEntryContext(id: string): Stage3EntryContext {
+  return {
+    schemaVersion: 1,
+    personalPlanId: `plan-${id}`,
+    refinedVersionId: `refined-${id}`,
+    orderedCategories: [
+      {
+        category: "oil",
+        requiredRoles: ["dry_finish"],
+        needSummary: "Pflege für Längen und Spitzen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+  }
 }
 
 test("the journey header labels local review choices without claiming a server save", () => {
@@ -674,6 +733,299 @@ test("catalog search errors keep manual intake available without claiming no pro
   capture?.props.onOpenFallbackIntake()
   tree = await renderSettled(harness)
   assert.ok(findByType(tree, IntakeFallbackBoundary))
+})
+
+test("catalog search carries the accepted capped state and clears it for newer uncapped or short queries", async () => {
+  const gateway = createAuthorityTestGateway()
+  gateway.search = async (input) => ({
+    status: "ready",
+    requestToken: input.requestToken,
+    result: {
+      category: input.category,
+      query: input.query,
+      candidates: [
+        {
+          candidateId: "ogx-oil",
+          productId: "ogx-oil",
+          displayName: "Argan Oil of Morocco Penetrating Oil",
+          brandName: "OGX",
+          category: input.category,
+          confidence: "exact",
+          assessmentStatus: "ready",
+          assessmentReasonCodes: [],
+        },
+      ],
+      totalCapped: input.query === "ogx",
+    },
+  })
+  const entryContext = oilSearchEntryContext("search-cap")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onQueryChange("ogx")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "ready")
+  assert.equal(capture?.props.searchTotalCapped, true)
+
+  capture?.props.onQueryChange("ogx oil")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "ready")
+  assert.equal(capture?.props.searchTotalCapped, false)
+
+  capture?.props.onQueryChange("o")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "idle")
+  assert.equal(capture?.props.searchTotalCapped, false)
+})
+
+test("a broad search resolving after a short query cannot restore stale results or capping", async () => {
+  const oldSearch = deferred<Stage3SearchResponse>()
+  let oldRequestToken: number | undefined
+  const gateway = createAuthorityTestGateway()
+  gateway.search = async (input) => {
+    oldRequestToken = input.requestToken
+    return oldSearch.promise
+  }
+  const entryContext = oilSearchEntryContext("search-short-race")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onQueryChange("broad oil")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "loading")
+
+  capture?.props.onQueryChange("o")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "idle")
+  assert.ok(oldRequestToken)
+
+  oldSearch.resolve(
+    searchResponse({
+      requestToken: oldRequestToken,
+      query: "broad oil",
+      candidateId: "stale-oil",
+      totalCapped: true,
+    }),
+  )
+  await Promise.resolve()
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "idle")
+  assert.deepEqual(capture?.props.searchResults, [])
+  assert.equal(capture?.props.searchTotalCapped, false)
+})
+
+test("an older rejected search cannot overwrite a newer successful result", async () => {
+  const oldSearch = deferred<Stage3SearchResponse>()
+  const newerSearch = deferred<Stage3SearchResponse>()
+  let newerRequestToken: number | undefined
+  const gateway = createAuthorityTestGateway()
+  gateway.search = async (input) => {
+    if (input.query === "old oil") return oldSearch.promise
+    newerRequestToken = input.requestToken
+    return newerSearch.promise
+  }
+  const entryContext = oilSearchEntryContext("search-rejection-race")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onQueryChange("old oil")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onQueryChange("new oil")
+  await renderSettled(harness)
+  assert.ok(newerRequestToken)
+
+  newerSearch.resolve(
+    searchResponse({
+      requestToken: newerRequestToken,
+      query: "new oil",
+      candidateId: "newer-oil",
+      totalCapped: true,
+    }),
+  )
+  await Promise.resolve()
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "ready")
+  assert.equal(capture?.props.searchResults[0]?.candidateId, "newer-oil")
+  assert.equal(capture?.props.searchTotalCapped, true)
+
+  oldSearch.reject(new Error("late old search failure"))
+  await Promise.resolve()
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "ready")
+  assert.equal(capture?.props.searchResults[0]?.candidateId, "newer-oil")
+  assert.equal(capture?.props.searchTotalCapped, true)
+})
+
+test("leaving the capture context invalidates an in-flight search before returning", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "shampoo",
+      requiredRoles: ["shampoo_everyday"],
+      needSummary: "Sanfte Reinigung",
+      authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+    },
+  ]
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: "refined-search-context-race",
+    refinedInputHash: "hash-search-context-race",
+    categoryDecisions: [],
+    coverage: [],
+    orderedCategories: ["shampoo"],
+    authorityVersions: Object.fromEntries(
+      requirements.map(({ category, authorityVersion }) => [category, authorityVersion]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1,
+      scalpOiliness: "balanced",
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x",
+      oilPurposes: [],
+      ownedCategories: ["shampoo"],
+    },
+  }
+  const draft = createStage3Draft({
+    draftId: "draft-search-context-race",
+    userId: "user-search-context-race",
+    personalPlanId: "plan-search-context-race",
+    refinedVersionId: "refined-search-context-race",
+    requirements,
+    authoritySnapshot,
+    now: "2026-08-15T00:00:00.000Z",
+  })
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: draft.personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+      authoritySnapshot,
+    },
+    draft,
+    requirements,
+    authorityEvaluations: [],
+  }
+  const oldSearch = deferred<Stage3SearchResponse>()
+  const nextSearch = deferred<Stage3SearchResponse>()
+  let oldRequestToken: number | undefined
+  let searchCallCount = 0
+  let searchDebounceMs = 0
+  const gateway = createAuthorityTestGateway()
+  gateway.search = async (input) => {
+    searchCallCount += 1
+    if (searchCallCount === 1) {
+      oldRequestToken = input.requestToken
+      return oldSearch.promise
+    }
+    return nextSearch.promise
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ bootstrap, gateway, searchDebounceMs }),
+  )
+
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onQueryChange("race shampoo")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "loading")
+  ;(
+    capture?.props as React.ComponentProps<typeof ProductCaptureScreen> & {
+      onChangeProductKinds?: () => void
+    }
+  ).onChangeProductKinds?.()
+
+  tree = await renderSettled(harness)
+  const review = findByType<React.ComponentProps<typeof ProductKindReviewScreen>>(
+    tree,
+    ProductKindReviewScreen,
+  )
+  assert.ok(review)
+  assert.ok(oldRequestToken)
+  oldSearch.resolve(
+    searchResponse({
+      requestToken: oldRequestToken,
+      query: "race shampoo",
+      candidateId: "stale-shampoo",
+      totalCapped: true,
+      category: "shampoo",
+    }),
+  )
+  await Promise.resolve()
+  await renderSettled(harness)
+
+  searchDebounceMs = 100
+  review.props.onContinue()
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "loading")
+  assert.deepEqual(capture?.props.searchResults, [])
+  assert.equal(capture?.props.searchTotalCapped, false)
 })
 
 test("waiting for catalog analysis preserves the selected product and cadence", async () => {

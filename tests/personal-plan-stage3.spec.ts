@@ -23,6 +23,16 @@ async function openUncoveredConditionerLab(page: Page) {
   }
 }
 
+async function openOwnedSearchOverflowLab(page: Page) {
+  await page.goto(`${baseUrl}${labPath}?scenario=owned-search-overflow`)
+  await expect(page.getByRole("heading", { name: "Dein Conditioner" })).toBeVisible()
+  const cookieDialog = page.getByRole("dialog", { name: "Cookie-Einstellungen" })
+  await cookieDialog.waitFor({ state: "visible", timeout: 2_000 }).catch(() => undefined)
+  if (await cookieDialog.isVisible()) {
+    await cookieDialog.getByRole("button", { name: "Nur essentielle" }).click()
+  }
+}
+
 async function searchAndSelect(page: Page, query: string, productName: string) {
   const search = page.getByRole("searchbox", { name: "Produkt suchen" })
   await search.fill(query)
@@ -148,6 +158,37 @@ test.describe("Personal Plan products lab", () => {
       .locator("html")
       .evaluate((element) => element.scrollWidth <= element.clientWidth)
     expect(hasNoHorizontalOverflow).toBe(true)
+  })
+
+  test("discloses capped owned-product results and removes the hint after refinement", async ({
+    page,
+  }) => {
+    await openOwnedSearchOverflowLab(page)
+    const search = page.getByRole("searchbox", { name: "Produkt suchen" })
+
+    await search.fill("Overflow Conditioner")
+    await expect(page.getByRole("option")).toHaveCount(8)
+    const overflowStatus = page.getByRole("status").filter({ hasText: "Weitere Treffer vorhanden" })
+    await expect(overflowStatus).toContainText("Verfeinere deine Suche mit Marke oder Produktname.")
+    await expect(
+      page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }),
+    ).toBeVisible()
+
+    const noMobileOverflow = await page
+      .locator("html")
+      .evaluate((element: HTMLElement) => element.scrollWidth <= element.clientWidth)
+    expect(noMobileOverflow).toBe(true)
+
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await expect(overflowStatus).toBeVisible()
+    const noDesktopOverflow = await page
+      .locator("html")
+      .evaluate((element: HTMLElement) => element.scrollWidth <= element.clientWidth)
+    expect(noDesktopOverflow).toBe(true)
+
+    await search.fill("Overflow Conditioner 9")
+    await expect(page.getByRole("option")).toHaveCount(1)
+    await expect(overflowStatus).toHaveCount(0)
   })
 
   test("offers a missing Conditioner directly and plans the third verified product", async ({
