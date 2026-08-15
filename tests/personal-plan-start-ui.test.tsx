@@ -209,7 +209,7 @@ test("omits the Optional page and progress step when no optional categories exis
   )
 
   assert.match(html, /data-plan-start-has-optional="false"/)
-  assert.match(html, /Jetzt auf meine Produkte abstimmen/)
+  assert.match(html, /Auf meine Produkte abstimmen/)
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
 })
 
@@ -228,11 +228,11 @@ test("Stage 1-only keeps signed Basis and Optional pages but removes the refinem
   assert.match(basis, /Optionale Empfehlungen/)
   assert.doesNotMatch(
     basis,
-    /Plan wirklich zu meinem machen|Plan verfeinern|Jetzt auf meine Produkte abstimmen/,
+    /Plan wirklich zu meinem machen|Plan verfeinern|Auf meine Produkte abstimmen/,
   )
   assert.doesNotMatch(
     terminalBasis,
-    /Plan wirklich zu meinem machen|Plan verfeinern|Jetzt auf meine Produkte abstimmen/,
+    /Plan wirklich zu meinem machen|Plan verfeinern|Auf meine Produkte abstimmen/,
   )
 })
 
@@ -524,7 +524,7 @@ test("adapts Basis-only snapshots without an empty Optional page", () => {
   const html = renderToStaticMarkup(
     <PlanStartFlow state="ready" plan={plan} onContinueToRefinement={() => {}} />,
   )
-  assert.match(html, /Jetzt auf meine Produkte abstimmen/)
+  assert.match(html, /Auf meine Produkte abstimmen/)
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
 })
 
