@@ -10,7 +10,10 @@ import {
   shouldCapturePromotionError,
   validatePromotableProduct,
 } from "../scripts/product-intake/promote"
-import { deriveSuitableThicknessesFromSpecOperations } from "../scripts/product-intake/approve"
+import {
+  deriveSuitableThicknessesFromSpecOperations,
+  resolveSuitableThicknessesForApprovedProduct,
+} from "../scripts/product-intake/approve"
 import {
   buildQueueReport,
   matchesQueueFilters,
@@ -548,6 +551,8 @@ test("queue loader pages complete exports while preserving explicit sample limit
 })
 
 test("promotion command reports state and preserves category-specific readiness gates", () => {
+  const finalizedImageUrl =
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/products/mask.webp"
   assert.deepEqual(REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY.conditioner, [
     "product_conditioner_specs",
     "product_conditioner_rerank_specs",
@@ -575,6 +580,8 @@ test("promotion command reports state and preserves category-specific readiness 
       is_active: true,
       lifecycle_status: "active",
       is_chaarlie_recommended: false,
+      image_url: finalizedImageUrl,
+      suitable_thicknesses: ["fine", "normal"],
     },
     dryRun: true,
     reviewer: "Nick",
@@ -601,8 +608,52 @@ test("promotion command reports state and preserves category-specific readiness 
       is_active: true,
       lifecycle_status: "active",
       is_chaarlie_recommended: false,
+      image_url: finalizedImageUrl,
+      suitable_thicknesses: ["fine", "normal"],
     }),
     ["product_mask_specs", "product_application_protocols"],
+  )
+
+  assert.throws(
+    () =>
+      validatePromotableProduct({
+        id: "product-no-image",
+        category_key: "mask",
+        origin: "user_submitted",
+        is_active: true,
+        lifecycle_status: "active",
+        is_chaarlie_recommended: false,
+        image_url: null,
+        suitable_thicknesses: ["normal"],
+      }),
+    /finalized Chaarlie product image/,
+  )
+  assert.throws(
+    () =>
+      validatePromotableProduct({
+        id: "product-no-thickness",
+        category_key: "mask",
+        origin: "user_submitted",
+        is_active: true,
+        lifecycle_status: "active",
+        is_chaarlie_recommended: false,
+        image_url: finalizedImageUrl,
+        suitable_thicknesses: [],
+      }),
+    /verified suitable_thicknesses/,
+  )
+  assert.deepEqual(
+    validatePromotableProduct({
+      id: "product-scalp",
+      category_key: "scalp_care",
+      origin: "user_submitted",
+      is_active: true,
+      lifecycle_status: "active",
+      is_chaarlie_recommended: false,
+      image_url: finalizedImageUrl,
+      suitable_thicknesses: [],
+    }),
+    ["product_scalp_care_specs", "product_application_protocols"],
   )
 
   assert.throws(
@@ -659,6 +710,9 @@ test("promotion command blocks missing specs and stale guarded updates", async (
     is_active: true,
     lifecycle_status: "active",
     is_chaarlie_recommended: false,
+    image_url:
+      "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/products/mask.webp",
+    suitable_thicknesses: ["fine", "normal"],
     updated_at: "2026-06-17T10:00:00.000Z",
   }
 
@@ -724,6 +778,9 @@ test("promotion command requires an approved intake submission and updates only 
     is_active: true,
     lifecycle_status: "active",
     is_chaarlie_recommended: false,
+    image_url:
+      "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/products/mask.webp",
+    suitable_thicknesses: ["fine", "normal"],
     updated_at: "2026-06-17T10:00:00.000Z",
   }
 
@@ -1197,5 +1254,19 @@ test("approval derives suitable thicknesses from category spec operations", () =
       },
     ] as never),
     [],
+  )
+
+  assert.deepEqual(
+    resolveSuitableThicknessesForApprovedProduct({
+      reviewedThicknesses: ["coarse", "normal", "coarse"],
+      specOperations: [
+        {
+          type: "upsert",
+          table: "product_conditioner_specs",
+          rows: [{ product_id: "p4", thickness: "fine", protein_moisture_balance: "snaps" }],
+        },
+      ] as never,
+    }),
+    ["coarse", "fine", "normal"],
   )
 })

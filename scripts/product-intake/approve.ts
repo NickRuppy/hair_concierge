@@ -35,12 +35,30 @@ export function deriveSuitableThicknessesFromSpecOperations(
   return [...thicknesses].sort()
 }
 
+export function resolveSuitableThicknessesForApprovedProduct(params: {
+  reviewedThicknesses: readonly string[]
+  specOperations: readonly ProductIntakeTargetSpecOperation[]
+}): string[] {
+  return [
+    ...new Set([
+      ...params.reviewedThicknesses.filter(
+        (value) => value === "fine" || value === "normal" || value === "coarse",
+      ),
+      ...deriveSuitableThicknessesFromSpecOperations(params.specOperations),
+    ]),
+  ].sort()
+}
+
 async function writeSuitableThicknessesForApprovedProduct(params: {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   productId: string
+  reviewedThicknesses: readonly string[]
   specOperations: readonly ProductIntakeTargetSpecOperation[]
 }): Promise<void> {
-  const thicknesses = deriveSuitableThicknessesFromSpecOperations(params.specOperations)
+  const thicknesses = resolveSuitableThicknessesForApprovedProduct({
+    reviewedThicknesses: params.reviewedThicknesses,
+    specOperations: params.specOperations,
+  })
   if (thicknesses.length === 0) return
   const { error } = await params.supabase
     .from("products")
@@ -118,6 +136,8 @@ export async function approveSubmissionById(params: {
     await writeSuitableThicknessesForApprovedProduct({
       supabase,
       productId: approval.product_id,
+      reviewedThicknesses:
+        validation.normalizedPayload.final.product.suitable_thicknesses ?? [],
       specOperations: validation.targetSpecOperations,
     })
   } catch (error) {

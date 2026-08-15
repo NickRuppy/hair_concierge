@@ -184,6 +184,7 @@ function approvalReadyPayload(
       "product.canonical_brand",
       "product.clean_name",
       "product.category_key",
+      "product.suitable_thicknesses",
       "product.affiliate_link",
       "product.image_url",
       "product.price_eur",
@@ -202,6 +203,11 @@ function approvalReadyPayload(
         product_line: null,
         clean_name: `Audit ${categoryKey} Product`,
         category_key: categoryKey,
+        suitable_thicknesses: ["heat_protectant", "dry_shampoo", "scalp_care"].includes(
+          categoryKey,
+        )
+          ? []
+          : ["normal"],
         affiliate_link: "https://example.test/product",
         image_url: "https://example.test/raw-image.png",
         price_eur: 9.95,
@@ -1154,6 +1160,10 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /product_conditioner_specs/)
   assert.match(workerScript, /product_conditioner_rerank_specs/)
   assert.match(workerScript, /product_mask_specs/)
+  assert.match(workerScript, /suitable_thicknesses/)
+  assert.match(workerScript, /repair_support_level/)
+  assert.match(workerScript, /functional_benefits/)
+  assert.match(workerScript, /intensive_conditioning_mask/)
   assert.match(workerScript, /product_oil_eligibility/)
   assert.match(
     workerScript,

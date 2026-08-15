@@ -133,18 +133,30 @@ type SupabaseQueryResult<T> = {
 }
 
 const CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs"],
-  conditioner: ["product_conditioner_specs", "product_conditioner_rerank_specs"],
-  mask: ["product_mask_specs"],
+  shampoo: ["product_shampoo_specs", "product_application_protocols"],
+  conditioner: [
+    "product_conditioner_specs",
+    "product_conditioner_rerank_specs",
+    "product_application_protocols",
+  ],
+  mask: ["product_mask_specs", "product_application_protocols"],
   leave_in: [
     "product_leave_in_specs",
     "product_leave_in_fit_specs",
     "product_leave_in_eligibility",
+    "product_application_protocols",
   ],
-  oil: ["product_oil_eligibility"],
-  dry_shampoo: ["product_dry_shampoo_specs"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
-  bondbuilder: ["product_bondbuilder_specs", "product_relationships"],
+  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
+  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
+  deep_cleansing_shampoo: [
+    "product_deep_cleansing_shampoo_specs",
+    "product_application_protocols",
+  ],
+  bondbuilder: [
+    "product_bondbuilder_specs",
+    "product_relationships",
+    "product_application_protocols",
+  ],
   heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
   scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
 } as const
@@ -152,18 +164,26 @@ const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
 
 const REQUIRED_CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs"],
-  conditioner: ["product_conditioner_specs", "product_conditioner_rerank_specs"],
-  mask: ["product_mask_specs"],
+  shampoo: ["product_shampoo_specs", "product_application_protocols"],
+  conditioner: [
+    "product_conditioner_specs",
+    "product_conditioner_rerank_specs",
+    "product_application_protocols",
+  ],
+  mask: ["product_mask_specs", "product_application_protocols"],
   leave_in: [
     "product_leave_in_specs",
     "product_leave_in_fit_specs",
     "product_leave_in_eligibility",
+    "product_application_protocols",
   ],
-  oil: ["product_oil_eligibility"],
-  dry_shampoo: ["product_dry_shampoo_specs"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
-  bondbuilder: ["product_bondbuilder_specs"],
+  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
+  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
+  deep_cleansing_shampoo: [
+    "product_deep_cleansing_shampoo_specs",
+    "product_application_protocols",
+  ],
+  bondbuilder: ["product_bondbuilder_specs", "product_application_protocols"],
   heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
   scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
 } as const
@@ -760,6 +780,8 @@ function approvalPayloadContract(category: string | null | undefined): JsonRecor
             "string or null; exact product_lines table value from brand_resolution_context.resolved_brand.product_line when present, otherwise researched stable product line/variant",
           clean_name: "string; product name without brand prefix when possible",
           category_key: normalizeCategoryKey(category) ?? "one supported product category key",
+          suitable_thicknesses:
+            "array containing every verified compatible hair diameter: fine, normal, coarse. Use [] only for heat_protectant, dry_shampoo, or scalp_care, whose authority does not use thickness.",
           affiliate_link:
             "string URL; chosen purchasable product-detail page following commercial_source_contract.purchase_url_preference. Must not be a search, listing, price-comparison, marketplace junk, or wrong-market page.",
           image_url: "string URL or null; raw candidate image before final processing",
@@ -969,6 +991,11 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
         schuppen: "dandruff or dry_flakes",
         irritationen: "irritated",
       },
+      product_application_protocols: applicationProtocolResearchContract(
+        "shampoo",
+        ["shampoo_everyday", "shampoo_dandruff"],
+        "Always include shampoo_everyday; include shampoo_dandruff when any row uses the schuppen bucket.",
+      ),
     }
   }
 
@@ -990,6 +1017,10 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
         balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
         ingredient_flags: [...CONDITIONER_INGREDIENT_FLAGS],
       },
+      product_application_protocols: applicationProtocolResearchContract(
+        "conditioner",
+        ["conditioner_rinse_out"],
+      ),
     }
   }
 
@@ -1004,6 +1035,24 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
         concentration: [...MASK_CONCENTRATIONS],
         balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
         ingredient_flags: [...MASK_INGREDIENT_FLAGS],
+        repair_support_level: ["low", "medium", "high"],
+        functional_benefits: ["smoothing_frizz_control", "detangling_slip", "shine"],
+      },
+      product_application_protocols: {
+        category: ["mask"],
+        role: ["intensive_conditioning_mask"],
+        required_fields: [
+          "cadence",
+          "application_stage",
+          "placement",
+          "contact_time_seconds",
+          "rinse_action",
+          "source_label",
+          "source_url",
+          "source_text",
+          "guidance_payload",
+        ],
+        note: "The exact manufacturer protocol must be complete enough to derive the Stage 5 product pointer.",
       },
     }
   }
@@ -1051,6 +1100,11 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
       post_wash:
         "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry.",
     },
+    product_application_protocols: applicationProtocolResearchContract(
+      "leave_in",
+      ["post_wash_leave_in", "pre_heat_protection"],
+      "Always include post_wash_leave_in; include pre_heat_protection only when the product claims heat protection.",
+    ),
   }
 }
 
@@ -1060,6 +1114,15 @@ function oilApprovalContract(): JsonRecord {
     instruction:
       "Research and emit only oil approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...CATEGORY_SPEC_KEYS.oil],
+    product_oil_specs: {
+      weight: ["light", "medium", "rich"],
+      role_support: [
+        "pre_wash_fibre_treatment",
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection",
+      ],
+    },
     product_oil_eligibility:
       "array with one or more user-fit rows; each row has thickness, oil_subtype, oil_purpose, and ingredient_flags",
     allowed_product_oil_eligibility_values: {
@@ -1068,6 +1131,16 @@ function oilApprovalContract(): JsonRecord {
       oil_purpose: [...OIL_PURPOSES, null],
       ingredient_flags: [...OIL_INGREDIENT_FLAGS],
     },
+    product_application_protocols: applicationProtocolResearchContract(
+      "oil",
+      [
+        "pre_wash_fibre_treatment",
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection",
+      ],
+      "Include one exact protocol for every role declared in product_oil_specs.role_support.",
+    ),
   }
 }
 
@@ -1083,6 +1156,9 @@ function dryShampooApprovalContract(): JsonRecord {
       scalp_sensitivity_fit: [...DRY_SHAMPOO_SCALP_SENSITIVITY_FITS],
       format: [...DRY_SHAMPOO_FORMATS],
     },
+    product_application_protocols: applicationProtocolResearchContract("dry_shampoo", [
+      "root_refresh_bridge",
+    ]),
   }
 }
 
@@ -1098,6 +1174,11 @@ function deepCleansingShampooApprovalContract(): JsonRecord {
       reset_focus: [...DEEP_CLEANSING_RESET_FOCUSES],
       color_treated_suitability: [...DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES],
     },
+    product_application_protocols: applicationProtocolResearchContract(
+      "deep_cleansing_shampoo",
+      ["residue_reset", "mineral_reset"],
+      "Use mineral_reset for metal_mineral_hard_water, residue_reset for product_sebum_buildup, and both for broad_spectrum_detox.",
+    ),
   }
 }
 
@@ -1116,6 +1197,37 @@ function bondbuilderApprovalContract(): JsonRecord {
       usage_protocol: [...PRODUCT_BOND_USAGE_PROTOCOLS],
     },
     product_relationships: "optional; emit only when needed by the approval payload",
+    product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
+      "specialized_bond_treatment",
+    ]),
+  }
+}
+
+function applicationProtocolResearchContract(
+  category: CategoryContractKey,
+  roles: readonly string[],
+  requiredRoleRule = "Include every listed role.",
+): JsonRecord {
+  return {
+    category: [category],
+    roles: [...roles],
+    required_role_rule: requiredRoleRule,
+    required_fields: [
+      "cadence",
+      "application_stage",
+      "application_state",
+      "placement",
+      "contact_time_seconds",
+      "rinse_action",
+      "reapplication",
+      "instruction_modifiers",
+      "source_label",
+      "source_url",
+      "source_text",
+      "guidance_payload",
+    ],
+    guidance_payload:
+      "Canonical schemaVersion 1 product-scoped guidance payload using productId __PRODUCT_ID__; it must be complete enough to derive the Stage 5 V2 product pointer.",
   }
 }
 
@@ -1552,6 +1664,7 @@ function missingFinalProductFields(final: JsonRecord | null | undefined): string
       "canonical_brand",
       "clean_name",
       "category_key",
+      "suitable_thicknesses",
       "affiliate_link",
       "image_url",
       "price_eur",
@@ -1566,6 +1679,7 @@ function missingFinalProductFields(final: JsonRecord | null | undefined): string
     "canonical_brand",
     "clean_name",
     "category_key",
+    "suitable_thicknesses",
     "affiliate_link",
     "image_url",
     "price_eur",

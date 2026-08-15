@@ -23,6 +23,8 @@ type ProductRow = {
   is_active: boolean | null
   lifecycle_status?: string | null
   is_chaarlie_recommended: boolean | null
+  image_url?: string | null
+  suitable_thicknesses?: string[] | null
   updated_at?: string | null
 }
 
@@ -59,7 +61,16 @@ type PromotionResult = PromotionPayload & {
 }
 
 const PRODUCT_SELECT =
-  "id,name,category,category_key,origin,is_active,lifecycle_status,is_chaarlie_recommended,updated_at"
+  "id,name,category,category_key,origin,is_active,lifecycle_status,is_chaarlie_recommended,image_url,suitable_thicknesses,updated_at"
+
+const THICKNESS_INDEPENDENT_PROMOTION_CATEGORIES = new Set<PromotionCategory>([
+  "heat_protectant",
+  "dry_shampoo",
+  "scalp_care",
+])
+
+const CHAARLIE_PRODUCT_IMAGE_PREFIX =
+  "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/"
 
 export const REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY = {
   shampoo: ["product_shampoo_specs", "product_application_protocols"],
@@ -145,6 +156,21 @@ export function validatePromotableProduct(product: ProductRow): RequiredSpecTabl
       `Product ${product.id} has unsupported or missing category for promotion: ${
         product.category_key ?? product.category ?? "missing"
       }`,
+    )
+  }
+
+  if (!product.image_url?.startsWith(CHAARLIE_PRODUCT_IMAGE_PREFIX)) {
+    throw new PromotionGateError(
+      `Product ${product.id} promotion requires a finalized Chaarlie product image`,
+    )
+  }
+
+  if (
+    !THICKNESS_INDEPENDENT_PROMOTION_CATEGORIES.has(category) &&
+    (!Array.isArray(product.suitable_thicknesses) || product.suitable_thicknesses.length === 0)
+  ) {
+    throw new PromotionGateError(
+      `Product ${product.id} promotion requires verified suitable_thicknesses`,
     )
   }
 
