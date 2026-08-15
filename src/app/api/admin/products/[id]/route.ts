@@ -10,6 +10,10 @@ import { isLeaveInCategory } from "@/lib/leave-in/constants"
 import { isMaskCategory } from "@/lib/mask/constants"
 import { isPeelingCategory } from "@/lib/peeling/constants"
 import { SHAMPOO_SOURCE_MANAGED_MESSAGE, isShampooCategory } from "@/lib/shampoo/constants"
+import {
+  PRODUCT_RECATEGORIZATION_REQUIRES_GUARDED_REPAIR,
+  requiresGuardedProductRecategorization,
+} from "@/lib/admin/product-category-write-policy"
 
 const STRUCTURED_SPEC_TABLES = [
   "product_conditioner_rerank_specs",
@@ -100,7 +104,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   const { data: existing, error: existingError } = await supabase
     .from("products")
-    .select("category")
+    .select("category, category_key")
     .eq("id", id)
     .single()
 
@@ -110,6 +114,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   if (isShampooCategory(existing.category) || isShampooCategory(parsed.data.category)) {
     return NextResponse.json({ error: SHAMPOO_SOURCE_MANAGED_MESSAGE }, { status: 409 })
+  }
+
+  if (requiresGuardedProductRecategorization(existing.category_key, parsed.data.category)) {
+    return NextResponse.json(
+      { error: PRODUCT_RECATEGORIZATION_REQUIRES_GUARDED_REPAIR },
+      { status: 409 },
+    )
   }
 
   const {

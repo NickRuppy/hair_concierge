@@ -5,6 +5,7 @@ import { auditCatalogAuthority } from "../src/lib/catalog-authority/audit"
 import {
   CATALOG_AUTHORITY_AUDIT_ISSUE_CODES,
   CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS,
+  CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS,
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type CatalogAuthorityAuditSnapshot,
   type CatalogAuditFactRow,
@@ -32,7 +33,7 @@ test("a complete ten-category fixture has no authority issues", () => {
 test("legacy display labels normalize to the canonical category keys", () => {
   const displayLabels = {
     shampoo: "Shampoo",
-    conditioner: "Conditioner",
+    conditioner: "Conditioner Profi",
     leave_in: "Leave-in",
     heat_protectant: "heat_protectant",
     oil: "Öle",
@@ -113,7 +114,7 @@ test("thickness is non-applicable for heat protectant, dry shampoo, and scalp ca
     (category, index) => ({
       ...completeProduct(category, uuid(210 + index)),
       suitableThicknesses: category === "heat_protectant" ? ["fine"] : [],
-      canonicalThicknesses: null,
+      canonicalThicknesses: [],
     }),
   )
 
@@ -122,6 +123,51 @@ test("thickness is non-applicable for heat protectant, dry shampoo, and scalp ca
   assert.equal(receipt.issueCounts.contextual_matrix_empty, undefined)
   assert.equal(receipt.issueCounts.legacy_thickness_divergence, undefined)
   assert.equal(receipt.clean, true)
+})
+
+test("expand-phase composite constraints may be present but not yet validated", () => {
+  const snapshot = completeSnapshot([completeProduct("shampoo", uuid(213))])
+  snapshot.schemaObjects = requiredSchemaObjects().map((object) => ({
+    ...object,
+    valid: CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS.includes(
+      object.name as (typeof CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS)[number],
+    ),
+  }))
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.required_index_or_constraint_missing, undefined)
+  assert.equal(receipt.clean, true)
+})
+
+test("pre-existing product spine constraints must remain validated", () => {
+  const snapshot = completeSnapshot([completeProduct("shampoo", uuid(214))])
+  snapshot.schemaObjects = requiredSchemaObjects().map((object) => ({
+    ...object,
+    valid: object.name !== "products_origin_check",
+  }))
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.required_index_or_constraint_missing, 1)
+  assert.match(
+    receipt.issues.find((issue) => issue.code === "required_index_or_constraint_missing")!.detail,
+    /products_origin_check is not validated/,
+  )
+})
+
+test("expand-phase audit reports contextual thicknesses missing normalized eligibility", () => {
+  const product = completeProduct("shampoo", uuid(215))
+  const snapshot = completeSnapshot([product])
+  snapshot.rowCounts.product_thickness_eligibility = 0
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.contextual_matrix_incomplete, 1)
+  assert.match(
+    receipt.issues.find((issue) => issue.code === "contextual_matrix_incomplete")!.detail,
+    /no normalized eligibility reference/,
+  )
 })
 
 test("target normalized thickness debt remains visible for required singleton categories", () => {
@@ -377,7 +423,7 @@ function requiredProtocols(product: CatalogAuditProduct) {
 
 function requiredSchemaObjects() {
   return CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS.map((name) => ({
-    kind: "constraint" as const,
+    kind: name.endsWith("_idx") ? ("index" as const) : ("constraint" as const),
     name,
     valid: true,
     definition: "verified test constraint",

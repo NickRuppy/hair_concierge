@@ -1,5 +1,6 @@
 import {
   CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS,
+  CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS,
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type CatalogAuthorityAuditIssue,
   CatalogAuthorityAuditReceipt,
@@ -9,6 +10,7 @@ import {
   type CatalogAuditProduct,
   type PersonalPlanCategory,
 } from "./contracts"
+import { normalizeCategoryKey } from "@/lib/product-identity"
 
 type CategoryFactRule = {
   one: readonly string[]
@@ -91,6 +93,7 @@ export function auditCatalogAuthority(
       )
     }
     if (
+      thicknessApplies(product.categoryKey) &&
       product.canonicalThicknesses !== null &&
       !sameSet(product.canonicalThicknesses, product.suitableThicknesses)
     ) {
@@ -149,6 +152,40 @@ export function auditCatalogAuthority(
         "legacy Leave-in fit facts overlap canonical Leave-in specs",
         "leave_in",
       )
+    }
+  }
+
+  if (snapshot.rowCounts.product_thickness_eligibility !== undefined) {
+    const normalizedThicknessKeys = new Set(
+      snapshot.facts
+        .filter((row) => row.table === "product_thickness_eligibility" && row.thickness)
+        .map((row) => [row.productId, row.expectedCategory, row.thickness].join("\0")),
+    )
+    for (const row of snapshot.facts) {
+      if (
+        !row.thickness ||
+        ![
+          "product_shampoo_specs",
+          "product_conditioner_specs",
+          "product_leave_in_eligibility",
+          "product_oil_eligibility",
+        ].includes(row.table)
+      ) {
+        continue
+      }
+      if (
+        !normalizedThicknessKeys.has(
+          [row.productId, row.expectedCategory, row.thickness].join("\0"),
+        )
+      ) {
+        add(
+          "contextual_matrix_incomplete",
+          products.get(row.productId) ?? null,
+          row.table,
+          "contextual thickness has no normalized eligibility reference",
+          row.expectedCategory,
+        )
+      }
     }
   }
 
@@ -290,9 +327,10 @@ export function auditCatalogAuthority(
     )
   } else {
     const actual = new Map(snapshot.schemaObjects.map((object) => [object.name, object]))
+    const mustBeValidated = new Set<string>(CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS)
     for (const name of CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS) {
       const object = actual.get(name)
-      if (!object || !object.valid) {
+      if (!object || (mustBeValidated.has(name) && !object.valid)) {
         add(
           "required_index_or_constraint_missing",
           null,
@@ -319,6 +357,10 @@ export function auditCatalogAuthority(
     issues: deduped,
     clean: deduped.length === 0,
   }
+}
+
+function thicknessApplies(category: PersonalPlanCategory | null): boolean {
+  return category !== "heat_protectant" && category !== "dry_shampoo" && category !== "scalp_care"
 }
 
 function auditProductFacts(
@@ -435,23 +477,12 @@ function requiresPublicationCompleteness(product: CatalogAuditProduct): boolean 
 }
 
 function normalizeCategory(value: string): PersonalPlanCategory | null {
-  const normalized = value
-    .trim()
-    .toLowerCase()
-    .replace(/[\s-]+/g, "_")
+  const normalized = normalizeCategoryKey(value)
+  if (!normalized) return null
   if (PERSONAL_PLAN_PRODUCT_CATEGORIES.includes(normalized as PersonalPlanCategory)) {
     return normalized as PersonalPlanCategory
   }
-  return (
-    (
-      {
-        tiefenreinigungsshampoo: "deep_cleansing_shampoo",
-        trockenshampoo: "dry_shampoo",
-        maske: "mask",
-        öle: "oil",
-      } as const
-    )[normalized as "tiefenreinigungsshampoo" | "trockenshampoo" | "maske" | "öle"] ?? null
-  )
+  return null
 }
 
 function sameSet(left: readonly string[], right: readonly string[]): boolean {

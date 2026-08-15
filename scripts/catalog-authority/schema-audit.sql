@@ -20,13 +20,29 @@ WITH constraint_objects AS (
         constraint_row.conname IN (
           'products_origin_check',
           'products_category_key_fkey',
-          'products_id_category_key_key'
+          'products_id_category_key_key',
+          'products_category_key_not_null_check'
         )
         OR constraint_row.conname LIKE 'product\_%\_product\_category\_fkey' ESCAPE '\'
+        OR constraint_row.conname LIKE 'product\_%\_thickness\_eligibility\_fkey' ESCAPE '\'
       )
   ) AS constraints
+), index_objects AS (
+  SELECT
+    'index'::text AS kind,
+    index_relation.relname AS name,
+    index_row.indisvalid AND index_row.indisready AS valid,
+    pg_catalog.pg_get_indexdef(index_row.indexrelid) AS definition
+  FROM pg_catalog.pg_index AS index_row
+  JOIN pg_catalog.pg_class AS index_relation ON index_relation.oid = index_row.indexrelid
+  JOIN pg_catalog.pg_class AS table_relation ON table_relation.oid = index_row.indrelid
+  JOIN pg_catalog.pg_namespace AS namespace ON namespace.oid = table_relation.relnamespace
+  WHERE namespace.nspname = 'public'
+    AND index_relation.relname LIKE 'product\_%\_product\_category\_idx' ESCAPE '\'
 ), schema_objects AS (
   SELECT * FROM constraint_objects
+  UNION ALL
+  SELECT * FROM index_objects
 )
 SELECT pg_catalog.jsonb_build_object(
   'schemaObjects',
