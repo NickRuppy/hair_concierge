@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import {
+  PersonalPlanJourneyHeader,
+  PersonalPlanViewTransition,
+  type PersonalPlanTransitionDirection,
+} from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import {
   Stage2RefinementError,
@@ -22,6 +26,7 @@ import {
   getAnswerForQuestion,
   getQuestionFamily,
   getQuestionSection,
+  journeySaveStatus,
   type RefinementQuestionStatus,
 } from "./refinement-question"
 import { REFINEMENT_TELEMETRY_EVENTS } from "./refinement-options"
@@ -96,6 +101,7 @@ export function RefinementFlow({
   onHandoff,
   autoHandoff = true,
   directEntry = false,
+  stageEntrance = false,
 }: {
   gateway: Stage2RefinementGateway
   initialSession?: Stage2RefinementSession
@@ -104,6 +110,7 @@ export function RefinementFlow({
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
   autoHandoff?: boolean
   directEntry?: boolean
+  stageEntrance?: boolean
 }) {
   const initialView = useMemo(
     () => initialRefinementView(initialSession, directEntry),
@@ -115,6 +122,9 @@ export function RefinementFlow({
   const [activeQuestionId, setActiveQuestionId] = useState<Stage2QuestionId | null>(
     initialView?.activeQuestionId ?? null,
   )
+  const activeQuestionIdRef = useRef<Stage2QuestionId | null>(initialView?.activeQuestionId ?? null)
+  const [questionDirection, setQuestionDirection] =
+    useState<PersonalPlanTransitionDirection>("forward")
   const [localAnswer, setLocalAnswer] = useState<unknown>(initialView?.localAnswer)
   const [status, setStatus] = useState<RefinementQuestionStatus>(initialView?.status ?? "idle")
   const [mode, setMode] = useState<RefinementMode>(initialView?.mode ?? "loading")
@@ -141,6 +151,15 @@ export function RefinementFlow({
       nextQuestionId: Stage2QuestionId | null,
       options?: { liveMessage?: string; status?: RefinementQuestionStatus },
     ) => {
+      const previousQuestionId = activeQuestionIdRef.current
+      if (previousQuestionId && nextQuestionId && previousQuestionId !== nextQuestionId) {
+        const previousIndex = nextSession.path.orderedQuestionIds.indexOf(previousQuestionId)
+        const nextIndex = nextSession.path.orderedQuestionIds.indexOf(nextQuestionId)
+        setQuestionDirection(
+          previousIndex >= 0 && nextIndex >= 0 && nextIndex < previousIndex ? "reverse" : "forward",
+        )
+      }
+      activeQuestionIdRef.current = nextQuestionId
       setSession(nextSession)
       setActiveQuestionId(nextQuestionId)
       setLocalAnswer(
@@ -451,6 +470,8 @@ export function RefinementFlow({
       const code = error instanceof Stage2RefinementError ? error.code : "save_failed"
       emit({ name: "personal_plan_stage2_save_failed", errorCode: code })
       setSession(submittedSession)
+      activeQuestionIdRef.current = submittedQuestionId
+      setQuestionDirection("reverse")
       setActiveQuestionId(submittedQuestionId)
       setLocalAnswer(submittedAnswer)
       setStatus("save_failed")
@@ -487,9 +508,6 @@ export function RefinementFlow({
   const content = useMemo(() => {
     if (mode === "loading") return <LoadingShell status={status} liveMessage={liveMessage} />
     if (mode === "bridge" && bridge) {
-      if (autoHandoff && onHandoff && handoffStatus !== "error") {
-        return <LoadingShell status="saved" liveMessage="Produkte werden geöffnet." />
-      }
       return (
         <RefinementBridge
           refinedVersionId={bridge.refinedVersionId}
@@ -518,23 +536,41 @@ export function RefinementFlow({
         />
       )
     }
+    const canGoBack = session.path.orderedQuestionIds.indexOf(activeQuestionId) > 0
     return (
-      <RefinementQuestion
-        session={session}
-        questionId={activeQuestionId}
-        localAnswer={localAnswer}
-        onLocalAnswerChange={handleLocalAnswer}
-        status={status}
-        liveMessage={liveMessage}
-        canGoBack={session.path.orderedQuestionIds.indexOf(activeQuestionId) > 0}
-        onBack={handleBack}
-        onSubmit={handleSubmit}
-        onSecondaryExit={onSecondaryExit ?? (() => {})}
-      />
+      <div className="min-h-dvh bg-[var(--background)] text-[var(--text-body)]">
+        <PersonalPlanJourneyHeader
+          currentStage={2}
+          saveStatus={journeySaveStatus(status)}
+          onBack={canGoBack ? handleBack : onSecondaryExit}
+        />
+        <div className={stageEntrance ? "personal-plan-stage-target-enter" : undefined}>
+          <PersonalPlanViewTransition
+            viewKey={activeQuestionId}
+            direction={questionDirection}
+            variant="depth"
+            focusOnInitialMount
+          >
+            <RefinementQuestion
+              session={session}
+              questionId={activeQuestionId}
+              localAnswer={localAnswer}
+              onLocalAnswerChange={handleLocalAnswer}
+              status={status}
+              liveMessage={liveMessage}
+              canGoBack={canGoBack}
+              onBack={handleBack}
+              onSubmit={handleSubmit}
+              onSecondaryExit={onSecondaryExit ?? (() => {})}
+              showJourneyHeader={false}
+              focusOnQuestionChange={false}
+            />
+          </PersonalPlanViewTransition>
+        </div>
+      </div>
     )
   }, [
     activeQuestionId,
-    autoHandoff,
     begin,
     bridge,
     handleBack,
@@ -548,7 +584,9 @@ export function RefinementFlow({
     handoffStatus,
     onHandoff,
     onSecondaryExit,
+    questionDirection,
     session,
+    stageEntrance,
     status,
   ])
 
@@ -595,10 +633,7 @@ function LoadingShell({
 }) {
   return (
     <div className="min-h-dvh bg-[var(--background)]">
-      <PersonalPlanJourneyHeader
-        currentStage={2}
-        saveStatus={status === "saved" ? "saved" : "idle"}
-      />
+      <PersonalPlanJourneyHeader currentStage={2} saveStatus={journeySaveStatus(status)} />
       <main className="grid min-h-[calc(100dvh-92px)] place-items-center px-5 text-center">
         <div>
           <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">

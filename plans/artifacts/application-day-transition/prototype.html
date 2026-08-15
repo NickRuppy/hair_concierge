@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anwendung – Übergangsprototyp</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --plum: #442261;
+        --plum-dark: #2c1748;
+        --plum-light: #d9cbe2;
+        --plum-ice: #f4eff7;
+        --paper: #fdfbf9;
+        --muted: #6f6672;
+        --coral: #d76858;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #eee9ed; color: var(--plum-dark); }
+      button { font: inherit; }
+      .lab { min-height: 100vh; padding: 18px; }
+      .lab-bar {
+        width: min(100%, 720px); margin: 0 auto 14px; display: flex; align-items: center;
+        justify-content: space-between; gap: 12px; color: #554c58; font-size: 13px;
+      }
+      .switcher { display: flex; gap: 6px; border-radius: 999px; background: #fff; padding: 4px; }
+      .switcher button { border: 0; border-radius: 999px; background: transparent; padding: 7px 11px; color: var(--plum); cursor: pointer; }
+      .switcher button[aria-pressed="true"] { background: var(--plum); color: white; }
+      .phone {
+        position: relative; width: min(100%, 430px); height: min(850px, calc(100vh - 92px));
+        margin: auto; overflow: hidden; border: 1px solid #ddd3de; border-radius: 32px;
+        background: var(--paper); box-shadow: 0 24px 65px -36px rgba(44, 23, 72, .62);
+      }
+      .chrome { position: relative; z-index: 20; height: 104px; border-bottom: 1px solid #e5dfe5; background: rgba(253, 251, 249, .96); padding: 16px 20px 12px; }
+      .brand-row { display: flex; justify-content: space-between; align-items: center; }
+      .brand { font-family: Georgia, serif; font-size: 27px; font-weight: 800; letter-spacing: -.6px; color: var(--plum); }
+      .saved { font-size: 11px; font-weight: 750; color: #337653; }
+      .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 13px; }
+      .progress span { height: 4px; border-radius: 4px; background: #8660a7; }
+      .progress-labels { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 6px; font-size: 8px; text-align: center; color: #6b626d; }
+      .progress-labels strong { color: var(--plum); }
+      .viewport { position: absolute; inset: 104px 0 0; overflow: hidden; }
+      .screen { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; background: var(--paper); padding: 22px 18px 34px; }
+
+      .push .overview { transform: translateX(0); opacity: 1; transition: transform 360ms cubic-bezier(.2,.78,.2,1), opacity 260ms ease; }
+      .push .detail { transform: translateX(100%); box-shadow: -18px 0 42px -34px rgba(44,23,72,.65); transition: transform 360ms cubic-bezier(.2,.78,.2,1); }
+      .push[data-open="true"] .overview { transform: translateX(-24%); opacity: .72; pointer-events: none; }
+      .push[data-open="true"] .detail { transform: translateX(0); }
+
+      .sheet .overview { transform: none; transition: filter 300ms ease, transform 300ms ease; }
+      .sheet .detail { top: 30px; border-radius: 24px 24px 0 0; transform: translateY(105%); box-shadow: 0 -18px 48px -25px rgba(44,23,72,.7); transition: transform 390ms cubic-bezier(.2,.78,.2,1); }
+      .sheet[data-open="true"] .overview { filter: brightness(.93); transform: scale(.975); pointer-events: none; }
+      .sheet[data-open="true"] .detail { transform: translateY(0); }
+
+      h1 { margin: 0; font-family: Georgia, serif; font-size: 34px; line-height: 1.06; letter-spacing: -.7px; }
+      h2 { margin: 0; font-family: Georgia, serif; font-size: 22px; }
+      p { margin: 0; }
+      .lede { margin-top: 8px; color: var(--muted); font-size: 15px; }
+      .status { margin: 13px 0 18px; border-left: 2px solid var(--plum); padding-left: 10px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .days { display: grid; gap: 14px; }
+      .day-card { width: 100%; border: 1px solid #e2dce3; border-radius: 20px; background: white; padding: 13px; color: inherit; text-align: left; cursor: pointer; box-shadow: 0 12px 34px -30px rgba(44,23,72,.7); }
+      .day-card:focus-visible, .back:focus-visible { outline: 2px solid var(--plum); outline-offset: 3px; }
+      .card-title { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+      .card-title span { font-size: 10px; font-weight: 750; color: #9b642c; }
+      .card-copy { margin-top: 3px; color: var(--muted); font-size: 12px; }
+      .shelf { position: relative; height: 125px; margin-top: 13px; display: flex; align-items: flex-end; justify-content: center; gap: 10px; border: 1px solid #e2dce3; border-radius: 17px; background: #e9e3ed; padding: 14px 22px 24px; }
+      .shelf::after { content: ""; position: absolute; left: 22px; right: 22px; bottom: 17px; height: 6px; border-radius: 6px; background: #d9b99c; }
+      .product { position: relative; z-index: 1; width: 45px; border-radius: 12px 12px 9px 9px; background: #f3f0e8; border: 2px solid var(--tone, #d0a43c); box-shadow: 0 10px 20px -15px rgba(44,23,72,.9); }
+      .product.tall { height: 79px; }
+      .product.medium { height: 66px; border-radius: 15px 15px 8px 8px; }
+      .product.short { height: 52px; border-radius: 8px; }
+      .product::before { content: ""; position: absolute; inset: 16px 8px 12px; border-radius: 5px; background: color-mix(in srgb, var(--tone) 68%, white); }
+      .card-fact { margin-top: 10px; color: var(--muted); font-size: 11px; }
+      .moon { width: 78px; height: 78px; border: 1px solid #d8c6e4; border-radius: 50%; background: #f3f0e8; color: var(--plum); display: grid; place-items: center; font-size: 34px; }
+
+      .back { min-height: 44px; margin: -8px 0 5px -8px; border: 0; border-radius: 9px; background: transparent; padding: 0 9px; color: var(--plum); font-weight: 750; cursor: pointer; }
+      .detail header { border-bottom: 1px solid #e2dce3; padding-bottom: 17px; }
+      .cadence { margin-top: 11px; color: #7d737f; font-size: 12px; }
+      .steps { display: grid; gap: 15px; margin-top: 18px; }
+      .step { display: grid; grid-template-columns: 31px 1fr; gap: 11px; }
+      .number { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--plum); color: white; font-size: 12px; font-weight: 800; }
+      .instruction { border: 1px solid var(--plum-light); border-radius: 14px; background: var(--plum-ice); padding: 14px; }
+      .instruction-label { color: #7a6d7d; font-size: 10px; font-weight: 750; letter-spacing: .03em; text-transform: uppercase; }
+      .instruction h2 { margin-top: 4px; font-family: inherit; font-size: 16px; }
+      .instruction p { margin-top: 7px; color: #5e5660; font-size: 13px; line-height: 1.45; }
+      .ready-note { position: absolute; z-index: 30; right: 14px; bottom: 12px; border-radius: 999px; background: rgba(44,23,72,.88); padding: 7px 10px; color: white; font-size: 10px; opacity: 0; transform: translateY(5px); transition: 180ms ease; pointer-events: none; }
+      .phone[data-open="true"] .ready-note { opacity: 1; transform: translateY(0); transition-delay: 210ms; }
+
+      @media (min-width: 860px) {
+        .lab { padding-top: 28px; }
+        .phone { width: 720px; max-width: 720px; height: 820px; border-radius: 26px; }
+        .screen { padding-left: 52px; padding-right: 52px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .overview, .detail, .ready-note { transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="lab">
+      <div class="lab-bar">
+        <span>Interaktiver Planungsprototyp · keine echten Daten</span>
+        <div class="switcher" aria-label="Übergangsvariante">
+          <button type="button" data-variant="push" aria-pressed="true">A · Horizontal</button>
+          <button type="button" data-variant="sheet" aria-pressed="false">B · Sheet</button>
+        </div>
+      </div>
+      <section class="phone push" data-open="false" aria-label="Anwendung Prototyp">
+        <div class="chrome">
+          <div class="brand-row"><span class="brand">chaarlie</span><span class="saved">Gespeichert</span></div>
+          <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="progress-labels"><span>Bedarf</span><span>Feinschliff</span><span>Produkte</span><span>Routine</span><strong>Anwendung</strong></div>
+        </div>
+        <div class="viewport">
+          <section class="screen overview" aria-labelledby="overview-title">
+            <h1 id="overview-title">Anwendung</h1>
+            <p class="lede">Wähle, was heute passt.</p>
+            <p class="status"><strong>Teilweise bereit:</strong> 1 Produkt ist vorläufig. 2 Details sind noch offen.</p>
+            <div class="days">
+              <button class="day-card" type="button" data-open-day="Waschtag">
+                <span class="card-title"><h2>Waschtag</h2><span>Teilweise bereit</span></span>
+                <p class="card-copy">Deine Produkte in der richtigen Reihenfolge</p>
+                <span class="shelf" aria-hidden="true">
+                  <span class="product tall" style="--tone:#d0a43c"></span>
+                  <span class="product medium" style="--tone:#67abc4"></span>
+                  <span class="product short" style="--tone:#68ad88"></span>
+                </span>
+                <p class="card-fact">Bei deiner nächsten Haarwäsche · 6 Schritte</p>
+              </button>
+              <button class="day-card" type="button" data-open-day="Auffrischung">
+                <span class="card-title"><h2>Auffrischung</h2><span>Bereit</span></span>
+                <p class="card-copy">Für zwischendurch</p>
+                <span class="shelf" aria-hidden="true"><span class="product tall" style="--tone:#78a8a2"></span></span>
+                <p class="card-fact">1 Produkt · 3 Schritte</p>
+              </button>
+              <button class="day-card" type="button" data-open-day="Pausentag">
+                <span class="card-title"><h2>Pausentag</h2><span>Bereit</span></span>
+                <p class="card-copy">Heute sind keine Produkte nötig</p>
+                <span class="shelf" aria-hidden="true"><span class="moon">☾</span></span>
+                <p class="card-fact">Erholung für Haar und Kopfhaut</p>
+              </button>
+            </div>
+          </section>
+          <article class="screen detail" aria-labelledby="detail-title">
+            <button class="back" type="button">← Alle Tage</button>
+            <header>
+              <h1 id="detail-title">Waschtag</h1>
+              <p class="lede">Deine vollständige Basiswäsche.</p>
+              <p class="cadence">Bei deiner nächsten Haarwäsche</p>
+            </header>
+            <div class="steps">
+              <div class="step"><span class="number">1</span><div class="instruction"><span class="instruction-label">Vorbereitung</span><h2>Haare vollständig anfeuchten</h2><p>Lass das Wasser kurz durch Ansatz und Längen laufen.</p></div></div>
+              <div class="step"><span class="number">2</span><div class="instruction"><span class="instruction-label">Shampoo</span><h2>Mildes Shampoo</h2><p>Auf die nasse Kopfhaut geben und sanft einmassieren.</p></div></div>
+              <div class="step"><span class="number">3</span><div class="instruction"><span class="instruction-label">Conditioner</span><h2>Feuchtigkeits-Conditioner</h2><p>In Längen und Spitzen verteilen, kurz einwirken lassen und gründlich ausspülen.</p></div></div>
+              <div class="step"><span class="number">4</span><div class="instruction"><span class="instruction-label">Leave-in</span><h2>Leichtes Leave-in</h2><p>Eine kleine Menge in die handtuchtrockenen Längen einarbeiten.</p></div></div>
+            </div>
+          </article>
+        </div>
+        <span class="ready-note" aria-hidden="true">Anleitung war bereits geladen</span>
+      </section>
+    </main>
+    <script>
+      const phone = document.querySelector('.phone')
+      const detailTitle = document.querySelector('#detail-title')
+      const openDay = (label, push = true) => {
+        detailTitle.textContent = label
+        phone.dataset.open = 'true'
+        if (push) history.pushState({ day: label }, '', `?variant=${phone.classList.contains('sheet') ? 'sheet' : 'push'}&day=${encodeURIComponent(label)}`)
+      }
+      const closeDay = (push = true) => {
+        phone.dataset.open = 'false'
+        if (push) history.pushState({}, '', `?variant=${phone.classList.contains('sheet') ? 'sheet' : 'push'}`)
+      }
+      document.querySelectorAll('[data-open-day]').forEach(button => button.addEventListener('click', () => openDay(button.dataset.openDay)))
+      document.querySelector('.back').addEventListener('click', () => history.back())
+      document.querySelectorAll('[data-variant]').forEach(button => button.addEventListener('click', () => {
+        const variant = button.dataset.variant
+        phone.classList.toggle('push', variant === 'push')
+        phone.classList.toggle('sheet', variant === 'sheet')
+        document.querySelectorAll('[data-variant]').forEach(option => option.setAttribute('aria-pressed', String(option === button)))
+        history.replaceState(history.state, '', `?variant=${variant}${phone.dataset.open === 'true' ? `&day=${encodeURIComponent(detailTitle.textContent)}` : ''}`)
+      }))
+      addEventListener('popstate', event => event.state?.day ? openDay(event.state.day, false) : closeDay(false))
+      const params = new URLSearchParams(location.search)
+      const initialVariant = params.get('variant') === 'sheet' ? 'sheet' : 'push'
+      document.querySelector(`[data-variant="${initialVariant}"]`).click()
+      const initialDay = params.get('day')
+      if (initialDay) openDay(initialDay, false)
+    </script>
+  </body>
+</html>

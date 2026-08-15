@@ -921,6 +921,115 @@
   outline: none;
 }
 
+.personal-plan-view-transition {
+  display: grid;
+  overflow-x: clip;
+}
+
+.personal-plan-view-transition-layer {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.personal-plan-view-transition-outgoing {
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.personal-plan-view-transition-incoming {
+  position: relative;
+  z-index: 2;
+}
+
+[data-personal-plan-view-transition="depth"]
+  .personal-plan-view-transition-incoming[data-transition-direction="forward"] {
+  animation: personalPlanDepthIncomingForward 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+}
+
+[data-personal-plan-view-transition="depth"]
+  .personal-plan-view-transition-outgoing[data-transition-direction="forward"] {
+  animation: personalPlanDepthOutgoingForward 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+}
+
+[data-personal-plan-view-transition="depth"]
+  .personal-plan-view-transition-incoming[data-transition-direction="reverse"] {
+  animation: personalPlanDepthIncomingReverse 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+}
+
+[data-personal-plan-view-transition="depth"]
+  .personal-plan-view-transition-outgoing[data-transition-direction="reverse"] {
+  animation: personalPlanDepthOutgoingReverse 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+}
+
+@keyframes personalPlanDepthIncomingForward {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes personalPlanDepthOutgoingForward {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0.72;
+    transform: translateX(-24%);
+  }
+}
+
+@keyframes personalPlanDepthIncomingReverse {
+  from {
+    transform: translateX(-24%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes personalPlanDepthOutgoingReverse {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0.72;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes personalPlanStageIncoming {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.personal-plan-stage-target-enter {
+  animation: personalPlanStageIncoming 220ms ease-out;
+}
+
+@keyframes personalPlanStageTargetFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.personal-plan-stage-target-fade {
+  animation: personalPlanStageTargetFade 220ms ease-out;
+}
+
 .personal-plan-multi-count {
   animation: personalPlanCountChange 180ms ease-out both;
 }
@@ -1051,6 +1160,17 @@
   .personal-plan-analysis-settle,
   .personal-plan-profile-row {
     animation: none !important;
+  }
+
+  .personal-plan-view-transition-layer {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .personal-plan-stage-target-enter,
+  .personal-plan-stage-target-fade {
+    animation: none !important;
+    transform: none !important;
   }
 
   [data-offer-plan-card],

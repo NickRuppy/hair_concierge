@@ -1,12 +1,20 @@
+import type { MouseEvent } from "react"
+
+import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
+
 import type { ApplicationDayView } from "./application-types"
 import { ApplicationDayCard } from "./application-day-card"
 
 export function ApplicationOverview({
   days,
   showHeader = true,
+  onOpenDay,
+  navigationBasePath = "/anwendung",
 }: {
   days: ApplicationDayView[]
   showHeader?: boolean
+  onOpenDay?: (event: MouseEvent<HTMLAnchorElement>, dayType: ApplicationDayTypeKey) => void
+  navigationBasePath?: string
 }) {
   const hasPartialGuidance = days.some((day) => day.isPartial)
   const provisionalProductCount = days.reduce(
@@ -32,7 +40,12 @@ export function ApplicationOverview({
     >
       {showHeader ? (
         <header className="max-w-2xl pb-1">
-          <h1 id="application-overview-title" className="type-h1 text-[var(--text-heading)]">
+          <h1
+            id="application-overview-title"
+            className="type-h1 text-[var(--text-heading)]"
+            data-personal-plan-transition-focus
+            tabIndex={-1}
+          >
             Anwendung
           </h1>
           <p className="type-body mt-2 text-[var(--text-sub)]">Wähle, was heute passt.</p>
@@ -48,7 +61,12 @@ export function ApplicationOverview({
       ) : null}
       <ol className={`${showHeader ? "mt-5 " : ""}grid gap-4`}>
         {days.map((day) => (
-          <ApplicationDayCard key={day.dayType} day={day} />
+          <ApplicationDayCard
+            key={day.dayType}
+            day={day}
+            onOpenDay={onOpenDay}
+            navigationBasePath={navigationBasePath}
+          />
         ))}
       </ol>
     </section>

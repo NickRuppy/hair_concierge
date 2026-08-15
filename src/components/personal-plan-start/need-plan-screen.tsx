@@ -1,8 +1,13 @@
 "use client"
 
+import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import {
+  PersonalPlanJourneyHeader,
+  usePersonalPlanTransitionLayer,
+} from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { NeedCard, type NeedCardViewModel } from "./need-card"
@@ -25,26 +30,99 @@ type NeedPlanScreenProps = {
   hasOptionalPage: boolean
   onBack?: () => void
   onNext?: () => void
+  showJourneyHeader?: boolean
+  nextStatus?: "idle" | "loading" | "error"
 }
 
-export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: NeedPlanScreenProps) {
+export function NeedPlanScreen({
+  screen,
+  hasOptionalPage,
+  onBack,
+  onNext,
+  showJourneyHeader = true,
+  nextStatus = "idle",
+}: NeedPlanScreenProps) {
+  const transitionLayer = usePersonalPlanTransitionLayer()
+  const [actionPortalTarget, setActionPortalTarget] = useState<HTMLElement | null>(null)
+
+  useEffect(() => {
+    if (transitionLayer === "outgoing") return
+    const frame = window.requestAnimationFrame(() => setActionPortalTarget(document.body))
+    return () => window.cancelAnimationFrame(frame)
+  }, [transitionLayer])
+
   const nextLabel =
-    screen.kind === "basis" && hasOptionalPage
-      ? "Optionale Empfehlungen"
-      : "Jetzt auf meine Produkte abstimmen"
+    nextStatus === "loading"
+      ? "Feinschliff wird geöffnet …"
+      : screen.kind === "basis" && hasOptionalPage
+        ? "Optionale Empfehlungen"
+        : "Jetzt auf meine Produkte abstimmen"
+
+  const actionNav =
+    transitionLayer === "outgoing" || (!onBack && !onNext) ? null : (
+      <nav
+        aria-label="Bedarfsplan-Seiten"
+        className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 py-2.5 backdrop-blur"
+      >
+        <div
+          className={cn(
+            "mx-auto flex max-w-[430px] items-center gap-2 sm:max-w-[560px]",
+            !onBack && "justify-end",
+          )}
+        >
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              className="inline-flex min-h-11 items-center gap-1 rounded-[12px] px-3 text-[11px] font-extrabold text-[#6B50A0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+              Zur Basis
+            </button>
+          ) : null}
+          {onNext ? (
+            <Button
+              type="button"
+              onClick={onNext}
+              variant="funnelCta"
+              disabled={nextStatus === "loading"}
+              aria-busy={nextStatus === "loading"}
+            >
+              {nextLabel}
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          ) : null}
+        </div>
+        {nextStatus === "error" ? (
+          <p
+            className="mx-auto mt-2 max-w-[430px] text-center text-xs font-medium text-[var(--status-danger-text)] sm:max-w-[560px]"
+            role="alert"
+          >
+            Feinschliff konnte nicht geöffnet werden. Versuche es noch einmal.
+          </p>
+        ) : null}
+      </nav>
+    )
 
   return (
     <section
-      className="personal-plan-cookie-clearance flex min-h-dvh flex-col bg-[var(--background)]"
+      className={cn(
+        "personal-plan-cookie-clearance flex flex-col bg-[var(--background)]",
+        showJourneyHeader ? "min-h-dvh" : "min-h-[calc(100dvh-92px)]",
+      )}
       data-plan-start-screen={screen.kind}
       data-plan-start-has-optional={hasOptionalPage ? "true" : "false"}
     >
-      <PlanStartHeader stageLabel="Bedarfsplan" />
+      {showJourneyHeader ? <PlanStartHeader stageLabel="Bedarfsplan" /> : null}
       <main className="mx-auto flex w-full max-w-[430px] flex-1 flex-col px-3 pb-24 pt-3 sm:max-w-[560px] sm:px-5">
         <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#6e6863]">
           {screen.overline}
         </div>
-        <h1 className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
+        <h1
+          className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] outline-none sm:text-[28px]"
+          data-personal-plan-transition-focus
+          tabIndex={-1}
+        >
           {screen.title}
         </h1>
         <p className="mt-1 max-w-[34rem] text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
@@ -69,36 +147,7 @@ export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: Need
           ))}
         </div>
       </main>
-      {onBack || onNext ? (
-        <nav
-          aria-label="Bedarfsplan-Seiten"
-          className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 py-2.5 backdrop-blur"
-        >
-          <div
-            className={cn(
-              "mx-auto flex max-w-[430px] items-center gap-2 sm:max-w-[560px]",
-              !onBack && "justify-end",
-            )}
-          >
-            {onBack ? (
-              <button
-                type="button"
-                onClick={onBack}
-                className="inline-flex min-h-11 items-center gap-1 rounded-[12px] px-3 text-[11px] font-extrabold text-[#6B50A0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                Zur Basis
-              </button>
-            ) : null}
-            {onNext ? (
-              <Button type="button" onClick={onNext} variant="funnelCta">
-                {nextLabel}
-                <ChevronRight className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            ) : null}
-          </div>
-        </nav>
-      ) : null}
+      {actionPortalTarget ? createPortal(actionNav, actionPortalTarget) : actionNav}
     </section>
   )
 }

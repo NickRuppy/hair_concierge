@@ -24,6 +24,7 @@ import type {
 import type { RoutineProductDetail as RoutineProductDetailData } from "@/lib/personal-plan/routine/product-detail-service"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { requestRoutineAttentionRefresh } from "./routine-attention-indicator"
@@ -208,6 +209,9 @@ export function PersonalPlanRoutineClient({
   )
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const openApplication = React.useCallback(() => {
+    markPersonalPlanStageNavigation("/anwendung")
+  }, [])
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
   const [detail, setDetail] = React.useState<RoutineProductDetailData | null>(null)
   const [detailOpen, setDetailOpen] = React.useState(false)
@@ -527,6 +531,7 @@ export function PersonalPlanRoutineClient({
         view={view}
         stage5Reachable={stage5Reachable}
         portfolioPresentation={portfolioPresentation}
+        onOpenApplication={openApplication}
       />
     )
   }
@@ -567,6 +572,7 @@ export function PersonalPlanRoutineClient({
         }
         onItemDetail={(item) => void openDetail(item)}
         portfolioPresentation={portfolioPresentation}
+        onOpenApplication={openApplication}
       />
       {pending ? (
         <RoutineProposalSheet

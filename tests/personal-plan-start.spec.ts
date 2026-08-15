@@ -107,6 +107,15 @@ if (!preparedStage3Entry.authoritySnapshot)
   throw new Error("production browser fixture is missing Stage 3 authority")
 
 test.describe("production-shaped Personal Plan Stage 1 surface", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        "chaarlie_cookie_consent_v1",
+        JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+      )
+    })
+  })
+
   test("preserves the signed mobile Basis and Optional journey with one direct Stage 2 handoff", async ({
     page,
   }) => {
@@ -131,13 +140,15 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       pathVersion: "stage2-fixture-v1",
       triggerContext: completedRefinement.triggerContext,
     })
-    await page.route("**/api/personal-plan/stage-2", (route) =>
-      route.fulfill({
+    let stage2Requests = 0
+    await page.route("**/api/personal-plan/stage-2", (route) => {
+      stage2Requests += 1
+      return route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify(freshRefinement),
-      }),
-    )
+      })
+    })
     await page.setViewportSize({ width: 375, height: 844 })
     await page.goto(labPath)
 
@@ -156,17 +167,55 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await basisCards.first().getByRole("button").click()
     await expect(basisCards.first().getByText("Warum das zu deinem Haar passt")).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+    await page.waitForTimeout(100)
+    const actionNav = page.getByRole("navigation", { name: "Bedarfsplan-Seiten" })
+    await expect(actionNav).toHaveCount(1)
+    expect(
+      await actionNav.evaluate((element) => ({
+        parent: element.parentElement?.tagName,
+        bottom: Math.round(element.getBoundingClientRect().bottom),
+        viewportBottom: window.innerHeight,
+      })),
+    ).toEqual({ parent: "BODY", bottom: 844, viewportBottom: 844 })
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
     const optionalCards = page.locator("[data-plan-start-card-list] article")
     await expect(
       page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
     ).toHaveCount(await optionalCards.count())
+    expect(stage2Requests).toBe(0)
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
     await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+    expect(stage2Requests).toBe(1)
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await expect(
       page.getByRole("heading", { name: "Jetzt machen wir ihn zu deinem." }),
     ).toHaveCount(0)
+  })
+
+  test("retains the Bedarfsplan and offers retry when Stage 2 cannot open", async ({ page }) => {
+    let stage2Requests = 0
+    await page.route("**/api/personal-plan/stage-2", (route) => {
+      stage2Requests += 1
+      return route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "temporarily_unavailable" }),
+      })
+    })
+
+    await page.goto(labPath)
+    await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+    expect(stage2Requests).toBe(0)
+    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+
+    await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
+    await expect(
+      page.getByRole("alert").filter({ hasText: "Feinschliff konnte nicht geöffnet werden" }),
+    ).toBeVisible()
+    expect(stage2Requests).toBe(1)
+
+    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+    await expect.poll(() => stage2Requests).toBe(2)
   })
 
   test("contains the reviewed surface at desktop without horizontal overflow", async ({ page }) => {
@@ -240,6 +289,13 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
     await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toHaveCount(0)
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
+    await expect
+      .poll(() =>
+        page
+          .locator("main[data-stage3-progress]")
+          .evaluate((element) => getComputedStyle(element).transform),
+      )
+      .toBe("none")
     await expect(
       page.getByText(preparedStage3Entry.orderedCategories[0]!.needSummary),
     ).toBeVisible()

@@ -1,4 +1,4 @@
-import { ApplicationPage } from "@/components/application/application-page"
+import { RouteAwareApplicationPage } from "@/components/application/application-page"
 import type { ApplicationPageView } from "@/components/application/application-types"
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
 import {
@@ -226,5 +226,5 @@ export default async function AnwendungPage({
     process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED === "true"
       ? Math.round(durationMs * 100) / 100
       : undefined
-  return <ApplicationPage view={view} internalComputeMs={internalComputeMs} />
+  return <RouteAwareApplicationPage view={view} internalComputeMs={internalComputeMs} />
 }

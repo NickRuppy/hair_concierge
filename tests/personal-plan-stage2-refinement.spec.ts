@@ -125,6 +125,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await continueButton(page).click()
     await expect(page.getByText("Deine Antwort wird sicher gespeichert.")).toHaveCount(0)
     await expect(page.getByRole("alert").filter({ hasText: /nicht geklappt/i })).toBeVisible()
+    await expect(page.getByText("Nicht gespeichert", { exact: true })).toBeVisible()
     await expect(shampoo).toHaveAttribute("aria-pressed", "true")
     await expect(page.getByRole("button", { name: "Erneut versuchen" })).toBeVisible()
     await page.getByRole("button", { name: "Erneut versuchen" }).click()
@@ -299,6 +300,26 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(
       page.getByRole("heading", { name: "Wie oft wäschst du deine Haare nass?" }),
     ).toBeVisible()
+    await expect(dock).toHaveCount(1)
+    await expect(dock).toBeVisible()
+    await expect(banner).toBeVisible()
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const currentDock = document.querySelector<HTMLElement>(
+            "[data-stage2-mobile-dock=portal]",
+          )
+          const currentBanner = document.querySelector<HTMLElement>(
+            '[role="dialog"][aria-label="Cookie-Einstellungen"]',
+          )
+          if (!currentDock || !currentBanner) return false
+          return (
+            currentBanner.getBoundingClientRect().bottom <=
+            currentDock.getBoundingClientRect().top - 4
+          )
+        }),
+      )
+      .toBe(true)
   })
 
   test("unknown preview scenarios return 404", async ({ page }) => {

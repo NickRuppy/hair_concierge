@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Info, Loader2, RotateCcw } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
@@ -8,7 +9,13 @@ import {
   RefinementFlow,
   type Stage2HandoffPayload,
 } from "@/components/personal-plan-refinement/refinement-flow"
+import {
+  PersonalPlanStageEntrance,
+  PersonalPlanViewTransition,
+  type PersonalPlanTransitionDirection,
+} from "@/components/personal-plan-journey"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
+import type { Stage3RoutineHandoff } from "@/components/personal-plan-products/stage3-products-flow"
 import {
   createHttpStage3IntakeClient,
   createHttpStage3ProductsGateway,
@@ -36,6 +43,7 @@ import {
   stage1ProductExamplePreviewRequestUrl,
   type Stage1ProductExamplePreviewResponse,
 } from "@/lib/personal-plan/product-preview-contract"
+import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 
 import {
   NeedPlanScreen,
@@ -215,19 +223,23 @@ export function interpretPlanStartApiResponse(status: number, body: unknown): Pl
   return { state: "retryable_error" }
 }
 
+export type PlanStartProductionGateProps = {
+  initialJourney?: PlanStartInitialJourney
+  initialPlan?: PlanStartReadyViewModel
+  personalPlanId?: string
+  initialRefinementSession?: Stage2RefinementSession
+  reloadServerFrontier?: () => void
+  replaceRoute?: (href: string) => void
+}
+
 export function PlanStartProductionGate({
   initialJourney = { stage: "stage1" },
   initialPlan,
   personalPlanId,
   initialRefinementSession,
   reloadServerFrontier,
-}: {
-  initialJourney?: PlanStartInitialJourney
-  initialPlan?: PlanStartReadyViewModel
-  personalPlanId?: string
-  initialRefinementSession?: Stage2RefinementSession
-  reloadServerFrontier?: () => void
-}) {
+  replaceRoute,
+}: PlanStartProductionGateProps) {
   const canBootstrapLaterStage = isValidLaterStageBootstrap(
     initialJourney,
     personalPlanId,
@@ -270,6 +282,7 @@ export function PlanStartProductionGate({
         personalPlanId={personalPlanId}
         initialRefinementSession={initialRefinementSession}
         reloadServerFrontier={reloadServerFrontier}
+        replaceRoute={replaceRoute}
       />
     )
   }
@@ -283,8 +296,17 @@ export function PlanStartProductionGate({
       initialJourney={initialJourney}
       personalPlanId={state.plan.personalPlanId}
       reloadServerFrontier={reloadServerFrontier}
+      replaceRoute={replaceRoute}
     />
   )
+}
+
+export function RouteAwarePlanStartProductionGate(
+  props: Omit<PlanStartProductionGateProps, "replaceRoute">,
+) {
+  const router = useRouter()
+  const replaceRoute = useCallback((href: string) => router.replace(href), [router])
+  return <PlanStartProductionGate {...props} replaceRoute={replaceRoute} />
 }
 
 export function shouldRequestPlanStartOnMount(initialPlan?: PlanStartReadyViewModel): boolean {
@@ -354,24 +376,40 @@ export async function loadPlanStartStage2HandoffBootstrap(input: {
   }
 }
 
+export function performPersonalPlanRoutineHandoff(
+  handoff: Stage3RoutineHandoff,
+  dependencies: {
+    markNavigation: (destination: "/routine") => unknown
+    replaceRoute: (href: string) => void
+  },
+) {
+  dependencies.markNavigation("/routine")
+  dependencies.replaceRoute(handoff.next.href)
+}
+
 export function PlanStartCustomerJourney({
   initialPlan,
   initialJourney,
   personalPlanId,
   initialRefinementSession,
   reloadServerFrontier = () => window.location.reload(),
+  replaceRoute = (href) => window.location.replace(href),
 }: {
   initialPlan?: PlanStartReadyViewModel
   initialJourney: PlanStartInitialJourney
   personalPlanId: string
   initialRefinementSession?: Stage2RefinementSession
   reloadServerFrontier?: () => void
+  replaceRoute?: (href: string) => void
 }) {
   const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
   const [stage1LoadState, setStage1LoadState] = useState<"idle" | "loading" | "error">("idle")
+  const [stage2LoadState, setStage2LoadState] = useState<"idle" | "loading" | "error">("idle")
+  const [stage2EnteredLocally, setStage2EnteredLocally] = useState(false)
+  const [stage3EnteredLocally, setStage3EnteredLocally] = useState(false)
   const stage2SeedRef = useRef(initialRefinementSession)
   const pendingStage2CompletionRef = useRef<Stage2RefinementSession | null>(null)
   const pendingStage3BootstrapRef = useRef<Stage2RefinementSession | null>(null)
@@ -446,6 +484,7 @@ export function PlanStartCustomerJourney({
       stage2SeedRef.current = session
       setStage3LoadState("idle")
       setReturningToRefinement(false)
+      setStage3EnteredLocally(true)
       setStage("stage3")
     },
     [installNewStage3Bootstrap, loadStage3Bootstrap, reloadServerFrontier],
@@ -551,9 +590,36 @@ export function PlanStartCustomerJourney({
     }
   }, [personalPlanId, plan, stage1LoadState])
 
+  const enterStage2 = useCallback(async () => {
+    if (stage2LoadState === "loading") return
+    if (stage2SeedRef.current) {
+      setStage2EnteredLocally(true)
+      setStage("stage2")
+      return
+    }
+    setStage2LoadState("loading")
+    try {
+      stage2SeedRef.current = await stage2Gateway.load()
+      setStage2LoadState("idle")
+      setStage2EnteredLocally(true)
+      setStage("stage2")
+    } catch {
+      setStage2LoadState("error")
+    }
+  }, [stage2Gateway, stage2LoadState])
+
+  const openRoutine = useCallback(
+    (handoff: Stage3RoutineHandoff) => {
+      performPersonalPlanRoutineHandoff(handoff, {
+        markNavigation: markPersonalPlanStageNavigation,
+        replaceRoute,
+      })
+    },
+    [replaceRoute],
+  )
+
   if (stage === "stage2") {
     // The ref deliberately retains the latest persisted seed across stage switches.
-    // eslint-disable-next-line react-hooks/refs
     const initialStage2Session = stage2SeedRef.current
     return (
       <RefinementFlow
@@ -566,6 +632,7 @@ export function PlanStartCustomerJourney({
         onHandoff={handleHandoff}
         autoHandoff={!returningToRefinement}
         directEntry
+        stageEntrance={stage2EnteredLocally}
       />
     )
   }
@@ -595,6 +662,8 @@ export function PlanStartCustomerJourney({
         gateway={stage3Gateway}
         intakeClient={intakeClient}
         analytics={stage3BaselineAnalytics}
+        stageEntrance={stage3EnteredLocally}
+        onOpenRoutine={openRoutine}
         onProductKindsCorrection={handleProductKindsCorrection}
         onBackToRefinement={() => {
           setReturningToRefinement(true)
@@ -616,7 +685,8 @@ export function PlanStartCustomerJourney({
       refinementAvailable={
         initialJourney.stage === "stage3" || initialJourney.refinementAvailable !== false
       }
-      onContinueToRefinement={() => setStage("stage2")}
+      continuationStatus={stage2LoadState}
+      onContinueToRefinement={() => void enterStage2()}
     />
   )
 }
@@ -641,9 +711,11 @@ export function PlanStartFlow(
   props: PlanStartFlowProps & {
     onContinueToRefinement?: () => void
     refinementAvailable?: boolean
+    continuationStatus?: "idle" | "loading" | "error"
   },
 ) {
   const [step, setStep] = useState<FlowStep>("basis")
+  const [direction, setDirection] = useState<PersonalPlanTransitionDirection>("forward")
   const hasOptionalPage = props.state === "ready" && Boolean(props.plan.optional)
   const canRefine = props.refinementAvailable !== false
   const optionalImageUrls =
@@ -662,7 +734,12 @@ export function PlanStartFlow(
         <NeedPlanScreen
           screen={props.plan.optional}
           hasOptionalPage
-          onBack={() => setStep("basis")}
+          showJourneyHeader={false}
+          nextStatus={props.continuationStatus}
+          onBack={() => {
+            setDirection("reverse")
+            setStep("basis")
+          }}
           onNext={canRefine ? props.onContinueToRefinement : undefined}
         />
       )
@@ -671,9 +748,14 @@ export function PlanStartFlow(
       <NeedPlanScreen
         screen={props.plan.basis}
         hasOptionalPage={hasOptionalPage}
+        showJourneyHeader={false}
+        nextStatus={hasOptionalPage ? "idle" : props.continuationStatus}
         onNext={
           hasOptionalPage
-            ? () => setStep("optional")
+            ? () => {
+                setDirection("forward")
+                setStep("optional")
+              }
             : canRefine
               ? props.onContinueToRefinement
               : undefined
@@ -702,7 +784,14 @@ export function PlanStartFlow(
       {optionalImageUrls.map((imageUrl) => (
         <link key={imageUrl} rel="preload" as="image" href={imageUrl} />
       ))}
-      {content}
+      <div className="min-h-dvh bg-[var(--background)]">
+        <PlanStartHeader stageLabel="Bedarfsplan" />
+        <PersonalPlanStageEntrance destination="/plan-start">
+          <PersonalPlanViewTransition viewKey={step} direction={direction} variant="depth">
+            {content}
+          </PersonalPlanViewTransition>
+        </PersonalPlanStageEntrance>
+      </div>
     </>
   )
 }
