@@ -12,6 +12,8 @@ export type Stage3AnalyticsEventName =
   | "personal_plan_stage3_flow_viewed"
   | "personal_plan_stage3_search_interacted"
   | "personal_plan_stage3_fallback_opened"
+  | "personal_plan_stage3_thumbnail_fallback"
+  | "personal_plan_stage3_thumbnail_total_failure"
   | "personal_plan_stage3_decision_selected"
   | "personal_plan_stage3_save_outcome"
   | "personal_plan_stage3_recovery_outcome"
@@ -32,6 +34,8 @@ type Stage3BaselineAnalyticsEventName =
   | "personal_plan_stage3_review_back"
   | "personal_plan_stage3_review_completed"
   | "personal_plan_stage3_review_action"
+  | "personal_plan_stage3_thumbnail_fallback"
+  | "personal_plan_stage3_thumbnail_total_failure"
 
 const stage3BaselineEvents = new Set<Stage3BaselineAnalyticsEventName>([
   "personal_plan_stage3_journey_started",
@@ -40,6 +44,8 @@ const stage3BaselineEvents = new Set<Stage3BaselineAnalyticsEventName>([
   "personal_plan_stage3_review_back",
   "personal_plan_stage3_review_completed",
   "personal_plan_stage3_review_action",
+  "personal_plan_stage3_thumbnail_fallback",
+  "personal_plan_stage3_thumbnail_total_failure",
 ])
 
 type ConsentAwareStage3BaselineAnalyticsDeps = {

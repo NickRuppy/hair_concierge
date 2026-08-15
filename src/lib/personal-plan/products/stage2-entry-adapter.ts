@@ -32,6 +32,7 @@ export type Stage3Bootstrap = {
   requirements: Stage3DraftResponse["requirements"]
   authorityEvaluations: Stage3AuthorityEvaluation[]
   fitComparisons?: Stage3FitComparison[]
+  catalogThumbnails?: Record<string, string>
 }
 
 export function buildStage3Bootstrap(
@@ -76,6 +77,7 @@ export function buildStage3Bootstrap(
     requirements: response.requirements,
     authorityEvaluations: response.authorityEvaluations,
     fitComparisons: Array.isArray(response.fitComparisons) ? response.fitComparisons : [],
+    catalogThumbnails: response.catalogThumbnails,
   }
 }
 

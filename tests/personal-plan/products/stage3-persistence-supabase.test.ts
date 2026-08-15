@@ -393,6 +393,48 @@ test("owned-product search delegates active identity and assessment readiness to
   )
 })
 
+test("thumbnail-enabled search calls v3 and keeps canonical and compact URLs separate", async () => {
+  const calls: string[] = []
+  const client = {
+    async rpc(name: string) {
+      calls.push(name)
+      return {
+        data: [
+          {
+            product_id: "sante-conditioner",
+            category_key: "conditioner",
+            brand_name: "Sante",
+            product_line_name: null,
+            product_name: "Deep Repair Conditioner",
+            image_url: "https://example.test/canonical.webp",
+            thumbnail_image_url: "https://example.test/thumbnail.webp",
+            sort_order: 1,
+            assessment_status: "ready",
+            assessment_reason_codes: [],
+            total_capped: false,
+          },
+        ],
+        error: null,
+      }
+    },
+  }
+
+  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
+    thumbnailsEnabled: true,
+  })
+  const result = await persistence.search({
+    userId: "owner-1",
+    category: "conditioner",
+    query: "sante",
+    requestToken: 9,
+    assessmentContext: { ...shampooSearchContext, conditionerTarget: null },
+  })
+
+  assert.deepEqual(calls, ["personal_plan_search_assessment_products_v3"])
+  assert.equal(result.candidates[0]?.imageUrl, "https://example.test/canonical.webp")
+  assert.equal(result.candidates[0]?.thumbnailImageUrl, "https://example.test/thumbnail.webp")
+})
+
 test("selected owned-product resolution persists the complete brand, line, and title identity", async () => {
   let selectedColumns = ""
   const client = {
@@ -549,6 +591,56 @@ test("completion identity lookup is owner-bound and restores brand, line, and sa
     imageUrl: "https://example.test/ogx.webp",
     category: "shampoo",
   })
+})
+
+test("thumbnail-enabled current product lookup exposes an ephemeral compact URL", async () => {
+  const client = {
+    from(table: string) {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () =>
+          table === "user_products"
+            ? {
+                data: {
+                  id: "owned-1",
+                  catalog_product_id: "catalog-1",
+                  category: "conditioner",
+                  identity_status: "matched",
+                  ownership_status: "owned",
+                },
+                error: null,
+              }
+            : {
+                data: {
+                  id: "catalog-1",
+                  brand: "Sante",
+                  name: "Conditioner",
+                  image_url: "https://example.test/canonical.webp",
+                  thumbnail_image_url: "https://example.test/thumbnail.webp",
+                  category_key: "conditioner",
+                  is_active: true,
+                  lifecycle_status: "active",
+                  product_line: null,
+                },
+                error: null,
+              },
+      }
+      return chain
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never, {
+    thumbnailsEnabled: true,
+  })
+
+  const resolved = await persistence.loadCurrentCatalogProduct({
+    userId: "owner-1",
+    userProductId: "owned-1",
+    productId: "catalog-1",
+    category: "conditioner",
+  })
+
+  assert.equal(resolved?.thumbnailImageUrl, "https://example.test/thumbnail.webp")
 })
 
 function conditionerAuthorityDraft(): Stage3ProductDraft {

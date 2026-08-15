@@ -26,6 +26,10 @@ export type ProductIntakeImageFinalizationDecision =
       processing_method: (typeof PROCESSING_METHODS)[number]
       final_file: string
       asset_sha256: string
+      thumbnail_storage_path: string
+      thumbnail_public_url: string
+      thumbnail_final_file: string
+      thumbnail_asset_sha256: string
       user_approved: true
       reviewed_by?: string
       reviewed_at?: string
@@ -121,6 +125,30 @@ export function validateProductIntakeImageFinalization(params: {
       !/^[a-f0-9]{64}$/.test(params.value.asset_sha256)
     ) {
       return invalid("approved image asset_sha256 must be a lowercase SHA-256 hex digest")
+    }
+    if (!isNonEmptyString(params.value.thumbnail_storage_path)) {
+      return invalid("approved image thumbnail_storage_path is required")
+    }
+    if (
+      params.value.thumbnail_storage_path !==
+      `thumbnails/search-v1/${params.value.asset_sha256}.webp`
+    ) {
+      return invalid("approved image thumbnail_storage_path must match canonical asset_sha256")
+    }
+    if (
+      params.value.thumbnail_public_url !==
+      `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${params.value.thumbnail_storage_path}`
+    ) {
+      return invalid("approved image thumbnail_public_url does not match thumbnail_storage_path")
+    }
+    if (!isNonEmptyString(params.value.thumbnail_final_file)) {
+      return invalid("approved image thumbnail_final_file is required")
+    }
+    if (
+      !isNonEmptyString(params.value.thumbnail_asset_sha256) ||
+      !/^[a-f0-9]{64}$/.test(params.value.thumbnail_asset_sha256)
+    ) {
+      return invalid("approved image thumbnail_asset_sha256 must be a lowercase SHA-256 hex digest")
     }
     if (params.value.user_approved !== true) {
       return invalid("approved image requires user_approved true")

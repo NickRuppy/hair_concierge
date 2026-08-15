@@ -10,6 +10,7 @@ import {
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3CompleteCatalogEnabled,
   isPersonalPlanStage3Enabled,
+  isPersonalPlanStage3ThumbnailsEnabled,
   resolvePersonalPlanAppV1Rollout,
   resolvePersonalPlanAppV1InternalEmails,
 } from "../src/lib/personal-plan/release"
@@ -102,6 +103,18 @@ test("complete Stage 3 catalog hydration is a strict default-off rollback gate",
     isPersonalPlanStage3CompleteCatalogEnabled({
       PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG: "true",
     }),
+    true,
+  )
+})
+
+test("Stage 3 thumbnail delivery is a strict default-off rollback gate", () => {
+  assert.equal(isPersonalPlanStage3ThumbnailsEnabled({}), false)
+  assert.equal(
+    isPersonalPlanStage3ThumbnailsEnabled({ PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED: "TRUE" }),
+    false,
+  )
+  assert.equal(
+    isPersonalPlanStage3ThumbnailsEnabled({ PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED: "true" }),
     true,
   )
 })

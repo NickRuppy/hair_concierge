@@ -198,6 +198,8 @@ export type Stage3CatalogCandidate = {
   category: PersonalPlanCategory
   brandName: string | null
   imageUrl?: string | null
+  /** Ephemeral compact-card projection; never persisted in product identity. */
+  thumbnailImageUrl?: string | null
   confidence: "exact" | "likely" | "category_mismatch"
   /** Present for the production assessment-search projection. */
   assessmentStatus?: "ready" | "pending_analysis"
@@ -816,7 +818,10 @@ const stage3InventoryAuthoritySchema: z.ZodType<Stage3InventoryAuthorityV1> = z
     stage2RefinedNeedVersionId: idSchema,
     inventorySnapshotFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
     status: z.enum(["not_needed", "pending", "accepted", "rejected"]),
-    proposalFingerprint: z.string().regex(/^[0-9a-f]{64}$/).nullable(),
+    proposalFingerprint: z
+      .string()
+      .regex(/^[0-9a-f]{64}$/)
+      .nullable(),
     proposedInputHash: idSchema.nullable(),
     proposedOutputSnapshot: z
       .record(z.string(), z.unknown())
@@ -824,7 +829,10 @@ const stage3InventoryAuthoritySchema: z.ZodType<Stage3InventoryAuthorityV1> = z
     materialDelta: z.array(z.record(z.string(), z.unknown())) as unknown as z.ZodType<
       Stage3NeedMaterialDelta[]
     >,
-    resolvedFingerprint: z.string().regex(/^[0-9a-f]{64}$/).nullable(),
+    resolvedFingerprint: z
+      .string()
+      .regex(/^[0-9a-f]{64}$/)
+      .nullable(),
   })
   .strict()
 
@@ -1157,7 +1165,10 @@ export function deriveStage3DecisionSubjects(draft: Stage3ProductDraft): Stage3D
     const categoryDifference = categoryIndex(left.category) - categoryIndex(right.category)
     if (categoryDifference !== 0) return categoryDifference
 
-    if (left.subjectKind === "inventory_disposition" || right.subjectKind === "inventory_disposition") {
+    if (
+      left.subjectKind === "inventory_disposition" ||
+      right.subjectKind === "inventory_disposition"
+    ) {
       if (left.subjectKind !== right.subjectKind) {
         return left.subjectKind === "inventory_disposition" ? 1 : -1
       }
@@ -1210,12 +1221,16 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
   for (const disposition of draft.inventoryDispositions ?? []) {
     const existing = dispositionsByProductId.get(disposition.capturedProductId)
     if (existing) {
-      issues.push(`product ${disposition.capturedProductId} has more than one inventory disposition`)
+      issues.push(
+        `product ${disposition.capturedProductId} has more than one inventory disposition`,
+      )
     }
     dispositionsByProductId.set(disposition.capturedProductId, disposition)
     const product = productsById.get(disposition.capturedProductId)
     if (!product) {
-      issues.push(`inventory disposition references unknown product ${disposition.capturedProductId}`)
+      issues.push(
+        `inventory disposition references unknown product ${disposition.capturedProductId}`,
+      )
       continue
     }
     if (product.identity.category !== disposition.category) {

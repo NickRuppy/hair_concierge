@@ -43,6 +43,8 @@ export const eventRoutes = {
   personal_plan_stage3_save_outcome: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_recovery_outcome: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_search_interacted: { customerio: false, meta: false, posthog: true },
+  personal_plan_stage3_thumbnail_fallback: { customerio: false, meta: false, posthog: true },
+  personal_plan_stage3_thumbnail_total_failure: { customerio: false, meta: false, posthog: true },
   personal_plan_stage4_editor_interacted: { customerio: false, meta: false, posthog: true },
   personal_plan_stage4_item_interacted: { customerio: false, meta: false, posthog: true },
   personal_plan_stage4_outcome: { customerio: false, meta: false, posthog: true },

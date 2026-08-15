@@ -102,6 +102,8 @@ export type Stage3DraftResponse = {
   requirements: Stage3CategoryRequirement[]
   /** Bounded server-authored fit bundle, keyed by decision subject. */
   fitComparisons?: Stage3FitComparison[]
+  /** Ephemeral compact-card projection; never serialized into the draft. */
+  catalogThumbnails?: Record<string, string>
 }
 
 export type Stage3SearchResponse = {

@@ -1,7 +1,7 @@
 "use client"
 
 import { AlertCircle, ArrowLeft, Check, ImageIcon, Loader2, Plus, Search } from "lucide-react"
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
@@ -30,6 +30,7 @@ export type Stage3CatalogCandidate = {
   brandName?: string
   detail?: string
   imageUrl?: string
+  thumbnailImageUrl?: string
   assessmentStatus?: "ready" | "pending_analysis"
   assessmentReasonCodes?: Array<"missing_required_spec" | "missing_application_protocol">
 }
@@ -41,6 +42,7 @@ export type Stage3CapturedProductSummary = {
   sourceLabel?: string
   statusLabel?: string
   imageUrl?: string
+  thumbnailImageUrl?: string
 }
 
 export type Stage3FrequencyOption = {
@@ -192,6 +194,7 @@ export function ProductCaptureScreen({
   onChangeProductKinds,
   onContinue,
   onBack,
+  onImageOutcome,
   disabled = false,
 }: {
   categoryLabel: string
@@ -220,6 +223,7 @@ export function ProductCaptureScreen({
   onChangeProductKinds?: () => void
   onContinue: () => void
   onBack?: () => void
+  onImageOutcome?: (outcome: "thumbnail_fallback" | "thumbnail_total_failure") => void
   disabled?: boolean
 }) {
   const selectedSearchCandidate = searchResults.find(
@@ -279,6 +283,7 @@ export function ProductCaptureScreen({
         message={searchMessage}
         onSelectCandidate={onSelectCandidate}
         selectedCandidateId={selectedCandidateId}
+        onImageOutcome={onImageOutcome}
         disabled={disabled}
       />
 
@@ -343,6 +348,7 @@ export function ProductCaptureScreen({
         categoryLabel={categoryLabel}
         products={capturedProducts}
         onRemoveProduct={onRemoveProduct}
+        onImageOutcome={onImageOutcome}
         disabled={disabled}
       />
 
@@ -455,6 +461,7 @@ export function ProductSearchResults({
   message,
   onSelectCandidate,
   selectedCandidateId,
+  onImageOutcome,
   disabled = false,
 }: {
   results: Stage3CatalogCandidate[]
@@ -462,6 +469,7 @@ export function ProductSearchResults({
   message?: string
   onSelectCandidate: (candidateId: string) => void
   selectedCandidateId?: string
+  onImageOutcome?: (outcome: "thumbnail_fallback" | "thumbnail_total_failure") => void
   disabled?: boolean
 }) {
   if (status === "idle") {
@@ -520,7 +528,12 @@ export function ProductSearchResults({
                 : "border-border hover:border-[var(--brand-plum)]/40",
             )}
           >
-            <ProductImage imageUrl={result.imageUrl} label={identity} />
+            <ProductImage
+              thumbnailImageUrl={result.thumbnailImageUrl}
+              imageUrl={result.imageUrl}
+              label={identity}
+              onOutcome={onImageOutcome}
+            />
             <span className="min-w-0">
               <strong className="block break-words text-sm text-foreground">
                 {result.displayName}
@@ -585,11 +598,13 @@ export function ProductCapturedProductList({
   categoryLabel,
   products,
   onRemoveProduct,
+  onImageOutcome,
   disabled = false,
 }: {
   categoryLabel: string
   products: Stage3CapturedProductSummary[]
   onRemoveProduct?: (capturedProductId: string) => void
+  onImageOutcome?: (outcome: "thumbnail_fallback" | "thumbnail_total_failure") => void
   disabled?: boolean
 }) {
   if (products.length === 0) return null
@@ -608,7 +623,12 @@ export function ProductCapturedProductList({
             key={product.capturedProductId}
             className="grid grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3"
           >
-            <ProductImage imageUrl={product.imageUrl} label={product.displayName} />
+            <ProductImage
+              thumbnailImageUrl={product.thumbnailImageUrl}
+              imageUrl={product.imageUrl}
+              label={product.displayName}
+              onOutcome={onImageOutcome}
+            />
             <div className="min-w-0">
               <h3 className="break-words text-sm font-semibold text-foreground">
                 {product.displayName}
@@ -951,17 +971,89 @@ export function IntakeFallbackBoundary({
   )
 }
 
-function ProductImage({ imageUrl, label }: { imageUrl?: string; label: string }) {
+function ProductImage({
+  thumbnailImageUrl,
+  imageUrl,
+  label,
+  onOutcome,
+}: {
+  thumbnailImageUrl?: string
+  imageUrl?: string
+  label: string
+  onOutcome?: (outcome: "thumbnail_fallback" | "thumbnail_total_failure") => void
+}) {
+  return (
+    <ProductImageAttempt
+      key={`${thumbnailImageUrl ?? ""}\u0000${imageUrl ?? ""}`}
+      thumbnailImageUrl={thumbnailImageUrl}
+      imageUrl={imageUrl}
+      label={label}
+      onOutcome={onOutcome}
+    />
+  )
+}
+
+function ProductImageAttempt({
+  thumbnailImageUrl,
+  imageUrl,
+  label,
+  onOutcome,
+}: {
+  thumbnailImageUrl?: string
+  imageUrl?: string
+  label: string
+  onOutcome?: (outcome: "thumbnail_fallback" | "thumbnail_total_failure") => void
+}) {
+  const preferred = thumbnailImageUrl ?? imageUrl
+  const [source, setSource] = useState(preferred)
+
   return (
     <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
-      {imageUrl ? (
+      {source ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+        <img
+          src={source}
+          alt=""
+          width={48}
+          height={48}
+          decoding="async"
+          className="h-full w-full object-cover"
+          onError={() => {
+            const transition = productImageErrorTransition({
+              source,
+              thumbnailImageUrl,
+              imageUrl,
+            })
+            if (transition.outcome) onOutcome?.(transition.outcome)
+            setSource(transition.source)
+          }}
+        />
       ) : (
         <ImageIcon className="h-5 w-5" aria-label={`Kein Produktbild für ${label}`} />
       )}
     </div>
   )
+}
+
+export function productImageErrorTransition({
+  source,
+  thumbnailImageUrl,
+  imageUrl,
+}: {
+  source?: string
+  thumbnailImageUrl?: string
+  imageUrl?: string
+}): {
+  source: string | undefined
+  outcome: "thumbnail_fallback" | "thumbnail_total_failure" | null
+} {
+  if (source === thumbnailImageUrl && imageUrl && imageUrl !== thumbnailImageUrl) {
+    return { source: imageUrl, outcome: "thumbnail_fallback" }
+  }
+  return {
+    source: undefined,
+    outcome: thumbnailImageUrl ? "thumbnail_total_failure" : null,
+  }
 }
 
 const PERSONAL_PLAN_CATEGORY_HEADING_COPY = {

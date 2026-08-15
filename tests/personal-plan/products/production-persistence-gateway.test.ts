@@ -177,6 +177,65 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
   }
 }
 
+test("load returns restored catalog thumbnails as an ephemeral projection", async () => {
+  const draft = readyDraft()
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    thumbnailsEnabled: true,
+    persistence: {
+      ...persistence(draft),
+      loadCurrentCatalogProduct: async () => ({
+        userProductId: "owned-a",
+        productId: "catalog-a",
+        displayName: "Pflege",
+        imageUrl: "https://example.test/canonical.webp",
+        thumbnailImageUrl: "https://example.test/thumbnail.webp",
+        category: "conditioner",
+      }),
+    },
+  })
+
+  const response = await gateway.loadOrCreate({
+    draftId: "ignored",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements,
+  })
+
+  assert.deepEqual(response.catalogThumbnails, {
+    "catalog-a": "https://example.test/thumbnail.webp",
+  })
+  assert.equal("thumbnailImageUrl" in response.draft.products[0]!.identity, false)
+})
+
+test("flag-off load performs no thumbnail enrichment reads", async () => {
+  const draft = readyDraft()
+  let currentProductReads = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    thumbnailsEnabled: false,
+    persistence: {
+      ...persistence(draft),
+      loadCurrentCatalogProduct: async () => {
+        currentProductReads += 1
+        return null
+      },
+    },
+  })
+
+  const response = await gateway.loadOrCreate({
+    draftId: "ignored",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements,
+  })
+
+  assert.equal(response.catalogThumbnails, undefined)
+  assert.equal(currentProductReads, 0)
+})
+
 test("catalog capture replay is idempotent after the first save committed", async () => {
   const initial = createStage3Draft({
     draftId: "draft-catalog-replay",

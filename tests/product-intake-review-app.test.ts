@@ -90,6 +90,10 @@ function approvedImageDecision() {
     processing_method: "local" as const,
     final_file: "images/final/granatapfel.webp",
     asset_sha256: "a".repeat(64),
+    thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
+    thumbnail_public_url: `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${"a".repeat(64)}.webp`,
+    thumbnail_final_file: `images/final/thumbnails/${"a".repeat(64)}.webp`,
+    thumbnail_asset_sha256: "b".repeat(64),
     user_approved: true as const,
     reviewed_by: "nick",
     reviewed_at: "2026-06-26T12:00:00.000Z",
@@ -1534,15 +1538,22 @@ test("finalize image script creates reviewable final asset metadata", async () =
 
     const result = await finalizeProductIntakePackageImage({ packageDir: dir })
     const finalMeta = await sharp(result.finalFile).metadata()
+    const thumbnailMeta = await sharp(result.thumbnailFile).metadata()
     const decision = JSON.parse(await readFile(join(dir, "image-finalization.json"), "utf8"))
     const detail = await readReviewPackage({ rootDir: root, packagePath: dir })
 
     assert.equal(finalMeta.width, 1200)
     assert.equal(finalMeta.height, 1200)
+    assert.equal(thumbnailMeta.width, 144)
+    assert.equal(thumbnailMeta.height, 144)
     assert.equal(decision.status, "pending")
     assert.equal(decision.final_file, `images/final/${result.finalFile.split("/").pop()}`)
     assert.equal(decision.asset_sha256, result.sha256)
     assert.equal(decision.public_url, result.publicUrl)
+    assert.equal(decision.thumbnail_final_file, `images/final/thumbnails/${result.sha256}.webp`)
+    assert.equal(decision.thumbnail_storage_path, `thumbnails/search-v1/${result.sha256}.webp`)
+    assert.equal(decision.thumbnail_public_url, result.thumbnailPublicUrl)
+    assert.equal(decision.thumbnail_asset_sha256, result.thumbnailSha256)
     assert.equal(
       detail.image_assets.some((asset) => asset.kind === "final_product_image"),
       true,
@@ -1873,6 +1884,10 @@ test("review app normalizes review-app image search provenance before final appr
         processing_method: "local",
         final_file: "images/final/replacement.webp",
         asset_sha256: "a".repeat(64),
+        thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
+        thumbnail_public_url: `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${"a".repeat(64)}.webp`,
+        thumbnail_final_file: `images/final/thumbnails/${"a".repeat(64)}.webp`,
+        thumbnail_asset_sha256: "b".repeat(64),
         user_approved: true,
         reviewed_by: "nick",
         reviewed_at: "2026-06-26T12:00:00.000Z",
@@ -1956,6 +1971,10 @@ test("review app rejects invalid approved image metadata before writing", async 
             processing_method: "local",
             final_file: "images/final/granatapfel.webp",
             asset_sha256: "a".repeat(64),
+            thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
+            thumbnail_public_url: `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${"a".repeat(64)}.webp`,
+            thumbnail_final_file: `images/final/thumbnails/${"a".repeat(64)}.webp`,
+            thumbnail_asset_sha256: "b".repeat(64),
             user_approved: true,
             reviewed_by: "nick",
             reviewed_at: "2026-06-26T12:00:00.000Z",

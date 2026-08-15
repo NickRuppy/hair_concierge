@@ -365,6 +365,9 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       const data = payload as AppEventMap["personal_plan_stage3_fallback_opened"]
       return { step_key: data.stepKey }
     }
+    case "personal_plan_stage3_thumbnail_fallback":
+    case "personal_plan_stage3_thumbnail_total_failure":
+      return {}
     case "personal_plan_stage3_decision_selected": {
       const data = payload as AppEventMap["personal_plan_stage3_decision_selected"]
       return { decision_type: data.decisionType, step_key: data.stepKey }

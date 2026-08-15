@@ -111,12 +111,12 @@ fields:
 
 Purchase URL preference is category-specific:
 
-| Category | Preferred purchase URL order |
-|---|---|
-| Shampoo, conditioner, mask, dry shampoo, deep cleansing shampoo | dm > Rossmann > Müller > brand-direct > Amazon DE |
-| Leave-in | dm > brand-direct > Rossmann > Amazon DE |
-| Oil | brand-direct > Amazon DE > dm > Rossmann |
-| Bondbuilder / pro / high-end products | brand-direct or reputable specialist retailer can beat dm/Rossmann when that PDP is the stable canonical source |
+| Category                                                        | Preferred purchase URL order                                                                                    |
+| --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Shampoo, conditioner, mask, dry shampoo, deep cleansing shampoo | dm > Rossmann > Müller > brand-direct > Amazon DE                                                               |
+| Leave-in                                                        | dm > brand-direct > Rossmann > Amazon DE                                                                        |
+| Oil                                                             | brand-direct > Amazon DE > dm > Rossmann                                                                        |
+| Bondbuilder / pro / high-end products                           | brand-direct or reputable specialist retailer can beat dm/Rossmann when that PDP is the stable canonical source |
 
 Before returning no `affiliate_link` or no `price_eur`, the worker or manual
 operator must search the preferred hosts with both the submitted name and the
@@ -202,16 +202,16 @@ Every final payload must include:
 
 Supported categories and required spec tables:
 
-| Category key | Required category specs |
-|---|---|
-| `shampoo` | `product_shampoo_specs[]`: one or more rows with `thickness` (`fine`, `normal`, `coarse`), `shampoo_bucket` (`schuppen`, `irritationen`, `normal`, `dehydriert-fettig`, `trocken`), `scalp_route` (`oily`, `balanced`, `dry`, `dandruff`, `dry_flakes`, `irritated`), optional `cleansing_intensity` (`gentle`, `regular`, `clarifying`) |
-| `conditioner` | `product_conditioner_specs[]`: `thickness`, `protein_moisture_balance` (`snaps`, `stretches_bounces`, `stretches_stays`); plus `product_conditioner_rerank_specs`: `weight` (`light`, `medium`, `rich`), `repair_level` (`low`, `medium`, `high`), `balance_direction` (`protein`, `moisture`, `balanced`, or `null`), `ingredient_flags` |
-| `mask` | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags` |
-| `leave_in` | `product_leave_in_specs`: `format` (`spray`, `milk`, `lotion`, `cream`, `serum`), `weight`, `roles`, `provides_heat_protection`, `heat_protection_max_c`, `heat_activation_required`, `care_benefits`, `ingredient_flags`, `application_stage`; plus `product_leave_in_fit_specs`; plus `product_leave_in_eligibility[]` |
-| `oil` | `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags` |
-| `dry_shampoo` | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`) |
-| `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`) |
-| `bondbuilder` | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`) |
+| Category key             | Required category specs                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shampoo`                | `product_shampoo_specs[]`: one or more rows with `thickness` (`fine`, `normal`, `coarse`), `shampoo_bucket` (`schuppen`, `irritationen`, `normal`, `dehydriert-fettig`, `trocken`), `scalp_route` (`oily`, `balanced`, `dry`, `dandruff`, `dry_flakes`, `irritated`), optional `cleansing_intensity` (`gentle`, `regular`, `clarifying`)                                                                                                                       |
+| `conditioner`            | `product_conditioner_specs[]`: `thickness`, `protein_moisture_balance` (`snaps`, `stretches_bounces`, `stretches_stays`); plus `product_conditioner_rerank_specs`: `weight` (`light`, `medium`, `rich`), `repair_level` (`low`, `medium`, `high`), `balance_direction` (`protein`, `moisture`, `balanced`, or `null`), `ingredient_flags`                                                                                                                      |
+| `mask`                   | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags`                                                                                                                                                                                                                                                                                                                 |
+| `leave_in`               | `product_leave_in_specs`: `format` (`spray`, `milk`, `lotion`, `cream`, `serum`), `weight`, `roles`, `provides_heat_protection`, `heat_protection_max_c`, `heat_activation_required`, `care_benefits`, `ingredient_flags`, `application_stage`; plus `product_leave_in_fit_specs`; plus `product_leave_in_eligibility[]`                                                                                                                                       |
+| `oil`                    | `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags`                                                                                                                                                                                                                                                 |
+| `dry_shampoo`            | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`)                                                                                                                                                                     |
+| `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`)                                                                                                                                                       |
+| `bondbuilder`            | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`) |
 
 Shared categorical values:
 
@@ -791,7 +791,6 @@ product-only, and high-resolution enough for review.
    ```
 
 5. Review both outputs:
-
    - magenta QA for leftover halo, shadow tail, reflection, or cutout damage
    - neutral Chaarlie final image for the actual product-card appearance
 
@@ -829,9 +828,10 @@ The finalizer:
 - composites onto Chaarlie's neutral product background
 - writes a magenta QA preview
 - writes a final `1200x1200` WebP under `images/final/`
+- writes a `144x144` search-card WebP under `images/final/thumbnails/`
 - writes `image-finalization.json`
-- computes SHA-256
-- prepares the public `product-images` URL
+- computes SHA-256 for both files
+- prepares the canonical and thumbnail public `product-images` URLs
 
 If the quality gate returns `needs_image_work`, do not approve the image. Find a
 better source or fix the cutout.
@@ -856,6 +856,10 @@ The image decision is valid only when `image-finalization.json` has:
   "processing_method": "local",
   "final_file": "images/final/<file>.webp",
   "asset_sha256": "...",
+  "thumbnail_final_file": "images/final/thumbnails/<canonical-sha256>.webp",
+  "thumbnail_storage_path": "thumbnails/search-v1/<canonical-sha256>.webp",
+  "thumbnail_public_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/...",
+  "thumbnail_asset_sha256": "...",
   "user_approved": true,
   "reviewed_by": "nick",
   "reviewed_at": "..."
@@ -892,9 +896,42 @@ Apply only after explicit approval:
 npm run products:intake:upload-image -- --package ops/product-intake-research/YYYY-MM-DD/<submission-id> --apply --confirm
 ```
 
-`approve-package --apply --confirm` also runs this upload/verification gate
+The dry-run reports both the canonical and search-thumbnail objects. Apply
+uploads each missing content-addressed object without overwrite, verifies its
+checksum and dimensions after download, and gives the thumbnail a one-year
+browser cache lifetime. If either asset fails, database approval does not run.
+
+`approve-package --apply --confirm` also runs this paired upload/verification gate
 before any database approval. The separate upload command is useful when Nick
 wants to inspect the uploaded image URL before final product approval.
+
+Packages whose image was approved before the paired-thumbnail contract do not
+contain the required derivative metadata. Re-run `products:intake:finalize-image`
+and review the regenerated image decision before approving such an in-flight
+package; do not hand-edit hashes or URLs into the old decision.
+
+### Existing Product Thumbnail Backfill
+
+After the additive thumbnail migration is available, inventory every catalog
+row without writing:
+
+```bash
+npm run products:intake:backfill-thumbnails
+```
+
+The report classifies every row as create, reuse, not applicable, or refused.
+Applying remains a separate production-write gate and requires both flags:
+
+```bash
+npm run products:intake:backfill-thumbnails -- --apply --confirm-project=pqdkhefxsxkyeqelqegq
+```
+
+Apply uploads/verifies the thumbnail first, then compare-and-set updates the
+product only if its canonical URL is unchanged. Rerun the complete command to
+resume safely; existing `search-v1` objects are reused. Any refusal keeps the
+command non-zero and must be reviewed rather than silently skipped. Replacing a
+canonical image clears `thumbnail_image_url`; regenerate the derivative before
+enabling thumbnail delivery for that row.
 
 ### 10. Dry-Run Package Approval
 

@@ -255,6 +255,12 @@ const reviewedProductSchema = z
     category_key: z.enum(PRODUCT_INTAKE_REVIEW_CATEGORY_KEYS),
     affiliate_link: urlString,
     image_url: urlString.nullable(),
+    canonical_image_sha256: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .nullable()
+      .optional(),
+    thumbnail_image_url: urlString.nullable().optional(),
     price_eur: z.number().finite().nonnegative(),
     currency: currencyString,
     purchase_link_status: z.enum(["available", "unavailable"]),

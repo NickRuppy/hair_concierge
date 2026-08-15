@@ -42,6 +42,10 @@ export type FinalImageUploadDecision =
       storagePath: string
       publicUrl: string
       contentType: string
+      thumbnailLocalFile: string
+      thumbnailAssetSha256: string
+      thumbnailStoragePath: string
+      thumbnailPublicUrl: string
     }
   | {
       ok: false
@@ -91,6 +95,10 @@ export function finalImageUploadDecisionFromArtifacts(
     stringValue(payload.public_url) ??
     stringValue(payload.planned_public_url) ??
     stringValue(payload.final_public_url)
+  const thumbnailLocalFile = stringValue(payload.thumbnail_file)
+  const thumbnailAssetSha256 = stringValue(payload.thumbnail_asset_sha256)
+  const thumbnailStoragePath = stringValue(payload.thumbnail_storage_path)
+  const thumbnailPublicUrl = stringValue(payload.thumbnail_public_url)
 
   if (!localFile) return invalid("Verarbeitetes Bild hat keine lokale final_file.")
   if (!assetSha256 || !/^[a-f0-9]{64}$/.test(assetSha256)) {
@@ -106,6 +114,16 @@ export function finalImageUploadDecisionFromArtifacts(
   if (publicUrl !== `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${storagePath}`) {
     return invalid("Verarbeitetes Bild public URL passt nicht zum Storage-Pfad.")
   }
+  if (!thumbnailLocalFile) return invalid("Verarbeitetes Bild hat keine thumbnail_file.")
+  if (!thumbnailAssetSha256 || !/^[a-f0-9]{64}$/.test(thumbnailAssetSha256)) {
+    return invalid("Verarbeitetes Bild hat keinen gueltigen thumbnail_asset_sha256.")
+  }
+  if (thumbnailStoragePath !== `thumbnails/search-v1/${assetSha256}.webp`) {
+    return invalid("Thumbnail-Pfad passt nicht zum kanonischen SHA-256.")
+  }
+  if (thumbnailPublicUrl !== `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${thumbnailStoragePath}`) {
+    return invalid("Thumbnail-URL passt nicht zum Thumbnail-Storage-Pfad.")
+  }
 
   return {
     ok: true,
@@ -116,6 +134,10 @@ export function finalImageUploadDecisionFromArtifacts(
     storagePath,
     publicUrl,
     contentType: contentTypeFor(localFile),
+    thumbnailLocalFile,
+    thumbnailAssetSha256,
+    thumbnailStoragePath,
+    thumbnailPublicUrl,
   }
 }
 
@@ -131,6 +153,7 @@ export function buildResearchedPayloadWithFinalImage(
   researchedPayload: JsonRecord,
   finalImageUrl: string,
   review: PublishReviewMetadata,
+  imageMetadata?: { canonicalImageSha256: string; thumbnailImageUrl: string },
 ): JsonRecord & { final: JsonRecord & { product: JsonRecord } } {
   const finalPayload = recordValue(researchedPayload.final)
   const product = recordValue(finalPayload?.product)
@@ -150,6 +173,12 @@ export function buildResearchedPayloadWithFinalImage(
       product: {
         ...product,
         image_url: finalImageUrl,
+        ...(imageMetadata
+          ? {
+              canonical_image_sha256: imageMetadata.canonicalImageSha256,
+              thumbnail_image_url: imageMetadata.thumbnailImageUrl,
+            }
+          : {}),
       },
       identifiers: normalizeFinalIdentifiers(finalPayload.identifiers),
     },
@@ -250,45 +279,76 @@ export async function uploadFinalizedReviewImage(
   decision: Extract<FinalImageUploadDecision, { ok: true }>,
 ): Promise<FinalImageUploadResult> {
   const bytes = await readFile(decision.localFile)
+  const thumbnailBytes = await readFile(decision.thumbnailLocalFile)
   const actualSha256 = createHash("sha256").update(bytes).digest("hex")
   if (actualSha256 !== decision.assetSha256) {
     throw new Error("Lokales finales Bild passt nicht zum gespeicherten SHA-256.")
   }
+  const actualThumbnailSha256 = createHash("sha256").update(thumbnailBytes).digest("hex")
+  if (actualThumbnailSha256 !== decision.thumbnailAssetSha256) {
+    throw new Error("Lokales Thumbnail passt nicht zum gespeicherten SHA-256.")
+  }
 
   const bucket = supabase.storage.from(decision.bucket)
-  const existing = await bucket.download(decision.storagePath)
-  if (!existing.error && existing.data) {
-    return {
-      status: "already_uploaded",
-      bucket: decision.bucket,
-      storagePath: decision.storagePath,
-      publicUrl: decision.publicUrl,
-      assetSha256: actualSha256,
-    }
-  }
-
-  const { error: uploadError } = await bucket.upload(decision.storagePath, bytes, {
+  const canonicalStatus = await ensureUploaded(bucket, {
+    path: decision.storagePath,
+    bytes,
+    expectedSha256: decision.assetSha256,
     contentType: decision.contentType,
-    upsert: false,
   })
-  if (uploadError) {
-    throw new Error(`Finales Produktbild hochladen: ${uploadError.message}`)
-  }
-
-  const verify = await bucket.download(decision.storagePath)
-  if (verify.error || !verify.data) {
-    throw new Error(
-      `Finales Produktbild verifizieren: ${verify.error?.message ?? "nicht gefunden"}`,
-    )
-  }
+  const thumbnailStatus = await ensureUploaded(bucket, {
+    path: decision.thumbnailStoragePath,
+    bytes: thumbnailBytes,
+    expectedSha256: decision.thumbnailAssetSha256,
+    contentType: "image/webp",
+    cacheControl: "31536000",
+  })
 
   return {
-    status: "uploaded",
+    status:
+      canonicalStatus === "already_uploaded" && thumbnailStatus === "already_uploaded"
+        ? "already_uploaded"
+        : "uploaded",
     bucket: decision.bucket,
     storagePath: decision.storagePath,
     publicUrl: decision.publicUrl,
     assetSha256: actualSha256,
   }
+}
+
+async function ensureUploaded(
+  bucket: ReturnType<SupabaseClient["storage"]["from"]>,
+  input: {
+    path: string
+    bytes: Buffer
+    expectedSha256: string
+    contentType: string
+    cacheControl?: string
+  },
+): Promise<"already_uploaded" | "uploaded"> {
+  const existing = await bucket.download(input.path)
+  if (!existing.error && existing.data) {
+    const existingBytes = Buffer.from(await existing.data.arrayBuffer())
+    if (createHash("sha256").update(existingBytes).digest("hex") !== input.expectedSha256) {
+      throw new Error(`Vorhandenes Produktbild hat einen falschen SHA-256: ${input.path}`)
+    }
+    return "already_uploaded"
+  }
+  const { error } = await bucket.upload(input.path, input.bytes, {
+    contentType: input.contentType,
+    cacheControl: input.cacheControl,
+    upsert: false,
+  })
+  if (error) throw new Error(`Produktbild hochladen: ${error.message}`)
+  const verify = await bucket.download(input.path)
+  if (verify.error || !verify.data) {
+    throw new Error(`Produktbild verifizieren: ${verify.error?.message ?? "nicht gefunden"}`)
+  }
+  const verifiedBytes = Buffer.from(await verify.data.arrayBuffer())
+  if (createHash("sha256").update(verifiedBytes).digest("hex") !== input.expectedSha256) {
+    throw new Error(`Hochgeladenes Produktbild hat einen falschen SHA-256: ${input.path}`)
+  }
+  return "uploaded"
 }
 
 function invalid(reason: string): FinalImageUploadDecision {
