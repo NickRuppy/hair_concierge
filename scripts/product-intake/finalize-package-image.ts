@@ -4,6 +4,8 @@ import { basename, dirname, extname, join, relative, resolve } from "node:path"
 
 import sharp from "sharp"
 
+import { generateProductSearchThumbnail } from "./product-thumbnail"
+
 const PRODUCT_IMAGE_PUBLIC_URL_PREFIX =
   "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/"
 const PRODUCT_IMAGE_BUCKET = "product-images"
@@ -41,6 +43,10 @@ export type FinalizedPackageImage = {
   publicUrl: string
   storagePath: string
   sha256: string
+  thumbnailFile: string
+  thumbnailPublicUrl: string
+  thumbnailStoragePath: string
+  thumbnailSha256: string
 }
 
 export type FinalizeProductImageAssetOptions = {
@@ -67,6 +73,10 @@ export type FinalizedProductImageAsset = {
   publicUrl: string
   storagePath: string
   sha256: string
+  thumbnailFile: string
+  thumbnailPublicUrl: string
+  thumbnailStoragePath: string
+  thumbnailSha256: string
   qualityGate: CutoutQualityGate
   sourceAlphaCoverage: number
   processingMethod: "local"
@@ -444,6 +454,10 @@ export async function finalizeProductImageAsset(
 
   const storagePath = `product-intake/${options.dateFolder}/${options.submissionId}/${basename(finalFile)}`
   const publicUrl = `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${storagePath}`
+  const thumbnail = await generateProductSearchThumbnail(readFileSync(finalFile))
+  const thumbnailFile = join(options.outputDir, `${thumbnail.sourceSha256}-search-v1.webp`)
+  writeFileSync(thumbnailFile, thumbnail.bytes)
+  const thumbnailPublicUrl = `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${thumbnail.storagePath}`
   const normalizedPrefix = options.publicPathPrefix.replace(/\/+$/g, "")
 
   return {
@@ -456,6 +470,10 @@ export async function finalizeProductImageAsset(
     publicUrl,
     storagePath,
     sha256,
+    thumbnailFile,
+    thumbnailPublicUrl,
+    thumbnailStoragePath: thumbnail.storagePath,
+    thumbnailSha256: thumbnail.outputSha256,
     qualityGate,
     sourceAlphaCoverage,
     processingMethod: "local",
@@ -584,6 +602,12 @@ export async function finalizeProductIntakePackageImage(
     basename(packageDir)
   const storagePath = `product-intake/${dateFolder}/${submissionId}/${basename(finalFile)}`
   const publicUrl = `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${storagePath}`
+  const thumbnail = await generateProductSearchThumbnail(readFileSync(finalFile))
+  const thumbnailRelative = `images/final/thumbnails/${thumbnail.sourceSha256}.webp`
+  const thumbnailFile = join(packageDir, thumbnailRelative)
+  mkdirSync(dirname(thumbnailFile), { recursive: true })
+  writeFileSync(thumbnailFile, thumbnail.bytes)
+  const thumbnailPublicUrl = `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${thumbnail.storagePath}`
 
   writeJson(join(packageDir, "image-finalization.json"), {
     status: qualityGate.status === "pass" ? "pending" : "needs_image_work",
@@ -608,6 +632,10 @@ export async function finalizeProductIntakePackageImage(
     qa_file: qaRelative,
     final_file: finalRelative,
     asset_sha256: sha256,
+    thumbnail_final_file: thumbnailRelative,
+    thumbnail_storage_path: thumbnail.storagePath,
+    thumbnail_public_url: thumbnailPublicUrl,
+    thumbnail_asset_sha256: thumbnail.outputSha256,
     user_approved: false,
   })
 
@@ -620,6 +648,10 @@ export async function finalizeProductIntakePackageImage(
     publicUrl,
     storagePath,
     sha256,
+    thumbnailFile,
+    thumbnailPublicUrl,
+    thumbnailStoragePath: thumbnail.storagePath,
+    thumbnailSha256: thumbnail.outputSha256,
   }
 }
 

@@ -125,15 +125,39 @@ function finalProductImageUrl(researchedPayload: Record<string, unknown>): unkno
   return (product as { image_url?: unknown }).image_url
 }
 
+function researchedPayloadWithFinalImageMetadata(pack: ResearchPackage): Record<string, unknown> {
+  if (
+    !pack.imageFinalization ||
+    typeof pack.imageFinalization !== "object" ||
+    Array.isArray(pack.imageFinalization) ||
+    (pack.imageFinalization as { status?: unknown }).status !== "approved_asset"
+  ) {
+    return pack.researchedPayload
+  }
+
+  const decision = pack.imageFinalization as {
+    asset_sha256?: unknown
+    thumbnail_public_url?: unknown
+  }
+  const cloned = JSON.parse(JSON.stringify(pack.researchedPayload)) as Record<string, unknown>
+  const final = cloned.final as Record<string, unknown> | undefined
+  const product = final?.product as Record<string, unknown> | undefined
+  if (!product) return cloned
+  product.canonical_image_sha256 = decision.asset_sha256
+  product.thumbnail_image_url = decision.thumbnail_public_url
+  return cloned
+}
+
 export function buildApprovePackageDryRun(params: {
   pack: ResearchPackage
   submission: ReviewActionSubmission
   reviewedBy: string
   reviewNotes: string | null
 }) {
+  const approvalPayload = researchedPayloadWithFinalImageMetadata(params.pack)
   const researchSave = dryRunResearchedPayload({
     submission: params.submission,
-    researchedPayload: params.pack.researchedPayload,
+    researchedPayload: approvalPayload,
     markReady: true,
   })
   const imageFinalization =
@@ -220,10 +244,11 @@ export async function approveResearchPackage(params: {
     apply: true,
     confirm: true,
   })
+  const approvalPayload = researchedPayloadWithFinalImageMetadata(pack)
   const researchSave = await deps.savePayload({
     supabase,
     submission,
-    researchedPayload: pack.researchedPayload,
+    researchedPayload: approvalPayload,
     markReady: true,
   })
   const approval = await deps.approveById({

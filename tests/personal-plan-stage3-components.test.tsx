@@ -9,6 +9,7 @@ import {
   ProductFrequencyPicker,
   ProductKindReviewScreen,
   ProductSearchResults,
+  productImageErrorTransition,
   SemanticRoleAssignment,
   Stage3Shell,
   Stage3SystemState,
@@ -23,6 +24,32 @@ import {
 import { PRODUCT_FREQUENCIES, PRODUCT_FREQUENCY_LABELS } from "../src/lib/vocabulary/frequencies"
 
 const forbiddenFlowLabels = /\b(?:Pass|Teil\s+\d|Stage|Stufe)\b/i
+
+test("product image failures fall back once, then hide without leaking identity", () => {
+  assert.deepEqual(
+    productImageErrorTransition({
+      source: "thumbnail.webp",
+      thumbnailImageUrl: "thumbnail.webp",
+      imageUrl: "canonical.webp",
+    }),
+    { source: "canonical.webp", outcome: "thumbnail_fallback" },
+  )
+  assert.deepEqual(
+    productImageErrorTransition({
+      source: "canonical.webp",
+      thumbnailImageUrl: "thumbnail.webp",
+      imageUrl: "canonical.webp",
+    }),
+    { source: undefined, outcome: "thumbnail_total_failure" },
+  )
+  assert.deepEqual(
+    productImageErrorTransition({
+      source: "canonical.webp",
+      imageUrl: "canonical.webp",
+    }),
+    { source: undefined, outcome: null },
+  )
+})
 
 function childrenOf(node: ReactNode): ReactNode[] {
   if (!React.isValidElement(node)) return []
@@ -155,6 +182,8 @@ test("search results expose one complete identity and distinguish temporary anal
           candidateId: "ogx-ready",
           displayName: "Renewing + Argan Oil of Morocco Shampoo",
           brandName: "OGX",
+          imageUrl: "https://example.test/canonical.webp",
+          thumbnailImageUrl: "https://example.test/thumbnail.webp",
           assessmentStatus: "ready",
         },
         {
@@ -184,6 +213,11 @@ test("search results expose one complete identity and distinguish temporary anal
   assert.match(html, /Ausgewählt/)
   assert.doesNotMatch(html, /Wahrscheinlich dein Produkt|Eindeutiger Treffer/)
   assert.match(html, /aria-selected="true"/)
+  assert.match(
+    html,
+    /src="https:\/\/example\.test\/thumbnail\.webp"[^>]*width="48"[^>]*height="48"[^>]*decoding="async"/,
+  )
+  assert.doesNotMatch(html, /src="https:\/\/example\.test\/canonical\.webp"/)
 })
 
 test("capped ready search results disclose that a more specific query can reveal more products", () => {

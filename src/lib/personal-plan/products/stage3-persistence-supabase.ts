@@ -19,17 +19,21 @@ import {
 import { Stage3AuthoritySnapshotError } from "./authority/snapshot"
 import { effectiveStage3CategoryDecisions } from "./product-load-resolution"
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
-import { isPersonalPlanStage3CompleteCatalogEnabled } from "@/lib/personal-plan/release"
+import {
+  isPersonalPlanStage3CompleteCatalogEnabled,
+  isPersonalPlanStage3ThumbnailsEnabled,
+} from "@/lib/personal-plan/release"
 
 type AdminClient = SupabaseClient
 
 /** Server-only adapter for the Stage-3 service primitives. */
 export function createSupabaseStage3ProductionPersistence(
   client: AdminClient,
-  options: { completeCatalogEnabled?: boolean } = {},
+  options: { completeCatalogEnabled?: boolean; thumbnailsEnabled?: boolean } = {},
 ): Stage3ProductionPersistence {
   const completeCatalogEnabled =
     options.completeCatalogEnabled ?? isPersonalPlanStage3CompleteCatalogEnabled()
+  const thumbnailsEnabled = options.thumbnailsEnabled ?? isPersonalPlanStage3ThumbnailsEnabled()
   const recommendationCandidateCache = new Map<
     string,
     ReturnType<typeof loadStage3RecommendationCandidates>
@@ -151,17 +155,24 @@ export function createSupabaseStage3ProductionPersistence(
     },
     async search(input) {
       const query = normalizeOwnedProductSearchQuery(input.query)
-      const { data, error } = await client.rpc("personal_plan_search_assessment_products_v2", {
-        p_user_id: input.userId,
-        p_category: input.category,
-        p_query: query,
-        p_limit: 8,
-        p_context: input.assessmentContext,
-      })
+      const { data, error } = await client.rpc(
+        thumbnailsEnabled
+          ? "personal_plan_search_assessment_products_v3"
+          : "personal_plan_search_assessment_products_v2",
+        {
+          p_user_id: input.userId,
+          p_category: input.category,
+          p_query: query,
+          p_limit: 8,
+          p_context: input.assessmentContext,
+        },
+      )
       if (error) throw new Error("stage3_catalog_search_failed")
 
       const rows = Array.isArray(data) ? data : []
-      const candidates = rows.map((raw) => mapAssessmentSearchCandidate(raw, input.category, query))
+      const candidates = rows.map((raw) =>
+        mapAssessmentSearchCandidate(raw, input.category, query, thumbnailsEnabled),
+      )
       return {
         requestToken: input.requestToken,
         query,
@@ -176,7 +187,7 @@ export function createSupabaseStage3ProductionPersistence(
       const { data: candidate, error: candidateError } = await client
         .from("products")
         .select(
-          "id,brand,name,image_url,category_key,origin,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
+          "id,brand,name,image_url,thumbnail_image_url,category_key,origin,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
         )
         .eq("id", input.candidateId)
         .eq("category_key", input.category)
@@ -215,6 +226,14 @@ export function createSupabaseStage3ProductionPersistence(
         productId: String(owned.catalog_product_id),
         displayName: canonicalCatalogCompleteIdentity(candidate, productLine),
         imageUrl: typeof candidate.image_url === "string" ? candidate.image_url : null,
+        ...(thumbnailsEnabled
+          ? {
+              thumbnailImageUrl:
+                typeof candidate.thumbnail_image_url === "string"
+                  ? candidate.thumbnail_image_url
+                  : null,
+            }
+          : {}),
         category: owned.category as never,
       }
     },
@@ -238,7 +257,7 @@ export function createSupabaseStage3ProductionPersistence(
       const { data: product, error: productError } = await client
         .from("products")
         .select(
-          "id,brand,name,image_url,category_key,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
+          "id,brand,name,image_url,thumbnail_image_url,category_key,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
         )
         .eq("id", input.productId)
         .eq("category_key", input.category)
@@ -259,6 +278,14 @@ export function createSupabaseStage3ProductionPersistence(
           readProductLineName(product.product_line),
         ),
         imageUrl: typeof product.image_url === "string" ? product.image_url : null,
+        ...(thumbnailsEnabled
+          ? {
+              thumbnailImageUrl:
+                typeof product.thumbnail_image_url === "string"
+                  ? product.thumbnail_image_url
+                  : null,
+            }
+          : {}),
         category: owned.category as PersonalPlanCategory,
       }
     },
@@ -457,7 +484,12 @@ export function createSupabaseStage3ProductionPersistence(
   }
 }
 
-function mapAssessmentSearchCandidate(raw: unknown, category: PersonalPlanCategory, query: string) {
+function mapAssessmentSearchCandidate(
+  raw: unknown,
+  category: PersonalPlanCategory,
+  query: string,
+  thumbnailsEnabled: boolean,
+) {
   const row = raw as Record<string, unknown>
   const brandName = typeof row.brand_name === "string" ? row.brand_name : null
   const productLine = typeof row.product_line_name === "string" ? row.product_line_name : null
@@ -481,6 +513,12 @@ function mapAssessmentSearchCandidate(raw: unknown, category: PersonalPlanCatego
     category,
     brandName,
     imageUrl: typeof row.image_url === "string" ? row.image_url : null,
+    ...(thumbnailsEnabled
+      ? {
+          thumbnailImageUrl:
+            typeof row.thumbnail_image_url === "string" ? row.thumbnail_image_url : null,
+        }
+      : {}),
     confidence: label === query.toLocaleLowerCase() ? ("exact" as const) : ("likely" as const),
     assessmentStatus,
     assessmentReasonCodes,

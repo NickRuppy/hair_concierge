@@ -470,6 +470,8 @@ export type AppEventMap = {
   personal_plan_stage3_fallback_opened: {
     stepKey: "product_search"
   }
+  personal_plan_stage3_thumbnail_fallback: Record<string, never>
+  personal_plan_stage3_thumbnail_total_failure: Record<string, never>
   personal_plan_stage3_decision_selected: {
     decisionType: PersonalPlanStage3DecisionType
     stepKey: "fit_decision"

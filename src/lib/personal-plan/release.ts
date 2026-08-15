@@ -5,6 +5,7 @@ type PersonalPlanAppReleaseEnvironment = {
   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
   PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2?: string
   PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG?: string
+  PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED?: string
 }
 
 export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
@@ -62,6 +63,13 @@ export function isPersonalPlanStage3CompleteCatalogEnabled(
   environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
   return environment.PERSONAL_PLAN_STAGE3_COMPLETE_CATALOG === "true"
+}
+
+/** Default-off rollback gate for stored compact-card product thumbnails. */
+export function isPersonalPlanStage3ThumbnailsEnabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED === "true"
 }
 
 export function isPersonalPlanStage4Enabled(

@@ -46,6 +46,7 @@ import {
 import {
   isPersonalPlanStage3CompleteCatalogEnabled,
   isPersonalPlanStage3InventoryAuthorityV2Enabled,
+  isPersonalPlanStage3ThumbnailsEnabled,
 } from "@/lib/personal-plan/release"
 import type {
   RoutineCandidateCompiler,
@@ -128,6 +129,7 @@ export type Stage3ProductionPersistence = {
     productId: string
     displayName: string
     imageUrl?: string | null
+    thumbnailImageUrl?: string | null
     category: PersonalPlanCategory
   } | null>
   loadCurrentCatalogProduct(input: {
@@ -140,6 +142,7 @@ export type Stage3ProductionPersistence = {
     productId: string
     displayName: string
     imageUrl?: string | null
+    thumbnailImageUrl?: string | null
     category: PersonalPlanCategory
   } | null>
   resolveOwnedPendingProduct?(input: {
@@ -199,6 +202,7 @@ export type Stage3ProductionGatewayOptions = {
   now?: () => string
   inventoryAuthorityV2Enabled?: boolean
   completeCatalogEnabled?: boolean
+  thumbnailsEnabled?: boolean
 }
 
 export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
@@ -240,6 +244,7 @@ export function createProductionStage3ProductsGateway(
     options.inventoryAuthorityV2Enabled ?? isPersonalPlanStage3InventoryAuthorityV2Enabled()
   const completeCatalogEnabled =
     options.completeCatalogEnabled ?? isPersonalPlanStage3CompleteCatalogEnabled()
+  const thumbnailsEnabled = options.thumbnailsEnabled ?? isPersonalPlanStage3ThumbnailsEnabled()
   let cached: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] } | null = null
 
   async function repairLoadedDraft(input: {
@@ -273,6 +278,33 @@ export function createProductionStage3ProductsGateway(
       if (saved.outcome === "saved") return loaded
     }
     throw new Error("stage3_resume_repair_conflict")
+  }
+
+  async function loadCatalogThumbnails(draft: Stage3ProductDraft) {
+    if (!thumbnailsEnabled) return undefined
+    const pairs = await Promise.all(
+      draft.products.flatMap((product) => {
+        const identity = product.identity
+        return identity.kind === "catalog_product"
+          ? [
+              options.persistence
+                .loadCurrentCatalogProduct({
+                  userId: options.userId,
+                  userProductId: product.userProductId,
+                  productId: identity.productId,
+                  category: identity.category,
+                })
+                .then((current) =>
+                  current?.thumbnailImageUrl
+                    ? ([identity.productId, current.thumbnailImageUrl] as const)
+                    : null,
+                ),
+            ]
+          : []
+      }),
+    )
+    const entries = pairs.filter((pair): pair is readonly [string, string] => pair !== null)
+    return entries.length > 0 ? Object.fromEntries(entries) : undefined
   }
 
   async function current(draftId: string) {
@@ -598,6 +630,7 @@ export function createProductionStage3ProductsGateway(
         status: loaded.draft.status,
         draft: loaded.draft,
         requirements: loaded.requirements,
+        catalogThumbnails: await loadCatalogThumbnails(loaded.draft),
       }
     },
 

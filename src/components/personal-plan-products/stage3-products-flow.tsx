@@ -360,6 +360,9 @@ export function Stage3ProductsFlow({
   >("idle")
   const [searchResults, setSearchResults] = useState<Stage3CatalogCandidate[]>([])
   const [searchTotalCapped, setSearchTotalCapped] = useState(false)
+  const [catalogThumbnails, setCatalogThumbnails] = useState<Record<string, string>>(
+    () => bootstrap?.catalogThumbnails ?? {},
+  )
   const [searchMessage, setSearchMessage] = useState<string>()
   const [frequency, setFrequency] = useState<ProductFrequency | null>(null)
   const [pendingCandidate, setPendingCandidate] = useState<Stage3CatalogCandidate | null>(null)
@@ -591,6 +594,7 @@ export function Stage3ProductsFlow({
             displayName: candidate.displayName,
             brandName: candidate.brandName ?? undefined,
             imageUrl: candidate.imageUrl ?? undefined,
+            thumbnailImageUrl: candidate.thumbnailImageUrl ?? undefined,
             assessmentStatus: candidate.assessmentStatus ?? "ready",
             assessmentReasonCodes: candidate.assessmentReasonCodes,
           }))
@@ -885,6 +889,10 @@ export function Stage3ProductsFlow({
             statusLabel:
               product.identity.kind === "pending_submission" ? "Analyse läuft" : undefined,
             imageUrl: product.identity.imageUrl ?? undefined,
+            thumbnailImageUrl:
+              product.identity.kind === "catalog_product"
+                ? catalogThumbnails[product.identity.productId]
+                : undefined,
           })),
           ...localCatalogCaptures.map(({ candidate, frequencyRange }) => ({
             capturedProductId: `local:${candidate.candidateId}`,
@@ -894,6 +902,7 @@ export function Stage3ProductsFlow({
               frequencyRange,
             sourceLabel: "Ausgewählt",
             imageUrl: candidate.imageUrl,
+            thumbnailImageUrl: candidate.thumbnailImageUrl,
           })),
         ]}
         frequencyOptions={FREQUENCIES}
@@ -953,6 +962,14 @@ export function Stage3ProductsFlow({
         onChooseOtherProduct={() => {
           setPendingCandidate(null)
           setFrequency(null)
+        }}
+        onImageOutcome={(outcome) => {
+          analytics.track(
+            outcome === "thumbnail_fallback"
+              ? "personal_plan_stage3_thumbnail_fallback"
+              : "personal_plan_stage3_thumbnail_total_failure",
+            {},
+          )
         }}
         onContinue={() => void continueCapture()}
         onBack={
@@ -1155,6 +1172,7 @@ export function Stage3ProductsFlow({
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setDraft(loadedDraft)
+    setCatalogThumbnails(response.catalogThumbnails ?? {})
     setDisplayedAlternative({ subjectKey: null, index: 0 })
     categoryCapture.setSaveLabel("Gespeichert")
     setDraftReadyForQueueReconciliation(true)
@@ -2004,6 +2022,7 @@ export function Stage3ProductsFlow({
       throw new Stage3ProductsGatewayError("stale_refined_source")
     }
     setDraft(response.draft)
+    setCatalogThumbnails(response.catalogThumbnails ?? {})
     setDisplayedAlternative({ subjectKey: null, index: 0 })
     categoryCapture.synchronizeRevision(response.draft.revision)
     categoryCapture.setSaveLabel("Gespeichert")

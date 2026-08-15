@@ -76,6 +76,7 @@
     "products:intake:review-app": "tsx scripts/product-intake/review-app.ts",
     "products:intake:finalize-image": "tsx scripts/product-intake/finalize-package-image.ts",
     "products:intake:upload-image": "tsx scripts/product-intake/upload-package-image.ts",
+    "products:intake:backfill-thumbnails": "tsx scripts/product-intake/backfill-product-thumbnails.ts",
     "products:intake:research": "tsx scripts/product-intake/research.ts",
     "products:intake:approve": "tsx scripts/product-intake/approve.ts",
     "products:intake:approve-package": "tsx scripts/product-intake/approve-package.ts",

@@ -5,6 +5,8 @@ import { join } from "node:path"
 import { tmpdir } from "node:os"
 import test from "node:test"
 
+import sharp from "sharp"
+
 import {
   approveResearchPackage,
   readResearchPackage,
@@ -169,6 +171,10 @@ function approvedImageFinalization(overrides: Record<string, unknown> = {}) {
     processing_method: "local",
     final_file: "images/final/granatapfel-conditioner.webp",
     asset_sha256: "a".repeat(64),
+    thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
+    thumbnail_public_url: `${chaarlieImageUrl.split("product-intake-")[0]}thumbnails/search-v1/${"a".repeat(64)}.webp`,
+    thumbnail_final_file: `images/final/thumbnails/${"a".repeat(64)}.webp`,
+    thumbnail_asset_sha256: "b".repeat(64),
     user_approved: true,
     reviewed_by: "nick",
     reviewed_at: "2026-06-26T10:00:00.000Z",
@@ -184,7 +190,32 @@ async function writeApprovedImageFile(dir: string, content = "final image bytes"
   const assetSha256 = createHash("sha256")
     .update(await readFile(file))
     .digest("hex")
-  return { file, assetSha256 }
+  const thumbnailFile = join(dir, "images", "final", "thumbnails", `${assetSha256}.webp`)
+  await mkdir(join(dir, "images", "final", "thumbnails"), { recursive: true })
+  const thumbnailBytes = await sharp({
+    create: {
+      width: 144,
+      height: 144,
+      channels: 3,
+      background: { r: 243, g: 239, b: 232 },
+    },
+  })
+    .webp()
+    .toBuffer()
+  await writeFile(thumbnailFile, thumbnailBytes)
+  const thumbnailAssetSha256 = createHash("sha256").update(thumbnailBytes).digest("hex")
+  return { file, assetSha256, thumbnailFile, thumbnailAssetSha256 }
+}
+
+function finalizationForImage(image: Awaited<ReturnType<typeof writeApprovedImageFile>>) {
+  const thumbnailStoragePath = `thumbnails/search-v1/${image.assetSha256}.webp`
+  return approvedImageFinalization({
+    asset_sha256: image.assetSha256,
+    thumbnail_storage_path: thumbnailStoragePath,
+    thumbnail_public_url: `${chaarlieImageUrl.split("product-intake-")[0]}${thumbnailStoragePath}`,
+    thumbnail_final_file: `images/final/thumbnails/${image.assetSha256}.webp`,
+    thumbnail_asset_sha256: image.thumbnailAssetSha256,
+  })
 }
 
 function fakeStorageClient() {
@@ -204,10 +235,10 @@ function fakeStorageClient() {
           async upload(
             path: string,
             bytes: Buffer,
-            options: { contentType?: string; upsert?: boolean },
+            options: { contentType?: string; cacheControl?: string; upsert?: boolean },
           ) {
             calls.push(
-              `upload:${bucketName}:${path}:${options.contentType ?? ""}:${String(options.upsert)}`,
+              `upload:${bucketName}:${path}:${options.contentType ?? ""}:${options.cacheControl ?? ""}:${String(options.upsert)}`,
             )
             objects.set(path, Buffer.from(bytes))
             return { data: { path }, error: null }
@@ -525,7 +556,7 @@ test("uploadApprovedPackageImage dry-run reports approved target without writing
   const root = await mkdtemp(join(tmpdir(), "product-intake-package-"))
   const dir = await writePackage({ root, imageFinalization: noImageFinalization() })
   const image = await writeApprovedImageFile(dir)
-  const finalization = approvedImageFinalization({ asset_sha256: image.assetSha256 })
+  const finalization = finalizationForImage(image)
   const storage = fakeStorageClient()
 
   const result = await uploadApprovedPackageImage({
@@ -545,7 +576,7 @@ test("uploadApprovedPackageImage uploads and verifies an approved final asset", 
   const root = await mkdtemp(join(tmpdir(), "product-intake-package-"))
   const dir = await writePackage({ root, imageFinalization: noImageFinalization() })
   const image = await writeApprovedImageFile(dir)
-  const finalization = approvedImageFinalization({ asset_sha256: image.assetSha256 })
+  const finalization = finalizationForImage(image)
   const storage = fakeStorageClient()
 
   const result = await uploadApprovedPackageImage({
@@ -559,9 +590,48 @@ test("uploadApprovedPackageImage uploads and verifies an approved final asset", 
   assert.equal(result.status, "uploaded")
   assert.deepEqual(storage.calls, [
     "download:product-images:product-intake-2026-06-26/submission-1/granatapfel-conditioner-aaaaaaaaaaaa.webp",
-    "upload:product-images:product-intake-2026-06-26/submission-1/granatapfel-conditioner-aaaaaaaaaaaa.webp:image/webp:false",
+    "upload:product-images:product-intake-2026-06-26/submission-1/granatapfel-conditioner-aaaaaaaaaaaa.webp:image/webp::false",
     "download:product-images:product-intake-2026-06-26/submission-1/granatapfel-conditioner-aaaaaaaaaaaa.webp",
+    `download:product-images:thumbnails/search-v1/${image.assetSha256}.webp`,
+    `upload:product-images:thumbnails/search-v1/${image.assetSha256}.webp:image/webp:31536000:false`,
+    `download:product-images:thumbnails/search-v1/${image.assetSha256}.webp`,
   ])
+})
+
+test("uploadApprovedPackageImage reuses a valid source-addressed thumbnail with different encoder bytes", async () => {
+  const root = await mkdtemp(join(tmpdir(), "product-intake-package-"))
+  const dir = await writePackage({ root, imageFinalization: noImageFinalization() })
+  const image = await writeApprovedImageFile(dir)
+  const finalization = finalizationForImage(image)
+  const storage = fakeStorageClient()
+  storage.objects.set(finalization.storage_path, await readFile(image.file))
+  storage.objects.set(
+    finalization.thumbnail_storage_path,
+    await sharp({
+      create: {
+        width: 144,
+        height: 144,
+        channels: 3,
+        background: { r: 240, g: 236, b: 229 },
+      },
+    })
+      .webp({ quality: 79 })
+      .toBuffer(),
+  )
+
+  const result = await uploadApprovedPackageImage({
+    supabase: storage.client as never,
+    packageDir: dir,
+    imageFinalization: finalization,
+    apply: true,
+    confirm: true,
+  })
+
+  assert.equal(result.status, "already_uploaded")
+  assert.equal(
+    storage.calls.some((call) => call.startsWith("upload:")),
+    false,
+  )
 })
 
 test("uploadApprovedPackageImage refuses a final asset whose checksum changed", async () => {
@@ -628,6 +698,10 @@ test("approveResearchPackage apply saves payload before using existing approval 
           local_file: "images/final/granatapfel-conditioner.webp",
           content_type: "image/webp",
           asset_sha256: "a".repeat(64),
+          thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
+          thumbnail_public_url: `${chaarlieImageUrl.split("product-intake-")[0]}thumbnails/search-v1/${"a".repeat(64)}.webp`,
+          thumbnail_local_file: `images/final/thumbnails/${"a".repeat(64)}.webp`,
+          thumbnail_asset_sha256: "b".repeat(64),
         }
       },
     },

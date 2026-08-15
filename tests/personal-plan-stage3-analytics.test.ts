@@ -24,6 +24,8 @@ const verboseStage3EventNames = [
 const baselineStage3EventNames = [
   "personal_plan_stage3_journey_started",
   "personal_plan_stage3_routine_opened",
+  "personal_plan_stage3_thumbnail_fallback",
+  "personal_plan_stage3_thumbnail_total_failure",
 ] as const
 
 const reviewStage3EventNames = [
@@ -63,6 +65,8 @@ test("Stage 3 baseline analytics is consent-aware and suppresses verbose events"
   })
   consentedAnalytics.track("personal_plan_stage3_journey_started", {})
   consentedAnalytics.track("personal_plan_stage3_routine_opened", {})
+  consentedAnalytics.track("personal_plan_stage3_thumbnail_fallback", {})
+  consentedAnalytics.track("personal_plan_stage3_thumbnail_total_failure", {})
   consentedAnalytics.track("personal_plan_stage3_review_viewed", {
     category: "conditioner",
     verdict: "ideal",
@@ -78,6 +82,8 @@ test("Stage 3 baseline analytics is consent-aware and suppresses verbose events"
   assert.deepEqual(calls, [
     { eventName: "personal_plan_stage3_journey_started", payload: {} },
     { eventName: "personal_plan_stage3_routine_opened", payload: {} },
+    { eventName: "personal_plan_stage3_thumbnail_fallback", payload: {} },
+    { eventName: "personal_plan_stage3_thumbnail_total_failure", payload: {} },
     {
       eventName: "personal_plan_stage3_review_viewed",
       payload: {
@@ -184,6 +190,8 @@ test("Stage 3 baseline events map to PostHog with empty payloads", () => {
   assert.deepEqual(calls, [
     ["personal_plan_stage3_journey_started", {}],
     ["personal_plan_stage3_routine_opened", {}],
+    ["personal_plan_stage3_thumbnail_fallback", {}],
+    ["personal_plan_stage3_thumbnail_total_failure", {}],
   ])
 })
 

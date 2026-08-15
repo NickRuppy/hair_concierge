@@ -1227,6 +1227,10 @@ test("cockpit publish handoff promotes the processed image storage URL into the 
     payload: {
       final_file: "/tmp/final.webp",
       asset_sha256: "a".repeat(64),
+      thumbnail_file: "/tmp/thumbnail.webp",
+      thumbnail_asset_sha256: "b".repeat(64),
+      thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
+      thumbnail_public_url: `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${"a".repeat(64)}.webp`,
       storage_bucket: "product-images",
       storage_path: storagePath,
       planned_public_url: finalPublicUrl,
@@ -1303,15 +1307,29 @@ test("cockpit publish handoff promotes the processed image storage URL into the 
   assert.equal(decision.ok, true)
   assert.equal(decision.ok ? decision.publicUrl : null, finalPublicUrl)
   assert.equal(decision.ok ? decision.storagePath : null, storagePath)
+  assert.equal(
+    decision.ok ? decision.thumbnailStoragePath : null,
+    `thumbnails/search-v1/${"a".repeat(64)}.webp`,
+  )
   assert.equal(decision.ok ? decision.artifact.id : null, "artifact-1")
 
-  const updated = buildResearchedPayloadWithFinalImage(existingPayload, finalPublicUrl, {
-    reviewedBy: "nick",
-    reviewedAt: "2026-07-02T08:30:00.000Z",
-    notes: "Approved from Product Intake Review Cockpit.",
-  })
+  const updated = buildResearchedPayloadWithFinalImage(
+    existingPayload,
+    finalPublicUrl,
+    {
+      reviewedBy: "nick",
+      reviewedAt: "2026-07-02T08:30:00.000Z",
+      notes: "Approved from Product Intake Review Cockpit.",
+    },
+    {
+      canonicalImageSha256: "a".repeat(64),
+      thumbnailImageUrl: `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${"a".repeat(64)}.webp`,
+    },
+  )
 
   assert.equal(updated.final.product.image_url, finalPublicUrl)
+  assert.equal(updated.final.product.canonical_image_sha256, "a".repeat(64))
+  assert.match(String(updated.final.product.thumbnail_image_url), /thumbnails\/search-v1/)
   assert.deepEqual(updated.final.identifiers, [
     {
       type: "retailer_sku",
