@@ -107,10 +107,16 @@ test("inactive product demotes its item instead of failing the page", async () =
   ])
 })
 test("category_key mismatch demotes instead of failing", async () => { /* same pattern, category_key: "mask" on a bondbuilder slot */ })
-test("zero surviving items with degradations still returns (all demoted, empty routineItems)", async () => {
-  const result = await adaptAcceptedActiveRoutineForApplication(inputWhereAllProductsInactive())
-  assert.equal(result.routineItems.length, 0)
-  assert.equal(result.degradedItems.length, totalItems)
+test("all items demoted fails closed", async () => {
+  // spec decision: a page with zero surviving products must NOT render as ready
+  await assert.rejects(
+    () => adaptAcceptedActiveRoutineForApplication(inputWhereAllProductsInactive()),
+    /accepted_routine_product_unavailable/,
+  )
+})
+test("demoted item carries reason catalog_unavailable", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(inputWithInactiveProductA())
+  assert.equal(result.unresolvedRoutineItems[0]?.reason, "catalog_unavailable")
 })
 ```
 
@@ -129,10 +135,12 @@ unresolvedRoutineItems.push({
 continue
 ```
 
-(convert the `.map` to a `for … of` over `candidates`; declare `const degradedItems: … = []` next to `unresolvedRoutineItems`). Add `degradedItems` to both `return` sites (:184-192 early return → `degradedItems: []`).
+(convert the `.map` to a `for … of` over `candidates`; declare `const degradedItems: … = []` next to `unresolvedRoutineItems`). Add `degradedItems` to both `return` sites (:184-192 early return → `degradedItems: []`). **Fail-closed policy:** after the loop, `if (routineItems.length === 0 && degradedItems.length > 0) throw new Error("accepted_routine_product_unavailable")` — a page with zero surviving products must not render as ready (spec §Blocker 1 fix 2).
 
-- [ ] **Step 4:** In `src/app/anwendung/page.tsx`, where the adapter result is consumed inside the resolver (before the success return): if `adapterResult.degradedItems.length > 0`, call the existing `deps.reportFailure` with the same `failureContext` spread used in the catch at :176-183 but `reason: "product_guidance_unresolved"` plus `degradedProductIds: adapterResult.degradedItems.map(d => d.productId)` — and **still return the ready view**. Extend the `reason` union/`failureReason` helper (:62-70) if the type requires it.
-- [ ] **Step 5: Diagnosability.** In `src/lib/observability/personal-plan-application.ts:67-70` (where `personal_plan.failure_reason` is tagged and the original error is dropped): additionally set `scope.setTag("personal_plan.failure_code", error instanceof Error ? error.message.slice(0, 64) : "unknown")`. The error message here is one of our own stable codes (`accepted_routine_product_unavailable` etc.), not user data.
+- [ ] **Step 3b: Reason-aware unresolved copy.** Extend `NormalizedUnresolvedRoutineItem` with `reason?: "no_product_chosen" | "catalog_unavailable"` (default `"no_product_chosen"`; demoted items set `"catalog_unavailable"`). In `src/components/application/unresolved-product-block.tsx:23` the current copy ("Produkt noch offen" / no confirmed product) is FALSE for a demoted confirmed product — branch on the reason: `catalog_unavailable` → title "Produkt gerade nicht verfügbar", body "Dein gewähltes Produkt ist im Katalog gerade nicht verfügbar. Deine Routine bleibt gespeichert." Thread the field through whatever schema/view types sit between the adapter and that component (follow the type errors).
+- [ ] **Step 4:** In `src/app/anwendung/page.tsx`, where the adapter result is consumed (before the success return): for **each** entry of `adapterResult.degradedItems`, call `deps.reportFailure` once, using the existing `PersonalPlanApplicationFailureDetails` contract (`src/lib/observability/personal-plan-application.ts:11` — it supports singular `productId` and `issueCode`; read the exact shape before coding): same `failureContext` spread as the catch at :176-183, `reason: "product_guidance_unresolved"`, `productId: item.productId`, `issueCode: "catalog_identity_mismatch"` — and **still return the ready view**. Extend the `reason` union/`failureReason` helper (:62-70) if the type requires it.
+- [ ] **Step 5: Diagnosability.** In the resolver's `catch` in `src/app/anwendung/page.tsx:176-183` (where the thrown `error` IS in scope, unlike inside `capturePersonalPlanApplicationFailure`): add `failureCode: error instanceof Error ? error.message.slice(0, 64) : "unknown"` to the reported details; in `personal-plan-application.ts` add optional `failureCode?: string` to `PersonalPlanApplicationFailureDetails` and `scope.setTag("personal_plan.failure_code", details.failureCode ?? "unknown")` next to the existing reason tag (:67). The message is one of our own stable codes, not user data.
+- [ ] **Step 5b: Resolver test.** Add/extend a page-resolver test proving the view stays `ready` while per-item warnings are emitted when one product degrades (stub `deps.reportFailure`, assert it was called once with `issueCode: "catalog_identity_mismatch"`).
 - [ ] **Step 6:** Run adapter test file → PASS. Run `npm run test:personal-plan-stage5` → PASS.
 - [ ] **Step 7: Commit** `fix(anwendung): degrade unavailable catalog products per item instead of failing the page`.
 
@@ -153,7 +161,9 @@ continue
 - Modify: `src/lib/personal-plan/frontier-routing.ts:50, 63-70`
 - Modify: `src/lib/auth/intake-state.ts:74-90`
 - Modify: `src/lib/supabase/middleware.ts:433-438`
-- Test: `tests/personal-plan-frontier-routing.test.ts` (assertions at :79, :89), `tests/auth-intake-state.test.ts`
+- Test: `tests/personal-plan-frontier-routing.test.ts` (assertions at :79, :89), `tests/auth-intake-state.test.ts`, `tests/auth-middleware-personal-plan-routine.test.ts` (existing integration cases at :273 area encode the old chat redirect — Stage 1, recovery, frontier-outage — rewrite them to the new oracle)
+
+**Intended oracle (explicit product decision):** `/chat` is NEVER frontier-redirected — at any stage, including recovery and pre-Stage-3. Access control for chat is solely the intake gate: entitled users with a pending or active routine bypass legacy onboarding; users without entitlement/routine keep today's behavior (`needs_quiz` → `/quiz`, `needs_onboarding` without bypass → `/onboarding`). No redirect loop exists: paywall runs first and the bypass requires entitlement + routine.
 
 **Interfaces:** Produces `isPersonalPlanOnboardingBypassRoute(pathname: string): boolean` exported from `intake-state.ts` (= `/routine | /anwendung | /chat` prefixes).
 
@@ -188,8 +198,9 @@ test("chat bypasses legacy onboarding with pending or active routine", () => {
   1. `frontier-routing.ts:50` → `if (pathname === "/auth") return frontier.nextHref` and remove `isRoute(pathname, "/chat")` from `isFrontierControlledRoute` (:66).
   2. `intake-state.ts`: add `export function isPersonalPlanOnboardingBypassRoute(pathname: string): boolean { return isPersonalPlanRoutineRoute(pathname) || isRoute(pathname, "/chat") }`; in `canBypassLegacyOnboardingForPersonalPlanRoutine` (:78-90) add before the final `return false`: `if (isRoute(pathname, "/chat")) return hasPendingOrActiveRoutine`.
   3. `middleware.ts:437`: replace `isPersonalPlanRoutineRoute(pathname)` with `isPersonalPlanOnboardingBypassRoute(pathname)` (import it) so the `personalPlanRoutineAccess` pre-load also runs for `/chat` and the bypass doesn't fail closed.
-- [ ] **Step 4:** Run both test files + `npm run test:personal-plan-stage5` (includes `auth-intake-state` and nav tests) → PASS.
-- [ ] **Step 5: Commit** `fix(chat): stop frontier-redirecting chat for personal-plan users`.
+- [ ] **Step 4: Middleware matrix.** In `tests/auth-middleware-personal-plan-routine.test.ts`, cover `/chat` across: active routine (→ pass through), pending routine (→ pass through), entitled but no routine pointer (→ `/onboarding`), `needs_quiz` (→ `/quiz`), no entitlement (→ `/onboarding`), recovery frontier (→ pass through, intake gate still applies), frontier load failure (→ existing 503/fallback behavior unchanged for chat).
+- [ ] **Step 5:** Run all three test files + `npm run test:personal-plan-stage5` (includes `auth-intake-state` and nav tests) → PASS.
+- [ ] **Step 6: Commit** `fix(chat): stop frontier-redirecting chat for personal-plan users`.
 
 ### Task 1.6: Stage-3 finalization timeout → auto-reconcile, truthful badge, bigger budget
 
@@ -212,6 +223,8 @@ test("a finalization timeout auto-reconciles and reaches the handoff", async () 
   … render, choose all subjects, advance timers …
   await screen.findByText("Speicherstatus wird geprüft.")   // transient, not the manual screen
   await screen.findByText("Deine Produktauswahl steht.")    // handoff reached with zero clicks
+  assert.equal(gatewayStub.resolveAuthorityDecisions.callCount, 1) // NOT resubmitted by the auto-submit effect
+  assert.ok(gatewayStub.complete.callCount <= 1)                    // no duplicate completion
 })
 test("manual screen appears only when the reconcile also fails", async () => {
   // gateway stub: submission times out AND the recovery reload rejects
@@ -236,15 +249,18 @@ with
 
 ```ts
 if (error instanceof Stage3FinalizationTimeoutError) {
+  setPendingRecoveryMode("checking") // BEFORE releasing any guard — closes the auto-resubmit window
   finishDecisionSubmission()
-  analytics.track("personal_plan_stage3_save_outcome", { outcome: "finalization_timeout" })
+  Sentry.captureMessage("personal_plan_stage3_finalization_timeout", "warning")
   await delay(2_000) // let the still-running request commit server-side
   await handlePendingRecoveryError(error, sourceDraft)
   return
 }
 ```
 
-and identically in `completeFlow` (:2830-2833, keep the `completionInFlight.current = false` + `finishDecisionSubmission()` that precede it). `handlePendingRecoveryError` (:1839-1882) already does exactly the right thing for non-gateway errors: reads the pending intent, shows "checking", reconciles, falls back to "manual" only on a second failure.
+**Ordering is load-bearing:** the auto-submit effect (:688-711) re-fires the whole batch whenever `decisionSubmitStatus` returns to idle while `pendingRecoveryMode` is null — `setPendingRecoveryMode("checking")` must run BEFORE `finishDecisionSubmission()`. Same in `completeFlow` (:2830-2833): set `"checking"` first, THEN `completionInFlight.current = false` + `finishDecisionSubmission()`, then the same Sentry + delay + `handlePendingRecoveryError` sequence. `handlePendingRecoveryError` (:1839-1882) already does exactly the right thing for non-gateway errors: reads the pending intent, keeps "checking", reconciles, falls back to "manual" only on a second failure.
+
+**Telemetry channel (deliberate):** use Sentry `captureMessage` (payload-free, import per the repo's existing `@sentry/nextjs` usage), NOT `analytics.track` — `"finalization_timeout"` is not in `PersonalPlanStage3SaveOutcome` (`src/lib/analytics/events.ts:187`) and production Stage-3 analytics allowlists only the consent-gated payload-free baseline (`src/lib/personal-plan/products/stage3-analytics.ts:56` drops both save- and recovery-outcome events). We do not touch that privacy allowlist.
 
 - [ ] **Step 4: Budget.** `:249` `finalizationTimeoutMs = 12_000` → `finalizationTimeoutMs = 30_000`. Add `export const maxDuration = 60` to both stage-3 API routes.
 - [ ] **Step 5: Badge truthfulness.** `journey-header.tsx`: add `saveLabel` prop, render `{saveLabel ?? SAVE_COPY[saveStatus]}` at :76 (`saveLabel` also drives the `aria-live` text). `index.tsx:95`: `<PersonalPlanJourneyHeader currentStage={3} saveStatus={saveStatus} saveLabel={saveState.label || undefined} onBack={onBack} />`. In `stage3-products-flow.tsx:737-741` make the label match the mode: `pendingRecoveryMode === "checking" ? "Speicherstatus wird geprüft" : pendingRecoveryMode === "manual" ? "Speicherstatus offen" : …` (never "Nicht gespeichert" while the save may have succeeded).
@@ -373,19 +389,32 @@ Read-path overlay, no backfill (two live systems keep writing independently — 
 - Create: `src/app/api/personal-plan/refinement-presentation/route.ts`
 - Test: `tests/personal-plan-refinement-presentation-route.test.ts`
 
-**Interfaces:** `GET` → `{ answers: PersonalPlanRefinementAnswersV1 | null, completedQuestionIds: string[] }` for the caller's latest **complete** refinement draft (`personal_plan_refinement_drafts`, `status = "complete"`, newest `updated_at`; drafts persist after completion — verified, nothing deletes them). Auth + client acquisition: mirror `src/app/api/personal-plan/portfolio-presentation/route.ts` exactly (same session handling, same 401 shape, `Cache-Control: no-store`).
+**Interfaces:** `GET` → `{ answers: PersonalPlanRefinementAnswersV1 | null, completedQuestionIds: string[], routineProducts: RoutineProductSummary[] | null }` where `RoutineProductSummary = { categoryLabel: string; name: string; purposeLabel: string; state: "owned" | "planned"; cadenceLabel: string | null }`.
+
+- **Answers authority (not "latest by updated_at"):** resolve the draft by binding `personal_plan_refinement_drafts.result_refined_need_version_id` to the plan's `current_refined_need_version_id` (completion updates that pointer atomically — `supabase/migrations/20260808062602_personal_plan_stage1_3_foundation.sql:310`). No matching complete draft → `answers: null`.
+- **routineProducts:** the included items of the ACTIVE routine version — this is the data /profile's Produkte section will render (Task 3.3). Reuse the server loader that feeds `src/components/routine/personal-plan/routine-page.tsx` its `view` prop (follow its import from `src/app/routine/`); map basis + optional items with `state.inclusion === "included"` to the summary shape (`state: "owned"` when `item.product.kind === "owned"`, `"planned"` for planned; skip `pending_review`/`none`). `null` when there is no active routine version. Do NOT source products from `PortfolioPresentation` — it only exposes planned-purchase decision keys and `not_used` retained products (`src/lib/personal-plan/routine/portfolio-presentation.ts:15`), not the in-routine products.
+- Auth + client acquisition: mirror `src/app/api/personal-plan/portfolio-presentation/route.ts` exactly (same session handling, same 401 shape, `Cache-Control: no-store`).
 
 - [ ] **Step 1: Write the failing test** (node runner; stub the Supabase client the same way the neighboring personal-plan route tests do — copy the harness from the portfolio-presentation route test if one exists, else from `tests/product-intake-personal-plan-route.test.ts`):
 
 ```ts
-test("returns latest complete refinement answers", async () => {
-  // seeded stub: one complete draft { answers: { towel: { material: "terry", technique: "gentle_squeeze" }, nightProtection: [] }, completed_question_ids: ["towel_handling","night_protection"] }
+test("returns the refinement answers bound to the current refined need version", async () => {
+  // seeded stub: plan.current_refined_need_version_id = "rv1"; draft { result_refined_need_version_id: "rv1",
+  //   answers: { towel: { material: "frottee", technique: "gentle_press" }, nightProtection: [] }, … }
+  //   plus a NEWER stale draft with result_refined_need_version_id: "rv0" that must NOT win
   const res = await GET(request())
   const body = await res.json()
-  assert.equal(body.answers.towel.material, "terry")
+  assert.equal(body.answers.towel.material, "frottee")
   assert.deepEqual(body.answers.nightProtection, [])
 })
-test("returns null answers when no complete draft exists", async () => { /* → { answers: null, completedQuestionIds: [] } */ })
+test("returns null answers when no complete draft matches the pointer", async () => { /* → { answers: null, completedQuestionIds: [], routineProducts: … } */ })
+test("returns included routine products of the active version", async () => {
+  // stub active routine with an owned conditioner + planned shampoo + a pending_review item (excluded)
+  const body = await (await GET(request())).json()
+  assert.equal(body.routineProducts.length, 2)
+  assert.equal(body.routineProducts.find(p => p.state === "owned").name, "Gliss Kur Aqua Revive Conditioner")
+})
+test("routineProducts is null without an active routine", async () => { /* … */ })
 ```
 
 - [ ] **Step 2:** Run → FAIL. **Step 3:** Implement the route (select `answers,completed_question_ids,updated_at`, `.eq("status","complete").order("updated_at",{ascending:false}).limit(1).maybeSingle()` scoped to the user's plan via the same plan-lookup the portfolio route uses). **Step 4:** Run → PASS. **Step 5: Commit** `feat(profile): API for completed refinement answers`.
@@ -396,34 +425,34 @@ test("returns null answers when no complete draft exists", async () => { /* → 
 - Modify: `src/lib/profile/section-config.ts:227-327` (fields `styling_tools`, `heat_styling`, `towel_material`, `towel_technique`, `drying_method`, `night_protection`)
 - Test: `tests/profile-plan-overlay.test.ts` (new)
 
-**Interfaces:** Every field config's `getValue(profile)` becomes `getValue(profile, plan?: PersonalPlanRefinementAnswersV1 | null)`. Import the type from `@/lib/personal-plan/refinement/types`. Label maps for plan enums live in section-config next to the legacy maps:
+**Interfaces:** Every field config's `getValue(profile)` becomes `getValue(profile, plan?: PersonalPlanRefinementAnswersV1 | null)`. Import the type from `@/lib/personal-plan/refinement/types`.
+
+**Label maps — verified against the real enums:** `TowelMaterial`, `TowelTechnique`, `NightProtection` are RE-EXPORTED from `@/lib/vocabulary/onboarding-care` (values `frottee | mikrofaser | tshirt | turban_mikrofaser | no_towel`, `rough_rubbing | gentle_press`, `silk_satin_pillow | silk_satin_bonnet | loose_tied | pineapple | length_tip_accessory`) — the SAME vocabulary the legacy labels in section-config already map (`TOWEL_MATERIAL_LABELS`, `TOWEL_TECHNIQUE_LABELS`, `NIGHT_PROTECTION_LABELS`). **Reuse those maps directly; no new towel/night maps.** Only two NEW maps are needed (types verified at `src/lib/personal-plan/refinement/types.ts:37-50`):
 
 ```ts
-const PLAN_TOWEL_MATERIAL_LABELS: Record<string, string> = {
-  terry: "Frottee-Handtuch", microfiber: "Mikrofaser-Handtuch",
-  cotton_shirt: "T-Shirt / Baumwolltuch", microfiber_turban: "Turban (Mikrofaser)", none: "Kein Handtuch oder Tuch",
+const PLAN_DRYING_ROUTE_LABELS: Record<DryingRoute, string> = {
+  air_dry: "Lufttrocknen",
+  ordinary_blow_dry: "Gewöhnlich föhnen",
+  diffuser_or_airflow_shaping: "Diffusor oder formender Luftstrom",
 }
-const PLAN_TOWEL_TECHNIQUE_LABELS: Record<string, string> = { gentle_squeeze: "Sanft ausdrücken / scrunchen", rubbing: "Rubbeln" }
-const PLAN_DRYING_ROUTE_LABELS: Record<string, string> = {
-  air_dry: "Lufttrocknen", ordinary_airflow: "Gewöhnlich föhnen", airflow_shaping: "Diffusor oder formender Luftstrom",
-}
-const PLAN_HEAT_TOOL_LABELS: Record<string, string> = {
-  dryer_brush: "Föhnbürste", hot_air_styler: "Heißluft-Multistyler", straightener: "Glätteisen",
-  curling_iron: "Lockenstab oder Welleneisen", thermal_rollers: "Thermo-Wickler",
+const PLAN_HEAT_TOOL_LABELS: Record<AdditionalHeatTool, string> = {
+  dryer_brush: "Föhnbürste",
+  hot_air_styler: "Heißluft-Multistyler",
+  straightener: "Glätteisen",
+  curling_or_wave_iron: "Lockenstab oder Welleneisen",
+  thermal_rollers: "Thermo-Wickler",
 }
 ```
-
-**IMPORTANT:** before coding, open `src/lib/personal-plan/refinement/types.ts` and copy the REAL enum values for `TowelMaterial`, `TowelTechnique`, `DryingRoute`, `AdditionalHeatTool`, `NightProtection` into these maps (the keys above are best-guess; the German labels are the quiz's own option labels and are correct).
 
 - [ ] **Step 1: Write the failing tests** (plain unit tests over the exported field configs):
 
 ```ts
 test("towel material falls back to plan answer", () => {
-  const value = towelMaterialField.getValue(null, { towel: { material: "terry" } })
+  const value = towelMaterialField.getValue(null, { towel: { material: "frottee" } })
   assert.equal(value, "Frottee-Handtuch")
 })
 test("legacy value wins over plan answer", () => {
-  const value = towelMaterialField.getValue({ towel_material: "microfiber" } as HairProfile, { towel: { material: "terry" } })
+  const value = towelMaterialField.getValue({ towel_material: "mikrofaser" } as HairProfile, { towel: { material: "frottee" } })
   assert.equal(value, "Mikrofaser-Handtuch")
 })
 test("empty additionalHeatTools reads as answered none", () => {
@@ -448,7 +477,7 @@ test("drying routes join labels", () => {
 
 - [ ] **Step 1:** Add `const [refinementAnswers, setRefinementAnswers] = useState<PersonalPlanRefinementAnswersV1 | null>(null)` + an effect fetching `/api/personal-plan/refinement-presentation` (`cache: "no-store"`, silent-null on failure — copy the portfolio effect verbatim, only URL/state differ).
 - [ ] **Step 2:** Update the section rendering to call `field.getValue(hairProfile, refinementAnswers)`.
-- [ ] **Step 3: Produkte section:** where the empty state "Noch keine Produktangaben vorhanden" renders (grid fed by `user_product_usage`, :658-666): when `user_product_usage` is empty AND `portfolioPresentation` contains products, render those instead of the empty state — reuse the row presentation already used for "Nicht verwendete Produkte" (:776 area), listing retained/owned products with their status labels, and change the section badge from "Offen" to "Aus deinem Personal Plan". Read the `PortfolioPresentationApiResponse` type (imported at the top of page.tsx) for the exact field names before mapping — extend the mapping to whatever product lists it exposes beyond `retainedOwnedProducts` if present (e.g. planned products), but invent nothing: only render lists the type actually has.
+- [ ] **Step 3: Produkte section:** where the empty state "Noch keine Produktangaben vorhanden" renders (grid fed by `user_product_usage`, :658-666): when `user_product_usage` is empty AND the new API's `routineProducts` is non-null, render those rows instead of the empty state — `{categoryLabel} · {name} · {purposeLabel}` with a state chip (`owned` → "Vorhanden", `planned` → "Noch kaufen") and `cadenceLabel` as sub-line; change the section badge from "Offen" to "Aus deinem Personal Plan". Do NOT source this from `portfolioPresentation` — it only carries `not_used` retained products, which the separate "Nicht verwendete Produkte" block (`src/components/profile/retained-personal-plan-products.tsx:20`) already renders; rendering it twice would duplicate that list and still miss the in-routine products.
 - [ ] **Step 4:** Also update the two "Vollständig/Offen" badge computations for Alltag/Styling so overlay-filled fields count as answered.
 - [ ] **Step 5:** Manual verification with the field-test account (or a fresh test-quiz run): Alltag shows Frottee/sanft ausdrücken/Lufttrocknen, Hitzetools "Keine Hitzetools", Nachtschutz "Nichts davon", Produkte no longer claims "keine Angaben". Screenshot for the PR.
 - [ ] **Step 6: Commit** `feat(profile): profile reflects personal-plan answers and products`.
@@ -461,8 +490,20 @@ test("drying routes join labels", () => {
 
 ---
 
+## Explicit non-goals (deliberate follow-ups, NOT this plan)
+
+Accepted as out of scope by Nick / deferred with reasons:
+
+1. **Idealplan example-image placeholders** — Nick is fixing this himself.
+2. **Bondbuilder engine jargon** ("Rollenbeziehung", "Kritisches Protokoll") — needs a product decision on user-facing Prüfpunkt labels; audit finding stands, own follow-up.
+3. **Triple Öl review consolidation** (3 near-identical screens) — flow redesign with its own mockup gate.
+4. **Shampoo catalog coverage gaps** (Gliss/Elvital/Olaplex return no shampoo hits) — content/ingestion work, not code.
+5. **Catalog data cleanup** if Task 1.1 finds bad rows (relative `image_url`s, wrong `category_key`) — data follow-up; PR 1 makes the app robust against them regardless.
+6. **Profile `editTarget` rerouting to Feinschliff flows** — spec suggests it; this plan keeps legacy onboarding targets, which is consistent with the legacy-wins precedence rule. Needs explicit product sign-off before changing.
+7. **Styling-Frequenz / Bürste-Kamm overlay** — no plan-side data source exists; stays legacy.
+
 ## Self-review notes
 
-- Spec coverage: blockers-investigation §Blocker 1 → Tasks 1.2–1.4 (+1.1 diagnosis); §Chat → 1.5; §Blocker 2 → 1.6; styling-fixes #1–#8 → 2.1–2.7 (#idealplan-cards intentionally excluded — Nick); §Profil-Sync → 3.1–3.3.
-- Known deliberate scope cuts: catalog data cleanup (if Task 1.1 finds bad rows) is a follow-up, not this plan; Styling-Frequenz/Bürste overlay has no plan-side source and stays legacy; profile `editTarget` routing still points to legacy onboarding steps (consistent with legacy-wins precedence) — candidate for a later plan.
+- Spec coverage: blockers-investigation §Blocker 1 → Tasks 1.2–1.4 (+1.1 diagnosis); §Chat → 1.5; §Blocker 2 → 1.6; styling-fixes #1–#8 → 2.1–2.7; §Profil-Sync → 3.1–3.3; remaining audit findings → Non-goals above.
+- Codex plan review (2026-08-15, effort xhigh) incorporated: 1.6 guard-ordering race + telemetry channel, 1.3 observability contract + fail-closed policy + reason-aware unresolved copy, 1.5 middleware test matrix + explicit oracle, 3.1 pointer-bound draft authority + routineProducts source, 3.2 real enum keys (shared vocabulary reuse).
 - Risk: Task 1.3 changes an adapter return type — `npm run test:personal-plan-stage5` covers the consumers; Task 2.7 touches shared shell padding — verify /chat too during its screenshot pass.
