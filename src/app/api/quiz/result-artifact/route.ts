@@ -7,6 +7,7 @@ import {
   type ResultArtifactLead,
   type ResultArtifactStore,
 } from "@/lib/customerio/result-artifact-service"
+import { PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV } from "@/lib/customerio/personal-plan-result-artifact"
 import { sendCustomerIoTransactionalEmail } from "@/lib/customerio/transactional"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -132,7 +133,10 @@ function siteUrlFromRequest(request: Request): string {
 }
 
 function hasCustomerIoTransactionalConfig(): boolean {
-  return Boolean(process.env.CUSTOMERIO_APP_API_KEY)
+  return Boolean(
+    process.env.CUSTOMERIO_APP_API_KEY &&
+    process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV]?.trim(),
+  )
 }
 
 function createResultArtifactRouteDeps(
