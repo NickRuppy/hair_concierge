@@ -173,7 +173,7 @@ test("skips a failed result artifact email until manual retry resets it", async 
   assert.deepEqual(store.sent, [])
 })
 
-test("sends with a blank first name fallback", async () => {
+test("the harmonized result email does not require a first name", async () => {
   const sends: CustomerIoTransactionalEmailPayload[] = []
   const store = createStore({
     id: leadId,
@@ -189,7 +189,7 @@ test("sends with a blank first name fallback", async () => {
   assert.equal(response.status, 200)
   assert.deepEqual(response.body, { sent: true, skipped: false })
   assert.equal(sends.length, 1)
-  assert.equal(sends[0].messageData.first_name, "")
+  assert.equal("first_name" in sends[0].messageData, false)
   assert.deepEqual(store.sent, [leadId])
 })
 

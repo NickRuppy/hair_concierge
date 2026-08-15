@@ -1,19 +1,12 @@
-import {
-  APP_VALUE_STACK_BRIDGE_BODY,
-  APP_VALUE_STACK_BRIDGE_HEADLINE,
-  APP_VALUE_STACK_CTA_LABEL,
-  APP_VALUE_STACK_STORIES,
-  buildAppValueStackHeroCopy,
-} from "@/lib/quiz/app-value-stack-copy"
-import { buildQuizOfferPreview } from "@/lib/quiz/offer-preview"
-import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
+import { buildPersonalPlanAssessmentRows } from "@/lib/personal-plan-quiz/assessment-copy"
+import { assessPersonalPlanHair } from "@/lib/personal-plan-quiz/hair-assessment"
+import { adaptLegacyQuizAnswersForAssessment } from "@/lib/personal-plan-quiz/offer-adapter"
+import { derivePersonalPlanPrimaryMessage } from "@/lib/personal-plan-quiz/prepared-plan"
+import { rankGuidedStoryPriorities } from "@/lib/quiz/guided-story-priorities"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
+import { buildPersonalPlanResultArtifactEmailPayload } from "./personal-plan-result-artifact"
 import type { CustomerIoTransactionalEmailPayload } from "./transactional"
-
-export const QUIZ_RESULT_ARTIFACT_MESSAGE_ID = "quiz_result_artifact"
-export const QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV = "CUSTOMERIO_QUIZ_RESULT_TRANSACTIONAL_MESSAGE_ID"
-export const QUIZ_RESULT_ARTIFACT_CTA_LABEL = APP_VALUE_STACK_CTA_LABEL
 
 export interface QuizResultArtifactEmailInput {
   leadId: string
@@ -23,84 +16,57 @@ export interface QuizResultArtifactEmailInput {
   siteUrl: string
 }
 
-function firstName(name: string): string {
-  const first = name.trim().split(/\s+/)[0] ?? ""
-
-  return first.replace(/[^\p{L}\p{N}' -]/gu, "").slice(0, 60)
+const structureLabels: Record<string, string> = {
+  straight: "glattes",
+  wavy: "welliges",
+  curly: "lockiges",
+  coily: "stark gelocktes",
 }
 
-function resultUrl(siteUrl: string, leadId: string): string {
-  const url = new URL(`/result/${encodeURIComponent(leadId)}`, siteUrl)
-  url.searchParams.set("focus", "unlock-plan")
-  url.searchParams.set("entry", "result_email")
-
-  return url.toString()
+const thicknessLabels: Record<string, string> = {
+  fine: "feines",
+  normal: "mittelstarkes",
+  coarse: "kräftiges",
 }
 
-export function getQuizResultArtifactMessageId(): string | number {
-  const configured = process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV]?.trim()
-
-  if (!configured) {
-    return QUIZ_RESULT_ARTIFACT_MESSAGE_ID
-  }
-
-  return /^\d+$/.test(configured) ? Number(configured) : configured
+function profileLine(answers: QuizAnswers): string {
+  const texture = answers.structure ? structureLabels[answers.structure] : null
+  const thickness = answers.thickness ? thicknessLabels[answers.thickness] : null
+  if (texture && thickness) return `Für ${texture}, ${thickness} Haar`
+  return "Für dein persönliches Haarprofil"
 }
 
+/**
+ * The regular quiz now uses the same compact Customer.io result email as the
+ * Personal Plan quiz. Its public diagnosis is derived from the same assessment
+ * model as the regular result page; product and routine details stay behind the
+ * result-page paywall.
+ */
 export function buildQuizResultArtifactEmailPayload(
   input: QuizResultArtifactEmailInput,
 ): CustomerIoTransactionalEmailPayload {
-  const narrative = buildQuizResultNarrative(input.quizAnswers)
-  const preview = buildQuizOfferPreview(input.quizAnswers)
-  const sanitizedFirstName = firstName(input.name)
-  const hero = buildAppValueStackHeroCopy({
-    name: sanitizedFirstName,
-    narrative,
-    lane: preview.lane,
-  })
-  const foundationProducts = preview.products.filter((product) => !product.suggested)
+  const diagnosticInput = adaptLegacyQuizAnswersForAssessment(input.quizAnswers)
+  const assessment = assessPersonalPlanHair(diagnosticInput)
+  const diagnosticRows = buildPersonalPlanAssessmentRows(assessment, diagnosticInput)
+  const priorities = rankGuidedStoryPriorities(input.quizAnswers)
+  const centralPriority = priorities.find((priority) => priority.isCentral) ?? priorities[0]
 
-  return {
-    to: input.email,
-    transactionalMessageId: getQuizResultArtifactMessageId(),
-    messageData: {
-      lead_id: input.leadId,
-      first_name: sanitizedFirstName,
-      headline: hero.headline,
-      intro: hero.intro,
-      signals: preview.signals.map((signal) => ({
-        label: signal.label,
-        conclusion: signal.conclusion,
-      })),
-      foundation_products: foundationProducts.map((product) => ({
-        category_label: product.categoryLabel,
-        name: product.name,
-        note: product.note,
-        image_url: product.imageUrl,
-        cadence_label: product.cadence.label,
-        cadence_qualifier: product.cadence.qualifier ?? "",
-      })),
-      app_stories: APP_VALUE_STACK_STORIES.map((story) => ({
-        label: story.label,
-        headline: story.headline,
-        body: story.body,
-      })),
-      app_bridge_headline: APP_VALUE_STACK_BRIDGE_HEADLINE,
-      app_bridge_body: APP_VALUE_STACK_BRIDGE_BODY,
-      rows: narrative.rows.map((row) => ({
-        label: row.label,
-        scope: row.scope,
-        before: row.before,
-        after: row.after,
-      })),
-      main_lever_title: narrative.needs.mainLeverTitle,
-      main_lever_why: narrative.needs.mainLeverWhy,
-      routine_levers: narrative.needs.products.map((product) => ({
-        name: product.name,
-        description: product.description,
-      })),
-      cta_label: QUIZ_RESULT_ARTIFACT_CTA_LABEL,
-      result_url: resultUrl(input.siteUrl, input.leadId),
-    },
+  if (!centralPriority) {
+    throw new Error("Regular quiz result email could not produce a central priority")
   }
+
+  return buildPersonalPlanResultArtifactEmailPayload({
+    email: input.email,
+    leadId: input.leadId,
+    priorities,
+    publicOfferModel: {
+      modelVersion: "personal_plan_offer_v2",
+      profileLine: profileLine(input.quizAnswers),
+      diagnosticRows,
+      primaryMessage: derivePersonalPlanPrimaryMessage(centralPriority),
+      planFitStatement:
+        "Eine verlässliche Richtung für dein Haar: Dein Plan baut auf deiner Ausgangslage auf und macht die nächsten Pflegeschritte klar.",
+    },
+    siteUrl: input.siteUrl,
+  })
 }

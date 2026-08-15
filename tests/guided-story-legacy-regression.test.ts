@@ -674,7 +674,7 @@ test("legacy guided-story output locks retain all four representative profile co
   })
 })
 
-test("result email retains the legacy app-value-stack content and excludes free quiz text", () => {
+test("result email uses the compact personal-plan contract and excludes free quiz text", () => {
   const payload = buildQuizResultArtifactEmailPayload({
     leadId: "legacy-regression-lead",
     name: "Lea Legacy",
@@ -683,44 +683,22 @@ test("result email retains the legacy app-value-stack content and excludes free 
     siteUrl: "https://chaarlie.de",
   })
 
-  assert.deepEqual(payload.messageData.app_stories, [
-    {
-      label: "Deine Routine",
-      headline: "Deine Routine auf einen Blick.",
-      body: "Produkte, Reihenfolge und Anwendung – klar an einem Ort.",
-    },
-    {
-      label: "Dein Haar-Berater",
-      headline: "Frag Chaarlie zu deinem Haar.",
-      body: "Chaarlie kennt dein Haarprofil und hilft dir, wenn etwas unklar ist oder sich verändert.",
-    },
-    {
-      label: "Deine Empfehlungen",
-      headline: "Frag nach Produkten, die zu dir passen.",
-      body: "Du bekommst Preis, Anwendung und eine verständliche Begründung direkt dazu.",
-    },
-  ])
   assert.deepEqual(
     {
-      headline: payload.messageData.headline,
-      intro: payload.messageData.intro,
-      app_bridge_headline: payload.messageData.app_bridge_headline,
-      app_bridge_body: payload.messageData.app_bridge_body,
+      profile_line: payload.messageData.profile_line,
       cta_label: payload.messageData.cta_label,
       result_url: payload.messageData.result_url,
     },
     {
-      headline: "Lea, dein 4-Wochen-Weg zu mehr Geschmeidigkeit & Kontrolle.",
-      intro:
-        "Frizz ist dein wichtigster Pflegefokus. Deine Pflegebasis setzt deshalb auf Geschmeidigkeit und Schutz zwischen den Haarwäschen.",
-      app_bridge_headline: "Deine Routine ist erst der Anfang.",
-      app_bridge_body:
-        "Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.",
-      cta_label: "Mit Chaarlie starten",
+      profile_line: "Für welliges, mittelstarkes Haar",
+      cta_label: "Meinen Plan freischalten",
       result_url:
-        "https://chaarlie.de/result/legacy-regression-lead?focus=unlock-plan&entry=result_email",
+        "https://chaarlie.de/result/legacy-regression-lead?entry=result_email&focus=personal_plan_complete_plan#personal_plan_complete_plan",
     },
   )
+  assert.equal(Array.isArray(payload.messageData.diagnostic_rows), true)
+  assert.equal("foundation_products" in payload.messageData, false)
+  assert.equal("routine_levers" in payload.messageData, false)
   assert.equal("concerns_other_text" in payload.messageData, false)
   assert.doesNotMatch(JSON.stringify(payload.messageData), /do not send/)
 })
