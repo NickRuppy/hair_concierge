@@ -84,6 +84,30 @@ export type Stage1ProductExampleRolePreview =
 /** @deprecated Use `Stage1ProductExampleRolePreview`. Kept for callers that only render the recommendation case. */
 export type Stage1ProductExamplePreview = Stage1ProductExampleRecommendation
 
+/**
+ * The payload is per-role, but a Stage-1 card is per-category: it shows the
+ * entry of the category's primary (first-allowed) role, preferring a real
+ * recommendation over a fallback so a secondary-role product still leads the
+ * card. Every other entry of that category is therefore something the user
+ * never saw on a card — which the fork screen has to disclose before a direct
+ * acceptance buys it.
+ */
+export function stage1LeadRolePreviewByCategory(
+  previews: readonly Stage1ProductExampleRolePreview[],
+): Map<Stage1Category, Stage1ProductExampleRolePreview> {
+  const roleRank = (role: PlanProductRole, category: Stage1Category) =>
+    CATEGORY_ROLE_POLICIES[category].allowedRoles.indexOf(role as never)
+  const rank = (preview: Stage1ProductExampleRolePreview) =>
+    (preview.kind === "recommendation" ? 0 : 1_000) + roleRank(preview.role, preview.category)
+
+  const leads = new Map<Stage1Category, Stage1ProductExampleRolePreview>()
+  for (const preview of previews) {
+    const existing = leads.get(preview.category)
+    if (!existing || rank(preview) < rank(existing)) leads.set(preview.category, preview)
+  }
+  return leads
+}
+
 export type Stage1ProductExamplePreviewResponse = {
   schemaVersion: 2
   personalPlanId: string

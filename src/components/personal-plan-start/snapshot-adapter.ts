@@ -5,9 +5,9 @@ import type {
   PlanProductRole,
   Stage1Category,
 } from "@/lib/personal-plan/types"
-import type {
-  Stage1ProductExamplePreviewResponse,
-  Stage1ProductExampleRolePreview,
+import {
+  stage1LeadRolePreviewByCategory,
+  type Stage1ProductExamplePreviewResponse,
 } from "@/lib/personal-plan/product-preview-contract"
 import {
   CATEGORY_LABELS,
@@ -18,7 +18,7 @@ import {
   isStage1Category,
   presentationFor,
 } from "@/lib/personal-plan/decision-presentation"
-import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
+import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 
 import { NEED_CARD_FALLBACK_NOTE, type NeedCardViewModel } from "./need-card"
 import type { NeedPlanScreenViewModel } from "./need-plan-screen"
@@ -174,6 +174,11 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
   const hasOptionalPage = visibleOptionalCards.length > 0
   return {
     sourceInputHash: snapshot.inputHash,
+    // The fork screen has to name the Stage-2 defaults direct acceptance would
+    // apply before the user accepts, and it must not load Stage 2 to do it.
+    // This is the very context the persisted Stage-2 draft derives from the
+    // same initial snapshot, so both paths describe one truth.
+    stage2TriggerContext: deriveStage2TriggerContext(snapshot),
     basis: screenFor("basis", visibleBasisCards, hasOptionalPage),
     optional: hasOptionalPage ? screenFor("optional", visibleOptionalCards, hasOptionalPage) : null,
   }
@@ -191,18 +196,7 @@ export function applyStage1ProductExamplePreviews(
   ) {
     return plan
   }
-  // The payload is per-role, one category card. Pick the entry of the
-  // category's primary (first-allowed) role, preferring a real recommendation
-  // over a fallback so a secondary-role product still leads the card.
-  const previews = new Map<Stage1Category, Stage1ProductExampleRolePreview>()
-  const roleRank = (role: PlanProductRole, category: Stage1Category) =>
-    CATEGORY_ROLE_POLICIES[category].allowedRoles.indexOf(role as never)
-  const rank = (preview: Stage1ProductExampleRolePreview) =>
-    (preview.kind === "recommendation" ? 0 : 1_000) + roleRank(preview.role, preview.category)
-  for (const preview of response.previews) {
-    const existing = previews.get(preview.category)
-    if (!existing || rank(preview) < rank(existing)) previews.set(preview.category, preview)
-  }
+  const previews = stage1LeadRolePreviewByCategory(response.previews)
   const apply = (screen: NeedPlanScreenViewModel): NeedPlanScreenViewModel => ({
     ...screen,
     cards: screen.cards.map((card) => {
