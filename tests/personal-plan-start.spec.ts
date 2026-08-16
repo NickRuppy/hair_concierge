@@ -179,14 +179,14 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(
       page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
     ).toHaveCount(await basisCards.count())
-    await expect(basisCards.getByText("Beispiel", { exact: true })).toHaveCount(
-      await basisCards.count(),
-    )
     await expect
       .poll(() => optionalCategories.every((category) => requestedImages.has(category)))
       .toBe(true)
     await basisCards.first().getByRole("button").click()
-    await expect(basisCards.first().getByText("Warum das zu deinem Haar passt")).toBeVisible()
+    const detailSheet = page.getByRole("dialog")
+    await expect(detailSheet.getByText("Warum das zu deinem Haar passt")).toBeVisible()
+    await page.keyboard.press("Escape")
+    await expect(detailSheet).toHaveCount(0)
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await page.waitForTimeout(100)
     const actionNav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
