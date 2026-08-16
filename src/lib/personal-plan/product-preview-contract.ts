@@ -1,7 +1,11 @@
 import { CATEGORY_ROLE_POLICIES } from "./products/authorities"
 import type { PlanProductRole, Stage1Category } from "./types"
 
-export const STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL = "private, max-age=60, must-revalidate"
+/**
+ * The payload now carries per-product prices, so a cached response can show a
+ * stale price. `no-store` keeps every request source-fresh.
+ */
+export const STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL = "no-store"
 
 export function stage1ProductExamplePreviewRequestUrl(input: {
   personalPlanId: string
@@ -14,22 +18,78 @@ export function stage1ProductExamplePreviewRequestUrl(input: {
   return `/api/personal-plan/stage-1/previews?${query.toString()}`
 }
 
-export type Stage1ProductExamplePreview = {
+export type Stage1ProductExampleReasoning = {
+  /** "Worauf es beim Produkt ankommt" */
+  productCriteria: string
+  /** "Warum das zu deinem Haar passt" */
+  fit: string
+  /** "Empfohlener Rhythmus" */
+  frequency: string
+}
+
+export type Stage1ProductExampleCommerce = {
+  priceEur: number | null
+  purchaseLinkStatus: "available" | "unavailable" | null
+  netContentValue: number | null
+  netContentUnit: "ml" | "g" | null
+  priceLabel: string | null
+  netContentLabel: string | null
+  // Null when availability is simply unknown — the surface stays quiet instead
+  // of announcing an unconfirmed status (mirrors the Routine detail contract).
+  availabilityLabel: string | null
+  productUrl: string | null
+  affiliateDisclosure: string | null
+}
+
+/**
+ * One buyable recommendation for one Stage-3 role. `decisionKey`, `productId`
+ * and `factFingerprint` are exactly the three values the accept-ideal-plan
+ * request contract (`DirectAcceptanceSeenRole`) expects the client to echo
+ * back at accept time — see `src/lib/personal-plan/direct-acceptance/accept.ts`.
+ */
+export type Stage1ProductExampleRecommendation = {
+  kind: "recommendation"
   category: Stage1Category
   role: PlanProductRole
+  decisionKey: string
   productId: string
   productName: string
   imageUrl: string
   verdict: "ideal" | "supportive"
   authorityVersion: string
+  factFingerprint: string
+  commerce: Stage1ProductExampleCommerce
+  reasoning: Stage1ProductExampleReasoning
 }
 
+/**
+ * The engine has no unique buyable recommendation for this role right now
+ * (no candidate, no image, or a stale fingerprint). Task 3 renders this as an
+ * explicit "wird nach der Verfeinerung konkret" state rather than silently
+ * omitting the role or falling back to an illustration-only product.
+ */
+export type Stage1ProductExampleFallback = {
+  kind: "fallback"
+  category: Stage1Category
+  role: PlanProductRole
+  decisionKey: string
+  authorityVersion: string
+  fallback: "post_refinement"
+}
+
+export type Stage1ProductExampleRolePreview =
+  | Stage1ProductExampleRecommendation
+  | Stage1ProductExampleFallback
+
+/** @deprecated Use `Stage1ProductExampleRolePreview`. Kept for callers that only render the recommendation case. */
+export type Stage1ProductExamplePreview = Stage1ProductExampleRecommendation
+
 export type Stage1ProductExamplePreviewResponse = {
-  schemaVersion: 1
+  schemaVersion: 2
   personalPlanId: string
   sourceNeedVersionId: string
   sourceInputHash: string
-  previews: Stage1ProductExamplePreview[]
+  previews: Stage1ProductExampleRolePreview[]
 }
 
 export function isStage1ProductExamplePreviewResponse(
@@ -38,30 +98,44 @@ export function isStage1ProductExamplePreviewResponse(
   if (!value || typeof value !== "object") return false
   const response = value as Partial<Stage1ProductExamplePreviewResponse>
   return (
-    response.schemaVersion === 1 &&
+    response.schemaVersion === 2 &&
     typeof response.personalPlanId === "string" &&
     typeof response.sourceNeedVersionId === "string" &&
     typeof response.sourceInputHash === "string" &&
     Array.isArray(response.previews) &&
-    response.previews.every(isProductExamplePreview)
+    response.previews.every(isProductExampleRolePreview)
   )
 }
 
-function isProductExamplePreview(value: unknown): value is Stage1ProductExamplePreview {
-  if (!value || typeof value !== "object") return false
-  const preview = value as Partial<Stage1ProductExamplePreview>
+function isRoleForCategory(category: unknown, role: unknown): boolean {
   return (
-    typeof preview.category === "string" &&
-    preview.category in CATEGORY_ROLE_POLICIES &&
-    typeof preview.role === "string" &&
-    CATEGORY_ROLE_POLICIES[preview.category as Stage1Category].allowedRoles.includes(
-      preview.role as never,
-    ) &&
+    typeof category === "string" &&
+    category in CATEGORY_ROLE_POLICIES &&
+    typeof role === "string" &&
+    CATEGORY_ROLE_POLICIES[category as Stage1Category].allowedRoles.includes(role as never)
+  )
+}
+
+function isProductExampleRolePreview(value: unknown): value is Stage1ProductExampleRolePreview {
+  if (!value || typeof value !== "object") return false
+  const preview = value as Record<string, unknown>
+  if (
+    !isRoleForCategory(preview.category, preview.role) ||
+    typeof preview.decisionKey !== "string" ||
+    preview.authorityVersion !==
+      CATEGORY_ROLE_POLICIES[preview.category as Stage1Category].authorityVersion
+  ) {
+    return false
+  }
+  if (preview.kind === "fallback") return preview.fallback === "post_refinement"
+  return (
+    preview.kind === "recommendation" &&
     typeof preview.productId === "string" &&
     typeof preview.productName === "string" &&
     typeof preview.imageUrl === "string" &&
     (preview.verdict === "ideal" || preview.verdict === "supportive") &&
-    preview.authorityVersion ===
-      CATEGORY_ROLE_POLICIES[preview.category as Stage1Category].authorityVersion
+    typeof preview.factFingerprint === "string" &&
+    Boolean(preview.commerce) &&
+    Boolean(preview.reasoning)
   )
 }

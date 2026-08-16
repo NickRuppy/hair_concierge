@@ -1,3 +1,4 @@
+import { presentCatalogCommerce, type CatalogCommerceFacts } from "./commerce"
 import { loadPersonalPlanRoutineView } from "./load-view"
 import type { RoutinePayloadV1 } from "./contracts"
 import type { PersonalPlanRoutineReadClient } from "./repository"
@@ -44,16 +45,6 @@ export type RoutineProductDetail = {
 export type RoutineProductDetailResult =
   | { status: "found"; detail: RoutineProductDetail }
   | { status: "not_found" }
-
-function safeHttpUrl(value: unknown): string | null {
-  if (typeof value !== "string" || value.length === 0 || value.length > 2_048) return null
-  try {
-    const url = new URL(value)
-    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null
-  } catch {
-    return null
-  }
-}
 
 function exactCatalogProductId(item: RoutineItem): string | null {
   if (item.product.kind === "owned" && typeof item.product.productId === "string")
@@ -105,27 +96,14 @@ function fitLabels(
   }
 }
 
-function priceLabel(row: CommerceRow): string | null {
-  if (typeof row.price_eur !== "number" || !Number.isFinite(row.price_eur)) return null
-  const currency = row.currency === "EUR" ? "EUR" : row.currency?.trim()
-  if (!currency) return null
-  try {
-    return new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(row.price_eur)
-  } catch {
-    return null
+function toCommerceFacts(row: CommerceRow): CatalogCommerceFacts {
+  return {
+    priceEur: row.price_eur,
+    currency: row.currency,
+    affiliateLink: row.affiliate_link,
+    purchaseLinkStatus: row.purchase_link_status,
+    updatedAt: row.updated_at,
   }
-}
-
-function freshnessLabel(updatedAt: string | null) {
-  if (!updatedAt) return "Zeitpunkt der Produktdaten nicht verfügbar."
-  const date = new Date(updatedAt)
-  if (!Number.isFinite(date.getTime())) return "Zeitpunkt der Produktdaten nicht verfügbar."
-  return `Produktdaten zuletzt aktualisiert am ${new Intl.DateTimeFormat("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    timeZone: "Europe/Berlin",
-  }).format(date)}.`
 }
 
 function commerceFor(
@@ -142,34 +120,7 @@ function commerceFor(
       productUrl: null,
     }
   }
-  if (!product) {
-    return {
-      availabilityLabel: null,
-      freshnessLabel: "Zu diesem Produkt liegen derzeit keine aktuellen Shopdaten vor.",
-      affiliateDisclosure: null,
-      priceLabel: null,
-      productUrl: null,
-    }
-  }
-  const productUrl =
-    product.purchase_link_status === "available" ? safeHttpUrl(product.affiliate_link) : null
-  const availabilityLabel =
-    product.purchase_link_status === "unavailable"
-      ? "Derzeit nicht verfügbar"
-      : product.purchase_link_status === "available" && productUrl
-        ? "Aktuell verfügbar"
-        : product.purchase_link_status === "available"
-          ? "Derzeit kein verifizierter Produktlink"
-          : null
-  return {
-    availabilityLabel,
-    freshnessLabel: freshnessLabel(product.updated_at),
-    affiliateDisclosure: productUrl
-      ? "Affiliate-Hinweis: Bei einem Kauf über diesen Link erhalten wir möglicherweise eine Provision."
-      : null,
-    priceLabel: priceLabel(product),
-    productUrl,
-  }
+  return presentCatalogCommerce(product ? toCommerceFacts(product) : null)
 }
 
 async function loadActiveCatalogProduct(

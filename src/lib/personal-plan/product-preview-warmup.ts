@@ -60,9 +60,13 @@ export async function warmStage1ProductExampleImages(
       return unavailable()
     }
 
-    const imageUrls = [...new Set(body.previews.map((preview) => preview.imageUrl))].filter(
-      (imageUrl) => imageUrl.trim().length > 0,
-    )
+    const imageUrls = [
+      ...new Set(
+        body.previews
+          .filter((preview) => preview.kind === "recommendation")
+          .map((preview) => preview.imageUrl),
+      ),
+    ].filter((imageUrl) => imageUrl.trim().length > 0)
     const warmedImageUrls: string[] = []
     for (const imageUrl of imageUrls) {
       try {
