@@ -6011,3 +6011,57 @@ test("Back onto a committed group member never asks again for what it reports as
   assert.equal(reopened.props.scopeContextLine, undefined)
   assert.equal(reopened.props.primaryActionLabelOverride, undefined)
 })
+
+test("the grouped commit never plans a use case whose own screen refuses to decide", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  withUnbookableDryFinish(gateway, "targetless_evidence")
+  const entryContext = threeUseCaseOilEntryContext("oil-group-unassessable")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.deepEqual(
+    grouped.props.group.map((useCase) => useCase.role).toSorted(),
+    ["leave_on_fibre_conditioning", "pre_wash_fibre_treatment"],
+    "a use case the single screen cannot assess stays out of the grouped commit",
+  )
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) === null,
+    "the unassessable use case's own screen",
+  )
+
+  const remaining = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(remaining)
+  assert.match(remaining.props.comparison.subjectKey, /dry_finish/)
+  assert.deepEqual(intents, [], "the unassessable use case keeps the batch open")
+})
+
+test("every committed-group reset also forgets a stale all-deselected grouped screen", () => {
+  const source = readFileSync(
+    new URL("../src/components/personal-plan-products/stage3-products-flow.tsx", import.meta.url),
+    "utf8",
+  )
+  const lines = source.split("\n")
+  const resetLines = lines.flatMap((line, index) =>
+    line.includes("setCommittedOilGroupKeys(new Set())") ? [index] : [],
+  )
+
+  assert.ok(resetLines.length >= 6, "every local-review-choice reset clears the committed group")
+  for (const index of resetLines) {
+    assert.ok(
+      lines
+        .slice(index + 1, index + 3)
+        .some((line) => line.includes("setOilGroupSelection({ anchorKey: null, deselected: [] })")),
+      `line ${index + 1} resets the committed group but would restore a stale, action-less all-deselected screen`,
+    )
+  }
+})

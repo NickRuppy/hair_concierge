@@ -471,7 +471,11 @@ export function Stage3ProductsFlow({
     reviewBundles,
     selectedRecommendationProductId,
   ])
-  /** Pending subjects whose preselected choice actually plans a product. */
+  /**
+   * Pending subjects whose preselected choice actually plans a product — and that their own
+   * screen would really offer (`proposedReviewChoice` mirrors its refusal gates). Everything
+   * else keeps its own, properly gated screen instead of joining a grouped commit.
+   */
   const groupableReviewKeys = useMemo(
     () =>
       new Set(
@@ -1360,6 +1364,7 @@ export function Stage3ProductsFlow({
       setLocalReviewChoices({})
       setReviewHistory([])
       setCommittedOilGroupKeys(new Set())
+      setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setDraft(loadedDraft)
@@ -1414,6 +1419,7 @@ export function Stage3ProductsFlow({
       setLocalReviewChoices({})
       setReviewHistory([])
       setCommittedOilGroupKeys(new Set())
+      setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setPhase("capture")
@@ -2514,6 +2520,7 @@ export function Stage3ProductsFlow({
     setReviewHistory([])
     setLocalReviewChoices({})
     setCommittedOilGroupKeys(new Set())
+    setOilGroupSelection({ anchorKey: null, deselected: [] })
     clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     setCurrentReviewSubjectKey(null)
     setDisplayedAlternative({ subjectKey: null, index: 0 })
@@ -2782,6 +2789,7 @@ export function Stage3ProductsFlow({
     setLocalReviewChoices(restored.choices)
     setReviewHistory(restored.order)
     setCommittedOilGroupKeys(new Set())
+    setOilGroupSelection({ anchorKey: null, deselected: [] })
     setCurrentReviewSubjectKey(restored.invalidKeys[0] ?? null)
     if (restored.order.length === 0) {
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
@@ -2830,6 +2838,7 @@ export function Stage3ProductsFlow({
     setLocalReviewChoices(retainedChoices)
     setReviewHistory(retainedOrder)
     setCommittedOilGroupKeys(new Set())
+    setOilGroupSelection({ anchorKey: null, deselected: [] })
     if (retainedOrder.length > 0) {
       writeStage3ReviewDraft(pendingRecoveryStorage, recoveryScope, {
         expectedRevision: latestDraft.revision,
@@ -2960,6 +2969,7 @@ export function Stage3ProductsFlow({
       setLocalReviewChoices({})
       setReviewHistory([])
       setCommittedOilGroupKeys(new Set())
+      setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
       await completeFlow(canonicalDraft)
     } catch (error) {
@@ -3618,6 +3628,12 @@ function proposedReviewChoice(
 ): ProposedReviewChoice | null {
   if (!bundle) return null
   const comparison = bundle.fitComparison
+  // The two render gates that suppress every action on the single screen (see
+  // ProductFitComparison: `evaluation.status === "unsupported"` and `hasUnexpectedTargetlessEvidence`).
+  // A subject the product refuses to decide on its own screen must not be decided by the
+  // grouped commit either, so it never becomes groupable.
+  if (bundle.authorityEvaluation.status === "unsupported") return null
+  if ((comparison.evidenceRows ?? []).some((row) => row.target === null)) return null
   const selectedAlternative = selectedComparisonCandidate(comparison, focus ?? {})
   const primaryAction = primaryActionFor({
     evaluation: bundle.authorityEvaluation,
