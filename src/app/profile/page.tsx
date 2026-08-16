@@ -53,6 +53,7 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
+import type { PersonalPlanRefinementAnswersV1 } from "@/lib/personal-plan/refinement/types"
 
 type MemoryApiResponse = {
   settings: { memory_enabled: boolean }
@@ -60,6 +61,20 @@ type MemoryApiResponse = {
 }
 
 type PortfolioPresentationApiResponse = { presentation: PortfolioPresentation | null }
+
+type RoutineProductFromPlan = {
+  categoryLabel: string
+  name: string
+  purposeLabel: string
+  state: "owned" | "planned"
+  cadenceLabel: string | null
+}
+
+type RefinementPresentationApiResponse = {
+  answers: PersonalPlanRefinementAnswersV1 | null
+  completedQuestionIds: string[]
+  routineProducts: RoutineProductFromPlan[] | null
+}
 
 function membershipStatusLabel(state: MembershipManagementState) {
   if (state.kind === "payment_problem") return "Zahlung ausstehend"
@@ -298,6 +313,22 @@ function ProductReviewStatusBadge({ label }: { label: string }) {
   )
 }
 
+function PlanProductStateBadge({ state }: { state: "owned" | "planned" }) {
+  const isOwned = state === "owned"
+  return (
+    <span
+      className={cn(
+        "w-fit rounded-full px-2.5 py-1 text-xs font-semibold",
+        isOwned
+          ? "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]"
+          : "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
+      )}
+    >
+      {isOwned ? "Vorhanden" : "Noch kaufen"}
+    </span>
+  )
+}
+
 function SectionHeader({
   title,
   description,
@@ -493,6 +524,9 @@ export default function ProfilePage() {
   const [portfolioPresentation, setPortfolioPresentation] = useState<PortfolioPresentation | null>(
     null,
   )
+  const [refinementAnswers, setRefinementAnswers] =
+    useState<PersonalPlanRefinementAnswersV1 | null>(null)
+  const [routineProducts, setRoutineProducts] = useState<RoutineProductFromPlan[] | null>(null)
   const [quizEditing, setQuizEditing] = useState(false)
   const [quizSaving, setQuizSaving] = useState(false)
   const [quizDraft, setQuizDraft] = useState<QuizDraft>(() => createQuizDraft(null))
@@ -578,6 +612,41 @@ export default function ProfilePage() {
     }
 
     loadPortfolioPresentation()
+    return () => {
+      active = false
+    }
+  }, [userId])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadRefinementPresentation() {
+      if (!userId) {
+        if (active) {
+          setRefinementAnswers(null)
+          setRoutineProducts(null)
+        }
+        return
+      }
+      try {
+        const response = await fetch("/api/personal-plan/refinement-presentation", {
+          cache: "no-store",
+        })
+        if (!response.ok) throw new Error("refinement presentation request failed")
+        const body = (await response.json()) as RefinementPresentationApiResponse
+        if (active) {
+          setRefinementAnswers(body.answers ?? null)
+          setRoutineProducts(body.routineProducts ?? null)
+        }
+      } catch {
+        if (active) {
+          setRefinementAnswers(null)
+          setRoutineProducts(null)
+        }
+      }
+    }
+
+    loadRefinementPresentation()
     return () => {
       active = false
     }
@@ -761,9 +830,9 @@ export default function ProfilePage() {
     () =>
       PROFILE_FIELD_CONFIG.map((field) => ({
         ...field,
-        value: field.getValue(hairProfile),
+        value: field.getValue(hairProfile, refinementAnswers),
       })),
-    [hairProfile],
+    [hairProfile, refinementAnswers],
   )
 
   const quizFields = structuredFields.filter((field) => field.sectionKey === "quiz")
@@ -791,13 +860,19 @@ export default function ProfilePage() {
   const goalsFilled = goalsFields.filter((field) => hasProfileFieldValue(field.value))
   const selectedProductCategories = productRows.map((row) => row.categoryLabel)
   const incompleteProductRows = productRows.filter((row) => row.needsUserDetails)
+  // When there are no logged user_product_usage rows, fall back to the active Personal Plan
+  // routine's products instead of claiming "keine Angaben". Null when there is no active routine
+  // (or it's mid authority-repair), matching /routine's own fallback behavior.
+  const planProductRows = productRows.length === 0 ? routineProducts : null
 
   const quizStatus = profileLoading
     ? "Wird geladen"
     : getCompletionLabel(quizFilled.length, quizFields.length)
   const productsStatus = productsLoading
     ? "Wird geladen"
-    : getProductCompletionLabel(productRows, Boolean(profile?.onboarding_completed))
+    : planProductRows !== null
+      ? "Aus deinem Personal Plan"
+      : getProductCompletionLabel(productRows, Boolean(profile?.onboarding_completed))
   const stylingStatus = profileLoading
     ? "Wird geladen"
     : getCompletionLabel(stylingFilled.length, stylingFields.length)
@@ -1656,6 +1731,25 @@ export default function ProfilePage() {
                       </button>
                     ))}
                   </div>
+                </div>
+              ) : planProductRows !== null ? (
+                <div className="space-y-2">
+                  {planProductRows.map((product, index) => (
+                    <div
+                      key={`${product.categoryLabel}-${product.name}-${index}`}
+                      className="rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <p className="text-sm font-semibold text-[var(--text-heading)]">
+                          {product.categoryLabel} · {product.name} · {product.purposeLabel}
+                        </p>
+                        <PlanProductStateBadge state={product.state} />
+                      </div>
+                      {product.cadenceLabel ? (
+                        <p className="mt-2 text-xs text-muted-foreground">{product.cadenceLabel}</p>
+                      ) : null}
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <InlinePromptCard
