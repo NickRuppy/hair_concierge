@@ -10,7 +10,7 @@ import { routineCategoryLabel, routinePurposeLabel } from "./routine-item-card"
 type RoutineItem = RoutinePayloadV1["items"][number]
 
 export type RoutineCommerceSnapshot = {
-  availabilityLabel: string
+  availabilityLabel: string | null
   freshnessLabel: string
   affiliateDisclosure?: string | null
   priceLabel?: string | null
@@ -24,7 +24,6 @@ export type RoutineProductDetailProps = {
   frozenFitSummary: string
   limitationLabel?: string | null
   onOpenProduct?: (item: RoutineItem) => void
-  onMarkPurchased?: (item: RoutineItem) => void
 }
 
 function productName(item: RoutineItem) {
@@ -39,10 +38,7 @@ export function RoutineProductDetail({
   frozenFitSummary,
   limitationLabel,
   onOpenProduct,
-  onMarkPurchased,
 }: RoutineProductDetailProps) {
-  const plannedExactProduct =
-    item.product.kind === "planned" && typeof item.product.productId === "string"
   const canOpenProduct = Boolean(onOpenProduct && commerce.productUrl)
 
   return (
@@ -70,7 +66,9 @@ export function RoutineProductDetail({
         {commerce.priceLabel ? (
           <p className="text-sm font-semibold">{commerce.priceLabel}</p>
         ) : null}
-        <p className="text-sm">{commerce.availabilityLabel}</p>
+        {commerce.availabilityLabel ? (
+          <p className="text-sm">{commerce.availabilityLabel}</p>
+        ) : null}
         <p className="text-sm text-muted-foreground">{commerce.freshnessLabel}</p>
         {commerce.affiliateDisclosure ? (
           <p className="text-xs text-muted-foreground">{commerce.affiliateDisclosure}</p>
@@ -86,11 +84,6 @@ export function RoutineProductDetail({
             onClick={() => onOpenProduct?.(item)}
           >
             Zum Produkt
-          </Button>
-        ) : null}
-        {plannedExactProduct && onMarkPurchased ? (
-          <Button type="button" variant="outline" onClick={() => onMarkPurchased(item)}>
-            Ich habe es schon gekauft
           </Button>
         ) : null}
       </div>

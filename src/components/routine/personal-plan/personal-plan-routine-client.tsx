@@ -478,38 +478,6 @@ export function PersonalPlanRoutineClient({
     }
   }, [])
 
-  const markPurchased = React.useCallback(
-    async (item: RoutinePayloadV1["items"][number]) => {
-      setBusy(true)
-      setError(null)
-      try {
-        const response = await fetch(
-          `/api/personal-plan/routine/planned-items/${encodeURIComponent(item.itemKey)}/acquire`,
-          { method: "POST" },
-        )
-        if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
-        const result = (await response.json()) as { proposalStaged?: unknown; needsRetry?: unknown }
-        routineAnalytics.track("personal_plan_stage4_item_interacted", {
-          interaction: "acquisition_declared",
-          surface: "routine_detail",
-        })
-        await reload()
-        setDetailOpen(false)
-        setProposalOpen(false)
-        if (result.needsRetry === true) {
-          setError(
-            "Der Kauf ist gespeichert. Der neue Routine-Vorschlag wird noch einmal vorbereitet.",
-          )
-        }
-      } catch {
-        setError("Der Kaufstatus konnte gerade nicht gespeichert werden.")
-      } finally {
-        setBusy(false)
-      }
-    },
-    [reload],
-  )
-
   if (mode === "application_transition") {
     return (
       <PersonalPlanChapterTransition
@@ -650,7 +618,6 @@ export function PersonalPlanRoutineClient({
                     }
                   : undefined
               }
-              onMarkPurchased={enabled && !busy ? (item) => void markPurchased(item) : undefined}
             />
           ) : null}
         </BottomSheetContent>

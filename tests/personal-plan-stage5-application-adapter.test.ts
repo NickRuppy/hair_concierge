@@ -903,3 +903,75 @@ test("immutable refined profile fails closed on missing row or database error", 
       error instanceof CatalogDatabaseReadError && error.message === "catalog_database_read_failed",
   )
 })
+
+function ownedAndPlannedPayload(): RoutinePayloadV1 {
+  return {
+    planId,
+    items: [
+      activePayload().items[0]!,
+      {
+        itemKey: "item:planned-conditioner",
+        assignmentKey: "assignment:planned-conditioner",
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        state: { inclusion: "included", availability: "planned" },
+        executable: false,
+        product: {
+          kind: "planned",
+          plannedPurchaseId: "purchase:conditioner",
+          productId: productBId,
+          displayName: "Vorgemerkter Conditioner",
+        },
+      },
+    ],
+  } as unknown as RoutinePayloadV1
+}
+
+test("a planned product that lost the Chaarlie recommendation demotes its step", async () => {
+  const { client, calls } = productClient([
+    {
+      id: productId,
+      category: "shampoo",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "active",
+      is_chaarlie_recommended: true,
+    },
+    { ...activeProductB, is_chaarlie_recommended: false },
+  ])
+  const result = await adaptAcceptedActiveRoutineForApplication({
+    client,
+    activeVersion: { id: "routine-v1", payload: ownedAndPlannedPayload() },
+  })
+
+  assert.match(calls[0]!.select ?? "", /is_chaarlie_recommended/)
+  assert.equal(result.routineItems.length, 1)
+  assert.equal(result.routineItems[0]?.productId, productId)
+  assert.deepEqual(result.degradedItems, [
+    { productId: productBId, category: "conditioner", issue: "catalog_identity_mismatch" },
+  ])
+  assert.equal(result.unresolvedRoutineItems.length, 1)
+  assert.equal(result.unresolvedRoutineItems[0]?.itemId, "item:planned-conditioner")
+})
+
+test("an owned product keeps its step even without the Chaarlie recommendation", async () => {
+  // Ownership is the user's fact; catalog curation must not hide products they
+  // already have in hand.
+  const { client } = productClient([
+    {
+      id: productId,
+      category: "shampoo",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "active",
+      is_chaarlie_recommended: false,
+    },
+  ])
+  const result = await adaptAcceptedActiveRoutineForApplication({
+    client,
+    activeVersion: { id: "routine-v1", payload: activePayload() },
+  })
+
+  assert.equal(result.routineItems.length, 1)
+  assert.deepEqual(result.degradedItems, [])
+})

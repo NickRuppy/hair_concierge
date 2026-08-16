@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Selected is Ready</title>
+<style>
+  :root {
+    --plum: #4b3672;
+    --plum-mid: #6b50a0;
+    --plum-light: #d9cdeb;
+    --plum-ice: #f2edf8;
+    --text: #2c1748;
+    --sub: #6b6472;
+    --caption: #8a8391;
+    --card-border: #e6e1ea;
+    --amber-bg: #fffbeb;
+    --amber-border: #fcd34d;
+    --amber-text: #78350f;
+    --danger: #a4404a;
+    --ok-text: #2e6b46;
+    --pending-bg: #fdf3e2;
+    --pending-text: #9b642c;
+    --shelf-bg: #e9e3ed;
+    --rail: #d9b99c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: #faf9fb; color: var(--text); padding: 32px 20px 80px; }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+  h1 { font-family: Georgia, serif; font-size: 30px; margin-bottom: 6px; }
+  .lede { color: var(--sub); margin-bottom: 36px; max-width: 720px; line-height: 1.5; }
+  h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--plum-mid); margin: 44px 0 6px; }
+  .section-note { color: var(--sub); font-size: 14px; line-height: 1.5; margin-bottom: 16px; max-width: 760px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 800px) { .pair { grid-template-columns: 1fr; } }
+  .pane { border-radius: 16px; border: 1px solid var(--card-border); background: #fff; padding: 16px; }
+  .pane-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; margin-bottom: 12px; }
+  .pane-label.before { background: #f6e8e9; color: var(--danger); }
+  .pane-label.after { background: #e6f2ea; color: var(--ok-text); }
+
+  /* status banner */
+  .status-banner { border-left: 2px solid var(--plum-mid); padding-left: 10px; font-size: 13px; color: var(--sub); margin-bottom: 14px; }
+  .status-banner.gone { border-left: 2px dashed #cfc8d6; color: #b6afbe; text-decoration: line-through; }
+  .banner-hint { font-size: 12px; color: var(--ok-text); margin-bottom: 14px; }
+
+  /* day card */
+  .day-card { border: 1px solid var(--card-border); border-radius: 18px; background: #fff; padding: 12px; box-shadow: 0 12px 34px -30px rgba(75,54,114,0.7); }
+  .shelf { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 10px; height: 128px; border-radius: 14px; background: var(--shelf-bg); padding: 12px 10px 22px; overflow: hidden; }
+  .rail { position: absolute; left: 14px; right: 14px; bottom: 12px; height: 7px; border-radius: 999px; background: var(--rail); }
+  .bottle { position: relative; z-index: 1; width: 52px; height: 84px; border-radius: 12px; background: #f3f0e8; display: grid; place-items: center; font-size: 22px; }
+  .bottle.prov { border: 2px dashed #c58b50; }
+  .clock { position: absolute; top: -8px; right: -6px; width: 20px; height: 20px; border-radius: 999px; background: #fff6e9; color: #9b642c; display: grid; place-items: center; font-size: 11px; }
+  .day-meta { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; }
+  .day-title { font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: var(--plum); }
+  .day-status { font-size: 11px; font-weight: 700; color: var(--danger); }
+  .day-fact { font-size: 12px; color: var(--caption); margin-top: 3px; }
+
+  /* product block */
+  .pblock { border-radius: 10px; padding: 14px; border: 1px solid; }
+  .pblock.prov { border-color: var(--amber-border); background: var(--amber-bg); }
+  .pblock.ok { border-color: var(--plum-light); background: var(--plum-ice); }
+  .pcat { font-size: 11px; color: var(--caption); display: flex; gap: 8px; align-items: center; }
+  .badge-prov { background: #fde68a; color: var(--amber-text); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 999px; }
+  .pname { font-size: 17px; font-weight: 700; margin-top: 2px; }
+  .ppurpose { font-size: 13px; color: var(--sub); margin-top: 2px; }
+  .pnote { font-size: 13px; color: var(--amber-text); margin-top: 8px; }
+  .steps { margin-top: 12px; display: grid; gap: 8px; }
+  .step { display: grid; grid-template-columns: 22px 1fr; gap: 8px; font-size: 13px; align-items: start; }
+  .stepnum { width: 20px; height: 20px; border-radius: 999px; background: #fff; color: var(--plum-mid); font-size: 11px; font-weight: 700; display: grid; place-items: center; border: 1px solid var(--card-border); }
+
+  /* routine row */
+  .r-row { display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; border: 1px solid var(--card-border); border-radius: 14px; padding: 10px 12px; background: #fff; }
+  .r-img { width: 46px; height: 60px; border-radius: 11px; background: #f3efe8; display: grid; place-items: center; font-size: 20px; }
+  .r-name { font-size: 14px; font-weight: 700; }
+  .r-sub { font-size: 12px; color: var(--caption); margin-top: 2px; }
+  .chip { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .chip.planned { background: var(--pending-bg); color: var(--pending-text); }
+  .chip.active { background: #e6f2ea; color: var(--ok-text); }
+  .chip.review { background: #eceef1; color: #56616e; }
+  .btnrow { display: flex; gap: 8px; margin-top: 12px; }
+  .btn { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 10px; border: 1px solid transparent; }
+  .btn.cta { background: var(--plum-mid); color: #fff; }
+  .btn.outline { background: #fff; color: var(--text); border-color: var(--card-border); }
+  .btn.removed { text-decoration: line-through; opacity: 0.45; }
+  .keep { margin-top: 40px; border: 1px solid var(--card-border); border-radius: 14px; background: #fff; padding: 16px 18px; }
+  .keep h3 { font-size: 14px; margin-bottom: 8px; }
+  .keep ul { padding-left: 18px; color: var(--sub); font-size: 13px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>„Gewählt = drin“ — Vorläufig-Status entfernen</h1>
+  <p class="lede">Option C: Jedes gewählte Katalogprodukt zählt sofort als vollwertiger Teil der Routine. Kein „vorläufig“, kein „Teilweise bereit“, kein Kauf-Bestätigen. Alles rechts („Nachher“) nutzt ausschließlich bereits existierende bestätigte Styles — es entsteht kein neues Design.</p>
+
+  <h2>1 · Anwendung — Übersicht</h2>
+  <p class="section-note">Statusbanner und roter Status entfallen. Die Faktenzeile unter dem Tagestitel zeigt automatisch den bestehenden Rhythmus- bzw. Schritt-Text (bereits vorhandene Logik für vollständige Tage).</p>
+  <div class="pair">
+    <div class="pane">
+      <span class="pane-label before">Vorher</span>
+      <div class="status-banner">Der Plan ist teilweise bereit. 12 Produkte sind vorläufig.</div>
+      <div class="day-card">
+        <div class="shelf">
+          <span class="rail"></span>
+          <span class="bottle prov">🧴<span class="clock">🕐</span></span>
+          <span class="bottle">🧴</span>
+          <span class="bottle prov">🫙<span class="clock">🕐</span></span>
+          <span class="bottle prov">💧<span class="clock">🕐</span></span>
+        </div>
+        <div class="day-meta">
+          <span class="day-title">Waschtag</span>
+          <span class="day-status">Teilweise bereit</span>
+        </div>
+        <div class="day-fact">4 Produkte vorläufig</div>
+      </div>
+    </div>
+    <div class="pane">
+      <span class="pane-label after">Nachher</span>
+      <div class="banner-hint">Banner entfällt komplett (erscheint nur noch bei offenen Details / Prüfung).</div>
+      <div class="day-card">
+        <div class="shelf">
+          <span class="rail"></span>
+          <span class="bottle">🧴</span>
+          <span class="bottle">🧴</span>
+          <span class="bottle">🫙</span>
+          <span class="bottle">💧</span>
+        </div>
+        <div class="day-meta">
+          <span class="day-title">Waschtag</span>
+        </div>
+        <div class="day-fact">1–2× pro Woche</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>2 · Anwendung — Tag-Detail</h2>
+  <p class="section-note">Gelbe Vorläufig-Karten werden zu normalen Produktkarten. Badge und Hinweiszeile entfallen; die Anleitungsschritte bleiben identisch.</p>
+  <div class="pair">
+    <div class="pane">
+      <span class="pane-label before">Vorher</span>
+      <div class="pblock prov">
+        <div class="pcat">Shampoo <span class="badge-prov">Vorläufig</span></div>
+        <div class="pname">Monday Haircare Volume Kraft &amp; Fülle Shampoo</div>
+        <div class="ppurpose">Reinigt Kopfhaut und Ansatz.</div>
+        <div class="pnote">Das Produkt ist noch nicht bestätigt; seine Anwendung ist bereits bekannt.</div>
+        <div class="steps">
+          <div class="step"><span class="stepnum">1</span> Haare und Kopfhaut vollständig anfeuchten.</div>
+          <div class="step"><span class="stepnum">2</span> Eine kleine Menge auf die Kopfhaut geben und sanft einmassieren.</div>
+          <div class="step"><span class="stepnum">3</span> Gründlich ausspülen.</div>
+        </div>
+      </div>
+    </div>
+    <div class="pane">
+      <span class="pane-label after">Nachher</span>
+      <div class="pblock ok">
+        <div class="pcat">Shampoo</div>
+        <div class="pname">Monday Haircare Volume Kraft &amp; Fülle Shampoo</div>
+        <div class="ppurpose">Reinigt Kopfhaut und Ansatz.</div>
+        <div class="steps">
+          <div class="step"><span class="stepnum">1</span> Haare und Kopfhaut vollständig anfeuchten.</div>
+          <div class="step"><span class="stepnum">2</span> Eine kleine Menge auf die Kopfhaut geben und sanft einmassieren.</div>
+          <div class="step"><span class="stepnum">3</span> Gründlich ausspülen.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>3 · Routine-Tab — Produktstatus &amp; Detail</h2>
+  <p class="section-note">„Geplant“-Badge wird zu „Aktiv“ (bestehender grüner Stil). Im Produktdetail entfällt der Button „Ich habe es schon gekauft“; „Zum Produkt“ bleibt.</p>
+  <div class="pair">
+    <div class="pane">
+      <span class="pane-label before">Vorher</span>
+      <div class="r-row">
+        <span class="r-img">🧴</span>
+        <span><span class="r-name">Monday Haircare Volume Shampoo</span><br /><span class="r-sub">Shampoo · 1–2× pro Woche</span></span>
+        <span class="chip planned">Geplant</span>
+      </div>
+      <div class="btnrow">
+        <span class="btn cta">Zum Produkt</span>
+        <span class="btn outline removed">Ich habe es schon gekauft</span>
+      </div>
+    </div>
+    <div class="pane">
+      <span class="pane-label after">Nachher</span>
+      <div class="r-row">
+        <span class="r-img">🧴</span>
+        <span><span class="r-name">Monday Haircare Volume Shampoo</span><br /><span class="r-sub">Shampoo · 1–2× pro Woche</span></span>
+        <span class="chip active">Aktiv</span>
+      </div>
+      <div class="btnrow">
+        <span class="btn cta">Zum Produkt</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="keep">
+    <h3>Bleibt unverändert (bewusst)</h3>
+    <ul>
+      <li><strong>„Noch in Prüfung“</strong> für selbst eingereichte Produkte ohne Katalog-Review — inkl. Kategorie-Anleitung als Fallback im Tag-Detail (<span class="chip review">Noch in Prüfung</span>).</li>
+      <li><strong>„Offen“ / „Details offen“</strong> für Slots ohne Produkt bleibt — dort fehlt wirklich etwas.</li>
+      <li><strong>„Nicht verfügbar“</strong> wenn ein Katalogprodukt deaktiviert wurde.</li>
+      <li>Datenmodell, Acquire-API und Kauf-Wissen bleiben intakt aber unsichtbar — späterer Ausbau („richtig, mit eigenem Status“) jederzeit möglich.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

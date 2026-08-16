@@ -24,6 +24,7 @@ export const PRODUCT_APPLICATION_FACTS_SELECT = [
   "category_key",
   "is_active",
   "lifecycle_status",
+  "is_chaarlie_recommended",
   embedProductSpec(
     "product_leave_in_specs",
     "format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage",

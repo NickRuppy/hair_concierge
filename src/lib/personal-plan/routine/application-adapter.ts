@@ -49,6 +49,7 @@ type ProductRow = {
   category_key: string | null
   is_active: boolean
   lifecycle_status: string
+  is_chaarlie_recommended?: boolean
   product_leave_in_specs?: unknown[] | object
   product_bondbuilder_specs?: unknown[] | object
   product_mask_specs?: unknown[] | object
@@ -242,11 +243,16 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
     if (!productId) throw new Error("accepted_routine_product_identity_unavailable")
     const product = products.get(productId)
     const category = product?.category_key ?? product?.category
+    // A planned product the catalog no longer recommends must not be presented
+    // as a confirmed step; owned products stay usable regardless of curation.
+    const demotedRecommendation =
+      item.product.kind === "planned" && product?.is_chaarlie_recommended === false
     if (
       !product ||
       !product.is_active ||
       product.lifecycle_status !== "active" ||
-      category !== item.category
+      category !== item.category ||
+      demotedRecommendation
     ) {
       // One unavailable catalog identity must degrade its own step only; the
       // rest of the accepted Routine stays readable.

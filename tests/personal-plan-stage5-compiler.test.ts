@@ -639,8 +639,8 @@ test("missing Dry Shampoo guidance creates only a partial refresh day and keeps 
   assert.equal(result.days.find((day) => day.key === "refresh_day")?.isPartial, true)
 })
 
-test("compiler keeps reviewed guidance for a provisional product inside the day sequence", () => {
-  const provisionalConditioner = {
+test("compiler treats a planned, non-executable product as a fully confirmed step (selected is ready)", () => {
+  const plannedConditioner = {
     ...conditioner,
     availability: "planned" as const,
     executable: false as const,
@@ -649,7 +649,7 @@ test("compiler keeps reviewed guidance for a provisional product inside the day 
   const result = compileApplicationView({
     input: input([
       { ...shampoo, routineOrder: 10 },
-      provisionalConditioner,
+      plannedConditioner,
       { ...leaveInAndHeat, routineOrder: 30 },
     ] as never),
     protocols: [
@@ -671,10 +671,14 @@ test("compiler keeps reviewed guidance for a provisional product inside the day 
     washDay.productBlocks.map((block) => [block.productName, block.status]),
     [
       ["Shampoo", "confirmed"],
-      ["Conditioner", "provisional"],
+      ["Conditioner", "confirmed"],
       ["Schutzspray", "confirmed"],
     ],
   )
+  assert.ok(washDay.productBlocks.every((block) => block.provisionalReason === null))
+  // A day made up entirely of planned/non-executable products is not partial:
+  // a selected catalog product is instantly a full routine member.
+  assert.equal(washDay.isPartial, false)
 })
 
 test("compiler retains a local unresolved product gap without hiding independent reviewed steps", () => {
@@ -708,6 +712,9 @@ test("compiler retains a local unresolved product gap without hiding independent
       ["wet_cleanse", "damp_leave_on", "Im handtuchtrockenen Haar weitermachen."],
     ],
   )
+  // The unresolved conditioner slot (no matching guidance protocol) still makes
+  // this day partial, independent of the confirmed product blocks around it.
+  assert.equal(washDay.isPartial, true)
   assert.equal(
     result.failures.some((failure) => failure.dayType === "wash_day"),
     false,

@@ -1,9 +1,8 @@
 import type { MouseEvent } from "react"
 import Link from "next/link"
-import { Clock3, ImageIcon, Moon, PackageOpen } from "lucide-react"
+import { ImageIcon, Moon, PackageOpen } from "lucide-react"
 
 import type { PersonalPlanCategory } from "@/lib/routines/personal-plan/application/contracts"
-import { cn } from "@/lib/utils"
 
 import type { ApplicationDayView, ApplicationShelfSlotView } from "./application-types"
 
@@ -87,16 +86,9 @@ const CATEGORY_LABELS_DE: Partial<Record<PersonalPlanCategory, string>> = {
 }
 
 function formatPartialFact(day: ApplicationDayView) {
-  return [
-    day.provisionalProductCount > 0
-      ? `${day.provisionalProductCount} ${day.provisionalProductCount === 1 ? "Produkt" : "Produkte"} vorläufig`
-      : null,
-    day.unresolvedProductCount > 0
-      ? `${day.unresolvedProductCount} ${day.unresolvedProductCount === 1 ? "Detail" : "Details"} offen`
-      : null,
-  ]
-    .filter(Boolean)
-    .join(" · ")
+  return day.unresolvedProductCount > 0
+    ? `${day.unresolvedProductCount} ${day.unresolvedProductCount === 1 ? "Detail" : "Details"} offen`
+    : ""
 }
 
 function formatDayFact(day: ApplicationDayView) {
@@ -116,8 +108,7 @@ function shelfStatusSummary(day: ApplicationDayView) {
         return slot.reason === "catalog_unavailable"
           ? `${slot.categoryLabelDe}: Produkt gerade nicht verfügbar`
           : `${slot.categoryLabelDe}: Produkt noch offen`
-      const status = slot.status === "provisional" ? "vorläufig" : "bestätigt"
-      return `${CATEGORY_LABELS_DE[slot.category] ?? slot.category}: ${slot.productName} (${status})`
+      return `${CATEGORY_LABELS_DE[slot.category] ?? slot.category}: ${slot.productName}`
     })
     .join("; ")
 }
@@ -149,10 +140,7 @@ function ProductSilhouette({
       <span
         data-application-shelf-slot={slot.status}
         data-application-image-treatment="fallback"
-        className={cn(
-          "relative z-10 grid h-32 min-w-0 flex-1 max-w-24 place-items-center overflow-hidden rounded-[18px] bg-[#f3f0e8] text-[var(--text-caption)] shadow-[0_14px_26px_-24px_rgba(44,23,72,0.9)]",
-          slot.status === "provisional" && "border-2 border-dashed border-[#c58b50]",
-        )}
+        className="relative z-10 grid h-32 min-w-0 flex-1 max-w-24 place-items-center overflow-hidden rounded-[18px] bg-[#f3f0e8] text-[var(--text-caption)] shadow-[0_14px_26px_-24px_rgba(44,23,72,0.9)]"
       >
         {slot.imageUrl ? (
           // Owner imagery stays uncropped because its canvas and safe area are unknown.
@@ -161,7 +149,6 @@ function ProductSilhouette({
         ) : (
           <ImageIcon className="h-6 w-6" aria-hidden="true" />
         )}
-        {slot.status === "provisional" ? <ProvisionalMark /> : null}
       </span>
     )
   }
@@ -172,10 +159,7 @@ function ProductSilhouette({
       data-application-shelf-slot={slot.status}
       data-application-silhouette={slot.category}
       data-application-image-treatment="standardized"
-      className={cn(
-        "relative z-10 h-32 min-w-0 flex-1 max-w-24",
-        slot.status === "provisional" && "rounded-xl border-2 border-dashed border-[#c58b50]",
-      )}
+      className="relative z-10 h-32 min-w-0 flex-1 max-w-24"
     >
       <svg viewBox="0 0 120 180" className="h-full w-full overflow-visible" aria-hidden="true">
         <defs>
@@ -196,15 +180,6 @@ function ProductSilhouette({
         />
         <path d={silhouette.path} fill="none" stroke={silhouette.color} strokeWidth="2.5" />
       </svg>
-      {slot.status === "provisional" ? <ProvisionalMark /> : null}
-    </span>
-  )
-}
-
-function ProvisionalMark() {
-  return (
-    <span className="absolute -right-0.5 -top-2 grid h-6 w-6 place-items-center rounded-full bg-[#fff6e9] text-[#9b642c]">
-      <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
     </span>
   )
 }

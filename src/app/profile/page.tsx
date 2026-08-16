@@ -327,22 +327,6 @@ function ProductReviewStatusBadge({ label }: { label: string }) {
   )
 }
 
-function PlanProductStateBadge({ state }: { state: "owned" | "planned" }) {
-  const isOwned = state === "owned"
-  return (
-    <span
-      className={cn(
-        "w-fit rounded-full px-2.5 py-1 text-xs font-semibold",
-        isOwned
-          ? "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]"
-          : "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
-      )}
-    >
-      {isOwned ? "Vorhanden" : "Noch kaufen"}
-    </span>
-  )
-}
-
 function SectionHeader({
   title,
   description,
@@ -1768,12 +1752,9 @@ export default function ProfilePage() {
                       key={`${product.categoryLabel}-${product.name}-${index}`}
                       className="rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm"
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <p className="text-sm font-semibold text-[var(--text-heading)]">
-                          {product.categoryLabel} · {product.name} · {product.purposeLabel}
-                        </p>
-                        <PlanProductStateBadge state={product.state} />
-                      </div>
+                      <p className="text-sm font-semibold text-[var(--text-heading)]">
+                        {product.categoryLabel} · {product.name} · {product.purposeLabel}
+                      </p>
                       {product.cadenceLabel ? (
                         <p className="mt-2 text-xs text-muted-foreground">{product.cadenceLabel}</p>
                       ) : null}
