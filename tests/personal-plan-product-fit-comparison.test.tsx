@@ -226,7 +226,7 @@ test("renders one focused server alternative and persists only an explicit exact
   ])
 })
 
-test("shows the truthful zero-action fallback with exactly one enabled primary action", () => {
+test("shows the truthful zero-action fallback without duplicating journey Back", () => {
   const calls: ProductFitComparisonAction[] = []
   const noActionComparison: Stage3FitComparison = {
     ...comparison,
@@ -255,7 +255,8 @@ test("shows the truthful zero-action fallback with exactly one enabled primary a
   )
 
   assert.match(html, /Keine passende Alternative verfügbar\./)
-  assert.match(html, /Zurück zu meinen Produkten/)
+  assert.doesNotMatch(html, /Zurück zu meinen Produkten/)
+  assert.equal((html.match(/<button/g) ?? []).length, 0)
   assert.doesNotMatch(html, /als Ersatz übernehmen|Vorerst ohne Produkt|trotzdem behalten/)
 })
 

@@ -61,7 +61,7 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
       firstRefinedVersion!,
     )
 
-    await page.getByRole("button", { name: "Zurück" }).click()
+    await page.getByRole("button", { name: "Zum Feinschliff" }).click()
 
     const bridge = page.locator("[data-refined-version-id]")
     await expect(bridge).toBeVisible()

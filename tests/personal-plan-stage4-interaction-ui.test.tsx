@@ -3,7 +3,12 @@ import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { RoutineEditor } from "../src/components/routine/personal-plan/routine-editor"
+import { PersonalPlanJourneyHeader } from "../src/components/personal-plan-journey"
+import {
+  RoutineDiscardConfirmBody,
+  RoutineEditor,
+} from "../src/components/routine/personal-plan/routine-editor"
+import { BottomSheet } from "../src/components/ui/bottom-sheet"
 import {
   RoutineProposalSheetBody,
   type RoutineProposalSheetDeltaEntry,
@@ -247,7 +252,11 @@ test("global editor renders the complete Routine and submits a local operation b
   assert.ok(select)
   select.props.onChange({ target: { value: "planned:planned-new:p-new" } })
   tree.value = tree.rerender()
-  findByText(tree.value, "Änderungen prüfen").props.onClick()
+  findAll(
+    tree.value,
+    (element) =>
+      textContent(element) === "Änderungen prüfen" && typeof element.props.onClick === "function",
+  )[0]?.props.onClick()
 
   assert.equal(operations.length, 1)
   assert.deepEqual(operations[0], [
@@ -286,13 +295,35 @@ test("global editor blocks invalid controls and asks before discarding dirty edi
   assert.ok(checkbox)
   checkbox.props.onChange({ target: { checked: false } })
   tree.value = tree.rerender()
-  findByText(tree.value, "Abbrechen").props.onClick()
+  const header = findAll(tree.value, (element) => element.type === PersonalPlanJourneyHeader)[0]
+  assert.ok(header)
+  assert.equal(header.props.backLabel, "Zur Routine")
+  assert.equal(header.props.showWordmark, false)
+  header.props.onBack()
   tree.value = tree.rerender()
 
   assert.equal(canceled, 0)
-  assert.match(renderToStaticMarkup(tree.value), /Lokale Änderungen verwerfen/)
-  findByText(tree.value, "Verwerfen").props.onClick()
+  const sheet = findAll(tree.value, (element) => element.type === BottomSheet)[0]
+  assert.ok(sheet)
+  assert.equal(sheet.props.open, true)
+  const confirmBody = findAll(
+    tree.value,
+    (element) => element.type === RoutineDiscardConfirmBody,
+  )[0]
+  assert.ok(confirmBody)
+  confirmBody.props.onDiscard()
   assert.equal(canceled, 1)
+})
+
+test("Routine discard confirmation uses the reviewed visible actions", () => {
+  const html = renderToStaticMarkup(
+    <RoutineDiscardConfirmBody onKeepEditing={() => {}} onDiscard={() => {}} />,
+  )
+
+  assert.match(html, /Änderungen verwerfen\?/)
+  assert.match(html, /Weiter bearbeiten/)
+  assert.match(html, /Änderungen verwerfen/)
+  assert.match(html, /safe-area-inset-bottom/)
 })
 
 test("global editor starts at the recommendation and can clear a cadence override", () => {
@@ -325,7 +356,11 @@ test("global editor starts at the recommendation and can clear a cadence overrid
     target: { value: "" },
   })
   tree.value = tree.rerender()
-  findByText(tree.value, "Änderungen prüfen").props.onClick()
+  findAll(
+    tree.value,
+    (element) =>
+      textContent(element) === "Änderungen prüfen" && typeof element.props.onClick === "function",
+  )[0]?.props.onClick()
 
   assert.deepEqual(operations, [
     [

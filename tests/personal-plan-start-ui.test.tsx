@@ -211,6 +211,32 @@ test("omits the Optional page and progress step when no optional categories exis
   assert.match(html, /data-plan-start-has-optional="false"/)
   assert.match(html, /Auf meine Produkte abstimmen/)
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
+
+  const withoutContinuation = renderToStaticMarkup(
+    <PlanStartFlow
+      state="ready"
+      plan={{ basis: { ...readyPlan.basis, progress: 100 }, optional: null }}
+    />,
+  )
+  assert.doesNotMatch(withoutContinuation, /Jetzt auf meine Produkte abstimmen/)
+  assert.doesNotMatch(withoutContinuation, /aria-label="Idealplan-Seiten"/)
+})
+
+test("Optional Idealplan uses the shared header Back and a forward-only safe-area dock", () => {
+  const html = renderToStaticMarkup(
+    <PlanStartFlow
+      state="ready"
+      plan={readyPlan}
+      initialStep="optional"
+      onContinueToRefinement={() => {}}
+    />,
+  )
+
+  assert.match(html, /data-plan-start-screen="optional"/)
+  assert.match(html, /aria-label="Zur Basis"/)
+  assert.doesNotMatch(html, />Zur Basis</)
+  assert.match(html, /pb-\[calc\(0\.625rem\+env\(safe-area-inset-bottom\)\)\]/)
+  assert.match(html, /min-w-0 w-full whitespace-normal/)
 })
 
 test("Stage 1-only keeps signed Basis and Optional pages but removes the refinement transition", () => {
@@ -528,13 +554,41 @@ test("adapts Basis-only snapshots without an empty Optional page", () => {
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
 })
 
+test("a missing Optional page normalizes an Optional return to Basis", () => {
+  const snapshot = computedSnapshot({
+    ...COMPLETE_V3_PLAN_ENVELOPE.answers,
+    texture: "straight",
+    thickness: "normal",
+    density: "medium",
+    goals: ["scalp_balance"],
+    currentConcerns: [],
+    concernRecurrence: undefined,
+    hairLength: "medium",
+    hairSurface: "smooth",
+    elasticResponse: "stretches_bounces",
+    chemicalTreatments: ["natural"],
+    scalpOiliness: "balanced",
+    scalpConcerns: [],
+  })
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
+
+  assert.ok(plan)
+  assert.equal(plan.optional, null)
+  const html = renderToStaticMarkup(
+    <PlanStartFlow state="ready" plan={plan} initialStep="optional" />,
+  )
+  assert.match(html, /Deine Basis/)
+  assert.doesNotMatch(html, /aria-label="Zur Basis"/)
+})
+
 test("the final Stage 1 CTA enters the first Stage 2 question without an invitation screen", () => {
   const componentSource = readFileSync(
     "src/components/personal-plan-start/plan-start-flow.tsx",
     "utf8",
   )
   assert.doesNotMatch(componentSource, /setStep\("transition"\)/)
-  assert.match(componentSource, /onNext=\{canRefine \? props\.onContinueToRefinement/)
+  assert.match(componentSource, /props\.onContinueToRefinement\?\.\("optional"\)/)
+  assert.match(componentSource, /props\.onContinueToRefinement\?\.\("basis"\)/)
   assert.match(componentSource, /directEntry/)
 })
 

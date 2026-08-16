@@ -1,33 +1,14 @@
-import type { MouseEvent } from "react"
 import type { ApplicationDayView } from "./application-types"
-import Link from "next/link"
 import { ProductApplicationBlock } from "./product-application-block"
 import { ProductlessStep } from "./productless-step"
 import { UnresolvedProductBlock } from "./unresolved-product-block"
 
-export function ApplicationDay({
-  day,
-  onOpenOverview,
-  navigationBasePath = "/anwendung",
-}: {
-  day: ApplicationDayView
-  onOpenOverview?: (event: MouseEvent<HTMLAnchorElement>) => void
-  navigationBasePath?: string
-}) {
+export function ApplicationDay({ day }: { day: ApplicationDayView }) {
   return (
     <article
       aria-labelledby="application-day-title"
       className="mx-auto w-full max-w-3xl px-4 py-5 sm:px-6"
     >
-      <Link
-        href={navigationBasePath}
-        prefetch={false}
-        data-application-navigation="overview"
-        onClick={onOpenOverview}
-        className="mb-4 inline-flex min-h-[44px] items-center rounded-md px-2 text-sm font-semibold text-primary hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        Alle Tage
-      </Link>
       <header className="border-b border-border pb-4">
         <h1
           id="application-day-title"

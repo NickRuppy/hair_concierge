@@ -416,6 +416,7 @@ export function PlanStartCustomerJourney({
   const stage3JourneyStartedRef = useRef(false)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
   const [returningToRefinement, setReturningToRefinement] = useState(false)
+  const stage1ReturnStepRef = useRef<FlowStep>("basis")
   const [stage3LoadState, setStage3LoadState] = useState<
     "idle" | "loading" | Stage3LoadRecoveryMode
   >(initialJourney.stage === "stage3" ? "loading" : "idle")
@@ -686,7 +687,11 @@ export function PlanStartCustomerJourney({
         initialJourney.stage === "stage3" || initialJourney.refinementAvailable !== false
       }
       continuationStatus={stage2LoadState}
-      onContinueToRefinement={() => void enterStage2()}
+      initialStep={stage1ReturnStepRef.current}
+      onContinueToRefinement={(sourceStep) => {
+        stage1ReturnStepRef.current = sourceStep
+        void enterStage2()
+      }}
     />
   )
 }
@@ -705,16 +710,21 @@ function isValidLaterStageBootstrap(
     initialRefinementSession.completedHandoff?.refinedVersionId === initialJourney.refinedVersionId
   )
 }
-type FlowStep = "basis" | "optional"
+export type FlowStep = "basis" | "optional"
 
 export function PlanStartFlow(
   props: PlanStartFlowProps & {
-    onContinueToRefinement?: () => void
+    initialStep?: FlowStep
+    onContinueToRefinement?: (sourceStep: FlowStep) => void
     refinementAvailable?: boolean
     continuationStatus?: "idle" | "loading" | "error"
   },
 ) {
-  const [step, setStep] = useState<FlowStep>("basis")
+  const [step, setStep] = useState<FlowStep>(() =>
+    props.initialStep === "optional" && props.state === "ready" && props.plan.optional
+      ? "optional"
+      : "basis",
+  )
   const [direction, setDirection] = useState<PersonalPlanTransitionDirection>("forward")
   const hasOptionalPage = props.state === "ready" && Boolean(props.plan.optional)
   const canRefine = props.refinementAvailable !== false
@@ -736,11 +746,11 @@ export function PlanStartFlow(
           hasOptionalPage
           showJourneyHeader={false}
           nextStatus={props.continuationStatus}
-          onBack={() => {
-            setDirection("reverse")
-            setStep("basis")
-          }}
-          onNext={canRefine ? props.onContinueToRefinement : undefined}
+          onNext={
+            canRefine && props.onContinueToRefinement
+              ? () => props.onContinueToRefinement?.("optional")
+              : undefined
+          }
         />
       )
     }
@@ -756,8 +766,8 @@ export function PlanStartFlow(
                 setDirection("forward")
                 setStep("optional")
               }
-            : canRefine
-              ? props.onContinueToRefinement
+            : canRefine && props.onContinueToRefinement
+              ? () => props.onContinueToRefinement?.("basis")
               : undefined
         }
       />
@@ -785,7 +795,18 @@ export function PlanStartFlow(
         <link key={imageUrl} rel="preload" as="image" href={imageUrl} />
       ))}
       <div className="min-h-dvh bg-[var(--background)]">
-        <PlanStartHeader stageLabel="Idealplan" />
+        <PlanStartHeader
+          stageLabel="Idealplan"
+          onBack={
+            step === "optional"
+              ? () => {
+                  setDirection("reverse")
+                  setStep("basis")
+                }
+              : undefined
+          }
+          backLabel={step === "optional" ? "Zur Basis" : undefined}
+        />
         <PersonalPlanStageEntrance destination="/plan-start">
           <PersonalPlanViewTransition viewKey={step} direction={direction} variant="depth">
             {content}

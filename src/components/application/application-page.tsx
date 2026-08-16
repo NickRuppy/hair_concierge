@@ -81,11 +81,13 @@ export function ApplicationPage({
   view,
   internalComputeMs,
   navigationBasePath = "/anwendung",
+  routineBackHref = "/routine",
   currentPathname,
 }: {
   view: ApplicationPageView
   internalComputeMs?: number
   navigationBasePath?: string
+  routineBackHref?: string
   currentPathname?: string
 }) {
   const days = useMemo(() => (view.state === "ready" ? sortDays(view.days) : []), [view])
@@ -151,11 +153,7 @@ export function ApplicationPage({
       <PersonalPlanStageEntrance destination="/anwendung">
         <PersonalPlanViewTransition viewKey={viewKey} direction={direction} variant="depth">
           {selectedDay ? (
-            <ApplicationDay
-              day={selectedDay}
-              onOpenOverview={openOverview}
-              navigationBasePath={navigationBasePath}
-            />
+            <ApplicationDay day={selectedDay} />
           ) : (
             <ApplicationOverview
               days={days}
@@ -175,7 +173,28 @@ export function ApplicationPage({
       data-personal-plan-application-compute-ms={internalComputeMs}
       data-application-router-pathname={currentPathname}
     >
-      <PersonalPlanJourneyHeader currentStage={5} saveStatus="saved" showWordmark={false} />
+      {view.state === "ready" ? (
+        selectedDayType ? (
+          <PersonalPlanJourneyHeader
+            currentStage={5}
+            saveStatus="saved"
+            backHref={navigationBasePath}
+            onBackLinkClick={openOverview}
+            backLabel="Alle Tage"
+            showWordmark={false}
+          />
+        ) : (
+          <PersonalPlanJourneyHeader
+            currentStage={5}
+            saveStatus="saved"
+            backHref={routineBackHref}
+            backLabel="Zur Routine"
+            showWordmark={false}
+          />
+        )
+      ) : (
+        <PersonalPlanJourneyHeader currentStage={5} saveStatus="saved" showWordmark={false} />
+      )}
       {content}
     </div>
   )

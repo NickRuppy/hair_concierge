@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mobile Back control comparison</title>
+    <style>
+      :root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #2a1845; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #242424; }
+      .board { width: 1120px; margin: 0 auto; padding: 28px 32px 34px; }
+      .intro { margin-bottom: 18px; color: #fff; }
+      .intro h1 { margin: 0 0 6px; font-family: Georgia, serif; font-size: 27px; }
+      .intro p { margin: 0; color: #d5cec8; font-size: 13px; }
+      .grid { display: grid; grid-template-columns: repeat(3, 330px); gap: 28px; justify-content: center; }
+      .variant h2 { margin: 0 0 5px; color: #fff; font-size: 16px; }
+      .variant > p { min-height: 56px; margin: 0 0 10px; color: #d5cec8; font-size: 11px; line-height: 1.45; }
+      .good { color: #b9efcf; }
+      .warn { color: #f4bf68; }
+      .phone { position: relative; width: 330px; height: 500px; overflow: hidden; background: #fdfbf9; box-shadow: 0 12px 36px #000a; }
+      .header { height: 112px; border-bottom: 1px solid #ece6df; padding: 8px 12px 8px; background: #fdfbf9f7; }
+      .top { display: grid; grid-template-columns: 52px 1fr 52px; align-items: center; min-height: 52px; }
+      .brand { text-align: center; font-family: Georgia, serif; font-size: 23px; font-weight: 700; }
+      .back { display: grid; place-items: center; border: 0; color: #6b50a0; font-size: 24px; }
+      .current { width: 40px; height: 40px; border-radius: 12px; background: transparent; font-size: 20px; }
+      .recommended { width: 48px; height: 48px; border: 1px solid rgba(107,80,160,.16); border-radius: 14px; background: #f0ebf8; box-shadow: 0 3px 10px rgba(42,24,69,.08); }
+      .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 2px; }
+      .step i { display: block; height: 5px; border-radius: 5px; background: #ddd7d1; }
+      .step.done i, .step.current i { background: #6b50a0; }
+      .step span { display: block; margin-top: 4px; overflow: hidden; color: #8a837d; font-size: 7px; font-weight: 700; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+      main { padding: 22px 16px 100px; }
+      .eyebrow { font-size: 9px; font-weight: 800; letter-spacing: .12em; color: #6b50a0; }
+      h3 { margin: 5px 0 8px; font-family: Georgia, serif; font-size: 28px; line-height: 1.08; }
+      .lead { margin: 0; color: #716b66; font-size: 11px; line-height: 1.5; }
+      .card { margin-top: 18px; border: 1px solid #d6e3db; border-radius: 18px; background: #edf4f0; padding: 14px; }
+      .card b { display: block; font-size: 13px; }
+      .card p { margin: 5px 0 0; color: #625d58; font-size: 10px; line-height: 1.45; }
+      .measure { position: absolute; top: 9px; left: 59px; border-radius: 999px; background: #2a1845; padding: 5px 7px; color: #fff; font-size: 9px; }
+      .dock { position: absolute; inset: auto 0 0; border-top: 1px solid #ece6df; background: #fdfbf9f7; padding: 10px 12px 24px; }
+      .dock-row { display: flex; align-items: center; gap: 8px; }
+      .dock-back { min-height: 48px; flex: 0 0 auto; border: 1px solid rgba(107,80,160,.16); border-radius: 14px; background: #f0ebf8; padding: 0 12px; color: #6b50a0; font-size: 11px; font-weight: 800; }
+      .cta { min-height: 56px; min-width: 0; flex: 1; border: 0; border-radius: 999px; background: #da6572; color: #fff; padding: 10px 14px; font-size: 14px; font-weight: 800; }
+      .note { position: absolute; left: 14px; right: 14px; bottom: 22px; border-left: 3px solid #6b50a0; background: #fff; padding: 9px 10px; color: #625d58; font-size: 10px; line-height: 1.4; }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <div class="intro"><h1>Back auf Mobile: Position und Größe</h1><p>Hierarchische Navigation sollte stabil oben links bleiben; die Trefffläche darf deutlicher werden.</p></div>
+      <div class="grid">
+        <section class="variant">
+          <h2>A · Heute</h2>
+          <p><span class="warn">40×40 px Ziel, 20 px Icon.</span> Funktioniert, wirkt auf Touch aber klein und hat im Ruhezustand keine sichtbare Fläche.</p>
+          <div class="phone">
+            <header class="header"><div class="top"><button class="back current">←</button><div class="brand">chaarlie</div><span></span></div><div class="progress"><div class="step done"><i></i><span>Idealplan</span></div><div class="step done"><i></i><span>Feinschliff</span></div><div class="step current"><i></i><span>Produkte</span></div><div class="step"><i></i><span>Routine</span></div><div class="step"><i></i><span>Anwendung</span></div></div></header>
+            <span class="measure">40 px</span>
+            <main><div class="eyebrow">PRODUKTE</div><h3>Deine Produktarten</h3><p class="lead">Prüfe, welche Produktarten du aktuell wirklich benutzt.</p><div class="card"><b>Shampoo</b><p>Reinigung deiner Kopfhaut und Haare.</p></div></main>
+          </div>
+        </section>
+
+        <section class="variant">
+          <h2>B · Top-left, klarer <span class="good">Empfohlen</span></h2>
+          <p><span class="good">48×48 px Ziel, 24 px Icon.</span> Dezente permanente Fläche, hoher Kontrast, klarer Fokuszustand und zielbezogenes Screenreader-Label.</p>
+          <div class="phone">
+            <header class="header"><div class="top"><button class="back recommended">←</button><div class="brand">chaarlie</div><span></span></div><div class="progress"><div class="step done"><i></i><span>Idealplan</span></div><div class="step done"><i></i><span>Feinschliff</span></div><div class="step current"><i></i><span>Produkte</span></div><div class="step"><i></i><span>Routine</span></div><div class="step"><i></i><span>Anwendung</span></div></div></header>
+            <span class="measure">48 px</span>
+            <main><div class="eyebrow">PRODUKTE</div><h3>Deine Produktarten</h3><p class="lead">Prüfe, welche Produktarten du aktuell wirklich benutzt.</p><div class="card"><b>Shampoo</b><p>Reinigung deiner Kopfhaut und Haare.</p></div></main>
+          </div>
+        </section>
+
+        <section class="variant">
+          <h2>C · Unten links</h2>
+          <p><span class="warn">Leichter mit dem Daumen erreichbar</span>, aber nicht der Plattformstandard für hierarchisches Back und in Konkurrenz zur primären Aktion und Safe Area.</p>
+          <div class="phone">
+            <header class="header"><div class="top"><span></span><div class="brand">chaarlie</div><span></span></div><div class="progress"><div class="step done"><i></i><span>Idealplan</span></div><div class="step done"><i></i><span>Feinschliff</span></div><div class="step current"><i></i><span>Produkte</span></div><div class="step"><i></i><span>Routine</span></div><div class="step"><i></i><span>Anwendung</span></div></div></header>
+            <main><div class="eyebrow">PRODUKTE</div><h3>Deine Produktarten</h3><p class="lead">Prüfe, welche Produktarten du aktuell wirklich benutzt.</p><div class="card"><b>Shampoo</b><p>Reinigung deiner Kopfhaut und Haare.</p></div></main>
+            <div class="dock"><div class="dock-row"><button class="dock-back">← Zurück</button><button class="cta">Weiter</button></div></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

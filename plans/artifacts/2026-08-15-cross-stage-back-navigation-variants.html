@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Back-Navigation im Personal Plan</title>
+    <style>
+      :root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #291a43; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #242424; }
+      .review { display: grid; grid-template-columns: repeat(3, 330px); gap: 24px; justify-content: center; padding: 28px; }
+      .variant > h1 { margin: 0 0 6px; color: #fff; font-size: 17px; }
+      .variant > p { min-height: 56px; margin: 0 0 12px; color: #d8d2cc; font-size: 12px; line-height: 1.45; }
+      .recommended { color: #b9efcf; }
+      .phone { position: relative; width: 330px; height: 650px; overflow: hidden; background: #fdfbf9; box-shadow: 0 12px 34px #0009; }
+      .header { height: 108px; border-bottom: 1px solid #ece6df; padding: 10px 12px 8px; background: #fdfbf9f5; }
+      .top { display: grid; grid-template-columns: 42px 1fr 42px; align-items: center; min-height: 40px; }
+      .back-icon { display: grid; width: 40px; height: 40px; place-items: center; border: 0; border-radius: 12px; background: transparent; color: #6b50a0; font-size: 23px; }
+      .brand { text-align: center; font-family: Georgia, serif; font-size: 22px; font-weight: 700; }
+      .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px; }
+      .step i { display: block; height: 5px; border-radius: 5px; background: #dfd9d3; }
+      .step.done i, .step.current i { background: #6b50a0; }
+      .step span { display: block; margin-top: 4px; overflow: hidden; color: #8a837d; font-size: 7px; font-weight: 700; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+      .step.current span { color: #291a43; }
+      main { padding: 18px 16px 120px; }
+      .context { font-size: 9px; font-weight: 800; letter-spacing: .12em; color: #6b50a0; }
+      h2 { margin: 5px 0 7px; font-family: Georgia, serif; font-size: 27px; line-height: 1.08; }
+      .lead { margin: 0; color: #706a65; font-size: 11px; line-height: 1.5; }
+      .content-back { display: inline-flex; min-height: 44px; align-items: center; margin: -8px 0 8px; color: #6b50a0; font-size: 12px; font-weight: 800; }
+      .card { margin-top: 18px; border: 1px solid #cedfd5; border-radius: 18px; background: #edf4f0; padding: 14px; }
+      .card b { display: block; font-size: 14px; }
+      .card p { margin: 5px 0 0; color: #625d58; font-size: 10px; line-height: 1.45; }
+      .dock { position: absolute; inset: auto 0 0; border-top: 1px solid #ece6df; background: #fdfbf9f5; padding: 10px 12px 28px; }
+      .dock-row { display: flex; align-items: center; gap: 8px; }
+      .dock-back { flex: 0 0 auto; min-height: 44px; border: 0; background: transparent; color: #6b50a0; font-size: 11px; font-weight: 800; }
+      .cta { min-width: 0; min-height: 56px; flex: 1; border: 0; border-radius: 999px; background: #da6572; color: white; padding: 10px 16px; font-size: 15px; font-weight: 800; line-height: 1.15; }
+      .full { width: 100%; }
+      .rule { margin-top: 14px; border-left: 3px solid #6b50a0; padding-left: 10px; color: #625d58; font-size: 10px; line-height: 1.4; }
+      .mapping { margin-top: 12px; border-radius: 12px; background: #ffffffdd; padding: 10px; color: #625d58; font-size: 9px; line-height: 1.45; }
+      .mapping b { color: #291a43; }
+      @media (max-width: 1060px) { .review { grid-template-columns: 330px; } }
+    </style>
+  </head>
+  <body>
+    <div class="review">
+      <section class="variant">
+        <h1>A · Shared header arrow <span class="recommended">Empfohlen</span></h1>
+        <p>One predictable top-left target for every reversible sub-step. Bottom docks contain only forward or decision actions.</p>
+        <div class="phone">
+          <header class="header">
+            <div class="top"><button class="back-icon" aria-label="Zur Anwendungsübersicht">←</button><div class="brand">chaarlie</div><span></span></div>
+            <div class="progress"><div class="step done"><i></i><span>Idealplan</span></div><div class="step done"><i></i><span>Feinschliff</span></div><div class="step done"><i></i><span>Produkte</span></div><div class="step done"><i></i><span>Routine</span></div><div class="step current"><i></i><span>Anwendung</span></div></div>
+          </header>
+          <main><div class="context">ANWENDUNG</div><h2>Waschtag mit Styling</h2><p class="lead">Deine Schritte für Reinigung, Pflege und Schutz.</p><div class="card"><b>1 · Shampoo</b><p>Sanft in die Kopfhaut einarbeiten und gründlich ausspülen.</p></div><div class="card"><b>2 · Conditioner</b><p>In Längen und Spitzen verteilen.</p></div><div class="mapping"><b>Same rule everywhere:</b><br>Idealplan Optional → Basis<br>Feinschliff → previous question<br>Products → previous product step<br>Application day → day overview</div></main>
+          <div class="dock"><button class="cta full">Nächster Schritt</button></div>
+        </div>
+      </section>
+
+      <section class="variant">
+        <h1>B · Labeled content link</h1>
+        <p>The destination is explicit, but the Back target sits below the progress header and moves vertically with page content.</p>
+        <div class="phone">
+          <header class="header">
+            <div class="top"><span></span><div class="brand">chaarlie</div><span></span></div>
+            <div class="progress"><div class="step done"><i></i><span>Idealplan</span></div><div class="step done"><i></i><span>Feinschliff</span></div><div class="step done"><i></i><span>Produkte</span></div><div class="step done"><i></i><span>Routine</span></div><div class="step current"><i></i><span>Anwendung</span></div></div>
+          </header>
+          <main><a class="content-back">← &nbsp;Alle Anwendungstage</a><div class="context">ANWENDUNG</div><h2>Waschtag mit Styling</h2><p class="lead">Deine Schritte für Reinigung, Pflege und Schutz.</p><div class="card"><b>1 · Shampoo</b><p>Sanft in die Kopfhaut einarbeiten und gründlich ausspülen.</p></div><div class="card"><b>2 · Conditioner</b><p>In Längen und Spitzen verteilen.</p></div><div class="rule">Clearer label, but it consumes vertical space and duplicates header-like navigation inside every screen.</div></main>
+          <div class="dock"><button class="cta full">Nächster Schritt</button></div>
+        </div>
+      </section>
+
+      <section class="variant">
+        <h1>C · Back in the bottom dock</h1>
+        <p>Thumb-friendly for linear steps, but forces every detail view to own a dock and competes with long primary actions.</p>
+        <div class="phone">
+          <header class="header">
+            <div class="top"><span></span><div class="brand">chaarlie</div><span></span></div>
+            <div class="progress"><div class="step done"><i></i><span>Idealplan</span></div><div class="step done"><i></i><span>Feinschliff</span></div><div class="step done"><i></i><span>Produkte</span></div><div class="step done"><i></i><span>Routine</span></div><div class="step current"><i></i><span>Anwendung</span></div></div>
+          </header>
+          <main><div class="context">ANWENDUNG</div><h2>Waschtag mit Styling</h2><p class="lead">Deine Schritte für Reinigung, Pflege und Schutz.</p><div class="card"><b>1 · Shampoo</b><p>Sanft in die Kopfhaut einarbeiten und gründlich ausspülen.</p></div><div class="card"><b>2 · Conditioner</b><p>In Längen und Spitzen verteilen.</p></div><div class="rule">This reproduces the current Idealplan pattern, including the width pressure that caused the reported CTA clipping.</div></main>
+          <div class="dock"><div class="dock-row"><button class="dock-back">← Zurück</button><button class="cta">Nächster Schritt</button></div></div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

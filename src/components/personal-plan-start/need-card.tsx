@@ -100,10 +100,10 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
                   card.imageAlt ??
                   `Beispielbild für ${card.categoryLabel}; kein ausgewähltes Produkt.`
                 }
-                width={56}
-                height={78}
+                fill
+                sizes="66px"
                 unoptimized
-                className="h-[94%] w-[78%] object-contain"
+                className="object-contain p-1.5"
                 onError={() => setFailedImageUrl(card.imageUrl)}
               />
               <span className="absolute bottom-1 left-1 rounded-full bg-[#291a43]/80 px-1.5 py-0.5 text-[7px] font-extrabold uppercase tracking-[0.08em] text-white">

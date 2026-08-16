@@ -133,7 +133,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       return route.fulfill({
         status: 200,
         contentType: "image/svg+xml",
-        body: '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="78"/>',
+        body: '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="140" viewBox="0 0 56 140"><rect x="14" y="4" width="28" height="132" rx="9" fill="#6b50a0"/><rect x="18" y="28" width="20" height="70" rx="4" fill="#f5efff"/></svg>',
       })
     })
     const freshRefinement = createStage2RefinementSession({
@@ -182,6 +182,33 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(
       page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
     ).toHaveCount(await optionalCards.count())
+    const loadedSlot = optionalCards.first().locator('[data-plan-start-card-image-slot="loaded"]')
+    const loadedImage = loadedSlot.locator("img")
+    await expect(loadedImage).toBeVisible()
+    const imageGeometry = await loadedImage.evaluate((image) => {
+      const slot = image.parentElement!.getBoundingClientRect()
+      const bounds = image.getBoundingClientRect()
+      return {
+        complete: (image as HTMLImageElement).complete,
+        naturalHeight: (image as HTMLImageElement).naturalHeight,
+        naturalWidth: (image as HTMLImageElement).naturalWidth,
+        objectFit: getComputedStyle(image).objectFit,
+        imageBounds: [bounds.left, bounds.top, bounds.right, bounds.bottom],
+        slotBounds: [slot.left, slot.top, slot.right, slot.bottom],
+        contained:
+          bounds.left >= slot.left - 1 &&
+          bounds.right <= slot.right + 1 &&
+          bounds.top >= slot.top - 1 &&
+          bounds.bottom <= slot.bottom + 1,
+      }
+    })
+    expect(imageGeometry).toMatchObject({ complete: true, objectFit: "contain" })
+    expect(imageGeometry.contained, JSON.stringify(imageGeometry)).toBe(true)
+    expect(imageGeometry.naturalHeight).toBeGreaterThan(imageGeometry.naturalWidth)
+    await expect(actionNav.getByRole("button", { name: "Zur Basis" })).toHaveCount(0)
+    const headerBack = page.getByRole("button", { name: "Zur Basis" })
+    await expect(headerBack).toBeVisible()
+    expect(await headerBack.evaluate((button) => button.getBoundingClientRect().width)).toBe(48)
     expect(stage2Requests).toBe(0)
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
     await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
@@ -192,7 +219,73 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     ).toHaveCount(0)
   })
 
+  test("keeps the forward-only Optional action inside 320, 375, and 390px viewports", async ({
+    page,
+  }) => {
+    for (const width of [320, 375, 390]) {
+      await page.setViewportSize({ width, height: 700 })
+      await page.goto(labPath)
+      await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+
+      const nav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
+      const action = nav.getByRole("button", { name: "Auf meine Produkte abstimmen" })
+      const geometry = await action.evaluate((button) => {
+        const bounds = button.getBoundingClientRect()
+        const nav = button.closest("nav")!
+        const style = getComputedStyle(nav)
+        return {
+          left: bounds.left,
+          right: bounds.right,
+          viewportWidth: window.innerWidth,
+          navBottom: nav.getBoundingClientRect().bottom,
+          viewportBottom: window.innerHeight,
+          paddingTop: parseFloat(style.paddingTop),
+          paddingBottom: parseFloat(style.paddingBottom),
+        }
+      })
+      expect(geometry.left).toBeGreaterThanOrEqual(0)
+      expect(geometry.right).toBeLessThanOrEqual(geometry.viewportWidth)
+      expect(geometry.navBottom).toBe(geometry.viewportBottom)
+      expect(geometry.paddingTop).toBe(10)
+      expect(geometry.paddingBottom).toBeGreaterThanOrEqual(10)
+      await expect(nav.getByRole("button")).toHaveCount(1)
+    }
+  })
+
+  test("adds a non-zero emulated safe-area inset below the Optional action", async ({
+    page,
+    context,
+  }) => {
+    const session = await context.newCDPSession(page)
+    try {
+      await session.send(
+        "Emulation.setSafeAreaInsetsOverride" as never,
+        {
+          insets: { bottom: 34 },
+        } as never,
+      )
+    } catch (error) {
+      test.skip(true, `Pinned Chromium does not support safe-area emulation: ${String(error)}`)
+      return
+    }
+
+    await page.setViewportSize({ width: 320, height: 700 })
+    await page.goto(labPath)
+    await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+    const paddingBottom = await page
+      .getByRole("navigation", { name: "Idealplan-Seiten" })
+      .evaluate((nav) => parseFloat(getComputedStyle(nav).paddingBottom))
+    expect(paddingBottom).toBe(44)
+    await session.send(
+      "Emulation.setSafeAreaInsetsOverride" as never,
+      {
+        insets: {},
+      } as never,
+    )
+  })
+
   test("retains the Bedarfsplan and offers retry when Stage 2 cannot open", async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 700 })
     let stage2Requests = 0
     await page.route("**/api/personal-plan/stage-2", (route) => {
       stage2Requests += 1
@@ -212,6 +305,34 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(
       page.getByRole("alert").filter({ hasText: "Feinschliff konnte nicht geöffnet werden" }),
     ).toBeVisible()
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })
+          const maximum = document.documentElement.scrollHeight - window.innerHeight
+          return Math.round(maximum - window.scrollY)
+        }),
+      )
+      .toBe(0)
+    const clearance = await page.evaluate(() => {
+      const dock = document.querySelector<HTMLElement>('nav[aria-label="Idealplan-Seiten"]')
+      const optionalScreen = document.querySelector<HTMLElement>(
+        '[data-plan-start-screen="optional"]',
+      )
+      const finalCard = document.querySelector<HTMLElement>(
+        '[data-plan-start-screen="optional"] [data-plan-start-card-list] article:last-child',
+      )
+      if (!dock || !optionalScreen || !finalCard) {
+        throw new Error("Expected Optional dock, screen, and final card")
+      }
+      return {
+        cardBottom: finalCard.getBoundingClientRect().bottom,
+        dockTop: dock.getBoundingClientRect().top,
+        mainPaddingBottom: getComputedStyle(optionalScreen.querySelector("main")!).paddingBottom,
+      }
+    })
+    expect(clearance.mainPaddingBottom).toBe("104px")
+    expect(clearance.cardBottom).toBeLessThanOrEqual(clearance.dockTop)
     expect(stage2Requests).toBe(1)
 
     await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()

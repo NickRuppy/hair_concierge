@@ -534,6 +534,7 @@ export function RefinementFlow({
         <ResumeShell
           firstUnresolvedQuestionLabel={labelForQuestion(activeQuestionId)}
           onBegin={begin}
+          onSecondaryExit={onSecondaryExit}
         />
       )
     }
@@ -677,13 +678,20 @@ function InvitationShell({
 function ResumeShell({
   firstUnresolvedQuestionLabel,
   onBegin,
+  onSecondaryExit,
 }: {
   firstUnresolvedQuestionLabel: string
   onBegin: () => void
+  onSecondaryExit?: () => void
 }) {
   return (
     <div className="min-h-dvh bg-[var(--background)]">
-      <PersonalPlanJourneyHeader currentStage={2} saveStatus="saved" />
+      <PersonalPlanJourneyHeader
+        currentStage={2}
+        saveStatus="saved"
+        onBack={onSecondaryExit}
+        backLabel="Zum Idealplan"
+      />
       <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
           Wir laden deinen Feinschliff.

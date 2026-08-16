@@ -23,7 +23,7 @@ export function AuthenticatedAppShell({
         personalPlan
           ? // Die Variable bleibt auf allen Breiten konstant, weil application-state
             // seine Höhe daraus ableitet; nur die Padding-Kompensation entfällt ab md.
-            "min-h-dvh [--personal-plan-shell-bottom-padding:calc(4.5rem+env(safe-area-inset-bottom))]"
+            "min-h-dvh [--personal-plan-shell-bottom-padding:calc(4.5rem+env(safe-area-inset-bottom))] [--personal-plan-shell-header-offset:3.5rem]"
           : "min-h-dvh"
       }
       data-personal-plan-shell={personalPlan || undefined}

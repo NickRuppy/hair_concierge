@@ -1,6 +1,6 @@
 "use client"
 
-import { AlertCircle, ArrowLeft, Check, ImageIcon, Loader2, Plus, Search } from "lucide-react"
+import { AlertCircle, Check, ImageIcon, Loader2, Plus, Search } from "lucide-react"
 import { useState, type ReactNode } from "react"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
@@ -18,8 +18,6 @@ export { Stage3StickyAction } from "./stage3-sticky-action"
  */
 export const STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE =
   "Wir haben dein Produkt nicht gefunden. Füge es über „Produkt hinzufügen“ einfach selbst hinzu."
-
-export type Stage3TransitionContext = "product_capture" | "fit_check" | "routine_ready"
 
 export type Stage3SaveState = {
   status: "local" | "saved" | "saving" | "error" | "conflict" | "idle"
@@ -78,6 +76,8 @@ export function Stage3Shell({
   saveState,
   children,
   onBack,
+  backDisabled = false,
+  backLabel = "Zurück",
   contentEntrance = false,
 }: {
   title: string
@@ -87,6 +87,8 @@ export function Stage3Shell({
   saveState: Stage3SaveState
   children: ReactNode
   onBack?: () => void
+  backDisabled?: boolean
+  backLabel?: string
   contentEntrance?: boolean
 }) {
   const saveStatus = saveState.status === "conflict" ? "error" : saveState.status
@@ -98,6 +100,8 @@ export function Stage3Shell({
         saveStatus={saveStatus}
         saveLabel={saveState.label || undefined}
         onBack={onBack}
+        backDisabled={backDisabled}
+        backLabel={backLabel}
       />
       <main
         className={`personal-plan-cookie-clearance mx-auto min-w-0 w-full max-w-[720px] px-5 pt-7 md:my-8 md:rounded-3xl md:border md:border-border md:bg-card md:px-10 md:pt-10 md:shadow-sm${contentEntrance ? " personal-plan-stage-target-fade" : ""}`}
@@ -108,71 +112,6 @@ export function Stage3Shell({
       </main>
     </div>
   )
-}
-
-export function Stage3Transition({
-  context,
-  onContinue,
-  onBack,
-}: {
-  context: Stage3TransitionContext
-  onContinue: () => void
-  onBack?: () => void
-}) {
-  const copy = transitionCopy[context]
-
-  return (
-    <section className="pt-8">
-      {onBack ? (
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={onBack}
-          aria-label="Zurück"
-          className="mb-3 rounded-full text-muted-foreground"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-      ) : null}
-
-      <div className="animate-fade-in-up">
-        <p className="mb-3 text-sm font-semibold text-[var(--brand-plum)]">{copy.kicker}</p>
-        <h1 className="mb-4 font-header text-3xl leading-tight text-foreground">{copy.title}</h1>
-        <p className="mb-10 text-base leading-relaxed text-muted-foreground">{copy.body}</p>
-      </div>
-
-      <div className="animate-fade-in-up" style={{ animationDelay: "120ms" }}>
-        <Button type="button" variant="funnelCta" onClick={onContinue}>
-          {copy.buttonLabel}
-        </Button>
-      </div>
-    </section>
-  )
-}
-
-const transitionCopy: Record<
-  Stage3TransitionContext,
-  { kicker: string; title: string; body: string; buttonLabel: string }
-> = {
-  product_capture: {
-    kicker: "Produkte finden",
-    title: "Welche Produkte nutzt du?",
-    body: "Jetzt finden wir die Produkte, die du wirklich benutzt.",
-    buttonLabel: "Produkte suchen",
-  },
-  fit_check: {
-    kicker: "Produkte prüfen",
-    title: "Wie gut passen deine Produkte?",
-    body: "Jetzt schauen wir uns die gefundenen Produkte an und prüfen, wie gut sie zu deinem Haar passen.",
-    buttonLabel: "Produkte prüfen",
-  },
-  routine_ready: {
-    kicker: "Routine vorbereiten",
-    title: "Deine Produktauswahl steht.",
-    body: "Als Nächstes bauen wir daraus deine Routine und markieren offene Punkte direkt an der passenden Stelle.",
-    buttonLabel: "Routine öffnen",
-  },
 }
 
 export function ProductCaptureScreen({
@@ -201,7 +140,6 @@ export function ProductCaptureScreen({
   onChooseOtherProduct,
   onChangeProductKinds,
   onContinue,
-  onBack,
   onImageOutcome,
   disabled = false,
 }: {
@@ -230,6 +168,7 @@ export function ProductCaptureScreen({
   onChooseOtherProduct?: () => void
   onChangeProductKinds?: () => void
   onContinue: () => void
+  /** @deprecated Journey Back is owned by PersonalPlanJourneyHeader. */
   onBack?: () => void
   onImageOutcome?: (outcome: "thumbnail_fallback" | "thumbnail_total_failure") => void
   disabled?: boolean
@@ -241,7 +180,6 @@ export function ProductCaptureScreen({
 
   return (
     <section>
-      {onBack ? <BackButton onBack={onBack} /> : null}
       <div className="animate-fade-in-up mb-2">
         <h1 className="font-header text-3xl leading-tight text-foreground">
           {categoryHeading(categoryLabel)}
@@ -382,7 +320,6 @@ export function ProductKindReviewScreen({
   status = "idle",
   onToggle,
   onContinue,
-  onBack,
 }: {
   options: Stage3ProductKindOption[]
   selected: PersonalPlanCategory[]
@@ -390,13 +327,13 @@ export function ProductKindReviewScreen({
   status?: "idle" | "saving" | "error"
   onToggle: (category: PersonalPlanCategory, checked: boolean) => void
   onContinue: () => void
+  /** @deprecated Journey Back is owned by PersonalPlanJourneyHeader. */
   onBack?: () => void
 }) {
   const selectedSet = new Set(selected)
 
   return (
     <section>
-      {onBack ? <BackButton onBack={onBack} disabled={disabled} /> : null}
       <div className="animate-fade-in-up mb-2">
         <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
           Produktarten
@@ -741,7 +678,6 @@ export function SemanticRoleAssignment({
   assignments,
   onToggleRole,
   onContinue,
-  onBack,
   disabled = false,
 }: {
   categoryLabel: string
@@ -751,7 +687,8 @@ export function SemanticRoleAssignment({
   assignments: Record<string, string[]>
   onToggleRole: (capturedProductId: string, role: string, checked: boolean) => void
   onContinue: () => void
-  onBack: () => void
+  /** @deprecated Journey Back is owned by PersonalPlanJourneyHeader. */
+  onBack?: () => void
   disabled?: boolean
 }) {
   const isOil = category === "oil"
@@ -769,7 +706,6 @@ export function SemanticRoleAssignment({
 
   return (
     <section>
-      <BackButton onBack={onBack} disabled={disabled} />
       <div className="animate-fade-in-up mb-2">
         <h1 className="font-header text-3xl leading-tight text-foreground">{heading}</h1>
       </div>
@@ -902,7 +838,6 @@ export function IntakeFallbackBoundary({
   onFrequencyChange,
   onOpen,
   onRetry,
-  onCancel,
 }: {
   categoryLabel: string
   status: "idle" | "pending" | "error"
@@ -914,7 +849,8 @@ export function IntakeFallbackBoundary({
   onFrequencyChange: (value: string) => void
   onOpen: () => void
   onRetry?: () => void
-  onCancel: () => void
+  /** @deprecated Journey Back is owned by PersonalPlanJourneyHeader. */
+  onCancel?: () => void
 }) {
   const role = status === "error" ? "alert" : "status"
 
@@ -985,9 +921,6 @@ export function IntakeFallbackBoundary({
             Erneut versuchen
           </Button>
         ) : null}
-        <Button type="button" variant="ghost" onClick={onCancel}>
-          Zurück zur Suche
-        </Button>
       </div>
     </section>
   )
@@ -1100,20 +1033,4 @@ const CATEGORY_HEADING_BY_LABEL: Readonly<Record<string, string>> = Object.fromE
 
 function categoryHeading(categoryLabel: string) {
   return CATEGORY_HEADING_BY_LABEL[categoryLabel] ?? categoryLabel
-}
-
-function BackButton({ onBack, disabled = false }: { onBack: () => void; disabled?: boolean }) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="icon"
-      onClick={onBack}
-      disabled={disabled}
-      aria-label="Zurück"
-      className="mb-2 rounded-full text-muted-foreground"
-    >
-      <ArrowLeft className="h-5 w-5" />
-    </Button>
-  )
 }

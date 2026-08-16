@@ -13,7 +13,6 @@ import {
   Stage3Shell,
   Stage3StickyAction,
   Stage3SystemState,
-  Stage3Transition,
 } from "../src/components/personal-plan-products"
 import {
   Stage3InventoryDispositionReview,
@@ -723,7 +722,6 @@ test("an unfinished Stage 3 draft resumes at the server-owned category cursor", 
   )
 
   const tree = await renderSettled(harness)
-  assert.equal(findByType(tree, Stage3Transition), null)
   assert.equal(
     findByType<React.ComponentProps<typeof ProductCaptureScreen>>(tree, ProductCaptureScreen)?.props
       .categoryLabel,
@@ -1873,7 +1871,9 @@ test("a supplied bootstrap skips duplicate loading and Back uses its resolved en
   )
   assert.equal(capture?.props.categoryLabel, "Öl")
   assert.equal(loadCalls, 0)
-  await capture?.props.onBack?.()
+  const captureShell = findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)
+  assert.equal(typeof captureShell?.props.onBack, "function")
+  await captureShell?.props.onBack?.()
   tree = await renderSettled(harness)
 
   assert.deepEqual(reopened, ["shampoo"])
@@ -1925,7 +1925,8 @@ test("every capture category exposes a safe Back action", async () => {
     tree,
     ProductCaptureScreen,
   )
-  assert.equal(typeof firstCapture?.props.onBack, "function")
+  const firstShell = findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)
+  assert.equal(typeof firstShell?.props.onBack, "function")
   firstCapture?.props.onContinue()
   await assignEveryRoleToFirstProduct(harness)
 
@@ -1935,7 +1936,8 @@ test("every capture category exposes a safe Back action", async () => {
     ProductCaptureScreen,
   )
   assert.equal(laterCapture?.props.categoryLabel, "Conditioner")
-  assert.equal(typeof laterCapture?.props.onBack, "function")
+  const laterShell = findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)
+  assert.equal(typeof laterShell?.props.onBack, "function")
 })
 
 test("editing from a server decision reopens that category through the persisted cursor", async () => {
@@ -1972,7 +1974,7 @@ test("editing from a server decision reopens that category through the persisted
     ProductFitComparison,
   )
   assert.ok(decision)
-  decision.props.onBack()
+  findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.onBack?.()
 
   tree = await renderSettled(harness)
   assert.equal(
@@ -3658,7 +3660,7 @@ test("unsupported authority offers a non-decision recovery exit to refinement", 
     ProductFitComparison,
   )
   assert.ok(decision)
-  decision.props.onBack()
+  findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.onBack?.()
   assert.equal(refinementExits, 0)
   tree = await renderSettled(harness)
   assert.ok(findByType(tree, ProductCaptureScreen))
@@ -4823,7 +4825,7 @@ test("Back from a later review edits the previous local decision without reopeni
   )
   assert.ok(secondReview)
   assert.notEqual(secondReview.props.comparison.subjectKey, firstDecisionKey)
-  await secondReview.props.onBack()
+  await findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.onBack?.()
   tree = await renderSettled(harness)
 
   assert.deepEqual(reopenedCategories, [])

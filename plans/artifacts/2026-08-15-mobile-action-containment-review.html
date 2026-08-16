@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Idealplan mobile action containment review</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #252525; color: #291a43; }
+      .review { display: grid; grid-template-columns: repeat(2, 375px); gap: 30px; justify-content: center; padding: 28px; }
+      .column > h1 { margin: 0 0 10px; color: white; font-size: 16px; }
+      .column > p { width: 375px; min-height: 42px; margin: 0 0 12px; color: #d6d0ca; font-size: 12px; line-height: 1.45; }
+      .phone { position: relative; width: 375px; height: 760px; overflow: hidden; background: #fdfbf9; box-shadow: 0 12px 35px #0008; }
+      .header { height: 112px; border-bottom: 1px solid #ece6df; padding: 24px 12px 12px; text-align: center; }
+      .brand { font-family: Georgia, serif; font-size: 28px; font-weight: 700; }
+      .steps { display: flex; justify-content: space-between; margin-top: 20px; font-size: 10px; font-weight: 700; color: #746f6b; }
+      main { padding: 14px 12px 130px; }
+      .eyebrow { font-size: 10px; font-weight: 800; letter-spacing: .12em; color: #6e6863; }
+      h2 { margin: 4px 0; font-family: Georgia, serif; font-size: 27px; }
+      .lead { margin: 0 0 12px; font-size: 11px; line-height: 1.5; color: #706a65; }
+      .rule { height: 4px; margin: 13px 0; border-radius: 4px; background: #6b50a0; }
+      .section-title { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 800; }
+      .card { display: grid; grid-template-columns: 66px minmax(0,1fr) 16px; gap: 12px; align-items: center; padding: 12px; border: 1px solid #cedfd5; border-radius: 19px; background: #edf4f0; }
+      .image { position: relative; display: grid; width: 66px; height: 82px; place-items: center; overflow: hidden; border-radius: 14px; background: #f3efe8; }
+      .bottle { position: relative; width: 32px; height: 70px; border: 2px solid #56866b; border-radius: 7px 7px 10px 10px; background: linear-gradient(#fafafa, #dce9e2); }
+      .bottle::before { content: ""; position: absolute; left: 8px; top: -8px; width: 13px; height: 8px; border-radius: 2px 2px 0 0; background: #56866b; }
+      .badge { position: absolute; left: 4px; bottom: 4px; padding: 2px 5px; border-radius: 10px; background: #291a43cc; color: white; font-size: 6px; font-weight: 800; }
+      .meta { font-size: 8px; font-weight: 800; letter-spacing: .09em; color: #6b50a0; }
+      .title { margin-top: 5px; font-size: 14px; font-weight: 800; }
+      .copy { margin-top: 2px; font-size: 9px; line-height: 1.35; color: #5f5954; }
+      .frequency { margin-top: 8px; padding-top: 7px; border-top: 1px solid #0000000d; font-size: 8px; font-weight: 700; color: #665e58; }
+      .dock { position: absolute; inset: auto 0 0; display: flex; align-items: center; gap: 8px; border-top: 1px solid #ece6df; background: #fdfbf9f5; padding: 10px 12px; }
+      .back { flex: 0 0 auto; border: 0; background: none; color: #6b50a0; font-size: 11px; font-weight: 800; }
+      .cta { min-height: 56px; border: 0; border-radius: 999px; background: #da6572; color: white; font-size: 16px; font-weight: 800; line-height: 1.15; }
+      .current .cta { width: 100%; flex: 0 1 auto; white-space: nowrap; padding: 0 24px; }
+      .current .dock::after { content: "68 px abgeschnitten"; position: absolute; right: 4px; top: -25px; padding: 4px 7px; border-radius: 5px; background: #9d2531; color: white; font-size: 10px; font-weight: 800; }
+      .current .dock { width: 443px; }
+      .proposed .dock { align-items: stretch; padding: 10px 12px 44px; }
+      .proposed .cta { min-width: 0; flex: 1 1 0; padding: 10px 16px; white-space: normal; }
+      .safe { position: absolute; inset: auto 0 0; height: 34px; display: grid; place-items: center; background: repeating-linear-gradient(135deg,#ebe5df,#ebe5df 6px,#f7f3ef 6px,#f7f3ef 12px); color: #6e6863; font-size: 9px; font-weight: 700; }
+      .note { position: absolute; right: 8px; top: -25px; padding: 4px 7px; border-radius: 5px; background: #2f7455; color: white; font-size: 10px; font-weight: 800; }
+      @media (max-width: 820px) { .review { grid-template-columns: 375px; } }
+    </style>
+  </head>
+  <body>
+    <div class="review">
+      <section class="column current">
+        <h1>Aktuell · reproduziert bei 375 px</h1>
+        <p>Der Primärbutton beansprucht die volle Zeilenbreite zusätzlich zum Zurück-Button. Der Bildplatz ist leer, wenn keine Preview geladen wurde.</p>
+        <div class="phone">
+          <div class="header"><div class="brand">chaarlie</div><div class="steps"><b>Idealplan</b><span>Feinschliff</span><span>Produkte</span><span>Routine</span><span>Anwendung</span></div></div>
+          <main><div class="eyebrow">OPTIONALE EMPFEHLUNGEN</div><h2>Zusätzlich sinnvoll</h2><p class="lead">Basierend auf deiner Haaranalyse können diese Ergänzungen deine Ziele zusätzlich unterstützen.</p><div class="rule"></div><div class="section-title"><span>Für deine Ziele</span><span>1 VORSCHLAG</span></div><div class="card"><div class="image"></div><div><div class="meta">● LEAVE-IN · OPTIONAL</div><div class="title">Leicht schützend</div><div class="copy">Gibt deinen Längen zusätzlichen Schutz vor Trockenheit und Reibung.</div><div class="frequency">◷ &nbsp; nach jeder Haarwäsche</div></div><div>⌄</div></div></main>
+          <div class="dock"><button class="back">‹ &nbsp;Zur Basis</button><button class="cta">Jetzt auf meine Produkte abstimmen&nbsp; ›</button></div>
+        </div>
+      </section>
+      <section class="column proposed">
+        <h1>Vorgeschlagen · ein gemeinsamer Mobile-Standard</h1>
+        <p>Der CTA nutzt nur den verbleibenden Platz, darf umbrechen und sitzt oberhalb der Geräte-Safe-Area. Eine geladene Preview bleibt vollständig im reservierten Bildfeld.</p>
+        <div class="phone">
+          <div class="header"><div class="brand">chaarlie</div><div class="steps"><b>Idealplan</b><span>Feinschliff</span><span>Produkte</span><span>Routine</span><span>Anwendung</span></div></div>
+          <main><div class="eyebrow">OPTIONALE EMPFEHLUNGEN</div><h2>Zusätzlich sinnvoll</h2><p class="lead">Basierend auf deiner Haaranalyse können diese Ergänzungen deine Ziele zusätzlich unterstützen.</p><div class="rule"></div><div class="section-title"><span>Für deine Ziele</span><span>1 VORSCHLAG</span></div><div class="card"><div class="image"><div class="bottle"></div><span class="badge">BEISPIEL</span></div><div><div class="meta">● LEAVE-IN · OPTIONAL</div><div class="title">Leicht schützend</div><div class="copy">Gibt deinen Längen zusätzlichen Schutz vor Trockenheit und Reibung.</div><div class="frequency">◷ &nbsp; nach jeder Haarwäsche</div></div><div>⌄</div></div></main>
+          <div class="dock"><span class="note">vollständig im Viewport</span><button class="back">‹ &nbsp;Zur Basis</button><button class="cta">Jetzt auf meine Produkte abstimmen&nbsp; ›</button></div>
+          <div class="safe">iPhone Safe Area · 34 px Testwert</div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

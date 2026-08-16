@@ -24,6 +24,9 @@ test("Anwendung reuses loaded guidance for day, Back, and Forward", async ({ pag
     }
   })
   await openLab(page)
+  const routineBack = page.getByRole("link", { name: "Zur Routine" })
+  await expect(routineBack).toHaveAttribute("href", "/labs/personal-plan-routine-editor")
+  expect(await routineBack.evaluate((link) => link.getBoundingClientRect().width)).toBe(48)
   await expect.poll(() => page.evaluate(() => window.history.scrollRestoration)).toBe("manual")
   await expect(page.locator("[data-personal-plan-application-root]")).toHaveAttribute(
     "data-application-router-pathname",
@@ -47,13 +50,17 @@ test("Anwendung reuses loaded guidance for day, Back, and Forward", async ({ pag
   await expect(page.getByRole("heading", { name: "Waschtag" })).toBeFocused()
   expect(applicationRscRequests).toEqual([])
 
+  const overviewBack = page.getByRole("link", { name: "Alle Tage" })
+  await expect(overviewBack).toHaveAttribute("href", labPath)
+  expect(await overviewBack.evaluate((link) => link.getBoundingClientRect().width)).toBe(48)
+
   await page.evaluate(() =>
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }),
   )
   const dayScrollY = await page.evaluate(() => window.scrollY)
   expect(dayScrollY).toBeGreaterThan(0)
 
-  await page.goBack()
+  await overviewBack.click()
   await expect(page).toHaveURL(labPath)
   await expect(page.locator("[data-personal-plan-application-root]")).toHaveAttribute(
     "data-application-router-pathname",
@@ -62,6 +69,10 @@ test("Anwendung reuses loaded guidance for day, Back, and Forward", async ({ pag
   await expect(page.getByRole("heading", { name: "Anwendung" })).toBeFocused()
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(overviewScrollY)
   expect(applicationRscRequests).toEqual([])
+
+  await page.getByRole("link", { name: /Waschtag:/ }).click()
+  await page.goBack()
+  await expect(page).toHaveURL(labPath)
 
   await page.goForward()
   await expect(page).toHaveURL(`${labPath}/wash_day`)
@@ -78,18 +89,18 @@ test("programmatic viewKey transitions preserve the outgoing view scroll", async
   await page.setViewportSize({ width: 375, height: 400 })
   await page.goto("/labs/personal-plan-view-transition")
 
-  await page.getByRole("button", { name: "Detail programmatisch öffnen" }).evaluate((button) =>
-    (button as HTMLButtonElement).click(),
-  )
+  await page
+    .getByRole("button", { name: "Detail programmatisch öffnen" })
+    .evaluate((button) => (button as HTMLButtonElement).click())
   const overviewScrollY = Number(
     await page.locator("[data-programmatic-transition-lab]").getAttribute("data-outgoing-scroll-y"),
   )
   expect(overviewScrollY).toBeGreaterThan(0)
   await expect(page.getByRole("heading", { name: "Programmatisches Detail" })).toBeFocused()
 
-  await page.getByRole("button", { name: "Übersicht programmatisch öffnen" }).evaluate((button) =>
-    (button as HTMLButtonElement).click(),
-  )
+  await page
+    .getByRole("button", { name: "Übersicht programmatisch öffnen" })
+    .evaluate((button) => (button as HTMLButtonElement).click())
   const detailScrollY = Number(
     await page.locator("[data-programmatic-transition-lab]").getAttribute("data-outgoing-scroll-y"),
   )
@@ -97,9 +108,9 @@ test("programmatic viewKey transitions preserve the outgoing view scroll", async
   await expect(page.getByRole("heading", { name: "Programmatische Übersicht" })).toBeFocused()
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(overviewScrollY)
 
-  await page.getByRole("button", { name: "Detail programmatisch öffnen" }).evaluate((button) =>
-    (button as HTMLButtonElement).click(),
-  )
+  await page
+    .getByRole("button", { name: "Detail programmatisch öffnen" })
+    .evaluate((button) => (button as HTMLButtonElement).click())
   await expect(page.getByRole("heading", { name: "Programmatisches Detail" })).toBeFocused()
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(detailScrollY)
 
