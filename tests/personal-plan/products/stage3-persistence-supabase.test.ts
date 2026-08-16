@@ -8,7 +8,9 @@ import {
 } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import { loadCatalogBatchSnapshot } from "../../../src/lib/personal-plan/products/authority/catalog-batching"
 import type { Stage3ProductDraft } from "../../../src/lib/personal-plan/products/contracts"
+import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
 import { createSupabaseStage3ProductionPersistence } from "../../../src/lib/personal-plan/products/stage3-persistence-supabase"
+import { createStage3Draft } from "../../../src/lib/personal-plan/products/state-machine"
 
 const shampooSearchContext = {
   hairThickness: "normal" as const,
@@ -185,7 +187,42 @@ test("draft creation persists the server-created immutable authority snapshot in
   assert.deepEqual(result.draft.authoritySnapshot?.coverage, refinedSnapshot.coverage)
 })
 
-test("authority refresh persists a current server-owned seed through the dedicated CAS boundary", async () => {
+function legacyShampooRefreshDraft(refinedSnapshot: { decisions: unknown[] }): Stage3ProductDraft {
+  return createStage3Draft({
+    draftId: "draft-1",
+    userId: "owner-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+    requirements: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Reinigung",
+        authorityVersion: "personal-plan.shampoo.v3",
+      },
+    ],
+    authoritySnapshot: {
+      schemaVersion: 1,
+      refinedNeedVersionId: "refined-1",
+      refinedInputHash: "refined-input-hash",
+      categoryDecisions: refinedSnapshot.decisions as never,
+      coverage: [],
+      orderedCategories: ["shampoo"],
+      authorityVersions: {
+        ...Object.fromEntries(
+          Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+            category,
+            policy.authorityVersion,
+          ]),
+        ),
+        shampoo: "personal-plan.shampoo.v3",
+      } as never,
+    },
+    now: "2026-08-08T00:00:00.000Z",
+  })
+}
+
+test("authority refresh preserves captured state through the dedicated CAS boundary", async () => {
   const calls: Array<{ name: string; args: Record<string, unknown> }> = []
   const refinedSnapshot = {
     inputHash: "refined-input-hash",
@@ -262,8 +299,25 @@ test("authority refresh persists a current server-owned seed through the dedicat
       expectedRevision: number
       personalPlanId: string
       refinedVersionId: string
+      draft: Stage3ProductDraft
     }): Promise<{ outcome: string; draft: Stage3ProductDraft }>
   }
+  const legacyDraft = legacyShampooRefreshDraft(refinedSnapshot)
+  legacyDraft.products = [
+    {
+      capturedProductId: "captured-shampoo",
+      userProductId: "user-product-shampoo",
+      identity: {
+        kind: "catalog_product",
+        productId: "catalog-shampoo",
+        displayName: "Mein Shampoo",
+        category: "shampoo",
+      },
+      frequencyRange: "weekly_2x",
+      ownership: "owned",
+      source: "catalog_search",
+    },
+  ]
 
   const result = await persistence.refreshAuthorityDraft({
     userId: "owner-1",
@@ -271,6 +325,7 @@ test("authority refresh persists a current server-owned seed through the dedicat
     expectedRevision: 4,
     personalPlanId: "plan-1",
     refinedVersionId: "refined-1",
+    draft: legacyDraft,
   })
 
   assert.equal(result.outcome, "saved")
@@ -290,6 +345,7 @@ test("authority refresh persists a current server-owned seed through the dedicat
     "personal-plan.shampoo.v4",
   )
   assert.deepEqual(result.draft.decisions, [])
+  assert.deepEqual(result.draft.products, legacyDraft.products)
 })
 
 test("authority refresh fails closed when SQL rejects a non-exact legacy transition", async () => {
@@ -336,6 +392,7 @@ test("authority refresh fails closed when SQL rejects a non-exact legacy transit
     },
   }
   const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  const legacyDraft = legacyShampooRefreshDraft(refinedSnapshot)
 
   await assert.rejects(
     () =>
@@ -345,6 +402,7 @@ test("authority refresh fails closed when SQL rejects a non-exact legacy transit
         expectedRevision: 4,
         personalPlanId: "plan-1",
         refinedVersionId: "refined-1",
+        draft: legacyDraft,
       }),
     /stage3_authority_refresh_rejected/,
   )

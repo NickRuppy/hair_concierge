@@ -1,4 +1,4 @@
-import type { PlanProductRole } from "@/lib/personal-plan/types"
+import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
 
 import type { PersonalPlanCategory } from "./contracts"
 
@@ -56,7 +56,7 @@ export const CATEGORY_ROLE_POLICIES = {
   },
   mask: {
     category: "mask",
-    authorityVersion: "personal-plan.mask.v3",
+    authorityVersion: "personal-plan.mask.v4",
     allowsMultiple: true,
     allowedRoles: ["intensive_conditioning_mask"],
     roleMultiplicity: { intensive_conditioning_mask: single },
@@ -110,6 +110,14 @@ export function roleAllowedForCategory(
   role: PlanProductRole,
 ): boolean {
   return CATEGORY_ROLE_POLICIES[category].allowedRoles.includes(role as never)
+}
+
+export function stage1ExampleVerdictAllowed(
+  decision: PlanCategoryDecision,
+  verdict: "ideal" | "supportive",
+): boolean {
+  if (verdict === "ideal") return true
+  return decision.category === "mask" && decision.needTier === "optional"
 }
 
 export function allowsMultipleProductsForRole(

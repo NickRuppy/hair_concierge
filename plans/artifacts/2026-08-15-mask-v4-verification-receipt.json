@@ -1,0 +1,47 @@
+{
+  "release": "personal-plan-mask-v4",
+  "gitAncestryBase": "f214e3a050098dd4b1b54cf0d7949e901fa90941",
+  "logicalBaseCommit": "180fa9ae4bbec111d943c6cb296d8161d2581190",
+  "logicalBaseManifestSha256": "b76d19cc3c73054319dbb99f0a12d6a3984742e9f96f685be116a954c2169a45",
+  "refreshedVerification": {
+    "personalPlanTests": 1632,
+    "nestedTests": 519,
+    "stage3LabBrowserTests": 5,
+    "fiveStageJourneyBrowserTests": 19,
+    "productionBuild": "passed"
+  },
+  "liveCoverage": {
+    "mode": "read_only",
+    "reachable": 2280,
+    "covered": 2280,
+    "uncovered": 0,
+    "nonBasisFailures": 0,
+    "fullTransientOutputSha256": "f0d8812dfd78aff48598f9c0d2b9159c962f2b23d6ad2d81ca0f51408e893402"
+  },
+  "postgresPreflight": {
+    "engine": "PGlite PostgreSQL/PLpgSQL",
+    "success": "saved",
+    "precedingRuntimeFreshSeedRefresh": "saved_with_persisted_capture_preserved",
+    "completed": "completed",
+    "casConflict": "revision_conflict",
+    "prematureScalpV3": "invalid_source",
+    "executePermissions": {
+      "service_role": true,
+      "anon": false,
+      "authenticated": false
+    },
+    "preservedProducts": 1,
+    "preservedScalpAuthorityVersion": "personal-plan.scalp-care.v2"
+  },
+  "counterpartReview": {
+    "model": "Claude Opus",
+    "effort": "high",
+    "initialHardFindings": 3,
+    "initialHardFindingsAddressed": 3,
+    "firstDeltaReview": "no_go",
+    "deltaFindings": 3,
+    "deltaFindingsAddressed": 3,
+    "finalDeltaReReview": "go"
+  },
+  "productionWrites": false
+}

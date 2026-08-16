@@ -473,6 +473,78 @@ test("returns an exact-fit Mask preview and rejects an unsuitable thickness", as
   assert.deepEqual(unsuitable.previews, [])
 })
 
+test("uses a source-bound supportive Mask only for an optional Mask decision", async () => {
+  const result = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "11111111-1111-4111-8111-111111111111",
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-14T10:00:00.000Z",
+  })
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("expected ready snapshot")
+  const role = "intensive_conditioning_mask" as const
+  const decision = {
+    category: "mask",
+    resolution: "resolved",
+    needTier: "optional",
+    roles: [role],
+    target: {
+      category: "mask",
+      roles: [role],
+      needStrength: "standard",
+      weight: "light",
+      careDirection: "moisture",
+      repairSupportLevel: "medium",
+      functionalNeeds: [],
+    },
+    frequency: null,
+    reasons: [],
+    executionState: "available",
+    executionPauseReason: null,
+    deferredFacts: [],
+  } satisfies PlanCategoryDecision
+  const candidate: Stage3MaskFacts = {
+    productId: "mask-supportive-fit",
+    displayName: "Maske mit begrenzter Gewichtsabweichung",
+    category: "mask",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: [result.snapshot.profile.hair.thickness],
+    knownReaction: false,
+    protocols: [{ role, status: "verified_complete", fingerprint: "protocol-mask-supportive" }],
+    presentationImageUrl: "https://example.com/mask-supportive.webp",
+    factFingerprint: "facts-mask-supportive",
+    spec: {
+      weight: "rich",
+      careDirection: "moisture",
+      repairSupportLevel: "medium",
+      functionalBenefits: [],
+    },
+  }
+  const preview = (needTier: "basis" | "optional") =>
+    computeStage1ProductExamplePreviews({
+      personalPlanId: "plan-1",
+      sourceNeedVersionId: "need-1",
+      snapshot: {
+        ...result.snapshot,
+        decisions: [{ ...decision, needTier }],
+        renderedOrder: ["mask"],
+      },
+      loadCandidates: async () => [candidate],
+    })
+
+  const optional = await preview("optional")
+  const basis = await preview("basis")
+
+  assert.deepEqual(
+    optional.previews.map((item) => [item.productId, item.verdict]),
+    [["mask-supportive-fit", "supportive"]],
+  )
+  assert.deepEqual(basis.previews, [])
+})
+
 test("returns an exact-fit Bondbuilder preview and rejects an unsuitable thickness", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,

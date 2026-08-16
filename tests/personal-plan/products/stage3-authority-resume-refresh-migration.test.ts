@@ -7,6 +7,8 @@ const migrationPath =
   "supabase/migrations/20260815110000_personal_plan_stage3_authority_resume_refresh.sql"
 const lockOrderMigrationPath =
   "supabase/migrations/20260815120000_personal_plan_stage3_authority_refresh_lock_order.sql"
+const maskV4MigrationPath =
+  "supabase/migrations/20260815134242_personal_plan_mask_v4_authority_refresh.sql"
 
 test("the already-applied authority refresh migration remains immutable", () => {
   const sql = readFileSync(migrationPath)
@@ -85,5 +87,44 @@ test("forward authority refresh replacement locks plan before draft and narrows 
   assert.match(
     sql,
     /REVOKE ALL ON FUNCTION public\.personal_plan_refresh_product_draft_authority[\s\S]*GRANT EXECUTE ON FUNCTION public\.personal_plan_refresh_product_draft_authority/,
+  )
+})
+
+test("Mask v4 refresh is independently deployable while Scalp remains v2", () => {
+  const sql = readFileSync(maskV4MigrationPath, "utf8")
+  const planLock = sql.search(
+    /SELECT \* INTO v_plan[\s\S]*?FROM public\.personal_plans[\s\S]*?FOR UPDATE/,
+  )
+  const draftLock = sql.search(
+    /SELECT \* INTO v_draft[\s\S]*?FROM public\.personal_plan_product_drafts[\s\S]*?FOR UPDATE/,
+  )
+
+  assert.ok(planLock >= 0)
+  assert.ok(draftLock > planLock)
+  assert.match(sql, /'mask', 'personal-plan\.mask\.v4'/)
+  assert.match(sql, /personal-plan\.mask\.v3/)
+  assert.match(sql, /personal-plan\.shampoo\.v3/)
+  assert.match(sql, /personal-plan\.shampoo\.v4/)
+  assert.match(sql, /'scalp_care', 'personal-plan\.scalp-care\.v2'/)
+  assert.doesNotMatch(sql, /personal-plan\.scalp-care\.v3/)
+  assert.match(sql, /v_previous_current_versions/)
+  assert.match(sql, /v_preceding_runtime_refresh/)
+  assert.match(sql, /WHEN v_preceding_runtime_refresh THEN v_normalized_old_payload/)
+  assert.match(sql, /WHEN v_preceding_runtime_refresh THEN v_old_cursor/)
+  assert.match(sql, /personal-plan\.mask\.v3/)
+  assert.match(
+    sql,
+    /v_new_snapshot_versions IS DISTINCT FROM v_expected_current_versions[\s\S]*v_new_snapshot_versions IS DISTINCT FROM v_previous_current_versions/,
+  )
+  assert.match(sql, /v_changed_count = 0/)
+  assert.match(sql, /v_normalized_old_snapshot IS DISTINCT FROM v_new_snapshot/)
+  assert.match(sql, /v_normalized_old_payload IS DISTINCT FROM p_payload/)
+  assert.doesNotMatch(sql, /pg_catalog\.coalesce\(/)
+  assert.match(sql, /SELECT coalesce\(/)
+  assert.match(sql, /v_draft\.status = 'completed'/)
+  assert.match(sql, /v_draft\.revision IS DISTINCT FROM p_expected_revision/)
+  assert.match(
+    sql,
+    /REVOKE ALL ON FUNCTION public\.personal_plan_refresh_product_draft_authority[\s\S]*FROM PUBLIC, anon, authenticated;[\s\S]*GRANT EXECUTE[\s\S]*TO service_role/,
   )
 })

@@ -10,7 +10,7 @@ import type {
   Stage1ProductExamplePreviewResponse,
 } from "@/lib/personal-plan/product-preview-contract"
 
-import { CATEGORY_ROLE_POLICIES } from "./products/authorities"
+import { CATEGORY_ROLE_POLICIES, stage1ExampleVerdictAllowed } from "./products/authorities"
 import {
   loadStage3RecommendationCandidates,
   type Stage3RecommendationCandidateSelection,
@@ -72,16 +72,29 @@ export async function computeStage1ProductExamplePreviews(input: {
             ? STAGE1_BONDBUILDER_EXAMPLE_PRODUCT_ID
             : null)
         if (!selectedProductId) return null
+        const selectedFromRecommendation =
+          evaluation.recommendation?.productId === selectedProductId
         const selected = candidates.find((candidate) => candidate.productId === selectedProductId)
         const imageUrl = selected?.presentationImageUrl?.trim()
         if (!selected || !imageUrl) return null
+        if (
+          selectedFromRecommendation &&
+          evaluation.recommendationFactFingerprint !== selected.factFingerprint
+        ) {
+          return null
+        }
         // Some authorities use the first verdict to describe an uncovered portfolio slot.
         // Evaluate the recommendation itself before exposing its presentation data.
         const selectedEvaluation = evaluateStage3Authority({
           ...authorityInput,
           productFacts: selected as never,
         })
-        if (selectedEvaluation.status !== "known" || selectedEvaluation.verdict !== "ideal") {
+        if (
+          selectedEvaluation.status !== "known" ||
+          (selectedEvaluation.verdict !== "ideal" && selectedEvaluation.verdict !== "supportive") ||
+          !stage1ExampleVerdictAllowed(decision, selectedEvaluation.verdict) ||
+          (!selectedFromRecommendation && selectedEvaluation.verdict !== "ideal")
+        ) {
           return null
         }
         return {
