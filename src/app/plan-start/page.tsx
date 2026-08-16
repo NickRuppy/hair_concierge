@@ -12,7 +12,6 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
-import { stage1ProductExamplePreviewRequestUrl } from "@/lib/personal-plan/product-preview-contract"
 import { loadExistingStage2RefinementSession } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
@@ -220,23 +219,11 @@ export function Stage1ProductExamplePreviewWarmup({
   ) {
     return null
   }
-  const previewUrl = stage1ProductExamplePreviewRequestUrl({
-    personalPlanId: initialPlan.personalPlanId,
-    sourceInputHash: initialPlan.sourceInputHash,
-  })
-  return (
-    <>
-      <link rel="preconnect" href="https://pqdkhefxsxkyeqelqegq.supabase.co" />
-      <link
-        rel="preload"
-        as="fetch"
-        href={previewUrl}
-        type="application/json"
-        crossOrigin="anonymous"
-        fetchPriority="low"
-      />
-    </>
-  )
+  // The preview JSON response is Cache-Control: no-store (it now carries
+  // prices), so a preload hint for it can never be reused by the client's
+  // real fetch — it would just be a second, wasted request. Product images
+  // are still cacheable, so keep the storage-origin preconnect for them.
+  return <link rel="preconnect" href="https://pqdkhefxsxkyeqelqegq.supabase.co" />
 }
 
 function parseUuidParam(value: string | string[] | undefined): string | undefined {

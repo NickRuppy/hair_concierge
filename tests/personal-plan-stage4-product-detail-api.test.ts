@@ -170,6 +170,35 @@ test("item detail combines the frozen owner Routine item with current active com
   )
 })
 
+test("a null currency fails closed to no price label instead of assuming EUR", async () => {
+  const result = await service({
+    plan: {
+      id: ids.plan,
+      revision: 1,
+      source_revision: 1,
+      active_routine_version_id: ids.version,
+      pending_routine_proposal_id: null,
+    },
+    version: { id: ids.version, payload: payload() },
+    product: {
+      id: ids.product,
+      name: "Current Shampoo",
+      brand: null,
+      price_eur: 12.9,
+      currency: null,
+      affiliate_link: "https://shop.example.test/current-shampoo",
+      purchase_link_status: "available",
+      updated_at: "2026-08-08T09:00:00.000Z",
+      is_active: true,
+    },
+  }).load({ userId: "owner-1", itemKey: "wash", enabled: true })
+  assert.equal(result.status, "found")
+  if (result.status !== "found") return
+  assert.equal(result.detail.commerce.priceLabel, null)
+  // Availability and the product link are unaffected by the unknown currency.
+  assert.equal(result.detail.commerce.productUrl, "https://shop.example.test/current-shampoo")
+})
+
 test("detail does not turn an invalid current commerce URL into an outbound link", async () => {
   const result = await service({
     plan: {

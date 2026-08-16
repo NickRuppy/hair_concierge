@@ -33,6 +33,23 @@ type RoleTask = {
   role: PlanProductRole
 }
 
+/**
+ * Every category's derived candidate facts are identical for every one of
+ * its roles — EXCEPT Shampoo: `selectShampooSpec` (catalog-facts.ts) filters
+ * each candidate's spec rows by the role-specific expected bucket/scalp
+ * route (see `expectedShampooBucket`), so `shampoo_everyday` and
+ * `shampoo_dandruff` can legitimately see different `spec` data for the same
+ * product. Only Shampoo needs a per-role candidate load; every other
+ * category can share one load across all of its role tasks.
+ */
+const ROLE_SENSITIVE_CANDIDATE_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set(["shampoo"])
+
+function candidateCacheKey(task: RoleTask): string {
+  return ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(task.category)
+    ? `${task.category}:${task.role}`
+    : task.category
+}
+
 export async function computeStage1ProductExamplePreviews(input: {
   personalPlanId: string
   sourceNeedVersionId: string
@@ -56,7 +73,30 @@ export async function computeStage1ProductExamplePreviews(input: {
     }
   }
 
-  const previews = await Promise.all(roleTasks.map((task) => computeRolePreview(task, input)))
+  // One candidate load per category (Shampoo: per role — see
+  // ROLE_SENSITIVE_CANDIDATE_CATEGORIES above), reused across every role
+  // task that shares its cache key, instead of one load per role.
+  const candidateLoadsByKey = new Map<string, Promise<Stage3CategoryProductFacts[]>>()
+  const loadCandidatesForTask = (task: RoleTask): Promise<Stage3CategoryProductFacts[]> => {
+    const key = candidateCacheKey(task)
+    const cached = candidateLoadsByKey.get(key)
+    if (cached) return cached
+    const promise = input.loadCandidates({
+      category: task.category,
+      hairThickness: input.snapshot.profile.hair.thickness,
+      role: task.role,
+      shampooTarget: task.decision.target?.category === "shampoo" ? task.decision.target : null,
+      conditionerTarget:
+        task.decision.target?.category === "conditioner" ? task.decision.target : null,
+      completeCatalog: true,
+    })
+    candidateLoadsByKey.set(key, promise)
+    return promise
+  }
+
+  const previews = await Promise.all(
+    roleTasks.map((task) => computeRolePreview(task, input, loadCandidatesForTask(task))),
+  )
   return {
     schemaVersion: 2,
     personalPlanId: input.personalPlanId,
@@ -71,8 +111,8 @@ async function computeRolePreview(
   input: {
     sourceNeedVersionId: string
     snapshot: InitialNeedPlanSnapshot
-    loadCandidates: Stage1ProductExamplePreviewCandidateLoader
   },
+  loadCandidates: Promise<Stage3CategoryProductFacts[]>,
 ): Promise<Stage1ProductExampleRolePreview> {
   const { category, decision, role } = task
   const authorityVersion = CATEGORY_ROLE_POLICIES[category].authorityVersion
@@ -87,14 +127,7 @@ async function computeRolePreview(
   })
 
   try {
-    const candidates = await input.loadCandidates({
-      category,
-      hairThickness: input.snapshot.profile.hair.thickness,
-      role,
-      shampooTarget: decision.target?.category === "shampoo" ? decision.target : null,
-      conditionerTarget: decision.target?.category === "conditioner" ? decision.target : null,
-      completeCatalog: true,
-    })
+    const candidates = await loadCandidates
     const authorityInput = {
       category,
       authorityVersion,
@@ -145,6 +178,7 @@ async function computeRolePreview(
     const { availabilityLabel, affiliateDisclosure, priceLabel, productUrl } =
       presentCatalogCommerce({
         priceEur: selected.priceEur ?? null,
+        currency: selected.currency ?? null,
         affiliateLink: selected.affiliateLink ?? null,
         purchaseLinkStatus: selected.purchaseLinkStatus ?? null,
         updatedAt: selected.priceCheckedAt ?? null,

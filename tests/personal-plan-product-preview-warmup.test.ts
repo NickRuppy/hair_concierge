@@ -87,6 +87,23 @@ test("warms every unique source-matched Basis and Optional preview image", async
           reasoning: emptyReasoning(),
         },
         {
+          // Same product, a different role of the same category (Oil's
+          // recommendation cache is shared across roles) — its image must
+          // still only be warmed once.
+          kind: "recommendation",
+          category: "oil",
+          role: "leave_on_fibre_conditioning",
+          decisionKey: "decision:oil:leave_on_fibre_conditioning:gap",
+          productId: "optional-product",
+          productName: "Optionales Produkt",
+          imageUrl: "https://images.example/optional.webp",
+          verdict: "supportive",
+          authorityVersion: "personal-plan.oil.v2",
+          factFingerprint: "facts-optional-product",
+          commerce: emptyCommerce(),
+          reasoning: emptyReasoning(),
+        },
+        {
           kind: "fallback",
           category: "scalp_care",
           role: "scalp_comfort",

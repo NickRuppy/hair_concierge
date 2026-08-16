@@ -195,6 +195,55 @@ test("falls back to post_refinement when the shared authority product has no pre
   })
 })
 
+test("a null currency fails closed to no price label on the Stage 1 preview path too", async () => {
+  const snapshot = conditionerSnapshot()
+  const decision = snapshot.decisions[0]!
+  const target = decision.target
+  assert.ok(target?.category === "conditioner")
+  const candidate: Stage3ConditionerFacts = {
+    productId: "conditioner-unknown-currency",
+    displayName: "Conditioner ohne bekannte Währung",
+    category: "conditioner",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: [snapshot.profile.hair.thickness],
+    knownReaction: false,
+    protocols: [
+      {
+        role: "conditioner_rinse_out",
+        status: "verified_complete",
+        fingerprint: "protocol-conditioner",
+      },
+    ],
+    presentationImageUrl: "https://example.com/conditioner-unknown-currency.webp",
+    factFingerprint: "facts-conditioner-unknown-currency",
+    priceEur: 9.9,
+    currency: null,
+    purchaseLinkStatus: "available",
+    spec: {
+      thickness: snapshot.profile.hair.thickness,
+      proteinMoistureBalance: target.careDirection,
+      weight: target.weight,
+      repairSupportLevel: target.repairSupportLevel,
+      balanceDirection: target.careDirection,
+      targetFit: "matched",
+    },
+  }
+
+  const response = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot,
+    loadCandidates: async () => [candidate],
+  })
+
+  assert.equal(response.previews.length, 1)
+  const recommendation = asRecommendation(response.previews[0]!)
+  assert.equal(recommendation.commerce.priceEur, 9.9)
+  assert.equal(recommendation.commerce.priceLabel, null)
+})
+
 test("selects the thirteenth injected complete-mode irritation Shampoo candidate", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
@@ -934,6 +983,96 @@ test("emits one entry per required role, so a two-role Shampoo decision yields t
   for (const preview of response.previews) {
     assert.equal(asFallback(preview).fallback, "post_refinement")
   }
+})
+
+test("shares a single candidate load across every role of a role-insensitive multi-role category (Oil)", async () => {
+  // Oil's derived candidate facts don't depend on `role` (see
+  // ROLE_SENSITIVE_CANDIDATE_CATEGORIES in product-previews.ts), so all
+  // three of its roles must be served by one candidate load, not three.
+  const result = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "11111111-1111-4111-8111-111111111111",
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-14T10:00:00.000Z",
+  })
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("expected ready snapshot")
+  const sourceDecision = result.snapshot.decisions.find((item) => item.category === "oil")
+  assert.ok(sourceDecision?.target?.category === "oil")
+  const allRoles = [
+    "pre_wash_fibre_treatment",
+    "leave_on_fibre_conditioning",
+    "dry_finish",
+  ] as const
+  const sourceRoleTarget = sourceDecision.target.roleTargets[0]!
+  const decision: PlanCategoryDecision = {
+    ...sourceDecision,
+    roles: [...allRoles],
+    target: {
+      ...sourceDecision.target,
+      roles: [...allRoles],
+      roleTargets: allRoles.map((role) => ({ ...sourceRoleTarget, role })),
+    },
+  }
+
+  let loadCount = 0
+  const response = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot: {
+      ...result.snapshot,
+      decisions: [decision],
+      renderedOrder: ["oil"],
+    },
+    loadCandidates: async () => {
+      loadCount += 1
+      return []
+    },
+  })
+
+  assert.equal(response.previews.length, 3)
+  assert.equal(loadCount, 1)
+})
+
+test("issues a separate candidate load per role for Shampoo, whose spec is role-sensitive", async () => {
+  const result = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "11111111-1111-4111-8111-111111111111",
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-14T10:00:00.000Z",
+  })
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("expected ready snapshot")
+  const sourceDecision = result.snapshot.decisions.find((item) => item.category === "shampoo")
+  assert.ok(sourceDecision?.target?.category === "shampoo")
+  const decision: PlanCategoryDecision = {
+    ...sourceDecision,
+    roles: ["shampoo_everyday", "shampoo_dandruff"],
+    target: { ...sourceDecision.target, roles: ["shampoo_everyday", "shampoo_dandruff"] },
+  }
+
+  let loadCount = 0
+  const requestedRoles: string[] = []
+  const response = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot: {
+      ...result.snapshot,
+      decisions: [decision],
+      renderedOrder: ["shampoo"],
+    },
+    loadCandidates: async (selection) => {
+      loadCount += 1
+      requestedRoles.push(selection.role)
+      return []
+    },
+  })
+
+  assert.equal(response.previews.length, 2)
+  assert.equal(loadCount, 2)
+  assert.deepEqual([...requestedRoles].sort(), ["shampoo_dandruff", "shampoo_everyday"])
 })
 
 function persistence(): Stage1PersistenceDependencies {

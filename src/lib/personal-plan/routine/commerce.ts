@@ -9,8 +9,8 @@
 
 export type CatalogCommerceFacts = {
   priceEur: number | null
-  /** Absent facts (e.g. Stage-3 authority candidates) default to EUR. */
-  currency?: string | null
+  /** A missing/empty currency fails closed: no price label is shown. */
+  currency: string | null
   affiliateLink: string | null
   purchaseLinkStatus: "available" | "unavailable" | null
   updatedAt: string | null
@@ -38,7 +38,9 @@ function safeHttpUrl(value: unknown): string | null {
 
 function priceLabel(facts: CatalogCommerceFacts): string | null {
   if (typeof facts.priceEur !== "number" || !Number.isFinite(facts.priceEur)) return null
-  const currency = facts.currency === "EUR" || !facts.currency ? "EUR" : facts.currency.trim()
+  // Fail closed: an unset currency means we don't know how to label the
+  // price, so no price is shown, rather than assuming EUR.
+  const currency = facts.currency === "EUR" ? "EUR" : facts.currency?.trim()
   if (!currency) return null
   try {
     return new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(facts.priceEur)

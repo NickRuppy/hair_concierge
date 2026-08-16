@@ -93,7 +93,7 @@ const readyPlan: PlanStartReadyViewModel = {
   },
 }
 
-test("warms the source-keyed preview request in server-rendered Stage 1 HTML", () => {
+test("warms only the image origin in server-rendered Stage 1 HTML, without a wasted no-store preload", () => {
   const previewUrl = stage1ProductExamplePreviewRequestUrl({
     personalPlanId: "plan-1",
     sourceInputHash: "input-1",
@@ -110,10 +110,11 @@ test("warms the source-keyed preview request in server-rendered Stage 1 HTML", (
     "/api/personal-plan/stage-1/previews?personalPlanId=plan-1&sourceInputHash=input-1",
   )
   assert.match(html, /rel="preconnect" href="https:\/\/pqdkhefxsxkyeqelqegq\.supabase\.co"/)
-  assert.match(
-    html,
-    /rel="preload" as="fetch" href="\/api\/personal-plan\/stage-1\/previews\?personalPlanId=plan-1&amp;sourceInputHash=input-1" type="application\/json" crossorigin="anonymous" fetchPriority="low"/,
-  )
+  // The preview response is Cache-Control: no-store (see below), so a
+  // rel=preload as=fetch hint for it can never be reused by the client's
+  // real fetch — it would only add a second, wasted request. Product
+  // images stay cacheable, so only the storage-origin preconnect remains.
+  assert.doesNotMatch(html, /rel="preload"/)
   assert.equal(STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL, "no-store")
 })
 

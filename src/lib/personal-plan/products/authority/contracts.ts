@@ -61,6 +61,7 @@ export type Stage3AuthorityCommonProductFacts = {
   netContentValue?: number | null
   netContentUnit?: "ml" | "g" | null
   affiliateLink?: string | null
+  currency?: string | null
 }
 
 export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {

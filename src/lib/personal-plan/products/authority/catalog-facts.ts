@@ -81,6 +81,7 @@ type Stage3AuthorityPresentationFields = {
   netContentValue?: number | null
   netContentUnit?: "ml" | "g" | null
   affiliateLink?: string | null
+  currency?: string | null
 }
 
 export async function loadStage3AuthorityFactBundle(
@@ -171,7 +172,7 @@ async function loadLegacyRecommendationCandidates(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
     )
     .eq("category_key", category)
     .eq("is_active", true)
@@ -201,7 +202,7 @@ async function loadRecommendationCandidates(
       client
         .from("products")
         .select(
-          "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link",
+          "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
           { count: "exact" },
         )
         .eq("category_key", category)
@@ -236,7 +237,7 @@ async function loadOneProduct(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
     )
     .eq("id", productId)
     .eq("category_key", category)
@@ -315,6 +316,7 @@ function assembleProductFacts(
         ? (product.net_content_unit as "ml" | "g")
         : null,
     affiliateLink: text(product.affiliate_link),
+    currency: text(product.currency),
   }
   const fingerprintCommon = omitPresentationFields(
     common as typeof common & Stage3AuthorityPresentationFields,
@@ -339,6 +341,7 @@ function omitPresentationFields<T extends Stage3AuthorityPresentationFields>(
     "netContentValue",
     "netContentUnit",
     "affiliateLink",
+    "currency",
   ])
   return Object.fromEntries(
     Object.entries(value).filter(
@@ -455,7 +458,7 @@ async function loadProductsByIds(
             client
               .from("products")
               .select(
-                "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link",
+                "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
                 { count: "exact" },
               )
               .eq("category_key", category) as unknown as {
