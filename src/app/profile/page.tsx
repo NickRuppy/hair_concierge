@@ -269,6 +269,20 @@ function hasProfileFieldValue(value: ProfileFieldValue): boolean {
   return value !== null && (!Array.isArray(value) || value.length > 0)
 }
 
+// Exported for a direct unit test — the Produkte section only shows the Personal Plan
+// fallback when there are no legacy user_product_usage rows AND the active routine actually
+// has owned/planned products. A present-but-empty routineProducts array (active routine, zero
+// owned/planned items) must fall through to the normal "Noch keine Produktangaben" empty state
+// rather than showing the "Aus deinem Personal Plan" badge over nothing.
+export function selectPlanProductRows(
+  legacyProductRowCount: number,
+  routineProducts: RoutineProductFromPlan[] | null,
+): RoutineProductFromPlan[] | null {
+  if (legacyProductRowCount !== 0) return null
+  if (routineProducts === null || routineProducts.length === 0) return null
+  return routineProducts
+}
+
 function toggleConcern(currentValues: ProfileConcern[], concern: ProfileConcern): ProfileConcern[] {
   if (currentValues.includes(concern)) {
     return currentValues.filter((value) => value !== concern)
@@ -862,8 +876,9 @@ export default function ProfilePage() {
   const incompleteProductRows = productRows.filter((row) => row.needsUserDetails)
   // When there are no logged user_product_usage rows, fall back to the active Personal Plan
   // routine's products instead of claiming "keine Angaben". Null when there is no active routine
-  // (or it's mid authority-repair), matching /routine's own fallback behavior.
-  const planProductRows = productRows.length === 0 ? routineProducts : null
+  // (or it's mid authority-repair), or when routineProducts is present but empty — see
+  // selectPlanProductRows above.
+  const planProductRows = selectPlanProductRows(productRows.length, routineProducts)
 
   const quizStatus = profileLoading
     ? "Wird geladen"

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { selectPlanProductRows } from "../src/app/profile/page"
 import { PROFILE_FIELD_CONFIG } from "../src/lib/profile/section-config"
 import type { HairProfile } from "../src/lib/types"
 
@@ -67,4 +68,28 @@ test("plan night protection maps to existing labels", () => {
   assert.deepEqual(nightProtectionField.getValue(null, { nightProtection: ["pineapple"] }), [
     "Pineapple",
   ])
+})
+
+const samplePlanProduct = {
+  categoryLabel: "Shampoo",
+  name: "Testprodukt",
+  purposeLabel: "Reinigung",
+  state: "owned" as const,
+  cadenceLabel: "2x pro Woche",
+}
+
+test("selectPlanProductRows falls back to routine products when legacy rows are empty", () => {
+  assert.deepEqual(selectPlanProductRows(0, [samplePlanProduct]), [samplePlanProduct])
+})
+
+test("selectPlanProductRows stays null when legacy rows exist", () => {
+  assert.equal(selectPlanProductRows(1, [samplePlanProduct]), null)
+})
+
+test("selectPlanProductRows stays null without an active routine", () => {
+  assert.equal(selectPlanProductRows(0, null), null)
+})
+
+test("selectPlanProductRows falls through to the empty state for a present-but-empty routine", () => {
+  assert.equal(selectPlanProductRows(0, []), null)
 })
