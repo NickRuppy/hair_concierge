@@ -54,6 +54,7 @@ const PUBLICATION_DEFECT_CODES = new Set<CatalogAuthorityAuditIssueCode>([
   "overlapping_product_guidance_authority",
   "overlapping_category_fact_authority",
   "provenance_missing",
+  "publication_state_conflict",
 ])
 
 export function auditCatalogAuthority(
@@ -82,6 +83,15 @@ export function auditCatalogAuthority(
     if (!product.categoryKey) {
       add("category_missing_or_invalid", product, "products", "category_key is missing or invalid")
     }
+    if (product.recommendable && (!product.isActive || product.lifecycleStatus !== "active")) {
+      add(
+        "publication_state_conflict",
+        product,
+        "products",
+        "recommendable product is inactive or not in active lifecycle state",
+      )
+    }
+    if (product.superseded) continue
     if (
       product.legacyCategory !== null &&
       normalizeCategory(product.legacyCategory) !== product.categoryKey
@@ -143,14 +153,17 @@ export function auditCatalogAuthority(
       row.table === "product_leave_in_fit_specs" &&
       snapshot.facts.some(
         (candidate) =>
-          candidate.productId === row.productId && candidate.table === "product_leave_in_specs",
+          candidate.productId === row.productId &&
+          candidate.table === "product_leave_in_specs" &&
+          (candidate.weight !== row.weight ||
+            candidate.conditionerRelationship !== row.conditionerRelationship),
       )
     ) {
       add(
         "overlapping_category_fact_authority",
         product,
         row.table,
-        "legacy Leave-in fit facts overlap canonical Leave-in specs",
+        "legacy Leave-in fit facts conflict with canonical Leave-in shared semantics",
         "leave_in",
       )
     }
@@ -221,7 +234,7 @@ export function auditCatalogAuthority(
         "protocol payload scope differs from indexed product/category",
       )
     }
-    if (!protocol.v2Complete) {
+    if (!protocol.v2Complete && requiresPublicationCompleteness(product)) {
       add(
         "exact_protocol_scope_mismatch",
         product,
@@ -282,23 +295,23 @@ export function auditCatalogAuthority(
   }
 
   for (const product of snapshot.products) {
+    if (product.superseded) continue
+    if (!requiresPublicationCompleteness(product)) continue
     auditProductFacts(product, snapshot.facts, add)
     auditProductProtocols(product, snapshot, add)
-    if (requiresPublicationCompleteness(product)) {
-      const hasEvidence = snapshot.evidence.some(
-        (row) =>
-          row.productId === product.productId &&
-          Boolean(row.sourceUrl?.trim()) &&
-          Boolean(row.contentFingerprint?.trim()),
+    const hasEvidence = snapshot.evidence.some(
+      (row) =>
+        row.productId === product.productId &&
+        Boolean(row.sourceUrl?.trim()) &&
+        Boolean(row.contentFingerprint?.trim()),
+    )
+    if (!hasEvidence) {
+      add(
+        "provenance_missing",
+        product,
+        "personal_plan_catalog_fact_evidence",
+        "published product has no complete fact evidence row",
       )
-      if (!hasEvidence) {
-        add(
-          "provenance_missing",
-          product,
-          "personal_plan_catalog_fact_evidence",
-          "published product has no complete fact evidence row",
-        )
-      }
     }
   }
 

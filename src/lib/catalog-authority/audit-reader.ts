@@ -95,6 +95,10 @@ const READ_REQUESTS: readonly CatalogAuditReadRequest[] = [
   },
   { table: "application_guidance_protocols", orderBy: ["product_id", "id"] },
   {
+    table: "product_relationships",
+    orderBy: ["source_product_id", "relationship_type", "target_product_id"],
+  },
+  {
     table: "personal_plan_catalog_fact_evidence",
     orderBy: ["product_id", "fact_key", "source_url"],
   },
@@ -129,8 +133,20 @@ export async function readCatalogAuthorityAuditSnapshot(
       .map((row) => text(row.product_id))
       .filter((value): value is string => value !== null),
   )
+  const supersededIds = new Set(
+    (rows.get("product_relationships") ?? [])
+      .filter((row) => text(row.relationship_type) === "replaced_by")
+      .map((row) => text(row.source_product_id))
+      .filter((value): value is string => value !== null),
+  )
   const products = (rows.get("products") ?? []).flatMap((row) =>
-    normalizeProduct(row, factRowsByTable, dispositionedIds),
+    normalizeProduct(
+      row,
+      factRowsByTable,
+      rows.get("product_thickness_eligibility") ?? [],
+      dispositionedIds,
+      supersededIds,
+    ),
   )
   const snapshot = {
     schemaVersion: CATALOG_AUTHORITY_SCHEMA_VERSION,
@@ -183,7 +199,9 @@ export function catalogAuthorityAuditReadRequests(): CatalogAuditReadRequest[] {
 function normalizeProduct(
   row: Row,
   facts: Map<(typeof FACT_TABLES)[number], Row[]>,
+  thicknessEligibility: Row[],
   dispositionedIds: Set<string>,
+  supersededIds: Set<string>,
 ): CatalogAuditProduct[] {
   const productId = text(row.id)
   if (!productId) return []
@@ -201,13 +219,13 @@ function normalizeProduct(
       recommendable: row.is_chaarlie_recommended === true,
       suitableThicknesses,
       suitableConcerns,
-      canonicalThicknesses: canonicalThicknesses(productId, categoryKey, facts),
-      // Task 2's normalized rows are expand-phase projections of this legacy
-      // field. Do not claim independent canonical parity until repair and the
-      // transactional publication boundary take ownership in later tasks.
+      canonicalThicknesses: canonicalThicknesses(productId, categoryKey, thicknessEligibility),
+      // Concern eligibility remains an expand-phase legacy projection until
+      // the reviewed repair manifests make it independent authority.
       canonicalConcerns: null,
       requiredRoles: requiredRoles(productId, categoryKey, facts),
       dispositioned: dispositionedIds.has(productId),
+      superseded: supersededIds.has(productId),
     },
   ]
 }
@@ -223,6 +241,19 @@ function normalizeFactRow(table: (typeof FACT_TABLES)[number], row: Row): Catalo
       complete: factComplete(table, row),
       contextualKey: contextualKey(table, row),
       thickness: text(row.thickness),
+      weight: text(row.weight),
+      conditionerRelationship:
+        table === "product_leave_in_fit_specs"
+          ? text(row.conditioner_relationship)
+          : table === "product_leave_in_specs"
+            ? textArray(row.roles).includes("replacement_conditioner")
+              ? "replacement_capable"
+              : "booster_only"
+            : null,
+      careBenefits:
+        table === "product_leave_in_fit_specs" || table === "product_leave_in_specs"
+          ? textArray(row.care_benefits)
+          : null,
     },
   ]
 }
@@ -243,6 +274,9 @@ function normalizeEligibilityRow(
       complete: true,
       contextualKey: value,
       thickness: table === "product_thickness_eligibility" ? value : null,
+      weight: null,
+      conditionerRelationship: null,
+      careBenefits: null,
     },
   ]
 }
@@ -331,17 +365,12 @@ function contextualKey(table: (typeof FACT_TABLES)[number], row: Row): string | 
 function canonicalThicknesses(
   productId: string,
   categoryKey: PersonalPlanCategory | null,
-  facts: Map<(typeof FACT_TABLES)[number], Row[]>,
+  thicknessEligibility: Row[],
 ): string[] | null {
   if (!categoryKey) return null
-  if (categoryKey === "heat_protectant") return null
-  // Shampoo is the only current thickness fact whose legacy sync trigger has
-  // been retired. Conditioner, Leave-in, and Oil still derive their rows from
-  // suitable_thicknesses, so comparing them would only compare a projection.
-  const table = categoryKey === "shampoo" ? "product_shampoo_specs" : undefined
-  if (!table) return null
-  const values = (facts.get(table) ?? [])
-    .filter((row) => text(row.product_id) === productId)
+  if (["heat_protectant", "dry_shampoo", "scalp_care"].includes(categoryKey)) return null
+  const values = thicknessEligibility
+    .filter((row) => text(row.product_id) === productId && text(row.category_key) === categoryKey)
     .map((row) => text(row.thickness))
     .filter((value): value is string => value !== null)
   return [...new Set(values)].sort()

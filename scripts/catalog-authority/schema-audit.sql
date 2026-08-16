@@ -22,7 +22,7 @@ WITH constraint_objects AS (
           'products_category_key_fkey',
           'products_id_category_key_key',
           'products_category_key_not_null_check',
-          'product_shampoo_specs_product_id_fkey',
+'product_shampoo_specs_product_id_fkey',
           'product_conditioner_specs_product_id_fkey',
           'product_conditioner_rerank_specs_product_id_fkey',
           'product_leave_in_specs_product_id_fkey',
@@ -35,7 +35,8 @@ WITH constraint_objects AS (
           'product_dry_shampoo_specs_product_id_fkey',
           'product_bondbuilder_specs_product_id_fkey',
           'product_deep_cleansing_shampoo_specs_product_id_fkey',
-          'product_application_protocols_product_id_fkey'
+          'product_application_protocols_product_id_fkey',
+          'products_recommendable_requires_active_check'
         )
         OR constraint_row.conname LIKE 'product\_%\_product\_category\_fkey' ESCAPE '\'
         OR constraint_row.conname LIKE 'product\_%\_thickness\_eligibility\_fkey' ESCAPE '\'
