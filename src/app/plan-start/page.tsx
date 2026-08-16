@@ -20,6 +20,8 @@ import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/ses
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage2Enabled,
+  isPersonalPlanStage3Enabled,
+  isPersonalPlanStage4Enabled,
 } from "@/lib/personal-plan/release"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -32,6 +34,13 @@ export const metadata: Metadata = {
 export type PlanStartPageDeps = {
   enabled: () => boolean
   stage2Enabled: () => boolean
+  /**
+   * Direct acceptance drives Stage 2 → 3 → 4 headlessly, so the fork may only
+   * offer it when the accept route's own flag set is satisfied. Fail closed:
+   * an unwired caller gets the refine-only fork.
+   */
+  stage3Enabled?: () => boolean
+  stage4Enabled?: () => boolean
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   loadExistingRefinementSession: (userId: string) => Promise<Stage2RefinementSession | null>
@@ -94,10 +103,16 @@ export async function resolvePlanStartPageState(
         stage2Enabled ? { stage: "stage1" } : { stage: "stage1", refinementAvailable: false },
       )
     }
+    // Mirrors the accept route's gate: reachable Stage 2 plus the Stage 3 and 4
+    // flags it drives headlessly.
+    const directAcceptance =
+      deps.stage3Enabled?.() && deps.stage4Enabled?.()
+        ? ({ directAcceptanceAvailable: true } as const)
+        : {}
 
     const refinement = await deps.loadExistingRefinementSession(userId)
     if (!refinement) {
-      return production({ stage: "stage1" })
+      return production({ stage: "stage1", ...directAcceptance })
     }
     const initialRefinementSession = isUsableInitialRefinementSession(refinement)
       ? refinement
@@ -136,7 +151,7 @@ export async function resolvePlanStartPageState(
       )
     }
     return production(
-      { stage: "stage2" },
+      { stage: "stage2", ...directAcceptance },
       initialRefinementSession
         ? { personalPlanId: access.personalPlanId, initialRefinementSession }
         : undefined,
@@ -168,6 +183,8 @@ export default async function PlanStartPage({
     {
       enabled: isPersonalPlanAppV1Enabled,
       stage2Enabled: isPersonalPlanStage2Enabled,
+      stage3Enabled: isPersonalPlanStage3Enabled,
+      stage4Enabled: isPersonalPlanStage4Enabled,
       getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
       loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
       loadExistingRefinementSession: async (userId) =>
