@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 – Aufgaben-Zuordnung</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #373331;
+        --sub: #756f6b;
+        --plum: #3f285f;
+        --lavender: #7350a5;
+        --rose: #d96070;
+        --paper: #fffdfb;
+        --line: #e6e0dc;
+        --blush: #f8ecee;
+        --green: #327249;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #2f3031; color: var(--ink); }
+      main { width: 1400px; min-height: 960px; margin: 0 auto; padding: 38px 44px; }
+      h1, h2 { font-family: Georgia, serif; font-weight: 500; }
+      .title { color: white; margin: 0 0 8px; font-size: 34px; }
+      .subtitle { color: #d5d0cc; margin: 0 0 30px; font-size: 17px; }
+      .board { display: grid; grid-template-columns: 410px 110px 410px 1fr; gap: 20px; align-items: center; }
+      .phone { position: relative; height: 760px; background: var(--paper); border-radius: 28px; overflow: hidden; box-shadow: 0 16px 40px #0006; }
+      .top { padding: 22px 24px 16px; border-bottom: 1px solid var(--line); }
+      .brand { display: flex; justify-content: space-between; align-items: center; }
+      .brand b { font-family: Georgia, serif; color: var(--plum); font-size: 28px; }
+      .saved { color: var(--green); font-weight: 700; }
+      .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-top: 18px; }
+      .step { height: 7px; border-radius: 99px; background: #d8d3d0; }
+      .step.on { background: var(--lavender); }
+      .step.current { background: var(--plum); }
+      .content { padding: 30px 28px 112px; }
+      .back { color: var(--sub); font-size: 28px; margin-bottom: 34px; }
+      .content h2 { font-size: 38px; line-height: 1.05; margin: 0 0 14px; }
+      .content p { color: var(--sub); font-size: 16px; line-height: 1.45; }
+      .warning { font-weight: 750; margin-top: 24px; }
+      .card { margin-top: 26px; border: 1px solid var(--line); border-radius: 20px; padding: 22px; background: white; }
+      .product-name { font-size: 19px; font-weight: 750; }
+      .empty { margin-top: 18px; min-height: 38px; border: 1px dashed #d7cbc5; border-radius: 10px; color: #9b918c; display: grid; place-items: center; font-size: 13px; }
+      .cta { margin-top: 24px; background: var(--rose); color: white; text-align: center; padding: 18px; border-radius: 99px; font-size: 18px; font-weight: 750; }
+      .sticky-action { position: absolute; inset: auto 0 0; border-top: 1px solid var(--line); background: #fffdfbf2; padding: 12px 28px; backdrop-filter: blur(10px); }
+      .sticky-action .cta { margin-top: 0; }
+      .category { color: var(--plum); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      .arrow { color: white; text-align: center; }
+      .arrow .line { font-size: 48px; }
+      .arrow strong { display: block; font-size: 17px; }
+      .arrow span { display: block; color: #d5d0cc; font-size: 14px; margin-top: 8px; line-height: 1.35; }
+      .rules { align-self: stretch; background: #f6f2ef; border-radius: 24px; padding: 24px; }
+      .rules h2 { color: var(--plum); margin: 0 0 16px; font-size: 25px; }
+      .rule { border-top: 1px solid #ddd3cd; padding: 15px 0; }
+      .rule:first-of-type { border-top: 0; }
+      .rule b { display: block; font-size: 16px; }
+      .rule span { display: block; margin-top: 4px; color: var(--sub); line-height: 1.4; font-size: 14px; }
+      .yes { color: #8f3946; }
+      .no { color: var(--green); }
+      .caption { margin-top: 20px; color: #d5d0cc; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 class="title">Stage 3: Aufgaben-Zuordnung nur bei echter Entscheidung</h1>
+      <p class="subtitle">Planungsevidenz · aktueller Null-Rollen-Fehler → vorgeschlagener direkter Übergang</p>
+      <div class="board">
+        <section class="phone" aria-label="Aktueller fehlerhafter Zustand">
+          <div class="top">
+            <div class="brand"><b>chaarlie</b><span class="saved">Gespeichert</span></div>
+            <div class="steps"><i class="step on"></i><i class="step on"></i><i class="step current"></i><i class="step"></i><i class="step"></i></div>
+          </div>
+          <div class="content">
+            <div class="back">←</div>
+            <h2>Welche Aufgabe hat dein Conditioner?</h2>
+            <p>Ordne jedes Produkt nur den Aufgaben zu, die es wirklich übernimmt.</p>
+            <p class="warning">Nicht ausgewählte Aufgaben bleiben als offene Lücke im Plan erhalten.</p>
+            <div class="card">
+              <div class="product-name">Bali Curls Moisturising Conditioner</div>
+              <div class="empty">Keine Aufgabe vorhanden</div>
+            </div>
+            <div class="cta">Auswahl übernehmen</div>
+          </div>
+        </section>
+
+        <div class="arrow" aria-label="Dieser Schritt wird übersprungen">
+          <div class="line">→</div>
+          <strong>Direkt weiter</strong>
+          <span>keine erfundene Aufgabe<br />kein zusätzlicher Klick</span>
+        </div>
+
+        <section class="phone" aria-label="Vorgeschlagener Folgezustand">
+          <div class="top">
+            <div class="brand"><b>chaarlie</b><span class="saved">Gespeichert</span></div>
+            <div class="steps"><i class="step on"></i><i class="step on"></i><i class="step current"></i><i class="step"></i><i class="step"></i></div>
+          </div>
+          <div class="content">
+            <div class="back">←</div>
+            <h2>Nicht in deiner Routine</h2>
+            <p>Dein Idealplan sieht aktuell keinen Conditioner vor. Du findest ihn weiterhin unter „Meine Produkte“.</p>
+            <div class="card">
+              <div class="category">Conditioner</div>
+              <div class="product-name">Bali Curls Moisturising Conditioner</div>
+            </div>
+            <div class="sticky-action"><div class="cta">Weiter</div></div>
+          </div>
+        </section>
+
+        <aside class="rules">
+          <h2>Wann erscheint die Seite?</h2>
+          <div class="rule"><b class="no">0 Aufgaben: nie</b><span>Inventory-only, pausiert oder nicht ausführbar. Direkt ohne Rollen-Zuordnung weiter.</span></div>
+          <div class="rule"><b class="no">1 Aufgabe + 1 Produkt: nie</b><span>Die einzige Aufgabe wird automatisch zugeordnet.</span></div>
+          <div class="rule"><b>1 Aufgabe + mehrere Produkte: manchmal</b><span>Nur anzeigen, wenn genau ein Produkt diese Aufgabe übernehmen darf. Conditioner erlaubt mehrere und wird automatisch zugeordnet.</span></div>
+          <div class="rule"><b class="yes">Mehrere Aufgaben: ja</b><span>Anzeigen, sofern keine bereits bestätigte Angabe die Zuordnung eindeutig festlegt.</span></div>
+        </aside>
+      </div>
+      <p class="caption">Die Korrektur verändert keine Empfehlung und nimmt inventory-only Produkte nicht in die Routine auf; sie entfernt ausschließlich eine inhaltsleere Zwischenfrage.</p>
+    </main>
+  </body>
+</html>

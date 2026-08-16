@@ -11,6 +11,7 @@ import {
   ProductKindReviewScreen,
   SemanticRoleAssignment,
   Stage3Shell,
+  Stage3StickyAction,
   Stage3SystemState,
   Stage3Transition,
 } from "../src/components/personal-plan-products"
@@ -139,6 +140,21 @@ test("the journey header labels local review choices without claiming a server s
 
   assert.match(html, /Auswahl gemerkt/)
   assert.doesNotMatch(html, />Gespeichert</)
+})
+
+test("Stage 3 primary actions stay viewport-sticky and align to the desktop content column", () => {
+  const html = renderToStaticMarkup(
+    <Stage3StickyAction className="grid gap-2">
+      <button type="button">Weiter</button>
+    </Stage3StickyAction>,
+  )
+
+  assert.match(html, /fixed inset-x-0 bottom-0/)
+  assert.match(html, /pb-\[calc\(0\.75rem\+env\(safe-area-inset-bottom\)\)\]/)
+  assert.match(html, /md:left-1\/2/)
+  assert.match(html, /md:max-w-\[640px\]/)
+  assert.match(html, /md:-translate-x-1\/2/)
+  assert.match(html, /grid gap-2/)
 })
 
 function createAuthorityTestGateway(
@@ -1350,10 +1366,29 @@ test("inventory-only products render acknowledgement-only and never enter fit co
     />,
   )
   assert.match(dispositionHtml, /Batiste Blush Trockenshampoo/)
-  assert.match(dispositionHtml, /Nicht Teil deiner Routine/)
-  assert.match(dispositionHtml, /Bleibt unter .Meine Produkte. gespeichert/)
-  assert.match(dispositionHtml, /Verstanden, weiter/)
+  assert.match(dispositionHtml, /Nicht in deiner Routine/)
+  assert.match(dispositionHtml, /aktuell nicht in deinem Idealplan vorgesehen/)
+  assert.match(dispositionHtml, /Meine Produkte/)
+  assert.match(dispositionHtml, />Weiter</)
+  assert.doesNotMatch(
+    dispositionHtml,
+    /Dieses Produkt bleibt erfasst|Von dir als regelmäßig verwendet|Nicht Teil deiner Routine|Verstanden, weiter|Wenn sich dein Idealplan später ändert/,
+  )
   assert.doesNotMatch(dispositionHtml, /Alternative|Ersatz|übernehmen/)
+
+  const unassignedRoleHtml = renderToStaticMarkup(
+    <Stage3InventoryDispositionReview
+      disposition={{
+        ...disposition.props.disposition,
+        reason: "not_assigned_to_final_role",
+      }}
+      product={disposition.props.product}
+      onAcknowledge={() => {}}
+      onBack={() => {}}
+    />,
+  )
+  assert.match(unassignedRoleHtml, /übernimmt aktuell keine Aufgabe in deiner Routine/)
+  assert.match(unassignedRoleHtml, /Meine Produkte/)
 
   disposition.props.onAcknowledge()
   tree = await renderSettled(harness)
@@ -2118,6 +2153,51 @@ test("multiple Conditioners auto-assign to their sole multi-product role", async
       (candidate) => candidate.roles.length === 1 && candidate.roles[0] === "conditioner_rinse_out",
     ),
   )
+})
+
+test("a Conditioner outside the final plan skips role assignment and saves no roles", async () => {
+  let finalization:
+    | Extract<
+        Parameters<Stage3ProductsGateway["mutate"]>[0]["mutation"],
+        { type: "replace_capture_category" }
+      >
+    | undefined
+  const gateway = createAuthorityTestGateway()
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    if (input.mutation.type === "replace_capture_category") finalization = input.mutation
+    return originalMutate(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-conditioner-inventory-only",
+    refinedVersionId: "refined-conditioner-inventory-only",
+    orderedCategories: [
+      {
+        category: "conditioner",
+        requiredRoles: [],
+        needSummary: "Conditioner ist aktuell nicht Teil des Idealplans",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Conditioner", "condition", 0)
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+
+  assert.equal(findByType(tree, SemanticRoleAssignment), null)
+  assert.equal(finalization?.candidates.length, 1)
+  assert.deepEqual(finalization?.candidates[0]?.roles, [])
+  assert.deepEqual(finalization?.uncoveredRoles, [])
 })
 
 test("an uncovered role saves the explicitly selected third strict recommendation", async () => {
@@ -4647,6 +4727,34 @@ test("assigning an Oil use to another product moves the exclusive checkbox", () 
   assert.deepEqual(assignments, {
     "oil-1": ["pre_wash_fibre_treatment"],
     "oil-2": ["dry_finish"],
+  })
+})
+
+test("one Leave-in may cover both roles while each role stays exclusive across products", () => {
+  const withBothRoles = updateStage3RoleAssignments(
+    { "leave-in-1": ["post_wash_leave_in"], "leave-in-2": [] },
+    "leave-in-1",
+    "pre_heat_application",
+    true,
+    true,
+  )
+
+  assert.deepEqual(withBothRoles, {
+    "leave-in-1": ["post_wash_leave_in", "pre_heat_application"],
+    "leave-in-2": [],
+  })
+
+  const splitRoles = updateStage3RoleAssignments(
+    withBothRoles,
+    "leave-in-2",
+    "pre_heat_application",
+    true,
+    true,
+  )
+
+  assert.deepEqual(splitRoles, {
+    "leave-in-1": ["post_wash_leave_in"],
+    "leave-in-2": ["pre_heat_application"],
   })
 })
 

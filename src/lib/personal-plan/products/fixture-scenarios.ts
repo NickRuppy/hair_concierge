@@ -7,9 +7,27 @@ import type {
 } from "./contracts"
 
 export const FIXTURE_STAGE3_SCENARIOS = {
+  inventoryOnlyConditioner: "inventory-only-conditioner",
   uncoveredConditioner: "uncovered-conditioner",
   ownedSearchOverflow: "owned-search-overflow",
 } as const
+
+export function createFixtureInventoryOnlyConditionerEntryContext(): Stage3EntryContext {
+  return {
+    schemaVersion: 1,
+    personalPlanId: "fixture-plan-inventory-only-conditioner",
+    refinedVersionId: "fixture-refined-inventory-only-conditioner",
+    orderedCategories: [
+      {
+        category: "conditioner",
+        requiredRoles: [],
+        needSummary: "Conditioner ist aktuell nicht Teil des Idealplans",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+}
 
 export function createFixtureOwnedSearchOverflowCatalog(): Stage3CatalogCandidate[] {
   return Array.from({ length: 9 }, (_, index) => {

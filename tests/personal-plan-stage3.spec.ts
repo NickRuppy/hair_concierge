@@ -23,6 +23,16 @@ async function openUncoveredConditionerLab(page: Page) {
   }
 }
 
+async function openInventoryOnlyConditionerLab(page: Page) {
+  await page.goto(`${baseUrl}${labPath}?scenario=inventory-only-conditioner`)
+  await expect(page.getByRole("heading", { name: "Dein Conditioner" })).toBeVisible()
+  const cookieDialog = page.getByRole("dialog", { name: "Cookie-Einstellungen" })
+  await cookieDialog.waitFor({ state: "visible", timeout: 2_000 }).catch(() => undefined)
+  if (await cookieDialog.isVisible()) {
+    await cookieDialog.getByRole("button", { name: "Nur essentielle" }).click()
+  }
+}
+
 async function openOwnedSearchOverflowLab(page: Page) {
   await page.goto(`${baseUrl}${labPath}?scenario=owned-search-overflow`)
   await expect(page.getByRole("heading", { name: "Dein Conditioner" })).toBeVisible()
@@ -151,8 +161,8 @@ test.describe("Personal Plan products lab", () => {
     const desktopActionContainer = desktopPrimaryAction.locator("..")
     await expect(desktopActionContainer).toHaveCSS("position", "fixed")
     const desktopActionBeforeScroll = await desktopActionContainer.boundingBox()
-    expect(desktopActionBeforeScroll?.x).toBe(40)
-    expect(desktopActionBeforeScroll?.width).toBe(1360)
+    expect(desktopActionBeforeScroll?.x).toBe(400)
+    expect(desktopActionBeforeScroll?.width).toBe(640)
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
     const desktopActionAfterScroll = await desktopActionContainer.boundingBox()
     expect(desktopActionAfterScroll?.y).toBe(desktopActionBeforeScroll?.y)
@@ -193,6 +203,17 @@ test.describe("Personal Plan products lab", () => {
 
     await page.waitForURL((url) => url.pathname !== labPath)
     await expect(page).not.toHaveURL(new RegExp(`${labPath}$`))
+  })
+
+  test("skips empty Conditioner roles without showing an empty assignment page", async ({
+    page,
+  }) => {
+    await openInventoryOnlyConditionerLab(page)
+    await searchAndSelect(page, "Balance", "Chaarlie Fixture Conditioner Balance")
+    await page.getByRole("button", { name: "Weiter", exact: true }).click()
+
+    await expect(page.getByRole("heading", { name: /Welche Aufgabe/ })).toHaveCount(0)
+    await expect(page.getByRole("heading", { name: "Deine Produktauswahl steht." })).toBeVisible()
   })
 
   test("keeps product-frequency labels centered on their markers at every target width", async ({
