@@ -95,6 +95,109 @@ test("publication completeness matches current bypass and recommendability rules
   assert.deepEqual(incompleteIds, [recommendable.productId, activeCurated.productId])
 })
 
+test("recommendable products cannot contradict inactive or discontinued lifecycle state", () => {
+  const inactive = completeProduct("shampoo", uuid(206))
+  inactive.isActive = false
+  const discontinued = completeProduct("conditioner", uuid(207))
+  discontinued.lifecycleStatus = "discontinued"
+  const snapshot = completeSnapshot([inactive, discontinued])
+
+  const receipt = auditCatalogAuthority(snapshot)
+  const conflicts = receipt.issues.filter((issue) => issue.code === "publication_state_conflict")
+
+  assert.deepEqual(
+    conflicts.map((issue) => issue.productId),
+    [inactive.productId, discontinued.productId],
+  )
+})
+
+test("verified replaced-by tombstones retain identity without requiring duplicate authority", () => {
+  const product = incompleteProduct(uuid(207), {
+    isActive: false,
+    lifecycleStatus: "discontinued",
+    superseded: true,
+    canonicalThicknesses: [],
+    requiredRoles: [],
+  })
+  const snapshot = completeSnapshot([product])
+  snapshot.facts = []
+  snapshot.protocols = []
+  snapshot.evidence = []
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.required_spec_missing, undefined)
+  assert.equal(receipt.issueCounts.contextual_matrix_empty, undefined)
+  assert.equal(receipt.issueCounts.required_protocol_missing, undefined)
+  assert.equal(receipt.clean, true)
+})
+
+test("inactive non-recommendable products retain structural checks without publication completeness debt", () => {
+  const product = incompleteProduct(uuid(209), {
+    isActive: false,
+    lifecycleStatus: "discontinued",
+    recommendable: false,
+    canonicalThicknesses: [],
+    requiredRoles: [],
+  })
+  const snapshot = completeSnapshot([product])
+  snapshot.facts = []
+  snapshot.protocols = []
+  snapshot.evidence = []
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.required_spec_missing, undefined)
+  assert.equal(receipt.issueCounts.contextual_matrix_empty, undefined)
+  assert.equal(receipt.issueCounts.required_protocol_missing, undefined)
+  assert.equal(receipt.issueCounts.provenance_missing, undefined)
+  assert.equal(receipt.issueCounts.publication_incomplete, undefined)
+  assert.equal(receipt.issueCounts.legacy_thickness_divergence, 1)
+})
+
+test("retired product protocols retain V1 scope integrity without requiring a V2 runtime pointer", () => {
+  const product = completeProduct("bondbuilder", uuid(210))
+  product.isActive = false
+  product.lifecycleStatus = "discontinued"
+  product.recommendable = false
+  const snapshot = completeSnapshot([product])
+  snapshot.protocols[0]!.v2Complete = false
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.exact_protocol_scope_mismatch, undefined)
+})
+
+test("Leave-in compatibility facts overlap only when shared semantics diverge", () => {
+  const product = completeProduct("leave_in", uuid(208))
+  const snapshot = completeSnapshot([product])
+  const canonical = snapshot.facts.find(
+    (row) => row.table === "product_leave_in_specs" && row.productId === product.productId,
+  )!
+  canonical.weight = "medium"
+  canonical.conditionerRelationship = "booster_only"
+  canonical.careBenefits = ["moisture", "detangling"]
+  snapshot.facts.push({
+    table: "product_leave_in_fit_specs",
+    productId: product.productId,
+    expectedCategory: "leave_in",
+    complete: true,
+    contextualKey: null,
+    thickness: null,
+    weight: "medium",
+    conditionerRelationship: "booster_only",
+    careBenefits: ["detangle_smooth"],
+  })
+
+  assert.equal(
+    auditCatalogAuthority(snapshot).issueCounts.overlapping_category_fact_authority,
+    undefined,
+  )
+
+  snapshot.facts.at(-1)!.weight = "rich"
+  assert.equal(auditCatalogAuthority(snapshot).issueCounts.overlapping_category_fact_authority, 1)
+})
+
 test("publication roll-up includes defects discovered before category completeness checks", () => {
   const product = completeProduct("mask", uuid(206))
   const snapshot = completeSnapshot([product])
@@ -205,7 +308,11 @@ test("target normalized thickness debt remains visible for required singleton ca
 
 test("the audit emits every stable issue code for realistic split-authority defects", () => {
   const valid = completeProduct("shampoo", PRODUCT_ID)
-  const conditioner = completeProduct("conditioner", "22222222-2222-4222-8222-222222222222")
+  const conditioner = {
+    ...completeProduct("conditioner", "22222222-2222-4222-8222-222222222222"),
+    isActive: false,
+    superseded: true,
+  }
   const snapshot = completeSnapshot([valid, conditioner])
   snapshot.products[0] = {
     ...valid,
@@ -225,6 +332,8 @@ test("the audit emits every stable issue code for realistic split-authority defe
       complete: true,
       contextualKey: null,
       thickness: null,
+      weight: "medium",
+      conditionerRelationship: "booster_only",
     },
     {
       table: "product_leave_in_fit_specs",
@@ -233,6 +342,8 @@ test("the audit emits every stable issue code for realistic split-authority defe
       complete: true,
       contextualKey: null,
       thickness: null,
+      weight: "rich",
+      conditionerRelationship: "booster_only",
     },
     {
       table: "product_shampoo_specs",
@@ -350,6 +461,7 @@ function completeProduct(
     canonicalConcerns: ["dryness"],
     requiredRoles: rolesFor(category),
     dispositioned: false,
+    superseded: false,
   }
 }
 
@@ -467,3 +579,38 @@ function rolesFor(category: NonNullable<CatalogAuditProduct["categoryKey"]>): st
 function uuid(value: number): string {
   return `00000000-0000-4000-8000-${value.toString().padStart(12, "0")}`
 }
+
+test("a replaced_by edge on a still-published product is flagged and suppresses nothing", () => {
+  const product = incompleteProduct(uuid(211), {
+    recommendable: true,
+    superseded: true,
+    canonicalThicknesses: [],
+    requiredRoles: [],
+  })
+  const snapshot = completeSnapshot([product])
+  snapshot.facts = []
+  snapshot.protocols = []
+  snapshot.evidence = []
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.superseded_product_still_published, 1)
+  assert.equal(receipt.issueCounts.provenance_missing, 1)
+  assert.equal(receipt.clean, false)
+})
+
+test("an active but non-recommendable product with a replaced_by edge keeps structural checks", () => {
+  const product = incompleteProduct(uuid(212), {
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: false,
+    superseded: true,
+    legacyCategory: "conditioner",
+  })
+  const snapshot = completeSnapshot([product])
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.superseded_product_still_published, 1)
+  assert.equal(receipt.issueCounts.legacy_category_divergence, 1)
+})

@@ -124,6 +124,7 @@ test("the snapshot reader exhaustively requests only the declared read relations
   assert.equal(receipt.countsByRelation.product_thickness_eligibility, 1)
   assert.deepEqual(snapshot.products[0]?.canonicalThicknesses, ["normal"])
   assert.equal(snapshot.products[0]?.canonicalConcerns, null)
+  assert.equal(snapshot.products[0]?.superseded, false)
   assert.equal(
     snapshot.facts.some(
       (fact) =>
@@ -136,7 +137,44 @@ test("the snapshot reader exhaustively requests only the declared read relations
   assert.equal(receipt.countsByRelation.product_oil_specs, 0)
 })
 
-test("expand-phase eligibility projections are counted without claiming canonical parity", async () => {
+test("the snapshot reader recognizes only explicit replaced-by tombstones", async () => {
+  const source: CatalogAuditDataSource = {
+    async readAll(request) {
+      const rows: Record<string, unknown>[] =
+        request.table === "products"
+          ? [
+              {
+                id: PRODUCT_ID,
+                origin: "curated",
+                category_key: "shampoo",
+                category: "shampoo",
+                is_active: false,
+                lifecycle_status: "discontinued",
+                is_chaarlie_recommended: false,
+                suitable_thicknesses: [],
+                suitable_concerns: [],
+              },
+            ]
+          : request.table === "product_relationships"
+            ? [
+                {
+                  source_product_id: PRODUCT_ID,
+                  target_product_id: "22222222-2222-4222-8222-222222222222",
+                  relationship_type: "replaced_by",
+                },
+              ]
+            : []
+      return { rows, exactCount: rows.length }
+    },
+  }
+
+  const snapshot = await readCatalogAuthorityAuditSnapshot(source)
+
+  assert.equal(snapshot.products[0]?.superseded, true)
+  assert.equal(snapshot.rowCounts.product_relationships, 1)
+})
+
+test("normalized thickness authority is category-scoped for every applicable product", async () => {
   const source: CatalogAuditDataSource = {
     async readAll(request) {
       const rows: Record<string, unknown>[] =
@@ -170,7 +208,7 @@ test("expand-phase eligibility projections are counted without claiming canonica
 
   const snapshot = await readCatalogAuthorityAuditSnapshot(source)
 
-  assert.equal(snapshot.products[0]?.canonicalThicknesses, null)
+  assert.deepEqual(snapshot.products[0]?.canonicalThicknesses, ["coarse"])
   assert.equal(snapshot.products[0]?.canonicalConcerns, null)
   assert.equal(snapshot.facts.filter((fact) => fact.table.endsWith("_eligibility")).length, 4)
 })
