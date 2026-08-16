@@ -29,15 +29,16 @@ const RICH_COMPARISON_CATEGORY_ROLES = new Set<string>([
   "oil/leave_on_fibre_conditioning",
   "oil/dry_finish",
   "mask/intensive_conditioning_mask",
+  "bondbuilder/specialized_bond_treatment",
 ])
 
 const CORE_CATEGORIES = new Set<PersonalPlanCategory>(["conditioner", "leave_in", "oil", "mask"])
 
+// Bondbuilder deliberately left this set: it now compares real product properties.
 const SPECIALIST_CATEGORIES = new Set<PersonalPlanCategory>([
   "heat_protectant",
   "scalp_care",
   "dry_shampoo",
-  "bondbuilder",
   "deep_cleansing_shampoo",
 ])
 
@@ -1049,6 +1050,173 @@ for (const role of [
   })
 }
 
+test("Bondbuilder compares application and thickness instead of engine criterion labels", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        factsFor("bondbuilder", "specialized_bond_treatment", "candidate", {
+          applicationMode: "post_wash_leave_in",
+          treatmentMode: "leave_in",
+        }),
+      ],
+    }),
+  )
+
+  assert.equal(comparison.mode, "comparison")
+  assert.deepEqual(
+    comparison.dimensions.map((dimension) => dimension.dimensionId),
+    ["bondbuilder.suitable_thicknesses"],
+  )
+
+  const rows = comparison.evidenceRows ?? []
+  assert.deepEqual(
+    rows.map((row) => row.rowId),
+    ["bondbuilder.application", "bondbuilder.suitable_thicknesses"],
+  )
+  assert.deepEqual(
+    rows.map((row) => row.label),
+    ["Anwendung", "Geeignete Haardicke"],
+  )
+  assert.equal(
+    rows.some((row) =>
+      ["Haarstärke", "Rollenbeziehung", "Kritisches Protokoll"].includes(row.label),
+    ),
+    false,
+  )
+
+  const application = rows[0]
+  assert.ok(application)
+  assert.equal(application.target?.valueLabel, "beides möglich")
+  assert.deepEqual(application.productValues, [
+    { productId: "owned", valueLabel: "Vorwäsche, ausspülen", relation: "in_target" },
+    { productId: "candidate", valueLabel: "Leave-in nach der Wäsche", relation: "in_target" },
+  ])
+
+  const thickness = rows[1]
+  assert.ok(thickness)
+  assert.equal(thickness.target?.valueLabel, "mittel")
+  assert.deepEqual(
+    thickness.productValues.map((value) => value.valueLabel),
+    ["fein, mittel", "fein, mittel"],
+  )
+})
+
+test("Bondbuilder shows the standalone row only when a displayed product is an add-on", () => {
+  const standaloneOnly = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [factsFor("bondbuilder", "specialized_bond_treatment", "candidate")],
+    }),
+  )
+
+  assert.equal(
+    (standaloneOnly.evidenceRows ?? []).some((row) => row.rowId === "bondbuilder.relationship"),
+    false,
+  )
+
+  const withAddOn = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
+          relationship: "add_on",
+        }),
+      ],
+    }),
+  )
+
+  const relationship = (withAddOn.evidenceRows ?? []).find(
+    (row) => row.rowId === "bondbuilder.relationship",
+  )
+  assert.ok(relationship)
+  assert.equal(relationship.label, "Wirkt eigenständig")
+  assert.equal(relationship.target?.valueLabel, "eigenständig")
+  assert.deepEqual(relationship.productValues, [
+    { productId: "owned", valueLabel: "eigenständig", relation: "in_target" },
+    { productId: "add-on-candidate", valueLabel: "nur ergänzend", relation: "supportive" },
+  ])
+})
+
+test("Bondbuilder standalone row states a dedicated rationale, not the generic profile claim", () => {
+  const withAddOn = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
+          relationship: "add_on",
+        }),
+      ],
+    }),
+  )
+
+  const relationship = (withAddOn.evidenceRows ?? []).find(
+    (row) => row.rowId === "bondbuilder.relationship",
+  )
+  assert.ok(relationship)
+  // "standalone" is a hard-coded engine constant, not derived from the user's profile — the
+  // generic fallback rationale would falsely claim otherwise.
+  assert.notEqual(
+    relationship.target?.rationale,
+    "Dieser Zielwert stammt aus deinem bestätigten Bedarfsprofil.",
+  )
+  assert.match(relationship.target?.rationale ?? "", /Produkteigenschaft/)
+})
+
+test("Bondbuilder Anwendung does not invent a leave-in instruction for a rinse-out product", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        // Independent, unconstrained columns: applicationMode says post-wash leave-in while
+        // treatmentMode says rinse-out. Nothing in the schema prevents this disagreement.
+        factsFor("bondbuilder", "specialized_bond_treatment", "contradictory-candidate", {
+          applicationMode: "post_wash_leave_in",
+          treatmentMode: "rinse_out",
+        }),
+      ],
+    }),
+  )
+
+  const application = (comparison.evidenceRows ?? []).find(
+    (row) => row.rowId === "bondbuilder.application",
+  )
+  assert.ok(application)
+  const contradictoryValue = application.productValues.find(
+    (value) => value.productId === "contradictory-candidate",
+  )
+  assert.ok(contradictoryValue)
+  assert.notEqual(contradictoryValue.valueLabel, "Leave-in nach der Wäsche")
+  assert.equal(contradictoryValue.valueLabel, "Ausspülen")
+})
+
+for (const [label, overrides] of [
+  ["standalone-only", {}],
+  ["with an add-on alternative", { relationship: "add_on" as const }],
+] as const) {
+  test(`Bondbuilder ${label} projects a target for every displayed property`, () => {
+    const comparison = buildStage3FitComparison(
+      authorityInput("bondbuilder", "specialized_bond_treatment", {
+        productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+        candidates: [factsFor("bondbuilder", "specialized_bond_treatment", "candidate", overrides)],
+      }),
+    )
+
+    const evidenceRows = comparison.evidenceRows ?? []
+    assert.ok(evidenceRows.length > 0)
+    assert.equal(
+      evidenceRows.every((row) => row.target !== null),
+      true,
+    )
+    assert.equal(
+      evidenceRows
+        .flatMap((row) => row.productValues)
+        .some((value) => value.relation === "no_target"),
+      false,
+    )
+  })
+}
+
 test("Shampoo dandruff stays compact instead of using the everyday scalp rail", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("shampoo", "shampoo_dandruff", {
@@ -1395,6 +1563,9 @@ function factsFor<C extends PersonalPlanCategory>(
     shampooBucket?: string | null
     scalpRoute?: string | null
     relationship?: "standalone" | "add_on" | null
+    applicationMode?: string | null
+    treatmentMode?: string | null
+    usageProtocol?: string | null
     providesHeatProtection?: boolean | null
   } = {},
 ): Extract<Stage3CategoryProductFacts, { category: C }> {
@@ -1529,10 +1700,13 @@ function factsFor<C extends PersonalPlanCategory>(
         ...common,
         category,
         spec: {
-          applicationMode: "pre_shampoo",
-          treatmentMode: "standalone",
+          applicationMode:
+            overrides.applicationMode === undefined ? "pre_shampoo" : overrides.applicationMode,
+          treatmentMode:
+            overrides.treatmentMode === undefined ? "rinse_out" : overrides.treatmentMode,
           productFormat: "treatment",
-          usageProtocol: "verified_course",
+          usageProtocol:
+            overrides.usageProtocol === undefined ? "verified_course" : overrides.usageProtocol,
           relationship: overrides.relationship ?? "standalone",
         },
       } as never

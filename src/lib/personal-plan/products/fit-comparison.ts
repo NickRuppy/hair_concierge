@@ -157,7 +157,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   )
   const entries = [
     ...currentComparisonProductEntries(authorityInput, authorityEvaluation),
-    ...alternativeProductEntries(selectedCandidates),
+    ...alternativeProductEntries(authorityInput, selectedCandidates),
   ]
   const products = entries.map((entry) => entry.product)
   const alternatives = selectedCandidates.map(publicSelectedCandidate)
@@ -249,6 +249,7 @@ function currentComparisonProductEntries(
 }
 
 function alternativeProductEntries(
+  input: Stage3AuthorityInput,
   alternatives: readonly CandidateAssessment[],
 ): ComparisonProductEntry[] {
   return alternatives.map((candidate) => ({
@@ -511,10 +512,11 @@ function comparisonDimensions(
       return maskDimensions(input, entries)
     case "oil":
       return oilDimensions(input, entries)
+    case "bondbuilder":
+      return bondbuilderDimensions(input, entries)
     case "heat_protectant":
     case "scalp_care":
     case "dry_shampoo":
-    case "bondbuilder":
     case "deep_cleansing_shampoo":
       return []
   }
@@ -556,8 +558,10 @@ function evidenceRowsFromDimensions(
       }
     }),
   }))
-  const targetFit = conditionerTargetFitEvidenceRow(input, entries)
-  return targetFit ? [targetFit, ...dimensionRows] : dimensionRows
+  const leadingRow =
+    conditionerTargetFitEvidenceRow(input, entries) ??
+    bondbuilderApplicationEvidenceRow(input, entries)
+  return leadingRow ? [leadingRow, ...dimensionRows] : dimensionRows
 }
 
 function criteriaByProductId(
@@ -620,7 +624,10 @@ function dimensionRelation(
   const criterionId =
     dimension.dimensionId === "oil.role_support" ? "oil.role" : dimension.dimensionId
   const criterion = criteria.find((item) => item.criterionId === criterionId)
-  if (criterion && (input.category === "mask" || input.category === "oil"))
+  if (
+    criterion &&
+    (input.category === "mask" || input.category === "oil" || input.category === "bondbuilder")
+  )
     return stage3CriterionEvidenceRelation(criterion.result)
 
   if (dimension.dimensionId.endsWith(".care_direction"))
@@ -769,6 +776,8 @@ function targetRationale(dimensionId: string): string {
     return "Vor Hitze ist ein bestätigter Schutz für diese Anwendung erforderlich."
   if (dimensionId === "oil.role_support")
     return "Das Produkt muss die ausgewählte Anwendung in deiner Routine ausdrücklich unterstützen."
+  if (dimensionId === "bondbuilder.relationship")
+    return "Ob ein Bondbuilder die Rolle eigenständig erfüllt, ist eine feste Produkteigenschaft – unabhängig von deinem Bedarfsprofil."
   return "Dieser Zielwert stammt aus deinem bestätigten Bedarfsprofil."
 }
 
@@ -1067,6 +1076,107 @@ function oilDimensions(
   ]
 }
 
+function bondbuilderDimensions(
+  input: Stage3AuthorityInput,
+  entries: readonly ComparisonProductEntry[],
+): Stage3FitComparisonDimension[] {
+  const thickness = dimension(
+    "bondbuilder.suitable_thicknesses",
+    "Geeignete Haardicke",
+    "set",
+    THICKNESS_STOPS,
+    input.hairThickness ?? null,
+    entries,
+    (facts) => facts.suitableThicknesses,
+    "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+  )
+  // The standalone axis only earns a row when it actually separates the displayed products.
+  const showsRelationship = entries.some(
+    (entry) => entry.facts.category === "bondbuilder" && entry.facts.spec.relationship === "add_on",
+  )
+  if (!showsRelationship) return [thickness]
+  return [
+    thickness,
+    dimension(
+      "bondbuilder.relationship",
+      "Wirkt eigenständig",
+      "categorical",
+      BONDBUILDER_RELATIONSHIP_STOPS,
+      "standalone",
+      entries,
+      (facts) => (facts.category === "bondbuilder" ? facts.spec.relationship : null),
+      "Die Rollenbeziehung bleibt ein expliziter Katalogwert.",
+    ),
+  ]
+}
+
+/**
+ * The plan target for Bondbuilder is mechanism-neutral, so the application is a real product
+ * difference without a profile target. It stays an explicit row instead of a dimension because
+ * a targetless dimension would mark the whole review as not assessable.
+ */
+function bondbuilderApplicationEvidenceRow(
+  input: Stage3AuthorityInput,
+  entries: readonly ComparisonProductEntry[],
+): Stage3FitEvidenceRow | null {
+  if (input.category !== "bondbuilder") return null
+  return {
+    rowId: "bondbuilder.application",
+    label: "Anwendung",
+    target: {
+      valueLabel: "beides möglich",
+      rationale: "Beide Anwendungen erfüllen die Bond-Rolle. Entscheide nach deinem Alltag.",
+      profileEvidenceLabels: [],
+    },
+    productValues: entries.map(({ product, facts }) => {
+      const application =
+        facts.category === "bondbuilder" ? bondbuilderApplication(facts.spec) : null
+      return {
+        productId: product.productId,
+        valueLabel: application ?? "nicht bestätigt",
+        relation: application ? ("in_target" as const) : ("unknown" as const),
+      }
+    }),
+  }
+}
+
+type BondbuilderApplicationBucket = "pre_rinse" | "post_leave_in"
+
+function bondbuilderApplicationModeBucket(
+  mode: string | null,
+): BondbuilderApplicationBucket | null {
+  if (mode === "pre_shampoo") return "pre_rinse"
+  if (mode === "post_wash_leave_in") return "post_leave_in"
+  return null
+}
+
+function bondbuilderTreatmentModeBucket(mode: string | null): BondbuilderApplicationBucket | null {
+  if (mode === "rinse_out") return "pre_rinse"
+  if (mode === "leave_in") return "post_leave_in"
+  return null
+}
+
+function bondbuilderApplication(spec: {
+  applicationMode: string | null
+  treatmentMode: string | null
+}): string | null {
+  const applicationBucket = bondbuilderApplicationModeBucket(spec.applicationMode)
+  const treatmentBucket = bondbuilderTreatmentModeBucket(spec.treatmentMode)
+  // Both axes are independent, unconstrained columns (see the admin form and migration CHECK
+  // constraints) — nothing enforces they agree. Only assert the two-axis claim when they land in
+  // the same bucket. When they disagree, fall back to the treatment axis alone (whether the
+  // product is rinsed out or left in) instead of inventing a combined instruction.
+  if (applicationBucket && treatmentBucket) {
+    if (applicationBucket === treatmentBucket) {
+      return applicationBucket === "pre_rinse" ? "Vorwäsche, ausspülen" : "Leave-in nach der Wäsche"
+    }
+    return treatmentBucket === "pre_rinse" ? "Ausspülen" : "Leave-in"
+  }
+  if (treatmentBucket) return treatmentBucket === "pre_rinse" ? "Ausspülen" : "Leave-in"
+  if (applicationBucket) return applicationBucket === "pre_rinse" ? "Vorwäsche" : "Nach der Wäsche"
+  return null
+}
+
 function dimension(
   dimensionId: string,
   label: string,
@@ -1118,6 +1228,11 @@ const THICKNESS_STOPS = [
   { stopId: "fine", label: "fein" },
   { stopId: "normal", label: "mittel" },
   { stopId: "coarse", label: "dick" },
+] as const
+
+const BONDBUILDER_RELATIONSHIP_STOPS = [
+  { stopId: "standalone", label: "eigenständig" },
+  { stopId: "add_on", label: "nur ergänzend" },
 ] as const
 
 const BINARY_STOPS = [
