@@ -7,7 +7,14 @@ import type { ApplicationRecoveryKind, ApplicationRecoveryView } from "./applica
 
 const STATE_COPY: Record<
   ApplicationRecoveryKind,
-  { title: string; description: string; actionLabel: string; actionHref: string | null }
+  {
+    title: string
+    description: string
+    actionLabel: string
+    actionHref: string | null
+    secondaryHref?: string
+    secondaryLabel?: string
+  }
 > = {
   feature_disabled: {
     title: "Anwendung gerade nicht verfügbar",
@@ -33,9 +40,11 @@ const STATE_COPY: Record<
   unavailable: {
     title: "Anwendung gerade nicht verfügbar",
     description:
-      "Deine Routine ist unverändert. Lade die Seite neu, sobald die Anleitung wieder erreichbar ist.",
+      "Deine Routine ist unverändert. Du kannst es erneut versuchen oder zurück zu deiner Routine gehen.",
     actionLabel: "Erneut laden",
     actionHref: null,
+    secondaryHref: "/routine",
+    secondaryLabel: "Zur Routine",
   },
 }
 
@@ -44,6 +53,8 @@ const DAY_UNAVAILABLE_COPY = {
   description: "Deine Routine bleibt unverändert. Wähle einen verfügbaren Tag in der Übersicht.",
   actionLabel: "Zur Übersicht",
   actionHref: null,
+  secondaryHref: undefined,
+  secondaryLabel: undefined,
 } as const
 
 export function ApplicationState({ view }: { view: ApplicationRecoveryView }) {
@@ -78,7 +89,17 @@ export function ApplicationState({ view }: { view: ApplicationRecoveryView }) {
             {copy.actionLabel}
           </Link>
         ) : (
-          <ApplicationRetryButton label={copy.actionLabel} />
+          <div className="mt-5 flex flex-col items-center gap-3">
+            <ApplicationRetryButton label={copy.actionLabel} />
+            {copy.secondaryHref && copy.secondaryLabel ? (
+              <Link
+                href={copy.secondaryHref}
+                className="inline-flex min-h-[44px] items-center justify-center rounded-[12px] border-[1.5px] border-primary px-5 text-sm font-semibold text-primary hover:bg-muted"
+              >
+                {copy.secondaryLabel}
+              </Link>
+            ) : null}
+          </div>
         )}
       </div>
     </section>
@@ -92,7 +113,7 @@ function ApplicationRetryButton({ label }: { label: string }) {
     <button
       type="button"
       onClick={() => router.refresh()}
-      className="mt-5 inline-flex min-h-[44px] items-center justify-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="inline-flex min-h-[44px] items-center justify-center rounded-[12px] bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       {label}
     </button>

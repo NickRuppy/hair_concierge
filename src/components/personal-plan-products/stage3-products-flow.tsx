@@ -1,5 +1,6 @@
 "use client"
 
+import * as Sentry from "@sentry/nextjs"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey"
@@ -246,7 +247,7 @@ export function updateStage3RoleAssignments(
 
 export function Stage3ProductsFlow({
   searchDebounceMs = 250,
-  finalizationTimeoutMs = 12_000,
+  finalizationTimeoutMs = 30_000,
   entryContext,
   bootstrap,
   draftId = "fixture-stage3-draft",
@@ -676,6 +677,9 @@ export function Stage3ProductsFlow({
       authorityStatus !== "ready" ||
       allDecisionSubjects.length !== 0 ||
       decisionSubjects.length !== 0 ||
+      // A running recovery installs the canonical draft, which would otherwise look like a fresh
+      // no-decision state and start a second completion next to the one being reconciled.
+      pendingRecoveryMode ||
       completionInFlight.current
     ) {
       return
@@ -683,7 +687,14 @@ export function Stage3ProductsFlow({
     void completeFlow(draft)
     // Completion is keyed to the authoritative no-decision state; completeFlow owns deduplication.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allDecisionSubjects.length, authorityStatus, decisionSubjects.length, draft, phase])
+  }, [
+    allDecisionSubjects.length,
+    authorityStatus,
+    decisionSubjects.length,
+    draft,
+    pendingRecoveryMode,
+    phase,
+  ])
 
   useEffect(() => {
     if (
@@ -734,11 +745,15 @@ export function Stage3ProductsFlow({
       totalSteps={requirements.length + 3}
       saveState={{
         status: shellSaveStatus,
+        // Only recovery and system states name themselves; every capture label stays the
+        // status copy so the narrow header slot keeps its one-line badge.
         label: pendingRecoveryMode
-          ? "Speicherstatus wird geprüft"
+          ? pendingRecoveryMode === "manual"
+            ? "Speicherstatus offen"
+            : "Speicherstatus wird geprüft"
           : systemIssue
             ? "Nicht gespeichert"
-            : categoryCapture.saveLabel,
+            : "",
       }}
       onBack={pendingRecoveryMode ? undefined : onBack}
       contentEntrance={stageEntrance}
@@ -2668,8 +2683,13 @@ export function Stage3ProductsFlow({
       await completeFlow(canonicalDraft)
     } catch (error) {
       if (error instanceof Stage3FinalizationTimeoutError) {
+        // Claim the recovery before releasing the submit guard: an idle submit status with no
+        // recovery mode makes the auto-submit effect resend the whole batch.
+        setPendingRecoveryMode("checking")
         finishDecisionSubmission()
-        setPendingRecoveryMode("manual")
+        Sentry.captureMessage("personal_plan_stage3_finalization_timeout", "warning")
+        await delay(2_000)
+        await handlePendingRecoveryError(error, canonicalDraft)
         return
       }
       if (
@@ -2829,12 +2849,18 @@ export function Stage3ProductsFlow({
       })
       if (options.openOnSuccess) openRoutine(response)
     } catch (error) {
-      completionInFlight.current = false
-      finishDecisionSubmission()
       if (error instanceof Stage3FinalizationTimeoutError) {
-        setPendingRecoveryMode("manual")
+        // Same ordering as the decision batch: claim the recovery before the guards are released.
+        setPendingRecoveryMode("checking")
+        completionInFlight.current = false
+        finishDecisionSubmission()
+        Sentry.captureMessage("personal_plan_stage3_finalization_timeout", "warning")
+        await delay(2_000)
+        await handlePendingRecoveryError(error, sourceDraft)
         return
       }
+      completionInFlight.current = false
+      finishDecisionSubmission()
       await handlePendingRecoveryError(error, sourceDraft)
     }
   }

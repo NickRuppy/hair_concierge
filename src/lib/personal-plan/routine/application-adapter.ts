@@ -130,6 +130,29 @@ function factsFor(category: string, row: ProductRow) {
   return spec ? { facts: spec, provenance: provenance(spec) } : { facts: {}, provenance: {} }
 }
 
+function sanitizeImageUrl(value: unknown): string | null {
+  if (typeof value !== "string") return null
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  try {
+    const parsed = new URL(trimmed)
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? trimmed : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * A confirmed Routine product the catalog can no longer serve under its
+ * accepted identity. Stage 5 keeps the rest of the page usable and reports one
+ * operational warning per demoted item.
+ */
+export type DegradedApplicationItem = {
+  productId: string
+  category: string
+  issue: "catalog_identity_mismatch"
+}
+
 /** Owner-scoped active Routine in, verified catalog identities and exact Heat guidance out. */
 export async function adaptAcceptedActiveRoutineForApplication(input: {
   client: ApplicationRoutineReadClient
@@ -140,6 +163,7 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
   planId: string
   routineItems: NormalizedRoutineItem[]
   unresolvedRoutineItems: NormalizedUnresolvedRoutineItem[]
+  degradedItems: DegradedApplicationItem[]
   exactGuidanceProtocols: ApplicationGuidanceProtocolV1[]
   applicationPointersV2?: ProductApplicationPointerV2[]
 }> {
@@ -189,6 +213,7 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       planId: input.activeVersion.payload.planId,
       routineItems: [],
       unresolvedRoutineItems,
+      degradedItems: [],
       exactGuidanceProtocols: [],
       applicationPointersV2: [],
     }
@@ -207,7 +232,9 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
     if (result.error) throw new CatalogDatabaseReadError()
     protocolRows = (result.data ?? []) as ReviewedProductApplicationProtocolRow[]
   }
-  const routineItems = candidates.map(({ item, routineOrder }) => {
+  const routineItems: NormalizedRoutineItem[] = []
+  const degradedItems: DegradedApplicationItem[] = []
+  for (const { item, routineOrder } of candidates) {
     if (item.product.kind !== "owned" && item.product.kind !== "planned") {
       throw new Error("accepted_routine_product_identity_unavailable")
     }
@@ -221,7 +248,18 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       product.lifecycle_status !== "active" ||
       category !== item.category
     ) {
-      throw new Error("accepted_routine_product_unavailable")
+      // One unavailable catalog identity must degrade its own step only; the
+      // rest of the accepted Routine stays readable.
+      degradedItems.push({ productId, category: item.category, issue: "catalog_identity_mismatch" })
+      unresolvedRoutineItems.push({
+        itemId: item.itemKey,
+        category: item.category,
+        role: semanticRoleByRoutineRole[item.role],
+        routineOrder,
+        applicationInstanceKey: item.assignmentKey,
+        reason: "catalog_unavailable",
+      })
+      continue
     }
     const adapted = factsFor(category, product)
     const reviewedProtocols = protocolRows.filter(
@@ -251,11 +289,11 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
             reapplication: reviewedReapplication,
           }
         : adapted.facts
-    return {
+    routineItems.push({
       itemId: item.itemKey,
       productId: product.id,
       productName: item.product.displayName,
-      imageUrl: product.image_url,
+      imageUrl: sanitizeImageUrl(product.image_url),
       category: item.category,
       role: semanticRoleByRoutineRole[item.role],
       sourceRoutineRole: item.role,
@@ -277,13 +315,19 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       applicationInstanceKey: item.assignmentKey,
       catalogFacts,
       catalogFactProvenance: adapted.provenance,
-    }
-  })
+    })
+  }
+  // A page without a single serviceable product is not a degraded page; it has
+  // no Routine left to show and must not render as ready.
+  if (routineItems.length === 0 && degradedItems.length > 0) {
+    throw new Error("accepted_routine_product_unavailable")
+  }
   return {
     routineVersionId: input.activeVersion.id,
     planId: input.activeVersion.payload.planId,
     routineItems,
     unresolvedRoutineItems,
+    degradedItems,
     exactGuidanceProtocols:
       contractVersion === 1 ? adaptReviewedProductApplicationProtocols(protocolRows) : [],
     applicationPointersV2:

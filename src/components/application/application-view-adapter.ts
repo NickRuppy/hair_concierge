@@ -97,6 +97,7 @@ export function toApplicationPageView({
             productId: step.block.productId,
             productName: step.block.productName,
             categoryLabelDe: categoryLabelDe(step.block.category),
+            reason: step.block.reason ?? ("no_product_chosen" as const),
           }
         }
         return {
@@ -128,6 +129,7 @@ export function toApplicationPageView({
               kind: "open" as const,
               category: step.block.category,
               categoryLabelDe: categoryLabelDe(step.block.category),
+              reason: step.block.reason ?? ("no_product_chosen" as const),
             },
           ]
         return []

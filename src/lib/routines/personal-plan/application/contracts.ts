@@ -123,7 +123,7 @@ export const normalizedRoutineItemSchema = z
     productName: z.string().min(1),
     // Current catalog presentation only. This is deliberately outside the
     // accepted Routine payload and application guidance facts.
-    imageUrl: z.string().url().nullable().optional(),
+    imageUrl: z.string().url().nullable().optional().catch(null),
     category: personalPlanCategorySchema,
     role: semanticRoleSchema,
     inclusion: z.literal("included"),
@@ -150,6 +150,10 @@ export const normalizedUnresolvedRoutineItemSchema = z
     role: semanticRoleSchema,
     routineOrder: z.number().int().nonnegative(),
     applicationInstanceKey: z.string().min(1),
+    // Absent means the accepted Routine never carried a confirmed product.
+    // `catalog_unavailable` marks a confirmed product the catalog can no longer
+    // serve, which the UI must not describe as an open product decision.
+    reason: z.enum(["no_product_chosen", "catalog_unavailable"]).optional(),
   })
   .strict()
 

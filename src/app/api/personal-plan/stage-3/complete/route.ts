@@ -203,6 +203,7 @@ export function createStage3CompleteRouteHandler(deps: Stage3CompleteRouteDeps) 
   return createStage3CompleteRouteHandlers(deps).POST
 }
 
+export const maxDuration = 60
 export const { GET, POST } = createStage3CompleteRouteHandlers({
   enabled: isPersonalPlanAppV1Enabled,
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,

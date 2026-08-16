@@ -158,6 +158,39 @@ test("Stage 5 adapter normalizes catalog read failures without retaining databas
   )
 })
 
+function inputWithProductImage(imageUrl: string) {
+  const { client } = productClient([
+    {
+      id: productId,
+      category: "shampoo",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "active",
+      image_url: imageUrl,
+    },
+  ])
+  return { client, activeVersion: { id: "routine-v1", payload: activePayload() } }
+}
+
+test("relative image_url is sanitized to null instead of failing", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(
+    inputWithProductImage("/images/foo.png"),
+  )
+  assert.equal(result.routineItems[0]?.imageUrl, null)
+})
+
+test("empty image_url is sanitized to null", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(inputWithProductImage(""))
+  assert.equal(result.routineItems[0]?.imageUrl, null)
+})
+
+test("absolute image_url passes through", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(
+    inputWithProductImage("https://cdn.example/x.png"),
+  )
+  assert.equal(result.routineItems[0]?.imageUrl, "https://cdn.example/x.png")
+})
+
 test("Stage 5 V2 adapter selects only typed pointer storage and ignores V1 manufacturer prose", async () => {
   const pointer = {
     schemaVersion: 2,
@@ -609,6 +642,123 @@ for (const [label, row] of [
     )
   })
 }
+
+const productBId = "30000000-0000-4000-8000-000000000002"
+
+function twoItemPayload(): RoutinePayloadV1 {
+  return {
+    planId,
+    items: [
+      activePayload().items[0]!,
+      {
+        itemKey: "item:conditioner",
+        assignmentKey: "assignment:conditioner",
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        state: { inclusion: "included", availability: "owned" },
+        executable: true,
+        product: { kind: "owned", productId: productBId, displayName: "Zweites Produkt" },
+      },
+    ],
+  } as unknown as RoutinePayloadV1
+}
+
+const activeProductB = {
+  id: productBId,
+  category: "conditioner",
+  category_key: "conditioner",
+  is_active: true,
+  lifecycle_status: "active",
+}
+
+function inputWithInactiveProductA() {
+  const { client } = productClient([
+    {
+      id: productId,
+      category: "shampoo",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "discontinued",
+    },
+    activeProductB,
+  ])
+  return { client, activeVersion: { id: "routine-v1", payload: twoItemPayload() } }
+}
+
+function inputWithMiscategorizedProductA() {
+  const { client } = productClient([
+    {
+      id: productId,
+      category: "mask",
+      category_key: "mask",
+      is_active: true,
+      lifecycle_status: "active",
+    },
+    activeProductB,
+  ])
+  return { client, activeVersion: { id: "routine-v1", payload: twoItemPayload() } }
+}
+
+function inputWhereAllProductsInactive() {
+  const { client } = productClient([
+    {
+      id: productId,
+      category: "shampoo",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "discontinued",
+    },
+    { ...activeProductB, is_active: false },
+  ])
+  return { client, activeVersion: { id: "routine-v1", payload: twoItemPayload() } }
+}
+
+test("inactive product demotes its item instead of failing the page", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(inputWithInactiveProductA())
+
+  assert.equal(result.routineItems.length, 1)
+  assert.equal(result.routineItems[0]?.productId, productBId)
+  assert.equal(result.unresolvedRoutineItems.length, 1)
+  assert.deepEqual(result.degradedItems, [
+    { productId, category: "shampoo", issue: "catalog_identity_mismatch" },
+  ])
+})
+
+test("category_key mismatch demotes instead of failing", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(inputWithMiscategorizedProductA())
+
+  assert.equal(result.routineItems.length, 1)
+  assert.deepEqual(result.degradedItems, [
+    { productId, category: "shampoo", issue: "catalog_identity_mismatch" },
+  ])
+  assert.deepEqual(result.unresolvedRoutineItems, [
+    {
+      itemId: "item:shampoo",
+      category: "shampoo",
+      role: "cleanse",
+      routineOrder: 0,
+      applicationInstanceKey: "assignment:shampoo",
+      reason: "catalog_unavailable",
+    },
+  ])
+})
+
+test("all items demoted fails closed", async () => {
+  await assert.rejects(
+    () => adaptAcceptedActiveRoutineForApplication(inputWhereAllProductsInactive()),
+    /accepted_routine_product_unavailable/,
+  )
+})
+
+test("demoted item carries reason catalog_unavailable", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(inputWithInactiveProductA())
+  assert.equal(result.unresolvedRoutineItems[0]?.reason, "catalog_unavailable")
+})
+
+test("a demoted item never leaks the accepted product display name", async () => {
+  const result = await adaptAcceptedActiveRoutineForApplication(inputWithInactiveProductA())
+  assert.doesNotMatch(JSON.stringify(result.unresolvedRoutineItems), /Never sent to observability/)
+})
 
 function profileClient(data: unknown, error: unknown = null) {
   const filters: Array<[string, unknown]> = []

@@ -169,6 +169,57 @@ test("renders an unresolved-only day as explicitly partial rather than claiming 
   assert.match(detailHtml, /Die Anwendung für dieses Produkt wird noch geprüft/)
 })
 
+test("names a demoted catalog product as temporarily unavailable, not as an open decision", () => {
+  const unresolved = {
+    productId: null,
+    productName: null,
+    category: "shampoo" as const,
+    role: "cleanse" as const,
+    applicationInstanceKey: "shampoo:catalog-unavailable",
+    status: "unresolved" as const,
+    reason: "catalog_unavailable" as const,
+  }
+  const view = toApplicationPageView({
+    compiled: {
+      days: [
+        {
+          key: "wash_day",
+          productBlocks: [],
+          outerSequence: [{ kind: "unresolved_product", block: unresolved }],
+          isPartial: true,
+        },
+        { key: "rest_day", productBlocks: [], outerSequence: [] },
+      ],
+      failures: [],
+    },
+    dayDefinitions: definitions,
+  })
+
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+  assert.equal(
+    view.days[0]?.steps[0]?.kind === "unresolved_product"
+      ? view.days[0].steps[0].reason
+      : undefined,
+    "catalog_unavailable",
+  )
+  const overviewHtml = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.match(overviewHtml, /Regal: Shampoo: Produkt gerade nicht verfügbar/)
+  assert.doesNotMatch(overviewHtml, /Produkt noch offen/)
+  // The sighted badge must agree with the aria-label, not read "Offen".
+  assert.match(overviewHtml, />Nicht verfügbar</)
+  assert.doesNotMatch(overviewHtml, />Offen</)
+  const detailHtml = renderToStaticMarkup(
+    createElement(ApplicationPage, { view: { ...view, selectedDayType: "wash_day" } }),
+  )
+  assert.match(detailHtml, /Produkt gerade nicht verfügbar/)
+  assert.match(
+    detailHtml,
+    /Dein gewähltes Produkt ist im Katalog gerade nicht verfügbar\. Deine Routine bleibt gespeichert\./,
+  )
+  assert.doesNotMatch(detailHtml, /Für diese Kategorie fehlen noch ein bestätigtes Produkt/)
+})
+
 test("fails closed when a compiled day has no active canonical definition", () => {
   assert.throws(
     () => toApplicationPageView({ compiled: compiledView(), dayDefinitions: definitions.slice(1) }),
@@ -436,6 +487,7 @@ test("counts open placeholders toward the five-slot shelf row cap", () => {
           kind: "open" as const,
           category,
           categoryLabelDe: category,
+          reason: "no_product_chosen" as const,
         })),
       },
     ],

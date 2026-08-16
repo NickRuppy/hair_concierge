@@ -48,6 +48,7 @@ export type CompiledUnresolvedProductBlock = {
   role: SemanticRole
   applicationInstanceKey: string
   status: "unresolved"
+  reason?: NormalizedUnresolvedRoutineItem["reason"]
 }
 export type CompiledApplicationDayV1 = {
   key: ApplicationDayTypeKey
@@ -73,6 +74,7 @@ type UnresolvedPosition = {
   role: SemanticRole
   routineOrder?: number
   applicationInstanceKey: string
+  reason?: NormalizedUnresolvedRoutineItem["reason"]
 }
 type ApplicationAnchor = ApplicationGuidanceProtocolV1["sequence"]["anchor"]
 type ConditionerRelationship = NonNullable<
@@ -319,6 +321,7 @@ function unresolvedOnlyDay(
         role: item.role,
         applicationInstanceKey: item.applicationInstanceKey,
         status: "unresolved" as const,
+        reason: item.reason,
       },
     }))
   return { key, productBlocks: [], outerSequence, isPartial: true }
@@ -672,6 +675,7 @@ function compileDay(
       role: item.role,
       applicationInstanceKey: item.applicationInstanceKey,
       status: "unresolved" as const,
+      reason: item.reason,
     },
     routineOrder: item.routineOrder,
   }))

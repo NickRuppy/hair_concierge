@@ -75,6 +75,10 @@ export function isPersonalPlanRoutineRoute(pathname: string): boolean {
   return isRoute(pathname, "/routine") || isRoute(pathname, "/anwendung")
 }
 
+export function isPersonalPlanOnboardingBypassRoute(pathname: string): boolean {
+  return isPersonalPlanRoutineRoute(pathname) || isRoute(pathname, "/chat")
+}
+
 export function canBypassLegacyOnboardingForPersonalPlanRoutine(
   pathname: string,
   access: PersonalPlanRoutineAccess | undefined,
@@ -86,6 +90,7 @@ export function canBypassLegacyOnboardingForPersonalPlanRoutine(
   )
   if (isRoute(pathname, "/routine")) return hasPendingOrActiveRoutine
   if (isRoute(pathname, "/anwendung")) return Boolean(access.activeRoutineVersionId)
+  if (isRoute(pathname, "/chat")) return hasPendingOrActiveRoutine
   return false
 }
 

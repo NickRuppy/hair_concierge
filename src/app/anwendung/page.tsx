@@ -60,6 +60,20 @@ export type AnwendungResolverDeps = {
   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
 }
 
+// Only Stage 5's own throw codes may become a Sentry tag. A database or Zod
+// message can carry key and received values, and its cardinality is unbounded.
+const STABLE_FAILURE_CODES = new Set([
+  "accepted_routine_product_unavailable",
+  "accepted_routine_product_identity_unavailable",
+  "application_v2_product_pointers_unavailable",
+  "refined_need_not_found",
+])
+
+function failureCode(error: unknown): string {
+  const message = error instanceof Error ? error.message : ""
+  return STABLE_FAILURE_CODES.has(message) ? message : "unknown"
+}
+
 function failureReason(error: unknown): PersonalPlanApplicationFailureDetails["reason"] {
   const message = error instanceof Error ? error.message : ""
   if (error instanceof CatalogDatabaseReadError) return "database"
@@ -132,6 +146,15 @@ export async function resolveAnwendungPage(
       familyTemplates: familyPayloads,
       productPointers: accepted.applicationPointersV2,
     })
+    for (const degraded of accepted.degradedItems) {
+      deps.reportFailure({
+        ...failureContext,
+        durationMs: Date.now() - startedAt,
+        reason: "product_guidance_unresolved",
+        productId: degraded.productId,
+        issueCode: degraded.issue,
+      })
+    }
     const pointerIssues = compiled.pointerIssues
     if (pointerIssues.length > 0) {
       for (const issue of pointerIssues) {
@@ -180,6 +203,7 @@ export async function resolveAnwendungPage(
       ...failureContext,
       durationMs: Date.now() - startedAt,
       reason: failureReason(error),
+      failureCode: failureCode(error),
     })
     return { state: "unavailable" }
   }

@@ -30,6 +30,7 @@ export type ApplicationUnresolvedProductStepView = {
   productId: string | null
   productName: string | null
   categoryLabelDe: string
+  reason: "no_product_chosen" | "catalog_unavailable"
 }
 
 export type ApplicationTransitionStepView = {
@@ -65,7 +66,12 @@ export type ApplicationShelfSlotView =
       category: PersonalPlanCategory
       status: "confirmed" | "provisional"
     }
-  | { kind: "open"; category: PersonalPlanCategory; categoryLabelDe: string }
+  | {
+      kind: "open"
+      category: PersonalPlanCategory
+      categoryLabelDe: string
+      reason: "no_product_chosen" | "catalog_unavailable"
+    }
 
 export type ApplicationRecoveryKind =
   | "feature_disabled"

@@ -527,5 +527,6 @@ const handlers = createStage3RouteHandlers({
   repairServiceFor: () => createSupabaseStage3RoutineAuthorityRepairService(createAdminClient()),
   checkRateLimit,
 })
+export const maxDuration = 60
 export const GET = handlers.GET
 export const PATCH = handlers.PATCH

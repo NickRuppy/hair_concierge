@@ -536,6 +536,27 @@ async function renderSettled(harness: ClientStateHarness): Promise<ReactElement 
   return harness.render()
 }
 
+/** Re-renders until the expectation holds, so real client timers cannot flake on slow runners. */
+async function renderUntil(
+  harness: ClientStateHarness,
+  matches: (tree: ReactElement | null) => boolean,
+  description: string,
+  timeoutMs = 10_000,
+): Promise<ReactElement | null> {
+  const deadline = Date.now() + timeoutMs
+  for (;;) {
+    const tree = await renderSettled(harness)
+    if (matches(tree)) return tree
+    if (Date.now() >= deadline) assert.fail(`timed out waiting for ${description}`)
+    await new Promise<void>((resolve) => setTimeout(resolve, 100))
+  }
+}
+
+function systemStateTitle(tree: ReactElement | null): string | undefined {
+  return findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+    .title
+}
+
 async function captureCatalogProduct(
   harness: ClientStateHarness,
   categoryLabel: string,
@@ -1397,7 +1418,7 @@ test("inventory-only products render acknowledgement-only and never enter fit co
   assert.equal(completeCalls, 1)
 })
 
-test("an unconfirmed inventory acknowledgement leaves a durable recovery action", async () => {
+test("an unconfirmed inventory acknowledgement auto-reconciles from its durable entry", async () => {
   const requirements: Stage3EntryContext["orderedCategories"] = [
     {
       category: "dry_shampoo",
@@ -1516,7 +1537,7 @@ test("an unconfirmed inventory acknowledgement leaves a durable recovery action"
   assert.equal(
     findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
       .title,
-    "Speicherstatus noch offen.",
+    "Speicherstatus wird geprüft.",
   )
   const pending = readPendingStage3Recovery(storage, {
     ownerId: draft.userId,
@@ -1533,30 +1554,12 @@ test("an unconfirmed inventory acknowledgement leaves a durable recovery action"
   assert.equal(pending?.intent.expectedRevision, draft.revision)
   assert.equal(typeof pending?.intent.createdAt, "number")
 
-  await renderSettled(
-    createClientStateHarness(() =>
-      Stage3ProductsFlow({
-        bootstrap: {
-          entryContext: {
-            schemaVersion: 1,
-            personalPlanId: draft.personalPlanId,
-            refinedVersionId: draft.refinedVersionId,
-            orderedCategories: requirements,
-            inventoryPrompts: [
-              { category: "dry_shampoo", allowsMultiple: true, allowsExplicitNone: true },
-            ],
-          },
-          draft,
-          requirements,
-          authorityEvaluations: [],
-          fitComparisons: [],
-        },
-        gateway,
-        pendingRecoveryStorage: storage,
-      }),
-    ),
+  // The durable entry is reconciled in place, without a remount and without a manual action.
+  const reconciled = await renderUntil(
+    harness,
+    () => acknowledgementCalls === 2,
+    "the in-place acknowledgement resend",
   )
-  assert.equal(acknowledgementCalls, 2)
   assert.equal(
     readPendingStage3Recovery(storage, {
       ownerId: draft.userId,
@@ -1564,6 +1567,11 @@ test("an unconfirmed inventory acknowledgement leaves a durable recovery action"
       draftId: draft.draftId,
     }),
     null,
+  )
+  assert.notEqual(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(reconciled, Stage3SystemState)?.props
+      .title,
+    "Speicherstatus noch offen.",
   )
 
   releaseAcknowledgement()
@@ -4154,8 +4162,25 @@ test("the last product choice submits one decision batch under one preparation s
   assert.equal(batchCalls, 1)
 })
 
-test("an unconfirmed final request leaves the loader for a durable recovery action", async () => {
-  const gateway = createAuthorityTestGateway({
+function finalizationTimeoutEntryContext(id: string): Stage3EntryContext {
+  return {
+    schemaVersion: 1,
+    personalPlanId: `plan-${id}`,
+    refinedVersionId: `refined-${id}`,
+    orderedCategories: [
+      {
+        category: "conditioner",
+        requiredRoles: ["conditioner_rinse_out"],
+        needSummary: "Pflege nach der Wäsche",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+}
+
+function keepOwnedAuthorityGateway() {
+  return createAuthorityTestGateway({
     evaluate(draft, subject) {
       const evaluation = testAuthorityEvaluation(draft, subject)
       assert.equal(evaluation.status, "known")
@@ -4168,37 +4193,9 @@ test("an unconfirmed final request leaves the loader for a durable recovery acti
       }
     },
   })
-  let releaseBatch!: () => void
-  const batchPending = new Promise<void>((resolve) => {
-    releaseBatch = resolve
-  })
-  gateway.resolveDecisions = async () => {
-    await batchPending
-    throw new Error("released after timeout")
-  }
-  const entryContext: Stage3EntryContext = {
-    schemaVersion: 1,
-    personalPlanId: "plan-final-timeout",
-    refinedVersionId: "refined-final-timeout",
-    orderedCategories: [
-      {
-        category: "conditioner",
-        requiredRoles: ["conditioner_rinse_out"],
-        needSummary: "Pflege nach der Wäsche",
-        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
-      },
-    ],
-    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
-  }
-  const harness = createClientStateHarness(() =>
-    Stage3ProductsFlow({
-      entryContext,
-      gateway,
-      searchDebounceMs: 0,
-      finalizationTimeoutMs: 5,
-    }),
-  )
+}
 
+async function submitFinalKeepOwnedDecision(harness: ClientStateHarness) {
   await captureCatalogProduct(harness, "Conditioner", "condition", 0)
   let tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
@@ -4210,10 +4207,209 @@ test("an unconfirmed final request leaves the loader for a durable recovery acti
     tree,
     ProductFitComparison,
   )?.props.onAction("keep_owned")
-  tree = await renderSettled(harness)
+  await renderSettled(harness)
+}
 
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  tree = await renderSettled(harness)
+test("a finalization timeout auto-reconciles and reaches the handoff", async () => {
+  const gateway = keepOwnedAuthorityGateway()
+  const resolveOne = gateway.resolveDecision.bind(gateway)
+  const completeDraft = gateway.complete.bind(gateway)
+  const stalledBatch = deferred<void>()
+  let batchCalls = 0
+  let completeCalls = 0
+  gateway.complete = async (input) => {
+    completeCalls += 1
+    return completeDraft(input)
+  }
+  gateway.resolveDecisions = async (input) => {
+    batchCalls += 1
+    let expectedRevision = input.expectedRevision
+    let result: Stage3MutationResponse | null = null
+    for (const intent of input.intents) {
+      result = await resolveOne({ draftId: input.draftId, expectedRevision, intent })
+      if (result.status === "conflict") return result
+      expectedRevision = result.draft.revision
+    }
+    assert.ok(result)
+    // The server has committed the batch, but the client never receives the answer in time.
+    await stalledBatch.promise
+    return result
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext: finalizationTimeoutEntryContext("final-timeout-reconcile"),
+      gateway,
+      searchDebounceMs: 0,
+      finalizationTimeoutMs: 5,
+    }),
+  )
+
+  await submitFinalKeepOwnedDecision(harness)
+
+  let tree = await renderUntil(
+    harness,
+    (candidate) => systemStateTitle(candidate) === "Speicherstatus wird geprüft.",
+    "the transient recovery check",
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .state,
+    "loading",
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.label,
+    "Speicherstatus wird geprüft",
+  )
+
+  tree = await renderUntil(
+    harness,
+    (candidate) => findByType(candidate, PersonalPlanChapterTransition) !== null,
+    "the Routine chapter handoff",
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
+      tree,
+      PersonalPlanChapterTransition,
+    )?.props.currentStage,
+    4,
+    "the timeout reconciles to the handoff without any manual step",
+  )
+  assert.equal(batchCalls, 1, "the recovery must not resubmit the committed batch")
+  assert.ok(completeCalls <= 1, "the recovery must not complete the draft twice")
+
+  stalledBatch.resolve()
+})
+
+test("a completion timeout without decisions never starts a second completion", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "dry_shampoo",
+      requiredRoles: [],
+      needSummary: "Aktuell verwendetes Trockenshampoo erfassen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.dry_shampoo.authorityVersion,
+    },
+  ]
+  const draft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-completion-timeout-race",
+      userId: "user-completion-timeout-race",
+      personalPlanId: "plan-completion-timeout-race",
+      refinedVersionId: "refined-completion-timeout-race",
+      requirements,
+      now: "2026-08-14T00:00:00.000Z",
+    }),
+    // No captured products and no required roles: the draft carries zero decision subjects,
+    // so the flow completes it from the no-decision effect instead of a user action.
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [],
+  }
+  // The server commits the completion the client never hears about.
+  const committedDraft: Stage3ProductDraft = { ...draft, status: "completed", revision: 1 }
+  const stalledCompletion = deferred<void>()
+  let completeCalls = 0
+  let receiptCalls = 0
+  let latestDraft = draft
+  const gateway = {
+    ...createAuthorityTestGateway(),
+    loadOrCreate: async () => ({
+      status: "active" as const,
+      draft: latestDraft,
+      requirements,
+      authorityEvaluations: [],
+      fitComparisons: [],
+    }),
+    complete: async () => {
+      completeCalls += 1
+      latestDraft = committedDraft
+      await stalledCompletion.promise
+      return { status: "not_ready" as const, draft: committedDraft }
+    },
+    loadCompletionReceipt: async () => {
+      receiptCalls += 1
+      // A slow receipt keeps the reconcile window open across several renders.
+      await new Promise<void>((resolve) => setTimeout(resolve, 200))
+      throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    },
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext: {
+        schemaVersion: 1,
+        personalPlanId: draft.personalPlanId,
+        refinedVersionId: draft.refinedVersionId,
+        orderedCategories: requirements,
+        inventoryPrompts: [
+          { category: "dry_shampoo", allowsMultiple: true, allowsExplicitNone: true },
+        ],
+      },
+      gateway,
+      searchDebounceMs: 0,
+      finalizationTimeoutMs: 5,
+    }),
+  )
+
+  await renderSettled(harness)
+  assert.equal(completeCalls, 1, "the no-decision draft completes exactly once on entry")
+
+  await renderUntil(harness, () => receiptCalls > 0, "the canonical completion receipt lookup")
+  const tree = await renderUntil(
+    harness,
+    (candidate) => systemStateTitle(candidate) === "Speicherstatus noch offen.",
+    "the manual recovery screen",
+  )
+  assert.equal(
+    completeCalls,
+    1,
+    "the canonical reload during recovery must not re-trigger the no-decision completion",
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.label,
+    "Speicherstatus offen",
+  )
+
+  stalledCompletion.resolve()
+})
+
+test("the manual screen appears only when the reconcile also fails", async () => {
+  const gateway = keepOwnedAuthorityGateway()
+  const resolveOne = gateway.resolveDecision.bind(gateway)
+  const loadDraft = gateway.loadOrCreate.bind(gateway)
+  const stalledBatch = deferred<void>()
+  let reloadFails = false
+  gateway.loadOrCreate = async (input) => {
+    if (reloadFails) throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    return loadDraft(input)
+  }
+  gateway.resolveDecisions = async (input) => {
+    let expectedRevision = input.expectedRevision
+    let result: Stage3MutationResponse | null = null
+    for (const intent of input.intents) {
+      result = await resolveOne({ draftId: input.draftId, expectedRevision, intent })
+      if (result.status === "conflict") return result
+      expectedRevision = result.draft.revision
+    }
+    assert.ok(result)
+    reloadFails = true
+    await stalledBatch.promise
+    return result
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext: finalizationTimeoutEntryContext("final-timeout-manual"),
+      gateway,
+      searchDebounceMs: 0,
+      finalizationTimeoutMs: 5,
+    }),
+  )
+
+  await submitFinalKeepOwnedDecision(harness)
+
+  const tree = await renderUntil(
+    harness,
+    (candidate) => systemStateTitle(candidate) === "Speicherstatus noch offen.",
+    "the manual recovery screen",
+  )
   const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
     tree,
     Stage3SystemState,
@@ -4221,8 +4417,12 @@ test("an unconfirmed final request leaves the loader for a durable recovery acti
   assert.equal(recovery?.props.state, "error")
   assert.equal(recovery?.props.title, "Speicherstatus noch offen.")
   assert.equal(recovery?.props.actionLabel, "Speicherstatus erneut prüfen")
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.label,
+    "Speicherstatus offen",
+  )
 
-  releaseBatch()
+  stalledBatch.resolve()
 })
 
 test("an ordinary reload restores local review choices for the same canonical revision", async () => {

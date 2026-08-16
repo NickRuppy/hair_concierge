@@ -86,8 +86,44 @@ test("legacy users and explicit old-flow edits remain untouched", () => {
   assert.equal(getPersonalPlanFrontierRedirect("/onboarding", stage1), null)
   assert.equal(getPersonalPlanFrontierRedirect("/onboarding/products", stage1), null)
   assert.equal(getPersonalPlanFrontierRedirect("/auth", stage1), "/plan-start")
-  assert.equal(getPersonalPlanFrontierRedirect("/chat", stage1), "/plan-start")
   assert.equal(getPersonalPlanFrontierRedirect("/routine", stage1), "/plan-start")
+})
+
+test("chat is never frontier-redirected for personal-plan users", () => {
+  const stage1 = resolvePersonalPlanRoutingFrontier({
+    eligible: true,
+    sourceReady: true,
+    plan: null,
+  })
+  const stage3 = resolvePersonalPlanRoutingFrontier({
+    eligible: true,
+    sourceReady: true,
+    plan: {
+      currentInitialNeedVersionId: "initial-1",
+      currentRefinedNeedVersionId: "refined-1",
+      pendingRoutineProposalId: null,
+      activeRoutineVersionId: null,
+    },
+  })
+  const stage5 = resolvePersonalPlanRoutingFrontier({
+    eligible: true,
+    sourceReady: true,
+    plan: {
+      currentInitialNeedVersionId: "initial-1",
+      currentRefinedNeedVersionId: "refined-1",
+      pendingRoutineProposalId: null,
+      activeRoutineVersionId: "routine-1",
+    },
+  })
+
+  assert.equal(getPersonalPlanFrontierRedirect("/chat", stage1), null)
+  assert.equal(getPersonalPlanFrontierRedirect("/chat", stage3), null)
+  assert.equal(getPersonalPlanFrontierRedirect("/chat", stage5), null)
+  assert.equal(getPersonalPlanFrontierRedirect("/chat/verlauf", stage5), null)
+  assert.equal(
+    getPersonalPlanFrontierRedirect("/chat", { kind: "recovery", nextHref: "/plan-bereit" }),
+    null,
+  )
 })
 
 test("the owner-only routing source keeps a new legacy buyer in readiness until Stage 1 exists", async () => {
