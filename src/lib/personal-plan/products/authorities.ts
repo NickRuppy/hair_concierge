@@ -63,7 +63,7 @@ export const CATEGORY_ROLE_POLICIES = {
   },
   scalp_care: {
     category: "scalp_care",
-    authorityVersion: "personal-plan.scalp-care.v2",
+    authorityVersion: "personal-plan.scalp-care.v3",
     allowsMultiple: true,
     allowedRoles: [
       "scalp_comfort",
