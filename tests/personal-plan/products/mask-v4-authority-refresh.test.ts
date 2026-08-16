@@ -71,11 +71,12 @@ function dormantDraft(): {
   currentSnapshot: Stage3AuthoritySnapshotV1
 } {
   const currentAuthorityVersions = versions()
-  assert.equal(currentAuthorityVersions.scalp_care, "personal-plan.scalp-care.v2")
+  assert.equal(currentAuthorityVersions.scalp_care, "personal-plan.scalp-care.v3")
   const legacyAuthorityVersions = {
     ...currentAuthorityVersions,
     shampoo: "personal-plan.shampoo.v3",
     mask: "personal-plan.mask.v3",
+    scalp_care: "personal-plan.scalp-care.v2",
   }
   const categoryDecisions = [decision("shampoo"), decision("mask")]
   const legacySnapshot: Stage3AuthoritySnapshotV1 = {
@@ -118,7 +119,7 @@ function dormantDraft(): {
   }
 }
 
-test("Mask v4 refresh accepts a dormant Shampoo v3 subset while Scalp stays v2", () => {
+test("Scalp v3 refresh accepts supported dormant Shampoo v3, Mask v3, and Scalp v2", () => {
   const { draft, currentSnapshot } = dormantDraft()
 
   assert.equal(authoritySnapshotMayNeedVersionRefresh(draft), true)
@@ -197,6 +198,6 @@ test("Mask v4 refresh preserves capture state and reopens only authority decisio
   assert.equal(refreshed.authorityVersions.mask, "personal-plan.mask.v4")
   assert.equal(
     refreshed.authoritySnapshot?.authorityVersions.scalp_care,
-    "personal-plan.scalp-care.v2",
+    "personal-plan.scalp-care.v3",
   )
 })

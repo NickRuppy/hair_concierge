@@ -19,10 +19,12 @@ import {
 type ScalpCareInput = Stage3AuthorityInput<"scalp_care">
 
 function coverageSuppressesPurchase(input: ScalpCareInput): boolean {
+  if (input.role !== "scalp_exfoliant") return false
   return input.coverage.some(
     (fact) =>
       fact.outcome === "duplicate_purchase_suppressed" &&
-      (fact.job === "scalp_flake_or_comfort" || fact.job === "scalp_root_reset"),
+      fact.ruleId === "portfolio.reset.deep_cleansing_primary" &&
+      fact.job === "scalp_root_reset",
   )
 }
 
@@ -82,6 +84,7 @@ export const evaluateScalpCareAuthority: Stage3CategoryAuthorityAdapter<"scalp_c
 
   const facts = input.productFacts
   if (!facts) {
+    const purchaseSuppressed = coverageSuppressesPurchase(input)
     const recommendation = recommendationFor(input)
     if (input.capturedProductId) return unknownEvaluation(input as never, ["catalog_product_facts"])
     return knownEvaluation(input as never, {
@@ -91,9 +94,11 @@ export const evaluateScalpCareAuthority: Stage3CategoryAuthorityAdapter<"scalp_c
           "scalp_care.selection.uncovered_role",
           "Offene Kopfhautpflege-Rolle",
           "caution",
-          recommendation
-            ? "Eine verifizierte, empfehlbare Option ist verfügbar."
-            : "Keine verifizierte, empfehlbare Option ist verfügbar.",
+          purchaseSuppressed
+            ? "Die Tiefenreinigung deckt diese Reset-Rolle bereits ab; deshalb empfehlen wir kein zusätzliches Kopfhaut-Peeling."
+            : recommendation
+              ? "Eine verifizierte, empfehlbare Option ist verfügbar."
+              : "Keine verifizierte, empfehlbare Option ist verfügbar.",
         ),
       ],
       allowedActions: recommendation

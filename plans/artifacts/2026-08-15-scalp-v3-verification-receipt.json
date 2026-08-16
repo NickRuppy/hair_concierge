@@ -1,0 +1,47 @@
+{
+  "release": "personal-plan-scalp-v3",
+  "logicalBaseCommit": "bd0dda704e7b45805e67f0ed36c1277211d9501f",
+  "logicalBaseManifestSha256": "33e84c5ac84f2ce3f5440badf15a1084551f118d9e210a54170dd2cfd355e4a4",
+  "gitAncestryBase": "f214e3a050098dd4b1b54cf0d7949e901fa90941",
+  "verification": {
+    "personalPlanTests": 1635,
+    "nestedTests": 522,
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "stage3LabBrowserTests": 5,
+    "fiveStageJourneyBrowserTests": 19
+  },
+  "liveCoverage": {
+    "mode": "read_only",
+    "basisMaskCovered": 2280,
+    "basisMaskReachable": 2280,
+    "scalpAlternatives": {
+      "scalp_comfort": 3,
+      "scalp_flake_oil_adjunct": 1,
+      "density_claim_tonic": 2,
+      "scalp_exfoliant": 2
+    },
+    "fullTransientOutputSha256": "f0d8812dfd78aff48598f9c0d2b9159c962f2b23d6ad2d81ca0f51408e893402"
+  },
+  "postgresPreflight": {
+    "engine": "PGlite PostgreSQL/PLpgSQL",
+    "success": "saved",
+    "completed": "completed",
+    "casConflict": "revision_conflict",
+    "unsupportedTransition": "invalid_source",
+    "executePermissions": {
+      "service_role": true,
+      "anon": false,
+      "authenticated": false
+    },
+    "preservedProducts": 1,
+    "persistedScalpAuthorityVersion": "personal-plan.scalp-care.v3"
+  },
+  "counterpartReview": {
+    "initialReview": "no_go",
+    "findingsAddressed": 4,
+    "claudeFinalDeltaReReview": "unavailable_session_limit",
+    "adversarialReview": "go_after_receipt_base_fix"
+  },
+  "productionWrites": false
+}

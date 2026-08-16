@@ -128,3 +128,28 @@ test("Mask v4 refresh is independently deployable while Scalp remains v2", () =>
     /REVOKE ALL ON FUNCTION public\.personal_plan_refresh_product_draft_authority[\s\S]*FROM PUBLIC, anon, authenticated;[\s\S]*GRANT EXECUTE[\s\S]*TO service_role/,
   )
 })
+const scalpV3MigrationPath =
+  "supabase/migrations/20260815140326_personal_plan_scalp_v3_authority_refresh.sql"
+
+test("Scalp v3 refresh is a later unit that preserves current Mask v4 and dormant subsets", () => {
+  const sql = readFileSync(scalpV3MigrationPath, "utf8")
+
+  assert.match(sql, /'mask', 'personal-plan\.mask\.v4'/)
+  assert.match(sql, /'scalp_care', 'personal-plan\.scalp-care\.v3'/)
+  assert.match(sql, /personal-plan\.scalp-care\.v2/)
+  assert.match(sql, /personal-plan\.shampoo\.v3/)
+  assert.match(sql, /personal-plan\.mask\.v3/)
+  assert.match(sql, /v_pre_mask_current_versions/)
+  assert.match(
+    sql,
+    /v_new_snapshot_versions IS DISTINCT FROM v_expected_current_versions[\s\S]*v_new_snapshot_versions IS DISTINCT FROM v_previous_current_versions[\s\S]*v_new_snapshot_versions IS DISTINCT FROM v_pre_mask_current_versions/,
+  )
+  assert.match(sql, /v_normalized_old_snapshot IS DISTINCT FROM v_new_snapshot/)
+  assert.match(sql, /v_normalized_old_payload IS DISTINCT FROM p_payload/)
+  assert.match(sql, /v_draft\.status = 'completed'/)
+  assert.match(sql, /v_draft\.revision IS DISTINCT FROM p_expected_revision/)
+  assert.match(
+    sql,
+    /REVOKE ALL ON FUNCTION public\.personal_plan_refresh_product_draft_authority[\s\S]*FROM PUBLIC, anon, authenticated;[\s\S]*GRANT EXECUTE[\s\S]*TO service_role/,
+  )
+})

@@ -372,7 +372,15 @@ test("evaluates an uncovered Scalp Care recommendation before exposing its image
       ...result.snapshot,
       decisions: [decision],
       renderedOrder: ["scalp_care"],
-      coverage: [],
+      coverage: [
+        {
+          job: "scalp_flake_or_comfort",
+          ruleId: "portfolio.scalp.shampoo_primary",
+          primaryCategories: ["shampoo"],
+          supportingCategories: ["scalp_care"],
+          outcome: "duplicate_purchase_suppressed",
+        },
+      ],
     },
     loadCandidates: async () => [candidate],
   })
@@ -385,7 +393,7 @@ test("evaluates an uncovered Scalp Care recommendation before exposing its image
       productName: "Kopfhautpflege Profil Fit",
       imageUrl: "https://example.com/scalp-care-profile-fit.webp",
       verdict: "ideal",
-      authorityVersion: "personal-plan.scalp-care.v2",
+      authorityVersion: "personal-plan.scalp-care.v3",
     },
   ])
 })

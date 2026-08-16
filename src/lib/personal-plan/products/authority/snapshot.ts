@@ -23,6 +23,7 @@ export class Stage3AuthoritySnapshotError extends Error {
 const SUPPORTED_LEGACY_AUTHORITY_VERSIONS: Partial<Record<PersonalPlanCategory, string>> = {
   shampoo: "personal-plan.shampoo.v3",
   mask: "personal-plan.mask.v3",
+  scalp_care: "personal-plan.scalp-care.v2",
 }
 
 function refreshableAuthorityCategories(

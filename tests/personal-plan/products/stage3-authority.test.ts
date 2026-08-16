@@ -441,7 +441,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       heat_protectant: "personal-plan.heat-protectant.v1",
       oil: "personal-plan.oil.v2",
       mask: "personal-plan.mask.v4",
-      scalp_care: "personal-plan.scalp-care.v2",
+      scalp_care: "personal-plan.scalp-care.v3",
       dry_shampoo: "personal-plan.dry-shampoo.v2",
       bondbuilder: "personal-plan.bondbuilder.v2",
       deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
@@ -1441,4 +1441,59 @@ test("complete Shampoo authority treats a non-target cleansing intensity as supp
   assert.equal(result.criteria[1]?.criterionId, "shampoo.cleansing_intensity")
   assert.equal(result.criteria[1]?.result, "caution")
   assert.deepEqual(result.allowedActions, ["keep_owned", "leave_uncovered"])
+})
+test("Scalp Care keeps comfort complementary while root reset suppresses only exfoliant", () => {
+  const comfortInput = input("scalp_care", "known") as Stage3AuthorityInput<"scalp_care">
+  const comfortCandidate = knownFacts("scalp_care")
+  if (comfortCandidate.category !== "scalp_care") throw new Error("expected Scalp Care fixture")
+  comfortCandidate.recommendable = true
+  comfortInput.capturedProductId = null
+  comfortInput.subjectIdentity = null
+  comfortInput.productFacts = null
+  comfortInput.recommendationCandidates = [comfortCandidate]
+  comfortInput.coverage = [
+    {
+      job: "scalp_flake_or_comfort",
+      ruleId: "portfolio.scalp.shampoo_primary",
+      primaryCategories: ["shampoo"],
+      supportingCategories: ["scalp_care"],
+      outcome: "duplicate_purchase_suppressed",
+    },
+    {
+      job: "scalp_root_reset",
+      ruleId: "portfolio.reset.deep_cleansing_primary",
+      primaryCategories: ["deep_cleansing_shampoo"],
+      supportingCategories: ["scalp_care"],
+      outcome: "duplicate_purchase_suppressed",
+    },
+  ]
+
+  const comfort = evaluateStage3Authority(comfortInput as never)
+  assert.equal(comfort.status, "known")
+  if (comfort.status !== "known") return
+  assert.equal(comfort.recommendation?.productId, comfortCandidate.productId)
+
+  const exfoliantInput = structuredClone(comfortInput) as Stage3AuthorityInput<"scalp_care">
+  exfoliantInput.role = "scalp_exfoliant"
+  exfoliantInput.subjectKey = "decision:scalp_care:scalp_exfoliant:gap"
+  exfoliantInput.categoryDecision.roles = ["scalp_exfoliant"]
+  exfoliantInput.categoryDecision.target = {
+    category: "scalp_care",
+    roles: ["scalp_exfoliant"],
+    roleTargets: [{ role: "scalp_exfoliant", coverage: "primary" }],
+  }
+  if (exfoliantInput.recommendationCandidates[0]?.category !== "scalp_care") {
+    throw new Error("expected Scalp Care candidate")
+  }
+  exfoliantInput.recommendationCandidates[0].spec.primaryRole = "scalp_exfoliant"
+  exfoliantInput.recommendationCandidates[0].protocols = [
+    { role: "scalp_exfoliant", status: "verified_complete", fingerprint: "protocol-exfoliant" },
+  ]
+
+  const exfoliant = evaluateStage3Authority(exfoliantInput as never)
+  assert.equal(exfoliant.status, "known")
+  if (exfoliant.status !== "known") return
+  assert.equal(exfoliant.recommendation, null)
+  assert.deepEqual(exfoliant.allowedActions, ["leave_uncovered"])
+  assert.match(exfoliant.criteria[0]?.explanation ?? "", /Tiefenreinigung.*Kopfhaut-Peeling/)
 })
