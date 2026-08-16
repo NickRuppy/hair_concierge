@@ -23,6 +23,25 @@ import {
   TOWEL_MATERIAL_LABELS,
   TOWEL_TECHNIQUE_LABELS,
 } from "@/lib/vocabulary"
+import type {
+  AdditionalHeatTool,
+  DryingRoute,
+  PersonalPlanRefinementAnswersV1,
+} from "@/lib/personal-plan/refinement/types"
+
+const PLAN_DRYING_ROUTE_LABELS: Record<DryingRoute, string> = {
+  air_dry: "Lufttrocknen",
+  ordinary_blow_dry: "Gewöhnlich föhnen",
+  diffuser_or_airflow_shaping: "Diffusor oder formender Luftstrom",
+}
+
+const PLAN_HEAT_TOOL_LABELS: Record<AdditionalHeatTool, string> = {
+  dryer_brush: "Föhnbürste",
+  hot_air_styler: "Heißluft-Multistyler",
+  straightener: "Glätteisen",
+  curling_or_wave_iron: "Lockenstab oder Welleneisen",
+  thermal_rollers: "Thermo-Wickler",
+}
 
 export type ProfileJourneySectionKey =
   | "quiz"
@@ -43,7 +62,10 @@ export type ProfileFieldConfig = {
   label: string
   sectionKey: Exclude<ProfileJourneySectionKey, "products" | "memory">
   editTarget: ProfileEditTarget
-  getValue: (profile: HairProfile | null) => ProfileFieldValue
+  getValue: (
+    profile: HairProfile | null,
+    plan?: PersonalPlanRefinementAnswersV1 | null,
+  ) => ProfileFieldValue
 }
 
 export type ProfileSectionMeta = {
@@ -66,6 +88,42 @@ function optionLabels(
 ): string[] | null {
   if (!values || values.length === 0) return null
   return Array.from(new Set(values.map((value) => labels[value] ?? value)))
+}
+
+// Resolves the towel material + technique as a single unit so the two fields can never mix
+// sources: if the legacy profile has any towel signal, both fields read only the legacy values
+// (existing legacy fallbacks, e.g. no_towel material implying "Keine Trocknungstechnik", stay
+// intact). Otherwise both fields read only the plan overlay, including its own no_towel branch.
+function resolveTowelSource(
+  profile: HairProfile | null,
+  plan?: PersonalPlanRefinementAnswersV1 | null,
+): { material: ProfileFieldValue; technique: ProfileFieldValue } {
+  const hasLegacyTowelSignal = Boolean(profile?.towel_material || profile?.towel_technique)
+
+  if (hasLegacyTowelSignal) {
+    return {
+      material: profile?.towel_material
+        ? (TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material)
+        : null,
+      technique: profile?.towel_technique
+        ? (TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique)
+        : profile?.towel_material === "no_towel"
+          ? "Keine Trocknungstechnik"
+          : null,
+    }
+  }
+
+  const planMaterial = plan?.towel?.material ?? null
+  const planTechnique = plan?.towel?.technique ?? null
+
+  return {
+    material: planMaterial ? (TOWEL_MATERIAL_LABELS[planMaterial] ?? planMaterial) : null,
+    technique: planTechnique
+      ? (TOWEL_TECHNIQUE_LABELS[planTechnique] ?? planTechnique)
+      : planMaterial === "no_towel"
+        ? "Keine Trocknungstechnik"
+        : null,
+  }
 }
 
 function orderedGoalLabels(profile: HairProfile | null): string[] | null {
@@ -229,13 +287,18 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Hitzetools",
     sectionKey: "styling",
     editTarget: { kind: "onboarding", step: "heat_tools" },
-    getValue: (profile) => {
+    getValue: (profile, plan) => {
       if (profile?.styling_tools?.length) {
         return optionLabels(profile.styling_tools, STYLING_TOOL_LABELS)
       }
 
       if (profile?.heat_styling === "never") {
         return "Keine Hitzetools"
+      }
+
+      if (plan?.additionalHeatTools) {
+        if (plan.additionalHeatTools.length === 0) return "Keine Hitzetools"
+        return optionLabels(plan.additionalHeatTools, PLAN_HEAT_TOOL_LABELS)
       }
 
       return null
@@ -261,36 +324,32 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Handtuch-Material",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "towel_material" },
-    getValue: (profile) =>
-      profile?.towel_material
-        ? (TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material)
-        : null,
+    getValue: (profile, plan) => resolveTowelSource(profile, plan).material,
   },
   {
     key: "towel_technique",
     label: "Trocknungstechnik",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "towel_technique" },
-    getValue: (profile) => {
-      if (profile?.towel_technique) {
-        return TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique
-      }
-      if (profile?.towel_material === "no_towel") {
-        return "Keine Trocknungstechnik"
-      }
-
-      return null
-    },
+    getValue: (profile, plan) => resolveTowelSource(profile, plan).technique,
   },
   {
     key: "drying_method",
     label: "Trocknungsmethode",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "drying_method" },
-    getValue: (profile) =>
-      profile?.drying_method
-        ? (DRYING_METHOD_LABELS[profile.drying_method] ?? profile.drying_method)
-        : null,
+    getValue: (profile, plan) => {
+      if (profile?.drying_method) {
+        return DRYING_METHOD_LABELS[profile.drying_method] ?? profile.drying_method
+      }
+
+      if (plan?.dryingRoutes) {
+        if (plan.dryingRoutes.length === 0) return "Nichts davon"
+        return plan.dryingRoutes.map((route) => PLAN_DRYING_ROUTE_LABELS[route] ?? route).join(", ")
+      }
+
+      return null
+    },
   },
   {
     key: "brush_type",
@@ -314,12 +373,17 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Nachtschutz",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "night_protection" },
-    getValue: (profile) => {
+    getValue: (profile, plan) => {
       if (profile?.night_protection?.length) {
         return optionLabels(profile.night_protection, NIGHT_PROTECTION_LABELS)
       }
       if (Array.isArray(profile?.night_protection)) {
         return "Nichts davon"
+      }
+
+      if (plan?.nightProtection) {
+        if (plan.nightProtection.length === 0) return "Nichts davon"
+        return optionLabels(plan.nightProtection, NIGHT_PROTECTION_LABELS)
       }
 
       return null
