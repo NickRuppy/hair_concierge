@@ -21,7 +21,6 @@ WITH constraint_objects AS (
           'products_origin_check',
           'products_category_key_fkey',
           'products_id_category_key_key',
-          'products_category_key_not_null_check',
 'product_shampoo_specs_product_id_fkey',
           'product_conditioner_specs_product_id_fkey',
           'product_conditioner_rerank_specs_product_id_fkey',

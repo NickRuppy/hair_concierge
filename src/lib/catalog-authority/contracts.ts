@@ -166,7 +166,6 @@ export const CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS = [
   "products_origin_check",
   "products_category_key_fkey",
   "products_id_category_key_key",
-  "products_category_key_not_null_check",
   "products_recommendable_requires_active_check",
   "product_thickness_eligibility_product_category_fkey",
   "product_concern_eligibility_product_category_fkey",
@@ -183,13 +182,21 @@ export const CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS = [
   "product_oil_eligibility_identity_thickness_idx",
 ] as const
 
-// Task 2 installs the composite identity constraints as NOT VALID so they
-// protect new writes before historical repair. Task 3 promotes them here once
-// the audited backfill is clean and the constraints are validated.
+// Task 2 installed the composite identity constraints as NOT VALID so they
+// protect new writes before historical repair. Task 3's closure migration
+// (20260816180000) validated the deferred set on the audited-clean catalogue;
+// products.category_key is now a NOT NULL column contract instead of a check.
 export const CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS = [
   "products_origin_check",
   "products_category_key_fkey",
   "products_id_category_key_key",
+  "products_recommendable_requires_active_check",
+  "product_thickness_eligibility_product_category_fkey",
+  "product_concern_eligibility_product_category_fkey",
+  "product_shampoo_specs_thickness_eligibility_fkey",
+  "product_conditioner_specs_thickness_eligibility_fkey",
+  "product_leave_in_eligibility_thickness_eligibility_fkey",
+  "product_oil_eligibility_thickness_eligibility_fkey",
   ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_fkey`),
   ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_idx`),
 ] as const
