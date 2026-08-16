@@ -273,14 +273,14 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Styling-Frequenz",
     sectionKey: "styling",
     editTarget: { kind: "onboarding", step: "heat_frequency" },
-    getValue: (profile, _plan) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
+    getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
   },
   {
     key: "uses_heat_protection",
     label: "Hitzeschutz",
     sectionKey: "styling",
     editTarget: { kind: "onboarding", step: "heat_protection" },
-    getValue: (profile, _plan) =>
+    getValue: (profile) =>
       profile?.uses_heat_protection != null ? (profile.uses_heat_protection ? "Ja" : "Nein") : null,
   },
   {
@@ -345,7 +345,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Bürste / Kamm",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "brush_type" },
-    getValue: (profile, _plan) => {
+    getValue: (profile) => {
       if (profile?.brush_type?.length) {
         return optionLabels(profile.brush_type, BRUSH_TYPE_LABELS)
       }
