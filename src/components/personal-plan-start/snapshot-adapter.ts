@@ -7,7 +7,7 @@ import type {
 } from "@/lib/personal-plan/types"
 import type {
   Stage1ProductExamplePreviewResponse,
-  Stage1ProductExampleRecommendation,
+  Stage1ProductExampleRolePreview,
 } from "@/lib/personal-plan/product-preview-contract"
 import {
   CATEGORY_LABELS,
@@ -20,7 +20,7 @@ import {
 } from "@/lib/personal-plan/decision-presentation"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 
-import type { NeedCardViewModel } from "./need-card"
+import { NEED_CARD_FALLBACK_NOTE, type NeedCardViewModel } from "./need-card"
 import type { NeedPlanScreenViewModel } from "./need-plan-screen"
 import type { PlanStartReadyViewModel } from "./plan-start-flow"
 
@@ -191,34 +191,52 @@ export function applyStage1ProductExamplePreviews(
   ) {
     return plan
   }
-  // The payload is now per-role; this legacy image-only rendering path still
-  // shows a single image per category card, so pick the preview whose role
-  // is the category's primary (first-allowed) role — same product a reader
-  // would have seen under the old per-category payload.
-  const previews = new Map<Stage1Category, Stage1ProductExampleRecommendation>()
+  // The payload is per-role, one category card. Pick the entry of the
+  // category's primary (first-allowed) role, preferring a real recommendation
+  // over a fallback so a secondary-role product still leads the card.
+  const previews = new Map<Stage1Category, Stage1ProductExampleRolePreview>()
   const roleRank = (role: PlanProductRole, category: Stage1Category) =>
     CATEGORY_ROLE_POLICIES[category].allowedRoles.indexOf(role as never)
+  const rank = (preview: Stage1ProductExampleRolePreview) =>
+    (preview.kind === "recommendation" ? 0 : 1_000) + roleRank(preview.role, preview.category)
   for (const preview of response.previews) {
-    if (preview.kind !== "recommendation") continue
     const existing = previews.get(preview.category)
-    if (
-      !existing ||
-      roleRank(preview.role, preview.category) < roleRank(existing.role, existing.category)
-    ) {
-      previews.set(preview.category, preview)
-    }
+    if (!existing || rank(preview) < rank(existing)) previews.set(preview.category, preview)
   }
   const apply = (screen: NeedPlanScreenViewModel): NeedPlanScreenViewModel => ({
     ...screen,
     cards: screen.cards.map((card) => {
       const preview = previews.get(card.id as Stage1Category)
-      return preview
-        ? {
-            ...card,
-            imageUrl: preview.imageUrl,
-            imageAlt: `Beispielprodukt ${preview.productName} für ${card.categoryLabel}; die finale Produktauswahl folgt später.`,
-          }
-        : { ...card, imageUrl: null }
+      if (preview?.kind === "recommendation") {
+        return {
+          ...card,
+          imageUrl: preview.imageUrl,
+          imageAlt: `Produktbild: ${preview.productName}`,
+          product: {
+            name: preview.productName,
+            priceLabel: preview.commerce.priceLabel,
+            netContentLabel: preview.commerce.netContentLabel,
+            availabilityLabel: preview.commerce.availabilityLabel,
+            productUrl: preview.commerce.productUrl,
+          },
+          fallbackNote: null,
+          detailBlocks: [
+            { title: DETAIL_TITLE_PRODUCT, body: preview.reasoning.productCriteria },
+            { title: DETAIL_TITLE_FIT, body: preview.reasoning.fit },
+            { title: DETAIL_TITLE_FREQUENCY, body: preview.reasoning.frequency },
+          ],
+        }
+      }
+      if (preview?.kind === "fallback") {
+        return {
+          ...card,
+          imageUrl: null,
+          imageAlt: `Noch kein Produktbild für ${card.categoryLabel}.`,
+          product: null,
+          fallbackNote: NEED_CARD_FALLBACK_NOTE,
+        }
+      }
+      return { ...card, imageUrl: null, product: null, fallbackNote: null }
     }),
   })
   return {

@@ -25,6 +25,20 @@ export type NeedPlanScreenViewModel = {
   progress: 50 | 100
 }
 
+export const PLAN_START_CATALOG_DISCLAIMER =
+  "Für jede Kategorie haben wir das passendste Produkt aus unserem Katalog gewählt."
+export const PLAN_START_PENDING_DISCLAIMER =
+  "Deine Produktempfehlungen folgen nach dem Feinschliff."
+
+/**
+ * The catalog sentence is only honest while at least one category can still
+ * get a product. If every category already fell back, say so instead.
+ */
+export function planStartProductDisclaimer(cards: NeedCardViewModel[]): string {
+  const everyCategoryPending = cards.length > 0 && cards.every((card) => card.fallbackNote)
+  return everyCategoryPending ? PLAN_START_PENDING_DISCLAIMER : PLAN_START_CATALOG_DISCLAIMER
+}
+
 type NeedPlanScreenProps = {
   screen: NeedPlanScreenViewModel
   hasOptionalPage: boolean
@@ -111,7 +125,7 @@ export function NeedPlanScreen({
           {screen.lead}
         </p>
         <p className="mt-1.5 max-w-[34rem] text-[10.5px] leading-relaxed text-[#706a65] sm:text-xs">
-          Bilder zeigen nur Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.
+          {planStartProductDisclaimer(screen.cards)}
         </p>
 
         <Progress value={hasOptionalPage ? screen.progress : 100} label="Idealplan-Fortschritt" />

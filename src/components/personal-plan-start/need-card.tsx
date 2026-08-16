@@ -1,13 +1,28 @@
 "use client"
 
 import Image from "next/image"
-import { ChevronDown, Clock3 } from "lucide-react"
-import { useId, useState } from "react"
+import { ChevronRight, Clock3 } from "lucide-react"
+import { useState } from "react"
 
 import type { Stage1Category } from "@/lib/personal-plan/types"
 import { cn } from "@/lib/utils"
 
+import { ProductDetailSheet } from "./product-detail-sheet"
+
 export type NeedCardTone = "basis" | "optional"
+
+/** The concrete catalog pick that leads the card once previews are loaded. */
+export type NeedCardProduct = {
+  name: string
+  priceLabel: string | null
+  netContentLabel: string | null
+  availabilityLabel: string
+  /** Only set when the purchase link is available and safe. */
+  productUrl: string | null
+}
+
+/** Honest state for a category without a qualifying product recommendation. */
+export const NEED_CARD_FALLBACK_NOTE = "Produktempfehlung folgt nach dem Feinschliff"
 
 export type NeedCardViewModel = {
   id: string
@@ -21,7 +36,8 @@ export type NeedCardViewModel = {
   imageUrl: string | null
   imageAlt?: string
   paused?: boolean
-  initiallyOpen?: boolean
+  product?: NeedCardProduct | null
+  fallbackNote?: string | null
   detailBlocks: Array<{
     title: string
     body: string
@@ -56,12 +72,12 @@ const NEUTRAL_CARD_STYLE = {
 }
 
 export function NeedCard({ card }: { card: NeedCardViewModel }) {
-  const [open, setOpen] = useState(Boolean(card.initiallyOpen))
+  const [open, setOpen] = useState(false)
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
-  const fallbackId = useId()
-  const panelId = `need-card-${card.id || fallbackId}-detail`
   const hasImage = Boolean(card.imageUrl) && failedImageUrl !== card.imageUrl
   const categoryStyle = CATEGORY_CARD_STYLES[card.id as Stage1Category] ?? NEUTRAL_CARD_STYLE
+  const product = card.product ?? null
+  const subline = product ? [card.targetType, product.priceLabel].filter(Boolean).join(" · ") : null
 
   return (
     <article
@@ -80,9 +96,9 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
           "grid w-full grid-cols-[66px_minmax(0,1fr)_16px] cursor-pointer items-center gap-3 bg-transparent p-3 text-left text-inherit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-3px]",
           "max-[360px]:gap-2 max-[360px]:p-2.5",
         )}
+        aria-haspopup="dialog"
         aria-expanded={open}
-        aria-controls={panelId}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => setOpen(true)}
       >
         <span
           aria-hidden={hasImage ? undefined : true}
@@ -93,23 +109,15 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
           )}
         >
           {hasImage ? (
-            <>
-              <Image
-                src={card.imageUrl!}
-                alt={
-                  card.imageAlt ??
-                  `Beispielbild für ${card.categoryLabel}; kein ausgewähltes Produkt.`
-                }
-                fill
-                sizes="66px"
-                unoptimized
-                className="object-contain p-1.5"
-                onError={() => setFailedImageUrl(card.imageUrl)}
-              />
-              <span className="absolute bottom-1 left-1 rounded-full bg-[#291a43]/80 px-1.5 py-0.5 text-[7px] font-extrabold uppercase tracking-[0.08em] text-white">
-                Beispiel
-              </span>
-            </>
+            <Image
+              src={card.imageUrl!}
+              alt={card.imageAlt ?? `Produktbild: ${card.categoryLabel}`}
+              fill
+              sizes="66px"
+              unoptimized
+              className="object-contain p-1.5"
+              onError={() => setFailedImageUrl(card.imageUrl)}
+            />
           ) : null}
         </span>
 
@@ -131,12 +139,22 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
               </span>
             ) : null}
           </span>
-          <strong className="mt-1 block text-[13.5px] leading-[1.18] text-[#291a43]">
-            {card.targetType}
+          <strong className="mt-1 line-clamp-2 block text-[13.5px] leading-[1.18] text-[#291a43]">
+            {product ? product.name : card.targetType}
           </strong>
+          {subline ? (
+            <span className="mt-0.5 block truncate text-[10px] font-semibold text-[#6a5f8a]">
+              {subline}
+            </span>
+          ) : null}
           <span className="mt-0.5 line-clamp-2 block text-[9.8px] leading-[1.32] text-[#5f5954]">
             {card.purpose}
           </span>
+          {!product && card.fallbackNote ? (
+            <span className="mt-0.5 block text-[9.5px] leading-[1.32] text-[#7d7770]">
+              {card.fallbackNote}
+            </span>
+          ) : null}
           {card.pills.length ? (
             <span className="mt-1.5 flex flex-nowrap gap-1 overflow-hidden">
               {card.pills.slice(0, 2).map((pill) => (
@@ -160,32 +178,10 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
           </span>
         </span>
 
-        <ChevronDown
-          className={cn(
-            "h-4 w-4 text-[rgba(31,26,20,0.38)] transition-transform",
-            open && "rotate-180",
-          )}
-          aria-hidden="true"
-        />
+        <ChevronRight className="h-4 w-4 text-[rgba(31,26,20,0.38)]" aria-hidden="true" />
       </button>
 
-      <div
-        id={panelId}
-        hidden={!open}
-        className="mx-2.5 mb-2.5 rounded-[14px] border border-[rgba(107,80,160,0.12)] bg-white/75 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
-      >
-        <div className="mb-2 px-0.5 text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#291a43]">
-          Was dein Haar braucht
-        </div>
-        <div className="space-y-1.5">
-          {card.detailBlocks.map((block, index) => (
-            <section key={`${block.title}-${index}`} className="rounded-[11px] bg-[#f8f5f2] p-2.5">
-              <h3 className="text-[10.5px] font-bold leading-snug text-[#291a43]">{block.title}</h3>
-              <p className="mt-1 text-[10.3px] leading-[1.42] text-[#625d58]">{block.body}</p>
-            </section>
-          ))}
-        </div>
-      </div>
+      <ProductDetailSheet card={card} open={open} onOpenChange={setOpen} />
     </article>
   )
 }
