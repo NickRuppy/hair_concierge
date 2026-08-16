@@ -9,6 +9,8 @@ import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
+export { Stage3StickyAction } from "./stage3-sticky-action"
+
 /**
  * Einzige Quelle fuer den Leertreffer-Hinweis der Produktsuche: Die Suche in
  * `index.tsx` rendert ihn, `stage3-products-flow.tsx` setzt ihn als

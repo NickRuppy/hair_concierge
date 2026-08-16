@@ -25,6 +25,7 @@ import type {
 } from "@/lib/personal-plan/products/fit-comparison"
 import { cn } from "@/lib/utils"
 import { categorySelectionHeading } from "./stage3-product-copy"
+import { Stage3StickyAction } from "./stage3-sticky-action"
 
 type ReviewProduct = {
   displayName: string
@@ -301,7 +302,7 @@ export function ProductFitComparison({
           ) : null}
 
           {visiblePrimaryAction ? (
-            <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
+            <Stage3StickyAction>
               <Button
                 type="button"
                 variant="funnelCta"
@@ -320,7 +321,7 @@ export function ProductFitComparison({
                   ? "Dieses Produkt einplanen"
                   : visiblePrimaryAction.label}
               </Button>
-            </div>
+            </Stage3StickyAction>
           ) : null}
         </>
       ) : null}

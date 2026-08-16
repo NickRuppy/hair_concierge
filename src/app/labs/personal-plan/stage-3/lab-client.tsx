@@ -7,6 +7,7 @@ import { developmentStage3Analytics } from "@/lib/personal-plan/products/stage3-
 import { createFixtureStage3Gateway } from "@/lib/personal-plan/products/fixture-gateway"
 import {
   FIXTURE_STAGE3_SCENARIOS,
+  createFixtureInventoryOnlyConditionerEntryContext,
   createFixtureOwnedSearchOverflowCatalog,
   createFixtureUncoveredConditionerEntryContext,
 } from "@/lib/personal-plan/products/fixture-scenarios"
@@ -27,9 +28,11 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
   )
   const entryContext = useMemo(
     () =>
-      scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
-        ? createFixtureUncoveredConditionerEntryContext()
-        : undefined,
+      scenario === FIXTURE_STAGE3_SCENARIOS.inventoryOnlyConditioner
+        ? createFixtureInventoryOnlyConditionerEntryContext()
+        : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
+          ? createFixtureUncoveredConditionerEntryContext()
+          : undefined,
     [scenario],
   )
 
@@ -38,11 +41,13 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
       analytics={developmentStage3Analytics}
       entryContext={entryContext}
       draftId={
-        scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
-          ? "fixture-draft-uncovered-conditioner"
-          : scenario === FIXTURE_STAGE3_SCENARIOS.ownedSearchOverflow
-            ? "fixture-draft-owned-search-overflow"
-            : undefined
+        scenario === FIXTURE_STAGE3_SCENARIOS.inventoryOnlyConditioner
+          ? "fixture-draft-inventory-only-conditioner"
+          : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
+            ? "fixture-draft-uncovered-conditioner"
+            : scenario === FIXTURE_STAGE3_SCENARIOS.ownedSearchOverflow
+              ? "fixture-draft-owned-search-overflow"
+              : undefined
       }
       gateway={gateway}
       searchDebounceMs={0}

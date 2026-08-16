@@ -80,6 +80,7 @@ import {
   SemanticRoleAssignment,
   STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE,
   Stage3Shell,
+  Stage3StickyAction,
   Stage3SystemState,
   type Stage3CatalogCandidate,
   type Stage3ProductKindOption,
@@ -1669,6 +1670,10 @@ export function Stage3ProductsFlow({
       )
       return
     }
+    if (currentRequirement.requiredRoles.length === 0) {
+      await saveRolesAndContinue({}, working)
+      return
+    }
     const initialAssignments = Object.fromEntries(
       working.map((product) => [
         product.key,
@@ -3035,7 +3040,7 @@ export function Stage3NeedRevisionCheckpoint({
         Wenn du ablehnst, bleibt dein bisheriger Idealplan erhalten.
       </p>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 grid gap-2 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
+      <Stage3StickyAction className="grid gap-2">
         <Button
           type="button"
           variant="funnelCta"
@@ -3054,7 +3059,7 @@ export function Stage3NeedRevisionCheckpoint({
         >
           Idealplan beibehalten
         </Button>
-      </div>
+      </Stage3StickyAction>
     </section>
   )
 }
@@ -3074,7 +3079,7 @@ export function Stage3InventoryDispositionReview({
 }) {
   return (
     <section className="min-w-0 pb-28" aria-labelledby="stage3-inventory-disposition-title">
-      <div className="mb-5 flex items-center justify-between gap-3">
+      <div className="mb-5">
         <Button
           type="button"
           variant="ghost"
@@ -3086,21 +3091,19 @@ export function Stage3InventoryDispositionReview({
         >
           ←
         </Button>
-        <p className="text-right text-sm font-medium text-muted-foreground">Produkte prüfen</p>
       </div>
 
       <header className="mb-5">
-        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">Dein Produkt</p>
         <h1
           id="stage3-inventory-disposition-title"
           className="font-header text-3xl leading-tight text-foreground"
         >
-          Dieses Produkt bleibt erfasst.
+          Nicht in deiner Routine
         </h1>
         <p className="mt-3 text-base leading-relaxed text-muted-foreground">
           {disposition.reason === "category_not_in_final_plan"
-            ? "Diese Produktart gehört aktuell nicht zu den Basis- oder Optional-Kategorien deines finalen Idealplans."
-            : "Dieses Produkt ist aktuell keiner Aufgabe in deinem finalen Idealplan zugeordnet."}
+            ? "Diese Produktart ist aktuell nicht in deinem Idealplan vorgesehen. Du findest das Produkt weiterhin unter „Meine Produkte“."
+            : "Dieses Produkt übernimmt aktuell keine Aufgabe in deiner Routine. Du findest es weiterhin unter „Meine Produkte“."}
         </p>
       </header>
 
@@ -3114,35 +3117,11 @@ export function Stage3InventoryDispositionReview({
             <h2 className="mt-1 break-words text-lg font-semibold text-foreground">
               {product.identity.displayName}
             </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Von dir als regelmäßig verwendet erfasst.
-            </p>
           </div>
         </div>
-
-        <div className="mt-5 border-l-4 border-[var(--brand-plum)] bg-[var(--brand-blush)]/60 p-4">
-          <p className="font-semibold text-foreground">Nicht Teil deiner Routine</p>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            {inventoryDispositionReason(disposition.reason)}
-          </p>
-        </div>
-
-        <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-[var(--status-ok-text)]">
-          <span
-            aria-hidden="true"
-            className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--status-ok-bg)]"
-          >
-            ✓
-          </span>
-          Bleibt unter „Meine Produkte“ gespeichert
-        </p>
       </article>
 
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Wenn sich dein Idealplan später ändert, wird das Produkt neu geprüft.
-      </p>
-
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur md:absolute md:inset-x-auto md:bottom-4 md:left-10 md:right-10 md:rounded-2xl md:border">
+      <Stage3StickyAction>
         <Button
           type="button"
           variant="funnelCta"
@@ -3150,9 +3129,9 @@ export function Stage3InventoryDispositionReview({
           disabled={disabled}
           onClick={onAcknowledge}
         >
-          Verstanden, weiter
+          Weiter
         </Button>
-      </div>
+      </Stage3StickyAction>
     </section>
   )
 }
@@ -3244,12 +3223,6 @@ function materialDeltaSummary(delta: Stage3NeedMaterialDelta) {
     return `${categoryLabel} bekommt eine andere Häufigkeit.`
   }
   return `${categoryLabel} wird in der Anwendung anders eingeordnet.`
-}
-
-function inventoryDispositionReason(reason: Stage3InventoryDispositionV1["reason"]) {
-  return reason === "category_not_in_final_plan"
-    ? "Diese Produktart ist gerade kein Schritt in deinem finalen Idealplan."
-    : "Dieses Produkt ist keiner finalen Planrolle zugeordnet."
 }
 
 function requirement(
