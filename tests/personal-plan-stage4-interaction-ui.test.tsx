@@ -647,16 +647,26 @@ test("product detail keeps fit frozen while commerce and explicit actions stay c
     fitStatusLabel: "Guter Fit aus deiner Produktauswahl",
     frozenFitSummary: "Diese Einschätzung stammt aus deiner bestätigten Produktauswahl.",
     onOpenProduct: () => events.push("open"),
-    onMarkPurchased: () => events.push("owned"),
   })
   const html = renderToStaticMarkup(tree)
   assert.match(html, /Guter Fit aus deiner Produktauswahl/)
   assert.match(html, /Preis vor 3 Stunden aktualisiert/)
   assert.match(html, /Affiliate-Link/)
+  // A selected planned product is already a full routine member: no purchase
+  // confirmation step or button, for planned or owned items alike.
+  assert.doesNotMatch(html, /Ich habe es schon gekauft/)
 
-  findByText(tree, "Zum Produkt").props.onClick()
-  findByText(tree, "Ich habe es schon gekauft").props.onClick()
-  assert.deepEqual(events, ["open", "owned"])
+  // With no purchase-confirmation button left as a sibling, the wrapping
+  // action row now shares the same text content as the single "Zum Produkt"
+  // button, so match the clickable element itself rather than the outer row.
+  const [openProductButton] = findAll(
+    tree,
+    (element) =>
+      typeof element.props.onClick === "function" && textContent(element) === "Zum Produkt",
+  )
+  assert.ok(openProductButton)
+  openProductButton.props.onClick()
+  assert.deepEqual(events, ["open"])
 
   const ownedHtml = renderToStaticMarkup(
     <RoutineProductDetail
@@ -665,7 +675,6 @@ test("product detail keeps fit frozen while commerce and explicit actions stay c
       fitStatusLabel="Aktiv"
       frozenFitSummary="Bestätigte Auswahl."
       onOpenProduct={() => undefined}
-      onMarkPurchased={() => events.push("should-not-render")}
     />,
   )
   assert.doesNotMatch(ownedHtml, /Ich habe es schon gekauft/)

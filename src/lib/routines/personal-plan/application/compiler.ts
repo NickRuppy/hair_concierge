@@ -524,10 +524,6 @@ function compileDay(
       if (item.heatEventId && !existing.heatEventIds?.includes(item.heatEventId)) {
         existing.heatEventIds = [...(existing.heatEventIds ?? []), item.heatEventId]
       }
-      if (item.availability === "planned" || !item.executable) existing.status = "provisional"
-      if (item.availability === "planned") existing.provisionalReason = "product_selection"
-      else if (!item.executable && existing.provisionalReason !== "product_selection")
-        existing.provisionalReason = "application_review"
       if (
         item.routineOrder !== undefined &&
         (existing.routineOrder === undefined || item.routineOrder < existing.routineOrder)
@@ -550,13 +546,10 @@ function compileDay(
         copyDe: step.copyTemplateDe,
       })),
       noteDe: null,
-      status: item.availability === "planned" || !item.executable ? "provisional" : "confirmed",
-      provisionalReason:
-        item.availability === "planned"
-          ? "product_selection"
-          : !item.executable
-            ? "application_review"
-            : null,
+      // A selected catalog product is instantly a full routine member: product
+      // blocks always compile confirmed, regardless of purchase/executable state.
+      status: "confirmed",
+      provisionalReason: null,
       heatEventIds: item.heatEventId ? [item.heatEventId] : [],
       guidanceKey: protocol.guidanceKey,
       scopeKind: protocol.scope.kind,
@@ -748,8 +741,9 @@ function compileDay(
     key,
     productBlocks,
     outerSequence,
-    isPartial:
-      unresolvedBlocks.length > 0 || productBlocks.some((block) => block.status === "provisional"),
+    // Product blocks always compile confirmed now, so only genuinely unresolved
+    // slots (no product chosen, or a demoted catalog identity) make a day partial.
+    isPartial: unresolvedBlocks.length > 0,
   }
 }
 

@@ -17,16 +17,9 @@ export function ApplicationOverview({
   navigationBasePath?: string
 }) {
   const hasPartialGuidance = days.some((day) => day.isPartial)
-  const provisionalProductCount = days.reduce(
-    (total, day) => total + day.provisionalProductCount,
-    0,
-  )
   const unresolvedProductCount = days.reduce((total, day) => total + day.unresolvedProductCount, 0)
   const summaryParts = [
     hasPartialGuidance ? "Der Plan ist teilweise bereit" : null,
-    provisionalProductCount > 0
-      ? `${provisionalProductCount} ${provisionalProductCount === 1 ? "Produkt ist" : "Produkte sind"} vorläufig`
-      : null,
     unresolvedProductCount > 0
       ? `${unresolvedProductCount} ${unresolvedProductCount === 1 ? "Detail ist" : "Details sind"} noch offen`
       : null,

@@ -195,7 +195,7 @@ test("detail does not turn an invalid current commerce URL into an outbound link
   assert.equal(result.status, "found")
   if (result.status !== "found") return
   assert.equal(result.detail.commerce.productUrl, null)
-  assert.match(result.detail.commerce.availabilityLabel, /kein verifizierter Produktlink/)
+  assert.equal(result.detail.commerce.availabilityLabel, "Derzeit kein verifizierter Produktlink")
 })
 
 test("a planned exact catalog product is allowed current commerce; foreign, no-plan, and forged item keys remain unavailable", async () => {
@@ -291,4 +291,28 @@ test("route authenticates before constructing its admin-backed service and retur
     [response.status, await response.json(), response.headers.get("Cache-Control")],
     [404, { error: "personal_plan_not_available" }, "no-store"],
   )
+})
+
+test("unknown availability stays quiet instead of announcing an unconfirmed status", async () => {
+  const db = client({
+    plan: {
+      id: ids.plan,
+      revision: 2,
+      source_revision: 3,
+      active_routine_version_id: ids.version,
+      pending_routine_proposal_id: null,
+    },
+    version: { id: ids.version, payload: payload() },
+    product: null,
+  })
+  const result = await createRoutineProductDetailService({ client: db }).load({
+    userId: "owner-1",
+    itemKey: "wash",
+    enabled: true,
+  })
+
+  assert.equal(result.status, "found")
+  if (result.status !== "found") return
+  assert.equal(result.detail.commerce.availabilityLabel, null)
+  assert.equal(result.detail.commerce.productUrl, null)
 })

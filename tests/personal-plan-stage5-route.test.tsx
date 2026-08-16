@@ -444,8 +444,20 @@ test("a rendered partial day is usable and does not emit a route failure", async
       adaptRoutine: async () => ({
         routineVersionId: "routine-1",
         planId: "plan-1",
-        routineItems: [{ ...shampooItem, availability: "planned", executable: false }],
-        unresolvedRoutineItems: [],
+        // A confirmed shampoo plus a genuinely unresolved conditioner slot (no
+        // product chosen) is what makes a day partial now — a planned product
+        // alone no longer does, since a selected catalog product is instantly
+        // a full routine member.
+        routineItems: [shampooItem],
+        unresolvedRoutineItems: [
+          {
+            itemId: "item:conditioner-gap",
+            category: "conditioner",
+            role: "condition",
+            routineOrder: 1,
+            applicationInstanceKey: "assignment:conditioner-gap",
+          },
+        ],
         degradedItems: [],
         exactGuidanceProtocols: [],
         applicationPointersV2: [shampooPointer],
@@ -627,8 +639,10 @@ test("route composes a planned Heat item with its canonical family instructions"
   if (view.state !== "ready") return
   const stylingDay = view.days.find((day) => day.dayType === "styling_day")
   assert.ok(stylingDay)
-  assert.equal(stylingDay.isPartial, true)
-  assert.equal(stylingDay.provisionalProductCount, 1)
+  // A planned Heat item with a chosen product is instantly a full routine
+  // member: the day is confirmed, not partial.
+  assert.equal(stylingDay.isPartial, false)
+  assert.equal(stylingDay.provisionalProductCount, 0)
   assert.equal(
     stylingDay.steps.find((step) => step.kind === "product")?.actions[0]?.copyDe,
     "Gleichmäßig auf vollständig trockenem Haar verteilen. Erst danach das heiße Tool verwenden.",

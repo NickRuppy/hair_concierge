@@ -227,7 +227,7 @@ test("fails closed when a compiled day has no active canonical definition", () =
   )
 })
 
-test("adapts and renders provisional guidance plus a local unresolved product gap", () => {
+test("passes a provisional-status block through the adapter without special visual treatment, plus a local unresolved product gap", () => {
   const compiled = compiledView()
   const washDay = compiled.days[0]!
   const provisional = {
@@ -280,22 +280,27 @@ test("adapts and renders provisional guidance plus a local unresolved product ga
   assert.doesNotMatch(html, /rounded-full[^>]*>Plan teilweise bereit/)
   assert.match(html, /Teilweise bereit/)
   assert.match(html, /data-application-shelf-scene="true"/)
+  // The status field still flows through untouched (only the rendering
+  // branches that differentiated it visually were removed).
   assert.match(html, /data-application-shelf-slot="provisional"/)
   assert.match(html, /vorgemerkter-conditioner\.webp/)
   assert.match(html, /data-application-shelf-slot="open"/)
+  // A selected catalog product is instantly a full routine member: the shelf
+  // summary names products plainly, with no "(bestätigt)"/"(vorläufig)" split.
   assert.match(
     html,
-    /Regal: Shampoo: Mildes Shampoo \(bestätigt\); Conditioner: Vorgemerkter Conditioner \(vorläufig\); Leave-in: Produkt noch offen/,
+    /Regal: Shampoo: Mildes Shampoo; Conditioner: Vorgemerkter Conditioner; Leave-in: Produkt noch offen/,
   )
   assert.doesNotMatch(html, /Du kannst die bekannten Schritte bereits nutzen/)
+  assert.doesNotMatch(html, /Vorläufig/)
 
   const selectedHtml = renderToStaticMarkup(
     createElement(ApplicationPage, {
       view: { ...view, selectedDayType: "wash_day" },
     }),
   )
-  assert.match(selectedHtml, /Vorläufig/)
-  assert.match(selectedHtml, /seine Anwendung ist bereits bekannt/)
+  assert.doesNotMatch(selectedHtml, /Vorläufig/)
+  assert.doesNotMatch(selectedHtml, /seine Anwendung ist bereits bekannt/)
   assert.match(selectedHtml, /Produkt noch offen/)
   assert.match(selectedHtml, /Für diese Kategorie fehlen noch ein bestätigtes Produkt/)
 })
@@ -312,7 +317,8 @@ test("uses a neutral shelf fallback when a confirmed catalog image is missing", 
 
   const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
   assert.match(html, /data-application-image-treatment="fallback"/)
-  assert.match(html, /Regal: Shampoo: Mildes Shampoo \(bestätigt\)/)
+  assert.match(html, /Regal: Shampoo: Mildes Shampoo/)
+  assert.doesNotMatch(html, /\(bestätigt\)/)
 })
 
 test("uses a neutral contained fallback for nonstandard product imagery", () => {
@@ -333,7 +339,7 @@ test("uses a neutral contained fallback for nonstandard product imagery", () => 
   assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
 })
 
-test("keeps provisional semantics accessible for nonstandard product imagery", () => {
+test("keeps the provisional status data hook accessible for nonstandard product imagery", () => {
   const compiled = compiledView()
   compiled.days[0]!.productBlocks[0]!.status = "provisional"
   compiled.days[0]!.productBlocks[0]!.provisionalReason = "product_selection"
@@ -351,7 +357,8 @@ test("keeps provisional semantics accessible for nonstandard product imagery", (
 
   const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
   assert.match(html, /data-application-shelf-slot="provisional"/)
-  assert.match(html, /Regal: Shampoo: Mildes Shampoo \(vorläufig\)/)
+  assert.match(html, /Regal: Shampoo: Mildes Shampoo/)
+  assert.doesNotMatch(html, /\(vorläufig\)/)
 })
 
 test("renders the ten approved category-specific product silhouettes", () => {

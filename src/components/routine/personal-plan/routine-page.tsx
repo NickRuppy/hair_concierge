@@ -13,6 +13,7 @@ import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfoli
 
 import { routineCategoryLabel } from "./routine-item-card"
 
+import { hasChosenPlannedProduct } from "./routine-status"
 import { RoutineSection } from "./routine-section"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
@@ -40,7 +41,9 @@ function isBlockingBasisGap(item: RoutineItem) {
   return (
     item.state.systemAssessment === "basis" &&
     item.state.inclusion === "included" &&
-    (item.state.availability === "none" || item.state.availability === "pending_review")
+    (item.state.availability === "none" ||
+      item.state.availability === "pending_review" ||
+      (item.state.availability === "planned" && !hasChosenPlannedProduct(item)))
   )
 }
 
@@ -99,10 +102,6 @@ export function RoutinePage({
   const basisItems = sectionItems("basis")
   const optionalItems = sectionItems("optional").filter((item) => !isLaterOptional(item))
   const laterItems = sectionItems("optional").filter(isLaterOptional)
-  const activeProductCount = [...basisItems, ...optionalItems].filter(
-    (item) => item.executable && item.state.inclusion === "included",
-  ).length
-  // Für die Kopfzeile zählt die Routine-Größe, nicht nur schon vorhandene Produkte.
   const includedProductCount = [...basisItems, ...optionalItems].filter(
     (item) => item.state.inclusion === "included",
   ).length
@@ -138,9 +137,7 @@ export function RoutinePage({
                       ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
                       : includedProductCount === 0
                         ? "Deine Routine ist bereit."
-                        : activeProductCount > 0
-                          ? `Deine Routine mit ${includedProductCount} ${includedProductCount === 1 ? "Produkt" : "Produkten"} – ${activeProductCount} davon hast du schon.`
-                          : `Deine Routine mit ${includedProductCount} ${includedProductCount === 1 ? "Produkt" : "Produkten"}.`}
+                        : `Deine Routine mit ${includedProductCount} ${includedProductCount === 1 ? "Produkt" : "Produkten"}.`}
                 </p>
                 {hasBlockingBasisGap ? (
                   <p

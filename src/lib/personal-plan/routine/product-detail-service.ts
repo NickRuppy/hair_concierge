@@ -28,7 +28,9 @@ type RoutineItem = RoutinePayloadV1["items"][number]
 export type RoutineProductDetail = {
   item: RoutineItem
   commerce: {
-    availabilityLabel: string
+    // Null when availability is simply unknown — the sheet stays quiet instead
+    // of announcing an unconfirmed status.
+    availabilityLabel: string | null
     freshnessLabel: string
     affiliateDisclosure: string | null
     priceLabel: string | null
@@ -133,10 +135,7 @@ function commerceFor(
   const productId = exactCatalogProductId(item)
   if (!productId) {
     return {
-      availabilityLabel:
-        item.product.kind === "none"
-          ? "Noch kein Produkt ausgewählt"
-          : "Noch keine Shopdaten verfügbar",
+      availabilityLabel: item.product.kind === "none" ? "Noch kein Produkt ausgewählt" : null,
       freshnessLabel: "Es liegen keine aktuellen Produktdaten vor.",
       affiliateDisclosure: null,
       priceLabel: null,
@@ -145,7 +144,7 @@ function commerceFor(
   }
   if (!product) {
     return {
-      availabilityLabel: "Aktuelle Verfügbarkeit nicht bestätigt",
+      availabilityLabel: null,
       freshnessLabel: "Zu diesem Produkt liegen derzeit keine aktuellen Shopdaten vor.",
       affiliateDisclosure: null,
       priceLabel: null,
@@ -161,7 +160,7 @@ function commerceFor(
         ? "Aktuell verfügbar"
         : product.purchase_link_status === "available"
           ? "Derzeit kein verifizierter Produktlink"
-          : "Aktuelle Verfügbarkeit nicht bestätigt"
+          : null
   return {
     availabilityLabel,
     freshnessLabel: freshnessLabel(product.updated_at),

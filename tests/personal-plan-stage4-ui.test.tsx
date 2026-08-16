@@ -113,7 +113,15 @@ test("renders Basis before Optional and groups multiple roles into one Bedarfspl
           availability: "planned",
           fitDecision: "standard",
         },
-        product: { kind: "planned", displayName: "Pflegemaske" },
+        // Contract-valid planned-without-product shape (productId is nullable
+        // in the routine payload even though Stage 3 always chooses one).
+        product: {
+          kind: "planned",
+          plannedPurchaseId: "planned:mask",
+          productId: null,
+          displayName: "Pflegemaske",
+        },
+        executable: false,
       }),
     ],
     [
@@ -141,7 +149,71 @@ test("renders Basis before Optional and groups multiple roles into one Bedarfspl
     /aria-label="Zweck: Schuppenpflege; Produkt: Kopfhautserum; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich"/,
   )
   assert.match(html, />2 Anwendungen</)
-  assert.match(html, /Geplant/)
+  // A planned item without a concrete product choice reads "Offen", same as
+  // availability "none" — a selected catalog product is instantly Aktiv.
+  assert.match(html, /Status: Offen/)
+})
+
+test("a basis slot with a planned ref but no chosen product blocks the Anwendung", () => {
+  const routine = payload([
+    item({
+      itemKey: "item:shampoo:planned-open",
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "planned",
+        fitDecision: "standard",
+      },
+      product: {
+        kind: "planned",
+        plannedPurchaseId: "planned:open",
+        productId: null,
+        displayName: "Noch offenes Shampoo",
+      },
+      executable: false,
+    }),
+  ])
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} onItemDetail={() => undefined} />,
+  )
+
+  assert.match(html, /Status: Offen/)
+  assert.match(html, /Mindestens ein Basis-Baustein fehlt noch/)
+  assert.doesNotMatch(html, /Anwendung ansehen/)
+})
+
+test("a planned item with a chosen catalog product is a full routine member", () => {
+  // Faithful payload shape: planned items are never executable in real
+  // portfolios (executable = owned catalog product), yet they must read Aktiv.
+  const routine = payload([
+    item({
+      itemKey: "item:shampoo:shampoo_everyday:planned",
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "planned",
+        fitDecision: "standard",
+      },
+      product: {
+        kind: "planned",
+        plannedPurchaseId: "planned:decision-1",
+        productId: "33333333-3333-4333-8333-333333333333",
+        displayName: "Empfohlenes Shampoo",
+      },
+      executable: false,
+    }),
+  ])
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} onItemDetail={() => undefined} />,
+  )
+
+  assert.match(
+    html,
+    /aria-label="Zweck: Regelmäßige Reinigung; Produkt: Empfohlenes Shampoo; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich"/,
+  )
+  assert.doesNotMatch(html, /Nicht einsatzbereit/)
+  assert.doesNotMatch(html, /Geplant/)
+  assert.doesNotMatch(html, /Status: Offen/)
 })
 
 test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 frontier is reachable", () => {
@@ -384,7 +456,14 @@ test("shows v3 replacement labels and retained owned products without adding the
         availability: "planned",
         fitDecision: "standard",
       },
-      product: { kind: "planned", displayName: "Neues Shampoo" },
+      // Faithful v3 replacement shape: Stage3PlannedPurchase.productId is a
+      // required non-null string, so real replacement items always carry one.
+      product: {
+        kind: "planned",
+        plannedPurchaseId: "planned:decision-replace",
+        productId: "44444444-4444-4444-8444-444444444444",
+        displayName: "Neues Shampoo",
+      },
       executable: false,
     }),
     item({
@@ -420,7 +499,10 @@ test("shows v3 replacement labels and retained owned products without adding the
     <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,
   )
 
-  assert.match(html, /Noch kaufen/)
+  // A selected catalog product is instantly Aktiv, so the v3 decision-keyed
+  // "Noch kaufen" replacement label no longer surfaces anywhere.
+  assert.match(html, /Zweck: Regelmäßige Reinigung; Produkt: Neues Shampoo;[^"]*Status: Aktiv/)
+  assert.doesNotMatch(html, /Noch kaufen/)
   assert.match(html, /Mit Einschränkung/)
   assert.match(html, /Nicht verwendete Produkte \(1\)/)
   assert.match(html, /Altes Shampoo/)

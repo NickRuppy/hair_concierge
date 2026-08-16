@@ -11,7 +11,7 @@ import {
   type PortfolioPresentation,
 } from "@/lib/personal-plan/routine/portfolio-presentation"
 
-import { getRoutineStatus, RoutineStatusBadge } from "./routine-status"
+import { getRoutineStatus, hasChosenPlannedProduct, RoutineStatusBadge } from "./routine-status"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
 
@@ -176,6 +176,10 @@ export function routineFitLabel(
     )
   }
   if (item.state.systemAssessment === "not_recommended") return "Bewusste Wahl"
+  if (item.state.availability === "planned") {
+    if (hasChosenPlannedProduct(item)) return "✓ Passt"
+    return item.state.systemAssessment === "basis" ? "Basis-Lücke" : "Optional offen"
+  }
   if (!item.executable) return "Nicht einsatzbereit"
   return "✓ Passt"
 }
@@ -211,7 +215,7 @@ export function RoutineItemCard({
   const visibleCategory = variant === "later" ? `${category} optional` : category
   const product = productName(item, productPresentation)
   const cadence = routineCadenceLabel(item)
-  const status = getRoutineStatus(item, presentation).label
+  const status = getRoutineStatus(item).label
   const fit = routineFitLabel(item, presentation)
   const timing = routineTimingLabel(item)
   const accessibleName = `Zweck: ${purpose}; Kategorie: ${category}; Produkt: ${product}; Status: ${status}; Rhythmus: ${cadence}`
@@ -276,7 +280,7 @@ export function RoutineItemCard({
           <p className="mt-2 leading-relaxed text-muted-foreground">{detailCopy(item)}</p>
         </details>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <RoutineStatusBadge item={item} presentation={presentation} />
+          <RoutineStatusBadge item={item} />
           {onDetail ? (
             <Button type="button" variant="ghost" size="sm" onClick={() => onDetail(item)}>
               Detail öffnen
@@ -308,7 +312,7 @@ export function RoutineCategoryCard({
   const multipleItems = items.length > 1
 
   function rowStatus(item: RoutineItem) {
-    const status = getRoutineStatus(item, presentation).label
+    const status = getRoutineStatus(item).label
     if (status !== "Aktiv") return status
     const fit = routineFitLabel(item, presentation)
     return fit === "✓ Passt" ? status : fit
@@ -320,7 +324,14 @@ export function RoutineCategoryCard({
     if (item.state.inclusion === "excluded" || item.state.systemAssessment === "not_recommended") {
       return "text-[var(--brand-plum)]"
     }
-    if (item.state.availability === "planned" || !item.executable) {
+    if (item.state.availability === "planned") {
+      // A chosen catalog product styles like an owned one; only a planned slot
+      // without an exact product is an open decision, same tone as "none".
+      return hasChosenPlannedProduct(item)
+        ? "text-[var(--brand-plum)]"
+        : "text-[var(--status-danger-text)]"
+    }
+    if (!item.executable) {
       return "text-[var(--status-pending-text)]"
     }
     if (item.state.availability === "pending_review") {
