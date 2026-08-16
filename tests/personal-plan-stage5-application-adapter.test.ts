@@ -7,6 +7,7 @@ import {
   type ApplicationRoutineReadClient,
 } from "../src/lib/personal-plan/routine/application-adapter"
 import type { RoutinePayloadV1 } from "../src/lib/personal-plan/routine/contracts"
+import { CatalogDatabaseReadError } from "../src/lib/catalog-authority/product-spec-relationships"
 
 const planId = "10000000-0000-4000-8000-000000000001"
 const refinedVersionId = "20000000-0000-4000-8000-000000000001"
@@ -123,6 +124,38 @@ test("Stage 5 adapter bulk-reads products and exact protocols while preserving a
     "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/shampoo.webp",
   )
   assert.match(calls[0]!.select ?? "", /image_url/)
+  for (const table of [
+    "product_leave_in_specs",
+    "product_bondbuilder_specs",
+    "product_mask_specs",
+    "product_oil_specs",
+    "product_heat_protectant_specs",
+    "product_scalp_care_specs",
+    "product_dry_shampoo_specs",
+  ]) {
+    assert.match(calls[0]!.select ?? "", new RegExp(`${table}!${table}_product_category_fkey\\(`))
+  }
+})
+
+test("Stage 5 adapter normalizes catalog read failures without retaining database details", async () => {
+  const { client } = productClient(null, {
+    code: "PGRST201",
+    message: "sensitive relationship and query details",
+  })
+
+  await assert.rejects(
+    adaptAcceptedActiveRoutineForApplication({
+      client,
+      activeVersion: { id: "routine-v1", payload: activePayload() },
+    }),
+    (error: unknown) => {
+      assert.ok(error instanceof CatalogDatabaseReadError)
+      assert.equal(error.message, "catalog_database_read_failed")
+      assert.doesNotMatch(error.message, /PGRST201|sensitive|relationship|query/)
+      assert.equal("cause" in error, false)
+      return true
+    },
+  )
 })
 
 test("Stage 5 V2 adapter selects only typed pointer storage and ignores V1 manufacturer prose", async () => {
@@ -215,7 +248,7 @@ test("Stage 5 adapter carries reviewed Oil weight into application dosage facts"
 
   assert.match(
     calls[0]!.select!,
-    /product_oil_specs\(weight,role_support,provides_heat_protection\)/,
+    /product_oil_specs!product_oil_specs_product_category_fkey\(weight,role_support,provides_heat_protection\)/,
   )
   assert.equal(result.routineItems[0]?.catalogFacts.weight, "rich")
   assert.equal(result.routineItems[0]?.catalogFactProvenance?.weight, "catalog_spec")
@@ -716,6 +749,7 @@ test("immutable refined profile fails closed on missing row or database error", 
       planId,
       refinedVersionId,
     }),
-    /database unavailable/,
+    (error: unknown) =>
+      error instanceof CatalogDatabaseReadError && error.message === "catalog_database_read_failed",
   )
 })

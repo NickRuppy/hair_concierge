@@ -1,6 +1,7 @@
 import {
   CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS,
   CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS,
+  CATALOG_AUTHORITY_FORBIDDEN_SCHEMA_OBJECTS,
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type CatalogAuthorityAuditIssue,
   CatalogAuthorityAuditReceipt,
@@ -336,6 +337,16 @@ export function auditCatalogAuthority(
           null,
           object?.kind ?? null,
           object ? `${name} is not validated` : `${name} is missing`,
+        )
+      }
+    }
+    for (const name of CATALOG_AUTHORITY_FORBIDDEN_SCHEMA_OBJECTS) {
+      if (actual.has(name)) {
+        add(
+          "required_index_or_constraint_missing",
+          null,
+          "constraint",
+          `${name} must be absent after relationship convergence`,
         )
       }
     }

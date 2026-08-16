@@ -8,6 +8,7 @@ import { resolveAnwendungPage, type AnwendungResolverDeps } from "../src/app/anw
 import type { ApplicationDayTypeKey } from "../src/lib/routines/personal-plan/application/contracts"
 import { SHARED_APPLICATION_TEMPLATE_BY_KEY_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 import { adaptAcceptedActiveRoutineForApplication } from "../src/lib/personal-plan/routine/application-adapter"
+import { CatalogDatabaseReadError } from "../src/lib/catalog-authority/product-spec-relationships"
 
 test("direct Anwendung route stays compact and non-exposing without an eligible owner", async () => {
   const view = await resolveAnwendungPage(readyDeps({ getUserId: async () => null }))
@@ -356,6 +357,18 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   assert.equal(failures.length, 1)
   assert.equal((failures[0] as { reason: string }).reason, "database")
   assert.equal(typeof (failures[0] as { durationMs: unknown }).durationMs, "number")
+
+  const normalizedFailures: unknown[] = []
+  const normalizedDatabase = await resolveAnwendungPage(
+    readyDeps({
+      loadRoutineVersion: async () => {
+        throw new CatalogDatabaseReadError()
+      },
+      reportFailure: (details) => normalizedFailures.push(details),
+    }),
+  )
+  assert.deepEqual(normalizedDatabase, { state: "unavailable" })
+  assert.equal((normalizedFailures[0] as { reason: string }).reason, "database")
 })
 
 test("a rendered partial day is usable and does not emit a route failure", async () => {

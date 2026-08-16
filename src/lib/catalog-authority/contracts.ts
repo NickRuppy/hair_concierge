@@ -178,5 +178,9 @@ export const CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS = [
   "products_origin_check",
   "products_category_key_fkey",
   "products_id_category_key_key",
+  ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_fkey`),
   ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_idx`),
 ] as const
+
+export const CATALOG_AUTHORITY_FORBIDDEN_SCHEMA_OBJECTS =
+  CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_id_fkey`)

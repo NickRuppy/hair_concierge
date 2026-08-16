@@ -5,6 +5,7 @@ import {
   type Stage5ProtocolPreflightRead,
 } from "@/lib/product-intake/catalog-enrichment/stage5-protocols"
 import type { Stage5V2ApplicationPreflightRead } from "@/lib/product-intake/catalog-enrichment/stage5-v2-application"
+import { embedProductSpec } from "@/lib/catalog-authority/product-spec-relationships"
 
 type QueryResult<T> = Promise<{ data: T | null; error: { message: string } | null }>
 type SelectBuilder<T> = PromiseLike<{
@@ -35,6 +36,38 @@ type Stage5ProtocolClient = {
         },
   ) => QueryResult<Record<string, unknown>[]>
 }
+
+const STAGE5_COHORT_BASE_COLUMNS = [
+  "id",
+  "category_key",
+  "origin",
+  "is_active",
+  "lifecycle_status",
+  "is_chaarlie_recommended",
+  "brand",
+  "name",
+  "affiliate_link",
+  embedProductSpec("product_shampoo_specs", "shampoo_bucket"),
+  embedProductSpec("product_scalp_care_specs", "primary_role"),
+  embedProductSpec("product_deep_cleansing_shampoo_specs", "reset_focus"),
+].join(",")
+
+export const STAGE5_COHORT_AUDIT_SELECT = [
+  STAGE5_COHORT_BASE_COLUMNS,
+  embedProductSpec(
+    "product_leave_in_specs",
+    "plan_roles,care_direction,repair_support_level,functional_benefits",
+  ),
+  embedProductSpec("product_oil_specs", "weight,role_support,provides_heat_protection"),
+  embedProductSpec("product_mask_specs", "repair_support_level,functional_benefits"),
+].join(",")
+
+export const STAGE5_COHORT_AUDIT_FALLBACK_SELECT = [
+  STAGE5_COHORT_BASE_COLUMNS,
+  embedProductSpec("product_leave_in_specs", "provides_heat_protection"),
+  embedProductSpec("product_oil_specs", "provides_heat_protection"),
+  embedProductSpec("product_mask_specs", "product_id"),
+].join(",")
 
 export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient) {
   const read: Stage5ProtocolPreflightRead & Stage5V2ApplicationPreflightRead = {
@@ -120,8 +153,6 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
           product_scalp_care_specs: { primary_role: string | null } | null
           product_deep_cleansing_shampoo_specs: { reset_focus: string | null } | null
         }
-        const baseColumns =
-          "id,category_key,origin,is_active,lifecycle_status,is_chaarlie_recommended,brand,name,affiliate_link,product_shampoo_specs(shampoo_bucket),product_scalp_care_specs(primary_role),product_deep_cleansing_shampoo_specs(reset_focus)"
         const run = (columns: string) =>
           client
             .from("products")
@@ -129,16 +160,12 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
             .eq("origin", "curated")
             .eq("is_active", true)
             .eq("lifecycle_status", "active")
-        let { data, error } = await run(
-          `${baseColumns},product_leave_in_specs(plan_roles,care_direction,repair_support_level,functional_benefits),product_oil_specs(weight,role_support,provides_heat_protection),product_mask_specs(repair_support_level,functional_benefits)`,
-        )
+        let { data, error } = await run(STAGE5_COHORT_AUDIT_SELECT)
         if (
           error &&
           /(?:plan_roles|repair_support_level|role_support).*does not exist/i.test(error.message)
         ) {
-          const fallback = await run(
-            `${baseColumns},product_leave_in_specs(provides_heat_protection),product_oil_specs(provides_heat_protection),product_mask_specs(product_id)`,
-          )
+          const fallback = await run(STAGE5_COHORT_AUDIT_FALLBACK_SELECT)
           data = (fallback.data ?? []).map((product) => ({
             ...product,
             product_leave_in_specs: product.product_leave_in_specs

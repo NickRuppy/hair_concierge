@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { auditCatalogAuthority } from "../src/lib/catalog-authority/audit"
 import {
+  CATALOG_AUTHORITY_FORBIDDEN_SCHEMA_OBJECTS,
   CATALOG_AUTHORITY_AUDIT_ISSUE_CODES,
   CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS,
   CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS,
@@ -125,19 +126,37 @@ test("thickness is non-applicable for heat protectant, dry shampoo, and scalp ca
   assert.equal(receipt.clean, true)
 })
 
-test("expand-phase composite constraints may be present but not yet validated", () => {
+test("converged composite constraints must be validated", () => {
   const snapshot = completeSnapshot([completeProduct("shampoo", uuid(213))])
   snapshot.schemaObjects = requiredSchemaObjects().map((object) => ({
     ...object,
-    valid: CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS.includes(
-      object.name as (typeof CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS)[number],
-    ),
+    valid: object.name.endsWith("_product_category_fkey") ? false : object.valid,
   }))
 
   const receipt = auditCatalogAuthority(snapshot)
 
-  assert.equal(receipt.issueCounts.required_index_or_constraint_missing, undefined)
-  assert.equal(receipt.clean, true)
+  assert.equal(receipt.issueCounts.required_index_or_constraint_missing, 14)
+  assert.equal(receipt.clean, false)
+})
+
+test("converged schema rejects every redundant single-column product relationship", () => {
+  const snapshot = completeSnapshot([completeProduct("shampoo", uuid(216))])
+  snapshot.schemaObjects!.push(
+    ...CATALOG_AUTHORITY_FORBIDDEN_SCHEMA_OBJECTS.map((name) => ({
+      kind: "constraint" as const,
+      name,
+      valid: true,
+      definition: "FOREIGN KEY (product_id) REFERENCES products(id)",
+    })),
+  )
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(
+    receipt.issueCounts.required_index_or_constraint_missing,
+    CATALOG_AUTHORITY_FORBIDDEN_SCHEMA_OBJECTS.length,
+  )
+  assert.equal(receipt.clean, false)
 })
 
 test("pre-existing product spine constraints must remain validated", () => {

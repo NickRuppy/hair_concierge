@@ -16,6 +16,10 @@ import {
 } from "@/lib/routines/personal-plan/application/product-protocol-adapter"
 import type { ProductApplicationPointerV2 } from "@/lib/routines/personal-plan/application/contracts-v2"
 import type { PersonalPlanStage5ContractVersion } from "@/lib/personal-plan/stage5-access"
+import {
+  CatalogDatabaseReadError,
+  PRODUCT_APPLICATION_FACTS_SELECT,
+} from "@/lib/catalog-authority/product-spec-relationships"
 
 const semanticRoleByRoutineRole = {
   shampoo_everyday: "cleanse",
@@ -60,8 +64,6 @@ type Query = {
   maybeSingle(): Promise<{ data: unknown; error: unknown }>
 }
 export type ApplicationRoutineReadClient = { from(table: string): Query }
-const PRODUCT_SELECT =
-  "id,image_url,category,category_key,is_active,lifecycle_status,product_leave_in_specs(format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage),product_bondbuilder_specs(application_mode,treatment_mode,product_format,usage_protocol),product_mask_specs(weight,concentration,balance_direction),product_oil_specs(weight,role_support,provides_heat_protection),product_heat_protectant_specs(provides_heat_protection),product_scalp_care_specs(primary_role,presentation_format,rinse_mode),product_dry_shampoo_specs(format)"
 const PRODUCT_PROTOCOL_SELECT =
   "product_id,category,role,guidance_payload,application_state,reapplication,source_url,source_text,updated_at"
 const PRODUCT_PROTOCOL_V2_SELECT =
@@ -192,9 +194,9 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
     }
   const { data, error } = await input.client
     .from("products")
-    .select(PRODUCT_SELECT)
+    .select(PRODUCT_APPLICATION_FACTS_SELECT)
     .in("id", productIds)
-  if (error) throw error
+  if (error) throw new CatalogDatabaseReadError()
   const products = new Map(((data ?? []) as ProductRow[]).map((row) => [row.id, row]))
   let protocolRows: ReviewedProductApplicationProtocolRow[] = []
   if (productIds.length > 0) {
@@ -202,7 +204,7 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       .from("product_application_protocols")
       .select(contractVersion === 2 ? PRODUCT_PROTOCOL_V2_SELECT : PRODUCT_PROTOCOL_SELECT)
       .in("product_id", productIds)
-    if (result.error) throw result.error
+    if (result.error) throw new CatalogDatabaseReadError()
     protocolRows = (result.data ?? []) as ReviewedProductApplicationProtocolRow[]
   }
   const routineItems = candidates.map(({ item, routineOrder }) => {
@@ -303,7 +305,8 @@ export async function loadImmutableRoutineProfile(input: {
     .eq("personal_plan_id", input.planId)
     .eq("kind", "refined")
     .maybeSingle()
-  if (error || !data || typeof data !== "object") throw error ?? new Error("refined_need_not_found")
+  if (error) throw new CatalogDatabaseReadError()
+  if (!data || typeof data !== "object") throw new Error("refined_need_not_found")
   const snapshot = (data as { output_snapshot?: unknown }).output_snapshot
   const profile =
     snapshot && typeof snapshot === "object" && "profile" in snapshot
