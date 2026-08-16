@@ -23,6 +23,10 @@ import {
   updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
 import { ProductFitComparison } from "../src/components/personal-plan-products/product-fit-comparison"
+import {
+  OilGroupReview,
+  oilGroupCommitLabel,
+} from "../src/components/personal-plan-products/oil-group-review"
 import { customerIoDestination } from "../src/lib/analytics/destinations/customerio"
 import { metaDestination } from "../src/lib/analytics/destinations/meta"
 import { postHogDestination } from "../src/lib/analytics/destinations/posthog"
@@ -5142,4 +5146,252 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   assert.equal(review.props.comparison.subjectKey.length > 0, true)
   assert.deepEqual(intents, [])
   assert.deepEqual(handoffs, [])
+})
+
+function threeUseCaseOilEntryContext(id: string): Stage3EntryContext {
+  return {
+    schemaVersion: 1,
+    personalPlanId: `plan-${id}`,
+    refinedVersionId: `refined-${id}`,
+    orderedCategories: [
+      {
+        category: "oil",
+        requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+        needSummary: "Pflege für Längen und Spitzen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+}
+
+async function reachOilReview(harness: ClientStateHarness) {
+  await captureCatalogProduct(harness, "Öl", "oil")
+  const tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  return renderSettled(harness)
+}
+
+function oilGroupScreen(tree: ReactElement | null) {
+  return findByType<React.ComponentProps<typeof OilGroupReview>>(tree, OilGroupReview)
+}
+
+test("the grouped Öl screen lists every named use case pre-checked under one commit action", () => {
+  const cases = [
+    {
+      role: "pre_wash_fibre_treatment",
+      roleTitle: "Vor der Haarwäsche",
+      roleSubtitle: "Als Pflege vor dem Waschen",
+      decisionKey: "oil-1",
+      productName: null,
+    },
+    {
+      role: "leave_on_fibre_conditioning",
+      roleTitle: "Im feuchten Haar",
+      roleSubtitle: "Nach dem Waschen, bleibt im Haar",
+      decisionKey: "oil-2",
+      productName: null,
+    },
+    {
+      role: "dry_finish",
+      roleTitle: "Im trockenen Haar",
+      roleSubtitle: "Für Glanz und Finish",
+      decisionKey: "oil-3",
+      productName: null,
+    },
+  ]
+  const html = renderToStaticMarkup(
+    <OilGroupReview
+      group={cases}
+      uniformProposition
+      checkedKeys={new Set(cases.map((useCase) => useCase.decisionKey))}
+      onToggle={() => undefined}
+      onCommit={() => undefined}
+    >
+      <div>Vergleich</div>
+    </OilGroupReview>,
+  )
+
+  assert.match(html, /Deine Einsätze aus dem Feinschliff — antippen zum Abwählen:/)
+  assert.match(html, /Vor der Haarwäsche/)
+  assert.match(html, /Nach dem Waschen, bleibt im Haar/)
+  assert.match(html, /Für Glanz und Finish/)
+  assert.equal(html.match(/aria-checked="true"/g)?.length, 3)
+  assert.match(html, /Für alle 3 Einsätze einplanen/)
+})
+
+test("the grouped Öl commit action counts the checked use cases and names diverging picks", () => {
+  assert.equal(oilGroupCommitLabel(3, 3, true), "Für alle 3 Einsätze einplanen")
+  assert.equal(oilGroupCommitLabel(3, 3, false), "Empfehlungen für alle 3 einplanen")
+  assert.equal(oilGroupCommitLabel(2, 3, true), "Für 2 Einsätze einplanen")
+  assert.equal(oilGroupCommitLabel(1, 3, true), "Für diesen Einsatz einplanen")
+})
+
+test("three oil use cases render as one grouped screen with pre-checked cases", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = threeUseCaseOilEntryContext("oil-group")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  const tree = await reachOilReview(harness)
+
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped, "the three pending oil use cases share one review screen")
+  assert.deepEqual(
+    grouped.props.group.map((useCase) => useCase.roleTitle),
+    ["Vor der Haarwäsche", "Im feuchten Haar", "Im trockenen Haar"],
+  )
+  assert.equal(grouped.props.checkedKeys.size, 3)
+  assert.equal(grouped.props.uniformProposition, true)
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  assert.equal(anchor.props.reviewPosition, 1)
+  assert.equal(anchor.props.reviewTotal, 1, "the grouped use cases count as one review step")
+})
+
+test("committing the full group records one local choice per member and advances past all oil subjects", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  const entryContext = threeUseCaseOilEntryContext("oil-group-commit")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  const memberKeys = grouped.props.group.map((useCase) => useCase.decisionKey)
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) === null && findByType(next, ProductFitComparison) === null,
+    "the grouped commit to leave every oil use case behind",
+  )
+
+  assert.equal(intents.length, 3)
+  assert.deepEqual(
+    intents.map((intent) => intent.subjectKey).toSorted(),
+    memberKeys.toSorted(),
+    "every checked use case reaches the batch with its own decision key",
+  )
+})
+
+test("deselecting one case commits two and surfaces the third as a scoped follow-up", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  const entryContext = threeUseCaseOilEntryContext("oil-group-split")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  let grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  const dryFinishKey = grouped.props.group.find(
+    (useCase) => useCase.role === "dry_finish",
+  )?.decisionKey
+  assert.ok(dryFinishKey)
+  grouped.props.onToggle(dryFinishKey)
+  tree = await renderSettled(harness)
+  grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(grouped.props.checkedKeys.size, 2)
+  assert.equal(grouped.props.checkedKeys.has(dryFinishKey), false)
+
+  grouped.props.onCommit()
+  tree = await renderUntil(harness, (next) => oilGroupScreen(next) === null, "the scoped follow-up")
+
+  const followUp = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(followUp, "the deselected use case gets its own review")
+  assert.equal(followUp.props.comparison.subjectKey, dryFinishKey)
+  assert.equal(followUp.props.roleLabel, "Im trockenen Haar")
+  assert.equal(followUp.props.reviewPosition, 2)
+  assert.equal(followUp.props.reviewTotal, 2, "the committed group stays one step")
+  assert.deepEqual(intents, [], "the deselected case keeps the batch open")
+})
+
+test("diverging recommendations relabel the grouped commit action", async () => {
+  const gateway = createAuthorityTestGateway()
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    return bundles.map((bundle) => {
+      const subjectKey = bundle.authorityEvaluation.subjectKey
+      if (!subjectKey.includes("dry_finish")) return bundle
+      const alternative: Stage3SelectedComparisonCandidate = {
+        productId: `recommended:${subjectKey}`,
+        category: bundle.fitComparison.category,
+        role: bundle.fitComparison.role,
+        verdict: "ideal",
+        criteria: [],
+        recommendation: {
+          recommendationId: `recommend:${subjectKey}`,
+          productId: `recommended:${subjectKey}`,
+          category: bundle.fitComparison.category,
+          role: bundle.fitComparison.role,
+          displayName: "Dr. Scheller Reines Arganöl",
+          reason: "Passt besser zu diesem Einsatz.",
+          authorityRuleId: "test.authority",
+        },
+        factFingerprint: `facts:recommend:${subjectKey}`,
+      }
+      return {
+        authorityEvaluation: {
+          status: "known",
+          category: bundle.authorityEvaluation.category,
+          subjectKey,
+          verdict: "mismatch",
+          criteria: [],
+          allowedActions: ["plan_recommendation", "acknowledge_override"],
+          recommendation: null,
+          productFactFingerprint: `facts:${subjectKey}`,
+          recommendationFactFingerprint: alternative.factFingerprint,
+          coverageRuleIds: [],
+        },
+        fitComparison: {
+          ...bundle.fitComparison,
+          alternatives: [alternative],
+          products: [
+            ...bundle.fitComparison.products,
+            {
+              productId: alternative.productId,
+              displayName: alternative.recommendation.displayName,
+              category: bundle.fitComparison.category,
+              role: bundle.fitComparison.role,
+              source: "alternative" as const,
+            },
+          ],
+        },
+      }
+    })
+  }
+  const entryContext = threeUseCaseOilEntryContext("oil-group-diverging")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  const tree = await reachOilReview(harness)
+
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(grouped.props.uniformProposition, false)
+  assert.equal(
+    grouped.props.group.find((useCase) => useCase.role === "dry_finish")?.productName,
+    "Dr. Scheller Reines Arganöl",
+  )
+  assert.equal(
+    oilGroupCommitLabel(grouped.props.checkedKeys.size, grouped.props.group.length, false),
+    "Empfehlungen für alle 3 einplanen",
+  )
 })

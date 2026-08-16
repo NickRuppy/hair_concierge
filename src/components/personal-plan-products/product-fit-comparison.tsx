@@ -47,6 +47,8 @@ type ProductFitComparisonProps = {
   selectedRecommendationProductId?: string | null
   onSelectedRecommendationChange?: (productId: string) => void
   disabled?: boolean
+  /** Set when a composing screen (e.g. the grouped Öl review) owns the commit action. */
+  hideActions?: boolean
   recoveryMessage?: string
   onAction: (
     action: ProductFitComparisonAction,
@@ -69,6 +71,7 @@ export function ProductFitComparison({
   selectedRecommendationProductId = null,
   onSelectedRecommendationChange,
   disabled = false,
+  hideActions = false,
   recoveryMessage,
   onAction,
   onRetry,
@@ -215,7 +218,7 @@ export function ProductFitComparison({
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
         onSelectReplacement={
-          directReplacementAction
+          directReplacementAction && !hideActions
             ? () => invokeAction(directReplacementAction.kind, selectedAlternative, onAction)
             : null
         }
@@ -241,7 +244,7 @@ export function ProductFitComparison({
 
       {content}
 
-      {evaluation.status !== "unsupported" && hasTruthfulAction ? (
+      {!hideActions && evaluation.status !== "unsupported" && hasTruthfulAction ? (
         <>
           {otherQuietActions.length > 0 ? (
             <section
@@ -1527,7 +1530,8 @@ function visibleEvidenceRows(
   })
 }
 
-function primaryActionFor({
+/** The action the review screen preselects; exported so grouped screens can commit the same choice. */
+export function primaryActionFor({
   evaluation,
   replacementAllowed,
 }: {
