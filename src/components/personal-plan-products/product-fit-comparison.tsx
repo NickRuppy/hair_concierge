@@ -19,6 +19,9 @@ import { cn } from "@/lib/utils"
 import { categorySelectionHeading } from "./stage3-product-copy"
 import { Stage3StickyAction } from "./stage3-sticky-action"
 
+/** The one planning CTA a single review screen offers for a product it can plan. */
+export const STAGE3_PLAN_PRODUCT_ACTION_LABEL = "Dieses Produkt einplanen"
+
 type ReviewProduct = {
   displayName: string
   presentationImageUrl?: string | null
@@ -39,7 +42,8 @@ type ProductFitComparisonProps = {
   comparison: Stage3FitComparison
   evaluation: Stage3AuthorityEvaluation
   categoryLabel?: string
-  roleLabel?: string
+  /** null omits the role segment, e.g. on the grouped Öl screen that covers every use case. */
+  roleLabel?: string | null
   reviewPosition?: number
   reviewTotal?: number
   /** Parent-owned, presentation-only candidate focus. It is never a pending intent. */
@@ -136,7 +140,9 @@ export function ProductFitComparison({
   const hasTruthfulAction =
     !hasUnexpectedTargetlessEvidence &&
     (uncoveredRetryIsPrimary || primaryAction !== null || quietActions.length > 0)
-  const contextLabel = `${categoryLabel} · ${roleLabel} · Produkt ${reviewPosition} von ${reviewTotal}`
+  const contextLabel = [categoryLabel, roleLabel, `Produkt ${reviewPosition} von ${reviewTotal}`]
+    .filter((segment) => Boolean(segment))
+    .join(" · ")
   const isUnknownFit =
     evaluation.status === "unknown" ||
     (evaluation.status === "known" && evaluation.verdict === "unknown")
@@ -326,13 +332,13 @@ export function ProductFitComparison({
                 aria-label={
                   primaryActionLabelOverride ??
                   (selectedAlternative && isUncoveredReview
-                    ? "Dieses Produkt einplanen"
+                    ? STAGE3_PLAN_PRODUCT_ACTION_LABEL
                     : visiblePrimaryAction.label)
                 }
               >
                 {primaryActionLabelOverride ??
                   (selectedAlternative && isUncoveredReview
-                    ? "Dieses Produkt einplanen"
+                    ? STAGE3_PLAN_PRODUCT_ACTION_LABEL
                     : visiblePrimaryAction.label)}
               </Button>
             </Stage3StickyAction>

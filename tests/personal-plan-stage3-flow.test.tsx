@@ -22,7 +22,10 @@ import {
   type Stage3RoutineHandoff,
   updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
-import { ProductFitComparison } from "../src/components/personal-plan-products/product-fit-comparison"
+import {
+  ProductFitComparison,
+  STAGE3_PLAN_PRODUCT_ACTION_LABEL,
+} from "../src/components/personal-plan-products/product-fit-comparison"
 import {
   OilGroupReview,
   oilGroupCommitLabel,
@@ -5305,6 +5308,11 @@ test("three oil use cases render as one grouped screen with pre-checked cases", 
   assert.ok(anchor)
   assert.equal(anchor.props.reviewPosition, 1)
   assert.equal(anchor.props.reviewTotal, 1, "the grouped use cases count as one review step")
+  assert.equal(
+    anchor.props.roleLabel,
+    null,
+    "the grouped screen covers every use case, so its kicker names none of them",
+  )
 })
 
 test("committing the full group records one local choice per member and advances past all oil subjects", async () => {
@@ -5373,7 +5381,11 @@ test("deselecting one case commits two and surfaces the third as a scoped follow
     followUp.props.scopeContextLine,
     "✓ Oil Length Seal eingeplant für: Vorwäsche · Feuchtes Haar",
   )
-  assert.equal(followUp.props.primaryActionLabelOverride, "Für diesen Einsatz einplanen")
+  assert.equal(
+    followUp.props.primaryActionLabelOverride,
+    STAGE3_PLAN_PRODUCT_ACTION_LABEL,
+    "the follow-up plans a product with the app's universal planning CTA",
+  )
   assert.deepEqual(intents, [], "the deselected case keeps the batch open")
 })
 
@@ -5762,4 +5774,240 @@ test("the grouped Öl use cases are exposed as one labelled checkbox group", () 
 
   assert.match(html, /role="group"/)
   assert.match(html, /role="group"[^>]*aria-labelledby="oil-group-use-cases-title"/)
+})
+
+test("a kicker without a role segment keeps category and counter", () => {
+  const comparison: Stage3FitComparison = {
+    schemaVersion: 1,
+    mode: "compact",
+    category: "oil",
+    role: "pre_wash_fibre_treatment",
+    subjectKey: "decision:oil:pre_wash_fibre_treatment:gap",
+    sourceIdentity: null,
+    products: [],
+    alternatives: [],
+    dimensions: [],
+    reason: "specialist_category",
+  }
+  const evaluation: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "oil",
+    subjectKey: comparison.subjectKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      comparison={comparison}
+      evaluation={evaluation}
+      categoryLabel="Öl"
+      roleLabel={null}
+      reviewPosition={3}
+      reviewTotal={3}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => undefined}
+      onAction={() => undefined}
+      hideActions
+    />,
+  )
+
+  assert.match(html, /Öl · <span class="whitespace-nowrap">Produkt 3 von 3<\/span>/)
+  assert.doesNotMatch(html, /Vor der Haarwäsche/)
+})
+
+function shampooAndThreeOilUseCases(id: string): Stage3EntryContext {
+  return {
+    schemaVersion: 1,
+    personalPlanId: `plan-${id}`,
+    refinedVersionId: `refined-${id}`,
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+      {
+        category: "oil",
+        requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+        needSummary: "Pflege für Längen und Spitzen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [
+      { category: "shampoo", allowsMultiple: true, allowsExplicitNone: true },
+      { category: "oil", allowsMultiple: true, allowsExplicitNone: true },
+    ],
+  }
+}
+
+test("the review counter collapses the oil group on every step, not only on the group's own", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = shampooAndThreeOilUseCases("oil-group-counter")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  tree = await reachOilReview(harness)
+
+  const shampooReview = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(shampooReview)
+  assert.equal(shampooReview.props.comparison.category, "shampoo")
+  assert.equal(shampooReview.props.reviewPosition, 1)
+  assert.equal(
+    shampooReview.props.reviewTotal,
+    2,
+    "the pending oil group counts as one step from the very first screen",
+  )
+
+  shampooReview.props.onAction("keep_owned")
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) !== null,
+    "the grouped Öl review after the shampoo decision",
+  )
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  assert.equal(anchor.props.reviewPosition, 2)
+  assert.equal(anchor.props.reviewTotal, 2, "the denominator never shrinks between steps")
+})
+
+/** Makes the dry-finish use case unbookable in the way the argument describes. */
+function withUnbookableDryFinish(
+  gateway: ReturnType<typeof createAuthorityTestGateway>,
+  mode: "pending" | "targetless_evidence",
+) {
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    return bundles.map((bundle) => {
+      const subjectKey = bundle.authorityEvaluation.subjectKey
+      if (!subjectKey.includes("dry_finish")) return bundle
+      if (mode === "targetless_evidence") {
+        return {
+          ...bundle,
+          fitComparison: {
+            ...bundle.fitComparison,
+            evidenceRows: [
+              {
+                rowId: "unknown-target",
+                label: "Feuchtigkeit",
+                target: null,
+                productValues: [],
+              },
+            ],
+          },
+        }
+      }
+      return {
+        ...bundle,
+        authorityEvaluation: {
+          status: "pending",
+          category: bundle.authorityEvaluation.category,
+          subjectKey,
+          reason: "product_intake_pending",
+          allowedActions: ["keep_pending", "leave_uncovered"],
+          coverageRuleIds: [],
+        },
+      }
+    })
+  }
+}
+
+test("a follow-up that can only wait for analysis keeps its own honest heading and action", async () => {
+  const gateway = createAuthorityTestGateway()
+  withUnbookableDryFinish(gateway, "pending")
+  const entryContext = threeUseCaseOilEntryContext("oil-group-pending-followup")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(
+    grouped.props.group.length,
+    2,
+    "a use case that plans no product never joins the group",
+  )
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) === null,
+    "the pending oil use case's own screen",
+  )
+
+  const followUp = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(followUp)
+  assert.match(followUp.props.comparison.subjectKey, /dry_finish/)
+  assert.equal(
+    followUp.props.primaryActionLabelOverride,
+    undefined,
+    "a screen whose action only records 'keep waiting' must not promise to plan a product",
+  )
+  assert.equal(followUp.props.headingOverride, undefined)
+})
+
+test("Back onto a committed group member never asks again for what it reports as planned", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = threeUseCaseOilEntryContext("oil-group-back-committed")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  const dryFinishKey = grouped.props.group.find(
+    (useCase) => useCase.role === "dry_finish",
+  )?.decisionKey
+  assert.ok(dryFinishKey)
+  grouped.props.onToggle(dryFinishKey)
+  tree = await renderSettled(harness)
+  oilGroupScreen(tree)?.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) =>
+      findByType<React.ComponentProps<typeof ProductFitComparison>>(next, ProductFitComparison)
+        ?.props.comparison.subjectKey === dryFinishKey,
+    "the scoped follow-up",
+  )
+
+  await findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.onBack?.()
+  tree = await renderSettled(harness)
+
+  const reopened = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(reopened)
+  assert.notEqual(reopened.props.comparison.subjectKey, dryFinishKey)
+  assert.equal(
+    reopened.props.headingOverride,
+    undefined,
+    "a committed use case must not be re-asked above a line that reports it as planned",
+  )
+  assert.equal(reopened.props.scopeContextLine, undefined)
+  assert.equal(reopened.props.primaryActionLabelOverride, undefined)
 })

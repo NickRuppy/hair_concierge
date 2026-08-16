@@ -94,10 +94,11 @@ import {
   primaryActionFor,
   ProductFitComparison,
   selectedComparisonCandidate,
+  STAGE3_PLAN_PRODUCT_ACTION_LABEL,
   type ProductFitComparisonAction,
   type ProductFitComparisonSelection,
 } from "./product-fit-comparison"
-import { oilGroupCommitLabel, OilGroupReview, type OilGroupReviewCase } from "./oil-group-review"
+import { OilGroupReview, type OilGroupReviewCase } from "./oil-group-review"
 import {
   authorityDecisionIntent,
   hasUnresolvedDecisionSubjects,
@@ -484,10 +485,19 @@ export function Stage3ProductsFlow({
       ),
     [decisionSubjects, localReviewChoices, proposedChoiceByDecisionKey],
   )
-  const oilReviewGroup = useMemo(() => {
-    if (phase !== "decisions" || !displayedReviewDecisionKey) return null
+  /**
+   * The pending oil group, derived from the first groupable oil subject rather than from what
+   * is on screen: every step's counter and analytics position must collapse the same group,
+   * or the total would shrink the moment the user reaches it.
+   */
+  const pendingOilGroup = useMemo(() => {
+    if (phase !== "decisions") return null
     // A committed group never re-forms: its deselected use cases each get their own follow-up.
     if (committedOilGroupKeys.size > 0) return null
+    const firstGroupableOil = decisionSubjects.find(
+      (subject) => subject.category === "oil" && groupableReviewKeys.has(subject.decisionKey),
+    )
+    if (!firstGroupableOil) return null
     const propositions = new Map(
       [...proposedChoiceByDecisionKey].map(([key, proposal]) => [
         key,
@@ -497,24 +507,28 @@ export function Stage3ProductsFlow({
     return deriveOilReviewGroup(
       decisionSubjects,
       groupableReviewKeys,
-      displayedReviewDecisionKey,
+      firstGroupableOil.decisionKey,
       propositions,
     )
   }, [
     committedOilGroupKeys,
     decisionSubjects,
-    displayedReviewDecisionKey,
     groupableReviewKeys,
     phase,
     proposedChoiceByDecisionKey,
   ])
-  /** Decision keys that currently collapse into a single counted review step. */
+  /** The grouped screen renders only on its own anchor's step. */
+  const oilReviewGroup =
+    pendingOilGroup && pendingOilGroup.anchor.decisionKey === displayedReviewDecisionKey
+      ? pendingOilGroup
+      : null
+  /** Decision keys that collapse into a single counted review step. */
   const groupedOilKeys = useMemo(
     () =>
-      oilReviewGroup
-        ? new Set(oilReviewGroup.members.map((member) => member.decisionKey))
+      pendingOilGroup
+        ? new Set(pendingOilGroup.members.map((member) => member.decisionKey))
         : committedOilGroupKeys,
-    [committedOilGroupKeys, oilReviewGroup],
+    [committedOilGroupKeys, pendingOilGroup],
   )
   const oilGroupCheckedKeys = useMemo(() => {
     if (!oilReviewGroup) return new Set<string>()
@@ -1245,17 +1259,23 @@ export function Stage3ProductsFlow({
       )
     }
     const reviewControlsDisabled = decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)
-    // A pending oil subject while a group has already committed IS a deselected follow-up
-    // (see oilFollowUpCopy doc comment); a committed group never re-forms, so this is the
-    // only way an oil subject reaches its own screen again.
+    // An UNDECIDED oil subject while a group has already committed IS a deselected follow-up
+    // (see oilFollowUpCopy doc comment). A committed member can still be reached through Back —
+    // it keeps its own screen, or the follow-up heading would ask again for what the context
+    // line reports as planned.
     const oilFollowUp =
-      nextSubject.category === "oil" && committedOilGroupKeys.size > 0
+      nextSubject.category === "oil" &&
+      committedOilGroupKeys.size > 0 &&
+      !committedOilGroupKeys.has(nextSubject.decisionKey)
         ? oilFollowUpCopy(
             nextSubject,
             committedOilGroupKeys,
             decisionSubjects,
             localReviewChoices,
             reviewBundles,
+            // Only a subject whose own primary action plans a product may be framed as a
+            // choice; "keep waiting"/"leave uncovered" screens keep their honest copy.
+            Boolean(proposedChoiceByDecisionKey.get(nextSubject.decisionKey)),
           )
         : null
     const comparison = (
@@ -1267,7 +1287,8 @@ export function Stage3ProductsFlow({
           groupedReviewCounts(decisionSubjects, nextSubject.decisionKey, groupedOilKeys).total
         }
         categoryLabel={CATEGORY_COPY[nextSubject.category].label}
-        roleLabel={ROLE_COPY[nextSubject.role].label}
+        // The grouped screen's one CTA plans every use case, so its kicker names none of them.
+        roleLabel={oilReviewGroup ? null : ROLE_COPY[nextSubject.role].label}
         displayedAlternativeIndex={displayedAlternativeIndex}
         onDisplayedAlternativeChange={(index) =>
           setDisplayedAlternative({ subjectKey: nextSubject.decisionKey, index })
@@ -3633,18 +3654,22 @@ function proposedReviewChoice(
 }
 
 type OilFollowUpCopy = {
-  headingOverride: string
+  headingOverride?: string
   scopeContextLine?: string
-  primaryActionLabelOverride: string
+  primaryActionLabelOverride?: string
 }
 
 /**
  * Copy for a deselected oil use case's own review screen (Task 3, Screen 2): a heading
  * scoped to that use case, an optional green line naming what the committed group already
- * covers, and the group's n=1 commit CTA text. `scopeContextLine` is undefined whenever the
+ * covers, and the app's universal planning CTA. `scopeContextLine` is undefined whenever the
  * committed members' choices can't be read back honestly (missing bundle/choice) or plan
  * different products — the simplest honest presentation for a diverging group is to omit
  * the line rather than guess which product to name.
+ *
+ * `plansProduct` is false when the subject's own primary action records "keep waiting" or
+ * "leave uncovered": such a screen keeps its state-owned heading and action label — relabelling
+ * it "Dieses Produkt einplanen" would promise a product the tap never plans.
  */
 function oilFollowUpCopy(
   subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
@@ -3652,18 +3677,21 @@ function oilFollowUpCopy(
   decisionSubjects: ReturnType<typeof deriveStage3DecisionSubjects>,
   localReviewChoices: Record<string, Stage3LocalReviewChoice>,
   reviewBundles: Stage3DecisionReviewBundles,
+  plansProduct: boolean,
 ): OilFollowUpCopy | null {
   const useCaseCopy = oilUseCaseCopy(subject.role)
   if (!useCaseCopy) return null
+  const scopeContextLine = committedOilScopeContextLine(
+    committedKeys,
+    decisionSubjects,
+    localReviewChoices,
+    reviewBundles,
+  )
+  if (!plansProduct) return scopeContextLine ? { scopeContextLine } : null
   return {
     headingOverride: `Wähle dein Öl ${useCaseCopy.scopePhrase}`,
-    scopeContextLine: committedOilScopeContextLine(
-      committedKeys,
-      decisionSubjects,
-      localReviewChoices,
-      reviewBundles,
-    ),
-    primaryActionLabelOverride: oilGroupCommitLabel(1, 1, true),
+    scopeContextLine,
+    primaryActionLabelOverride: STAGE3_PLAN_PRODUCT_ACTION_LABEL,
   }
 }
 
