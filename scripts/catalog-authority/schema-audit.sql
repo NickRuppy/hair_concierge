@@ -53,7 +53,10 @@ WITH constraint_objects AS (
   JOIN pg_catalog.pg_class AS table_relation ON table_relation.oid = index_row.indrelid
   JOIN pg_catalog.pg_namespace AS namespace ON namespace.oid = table_relation.relnamespace
   WHERE namespace.nspname = 'public'
-    AND index_relation.relname LIKE 'product\_%\_product\_category\_idx' ESCAPE '\'
+    AND (
+      index_relation.relname LIKE 'product\_%\_product\_category\_idx' ESCAPE '\'
+      OR index_relation.relname LIKE 'product\_%\_identity\_thickness\_idx' ESCAPE '\'
+    )
 ), schema_objects AS (
   SELECT * FROM constraint_objects
   UNION ALL

@@ -128,3 +128,61 @@ test("category-bounded slices reject entries from another repair lane", () => {
     /catalog_authority_repair_slice_category_conflict/,
   )
 })
+
+test("value fingerprints are stable across key insertion order", () => {
+  const forward = catalogAuthorityValueFingerprint({ alpha: 1, beta: [true, null], gamma: "x" })
+  const reversed = catalogAuthorityValueFingerprint({ gamma: "x", beta: [true, null], alpha: 1 })
+
+  assert.equal(forward, reversed)
+})
+
+test("unicode-equivalent but distinct keys produce distinct fingerprints in any order", () => {
+  const composed = "é"
+  const decomposed = "é"
+  const forward = catalogAuthorityValueFingerprint({ [composed]: 1, [decomposed]: 2 })
+  const reversed = catalogAuthorityValueFingerprint({ [decomposed]: 2, [composed]: 1 })
+
+  assert.equal(forward, reversed)
+  assert.notEqual(
+    catalogAuthorityValueFingerprint({ [composed]: 1 }),
+    catalogAuthorityValueFingerprint({ [decomposed]: 1 }),
+  )
+})
+
+test("fingerprinting rejects values JSON would silently coerce", () => {
+  assert.throws(
+    () => catalogAuthorityValueFingerprint([undefined]),
+    /catalog_authority_fingerprint_undefined_value/,
+  )
+  assert.throws(
+    () => catalogAuthorityValueFingerprint({ value: Number.NaN }),
+    /catalog_authority_fingerprint_non_finite_number/,
+  )
+  assert.throws(
+    () => catalogAuthorityValueFingerprint({ value: Number.POSITIVE_INFINITY }),
+    /catalog_authority_fingerprint_non_finite_number/,
+  )
+  assert.throws(
+    () => catalogAuthorityValueFingerprint({ value: undefined }),
+    /catalog_authority_fingerprint_undefined_value/,
+  )
+})
+
+test("manifest entries reject non-JSON intended authority values", () => {
+  const manifest = approvedManifest()
+  const broken = {
+    ...manifest,
+    entries: [
+      {
+        ...manifest.entries[0]!,
+        intendedAuthority: { thicknessEligibility: Number.NaN },
+      },
+    ],
+  }
+
+  assert.throws(() =>
+    assertCatalogAuthorityRepairReady(broken, [
+      { productId: PRODUCT_ID, categoryKey: "shampoo", authority: before },
+    ]),
+  )
+})

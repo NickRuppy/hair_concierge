@@ -91,7 +91,15 @@ export function auditCatalogAuthority(
         "recommendable product is inactive or not in active lifecycle state",
       )
     }
-    if (product.superseded) continue
+    if (product.superseded && !isRetiredSuperseded(product)) {
+      add(
+        "superseded_product_still_published",
+        product,
+        "product_relationships",
+        "product with a replaced_by relationship is still active or recommendable",
+      )
+    }
+    if (isRetiredSuperseded(product)) continue
     if (
       product.legacyCategory !== null &&
       normalizeCategory(product.legacyCategory) !== product.categoryKey
@@ -295,7 +303,7 @@ export function auditCatalogAuthority(
   }
 
   for (const product of snapshot.products) {
-    if (product.superseded) continue
+    if (isRetiredSuperseded(product)) continue
     if (!requiresPublicationCompleteness(product)) continue
     auditProductFacts(product, snapshot.facts, add)
     auditProductProtocols(product, snapshot, add)
@@ -381,6 +389,16 @@ export function auditCatalogAuthority(
     issues: deduped,
     clean: deduped.length === 0,
   }
+}
+
+// A replaced_by edge only suppresses authority checks for a genuinely retired
+// row; a still-active or recommendable source keeps full audit coverage.
+function isRetiredSuperseded(product: CatalogAuditProduct): boolean {
+  return (
+    product.superseded &&
+    !product.recommendable &&
+    (!product.isActive || product.lifecycleStatus !== "active")
+  )
 }
 
 function thicknessApplies(category: PersonalPlanCategory | null): boolean {

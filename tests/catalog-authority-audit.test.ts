@@ -311,6 +311,7 @@ test("the audit emits every stable issue code for realistic split-authority defe
   const conditioner = {
     ...completeProduct("conditioner", "22222222-2222-4222-8222-222222222222"),
     isActive: false,
+    superseded: true,
   }
   const snapshot = completeSnapshot([valid, conditioner])
   snapshot.products[0] = {
@@ -578,3 +579,38 @@ function rolesFor(category: NonNullable<CatalogAuditProduct["categoryKey"]>): st
 function uuid(value: number): string {
   return `00000000-0000-4000-8000-${value.toString().padStart(12, "0")}`
 }
+
+test("a replaced_by edge on a still-published product is flagged and suppresses nothing", () => {
+  const product = incompleteProduct(uuid(211), {
+    recommendable: true,
+    superseded: true,
+    canonicalThicknesses: [],
+    requiredRoles: [],
+  })
+  const snapshot = completeSnapshot([product])
+  snapshot.facts = []
+  snapshot.protocols = []
+  snapshot.evidence = []
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.superseded_product_still_published, 1)
+  assert.equal(receipt.issueCounts.provenance_missing, 1)
+  assert.equal(receipt.clean, false)
+})
+
+test("an active but non-recommendable product with a replaced_by edge keeps structural checks", () => {
+  const product = incompleteProduct(uuid(212), {
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: false,
+    superseded: true,
+    legacyCategory: "conditioner",
+  })
+  const snapshot = completeSnapshot([product])
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.superseded_product_still_published, 1)
+  assert.equal(receipt.issueCounts.legacy_category_divergence, 1)
+})

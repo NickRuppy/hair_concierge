@@ -28,6 +28,7 @@ export const CATALOG_AUTHORITY_AUDIT_ISSUE_CODES = [
   "overlapping_category_fact_authority",
   "provenance_missing",
   "publication_state_conflict",
+  "superseded_product_still_published",
   "publication_incomplete",
   "orphan_authority_row",
   "required_index_or_constraint_missing",
@@ -175,6 +176,11 @@ export const CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS = [
   "product_oil_eligibility_thickness_eligibility_fkey",
   ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_fkey`),
   ...CATALOG_AUTHORITY_CATEGORY_IDENTITY_TABLES.map((table) => `${table}_product_category_idx`),
+  // Task 3 contextual-FK covering indexes (historical repair migration).
+  "product_shampoo_specs_identity_thickness_idx",
+  "product_conditioner_specs_identity_thickness_idx",
+  "product_leave_in_eligibility_identity_thickness_idx",
+  "product_oil_eligibility_identity_thickness_idx",
 ] as const
 
 // Task 2 installs the composite identity constraints as NOT VALID so they

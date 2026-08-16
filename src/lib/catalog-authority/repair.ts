@@ -16,11 +16,24 @@ const repairEvidenceSchema = z.object({
   note: z.string().trim().min(1),
 })
 
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }
+
+const jsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number().finite(),
+    z.boolean(),
+    z.null(),
+    jsonValueSchema.array(),
+    z.record(z.string(), jsonValueSchema),
+  ]),
+)
+
 const repairEntrySchema = z.object({
   productId: z.string().uuid(),
   categoryKey: personalPlanCategorySchema,
   expectedOldFingerprint: sha256Schema,
-  intendedAuthority: z.record(z.string(), z.unknown()),
+  intendedAuthority: z.record(z.string(), jsonValueSchema),
   evidence: repairEvidenceSchema.array().min(1),
   expectedNewFingerprint: sha256Schema,
 })
@@ -130,14 +143,25 @@ export function assertCatalogAuthorityRepairReady(
   return manifest
 }
 
+// Deterministic canonical JSON: code-unit key ordering (never locale-sensitive)
+// and hard rejection of values JSON.stringify would silently coerce.
 function canonicalJson(value: unknown): string {
+  if (value === undefined) {
+    throw new Error("catalog_authority_fingerprint_undefined_value")
+  }
+  if (typeof value === "number" && !Number.isFinite(value)) {
+    throw new Error("catalog_authority_fingerprint_non_finite_number")
+  }
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`
   if (value !== null && typeof value === "object") {
     return `{${Object.entries(value as Record<string, unknown>)
-      .filter(([, child]) => child !== undefined)
-      .sort(([left], [right]) => left.localeCompare(right))
+      .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
       .map(([key, child]) => `${JSON.stringify(key)}:${canonicalJson(child)}`)
       .join(",")}}`
   }
-  return JSON.stringify(value)
+  const serialized = JSON.stringify(value)
+  if (serialized === undefined) {
+    throw new Error("catalog_authority_fingerprint_unsupported_value")
+  }
+  return serialized
 }
