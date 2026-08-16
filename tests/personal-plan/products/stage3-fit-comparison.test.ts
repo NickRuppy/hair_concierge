@@ -1138,6 +1138,85 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
   ])
 })
 
+test("Bondbuilder standalone row states a dedicated rationale, not the generic profile claim", () => {
+  const withAddOn = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
+          relationship: "add_on",
+        }),
+      ],
+    }),
+  )
+
+  const relationship = (withAddOn.evidenceRows ?? []).find(
+    (row) => row.rowId === "bondbuilder.relationship",
+  )
+  assert.ok(relationship)
+  // "standalone" is a hard-coded engine constant, not derived from the user's profile — the
+  // generic fallback rationale would falsely claim otherwise.
+  assert.notEqual(
+    relationship.target?.rationale,
+    "Dieser Zielwert stammt aus deinem bestätigten Bedarfsprofil.",
+  )
+  assert.match(relationship.target?.rationale ?? "", /Produkteigenschaft/)
+})
+
+test("Bondbuilder Anwendung does not invent a leave-in instruction for a rinse-out product", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        // Independent, unconstrained columns: applicationMode says post-wash leave-in while
+        // treatmentMode says rinse-out. Nothing in the schema prevents this disagreement.
+        factsFor("bondbuilder", "specialized_bond_treatment", "contradictory-candidate", {
+          applicationMode: "post_wash_leave_in",
+          treatmentMode: "rinse_out",
+        }),
+      ],
+    }),
+  )
+
+  const application = (comparison.evidenceRows ?? []).find(
+    (row) => row.rowId === "bondbuilder.application",
+  )
+  assert.ok(application)
+  const contradictoryValue = application.productValues.find(
+    (value) => value.productId === "contradictory-candidate",
+  )
+  assert.ok(contradictoryValue)
+  assert.notEqual(contradictoryValue.valueLabel, "Leave-in nach der Wäsche")
+  assert.equal(contradictoryValue.valueLabel, "Ausspülen")
+})
+
+for (const [label, overrides] of [
+  ["standalone-only", {}],
+  ["with an add-on alternative", { relationship: "add_on" as const }],
+] as const) {
+  test(`Bondbuilder ${label} projects a target for every displayed property`, () => {
+    const comparison = buildStage3FitComparison(
+      authorityInput("bondbuilder", "specialized_bond_treatment", {
+        productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+        candidates: [factsFor("bondbuilder", "specialized_bond_treatment", "candidate", overrides)],
+      }),
+    )
+
+    const evidenceRows = comparison.evidenceRows ?? []
+    assert.ok(evidenceRows.length > 0)
+    assert.equal(
+      evidenceRows.every((row) => row.target !== null),
+      true,
+    )
+    assert.equal(
+      evidenceRows
+        .flatMap((row) => row.productValues)
+        .some((value) => value.relation === "no_target"),
+      false,
+    )
+  })
+}
+
 test("Shampoo dandruff stays compact instead of using the everyday scalp rail", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("shampoo", "shampoo_dandruff", {

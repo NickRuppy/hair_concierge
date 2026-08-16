@@ -33,8 +33,8 @@ export function recommendationForBondbuilder(product: Stage3BondbuilderFacts, su
 }
 
 /**
- * Single source of truth for the verified-application state. Authority uses it as a criterion,
- * the Stage 3 comparison uses it as the product-card badge.
+ * Single source of truth for the verified-application state. Authority uses it as the
+ * `bondbuilder.protocol` criterion.
  */
 export function bondbuilderApplicationVerified(
   product: Stage3BondbuilderFacts,

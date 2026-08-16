@@ -375,7 +375,12 @@ function ComparisonReview({
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
       null)
     : null
-  const count = targetCount(comparison.evidenceRows ?? [], ownedProductId)
+  const visibleRows = visibleEvidenceRows(
+    comparison.evidenceRows ?? [],
+    ownedProductId,
+    selectedAlternative?.productId,
+  )
+  const count = targetCount(visibleRows, ownedProductId)
   return (
     <>
       <ReviewHeader
@@ -385,7 +390,7 @@ function ComparisonReview({
       <OverallVerdict
         evaluation={evaluation}
         count={count}
-        rows={comparison.evidenceRows ?? []}
+        rows={visibleRows}
         currentProductId={ownedProductId}
       />
       <div className="grid min-w-0 grid-cols-2 gap-2">
@@ -420,14 +425,10 @@ function ComparisonReview({
           Diese Alternative wählen
         </Button>
       ) : null}
-      {(comparison.evidenceRows?.length ?? 0) > 0 && selectedAlternative ? (
+      {visibleRows.length > 0 && selectedAlternative ? (
         <EvidenceMatrix
-          key={evidenceMatrixKey(
-            comparison.evidenceRows ?? [],
-            ownedProductId,
-            selectedAlternative.productId,
-          )}
-          rows={comparison.evidenceRows ?? []}
+          key={evidenceMatrixKey(visibleRows, ownedProductId, selectedAlternative.productId)}
+          rows={visibleRows}
           firstProductId={ownedProductId}
           secondProductId={selectedAlternative.productId}
           firstLabel="Deins"
@@ -642,6 +643,11 @@ function UncoveredRecommendationReview({
   const secondaryBaseLabel = secondaryIndex === null ? null : `Alternative ${secondaryIndex}`
   const secondaryLabel =
     secondary && secondaryBaseLabel ? recommendationCardLabel(secondaryBaseLabel, secondary) : null
+  const visibleRows = visibleEvidenceRows(
+    comparison.evidenceRows ?? [],
+    first?.productId,
+    secondary?.productId,
+  )
 
   return (
     <>
@@ -686,14 +692,10 @@ function UncoveredRecommendationReview({
               onChange={onDisplayedAlternativeChange}
             />
           ) : null}
-          {(comparison.evidenceRows?.length ?? 0) > 0 && secondary ? (
+          {visibleRows.length > 0 && secondary ? (
             <EvidenceMatrix
-              key={evidenceMatrixKey(
-                comparison.evidenceRows ?? [],
-                first.productId,
-                secondary.productId,
-              )}
-              rows={comparison.evidenceRows ?? []}
+              key={evidenceMatrixKey(visibleRows, first.productId, secondary.productId)}
+              rows={visibleRows}
               firstProductId={first.productId}
               secondProductId={secondary.productId}
               firstLabel={firstLabel}
@@ -1501,6 +1503,28 @@ function valueFor(row: Stage3FitEvidenceRow, productId?: string) {
 
 function relationFor(row: Stage3FitEvidenceRow, productId?: string): Stage3FitEvidenceRelation {
   return valueFor(row, productId)?.relation ?? "unknown"
+}
+
+/**
+ * The server computes evidenceRows once for the whole candidate set (owned + up to 3
+ * alternatives), but only two products are ever shown side by side at a time. The Bondbuilder
+ * "Wirkt eigenständig" row only earns its place when it separates the currently displayed pair
+ * (i.e. one of the two is an add-on) — otherwise both columns read "eigenständig" and the row
+ * is noise. Filtering happens here, per displayed pair, rather than on the server, because which
+ * pair is displayed is client-side navigation state.
+ */
+function visibleEvidenceRows(
+  rows: Stage3FitEvidenceRow[],
+  firstProductId?: string,
+  secondProductId?: string,
+): Stage3FitEvidenceRow[] {
+  return rows.filter((row) => {
+    if (row.rowId !== "bondbuilder.relationship") return true
+    return (
+      relationFor(row, firstProductId) === "supportive" ||
+      relationFor(row, secondProductId) === "supportive"
+    )
+  })
 }
 
 function primaryActionFor({

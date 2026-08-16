@@ -1165,6 +1165,226 @@ test("keeps confirmed relation counts visible while identifying unknown rows sep
   assert.match(html, /1 außerhalb · 1 nicht bestätigt · 1 ohne Einordnung/)
 })
 
+const bondbuilderComparison: Stage3FitComparison = {
+  schemaVersion: 1,
+  mode: "comparison",
+  category: "bondbuilder",
+  role: "specialized_bond_treatment",
+  subjectKey: "subject:bondbuilder",
+  sourceIdentity: {
+    kind: "catalog_product",
+    productId: "owned-bond",
+    displayName: "Mein Bondbuilder",
+    category: "bondbuilder",
+  },
+  products: [
+    {
+      productId: "owned-bond",
+      displayName: "Mein Bondbuilder",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      source: "current",
+      presentation: { netContentLabel: "150 ml", priceLabel: "24,00 €" },
+    },
+    {
+      productId: "standalone-b",
+      displayName: "Standalone B",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      source: "alternative",
+      presentation: { netContentLabel: "150 ml", priceLabel: "22,00 €" },
+    },
+    {
+      productId: "standalone-c",
+      displayName: "Standalone C",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      source: "alternative",
+      presentation: { netContentLabel: "150 ml", priceLabel: "23,00 €" },
+    },
+    {
+      productId: "addon-a",
+      displayName: "Add-on A",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      source: "alternative",
+      presentation: { netContentLabel: "100 ml", priceLabel: "18,00 €" },
+    },
+  ],
+  alternatives: [
+    {
+      productId: "standalone-b",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      verdict: "ideal",
+      criteria: [],
+      recommendation: {
+        recommendationId: "recommendation-standalone-b",
+        productId: "standalone-b",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        displayName: "Standalone B",
+        reason: "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
+        authorityRuleId: "bondbuilder.stage3.validated_standalone",
+      },
+      factFingerprint: "fingerprint-standalone-b",
+    },
+    {
+      productId: "standalone-c",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      verdict: "ideal",
+      criteria: [],
+      recommendation: {
+        recommendationId: "recommendation-standalone-c",
+        productId: "standalone-c",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        displayName: "Standalone C",
+        reason: "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
+        authorityRuleId: "bondbuilder.stage3.validated_standalone",
+      },
+      factFingerprint: "fingerprint-standalone-c",
+    },
+    {
+      productId: "addon-a",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      verdict: "supportive",
+      criteria: [],
+      recommendation: {
+        recommendationId: "recommendation-addon-a",
+        productId: "addon-a",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        displayName: "Add-on A",
+        reason:
+          "Ist ein verifiziertes Ergänzungsprodukt und erfüllt die Bondbuilder-Rolle nicht allein.",
+        authorityRuleId: "bondbuilder.stage3.validated_add_on",
+      },
+      factFingerprint: "fingerprint-addon-a",
+    },
+  ],
+  dimensions: [
+    {
+      dimensionId: "bondbuilder.suitable_thicknesses",
+      label: "Geeignete Haardicke",
+      presentationKind: "set",
+      stops: [
+        { stopId: "fine", label: "fein" },
+        { stopId: "normal", label: "mittel" },
+        { stopId: "coarse", label: "dick" },
+      ],
+      targetPosition: { kind: "supported_stops", stopIds: ["normal"] },
+      productPositions: [
+        {
+          productId: "owned-bond",
+          position: { kind: "supported_stops", stopIds: ["fine", "normal"] },
+        },
+        {
+          productId: "standalone-b",
+          position: { kind: "supported_stops", stopIds: ["fine", "normal"] },
+        },
+        {
+          productId: "standalone-c",
+          position: { kind: "supported_stops", stopIds: ["fine", "normal"] },
+        },
+        {
+          productId: "addon-a",
+          position: { kind: "supported_stops", stopIds: ["fine", "normal"] },
+        },
+      ],
+      reason: "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+    },
+  ],
+  evidenceRows: [
+    {
+      rowId: "bondbuilder.suitable_thicknesses",
+      label: "Geeignete Haardicke",
+      target: {
+        valueLabel: "mittel",
+        rationale: "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+        profileEvidenceLabels: [],
+      },
+      productValues: [
+        { productId: "owned-bond", valueLabel: "fein, mittel", relation: "in_target" },
+        { productId: "standalone-b", valueLabel: "fein, mittel", relation: "in_target" },
+        { productId: "standalone-c", valueLabel: "fein, mittel", relation: "in_target" },
+        { productId: "addon-a", valueLabel: "fein, mittel", relation: "in_target" },
+      ],
+    },
+    {
+      rowId: "bondbuilder.relationship",
+      label: "Wirkt eigenständig",
+      target: {
+        valueLabel: "eigenständig",
+        rationale:
+          "Ob ein Bondbuilder die Rolle eigenständig erfüllt, ist eine feste Produkteigenschaft – unabhängig von deinem Bedarfsprofil.",
+        profileEvidenceLabels: [],
+      },
+      productValues: [
+        { productId: "owned-bond", valueLabel: "eigenständig", relation: "in_target" },
+        { productId: "standalone-b", valueLabel: "eigenständig", relation: "in_target" },
+        { productId: "standalone-c", valueLabel: "eigenständig", relation: "in_target" },
+        { productId: "addon-a", valueLabel: "nur ergänzend", relation: "supportive" },
+      ],
+    },
+  ],
+}
+
+const bondbuilderEvaluation: Stage3AuthorityEvaluation = {
+  status: "known",
+  category: "bondbuilder",
+  subjectKey: "subject:bondbuilder",
+  verdict: "ideal",
+  criteria: [],
+  allowedActions: ["keep_owned"],
+  recommendation: null,
+  productFactFingerprint: "owned-bond-fingerprint",
+  recommendationFactFingerprint: null,
+  coverageRuleIds: [],
+}
+
+test("hides the standalone row when the displayed pair does not include an add-on, shows it when it does", () => {
+  const standaloneHtml = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Bondbuilder"
+      roleLabel="Bondbuilder"
+      reviewPosition={1}
+      reviewTotal={1}
+      comparison={bondbuilderComparison}
+      evaluation={bondbuilderEvaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  // First paint shows owned vs. standalone-b — neither is an add-on, so the row that only earns
+  // its place by separating the displayed products must not render.
+  assert.doesNotMatch(standaloneHtml, /Wirkt eigenständig/)
+
+  const addOnHtml = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Bondbuilder"
+      roleLabel="Bondbuilder"
+      reviewPosition={1}
+      reviewTotal={1}
+      comparison={bondbuilderComparison}
+      evaluation={bondbuilderEvaluation}
+      displayedAlternativeIndex={2}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  // Selecting addon-a (index 2) makes the row meaningful again.
+  assert.match(addOnHtml, /Wirkt eigenständig/)
+  assert.match(addOnHtml, /nur ergänzend/)
+})
+
 function treeFor(authorityEvaluation: Stage3AuthorityEvaluation) {
   return ProductFitComparison({
     categoryLabel: "Shampoo",

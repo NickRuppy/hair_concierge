@@ -776,6 +776,8 @@ function targetRationale(dimensionId: string): string {
     return "Vor Hitze ist ein bestätigter Schutz für diese Anwendung erforderlich."
   if (dimensionId === "oil.role_support")
     return "Das Produkt muss die ausgewählte Anwendung in deiner Routine ausdrücklich unterstützen."
+  if (dimensionId === "bondbuilder.relationship")
+    return "Ob ein Bondbuilder die Rolle eigenständig erfüllt, ist eine feste Produkteigenschaft – unabhängig von deinem Bedarfsprofil."
   return "Dieser Zielwert stammt aus deinem bestätigten Bedarfsprofil."
 }
 
@@ -1138,13 +1140,40 @@ function bondbuilderApplicationEvidenceRow(
   }
 }
 
+type BondbuilderApplicationBucket = "pre_rinse" | "post_leave_in"
+
+function bondbuilderApplicationModeBucket(
+  mode: string | null,
+): BondbuilderApplicationBucket | null {
+  if (mode === "pre_shampoo") return "pre_rinse"
+  if (mode === "post_wash_leave_in") return "post_leave_in"
+  return null
+}
+
+function bondbuilderTreatmentModeBucket(mode: string | null): BondbuilderApplicationBucket | null {
+  if (mode === "rinse_out") return "pre_rinse"
+  if (mode === "leave_in") return "post_leave_in"
+  return null
+}
+
 function bondbuilderApplication(spec: {
   applicationMode: string | null
   treatmentMode: string | null
 }): string | null {
-  const mode = spec.applicationMode ?? spec.treatmentMode
-  if (mode === "pre_shampoo" || mode === "rinse_out") return "Vorwäsche, ausspülen"
-  if (mode === "post_wash_leave_in" || mode === "leave_in") return "Leave-in nach der Wäsche"
+  const applicationBucket = bondbuilderApplicationModeBucket(spec.applicationMode)
+  const treatmentBucket = bondbuilderTreatmentModeBucket(spec.treatmentMode)
+  // Both axes are independent, unconstrained columns (see the admin form and migration CHECK
+  // constraints) — nothing enforces they agree. Only assert the two-axis claim when they land in
+  // the same bucket. When they disagree, fall back to the treatment axis alone (whether the
+  // product is rinsed out or left in) instead of inventing a combined instruction.
+  if (applicationBucket && treatmentBucket) {
+    if (applicationBucket === treatmentBucket) {
+      return applicationBucket === "pre_rinse" ? "Vorwäsche, ausspülen" : "Leave-in nach der Wäsche"
+    }
+    return treatmentBucket === "pre_rinse" ? "Ausspülen" : "Leave-in"
+  }
+  if (treatmentBucket) return treatmentBucket === "pre_rinse" ? "Ausspülen" : "Leave-in"
+  if (applicationBucket) return applicationBucket === "pre_rinse" ? "Vorwäsche" : "Nach der Wäsche"
   return null
 }
 
