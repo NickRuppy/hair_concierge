@@ -27,12 +27,18 @@ export const DIRECT_ACCEPTANCE_TOWEL_MATERIAL: TowelMaterial = "mikrofaser"
 export const DIRECT_ACCEPTANCE_TOWEL_TECHNIQUE: TowelTechnique = "gentle_press"
 
 /**
- * Only asked when Stage 1 already recorded an irritated scalp. The middle
- * option keeps the reported symptom visible without assuming an inflamed,
- * medically adjacent state that would pause the plan.
+ * Only asked when Stage 1 already recorded an irritated scalp, where Stage 1
+ * defers Scalp Care instead of rendering it. "normal" is the only value that
+ * does not turn that deferral into an extra role, so the accepted routine stays
+ * the plan the user actually saw.
+ *
+ * The alternative, "mild_sensitive_or_itchy", was surfaced to Nick: it would be
+ * more faithful to the reported symptom but adds a `scalp_comfort` role the
+ * Idealplan never showed. Plan identity won — the journey promises "accept the
+ * plan you see", and the assumption label discloses the assumption so the user
+ * can correct it in a real Stage 2.
  */
-export const DIRECT_ACCEPTANCE_SCALP_IRRITATION_DETAIL: ScalpIrritationDetail =
-  "mild_sensitive_or_itchy"
+export const DIRECT_ACCEPTANCE_SCALP_IRRITATION_DETAIL: ScalpIrritationDetail = "normal"
 
 /** Declining the bridge keeps Dry Shampoo out of an Idealplan that never showed it. */
 export const DIRECT_ACCEPTANCE_DRY_SHAMPOO_BRIDGE_PREFERENCE: DryShampooBridgePreference = "decline"
@@ -91,7 +97,7 @@ export function directAcceptanceAssumptions(
       ? [
           {
             id: "scalp_irritation_detail" as const,
-            label: "Kopfhaut leicht empfindlich oder juckend, nicht entzündet",
+            label: "Kopfhaut aktuell nicht gereizt",
           },
         ]
       : []),

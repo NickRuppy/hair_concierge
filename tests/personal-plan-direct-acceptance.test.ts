@@ -16,6 +16,7 @@ import {
   buildDirectAcceptanceStage2Defaults,
   directAcceptanceAssumptions,
 } from "../src/lib/personal-plan/direct-acceptance/defaults"
+import { createPersistedStage2RefinementGateway } from "../src/lib/personal-plan/refinement/production-persistence-gateway"
 import { buildPlanRoutineContextFromCompletedRefinement } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { deriveStage2TriggerContext } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
@@ -23,7 +24,11 @@ import type {
   Stage2PersistedDraft,
   Stage2RefinementPersistence,
 } from "../src/lib/personal-plan/persistence/stage2-refinement-service"
-import type { Stage2TriggerContext } from "../src/lib/personal-plan/refinement/types"
+import type {
+  PersonalPlanRefinementAnswersV1,
+  Stage2QuestionId,
+  Stage2TriggerContext,
+} from "../src/lib/personal-plan/refinement/types"
 import type { Stage3AuthorityEvaluation } from "../src/lib/personal-plan/products/authority/contracts"
 import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
 import { PRODUCT_FREQUENCY_LABELS } from "../src/lib/vocabulary/frequencies"
@@ -138,6 +143,54 @@ test("direct-acceptance defaults recompute a refined plan without clarification"
   assert.ok(refined.snapshot.renderedOrder.length > 0)
   // Air-drying defaults must not invent a Heat Protectant the Idealplan never showed.
   assert.equal(refined.snapshot.renderedOrder.includes("heat_protectant"), false)
+  // Nor a Dry Shampoo, because the bridge default declines it.
+  assert.equal(refined.snapshot.renderedOrder.includes("dry_shampoo"), false)
+})
+
+/**
+ * Pins a known, deliberate limit of the "accept the plan you see" promise.
+ * Stage 1 defers Scalp Care whenever an irritated scalp is reported, so it is
+ * absent from the Idealplan. Answering the deferred question at all resolves the
+ * deferral, and for an oily scalp the `scalp_flake_oil_adjunct` role then comes
+ * from `scalpOiliness`, not from the irritation answer. The "normal" default
+ * avoids the extra `scalp_comfort` role but cannot avoid this one.
+ */
+test("resolving the deferred scalp question can still add Scalp Care for an oily scalp", () => {
+  const triggerContext = labTriggerContext()
+  assert.equal(triggerContext.hasReportedIrritatedScalp, true)
+
+  const initial = computeNeedPlan({
+    rawEnvelope: STAGE1_STAGE2_LAB_ENVELOPE,
+    artifactId: ARTIFACT_ID,
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-16T09:00:00.000Z",
+  })
+  if (initial.status !== "ready") throw new Error("unreachable")
+  assert.equal(initial.snapshot.renderedOrder.includes("scalp_care"), false)
+
+  const defaults = buildDirectAcceptanceStage2Defaults(triggerContext)
+  assert.equal(defaults.answers.scalpIrritationDetail, "normal")
+  const refined = computeNeedPlan({
+    rawEnvelope: STAGE1_STAGE2_LAB_ENVELOPE,
+    artifactId: ARTIFACT_ID,
+    projection: "refined_post_plan",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-16T09:00:00.000Z",
+    routine: buildPlanRoutineContextFromCompletedRefinement({
+      triggerContext,
+      answers: defaults.answers,
+      completedQuestionIds: defaults.completedQuestionIds,
+    }),
+  })
+  if (refined.status !== "ready") throw new Error("unreachable")
+
+  const scalpCare = refined.snapshot.decisions.find(
+    (decision) => decision.category === "scalp_care",
+  )
+  assert.deepEqual(scalpCare?.roles, ["scalp_flake_oil_adjunct"])
+  // The "normal" default at least keeps the irritation-driven comfort role out.
+  assert.equal(scalpCare?.roles.includes("scalp_comfort"), false)
 })
 
 /* ── Defaults: German assumption labels ── */
@@ -336,74 +389,167 @@ test("a role without a usable recommendation cannot be accepted directly", () =>
   )
 })
 
-/* ── Chain orchestration ── */
+/* ── A refinement persistence fake that enforces the real SQL constraints ── */
 
-type RefinementCall =
-  | { kind: "loadOrCreate" }
-  | { kind: "save"; answers: unknown; completedQuestionIds: unknown; expectedRevision: number }
-  | { kind: "complete"; expectedRevision: number; inputHash: string }
-
-function createFakeRefinementPersistence(options: {
-  status?: Stage2PersistedDraft["status"]
-  refinedVersionId?: string | null
-  completeOutcome?: "completed" | "already_completed"
-  calls: RefinementCall[]
-}): Stage2RefinementPersistence {
+/**
+ * Mirrors `supabase/migrations/20260808062602_personal_plan_stage1_3_foundation.sql`:
+ *
+ * - line 43  `personal_plan_need_versions_refined_input_key`
+ *            UNIQUE (personal_plan_id, parent_need_version_id, input_hash) WHERE kind='refined'
+ * - lines 67-69 `personal_plan_refinement_drafts_open_key`
+ *            UNIQUE (personal_plan_id, base_initial_need_version_id) WHERE status='in_progress'
+ * - lines 300-322 `personal_plan_complete_refinement_draft`, including the
+ *            `already_completed` short-circuit, the revision CAS, the
+ *            `ON CONFLICT … DO NOTHING` + re-select hash-collision path, the
+ *            staling of active product drafts whose refined need id changed, and
+ *            the `refined_need` source-change enqueue.
+ * - lines 285-289 `personal_plan_save_refinement_draft` revision CAS.
+ *
+ * Read-after-conflict for both partial unique indexes mirrors
+ * `stage2-refinement-supabase.ts` lines 50-79 (loadExisting: in_progress first,
+ * then the newest complete draft), 107-118 (loadOrCreate) and 143-151 (reopen).
+ *
+ * Live-DB verification of these paths is deferred to controller verification;
+ * this fake is the highest fidelity available while the migration must not be
+ * applied.
+ */
+function createRefinementDb() {
   const triggerContext = labTriggerContext()
-  const draft: Stage2PersistedDraft = {
-    id: "77777777-7777-4777-8777-777777777777",
-    personalPlanId: PERSONAL_PLAN_ID,
-    baseInitialNeedVersionId: INITIAL_NEED_VERSION_ID,
-    schemaVersion: 1,
-    preparedArtifactSourceId: ARTIFACT_ID,
-    baseInputSnapshot: STAGE1_STAGE2_LAB_ENVELOPE as never,
-    pathVersion: "stage2-v1",
-    triggerContext,
-    answers: {},
-    completedQuestionIds: [],
-    revision: 0,
-    status: options.status ?? "in_progress",
-    refinedVersionId: options.refinedVersionId ?? null,
+  type DraftRow = {
+    id: string
+    status: "in_progress" | "complete" | "stale"
+    answers: PersonalPlanRefinementAnswersV1
+    completedQuestionIds: Stage2QuestionId[]
+    revision: number
+    resultRefinedNeedVersionId: string | null
+    updatedAt: number
   }
-  let current = draft
 
-  return {
+  const drafts: DraftRow[] = []
+  const needVersions: Array<{ id: string; inputHash: string }> = []
+  const productDrafts: Array<{ id: string; status: string; refinedNeedVersionId: string }> = []
+  const sourceChanges: Array<{ sourceKind: string; sourceKey: string }> = []
+  const plan = { currentRefinedNeedVersionId: null as string | null }
+  let clock = 0
+  let sequence = 0
+
+  function openDraft(): DraftRow | undefined {
+    return drafts.find((row) => row.status === "in_progress")
+  }
+
+  function newestCompleteDraft(): DraftRow | undefined {
+    return drafts
+      .filter((row) => row.status === "complete")
+      .toSorted((left, right) => right.updatedAt - left.updatedAt)[0]
+  }
+
+  function toPersisted(row: DraftRow): Stage2PersistedDraft {
+    return {
+      id: row.id,
+      personalPlanId: PERSONAL_PLAN_ID,
+      baseInitialNeedVersionId: INITIAL_NEED_VERSION_ID,
+      schemaVersion: 1,
+      preparedArtifactSourceId: ARTIFACT_ID,
+      baseInputSnapshot: STAGE1_STAGE2_LAB_ENVELOPE as never,
+      pathVersion: "stage2-v1",
+      triggerContext,
+      answers: structuredClone(row.answers),
+      completedQuestionIds: [...row.completedQuestionIds],
+      revision: row.revision,
+      status: row.status,
+      refinedVersionId: row.resultRefinedNeedVersionId,
+    }
+  }
+
+  function insertDraft(seed: Partial<DraftRow> = {}): DraftRow {
+    // The partial unique index makes a concurrent create a safe read.
+    const existing = openDraft()
+    if (existing) return existing
+    sequence += 1
+    const row: DraftRow = {
+      id: `draft-${sequence}`,
+      status: "in_progress",
+      answers: {},
+      completedQuestionIds: [],
+      revision: 0,
+      resultRefinedNeedVersionId: null,
+      updatedAt: (clock += 1),
+      ...seed,
+    }
+    drafts.push(row)
+    return row
+  }
+
+  const persistence: Stage2RefinementPersistence = {
     async loadOrCreate() {
-      options.calls.push({ kind: "loadOrCreate" })
-      return current
+      return toPersisted(openDraft() ?? newestCompleteDraft() ?? insertDraft())
     },
-    async reopen() {
-      throw new Error("reopen is not part of the direct-acceptance chain")
+    async reopen({ draft }) {
+      return toPersisted(
+        insertDraft({
+          answers: structuredClone(draft.answers),
+          completedQuestionIds: [...draft.completedQuestionIds],
+          revision: draft.revision,
+        }),
+      )
     },
     async save(input) {
-      options.calls.push({
-        kind: "save",
-        answers: input.answers,
-        completedQuestionIds: input.completedQuestionIds,
-        expectedRevision: input.expectedRevision,
-      })
-      current = {
-        ...current,
-        answers: input.answers,
-        completedQuestionIds: input.completedQuestionIds,
-        revision: input.expectedRevision + 1,
+      const row = drafts.find((candidate) => candidate.id === input.draft.id)
+      if (!row) throw new Error("stage2_save_failed")
+      if (row.status !== "in_progress" || row.revision !== input.expectedRevision) {
+        return { outcome: "revision_conflict", revision: row.revision }
       }
-      return { outcome: "saved", revision: current.revision }
+      row.answers = structuredClone(input.answers)
+      row.completedQuestionIds = [...input.completedQuestionIds]
+      row.revision += 1
+      row.updatedAt = clock += 1
+      return { outcome: "saved", revision: row.revision }
     },
     async complete(input) {
-      options.calls.push({
-        kind: "complete",
-        expectedRevision: input.expectedRevision,
-        inputHash: input.inputHash,
-      })
-      current = { ...current, status: "complete", refinedVersionId: REFINED_NEED_VERSION_ID }
-      return {
-        outcome: options.completeOutcome ?? "completed",
-        refinedVersionId: REFINED_NEED_VERSION_ID,
+      const row = drafts.find((candidate) => candidate.id === input.draft.id)
+      if (!row) return { outcome: "stale_source" }
+      if (row.status === "complete") {
+        return {
+          outcome: "already_completed",
+          refinedVersionId: row.resultRefinedNeedVersionId!,
+        }
       }
+      if (row.status !== "in_progress" || row.revision !== input.expectedRevision) {
+        return { outcome: "revision_conflict", revision: row.revision }
+      }
+      if (!/^[0-9a-f]{64}$/.test(input.inputHash)) throw new Error("invalid_refined_need")
+
+      // ON CONFLICT (personal_plan_id, parent_need_version_id, input_hash)
+      // WHERE kind='refined' DO NOTHING, then re-select the colliding row.
+      let needVersion = needVersions.find((candidate) => candidate.inputHash === input.inputHash)
+      if (!needVersion) {
+        sequence += 1
+        needVersion = { id: `refined-${sequence}`, inputHash: input.inputHash }
+        needVersions.push(needVersion)
+      }
+      row.status = "complete"
+      row.resultRefinedNeedVersionId = needVersion.id
+      row.updatedAt = clock += 1
+      for (const productDraft of productDrafts) {
+        if (
+          productDraft.status === "active" &&
+          productDraft.refinedNeedVersionId !== needVersion.id
+        ) {
+          productDraft.status = "stale"
+        }
+      }
+      plan.currentRefinedNeedVersionId = needVersion.id
+      sourceChanges.push({ sourceKind: "refined_need", sourceKey: needVersion.id })
+      return { outcome: "completed", refinedVersionId: needVersion.id }
     },
   }
+
+  return { persistence, drafts, needVersions, productDrafts, sourceChanges, plan, insertDraft }
 }
+
+type RefinementDb = ReturnType<typeof createRefinementDb>
+
+/* ── Chain orchestration ── */
 
 function fakeStage3Draft(overrides: Partial<Stage3ProductDraft> = {}): Stage3ProductDraft {
   return {
@@ -437,12 +583,17 @@ type Stage3Call =
   | { kind: "resolveDecisions"; expectedRevision: number; subjectKeys: string[] }
   | { kind: "complete"; expectedRevision: number }
 
+/**
+ * Stateful Stage-3 fake: `complete` flips the draft to completed and activates a
+ * Routine, so a second accept exercises the real replay path rather than a
+ * pre-seeded fixture.
+ */
 function createFakeStage3Gateway(options: {
   calls: Stage3Call[]
-  draft?: Stage3ProductDraft
+  planState: { activeRoutineVersionId: string | null }
   evaluations?: Stage3AuthorityEvaluation[]
 }): DirectAcceptanceStage3Gateway {
-  const draft = options.draft ?? fakeStage3Draft()
+  let draft = fakeStage3Draft()
   return {
     async loadOrCreate(input) {
       options.calls.push({
@@ -454,7 +605,7 @@ function createFakeStage3Gateway(options: {
     },
     async evaluateDecisions() {
       options.calls.push({ kind: "evaluateDecisions" })
-      return options.evaluations ?? MULTI_ROLE_EVALUATIONS
+      return draft.status === "active" ? (options.evaluations ?? MULTI_ROLE_EVALUATIONS) : []
     },
     async resolveDecisions(input) {
       options.calls.push({
@@ -462,16 +613,16 @@ function createFakeStage3Gateway(options: {
         expectedRevision: input.expectedRevision,
         subjectKeys: input.intents.map((intent) => intent.subjectKey),
       })
-      return {
-        status: "saved",
-        draft: { ...draft, revision: input.expectedRevision + 1 },
-      }
+      draft = { ...draft, revision: input.expectedRevision + 1 }
+      return { status: "saved", draft }
     },
     async complete(input) {
       options.calls.push({ kind: "complete", expectedRevision: input.expectedRevision })
+      draft = { ...draft, status: "completed" }
+      options.planState.activeRoutineVersionId = "routine-1"
       return {
         status: "ready_for_routine",
-        draft: { ...draft, status: "completed" },
+        draft,
         portfolio: { plannedPurchases: [], ownedProducts: [] } as never,
         personalPlanId: PERSONAL_PLAN_ID,
         refinedVersionId: REFINED_NEED_VERSION_ID,
@@ -483,80 +634,96 @@ function createFakeStage3Gateway(options: {
   }
 }
 
-function createDeps(overrides: {
-  refinementCalls: RefinementCall[]
+type Harness = {
+  deps: AcceptIdealPlanDeps
+  db: RefinementDb
   stage3Calls: Stage3Call[]
   provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }>
-  flags?: AcceptIdealPlanDeps["flags"]
-  refinementStatus?: Stage2PersistedDraft["status"]
-  refinedVersionId?: string | null
-  completeOutcome?: "completed" | "already_completed"
-  stage3Draft?: Stage3ProductDraft
-  evaluations?: Stage3AuthorityEvaluation[]
-}): AcceptIdealPlanDeps {
+  planState: { activeRoutineVersionId: string | null }
+}
+
+function createHarness(
+  overrides: {
+    flags?: AcceptIdealPlanDeps["flags"]
+    db?: RefinementDb
+    activeRoutineVersionId?: string | null
+    evaluations?: Stage3AuthorityEvaluation[]
+  } = {},
+): Harness {
+  const db = overrides.db ?? createRefinementDb()
+  const stage3Calls: Stage3Call[] = []
+  const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
+  const planState = { activeRoutineVersionId: overrides.activeRoutineVersionId ?? null }
+
   return {
-    userId: USER_ID,
-    flags: overrides.flags ?? { stage2Enabled: true, stage3Enabled: true, stage4Enabled: true },
-    refinementPersistence: createFakeRefinementPersistence({
-      calls: overrides.refinementCalls,
-      status: overrides.refinementStatus,
-      refinedVersionId: overrides.refinedVersionId,
-      completeOutcome: overrides.completeOutcome,
-    }),
-    stage3Gateway: createFakeStage3Gateway({
-      calls: overrides.stage3Calls,
-      draft: overrides.stage3Draft,
-      evaluations: overrides.evaluations,
-    }),
-    provenance: {
-      async recordDirectAccept(input) {
-        overrides.provenanceCalls.push({
-          personalPlanId: input.personalPlanId,
-          refinedVersionId: input.refinedVersionId,
-        })
+    db,
+    stage3Calls,
+    provenanceCalls,
+    planState,
+    deps: {
+      userId: USER_ID,
+      flags: overrides.flags ?? { stage2Enabled: true, stage3Enabled: true, stage4Enabled: true },
+      refinementPersistence: db.persistence,
+      planState: {
+        async loadActiveRoutineVersionId() {
+          return planState.activeRoutineVersionId
+        },
+      },
+      stage3Gateway: createFakeStage3Gateway({
+        calls: stage3Calls,
+        planState,
+        evaluations: overrides.evaluations,
+      }),
+      provenance: {
+        async recordDirectAccept(input) {
+          provenanceCalls.push({
+            personalPlanId: input.personalPlanId,
+            refinedVersionId: input.refinedVersionId,
+          })
+        },
       },
     },
   }
 }
 
-test("the accept chain drives Stage 2 completion, per-role planning and activation", async () => {
-  const refinementCalls: RefinementCall[] = []
-  const stage3Calls: Stage3Call[] = []
-  const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
-  const deps = createDeps({ refinementCalls, stage3Calls, provenanceCalls })
+const SEEN_ROLES = () => seenRolesFor(MULTI_ROLE_EVALUATIONS)
 
-  const result = await acceptIdealPlan(deps, {
-    seenRoles: seenRolesFor(MULTI_ROLE_EVALUATIONS),
-  })
+test("the accept chain drives Stage 2 completion, per-role planning and activation", async () => {
+  const harness = createHarness()
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
 
   assert.equal(result.status, "accepted")
-  assert.equal(result.refinedVersionId, REFINED_NEED_VERSION_ID)
   assert.equal(result.productDraftId, DRAFT_ID)
   assert.equal(result.next.href, "/routine")
 
-  const saveCall = refinementCalls.find((call) => call.kind === "save")
-  assert.ok(saveCall && saveCall.kind === "save")
   const expectedDefaults = buildDirectAcceptanceStage2Defaults(labTriggerContext())
-  assert.deepEqual(saveCall.answers, expectedDefaults.answers)
-  assert.deepEqual(saveCall.completedQuestionIds, expectedDefaults.completedQuestionIds)
-  assert.ok(refinementCalls.some((call) => call.kind === "complete"))
+  assert.equal(harness.db.drafts.length, 1)
+  assert.equal(harness.db.drafts[0]!.status, "complete")
+  assert.deepEqual(harness.db.drafts[0]!.answers, expectedDefaults.answers)
+  assert.deepEqual(
+    harness.db.drafts[0]!.completedQuestionIds,
+    expectedDefaults.completedQuestionIds,
+  )
+  assert.equal(harness.db.needVersions.length, 1)
+  assert.equal(result.refinedVersionId, harness.db.needVersions[0]!.id)
 
   assert.deepEqual(
-    stage3Calls.map((call) => call.kind),
+    harness.stage3Calls.map((call) => call.kind),
     ["loadOrCreate", "evaluateDecisions", "resolveDecisions", "complete"],
   )
-  const resolveCall = stage3Calls.find((call) => call.kind === "resolveDecisions")
+  const resolveCall = harness.stage3Calls.find((call) => call.kind === "resolveDecisions")
   assert.ok(resolveCall && resolveCall.kind === "resolveDecisions")
   assert.deepEqual(
     resolveCall.subjectKeys,
     MULTI_ROLE_EVALUATIONS.map((evaluation) => evaluation.subjectKey),
   )
-  const completeCall = stage3Calls.find((call) => call.kind === "complete")
+  const completeCall = harness.stage3Calls.find((call) => call.kind === "complete")
   assert.ok(completeCall && completeCall.kind === "complete")
   assert.equal(completeCall.expectedRevision, resolveCall.expectedRevision + 1)
 
-  assert.deepEqual(provenanceCalls, [
-    { personalPlanId: PERSONAL_PLAN_ID, refinedVersionId: REFINED_NEED_VERSION_ID },
+  assert.deepEqual(harness.provenanceCalls, [
+    { personalPlanId: PERSONAL_PLAN_ID, refinedVersionId: harness.db.needVersions[0]!.id },
   ])
 })
 
@@ -566,87 +733,240 @@ test("a disabled Stage 2, 3 or 4 flag refuses the accept chain without any write
     { stage2Enabled: true, stage3Enabled: false, stage4Enabled: true },
     { stage2Enabled: true, stage3Enabled: true, stage4Enabled: false },
   ]) {
-    const refinementCalls: RefinementCall[] = []
-    const stage3Calls: Stage3Call[] = []
-    const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
-    const deps = createDeps({ refinementCalls, stage3Calls, provenanceCalls, flags })
+    const harness = createHarness({ flags })
 
     await assert.rejects(
-      acceptIdealPlan(deps, { seenRoles: seenRolesFor(MULTI_ROLE_EVALUATIONS) }),
+      acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
       (error: unknown) =>
         error instanceof DirectAcceptanceError && error.code === "stage_not_available",
     )
-    assert.deepEqual(refinementCalls, [])
-    assert.deepEqual(stage3Calls, [])
-    assert.deepEqual(provenanceCalls, [])
+    assert.deepEqual(harness.db.drafts, [])
+    assert.deepEqual(harness.stage3Calls, [])
+    assert.deepEqual(harness.provenanceCalls, [])
   }
 })
 
 test("a stale seen state aborts before any Stage 3 decision is written", async () => {
-  const refinementCalls: RefinementCall[] = []
-  const stage3Calls: Stage3Call[] = []
-  const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
-  const deps = createDeps({ refinementCalls, stage3Calls, provenanceCalls })
-  const seen = seenRolesFor(MULTI_ROLE_EVALUATIONS)
+  const harness = createHarness()
+  const seen = SEEN_ROLES()
   seen[1] = { ...seen[1]!, factFingerprint: "fingerprint-changed" }
 
   await assert.rejects(
-    acceptIdealPlan(deps, { seenRoles: seen }),
+    acceptIdealPlan(harness.deps, { seenRoles: seen }),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
   assert.deepEqual(
-    stage3Calls.map((call) => call.kind),
+    harness.stage3Calls.map((call) => call.kind),
     ["loadOrCreate", "evaluateDecisions"],
   )
-  assert.deepEqual(provenanceCalls, [])
+  assert.deepEqual(harness.provenanceCalls, [])
 })
 
-test("a second accept reuses the completed refinement and the completed product draft", async () => {
-  const refinementCalls: RefinementCall[] = []
-  const stage3Calls: Stage3Call[] = []
-  const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
-  const deps = createDeps({
-    refinementCalls,
-    stage3Calls,
-    provenanceCalls,
-    refinementStatus: "complete",
-    refinedVersionId: REFINED_NEED_VERSION_ID,
-    stage3Draft: fakeStage3Draft({ status: "completed" }),
-  })
+/* ── Guards against destroying real work ── */
 
-  const result = await acceptIdealPlan(deps, {
-    seenRoles: seenRolesFor(MULTI_ROLE_EVALUATIONS),
+test("a partially answered real Stage 2 refuses the accept and writes nothing", async () => {
+  const db = createRefinementDb()
+  // The user answered the first Stage-2 question for real and left.
+  db.insertDraft({
+    answers: { currentProductCategories: ["shampoo", "conditioner"] },
+    completedQuestionIds: ["current_product_categories"],
+    revision: 1,
   })
+  const harness = createHarness({ db })
+  const before = structuredClone(db.drafts)
 
-  assert.equal(result.status, "accepted")
-  assert.equal(result.refinedVersionId, REFINED_NEED_VERSION_ID)
-  // No second refinement write, and no decision replay on a completed draft.
-  assert.deepEqual(
-    refinementCalls.map((call) => call.kind),
-    ["loadOrCreate"],
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof DirectAcceptanceError && error.code === "refinement_in_progress",
   )
-  assert.deepEqual(
-    stage3Calls.map((call) => call.kind),
-    ["loadOrCreate", "complete"],
-  )
+  assert.deepEqual(db.drafts, before, "the real answers must survive untouched")
+  assert.deepEqual(db.needVersions, [])
+  assert.deepEqual(harness.stage3Calls, [])
+  assert.deepEqual(harness.provenanceCalls, [])
 })
 
-test("an already-completed refinement hash resolves as a clean re-refinement", async () => {
-  const refinementCalls: RefinementCall[] = []
-  const stage3Calls: Stage3Call[] = []
-  const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
-  const deps = createDeps({
-    refinementCalls,
-    stage3Calls,
-    provenanceCalls,
-    completeOutcome: "already_completed",
+test("an interrupted synthetic save resumes instead of being treated as real work", async () => {
+  const db = createRefinementDb()
+  const defaults = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  // A previous accept saved the defaults and crashed before completing.
+  db.insertDraft({
+    answers: defaults.answers,
+    completedQuestionIds: defaults.completedQuestionIds,
+    revision: 1,
   })
+  const harness = createHarness({ db })
 
-  const result = await acceptIdealPlan(deps, {
-    seenRoles: seenRolesFor(MULTI_ROLE_EVALUATIONS),
-  })
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
 
   assert.equal(result.status, "accepted")
-  assert.equal(result.refinedVersionId, REFINED_NEED_VERSION_ID)
-  assert.ok(refinementCalls.some((call) => call.kind === "complete"))
+  assert.equal(db.drafts.length, 1)
+  assert.equal(db.drafts[0]!.status, "complete")
+})
+
+test("an active Routine this flow did not create refuses the accept", async () => {
+  const harness = createHarness({ activeRoutineVersionId: "routine-from-real-stage-3" })
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof DirectAcceptanceError && error.code === "plan_already_accepted",
+  )
+  assert.deepEqual(harness.db.needVersions, [])
+  assert.deepEqual(harness.stage3Calls, [])
+  assert.deepEqual(harness.provenanceCalls, [])
+})
+
+test("a double accept stays idempotent and returns the same receipt", async () => {
+  const harness = createHarness()
+
+  const first = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  assert.equal(harness.planState.activeRoutineVersionId, "routine-1")
+
+  const second = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  assert.deepEqual(second, first)
+  assert.equal(harness.db.drafts.length, 1, "no second refinement draft")
+  assert.equal(harness.db.needVersions.length, 1, "no second refined need version")
+  // The replay reuses the completed refinement and the completed product draft.
+  assert.deepEqual(
+    harness.stage3Calls.map((call) => call.kind),
+    [
+      "loadOrCreate",
+      "evaluateDecisions",
+      "resolveDecisions",
+      "complete",
+      "loadOrCreate",
+      "complete",
+    ],
+  )
+  assert.equal(harness.provenanceCalls.length, 2)
+})
+
+/* ── Post-accept refinement: the two SQL constraint paths ── */
+
+test("a real Stage 2 replaying the defaults completes as a clean re-refinement", async () => {
+  const harness = createHarness()
+  const accepted = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  harness.db.productDrafts.push({
+    id: DRAFT_ID,
+    status: "completed",
+    refinedNeedVersionId: accepted.refinedVersionId,
+  })
+  const sourceChangesAfterAccept = harness.db.sourceChanges.length
+
+  // The user now runs Stage 2 for real and answers exactly the defaults.
+  const gateway = createPersistedStage2RefinementGateway({
+    userId: USER_ID,
+    persistence: harness.db.persistence,
+  })
+  const completedSession = await gateway.load()
+  assert.equal(completedSession.status, "complete")
+  const reopened = await gateway.saveAnswer({
+    questionId: "wet_wash_frequency",
+    answer: DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY,
+    expectedRevision: completedSession.revision,
+  })
+  assert.equal(reopened.status, "in_progress")
+  assert.equal(harness.db.drafts.length, 2, "reopen creates exactly one new in_progress draft")
+  assert.equal(
+    harness.db.drafts.filter((row) => row.status === "in_progress").length,
+    1,
+    "the partial unique index allows only one open draft",
+  )
+
+  const handoff = await gateway.complete({ expectedRevision: reopened.revision })
+
+  // Hash collision: the refined need version is reused, never inserted twice.
+  assert.equal(handoff.refinedVersionId, accepted.refinedVersionId)
+  assert.equal(harness.db.needVersions.length, 1)
+  assert.equal(harness.db.drafts.filter((row) => row.status === "complete").length, 2)
+  assert.equal(
+    harness.db.productDrafts[0]!.status,
+    "completed",
+    "an unchanged refined need must not stale the accepted product draft",
+  )
+  assert.equal(harness.db.sourceChanges.length, sourceChangesAfterAccept + 1)
+  assert.equal(harness.db.sourceChanges.at(-1)!.sourceKind, "refined_need")
+})
+
+test("a real Stage 2 that changes an answer produces a successor refined source", async () => {
+  const harness = createHarness()
+  const accepted = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  harness.db.productDrafts.push({
+    id: DRAFT_ID,
+    status: "active",
+    refinedNeedVersionId: accepted.refinedVersionId,
+  })
+
+  const gateway = createPersistedStage2RefinementGateway({
+    userId: USER_ID,
+    persistence: harness.db.persistence,
+  })
+  const completedSession = await gateway.load()
+  const reopened = await gateway.saveAnswer({
+    questionId: "wet_wash_frequency",
+    answer: "daily_1x",
+    expectedRevision: completedSession.revision,
+  })
+  const handoff = await gateway.complete({ expectedRevision: reopened.revision })
+
+  assert.notEqual(handoff.refinedVersionId, accepted.refinedVersionId)
+  assert.equal(harness.db.needVersions.length, 2)
+  assert.equal(harness.db.plan.currentRefinedNeedVersionId, handoff.refinedVersionId)
+  assert.equal(
+    harness.db.productDrafts[0]!.status,
+    "stale",
+    "the superseded active product draft is staled for the successor pass",
+  )
+  assert.equal(harness.db.sourceChanges.at(-1)!.sourceKey, handoff.refinedVersionId)
+})
+
+test("a leftover synthetic in_progress draft does not block a real Stage 2", async () => {
+  const db = createRefinementDb()
+  const defaults = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  db.insertDraft({
+    answers: defaults.answers,
+    completedQuestionIds: defaults.completedQuestionIds,
+    revision: 1,
+  })
+
+  const gateway = createPersistedStage2RefinementGateway({
+    userId: USER_ID,
+    persistence: db.persistence,
+  })
+  const session = await gateway.load()
+  assert.equal(session.status, "in_progress")
+  assert.equal(db.drafts.length, 1, "the open-draft index reuses the leftover row")
+
+  const saved = await gateway.saveAnswer({
+    questionId: "current_product_categories",
+    answer: ["shampoo"],
+    expectedRevision: session.revision,
+  })
+  assert.deepEqual(saved.answers.currentProductCategories, ["shampoo"])
+  assert.equal(db.drafts.length, 1, "no second in_progress draft is created")
+})
+
+test("a lost completion response replays as already_completed, not a constraint error", async () => {
+  const harness = createHarness()
+  const accepted = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  const row = harness.db.drafts[0]!
+
+  const replay = await harness.db.persistence.complete({
+    userId: USER_ID,
+    draft: { id: row.id } as never,
+    expectedRevision: row.revision,
+    inputSnapshot: {},
+    outputSnapshot: {},
+    inputHash: "0".repeat(64),
+    schemaVersion: 1,
+    computationVersion: "stage1-v1",
+  })
+
+  assert.deepEqual(replay, {
+    outcome: "already_completed",
+    refinedVersionId: accepted.refinedVersionId,
+  })
+  assert.equal(harness.db.needVersions.length, 1)
 })

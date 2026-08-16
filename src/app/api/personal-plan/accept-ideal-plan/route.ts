@@ -67,6 +67,8 @@ const STATUS_BY_CODE = {
   recommendation_unavailable: 409,
   conflict: 409,
   acceptance_not_ready: 409,
+  refinement_in_progress: 409,
+  plan_already_accepted: 409,
 } as const
 
 export type AcceptIdealPlanRouteDeps = {
@@ -145,6 +147,18 @@ export const POST = createAcceptIdealPlanRouteHandler({
           stage4Enabled: isPersonalPlanStage4Enabled(),
         },
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin),
+        planState: {
+          async loadActiveRoutineVersionId({ personalPlanId }) {
+            const { data, error } = await admin
+              .from("personal_plans")
+              .select("active_routine_version_id")
+              .eq("id", personalPlanId)
+              .eq("user_id", userId)
+              .maybeSingle()
+            if (error || !data) throw new Error("direct_accept_plan_state_unavailable")
+            return data.active_routine_version_id ? String(data.active_routine_version_id) : null
+          },
+        },
         stage3Gateway: createProductionStage3ProductsGateway({
           userId,
           persistence: createSupabaseStage3ProductionPersistence(admin),

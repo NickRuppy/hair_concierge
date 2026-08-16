@@ -1,12 +1,19 @@
-import type { Stage2RefinementPersistence } from "../persistence/stage2-refinement-service"
+import type {
+  Stage2PersistedDraft,
+  Stage2RefinementPersistence,
+} from "../persistence/stage2-refinement-service"
 import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "../products/authority/contracts"
 import type { Stage3AuthorityProductionGateway } from "../products/production-persistence-gateway"
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
+import { semanticHash } from "../routine/canonicalize"
 
-import { buildDirectAcceptanceStage2Defaults } from "./defaults"
+import {
+  buildDirectAcceptanceStage2Defaults,
+  type DirectAcceptanceStage2Defaults,
+} from "./defaults"
 
 /**
  * Direct acceptance drives the real Stage-2 → Stage-4 machinery headlessly with
@@ -21,6 +28,10 @@ export type DirectAcceptanceErrorCode =
   | "recommendation_unavailable"
   | "conflict"
   | "acceptance_not_ready"
+  /** A real Stage-2 refinement is already under way; accepting would discard it. */
+  | "refinement_in_progress"
+  /** The plan already has an active Routine that direct acceptance did not create. */
+  | "plan_already_accepted"
 
 export class DirectAcceptanceError extends Error {
   constructor(
@@ -70,10 +81,18 @@ export type DirectAcceptanceProvenanceWriter = {
   }): Promise<void>
 }
 
+export type DirectAcceptancePlanStateReader = {
+  loadActiveRoutineVersionId(input: {
+    userId: string
+    personalPlanId: string
+  }): Promise<string | null>
+}
+
 export type AcceptIdealPlanDeps = {
   userId: string
   flags: { stage2Enabled: boolean; stage3Enabled: boolean; stage4Enabled: boolean }
   refinementPersistence: Stage2RefinementPersistence
+  planState: DirectAcceptancePlanStateReader
   stage3Gateway: DirectAcceptanceStage3Gateway
   provenance: DirectAcceptanceProvenanceWriter
 }
@@ -174,20 +193,64 @@ export async function acceptIdealPlan(
   }
 }
 
+/** A draft the user has not touched yet, or one holding only our own defaults. */
+function isDirectAcceptanceDraft(
+  draft: Stage2PersistedDraft,
+  defaults: DirectAcceptanceStage2Defaults,
+): boolean {
+  const isUntouched =
+    Object.keys(draft.answers).length === 0 && draft.completedQuestionIds.length === 0
+  if (isUntouched) return true
+  // Key order survives a JSON round-trip unpredictably, so compare semantically.
+  return (
+    semanticHash({
+      answers: draft.answers,
+      completedQuestionIds: [...draft.completedQuestionIds].sort(),
+    }) ===
+    semanticHash({
+      answers: defaults.answers,
+      completedQuestionIds: [...defaults.completedQuestionIds].sort(),
+    })
+  )
+}
+
 /**
  * Writes the documented defaults into the real refinement draft and completes
  * it through the production Stage-2 gateway, so the refined need version is
  * produced by exactly the path interactive Stage 2 uses.
+ *
+ * Two server-side guards keep this from destroying real work. Neither relies on
+ * the UI hiding the fork screen: a stale screen, back-navigation or a retry can
+ * always POST this route.
  */
 async function completeSyntheticRefinement(
   deps: AcceptIdealPlanDeps,
 ): Promise<{ personalPlanId: string; refinedVersionId: string }> {
   const draft = await deps.refinementPersistence.loadOrCreate(deps.userId)
+  const defaults = buildDirectAcceptanceStage2Defaults(draft.triggerContext)
+  // `save` replaces the whole answer object, so a partially answered real
+  // Stage 2 would be silently overwritten — and the CAS would happily pass,
+  // because the revision is current.
+  const ownedByDirectAcceptance = isDirectAcceptanceDraft(draft, defaults)
+  if (!ownedByDirectAcceptance && draft.status === "in_progress") {
+    throw new DirectAcceptanceError("refinement_in_progress")
+  }
+
+  // An active Routine this flow did not create must not be relabelled as a
+  // direct accept. The pure double-accept retry is exempt: its refinement draft
+  // is complete and still carries exactly these defaults.
+  const activeRoutineVersionId = await deps.planState.loadActiveRoutineVersionId({
+    userId: deps.userId,
+    personalPlanId: draft.personalPlanId,
+  })
+  if (activeRoutineVersionId && !(draft.status === "complete" && ownedByDirectAcceptance)) {
+    throw new DirectAcceptanceError("plan_already_accepted")
+  }
+
   if (draft.status === "complete" && draft.refinedVersionId) {
     return { personalPlanId: draft.personalPlanId, refinedVersionId: draft.refinedVersionId }
   }
 
-  const defaults = buildDirectAcceptanceStage2Defaults(draft.triggerContext)
   const saved = await deps.refinementPersistence.save({
     userId: deps.userId,
     draft,
