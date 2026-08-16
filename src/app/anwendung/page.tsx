@@ -35,6 +35,7 @@ import {
   type PersonalPlanApplicationFailureDetails,
 } from "@/lib/observability/personal-plan-application"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+import { CatalogDatabaseReadError } from "@/lib/catalog-authority/product-spec-relationships"
 
 export const dynamic = "force-dynamic"
 
@@ -61,6 +62,7 @@ export type AnwendungResolverDeps = {
 
 function failureReason(error: unknown): PersonalPlanApplicationFailureDetails["reason"] {
   const message = error instanceof Error ? error.message : ""
+  if (error instanceof CatalogDatabaseReadError) return "database"
   if (error instanceof Error && error.name === "ZodError") return "schema_contract"
   if (/database|postgres|supabase|relation|query/i.test(message)) return "database"
   if (/zod|schema|invalid|expected|missing active day definition/i.test(message))
