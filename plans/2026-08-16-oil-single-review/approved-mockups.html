@@ -1,0 +1,156 @@
+<title>Bondbuilder & Öl-Flow: finale Designs</title>
+<style>
+  :root {
+    --paper: #fdfbf9; --card: #ffffff; --ink: #291a43; --body: #4a4440;
+    --muted: #837c76; --line: #ece6df; --plum: #6b50a0; --plum-ice: #f0ebf7;
+    --coral: #d96c62; --ok-bg: #eaf2ec; --ok-text: #3e7a4e;
+    --warn-bg: #f7efe0; --warn-text: #8a6d2f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #191423; --card: #221c30; --ink: #ece7f6; --body: #c9c2bd;
+      --muted: #8f8894; --line: #363044; --plum: #b39ddb; --plum-ice: #322a45;
+      --coral: #e0837a; --ok-bg: #21332a; --ok-text: #8fc49b;
+      --warn-bg: #37301f; --warn-text: #d3b878;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #191423; --card: #221c30; --ink: #ece7f6; --body: #c9c2bd;
+    --muted: #8f8894; --line: #363044; --plum: #b39ddb; --plum-ice: #322a45;
+    --coral: #e0837a; --ok-bg: #21332a; --ok-text: #8fc49b;
+    --warn-bg: #37301f; --warn-text: #d3b878;
+  }
+  body { background: var(--paper); color: var(--body); margin: 0; padding: 2.5rem 1.25rem 5rem;
+    font: 16px/1.6 -apple-system, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 62rem; margin: 0 auto; }
+  h1, h2, h4 { font-family: Georgia, serif; color: var(--ink); line-height: 1.2; text-wrap: balance; }
+  h1 { font-size: 1.9rem; margin: 0.3rem 0 0.5rem; }
+  h2 { font-size: 1.4rem; margin: 3rem 0 0.5rem; }
+  .eyebrow { color: var(--plum); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em;
+    text-transform: uppercase; margin: 0; }
+  .note { font-size: 0.85rem; color: var(--muted); max-width: 46rem; }
+  .step { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 999px;
+    background: var(--plum); color: #fff; font-size: 0.75rem; font-weight: 800; flex: none; }
+  .walk { display: flex; gap: 0.6rem; align-items: baseline; max-width: 46rem; margin: 0.5rem 0; }
+  .cmp { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--card); }
+  .cmp header { display: flex; justify-content: space-between; padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--line); font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+  .cmp header span { font-size: 0.63rem; color: var(--muted); font-weight: 400; }
+  .cmp table { width: 100%; table-layout: fixed; border-collapse: collapse; text-align: center; font-size: 10px; }
+  .cmp th, .cmp td { padding: 0.7rem 0.35rem; }
+  .cmp thead { color: var(--muted); }
+  .cmp thead th:first-child { width: 34%; text-align: left; padding-left: 0.5rem; padding-right: 0.75rem; }
+  .cmp tbody tr { border-top: 1px solid var(--line); background: color-mix(in srgb, var(--ok-bg) 35%, transparent); }
+  .cmp tbody th { text-align: left; font-size: 11px; font-weight: 600; color: var(--ink);
+    padding-left: 0.5rem; padding-right: 0.75rem; border-left: 3px solid var(--ok-text); }
+  .cmp .mark { display: inline-grid; place-items: center; width: 16px; height: 16px;
+    border-radius: 999px; border: 1px solid var(--ok-text); color: var(--ok-text); font-size: 10px; }
+  .pair { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 1rem; }
+  figure { margin: 0; max-width: 375px; }
+  figcaption { display: flex; gap: 0.5rem; align-items: baseline; margin-bottom: 0.5rem;
+    font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+  .screen { border: 1px solid var(--line); border-radius: 18px; background: var(--card);
+    padding: 1rem; font-size: 0.82rem; }
+  .screen .kicker { color: var(--plum); font-size: 0.62rem; font-weight: 800;
+    letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.3rem; }
+  .screen h4 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+  .prodcard { border: 1.5px solid var(--plum); border-radius: 14px; padding: 0.6rem;
+    text-align: center; font-weight: 600; color: var(--ink); background: var(--card); }
+  .prodcard small { display: block; color: var(--ok-text); font-size: 0.62rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem; }
+  .usecase { display: flex; align-items: center; gap: 0.55rem; border: 1px solid var(--line);
+    border-radius: 12px; padding: 0.55rem 0.7rem; margin-top: 0.5rem; background: var(--card); }
+  .usecase .cb { width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--plum);
+    display: inline-grid; place-items: center; color: #fff; background: var(--plum); font-size: 12px; flex: none; }
+  .usecase b { color: var(--ink); font-weight: 600; }
+  .usecase .sub { color: var(--muted); font-size: 0.72rem; display: block; }
+  .cta { display: block; width: 100%; margin-top: 0.8rem; border: 0; border-radius: 999px;
+    background: var(--coral); color: #fff; font-weight: 700; font-size: 0.95rem;
+    padding: 0.85rem 1rem; text-align: center; }
+  .badge { display: inline-block; font-size: 0.68rem; font-weight: 700; color: var(--ok-text);
+    background: var(--ok-bg); border-radius: 999px; padding: 0.15rem 0.6rem; }
+  .decided { border: 1px solid var(--line); border-left: 4px solid var(--ok-text); border-radius: 10px;
+    background: color-mix(in srgb, var(--ok-bg) 40%, transparent); color: var(--ink);
+    padding: 0.6rem 0.8rem; font-size: 0.85rem; margin: 0.8rem 0; max-width: 46rem; }
+</style>
+<main>
+  <p class="eyebrow">Chaarlie · Follow-ups · Stand nach Nicks Feedback — nur noch die finalen Designs</p>
+  <h1>Bondbuilder-Vergleich & Öl-Flow</h1>
+
+  <h2>1 · Bondbuilder — entschieden</h2>
+  <div class="decided">✓ <b>Beschlossen:</b> Zeilen = <b>Haarstärke</b> + <b>Anwendung</b>;
+    „Wirkt eigenständig“ nur konditional (wenn ein Add-on-Produkt im Vergleich ist); QA-Check wird
+    Badge. Datencheck: aktuell unterscheidet real nur die Anwendung (alle 5 Produkte sind intensiv
+    und für alle Haarstärken) — „nicht super, aber so lassen“ (Nick), die Struktur trägt, sobald der
+    Katalog vielfältiger wird.</div>
+  <figure>
+    <figcaption>So sieht die Tabelle danach aus (K18 vs. Olaplex No.3 — Anwendung unterscheidet wirklich)</figcaption>
+    <div class="cmp">
+      <header>Eigenschaft für Eigenschaft <span>Zeile antippen</span></header>
+      <table>
+        <thead><tr><th>Prüfpunkt</th><th>Beste Passung</th><th>Ziel</th><th>Alternative 1</th></tr></thead>
+        <tbody>
+          <tr><th>Haarstärke</th><td>erfüllt <span class="mark">✓</span></td><td>erfüllt</td><td>erfüllt <span class="mark">✓</span></td></tr>
+          <tr><th>Anwendung</th><td>Leave-in <span class="mark">✓</span></td><td>—</td><td>Vorwäsche, ausspülen <span class="mark">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:0.5rem 0 0"><span class="badge">✓ Anwendung verifiziert</span>
+      <span class="note">← ersetzt die bisherige „Kritisches Protokoll“-Zeile, am Produkt statt in der Tabelle</span></p>
+  </figure>
+
+  <h2>2 · Öl-Flow — der komplette Ablauf in zwei Screens</h2>
+  <p class="note"><b>So liest du die Mockups:</b> Es gibt nur noch EINEN Öl-Screen für alle
+    (Screen&thinsp;1). Screen&thinsp;2 existiert nur für Nutzerinnen, die auf Screen&thinsp;1 einen
+    Einsatz abgewählt haben.</p>
+  <div class="walk"><span class="step">1</span><span>Screen 1 zeigt das empfohlene Öl <b>einmal</b> —
+    darunter stehen die Einsätze, die die Nutzerin selbst im Feinschliff angegeben hat, alle
+    vorausgewählt, jeder mit Erklärung. <b>Normalfall: ein Tap auf den roten Button, fertig — statt
+    heute drei Screens.</b></span></div>
+  <div class="walk"><span class="step">2</span><span>Wer NICHT überall dasselbe Öl will, tippt einen
+    Einsatz ab (Checkbox aus). Der Button zählt live mit: „Für 2 Einsätze einplanen“.</span></div>
+  <div class="walk"><span class="step">3</span><span>Nur dann erscheint danach Screen 2: pro
+    abgewähltem Einsatz ein eigener kleiner Prüf-Screen mit einer Empfehlung <b>speziell für diesen
+    Einsatz</b> — plus grüner Kontextzeile, was schon eingeplant ist.</span></div>
+
+  <div class="pair">
+    <figure>
+      <figcaption>Screen 1 — der eine Öl-Screen (alle sehen ihn)</figcaption>
+      <div class="screen">
+        <p class="kicker">Öl · Prüfung 4 von 6</p>
+        <h4>Wähle dein Öl</h4>
+        <div class="prodcard"><small>Beste Passung</small>NANOIL Avocadoöl</div>
+        <div class="cmp" style="margin-top:0.6rem"><header>Eigenschaft für Eigenschaft <span>Zeile antippen</span></header>
+          <table><tbody>
+            <tr><th>Unterstützte Einsätze</th><td>ja <span class="mark">✓</span></td><td>ja</td><td>ja <span class="mark">✓</span></td></tr>
+          </tbody></table>
+        </div>
+        <p style="margin:0.7rem 0 0.1rem; font-size:0.72rem; color:var(--muted)">Deine Einsätze aus dem Feinschliff — antippen zum Abwählen:</p>
+        <div class="usecase"><span class="cb">✓</span><span><b>Vor der Haarwäsche</b><span class="sub">Als Pflege vor dem Waschen</span></span></div>
+        <div class="usecase"><span class="cb">✓</span><span><b>Im feuchten Haar</b><span class="sub">Nach dem Waschen, bleibt im Haar</span></span></div>
+        <div class="usecase"><span class="cb">✓</span><span><b>Im trockenen Haar</b><span class="sub">Für Glanz und Finish</span></span></div>
+        <button class="cta">Für alle 3 Einsätze einplanen</button>
+      </div>
+    </figure>
+    <figure>
+      <figcaption>Screen 2 — nur nach Abwahl (pro abgewähltem Einsatz einer)</figcaption>
+      <div class="screen">
+        <p class="kicker">Öl · Im trockenen Haar · Prüfung 5 von 6</p>
+        <h4>Wähle dein Öl fürs trockene Haar</h4>
+        <p style="margin:0 0 0.5rem; font-size:0.72rem; color:var(--ok-text)">✓ NANOIL Avocadoöl eingeplant für: Vorwäsche · Feuchtes Haar</p>
+        <div class="prodcard"><small>Beste Passung für diesen Einsatz</small>Dr. Scheller Reines Arganöl</div>
+        <div class="cmp" style="margin-top:0.6rem"><header>Eigenschaft für Eigenschaft <span>Zeile antippen</span></header>
+          <table><tbody>
+            <tr><th>Unterstützte Einsätze</th><td>ja <span class="mark">✓</span></td><td>ja</td><td>ja <span class="mark">✓</span></td></tr>
+            <tr><th>Pflegegewicht</th><td>mittel <span class="mark">✓</span></td><td>mittel</td><td>mittel <span class="mark">✓</span></td></tr>
+          </tbody></table>
+        </div>
+        <button class="cta">Für diesen Einsatz einplanen</button>
+      </div>
+    </figure>
+  </div>
+  <p class="note" style="margin-top:0.8rem">Sonderfall abweichender Empfehlungen (heute real:
+    NANOIL für die Vorwäsche, Arganöl für feucht &amp; trocken): Screen 1 zeigt dann das jeweilige
+    Produkt klein an jeder Einsatz-Zeile, der Button heißt „Empfehlungen für alle 3 einplanen“ —
+    weiterhin ein Tap. Die Engine prüft ohnehin jeden Einsatz einzeln im Hintergrund.</p>
+</main>
