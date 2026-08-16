@@ -90,6 +90,42 @@ function optionLabels(
   return Array.from(new Set(values.map((value) => labels[value] ?? value)))
 }
 
+// Resolves the towel material + technique as a single unit so the two fields can never mix
+// sources: if the legacy profile has any towel signal, both fields read only the legacy values
+// (existing legacy fallbacks, e.g. no_towel material implying "Keine Trocknungstechnik", stay
+// intact). Otherwise both fields read only the plan overlay, including its own no_towel branch.
+function resolveTowelSource(
+  profile: HairProfile | null,
+  plan?: PersonalPlanRefinementAnswersV1 | null,
+): { material: ProfileFieldValue; technique: ProfileFieldValue } {
+  const hasLegacyTowelSignal = Boolean(profile?.towel_material || profile?.towel_technique)
+
+  if (hasLegacyTowelSignal) {
+    return {
+      material: profile?.towel_material
+        ? (TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material)
+        : null,
+      technique: profile?.towel_technique
+        ? (TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique)
+        : profile?.towel_material === "no_towel"
+          ? "Keine Trocknungstechnik"
+          : null,
+    }
+  }
+
+  const planMaterial = plan?.towel?.material ?? null
+  const planTechnique = plan?.towel?.technique ?? null
+
+  return {
+    material: planMaterial ? (TOWEL_MATERIAL_LABELS[planMaterial] ?? planMaterial) : null,
+    technique: planTechnique
+      ? (TOWEL_TECHNIQUE_LABELS[planTechnique] ?? planTechnique)
+      : planMaterial === "no_towel"
+        ? "Keine Trocknungstechnik"
+        : null,
+  }
+}
+
 function orderedGoalLabels(profile: HairProfile | null): string[] | null {
   if (!profile) return null
 
@@ -288,40 +324,14 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Handtuch-Material",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "towel_material" },
-    getValue: (profile, plan) => {
-      if (profile?.towel_material) {
-        return TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material
-      }
-
-      if (plan?.towel?.material) {
-        return TOWEL_MATERIAL_LABELS[plan.towel.material] ?? plan.towel.material
-      }
-
-      return null
-    },
+    getValue: (profile, plan) => resolveTowelSource(profile, plan).material,
   },
   {
     key: "towel_technique",
     label: "Trocknungstechnik",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "towel_technique" },
-    getValue: (profile, plan) => {
-      if (profile?.towel_technique) {
-        return TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique
-      }
-      if (profile?.towel_material === "no_towel") {
-        return "Keine Trocknungstechnik"
-      }
-
-      if (plan?.towel?.technique) {
-        return TOWEL_TECHNIQUE_LABELS[plan.towel.technique] ?? plan.towel.technique
-      }
-      if (plan?.towel?.material === "no_towel") {
-        return "Keine Trocknungstechnik"
-      }
-
-      return null
-    },
+    getValue: (profile, plan) => resolveTowelSource(profile, plan).technique,
   },
   {
     key: "drying_method",
@@ -333,7 +343,8 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
         return DRYING_METHOD_LABELS[profile.drying_method] ?? profile.drying_method
       }
 
-      if (plan?.dryingRoutes?.length) {
+      if (plan?.dryingRoutes) {
+        if (plan.dryingRoutes.length === 0) return "Nichts davon"
         return plan.dryingRoutes.map((route) => PLAN_DRYING_ROUTE_LABELS[route] ?? route).join(", ")
       }
 

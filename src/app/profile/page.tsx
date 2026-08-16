@@ -540,6 +540,7 @@ export default function ProfilePage() {
   )
   const [refinementAnswers, setRefinementAnswers] =
     useState<PersonalPlanRefinementAnswersV1 | null>(null)
+  const [refinementLoading, setRefinementLoading] = useState(true)
   const [routineProducts, setRoutineProducts] = useState<RoutineProductFromPlan[] | null>(null)
   const [quizEditing, setQuizEditing] = useState(false)
   const [quizSaving, setQuizSaving] = useState(false)
@@ -639,9 +640,11 @@ export default function ProfilePage() {
         if (active) {
           setRefinementAnswers(null)
           setRoutineProducts(null)
+          setRefinementLoading(false)
         }
         return
       }
+      setRefinementLoading(true)
       try {
         const response = await fetch("/api/personal-plan/refinement-presentation", {
           cache: "no-store",
@@ -656,6 +659,10 @@ export default function ProfilePage() {
         if (active) {
           setRefinementAnswers(null)
           setRoutineProducts(null)
+        }
+      } finally {
+        if (active) {
+          setRefinementLoading(false)
         }
       }
     }
@@ -883,17 +890,24 @@ export default function ProfilePage() {
   const quizStatus = profileLoading
     ? "Wird geladen"
     : getCompletionLabel(quizFilled.length, quizFields.length)
-  const productsStatus = productsLoading
-    ? "Wird geladen"
-    : planProductRows !== null
-      ? "Aus deinem Personal Plan"
-      : getProductCompletionLabel(productRows, Boolean(profile?.onboarding_completed))
-  const stylingStatus = profileLoading
-    ? "Wird geladen"
-    : getCompletionLabel(stylingFilled.length, stylingFields.length)
-  const routineStatus = profileLoading
-    ? "Wird geladen"
-    : getCompletionLabel(routineFilled.length, routineFields.length)
+  // Plan data only ever changes what's shown when there are no legacy rows to fall back on
+  // (see selectPlanProductRows above), so only wait on the refinement fetch in that case —
+  // legacy rows render immediately without waiting on the overlay to settle.
+  const productsAwaitingRefinement = refinementLoading && productRows.length === 0
+  const productsStatus =
+    productsLoading || productsAwaitingRefinement
+      ? "Wird geladen"
+      : planProductRows !== null
+        ? "Aus deinem Personal Plan"
+        : getProductCompletionLabel(productRows, Boolean(profile?.onboarding_completed))
+  const stylingStatus =
+    profileLoading || refinementLoading
+      ? "Wird geladen"
+      : getCompletionLabel(stylingFilled.length, stylingFields.length)
+  const routineStatus =
+    profileLoading || refinementLoading
+      ? "Wird geladen"
+      : getCompletionLabel(routineFilled.length, routineFields.length)
   const goalsStatus = profileLoading
     ? "Wird geladen"
     : getCompletionLabel(goalsFilled.length, goalsFields.length)
@@ -1601,7 +1615,7 @@ export default function ProfilePage() {
               />
             </CardHeader>
             <CardContent className="space-y-4">
-              {productsLoading ? (
+              {productsLoading || productsAwaitingRefinement ? (
                 <div className="space-y-4">
                   <div className="rounded-xl border border-border/80 bg-card/80 p-4">
                     <Skeleton className="h-4 w-36" />
@@ -1849,7 +1863,7 @@ export default function ProfilePage() {
               />
             </CardHeader>
             <CardContent className="space-y-4">
-              {profileLoading ? (
+              {profileLoading || refinementLoading ? (
                 <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -1904,7 +1918,7 @@ export default function ProfilePage() {
               />
             </CardHeader>
             <CardContent className="space-y-4">
-              {profileLoading ? (
+              {profileLoading || refinementLoading ? (
                 <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

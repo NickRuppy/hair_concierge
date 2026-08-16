@@ -12,6 +12,7 @@ function getField(key: string) {
 }
 
 const towelMaterialField = getField("towel_material")
+const towelTechniqueField = getField("towel_technique")
 const stylingToolsField = getField("styling_tools")
 const nightProtectionField = getField("night_protection")
 const dryingMethodField = getField("drying_method")
@@ -40,6 +41,14 @@ test("drying routes join labels", () => {
   assert.equal(dryingMethodField.getValue(null, { dryingRoutes: ["air_dry"] }), "Lufttrocknen")
 })
 
+test("present-but-empty drying routes reads as answered none", () => {
+  assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [] }), "Nichts davon")
+})
+
+test("undefined drying routes stays null", () => {
+  assert.equal(dryingMethodField.getValue(null, {}), null)
+})
+
 test("unanswered plan leaves value null", () => {
   assert.equal(towelMaterialField.getValue(null, null), null)
   assert.equal(towelMaterialField.getValue(null, {}), null)
@@ -49,13 +58,37 @@ test("unanswered plan leaves value null", () => {
 })
 
 test("towel technique falls back to plan answer", () => {
-  const towelTechniqueField = getField("towel_technique")
   assert.equal(
     towelTechniqueField.getValue(null, {
       towel: { material: "frottee", technique: "gentle_press" },
     }),
     "Sanft ausdrücken / scrunchen",
   )
+})
+
+test("towel material and technique resolve as a unit — legacy technique signal blocks plan material", () => {
+  // Legacy has a technique but no material; plan has a conflicting no_towel material. The two
+  // fields must not mix sources: legacy wins for both, so no plan value leaks into material.
+  const profile = { towel_material: null, towel_technique: "gentle_press" } as HairProfile
+  const plan = { towel: { material: "no_towel" as const } }
+
+  assert.equal(towelTechniqueField.getValue(profile, plan), "Sanft ausdrücken / scrunchen")
+  assert.equal(towelMaterialField.getValue(profile, plan), null)
+})
+
+test("towel material and technique resolve as a unit — pure plan no_towel", () => {
+  const plan = { towel: { material: "no_towel" as const } }
+
+  assert.equal(
+    towelMaterialField.getValue(null, plan),
+    "Kein Handtuch: Ich lasse meine Haare tropfnass trocknen",
+  )
+  assert.equal(towelTechniqueField.getValue(null, plan), "Keine Trocknungstechnik")
+})
+
+test("plan-derived no_towel material implies no technique needed", () => {
+  const value = towelTechniqueField.getValue(null, { towel: { material: "no_towel" } })
+  assert.equal(value, "Keine Trocknungstechnik")
 })
 
 test("plan additional heat tools map to Alltag/Styling labels", () => {
