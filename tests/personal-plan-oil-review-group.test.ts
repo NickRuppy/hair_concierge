@@ -70,6 +70,12 @@ test("non-oil anchor returns null", () => {
   assert.equal(group, null)
 })
 
+test("a non-pending anchor returns null", () => {
+  const pending = new Set(["oil-2", "oil-3"])
+  const group = deriveOilReviewGroup(subjects3Oil, pending, "oil-1", uniformProps)
+  assert.equal(group, null)
+})
+
 test("single pending oil subject returns null (keeps classic screen)", () => {
   const pending = new Set(["oil-1"])
   const group = deriveOilReviewGroup(subjects3Oil, pending, "oil-1", uniformProps)

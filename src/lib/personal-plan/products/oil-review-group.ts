@@ -26,6 +26,7 @@ export function deriveOilReviewGroup(
   if (!anchor) return null
   if (anchor.category !== "oil") return null
   if (anchor.subjectKind === "inventory_disposition") return null
+  if (!pendingDecisionKeys.has(anchorKey)) return null
 
   const members = subjects.filter(
     (subject) =>
