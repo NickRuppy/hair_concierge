@@ -5395,3 +5395,227 @@ test("diverging recommendations relabel the grouped commit action", async () => 
     "Empfehlungen für alle 3 einplanen",
   )
 })
+
+test("a conflict that drops a committed group choice restores individual step counting", async () => {
+  let conflicted = false
+  let latestDraft: Stage3ProductDraft | null = null
+  const gateway = createAuthorityTestGateway()
+  const originalLoadOrCreate = gateway.loadOrCreate.bind(gateway)
+  gateway.loadOrCreate = async (input) => {
+    const response = await originalLoadOrCreate(input)
+    latestDraft = response.draft
+    return response
+  }
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    const response = await originalMutate(input)
+    latestDraft = response.status === "saved" ? response.draft : response.latestDraft
+    return response
+  }
+  gateway.resolveDecision = async () => {
+    conflicted = true
+    assert.ok(latestDraft)
+    return { status: "conflict", latestDraft }
+  }
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    if (!conflicted) return bundles
+    // After the conflict the authority no longer lets the user keep their product for the
+    // dry-finish use case, so only that remembered choice is dropped and it alone reopens.
+    return bundles.map((bundle) =>
+      bundle.authorityEvaluation.subjectKey.includes("dry_finish")
+        ? {
+            ...bundle,
+            authorityEvaluation: {
+              status: "known",
+              category: bundle.authorityEvaluation.category,
+              subjectKey: bundle.authorityEvaluation.subjectKey,
+              verdict: "unknown",
+              criteria: [],
+              allowedActions: ["leave_uncovered"],
+              recommendation: null,
+              productFactFingerprint: null,
+              recommendationFactFingerprint: null,
+              coverageRuleIds: [],
+            },
+          }
+        : bundle,
+    )
+  }
+  const entryContext = threeUseCaseOilEntryContext("oil-group-conflict")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(grouped.props.checkedKeys.size, 3)
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => systemStateTitle(next) === "Die passenden Optionen wurden aktualisiert.",
+    "the reconciliation notice for the dropped choice",
+  )
+  findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    tree,
+    Stage3SystemState,
+  )?.props.onAction?.()
+  tree = await renderUntil(
+    harness,
+    (next) => conflicted && findByType(next, ProductFitComparison) !== null,
+    "the reopened review after the decision conflict",
+  )
+
+  assert.equal(oilGroupScreen(tree), null, "one reopened use case cannot form a group on its own")
+  const reopened = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(reopened)
+  assert.match(reopened.props.comparison.subjectKey, /dry_finish/)
+  assert.equal(reopened.props.reviewPosition, 3)
+  assert.equal(
+    reopened.props.reviewTotal,
+    3,
+    "the dropped group stops collapsing the counter once its choices are gone",
+  )
+})
+
+test("the grouped commit plans the recommendation selected on the anchor screen", async () => {
+  const gateway = createAuthorityTestGateway()
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    return bundles.map((bundle) => {
+      const subjectKey = bundle.authorityEvaluation.subjectKey
+      if (!subjectKey.startsWith("decision:oil:")) return bundle
+      const alternatives: Stage3SelectedComparisonCandidate[] = [1, 2].map((rank) => ({
+        productId: `recommended-${rank}:${subjectKey}`,
+        category: bundle.fitComparison.category,
+        role: bundle.fitComparison.role,
+        verdict: "ideal" as const,
+        criteria: [],
+        recommendation: {
+          recommendationId: `recommend-${rank}:${subjectKey}`,
+          productId: `recommended-${rank}:${subjectKey}`,
+          category: bundle.fitComparison.category,
+          role: bundle.fitComparison.role,
+          displayName: `Empfehlung ${rank}`,
+          reason: "Passt zum Bedarf.",
+          authorityRuleId: "test.authority",
+        },
+        factFingerprint: `facts:recommend-${rank}:${subjectKey}`,
+      }))
+      return {
+        authorityEvaluation: {
+          status: "known",
+          category: bundle.authorityEvaluation.category,
+          subjectKey,
+          verdict: "unknown",
+          criteria: [],
+          allowedActions: ["leave_uncovered"],
+          recommendation: null,
+          productFactFingerprint: null,
+          recommendationFactFingerprint: null,
+          coverageRuleIds: [],
+        },
+        fitComparison: {
+          ...bundle.fitComparison,
+          sourceIdentity: null,
+          alternatives,
+          products: alternatives.map((candidate) => ({
+            productId: candidate.productId,
+            displayName: candidate.recommendation.displayName,
+            category: bundle.fitComparison.category,
+            role: bundle.fitComparison.role,
+            source: "alternative" as const,
+          })),
+        },
+      }
+    })
+  }
+  const entryContext = threeUseCaseOilEntryContext("oil-group-picker")
+  const storage = createMemoryPendingStage3RecoveryStorage()
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      gateway,
+      searchDebounceMs: 0,
+      pendingRecoveryStorage: storage,
+    }),
+  )
+
+  await captureCatalogProduct(harness, "Öl", "oil")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) !== null,
+    "the grouped Öl review with engine recommendations",
+  )
+
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  const anchorKey = anchor.props.comparison.subjectKey
+  const anchorSecond = anchor.props.comparison.alternatives[1]
+  assert.ok(anchorSecond)
+  anchor.props.onSelectedRecommendationChange?.(anchorSecond.productId)
+  tree = await renderSettled(harness)
+  let grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(
+    grouped.props.group.find((useCase) => useCase.decisionKey === anchorKey)?.productName,
+    "Empfehlung 2",
+    "the grouped row reflects the picked recommendation",
+  )
+
+  // Leave one use case pending so the batch stays open and the local choices are observable.
+  const dryFinishKey = grouped.props.group.find(
+    (useCase) => useCase.role === "dry_finish",
+  )?.decisionKey
+  assert.ok(dryFinishKey)
+  assert.notEqual(dryFinishKey, anchorKey)
+  grouped.props.onToggle(dryFinishKey)
+  tree = await renderSettled(harness)
+  grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  grouped.props.onCommit()
+  await renderUntil(harness, (next) => oilGroupScreen(next) === null, "the scoped follow-up")
+
+  const reviewDraft = readStage3ReviewDraft(storage, {
+    ownerId: "fixture-user",
+    personalPlanId: entryContext.personalPlanId,
+    draftId: "fixture-stage3-draft",
+  })
+  const anchorChoice = reviewDraft?.choices[anchorKey]
+  assert.equal(anchorChoice?.kind, "decision")
+  assert.equal(
+    anchorChoice?.kind === "decision" ? anchorChoice.intent.selectedCandidateId : null,
+    anchorSecond.productId,
+    "the anchor commits the recommendation the user selected, not the engine's first",
+  )
+  assert.equal(
+    anchorChoice?.kind === "decision" ? anchorChoice.intent.selectedCandidateFactFingerprint : null,
+    anchorSecond.factFingerprint,
+  )
+  const otherKey = grouped.props.group
+    .map((useCase) => useCase.decisionKey)
+    .find((key) => key !== anchorKey && key !== dryFinishKey)
+  assert.ok(otherKey)
+  const otherChoice = reviewDraft?.choices[otherKey]
+  assert.equal(
+    otherChoice?.kind === "decision" ? otherChoice.intent.selectedCandidateId : null,
+    `recommended-1:${otherKey}`,
+    "a member without a visible screen keeps its own first recommendation",
+  )
+  assert.equal(reviewDraft?.choices[dryFinishKey], undefined)
+})

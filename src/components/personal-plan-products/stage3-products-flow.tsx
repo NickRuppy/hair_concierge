@@ -93,6 +93,7 @@ import {
 import {
   primaryActionFor,
   ProductFitComparison,
+  selectedComparisonCandidate,
   type ProductFitComparisonAction,
   type ProductFitComparisonSelection,
 } from "./product-fit-comparison"
@@ -439,16 +440,36 @@ export function Stage3ProductsFlow({
     )
   }, [currentReviewSubjectKey, decisionSubjects, localReviewChoices, phase])
   const displayedReviewDecisionKey = displayedReviewSubject?.decisionKey ?? null
+  const displayedAlternativeIndex =
+    displayedAlternative.subjectKey === displayedReviewDecisionKey ? displayedAlternative.index : 0
+  const selectedRecommendationProductId =
+    selectedRecommendation.subjectKey === displayedReviewDecisionKey
+      ? selectedRecommendation.productId
+      : null
   const proposedChoiceByDecisionKey = useMemo(() => {
     const proposals = new Map<string, ProposedReviewChoice | null>()
     for (const subject of decisionSubjects) {
       proposals.set(
         subject.decisionKey,
-        proposedReviewChoice(subject, reviewBundles.get(subject.decisionKey)),
+        proposedReviewChoice(
+          subject,
+          reviewBundles.get(subject.decisionKey),
+          // Only the displayed subject has live pager/picker state; the other grouped
+          // members keep the engine's own proposal.
+          subject.decisionKey === displayedReviewDecisionKey
+            ? { displayedAlternativeIndex, selectedRecommendationProductId }
+            : undefined,
+        ),
       )
     }
     return proposals
-  }, [decisionSubjects, reviewBundles])
+  }, [
+    decisionSubjects,
+    displayedAlternativeIndex,
+    displayedReviewDecisionKey,
+    reviewBundles,
+    selectedRecommendationProductId,
+  ])
   /** Pending subjects whose preselected choice actually plans a product. */
   const groupableReviewKeys = useMemo(
     () =>
@@ -507,12 +528,6 @@ export function Stage3ProductsFlow({
         .filter((key) => !deselected.includes(key)),
     )
   }, [oilGroupSelection, oilReviewGroup])
-  const displayedAlternativeIndex =
-    displayedAlternative.subjectKey === displayedReviewDecisionKey ? displayedAlternative.index : 0
-  const selectedRecommendationProductId =
-    selectedRecommendation.subjectKey === displayedReviewDecisionKey
-      ? selectedRecommendation.productId
-      : null
 
   const currentRequirement =
     requirements[categoryIndex] ?? requirements[0] ?? DEFAULT_REQUIREMENTS[0]!
@@ -1307,6 +1322,7 @@ export function Stage3ProductsFlow({
     if (initialReviewDraft && !reviewDraftToRestore) {
       setLocalReviewChoices({})
       setReviewHistory([])
+      setCommittedOilGroupKeys(new Set())
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setDraft(loadedDraft)
@@ -1360,6 +1376,7 @@ export function Stage3ProductsFlow({
     if (reviewDraftToRestore) {
       setLocalReviewChoices({})
       setReviewHistory([])
+      setCommittedOilGroupKeys(new Set())
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setPhase("capture")
@@ -2459,6 +2476,7 @@ export function Stage3ProductsFlow({
     setReviewBundles(new Map())
     setReviewHistory([])
     setLocalReviewChoices({})
+    setCommittedOilGroupKeys(new Set())
     clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     setCurrentReviewSubjectKey(null)
     setDisplayedAlternative({ subjectKey: null, index: 0 })
@@ -2726,6 +2744,7 @@ export function Stage3ProductsFlow({
     const restored = partitionStage3ReviewDraft(sourceDraft, reviews, reviewDraft)
     setLocalReviewChoices(restored.choices)
     setReviewHistory(restored.order)
+    setCommittedOilGroupKeys(new Set())
     setCurrentReviewSubjectKey(restored.invalidKeys[0] ?? null)
     if (restored.order.length === 0) {
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
@@ -2773,6 +2792,7 @@ export function Stage3ProductsFlow({
     const retainedOrder = reviewHistory.filter((key) => retainedChoices[key])
     setLocalReviewChoices(retainedChoices)
     setReviewHistory(retainedOrder)
+    setCommittedOilGroupKeys(new Set())
     if (retainedOrder.length > 0) {
       writeStage3ReviewDraft(pendingRecoveryStorage, recoveryScope, {
         expectedRevision: latestDraft.revision,
@@ -2902,6 +2922,7 @@ export function Stage3ProductsFlow({
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       setLocalReviewChoices({})
       setReviewHistory([])
+      setCommittedOilGroupKeys(new Set())
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
       await completeFlow(canonicalDraft)
     } catch (error) {
@@ -3547,16 +3568,20 @@ type ProposedReviewChoice = {
 
 /**
  * The choice the single review screen preselects for a subject: the same primary
- * action `ProductFitComparison` would offer, resolved against the first (default)
- * alternative. Returns null when nothing is proposed, so callers never invent one.
+ * action `ProductFitComparison` would offer, resolved against the candidate that screen
+ * treats as selected. `focus` carries the displayed subject's live pager/recommendation
+ * state, so a grouped commit plans exactly what the user has selected; members without
+ * a visible screen fall back to the engine's own first proposal. Returns null when
+ * nothing is proposed, so callers never invent one.
  */
 function proposedReviewChoice(
   subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
   bundle: Stage3DecisionReviewBundle | undefined,
+  focus?: { displayedAlternativeIndex: number; selectedRecommendationProductId: string | null },
 ): ProposedReviewChoice | null {
   if (!bundle) return null
   const comparison = bundle.fitComparison
-  const selectedAlternative = comparison.alternatives[0] ?? null
+  const selectedAlternative = selectedComparisonCandidate(comparison, focus ?? {})
   const primaryAction = primaryActionFor({
     evaluation: bundle.authorityEvaluation,
     replacementAllowed: selectedAlternative !== null,

@@ -8,11 +8,12 @@ import type {
   Stage3AuthorityActionKind,
   Stage3AuthorityEvaluation,
 } from "@/lib/personal-plan/products/authority/contracts"
-import type {
-  Stage3FitComparison,
-  Stage3FitEvidenceRelation,
-  Stage3FitEvidenceRow,
-  Stage3SelectedComparisonCandidate,
+import {
+  STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  type Stage3FitComparison,
+  type Stage3FitEvidenceRelation,
+  type Stage3FitEvidenceRow,
+  type Stage3SelectedComparisonCandidate,
 } from "@/lib/personal-plan/products/fit-comparison"
 import { cn } from "@/lib/utils"
 import { categorySelectionHeading } from "./stage3-product-copy"
@@ -76,9 +77,8 @@ export function ProductFitComparison({
   onAction,
   onRetry,
 }: ProductFitComparisonProps): ReactElement {
-  const alternatives = comparison.alternatives.slice(0, 3)
+  const alternatives = comparison.alternatives.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
   const selectedIndex = normalizeIndex(displayedAlternativeIndex, alternatives.length)
-  const displayedAlternative = alternatives[selectedIndex] ?? null
   const ownedProduct = comparison.products.find((product) => product.source === "current") ?? null
   const currentProduct =
     ownedProduct ??
@@ -97,7 +97,10 @@ export function ProductFitComparison({
     alternatives.find((candidate) => candidate.productId === selectedRecommendationProductId) ??
     alternatives[0] ??
     null
-  const selectedAlternative = isUncoveredReview ? selectedRecommendation : displayedAlternative
+  const selectedAlternative = selectedComparisonCandidate(comparison, {
+    displayedAlternativeIndex,
+    selectedRecommendationProductId,
+  })
   // The bounded comparison bundle is the server's replacement allowlist. Adapters deliberately
   // do not expose select_replacement through allowedActions.
   const replacementAllowed = selectedAlternative !== null
@@ -1528,6 +1531,35 @@ function visibleEvidenceRows(
       relationFor(row, secondProductId) === "supportive"
     )
   })
+}
+
+/**
+ * The candidate this screen currently treats as selected — the one its primary action
+ * would plan. Exported so a composing screen (the grouped Öl review) commits exactly what
+ * the user sees selected, with no second implementation of the selection rules.
+ */
+export function selectedComparisonCandidate(
+  comparison: Stage3FitComparison,
+  focus: {
+    displayedAlternativeIndex?: number
+    selectedRecommendationProductId?: string | null
+  } = {},
+): Stage3SelectedComparisonCandidate | null {
+  const alternatives = comparison.alternatives.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+  const ownedProduct = comparison.products.find((product) => product.source === "current") ?? null
+  const isUncoveredReview = ownedProduct === null && !comparison.sourceIdentity
+  if (isUncoveredReview) {
+    return (
+      alternatives.find(
+        (candidate) => candidate.productId === focus.selectedRecommendationProductId,
+      ) ??
+      alternatives[0] ??
+      null
+    )
+  }
+  return (
+    alternatives[normalizeIndex(focus.displayedAlternativeIndex ?? 0, alternatives.length)] ?? null
+  )
 }
 
 /** The action the review screen preselects; exported so grouped screens can commit the same choice. */
