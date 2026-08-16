@@ -19,6 +19,7 @@ import {
   orderedAxisFitResult,
   repairSupportAxisFitResult,
 } from "./authority/categories/axis-fit"
+import { bondbuilderApplicationVerified } from "./authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
 import { expectedShampooSpecTarget } from "./authority/categories/shampoo"
@@ -49,6 +50,8 @@ export type Stage3FitComparisonProduct = {
   category: PersonalPlanCategory
   role: PlanProductRole | null
   source: "current" | "alternative"
+  /** Only set when the exact application protocol is verified. Bondbuilder card badge. */
+  applicationVerified?: true
 }
 
 export type Stage3FitComparisonDimension = {
@@ -157,7 +160,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   )
   const entries = [
     ...currentComparisonProductEntries(authorityInput, authorityEvaluation),
-    ...alternativeProductEntries(selectedCandidates),
+    ...alternativeProductEntries(authorityInput, selectedCandidates),
   ]
   const products = entries.map((entry) => entry.product)
   const alternatives = selectedCandidates.map(publicSelectedCandidate)
@@ -242,6 +245,7 @@ function currentComparisonProductEntries(
         category: input.category,
         role: input.role,
         source: "current",
+        ...applicationVerifiedFlag(input.productFacts, input.role),
       },
       facts: input.productFacts,
     },
@@ -249,6 +253,7 @@ function currentComparisonProductEntries(
 }
 
 function alternativeProductEntries(
+  input: Stage3AuthorityInput,
   alternatives: readonly CandidateAssessment[],
 ): ComparisonProductEntry[] {
   return alternatives.map((candidate) => ({
@@ -260,9 +265,22 @@ function alternativeProductEntries(
       category: candidate.category,
       role: candidate.role,
       source: "alternative",
+      ...applicationVerifiedFlag(candidate.facts, input.role),
     },
     facts: candidate.facts,
   }))
+}
+
+/**
+ * Presentation-only card badge. It mirrors the authority criterion instead of re-deriving it,
+ * so the badge can never claim more than the engine already verified.
+ */
+function applicationVerifiedFlag(
+  facts: Stage3CategoryProductFacts,
+  role: PlanProductRole,
+): { applicationVerified?: true } {
+  if (facts.category !== "bondbuilder") return {}
+  return bondbuilderApplicationVerified(facts, role) ? { applicationVerified: true } : {}
 }
 
 const STAGE3_COMMERCE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
@@ -511,10 +529,11 @@ function comparisonDimensions(
       return maskDimensions(input, entries)
     case "oil":
       return oilDimensions(input, entries)
+    case "bondbuilder":
+      return bondbuilderDimensions(input, entries)
     case "heat_protectant":
     case "scalp_care":
     case "dry_shampoo":
-    case "bondbuilder":
     case "deep_cleansing_shampoo":
       return []
   }
@@ -556,8 +575,10 @@ function evidenceRowsFromDimensions(
       }
     }),
   }))
-  const targetFit = conditionerTargetFitEvidenceRow(input, entries)
-  return targetFit ? [targetFit, ...dimensionRows] : dimensionRows
+  const leadingRow =
+    conditionerTargetFitEvidenceRow(input, entries) ??
+    bondbuilderApplicationEvidenceRow(input, entries)
+  return leadingRow ? [leadingRow, ...dimensionRows] : dimensionRows
 }
 
 function criteriaByProductId(
@@ -620,7 +641,10 @@ function dimensionRelation(
   const criterionId =
     dimension.dimensionId === "oil.role_support" ? "oil.role" : dimension.dimensionId
   const criterion = criteria.find((item) => item.criterionId === criterionId)
-  if (criterion && (input.category === "mask" || input.category === "oil"))
+  if (
+    criterion &&
+    (input.category === "mask" || input.category === "oil" || input.category === "bondbuilder")
+  )
     return stage3CriterionEvidenceRelation(criterion.result)
 
   if (dimension.dimensionId.endsWith(".care_direction"))
@@ -1067,6 +1091,80 @@ function oilDimensions(
   ]
 }
 
+function bondbuilderDimensions(
+  input: Stage3AuthorityInput,
+  entries: readonly ComparisonProductEntry[],
+): Stage3FitComparisonDimension[] {
+  const thickness = dimension(
+    "bondbuilder.suitable_thicknesses",
+    "Geeignete Haardicke",
+    "set",
+    THICKNESS_STOPS,
+    input.hairThickness ?? null,
+    entries,
+    (facts) => facts.suitableThicknesses,
+    "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+  )
+  // The standalone axis only earns a row when it actually separates the displayed products.
+  const showsRelationship = entries.some(
+    (entry) => entry.facts.category === "bondbuilder" && entry.facts.spec.relationship === "add_on",
+  )
+  if (!showsRelationship) return [thickness]
+  return [
+    thickness,
+    dimension(
+      "bondbuilder.relationship",
+      "Wirkt eigenständig",
+      "categorical",
+      BONDBUILDER_RELATIONSHIP_STOPS,
+      "standalone",
+      entries,
+      (facts) => (facts.category === "bondbuilder" ? facts.spec.relationship : null),
+      "Die Rollenbeziehung bleibt ein expliziter Katalogwert.",
+    ),
+  ]
+}
+
+/**
+ * The plan target for Bondbuilder is mechanism-neutral, so the application is a real product
+ * difference without a profile target. It stays an explicit row instead of a dimension because
+ * a targetless dimension would mark the whole review as not assessable.
+ */
+function bondbuilderApplicationEvidenceRow(
+  input: Stage3AuthorityInput,
+  entries: readonly ComparisonProductEntry[],
+): Stage3FitEvidenceRow | null {
+  if (input.category !== "bondbuilder") return null
+  return {
+    rowId: "bondbuilder.application",
+    label: "Anwendung",
+    target: {
+      valueLabel: "beides möglich",
+      rationale: "Beide Anwendungen erfüllen die Bond-Rolle. Entscheide nach deinem Alltag.",
+      profileEvidenceLabels: [],
+    },
+    productValues: entries.map(({ product, facts }) => {
+      const application =
+        facts.category === "bondbuilder" ? bondbuilderApplication(facts.spec) : null
+      return {
+        productId: product.productId,
+        valueLabel: application ?? "nicht bestätigt",
+        relation: application ? ("in_target" as const) : ("unknown" as const),
+      }
+    }),
+  }
+}
+
+function bondbuilderApplication(spec: {
+  applicationMode: string | null
+  treatmentMode: string | null
+}): string | null {
+  const mode = spec.applicationMode ?? spec.treatmentMode
+  if (mode === "pre_shampoo" || mode === "rinse_out") return "Vorwäsche, ausspülen"
+  if (mode === "post_wash_leave_in" || mode === "leave_in") return "Leave-in nach der Wäsche"
+  return null
+}
+
 function dimension(
   dimensionId: string,
   label: string,
@@ -1118,6 +1216,11 @@ const THICKNESS_STOPS = [
   { stopId: "fine", label: "fein" },
   { stopId: "normal", label: "mittel" },
   { stopId: "coarse", label: "dick" },
+] as const
+
+const BONDBUILDER_RELATIONSHIP_STOPS = [
+  { stopId: "standalone", label: "eigenständig" },
+  { stopId: "add_on", label: "nur ergänzend" },
 ] as const
 
 const BINARY_STOPS = [

@@ -30,17 +30,14 @@ export function compactCriterionSchema(
         },
         { criterionId: "dry_shampoo.protocol.verified", label: "Verifizierte Anwendung" },
       ]
-    case "bondbuilder":
-      return [
-        { criterionId: "bondbuilder.thickness", label: "Haarstärke" },
-        { criterionId: "bondbuilder.relationship", label: "Rollenbeziehung" },
-        { criterionId: "bondbuilder.protocol", label: "Kritisches Protokoll" },
-      ]
     case "deep_cleansing_shampoo":
       return [
         { criterionId: "deep_cleansing.reset_role", label: "Reset-Rolle" },
         { criterionId: "deep_cleansing.protocol", label: "Anwendungsprotokoll" },
       ]
+    // Bondbuilder projects real product differences through comparison dimensions instead of
+    // engine criterion labels; its criteria stay authority-internal.
+    case "bondbuilder":
     case "conditioner":
     case "leave_in":
     case "mask":

@@ -1,3 +1,5 @@
+import type { PlanProductRole } from "@/lib/personal-plan/types"
+
 import type { Stage3CriterionResult } from "../../contracts"
 import type {
   Stage3AuthorityEvaluation,
@@ -28,6 +30,23 @@ export function recommendationForBondbuilder(product: Stage3BondbuilderFacts, su
       ? "bondbuilder.stage3.validated_add_on"
       : "bondbuilder.stage3.validated_standalone",
   }
+}
+
+/**
+ * Single source of truth for the verified-application state. Authority uses it as a criterion,
+ * the Stage 3 comparison uses it as the product-card badge.
+ */
+export function bondbuilderApplicationVerified(
+  product: Stage3BondbuilderFacts,
+  role: PlanProductRole,
+): boolean {
+  const protocol = product.protocols.find((entry) => entry.role === role)
+  return (
+    protocol?.status === "verified_complete" &&
+    product.spec.applicationMode !== null &&
+    product.spec.treatmentMode !== null &&
+    product.spec.usageProtocol !== null
+  )
 }
 
 function evaluateProduct(
@@ -99,12 +118,7 @@ function evaluateProduct(
           : "Ist nur ein ergänzendes Produkt und kann die Rolle nicht allein erfüllen.",
       ),
     )
-  const protocol = product.protocols.find((entry) => entry.role === input.role)
-  const protocolComplete =
-    protocol?.status === "verified_complete" &&
-    product.spec.applicationMode !== null &&
-    product.spec.treatmentMode !== null &&
-    product.spec.usageProtocol !== null
+  const protocolComplete = bondbuilderApplicationVerified(product, input.role)
   criteria.push(
     criterion(
       "bondbuilder.protocol",
