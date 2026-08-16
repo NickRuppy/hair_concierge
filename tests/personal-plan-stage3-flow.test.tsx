@@ -5318,7 +5318,31 @@ test("deselecting one case commits two and surfaces the third as a scoped follow
   assert.equal(followUp.props.roleLabel, "Im trockenen Haar")
   assert.equal(followUp.props.reviewPosition, 2)
   assert.equal(followUp.props.reviewTotal, 2, "the committed group stays one step")
+  assert.equal(followUp.props.headingOverride, "Wähle dein Öl fürs trockene Haar")
+  assert.equal(
+    followUp.props.scopeContextLine,
+    "✓ Oil Length Seal eingeplant für: Vorwäsche · Feuchtes Haar",
+  )
+  assert.equal(followUp.props.primaryActionLabelOverride, "Für diesen Einsatz einplanen")
   assert.deepEqual(intents, [], "the deselected case keeps the batch open")
+})
+
+test("the anchor's own screen carries no follow-up overrides", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = threeUseCaseOilEntryContext("oil-group-anchor-plain")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  const tree = await reachOilReview(harness)
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  assert.equal(anchor.props.headingOverride, undefined)
+  assert.equal(anchor.props.scopeContextLine, undefined)
+  assert.equal(anchor.props.primaryActionLabelOverride, undefined)
 })
 
 test("diverging recommendations relabel the grouped commit action", async () => {

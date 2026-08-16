@@ -97,7 +97,7 @@ import {
   type ProductFitComparisonAction,
   type ProductFitComparisonSelection,
 } from "./product-fit-comparison"
-import { OilGroupReview, type OilGroupReviewCase } from "./oil-group-review"
+import { oilGroupCommitLabel, OilGroupReview, type OilGroupReviewCase } from "./oil-group-review"
 import {
   authorityDecisionIntent,
   hasUnresolvedDecisionSubjects,
@@ -1245,6 +1245,19 @@ export function Stage3ProductsFlow({
       )
     }
     const reviewControlsDisabled = decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)
+    // A pending oil subject while a group has already committed IS a deselected follow-up
+    // (see oilFollowUpCopy doc comment); a committed group never re-forms, so this is the
+    // only way an oil subject reaches its own screen again.
+    const oilFollowUp =
+      nextSubject.category === "oil" && committedOilGroupKeys.size > 0
+        ? oilFollowUpCopy(
+            nextSubject,
+            committedOilGroupKeys,
+            decisionSubjects,
+            localReviewChoices,
+            reviewBundles,
+          )
+        : null
     const comparison = (
       <ProductFitComparison
         comparison={reviewBundle.fitComparison}
@@ -1266,6 +1279,9 @@ export function Stage3ProductsFlow({
         disabled={reviewControlsDisabled}
         // The grouped screen owns the single commit action for every checked use case.
         hideActions={oilReviewGroup !== null}
+        headingOverride={oilFollowUp?.headingOverride}
+        scopeContextLine={oilFollowUp?.scopeContextLine}
+        primaryActionLabelOverride={oilFollowUp?.primaryActionLabelOverride}
         onRetry={() => void reloadDecisionBundle(draft)}
         onAction={(action, selectedCandidate) =>
           void chooseFitDecision(nextSubject.decisionKey, action, selectedCandidate)
@@ -3614,6 +3630,77 @@ function proposedReviewChoice(
   }
   // keep_pending and leave_uncovered plan no product; they stay on their own screen.
   return null
+}
+
+type OilFollowUpCopy = {
+  headingOverride: string
+  scopeContextLine?: string
+  primaryActionLabelOverride: string
+}
+
+/**
+ * Copy for a deselected oil use case's own review screen (Task 3, Screen 2): a heading
+ * scoped to that use case, an optional green line naming what the committed group already
+ * covers, and the group's n=1 commit CTA text. `scopeContextLine` is undefined whenever the
+ * committed members' choices can't be read back honestly (missing bundle/choice) or plan
+ * different products — the simplest honest presentation for a diverging group is to omit
+ * the line rather than guess which product to name.
+ */
+function oilFollowUpCopy(
+  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+  committedKeys: ReadonlySet<string>,
+  decisionSubjects: ReturnType<typeof deriveStage3DecisionSubjects>,
+  localReviewChoices: Record<string, Stage3LocalReviewChoice>,
+  reviewBundles: Stage3DecisionReviewBundles,
+): OilFollowUpCopy | null {
+  const useCaseCopy = oilUseCaseCopy(subject.role)
+  if (!useCaseCopy) return null
+  return {
+    headingOverride: `Wähle dein Öl ${useCaseCopy.scopePhrase}`,
+    scopeContextLine: committedOilScopeContextLine(
+      committedKeys,
+      decisionSubjects,
+      localReviewChoices,
+      reviewBundles,
+    ),
+    primaryActionLabelOverride: oilGroupCommitLabel(1, 1, true),
+  }
+}
+
+function committedOilScopeContextLine(
+  committedKeys: ReadonlySet<string>,
+  decisionSubjects: ReturnType<typeof deriveStage3DecisionSubjects>,
+  localReviewChoices: Record<string, Stage3LocalReviewChoice>,
+  reviewBundles: Stage3DecisionReviewBundles,
+): string | undefined {
+  const productNames = new Set<string>()
+  const useCaseLabels: string[] = []
+  for (const key of committedKeys) {
+    const choice = localReviewChoices[key]
+    const bundle = reviewBundles.get(key)
+    const subject = decisionSubjects.find((candidate) => candidate.decisionKey === key)
+    if (!choice || choice.kind !== "decision" || !bundle || !subject) return undefined
+    const productName = committedChoiceProductName(choice.intent, bundle.fitComparison)
+    if (!productName) return undefined
+    productNames.add(productName)
+    useCaseLabels.push(oilUseCaseCopy(subject.role)?.shortLabel ?? ROLE_COPY[subject.role].label)
+  }
+  if (productNames.size !== 1 || useCaseLabels.length === 0) return undefined
+  return `✓ ${[...productNames][0]} eingeplant für: ${useCaseLabels.join(" · ")}`
+}
+
+/** The product a committed choice actually plans — the same rule `proposedReviewChoice` uses. */
+function committedChoiceProductName(
+  intent: Stage3AuthoritySemanticIntent,
+  comparison: Stage3FitComparison,
+): string | null {
+  if (intent.action === "select_replacement" && intent.selectedCandidateId) {
+    return (
+      comparison.products.find((product) => product.productId === intent.selectedCandidateId)
+        ?.displayName ?? null
+    )
+  }
+  return comparison.products.find((product) => product.source === "current")?.displayName ?? null
 }
 
 function reviewVerdict(evaluation: Stage3AuthorityEvaluation) {

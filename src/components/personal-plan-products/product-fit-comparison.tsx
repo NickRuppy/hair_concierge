@@ -50,6 +50,12 @@ type ProductFitComparisonProps = {
   disabled?: boolean
   /** Set when a composing screen (e.g. the grouped Öl review) owns the commit action. */
   hideActions?: boolean
+  /** Replaces the state-computed heading, e.g. a scoped Öl follow-up's "Wähle dein Öl …". */
+  headingOverride?: string
+  /** Green confirmation line rendered under the heading, e.g. what a committed Öl group already covers. */
+  scopeContextLine?: string
+  /** Replaces the primary action's label without changing which action it invokes. */
+  primaryActionLabelOverride?: string
   recoveryMessage?: string
   onAction: (
     action: ProductFitComparisonAction,
@@ -73,6 +79,9 @@ export function ProductFitComparison({
   onSelectedRecommendationChange,
   disabled = false,
   hideActions = false,
+  headingOverride,
+  scopeContextLine,
+  primaryActionLabelOverride,
   recoveryMessage,
   onAction,
   onRetry,
@@ -146,6 +155,8 @@ export function ProductFitComparison({
         comparison={comparison}
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (evaluation.status === "pending") {
@@ -160,6 +171,8 @@ export function ProductFitComparison({
         selectedIndex={selectedIndex}
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (isUncoveredReview) {
@@ -175,6 +188,8 @@ export function ProductFitComparison({
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
         onSelect={onSelectedRecommendationChange ?? (() => undefined)}
         onRetry={onRetry}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (isUnknownFit) {
@@ -189,6 +204,8 @@ export function ProductFitComparison({
         comparison={comparison}
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (!hasTruthfulAction && evaluation.status === "known") {
@@ -204,6 +221,8 @@ export function ProductFitComparison({
         evaluation={evaluation}
         evidenceRows={evidenceRows}
         productId={ownedProduct?.productId}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else {
@@ -225,6 +244,8 @@ export function ProductFitComparison({
             ? () => invokeAction(directReplacementAction.kind, selectedAlternative, onAction)
             : null
         }
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   }
@@ -298,14 +319,16 @@ export function ProductFitComparison({
                   invokeAction(visiblePrimaryAction.kind, selectedAlternative, onAction)
                 }}
                 aria-label={
-                  selectedAlternative && isUncoveredReview
+                  primaryActionLabelOverride ??
+                  (selectedAlternative && isUncoveredReview
                     ? "Dieses Produkt einplanen"
-                    : visiblePrimaryAction.label
+                    : visiblePrimaryAction.label)
                 }
               >
-                {selectedAlternative && isUncoveredReview
-                  ? "Dieses Produkt einplanen"
-                  : visiblePrimaryAction.label}
+                {primaryActionLabelOverride ??
+                  (selectedAlternative && isUncoveredReview
+                    ? "Dieses Produkt einplanen"
+                    : visiblePrimaryAction.label)}
               </Button>
             </Stage3StickyAction>
           ) : null}
@@ -319,10 +342,13 @@ function ReviewHeader({
   contextLabel,
   title,
   description,
+  scopeContextLine,
 }: {
   contextLabel: string
   title: string
   description?: string
+  /** Green confirmation line rendered under the heading, e.g. what a committed Öl group already covers. */
+  scopeContextLine?: string
 }) {
   // Der Zähler ("Produkt X von Y") darf nicht mitten im Ausdruck umbrechen.
   const counterSplit = contextLabel.split(" · Produkt ")
@@ -343,6 +369,9 @@ function ReviewHeader({
       >
         {title}
       </h1>
+      {scopeContextLine ? (
+        <p className="mt-2 text-sm font-medium text-[var(--status-ok-text)]">{scopeContextLine}</p>
+      ) : null}
       {description ? (
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
       ) : null}
@@ -363,6 +392,8 @@ function ComparisonReview({
   disabled,
   onDisplayedAlternativeChange,
   onSelectReplacement,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -376,6 +407,8 @@ function ComparisonReview({
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
   onSelectReplacement: (() => void) | null
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -391,7 +424,8 @@ function ComparisonReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={`Dein ${categoryLabel || "Produkt"} im Vergleich`}
+        title={headingOverride ?? `Dein ${categoryLabel || "Produkt"} im Vergleich`}
+        scopeContextLine={scopeContextLine}
       />
       <OverallVerdict
         evaluation={evaluation}
@@ -454,6 +488,8 @@ function FitOnlyReview({
   evaluation,
   evidenceRows,
   productId,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -461,6 +497,8 @@ function FitOnlyReview({
   evaluation: Stage3AuthorityEvaluation
   evidenceRows: Stage3FitEvidenceRow[]
   productId?: string
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const verdict = evaluation.status === "known" ? evaluation.verdict : "unknown"
   const presentation =
@@ -483,8 +521,9 @@ function FitOnlyReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={presentation.title}
+        title={headingOverride ?? presentation.title}
         description={presentation.description}
+        scopeContextLine={scopeContextLine}
       />
       <ProductCard product={product} label="Dein Produkt" />
       {evidenceRows.length > 0 && productId ? (
@@ -509,6 +548,8 @@ function PendingReview({
   selectedIndex,
   disabled,
   onDisplayedAlternativeChange,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -519,6 +560,8 @@ function PendingReview({
   selectedIndex: number
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -528,8 +571,9 @@ function PendingReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={`Dein ${categoryLabel || "Produkt"} wird noch geprüft`}
+        title={headingOverride ?? `Dein ${categoryLabel || "Produkt"} wird noch geprüft`}
         description="Wir haben noch nicht genug bestätigte Produktdaten für ein verlässliches Urteil."
+        scopeContextLine={scopeContextLine}
       />
       <div className={cn("grid min-w-0 gap-2", selectedAlternative && "grid-cols-2")}>
         <ProductCard product={currentProduct} label="Dein Produkt" />
@@ -566,6 +610,8 @@ function UnassessableReview({
   comparison,
   disabled,
   onDisplayedAlternativeChange,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -576,6 +622,8 @@ function UnassessableReview({
   comparison: Stage3FitComparison
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -585,8 +633,9 @@ function UnassessableReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title="Noch nicht eindeutig beurteilbar"
+        title={headingOverride ?? "Noch nicht eindeutig beurteilbar"}
         description="Für diesen Vergleich fehlen noch verifizierte Produktdaten."
+        scopeContextLine={scopeContextLine}
       />
       <div className={cn("grid min-w-0 gap-2", selectedAlternative && "grid-cols-2")}>
         <ProductCard product={currentProduct} label={`Dein ${categoryLabel || "Produkt"}`} />
@@ -624,6 +673,8 @@ function UncoveredRecommendationReview({
   onDisplayedAlternativeChange,
   onSelect,
   onRetry,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -635,6 +686,8 @@ function UncoveredRecommendationReview({
   onDisplayedAlternativeChange: (index: number) => void
   onSelect: (productId: string) => void
   onRetry?: () => void
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const first = alternatives[0] ?? null
   const secondaryIndex = alternatives.length > 1 ? (selectedIndex > 0 ? selectedIndex : 1) : null
@@ -659,7 +712,7 @@ function UncoveredRecommendationReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={categorySelectionHeading(categoryLabel)}
+        title={headingOverride ?? categorySelectionHeading(categoryLabel)}
         description={
           first
             ? first.verdict === "ideal"
@@ -667,6 +720,7 @@ function UncoveredRecommendationReview({
               : "Das sind die besten geprüften Optionen im Katalog. Wir zeigen die Einschränkung offen."
             : "Dein gespeicherter Bedarf bleibt erhalten. Prüfe später erneut oder fahre vorerst ohne Produkt fort."
         }
+        scopeContextLine={scopeContextLine}
       />
       {first ? (
         <>

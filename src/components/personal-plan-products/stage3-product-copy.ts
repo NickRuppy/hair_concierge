@@ -77,6 +77,8 @@ export type OilUseCaseCopy = {
   subtitle: string
   /** Scope suffix for the follow-up heading: `Wähle dein Öl ${scopePhrase}`. */
   scopePhrase: string
+  /** Short form used in the follow-up screen's committed-for context line, e.g. "Vorwäsche". */
+  shortLabel: string
 }
 
 export const OIL_USE_CASE_COPY: Record<OilUseCaseRole, OilUseCaseCopy> = {
@@ -84,16 +86,19 @@ export const OIL_USE_CASE_COPY: Record<OilUseCaseRole, OilUseCaseCopy> = {
     title: "Vor der Haarwäsche",
     subtitle: "Als Pflege vor dem Waschen",
     scopePhrase: "für die Vorwäsche",
+    shortLabel: "Vorwäsche",
   },
   leave_on_fibre_conditioning: {
     title: "Im feuchten Haar",
     subtitle: "Nach dem Waschen, bleibt im Haar",
     scopePhrase: "fürs feuchte Haar",
+    shortLabel: "Feuchtes Haar",
   },
   dry_finish: {
     title: "Im trockenen Haar",
     subtitle: "Für Glanz und Finish",
     scopePhrase: "fürs trockene Haar",
+    shortLabel: "Trockenes Haar",
   },
 }
 
