@@ -48,34 +48,35 @@ function axisResult<T extends string>(
   if (product === target)
     return criterion(criterionId, label, "pass", "Stimmt mit dem Ziel überein.")
   if (criterionId === "mask.care_direction") {
-    const supportive = product === "balanced" || target === "balanced"
     return criterion(
       criterionId,
       label,
-      supportive ? "caution" : "fail",
-      supportive
-        ? "Die ausgewogene Richtung ist eine begrenzte Brücke."
-        : "Die Pflegerichtungen stehen sich direkt gegenüber.",
+      "pass",
+      "Die verifizierte Pflegerichtung weicht vom Wunschprofil ab, erfüllt aber die intensive Masken-Rolle.",
     )
   }
   const distance = Math.abs(values!.indexOf(product) - values!.indexOf(target))
   if (criterionId === "mask.repair_support") {
-    if (product === "high" && target !== "high")
-      return criterion(criterionId, label, "caution", "Unterstützt stärker als erforderlich.")
+    const productIndex = values!.indexOf(product)
+    const targetIndex = values!.indexOf(target)
+    if (productIndex > targetIndex)
+      return criterion(criterionId, label, "pass", "Unterstützt stärker als erforderlich.")
     return criterion(
       criterionId,
       label,
-      distance === 1 ? "caution" : "fail",
+      distance === 1 ? "pass" : "caution",
       distance === 1
-        ? "Liegt eine Stufe unter dem Ziel."
-        : "Liegt mindestens zwei Stufen unter dem Ziel.",
+        ? "Liegt eine Stufe unter dem Wunschprofil und bleibt für die Masken-Rolle kompatibel."
+        : "Liegt mindestens zwei Stufen unter dem Wunschprofil.",
     )
   }
   return criterion(
     criterionId,
     label,
-    distance === 1 ? "caution" : "fail",
-    distance === 1 ? "Liegt eine Stufe neben dem Ziel." : "Liegt zwei Stufen neben dem Ziel.",
+    distance === 1 ? "pass" : "caution",
+    distance === 1
+      ? "Liegt eine Stufe neben dem Wunschprofil und bleibt kompatibel."
+      : "Liegt zwei Stufen neben dem Wunschprofil.",
   )
 }
 
@@ -248,17 +249,44 @@ export function evaluateMaskAuthority(
     const eligible = input.recommendationCandidates
       .filter(
         (candidate) =>
-          candidate.recommendable && candidate.isActive && candidate.lifecycleStatus === "active",
+          candidate.recommendable &&
+          candidate.isActive &&
+          candidate.lifecycleStatus === "active" &&
+          Boolean(candidate.presentationImageUrl?.trim()),
       )
       .map((candidate) => ({ candidate, assessment: evaluateProduct(input, candidate) }))
-      .find(({ assessment }) => assessment?.verdict === "ideal")
+      .filter(
+        ({ assessment }) =>
+          assessment?.verdict === "ideal" ||
+          (input.categoryDecision.needTier === "optional" && assessment?.verdict === "supportive"),
+      )
+      .sort((left, right) => {
+        const verdictDifference =
+          (left.assessment?.verdict === "ideal" ? 0 : 1) -
+          (right.assessment?.verdict === "ideal" ? 0 : 1)
+        if (verdictDifference !== 0) return verdictDifference
+        const cautionDifference =
+          (left.assessment?.criteria.filter((entry) => entry.result === "caution").length ?? 0) -
+          (right.assessment?.criteria.filter((entry) => entry.result === "caution").length ?? 0)
+        if (cautionDifference !== 0) return cautionDifference
+        const catalogOrderDifference =
+          (left.candidate.catalogSortOrder ?? Number.MAX_SAFE_INTEGER) -
+          (right.candidate.catalogSortOrder ?? Number.MAX_SAFE_INTEGER)
+        return (
+          catalogOrderDifference ||
+          left.candidate.displayName.localeCompare(right.candidate.displayName, "de") ||
+          left.candidate.productId.localeCompare(right.candidate.productId)
+        )
+      })[0]
     return knownEvaluation(sharedInput, {
       // A recommendation can be ideal; an absent owned product cannot be.
       // Keep the uncovered state explicit when the catalog yields no candidate.
-      verdict: eligible ? "ideal" : "unknown",
-      criteria: [],
+      verdict: eligible?.assessment?.verdict ?? "unknown",
+      criteria: eligible?.assessment?.criteria ?? [],
       allowedActions: eligible ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: eligible ? recommendationForMask(eligible.candidate) : null,
+      recommendation: eligible
+        ? recommendationForMask(eligible.candidate, eligible.assessment?.verdict === "supportive")
+        : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: eligible?.candidate.factFingerprint ?? null,
     })

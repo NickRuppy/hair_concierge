@@ -690,7 +690,7 @@ for (const scenario of [
     name: "Mask",
     category: "mask" as const,
     role: "intensive_conditioning_mask" as const,
-    overrides: { weight: "medium" },
+    overrides: { weight: "rich" },
     authorityRuleId: "mask.stage3.validated_supportive_candidate",
   },
   {
@@ -904,11 +904,11 @@ for (const scenario of [
     overrides: { careDirection: "balanced" },
   },
   {
-    name: "Mask adjacent weight",
+    name: "Mask extreme weight gap",
     category: "mask" as const,
     role: "intensive_conditioning_mask" as const,
     rowId: "mask.weight",
-    overrides: { weight: "medium" },
+    overrides: { weight: "rich" },
   },
   {
     name: "Oil adjacent leave-on weight",

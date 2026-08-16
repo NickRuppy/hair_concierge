@@ -345,7 +345,7 @@ test("supportive owned-product verdicts retain explicit keep and uncovered actio
   leaveInInput.productFacts.spec.weight = "medium"
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   if (maskInput.productFacts?.category !== "mask") throw new Error("fixture")
-  maskInput.productFacts.spec.weight = "medium"
+  maskInput.productFacts.spec.weight = "rich"
   const bondbuilderInput = input("bondbuilder", "known") as Stage3AuthorityInput<"bondbuilder">
   if (bondbuilderInput.productFacts?.category !== "bondbuilder") throw new Error("fixture")
   bondbuilderInput.productFacts.spec.relationship = "add_on"
@@ -408,6 +408,9 @@ for (const category of [
     const noOwnedProduct = input(category, "known")
     const candidate = knownFacts(category)
     candidate.recommendable = true
+    if (candidate.category === "mask") {
+      candidate.presentationImageUrl = "https://example.com/mask.webp"
+    }
     noOwnedProduct.capturedProductId = null
     noOwnedProduct.subjectIdentity = null
     noOwnedProduct.productFacts = null
@@ -437,7 +440,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       leave_in: "personal-plan.leave-in.v3",
       heat_protectant: "personal-plan.heat-protectant.v1",
       oil: "personal-plan.oil.v2",
-      mask: "personal-plan.mask.v3",
+      mask: "personal-plan.mask.v4",
       scalp_care: "personal-plan.scalp-care.v2",
       dry_shampoo: "personal-plan.dry-shampoo.v2",
       bondbuilder: "personal-plan.bondbuilder.v2",
@@ -641,7 +644,7 @@ test("Oil v2 requires explicit leave-on support, canonical weight, and target-th
   assert.equal(mismatch.verdict, "mismatch")
 })
 
-test("Mask v3 evaluates complete canonical facts as ideal, supportive, or mismatch", () => {
+test("Mask v4 treats compatible formulation preferences as ideal but keeps hard needs strict", () => {
   const idealInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   idealInput.categoryDecision.target = {
     category: "mask",
@@ -668,13 +671,56 @@ test("Mask v3 evaluates complete canonical facts as ideal, supportive, or mismat
   if (ideal.status !== "known") return
   assert.equal(ideal.verdict, "ideal")
 
-  const supportiveInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
-  if (supportiveInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
-  supportiveInput.productFacts.spec.weight = "medium"
-  const supportive = evaluateStage3Authority(supportiveInput as never)
-  assert.equal(supportive.status, "known")
-  if (supportive.status !== "known") return
-  assert.equal(supportive.verdict, "supportive")
+  const compatibleInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
+  if (compatibleInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
+  compatibleInput.productFacts.spec.weight = "medium"
+  compatibleInput.productFacts.spec.careDirection = "protein"
+  compatibleInput.productFacts.spec.repairSupportLevel = "low"
+  const compatible = evaluateStage3Authority(compatibleInput as never)
+  assert.equal(compatible.status, "known")
+  if (compatible.status !== "known") return
+  assert.equal(compatible.verdict, "ideal")
+  assert.deepEqual(
+    compatible.criteria
+      .filter((criterion) =>
+        ["mask.weight", "mask.care_direction", "mask.repair_support"].includes(
+          criterion.criterionId,
+        ),
+      )
+      .map((criterion) => criterion.result),
+    ["pass", "pass", "pass"],
+  )
+
+  const strongerThanRequestedInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
+  if (strongerThanRequestedInput.productFacts?.category !== "mask") {
+    throw new Error("expected Mask fixture")
+  }
+  if (strongerThanRequestedInput.categoryDecision.target?.category !== "mask") {
+    throw new Error("expected Mask target")
+  }
+  strongerThanRequestedInput.categoryDecision.target.repairSupportLevel = "low"
+  strongerThanRequestedInput.productFacts.spec.repairSupportLevel = "medium"
+  const strongerThanRequested = evaluateStage3Authority(strongerThanRequestedInput as never)
+  assert.equal(strongerThanRequested.status, "known")
+  if (strongerThanRequested.status !== "known") return
+  assert.equal(
+    strongerThanRequested.criteria.find(
+      (criterion) => criterion.criterionId === "mask.repair_support",
+    )?.explanation,
+    "Unterstützt stärker als erforderlich.",
+  )
+
+  const tooHeavyInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
+  if (tooHeavyInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
+  tooHeavyInput.productFacts.spec.weight = "rich"
+  const tooHeavy = evaluateStage3Authority(tooHeavyInput as never)
+  assert.equal(tooHeavy.status, "known")
+  if (tooHeavy.status !== "known") return
+  assert.equal(tooHeavy.verdict, "supportive")
+  assert.equal(
+    tooHeavy.criteria.find((criterion) => criterion.criterionId === "mask.weight")?.result,
+    "caution",
+  )
 
   const mismatchInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
   if (mismatchInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
@@ -685,7 +731,7 @@ test("Mask v3 evaluates complete canonical facts as ideal, supportive, or mismat
   assert.equal(mismatch.verdict, "mismatch")
 })
 
-test("Mask v3 fails closed when required canonical functional benefits are missing", () => {
+test("Mask v4 fails closed when required canonical functional benefits are missing", () => {
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.categoryDecision.target = {
     category: "mask",
@@ -710,6 +756,107 @@ test("Mask v3 fails closed when required canonical functional benefits are missi
   assert.equal(result.status, "unknown")
   if (result.status !== "unknown") return
   assert.ok(result.missingFacts.includes("mask.functional_benefits"))
+})
+
+test("optional Mask selects the best image-backed supportive candidate while basis stays ideal-only", () => {
+  const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  maskInput.capturedProductId = null
+  maskInput.subjectIdentity = null
+  maskInput.productFacts = null
+  maskInput.categoryDecision.needTier = "optional"
+  if (maskInput.categoryDecision.target?.category !== "mask") throw new Error("expected target")
+  maskInput.categoryDecision.target.repairSupportLevel = "high"
+  const oneCaution = knownFacts("mask")
+  const twoCautions = knownFacts("mask")
+  if (oneCaution.category !== "mask" || twoCautions.category !== "mask") {
+    throw new Error("expected Mask fixtures")
+  }
+  Object.assign(oneCaution, {
+    productId: "z-one-caution",
+    displayName: "Eine Abweichung",
+    recommendable: true,
+    presentationImageUrl: "https://example.com/one.webp",
+    factFingerprint: "facts-one-caution",
+  })
+  oneCaution.spec.weight = "rich"
+  oneCaution.spec.repairSupportLevel = "high"
+  Object.assign(twoCautions, {
+    productId: "a-two-cautions",
+    displayName: "Zwei Abweichungen",
+    recommendable: true,
+    presentationImageUrl: "https://example.com/two.webp",
+    factFingerprint: "facts-two-cautions",
+  })
+  twoCautions.spec.weight = "rich"
+  twoCautions.spec.repairSupportLevel = "low"
+
+  const evaluate = (candidates: Stage3CategoryProductFacts[]) => {
+    maskInput.recommendationCandidates = candidates as never
+    return evaluateStage3Authority(maskInput as never)
+  }
+  const forward = evaluate([twoCautions, oneCaution])
+  const reverse = evaluate([oneCaution, twoCautions])
+
+  for (const result of [forward, reverse]) {
+    assert.equal(result.status, "known")
+    if (result.status !== "known") continue
+    assert.equal(result.verdict, "supportive")
+    assert.equal(result.recommendation?.productId, "z-one-caution")
+    assert.equal(result.recommendationFactFingerprint, "facts-one-caution")
+    assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+  }
+
+  maskInput.categoryDecision.needTier = "basis"
+  const basis = evaluate([oneCaution])
+  assert.equal(basis.status, "known")
+  if (basis.status !== "known") return
+  assert.equal(basis.verdict, "unknown")
+  assert.equal(basis.recommendation, null)
+  assert.deepEqual(basis.allowedActions, ["leave_uncovered"])
+
+  maskInput.categoryDecision.needTier = "optional"
+  oneCaution.presentationImageUrl = null
+  const imageLess = evaluate([oneCaution])
+  assert.equal(imageLess.status, "known")
+  if (imageLess.status !== "known") return
+  assert.equal(imageLess.recommendation, null)
+})
+
+test("Mask v4 preserves catalog merchandising order among equally fitting candidates", () => {
+  const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  maskInput.capturedProductId = null
+  maskInput.subjectIdentity = null
+  maskInput.productFacts = null
+  const first = knownFacts("mask")
+  const second = knownFacts("mask")
+  if (first.category !== "mask" || second.category !== "mask") {
+    throw new Error("expected Mask fixtures")
+  }
+  Object.assign(first, {
+    productId: "z-merchandising-first",
+    displayName: "Zuerst kuratiert",
+    catalogSortOrder: 1,
+    recommendable: true,
+    presentationImageUrl: "https://example.com/first.webp",
+    factFingerprint: "facts-first",
+  })
+  Object.assign(second, {
+    productId: "a-merchandising-second",
+    displayName: "Danach kuratiert",
+    catalogSortOrder: 2,
+    recommendable: true,
+    presentationImageUrl: "https://example.com/second.webp",
+    factFingerprint: "facts-second",
+  })
+  maskInput.recommendationCandidates = [second, first] as never
+
+  const result = evaluateStage3Authority(maskInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "z-merchandising-first")
+  assert.equal(result.recommendationFactFingerprint, "facts-first")
 })
 
 test("Leave-in v3 evaluates towel-dry post-wash facts and repair support deterministically", () => {

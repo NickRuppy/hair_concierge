@@ -1,0 +1,3975 @@
+{
+  "generatedAt": "2026-08-15",
+  "source": "read-only complete normalized live catalogue",
+  "reachableDisplayTargetCount": 2280,
+  "coveredDisplayTargetCount": 544,
+  "uncoveredDisplayTargetCount": 1736,
+  "authorityMatrixDefinition": [
+    "hairThickness",
+    "weight",
+    "careDirection",
+    "repairSupportLevel",
+    "requiredFunctionalBenefits"
+  ],
+  "uncoveredAuthorityMatrices": [
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "47795618-40e7-4ef6-8034-0fd8eb747575",
+          "displayName": "Isana 3in1 Milchprotein & Mandel",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+          "displayName": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "077a94ae-fede-4773-9435-17022c2b89c0",
+          "displayName": "PANTENE PRO-V Haarmaske Keratin Repair & Care",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+          "displayName": "Hask Argan Oil Repairing Deep Conditioner",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+          "displayName": "Hask Argan Oil Repairing Deep Conditioner",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+          "displayName": "Hask Argan Oil Repairing Deep Conditioner",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+          "displayName": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+          "displayName": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "077a94ae-fede-4773-9435-17022c2b89c0",
+          "displayName": "PANTENE PRO-V Haarmaske Keratin Repair & Care",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "961e3935-f823-44e7-8601-900c62855d3d",
+          "displayName": "Syoss Intense Keratin",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.thickness"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.thickness"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "077a94ae-fede-4773-9435-17022c2b89c0",
+          "displayName": "PANTENE PRO-V Haarmaske Keratin Repair & Care",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "961e3935-f823-44e7-8601-900c62855d3d",
+          "displayName": "Syoss Intense Keratin",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "47795618-40e7-4ef6-8034-0fd8eb747575",
+          "displayName": "Isana 3in1 Milchprotein & Mandel",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "077a94ae-fede-4773-9435-17022c2b89c0",
+          "displayName": "PANTENE PRO-V Haarmaske Keratin Repair & Care",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "961e3935-f823-44e7-8601-900c62855d3d",
+          "displayName": "Syoss Intense Keratin",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "47795618-40e7-4ef6-8034-0fd8eb747575",
+          "displayName": "Isana 3in1 Milchprotein & Mandel",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "rich",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "rich",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "rich",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "rich",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "rich",
+      "careDirection": "balanced",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "47795618-40e7-4ef6-8034-0fd8eb747575",
+          "displayName": "Isana 3in1 Milchprotein & Mandel",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+          "displayName": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "rich",
+      "careDirection": "moisture",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+          "displayName": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "coarse",
+      "weight": "rich",
+      "careDirection": "protein",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+          "displayName": "Bali Curls SOS Protein Treatment",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "47795618-40e7-4ef6-8034-0fd8eb747575",
+          "displayName": "Isana 3in1 Milchprotein & Mandel",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+          "displayName": "Jean&Len Tiefenreparatur Haarkur",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+          "displayName": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "22d41784-5fc6-40bb-a4dc-92841322f933",
+          "displayName": "Neqi Peptide Power",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+          "displayName": "Balea Professional Plex Care 2in1",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+          "displayName": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "22d41784-5fc6-40bb-a4dc-92841322f933",
+          "displayName": "Neqi Peptide Power",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+          "displayName": "Balea Professional Plex Care 2in1",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "869abd97-a499-4f39-97e5-2722773e46ae",
+          "displayName": "Sante Intense Hydration",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+          "displayName": "Gliss Aqua Revive",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+          "displayName": "Schaebens Argan-Öl Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "869abd97-a499-4f39-97e5-2722773e46ae",
+          "displayName": "Sante Intense Hydration",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+          "displayName": "Balea Aqua Hyaluron 3 in 1",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "869abd97-a499-4f39-97e5-2722773e46ae",
+          "displayName": "Sante Intense Hydration",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+          "displayName": "Balea Aqua Hyaluron 3 in 1",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+          "displayName": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+          "displayName": "Balea Aqua Hyaluron 3 in 1",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "869abd97-a499-4f39-97e5-2722773e46ae",
+          "displayName": "Sante Intense Hydration",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+          "displayName": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+          "displayName": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "displayName": "Fructis Hair Food Aloe Vera",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+          "displayName": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "fine",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "displayName": "Fructis Hair Food Papaya",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.thickness"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+          "displayName": "Balea Professional Glow & Shine",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "balanced",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+          "displayName": "Pantene Hydra Glow",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "moisture",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "17c50884-3c17-479a-848a-10447464e086",
+          "displayName": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+          "displayName": "Balea Professional Glow & Shine",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d33543b0-6011-45f1-9bb2-125289ac849a",
+          "displayName": "Neqi Repair Reveal",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "light",
+      "careDirection": "protein",
+      "repairSupportLevel": "medium",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight",
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+          "displayName": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.thickness"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "balanced",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+          "displayName": "Bali Curls Deep Repair Mask",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.thickness"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.weight"
+          ],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 8,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.care_direction"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+          "displayName": "Pantene Hydra Glow",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.repair_support"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "moisture",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "displayName": "Balea 3 in 1 Intensivmaske",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+          "displayName": "Syoss Intense Curls Haarmaske",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.thickness"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "high",
+      "requiredFunctionalBenefits": [
+        "detangling_slip",
+        "smoothing_frizz_control"
+      ],
+      "reachableNeedStrengths": [
+        "high"
+      ],
+      "displayVariantCount": 16,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+          "displayName": "Pantene Bond Repair",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        },
+        {
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+          "displayName": "Neqi Build Boost",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [],
+          "hasImage": true
+        }
+      ]
+    },
+    {
+      "hairThickness": "normal",
+      "weight": "medium",
+      "careDirection": "protein",
+      "repairSupportLevel": "low",
+      "requiredFunctionalBenefits": [
+        "detangling_slip"
+      ],
+      "reachableNeedStrengths": [
+        "standard"
+      ],
+      "displayVariantCount": 32,
+      "nearestCandidates": [
+        {
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+          "displayName": "Balea Haarkur reparierend",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+          "displayName": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+          "verdict": "supportive",
+          "failedCriteria": [],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction",
+            "mask.repair_support"
+          ],
+          "hasImage": true
+        },
+        {
+          "productId": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+          "displayName": "Balea Professional Glow & Shine",
+          "verdict": "mismatch",
+          "failedCriteria": [
+            "mask.functional_benefits"
+          ],
+          "unknownCriteria": [],
+          "cautionCriteria": [
+            "mask.care_direction"
+          ],
+          "hasImage": true
+        }
+      ]
+    }
+  ]
+}

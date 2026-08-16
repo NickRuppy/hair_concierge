@@ -598,7 +598,9 @@ export function compareStage3NeedMaterialDelta(
         after: afterComparable?.needTier ?? null,
       })
     }
-    if (semanticHash(beforeComparable?.roles ?? []) !== semanticHash(afterComparable?.roles ?? [])) {
+    if (
+      semanticHash(beforeComparable?.roles ?? []) !== semanticHash(afterComparable?.roles ?? [])
+    ) {
       delta.push({
         kind: "roles_changed",
         category,
@@ -781,8 +783,58 @@ export function requireCurrentProductLoadResolution(draft: Stage3AuthorityDraftI
     draft.productLoadResolution.refinedInputHash !== current.refinedInputHash ||
     draft.productLoadResolution.capturedFrequencyFingerprint !==
       current.capturedFrequencyFingerprint ||
+    semanticHash(draft.productLoadResolution.authorityVersions) !==
+      semanticHash(current.authorityVersions) ||
     semanticHash(draft.productLoadResolution.decisions) !== semanticHash(current.decisions) ||
     semanticHash(draft.productLoadResolution.requirements) !== semanticHash(current.requirements) ||
+    semanticHash(draft.productLoadResolution.coverage) !== semanticHash(current.coverage)
+  ) {
+    throw new Error("stale_product_load_resolution")
+  }
+}
+
+export function requireRefreshableProductLoadResolution(
+  draft: Stage3AuthorityDraftInput,
+  refreshingCategories: ReadonlySet<PersonalPlanCategory>,
+): void {
+  if (!draft.productLoadResolution) return
+  const current = resolveStage3ProductLoadResolution({ ...draft, productLoadResolution: undefined })
+  if (!current) throw new Error("stale_product_load_resolution")
+  const normalizedRequirements = draft.productLoadResolution.requirements.map((requirement) => {
+    if (!refreshingCategories.has(requirement.category)) return requirement
+    if (requirement.authorityVersion !== draft.authorityVersions[requirement.category]) {
+      throw new Error("stale_product_load_resolution")
+    }
+    return {
+      ...requirement,
+      authorityVersion: CATEGORY_ROLE_POLICIES[requirement.category].authorityVersion,
+    }
+  })
+  const normalizedAuthorityVersions = Object.fromEntries(
+    Object.entries(draft.productLoadResolution.authorityVersions).map(([category, version]) => {
+      const typedCategory = category as PersonalPlanCategory
+      if (
+        refreshingCategories.has(typedCategory) &&
+        version !== draft.authorityVersions[typedCategory]
+      ) {
+        throw new Error("stale_product_load_resolution")
+      }
+      return [
+        category,
+        refreshingCategories.has(typedCategory)
+          ? CATEGORY_ROLE_POLICIES[typedCategory].authorityVersion
+          : version,
+      ]
+    }),
+  )
+  if (
+    draft.productLoadResolution.refinedNeedVersionId !== current.refinedNeedVersionId ||
+    draft.productLoadResolution.refinedInputHash !== current.refinedInputHash ||
+    draft.productLoadResolution.capturedFrequencyFingerprint !==
+      current.capturedFrequencyFingerprint ||
+    semanticHash(normalizedAuthorityVersions) !== semanticHash(current.authorityVersions) ||
+    semanticHash(draft.productLoadResolution.decisions) !== semanticHash(current.decisions) ||
+    semanticHash(normalizedRequirements) !== semanticHash(current.requirements) ||
     semanticHash(draft.productLoadResolution.coverage) !== semanticHash(current.coverage)
   ) {
     throw new Error("stale_product_load_resolution")

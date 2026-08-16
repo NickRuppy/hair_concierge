@@ -6,7 +6,10 @@ import type {
   Stage3AuthoritySnapshotV1,
 } from "../contracts"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "../contracts"
-import { requireCurrentProductLoadResolution } from "../product-load-resolution"
+import {
+  requireCurrentProductLoadResolution,
+  requireRefreshableProductLoadResolution,
+} from "../product-load-resolution"
 import { isValidPersistedCategoryDecision } from "./category-decision-schema"
 import { canonicalJson } from "@/lib/personal-plan/routine/canonicalize"
 
@@ -15,6 +18,27 @@ export class Stage3AuthoritySnapshotError extends Error {
     super(code)
     this.name = "Stage3AuthoritySnapshotError"
   }
+}
+
+const SUPPORTED_LEGACY_AUTHORITY_VERSIONS: Partial<Record<PersonalPlanCategory, string>> = {
+  shampoo: "personal-plan.shampoo.v3",
+  mask: "personal-plan.mask.v3",
+}
+
+function refreshableAuthorityCategories(
+  draft: Stage3AuthorityDraftInput & Pick<Stage3ProductDraft, "status">,
+): PersonalPlanCategory[] | null {
+  const snapshot = draft.authoritySnapshot
+  if (!snapshot) return null
+  const refreshing: PersonalPlanCategory[] = []
+  for (const category of PERSONAL_PLAN_PRODUCT_CATEGORIES) {
+    const persisted = snapshot.authorityVersions[category]
+    const current = CATEGORY_ROLE_POLICIES[category].authorityVersion
+    if (persisted === current) continue
+    if (persisted !== SUPPORTED_LEGACY_AUTHORITY_VERSIONS[category]) return null
+    refreshing.push(category)
+  }
+  return refreshing.length > 0 ? refreshing : null
 }
 
 /**
@@ -39,9 +63,7 @@ export function authoritySnapshotMayNeedVersionRefresh(
   const knownCategories = new Set<PersonalPlanCategory>(PERSONAL_PLAN_PRODUCT_CATEGORIES)
   if (
     !uniqueKnownCategories(snapshot.orderedCategories, knownCategories) ||
-    !uniqueKnownCategories(snapshot.inventoryOnlyCategories ?? [], knownCategories) ||
-    (!snapshot.orderedCategories.includes("shampoo") &&
-      !snapshot.inventoryOnlyCategories?.includes("shampoo"))
+    !uniqueKnownCategories(snapshot.inventoryOnlyCategories ?? [], knownCategories)
   ) {
     return false
   }
@@ -65,12 +87,6 @@ export function authoritySnapshotMayNeedVersionRefresh(
     }
   }
   if (
-    draft.authorityVersions.shampoo !== "personal-plan.shampoo.v3" ||
-    snapshot.authorityVersions.shampoo !== "personal-plan.shampoo.v3"
-  ) {
-    return false
-  }
-  if (
     Object.keys(snapshot.authorityVersions).length !== PERSONAL_PLAN_PRODUCT_CATEGORIES.length ||
     Object.keys(snapshot.authorityVersions).some(
       (category) => !knownCategories.has(category as PersonalPlanCategory),
@@ -78,10 +94,8 @@ export function authoritySnapshotMayNeedVersionRefresh(
   ) {
     return false
   }
-  for (const category of PERSONAL_PLAN_PRODUCT_CATEGORIES) {
-    const expected = CATEGORY_ROLE_POLICIES[category].authorityVersion
-    if (category !== "shampoo" && snapshot.authorityVersions[category] !== expected) return false
-  }
+  const refreshingCategories = refreshableAuthorityCategories(draft)
+  if (!refreshingCategories) return false
 
   const inventoryOnly = new Set(snapshot.inventoryOnlyCategories ?? [])
   const ordered = new Set(snapshot.orderedCategories)
@@ -98,7 +112,7 @@ export function authoritySnapshotMayNeedVersionRefresh(
   if ([...decisionCounts.values()].some((count) => count !== 1)) return false
 
   try {
-    requireCurrentProductLoadResolution(draft)
+    requireRefreshableProductLoadResolution(draft, new Set(refreshingCategories))
   } catch {
     return false
   }
@@ -107,27 +121,31 @@ export function authoritySnapshotMayNeedVersionRefresh(
 
 /**
  * Admits refresh only when the persisted immutable authority is exactly what
- * the current refined source re-derives. The sole permitted difference is the
- * supported Shampoo authority version transition from v3 to v4.
+ * the current refined source re-derives. The sole permitted differences are
+ * the exact supported Shampoo and Mask authority-version transitions.
  */
 export function authoritySnapshotNeedsVersionRefresh(
   draft: Stage3AuthorityDraftInput & Pick<Stage3ProductDraft, "status">,
   currentSnapshot: Stage3AuthoritySnapshotV1,
 ): boolean {
   if (!authoritySnapshotMayNeedVersionRefresh(draft)) return false
-  if (
-    currentSnapshot.refinedNeedVersionId !== draft.refinedVersionId ||
-    currentSnapshot.authorityVersions.shampoo !== CATEGORY_ROLE_POLICIES.shampoo.authorityVersion
-  ) {
+  if (currentSnapshot.refinedNeedVersionId !== draft.refinedVersionId) {
     return false
   }
 
   const persistedSnapshot = draft.authoritySnapshot!
+  const refreshingCategories = refreshableAuthorityCategories(draft)
+  if (!refreshingCategories) return false
   const normalizedPersistedSnapshot: Stage3AuthoritySnapshotV1 = {
     ...persistedSnapshot,
     authorityVersions: {
       ...persistedSnapshot.authorityVersions,
-      shampoo: currentSnapshot.authorityVersions.shampoo,
+      ...Object.fromEntries(
+        refreshingCategories.map((category) => [
+          category,
+          currentSnapshot.authorityVersions[category],
+        ]),
+      ),
     },
   }
   return canonicalJson(normalizedPersistedSnapshot) === canonicalJson(currentSnapshot)

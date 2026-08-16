@@ -101,6 +101,7 @@ export type Stage3ProductionPersistence = {
     expectedRevision: number
     personalPlanId: string
     refinedVersionId: string
+    draft: Stage3ProductDraft
   }): Promise<
     | { outcome: "saved" | "completed" | "revision_conflict"; draft: Stage3ProductDraft }
     | { outcome: "stale_source"; draft: Stage3ProductDraft }
@@ -286,6 +287,7 @@ export function createProductionStage3ProductsGateway(
           expectedRevision: loaded.draft.revision,
           personalPlanId: loaded.draft.personalPlanId,
           refinedVersionId: loaded.draft.refinedVersionId,
+          draft: loaded.draft,
         })
         if (refreshed.outcome === "stale_source") {
           cached = null

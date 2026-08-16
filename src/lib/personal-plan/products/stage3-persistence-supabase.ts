@@ -98,36 +98,26 @@ export function createSupabaseStage3ProductionPersistence(
     },
     async refreshAuthorityDraft(input) {
       const context = await loadEntryContext(input)
-      const seed = createStage3Draft({
-        draftId: input.draftId,
-        userId: input.userId,
-        personalPlanId: input.personalPlanId,
-        refinedVersionId: input.refinedVersionId,
-        requirements: context.orderedCategories,
-        authoritySnapshot: context.authoritySnapshot,
-        now: new Date().toISOString(),
-      })
-      const payload = draftPayload(seed)
+      const refreshedDraft = buildAuthorityRefreshDraft(input.draft, context.authoritySnapshot)
+      const payload = draftPayload(refreshedDraft)
       const cursor = {
-        categoryCursor: seed.categoryCursor,
-        completedCaptureCategories: seed.completedCaptureCategories,
-        completedDecisionKeys: seed.completedDecisionKeys,
+        categoryCursor: refreshedDraft.categoryCursor,
+        completedCaptureCategories: refreshedDraft.completedCaptureCategories,
+        completedDecisionKeys: refreshedDraft.completedDecisionKeys,
       }
       const { data, error } = await client.rpc("personal_plan_refresh_product_draft_authority", {
         p_user_id: input.userId,
         p_draft_id: input.draftId,
         p_expected_revision: input.expectedRevision,
-        p_contract_version: context.schemaVersion,
-        p_category_authority_versions: Object.fromEntries(
-          context.orderedCategories.map((item) => [item.category, item.authorityVersion]),
-        ),
-        p_pass: seed.pass,
+        p_contract_version: refreshedDraft.schemaVersion,
+        p_category_authority_versions: refreshedDraft.authorityVersions,
+        p_pass: refreshedDraft.pass,
         p_cursor: cursor,
         p_payload: payload,
       })
       if (error || !data) throw new Error("stage3_authority_refresh_failed")
       const outcome = String((data as Record<string, unknown>).outcome)
-      if (outcome === "stale_source") return { outcome, draft: seed } as const
+      if (outcome === "stale_source") return { outcome, draft: refreshedDraft } as const
       if (!["saved", "completed", "revision_conflict"].includes(outcome)) {
         throw new Error("stage3_authority_refresh_rejected")
       }
@@ -525,6 +515,42 @@ export function createSupabaseStage3ProductionPersistence(
       if (error) throw new Error("stage3_draft_load_failed")
       return data ? mapStage3Draft(data) : null
     },
+  }
+}
+
+export function buildAuthorityRefreshDraft(
+  draft: Stage3ProductDraft,
+  currentSnapshot: NonNullable<Stage3ProductDraft["authoritySnapshot"]>,
+): Stage3ProductDraft {
+  const authorityVersions = Object.fromEntries(
+    Object.keys(draft.authorityVersions).map((category) => [
+      category,
+      currentSnapshot.authorityVersions[category as PersonalPlanCategory],
+    ]),
+  ) as Stage3ProductDraft["authorityVersions"]
+  const productLoadResolution = draft.productLoadResolution
+    ? {
+        ...draft.productLoadResolution,
+        authorityVersions: Object.fromEntries(
+          Object.keys(draft.productLoadResolution.authorityVersions).map((category) => [
+            category,
+            currentSnapshot.authorityVersions[category as PersonalPlanCategory],
+          ]),
+        ),
+        requirements: draft.productLoadResolution.requirements.map((requirement) => ({
+          ...requirement,
+          authorityVersion: currentSnapshot.authorityVersions[requirement.category],
+        })),
+      }
+    : undefined
+  return {
+    ...draft,
+    authorityVersions,
+    authoritySnapshot: currentSnapshot,
+    ...(productLoadResolution ? { productLoadResolution } : {}),
+    decisions: [],
+    completedDecisionKeys: [],
+    pass: draft.pass === "ready_for_routine" ? "product_decisions" : draft.pass,
   }
 }
 
