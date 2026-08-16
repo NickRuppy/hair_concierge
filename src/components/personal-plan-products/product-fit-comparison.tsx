@@ -251,7 +251,12 @@ export function ProductFitComparison({
   }
 
   return (
-    <section className="min-w-0 pb-40" aria-labelledby="product-fit-comparison-title">
+    <section
+      // A composing screen that owns the sticky action also owns its bottom clearance;
+      // keeping this padding there would strand a bar's worth of blank space mid-page.
+      className={cn("min-w-0", !hideActions && "pb-40")}
+      aria-labelledby="product-fit-comparison-title"
+    >
       <div className="mb-4 flex items-center justify-end gap-3">
         <p className="text-right text-sm font-medium text-muted-foreground">Produkte prüfen</p>
       </div>

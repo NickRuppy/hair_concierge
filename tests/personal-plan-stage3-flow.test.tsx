@@ -5222,6 +5222,56 @@ test("the grouped Öl screen lists every named use case pre-checked under one co
   assert.match(html, /Für Glanz und Finish/)
   assert.equal(html.match(/aria-checked="true"/g)?.length, 3)
   assert.match(html, /Für alle 3 Einsätze einplanen/)
+  assert.match(
+    html,
+    /^<div class="min-w-0 pb-40"/,
+    "the fixed commit bar needs bottom clearance or it covers the last use case",
+  )
+})
+
+test("a review composed into the grouped Öl screen defers its sticky-bar clearance", () => {
+  const comparison: Stage3FitComparison = {
+    schemaVersion: 1,
+    mode: "compact",
+    category: "oil",
+    role: "dry_finish",
+    subjectKey: "decision:oil:dry_finish:gap",
+    sourceIdentity: null,
+    products: [],
+    alternatives: [],
+    dimensions: [],
+    reason: "specialist_category",
+  }
+  const evaluation: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "oil",
+    subjectKey: comparison.subjectKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+  const markupFor = (hideActions: boolean) =>
+    renderToStaticMarkup(
+      <ProductFitComparison
+        comparison={comparison}
+        evaluation={evaluation}
+        displayedAlternativeIndex={0}
+        onDisplayedAlternativeChange={() => undefined}
+        onAction={() => undefined}
+        hideActions={hideActions}
+      />,
+    )
+
+  assert.match(markupFor(false), /^<section class="min-w-0 pb-40"/)
+  assert.match(
+    markupFor(true),
+    /^<section class="min-w-0"/,
+    "the grouped screen owns both the sticky bar and its clearance",
+  )
 })
 
 test("the grouped Öl commit action counts the checked use cases and names diverging picks", () => {

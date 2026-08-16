@@ -45,7 +45,10 @@ export function OilGroupReview({
   const checkedCount = group.filter((useCase) => checkedKeys.has(useCase.decisionKey)).length
 
   return (
-    <div className="min-w-0">
+    // The commit action below is viewport-fixed, so this screen reserves the same bottom
+    // clearance the other Stage 3 sticky-action screens do — without it the bar covers the
+    // last use case and swallows its taps.
+    <div className="min-w-0 pb-40">
       {children}
       <section className="mt-5" aria-labelledby="oil-group-use-cases-title">
         <p id="oil-group-use-cases-title" className="text-sm text-muted-foreground">
