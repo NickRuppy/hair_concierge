@@ -176,12 +176,34 @@ test.describe("Personal Plan products lab", () => {
     await expect(page.getByText("Conditioner Soft Care", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: "Diese Alternative wählen" }).click()
     await expect(page.getByText("Oil Length Seal", { exact: true })).toBeVisible()
+    // Stage 3 now reviews all three oil use cases on one grouped screen instead of
+    // three sequential single-use-case screens.
     await expectCompleteOilMatrix(page, "Vor der Haarwäsche")
-    await page.getByRole("button", { name: "Mein Produkt behalten" }).click()
-    await expectCompleteOilMatrix(page, "Im feuchten Haar")
-    await page.getByRole("button", { name: "Mein Produkt behalten" }).click()
-    await expectCompleteOilMatrix(page, "Im trockenen Haar")
-    await page.getByRole("button", { name: "Mein Produkt behalten" }).click()
+    const preWashCheckbox = page.getByRole("checkbox", { name: /Vor der Haarwäsche/ })
+    const wetHairCheckbox = page.getByRole("checkbox", { name: /Im feuchten Haar/ })
+    const dryHairCheckbox = page.getByRole("checkbox", { name: /Im trockenen Haar/ })
+    await expect(preWashCheckbox).toBeVisible()
+    await expect(preWashCheckbox).toHaveAttribute("aria-checked", "true")
+    await expect(wetHairCheckbox).toBeVisible()
+    await expect(wetHairCheckbox).toHaveAttribute("aria-checked", "true")
+    await expect(dryHairCheckbox).toBeVisible()
+    await expect(dryHairCheckbox).toHaveAttribute("aria-checked", "true")
+
+    // Deselect one use case: the CTA counter drops to 2, and the deselected case
+    // gets its own scoped follow-up screen once the remaining two are committed.
+    await dryHairCheckbox.click()
+    await expect(dryHairCheckbox).toHaveAttribute("aria-checked", "false")
+    await expect(page.getByRole("button", { name: "Für 2 Einsätze einplanen" })).toBeVisible()
+    await page.getByRole("button", { name: "Für 2 Einsätze einplanen" }).click()
+
+    await expect(
+      page.getByRole("heading", { name: "Wähle dein Öl fürs trockene Haar" }),
+    ).toBeVisible()
+    await expect(
+      page.getByText("✓ Oil Length Seal eingeplant für: Vorwäsche · Feuchtes Haar"),
+    ).toBeVisible()
+    await page.getByRole("button", { name: "Dieses Produkt einplanen" }).click()
+
     await expect(page.getByText("Kopfhaut-Tonic", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /Auf Analyse warten/ }).click()
     const noHorizontalOverflow = await page

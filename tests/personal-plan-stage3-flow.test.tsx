@@ -22,7 +22,14 @@ import {
   type Stage3RoutineHandoff,
   updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
-import { ProductFitComparison } from "../src/components/personal-plan-products/product-fit-comparison"
+import {
+  ProductFitComparison,
+  STAGE3_PLAN_PRODUCT_ACTION_LABEL,
+} from "../src/components/personal-plan-products/product-fit-comparison"
+import {
+  OilGroupReview,
+  oilGroupCommitLabel,
+} from "../src/components/personal-plan-products/oil-group-review"
 import { customerIoDestination } from "../src/lib/analytics/destinations/customerio"
 import { metaDestination } from "../src/lib/analytics/destinations/meta"
 import { postHogDestination } from "../src/lib/analytics/destinations/posthog"
@@ -5142,4 +5149,919 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   assert.equal(review.props.comparison.subjectKey.length > 0, true)
   assert.deepEqual(intents, [])
   assert.deepEqual(handoffs, [])
+})
+
+function threeUseCaseOilEntryContext(id: string): Stage3EntryContext {
+  return {
+    schemaVersion: 1,
+    personalPlanId: `plan-${id}`,
+    refinedVersionId: `refined-${id}`,
+    orderedCategories: [
+      {
+        category: "oil",
+        requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+        needSummary: "Pflege für Längen und Spitzen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+}
+
+async function reachOilReview(harness: ClientStateHarness) {
+  await captureCatalogProduct(harness, "Öl", "oil")
+  const tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  return renderSettled(harness)
+}
+
+function oilGroupScreen(tree: ReactElement | null) {
+  return findByType<React.ComponentProps<typeof OilGroupReview>>(tree, OilGroupReview)
+}
+
+test("the grouped Öl screen lists every named use case pre-checked under one commit action", () => {
+  const cases = [
+    {
+      role: "pre_wash_fibre_treatment",
+      roleTitle: "Vor der Haarwäsche",
+      roleSubtitle: "Als Pflege vor dem Waschen",
+      decisionKey: "oil-1",
+      productName: null,
+    },
+    {
+      role: "leave_on_fibre_conditioning",
+      roleTitle: "Im feuchten Haar",
+      roleSubtitle: "Nach dem Waschen, bleibt im Haar",
+      decisionKey: "oil-2",
+      productName: null,
+    },
+    {
+      role: "dry_finish",
+      roleTitle: "Im trockenen Haar",
+      roleSubtitle: "Für Glanz und Finish",
+      decisionKey: "oil-3",
+      productName: null,
+    },
+  ]
+  const html = renderToStaticMarkup(
+    <OilGroupReview
+      group={cases}
+      uniformProposition
+      checkedKeys={new Set(cases.map((useCase) => useCase.decisionKey))}
+      onToggle={() => undefined}
+      onCommit={() => undefined}
+    >
+      <div>Vergleich</div>
+    </OilGroupReview>,
+  )
+
+  assert.match(html, /Deine Einsätze aus dem Feinschliff — antippen zum Abwählen:/)
+  assert.match(html, /Vor der Haarwäsche/)
+  assert.match(html, /Nach dem Waschen, bleibt im Haar/)
+  assert.match(html, /Für Glanz und Finish/)
+  assert.equal(html.match(/aria-checked="true"/g)?.length, 3)
+  assert.match(html, /Für alle 3 Einsätze einplanen/)
+  assert.match(
+    html,
+    /^<div class="min-w-0 pb-40"/,
+    "the fixed commit bar needs bottom clearance or it covers the last use case",
+  )
+})
+
+test("a review composed into the grouped Öl screen defers its sticky-bar clearance", () => {
+  const comparison: Stage3FitComparison = {
+    schemaVersion: 1,
+    mode: "compact",
+    category: "oil",
+    role: "dry_finish",
+    subjectKey: "decision:oil:dry_finish:gap",
+    sourceIdentity: null,
+    products: [],
+    alternatives: [],
+    dimensions: [],
+    reason: "specialist_category",
+  }
+  const evaluation: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "oil",
+    subjectKey: comparison.subjectKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+  const markupFor = (hideActions: boolean) =>
+    renderToStaticMarkup(
+      <ProductFitComparison
+        comparison={comparison}
+        evaluation={evaluation}
+        displayedAlternativeIndex={0}
+        onDisplayedAlternativeChange={() => undefined}
+        onAction={() => undefined}
+        hideActions={hideActions}
+      />,
+    )
+
+  assert.match(markupFor(false), /^<section class="min-w-0 pb-40"/)
+  assert.match(
+    markupFor(true),
+    /^<section class="min-w-0"/,
+    "the grouped screen owns both the sticky bar and its clearance",
+  )
+})
+
+test("the grouped Öl commit action counts the checked use cases and names diverging picks", () => {
+  assert.equal(oilGroupCommitLabel(3, 3, true), "Für alle 3 Einsätze einplanen")
+  assert.equal(oilGroupCommitLabel(3, 3, false), "Empfehlungen für alle 3 einplanen")
+  assert.equal(oilGroupCommitLabel(2, 3, true), "Für 2 Einsätze einplanen")
+  assert.equal(oilGroupCommitLabel(1, 3, true), "Für diesen Einsatz einplanen")
+})
+
+test("three oil use cases render as one grouped screen with pre-checked cases", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = threeUseCaseOilEntryContext("oil-group")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  const tree = await reachOilReview(harness)
+
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped, "the three pending oil use cases share one review screen")
+  assert.deepEqual(
+    grouped.props.group.map((useCase) => useCase.roleTitle),
+    ["Vor der Haarwäsche", "Im feuchten Haar", "Im trockenen Haar"],
+  )
+  assert.equal(grouped.props.checkedKeys.size, 3)
+  assert.equal(grouped.props.uniformProposition, true)
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  assert.equal(anchor.props.reviewPosition, 1)
+  assert.equal(anchor.props.reviewTotal, 1, "the grouped use cases count as one review step")
+  assert.equal(
+    anchor.props.roleLabel,
+    null,
+    "the grouped screen covers every use case, so its kicker names none of them",
+  )
+})
+
+test("committing the full group records one local choice per member and advances past all oil subjects", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  const entryContext = threeUseCaseOilEntryContext("oil-group-commit")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  const memberKeys = grouped.props.group.map((useCase) => useCase.decisionKey)
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) === null && findByType(next, ProductFitComparison) === null,
+    "the grouped commit to leave every oil use case behind",
+  )
+
+  assert.equal(intents.length, 3)
+  assert.deepEqual(
+    intents.map((intent) => intent.subjectKey).toSorted(),
+    memberKeys.toSorted(),
+    "every checked use case reaches the batch with its own decision key",
+  )
+})
+
+test("deselecting one case commits two and surfaces the third as a scoped follow-up", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  const entryContext = threeUseCaseOilEntryContext("oil-group-split")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  let grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  const dryFinishKey = grouped.props.group.find(
+    (useCase) => useCase.role === "dry_finish",
+  )?.decisionKey
+  assert.ok(dryFinishKey)
+  grouped.props.onToggle(dryFinishKey)
+  tree = await renderSettled(harness)
+  grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(grouped.props.checkedKeys.size, 2)
+  assert.equal(grouped.props.checkedKeys.has(dryFinishKey), false)
+
+  grouped.props.onCommit()
+  tree = await renderUntil(harness, (next) => oilGroupScreen(next) === null, "the scoped follow-up")
+
+  const followUp = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(followUp, "the deselected use case gets its own review")
+  assert.equal(followUp.props.comparison.subjectKey, dryFinishKey)
+  assert.equal(followUp.props.roleLabel, "Im trockenen Haar")
+  assert.equal(followUp.props.reviewPosition, 2)
+  assert.equal(followUp.props.reviewTotal, 2, "the committed group stays one step")
+  assert.equal(followUp.props.headingOverride, "Wähle dein Öl fürs trockene Haar")
+  assert.equal(
+    followUp.props.scopeContextLine,
+    "✓ Oil Length Seal eingeplant für: Vorwäsche · Feuchtes Haar",
+  )
+  assert.equal(
+    followUp.props.primaryActionLabelOverride,
+    STAGE3_PLAN_PRODUCT_ACTION_LABEL,
+    "the follow-up plans a product with the app's universal planning CTA",
+  )
+  assert.deepEqual(intents, [], "the deselected case keeps the batch open")
+})
+
+test("the anchor's own screen carries no follow-up overrides", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = threeUseCaseOilEntryContext("oil-group-anchor-plain")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  const tree = await reachOilReview(harness)
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  assert.equal(anchor.props.headingOverride, undefined)
+  assert.equal(anchor.props.scopeContextLine, undefined)
+  assert.equal(anchor.props.primaryActionLabelOverride, undefined)
+})
+
+test("diverging recommendations relabel the grouped commit action", async () => {
+  const gateway = createAuthorityTestGateway()
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    return bundles.map((bundle) => {
+      const subjectKey = bundle.authorityEvaluation.subjectKey
+      if (!subjectKey.includes("dry_finish")) return bundle
+      const alternative: Stage3SelectedComparisonCandidate = {
+        productId: `recommended:${subjectKey}`,
+        category: bundle.fitComparison.category,
+        role: bundle.fitComparison.role,
+        verdict: "ideal",
+        criteria: [],
+        recommendation: {
+          recommendationId: `recommend:${subjectKey}`,
+          productId: `recommended:${subjectKey}`,
+          category: bundle.fitComparison.category,
+          role: bundle.fitComparison.role,
+          displayName: "Dr. Scheller Reines Arganöl",
+          reason: "Passt besser zu diesem Einsatz.",
+          authorityRuleId: "test.authority",
+        },
+        factFingerprint: `facts:recommend:${subjectKey}`,
+      }
+      return {
+        authorityEvaluation: {
+          status: "known",
+          category: bundle.authorityEvaluation.category,
+          subjectKey,
+          verdict: "mismatch",
+          criteria: [],
+          allowedActions: ["plan_recommendation", "acknowledge_override"],
+          recommendation: null,
+          productFactFingerprint: `facts:${subjectKey}`,
+          recommendationFactFingerprint: alternative.factFingerprint,
+          coverageRuleIds: [],
+        },
+        fitComparison: {
+          ...bundle.fitComparison,
+          alternatives: [alternative],
+          products: [
+            ...bundle.fitComparison.products,
+            {
+              productId: alternative.productId,
+              displayName: alternative.recommendation.displayName,
+              category: bundle.fitComparison.category,
+              role: bundle.fitComparison.role,
+              source: "alternative" as const,
+            },
+          ],
+        },
+      }
+    })
+  }
+  const entryContext = threeUseCaseOilEntryContext("oil-group-diverging")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  const tree = await reachOilReview(harness)
+
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(grouped.props.uniformProposition, false)
+  assert.equal(
+    grouped.props.group.find((useCase) => useCase.role === "dry_finish")?.productName,
+    "Dr. Scheller Reines Arganöl",
+  )
+  assert.equal(
+    oilGroupCommitLabel(grouped.props.checkedKeys.size, grouped.props.group.length, false),
+    "Empfehlungen für alle 3 einplanen",
+  )
+})
+
+test("a conflict that drops a committed group choice restores individual step counting", async () => {
+  let conflicted = false
+  let latestDraft: Stage3ProductDraft | null = null
+  const gateway = createAuthorityTestGateway()
+  const originalLoadOrCreate = gateway.loadOrCreate.bind(gateway)
+  gateway.loadOrCreate = async (input) => {
+    const response = await originalLoadOrCreate(input)
+    latestDraft = response.draft
+    return response
+  }
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    const response = await originalMutate(input)
+    latestDraft = response.status === "saved" ? response.draft : response.latestDraft
+    return response
+  }
+  gateway.resolveDecision = async () => {
+    conflicted = true
+    assert.ok(latestDraft)
+    return { status: "conflict", latestDraft }
+  }
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    if (!conflicted) return bundles
+    // After the conflict the authority no longer lets the user keep their product for the
+    // dry-finish use case, so only that remembered choice is dropped and it alone reopens.
+    return bundles.map((bundle) =>
+      bundle.authorityEvaluation.subjectKey.includes("dry_finish")
+        ? {
+            ...bundle,
+            authorityEvaluation: {
+              status: "known",
+              category: bundle.authorityEvaluation.category,
+              subjectKey: bundle.authorityEvaluation.subjectKey,
+              verdict: "unknown",
+              criteria: [],
+              allowedActions: ["leave_uncovered"],
+              recommendation: null,
+              productFactFingerprint: null,
+              recommendationFactFingerprint: null,
+              coverageRuleIds: [],
+            },
+          }
+        : bundle,
+    )
+  }
+  const entryContext = threeUseCaseOilEntryContext("oil-group-conflict")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(grouped.props.checkedKeys.size, 3)
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => systemStateTitle(next) === "Die passenden Optionen wurden aktualisiert.",
+    "the reconciliation notice for the dropped choice",
+  )
+  findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    tree,
+    Stage3SystemState,
+  )?.props.onAction?.()
+  tree = await renderUntil(
+    harness,
+    (next) => conflicted && findByType(next, ProductFitComparison) !== null,
+    "the reopened review after the decision conflict",
+  )
+
+  assert.equal(oilGroupScreen(tree), null, "one reopened use case cannot form a group on its own")
+  const reopened = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(reopened)
+  assert.match(reopened.props.comparison.subjectKey, /dry_finish/)
+  assert.equal(reopened.props.reviewPosition, 3)
+  assert.equal(
+    reopened.props.reviewTotal,
+    3,
+    "the dropped group stops collapsing the counter once its choices are gone",
+  )
+})
+
+test("the grouped commit plans the recommendation selected on the anchor screen", async () => {
+  const gateway = createAuthorityTestGateway()
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    return bundles.map((bundle) => {
+      const subjectKey = bundle.authorityEvaluation.subjectKey
+      if (!subjectKey.startsWith("decision:oil:")) return bundle
+      const alternatives: Stage3SelectedComparisonCandidate[] = [1, 2].map((rank) => ({
+        productId: `recommended-${rank}:${subjectKey}`,
+        category: bundle.fitComparison.category,
+        role: bundle.fitComparison.role,
+        verdict: "ideal" as const,
+        criteria: [],
+        recommendation: {
+          recommendationId: `recommend-${rank}:${subjectKey}`,
+          productId: `recommended-${rank}:${subjectKey}`,
+          category: bundle.fitComparison.category,
+          role: bundle.fitComparison.role,
+          displayName: `Empfehlung ${rank}`,
+          reason: "Passt zum Bedarf.",
+          authorityRuleId: "test.authority",
+        },
+        factFingerprint: `facts:recommend-${rank}:${subjectKey}`,
+      }))
+      return {
+        authorityEvaluation: {
+          status: "known",
+          category: bundle.authorityEvaluation.category,
+          subjectKey,
+          verdict: "unknown",
+          criteria: [],
+          allowedActions: ["leave_uncovered"],
+          recommendation: null,
+          productFactFingerprint: null,
+          recommendationFactFingerprint: null,
+          coverageRuleIds: [],
+        },
+        fitComparison: {
+          ...bundle.fitComparison,
+          sourceIdentity: null,
+          alternatives,
+          products: alternatives.map((candidate) => ({
+            productId: candidate.productId,
+            displayName: candidate.recommendation.displayName,
+            category: bundle.fitComparison.category,
+            role: bundle.fitComparison.role,
+            source: "alternative" as const,
+          })),
+        },
+      }
+    })
+  }
+  const entryContext = threeUseCaseOilEntryContext("oil-group-picker")
+  const storage = createMemoryPendingStage3RecoveryStorage()
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      gateway,
+      searchDebounceMs: 0,
+      pendingRecoveryStorage: storage,
+    }),
+  )
+
+  await captureCatalogProduct(harness, "Öl", "oil")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) !== null,
+    "the grouped Öl review with engine recommendations",
+  )
+
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  const anchorKey = anchor.props.comparison.subjectKey
+  const anchorSecond = anchor.props.comparison.alternatives[1]
+  assert.ok(anchorSecond)
+  anchor.props.onSelectedRecommendationChange?.(anchorSecond.productId)
+  tree = await renderSettled(harness)
+  let grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(
+    grouped.props.group.find((useCase) => useCase.decisionKey === anchorKey)?.productName,
+    "Empfehlung 2",
+    "the grouped row reflects the picked recommendation",
+  )
+
+  // Leave one use case pending so the batch stays open and the local choices are observable.
+  const dryFinishKey = grouped.props.group.find(
+    (useCase) => useCase.role === "dry_finish",
+  )?.decisionKey
+  assert.ok(dryFinishKey)
+  assert.notEqual(dryFinishKey, anchorKey)
+  grouped.props.onToggle(dryFinishKey)
+  tree = await renderSettled(harness)
+  grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  grouped.props.onCommit()
+  await renderUntil(harness, (next) => oilGroupScreen(next) === null, "the scoped follow-up")
+
+  const reviewDraft = readStage3ReviewDraft(storage, {
+    ownerId: "fixture-user",
+    personalPlanId: entryContext.personalPlanId,
+    draftId: "fixture-stage3-draft",
+  })
+  const anchorChoice = reviewDraft?.choices[anchorKey]
+  assert.equal(anchorChoice?.kind, "decision")
+  assert.equal(
+    anchorChoice?.kind === "decision" ? anchorChoice.intent.selectedCandidateId : null,
+    anchorSecond.productId,
+    "the anchor commits the recommendation the user selected, not the engine's first",
+  )
+  assert.equal(
+    anchorChoice?.kind === "decision" ? anchorChoice.intent.selectedCandidateFactFingerprint : null,
+    anchorSecond.factFingerprint,
+  )
+  const otherKey = grouped.props.group
+    .map((useCase) => useCase.decisionKey)
+    .find((key) => key !== anchorKey && key !== dryFinishKey)
+  assert.ok(otherKey)
+  const otherChoice = reviewDraft?.choices[otherKey]
+  assert.equal(
+    otherChoice?.kind === "decision" ? otherChoice.intent.selectedCandidateId : null,
+    `recommended-1:${otherKey}`,
+    "a member without a visible screen keeps its own first recommendation",
+  )
+  assert.equal(reviewDraft?.choices[dryFinishKey], undefined)
+})
+
+test("the grouped Öl use cases render their selected state in the app's plum token", () => {
+  const cases = [
+    {
+      role: "pre_wash_fibre_treatment",
+      roleTitle: "Vor der Haarwäsche",
+      roleSubtitle: "Als Pflege vor dem Waschen",
+      decisionKey: "oil-1",
+      productName: null,
+    },
+    {
+      role: "dry_finish",
+      roleTitle: "Im trockenen Haar",
+      roleSubtitle: "Für Glanz und Finish",
+      decisionKey: "oil-2",
+      productName: null,
+    },
+  ]
+  const html = renderToStaticMarkup(
+    <OilGroupReview
+      group={cases}
+      uniformProposition
+      checkedKeys={new Set(["oil-1"])}
+      onToggle={() => undefined}
+      onCommit={() => undefined}
+    >
+      <div>Vergleich</div>
+    </OilGroupReview>,
+  )
+
+  assert.doesNotMatch(
+    html,
+    /var\(--plum\)/,
+    "--plum is not a token in this app; an unresolvable var() renders the checked box invisible",
+  )
+  assert.match(html, /bg-\[var\(--brand-plum\)\]/)
+  assert.match(html, /border-\[var\(--brand-plum\)\]/)
+  for (const token of html.match(/var\(--[a-z-]+\)/g) ?? []) {
+    assert.match(
+      readFileSync("src/app/globals.css", "utf8"),
+      new RegExp(`${token.slice(4, -1)}:`),
+      `${token} must be defined in globals.css`,
+    )
+  }
+})
+
+test("the grouped Öl use cases are exposed as one labelled checkbox group", () => {
+  const html = renderToStaticMarkup(
+    <OilGroupReview
+      group={[
+        {
+          role: "dry_finish",
+          roleTitle: "Im trockenen Haar",
+          roleSubtitle: "Für Glanz und Finish",
+          decisionKey: "oil-1",
+          productName: null,
+        },
+      ]}
+      uniformProposition
+      checkedKeys={new Set(["oil-1"])}
+      onToggle={() => undefined}
+      onCommit={() => undefined}
+    >
+      <div>Vergleich</div>
+    </OilGroupReview>,
+  )
+
+  assert.match(html, /role="group"/)
+  assert.match(html, /role="group"[^>]*aria-labelledby="oil-group-use-cases-title"/)
+})
+
+test("a kicker without a role segment keeps category and counter", () => {
+  const comparison: Stage3FitComparison = {
+    schemaVersion: 1,
+    mode: "compact",
+    category: "oil",
+    role: "pre_wash_fibre_treatment",
+    subjectKey: "decision:oil:pre_wash_fibre_treatment:gap",
+    sourceIdentity: null,
+    products: [],
+    alternatives: [],
+    dimensions: [],
+    reason: "specialist_category",
+  }
+  const evaluation: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "oil",
+    subjectKey: comparison.subjectKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      comparison={comparison}
+      evaluation={evaluation}
+      categoryLabel="Öl"
+      roleLabel={null}
+      reviewPosition={3}
+      reviewTotal={3}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => undefined}
+      onAction={() => undefined}
+      hideActions
+    />,
+  )
+
+  assert.match(html, /Öl · <span class="whitespace-nowrap">Produkt 3 von 3<\/span>/)
+  assert.doesNotMatch(html, /Vor der Haarwäsche/)
+})
+
+function shampooAndThreeOilUseCases(id: string): Stage3EntryContext {
+  return {
+    schemaVersion: 1,
+    personalPlanId: `plan-${id}`,
+    refinedVersionId: `refined-${id}`,
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+      {
+        category: "oil",
+        requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+        needSummary: "Pflege für Längen und Spitzen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [
+      { category: "shampoo", allowsMultiple: true, allowsExplicitNone: true },
+      { category: "oil", allowsMultiple: true, allowsExplicitNone: true },
+    ],
+  }
+}
+
+test("the review counter collapses the oil group on every step, not only on the group's own", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = shampooAndThreeOilUseCases("oil-group-counter")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  tree = await reachOilReview(harness)
+
+  const shampooReview = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(shampooReview)
+  assert.equal(shampooReview.props.comparison.category, "shampoo")
+  assert.equal(shampooReview.props.reviewPosition, 1)
+  assert.equal(
+    shampooReview.props.reviewTotal,
+    2,
+    "the pending oil group counts as one step from the very first screen",
+  )
+
+  shampooReview.props.onAction("keep_owned")
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) !== null,
+    "the grouped Öl review after the shampoo decision",
+  )
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor)
+  assert.equal(anchor.props.reviewPosition, 2)
+  assert.equal(anchor.props.reviewTotal, 2, "the denominator never shrinks between steps")
+})
+
+/** Makes the dry-finish use case unbookable in the way the argument describes. */
+function withUnbookableDryFinish(
+  gateway: ReturnType<typeof createAuthorityTestGateway>,
+  mode: "pending" | "targetless_evidence",
+) {
+  const originalReviewDecisionBundles = gateway.reviewDecisionBundles.bind(gateway)
+  gateway.reviewDecisionBundles = async (input) => {
+    const bundles = await originalReviewDecisionBundles(input)
+    return bundles.map((bundle) => {
+      const subjectKey = bundle.authorityEvaluation.subjectKey
+      if (!subjectKey.includes("dry_finish")) return bundle
+      if (mode === "targetless_evidence") {
+        return {
+          ...bundle,
+          fitComparison: {
+            ...bundle.fitComparison,
+            evidenceRows: [
+              {
+                rowId: "unknown-target",
+                label: "Feuchtigkeit",
+                target: null,
+                productValues: [],
+              },
+            ],
+          },
+        }
+      }
+      return {
+        ...bundle,
+        authorityEvaluation: {
+          status: "pending",
+          category: bundle.authorityEvaluation.category,
+          subjectKey,
+          reason: "product_intake_pending",
+          allowedActions: ["keep_pending", "leave_uncovered"],
+          coverageRuleIds: [],
+        },
+      }
+    })
+  }
+}
+
+test("a follow-up that can only wait for analysis keeps its own honest heading and action", async () => {
+  const gateway = createAuthorityTestGateway()
+  withUnbookableDryFinish(gateway, "pending")
+  const entryContext = threeUseCaseOilEntryContext("oil-group-pending-followup")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.equal(
+    grouped.props.group.length,
+    2,
+    "a use case that plans no product never joins the group",
+  )
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) === null,
+    "the pending oil use case's own screen",
+  )
+
+  const followUp = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(followUp)
+  assert.match(followUp.props.comparison.subjectKey, /dry_finish/)
+  assert.equal(
+    followUp.props.primaryActionLabelOverride,
+    undefined,
+    "a screen whose action only records 'keep waiting' must not promise to plan a product",
+  )
+  assert.equal(followUp.props.headingOverride, undefined)
+})
+
+test("Back onto a committed group member never asks again for what it reports as planned", async () => {
+  const gateway = createAuthorityTestGateway()
+  const entryContext = threeUseCaseOilEntryContext("oil-group-back-committed")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  const dryFinishKey = grouped.props.group.find(
+    (useCase) => useCase.role === "dry_finish",
+  )?.decisionKey
+  assert.ok(dryFinishKey)
+  grouped.props.onToggle(dryFinishKey)
+  tree = await renderSettled(harness)
+  oilGroupScreen(tree)?.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) =>
+      findByType<React.ComponentProps<typeof ProductFitComparison>>(next, ProductFitComparison)
+        ?.props.comparison.subjectKey === dryFinishKey,
+    "the scoped follow-up",
+  )
+
+  await findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.onBack?.()
+  tree = await renderSettled(harness)
+
+  const reopened = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(reopened)
+  assert.notEqual(reopened.props.comparison.subjectKey, dryFinishKey)
+  assert.equal(
+    reopened.props.headingOverride,
+    undefined,
+    "a committed use case must not be re-asked above a line that reports it as planned",
+  )
+  assert.equal(reopened.props.scopeContextLine, undefined)
+  assert.equal(reopened.props.primaryActionLabelOverride, undefined)
+})
+
+test("the grouped commit never plans a use case whose own screen refuses to decide", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  withUnbookableDryFinish(gateway, "targetless_evidence")
+  const entryContext = threeUseCaseOilEntryContext("oil-group-unassessable")
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await reachOilReview(harness)
+  const grouped = oilGroupScreen(tree)
+  assert.ok(grouped)
+  assert.deepEqual(
+    grouped.props.group.map((useCase) => useCase.role).toSorted(),
+    ["leave_on_fibre_conditioning", "pre_wash_fibre_treatment"],
+    "a use case the single screen cannot assess stays out of the grouped commit",
+  )
+  grouped.props.onCommit()
+  tree = await renderUntil(
+    harness,
+    (next) => oilGroupScreen(next) === null,
+    "the unassessable use case's own screen",
+  )
+
+  const remaining = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(remaining)
+  assert.match(remaining.props.comparison.subjectKey, /dry_finish/)
+  assert.deepEqual(intents, [], "the unassessable use case keeps the batch open")
+})
+
+test("every committed-group reset also forgets a stale all-deselected grouped screen", () => {
+  const source = readFileSync(
+    new URL("../src/components/personal-plan-products/stage3-products-flow.tsx", import.meta.url),
+    "utf8",
+  )
+  const lines = source.split("\n")
+  const resetLines = lines.flatMap((line, index) =>
+    line.includes("setCommittedOilGroupKeys(new Set())") ? [index] : [],
+  )
+
+  assert.ok(resetLines.length >= 6, "every local-review-choice reset clears the committed group")
+  for (const index of resetLines) {
+    assert.ok(
+      lines
+        .slice(index + 1, index + 3)
+        .some((line) => line.includes("setOilGroupSelection({ anchorKey: null, deselected: [] })")),
+      `line ${index + 1} resets the committed group but would restore a stale, action-less all-deselected screen`,
+    )
+  }
 })

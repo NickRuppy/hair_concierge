@@ -8,15 +8,19 @@ import type {
   Stage3AuthorityActionKind,
   Stage3AuthorityEvaluation,
 } from "@/lib/personal-plan/products/authority/contracts"
-import type {
-  Stage3FitComparison,
-  Stage3FitEvidenceRelation,
-  Stage3FitEvidenceRow,
-  Stage3SelectedComparisonCandidate,
+import {
+  STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  type Stage3FitComparison,
+  type Stage3FitEvidenceRelation,
+  type Stage3FitEvidenceRow,
+  type Stage3SelectedComparisonCandidate,
 } from "@/lib/personal-plan/products/fit-comparison"
 import { cn } from "@/lib/utils"
 import { categorySelectionHeading } from "./stage3-product-copy"
 import { Stage3StickyAction } from "./stage3-sticky-action"
+
+/** The one planning CTA a single review screen offers for a product it can plan. */
+export const STAGE3_PLAN_PRODUCT_ACTION_LABEL = "Dieses Produkt einplanen"
 
 type ReviewProduct = {
   displayName: string
@@ -38,7 +42,8 @@ type ProductFitComparisonProps = {
   comparison: Stage3FitComparison
   evaluation: Stage3AuthorityEvaluation
   categoryLabel?: string
-  roleLabel?: string
+  /** null omits the role segment, e.g. on the grouped Öl screen that covers every use case. */
+  roleLabel?: string | null
   reviewPosition?: number
   reviewTotal?: number
   /** Parent-owned, presentation-only candidate focus. It is never a pending intent. */
@@ -47,6 +52,14 @@ type ProductFitComparisonProps = {
   selectedRecommendationProductId?: string | null
   onSelectedRecommendationChange?: (productId: string) => void
   disabled?: boolean
+  /** Set when a composing screen (e.g. the grouped Öl review) owns the commit action. */
+  hideActions?: boolean
+  /** Replaces the state-computed heading, e.g. a scoped Öl follow-up's "Wähle dein Öl …". */
+  headingOverride?: string
+  /** Green confirmation line rendered under the heading, e.g. what a committed Öl group already covers. */
+  scopeContextLine?: string
+  /** Replaces the primary action's label without changing which action it invokes. */
+  primaryActionLabelOverride?: string
   recoveryMessage?: string
   onAction: (
     action: ProductFitComparisonAction,
@@ -69,13 +82,16 @@ export function ProductFitComparison({
   selectedRecommendationProductId = null,
   onSelectedRecommendationChange,
   disabled = false,
+  hideActions = false,
+  headingOverride,
+  scopeContextLine,
+  primaryActionLabelOverride,
   recoveryMessage,
   onAction,
   onRetry,
 }: ProductFitComparisonProps): ReactElement {
-  const alternatives = comparison.alternatives.slice(0, 3)
+  const alternatives = comparison.alternatives.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
   const selectedIndex = normalizeIndex(displayedAlternativeIndex, alternatives.length)
-  const displayedAlternative = alternatives[selectedIndex] ?? null
   const ownedProduct = comparison.products.find((product) => product.source === "current") ?? null
   const currentProduct =
     ownedProduct ??
@@ -94,7 +110,10 @@ export function ProductFitComparison({
     alternatives.find((candidate) => candidate.productId === selectedRecommendationProductId) ??
     alternatives[0] ??
     null
-  const selectedAlternative = isUncoveredReview ? selectedRecommendation : displayedAlternative
+  const selectedAlternative = selectedComparisonCandidate(comparison, {
+    displayedAlternativeIndex,
+    selectedRecommendationProductId,
+  })
   // The bounded comparison bundle is the server's replacement allowlist. Adapters deliberately
   // do not expose select_replacement through allowedActions.
   const replacementAllowed = selectedAlternative !== null
@@ -121,7 +140,9 @@ export function ProductFitComparison({
   const hasTruthfulAction =
     !hasUnexpectedTargetlessEvidence &&
     (uncoveredRetryIsPrimary || primaryAction !== null || quietActions.length > 0)
-  const contextLabel = `${categoryLabel} · ${roleLabel} · Produkt ${reviewPosition} von ${reviewTotal}`
+  const contextLabel = [categoryLabel, roleLabel, `Produkt ${reviewPosition} von ${reviewTotal}`]
+    .filter((segment) => Boolean(segment))
+    .join(" · ")
   const isUnknownFit =
     evaluation.status === "unknown" ||
     (evaluation.status === "known" && evaluation.verdict === "unknown")
@@ -140,6 +161,8 @@ export function ProductFitComparison({
         comparison={comparison}
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (evaluation.status === "pending") {
@@ -154,6 +177,8 @@ export function ProductFitComparison({
         selectedIndex={selectedIndex}
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (isUncoveredReview) {
@@ -169,6 +194,8 @@ export function ProductFitComparison({
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
         onSelect={onSelectedRecommendationChange ?? (() => undefined)}
         onRetry={onRetry}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (isUnknownFit) {
@@ -183,6 +210,8 @@ export function ProductFitComparison({
         comparison={comparison}
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else if (!hasTruthfulAction && evaluation.status === "known") {
@@ -198,6 +227,8 @@ export function ProductFitComparison({
         evaluation={evaluation}
         evidenceRows={evidenceRows}
         productId={ownedProduct?.productId}
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   } else {
@@ -215,16 +246,23 @@ export function ProductFitComparison({
         disabled={disabled}
         onDisplayedAlternativeChange={onDisplayedAlternativeChange}
         onSelectReplacement={
-          directReplacementAction
+          directReplacementAction && !hideActions
             ? () => invokeAction(directReplacementAction.kind, selectedAlternative, onAction)
             : null
         }
+        headingOverride={headingOverride}
+        scopeContextLine={scopeContextLine}
       />
     )
   }
 
   return (
-    <section className="min-w-0 pb-40" aria-labelledby="product-fit-comparison-title">
+    <section
+      // A composing screen that owns the sticky action also owns its bottom clearance;
+      // keeping this padding there would strand a bar's worth of blank space mid-page.
+      className={cn("min-w-0", !hideActions && "pb-40")}
+      aria-labelledby="product-fit-comparison-title"
+    >
       <div className="mb-4 flex items-center justify-end gap-3">
         <p className="text-right text-sm font-medium text-muted-foreground">Produkte prüfen</p>
       </div>
@@ -241,7 +279,7 @@ export function ProductFitComparison({
 
       {content}
 
-      {evaluation.status !== "unsupported" && hasTruthfulAction ? (
+      {!hideActions && evaluation.status !== "unsupported" && hasTruthfulAction ? (
         <>
           {otherQuietActions.length > 0 ? (
             <section
@@ -292,14 +330,16 @@ export function ProductFitComparison({
                   invokeAction(visiblePrimaryAction.kind, selectedAlternative, onAction)
                 }}
                 aria-label={
-                  selectedAlternative && isUncoveredReview
-                    ? "Dieses Produkt einplanen"
-                    : visiblePrimaryAction.label
+                  primaryActionLabelOverride ??
+                  (selectedAlternative && isUncoveredReview
+                    ? STAGE3_PLAN_PRODUCT_ACTION_LABEL
+                    : visiblePrimaryAction.label)
                 }
               >
-                {selectedAlternative && isUncoveredReview
-                  ? "Dieses Produkt einplanen"
-                  : visiblePrimaryAction.label}
+                {primaryActionLabelOverride ??
+                  (selectedAlternative && isUncoveredReview
+                    ? STAGE3_PLAN_PRODUCT_ACTION_LABEL
+                    : visiblePrimaryAction.label)}
               </Button>
             </Stage3StickyAction>
           ) : null}
@@ -313,10 +353,13 @@ function ReviewHeader({
   contextLabel,
   title,
   description,
+  scopeContextLine,
 }: {
   contextLabel: string
   title: string
   description?: string
+  /** Green confirmation line rendered under the heading, e.g. what a committed Öl group already covers. */
+  scopeContextLine?: string
 }) {
   // Der Zähler ("Produkt X von Y") darf nicht mitten im Ausdruck umbrechen.
   const counterSplit = contextLabel.split(" · Produkt ")
@@ -337,6 +380,9 @@ function ReviewHeader({
       >
         {title}
       </h1>
+      {scopeContextLine ? (
+        <p className="mt-2 text-sm font-medium text-[var(--status-ok-text)]">{scopeContextLine}</p>
+      ) : null}
       {description ? (
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
       ) : null}
@@ -357,6 +403,8 @@ function ComparisonReview({
   disabled,
   onDisplayedAlternativeChange,
   onSelectReplacement,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -370,6 +418,8 @@ function ComparisonReview({
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
   onSelectReplacement: (() => void) | null
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -385,7 +435,8 @@ function ComparisonReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={`Dein ${categoryLabel || "Produkt"} im Vergleich`}
+        title={headingOverride ?? `Dein ${categoryLabel || "Produkt"} im Vergleich`}
+        scopeContextLine={scopeContextLine}
       />
       <OverallVerdict
         evaluation={evaluation}
@@ -448,6 +499,8 @@ function FitOnlyReview({
   evaluation,
   evidenceRows,
   productId,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -455,6 +508,8 @@ function FitOnlyReview({
   evaluation: Stage3AuthorityEvaluation
   evidenceRows: Stage3FitEvidenceRow[]
   productId?: string
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const verdict = evaluation.status === "known" ? evaluation.verdict : "unknown"
   const presentation =
@@ -477,8 +532,9 @@ function FitOnlyReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={presentation.title}
+        title={headingOverride ?? presentation.title}
         description={presentation.description}
+        scopeContextLine={scopeContextLine}
       />
       <ProductCard product={product} label="Dein Produkt" />
       {evidenceRows.length > 0 && productId ? (
@@ -503,6 +559,8 @@ function PendingReview({
   selectedIndex,
   disabled,
   onDisplayedAlternativeChange,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -513,6 +571,8 @@ function PendingReview({
   selectedIndex: number
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -522,8 +582,9 @@ function PendingReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={`Dein ${categoryLabel || "Produkt"} wird noch geprüft`}
+        title={headingOverride ?? `Dein ${categoryLabel || "Produkt"} wird noch geprüft`}
         description="Wir haben noch nicht genug bestätigte Produktdaten für ein verlässliches Urteil."
+        scopeContextLine={scopeContextLine}
       />
       <div className={cn("grid min-w-0 gap-2", selectedAlternative && "grid-cols-2")}>
         <ProductCard product={currentProduct} label="Dein Produkt" />
@@ -560,6 +621,8 @@ function UnassessableReview({
   comparison,
   disabled,
   onDisplayedAlternativeChange,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -570,6 +633,8 @@ function UnassessableReview({
   comparison: Stage3FitComparison
   disabled: boolean
   onDisplayedAlternativeChange: (index: number) => void
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -579,8 +644,9 @@ function UnassessableReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title="Noch nicht eindeutig beurteilbar"
+        title={headingOverride ?? "Noch nicht eindeutig beurteilbar"}
         description="Für diesen Vergleich fehlen noch verifizierte Produktdaten."
+        scopeContextLine={scopeContextLine}
       />
       <div className={cn("grid min-w-0 gap-2", selectedAlternative && "grid-cols-2")}>
         <ProductCard product={currentProduct} label={`Dein ${categoryLabel || "Produkt"}`} />
@@ -618,6 +684,8 @@ function UncoveredRecommendationReview({
   onDisplayedAlternativeChange,
   onSelect,
   onRetry,
+  headingOverride,
+  scopeContextLine,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -629,6 +697,8 @@ function UncoveredRecommendationReview({
   onDisplayedAlternativeChange: (index: number) => void
   onSelect: (productId: string) => void
   onRetry?: () => void
+  headingOverride?: string
+  scopeContextLine?: string
 }) {
   const first = alternatives[0] ?? null
   const secondaryIndex = alternatives.length > 1 ? (selectedIndex > 0 ? selectedIndex : 1) : null
@@ -653,7 +723,7 @@ function UncoveredRecommendationReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={categorySelectionHeading(categoryLabel)}
+        title={headingOverride ?? categorySelectionHeading(categoryLabel)}
         description={
           first
             ? first.verdict === "ideal"
@@ -661,6 +731,7 @@ function UncoveredRecommendationReview({
               : "Das sind die besten geprüften Optionen im Katalog. Wir zeigen die Einschränkung offen."
             : "Dein gespeicherter Bedarf bleibt erhalten. Prüfe später erneut oder fahre vorerst ohne Produkt fort."
         }
+        scopeContextLine={scopeContextLine}
       />
       {first ? (
         <>
@@ -1527,7 +1598,37 @@ function visibleEvidenceRows(
   })
 }
 
-function primaryActionFor({
+/**
+ * The candidate this screen currently treats as selected — the one its primary action
+ * would plan. Exported so a composing screen (the grouped Öl review) commits exactly what
+ * the user sees selected, with no second implementation of the selection rules.
+ */
+export function selectedComparisonCandidate(
+  comparison: Stage3FitComparison,
+  focus: {
+    displayedAlternativeIndex?: number
+    selectedRecommendationProductId?: string | null
+  } = {},
+): Stage3SelectedComparisonCandidate | null {
+  const alternatives = comparison.alternatives.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+  const ownedProduct = comparison.products.find((product) => product.source === "current") ?? null
+  const isUncoveredReview = ownedProduct === null && !comparison.sourceIdentity
+  if (isUncoveredReview) {
+    return (
+      alternatives.find(
+        (candidate) => candidate.productId === focus.selectedRecommendationProductId,
+      ) ??
+      alternatives[0] ??
+      null
+    )
+  }
+  return (
+    alternatives[normalizeIndex(focus.displayedAlternativeIndex ?? 0, alternatives.length)] ?? null
+  )
+}
+
+/** The action the review screen preselects; exported so grouped screens can commit the same choice. */
+export function primaryActionFor({
   evaluation,
   replacementAllowed,
 }: {

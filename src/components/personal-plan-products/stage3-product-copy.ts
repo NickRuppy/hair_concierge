@@ -64,6 +64,48 @@ export function categorySelectionHeading(categoryLabel: string): string {
   )
 }
 
+/** The oil roles from `getCategoryRolePolicy("oil").allowedRoles`. */
+export type OilUseCaseRole =
+  | "pre_wash_fibre_treatment"
+  | "leave_on_fibre_conditioning"
+  | "dry_finish"
+
+export type OilUseCaseCopy = {
+  /** Row title on the grouped Öl screen. */
+  title: string
+  /** Row subtitle on the grouped Öl screen. */
+  subtitle: string
+  /** Scope suffix for the follow-up heading: `Wähle dein Öl ${scopePhrase}`. */
+  scopePhrase: string
+  /** Short form used in the follow-up screen's committed-for context line, e.g. "Vorwäsche". */
+  shortLabel: string
+}
+
+export const OIL_USE_CASE_COPY: Record<OilUseCaseRole, OilUseCaseCopy> = {
+  pre_wash_fibre_treatment: {
+    title: "Vor der Haarwäsche",
+    subtitle: "Als Pflege vor dem Waschen",
+    scopePhrase: "für die Vorwäsche",
+    shortLabel: "Vorwäsche",
+  },
+  leave_on_fibre_conditioning: {
+    title: "Im feuchten Haar",
+    subtitle: "Nach dem Waschen, bleibt im Haar",
+    scopePhrase: "fürs feuchte Haar",
+    shortLabel: "Feuchtes Haar",
+  },
+  dry_finish: {
+    title: "Im trockenen Haar",
+    subtitle: "Für Glanz und Finish",
+    scopePhrase: "fürs trockene Haar",
+    shortLabel: "Trockenes Haar",
+  },
+}
+
+export function oilUseCaseCopy(role: PlanProductRole): OilUseCaseCopy | null {
+  return OIL_USE_CASE_COPY[role as OilUseCaseRole] ?? null
+}
+
 export const ROLE_COPY: Record<PlanProductRole, { label: string; description: string }> = {
   shampoo_everyday: { label: "Hauptreinigung", description: "Für deine regelmäßige Haarwäsche" },
   shampoo_dandruff: { label: "Gezielte Reinigung", description: "Als gezielte Ergänzung" },

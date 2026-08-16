@@ -29,6 +29,10 @@ import {
   type Stage3NeedMaterialDelta,
   type Stage3ProductDraft,
 } from "@/lib/personal-plan/products/contracts"
+import {
+  deriveOilReviewGroup,
+  groupedReviewCounts,
+} from "@/lib/personal-plan/products/oil-review-group"
 import { createStage3Draft } from "@/lib/personal-plan/products/state-machine"
 import {
   Stage3ProductsGatewayError,
@@ -87,16 +91,20 @@ import {
   type Stage3ProductKindOption,
 } from "."
 import {
+  primaryActionFor,
   ProductFitComparison,
+  selectedComparisonCandidate,
+  STAGE3_PLAN_PRODUCT_ACTION_LABEL,
   type ProductFitComparisonAction,
   type ProductFitComparisonSelection,
 } from "./product-fit-comparison"
+import { OilGroupReview, type OilGroupReviewCase } from "./oil-group-review"
 import {
   authorityDecisionIntent,
   hasUnresolvedDecisionSubjects,
   unresolvedDecisionSubjects,
 } from "./stage3-decision-controller"
-import { CATEGORY_COPY, ROLE_COPY } from "./stage3-product-copy"
+import { CATEGORY_COPY, oilUseCaseCopy, ROLE_COPY } from "./stage3-product-copy"
 import {
   completeCandidateIdentity,
   useStage3CategoryCaptureController,
@@ -394,6 +402,15 @@ export function Stage3ProductsFlow({
   const [currentReviewSubjectKey, setCurrentReviewSubjectKey] = useState<string | null>(
     () => initialReviewPartition.invalidKeys[0] ?? null,
   )
+  /** Use cases the user unticked on the grouped Öl screen, scoped to that screen's anchor. */
+  const [oilGroupSelection, setOilGroupSelection] = useState<{
+    anchorKey: string | null
+    deselected: string[]
+  }>({ anchorKey: null, deselected: [] })
+  /** Oil use cases committed together as one grouped step; they keep counting as one. */
+  const [committedOilGroupKeys, setCommittedOilGroupKeys] = useState<ReadonlySet<string>>(
+    () => new Set<string>(),
+  )
   const [authorityStatus, setAuthorityStatus] = useState<"idle" | "loading" | "ready">(
     bootstrap ? "ready" : "idle",
   )
@@ -430,6 +447,105 @@ export function Stage3ProductsFlow({
     selectedRecommendation.subjectKey === displayedReviewDecisionKey
       ? selectedRecommendation.productId
       : null
+  const proposedChoiceByDecisionKey = useMemo(() => {
+    const proposals = new Map<string, ProposedReviewChoice | null>()
+    for (const subject of decisionSubjects) {
+      proposals.set(
+        subject.decisionKey,
+        proposedReviewChoice(
+          subject,
+          reviewBundles.get(subject.decisionKey),
+          // Only the displayed subject has live pager/picker state; the other grouped
+          // members keep the engine's own proposal.
+          subject.decisionKey === displayedReviewDecisionKey
+            ? { displayedAlternativeIndex, selectedRecommendationProductId }
+            : undefined,
+        ),
+      )
+    }
+    return proposals
+  }, [
+    decisionSubjects,
+    displayedAlternativeIndex,
+    displayedReviewDecisionKey,
+    reviewBundles,
+    selectedRecommendationProductId,
+  ])
+  /**
+   * Pending subjects whose preselected choice actually plans a product — and that their own
+   * screen would really offer (`proposedReviewChoice` mirrors its refusal gates). Everything
+   * else keeps its own, properly gated screen instead of joining a grouped commit.
+   */
+  const groupableReviewKeys = useMemo(
+    () =>
+      new Set(
+        decisionSubjects
+          .filter(
+            (subject) =>
+              !localReviewChoices[subject.decisionKey] &&
+              proposedChoiceByDecisionKey.get(subject.decisionKey),
+          )
+          .map((subject) => subject.decisionKey),
+      ),
+    [decisionSubjects, localReviewChoices, proposedChoiceByDecisionKey],
+  )
+  /**
+   * The pending oil group, derived from the first groupable oil subject rather than from what
+   * is on screen: every step's counter and analytics position must collapse the same group,
+   * or the total would shrink the moment the user reaches it.
+   */
+  const pendingOilGroup = useMemo(() => {
+    if (phase !== "decisions") return null
+    // A committed group never re-forms: its deselected use cases each get their own follow-up.
+    if (committedOilGroupKeys.size > 0) return null
+    const firstGroupableOil = decisionSubjects.find(
+      (subject) => subject.category === "oil" && groupableReviewKeys.has(subject.decisionKey),
+    )
+    if (!firstGroupableOil) return null
+    const propositions = new Map(
+      [...proposedChoiceByDecisionKey].map(([key, proposal]) => [
+        key,
+        proposal?.proposition ?? null,
+      ]),
+    )
+    return deriveOilReviewGroup(
+      decisionSubjects,
+      groupableReviewKeys,
+      firstGroupableOil.decisionKey,
+      propositions,
+    )
+  }, [
+    committedOilGroupKeys,
+    decisionSubjects,
+    groupableReviewKeys,
+    phase,
+    proposedChoiceByDecisionKey,
+  ])
+  /** The grouped screen renders only on its own anchor's step. */
+  const oilReviewGroup =
+    pendingOilGroup && pendingOilGroup.anchor.decisionKey === displayedReviewDecisionKey
+      ? pendingOilGroup
+      : null
+  /** Decision keys that collapse into a single counted review step. */
+  const groupedOilKeys = useMemo(
+    () =>
+      pendingOilGroup
+        ? new Set(pendingOilGroup.members.map((member) => member.decisionKey))
+        : committedOilGroupKeys,
+    [committedOilGroupKeys, pendingOilGroup],
+  )
+  const oilGroupCheckedKeys = useMemo(() => {
+    if (!oilReviewGroup) return new Set<string>()
+    const deselected =
+      oilGroupSelection.anchorKey === oilReviewGroup.anchor.decisionKey
+        ? oilGroupSelection.deselected
+        : []
+    return new Set(
+      oilReviewGroup.members
+        .map((member) => member.decisionKey)
+        .filter((key) => !deselected.includes(key)),
+    )
+  }, [oilGroupSelection, oilReviewGroup])
 
   const currentRequirement =
     requirements[categoryIndex] ?? requirements[0] ?? DEFAULT_REQUIREMENTS[0]!
@@ -666,10 +782,25 @@ export function Stage3ProductsFlow({
           ? "available"
           : "exhausted"
         : "not_applicable",
-      position: reviewPosition(draft, subject.decisionKey),
+      position: Math.max(
+        1,
+        groupedReviewCounts(
+          deriveStage3DecisionSubjects(draft),
+          subject.decisionKey,
+          groupedOilKeys,
+        ).position,
+      ),
       count: decisionSubjects.length,
     })
-  }, [analytics, decisionSubjects.length, displayedReviewSubject, draft, phase, reviewBundles])
+  }, [
+    analytics,
+    decisionSubjects.length,
+    displayedReviewSubject,
+    draft,
+    groupedOilKeys,
+    phase,
+    reviewBundles,
+  ])
 
   useEffect(() => {
     if (
@@ -1131,14 +1262,37 @@ export function Stage3ProductsFlow({
         CATEGORY_COPY[nextSubject.category].label,
       )
     }
-    return shell(
+    const reviewControlsDisabled = decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)
+    // An UNDECIDED oil subject while a group has already committed IS a deselected follow-up
+    // (see oilFollowUpCopy doc comment). A committed member can still be reached through Back —
+    // it keeps its own screen, or the follow-up heading would ask again for what the context
+    // line reports as planned.
+    const oilFollowUp =
+      nextSubject.category === "oil" &&
+      committedOilGroupKeys.size > 0 &&
+      !committedOilGroupKeys.has(nextSubject.decisionKey)
+        ? oilFollowUpCopy(
+            nextSubject,
+            committedOilGroupKeys,
+            decisionSubjects,
+            localReviewChoices,
+            reviewBundles,
+            // Only a subject whose own primary action plans a product may be framed as a
+            // choice; "keep waiting"/"leave uncovered" screens keep their honest copy.
+            Boolean(proposedChoiceByDecisionKey.get(nextSubject.decisionKey)),
+          )
+        : null
+    const comparison = (
       <ProductFitComparison
         comparison={reviewBundle.fitComparison}
         evaluation={reviewBundle.authorityEvaluation}
-        reviewPosition={reviewPosition(draft, nextSubject.decisionKey)}
-        reviewTotal={decisionSubjects.length}
+        reviewPosition={groupedReviewPosition(draft, nextSubject.decisionKey)}
+        reviewTotal={
+          groupedReviewCounts(decisionSubjects, nextSubject.decisionKey, groupedOilKeys).total
+        }
         categoryLabel={CATEGORY_COPY[nextSubject.category].label}
-        roleLabel={ROLE_COPY[nextSubject.role].label}
+        // The grouped screen's one CTA plans every use case, so its kicker names none of them.
+        roleLabel={oilReviewGroup ? null : ROLE_COPY[nextSubject.role].label}
         displayedAlternativeIndex={displayedAlternativeIndex}
         onDisplayedAlternativeChange={(index) =>
           setDisplayedAlternative({ subjectKey: nextSubject.decisionKey, index })
@@ -1147,15 +1301,36 @@ export function Stage3ProductsFlow({
         onSelectedRecommendationChange={(productId) =>
           setSelectedRecommendation({ subjectKey: nextSubject.decisionKey, productId })
         }
-        disabled={decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)}
+        disabled={reviewControlsDisabled}
+        // The grouped screen owns the single commit action for every checked use case.
+        hideActions={oilReviewGroup !== null}
+        headingOverride={oilFollowUp?.headingOverride}
+        scopeContextLine={oilFollowUp?.scopeContextLine}
+        primaryActionLabelOverride={oilFollowUp?.primaryActionLabelOverride}
         onRetry={() => void reloadDecisionBundle(draft)}
         onAction={(action, selectedCandidate) =>
           void chooseFitDecision(nextSubject.decisionKey, action, selectedCandidate)
         }
-      />,
+      />
+    )
+    return shell(
+      oilReviewGroup ? (
+        <OilGroupReview
+          group={oilGroupUseCases(oilReviewGroup.members)}
+          uniformProposition={oilReviewGroup.uniformProposition}
+          checkedKeys={oilGroupCheckedKeys}
+          onToggle={(decisionKey) => toggleOilGroupUseCase(oilReviewGroup, decisionKey)}
+          onCommit={() => commitOilGroup(oilReviewGroup)}
+          disabled={reviewControlsDisabled}
+        >
+          {comparison}
+        </OilGroupReview>
+      ) : (
+        comparison
+      ),
       CATEGORY_COPY[nextSubject.category].label,
       () => void backFromReview(nextSubject),
-      decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode),
+      reviewControlsDisabled,
       "Zurück zu meinen Produkten",
     )
   }
@@ -1188,6 +1363,8 @@ export function Stage3ProductsFlow({
     if (initialReviewDraft && !reviewDraftToRestore) {
       setLocalReviewChoices({})
       setReviewHistory([])
+      setCommittedOilGroupKeys(new Set())
+      setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setDraft(loadedDraft)
@@ -1241,6 +1418,8 @@ export function Stage3ProductsFlow({
     if (reviewDraftToRestore) {
       setLocalReviewChoices({})
       setReviewHistory([])
+      setCommittedOilGroupKeys(new Set())
+      setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
     setPhase("capture")
@@ -2340,6 +2519,8 @@ export function Stage3ProductsFlow({
     setReviewBundles(new Map())
     setReviewHistory([])
     setLocalReviewChoices({})
+    setCommittedOilGroupKeys(new Set())
+    setOilGroupSelection({ anchorKey: null, deselected: [] })
     clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     setCurrentReviewSubjectKey(null)
     setDisplayedAlternative({ subjectKey: null, index: 0 })
@@ -2395,7 +2576,7 @@ export function Stage3ProductsFlow({
       category: subject.category,
       verdict: reviewVerdict(evaluation),
       action,
-      position: reviewPosition(activeDraft, decisionKey),
+      position: groupedReviewPosition(activeDraft, decisionKey),
       count: deriveStage3DecisionSubjects(activeDraft).length,
     })
     rememberLocalReviewChoice(decisionKey, { kind: "decision", intent })
@@ -2444,7 +2625,7 @@ export function Stage3ProductsFlow({
       category: null,
       verdict: "inventory_disposition",
       action: "leave_uncovered",
-      position: reviewPosition(activeDraft, dispositionKey),
+      position: groupedReviewPosition(activeDraft, dispositionKey),
       count: deriveStage3DecisionSubjects(activeDraft).length,
     })
     rememberLocalReviewChoice(dispositionKey, {
@@ -2458,7 +2639,7 @@ export function Stage3ProductsFlow({
     analytics.track("personal_plan_stage3_review_back", {
       category: subject.category,
       destination: reviewHistory.length > 0 ? "previous_review" : "product_capture",
-      position: reviewPosition(draft, subject.decisionKey),
+      position: groupedReviewPosition(draft, subject.decisionKey),
       count: deriveStage3DecisionSubjects(draft).length,
     })
     if (reviewHistory.length > 0) {
@@ -2480,17 +2661,103 @@ export function Stage3ProductsFlow({
     await reopenCategory(subject.category)
   }
 
+  function groupedReviewPosition(sourceDraft: Stage3ProductDraft, subjectKey: string) {
+    return Math.max(
+      1,
+      groupedReviewCounts(deriveStage3DecisionSubjects(sourceDraft), subjectKey, groupedOilKeys)
+        .position,
+    )
+  }
+
+  function oilGroupUseCases(
+    members: ReturnType<typeof deriveStage3DecisionSubjects>,
+  ): OilGroupReviewCase[] {
+    return members.map((member) => {
+      const useCaseCopy = oilUseCaseCopy(member.role)
+      return {
+        role: member.role,
+        roleTitle: useCaseCopy?.title ?? ROLE_COPY[member.role].label,
+        roleSubtitle: useCaseCopy?.subtitle ?? ROLE_COPY[member.role].description,
+        decisionKey: member.decisionKey,
+        productName: proposedChoiceByDecisionKey.get(member.decisionKey)?.productName ?? null,
+      }
+    })
+  }
+
+  function toggleOilGroupUseCase(group: { anchor: { decisionKey: string } }, decisionKey: string) {
+    const anchorKey = group.anchor.decisionKey
+    const deselected = oilGroupSelection.anchorKey === anchorKey ? oilGroupSelection.deselected : []
+    setOilGroupSelection({
+      anchorKey,
+      deselected: deselected.includes(decisionKey)
+        ? deselected.filter((candidate) => candidate !== decisionKey)
+        : [...deselected, decisionKey],
+    })
+  }
+
+  /**
+   * Records one local review choice per CHECKED use case — the same choice its own
+   * single screen would have recorded. Unchecked use cases stay pending and reach
+   * their own scoped follow-up review.
+   */
+  function commitOilGroup(group: {
+    anchor: { decisionKey: string }
+    members: ReturnType<typeof deriveStage3DecisionSubjects>
+  }) {
+    const entries: Array<[string, Stage3LocalReviewChoice]> = []
+    for (const member of group.members) {
+      if (!oilGroupCheckedKeys.has(member.decisionKey)) continue
+      const proposal = proposedChoiceByDecisionKey.get(member.decisionKey)
+      const evaluation = reviewBundles.get(member.decisionKey)?.authorityEvaluation
+      if (!proposal || !evaluation) {
+        handleMutationError(new Error("stage3_authority_action_unavailable"))
+        return
+      }
+      let intent: Stage3AuthoritySemanticIntent
+      try {
+        intent = authorityDecisionIntent(
+          member.decisionKey,
+          proposal.action,
+          proposal.selection?.productId,
+          proposal.selection?.factFingerprint,
+        )
+      } catch (error) {
+        handleMutationError(error)
+        return
+      }
+      analytics.track("personal_plan_stage3_review_action", {
+        category: member.category,
+        verdict: reviewVerdict(evaluation),
+        action: proposal.action,
+        position: groupedReviewPosition(activeDraft, member.decisionKey),
+        count: deriveStage3DecisionSubjects(activeDraft).length,
+      })
+      entries.push([member.decisionKey, { kind: "decision", intent }])
+    }
+    if (entries.length === 0) return
+    setCommittedOilGroupKeys(new Set(entries.map(([decisionKey]) => decisionKey)))
+    setOilGroupSelection({ anchorKey: null, deselected: [] })
+    rememberLocalReviewChoices(entries)
+  }
+
   function rememberLocalReviewChoice(decisionKey: string, choice: Stage3LocalReviewChoice) {
-    const nextChoices = { ...localReviewChoices, [decisionKey]: choice }
+    rememberLocalReviewChoices([[decisionKey, choice]])
+  }
+
+  function rememberLocalReviewChoices(entries: Array<[string, Stage3LocalReviewChoice]>) {
+    if (entries.length === 0) return
+    const decisionKeys = entries.map(([decisionKey]) => decisionKey)
+    const nextChoices = { ...localReviewChoices, ...Object.fromEntries(entries) }
     const nextOrder = [
-      ...reviewHistory.filter((candidate) => candidate !== decisionKey),
-      decisionKey,
+      ...reviewHistory.filter((candidate) => !decisionKeys.includes(candidate)),
+      ...decisionKeys,
     ]
     setLocalReviewChoices(nextChoices)
     setReviewHistory(nextOrder)
     persistLocalReviewDraft(nextChoices, nextOrder)
     const nextSubject = decisionSubjects.find(
-      (subject) => subject.decisionKey !== decisionKey && !localReviewChoices[subject.decisionKey],
+      (subject) =>
+        !decisionKeys.includes(subject.decisionKey) && !localReviewChoices[subject.decisionKey],
     )
     setCurrentReviewSubjectKey(nextSubject?.decisionKey ?? null)
     categoryCapture.setSaveLabel("Auswahl gemerkt")
@@ -2521,6 +2788,8 @@ export function Stage3ProductsFlow({
     const restored = partitionStage3ReviewDraft(sourceDraft, reviews, reviewDraft)
     setLocalReviewChoices(restored.choices)
     setReviewHistory(restored.order)
+    setCommittedOilGroupKeys(new Set())
+    setOilGroupSelection({ anchorKey: null, deselected: [] })
     setCurrentReviewSubjectKey(restored.invalidKeys[0] ?? null)
     if (restored.order.length === 0) {
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
@@ -2568,6 +2837,8 @@ export function Stage3ProductsFlow({
     const retainedOrder = reviewHistory.filter((key) => retainedChoices[key])
     setLocalReviewChoices(retainedChoices)
     setReviewHistory(retainedOrder)
+    setCommittedOilGroupKeys(new Set())
+    setOilGroupSelection({ anchorKey: null, deselected: [] })
     if (retainedOrder.length > 0) {
       writeStage3ReviewDraft(pendingRecoveryStorage, recoveryScope, {
         expectedRevision: latestDraft.revision,
@@ -2697,6 +2968,8 @@ export function Stage3ProductsFlow({
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       setLocalReviewChoices({})
       setReviewHistory([])
+      setCommittedOilGroupKeys(new Set())
+      setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
       await completeFlow(canonicalDraft)
     } catch (error) {
@@ -3332,13 +3605,146 @@ function recoveryAnalyticsOperation(
   return intent.operation
 }
 
-function reviewPosition(sourceDraft: Stage3ProductDraft, subjectKey: string) {
-  return Math.max(
-    1,
-    deriveStage3DecisionSubjects(sourceDraft).findIndex(
-      (subject) => subject.decisionKey === subjectKey,
-    ) + 1,
+type ProposedReviewChoice = {
+  action: ProductFitComparisonAction
+  selection?: ProductFitComparisonSelection
+  /** Stable identity of the proposed product, so propositions can be compared across subjects. */
+  proposition: string
+  productName: string | null
+}
+
+/**
+ * The choice the single review screen preselects for a subject: the same primary
+ * action `ProductFitComparison` would offer, resolved against the candidate that screen
+ * treats as selected. `focus` carries the displayed subject's live pager/recommendation
+ * state, so a grouped commit plans exactly what the user has selected; members without
+ * a visible screen fall back to the engine's own first proposal. Returns null when
+ * nothing is proposed, so callers never invent one.
+ */
+function proposedReviewChoice(
+  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+  bundle: Stage3DecisionReviewBundle | undefined,
+  focus?: { displayedAlternativeIndex: number; selectedRecommendationProductId: string | null },
+): ProposedReviewChoice | null {
+  if (!bundle) return null
+  const comparison = bundle.fitComparison
+  // The two render gates that suppress every action on the single screen (see
+  // ProductFitComparison: `evaluation.status === "unsupported"` and `hasUnexpectedTargetlessEvidence`).
+  // A subject the product refuses to decide on its own screen must not be decided by the
+  // grouped commit either, so it never becomes groupable.
+  if (bundle.authorityEvaluation.status === "unsupported") return null
+  if ((comparison.evidenceRows ?? []).some((row) => row.target === null)) return null
+  const selectedAlternative = selectedComparisonCandidate(comparison, focus ?? {})
+  const primaryAction = primaryActionFor({
+    evaluation: bundle.authorityEvaluation,
+    replacementAllowed: selectedAlternative !== null,
+  })
+  if (!primaryAction) return null
+  const displayName = (productId: string) =>
+    comparison.products.find((product) => product.productId === productId)?.displayName ?? null
+
+  if (primaryAction.kind === "select_replacement") {
+    if (!selectedAlternative) return null
+    return {
+      action: primaryAction.kind,
+      selection: {
+        productId: selectedAlternative.productId,
+        factFingerprint: selectedAlternative.factFingerprint,
+      },
+      proposition: `product:${selectedAlternative.productId}`,
+      productName:
+        displayName(selectedAlternative.productId) ??
+        selectedAlternative.recommendation.displayName,
+    }
+  }
+  if (primaryAction.kind === "keep_owned" || primaryAction.kind === "acknowledge_override") {
+    const ownedProduct = comparison.products.find((product) => product.source === "current") ?? null
+    return {
+      action: primaryAction.kind,
+      proposition: `owned:${subject.capturedProductId ?? ownedProduct?.productId ?? subject.decisionKey}`,
+      productName: ownedProduct?.displayName ?? comparison.sourceIdentity?.displayName ?? null,
+    }
+  }
+  // keep_pending and leave_uncovered plan no product; they stay on their own screen.
+  return null
+}
+
+type OilFollowUpCopy = {
+  headingOverride?: string
+  scopeContextLine?: string
+  primaryActionLabelOverride?: string
+}
+
+/**
+ * Copy for a deselected oil use case's own review screen (Task 3, Screen 2): a heading
+ * scoped to that use case, an optional green line naming what the committed group already
+ * covers, and the app's universal planning CTA. `scopeContextLine` is undefined whenever the
+ * committed members' choices can't be read back honestly (missing bundle/choice) or plan
+ * different products — the simplest honest presentation for a diverging group is to omit
+ * the line rather than guess which product to name.
+ *
+ * `plansProduct` is false when the subject's own primary action records "keep waiting" or
+ * "leave uncovered": such a screen keeps its state-owned heading and action label — relabelling
+ * it "Dieses Produkt einplanen" would promise a product the tap never plans.
+ */
+function oilFollowUpCopy(
+  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+  committedKeys: ReadonlySet<string>,
+  decisionSubjects: ReturnType<typeof deriveStage3DecisionSubjects>,
+  localReviewChoices: Record<string, Stage3LocalReviewChoice>,
+  reviewBundles: Stage3DecisionReviewBundles,
+  plansProduct: boolean,
+): OilFollowUpCopy | null {
+  const useCaseCopy = oilUseCaseCopy(subject.role)
+  if (!useCaseCopy) return null
+  const scopeContextLine = committedOilScopeContextLine(
+    committedKeys,
+    decisionSubjects,
+    localReviewChoices,
+    reviewBundles,
   )
+  if (!plansProduct) return scopeContextLine ? { scopeContextLine } : null
+  return {
+    headingOverride: `Wähle dein Öl ${useCaseCopy.scopePhrase}`,
+    scopeContextLine,
+    primaryActionLabelOverride: STAGE3_PLAN_PRODUCT_ACTION_LABEL,
+  }
+}
+
+function committedOilScopeContextLine(
+  committedKeys: ReadonlySet<string>,
+  decisionSubjects: ReturnType<typeof deriveStage3DecisionSubjects>,
+  localReviewChoices: Record<string, Stage3LocalReviewChoice>,
+  reviewBundles: Stage3DecisionReviewBundles,
+): string | undefined {
+  const productNames = new Set<string>()
+  const useCaseLabels: string[] = []
+  for (const key of committedKeys) {
+    const choice = localReviewChoices[key]
+    const bundle = reviewBundles.get(key)
+    const subject = decisionSubjects.find((candidate) => candidate.decisionKey === key)
+    if (!choice || choice.kind !== "decision" || !bundle || !subject) return undefined
+    const productName = committedChoiceProductName(choice.intent, bundle.fitComparison)
+    if (!productName) return undefined
+    productNames.add(productName)
+    useCaseLabels.push(oilUseCaseCopy(subject.role)?.shortLabel ?? ROLE_COPY[subject.role].label)
+  }
+  if (productNames.size !== 1 || useCaseLabels.length === 0) return undefined
+  return `✓ ${[...productNames][0]} eingeplant für: ${useCaseLabels.join(" · ")}`
+}
+
+/** The product a committed choice actually plans — the same rule `proposedReviewChoice` uses. */
+function committedChoiceProductName(
+  intent: Stage3AuthoritySemanticIntent,
+  comparison: Stage3FitComparison,
+): string | null {
+  if (intent.action === "select_replacement" && intent.selectedCandidateId) {
+    return (
+      comparison.products.find((product) => product.productId === intent.selectedCandidateId)
+        ?.displayName ?? null
+    )
+  }
+  return comparison.products.find((product) => product.source === "current")?.displayName ?? null
 }
 
 function reviewVerdict(evaluation: Stage3AuthorityEvaluation) {
