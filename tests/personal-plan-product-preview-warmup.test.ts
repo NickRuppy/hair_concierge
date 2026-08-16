@@ -57,6 +57,7 @@ test("warms every unique source-matched Basis and Optional preview image", async
       personalPlanId: "plan-1",
       sourceNeedVersionId: "need-1",
       sourceInputHash: "input-1",
+      directAcceptance: { available: true },
       previews: [
         {
           kind: "recommendation",
@@ -177,6 +178,7 @@ test("fails open before warming images when the preview source does not match", 
             personalPlanId: "plan-1",
             sourceNeedVersionId: "need-stale",
             sourceInputHash: "input-stale",
+            directAcceptance: { available: true },
             previews: [
               {
                 kind: "recommendation",

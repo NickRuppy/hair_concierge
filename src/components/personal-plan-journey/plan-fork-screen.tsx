@@ -58,6 +58,13 @@ export type PlanForkPreviewState = {
   additionalItems: { productName: string; priceLabel: string | null }[]
   /** Set when at least one role has no product yet, which the accept contract rejects. */
   fallbackNotice: string | null
+  /**
+   * Set when the server has already determined that the defaults would plan a
+   * category this payload could never show. Blocks acceptance the same way a
+   * fallback does, but says something different: the plan is complete, the
+   * *choice* needs the refinement.
+   */
+  refinementRequiredNotice: string | null
 }
 
 /**
@@ -97,6 +104,7 @@ export function derivePlanForkPreviewState(
         productName: preview.productName,
         priceLabel: preview.commerce.priceLabel,
       })),
+    refinementRequiredNotice: directAcceptanceBlockedNotice(response.directAcceptance),
     fallbackNotice:
       fallbackCategories.length === 0
         ? null
@@ -150,6 +158,21 @@ export function interpretAcceptIdealPlanResponse(
   return { kind: "error" }
 }
 
+/**
+ * Distinct from the fallback line on purpose: nothing is missing from the plan,
+ * the deferred category's product choice simply depends on an answer only the
+ * refinement collects.
+ */
+function directAcceptanceBlockedNotice(
+  verdict: Stage1ProductExamplePreviewResponse["directAcceptance"],
+): string | null {
+  if (verdict.available) return null
+  if (verdict.blockedCategories.length === 1 && verdict.blockedCategories[0] === "scalp_care") {
+    return "Für deine Kopfhaut-Empfehlung brauchen wir den Feinschliff — er stellt sicher, dass die Produktwahl zu deiner Kopfhaut passt."
+  }
+  return "Für einen Teil deines Plans brauchen wir den Feinschliff — er stellt sicher, dass die Produktwahl zu dir passt."
+}
+
 export function PlanForkScreen({
   assumptions,
   previewState,
@@ -175,7 +198,10 @@ export function PlanForkScreen({
   const actionDockRef = useRef<HTMLElement>(null)
   const showsAcceptPath =
     directAcceptanceAvailable && previewState !== null && acceptStatus !== "unavailable"
-  const acceptBlocked = Boolean(previewState?.fallbackNotice)
+  // Both blockers disable the same control; only the explanation differs.
+  const acceptBlockedNotice =
+    previewState?.refinementRequiredNotice ?? previewState?.fallbackNotice ?? null
+  const acceptBlocked = Boolean(acceptBlockedNotice)
   const busy = refineStatus === "loading" || acceptStatus === "pending"
 
   useEffect(() => {
@@ -314,9 +340,9 @@ export function PlanForkScreen({
             </button>
           ) : null}
 
-          {previewState?.fallbackNotice && showsAcceptPath ? (
+          {acceptBlockedNotice && showsAcceptPath ? (
             <p className="text-center text-[10px] leading-[1.35] text-[#8a837c]">
-              {previewState.fallbackNotice}
+              {acceptBlockedNotice}
             </p>
           ) : null}
 

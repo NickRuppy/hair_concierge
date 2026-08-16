@@ -137,6 +137,7 @@ test("binds only source-matched authority previews to their exact category cards
     personalPlanId: "plan-1",
     sourceNeedVersionId: "need-1",
     sourceInputHash: "input-1",
+    directAcceptance: { available: true as const },
     previews: [
       {
         kind: "recommendation" as const,
@@ -243,6 +244,7 @@ function previewResponse(previews: unknown[]) {
     personalPlanId: "plan-1",
     sourceNeedVersionId: "need-1",
     sourceInputHash: "input-1",
+    directAcceptance: { available: true },
     previews,
   } as Parameters<typeof applyStage1ProductExamplePreviews>[1]
 }

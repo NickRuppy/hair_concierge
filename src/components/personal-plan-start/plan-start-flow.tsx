@@ -659,7 +659,14 @@ export function PlanStartCustomerJourney({
   )
 
   const acceptIdealPlanDirectly = useCallback(async () => {
-    if (!forkPreviewState || forkPreviewState.fallbackNotice || acceptStatus === "pending") return
+    if (
+      !forkPreviewState ||
+      forkPreviewState.fallbackNotice ||
+      forkPreviewState.refinementRequiredNotice ||
+      acceptStatus === "pending"
+    ) {
+      return
+    }
     setAcceptStatus("pending")
     setForkNotice(null)
     const outcome = await requestAcceptIdealPlan(forkPreviewState.seenRoles)

@@ -6,6 +6,7 @@ import type {
   PlanProductRole,
 } from "@/lib/personal-plan/types"
 import type {
+  Stage1DirectAcceptanceAvailability,
   Stage1ProductExampleCommerce,
   Stage1ProductExamplePreviewResponse,
   Stage1ProductExampleReasoning,
@@ -103,7 +104,71 @@ export async function computeStage1ProductExamplePreviews(input: {
     sourceNeedVersionId: input.sourceNeedVersionId,
     sourceInputHash: input.snapshot.inputHash,
     previews,
+    directAcceptance: resolveDirectAcceptanceAvailability(input.snapshot),
   }
+}
+
+/**
+ * A deferred Stage-1 decision renders no card and gets no preview (see the
+ * `deferred_until_post_plan_onboarding` skip in the role-task loop above). The
+ * direct-acceptance defaults, however, must answer the deferred fact to
+ * complete Stage 2 — and answering it can resolve the deferral into real roles.
+ * Those roles reach the server's Stage-3 evaluation but are absent from the
+ * client's `seenRoles`, so the accept contract rejects the whole request.
+ *
+ * Rather than let that cohort meet a 409, the payload says up front that they
+ * need the refinement.
+ *
+ * Today exactly one deferral behaves this way: Scalp Care deferred on a
+ * reported irritation whose detail is still unknown
+ * (`categories/scalp-care.ts:81-95`, `deferredFacts: ["scalp_irritation_detail"]`).
+ * The defaults answer it with `"normal"`
+ * (`direct-acceptance/defaults.ts:41`), which skips the deferral branch and
+ * falls through to role derivation. The predicates below mirror the role rules
+ * that survive that `"normal"` answer:
+ *
+ *   - `scalp-care.ts:99-106`  scalp_comfort            ← oiliness === "dry"
+ *     (the `mild_sensitive_or_itchy` half cannot fire under `"normal"`)
+ *   - `scalp-care.ts:108-115` scalp_flake_oil_adjunct  ← oiliness === "oily"
+ *     || oily_dandruff || dry_dandruff
+ *   - `scalp-care.ts:117-120` scalp_comfort            ← dry_dandruff
+ *   - `scalp-care.ts:122-128` density_claim_tonic      ← hair_loss_or_thinning
+ *
+ * `scalp_exfoliant` (`scalp-care.ts:130-137`) keys off `assessments.scalpBuildup`,
+ * which the snapshot does not carry, so it is not mirrored here.
+ *
+ * This mirror is deliberately narrow. The joint invariant test
+ * (`tests/personal-plan-direct-accept-seen-state-join.test.ts`) is the drift
+ * net: any new divergence must fail there rather than reach users as a 409.
+ */
+function resolveDirectAcceptanceAvailability(
+  snapshot: InitialNeedPlanSnapshot,
+): Stage1DirectAcceptanceAvailability {
+  const blockedCategories: PersonalPlanCategory[] = []
+
+  const scalpCare = snapshot.decisions.find((decision) => decision.category === "scalp_care")
+  const scalpCareDeferredOnIrritation =
+    scalpCare?.resolution === "deferred_until_post_plan_onboarding" &&
+    scalpCare.deferredFacts.includes("scalp_irritation_detail")
+  if (scalpCareDeferredOnIrritation && defaultsWouldAddScalpCareRoles(snapshot)) {
+    blockedCategories.push("scalp_care")
+  }
+
+  return blockedCategories.length === 0
+    ? { available: true }
+    : { available: false, reason: "refinement_required", blockedCategories }
+}
+
+function defaultsWouldAddScalpCareRoles(snapshot: InitialNeedPlanSnapshot): boolean {
+  const scalpConcerns = new Set(snapshot.profile.scalp.concerns)
+  const oiliness = snapshot.profile.scalp.oiliness
+  return (
+    oiliness === "dry" ||
+    oiliness === "oily" ||
+    scalpConcerns.has("oily_dandruff") ||
+    scalpConcerns.has("dry_dandruff") ||
+    snapshot.profile.concerns.includes("hair_loss_or_thinning")
+  )
 }
 
 async function computeRolePreview(

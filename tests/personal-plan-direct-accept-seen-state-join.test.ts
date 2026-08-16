@@ -59,15 +59,69 @@ function initialSnapshot(envelope: PersonalPlanQuizSubmissionEnvelope) {
   return initial.snapshot
 }
 
-/** The role keys the Stage-1 cards showed, i.e. the accept request's `seenRoles`. */
-async function previewRoleKeys(envelope: PersonalPlanQuizSubmissionEnvelope): Promise<string[]> {
+/** The Stage-1 preview payload: the role keys the cards showed, plus its verdict. */
+async function previewPayload(envelope: PersonalPlanQuizSubmissionEnvelope) {
   const response = await computeStage1ProductExamplePreviews({
     personalPlanId: PERSONAL_PLAN_ID,
     sourceNeedVersionId: INITIAL_NEED_VERSION_ID,
     snapshot: initialSnapshot(envelope),
     loadCandidates: noCandidates,
   })
-  return [...response.previews.map((preview) => preview.decisionKey)].sort()
+  return {
+    roleKeys: [...response.previews.map((preview) => preview.decisionKey)].sort(),
+    directAcceptance: response.directAcceptance,
+  }
+}
+
+function categoryOf(decisionKey: string): string {
+  return decisionKey.split(":")[1]!
+}
+
+/**
+ * THE INVARIANT, in the form the product now guarantees. For every cohort,
+ * exactly one of these must hold:
+ *
+ *   - the preview role set and the accept chain's evaluation set are EQUAL, and
+ *     the payload offers direct acceptance; or
+ *   - they diverge, and the payload refuses direct acceptance up front, naming
+ *     every divergent category in `blockedCategories`.
+ *
+ * Any NEW divergence must fail this test rather than reach users as a 409:
+ * a diverging cohort that the payload still marks `available: true` is exactly
+ * the bug this net exists to catch.
+ */
+async function assertSeenStateJoin(envelope: PersonalPlanQuizSubmissionEnvelope) {
+  const { roleKeys: seen, directAcceptance } = await previewPayload(envelope)
+  const evaluated = acceptChainRoleKeys(envelope)
+  const serverOnly = evaluated.filter((key) => !seen.includes(key))
+  const clientOnly = seen.filter((key) => !evaluated.includes(key))
+
+  // A role the client saw but the server will not evaluate is never recoverable
+  // by refusing acceptance — it means the preview payload itself is wrong.
+  assert.deepEqual(clientOnly, [], "previews showed a role the accept chain does not evaluate")
+
+  if (serverOnly.length === 0) {
+    assert.deepEqual(seen, evaluated)
+    assert.deepEqual(
+      directAcceptance,
+      { available: true },
+      "sets match, so direct acceptance must be offered",
+    )
+    return
+  }
+
+  assert.equal(
+    directAcceptance.available,
+    false,
+    `sets diverge on ${serverOnly.join(", ")}, so the payload must refuse direct acceptance`,
+  )
+  if (directAcceptance.available) throw new Error("unreachable")
+  assert.equal(directAcceptance.reason, "refinement_required")
+  assert.deepEqual(
+    [...directAcceptance.blockedCategories].sort(),
+    [...new Set(serverOnly.map(categoryOf))].sort(),
+    "every divergent category must be named in blockedCategories",
+  )
 }
 
 /**
@@ -110,55 +164,32 @@ const CALM_SCALP_ENVELOPE: PersonalPlanQuizSubmissionEnvelope = {
   answers: { ...STAGE1_STAGE2_LAB_ENVELOPE.answers, scalpConcerns: [] },
 }
 
-/**
- * THE INVARIANT. The synthetic Stage-2 defaults must never add or remove a role
- * relative to the Stage-1 previews the user actually saw. If this fails, direct
- * accept 409s (`seen_state_stale`) for the affected cohort — the fork screen
- * cannot detect it client-side, because the extra role simply is not in the
- * preview payload.
- */
-test("the defaults add no role the Stage-1 previews never showed (calm scalp)", async () => {
-  assert.deepEqual(
-    await previewRoleKeys(CALM_SCALP_ENVELOPE),
-    acceptChainRoleKeys(CALM_SCALP_ENVELOPE),
-  )
-})
+test("the calm-scalp cohort joins cleanly and may accept directly", async () => {
+  await assertSeenStateJoin(CALM_SCALP_ENVELOPE)
 
-/** The one role the irritated + oily cohort's accept chain adds behind the user's back. */
-const IRRITATED_OILY_DIVERGENCE = "decision:scalp_care:scalp_flake_oil_adjunct:gap"
+  const { directAcceptance } = await previewPayload(CALM_SCALP_ENVELOPE)
+  assert.deepEqual(directAcceptance, { available: true })
+})
 
 /**
  * The cohort Task 1 pinned as problematic: reported scalp irritation on an oily
  * scalp. Stage 1 defers Scalp Care, so no card and no preview exists for it,
- * but answering the deferred question at all — which the defaults must do to
- * complete Stage 2 — resolves the deferral and `scalpOiliness` then produces a
- * `scalp_flake_oil_adjunct` role. See the pinned test "resolving the deferred
- * scalp question can still add Scalp Care for an oily scalp" in
- * tests/personal-plan-direct-acceptance.test.ts.
+ * but the defaults must answer the deferred question to complete Stage 2, which
+ * resolves the deferral — and `scalpOiliness` then produces a
+ * `scalp_flake_oil_adjunct` role the client could never echo. See the pinned
+ * test "resolving the deferred scalp question can still add Scalp Care for an
+ * oily scalp" in tests/personal-plan-direct-acceptance.test.ts.
  *
- * MEASURED, NOT HYPOTHETICAL: the sets diverge by exactly one key today, so
- * `POST /api/personal-plan/accept-ideal-plan` returns 409 `seen_state_stale`
- * for this entire cohort and direct acceptance is unreachable for them. The
- * fork screen cannot detect this client-side — the extra role simply is not in
- * the preview payload it echoes.
- *
- * Held as `todo` rather than red on purpose: fixing it is a product decision
- * (drop the role, surface the category at Stage 1, or relax the accept
- * contract), not a test bug, and it is escalated for a controller ruling. Do
- * not "fix" this by loosening the assertion.
+ * Per controller ruling the cohort is excluded from direct acceptance for this
+ * release, declared server-side in the payload rather than discovered as a 409.
  */
-test("the irritated + oily scalp cohort joins the same role set", { todo: true }, async () => {
-  const seen = await previewRoleKeys(STAGE1_STAGE2_LAB_ENVELOPE)
-  const evaluated = acceptChainRoleKeys(STAGE1_STAGE2_LAB_ENVELOPE)
+test("the irritated + oily scalp cohort is refused direct acceptance up front", async () => {
+  await assertSeenStateJoin(STAGE1_STAGE2_LAB_ENVELOPE)
 
-  // Pins the exact, current shape of the divergence so a change in it is visible.
-  assert.deepEqual(
-    evaluated.filter((key) => !seen.includes(key)),
-    [IRRITATED_OILY_DIVERGENCE],
-  )
-  assert.deepEqual(
-    seen.filter((key) => !evaluated.includes(key)),
-    [],
-  )
-  assert.deepEqual(seen, evaluated)
+  const { directAcceptance } = await previewPayload(STAGE1_STAGE2_LAB_ENVELOPE)
+  assert.deepEqual(directAcceptance, {
+    available: false,
+    reason: "refinement_required",
+    blockedCategories: ["scalp_care"],
+  })
 })

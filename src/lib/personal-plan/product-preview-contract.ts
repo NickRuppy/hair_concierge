@@ -108,12 +108,33 @@ export function stage1LeadRolePreviewByCategory(
   return leads
 }
 
+/**
+ * Whether the Idealplan on this payload can be accepted directly.
+ *
+ * Direct acceptance requires the client's `seenRoles` and the server's Stage-3
+ * evaluations to be EXACTLY equal — `buildDirectAcceptanceIntents` throws
+ * `seen_state_stale` otherwise. A Stage-1 decision that is deferred has no
+ * preview, but the synthetic Stage-2 defaults answer its deferred fact and can
+ * materialize roles from it, which the client could then never echo. The server
+ * decides that here, where the Stage-1 snapshot is in hand, instead of letting
+ * the cohort discover it as a 409.
+ */
+export type Stage1DirectAcceptanceAvailability =
+  | { available: true }
+  | {
+      available: false
+      reason: "refinement_required"
+      /** Categories whose roles the defaults would add without a preview. */
+      blockedCategories: Stage1Category[]
+    }
+
 export type Stage1ProductExamplePreviewResponse = {
   schemaVersion: 2
   personalPlanId: string
   sourceNeedVersionId: string
   sourceInputHash: string
   previews: Stage1ProductExampleRolePreview[]
+  directAcceptance: Stage1DirectAcceptanceAvailability
 }
 
 export function isStage1ProductExamplePreviewResponse(
@@ -127,7 +148,28 @@ export function isStage1ProductExamplePreviewResponse(
     typeof response.sourceNeedVersionId === "string" &&
     typeof response.sourceInputHash === "string" &&
     Array.isArray(response.previews) &&
-    response.previews.every(isProductExampleRolePreview)
+    response.previews.every(isProductExampleRolePreview) &&
+    isDirectAcceptanceAvailability(response.directAcceptance)
+  )
+}
+
+/**
+ * Fail closed: an unparseable or missing verdict must never be read as
+ * "acceptance is fine", so only the two well-formed shapes pass.
+ */
+function isDirectAcceptanceAvailability(
+  value: unknown,
+): value is Stage1DirectAcceptanceAvailability {
+  if (!value || typeof value !== "object") return false
+  const verdict = value as Record<string, unknown>
+  if (verdict.available === true) return true
+  return (
+    verdict.available === false &&
+    verdict.reason === "refinement_required" &&
+    Array.isArray(verdict.blockedCategories) &&
+    verdict.blockedCategories.every(
+      (category) => typeof category === "string" && category in CATEGORY_ROLE_POLICIES,
+    )
   )
 }
 

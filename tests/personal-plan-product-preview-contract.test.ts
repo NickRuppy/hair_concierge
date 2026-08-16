@@ -9,6 +9,7 @@ function baseResponse(previews: unknown[]) {
     personalPlanId: "plan-1",
     sourceNeedVersionId: "need-1",
     sourceInputHash: "input-1",
+    directAcceptance: { available: true },
     previews,
   }
 }

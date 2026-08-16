@@ -18,7 +18,10 @@ import {
 } from "../src/components/personal-plan-journey/plan-fork-screen"
 import { requestAcceptIdealPlan } from "../src/components/personal-plan-start/plan-start-flow"
 import { directAcceptanceAssumptions } from "../src/lib/personal-plan/direct-acceptance/defaults"
-import type { Stage1ProductExamplePreviewResponse } from "../src/lib/personal-plan/product-preview-contract"
+import {
+  isStage1ProductExamplePreviewResponse,
+  type Stage1ProductExamplePreviewResponse,
+} from "../src/lib/personal-plan/product-preview-contract"
 
 function recommendation(
   overrides: Partial<Stage1ProductExamplePreviewResponse["previews"][number]> = {},
@@ -56,6 +59,7 @@ function recommendation(
 
 function previewResponse(
   previews: Stage1ProductExamplePreviewResponse["previews"],
+  directAcceptance: Stage1ProductExamplePreviewResponse["directAcceptance"] = { available: true },
 ): Stage1ProductExamplePreviewResponse {
   return {
     schemaVersion: 2,
@@ -63,6 +67,7 @@ function previewResponse(
     sourceNeedVersionId: "need-1",
     sourceInputHash: "input-1",
     previews,
+    directAcceptance,
   }
 }
 
@@ -531,4 +536,76 @@ test("the flow retires acceptance only on the SECOND consecutive stale response"
   // Any non-stale outcome resets the run, so an isolated race never accumulates.
   assert.equal(acceptStatusAfterStale(1), "idle")
   assert.equal(acceptStatusAfterStale(3), "unavailable")
+})
+
+test("a server-declared refinement requirement blocks acceptance with its own reason", () => {
+  const state = derivePlanForkPreviewState(
+    previewResponse([recommendation()], {
+      available: false,
+      reason: "refinement_required",
+      blockedCategories: ["scalp_care"],
+    }),
+  )
+
+  assert.ok(state)
+  assert.equal(
+    state.refinementRequiredNotice,
+    "Für deine Kopfhaut-Empfehlung brauchen wir den Feinschliff — er stellt sicher, dass die Produktwahl zu deiner Kopfhaut passt.",
+  )
+  // Nothing is missing from the plan itself, so the fallback line must stay silent.
+  assert.equal(state.fallbackNotice, null)
+
+  const html = renderToStaticMarkup(
+    <PlanForkScreen
+      assumptions={assumptions}
+      previewState={state}
+      directAcceptanceAvailable
+      onRefine={() => {}}
+      onAccept={() => {}}
+    />,
+  )
+  assert.match(html, /Für deine Kopfhaut-Empfehlung brauchen wir den Feinschliff/)
+  assert.match(html, /disabled=""/)
+  assert.doesNotMatch(html, /steht die Produktwahl noch aus/)
+  assert.match(html, new RegExp(PLAN_FORK_REFINE_LABEL.replace(/[.·]/g, ".")))
+})
+
+test("an available verdict leaves acceptance untouched", () => {
+  const state = derivePlanForkPreviewState(previewResponse([recommendation()]))
+
+  assert.ok(state)
+  assert.equal(state.refinementRequiredNotice, null)
+})
+
+test("the preview contract rejects a payload whose acceptance verdict is missing or malformed", () => {
+  const valid = previewResponse([recommendation()])
+  assert.equal(isStage1ProductExamplePreviewResponse(valid), true)
+  assert.equal(
+    isStage1ProductExamplePreviewResponse(
+      previewResponse([recommendation()], {
+        available: false,
+        reason: "refinement_required",
+        blockedCategories: ["scalp_care"],
+      }),
+    ),
+    true,
+  )
+
+  // Fail closed: an absent or unparseable verdict must not read as "acceptable".
+  const { directAcceptance: _omitted, ...withoutVerdict } = valid
+  assert.equal(isStage1ProductExamplePreviewResponse(withoutVerdict), false)
+  for (const verdict of [
+    null,
+    { available: "yes" },
+    { available: false },
+    { available: false, reason: "refinement_required" },
+    { available: false, reason: "other", blockedCategories: ["scalp_care"] },
+    { available: false, reason: "refinement_required", blockedCategories: ["not_a_category"] },
+  ]) {
+    assert.equal(
+      isStage1ProductExamplePreviewResponse({ ...valid, directAcceptance: verdict }),
+      false,
+      `expected rejection for ${JSON.stringify(verdict)}`,
+    )
+  }
 })

@@ -68,6 +68,7 @@ const previewResponse = {
       },
     ]
   }),
+  directAcceptance: { available: true },
 } satisfies Stage1ProductExamplePreviewResponse
 const optionalCategories = computedPlan.optional?.cards.map((card) => card.id) ?? []
 
