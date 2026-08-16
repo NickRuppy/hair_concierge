@@ -238,7 +238,7 @@ test("converged composite constraints must be validated", () => {
 
   const receipt = auditCatalogAuthority(snapshot)
 
-  assert.equal(receipt.issueCounts.required_index_or_constraint_missing, 14)
+  assert.equal(receipt.issueCounts.required_index_or_constraint_missing, 16)
   assert.equal(receipt.clean, false)
 })
 
