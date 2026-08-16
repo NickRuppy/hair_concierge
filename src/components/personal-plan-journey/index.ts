@@ -7,7 +7,10 @@ export { PERSONAL_PLAN_JOURNEY_STAGES } from "./journey-content"
 export { PersonalPlanJourneyOverview } from "./journey-overview"
 export { PersonalPlanChapterTransition } from "./chapter-transition"
 export {
+  PLAN_FORK_ACCEPT_UNAVAILABLE,
+  PLAN_FORK_STALE_NOTICE,
   PlanForkScreen,
+  acceptStatusAfterStale,
   derivePlanForkPreviewState,
   interpretAcceptIdealPlanResponse,
   type AcceptIdealPlanOutcome,

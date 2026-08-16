@@ -5,6 +5,8 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import {
   PLAN_FORK_ACCEPT_ERROR,
+  PLAN_FORK_ACCEPT_UNAVAILABLE,
+  acceptStatusAfterStale,
   PLAN_FORK_ACCEPT_LABEL,
   PLAN_FORK_ACCEPT_PENDING_LABEL,
   PLAN_FORK_REFINE_ERROR,
@@ -461,4 +463,72 @@ test("a network failure during acceptance stays an inline error, never a silent 
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test("a second consecutive stale response retires acceptance instead of looping", () => {
+  const previewState = derivePlanForkPreviewState(previewResponse([recommendation()]))
+
+  // First stale response: honest "updated" notice, accept still offered.
+  const firstStale = renderToStaticMarkup(
+    <PlanForkScreen
+      assumptions={assumptions}
+      previewState={previewState}
+      directAcceptanceAvailable
+      noticeMessage={PLAN_FORK_STALE_NOTICE}
+      onRefine={() => {}}
+      onAccept={() => {}}
+    />,
+  )
+  assert.match(firstStale, new RegExp(PLAN_FORK_STALE_NOTICE))
+  assert.match(firstStale, /Plan direkt übernehmen/)
+
+  // Second one: the mismatch is structural, so the accept path is retired and
+  // the user is pointed at the path that works.
+  const secondStale = renderToStaticMarkup(
+    <PlanForkScreen
+      assumptions={assumptions}
+      previewState={previewState}
+      directAcceptanceAvailable
+      acceptStatus="unavailable"
+      onRefine={() => {}}
+      onAccept={() => {}}
+    />,
+  )
+  assert.match(secondStale, new RegExp(PLAN_FORK_ACCEPT_UNAVAILABLE))
+  assert.doesNotMatch(secondStale, /Plan direkt übernehmen/)
+  assert.doesNotMatch(secondStale, new RegExp(PLAN_FORK_STALE_NOTICE))
+  // The refinement path stays fully available.
+  assert.match(secondStale, new RegExp(PLAN_FORK_REFINE_LABEL.replace(/[.·]/g, ".")))
+})
+
+test("the flow retires acceptance only on the SECOND consecutive stale response", async () => {
+  const responses = [
+    { status: 409, body: { error: "seen_state_stale" } },
+    { status: 409, body: { error: "seen_state_stale" } },
+  ]
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    const next = responses.shift()!
+    return { status: next.status, json: async () => next.body } as unknown as Response
+  }) as typeof globalThis.fetch
+
+  const statuses: string[] = []
+  try {
+    let consecutiveStale = 0
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const outcome = await requestAcceptIdealPlan([
+        { decisionKey: "d", productId: "p", factFingerprint: "f" },
+      ])
+      assert.deepEqual(outcome, { kind: "seen_state_stale" })
+      consecutiveStale += 1
+      statuses.push(acceptStatusAfterStale(consecutiveStale))
+    }
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.deepEqual(statuses, ["idle", "unavailable"])
+  // Any non-stale outcome resets the run, so an isolated race never accumulates.
+  assert.equal(acceptStatusAfterStale(1), "idle")
+  assert.equal(acceptStatusAfterStale(3), "unavailable")
 })

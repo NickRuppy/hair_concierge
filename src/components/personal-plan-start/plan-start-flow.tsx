@@ -10,9 +10,11 @@ import {
   type Stage2HandoffPayload,
 } from "@/components/personal-plan-refinement/refinement-flow"
 import {
+  PLAN_FORK_STALE_NOTICE,
   PersonalPlanStageEntrance,
   PersonalPlanViewTransition,
   PlanForkScreen,
+  acceptStatusAfterStale,
   derivePlanForkPreviewState,
   interpretAcceptIdealPlanResponse,
   type PersonalPlanTransitionDirection,
@@ -431,8 +433,12 @@ export function PlanStartCustomerJourney({
   const [stage, setStage] = useState<"stage1" | "fork" | "stage2" | "stage3">(
     () => initialJourney.stage,
   )
-  const [acceptStatus, setAcceptStatus] = useState<"idle" | "pending" | "error">("idle")
+  const [acceptStatus, setAcceptStatus] = useState<"idle" | "pending" | "error" | "unavailable">(
+    "idle",
+  )
   const [forkNotice, setForkNotice] = useState<string | null>(null)
+  /** Consecutive `seen_state_stale` responses; resets on any other outcome. */
+  const staleAcceptCountRef = useRef(0)
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
@@ -669,8 +675,20 @@ export function PlanStartCustomerJourney({
     if (outcome.kind === "seen_state_stale") {
       // The server would plan other products than the user just saw. Re-render
       // the fork from fresh previews instead of accepting something unseen.
-      setAcceptStatus("idle")
-      setForkNotice("Deine Empfehlungen wurden aktualisiert.")
+      //
+      // A second consecutive stale response means re-fetching did not converge:
+      // the mismatch is structural (the server plans a role the preview payload
+      // does not contain at all), so retrying can only loop while telling the
+      // user their recommendations were "updated". Stop, and send them down the
+      // path that does work.
+      staleAcceptCountRef.current += 1
+      const nextStatus = acceptStatusAfterStale(staleAcceptCountRef.current)
+      setAcceptStatus(nextStatus)
+      if (nextStatus === "unavailable") {
+        setForkNotice(null)
+        return
+      }
+      setForkNotice(PLAN_FORK_STALE_NOTICE)
       if (!plan?.personalPlanId || !plan.sourceInputHash) {
         setProductExamplePreviews(null)
         return
@@ -686,6 +704,7 @@ export function PlanStartCustomerJourney({
       }
       return
     }
+    staleAcceptCountRef.current = 0
     setAcceptStatus("error")
   }, [
     acceptStatus,
@@ -728,6 +747,9 @@ export function PlanStartCustomerJourney({
         onRefine={() => void enterStage2()}
         onAccept={() => void acceptIdealPlanDirectly()}
         onBack={() => {
+          // Leaving to Stage 1 and returning is a real remount of the fork, so
+          // the retired accept path gets a clean slate.
+          staleAcceptCountRef.current = 0
           setAcceptStatus("idle")
           setForkNotice(null)
           setStage("stage1")
@@ -834,7 +856,6 @@ export function PlanStartFlow(
     initialStep?: FlowStep
     onContinueToRefinement?: (sourceStep: FlowStep) => void
     refinementAvailable?: boolean
-    continuationStatus?: "idle" | "loading" | "error"
   },
 ) {
   const [step, setStep] = useState<FlowStep>(() =>
@@ -862,7 +883,6 @@ export function PlanStartFlow(
           screen={props.plan.optional}
           hasOptionalPage
           showJourneyHeader={false}
-          nextStatus={props.continuationStatus}
           onNext={
             canRefine && props.onContinueToRefinement
               ? () => props.onContinueToRefinement?.("optional")
@@ -876,7 +896,6 @@ export function PlanStartFlow(
         screen={props.plan.basis}
         hasOptionalPage={hasOptionalPage}
         showJourneyHeader={false}
-        nextStatus={hasOptionalPage ? "idle" : props.continuationStatus}
         onNext={
           hasOptionalPage
             ? () => {

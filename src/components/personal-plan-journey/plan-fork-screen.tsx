@@ -29,6 +29,13 @@ export const PLAN_FORK_ACCEPT_ERROR =
 export const PLAN_FORK_REFINE_ERROR =
   "Der Feinschliff konnte nicht geladen werden. Versuche es noch einmal."
 export const PLAN_FORK_STALE_NOTICE = "Deine Empfehlungen wurden aktualisiert."
+/**
+ * Shown once re-fetching has failed to converge, i.e. the mismatch is
+ * structural rather than a race. Naming the working path beats a retry button
+ * that cannot succeed.
+ */
+export const PLAN_FORK_ACCEPT_UNAVAILABLE =
+  "Die direkte Übernahme ist gerade nicht möglich. Der Feinschliff bringt dich sicher ans Ziel."
 
 /**
  * One seen-state entry per recommendation role, exactly as
@@ -99,6 +106,18 @@ export function derivePlanForkPreviewState(
   }
 }
 
+/**
+ * A single `seen_state_stale` is a recoverable race — the previews moved under
+ * the user, and re-fetching converges. A second consecutive one means
+ * re-fetching did NOT converge: the server plans a role the preview payload
+ * does not contain at all, so every further retry produces the same 409 while
+ * telling the user their recommendations were "updated". Retire the path
+ * instead of looping.
+ */
+export function acceptStatusAfterStale(consecutiveStaleCount: number): "idle" | "unavailable" {
+  return consecutiveStaleCount >= 2 ? "unavailable" : "idle"
+}
+
 export type AcceptIdealPlanOutcome =
   | { kind: "accepted"; href: string }
   /** The server plans other products than the user saw; re-fetch and re-render. */
@@ -146,14 +165,16 @@ export function PlanForkScreen({
   previewState: PlanForkPreviewState | null
   directAcceptanceAvailable: boolean
   refineStatus?: "idle" | "loading" | "error"
-  acceptStatus?: "idle" | "pending" | "error"
+  /** `unavailable` retires the accept path for this mount; only a remount restores it. */
+  acceptStatus?: "idle" | "pending" | "error" | "unavailable"
   noticeMessage?: string | null
   onRefine: () => void
   onAccept: () => void
   onBack?: () => void
 }) {
   const actionDockRef = useRef<HTMLElement>(null)
-  const showsAcceptPath = directAcceptanceAvailable && previewState !== null
+  const showsAcceptPath =
+    directAcceptanceAvailable && previewState !== null && acceptStatus !== "unavailable"
   const acceptBlocked = Boolean(previewState?.fallbackNotice)
   const busy = refineStatus === "loading" || acceptStatus === "pending"
 
@@ -307,6 +328,11 @@ export function PlanForkScreen({
           {acceptStatus === "error" ? (
             <p role="alert" className="text-center text-[10.5px] leading-[1.3] text-[#a3434b]">
               {PLAN_FORK_ACCEPT_ERROR}
+            </p>
+          ) : null}
+          {acceptStatus === "unavailable" ? (
+            <p role="alert" className="text-center text-[10.5px] leading-[1.3] text-[#a3434b]">
+              {PLAN_FORK_ACCEPT_UNAVAILABLE}
             </p>
           ) : null}
 
