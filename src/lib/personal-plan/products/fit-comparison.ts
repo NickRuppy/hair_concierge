@@ -19,7 +19,6 @@ import {
   orderedAxisFitResult,
   repairSupportAxisFitResult,
 } from "./authority/categories/axis-fit"
-import { bondbuilderApplicationVerified } from "./authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
 import { expectedShampooSpecTarget } from "./authority/categories/shampoo"
@@ -50,8 +49,6 @@ export type Stage3FitComparisonProduct = {
   category: PersonalPlanCategory
   role: PlanProductRole | null
   source: "current" | "alternative"
-  /** Only set when the exact application protocol is verified. Bondbuilder card badge. */
-  applicationVerified?: true
 }
 
 export type Stage3FitComparisonDimension = {
@@ -245,7 +242,6 @@ function currentComparisonProductEntries(
         category: input.category,
         role: input.role,
         source: "current",
-        ...applicationVerifiedFlag(input.productFacts, input.role),
       },
       facts: input.productFacts,
     },
@@ -265,22 +261,9 @@ function alternativeProductEntries(
       category: candidate.category,
       role: candidate.role,
       source: "alternative",
-      ...applicationVerifiedFlag(candidate.facts, input.role),
     },
     facts: candidate.facts,
   }))
-}
-
-/**
- * Presentation-only card badge. It mirrors the authority criterion instead of re-deriving it,
- * so the badge can never claim more than the engine already verified.
- */
-function applicationVerifiedFlag(
-  facts: Stage3CategoryProductFacts,
-  role: PlanProductRole,
-): { applicationVerified?: true } {
-  if (facts.category !== "bondbuilder") return {}
-  return bondbuilderApplicationVerified(facts, role) ? { applicationVerified: true } : {}
 }
 
 const STAGE3_COMMERCE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000

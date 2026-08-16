@@ -1138,33 +1138,6 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
   ])
 })
 
-test("Bondbuilder marks verified application on displayed products only when it is verified", () => {
-  const verified = buildStage3FitComparison(
-    authorityInput("bondbuilder", "specialized_bond_treatment", {
-      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
-      candidates: [factsFor("bondbuilder", "specialized_bond_treatment", "candidate")],
-    }),
-  )
-  assert.ok(verified.products.length > 1)
-  assert.equal(
-    verified.products.every((product) => product.applicationVerified === true),
-    true,
-  )
-
-  const unverified = buildStage3FitComparison(
-    authorityInput("bondbuilder", "specialized_bond_treatment", {
-      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned", {
-        suitableThicknesses: ["coarse"],
-        usageProtocol: null,
-      }),
-      candidates: [factsFor("bondbuilder", "specialized_bond_treatment", "candidate")],
-    }),
-  )
-  const owned = unverified.products.find((product) => product.source === "current")
-  assert.ok(owned)
-  assert.equal(owned.applicationVerified, undefined)
-})
-
 test("Shampoo dandruff stays compact instead of using the everyday scalp rail", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("shampoo", "shampoo_dandruff", {

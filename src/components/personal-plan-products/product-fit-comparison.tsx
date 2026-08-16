@@ -22,7 +22,6 @@ type ReviewProduct = {
   displayName: string
   presentationImageUrl?: string | null
   presentation?: { priceLabel: string | null; netContentLabel: string | null }
-  applicationVerified?: true
 }
 
 export type ProductFitComparisonSelection = {
@@ -897,11 +896,6 @@ function ProductCardContent({
               {product.presentation.priceLabel ? (
                 <span>{product.presentation.priceLabel}</span>
               ) : null}
-            </p>
-          ) : null}
-          {product?.applicationVerified ? (
-            <p className="mt-1 text-[10px] font-medium text-[var(--status-ok-text)]">
-              ✓ Anwendung verifiziert
             </p>
           ) : null}
         </div>

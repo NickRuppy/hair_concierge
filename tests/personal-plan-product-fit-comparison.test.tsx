@@ -1165,48 +1165,6 @@ test("keeps confirmed relation counts visible while identifying unknown rows sep
   assert.match(html, /1 außerhalb · 1 nicht bestätigt · 1 ohne Einordnung/)
 })
 
-test("badges only the product cards whose application is verified", () => {
-  const bondbuilderComparison: Stage3FitComparison = {
-    ...comparison,
-    products: comparison.products.map((product) =>
-      product.source === "current" ? { ...product, applicationVerified: true as const } : product,
-    ),
-  }
-  const html = renderToStaticMarkup(
-    <ProductFitComparison
-      categoryLabel="Bondbuilder"
-      roleLabel="Bondbuilder"
-      reviewPosition={1}
-      reviewTotal={1}
-      comparison={bondbuilderComparison}
-      evaluation={evaluation}
-      displayedAlternativeIndex={0}
-      onDisplayedAlternativeChange={() => {}}
-      onAction={() => {}}
-      onBack={() => {}}
-    />,
-  )
-
-  assert.equal((html.match(/✓ Anwendung verifiziert/g) ?? []).length, 1)
-
-  const withoutBadge = renderToStaticMarkup(
-    <ProductFitComparison
-      categoryLabel="Bondbuilder"
-      roleLabel="Bondbuilder"
-      reviewPosition={1}
-      reviewTotal={1}
-      comparison={comparison}
-      evaluation={evaluation}
-      displayedAlternativeIndex={0}
-      onDisplayedAlternativeChange={() => {}}
-      onAction={() => {}}
-      onBack={() => {}}
-    />,
-  )
-
-  assert.doesNotMatch(withoutBadge, /Anwendung verifiziert/)
-})
-
 function treeFor(authorityEvaluation: Stage3AuthorityEvaluation) {
   return ProductFitComparison({
     categoryLabel: "Shampoo",
