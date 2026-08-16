@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
 import {
   PersonalPlanJourneyHeader,
@@ -28,7 +28,6 @@ export type NeedPlanScreenViewModel = {
 type NeedPlanScreenProps = {
   screen: NeedPlanScreenViewModel
   hasOptionalPage: boolean
-  onBack?: () => void
   onNext?: () => void
   showJourneyHeader?: boolean
   nextStatus?: "idle" | "loading" | "error"
@@ -37,7 +36,6 @@ type NeedPlanScreenProps = {
 export function NeedPlanScreen({
   screen,
   hasOptionalPage,
-  onBack,
   onNext,
   showJourneyHeader = true,
   nextStatus = "idle",
@@ -59,40 +57,23 @@ export function NeedPlanScreen({
         : "Auf meine Produkte abstimmen"
 
   const actionNav =
-    transitionLayer === "outgoing" || (!onBack && !onNext) ? null : (
+    transitionLayer === "outgoing" || !onNext ? null : (
       <nav
         aria-label="Idealplan-Seiten"
-        className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 py-2.5 backdrop-blur"
+        className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] backdrop-blur"
       >
-        <div
-          className={cn(
-            "mx-auto flex max-w-[430px] items-center gap-2 sm:max-w-[560px]",
-            !onBack && "justify-end",
-          )}
-        >
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex min-h-11 items-center gap-1 rounded-[12px] px-3 text-[11px] font-extrabold text-[#6B50A0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-              Zur Basis
-            </button>
-          ) : null}
-          {onNext ? (
-            <Button
-              type="button"
-              onClick={onNext}
-              variant="funnelCta"
-              className="min-w-0 flex-1 whitespace-normal px-4"
-              disabled={nextStatus === "loading"}
-              aria-busy={nextStatus === "loading"}
-            >
-              {nextLabel}
-              <ChevronRight className="h-4 w-4" aria-hidden="true" />
-            </Button>
-          ) : null}
+        <div className="mx-auto flex max-w-[430px] items-center sm:max-w-[560px]">
+          <Button
+            type="button"
+            onClick={onNext}
+            variant="funnelCta"
+            disabled={nextStatus === "loading"}
+            aria-busy={nextStatus === "loading"}
+            className="h-auto min-h-14 min-w-0 w-full whitespace-normal px-5 py-3 text-center leading-tight"
+          >
+            {nextLabel}
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </Button>
         </div>
         {nextStatus === "error" ? (
           <p
@@ -115,7 +96,7 @@ export function NeedPlanScreen({
       data-plan-start-has-optional={hasOptionalPage ? "true" : "false"}
     >
       {showJourneyHeader ? <PlanStartHeader stageLabel="Idealplan" /> : null}
-      <main className="mx-auto flex w-full max-w-[430px] flex-1 flex-col px-3 pb-24 pt-3 sm:max-w-[560px] sm:px-5">
+      <main className="mx-auto flex w-full max-w-[430px] flex-1 flex-col px-3 pb-[6.5rem] pt-3 sm:max-w-[560px] sm:px-5">
         <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#6e6863]">
           {screen.overline}
         </div>
@@ -153,10 +134,18 @@ export function NeedPlanScreen({
   )
 }
 
-export function PlanStartHeader({ stageLabel }: { stageLabel: string }) {
+export function PlanStartHeader({
+  stageLabel,
+  onBack,
+  backLabel,
+}: {
+  stageLabel: string
+  onBack?: () => void
+  backLabel?: string
+}) {
   return (
     <div aria-label={stageLabel}>
-      <PersonalPlanJourneyHeader currentStage={1} />
+      <PersonalPlanJourneyHeader currentStage={1} onBack={onBack} backLabel={backLabel} />
     </div>
   )
 }

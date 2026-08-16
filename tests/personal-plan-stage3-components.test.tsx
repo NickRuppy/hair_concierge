@@ -13,7 +13,6 @@ import {
   SemanticRoleAssignment,
   Stage3Shell,
   Stage3SystemState,
-  Stage3Transition,
 } from "../src/components/personal-plan-products"
 import { FrequencySliderField } from "../src/components/ui/frequency-slider-field"
 import {
@@ -22,8 +21,6 @@ import {
   type Stage3ProductDraft,
 } from "../src/lib/personal-plan/products/contracts"
 import { PRODUCT_FREQUENCIES, PRODUCT_FREQUENCY_LABELS } from "../src/lib/vocabulary/frequencies"
-
-const forbiddenFlowLabels = /\b(?:Pass|Teil\s+\d|Stage|Stufe)\b/i
 
 test("product image failures fall back once, then hide without leaking identity", () => {
   assert.deepEqual(
@@ -68,7 +65,7 @@ function findByType<P>(node: ReactNode, type: ReactElement<P>["type"]): ReactEle
   return null
 }
 
-test("stage 3 shell and transitions reuse onboarding language without internal numbering", () => {
+test("stage 3 shell reuses onboarding language without internal numbering", () => {
   const captureHtml = renderToStaticMarkup(
     <Stage3Shell
       title="Produkte"
@@ -77,12 +74,9 @@ test("stage 3 shell and transitions reuse onboarding language without internal n
       totalSteps={8}
       saveState={{ status: "saved", label: "Gespeichert" }}
     >
-      <Stage3Transition context="product_capture" onContinue={() => {}} onBack={() => {}} />
+      <h1 className="font-header">Welche Produkte nutzt du?</h1>
+      <p>Jetzt finden wir die Produkte, die du wirklich benutzt.</p>
     </Stage3Shell>,
-  )
-
-  const decisionHtml = renderToStaticMarkup(
-    <Stage3Transition context="fit_check" onContinue={() => {}} onBack={() => {}} />,
   )
 
   assert.match(captureHtml, /role="progressbar"/)
@@ -90,12 +84,8 @@ test("stage 3 shell and transitions reuse onboarding language without internal n
   assert.match(captureHtml, /Gespeichert/)
   assert.match(captureHtml, /<h1[^>]*>Welche Produkte nutzt du\?<\/h1>/)
   assert.match(captureHtml, /Jetzt finden wir die Produkte, die du wirklich benutzt\./)
-  assert.match(captureHtml, /rounded-full bg-\[var\(--brand-coral\)\]/)
   assert.match(captureHtml, /font-header/)
   assert.doesNotMatch(captureHtml, />(?:Pass|Teil\s+\d|Stage|Stufe)</i)
-  assert.match(decisionHtml, /<h1[^>]*>Wie gut passen deine Produkte\?<\/h1>/)
-  assert.match(decisionHtml, /Jetzt schauen wir uns die gefundenen Produkte an/)
-  assert.doesNotMatch(decisionHtml, forbiddenFlowLabels)
 })
 
 test("stage 3 shell renders the supplied save state instead of a hard-coded saved label", () => {
@@ -616,5 +606,5 @@ test("system states and intake fallback expose busy, live, retry, and boundary a
   assert.match(fallbackHtml, /Produktname/)
   assert.match(fallbackHtml, /Produkt speichern/)
   assert.match(fallbackHtml, /Erneut versuchen/)
-  assert.match(fallbackHtml, /Zurück zur Suche/)
+  assert.doesNotMatch(fallbackHtml, /Zurück zur Suche/)
 })

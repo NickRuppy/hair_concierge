@@ -44,7 +44,7 @@ const days: ApplicationDayView[] = [
   },
 ]
 
-test("Anwendung renders canonical links inside the bounded depth-transition surface", () => {
+test("Anwendung keeps day links in content and journey Back in the stable header", () => {
   const overview = renderToStaticMarkup(<ApplicationPage view={{ state: "ready", days }} />)
   assert.match(overview, /data-personal-plan-view-transition="depth"/)
   assert.match(overview, /data-application-navigation="day"/)
@@ -54,8 +54,9 @@ test("Anwendung renders canonical links inside the bounded depth-transition surf
     <ApplicationPage view={{ state: "ready", days, selectedDayType: "wash_day" }} />,
   )
   assert.match(detail, /data-personal-plan-view-transition="depth"/)
-  assert.match(detail, /data-application-navigation="overview"/)
+  assert.match(detail, /aria-label="Alle Tage"/)
   assert.match(detail, /href="\/anwendung"/)
+  assert.doesNotMatch(detail, /data-application-navigation="overview"/)
 })
 
 test("non-ready Anwendung surfaces never claim a successful view transition", () => {

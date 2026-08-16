@@ -45,6 +45,34 @@ test("journey overview distinguishes completed, current, and future chapters", (
   assert.equal((overview.match(/>✓</g) ?? []).length, 3)
 })
 
+test("shared journey Back uses the approved 48px target for callback and link navigation", () => {
+  const callbackHeader = renderToStaticMarkup(
+    React.createElement(PersonalPlanJourneyHeader, {
+      currentStage: 3,
+      onBack: () => {},
+      backLabel: "Zurück zum Feinschliff",
+      backDisabled: true,
+    }),
+  )
+  const linkHeader = renderToStaticMarkup(
+    React.createElement(PersonalPlanJourneyHeader, {
+      currentStage: 5,
+      backHref: "/routine",
+      backLabel: "Zur Routine",
+    }),
+  )
+
+  assert.match(callbackHeader, /aria-label="Zurück zum Feinschliff"/)
+  assert.match(callbackHeader, /disabled=""/)
+  assert.match(callbackHeader, /h-12 w-12/)
+  assert.match(callbackHeader, /rounded-xl/)
+  assert.match(callbackHeader, /h-6 w-6/)
+  assert.match(callbackHeader, /brand-plum-ice/)
+  assert.match(linkHeader, /href="\/routine"/)
+  assert.match(linkHeader, /aria-label="Zur Routine"/)
+  assert.equal((linkHeader.match(/<a/g) ?? []).length, 1)
+})
+
 test("shared chapter transition renders the approved stage-specific copy and one primary action", () => {
   const chapter = renderToStaticMarkup(
     React.createElement(PersonalPlanChapterTransition, {

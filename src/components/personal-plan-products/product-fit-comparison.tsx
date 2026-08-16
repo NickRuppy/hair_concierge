@@ -1,15 +1,6 @@
 "use client"
 
-import {
-  ArrowLeft,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  CircleHelp,
-  ImageIcon,
-  Minus,
-  X,
-} from "lucide-react"
+import { Check, ChevronLeft, ChevronRight, CircleHelp, ImageIcon, Minus, X } from "lucide-react"
 import { type ReactElement, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -62,7 +53,8 @@ type ProductFitComparisonProps = {
     selectedCandidate?: ProductFitComparisonSelection,
   ) => void
   onRetry?: () => void
-  onBack: () => void
+  /** @deprecated Journey Back is owned by PersonalPlanJourneyHeader. */
+  onBack?: () => void
 }
 
 export function ProductFitComparison({
@@ -80,7 +72,6 @@ export function ProductFitComparison({
   recoveryMessage,
   onAction,
   onRetry,
-  onBack,
 }: ProductFitComparisonProps): ReactElement {
   const alternatives = comparison.alternatives.slice(0, 3)
   const selectedIndex = normalizeIndex(displayedAlternativeIndex, alternatives.length)
@@ -136,7 +127,7 @@ export function ProductFitComparison({
     (evaluation.status === "known" && evaluation.verdict === "unknown")
   let content: ReactElement
   if (evaluation.status === "unsupported") {
-    content = <AnalysisUnavailable disabled={disabled} onRetry={onRetry} onBack={onBack} />
+    content = <AnalysisUnavailable disabled={disabled} onRetry={onRetry} />
   } else if (hasUnexpectedTargetlessEvidence) {
     content = (
       <UnassessableReview
@@ -195,9 +186,9 @@ export function ProductFitComparison({
       />
     )
   } else if (!hasTruthfulAction && evaluation.status === "known") {
-    content = <NoTruthfulAction disabled={disabled} onBack={onBack} />
+    content = <NoTruthfulAction />
   } else if (!hasTruthfulAction) {
-    content = <ReviewStillOpen disabled={disabled} onBack={onBack} />
+    content = <ReviewStillOpen />
   } else if (currentProduct && !selectedAlternative) {
     content = (
       <FitOnlyReview
@@ -234,18 +225,7 @@ export function ProductFitComparison({
 
   return (
     <section className="min-w-0 pb-40" aria-labelledby="product-fit-comparison-title">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={onBack}
-          disabled={disabled}
-          aria-label="Zurück zur vorherigen Prüfung"
-          className="shrink-0 rounded-full"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+      <div className="mb-4 flex items-center justify-end gap-3">
         <p className="text-right text-sm font-medium text-muted-foreground">Produkte prüfen</p>
       </div>
 
@@ -1445,15 +1425,7 @@ function CompactRecommendationEvidence({
   )
 }
 
-function AnalysisUnavailable({
-  disabled,
-  onRetry,
-  onBack,
-}: {
-  disabled: boolean
-  onRetry?: () => void
-  onBack: () => void
-}) {
+function AnalysisUnavailable({ disabled, onRetry }: { disabled: boolean; onRetry?: () => void }) {
   return (
     <div className="rounded-2xl border border-[var(--status-danger-text)]/30 bg-card p-5 text-center">
       <h1 id="product-fit-comparison-title" className="font-header text-2xl text-foreground">
@@ -1472,15 +1444,12 @@ function AnalysisUnavailable({
         >
           Erneut versuchen
         </Button>
-        <Button type="button" variant="ghost" disabled={disabled} onClick={onBack}>
-          Zurück zu meinen Produkten
-        </Button>
       </div>
     </div>
   )
 }
 
-function ReviewStillOpen({ disabled, onBack }: { disabled: boolean; onBack: () => void }) {
+function ReviewStillOpen() {
   return (
     <div className="rounded-2xl border border-border bg-card p-5 text-center">
       <h1 id="product-fit-comparison-title" className="font-header text-2xl text-foreground">
@@ -1489,14 +1458,11 @@ function ReviewStillOpen({ disabled, onBack }: { disabled: boolean; onBack: () =
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         Für eine verlässliche Entscheidung fehlen noch bestätigte Produktinformationen.
       </p>
-      <Button type="button" variant="ghost" className="mt-5" disabled={disabled} onClick={onBack}>
-        Zurück zu meinen Produkten
-      </Button>
     </div>
   )
 }
 
-function NoTruthfulAction({ disabled, onBack }: { disabled: boolean; onBack: () => void }) {
+function NoTruthfulAction() {
   return (
     <div className="rounded-2xl border border-border bg-card p-5 text-center">
       <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
@@ -1508,15 +1474,6 @@ function NoTruthfulAction({ disabled, onBack }: { disabled: boolean; onBack: () 
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         Aktuell können wir dir für dieses Produkt keine verifizierte Alternative empfehlen.
       </p>
-      <Button
-        type="button"
-        variant="funnelCta"
-        className="mt-5 w-full"
-        disabled={disabled}
-        onClick={onBack}
-      >
-        Zurück zu meinen Produkten
-      </Button>
     </div>
   )
 }

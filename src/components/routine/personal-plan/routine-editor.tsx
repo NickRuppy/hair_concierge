@@ -2,6 +2,13 @@
 
 import * as React from "react"
 
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import {
+  BottomSheet,
+  BottomSheetContent,
+  BottomSheetDescription,
+  BottomSheetTitle,
+} from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 import type {
@@ -173,6 +180,33 @@ function validationMessages(input: {
   return messages
 }
 
+export function RoutineDiscardConfirmBody({
+  onKeepEditing,
+  onDiscard,
+}: {
+  onKeepEditing: () => void
+  onDiscard: () => void
+}) {
+  return (
+    <div className="p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
+      <BottomSheetTitle className="font-header text-2xl text-[var(--brand-plum-darkest)]">
+        Änderungen verwerfen?
+      </BottomSheetTitle>
+      <BottomSheetDescription className="mt-2 leading-6">
+        Deine aktive Routine bleibt unverändert. Die noch nicht bestätigte Änderung geht verloren.
+      </BottomSheetDescription>
+      <div className="mt-5 grid gap-2">
+        <Button type="button" variant="funnelCta" onClick={onKeepEditing}>
+          Weiter bearbeiten
+        </Button>
+        <Button type="button" variant="outline" onClick={onDiscard}>
+          Änderungen verwerfen
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function RoutineEditor({
   routine,
   productOptions,
@@ -207,216 +241,217 @@ export function RoutineEditor({
   }, [onCancel])
 
   return (
-    <section
-      aria-label="Routine bearbeiten"
-      className="mx-auto w-full max-w-3xl space-y-6 px-4 py-6"
-    >
-      <header className="space-y-2">
-        <p className="text-sm font-semibold text-primary">Routine bearbeiten</p>
-        <h2 className="text-2xl font-semibold tracking-tight">Eine Änderung, ganze Routine</h2>
-        <p className="text-sm text-muted-foreground">
-          Aktive Routine bleibt unverändert, bis du den neu berechneten Vorschlag bestätigst.
-        </p>
-      </header>
-
-      {retryMessage ? (
-        <p className="rounded-[8px] border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
-          {retryMessage} Deine lokalen Änderungen bleiben für einen erneuten Versuch erhalten.
-        </p>
-      ) : null}
-
-      {(["basis", "optional"] as const).map((sectionKey) => {
-        const items = sectionItems(routine, sectionKey)
-        if (items.length === 0) return null
-        return (
-          <section key={sectionKey} className="space-y-3" aria-labelledby={`${sectionKey}-editor`}>
-            <h3 id={`${sectionKey}-editor`} className="text-lg font-semibold">
-              {sectionLabels[sectionKey]}
-            </h3>
-            <div className="space-y-3">
-              {items.map((item) => {
-                const options = productOptions[item.assignmentKey] ?? []
-                const roles = supportedRolesByCategory[item.category] ?? []
-                const messages = validationMessages({
-                  item,
-                  options,
-                  roles,
-                  cadences: supportedCadences,
-                })
-                const selectedProduct =
-                  operations.find(
-                    (
-                      operation,
-                    ): operation is Extract<RoutineEditOperation, { kind: "assignment_replace" }> =>
-                      operation.kind === "assignment_replace" &&
-                      operation.assignmentKey === item.assignmentKey,
-                  )?.productRef ?? null
-
-                return (
-                  <article
-                    key={item.itemKey}
-                    className="space-y-4 rounded-[8px] border border-border bg-card p-4"
-                  >
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <p className="text-xs font-medium text-muted-foreground">
-                          {labelFor(categoryLabels, item.category)}
-                        </p>
-                        <h4 className="text-base font-semibold">
-                          {labelFor(purposeLabels, item.purposeKey)}
-                        </h4>
-                        <p className="text-sm text-muted-foreground">{productName(item)}</p>
-                      </div>
-                      <label className="flex items-center gap-2 text-sm font-medium">
-                        <input
-                          type="checkbox"
-                          checked={currentInclusion(item, operations) === "included"}
-                          onChange={(event) =>
-                            updateOperation({
-                              kind: "category_inclusion",
-                              category: item.category as never,
-                              inclusion: event.target.checked ? "included" : "excluded",
-                            })
-                          }
-                        />
-                        Kategorie einplanen
-                      </label>
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      <label className="space-y-1 text-sm">
-                        <span className="font-medium">Produkt</span>
-                        <select
-                          className="min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
-                          value={selectedProduct ? productOptionValue(selectedProduct) : ""}
-                          onChange={(event) => {
-                            const option = options.find(
-                              (entry) =>
-                                productOptionValue(entry.productRef) === event.target.value,
-                            )
-                            if (!option) return
-                            updateOperation({
-                              kind: "assignment_replace",
-                              assignmentKey: item.assignmentKey,
-                              productRef: option.productRef,
-                            })
-                          }}
-                        >
-                          <option value="">Aktuelles Produkt behalten</option>
-                          {options.map((option) => (
-                            <option
-                              key={productOptionValue(option.productRef)}
-                              value={productOptionValue(option.productRef)}
-                            >
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                      <label className="space-y-1 text-sm">
-                        <span className="font-medium">Rolle</span>
-                        <select
-                          className="min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
-                          value={currentRole(item, operations)}
-                          onChange={(event) =>
-                            updateOperation({
-                              kind: "assignment_role",
-                              assignmentKey: item.assignmentKey,
-                              role: event.target.value as never,
-                            })
-                          }
-                          disabled={roles.length === 0}
-                        >
-                          {roles.map((role) => (
-                            <option key={role} value={role}>
-                              {labelFor(purposeLabels, role)}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                      <label className="space-y-1 text-sm">
-                        <span className="font-medium">Rhythmus</span>
-                        <select
-                          className="min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
-                          value={currentCadence(item, operations)}
-                          onChange={(event) =>
-                            updateOperation({
-                              kind: "cadence_override",
-                              assignmentKey: item.assignmentKey,
-                              cadenceOverride: event.target.value || null,
-                            })
-                          }
-                          disabled={supportedCadences.length === 0}
-                        >
-                          <option value="">Keine Abweichung – Empfehlung verwenden</option>
-                          {supportedCadences.map((cadence) => (
-                            <option key={cadence} value={cadence}>
-                              {labelFor(cadenceLabels, cadence)}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                    </div>
-
-                    {messages.length > 0 ? (
-                      <ul className="space-y-1 text-sm text-destructive" aria-live="polite">
-                        {messages.map((message) => (
-                          <li key={message}>{message}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </article>
-                )
-              })}
-            </div>
-          </section>
-        )
-      })}
-
-      <footer className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:justify-end">
-        <Button type="button" variant="outline" onClick={handleCancel}>
-          Abbrechen
-        </Button>
-        <Button
-          className="sm:w-auto"
-          type="button"
-          variant="funnelCta"
-          disabled={!dirty || isSubmitting}
-          onClick={() => onSubmitOperations([...operations])}
-        >
-          {isSubmitting ? "Wird geprüft ..." : submitLabel}
-        </Button>
-      </footer>
-
-      {confirmDiscard ? (
-        <div
-          aria-labelledby="routine-discard-title"
-          aria-modal="true"
-          className="rounded-[8px] border border-border bg-background p-4 shadow"
-          role="alertdialog"
-        >
-          <h3 id="routine-discard-title" className="text-base font-semibold">
-            Lokale Änderungen verwerfen?
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Deine aktive Routine bleibt unverändert. Deine unbearbeitete Änderungsliste wird
-            gelöscht.
+    <div className="min-h-dvh bg-[var(--background)]">
+      <PersonalPlanJourneyHeader
+        currentStage={4}
+        saveStatus={isSubmitting ? "saving" : dirty ? "local" : "saved"}
+        onBack={onCancel ? handleCancel : undefined}
+        backLabel="Zur Routine"
+        showWordmark={false}
+      />
+      <section
+        aria-label="Routine bearbeiten"
+        className="mx-auto w-full max-w-3xl space-y-6 px-4 py-6"
+      >
+        <header className="space-y-2">
+          <p className="text-sm font-semibold text-primary">Routine bearbeiten</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Eine Änderung, ganze Routine</h2>
+          <p className="text-sm text-muted-foreground">
+            Aktive Routine bleibt unverändert, bis du den neu berechneten Vorschlag bestätigst.
           </p>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
-            <Button type="button" variant="ghost" onClick={() => setConfirmDiscard(false)}>
-              Zurück
-            </Button>
-            <Button type="button" variant="destructive" onClick={discard}>
-              Verwerfen
-            </Button>
-          </div>
-        </div>
-      ) : null}
+        </header>
 
-      <p className={cn("text-xs text-muted-foreground", !dirty && "sr-only")} aria-live="polite">
-        {operations.length} lokale Änderung{operations.length === 1 ? "" : "en"} in Prüfung
-        vorbereitet.
-      </p>
-    </section>
+        {retryMessage ? (
+          <p className="rounded-[8px] border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
+            {retryMessage} Deine lokalen Änderungen bleiben für einen erneuten Versuch erhalten.
+          </p>
+        ) : null}
+
+        {(["basis", "optional"] as const).map((sectionKey) => {
+          const items = sectionItems(routine, sectionKey)
+          if (items.length === 0) return null
+          return (
+            <section
+              key={sectionKey}
+              className="space-y-3"
+              aria-labelledby={`${sectionKey}-editor`}
+            >
+              <h3 id={`${sectionKey}-editor`} className="text-lg font-semibold">
+                {sectionLabels[sectionKey]}
+              </h3>
+              <div className="space-y-3">
+                {items.map((item) => {
+                  const options = productOptions[item.assignmentKey] ?? []
+                  const roles = supportedRolesByCategory[item.category] ?? []
+                  const messages = validationMessages({
+                    item,
+                    options,
+                    roles,
+                    cadences: supportedCadences,
+                  })
+                  const selectedProduct =
+                    operations.find(
+                      (
+                        operation,
+                      ): operation is Extract<
+                        RoutineEditOperation,
+                        { kind: "assignment_replace" }
+                      > =>
+                        operation.kind === "assignment_replace" &&
+                        operation.assignmentKey === item.assignmentKey,
+                    )?.productRef ?? null
+
+                  return (
+                    <article
+                      key={item.itemKey}
+                      className="space-y-4 rounded-[8px] border border-border bg-card p-4"
+                    >
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                          <p className="text-xs font-medium text-muted-foreground">
+                            {labelFor(categoryLabels, item.category)}
+                          </p>
+                          <h4 className="text-base font-semibold">
+                            {labelFor(purposeLabels, item.purposeKey)}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">{productName(item)}</p>
+                        </div>
+                        <label className="flex items-center gap-2 text-sm font-medium">
+                          <input
+                            type="checkbox"
+                            checked={currentInclusion(item, operations) === "included"}
+                            onChange={(event) =>
+                              updateOperation({
+                                kind: "category_inclusion",
+                                category: item.category as never,
+                                inclusion: event.target.checked ? "included" : "excluded",
+                              })
+                            }
+                          />
+                          Kategorie einplanen
+                        </label>
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        <label className="space-y-1 text-sm">
+                          <span className="font-medium">Produkt</span>
+                          <select
+                            className="min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
+                            value={selectedProduct ? productOptionValue(selectedProduct) : ""}
+                            onChange={(event) => {
+                              const option = options.find(
+                                (entry) =>
+                                  productOptionValue(entry.productRef) === event.target.value,
+                              )
+                              if (!option) return
+                              updateOperation({
+                                kind: "assignment_replace",
+                                assignmentKey: item.assignmentKey,
+                                productRef: option.productRef,
+                              })
+                            }}
+                          >
+                            <option value="">Aktuelles Produkt behalten</option>
+                            {options.map((option) => (
+                              <option
+                                key={productOptionValue(option.productRef)}
+                                value={productOptionValue(option.productRef)}
+                              >
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="space-y-1 text-sm">
+                          <span className="font-medium">Rolle</span>
+                          <select
+                            className="min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
+                            value={currentRole(item, operations)}
+                            onChange={(event) =>
+                              updateOperation({
+                                kind: "assignment_role",
+                                assignmentKey: item.assignmentKey,
+                                role: event.target.value as never,
+                              })
+                            }
+                            disabled={roles.length === 0}
+                          >
+                            {roles.map((role) => (
+                              <option key={role} value={role}>
+                                {labelFor(purposeLabels, role)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="space-y-1 text-sm">
+                          <span className="font-medium">Rhythmus</span>
+                          <select
+                            className="min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
+                            value={currentCadence(item, operations)}
+                            onChange={(event) =>
+                              updateOperation({
+                                kind: "cadence_override",
+                                assignmentKey: item.assignmentKey,
+                                cadenceOverride: event.target.value || null,
+                              })
+                            }
+                            disabled={supportedCadences.length === 0}
+                          >
+                            <option value="">Keine Abweichung – Empfehlung verwenden</option>
+                            {supportedCadences.map((cadence) => (
+                              <option key={cadence} value={cadence}>
+                                {labelFor(cadenceLabels, cadence)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
+
+                      {messages.length > 0 ? (
+                        <ul className="space-y-1 text-sm text-destructive" aria-live="polite">
+                          {messages.map((message) => (
+                            <li key={message}>{message}</li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </article>
+                  )
+                })}
+              </div>
+            </section>
+          )
+        })}
+
+        <footer className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:justify-end">
+          <Button
+            className="sm:w-auto"
+            type="button"
+            variant="funnelCta"
+            disabled={!dirty || isSubmitting}
+            onClick={() => onSubmitOperations([...operations])}
+          >
+            {isSubmitting ? "Wird geprüft ..." : submitLabel}
+          </Button>
+        </footer>
+
+        <BottomSheet open={confirmDiscard} onOpenChange={setConfirmDiscard}>
+          <BottomSheetContent
+            disableDrag
+            showCloseButton={false}
+            onDismissRequest={() => setConfirmDiscard(false)}
+          >
+            <RoutineDiscardConfirmBody
+              onKeepEditing={() => setConfirmDiscard(false)}
+              onDiscard={discard}
+            />
+          </BottomSheetContent>
+        </BottomSheet>
+
+        <p className={cn("text-xs text-muted-foreground", !dirty && "sr-only")} aria-live="polite">
+          {operations.length} lokale Änderung{operations.length === 1 ? "" : "en"} in Prüfung
+          vorbereitet.
+        </p>
+      </section>
+    </div>
   )
 }

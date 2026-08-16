@@ -737,7 +737,13 @@ export function Stage3ProductsFlow({
               ? "idle"
               : "saving"
 
-  const shell = (children: React.ReactNode, stepLabel: string, onBack?: () => void) => (
+  const shell = (
+    children: React.ReactNode,
+    stepLabel: string,
+    onBack?: () => void,
+    backDisabled = false,
+    backLabel = "Zurück",
+  ) => (
     <Stage3Shell
       title="Produkte"
       currentStepLabel={stepLabel}
@@ -756,6 +762,8 @@ export function Stage3ProductsFlow({
             : "",
       }}
       onBack={pendingRecoveryMode ? undefined : onBack}
+      backDisabled={backDisabled}
+      backLabel={backLabel}
       contentEntrance={stageEntrance}
     >
       {children}
@@ -809,9 +817,11 @@ export function Stage3ProductsFlow({
         disabled={productKindStatus === "saving"}
         onToggle={toggleReviewedProductKind}
         onContinue={() => void confirmReviewedProductKinds()}
-        onBack={onBackToRefinement}
       />,
       "Produktarten",
+      onBackToRefinement,
+      productKindStatus === "saving",
+      "Zum Feinschliff",
     )
   }
 
@@ -868,10 +878,11 @@ export function Stage3ProductsFlow({
           }}
           onOpen={() => void capturePendingProduct()}
           onRetry={() => void capturePendingProduct()}
-          onCancel={() => setShowFallback(false)}
         />,
         currentCopy.label,
         () => setShowFallback(false),
+        false,
+        "Zurück zur Suche",
       )
     }
 
@@ -977,13 +988,11 @@ export function Stage3ProductsFlow({
           )
         }}
         onContinue={() => void continueCapture()}
-        onBack={
-          categoryIndex === 0
-            ? onBackToRefinement
-            : () => void reopenPreviousCategory(currentCategory)
-        }
       />
     )
+
+    const captureBack =
+      categoryIndex === 0 ? onBackToRefinement : () => void reopenPreviousCategory(currentCategory)
 
     return shell(
       <>
@@ -1000,6 +1009,9 @@ export function Stage3ProductsFlow({
         ) : null}
       </>,
       currentCopy.label,
+      captureBack,
+      false,
+      categoryIndex === 0 ? "Zum Feinschliff" : "Zur vorherigen Produktart",
     )
   }
 
@@ -1016,9 +1028,11 @@ export function Stage3ProductsFlow({
         assignments={roleAssignments}
         onToggleRole={toggleRole}
         onContinue={() => void saveRolesAndContinue()}
-        onBack={() => setPhase("capture")}
       />,
       `${currentCopy.label} zuordnen`,
+      () => setPhase("capture"),
+      false,
+      "Zurück zur Produktsuche",
     )
   }
 
@@ -1096,9 +1110,11 @@ export function Stage3ProductsFlow({
             product={product}
             disabled={decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)}
             onAcknowledge={() => void acknowledgeInventoryDisposition(disposition.dispositionKey)}
-            onBack={() => void backFromReview(nextSubject)}
           />,
           CATEGORY_COPY[nextSubject.category].label,
+          () => void backFromReview(nextSubject),
+          decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode),
+          "Zurück zu meinen Produkten",
         )
       }
     }
@@ -1136,9 +1152,11 @@ export function Stage3ProductsFlow({
         onAction={(action, selectedCandidate) =>
           void chooseFitDecision(nextSubject.decisionKey, action, selectedCandidate)
         }
-        onBack={() => void backFromReview(nextSubject)}
       />,
       CATEGORY_COPY[nextSubject.category].label,
+      () => void backFromReview(nextSubject),
+      decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode),
+      "Zurück zu meinen Produkten",
     )
   }
 
@@ -3095,28 +3113,18 @@ export function Stage3InventoryDispositionReview({
   product,
   disabled,
   onAcknowledge,
-  onBack,
 }: {
   disposition: Stage3InventoryDispositionV1
   product: Stage3CapturedProduct
   disabled?: boolean
   onAcknowledge: () => void
-  onBack: () => void
+  /** @deprecated Journey Back is owned by PersonalPlanJourneyHeader. */
+  onBack?: () => void
 }) {
   return (
     <section className="min-w-0 pb-28" aria-labelledby="stage3-inventory-disposition-title">
-      <div className="mb-5">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={onBack}
-          disabled={disabled}
-          aria-label="Zurück zu meinen Produkten"
-          className="shrink-0 rounded-full"
-        >
-          ←
-        </Button>
+      <div className="mb-5 flex items-center justify-end gap-3">
+        <p className="text-right text-sm font-medium text-muted-foreground">Produkte prüfen</p>
       </div>
 
       <header className="mb-5">

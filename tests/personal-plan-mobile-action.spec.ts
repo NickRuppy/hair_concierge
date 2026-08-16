@@ -143,6 +143,41 @@ test.describe("mobile browser contexts", () => {
   }
 })
 
+test("keeps the Optional Idealplan action and Back target contained on mobile WebKit", async ({
+  page,
+}) => {
+  test.skip(
+    process.env.CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED !== "true",
+    "The deterministic Personal Plan lab is explicitly gated.",
+  )
+  await page.setViewportSize({ width: 320, height: 700 })
+  await page.goto("/labs/personal-plan-start")
+  await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+
+  const nav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
+  const action = nav.getByRole("button", { name: "Auf meine Produkte abstimmen" })
+  const geometry = await action.evaluate((button) => {
+    const bounds = button.getBoundingClientRect()
+    const nav = button.closest("nav")!.getBoundingClientRect()
+    return {
+      left: bounds.left,
+      right: bounds.right,
+      navBottom: nav.bottom,
+      viewportBottom:
+        (window.visualViewport?.offsetTop ?? 0) +
+        (window.visualViewport?.height ?? window.innerHeight),
+      width: window.innerWidth,
+    }
+  })
+  expect(geometry.left).toBeGreaterThanOrEqual(0)
+  expect(geometry.right).toBeLessThanOrEqual(geometry.width)
+  expect(Math.abs(geometry.navBottom - geometry.viewportBottom)).toBeLessThanOrEqual(1)
+  await expect(nav.getByRole("button")).toHaveCount(1)
+  const back = page.getByRole("button", { name: "Zur Basis" })
+  await expect(back).toBeVisible()
+  expect(await back.evaluate((button) => button.getBoundingClientRect().width)).toBe(48)
+})
+
 test("keeps the regular desktop action inline", async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 800 })
   await seedDraft(page, analysisDraft)
