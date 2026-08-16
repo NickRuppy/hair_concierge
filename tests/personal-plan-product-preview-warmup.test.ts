@@ -19,6 +19,24 @@ function jsonResponse(body: unknown, status = 200) {
   }
 }
 
+function emptyCommerce() {
+  return {
+    priceEur: null,
+    purchaseLinkStatus: null,
+    netContentValue: null,
+    netContentUnit: null,
+    priceLabel: null,
+    netContentLabel: null,
+    availabilityLabel: "Aktuelle Verfügbarkeit nicht bestätigt",
+    productUrl: null,
+    affiliateDisclosure: null,
+  }
+}
+
+function emptyReasoning() {
+  return { productCriteria: "Kriterien.", fit: "Begründung.", frequency: "Rhythmus." }
+}
+
 test("warms every unique source-matched Basis and Optional preview image", async () => {
   const requests: RecordedRequest[] = []
   const warmed: string[] = []
@@ -35,37 +53,46 @@ test("warms every unique source-matched Basis and Optional preview image", async
     }
     assert.equal(url, previewUrl)
     return jsonResponse({
-      schemaVersion: 1,
+      schemaVersion: 2,
       personalPlanId: "plan-1",
       sourceNeedVersionId: "need-1",
       sourceInputHash: "input-1",
       previews: [
         {
+          kind: "recommendation",
           category: "shampoo",
           role: "shampoo_everyday",
+          decisionKey: "decision:shampoo:shampoo_everyday:gap",
           productId: "basis-product",
           productName: "Basis Produkt",
           imageUrl: "https://images.example/basis.webp",
           verdict: "ideal",
           authorityVersion: "personal-plan.shampoo.v4",
+          factFingerprint: "facts-basis-product",
+          commerce: emptyCommerce(),
+          reasoning: emptyReasoning(),
         },
         {
+          kind: "recommendation",
           category: "oil",
           role: "dry_finish",
+          decisionKey: "decision:oil:dry_finish:gap",
           productId: "optional-product",
           productName: "Optionales Produkt",
           imageUrl: "https://images.example/optional.webp",
           verdict: "supportive",
           authorityVersion: "personal-plan.oil.v2",
+          factFingerprint: "facts-optional-product",
+          commerce: emptyCommerce(),
+          reasoning: emptyReasoning(),
         },
         {
-          category: "oil",
-          role: "dry_finish",
-          productId: "optional-product-duplicate",
-          productName: "Optionales Produkt doppelt",
-          imageUrl: "https://images.example/optional.webp",
-          verdict: "supportive",
-          authorityVersion: "personal-plan.oil.v2",
+          kind: "fallback",
+          category: "scalp_care",
+          role: "scalp_comfort",
+          decisionKey: "decision:scalp_care:scalp_comfort:gap",
+          authorityVersion: "personal-plan.scalp-care.v3",
+          fallback: "post_refinement",
         },
       ],
     })
@@ -129,19 +156,24 @@ test("fails open before warming images when the preview source does not match", 
             outputSnapshot: { inputHash: "input-1" },
           })
         : jsonResponse({
-            schemaVersion: 1,
+            schemaVersion: 2,
             personalPlanId: "plan-1",
             sourceNeedVersionId: "need-stale",
             sourceInputHash: "input-stale",
             previews: [
               {
+                kind: "recommendation",
                 category: "shampoo",
                 role: "shampoo_everyday",
+                decisionKey: "decision:shampoo:shampoo_everyday:gap",
                 productId: "stale-product",
                 productName: "Veraltetes Produkt",
                 imageUrl: "https://images.example/stale.webp",
                 verdict: "ideal",
                 authorityVersion: "personal-plan.shampoo.v4",
+                factFingerprint: "facts-stale-product",
+                commerce: emptyCommerce(),
+                reasoning: emptyReasoning(),
               },
             ],
           }),

@@ -6,6 +6,7 @@ import { adaptInitialNeedSnapshotToPlanStartViewModel } from "../src/components/
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
 import type { Stage1ProductExamplePreviewResponse } from "../src/lib/personal-plan/product-preview-contract"
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+import { stage3DecisionKey } from "../src/lib/personal-plan/products/contracts"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 
 const labPath = "/labs/personal-plan-start"
@@ -25,7 +26,7 @@ if (computed.status !== "ready") throw new Error("production browser fixture fai
 const computedPlan = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot)
 if (!computedPlan) throw new Error("production browser fixture failed to adapt")
 const previewResponse = {
-  schemaVersion: 1 as const,
+  schemaVersion: 2 as const,
   personalPlanId,
   sourceNeedVersionId: "10000000-0000-4000-8000-000000000002",
   sourceInputHash: computed.snapshot.inputHash,
@@ -37,13 +38,33 @@ const previewResponse = {
     if (!role) return []
     return [
       {
+        kind: "recommendation" as const,
         category,
         role,
+        decisionKey: stage3DecisionKey(category, role, null),
         productId: `fixture-${category}`,
         productName: `Fixture ${category}`,
         imageUrl: `http://127.0.0.1:3217/labs/product-images/${category}.svg`,
         verdict: "ideal" as const,
         authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
+        factFingerprint: `fixture-fingerprint-${category}`,
+        commerce: {
+          priceEur: 12.9,
+          purchaseLinkStatus: "available" as const,
+          netContentValue: 250,
+          netContentUnit: "ml" as const,
+          priceLabel: "12,90 €",
+          netContentLabel: "250 ml",
+          availabilityLabel: "Aktuell verfügbar",
+          productUrl: "https://example.com/fixture-product",
+          affiliateDisclosure:
+            "Affiliate-Hinweis: Bei einem Kauf über diesen Link erhalten wir möglicherweise eine Provision.",
+        },
+        reasoning: {
+          productCriteria: `Fixture-Kriterien für ${category}.`,
+          fit: `Fixture-Begründung für ${category}.`,
+          frequency: "Fixture-Rhythmus.",
+        },
       },
     ]
   }),

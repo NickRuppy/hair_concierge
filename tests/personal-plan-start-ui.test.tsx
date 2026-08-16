@@ -114,24 +114,44 @@ test("warms the source-keyed preview request in server-rendered Stage 1 HTML", (
     html,
     /rel="preload" as="fetch" href="\/api\/personal-plan\/stage-1\/previews\?personalPlanId=plan-1&amp;sourceInputHash=input-1" type="application\/json" crossorigin="anonymous" fetchPriority="low"/,
   )
-  assert.equal(STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL, "private, max-age=60, must-revalidate")
+  assert.equal(STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL, "no-store")
 })
 
 test("binds only source-matched authority previews to their exact category cards", () => {
   const response = {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     personalPlanId: "plan-1",
     sourceNeedVersionId: "need-1",
     sourceInputHash: "input-1",
     previews: [
       {
+        kind: "recommendation" as const,
         category: "conditioner" as const,
         role: "conditioner_rinse_out" as const,
+        decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
         productId: "conditioner-light",
         productName: "Leichter Conditioner",
         imageUrl: "https://example.com/conditioner-light.webp",
         verdict: "ideal" as const,
         authorityVersion: "personal-plan.conditioner.v3",
+        factFingerprint: "facts-conditioner-light",
+        commerce: {
+          priceEur: 9.9,
+          purchaseLinkStatus: "available" as const,
+          netContentValue: 200,
+          netContentUnit: "ml" as const,
+          priceLabel: "9,90 €",
+          netContentLabel: "200 ml",
+          availabilityLabel: "Aktuell verfügbar",
+          productUrl: "https://example.com/conditioner-light",
+          affiliateDisclosure:
+            "Affiliate-Hinweis: Bei einem Kauf über diesen Link erhalten wir möglicherweise eine Provision.",
+        },
+        reasoning: {
+          productCriteria: "Pflege, Glättung und Kämmbarkeit passend zum Gewicht deines Haars.",
+          fit: "Deine Längen brauchen nach der Wäsche eine verlässliche Basispflege.",
+          frequency: "nach jeder Haarwäsche",
+        },
       },
     ],
   }
