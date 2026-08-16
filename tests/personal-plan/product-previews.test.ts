@@ -554,6 +554,110 @@ test("returns an exact-fit Bondbuilder preview and rejects an unsuitable thickne
   assert.deepEqual(unsuitable.previews, [])
 })
 
+test("uses K18 as the Stage 1 Bondbuilder example when ideal candidates tie", async () => {
+  const result = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "11111111-1111-4111-8111-111111111111",
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-14T10:00:00.000Z",
+  })
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("expected ready snapshot")
+  const role = "specialized_bond_treatment" as const
+  const decision = {
+    category: "bondbuilder",
+    resolution: "resolved",
+    needTier: "basis",
+    roles: [role],
+    target: {
+      category: "bondbuilder",
+      roles: [role],
+      requiredFunction: "support_stressed_hair_resilience",
+      mechanismTarget: "mechanism_neutral",
+    },
+    frequency: null,
+    reasons: [],
+    executionState: "available",
+    executionPauseReason: null,
+    deferredFacts: [],
+  } satisfies PlanCategoryDecision
+  const candidate = (
+    productId: string,
+    displayName: string,
+    imageUrl: string,
+  ): Stage3BondbuilderFacts => ({
+    productId,
+    displayName,
+    category: "bondbuilder",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: [result.snapshot.profile.hair.thickness],
+    knownReaction: false,
+    protocols: [{ role, status: "verified_complete", fingerprint: `protocol-${productId}` }],
+    presentationImageUrl: imageUrl,
+    factFingerprint: `facts-${productId}`,
+    spec: {
+      applicationMode:
+        productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b" ? "post_wash_leave_in" : "pre_shampoo",
+      treatmentMode:
+        productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b" ? "leave_in" : "rinse_out",
+      productFormat:
+        productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b" ? "leave_in_mask" : "treatment",
+      usageProtocol:
+        productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b" ? "k18_leave_in" : "course",
+      relationship: "standalone",
+    },
+  })
+  const tiedCandidates = [
+    candidate("epres", "Epres Bond Repair Treatment", "https://example.com/epres.webp"),
+    candidate(
+      "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "K18 Leave-In Molecular Repair Hair Mask",
+      "https://example.com/k18.webp",
+    ),
+    candidate(
+      "olaplex",
+      "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "https://example.com/olaplex.webp",
+    ),
+  ]
+  const previewInput = {
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot: {
+      ...result.snapshot,
+      decisions: [decision],
+      renderedOrder: ["bondbuilder" as const],
+    },
+  }
+  const response = await computeStage1ProductExamplePreviews({
+    ...previewInput,
+    loadCandidates: async () => tiedCandidates,
+  })
+  const unsuitableK18 = await computeStage1ProductExamplePreviews({
+    ...previewInput,
+    loadCandidates: async () =>
+      tiedCandidates.map((item) =>
+        item.productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+          ? {
+              ...item,
+              suitableThicknesses: [
+                result.snapshot.profile.hair.thickness === "coarse" ? "fine" : "coarse",
+              ],
+            }
+          : item,
+      ),
+  })
+
+  assert.deepEqual(
+    response.previews.map((preview) => [preview.productId, preview.imageUrl, preview.verdict]),
+    [["38dace91-0fba-49ee-a93f-ac36e488fe4b", "https://example.com/k18.webp", "ideal"]],
+  )
+  assert.deepEqual(unsuitableK18.previews, [])
+})
+
 test("keeps a matching Shampoo preview when another category candidate load fails", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,

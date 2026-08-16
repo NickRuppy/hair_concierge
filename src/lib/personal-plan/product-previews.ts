@@ -18,6 +18,8 @@ import {
 import type { Stage3CategoryProductFacts } from "./products/authority/contracts"
 import { evaluateStage3Authority } from "./products/authority/evaluate"
 
+const STAGE1_BONDBUILDER_EXAMPLE_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+
 export type Stage1ProductExamplePreviewCandidateLoader = (
   input: Stage3RecommendationCandidateSelection,
 ) => Promise<Stage3CategoryProductFacts[]>
@@ -63,10 +65,14 @@ export async function computeStage1ProductExamplePreviews(input: {
           heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
         }
         const evaluation = evaluateStage3Authority(authorityInput)
-        if (evaluation.status !== "known" || !evaluation.recommendation) return null
-        const selected = candidates.find(
-          (candidate) => candidate.productId === evaluation.recommendation?.productId,
-        )
+        if (evaluation.status !== "known") return null
+        const selectedProductId =
+          evaluation.recommendation?.productId ??
+          (category === "bondbuilder" && evaluation.verdict === "ideal"
+            ? STAGE1_BONDBUILDER_EXAMPLE_PRODUCT_ID
+            : null)
+        if (!selectedProductId) return null
+        const selected = candidates.find((candidate) => candidate.productId === selectedProductId)
         const imageUrl = selected?.presentationImageUrl?.trim()
         if (!selected || !imageUrl) return null
         // Some authorities use the first verdict to describe an uncovered portfolio slot.
