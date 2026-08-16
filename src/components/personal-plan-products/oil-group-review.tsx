@@ -54,7 +54,7 @@ export function OilGroupReview({
         <p id="oil-group-use-cases-title" className="text-sm text-muted-foreground">
           {OIL_GROUP_USE_CASE_INTRO}
         </p>
-        <div className="mt-2 grid gap-2">
+        <div role="group" aria-labelledby="oil-group-use-cases-title" className="mt-2 grid gap-2">
           {group.map((useCase) => {
             const checked = checkedKeys.has(useCase.decisionKey)
             return (
@@ -68,7 +68,7 @@ export function OilGroupReview({
                 className={cn(
                   "flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition-colors",
                   checked
-                    ? "border-[var(--plum)] bg-card"
+                    ? "border-[var(--brand-plum)] bg-card"
                     : "border-border bg-muted/30 text-muted-foreground",
                   disabled ? "opacity-60" : "hover:bg-muted/40",
                 )}
@@ -77,9 +77,12 @@ export function OilGroupReview({
                   aria-hidden="true"
                   className={cn(
                     "grid h-[18px] w-[18px] flex-none place-items-center rounded-md border-2",
+                    // Selected states are plum in this app (coral stays a CTA accent), and the
+                    // token is --brand-plum — a var() that resolves nowhere renders the checked
+                    // box invisible.
                     checked
-                      ? "border-[var(--plum)] bg-[var(--plum)] text-white"
-                      : "border-border bg-transparent",
+                      ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-primary-foreground"
+                      : "border-[var(--brand-plum-light)] bg-white",
                   )}
                 >
                   {checked ? <Check className="h-3 w-3" strokeWidth={3} /> : null}

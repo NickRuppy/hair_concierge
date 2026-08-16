@@ -5693,3 +5693,73 @@ test("the grouped commit plans the recommendation selected on the anchor screen"
   )
   assert.equal(reviewDraft?.choices[dryFinishKey], undefined)
 })
+
+test("the grouped Öl use cases render their selected state in the app's plum token", () => {
+  const cases = [
+    {
+      role: "pre_wash_fibre_treatment",
+      roleTitle: "Vor der Haarwäsche",
+      roleSubtitle: "Als Pflege vor dem Waschen",
+      decisionKey: "oil-1",
+      productName: null,
+    },
+    {
+      role: "dry_finish",
+      roleTitle: "Im trockenen Haar",
+      roleSubtitle: "Für Glanz und Finish",
+      decisionKey: "oil-2",
+      productName: null,
+    },
+  ]
+  const html = renderToStaticMarkup(
+    <OilGroupReview
+      group={cases}
+      uniformProposition
+      checkedKeys={new Set(["oil-1"])}
+      onToggle={() => undefined}
+      onCommit={() => undefined}
+    >
+      <div>Vergleich</div>
+    </OilGroupReview>,
+  )
+
+  assert.doesNotMatch(
+    html,
+    /var\(--plum\)/,
+    "--plum is not a token in this app; an unresolvable var() renders the checked box invisible",
+  )
+  assert.match(html, /bg-\[var\(--brand-plum\)\]/)
+  assert.match(html, /border-\[var\(--brand-plum\)\]/)
+  for (const token of html.match(/var\(--[a-z-]+\)/g) ?? []) {
+    assert.match(
+      readFileSync("src/app/globals.css", "utf8"),
+      new RegExp(`${token.slice(4, -1)}:`),
+      `${token} must be defined in globals.css`,
+    )
+  }
+})
+
+test("the grouped Öl use cases are exposed as one labelled checkbox group", () => {
+  const html = renderToStaticMarkup(
+    <OilGroupReview
+      group={[
+        {
+          role: "dry_finish",
+          roleTitle: "Im trockenen Haar",
+          roleSubtitle: "Für Glanz und Finish",
+          decisionKey: "oil-1",
+          productName: null,
+        },
+      ]}
+      uniformProposition
+      checkedKeys={new Set(["oil-1"])}
+      onToggle={() => undefined}
+      onCommit={() => undefined}
+    >
+      <div>Vergleich</div>
+    </OilGroupReview>,
+  )
+
+  assert.match(html, /role="group"/)
+  assert.match(html, /role="group"[^>]*aria-labelledby="oil-group-use-cases-title"/)
+})
