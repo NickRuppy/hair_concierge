@@ -578,7 +578,8 @@ test("fails closed when unexpected targetless evidence reaches an otherwise know
     />,
   )
 
-  assert.match(html, /Shampoo · Produkt 2 von 3/)
+  // Der Zähler steht in einem eigenen nowrap-Span; für den Textvergleich Markup entfernen.
+  assert.match(html.replace(/<[^>]*>/g, ""), /Shampoo · Produkt 2 von 3/)
   assert.match(html, /Noch nicht eindeutig beurteilbar/)
   assert.match(html, /keine Zielmarken und kein Fit-Urteil/)
   assert.doesNotMatch(html, /Dein Shampoo passt mit Einschränkung/)

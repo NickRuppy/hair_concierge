@@ -56,7 +56,7 @@ export function NeedPlanScreen({
       ? "Feinschliff wird geöffnet …"
       : screen.kind === "basis" && hasOptionalPage
         ? "Optionale Empfehlungen"
-        : "Jetzt auf meine Produkte abstimmen"
+        : "Auf meine Produkte abstimmen"
 
   const actionNav =
     transitionLayer === "outgoing" || (!onBack && !onNext) ? null : (
@@ -85,6 +85,7 @@ export function NeedPlanScreen({
               type="button"
               onClick={onNext}
               variant="funnelCta"
+              className="min-w-0 flex-1 whitespace-normal px-4"
               disabled={nextStatus === "loading"}
               aria-busy={nextStatus === "loading"}
             >

@@ -1,12 +1,8 @@
-import type { CSSProperties, ReactNode } from "react"
+import type { ReactNode } from "react"
 
 import { Header } from "@/components/layout/header"
 import { PersonalPlanNavigation } from "@/components/layout/personal-plan-navigation"
 import type { AuthenticatedAppNavigationAccess } from "@/lib/personal-plan/navigation-access"
-
-type PersonalPlanShellStyle = CSSProperties & {
-  "--personal-plan-shell-bottom-padding": string
-}
 
 export function AuthenticatedAppShell({
   navigation,
@@ -20,14 +16,18 @@ export function AuthenticatedAppShell({
   personalPlanNavigation?: ReactNode
 }) {
   const personalPlan = navigation.kind === "personal_plan"
-  const style: PersonalPlanShellStyle | undefined = personalPlan
-    ? ({
-        "--personal-plan-shell-bottom-padding": "calc(4.5rem + env(safe-area-inset-bottom))",
-      } as PersonalPlanShellStyle)
-    : undefined
 
   return (
-    <div className="min-h-dvh" data-personal-plan-shell={personalPlan || undefined} style={style}>
+    <div
+      className={
+        personalPlan
+          ? // Die Variable bleibt auf allen Breiten konstant, weil application-state
+            // seine Höhe daraus ableitet; nur die Padding-Kompensation entfällt ab md.
+            "min-h-dvh [--personal-plan-shell-bottom-padding:calc(4.5rem+env(safe-area-inset-bottom))]"
+          : "min-h-dvh"
+      }
+      data-personal-plan-shell={personalPlan || undefined}
+    >
       {personalPlan
         ? (personalPlanNavigation ?? (
             <PersonalPlanNavigation
@@ -40,7 +40,7 @@ export function AuthenticatedAppShell({
       {personalPlan ? (
         <div
           data-personal-plan-content="true"
-          style={{ paddingBottom: "var(--personal-plan-shell-bottom-padding)" }}
+          className="pb-[var(--personal-plan-shell-bottom-padding)] md:pb-0"
         >
           {children}
         </div>

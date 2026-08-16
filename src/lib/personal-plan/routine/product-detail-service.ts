@@ -69,14 +69,14 @@ function fitLabels(
       fitStatusLabel: "Nicht empfohlen",
       frozenFitSummary:
         "Dieses Produkt ist in deiner Routine festgehalten, wird aber nicht empfohlen.",
-      limitationLabel: "Die Eignung stammt aus dem eingefrorenen Routine-Stand.",
+      limitationLabel: "Die Bewertung basiert auf deiner bestätigten Routine.",
     }
   }
   if (item.state.fitDecision === "informed_override") {
     return {
       fitStatusLabel: "Bewusste Abweichung",
       frozenFitSummary: "Du nutzt dieses Produkt bewusst abweichend von der Empfehlung.",
-      limitationLabel: "Die Eignung stammt aus dem eingefrorenen Routine-Stand.",
+      limitationLabel: "Die Bewertung basiert auf deiner bestätigten Routine.",
     }
   }
   if (item.product.kind === "owned" && !item.executable) {

@@ -40,13 +40,35 @@ export function PersonalPlanNavigationView({
               chaarlie
             </span>
           </Link>
+          <nav aria-label="Personal-Plan-Navigation" className="hidden items-center gap-1 md:flex">
+            {items.map((item) => {
+              const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
+              return (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`relative rounded-[10px] px-3 py-2 text-sm font-semibold transition-colors ${
+                    active
+                      ? "bg-[var(--brand-plum-ice)] text-primary"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                >
+                  {item.label}
+                  {item.key === "routine" ? (
+                    <RoutineAttentionIndicator hasPendingProposal={hasPendingRoutineProposal} />
+                  ) : null}
+                </Link>
+              )
+            })}
+          </nav>
           <CircleUserRound className="h-6 w-6 text-primary" aria-hidden="true" />
         </div>
       </header>
 
       <nav
-        aria-label="Personal-Plan-Navigation"
-        className="fixed inset-x-0 bottom-0 z-50 grid min-h-[calc(4.5rem+env(safe-area-inset-bottom))] border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_30px_-26px_rgba(var(--brand-plum-rgb),0.55)] backdrop-blur supports-[backdrop-filter]:bg-background/90"
+        aria-label="Personal-Plan-Navigation (mobil)"
+        className="fixed inset-x-0 bottom-0 z-50 grid min-h-[calc(4.5rem+env(safe-area-inset-bottom))] border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_30px_-26px_rgba(var(--brand-plum-rgb),0.55)] backdrop-blur supports-[backdrop-filter]:bg-background/90 md:hidden"
         style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
       >
         {items.map((item) => {

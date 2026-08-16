@@ -175,7 +175,7 @@ export function ApplicationPage({
       data-personal-plan-application-compute-ms={internalComputeMs}
       data-application-router-pathname={currentPathname}
     >
-      <PersonalPlanJourneyHeader currentStage={5} saveStatus="saved" />
+      <PersonalPlanJourneyHeader currentStage={5} saveStatus="saved" showWordmark={false} />
       {content}
     </div>
   )

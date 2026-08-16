@@ -672,6 +672,21 @@ export function ProductCapturedProductList({
   )
 }
 
+// Pro Kategorie fertiges Label statt generischem Template — das Genus lässt sich nicht ableiten.
+const ADD_MORE_LABELS: Record<string, string> = {
+  Shampoo: "Weiteres Shampoo hinzufügen",
+  Conditioner: "Weiteren Conditioner hinzufügen",
+  "Leave-in": "Weiteres Leave-in hinzufügen",
+  Öl: "Weiteres Öl hinzufügen",
+  Maske: "Weitere Maske hinzufügen",
+  Bondbuilder: "Weiteren Bondbuilder hinzufügen",
+  Hitzeschutz: "Weiteren Hitzeschutz hinzufügen",
+  Kopfhautpflege: "Weitere Kopfhautpflege hinzufügen",
+  Kopfhautprodukt: "Weiteres Kopfhautprodukt hinzufügen",
+  Trockenshampoo: "Weiteres Trockenshampoo hinzufügen",
+  Tiefenreinigungsshampoo: "Weiteres Tiefenreinigungsshampoo hinzufügen",
+}
+
 export function ProductMultiProductControls({
   categoryLabel,
   intakeAvailable,
@@ -698,7 +713,7 @@ export function ProductMultiProductControls({
       {showAddAnotherProduct ? (
         <Button type="button" variant="outline" onClick={onAddAnotherProduct} disabled={disabled}>
           <Plus className="h-4 w-4" />
-          Weiteres {categoryLabel} hinzufügen
+          {ADD_MORE_LABELS[categoryLabel] ?? `Mehr hinzufügen (${categoryLabel})`}
         </Button>
       ) : null}
       {intakeAvailable ? (

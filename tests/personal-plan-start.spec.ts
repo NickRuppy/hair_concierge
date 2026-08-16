@@ -184,7 +184,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     ).toHaveCount(await optionalCards.count())
     expect(stage2Requests).toBe(0)
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
-    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+    await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
     expect(stage2Requests).toBe(1)
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await expect(
@@ -206,7 +206,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(labPath)
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     expect(stage2Requests).toBe(0)
-    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+    await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
 
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
     await expect(
@@ -214,7 +214,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     ).toBeVisible()
     expect(stage2Requests).toBe(1)
 
-    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+    await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
     await expect.poll(() => stage2Requests).toBe(2)
   })
 
@@ -286,7 +286,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(productionCompositionLabPath)
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
-    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+    await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
     await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toHaveCount(0)
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
     await expect
