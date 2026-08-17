@@ -158,7 +158,7 @@ test("formats every category-owned cadence kind without consulting product proto
     {
       category: "conditioner",
       recommended: { kind: "after_each_eligible_wash" },
-      expected: "Nach jeder passenden Haarwäsche",
+      expected: "Nach jeder Haarwäsche",
     },
     {
       category: "heat_protectant",
@@ -189,7 +189,7 @@ test("formats every category-owned cadence kind without consulting product proto
         ],
       },
       role: "pre_wash_fibre_treatment",
-      expected: "Vor jeder passenden Haarwäsche",
+      expected: "Vor jeder Haarwäsche",
     },
   ]
 

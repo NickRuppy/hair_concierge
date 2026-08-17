@@ -444,7 +444,7 @@ test("renders active routine as product-led result with separated later addition
   assert.doesNotMatch(html, /Regelmäßige Reinigung für deine Kopfhaut/)
   assert.doesNotMatch(html, /Pflegt und entwirrt die Längen nach der Haarwäsche/)
   assert.match(html, /3–4× pro Woche/)
-  assert.match(html, /Nach jeder passenden Haarwäsche/)
+  assert.match(html, /Nach jeder Haarwäsche/)
   assert.match(html, /Haarwäsche/)
   assert.match(html, /Nach Shampoo/)
   assert.doesNotMatch(html, /✓ Passt/)
@@ -731,7 +731,7 @@ test("translates structured Personal Plan cadence without exposing internal keys
   const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)
 
   assert.match(html, /Etwa alle 2 Wochen · Nach Shampoo/)
-  assert.match(html, /Vor jeder passenden Haarwäsche · Vor der Haarwäsche/)
+  assert.match(html, /Vor jeder Haarwäsche · Vor der Haarwäsche/)
   assert.doesNotMatch(html, /personal_plan\.cadence\.mask_regular_interval/)
   assert.doesNotMatch(html, /personal_plan\.cadence\.role_based_wash_linked/)
 })
@@ -746,7 +746,7 @@ test("presents every structured cadence kind and keeps a user override authorita
     {
       role: "conditioner_rinse_out",
       recommended: { kind: "after_each_eligible_wash" },
-      expected: "Nach jeder passenden Haarwäsche",
+      expected: "Nach jeder Haarwäsche",
     },
     {
       role: "pre_heat_protection",
@@ -774,7 +774,7 @@ test("presents every structured cadence kind and keeps a user override authorita
         kind: "role_based_wash_linked",
         roleFrequencies: [{ role: "dry_finish", cadence: "finish_after_every_compatible_wash" }],
       },
-      expected: "Als Finish nach jeder passenden Haarwäsche",
+      expected: "Als Finish nach jeder Haarwäsche",
     },
     {
       role: "specialized_bond_treatment",

@@ -95,11 +95,11 @@ test("roleFrequencyLabel renders role cadence for role_based_wash_linked", () =>
   }
   assert.equal(
     roleFrequencyLabel(basisFrequency, "pre_wash_fibre_treatment", false),
-    "vor jeder passenden Haarwäsche",
+    "vor jeder Haarwäsche",
   )
   assert.equal(
     roleFrequencyLabel(basisFrequency, "leave_on_fibre_conditioning", false),
-    "nach jeder passenden Haarwäsche",
+    "nach jeder Haarwäsche",
   )
   assert.equal(
     roleFrequencyLabel(basisFrequency, "dry_finish", false),
@@ -543,7 +543,7 @@ test("two same-tier oil roles group into one card, each with its own role cadenc
   assert.equal(primary?.id, "oil:pre_wash_fibre_treatment")
   assert.equal(primary?.product?.name, "Reichhaltiges Vorwäsche-Öl")
   assert.equal(primary?.targetType, "Pflege vor der Haarwäsche")
-  assert.equal(primary?.frequency, "vor jeder passenden Haarwäsche")
+  assert.equal(primary?.frequency, "vor jeder Haarwäsche")
 
   // Same card pattern, same category identity — only the role changes.
   assert.equal(secondary?.id, "oil:dry_finish")
@@ -800,7 +800,7 @@ test("oil role entries split across screens by their own tier", () => {
   assert.equal(basisOil.length, 1)
   // A single role on this screen → standalone card, no group.
   assert.ok(!isNeedCardGroup(basisOil[0]!))
-  assert.equal(asCard(basisOil[0]).frequency, "vor jeder passenden Haarwäsche")
+  assert.equal(asCard(basisOil[0]).frequency, "vor jeder Haarwäsche")
 
   const optionalOil = applied.optional!.cards.filter((card) => card.category === "oil")
   assert.equal(optionalOil.length, 1)
@@ -854,7 +854,7 @@ test("a basis-tone role that falls back while the optional-tone role recommends 
   assert.equal(basisOil?.imageUrl, null)
   assert.equal(basisOil?.fallbackNote, NEED_CARD_FALLBACK_NOTE)
   assert.equal(basisOil?.statusLabel, "Basis")
-  assert.equal(basisOil?.frequency, "vor jeder passenden Haarwäsche")
+  assert.equal(basisOil?.frequency, "vor jeder Haarwäsche")
   // The recomputed Basis count includes oil again — it is not dropped just
   // because its only concrete recommendation lives on Optional.
   assert.equal(applied.basis.countLabel, "1 Kategorie")

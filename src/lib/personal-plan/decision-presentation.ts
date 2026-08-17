@@ -78,8 +78,8 @@ type RoleBasedWashLinkedFrequency = Extract<PlanFrequencyTarget, { kind: "role_b
 type RoleCadence = RoleBasedWashLinkedFrequency["roleFrequencies"][number]["cadence"]
 
 const ROLE_CADENCE_LABELS = {
-  before_every_compatible_wash: "vor jeder passenden Haarwäsche",
-  after_every_compatible_wash: "nach jeder passenden Haarwäsche",
+  before_every_compatible_wash: "vor jeder Haarwäsche",
+  after_every_compatible_wash: "nach jeder Haarwäsche",
   finish_after_every_compatible_wash: "als Finish nach jeder Haarwäsche",
   optional_allocation_deferred_to_day_type: "nach Bedarf",
 } satisfies Record<RoleCadence, string>
