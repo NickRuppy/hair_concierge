@@ -86,15 +86,24 @@ export function presentationFor(decision: PlanCategoryDecision): CategoryPresent
   }
 
   switch (decision.target.category) {
-    case "shampoo":
+    case "shampoo": {
+      const dandruffSentence = decision.target.requiresTargetedDandruffCapability
+        ? " Außerdem soll das Shampoo gezielt gegen Schuppen arbeiten."
+        : ""
       if (decision.target.everydayConstraint.includes("irritation")) {
         return {
           targetType: "Sanft reinigend",
           purpose:
             "Entfernt Talg und Rückstände, ohne deine empfindliche Kopfhaut unnötig zu reizen.",
           productCriteria: "Sanft und zuverlässig reinigen, ohne stark entfettend zu sein.",
-          fit: "Deine Kopfhaut braucht deshalb eine sanfte Reinigungsrichtung.",
+          fit: `Deine Kopfhaut reagiert empfindlich. Deshalb eine sanfte Reinigung, die auf unnötige Reizstoffe verzichtet.${dandruffSentence}`,
         }
+      }
+      const scalpFit: Record<typeof decision.target.scalpRoute, string> = {
+        oily: "Deine Kopfhaut fettet schneller nach. Deshalb eine ausgleichende Reinigung, die Talg zuverlässig mitnimmt, ohne die Kopfhaut zu reizen.",
+        dry: "Deine Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.",
+        balanced:
+          "Deine Kopfhaut ist im Gleichgewicht. Deshalb eine Reinigung, die genau das erhält – nicht zu mild, nicht zu stark.",
       }
       return {
         targetType:
@@ -103,8 +112,9 @@ export function presentationFor(decision: PlanCategoryDecision): CategoryPresent
             : "Ausgleichend reinigend",
         purpose: "Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.",
         productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
-        fit: "Deine Kopfhaut-Angaben bestimmen die Reinigungsrichtung.",
+        fit: `${scalpFit[decision.target.scalpRoute]}${dandruffSentence}`,
       }
+    }
     case "conditioner":
       return {
         targetType: decision.target.weight === "light" ? "Leicht pflegend" : "Pflegend",
