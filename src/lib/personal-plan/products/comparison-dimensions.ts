@@ -237,9 +237,7 @@ function conditionerDimensions(
   ]
 }
 
-export function canonicalCareDirection(
-  value: string | null,
-): "moisture" | "balanced" | "protein" | null {
+function canonicalCareDirection(value: string | null): "moisture" | "balanced" | "protein" | null {
   if (value === "moisture" || value === "snaps") return "moisture"
   if (value === "balanced" || value === "stretches_bounces") return "balanced"
   if (value === "protein" || value === "stretches_stays") return "protein"
@@ -448,41 +446,41 @@ function dimension(
   }
 }
 
-export const WEIGHT_STOPS = [
+const WEIGHT_STOPS = [
   { stopId: "light", label: "leicht" },
   { stopId: "medium", label: "mittel" },
   { stopId: "rich", label: "reichhaltig" },
 ] as const
 
-export const CARE_DIRECTION_STOPS = [
+const CARE_DIRECTION_STOPS = [
   { stopId: "moisture", label: "Feuchtigkeit" },
   { stopId: "balanced", label: "ausgeglichen" },
   { stopId: "protein", label: "Protein" },
 ] as const
 
-export const REPAIR_STOPS = [
+const REPAIR_STOPS = [
   { stopId: "low", label: "niedrig" },
   { stopId: "medium", label: "mittel" },
   { stopId: "high", label: "hoch" },
 ] as const
 
-export const THICKNESS_STOPS = [
+const THICKNESS_STOPS = [
   { stopId: "fine", label: "fein" },
   { stopId: "normal", label: "mittel" },
   { stopId: "coarse", label: "dick" },
 ] as const
 
-export const BONDBUILDER_RELATIONSHIP_STOPS = [
+const BONDBUILDER_RELATIONSHIP_STOPS = [
   { stopId: "standalone", label: "eigenständig" },
   { stopId: "add_on", label: "nur ergänzend" },
 ] as const
 
-export const BINARY_STOPS = [
+const BINARY_STOPS = [
   { stopId: "true", label: "ja" },
   { stopId: "false", label: "nein" },
 ] as const
 
-export function positionForValue(
+function positionForValue(
   value: string | boolean | readonly string[] | null,
   presentationKind: Stage3FitComparisonPresentationKind,
   stops: readonly Stage3FitComparisonStop[],
@@ -495,7 +493,7 @@ export function positionForValue(
   return scalarPosition(value as string | boolean, stops)
 }
 
-export function scalarPosition(
+function scalarPosition(
   value: string | boolean,
   stops: readonly Stage3FitComparisonStop[],
 ): Stage3FitComparisonPosition {
@@ -505,7 +503,7 @@ export function scalarPosition(
     : { kind: "unknown" }
 }
 
-export function setPosition(
+function setPosition(
   values: readonly string[],
   stops: readonly Stage3FitComparisonStop[],
 ): Stage3FitComparisonPosition {
