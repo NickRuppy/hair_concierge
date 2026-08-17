@@ -394,21 +394,27 @@ test("the detail sheet drops the CTA when no verified purchase link exists", () 
   assert.doesNotMatch(html, /text-\[#356b45\]/)
 })
 
-test("an unconfirmed availability is styled neutrally rather than green", () => {
+test("an unknown availability renders no availability line at all", () => {
   const html = renderToStaticMarkup(
     <ProductDetailSheetBody
       card={card({
         product: {
           ...productFixture,
-          availabilityLabel: "Aktuelle Verfügbarkeit nicht bestätigt",
+          // Unknown availability is null, not a guessed "nicht bestätigt" copy.
+          availabilityLabel: null,
           purchaseLinkStatus: null,
         },
       })}
     />,
   )
 
-  assert.match(html, /data-availability-tone="muted"/)
+  // No line beats an empty or invented one: the tone span must not render,
+  // so there is neither a stray green line nor an empty tinted placeholder.
+  assert.doesNotMatch(html, /data-availability-tone/)
   assert.doesNotMatch(html, /text-\[#356b45\]/)
+  assert.doesNotMatch(html, /nicht bestätigt/)
+  // The rest of the product line still renders.
+  assert.match(html, /Redken All Soft Shampoo/)
 })
 
 test("the fallback sheet explains the need without commerce or CTA", () => {

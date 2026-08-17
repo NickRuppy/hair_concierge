@@ -33,7 +33,7 @@ function recommendation(overrides: Record<string, unknown> = {}) {
       netContentUnit: null,
       priceLabel: null,
       netContentLabel: null,
-      availabilityLabel: "Aktuelle Verfügbarkeit nicht bestätigt",
+      availabilityLabel: null,
       productUrl: null,
       affiliateDisclosure: null,
     },

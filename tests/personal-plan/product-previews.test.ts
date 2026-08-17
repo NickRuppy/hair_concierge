@@ -62,7 +62,8 @@ function emptyCommerce() {
     netContentUnit: null,
     priceLabel: null,
     netContentLabel: null,
-    availabilityLabel: "Aktuelle Verfügbarkeit nicht bestätigt",
+    // Unknown availability stays quiet rather than announcing an unconfirmed status.
+    availabilityLabel: null,
     productUrl: null,
     affiliateDisclosure: null,
   }
