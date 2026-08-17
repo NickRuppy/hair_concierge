@@ -16,7 +16,8 @@ export type NeedCardProduct = {
   name: string
   priceLabel: string | null
   netContentLabel: string | null
-  availabilityLabel: string
+  /** Null when availability is unknown — the line is omitted instead of guessing. */
+  availabilityLabel: string | null
   /** Drives the availability line's tone: only "available" reads as green. */
   purchaseLinkStatus?: "available" | "unavailable" | null
   /** Only set when the purchase link is available and safe. */
