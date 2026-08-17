@@ -129,9 +129,12 @@ function cardFromDecision(decision: PlanCategoryDecision): NeedCardViewModel | n
 }
 
 /**
- * Basis counts categories, Optional counts the suggestions on the page. Only
- * the Optional label therefore has to be recomputed once the per-role expansion
- * has added cards — "N Kategorien" stays literally true either way.
+ * Basis counts distinct categories, Optional counts the suggestions on the
+ * page. Both labels are recomputed once the per-role expansion has settled
+ * final placement — a category can now leave the screen it started on
+ * entirely (e.g. its basis-tier role falls back while its optional-tier role
+ * recommends, relocating the whole category), so neither count is safe to
+ * carry over from the adapt-time screen unchanged.
  */
 function countLabelFor(kind: "basis" | "optional", count: number): string {
   return kind === "basis"
@@ -324,6 +327,26 @@ function roleRank(category: Stage1Category, role: PlanProductRole): number {
 }
 
 /**
+ * The single placement rule for every entry `applyStage1ProductExamplePreviews`
+ * produces, recommendation-backed or not: an explicit per-role tier
+ * (`card.roleTones[role]`, oil today) always wins. Otherwise the entry stays
+ * on the screen its category card already lives on (`originScreen`) — never
+ * the category's own aggregate `tone`, which can be stale after the
+ * paused-only-optional merge relocates a card without updating `tone`.
+ * `role` is `null` for a category with no resolved recommendation at all,
+ * which has no per-role tier to look up and so always falls through to
+ * `originScreen`.
+ */
+function placementTone(
+  card: NeedCardViewModel,
+  role: PlanProductRole | null,
+  originScreen: "basis" | "optional",
+): NeedCardTone {
+  const roleTone = role ? card.roleTones?.[role] : undefined
+  return roleTone ?? originScreen
+}
+
+/**
  * Same-tier entries of one category collapse into a single group card; a lone
  * entry stays a standalone card. Preserves first-encounter category order
  * within the tone bucket.
@@ -385,9 +408,11 @@ export function applyStage1ProductExamplePreviews(
   // group from an earlier application. The origin screen and the card's own
   // `tone` can disagree: `adaptInitialNeedSnapshotToPlanStartViewModel`'s
   // paused-only-optional merge physically moves a paused optional-tone card
-  // onto Basis without changing its `tone`. Role ENTRIES (recommendation-
-  // backed) are placed by their own per-role tone below; a category with no
-  // resolved role stays exactly where it already renders.
+  // onto Basis without changing its `tone`. One rule places every entry
+  // (`placementTone` below): an explicit per-role tier always wins; every
+  // other entry — including a category with no resolved role at all — stays
+  // on the screen it already lives on, never re-bucketed by the category's
+  // stale aggregate `tone`.
   const sourceCards: Array<{ card: NeedCardViewModel; originScreen: "basis" | "optional" }> = [
     ...(plan.basis.cards as NeedCardViewModel[]).map((card) => ({
       card,
@@ -413,10 +438,12 @@ export function applyStage1ProductExamplePreviews(
 
     if (recommendations.length === 0) {
       // No role resolved to a product — the category card is carried over
-      // unchanged to the screen it already lives on, never re-bucketed by
-      // `tone` (see the paused-merge note above).
+      // unchanged to the screen it already lives on (no role to look up a
+      // per-role tier for, so `placementTone` falls straight through to
+      // `originScreen`; see the paused-merge note above).
       const resultCard = categoryOnlyCard(card, leadPreviews.get(category))
-      const bucket = originScreen === "basis" ? basisEntries : optionalEntries
+      const bucket =
+        placementTone(card, null, originScreen) === "basis" ? basisEntries : optionalEntries
       bucket.push(resultCard)
       continue
     }
@@ -424,7 +451,8 @@ export function applyStage1ProductExamplePreviews(
     const multiRole = recommendations.length > 1
     for (const preview of recommendations) {
       const entry = roleEntry(card, preview, multiRole)
-      const bucket = entry.tone === "basis" ? basisEntries : optionalEntries
+      const bucket =
+        placementTone(card, preview.role, originScreen) === "basis" ? basisEntries : optionalEntries
       bucket.push(entry)
     }
   }
@@ -440,6 +468,10 @@ export function applyStage1ProductExamplePreviews(
   const basis: NeedPlanScreenViewModel = {
     ...plan.basis,
     cards: finalBasisCards,
+    countLabel: countLabelFor(
+      "basis",
+      new Set(finalBasisCards.map((resultCard) => resultCard.category)).size,
+    ),
     progress: hasOptionalNow ? 50 : 100,
   }
 

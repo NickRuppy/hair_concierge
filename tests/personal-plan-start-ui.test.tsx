@@ -106,9 +106,11 @@ test("roleFrequencyLabel renders role cadence for role_based_wash_linked", () =>
     "als Finish nach jeder Haarwäsche",
   )
   assert.equal(roleFrequencyLabel(optionalFrequency, "dry_finish", false), "nach Bedarf")
-  // No role entry at all falls back to the category-level label (which is
-  // also "nach Bedarf" for this frequency kind).
-  assert.equal(roleFrequencyLabel(basisFrequency, "unknown_role", false), "nach Bedarf")
+  // A role this frequency's `roleFrequencies` doesn't cover at all falls
+  // back to the category-level label (which is also "nach Bedarf" for this
+  // frequency kind) — a real `PlanProductRole`, just not one of the three
+  // this particular oil decision resolved.
+  assert.equal(roleFrequencyLabel(basisFrequency, "scalp_comfort", false), "nach Bedarf")
   assert.equal(roleFrequencyLabel(null, "dry_finish", true), "später: nach Klärung")
 })
 
@@ -1056,6 +1058,32 @@ test("the paused-merge card still resurrects nothing once other categories get r
   )
 })
 
+test("a paused-merge card whose own category gets a recommendation still does not resurrect the Optional page", () => {
+  // The paused category itself (not some other category) resolves a real
+  // recommendation. It has no `roleTones` entry for its role (dry_shampoo
+  // never tiers per role), so the single placement rule must fall through to
+  // `originScreen` ("basis", where the paused-merge physically put it) —
+  // never to the card's stale `tone` ("optional"), which would resurrect the
+  // suppressed Optional page and step `basis.progress` back to 50.
+  const applied = applyStage1ProductExamplePreviews(
+    pausedOnlyOptionalPlan,
+    previewResponse([
+      recommendation({
+        category: "dry_shampoo",
+        role: "root_refresh_bridge",
+        decisionKey: "decision:dry_shampoo:root_refresh_bridge:gap",
+        productName: "Trockenshampoo Sensitiv",
+      }),
+    ]),
+  )
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  const dryShampoo = findCard(applied.basis.cards, (item) => item.id === "dry_shampoo")
+  assert.ok(dryShampoo)
+  assert.equal(dryShampoo?.product?.name, "Trockenshampoo Sensitiv")
+})
+
 test("an optional screen that redistributes down to zero final cards is dropped", () => {
   // Artificial: `roleTones` pulls this optional-tone category's only role
   // back to "basis", so nothing is left to keep the Optional page alive.
@@ -1087,6 +1115,53 @@ test("an optional screen that redistributes down to zero final cards is dropped"
   // The role entry itself still renders — just relocated to Basis.
   const oilCard = findCard(applied.basis.cards, (item) => item.category === "oil")
   assert.equal(oilCard?.product?.name, "Reichhaltiges Vorwäsche-Öl")
+})
+
+test("a category that entirely relocates off Basis is dropped from the recomputed Basis count", () => {
+  // Oil's only resolved role is tiered "optional" via `roleTones`; its basis
+  // role has no preview at all (fell back). The whole category therefore
+  // relocates to Optional, and the Basis countLabel — which used to be
+  // carried over unchanged from adapt time — must be recomputed to reflect
+  // the categories that are still actually on the page.
+  const relocatingBasisPlan: PlanStartReadyViewModel = {
+    ...readyPlan,
+    basis: {
+      ...readyPlan.basis,
+      countLabel: "3 Kategorien",
+      cards: [
+        ...readyPlan.basis.cards,
+        card({
+          id: "oil",
+          category: "oil",
+          tone: "basis",
+          categoryLabel: "Haaröl",
+          imageUrl: null,
+          roleTones: { leave_on_fibre_conditioning: "optional" },
+        }),
+      ],
+    },
+  }
+
+  const applied = applyStage1ProductExamplePreviews(
+    relocatingBasisPlan,
+    previewResponse([
+      recommendation({
+        category: "oil",
+        role: "leave_on_fibre_conditioning",
+        decisionKey: "decision:oil:leave_on_fibre_conditioning:gap",
+        productName: "Leichtes Finish-Öl",
+      }),
+    ]),
+  )
+
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["shampoo", "conditioner"],
+  )
+  assert.equal(applied.basis.countLabel, "2 Kategorien")
+  assert.ok(applied.optional)
+  const oilCard = findCard(applied.optional!.cards, (item) => item.category === "oil")
+  assert.equal(oilCard?.product?.name, "Leichtes Finish-Öl")
 })
 
 test("the screen disclaimer stays honest when no category has a product yet", () => {
@@ -1784,4 +1859,9 @@ test("mobile containment is guarded by fixed card tracks and bounded text", () =
     `${componentSource}${adapterSource}`,
     /labs\/personal-plan|STAGE1_STAGE2|fixture/i,
   )
+  // `need-card.tsx` is a "use client" module — a value import from it in a
+  // server-reachable module like snapshot-adapter.ts turns that import into
+  // a client reference and crashes an RSC render that calls the function
+  // server-side. Type-only imports (e.g. from need-plan-screen) are fine.
+  assert.doesNotMatch(adapterSource, /import\s*\{[^}]*\}\s*from\s*"\.\/need-card"/)
 })

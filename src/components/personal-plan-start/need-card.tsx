@@ -7,13 +7,7 @@ import { useState } from "react"
 import type { Stage1Category } from "@/lib/personal-plan/types"
 import { cn } from "@/lib/utils"
 
-import {
-  isNeedCardGroup,
-  NEED_CARD_FALLBACK_NOTE,
-  type NeedCardGroupViewModel,
-  type NeedCardTone,
-  type NeedCardViewModel,
-} from "./plan-start-cards"
+import type { NeedCardGroupViewModel, NeedCardViewModel } from "./plan-start-cards"
 import { ProductDetailSheet } from "./product-detail-sheet"
 
 // Re-exported so existing importers (the barrel, tests, other client
@@ -229,7 +223,12 @@ export function NeedCardGroup({ group }: { group: NeedCardGroupViewModel }) {
         />
         <span className="truncate">{group.categoryLabel}</span>
         {group.statusLabel !== "Basis" ? (
-          <span className="shrink-0 rounded-full bg-[rgba(107,80,160,0.14)] px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.08em] text-[#6B50A0]">
+          <span
+            className={cn(
+              "shrink-0 rounded-full bg-[rgba(107,80,160,0.14)] px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.08em] text-[#6B50A0]",
+              group.statusLabel === "Pausiert" && "bg-[rgba(200,160,40,0.18)] text-[#7f5d0c]",
+            )}
+          >
             {group.statusLabel}
           </span>
         ) : null}

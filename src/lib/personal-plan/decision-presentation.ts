@@ -2,6 +2,7 @@ import { PRODUCT_FREQUENCY_LABELS, type ProductFrequency } from "@/lib/vocabular
 import type {
   PlanCategoryDecision,
   PlanFrequencyTarget,
+  PlanProductRole,
   Stage1Category,
 } from "@/lib/personal-plan/types"
 
@@ -73,12 +74,15 @@ export function frequencyLabel(frequency: PlanFrequencyTarget | null, paused: bo
   }
 }
 
-const ROLE_CADENCE_LABELS: Record<string, string> = {
+type RoleBasedWashLinkedFrequency = Extract<PlanFrequencyTarget, { kind: "role_based_wash_linked" }>
+type RoleCadence = RoleBasedWashLinkedFrequency["roleFrequencies"][number]["cadence"]
+
+const ROLE_CADENCE_LABELS = {
   before_every_compatible_wash: "vor jeder passenden Haarwäsche",
   after_every_compatible_wash: "nach jeder passenden Haarwäsche",
   finish_after_every_compatible_wash: "als Finish nach jeder Haarwäsche",
   optional_allocation_deferred_to_day_type: "nach Bedarf",
-}
+} satisfies Record<RoleCadence, string>
 
 /**
  * Role-scoped cadence copy for categories whose frequency is
@@ -89,7 +93,7 @@ const ROLE_CADENCE_LABELS: Record<string, string> = {
  */
 export function roleFrequencyLabel(
   frequency: PlanFrequencyTarget | null,
-  role: string,
+  role: PlanProductRole,
   paused: boolean,
 ): string {
   if (frequency?.kind === "role_based_wash_linked") {

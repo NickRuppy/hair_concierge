@@ -4,7 +4,7 @@ import Image from "next/image"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
-import type { NeedCardViewModel } from "./need-card"
+import type { NeedCardViewModel } from "./plan-start-cards"
 
 /** Shown once a concrete product leads the card: the refinement can still improve it. */
 export const PRODUCT_REFINEMENT_HINT =

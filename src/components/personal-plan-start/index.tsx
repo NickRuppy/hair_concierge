@@ -1,5 +1,5 @@
+export { NeedCard } from "./need-card"
 export {
-  NeedCard,
   NEED_CARD_FALLBACK_NOTE,
   isNeedCardGroup,
   type NeedCardGroupViewModel,
@@ -7,7 +7,7 @@ export {
   type NeedCardTone,
   type NeedCardViewModel,
   type PlanStartCardViewModel,
-} from "./need-card"
+} from "./plan-start-cards"
 export {
   NeedPlanScreen,
   PLAN_START_CATALOG_DISCLAIMER,
