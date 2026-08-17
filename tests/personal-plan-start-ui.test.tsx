@@ -26,6 +26,7 @@ import {
   type PlanStartReadyViewModel,
 } from "../src/components/personal-plan-start"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
+import { roleFrequencyLabel } from "../src/lib/personal-plan/decision-presentation"
 import {
   STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL,
   stage1ProductExamplePreviewRequestUrl,
@@ -33,6 +34,56 @@ import {
 import type { InitialNeedPlanSnapshot, InitialProductPreview } from "../src/lib/personal-plan/types"
 import type { PersonalPlanQuizSubmissionEnvelope } from "../src/lib/personal-plan-quiz/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
+
+test("roleFrequencyLabel renders role cadence for role_based_wash_linked", () => {
+  const basisFrequency = {
+    kind: "role_based_wash_linked" as const,
+    roleFrequencies: [
+      {
+        role: "pre_wash_fibre_treatment" as const,
+        tier: "basis" as const,
+        cadence: "before_every_compatible_wash" as const,
+      },
+      {
+        role: "leave_on_fibre_conditioning" as const,
+        tier: "basis" as const,
+        cadence: "after_every_compatible_wash" as const,
+      },
+      {
+        role: "dry_finish" as const,
+        tier: "basis" as const,
+        cadence: "finish_after_every_compatible_wash" as const,
+      },
+    ],
+  }
+  const optionalFrequency = {
+    kind: "role_based_wash_linked" as const,
+    roleFrequencies: [
+      {
+        role: "dry_finish" as const,
+        tier: "optional" as const,
+        cadence: "optional_allocation_deferred_to_day_type" as const,
+      },
+    ],
+  }
+  assert.equal(
+    roleFrequencyLabel(basisFrequency, "pre_wash_fibre_treatment", false),
+    "vor jeder passenden Haarwäsche",
+  )
+  assert.equal(
+    roleFrequencyLabel(basisFrequency, "leave_on_fibre_conditioning", false),
+    "nach jeder passenden Haarwäsche",
+  )
+  assert.equal(
+    roleFrequencyLabel(basisFrequency, "dry_finish", false),
+    "als Finish nach jeder Haarwäsche",
+  )
+  assert.equal(roleFrequencyLabel(optionalFrequency, "dry_finish", false), "nach Bedarf")
+  // No role entry at all falls back to the category-level label (which is
+  // also "nach Bedarf" for this frequency kind).
+  assert.equal(roleFrequencyLabel(basisFrequency, "unknown_role", false), "nach Bedarf")
+  assert.equal(roleFrequencyLabel(null, "dry_finish", true), "später: nach Klärung")
+})
 
 const baseDetailBlocks: NeedCardViewModel["detailBlocks"] = [
   {

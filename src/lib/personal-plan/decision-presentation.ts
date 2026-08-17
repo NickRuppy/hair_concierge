@@ -73,6 +73,33 @@ export function frequencyLabel(frequency: PlanFrequencyTarget | null, paused: bo
   }
 }
 
+const ROLE_CADENCE_LABELS: Record<string, string> = {
+  before_every_compatible_wash: "vor jeder passenden Haarwäsche",
+  after_every_compatible_wash: "nach jeder passenden Haarwäsche",
+  finish_after_every_compatible_wash: "als Finish nach jeder Haarwäsche",
+  optional_allocation_deferred_to_day_type: "nach Bedarf",
+}
+
+/**
+ * Role-scoped cadence copy for categories whose frequency is
+ * `role_based_wash_linked` (oil today): each role has its own cadence, unlike
+ * the category-level `frequencyLabel`, which only has one generic sentence
+ * ("nach Bedarf") for the whole category. Falls back to `frequencyLabel` for
+ * every other frequency kind and for a role this frequency doesn't cover.
+ */
+export function roleFrequencyLabel(
+  frequency: PlanFrequencyTarget | null,
+  role: string,
+  paused: boolean,
+): string {
+  if (frequency?.kind === "role_based_wash_linked") {
+    const entry = frequency.roleFrequencies.find((candidate) => candidate.role === role)
+    const label = entry ? ROLE_CADENCE_LABELS[entry.cadence] : undefined
+    if (label) return `${paused ? "später: " : ""}${label}`
+  }
+  return frequencyLabel(frequency, paused)
+}
+
 export function presentationFor(decision: PlanCategoryDecision): CategoryPresentation | null {
   if (!decision.target || !isStage1Category(decision.target.category)) return null
 
