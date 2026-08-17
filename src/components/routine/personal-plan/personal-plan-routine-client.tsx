@@ -23,7 +23,10 @@ import type {
   RoutineProductRef,
 } from "@/lib/personal-plan/routine-candidate-compiler"
 import type { RoutineProductDetail as RoutineProductDetailData } from "@/lib/personal-plan/routine/product-detail-service"
-import { shouldShowRoutineRefinementNudge } from "@/lib/personal-plan/routine/nudge"
+import {
+  ROUTINE_REFINEMENT_NUDGE_HREF,
+  shouldShowRoutineRefinementNudge,
+} from "@/lib/personal-plan/routine/nudge"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
@@ -231,7 +234,10 @@ export function PersonalPlanRoutineClient({
   }, [])
   const refineFromNudge = React.useCallback(() => {
     markPersonalPlanStageNavigation("/plan-start")
-    router.push("/plan-start")
+    // `?refine=1` forces a real Stage-2 re-entry: after a direct accept the
+    // refinement draft is already complete, so a bare /plan-start would seed the
+    // completed session and auto-hand off into Stage 3.
+    router.push(ROUTINE_REFINEMENT_NUDGE_HREF)
   }, [router])
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
   const [detail, setDetail] = React.useState<RoutineProductDetailData | null>(null)

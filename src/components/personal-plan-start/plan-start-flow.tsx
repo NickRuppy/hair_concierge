@@ -74,8 +74,30 @@ export type PlanStartReadyViewModel = {
 
 export type PlanStartInitialJourney =
   | { stage: "stage1"; refinementAvailable?: boolean; directAcceptanceAvailable?: boolean }
-  | { stage: "stage2"; refinementAvailable?: boolean; directAcceptanceAvailable?: boolean }
+  | {
+      stage: "stage2"
+      refinementAvailable?: boolean
+      directAcceptanceAvailable?: boolean
+      /**
+       * Explicit Stage-2 re-entry (`/plan-start?refine=1`, the Routine
+       * refinement nudge). Suppresses the bridge auto-handoff exactly like the
+       * in-session "Zurück zum Feinschliff" return from Stage 3 does, so a
+       * completed draft does not bounce the user straight back to Stage 3.
+       */
+      returningToRefinement?: boolean
+    }
   | { stage: "stage3"; refinedVersionId: string; repairRoutineVersionId?: string }
+
+/**
+ * Whether Stage 2's bridge may hand off into Stage 3 on its own. An explicit
+ * refine request (`/plan-start?refine=1`, the Routine refinement nudge) must
+ * not: after a direct accept the draft is already complete, so an auto-handoff
+ * would bounce the user straight back to Stage 3 without ever showing the
+ * Feinschliff.
+ */
+export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJourney): boolean {
+  return !(initialJourney.stage === "stage2" && initialJourney.returningToRefinement === true)
+}
 
 export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
 
@@ -451,7 +473,9 @@ export function PlanStartCustomerJourney({
   const pendingStage3BootstrapRef = useRef<Stage2RefinementSession | null>(null)
   const stage3JourneyStartedRef = useRef(false)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
-  const [returningToRefinement, setReturningToRefinement] = useState(false)
+  const [returningToRefinement, setReturningToRefinement] = useState(
+    () => !refinementAutoHandoffEnabled(initialJourney),
+  )
   const stage1ReturnStepRef = useRef<FlowStep>("basis")
   const [stage3LoadState, setStage3LoadState] = useState<
     "idle" | "loading" | Stage3LoadRecoveryMode

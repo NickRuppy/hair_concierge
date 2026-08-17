@@ -6,6 +6,15 @@
 
 export const ROUTINE_REFINEMENT_NUDGE_SNOOZE_MS = 24 * 60 * 60 * 1000
 
+/**
+ * The nudge's "Jetzt verfeinern" target. `refine=1` is load-bearing: after a
+ * direct accept the refinement draft is already complete, so a bare
+ * `/plan-start` would seed the completed session and hand off straight into
+ * Stage 3 instead of showing the Feinschliff. See `parseRefineParam` in
+ * `src/app/plan-start/page.tsx`.
+ */
+export const ROUTINE_REFINEMENT_NUDGE_HREF = "/plan-start?refine=1"
+
 export type RoutineRefinementNudgeState = {
   unrefinedDirectAccept: boolean
   nudgeDismissedUntil: string | null

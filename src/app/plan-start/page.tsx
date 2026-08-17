@@ -49,6 +49,18 @@ export type PlanStartPageDeps = {
 
 export type PlanStartSearchParams = {
   repairRoutineVersionId?: string | string[]
+  /** `1` = explicit re-entry into Stage 2 (the Routine refinement nudge). */
+  refine?: string | string[]
+}
+
+/**
+ * The Routine refinement nudge links to `/plan-start?refine=1`. Without it, a
+ * directly accepted plan has a COMPLETE refinement draft, so the resolver would
+ * seed the completed session and Stage 2 would auto-hand off straight into
+ * Stage 3 — the user would never see the Feinschliff again.
+ */
+export function parseRefineParam(value: string | string[] | undefined): boolean {
+  return (Array.isArray(value) ? value[0] : value) === "1"
 }
 
 export type PlanStartPageState =
@@ -64,7 +76,7 @@ export type PlanStartPageState =
 
 export async function resolvePlanStartPageState(
   deps: PlanStartPageDeps,
-  options: { repairRoutineVersionId?: string } = {},
+  options: { repairRoutineVersionId?: string; refine?: boolean } = {},
 ): Promise<PlanStartPageState> {
   if (!deps.enabled()) return { state: "unavailable" }
   const userId = await deps.getUserId()
@@ -117,6 +129,16 @@ export async function resolvePlanStartPageState(
     const initialRefinementSession = isUsableInitialRefinementSession(refinement)
       ? refinement
       : undefined
+    // An explicit refine request outranks every later-stage resume: it exists
+    // precisely to stop the completed draft from being handed off again.
+    if (options.refine) {
+      return production(
+        { stage: "stage2", returningToRefinement: true, ...directAcceptance },
+        initialRefinementSession
+          ? { personalPlanId: access.personalPlanId, initialRefinementSession }
+          : undefined,
+      )
+    }
     if (
       options.repairRoutineVersionId &&
       refinement.status === "complete" &&
@@ -201,7 +223,10 @@ export default async function PlanStartPage({
         return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
       },
     },
-    { repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId) },
+    {
+      repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId),
+      refine: parseRefineParam(params.refine),
+    },
   )
   if (state.state === "paid_pending") redirect("/plan-bereit")
   if (state.state === "unavailable") return <PlanStartFlow state="unavailable" />
