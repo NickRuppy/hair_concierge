@@ -73,12 +73,13 @@ than shrank.
 
 ### Joint invariant / accept chain
 
-`tests/personal-plan-direct-accept-seen-state-join.test.ts` stays green. It is
-structurally unaffected: it computes the preview payload with an **empty catalog
-loader**, so the preview role-key set is decided by the snapshot alone, and the
-bondbuilder change only decides whether an existing role key resolves to a
-recommendation or a fallback — never which role keys exist. No cohort
-divergence, so no BLOCKED condition. `personal-plan-direct-acceptance.test.ts`
+`tests/personal-plan-direct-accept-seen-state-join.test.ts` stays green, and a
+value-level cohort was added — see "Review follow-up FIX 2" below, which also
+corrects the framing of this paragraph as first written. The existing cohorts
+load an **empty catalog**, so their green run proves **key-set stability only**:
+every preview is a fallback there and no `productId` or `factFingerprint` is
+ever compared. That is enough to show the bondbuilder change does not alter
+which role keys exist, but it is not the join. `personal-plan-direct-acceptance.test.ts`
 and `personal-plan-stage1-2-3-integration.test.ts` also green.
 
 ### Ripple (intended)
@@ -235,7 +236,7 @@ Tests added / updated:
 | `tests/personal-plan/products/stage3-authority.test.ts` | 67 pass / 0 fail |
 | `tests/personal-plan/product-previews.test.ts` | 17 pass / 0 fail |
 | `tests/personal-plan-start-ui.test.tsx` + `tests/personal-plan-fork-screen.test.tsx` | 64 pass / 0 fail |
-| `npm run test:personal-plan` (flat glob) | **1808 pass / 0 fail** |
+| `npm run test:personal-plan` (flat glob) | **1811 pass / 0 fail** (second pass; 1808 before the review fixes) |
 | `node scripts/ci/run-personal-plan-nested.mjs` | **538 pass / 0 fail** |
 | `npm run test:node` | 4121 pass / 1 fail — pre-existing, unrelated (see below) |
 | `npm run ci:verify` (typecheck + lint + build) | pass |
@@ -260,14 +261,95 @@ Logs: `personal-plan-flat.log`, `personal-plan-nested.log`, `test-node.log`,
 
 ---
 
+## Review follow-up (second pass)
+
+Two fixes from the review verdict, plus one comment line.
+
+### FIX 1 — Optional `countLabel` recomputed after the per-role expansion
+
+Was: `screenFor` computed the label from the pre-expansion card list and
+`applyStage1ProductExamplePreviews` replaced only `cards`, so an Optional screen
+with a two-role Oil rendered two cards under "1 Vorschlag".
+
+- `snapshot-adapter.ts`: extracted `countLabelFor(kind, count)` (used by
+  `screenFor`), and `apply()` now recomputes `countLabel` for the **optional**
+  screen from the expanded card count. Basis keeps its category count —
+  "N Kategorien" stays literally true (2 categories, 3 cards).
+
+RED → GREEN:
+
+```
+✖ the optional count names the cards on the page, not the categories behind them
+✔ the basis count keeps counting categories after the per-role expansion
+```
+
+Both green after the fix. The optional test asserts "2 Vorschläge" for a
+two-role category and still "1 Vorschlag" for a single-role one; the basis test
+pins 3 cards under "2 Kategorien".
+
+### FIX 2 — The joint invariant now exercises the tie at value level
+
+The framing in the first pass was too strong and is corrected above. The
+existing cohorts use an empty candidate loader, so every preview is a fallback
+and the assertions compare decision **keys** only — but `seenRoles` echoes
+three values per role (`decisionKey`, `productId`, `factFingerprint`) and
+`buildDirectAcceptanceIntents` rejects a value mismatch exactly as hard as a
+missing key. The old net therefore proved key-set stability, not this join.
+
+New test in `tests/personal-plan-direct-accept-seen-state-join.test.ts`:
+`the Bondbuilder tie cohort joins on product identity, not only on role keys`.
+
+- A **non-empty fake catalog** carrying the production situation: three
+  bondbuilder candidates all evaluating `ideal`, one of them K18.
+- Asserts the bondbuilder preview is a `recommendation` for K18, then compares
+  it to what `evaluateStage3Authority` produces for the **same subject on the
+  accept chain's side** — built from the REFINED snapshot the synthetic Stage-2
+  defaults produce, with `capturedProductId: null` / `subjectIdentity: null`
+  (direct acceptance answers `currentProductCategories: []`). Both
+  `recommendation.productId` **and** `recommendationFactFingerprint` must equal
+  the preview's `productId` / `factFingerprint`.
+- The two sides really are different computations (initial vs. refined category
+  decision, initial vs. refined hair thickness), which is what makes the join
+  meaningful rather than tautological.
+- Candidate `suitableThicknesses` is pinned to the **initial** snapshot's
+  thickness rather than made universally suitable, so a thickness drift between
+  the two snapshots breaks the join loudly instead of being papered over.
+- The cohort also re-runs the existing key-level `assertSeenStateJoin`.
+- `refinedSnapshot(envelope)` was extracted from `acceptChainRoleKeys` so both
+  the key-level and value-level paths derive the refined side one way.
+
+**Mutation-tested for teeth.** The first draft imported
+`BONDBUILDER_TIE_DEFAULT_PRODUCT_ID`, so pointing the production constant at a
+bogus id left the test **green** — the fixture moved with the constant. The id
+is now pinned as a literal (`K18_PRODUCT_ID`) with a comment saying why. Re-run
+with the same mutation:
+
+```
+✖ the Bondbuilder tie cohort joins on product identity, not only on role keys
+  AssertionError: the tie default must resolve to a buyable product, not a fallback
+```
+
+Source restored; the only remaining diff to `bondbuilder.ts` in this pass is the
+comment below.
+
+### Comment line
+
+`BONDBUILDER_TIE_DEFAULT_PRODUCT_ID`'s doc comment now records that the same
+situation persists two different honest rule ids: an interactive Stage-3 pick of
+K18 persists `validated_standalone` (that path evaluates the chosen product on
+its own), while a direct acceptance persists `tie_default` — so anything keyed
+on `tie_default` sees only the direct-accept half of the cohort.
+
+### Deferred, per review
+
+Not touched: the `shampoo_dandruff` sentence, lead-card pill duplication,
+`equal_shortlist` visibility.
+
+---
+
 ## Concerns / follow-ups
 
-1. **`countLabel` under-counts now.** A screen's count line still says
-   "N Kategorien" / "N Vorschläge" from the snapshot's category count, computed
-   before the per-role expansion. For Basis ("Kategorien") that stays literally
-   true; for the Optional screen ("N Vorschläge") a category with two roles now
-   renders two cards under a label that counts one. Left alone deliberately
-   (out of the two decided changes) — worth a copy decision from Nick.
+1. ~~**`countLabel` under-counts now.**~~ Fixed in the review follow-up above.
 2. **Secondary-card copy comes from the Routine vocabulary.** It is approved,
    in-product German, but it was written for the Routine list, not the Stage-1
    card. Two lines read slightly generic in this context —
@@ -275,13 +357,18 @@ Logs: `personal-plan-flat.log`, `personal-plan-nested.log`, `test-node.log`,
    `scalp_flake_oil_adjunct` → "Ergänzt die Kopfhautpflege punktuell." If Nick
    wants Stage-1-specific role copy, `routineRolePurposeDescription` is the one
    place to fork.
-3. **Primary vs. secondary card voice.** The leading card still shows the
+3. **The value-level join covers Bondbuilder only.** The new cohort proves the
+   product-identity join for the one category that motivated it. Every other
+   category still joins on keys alone, because every other cohort loads an empty
+   catalog. Generalising the fake catalog across categories would widen the net
+   considerably — worth doing, but it is its own task.
+4. **Primary vs. secondary card voice.** The leading card still shows the
    category-level `targetType`/`purpose`; only further roles show role-level
    copy. That was the smaller, lower-risk diff and matches the brief, but it
    means an Oil pair reads "Reichhaltige Vorwäsche" (category) then "Finish"
    (role). Making the lead card role-aware too would need a role-level
    presentation layer in `decision-presentation.ts`.
-4. **Tie default is a catalog-coupled id.** `BONDBUILDER_TIE_DEFAULT_PRODUCT_ID`
+5. **Tie default is a catalog-coupled id.** `BONDBUILDER_TIE_DEFAULT_PRODUCT_ID`
    points at a specific production row. If K18 is delisted or its id changes,
    the tie silently reverts to the honest no-recommendation path (no crash, no
    wrong product) — but nobody is alerted. A catalog audit assertion could pin
