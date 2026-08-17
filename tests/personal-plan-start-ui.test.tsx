@@ -809,6 +809,61 @@ test("oil role entries split across screens by their own tier", () => {
   assert.equal(asGroup(optionalOil[0]).statusLabel, "Optional")
 })
 
+// Oil's basis-tone role (`pre_wash_fibre_treatment`) falls back while its
+// optional-tone role (`dry_finish`) gets a real recommendation. Without a
+// placeholder, the category's only entry would be the optional one and the
+// whole card relocates to Optional — silently dropping the basis-tone need
+// from the Basis page even though the recomputed count keeps naming it.
+const mixedTierBasisFallbackPlan: PlanStartReadyViewModel = {
+  ...readyPlan,
+  basis: {
+    ...readyPlan.basis,
+    cards: [
+      card({
+        id: "oil",
+        category: "oil",
+        categoryLabel: "Haaröl",
+        imageUrl: null,
+        roleTones: { pre_wash_fibre_treatment: "basis", dry_finish: "optional" },
+        frequencyTarget: oilFrequencyTarget,
+      }),
+    ],
+  },
+  optional: null,
+}
+
+test("a basis-tone role that falls back while the optional-tone role recommends keeps a Basis placeholder", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    mixedTierBasisFallbackPlan,
+    previewResponse([
+      {
+        kind: "fallback",
+        category: "oil",
+        role: "pre_wash_fibre_treatment",
+        decisionKey: "decision:oil:pre_wash_fibre_treatment:gap",
+        authorityVersion: "personal-plan.oil.v2",
+        fallback: "post_refinement",
+      },
+      oilDryFinish,
+    ]),
+  )
+
+  const basisOil = findCard(applied.basis.cards, (item) => item.category === "oil")
+  assert.ok(basisOil, "expected a Basis placeholder card for oil")
+  assert.equal(basisOil?.product ?? null, null)
+  assert.equal(basisOil?.imageUrl, null)
+  assert.equal(basisOil?.fallbackNote, NEED_CARD_FALLBACK_NOTE)
+  assert.equal(basisOil?.statusLabel, "Basis")
+  assert.equal(basisOil?.frequency, "vor jeder passenden Haarwäsche")
+  // The recomputed Basis count includes oil again — it is not dropped just
+  // because its only concrete recommendation lives on Optional.
+  assert.equal(applied.basis.countLabel, "1 Kategorie")
+
+  assert.ok(applied.optional)
+  const optionalOil = findCard(applied.optional!.cards, (item) => item.category === "oil")
+  assert.equal(optionalOil?.product?.name, "Leichtes Finish-Öl")
+})
+
 test("group renders one shell with a single kicker and full member anatomy", () => {
   const applied = applyStage1ProductExamplePreviews(
     planWithMixedOilTiers,
@@ -1117,12 +1172,18 @@ test("an optional screen that redistributes down to zero final cards is dropped"
   assert.equal(oilCard?.product?.name, "Reichhaltiges Vorwäsche-Öl")
 })
 
-test("a category that entirely relocates off Basis is dropped from the recomputed Basis count", () => {
+test("a category whose basis role has no preview at all still keeps a Basis placeholder, not a full relocation", () => {
   // Oil's only resolved role is tiered "optional" via `roleTones`; its basis
-  // role has no preview at all (fell back). The whole category therefore
-  // relocates to Optional, and the Basis countLabel — which used to be
-  // carried over unchanged from adapt time — must be recomputed to reflect
-  // the categories that are still actually on the page.
+  // role (`pre_wash_fibre_treatment`, listed here exactly as production's
+  // `cardFromDecision` would emit it — every resolved role gets a
+  // `roleTones` entry, not just the ones that differ from the origin
+  // screen) has no preview at all in the response below — not even a
+  // "fallback"-kind entry. The basis-placeholder rule treats "no preview"
+  // identically to "fallback" for a basis-tone role: previously this test
+  // encoded the whole category relocating off Basis and the recomputed
+  // Basis count dropping it; now the basis-tone gap keeps one placeholder
+  // card on Basis (and the count keeps naming it), while the optional-tone
+  // role's real recommendation still renders on Optional exactly as before.
   const relocatingBasisPlan: PlanStartReadyViewModel = {
     ...readyPlan,
     basis: {
@@ -1136,7 +1197,8 @@ test("a category that entirely relocates off Basis is dropped from the recompute
           tone: "basis",
           categoryLabel: "Haaröl",
           imageUrl: null,
-          roleTones: { leave_on_fibre_conditioning: "optional" },
+          roleTones: { pre_wash_fibre_treatment: "basis", leave_on_fibre_conditioning: "optional" },
+          frequencyTarget: oilFrequencyTarget,
         }),
       ],
     },
@@ -1156,9 +1218,15 @@ test("a category that entirely relocates off Basis is dropped from the recompute
 
   assert.deepEqual(
     applied.basis.cards.map((item) => item.id),
-    ["shampoo", "conditioner"],
+    ["shampoo", "conditioner", "oil"],
   )
-  assert.equal(applied.basis.countLabel, "2 Kategorien")
+  const oilBasisCard = findCard(applied.basis.cards, (item) => item.category === "oil")
+  assert.equal(oilBasisCard?.product ?? null, null)
+  assert.equal(oilBasisCard?.fallbackNote, NEED_CARD_FALLBACK_NOTE)
+  assert.equal(oilBasisCard?.statusLabel, "Basis")
+  // Recomputed against the categories actually on the page — still three,
+  // since the placeholder keeps oil represented.
+  assert.equal(applied.basis.countLabel, "3 Kategorien")
   assert.ok(applied.optional)
   const oilCard = findCard(applied.optional!.cards, (item) => item.category === "oil")
   assert.equal(oilCard?.product?.name, "Leichtes Finish-Öl")

@@ -279,6 +279,50 @@ function categoryOnlyCard(
 }
 
 /**
+ * Basis-page placeholder for a category with per-role tiers (oil today)
+ * whose basis-tone role(s) have no recommendation — fallback or simply no
+ * preview at all — while an optional-tone role of the same category does
+ * have one. Without this, the category's only entry is the optional one and
+ * it relocates to Optional wholesale, silently dropping the basis-tone need
+ * from the Basis page even though the recomputed count still names it. Stays
+ * the un-expanded category card, same shape as `categoryOnlyCard`'s fallback
+ * branch, with pills trimmed to the missing basis-tone role(s) and the
+ * frequency scoped to that single role when there is exactly one — several
+ * missing basis roles fall back to the category-level frequency instead of
+ * picking one arbitrarily.
+ */
+function basisRolePlaceholderCard(
+  card: NeedCardViewModel,
+  missingBasisRoles: PlanProductRole[],
+): NeedCardViewModel {
+  const paused = card.paused ?? false
+  const frequency =
+    missingBasisRoles.length === 1
+      ? roleFrequencyLabel(card.frequencyTarget ?? null, missingBasisRoles[0]!, paused)
+      : card.frequency
+  const pills = missingBasisRoles
+    .map((role) => ROLE_PILLS[role])
+    .filter((pill): pill is string => Boolean(pill))
+
+  return {
+    ...card,
+    tone: "basis",
+    statusLabel: paused ? "Pausiert" : "Basis",
+    imageUrl: null,
+    imageAlt: `Noch kein Produktbild für ${card.categoryLabel}.`,
+    product: null,
+    fallbackNote: NEED_CARD_FALLBACK_NOTE,
+    pills: [...new Set(pills)].slice(0, 2),
+    frequency,
+    detailBlocks: [
+      card.detailBlocks[0]!,
+      card.detailBlocks[1]!,
+      { title: DETAIL_TITLE_FREQUENCY, body: frequency },
+    ],
+  }
+}
+
+/**
  * One role's rendered entry for a category preview. Always carries this
  * role's own cadence (`roleFrequencyLabel` falls back to the category-level
  * label for every category that has no per-role cadence, so this is a no-op
@@ -436,24 +480,47 @@ export function applyStage1ProductExamplePreviews(
       )
       .sort((a, b) => roleRank(category, a.role) - roleRank(category, b.role))
 
+    const basisTierRoles = (
+      Object.entries(card.roleTones ?? {}) as Array<[PlanProductRole, NeedCardTone]>
+    )
+      .filter(([, tone]) => tone === "basis")
+      .map(([role]) => role)
+    let landedOnBasis = false
+
     if (recommendations.length === 0) {
       // No role resolved to a product — the category card is carried over
       // unchanged to the screen it already lives on (no role to look up a
       // per-role tier for, so `placementTone` falls straight through to
       // `originScreen`; see the paused-merge note above).
       const resultCard = categoryOnlyCard(card, leadPreviews.get(category))
-      const bucket =
-        placementTone(card, null, originScreen) === "basis" ? basisEntries : optionalEntries
+      const tone = placementTone(card, null, originScreen)
+      const bucket = tone === "basis" ? basisEntries : optionalEntries
       bucket.push(resultCard)
-      continue
+      landedOnBasis = tone === "basis"
+    } else {
+      const multiRole = recommendations.length > 1
+      for (const preview of recommendations) {
+        const entry = roleEntry(card, preview, multiRole)
+        const tone = placementTone(card, preview.role, originScreen)
+        const bucket = tone === "basis" ? basisEntries : optionalEntries
+        bucket.push(entry)
+        if (tone === "basis") landedOnBasis = true
+      }
     }
 
-    const multiRole = recommendations.length > 1
-    for (const preview of recommendations) {
-      const entry = roleEntry(card, preview, multiRole)
-      const bucket =
-        placementTone(card, preview.role, originScreen) === "basis" ? basisEntries : optionalEntries
-      bucket.push(entry)
+    // Close the per-role placement gap: a category with basis-tone role(s)
+    // that landed no card on Basis at all keeps one placeholder there — see
+    // `basisRolePlaceholderCard`. Only fires once per category, and only
+    // when the basis-tone role(s) genuinely have nothing (fallback or no
+    // preview at all); a basis-tone role that already has a recommendation
+    // means `landedOnBasis` is already true and this is skipped.
+    if (!landedOnBasis && basisTierRoles.length > 0) {
+      const missingBasisRoles = basisTierRoles.filter(
+        (role) => !recommendations.some((preview) => preview.role === role),
+      )
+      if (missingBasisRoles.length > 0) {
+        basisEntries.push(basisRolePlaceholderCard(card, missingBasisRoles))
+      }
     }
   }
 
