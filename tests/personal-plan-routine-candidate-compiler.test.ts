@@ -629,7 +629,10 @@ test("compiler accepts v4 snapshots but never turns retained inventory into rout
   })
   const payload = candidate.payload as Record<string, any>
 
-  assert.equal(payload.items.some((item: { category: string }) => item.category === "dry_shampoo"), false)
+  assert.equal(
+    payload.items.some((item: { category: string }) => item.category === "dry_shampoo"),
+    false,
+  )
 })
 
 test("compiler preserves a v1 pending assignment identity beside a same-role planned purchase", async () => {
@@ -700,4 +703,199 @@ test("compiler preserves a v1 pending assignment identity beside a same-role pla
     pendingItem?.assignmentKey,
     "assignment:conditioner:conditioner_rinse_out:captured-pending-a",
   )
+})
+
+test("routine items take the role tier, not the category aggregate", async () => {
+  // oil decision: needTier "basis"; roleTargets pre_wash tier "basis", dry_finish tier "optional"
+  const oilDecision = {
+    category: "oil",
+    needTier: "basis",
+    roles: ["pre_wash_fibre_treatment", "dry_finish"],
+    target: {
+      category: "oil",
+      roles: ["pre_wash_fibre_treatment", "dry_finish"],
+      roleTargets: [
+        {
+          role: "pre_wash_fibre_treatment",
+          tier: "basis",
+          weight: null,
+          functionalBenefits: [],
+        },
+        {
+          role: "dry_finish",
+          tier: "optional",
+          weight: null,
+          functionalBenefits: [],
+        },
+      ],
+    },
+    frequency: {
+      kind: "role_based_wash_linked",
+      roleFrequencies: [
+        {
+          role: "pre_wash_fibre_treatment",
+          tier: "basis",
+          cadence: "before_every_compatible_wash",
+        },
+        { role: "dry_finish", tier: "optional", cadence: "finish_after_every_compatible_wash" },
+      ],
+    },
+    reasons: [{ id: "oil.v1" }],
+  }
+
+  const testPortfolio = {
+    ...portfolio(),
+    categoryResolutions: [
+      {
+        decisionKey: "decision:oil:pre_wash_fibre_treatment:owned-oil-pre",
+        category: "oil",
+        role: "pre_wash_fibre_treatment",
+        verdict: "ideal",
+        choiceState: "owned_active",
+        capturedProductId: "captured-oil-pre",
+        executable: true,
+        gapPreserved: false,
+      },
+      {
+        decisionKey: "decision:oil:dry_finish:owned-oil-dry",
+        category: "oil",
+        role: "dry_finish",
+        verdict: "ideal",
+        choiceState: "owned_active",
+        capturedProductId: "captured-oil-dry",
+        executable: true,
+        gapPreserved: false,
+      },
+    ],
+    ownedProducts: [
+      {
+        capturedProductId: "captured-oil-pre",
+        userProductId: "user-oil-pre",
+        productId: "product-oil-pre",
+        displayName: "Oil Pre-Wash",
+        category: "oil",
+        role: "pre_wash_fibre_treatment",
+        frequencyRange: "weekly_2x",
+        choiceState: "owned_active",
+        sourceDecisionKey: "decision:oil:pre_wash_fibre_treatment:owned-oil-pre",
+      },
+      {
+        capturedProductId: "captured-oil-dry",
+        userProductId: "user-oil-dry",
+        productId: "product-oil-dry",
+        displayName: "Oil Dry Finish",
+        category: "oil",
+        role: "dry_finish",
+        frequencyRange: "weekly_2x",
+        choiceState: "owned_active",
+        sourceDecisionKey: "decision:oil:dry_finish:owned-oil-dry",
+      },
+    ],
+    plannedPurchases: [],
+    pendingProducts: [],
+    uncoveredRoles: [],
+  } as unknown as ProposedProductPortfolio
+
+  const testSnapshot = {
+    ...refinedNeedSnapshot,
+    decisions: [refinedNeedSnapshot.decisions[0]!, oilDecision as never],
+    renderedOrder: ["conditioner", "oil"],
+  } as unknown as InitialNeedPlanSnapshot
+
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSnapshot: testPortfolio as never,
+    refinedNeedSnapshot: testSnapshot,
+  })
+  const payload = candidate.payload as Record<string, any>
+
+  const preWashItem = payload.items.find(
+    (item: Record<string, any>) => item.role === "pre_wash_fibre_treatment",
+  )
+  const dryFinishItem = payload.items.find(
+    (item: Record<string, any>) => item.role === "dry_finish",
+  )
+
+  assert.equal(preWashItem?.state.systemAssessment, "basis")
+  assert.equal(dryFinishItem?.state.systemAssessment, "optional")
+})
+
+test("categories without per-role tiers keep the category assessment", async () => {
+  // scalp_care roleTargets have no tier field → systemAssessment === decision.needTier
+  const scalpDecision = {
+    category: "scalp_care",
+    needTier: "optional",
+    roles: ["scalp_comfort"],
+    target: {
+      category: "scalp_care",
+      roles: ["scalp_comfort"],
+      roleTargets: [
+        {
+          role: "scalp_comfort",
+          coverage: "primary",
+        },
+      ],
+    },
+    frequency: {
+      kind: "role_keyed_product_protocol",
+      roleFrequencies: [
+        {
+          role: "scalp_comfort",
+          cadence: "regular_according_to_product",
+        },
+      ],
+    },
+    reasons: [{ id: "scalp.v1" }],
+  }
+
+  const testPortfolio = {
+    ...portfolio(),
+    categoryResolutions: [
+      {
+        decisionKey: "decision:scalp_care:scalp_comfort:owned-scalp",
+        category: "scalp_care",
+        role: "scalp_comfort",
+        verdict: "ideal",
+        choiceState: "owned_active",
+        capturedProductId: "captured-scalp",
+        executable: true,
+        gapPreserved: false,
+      },
+    ],
+    ownedProducts: [
+      {
+        capturedProductId: "captured-scalp",
+        userProductId: "user-scalp",
+        productId: "product-scalp",
+        displayName: "Scalp Care",
+        category: "scalp_care",
+        role: "scalp_comfort",
+        frequencyRange: "weekly_2x",
+        choiceState: "owned_active",
+        sourceDecisionKey: "decision:scalp_care:scalp_comfort:owned-scalp",
+      },
+    ],
+    plannedPurchases: [],
+    pendingProducts: [],
+    uncoveredRoles: [],
+  } as unknown as ProposedProductPortfolio
+
+  const testSnapshot = {
+    ...refinedNeedSnapshot,
+    decisions: [refinedNeedSnapshot.decisions[0]!, scalpDecision as never],
+    renderedOrder: ["conditioner", "scalp_care"],
+  } as unknown as InitialNeedPlanSnapshot
+
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSnapshot: testPortfolio as never,
+    refinedNeedSnapshot: testSnapshot,
+  })
+  const payload = candidate.payload as Record<string, any>
+
+  const scalpItem = payload.items.find(
+    (item: Record<string, any>) => item.category === "scalp_care",
+  )
+
+  assert.equal(scalpItem?.state.systemAssessment, "optional")
 })

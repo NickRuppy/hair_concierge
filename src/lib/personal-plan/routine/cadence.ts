@@ -104,7 +104,7 @@ function categoryCadenceCopyDe(recommended: unknown, role: PlanProductRole): str
         ? (frequencyLabel(frequency.target) ?? "Entsprechend deinem Waschrhythmus")
         : "Entsprechend deinem Waschrhythmus"
     case "after_each_eligible_wash":
-      return "Nach jeder passenden Haarwäsche"
+      return "Nach jeder Haarwäsche"
     case "event_based":
       return "Vor jeder passenden Hitze-Anwendung"
     case "every_nth_wash":
@@ -162,11 +162,11 @@ function maskIntervalCopy(value: unknown): string {
 
 function washLinkedCopy(value: unknown): string {
   return value === "before_every_compatible_wash"
-    ? "Vor jeder passenden Haarwäsche"
+    ? "Vor jeder Haarwäsche"
     : value === "after_every_compatible_wash"
-      ? "Nach jeder passenden Haarwäsche"
+      ? "Nach jeder Haarwäsche"
       : value === "finish_after_every_compatible_wash"
-        ? "Als Finish nach jeder passenden Haarwäsche"
+        ? "Als Finish nach jeder Haarwäsche"
         : value === "optional_allocation_deferred_to_day_type"
           ? "Bei Bedarf passend zu deinem Waschtag"
           : "Passend zu deiner Haarwäsche"

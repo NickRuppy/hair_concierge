@@ -2,6 +2,7 @@ import { PRODUCT_FREQUENCY_LABELS, type ProductFrequency } from "@/lib/vocabular
 import type {
   PlanCategoryDecision,
   PlanFrequencyTarget,
+  PlanProductRole,
   Stage1Category,
 } from "@/lib/personal-plan/types"
 
@@ -71,6 +72,36 @@ export function frequencyLabel(frequency: PlanFrequencyTarget | null, paused: bo
     case "role_keyed_product_protocol":
       return `${prefix}nach Herstellerangabe`
   }
+}
+
+type RoleBasedWashLinkedFrequency = Extract<PlanFrequencyTarget, { kind: "role_based_wash_linked" }>
+type RoleCadence = RoleBasedWashLinkedFrequency["roleFrequencies"][number]["cadence"]
+
+const ROLE_CADENCE_LABELS = {
+  before_every_compatible_wash: "vor jeder Haarwäsche",
+  after_every_compatible_wash: "nach jeder Haarwäsche",
+  finish_after_every_compatible_wash: "als Finish nach jeder Haarwäsche",
+  optional_allocation_deferred_to_day_type: "nach Bedarf",
+} satisfies Record<RoleCadence, string>
+
+/**
+ * Role-scoped cadence copy for categories whose frequency is
+ * `role_based_wash_linked` (oil today): each role has its own cadence, unlike
+ * the category-level `frequencyLabel`, which only has one generic sentence
+ * ("nach Bedarf") for the whole category. Falls back to `frequencyLabel` for
+ * every other frequency kind and for a role this frequency doesn't cover.
+ */
+export function roleFrequencyLabel(
+  frequency: PlanFrequencyTarget | null,
+  role: PlanProductRole,
+  paused: boolean,
+): string {
+  if (frequency?.kind === "role_based_wash_linked") {
+    const entry = frequency.roleFrequencies.find((candidate) => candidate.role === role)
+    const label = entry ? ROLE_CADENCE_LABELS[entry.cadence] : undefined
+    if (label) return `${paused ? "später: " : ""}${label}`
+  }
+  return frequencyLabel(frequency, paused)
 }
 
 export function presentationFor(decision: PlanCategoryDecision): CategoryPresentation | null {

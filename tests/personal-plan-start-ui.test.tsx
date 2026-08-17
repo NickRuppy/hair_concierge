@@ -10,6 +10,7 @@ import {
 import {
   NEED_CARD_FALLBACK_NOTE,
   NeedCard,
+  NeedPlanScreen,
   PLAN_START_CATALOG_DISCLAIMER,
   PLAN_START_PENDING_DISCLAIMER,
   PRODUCT_REFINEMENT_HINT,
@@ -21,11 +22,15 @@ import {
   adaptInitialNeedSnapshotToPlanStartViewModel,
   applyStage1ProductExamplePreviews,
   interpretPlanStartApiResponse,
+  isNeedCardGroup,
   planStartProductDisclaimer,
+  type NeedCardGroupViewModel,
   type NeedCardViewModel,
+  type PlanStartCardViewModel,
   type PlanStartReadyViewModel,
 } from "../src/components/personal-plan-start"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
+import { roleFrequencyLabel } from "../src/lib/personal-plan/decision-presentation"
 import {
   STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL,
   stage1ProductExamplePreviewRequestUrl,
@@ -33,6 +38,81 @@ import {
 import type { InitialNeedPlanSnapshot, InitialProductPreview } from "../src/lib/personal-plan/types"
 import type { PersonalPlanQuizSubmissionEnvelope } from "../src/lib/personal-plan-quiz/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
+
+/** Narrows a `PlanStartCardViewModel`, failing loudly if it turns out to be a group. */
+function asCard(item: PlanStartCardViewModel | undefined | null): NeedCardViewModel {
+  assert.ok(item, "expected a card")
+  assert.ok(!isNeedCardGroup(item), "expected a single card, not a group")
+  return item
+}
+
+/** Narrows a `PlanStartCardViewModel`, failing loudly if it turns out to be a single card. */
+function asGroup(item: PlanStartCardViewModel | undefined | null): NeedCardGroupViewModel {
+  assert.ok(item, "expected a group")
+  assert.ok(isNeedCardGroup(item), "expected a group, not a single card")
+  return item
+}
+
+/** Finds a single (non-group) card among a screen's cards by predicate. */
+function findCard(
+  cards: PlanStartCardViewModel[],
+  predicate: (item: PlanStartCardViewModel) => boolean,
+): NeedCardViewModel | undefined {
+  const found = cards.find(predicate)
+  return found ? asCard(found) : undefined
+}
+
+test("roleFrequencyLabel renders role cadence for role_based_wash_linked", () => {
+  const basisFrequency = {
+    kind: "role_based_wash_linked" as const,
+    roleFrequencies: [
+      {
+        role: "pre_wash_fibre_treatment" as const,
+        tier: "basis" as const,
+        cadence: "before_every_compatible_wash" as const,
+      },
+      {
+        role: "leave_on_fibre_conditioning" as const,
+        tier: "basis" as const,
+        cadence: "after_every_compatible_wash" as const,
+      },
+      {
+        role: "dry_finish" as const,
+        tier: "basis" as const,
+        cadence: "finish_after_every_compatible_wash" as const,
+      },
+    ],
+  }
+  const optionalFrequency = {
+    kind: "role_based_wash_linked" as const,
+    roleFrequencies: [
+      {
+        role: "dry_finish" as const,
+        tier: "optional" as const,
+        cadence: "optional_allocation_deferred_to_day_type" as const,
+      },
+    ],
+  }
+  assert.equal(
+    roleFrequencyLabel(basisFrequency, "pre_wash_fibre_treatment", false),
+    "vor jeder Haarwäsche",
+  )
+  assert.equal(
+    roleFrequencyLabel(basisFrequency, "leave_on_fibre_conditioning", false),
+    "nach jeder Haarwäsche",
+  )
+  assert.equal(
+    roleFrequencyLabel(basisFrequency, "dry_finish", false),
+    "als Finish nach jeder Haarwäsche",
+  )
+  assert.equal(roleFrequencyLabel(optionalFrequency, "dry_finish", false), "nach Bedarf")
+  // A role this frequency's `roleFrequencies` doesn't cover at all falls
+  // back to the category-level label (which is also "nach Bedarf" for this
+  // frequency kind) — a real `PlanProductRole`, just not one of the three
+  // this particular oil decision resolved.
+  assert.equal(roleFrequencyLabel(basisFrequency, "scalp_comfort", false), "nach Bedarf")
+  assert.equal(roleFrequencyLabel(null, "dry_finish", true), "später: nach Klärung")
+})
 
 const baseDetailBlocks: NeedCardViewModel["detailBlocks"] = [
   {
@@ -91,6 +171,12 @@ const readyPlan: PlanStartReadyViewModel = {
         category: "conditioner",
         categoryLabel: "Conditioner",
         imageUrl: null,
+        frequencyTarget: {
+          kind: "after_each_eligible_wash",
+          roles: ["conditioner_rinse_out"],
+          dependsOn: "wet_wash_total",
+          placementState: "known",
+        },
       }),
     ],
   },
@@ -183,7 +269,7 @@ test("binds only source-matched authority previews to their exact category cards
   }
 
   const applied = applyStage1ProductExamplePreviews(readyPlan, response)
-  const conditioner = applied.basis.cards.find((item) => item.id === "conditioner")
+  const conditioner = findCard(applied.basis.cards, (item) => item.id === "conditioner")
   assert.equal(conditioner?.imageUrl, "https://example.com/conditioner-light.webp")
   assert.equal(conditioner?.imageAlt, "Produktbild: Leichter Conditioner")
   assert.deepEqual(conditioner?.product, {
@@ -208,7 +294,10 @@ test("binds only source-matched authority previews to their exact category cards
     { title: "Empfohlener Rhythmus", body: "nach jeder Haarwäsche" },
   ])
   // Categories without a payload entry keep no stale product.
-  assert.equal(applied.basis.cards.find((item) => item.id === "shampoo")?.product ?? null, null)
+  assert.equal(
+    findCard(applied.basis.cards, (item) => item.id === "shampoo")?.product ?? null,
+    null,
+  )
   assert.equal(
     applyStage1ProductExamplePreviews(readyPlan, {
       ...response,
@@ -275,7 +364,7 @@ test("a fallback role turns the category card into the honest post-refinement st
       },
     ]),
   )
-  const shampoo = applied.basis.cards.find((item) => item.id === "shampoo")
+  const shampoo = findCard(applied.basis.cards, (item) => item.id === "shampoo")
 
   assert.equal(shampoo?.product ?? null, null)
   assert.equal(shampoo?.fallbackNote, NEED_CARD_FALLBACK_NOTE)
@@ -306,12 +395,12 @@ test("a real recommendation for any role beats a fallback for the same category"
   )
 
   assert.equal(
-    applied.basis.cards.find((item) => item.id === "shampoo")?.product?.name,
+    findCard(applied.basis.cards, (item) => item.id === "shampoo")?.product?.name,
     "Anti-Schuppen Shampoo",
   )
 })
 
-test("the primary role leads the category card and the other role follows as its own card", () => {
+test("same-tier roles of a multi-role category group into one card, each wearing its own role copy", () => {
   const applied = applyStage1ProductExamplePreviews(
     readyPlan,
     previewResponse([
@@ -324,17 +413,27 @@ test("the primary role leads the category card and the other role follows as its
     ]),
   )
 
-  assert.equal(
-    applied.basis.cards.find((item) => item.id === "shampoo")?.product?.name,
-    "Redken All Soft Shampoo",
-  )
-  const secondary = applied.basis.cards.find((item) => item.id === "shampoo:shampoo_dandruff")
-  assert.equal(secondary?.product?.name, "Anti-Schuppen Shampoo")
-  assert.equal(secondary?.targetType, "Schuppenpflege")
+  // Both shampoo roles resolved to a product and share the same tier
+  // ("basis"), so they collapse into one group card instead of two siblings.
   assert.deepEqual(
     applied.basis.cards.map((item) => item.id),
-    ["shampoo", "shampoo:shampoo_dandruff", "conditioner"],
+    ["shampoo:group:basis", "conditioner"],
   )
+  const shampooGroup = asGroup(applied.basis.cards[0])
+  assert.equal(shampooGroup.category, "shampoo")
+  assert.equal(shampooGroup.statusLabel, "Basis")
+  assert.equal(shampooGroup.members.length, 2)
+
+  const [lead, secondary] = shampooGroup.members
+  // Canonical role order (shampoo_everyday before shampoo_dandruff), not
+  // input order — and once siblings exist, every member wears its own role
+  // copy, including the one that used to be the sole "lead".
+  assert.equal(lead?.id, "shampoo:shampoo_everyday")
+  assert.equal(lead?.product?.name, "Redken All Soft Shampoo")
+  assert.equal(lead?.targetType, "Regelmäßige Reinigung")
+  assert.equal(secondary?.id, "shampoo:shampoo_dandruff")
+  assert.equal(secondary?.product?.name, "Anti-Schuppen Shampoo")
+  assert.equal(secondary?.targetType, "Schuppenpflege")
 })
 
 const oilPreWash = recommendation({
@@ -380,6 +479,27 @@ const oilDryFinish = recommendation({
   },
 })
 
+const oilFrequencyTarget = {
+  kind: "role_based_wash_linked" as const,
+  roleFrequencies: [
+    {
+      role: "pre_wash_fibre_treatment" as const,
+      tier: "basis" as const,
+      cadence: "before_every_compatible_wash" as const,
+    },
+    {
+      role: "leave_on_fibre_conditioning" as const,
+      tier: "basis" as const,
+      cadence: "after_every_compatible_wash" as const,
+    },
+    {
+      role: "dry_finish" as const,
+      tier: "basis" as const,
+      cadence: "finish_after_every_compatible_wash" as const,
+    },
+  ],
+}
+
 const oilPlan: PlanStartReadyViewModel = {
   ...readyPlan,
   basis: {
@@ -394,27 +514,39 @@ const oilPlan: PlanStartReadyViewModel = {
         pills: ["Vorwäsche", "Finish & Glanz"],
         frequency: "jede 2. Haarwäsche",
         imageUrl: null,
+        frequencyTarget: oilFrequencyTarget,
       }),
     ],
   },
   optional: null,
 }
 
-test("a secondary role becomes its own card right after its category's primary card", () => {
+test("two same-tier oil roles group into one card, each with its own role cadence", () => {
   const applied = applyStage1ProductExamplePreviews(
     oilPlan,
     previewResponse([oilPreWash, oilDryFinish]),
   )
 
+  // Neither role has its own per-role tier here (this fixture has no
+  // `roleTones`), so both fall back to the category's aggregate tone
+  // ("basis") and land in one group, in canonical role order.
   assert.deepEqual(
     applied.basis.cards.map((item) => item.id),
-    ["oil", "oil:dry_finish"],
+    ["oil:group:basis"],
   )
-  const [primary, secondary] = applied.basis.cards
+  const oilGroup = asGroup(applied.basis.cards[0])
+  assert.equal(oilGroup.category, "oil")
+  assert.equal(oilGroup.statusLabel, "Basis")
+  assert.equal(oilGroup.members.length, 2)
+
+  const [primary, secondary] = oilGroup.members
+  assert.equal(primary?.id, "oil:pre_wash_fibre_treatment")
   assert.equal(primary?.product?.name, "Reichhaltiges Vorwäsche-Öl")
-  assert.equal(primary?.targetType, "Reichhaltige Vorwäsche")
+  assert.equal(primary?.targetType, "Pflege vor der Haarwäsche")
+  assert.equal(primary?.frequency, "vor jeder Haarwäsche")
 
   // Same card pattern, same category identity — only the role changes.
+  assert.equal(secondary?.id, "oil:dry_finish")
   assert.equal(secondary?.category, "oil")
   assert.equal(secondary?.categoryLabel, "Haaröl")
   assert.equal(secondary?.tone, "basis")
@@ -427,10 +559,12 @@ test("a secondary role becomes its own card right after its category's primary c
 
   // The role is what makes the second card readable: type subline, purpose and
   // pill all name this role instead of repeating the category's lead role.
+  // The frequency line is this role's own cadence, not the payload's generic
+  // reasoning text ("bei Bedarf") or the category's aggregate cadence.
   assert.equal(secondary?.targetType, "Finish")
   assert.equal(secondary?.purpose, "Schließt die Routine als Finish für die Längen ab.")
   assert.deepEqual(secondary?.pills, ["Finish & Glanz"])
-  assert.equal(secondary?.frequency, "bei Bedarf")
+  assert.equal(secondary?.frequency, "als Finish nach jeder Haarwäsche")
   assert.deepEqual(secondary?.detailBlocks, [
     {
       title: "Worauf es beim Produkt ankommt",
@@ -440,7 +574,7 @@ test("a secondary role becomes its own card right after its category's primary c
       title: "Warum das zu deinem Haar passt",
       body: "Deine raueren Spitzen profitieren von einem gezielten Finish.",
     },
-    { title: "Empfohlener Rhythmus", body: "bei Bedarf" },
+    { title: "Empfohlener Rhythmus", body: "als Finish nach jeder Haarwäsche" },
   ])
 })
 
@@ -469,7 +603,10 @@ test("the optional count names the cards on the page, not the categories behind 
     previewResponse([oilPreWash, oilDryFinish]),
   )
 
-  assert.equal(applied.optional?.cards.length, 2)
+  // Both oil roles resolve and share the optional tier, so they group into
+  // one card — but the count label still names the two suggestions inside it.
+  assert.equal(applied.optional?.cards.length, 1)
+  assert.equal(asGroup(applied.optional?.cards[0]).members.length, 2)
   assert.equal(applied.optional?.countLabel, "2 Vorschläge")
   // A single suggestion keeps the singular.
   assert.equal(
@@ -492,8 +629,9 @@ test("the basis count keeps counting categories after the per-role expansion", (
     ]),
   )
 
-  assert.equal(applied.basis.cards.length, 3)
-  // "N Kategorien" stays literally true: two categories, three cards.
+  // The two shampoo roles group into one card, plus the conditioner card.
+  assert.equal(applied.basis.cards.length, 2)
+  // "N Kategorien" stays literally true: two categories on the page.
   assert.equal(applied.basis.countLabel, "2 Kategorien")
 })
 
@@ -540,15 +678,16 @@ test("the lead card is never duplicated as a secondary card", () => {
     applied.basis.cards.map((item) => item.id),
     ["oil"],
   )
-  assert.equal(applied.basis.cards[0]?.product?.name, "Leichtes Finish-Öl")
+  assert.equal(asCard(applied.basis.cards[0]).product?.name, "Leichtes Finish-Öl")
 })
 
-test("the secondary-role card renders the role in its subline and keeps the category styling", () => {
+test("a role card inside a group renders the role in its subline and keeps the category styling", () => {
   const applied = applyStage1ProductExamplePreviews(
     oilPlan,
     previewResponse([oilPreWash, oilDryFinish]),
   )
-  const html = renderToStaticMarkup(<NeedCard card={applied.basis.cards[1]!} />)
+  const oilGroup = asGroup(applied.basis.cards[0])
+  const html = renderToStaticMarkup(<NeedCard card={oilGroup.members[1]!} />)
 
   assert.match(html, /Leichtes Finish-Öl/)
   assert.match(html, /Finish · 24,90 €/)
@@ -556,6 +695,541 @@ test("the secondary-role card renders the role in its subline and keeps the cate
   // The Oil category accent still applies even though the card id is per-role.
   assert.match(html, /bg-\[#A85F70\]/)
   assert.match(html, /data-plan-start-card="oil:dry_finish"/)
+})
+
+const oilSplitTierFrequencyTarget = {
+  kind: "role_based_wash_linked" as const,
+  roleFrequencies: [
+    {
+      role: "pre_wash_fibre_treatment" as const,
+      tier: "basis" as const,
+      cadence: "before_every_compatible_wash" as const,
+    },
+    {
+      role: "leave_on_fibre_conditioning" as const,
+      tier: "optional" as const,
+      cadence: "optional_allocation_deferred_to_day_type" as const,
+    },
+    {
+      role: "dry_finish" as const,
+      tier: "optional" as const,
+      cadence: "optional_allocation_deferred_to_day_type" as const,
+    },
+  ],
+}
+
+const oilLeaveOn = recommendation({
+  category: "oil",
+  role: "leave_on_fibre_conditioning",
+  decisionKey: "decision:oil:leave_on_fibre_conditioning:gap",
+  productId: "oil-leave-on",
+  productName: "Leichtes Leave-on-Öl",
+  imageUrl: "https://example.com/oil-leave-on.webp",
+  authorityVersion: "personal-plan.oil.v2",
+  factFingerprint: "facts-oil-leave-on",
+})
+
+// Oil's aggregate tier is "basis" (pre_wash is basis), but two of its three
+// roles are individually tiered "optional" — the case per-role tiers exist
+// to fix: those two roles belong on the Optional page, not the Basis page.
+const planWithMixedOilTiers: PlanStartReadyViewModel = {
+  ...readyPlan,
+  basis: {
+    ...readyPlan.basis,
+    cards: [
+      card({
+        id: "oil",
+        category: "oil",
+        categoryLabel: "Haaröl",
+        imageUrl: null,
+        roleTones: {
+          pre_wash_fibre_treatment: "basis",
+          leave_on_fibre_conditioning: "optional",
+          dry_finish: "optional",
+        },
+        frequencyTarget: oilSplitTierFrequencyTarget,
+      }),
+      card({
+        id: "conditioner",
+        category: "conditioner",
+        categoryLabel: "Conditioner",
+        imageUrl: null,
+      }),
+    ],
+  },
+  optional: {
+    ...readyPlan.optional!,
+    cards: [
+      card({
+        id: "dry_shampoo",
+        category: "dry_shampoo",
+        tone: "optional",
+        statusLabel: "Optional",
+        categoryLabel: "Trockenshampoo",
+        imageUrl: null,
+      }),
+    ],
+  },
+}
+
+test("oil role entries split across screens by their own tier", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    planWithMixedOilTiers,
+    previewResponse([
+      oilPreWash,
+      oilLeaveOn,
+      oilDryFinish,
+      recommendation({
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
+        productId: "conditioner-basic",
+        productName: "Basis Conditioner",
+      }),
+      recommendation({
+        category: "dry_shampoo",
+        role: "root_refresh_bridge",
+        decisionKey: "decision:dry_shampoo:root_refresh_bridge:gap",
+        productId: "dry-shampoo-basic",
+        productName: "Trockenshampoo Basis",
+      }),
+    ]),
+  )
+
+  const basisOil = applied.basis.cards.filter((card) => card.category === "oil")
+  assert.equal(basisOil.length, 1)
+  // A single role on this screen → standalone card, no group.
+  assert.ok(!isNeedCardGroup(basisOil[0]!))
+  assert.equal(asCard(basisOil[0]).frequency, "vor jeder Haarwäsche")
+
+  const optionalOil = applied.optional!.cards.filter((card) => card.category === "oil")
+  assert.equal(optionalOil.length, 1)
+  assert.ok(isNeedCardGroup(optionalOil[0]!))
+  assert.equal(asGroup(optionalOil[0]).members.length, 2)
+  assert.equal(asGroup(optionalOil[0]).statusLabel, "Optional")
+})
+
+// Oil's basis-tone role (`pre_wash_fibre_treatment`) falls back while its
+// optional-tone role (`dry_finish`) gets a real recommendation. Without a
+// placeholder, the category's only entry would be the optional one and the
+// whole card relocates to Optional — silently dropping the basis-tone need
+// from the Basis page even though the recomputed count keeps naming it.
+const mixedTierBasisFallbackPlan: PlanStartReadyViewModel = {
+  ...readyPlan,
+  basis: {
+    ...readyPlan.basis,
+    cards: [
+      card({
+        id: "oil",
+        category: "oil",
+        categoryLabel: "Haaröl",
+        imageUrl: null,
+        roleTones: { pre_wash_fibre_treatment: "basis", dry_finish: "optional" },
+        frequencyTarget: oilFrequencyTarget,
+      }),
+    ],
+  },
+  optional: null,
+}
+
+test("a basis-tone role that falls back while the optional-tone role recommends keeps a Basis placeholder", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    mixedTierBasisFallbackPlan,
+    previewResponse([
+      {
+        kind: "fallback",
+        category: "oil",
+        role: "pre_wash_fibre_treatment",
+        decisionKey: "decision:oil:pre_wash_fibre_treatment:gap",
+        authorityVersion: "personal-plan.oil.v2",
+        fallback: "post_refinement",
+      },
+      oilDryFinish,
+    ]),
+  )
+
+  const basisOil = findCard(applied.basis.cards, (item) => item.category === "oil")
+  assert.ok(basisOil, "expected a Basis placeholder card for oil")
+  assert.equal(basisOil?.product ?? null, null)
+  assert.equal(basisOil?.imageUrl, null)
+  assert.equal(basisOil?.fallbackNote, NEED_CARD_FALLBACK_NOTE)
+  assert.equal(basisOil?.statusLabel, "Basis")
+  assert.equal(basisOil?.frequency, "vor jeder Haarwäsche")
+  // The recomputed Basis count includes oil again — it is not dropped just
+  // because its only concrete recommendation lives on Optional.
+  assert.equal(applied.basis.countLabel, "1 Kategorie")
+
+  assert.ok(applied.optional)
+  const optionalOil = findCard(applied.optional!.cards, (item) => item.category === "oil")
+  assert.equal(optionalOil?.product?.name, "Leichtes Finish-Öl")
+})
+
+test("group renders one shell with a single kicker and full member anatomy", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    planWithMixedOilTiers,
+    previewResponse([oilPreWash, oilLeaveOn, oilDryFinish]),
+  )
+  const oilGroup = asGroup(applied.optional!.cards.find((item) => item.category === "oil")!)
+  assert.equal(oilGroup.id, "oil:group:optional")
+  assert.equal(oilGroup.members.length, 2)
+  const [primary, secondary] = oilGroup.members
+  assert.equal(primary?.id, "oil:leave_on_fibre_conditioning")
+  assert.equal(secondary?.id, "oil:dry_finish")
+
+  const html = renderToStaticMarkup(
+    <NeedPlanScreen screen={{ ...applied.optional!, cards: [oilGroup] }} hasOptionalPage />,
+  )
+
+  // Exactly one shell for the whole group, carrying the group id and tone.
+  assert.equal(html.match(/data-plan-start-card-group="oil:group:optional"/g)?.length, 1)
+  assert.ok(
+    html.includes(
+      'data-plan-start-card-group="oil:group:optional" data-plan-start-card-tone="optional"',
+    ),
+  )
+  // One kicker row for the group ("Haaröl · Optional"), not one per member.
+  assert.equal(html.match(/>Haaröl</g)?.length, 1)
+  assert.equal(html.match(/>Optional</g)?.length, 1)
+  // Both members still render as full, independently addressable cards.
+  assert.ok(html.includes(`data-plan-start-card="${primary!.id}"`))
+  assert.ok(html.includes(`data-plan-start-card="${secondary!.id}"`))
+  assert.ok(html.includes(primary!.product!.name))
+  assert.ok(html.includes(secondary!.product!.name))
+  assert.ok(html.includes(`${primary!.targetType} · ${primary!.product!.priceLabel}`))
+  assert.ok(html.includes(`${secondary!.targetType} · ${secondary!.product!.priceLabel}`))
+  // A divider sits between the two stacked members, and only there.
+  assert.equal(html.match(/mx-3 border-t border-\[rgba\(67,55,48,0\.12\)\]/g)?.length, 1)
+})
+
+test("each group member opens its own detail sheet", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    planWithMixedOilTiers,
+    previewResponse([oilPreWash, oilLeaveOn, oilDryFinish]),
+  )
+  const oilGroup = asGroup(applied.optional!.cards.find((item) => item.category === "oil")!)
+  const [primary, secondary] = oilGroup.members
+
+  const html = renderToStaticMarkup(
+    <NeedPlanScreen screen={{ ...applied.optional!, cards: [oilGroup] }} hasOptionalPage />,
+  )
+
+  // Each member keeps its own dialog trigger — two independent buttons, not
+  // one shared trigger for the whole group.
+  assert.equal(html.match(/aria-haspopup="dialog"/g)?.length, 2)
+
+  // Clicking either member's trigger must only ever be able to reveal that
+  // member's own product facts, never the other member's.
+  const primarySheet = renderToStaticMarkup(<ProductDetailSheetBody card={primary!} />)
+  const secondarySheet = renderToStaticMarkup(<ProductDetailSheetBody card={secondary!} />)
+  assert.ok(primarySheet.includes(primary!.product!.name))
+  assert.ok(!primarySheet.includes(secondary!.product!.name))
+  assert.ok(secondarySheet.includes(secondary!.product!.name))
+  assert.ok(!secondarySheet.includes(primary!.product!.name))
+})
+
+const planWithoutOptionalPage: PlanStartReadyViewModel = {
+  ...readyPlan,
+  basis: {
+    ...readyPlan.basis,
+    progress: 100,
+    cards: [
+      card({
+        id: "oil",
+        category: "oil",
+        categoryLabel: "Haaröl",
+        imageUrl: null,
+        roleTones: { pre_wash_fibre_treatment: "basis", dry_finish: "optional" },
+        frequencyTarget: oilFrequencyTarget,
+      }),
+    ],
+  },
+  optional: null,
+}
+
+test("optional screen is created when it did not exist but optional-tier roles do", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    planWithoutOptionalPage,
+    previewResponse([oilPreWash, oilDryFinish]),
+  )
+
+  assert.ok(applied.optional)
+  assert.equal(applied.basis.progress, 50)
+  assert.equal(applied.optional!.countLabel, "1 Vorschlag")
+})
+
+test("optional count label counts group members individually", () => {
+  const optionalOilAndDryShampooPlan: PlanStartReadyViewModel = {
+    ...readyPlan,
+    optional: {
+      ...readyPlan.optional!,
+      cards: [
+        card({
+          id: "oil",
+          category: "oil",
+          tone: "optional",
+          statusLabel: "Optional",
+          categoryLabel: "Haaröl",
+          imageUrl: null,
+        }),
+        card({
+          id: "dry_shampoo",
+          category: "dry_shampoo",
+          tone: "optional",
+          statusLabel: "Optional",
+          categoryLabel: "Trockenshampoo",
+          imageUrl: null,
+        }),
+      ],
+    },
+  }
+
+  const applied = applyStage1ProductExamplePreviews(
+    optionalOilAndDryShampooPlan,
+    previewResponse([
+      oilPreWash,
+      oilDryFinish,
+      recommendation({
+        category: "dry_shampoo",
+        role: "root_refresh_bridge",
+        decisionKey: "decision:dry_shampoo:root_refresh_bridge:gap",
+        productId: "dry-shampoo-basic",
+        productName: "Trockenshampoo Basis",
+      }),
+    ]),
+  )
+
+  // The two grouped oil roles plus the standalone dry_shampoo suggestion.
+  assert.equal(applied.optional!.countLabel, "3 Vorschläge")
+})
+
+test("fallback-only previews keep the category card on its aggregate-tier screen, un-expanded", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    oilPlan,
+    previewResponse([
+      {
+        kind: "fallback",
+        category: "oil",
+        role: "pre_wash_fibre_treatment",
+        decisionKey: "decision:oil:pre_wash_fibre_treatment:gap",
+        authorityVersion: "personal-plan.oil.v2",
+        fallback: "post_refinement",
+      },
+      {
+        kind: "fallback",
+        category: "oil",
+        role: "dry_finish",
+        decisionKey: "decision:oil:dry_finish:gap",
+        authorityVersion: "personal-plan.oil.v2",
+        fallback: "post_refinement",
+      },
+    ]),
+  )
+
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["oil"],
+  )
+  const oilCard = asCard(applied.basis.cards[0])
+  assert.equal(oilCard.product ?? null, null)
+  assert.equal(oilCard.fallbackNote, NEED_CARD_FALLBACK_NOTE)
+})
+
+test("single-role categories are byte-identical to before: no id change, no group, category copy kept", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    readyPlan,
+    previewResponse([
+      recommendation({
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
+        productId: "conditioner-light",
+        productName: "Leichter Conditioner",
+      }),
+    ]),
+  )
+
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["shampoo", "conditioner"],
+  )
+  const conditioner = asCard(applied.basis.cards[1])
+  // Category-level copy (from `cardFromDecision`) survives untouched — only a
+  // second role of the same category would ever replace it with role copy.
+  assert.equal(conditioner.targetType, card().targetType)
+  assert.equal(conditioner.product?.name, "Leichter Conditioner")
+})
+
+// `adaptInitialNeedSnapshotToPlanStartViewModel`'s paused-only-optional merge
+// physically relocates a paused optional-tone card onto Basis but does not
+// touch its `tone` field — it stays "optional" even though the card now lives
+// in `basis.cards` and `optional` is null. Placement here must follow the
+// screen the card is already on, not that stale tone, or applying previews
+// would resurrect the very Optional page the merge suppressed.
+const pausedOnlyOptionalPlan: PlanStartReadyViewModel = {
+  ...readyPlan,
+  basis: {
+    ...readyPlan.basis,
+    progress: 100,
+    cards: [
+      card(),
+      card({
+        id: "dry_shampoo",
+        category: "dry_shampoo",
+        tone: "optional",
+        categoryLabel: "Trockenshampoo",
+        statusLabel: "Pausiert",
+        targetType: "Aktuell nicht anwenden",
+        paused: true,
+        frequency: "später: bei Bedarf",
+        imageUrl: null,
+      }),
+    ],
+  },
+  optional: null,
+}
+
+test("a paused-merge card (optional tone, living on Basis) does not resurrect the Optional page", () => {
+  const applied = applyStage1ProductExamplePreviews(pausedOnlyOptionalPlan, previewResponse([]))
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  const dryShampoo = findCard(applied.basis.cards, (item) => item.id === "dry_shampoo")
+  assert.ok(dryShampoo)
+  assert.equal(dryShampoo?.statusLabel, "Pausiert")
+  assert.equal(dryShampoo?.tone, "optional")
+})
+
+test("the paused-merge card still resurrects nothing once other categories get real previews", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    pausedOnlyOptionalPlan,
+    previewResponse([recommendation()]),
+  )
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["shampoo", "dry_shampoo"],
+  )
+})
+
+test("a paused-merge card whose own category gets a recommendation still does not resurrect the Optional page", () => {
+  // The paused category itself (not some other category) resolves a real
+  // recommendation. It has no `roleTones` entry for its role (dry_shampoo
+  // never tiers per role), so the single placement rule must fall through to
+  // `originScreen` ("basis", where the paused-merge physically put it) —
+  // never to the card's stale `tone` ("optional"), which would resurrect the
+  // suppressed Optional page and step `basis.progress` back to 50.
+  const applied = applyStage1ProductExamplePreviews(
+    pausedOnlyOptionalPlan,
+    previewResponse([
+      recommendation({
+        category: "dry_shampoo",
+        role: "root_refresh_bridge",
+        decisionKey: "decision:dry_shampoo:root_refresh_bridge:gap",
+        productName: "Trockenshampoo Sensitiv",
+      }),
+    ]),
+  )
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  const dryShampoo = findCard(applied.basis.cards, (item) => item.id === "dry_shampoo")
+  assert.ok(dryShampoo)
+  assert.equal(dryShampoo?.product?.name, "Trockenshampoo Sensitiv")
+})
+
+test("an optional screen that redistributes down to zero final cards is dropped", () => {
+  // Artificial: `roleTones` pulls this optional-tone category's only role
+  // back to "basis", so nothing is left to keep the Optional page alive.
+  const drainingOptionalPlan: PlanStartReadyViewModel = {
+    ...readyPlan,
+    optional: {
+      ...readyPlan.optional!,
+      cards: [
+        card({
+          id: "oil",
+          category: "oil",
+          tone: "optional",
+          statusLabel: "Optional",
+          categoryLabel: "Haaröl",
+          imageUrl: null,
+          roleTones: { pre_wash_fibre_treatment: "basis" },
+        }),
+      ],
+    },
+  }
+
+  const applied = applyStage1ProductExamplePreviews(
+    drainingOptionalPlan,
+    previewResponse([oilPreWash]),
+  )
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  // The role entry itself still renders — just relocated to Basis.
+  const oilCard = findCard(applied.basis.cards, (item) => item.category === "oil")
+  assert.equal(oilCard?.product?.name, "Reichhaltiges Vorwäsche-Öl")
+})
+
+test("a category whose basis role has no preview at all still keeps a Basis placeholder, not a full relocation", () => {
+  // Oil's only resolved role is tiered "optional" via `roleTones`; its basis
+  // role (`pre_wash_fibre_treatment`, listed here exactly as production's
+  // `cardFromDecision` would emit it — every resolved role gets a
+  // `roleTones` entry, not just the ones that differ from the origin
+  // screen) has no preview at all in the response below — not even a
+  // "fallback"-kind entry. The basis-placeholder rule treats "no preview"
+  // identically to "fallback" for a basis-tone role: previously this test
+  // encoded the whole category relocating off Basis and the recomputed
+  // Basis count dropping it; now the basis-tone gap keeps one placeholder
+  // card on Basis (and the count keeps naming it), while the optional-tone
+  // role's real recommendation still renders on Optional exactly as before.
+  const relocatingBasisPlan: PlanStartReadyViewModel = {
+    ...readyPlan,
+    basis: {
+      ...readyPlan.basis,
+      countLabel: "3 Kategorien",
+      cards: [
+        ...readyPlan.basis.cards,
+        card({
+          id: "oil",
+          category: "oil",
+          tone: "basis",
+          categoryLabel: "Haaröl",
+          imageUrl: null,
+          roleTones: { pre_wash_fibre_treatment: "basis", leave_on_fibre_conditioning: "optional" },
+          frequencyTarget: oilFrequencyTarget,
+        }),
+      ],
+    },
+  }
+
+  const applied = applyStage1ProductExamplePreviews(
+    relocatingBasisPlan,
+    previewResponse([
+      recommendation({
+        category: "oil",
+        role: "leave_on_fibre_conditioning",
+        decisionKey: "decision:oil:leave_on_fibre_conditioning:gap",
+        productName: "Leichtes Finish-Öl",
+      }),
+    ]),
+  )
+
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["shampoo", "conditioner", "oil"],
+  )
+  const oilBasisCard = findCard(applied.basis.cards, (item) => item.category === "oil")
+  assert.equal(oilBasisCard?.product ?? null, null)
+  assert.equal(oilBasisCard?.fallbackNote, NEED_CARD_FALLBACK_NOTE)
+  assert.equal(oilBasisCard?.statusLabel, "Basis")
+  // Recomputed against the categories actually on the page — still three,
+  // since the placeholder keeps oil represented.
+  assert.equal(applied.basis.countLabel, "3 Kategorien")
+  assert.ok(applied.optional)
+  const oilCard = findCard(applied.optional!.cards, (item) => item.category === "oil")
+  assert.equal(oilCard?.product?.name, "Leichtes Finish-Öl")
 })
 
 test("the screen disclaimer stays honest when no category has a product yet", () => {
@@ -579,6 +1253,26 @@ test("the card leads with the product name and a type-plus-price subline", () =>
   assert.match(html, /aria-haspopup="dialog"/)
   assert.doesNotMatch(html, />Beispiel</)
   assert.doesNotMatch(html, /Was dein Haar braucht/)
+})
+
+test("a single card keeps all four data attributes on its outer article — no nested wrapper", () => {
+  const html = renderToStaticMarkup(<NeedCard card={card({ product: { ...productFixture } })} />)
+
+  // The root element must be the shell `<article>` itself — the same
+  // element that carries the visual card class — not a `<div>` nested
+  // one level inside it. A regression here breaks Playwright selectors
+  // like `[data-plan-start-card-list] article[data-plan-start-card-preview]`.
+  const articleOpenTag = html.match(/<article\b[^>]*>/)?.[0]
+  assert.ok(articleOpenTag, "expected the card to render as an <article>")
+  assert.match(articleOpenTag!, /rounded-\[19px\]/)
+  assert.match(articleOpenTag!, /data-plan-start-card="shampoo"/)
+  assert.match(articleOpenTag!, /data-plan-start-card-tone="basis"/)
+  assert.match(articleOpenTag!, /data-plan-start-card-paused="false"/)
+  assert.match(articleOpenTag!, /data-plan-start-card-preview="example"/)
+  // No inner element duplicates the card's own data-plan-start-card hook.
+  assert.equal(html.match(/data-plan-start-card="shampoo"/g)?.length, 1)
+  // Not a group: no group-only attribute leaks onto a standalone card.
+  assert.doesNotMatch(html, /data-plan-start-card-group/)
 })
 
 test("a fallback card keeps the category need and says the product follows later", () => {
@@ -775,7 +1469,7 @@ test("Stage 1-only keeps signed Basis and Optional pages but removes the refinem
 })
 
 test("renders paused cards as visible included categories with need details", () => {
-  const html = renderToStaticMarkup(<NeedCard card={readyPlan.optional!.cards[0]!} />)
+  const html = renderToStaticMarkup(<NeedCard card={asCard(readyPlan.optional!.cards[0])} />)
 
   assert.match(html, /data-plan-start-card-paused="true"/)
   assert.match(html, /Pausiert/)
@@ -821,7 +1515,7 @@ test("keeps Optional and Pausiert as explicit status text without replacing cate
       })}
     />,
   )
-  const paused = renderToStaticMarkup(<NeedCard card={readyPlan.optional!.cards[0]!} />)
+  const paused = renderToStaticMarkup(<NeedCard card={asCard(readyPlan.optional!.cards[0])} />)
 
   assert.match(optional, /Optional/)
   assert.match(optional, /bg-\[#F5EDEF\]/)
@@ -1028,13 +1722,13 @@ test("does not substitute category-only images for live authority previews", () 
   const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
   assert.ok(plan)
   assert.equal(plan.basis.title, "Deine Basis")
-  const shampoo = plan.basis.cards.find((item) => item.categoryLabel === "Shampoo")
-  const conditioner = plan.basis.cards.find((item) => item.categoryLabel === "Conditioner")
+  const shampoo = findCard(plan.basis.cards, (item) => item.categoryLabel === "Shampoo")
+  const conditioner = findCard(plan.basis.cards, (item) => item.categoryLabel === "Conditioner")
   assert.equal(shampoo?.imageUrl, null)
   assert.equal(conditioner?.imageUrl, null)
   assert.ok(plan.optional)
   assert.ok(plan.optional.cards.some((item) => item.id === "bondbuilder"))
-  assert.ok(plan.optional.cards.some((item) => item.paused))
+  assert.ok(plan.optional.cards.some((item) => !isNeedCardGroup(item) && item.paused))
 
   const interpreted = interpretPlanStartApiResponse(200, {
     status: "completed",
@@ -1124,7 +1818,10 @@ test("preserves paused included categories from the saved snapshot", () => {
 
   assert.ok(plan)
   assert.ok(plan.optional)
-  const paused = plan.optional.cards.find((item) => item.paused)
+  const paused = findCard(
+    plan.optional.cards,
+    (item) => !isNeedCardGroup(item) && Boolean(item.paused),
+  )
   assert.ok(paused)
   assert.equal(paused.statusLabel, "Pausiert")
   assert.equal(paused.targetType, "Aktuell nicht anwenden")
@@ -1230,4 +1927,9 @@ test("mobile containment is guarded by fixed card tracks and bounded text", () =
     `${componentSource}${adapterSource}`,
     /labs\/personal-plan|STAGE1_STAGE2|fixture/i,
   )
+  // `need-card.tsx` is a "use client" module — a value import from it in a
+  // server-reachable module like snapshot-adapter.ts turns that import into
+  // a client reference and crashes an RSC render that calls the function
+  // server-side. Type-only imports (e.g. from need-plan-screen) are fine.
+  assert.doesNotMatch(adapterSource, /import\s*\{[^}]*\}\s*from\s*"\.\/need-card"/)
 })

@@ -175,10 +175,17 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(labPath)
 
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
-    const basisCards = page.locator("[data-plan-start-card-list] article")
+    // Quantify over card entries, not `<article>` elements: a same-tier role
+    // group renders one shared `<article>` shell for several entries, so
+    // entry count and article count can legitimately diverge. Every entry —
+    // standalone or a group member — still carries its own
+    // `data-plan-start-card` hook and its own preview state.
+    const basisCards = page.locator("[data-plan-start-card-list] [data-plan-start-card]")
     await expect(basisCards).not.toHaveCount(0)
     await expect(
-      page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
+      page.locator(
+        '[data-plan-start-card-list] [data-plan-start-card][data-plan-start-card-preview="example"]',
+      ),
     ).toHaveCount(await basisCards.count())
     await expect
       .poll(() => optionalCategories.every((category) => requestedImages.has(category)))
@@ -200,9 +207,12 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       })),
     ).toEqual({ parent: "BODY", bottom: 844, viewportBottom: 844 })
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
-    const optionalCards = page.locator("[data-plan-start-card-list] article")
+    // Same entry-based counting as the Basis assertion above.
+    const optionalCards = page.locator("[data-plan-start-card-list] [data-plan-start-card]")
     await expect(
-      page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
+      page.locator(
+        '[data-plan-start-card-list] [data-plan-start-card][data-plan-start-card-preview="example"]',
+      ),
     ).toHaveCount(await optionalCards.count())
     const loadedSlot = optionalCards.first().locator('[data-plan-start-card-image-slot="loaded"]')
     const loadedImage = loadedSlot.locator("img")
@@ -345,11 +355,9 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await refineButton.click()
     await expect.poll(() => stage2Requests).toBe(1)
     await expect(
-      page
-        .getByRole("alert")
-        .filter({
-          hasText: "Der Feinschliff konnte nicht geladen werden. Versuche es noch einmal.",
-        }),
+      page.getByRole("alert").filter({
+        hasText: "Der Feinschliff konnte nicht geladen werden. Versuche es noch einmal.",
+      }),
     ).toBeVisible()
     // The fork (the retained Bedarfsplan/plan summary) stays on screen behind
     // the error, so the user can retry without losing their place.

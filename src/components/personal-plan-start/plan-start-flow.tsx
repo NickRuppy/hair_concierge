@@ -52,6 +52,7 @@ import {
 } from "@/lib/personal-plan/product-preview-contract"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 
+import { isNeedCardGroup } from "./need-card"
 import {
   NeedPlanScreen,
   PlanStartHeader,
@@ -901,7 +902,9 @@ export function PlanStartFlow(
     props.state === "ready" && step === "basis" && props.plan.optional
       ? [
           ...new Set(
-            props.plan.optional.cards.flatMap((card) => (card.imageUrl ? [card.imageUrl] : [])),
+            props.plan.optional.cards
+              .flatMap((card) => (isNeedCardGroup(card) ? card.members : [card]))
+              .flatMap((card) => (card.imageUrl ? [card.imageUrl] : [])),
           ),
         ]
       : []

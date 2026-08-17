@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Öl-Rollen nach Tier — Mockups</title>
+<style>
+  :root {
+    --bg: #f3f0ec;
+    --page-bg: #fdfbf9;
+    --ink: #291a43;
+    --purple: #6B50A0;
+    --muted: #706a65;
+    --oil-shell: #F5EDEF;
+    --oil-border: #E2D0D4;
+    --oil-dot: #A85F70;
+    --shampoo-shell: #F5F0E5;
+    --shampoo-border: #E2D4B8;
+    --shampoo-dot: #A77D31;
+    --dryshampoo-shell: #F1F3E9;
+    --dryshampoo-border: #DCE2C6;
+    --dryshampoo-dot: #7D913F;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    padding: 28px 20px 60px;
+  }
+  h1 { font-size: 21px; margin-bottom: 4px; }
+  .sub { color: var(--muted); font-size: 13px; max-width: 760px; line-height: 1.5; }
+  .scenario {
+    margin: 14px 0 26px; padding: 10px 14px; border-left: 3px solid var(--purple);
+    background: #fff; border-radius: 0 10px 10px 0; font-size: 12.5px; color: #4a4458;
+    max-width: 760px; line-height: 1.55;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 26px; align-items: flex-start; margin-bottom: 40px; }
+  .panel { width: 392px; }
+  .panel-label { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--purple); margin-bottom: 3px; }
+  .panel-note { font-size: 11.5px; color: var(--muted); line-height: 1.45; margin-bottom: 10px; min-height: 32px; }
+  .phone {
+    background: var(--page-bg); border: 1px solid #e6e0d9; border-radius: 26px;
+    padding: 18px 13px 16px; box-shadow: 0 8px 28px rgba(43,26,67,.08);
+  }
+  .overline { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #6e6863; }
+  .h1 { font-size: 23px; line-height: 1.14; margin-top: 4px; font-weight: 800; }
+  .lead { margin-top: 5px; font-size: 11.5px; line-height: 1.5; color: var(--muted); }
+  .progress { margin: 12px 0; height: 4px; border-radius: 99px; background: #e7e0d9; overflow: hidden; }
+  .progress span { display: block; height: 100%; background: var(--purple); border-radius: 99px; }
+  .sect { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 2px 8px; }
+  .sect strong { font-size: 13px; }
+  .count { font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--purple); }
+  .cards { display: flex; flex-direction: column; gap: 10px; }
+
+  .card { border: 1px solid; border-radius: 19px; box-shadow: 0 3px 11px rgba(43,26,67,.035); overflow: hidden; }
+  .card.oil { background: var(--oil-shell); border-color: var(--oil-border); }
+  .card.shampoo { background: var(--shampoo-shell); border-color: var(--shampoo-border); }
+  .card.dryshampoo { background: var(--dryshampoo-shell); border-color: var(--dryshampoo-border); }
+
+  .card-body { display: grid; grid-template-columns: 66px minmax(0,1fr) 16px; gap: 12px; align-items: center; padding: 12px; }
+  .img { height: 82px; width: 66px; border-radius: 14px; background: #f3efe8; box-shadow: inset 0 0 0 1px rgba(31,26,20,.04); display: grid; place-items: center; font-size: 26px; }
+  .img.sm { height: 52px; width: 42px; border-radius: 10px; font-size: 18px; }
+  .kicker { display: flex; align-items: center; gap: 6px; font-size: 8.5px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; color: var(--purple); }
+  .dot { height: 6px; width: 6px; border-radius: 99px; }
+  .dot.oil { background: var(--oil-dot); }
+  .dot.shampoo { background: var(--shampoo-dot); }
+  .dot.dryshampoo { background: var(--dryshampoo-dot); }
+  .status-pill { border-radius: 99px; background: rgba(107,80,160,.14); padding: 2px 6px; font-size: 8px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--purple); }
+  .name { display: block; margin-top: 4px; font-size: 13.5px; line-height: 1.18; font-weight: 700; }
+  .subline { display: block; margin-top: 2px; font-size: 10px; font-weight: 600; color: #6a5f8a; }
+  .purpose { display: block; margin-top: 2px; font-size: 9.8px; line-height: 1.32; color: #5f5954; }
+  .pills { display: flex; gap: 4px; margin-top: 6px; }
+  .pill { border: 1px solid rgba(107,80,160,.15); background: rgba(255,255,255,.7); border-radius: 99px; padding: 2px 6px; font-size: 7.8px; font-weight: 700; color: #62507e; }
+  .cadence { display: flex; align-items: center; gap: 6px; margin-top: 6px; border-top: 1px solid rgba(67,55,48,.08); padding-top: 6px; font-size: 8.8px; font-weight: 700; color: #665e58; }
+  .clock { height: 15px; width: 15px; border-radius: 99px; background: rgba(107,80,160,.11); display: grid; place-items: center; font-size: 8px; color: var(--purple); }
+  .chev { color: rgba(31,26,20,.38); font-size: 14px; justify-self: end; }
+
+  /* Variant A: header + compact rows */
+  .group-head { padding: 12px 12px 8px; }
+  .group-head .name { font-size: 13px; }
+  .group-rows { display: flex; flex-direction: column; }
+  .group-row { display: grid; grid-template-columns: 42px minmax(0,1fr) 16px; gap: 10px; align-items: center; padding: 9px 12px; border-top: 1px solid rgba(67,55,48,.09); background: rgba(255,255,255,.34); }
+  .group-row .role { font-size: 10.5px; font-weight: 800; color: var(--ink); }
+  .group-row .prod { font-size: 10px; color: #5f5954; margin-top: 1px; }
+  .group-row .freq { font-size: 8.6px; font-weight: 700; color: #665e58; margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+  .group-row .clock { height: 13px; width: 13px; font-size: 7px; }
+
+  /* Variant B: stacked full cards in one shell */
+  .stack-divider { border-top: 1px solid rgba(67,55,48,.12); margin: 0 12px; }
+
+  .callout { font-size: 10.5px; color: #8a5f2a; background: #fdf3e2; border: 1px solid #ecd9b8; border-radius: 8px; padding: 6px 9px; margin-top: 10px; line-height: 1.45; }
+  .h2 { font-size: 16px; margin: 8px 0 4px; }
+  .divider-note { max-width: 760px; color: var(--muted); font-size: 12.5px; line-height: 1.5; margin-bottom: 18px; }
+</style>
+</head>
+<body>
+
+<h1>Öl-Rollen nach eigenem Tier — Mockups</h1>
+<p class="sub">Beispielprofil: geschädigte, trockene Längen → <strong>Vorwäsche-Öl = Basis</strong>; Längenpflege-Öl und Finish-Öl = optional. Heute landen alle drei auf der Basis-Seite. Neu: jede Rolle sitzt in ihrem eigenen Tier.</p>
+<div class="scenario">
+  <strong>Lead-Card-Regel (dein Vorschlag):</strong> Eine Kategorie bekommt nur dann eine Lead-Card, wenn <em>mehrere</em> Rollen-Produkte derselben Kategorie im <em>selben</em> Tier liegen. Eine einzelne Rolle ist einfach eine eigenständige Karte. Varianten A und B unterscheiden sich nur in der Anatomie der gruppierten Karte.
+</div>
+
+<div class="row">
+
+  <!-- PANEL 1: current state -->
+  <div class="panel">
+    <div class="panel-label">Heute (Ist-Zustand)</div>
+    <div class="panel-note">Eine Basis-Rolle zieht alle drei Öl-Karten auf die Basis-Seite — gleiches Gewicht, gleiche Kadenz „nach Bedarf", Dr. Scheller doppelt.</div>
+    <div class="phone">
+      <div class="overline">Dein persönlicher Plan</div>
+      <div class="h1">Deine Basis</div>
+      <p class="lead">Basierend auf deiner Haaranalyse sind das die Grundlagen für deine Routine.</p>
+      <div class="progress"><span style="width:50%"></span></div>
+      <div class="sect"><strong>Von uns klar empfohlen</strong><span class="count">5 Kategorien</span></div>
+      <div class="cards">
+        <div class="card oil"><div class="card-body">
+          <div class="img">🫒</div>
+          <div><div class="kicker"><span class="dot oil"></span>Haaröl</div>
+            <span class="name">NANOIL Avocadoöl</span>
+            <span class="subline">Reichhaltige Vorwäsche · 12,99 €</span>
+            <span class="purpose">Glättet Frizz und gibt Glanz, ohne unnötig zu beschweren.</span>
+            <div class="pills"><span class="pill">Vorwäsche</span><span class="pill">Längenpflege</span></div>
+            <div class="cadence"><span class="clock">🕐</span>nach Bedarf</div>
+          </div><div class="chev">›</div>
+        </div></div>
+        <div class="card oil"><div class="card-body">
+          <div class="img">🧴</div>
+          <div><div class="kicker"><span class="dot oil"></span>Haaröl</div>
+            <span class="name">Dr. Scheller Reines Arganöl</span>
+            <span class="subline">Pflege ohne Ausspülen · 8,95 €</span>
+            <span class="purpose">Bleibt im Haar und ergänzt die Pflege nach der Wäsche.</span>
+            <div class="pills"><span class="pill">Längenpflege</span></div>
+            <div class="cadence"><span class="clock">🕐</span>nach Bedarf</div>
+          </div><div class="chev">›</div>
+        </div></div>
+        <div class="card oil"><div class="card-body">
+          <div class="img">🧴</div>
+          <div><div class="kicker"><span class="dot oil"></span>Haaröl</div>
+            <span class="name">Dr. Scheller Reines Arganöl</span>
+            <span class="subline">Finish · 8,95 €</span>
+            <span class="purpose">Schließt die Routine als Finish für die Längen ab.</span>
+            <div class="pills"><span class="pill">Finish &amp; Glanz</span></div>
+            <div class="cadence"><span class="clock">🕐</span>nach Bedarf</div>
+          </div><div class="chev">›</div>
+        </div></div>
+      </div>
+      <div class="callout">3 volle Öl-Karten in „Deine Basis" — obwohl nur die Vorwäsche Basis-Tier hat.</div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: new basis page -->
+  <div class="panel">
+    <div class="panel-label">Neu — Basis-Seite (beide Varianten)</div>
+    <div class="panel-note">Nur die Basis-Rolle bleibt. Eine Rolle allein im Tier → eigenständige Karte mit Rollen-Copy und echter Kadenz. Keine Lead-Card nötig.</div>
+    <div class="phone">
+      <div class="overline">Dein persönlicher Plan</div>
+      <div class="h1">Deine Basis</div>
+      <p class="lead">Basierend auf deiner Haaranalyse sind das die Grundlagen für deine Routine.</p>
+      <div class="progress"><span style="width:50%"></span></div>
+      <div class="sect"><strong>Von uns klar empfohlen</strong><span class="count">5 Kategorien</span></div>
+      <div class="cards">
+        <div class="card oil"><div class="card-body">
+          <div class="img">🫒</div>
+          <div><div class="kicker"><span class="dot oil"></span>Haaröl</div>
+            <span class="name">NANOIL Avocadoöl</span>
+            <span class="subline">Pflege vor der Haarwäsche · 12,99 €</span>
+            <span class="purpose">Pflegt die Längen vor der Haarwäsche.</span>
+            <div class="pills"><span class="pill">Vorwäsche</span></div>
+            <div class="cadence"><span class="clock">🕐</span>vor jeder passenden Haarwäsche</div>
+          </div><div class="chev">›</div>
+        </div></div>
+      </div>
+      <div class="callout">Neue Rollen-Kadenz statt „nach Bedarf": <em>vor jeder passenden Haarwäsche</em>. Die zwei optionalen Öl-Rollen sind auf die Optional-Seite gewandert.</div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: Variant A -->
+  <div class="panel">
+    <div class="panel-label">Variante A — Optional-Seite: Lead-Card als Kopf + kompakte Zeilen</div>
+    <div class="panel-note">Lead-Card ohne eigenes Produkt: Kategorie-Kopf, darunter je Rolle eine kompakte Produktzeile. Ruhigste Lösung; gleiche Produkte wiederholen sich nur als Zeile.</div>
+    <div class="phone">
+      <div class="overline">Optionale Empfehlungen</div>
+      <div class="h1">Zusätzlich sinnvoll</div>
+      <p class="lead">Basierend auf deiner Haaranalyse können diese Ergänzungen deine Ziele zusätzlich unterstützen.</p>
+      <div class="progress"><span style="width:100%"></span></div>
+      <div class="sect"><strong>Für deine Ziele</strong><span class="count">3 Vorschläge</span></div>
+      <div class="cards">
+        <div class="card oil">
+          <div class="group-head">
+            <div class="kicker"><span class="dot oil"></span>Haaröl <span class="status-pill">Optional</span></div>
+            <span class="name">Haaröl · 2 Einsätze</span>
+            <span class="purpose">Glättet Frizz und gibt Glanz, ohne unnötig zu beschweren.</span>
+          </div>
+          <div class="group-rows">
+            <div class="group-row">
+              <div class="img sm">🧴</div>
+              <div>
+                <div class="role">Pflege ohne Ausspülen</div>
+                <div class="prod">Dr. Scheller Reines Arganöl · 8,95 €</div>
+                <div class="freq"><span class="clock">🕐</span>nach Bedarf</div>
+              </div><div class="chev">›</div>
+            </div>
+            <div class="group-row">
+              <div class="img sm">🧴</div>
+              <div>
+                <div class="role">Finish</div>
+                <div class="prod">Dr. Scheller Reines Arganöl · 8,95 €</div>
+                <div class="freq"><span class="clock">🕐</span>nach Bedarf</div>
+              </div><div class="chev">›</div>
+            </div>
+          </div>
+        </div>
+        <div class="card dryshampoo"><div class="card-body">
+          <div class="img">🫧</div>
+          <div><div class="kicker"><span class="dot dryshampoo"></span>Trockenshampoo <span class="status-pill">Optional</span></div>
+            <span class="name">Batiste Original</span>
+            <span class="subline">Sensitives Aerosol · 5,45 €</span>
+            <span class="purpose">Überbrückt einen fettigeren Ansatz, wenn du keinen zusätzlichen Waschtag möchtest.</span>
+            <div class="cadence"><span class="clock">🕐</span>bei Bedarf</div>
+          </div><div class="chev">›</div>
+        </div></div>
+      </div>
+      <div class="callout">Dasselbe Produkt in zwei Rollen (Dr. Scheller) liest sich als „ein Öl, zwei Einsätze" statt als Doppelkauf.</div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: Variant B -->
+  <div class="panel">
+    <div class="panel-label">Variante B — Optional-Seite: volle Karten in einer Hülle</div>
+    <div class="panel-note">Gemeinsame Hülle mit einem Kategorie-Kicker, aber jede Rolle behält die volle Karten-Anatomie. Näher am Bestand, aber höher.</div>
+    <div class="phone">
+      <div class="overline">Optionale Empfehlungen</div>
+      <div class="h1">Zusätzlich sinnvoll</div>
+      <p class="lead">Basierend auf deiner Haaranalyse können diese Ergänzungen deine Ziele zusätzlich unterstützen.</p>
+      <div class="progress"><span style="width:100%"></span></div>
+      <div class="sect"><strong>Für deine Ziele</strong><span class="count">3 Vorschläge</span></div>
+      <div class="cards">
+        <div class="card oil">
+          <div class="group-head" style="padding-bottom:2px">
+            <div class="kicker"><span class="dot oil"></span>Haaröl <span class="status-pill">Optional</span></div>
+          </div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="img">🧴</div>
+            <div>
+              <span class="name">Dr. Scheller Reines Arganöl</span>
+              <span class="subline">Pflege ohne Ausspülen · 8,95 €</span>
+              <span class="purpose">Bleibt im Haar und ergänzt die Pflege nach der Wäsche.</span>
+              <div class="cadence"><span class="clock">🕐</span>nach Bedarf</div>
+            </div><div class="chev">›</div>
+          </div>
+          <div class="stack-divider"></div>
+          <div class="card-body">
+            <div class="img">🧴</div>
+            <div>
+              <span class="name">Dr. Scheller Reines Arganöl</span>
+              <span class="subline">Finish · 8,95 €</span>
+              <span class="purpose">Schließt die Routine als Finish für die Längen ab.</span>
+              <div class="cadence"><span class="clock">🕐</span>nach Bedarf</div>
+            </div><div class="chev">›</div>
+          </div>
+        </div>
+        <div class="card dryshampoo"><div class="card-body">
+          <div class="img">🫧</div>
+          <div><div class="kicker"><span class="dot dryshampoo"></span>Trockenshampoo <span class="status-pill">Optional</span></div>
+            <span class="name">Batiste Original</span>
+            <span class="subline">Sensitives Aerosol · 5,45 €</span>
+            <span class="purpose">Überbrückt einen fettigeren Ansatz, wenn du keinen zusätzlichen Waschtag möchtest.</span>
+            <div class="cadence"><span class="clock">🕐</span>bei Bedarf</div>
+          </div><div class="chev">›</div>
+        </div></div>
+      </div>
+      <div class="callout">Volle Anatomie pro Rolle — mehr Präsenz, aber die Doppelnennung von Dr. Scheller fällt stärker auf.</div>
+    </div>
+  </div>
+
+</div>
+
+<h2 class="h2">Gegenprobe: Shampoo-Gruppe im selben Tier (Basis)</h2>
+<p class="divider-note">Die Lead-Card-Regel muss auch für den kanonischen Gruppenfall funktionieren: Profil mit fettiger Kopfhaut + Schuppen plant <em>zwei</em> Shampoos im selben Tier (Basis). So sieht das in beiden Varianten aus:</p>
+
+<div class="row">
+  <div class="panel">
+    <div class="panel-label">Variante A</div>
+    <div class="panel-note"></div>
+    <div class="phone" style="padding-top:14px">
+      <div class="cards">
+        <div class="card shampoo">
+          <div class="group-head">
+            <div class="kicker"><span class="dot shampoo"></span>Shampoo</div>
+            <span class="name">Shampoo · 2 Einsätze</span>
+            <span class="purpose">Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.</span>
+          </div>
+          <div class="group-rows">
+            <div class="group-row">
+              <div class="img sm">🧴</div>
+              <div>
+                <div class="role">Regelmäßige Reinigung</div>
+                <div class="prod">Sante Extra Sensitiv Shampoo · 5,95 €</div>
+                <div class="freq"><span class="clock">🕐</span>2×/Woche</div>
+              </div><div class="chev">›</div>
+            </div>
+            <div class="group-row">
+              <div class="img sm">🧴</div>
+              <div>
+                <div class="role">Schuppenpflege</div>
+                <div class="prod">Sebamed Anti-Schuppen Shampoo · 8,45 €</div>
+                <div class="freq"><span class="clock">🕐</span>1×/Woche</div>
+              </div><div class="chev">›</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label">Variante B</div>
+    <div class="panel-note"></div>
+    <div class="phone" style="padding-top:14px">
+      <div class="cards">
+        <div class="card shampoo">
+          <div class="group-head" style="padding-bottom:2px">
+            <div class="kicker"><span class="dot shampoo"></span>Shampoo</div>
+          </div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="img">🧴</div>
+            <div>
+              <span class="name">Sante Extra Sensitiv Shampoo</span>
+              <span class="subline">Regelmäßige Reinigung · 5,95 €</span>
+              <span class="purpose">Regelmäßige Reinigung für deine Kopfhaut.</span>
+              <div class="cadence"><span class="clock">🕐</span>2×/Woche</div>
+            </div><div class="chev">›</div>
+          </div>
+          <div class="stack-divider"></div>
+          <div class="card-body">
+            <div class="img">🧴</div>
+            <div>
+              <span class="name">Sebamed Anti-Schuppen Shampoo</span>
+              <span class="subline">Schuppenpflege · 8,45 €</span>
+              <span class="purpose">Hilft, deine Kopfhautpflege gezielter einzuplanen.</span>
+              <div class="cadence"><span class="clock">🕐</span>1×/Woche</div>
+            </div><div class="chev">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

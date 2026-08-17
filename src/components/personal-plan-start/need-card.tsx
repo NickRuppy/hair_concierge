@@ -7,52 +7,22 @@ import { useState } from "react"
 import type { Stage1Category } from "@/lib/personal-plan/types"
 import { cn } from "@/lib/utils"
 
+import type { NeedCardGroupViewModel, NeedCardViewModel } from "./plan-start-cards"
 import { ProductDetailSheet } from "./product-detail-sheet"
 
-export type NeedCardTone = "basis" | "optional"
-
-/** The concrete catalog pick that leads the card once previews are loaded. */
-export type NeedCardProduct = {
-  name: string
-  priceLabel: string | null
-  netContentLabel: string | null
-  /** Null when availability is unknown — the line is omitted instead of guessing. */
-  availabilityLabel: string | null
-  /** Drives the availability line's tone: only "available" reads as green. */
-  purchaseLinkStatus?: "available" | "unavailable" | null
-  /** Only set when the purchase link is available and safe. */
-  productUrl: string | null
-}
-
-/** Honest state for a category without a qualifying product recommendation. */
-export const NEED_CARD_FALLBACK_NOTE = "Produktempfehlung folgt nach dem Feinschliff"
-
-export type NeedCardViewModel = {
-  /**
-   * Unique per rendered card. It is the category for a category's leading card
-   * and `<category>:<role>` for every further role of that category, which each
-   * render their own card.
-   */
-  id: string
-  /** The category the card belongs to — drives the accent styling. */
-  category: Stage1Category
-  tone: NeedCardTone
-  categoryLabel: string
-  statusLabel: "Basis" | "Optional" | "Pausiert"
-  targetType: string
-  purpose: string
-  pills: string[]
-  frequency: string
-  imageUrl: string | null
-  imageAlt?: string
-  paused?: boolean
-  product?: NeedCardProduct | null
-  fallbackNote?: string | null
-  detailBlocks: Array<{
-    title: string
-    body: string
-  }>
-}
+// Re-exported so existing importers (the barrel, tests, other client
+// components) keep working unchanged. Server-reachable modules must import
+// these from "./plan-start-cards" directly instead — see that module's
+// header comment for why.
+export {
+  isNeedCardGroup,
+  NEED_CARD_FALLBACK_NOTE,
+  type NeedCardGroupViewModel,
+  type NeedCardProduct,
+  type NeedCardTone,
+  type NeedCardViewModel,
+  type PlanStartCardViewModel,
+} from "./plan-start-cards"
 
 const CATEGORY_CARD_STYLES = {
   shampoo: { shellClassName: "border-[#E2D4B8] bg-[#F5F0E5]", dotClassName: "bg-[#A77D31]" },
@@ -81,20 +51,36 @@ const NEUTRAL_CARD_STYLE = {
   dotClassName: "bg-[#6B50A0]",
 }
 
-export function NeedCard({ card }: { card: NeedCardViewModel }) {
+/**
+ * The full card anatomy for one member: image, name, subline, purpose,
+ * pills, cadence and its own detail-sheet trigger. Used standalone (as the
+ * card's own category-shell `<article>` — `shellClassName` set — so a
+ * single card's DOM stays exactly what it was before groups existed, with
+ * no extra wrapper element) and stacked inside a shared category shell for
+ * same-tier role groups (`NeedCardGroup`, `shellClassName` unset, renders as
+ * a plain `<div>`) — each entry keeps an independent `open` state, so
+ * members open their own sheet.
+ */
+function NeedCardEntry({
+  card,
+  showKicker,
+  shellClassName,
+}: {
+  card: NeedCardViewModel
+  showKicker: boolean
+  shellClassName?: string
+}) {
   const [open, setOpen] = useState(false)
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const hasImage = Boolean(card.imageUrl) && failedImageUrl !== card.imageUrl
   const categoryStyle = CATEGORY_CARD_STYLES[card.category] ?? NEUTRAL_CARD_STYLE
   const product = card.product ?? null
   const subline = product ? [card.targetType, product.priceLabel].filter(Boolean).join(" · ") : null
+  const Container = shellClassName ? "article" : "div"
 
   return (
-    <article
-      className={cn(
-        "overflow-hidden rounded-[19px] border shadow-[0_3px_11px_rgba(43,26,67,0.035)]",
-        categoryStyle.shellClassName,
-      )}
+    <Container
+      className={shellClassName}
       data-plan-start-card={card.id}
       data-plan-start-card-tone={card.tone}
       data-plan-start-card-paused={card.paused ? "true" : "false"}
@@ -105,6 +91,7 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
         className={cn(
           "grid w-full grid-cols-[66px_minmax(0,1fr)_16px] cursor-pointer items-center gap-3 bg-transparent p-3 text-left text-inherit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-3px]",
           "max-[360px]:gap-2 max-[360px]:p-2.5",
+          !showKicker && "pt-2",
         )}
         aria-haspopup="dialog"
         aria-expanded={open}
@@ -132,23 +119,25 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
         </span>
 
         <span className="min-w-0">
-          <span className="flex min-w-0 items-center gap-1.5 text-[8.5px] font-extrabold uppercase tracking-[0.11em] text-[#6B50A0]">
-            <span
-              aria-hidden="true"
-              className={cn("h-1.5 w-1.5 shrink-0 rounded-full", categoryStyle.dotClassName)}
-            />
-            <span className="truncate">{card.categoryLabel}</span>
-            {card.statusLabel !== "Basis" ? (
+          {showKicker ? (
+            <span className="flex min-w-0 items-center gap-1.5 text-[8.5px] font-extrabold uppercase tracking-[0.11em] text-[#6B50A0]">
               <span
-                className={cn(
-                  "shrink-0 rounded-full bg-[rgba(107,80,160,0.14)] px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.08em] text-[#6B50A0]",
-                  card.paused && "bg-[rgba(200,160,40,0.18)] text-[#7f5d0c]",
-                )}
-              >
-                {card.statusLabel}
-              </span>
-            ) : null}
-          </span>
+                aria-hidden="true"
+                className={cn("h-1.5 w-1.5 shrink-0 rounded-full", categoryStyle.dotClassName)}
+              />
+              <span className="truncate">{card.categoryLabel}</span>
+              {card.statusLabel !== "Basis" ? (
+                <span
+                  className={cn(
+                    "shrink-0 rounded-full bg-[rgba(107,80,160,0.14)] px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.08em] text-[#6B50A0]",
+                    card.paused && "bg-[rgba(200,160,40,0.18)] text-[#7f5d0c]",
+                  )}
+                >
+                  {card.statusLabel}
+                </span>
+              ) : null}
+            </span>
+          ) : null}
           <strong className="mt-1 line-clamp-2 block text-[13.5px] leading-[1.18] text-[#291a43]">
             {product ? product.name : card.targetType}
           </strong>
@@ -192,6 +181,64 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
       </button>
 
       <ProductDetailSheet card={card} open={open} onOpenChange={setOpen} />
+    </Container>
+  )
+}
+
+export function NeedCard({ card }: { card: NeedCardViewModel }) {
+  const categoryStyle = CATEGORY_CARD_STYLES[card.category] ?? NEUTRAL_CARD_STYLE
+
+  return (
+    <NeedCardEntry
+      card={card}
+      showKicker
+      shellClassName={cn(
+        "overflow-hidden rounded-[19px] border shadow-[0_3px_11px_rgba(43,26,67,0.035)]",
+        categoryStyle.shellClassName,
+      )}
+    />
+  )
+}
+
+/**
+ * Same-tier, same-category role entries of a category share one shell with
+ * a single kicker row — each member still keeps its own full card anatomy
+ * and its own detail-sheet trigger, separated by a divider.
+ */
+export function NeedCardGroup({ group }: { group: NeedCardGroupViewModel }) {
+  const categoryStyle = CATEGORY_CARD_STYLES[group.category] ?? NEUTRAL_CARD_STYLE
+  return (
+    <article
+      className={cn(
+        "overflow-hidden rounded-[19px] border shadow-[0_3px_11px_rgba(43,26,67,0.035)]",
+        categoryStyle.shellClassName,
+      )}
+      data-plan-start-card-group={group.id}
+      data-plan-start-card-tone={group.tone}
+    >
+      <div className="flex items-center gap-1.5 px-3 pt-3 text-[8.5px] font-extrabold uppercase tracking-[0.11em] text-[#6B50A0]">
+        <span
+          aria-hidden="true"
+          className={cn("h-1.5 w-1.5 shrink-0 rounded-full", categoryStyle.dotClassName)}
+        />
+        <span className="truncate">{group.categoryLabel}</span>
+        {group.statusLabel !== "Basis" ? (
+          <span
+            className={cn(
+              "shrink-0 rounded-full bg-[rgba(107,80,160,0.14)] px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.08em] text-[#6B50A0]",
+              group.statusLabel === "Pausiert" && "bg-[rgba(200,160,40,0.18)] text-[#7f5d0c]",
+            )}
+          >
+            {group.statusLabel}
+          </span>
+        ) : null}
+      </div>
+      {group.members.map((member, index) => (
+        <div key={member.id}>
+          {index > 0 ? <div className="mx-3 border-t border-[rgba(67,55,48,0.12)]" /> : null}
+          <NeedCardEntry card={member} showKicker={false} />
+        </div>
+      ))}
     </article>
   )
 }

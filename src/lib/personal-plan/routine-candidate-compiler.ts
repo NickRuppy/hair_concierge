@@ -14,6 +14,7 @@ import {
   STAGE1_CATEGORY_ORDER,
   type InitialNeedPlanSnapshot,
   type PlanCategoryDecision,
+  type PlanNeedTier,
   type PlanProductRole,
 } from "./types"
 import { semanticHash } from "./routine/canonicalize"
@@ -224,9 +225,15 @@ function findPlannedPurchase(
       )
 }
 
-function assessment(decision: PlanCategoryDecision): RoutineSystemAssessment {
-  if (decision.needTier === "basis" || decision.needTier === "optional") return decision.needTier
-  if (decision.needTier === "not_needed") return "not_recommended"
+function assessment(decision: PlanCategoryDecision, role: string): RoutineSystemAssessment {
+  const roleTargets =
+    decision.target && "roleTargets" in decision.target ? (decision.target.roleTargets ?? []) : []
+  const roleTarget = roleTargets.find(
+    (candidate) => candidate.role === role && "tier" in candidate && candidate.tier,
+  ) as { tier?: PlanNeedTier } | undefined
+  const tier = roleTarget?.tier ?? decision.needTier
+  if (tier === "basis" || tier === "optional") return tier
+  if (tier === "not_needed") return "not_recommended"
   throw new Error(`routine_candidate_unresolved_refined_decision:${decision.category}`)
 }
 
@@ -313,7 +320,7 @@ function makeItem(input: {
     purposeKey: resolution.role,
     roleOrder: roleOrder(resolution.category, resolution.role),
     state: {
-      systemAssessment: assessment(decision),
+      systemAssessment: assessment(decision, resolution.role),
       inclusion: included,
       availability,
       fitDecision: resolution.choiceState === "owned_override" ? "informed_override" : "standard",
