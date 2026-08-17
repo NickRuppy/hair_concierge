@@ -1631,7 +1631,7 @@ test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
 })
 
 test("renderedDimensions caps a synthetic dimension list at STAGE3_RENDERED_DIMENSION_CAP", () => {
-  assert.equal(STAGE3_RENDERED_DIMENSION_CAP, 3)
+  assert.equal(STAGE3_RENDERED_DIMENSION_CAP, 4)
   const synthetic: Stage3FitComparisonDimension[] = Array.from({ length: 5 }, (_, index) => ({
     dimensionId: `synthetic.${index}`,
     label: `Dimension ${index}`,
@@ -1644,7 +1644,7 @@ test("renderedDimensions caps a synthetic dimension list at STAGE3_RENDERED_DIME
 
   assert.deepEqual(
     renderedDimensions(synthetic).map((dimension) => dimension.dimensionId),
-    ["synthetic.0", "synthetic.1", "synthetic.2"],
+    ["synthetic.0", "synthetic.1", "synthetic.2", "synthetic.3"],
   )
 })
 
