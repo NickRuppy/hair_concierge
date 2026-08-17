@@ -10,7 +10,7 @@ import {
 } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { NeedCard, isNeedCardGroup, type PlanStartCardViewModel } from "./need-card"
+import { NeedCard, NeedCardGroup, isNeedCardGroup, type PlanStartCardViewModel } from "./need-card"
 
 export type NeedPlanScreenKind = "basis" | "optional"
 
@@ -141,17 +141,13 @@ export function NeedPlanScreen({
         </div>
 
         <div className="space-y-2.5" data-plan-start-card-list>
-          {/*
-           * Grouped rendering (a single stacked group per same-tier role
-           * cluster) is Task 2's job. Until then, a group's members render as
-           * the same individual role cards the page already showed pre-Task 1
-           * — same ids, same layout — so the build stays green on real data.
-           */}
-          {screen.cards
-            .flatMap((card) => (isNeedCardGroup(card) ? card.members : [card]))
-            .map((card) => (
+          {screen.cards.map((card) =>
+            isNeedCardGroup(card) ? (
+              <NeedCardGroup key={card.id} group={card} />
+            ) : (
               <NeedCard key={card.id} card={card} />
-            ))}
+            ),
+          )}
         </div>
       </main>
       {actionPortalTarget ? createPortal(actionNav, actionPortalTarget) : actionNav}

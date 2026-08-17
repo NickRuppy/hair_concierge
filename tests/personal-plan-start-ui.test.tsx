@@ -10,6 +10,7 @@ import {
 import {
   NEED_CARD_FALLBACK_NOTE,
   NeedCard,
+  NeedPlanScreen,
   PLAN_START_CATALOG_DISCLAIMER,
   PLAN_START_PENDING_DISCLAIMER,
   PRODUCT_REFINEMENT_HINT,
@@ -804,6 +805,69 @@ test("oil role entries split across screens by their own tier", () => {
   assert.ok(isNeedCardGroup(optionalOil[0]!))
   assert.equal(asGroup(optionalOil[0]).members.length, 2)
   assert.equal(asGroup(optionalOil[0]).statusLabel, "Optional")
+})
+
+test("group renders one shell with a single kicker and full member anatomy", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    planWithMixedOilTiers,
+    previewResponse([oilPreWash, oilLeaveOn, oilDryFinish]),
+  )
+  const oilGroup = asGroup(applied.optional!.cards.find((item) => item.category === "oil")!)
+  assert.equal(oilGroup.id, "oil:group:optional")
+  assert.equal(oilGroup.members.length, 2)
+  const [primary, secondary] = oilGroup.members
+  assert.equal(primary?.id, "oil:leave_on_fibre_conditioning")
+  assert.equal(secondary?.id, "oil:dry_finish")
+
+  const html = renderToStaticMarkup(
+    <NeedPlanScreen screen={{ ...applied.optional!, cards: [oilGroup] }} hasOptionalPage />,
+  )
+
+  // Exactly one shell for the whole group, carrying the group id and tone.
+  assert.equal(html.match(/data-plan-start-card-group="oil:group:optional"/g)?.length, 1)
+  assert.ok(
+    html.includes(
+      'data-plan-start-card-group="oil:group:optional" data-plan-start-card-tone="optional"',
+    ),
+  )
+  // One kicker row for the group ("Haaröl · Optional"), not one per member.
+  assert.equal(html.match(/>Haaröl</g)?.length, 1)
+  assert.equal(html.match(/>Optional</g)?.length, 1)
+  // Both members still render as full, independently addressable cards.
+  assert.ok(html.includes(`data-plan-start-card="${primary!.id}"`))
+  assert.ok(html.includes(`data-plan-start-card="${secondary!.id}"`))
+  assert.ok(html.includes(primary!.product!.name))
+  assert.ok(html.includes(secondary!.product!.name))
+  assert.ok(html.includes(`${primary!.targetType} · ${primary!.product!.priceLabel}`))
+  assert.ok(html.includes(`${secondary!.targetType} · ${secondary!.product!.priceLabel}`))
+  // A divider sits between the two stacked members, and only there.
+  assert.equal(html.match(/mx-3 border-t border-\[rgba\(67,55,48,0\.12\)\]/g)?.length, 1)
+})
+
+test("each group member opens its own detail sheet", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    planWithMixedOilTiers,
+    previewResponse([oilPreWash, oilLeaveOn, oilDryFinish]),
+  )
+  const oilGroup = asGroup(applied.optional!.cards.find((item) => item.category === "oil")!)
+  const [primary, secondary] = oilGroup.members
+
+  const html = renderToStaticMarkup(
+    <NeedPlanScreen screen={{ ...applied.optional!, cards: [oilGroup] }} hasOptionalPage />,
+  )
+
+  // Each member keeps its own dialog trigger — two independent buttons, not
+  // one shared trigger for the whole group.
+  assert.equal(html.match(/aria-haspopup="dialog"/g)?.length, 2)
+
+  // Clicking either member's trigger must only ever be able to reveal that
+  // member's own product facts, never the other member's.
+  const primarySheet = renderToStaticMarkup(<ProductDetailSheetBody card={primary!} />)
+  const secondarySheet = renderToStaticMarkup(<ProductDetailSheetBody card={secondary!} />)
+  assert.ok(primarySheet.includes(primary!.product!.name))
+  assert.ok(!primarySheet.includes(secondary!.product!.name))
+  assert.ok(secondarySheet.includes(secondary!.product!.name))
+  assert.ok(!secondarySheet.includes(primary!.product!.name))
 })
 
 const planWithoutOptionalPage: PlanStartReadyViewModel = {
