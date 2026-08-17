@@ -1,11 +1,3 @@
-import type { PlanCategoryTarget, PlanProductRole } from "@/lib/personal-plan/types"
-import {
-  deriveShampooBucket,
-  primaryShampooScalpRoute,
-  shampooCleansingIntensity,
-  type ShampooBucket,
-} from "@/lib/shampoo/constants"
-
 import type {
   Stage3AuthorityInput,
   Stage3CategoryAuthorityAdapter,
@@ -23,8 +15,9 @@ import {
   unknownEvaluation,
   unsupportedEvaluation,
 } from "../shared"
+import { expectedShampooBucket, expectedShampooSpecTarget } from "./shampoo-spec-target"
 
-type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
+export { expectedShampooBucket, expectedShampooSpecTarget } from "./shampoo-spec-target"
 
 export function recommendationForShampoo(
   candidate: Stage3ShampooFacts,
@@ -43,33 +36,6 @@ export function recommendationForShampoo(
     authorityRuleId: supportive
       ? "shampoo.selection.verified_supportive_intensity"
       : "shampoo.selection.verified_role_fit",
-  }
-}
-
-export function expectedShampooBucket(input: {
-  role: PlanProductRole
-  target: ShampooTarget
-}): ShampooBucket | null {
-  if (input.role === "shampoo_dandruff") {
-    return deriveShampooBucket(null, "dandruff")
-  }
-  if (input.role !== "shampoo_everyday") return null
-
-  const condition = input.target.everydayConstraint.includes("irritation")
-    ? "irritated"
-    : input.target.everydayConstraint.includes("dry_scalp")
-      ? "dry_flakes"
-      : null
-  return deriveShampooBucket(input.target.scalpRoute, condition)
-}
-
-export function expectedShampooSpecTarget(input: { role: PlanProductRole; target: ShampooTarget }) {
-  const shampooBucket = expectedShampooBucket(input)
-  if (!shampooBucket) return null
-  return {
-    shampooBucket,
-    scalpRoute: primaryShampooScalpRoute(shampooBucket),
-    cleansingIntensity: shampooCleansingIntensity(shampooBucket),
   }
 }
 
