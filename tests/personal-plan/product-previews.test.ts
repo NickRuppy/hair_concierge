@@ -750,14 +750,16 @@ test("returns an exact-fit Bondbuilder preview and falls back on an unsuitable t
   assert.equal(asFallback(unsuitable.previews[0]!).fallback, "post_refinement")
 })
 
-test("falls back to post_refinement for a tied Bondbuilder recommendation instead of the removed K18 hardcode", async () => {
-  // Previously, product-previews.ts special-cased bondbuilder ties with a
+test("a tied Bondbuilder shortlist previews the authority's tie default, not an illustration", async () => {
+  // History: product-previews.ts once special-cased bondbuilder ties with a
   // hardcoded product id (STAGE1_BONDBUILDER_EXAMPLE_PRODUCT_ID, K18) as an
   // illustration-only fallback whenever multiple ideal candidates tied and
   // the bondbuilder authority itself declined to pick one
   // (recommendationCandidates.length > 1 => recommendation: null). That
-  // hardcode is now removed: a tie must surface the explicit
-  // fallback state instead of silently showing K18's image.
+  // presentation hardcode stays removed. The tie is now resolved where it
+  // belongs — inside the authority, as the `bondbuilder.stage3.tie_default`
+  // rule (BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) — so the preview shows a real,
+  // buyable recommendation with that product's own facts and fingerprint.
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -841,10 +843,26 @@ test("falls back to post_refinement for a tied Bondbuilder recommendation instea
   })
 
   assert.equal(response.previews.length, 1)
-  assert.equal(asFallback(response.previews[0]!).fallback, "post_refinement")
+  const tied = asRecommendation(response.previews[0]!)
+  assert.equal(tied.productId, "38dace91-0fba-49ee-a93f-ac36e488fe4b")
+  assert.equal(tied.productName, "K18 Leave-In Molecular Repair Hair Mask")
+  assert.equal(tied.imageUrl, "https://example.com/k18.webp")
+  assert.equal(tied.factFingerprint, "facts-38dace91-0fba-49ee-a93f-ac36e488fe4b")
+  assert.equal(tied.verdict, "ideal")
+
+  // A tie WITHOUT the default product on the shortlist keeps the honest
+  // fallback: the authority still refuses to pick among equals.
+  const tieWithoutDefault = await computeStage1ProductExamplePreviews({
+    ...previewInput,
+    loadCandidates: async () =>
+      tiedCandidates.filter((item) => item.productId !== "38dace91-0fba-49ee-a93f-ac36e488fe4b"),
+  })
+
+  assert.equal(tieWithoutDefault.previews.length, 1)
+  assert.equal(asFallback(tieWithoutDefault.previews[0]!).fallback, "post_refinement")
 
   // If only one ideal candidate remains, the tie resolves and the engine
-  // recommends it directly (no hardcoded id involved).
+  // recommends it directly (no tie default involved).
   const untied = await computeStage1ProductExamplePreviews({
     ...previewInput,
     loadCandidates: async () =>

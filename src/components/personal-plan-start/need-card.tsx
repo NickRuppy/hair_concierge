@@ -28,7 +28,14 @@ export type NeedCardProduct = {
 export const NEED_CARD_FALLBACK_NOTE = "Produktempfehlung folgt nach dem Feinschliff"
 
 export type NeedCardViewModel = {
+  /**
+   * Unique per rendered card. It is the category for a category's leading card
+   * and `<category>:<role>` for every further role of that category, which each
+   * render their own card.
+   */
   id: string
+  /** The category the card belongs to — drives the accent styling. */
+  category: Stage1Category
   tone: NeedCardTone
   categoryLabel: string
   statusLabel: "Basis" | "Optional" | "Pausiert"
@@ -78,7 +85,7 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
   const [open, setOpen] = useState(false)
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const hasImage = Boolean(card.imageUrl) && failedImageUrl !== card.imageUrl
-  const categoryStyle = CATEGORY_CARD_STYLES[card.id as Stage1Category] ?? NEUTRAL_CARD_STYLE
+  const categoryStyle = CATEGORY_CARD_STYLES[card.category] ?? NEUTRAL_CARD_STYLE
   const product = card.product ?? null
   const subline = product ? [card.targetType, product.priceLabel].filter(Boolean).join(" · ") : null
 

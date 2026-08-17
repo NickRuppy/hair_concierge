@@ -58,6 +58,7 @@ const productFixture: NonNullable<NeedCardViewModel["product"]> = {
 function card(overrides: Partial<NeedCardViewModel> = {}): NeedCardViewModel {
   return {
     id: "shampoo",
+    category: "shampoo",
     tone: "basis",
     categoryLabel: "Shampoo",
     statusLabel: "Basis",
@@ -83,7 +84,15 @@ const readyPlan: PlanStartReadyViewModel = {
     sectionTitle: "Von uns klar empfohlen",
     countLabel: "2 Kategorien",
     progress: 50,
-    cards: [card(), card({ id: "conditioner", categoryLabel: "Conditioner", imageUrl: null })],
+    cards: [
+      card(),
+      card({
+        id: "conditioner",
+        category: "conditioner",
+        categoryLabel: "Conditioner",
+        imageUrl: null,
+      }),
+    ],
   },
   optional: {
     kind: "optional",
@@ -96,6 +105,7 @@ const readyPlan: PlanStartReadyViewModel = {
     cards: [
       card({
         id: "dry_shampoo",
+        category: "dry_shampoo",
         tone: "optional",
         categoryLabel: "Trockenshampoo",
         statusLabel: "Pausiert",
@@ -301,7 +311,7 @@ test("a real recommendation for any role beats a fallback for the same category"
   )
 })
 
-test("the primary role wins when several roles deliver a recommendation", () => {
+test("the primary role leads the category card and the other role follows as its own card", () => {
   const applied = applyStage1ProductExamplePreviews(
     readyPlan,
     previewResponse([
@@ -318,11 +328,239 @@ test("the primary role wins when several roles deliver a recommendation", () => 
     applied.basis.cards.find((item) => item.id === "shampoo")?.product?.name,
     "Redken All Soft Shampoo",
   )
+  const secondary = applied.basis.cards.find((item) => item.id === "shampoo:shampoo_dandruff")
+  assert.equal(secondary?.product?.name, "Anti-Schuppen Shampoo")
+  assert.equal(secondary?.targetType, "Schuppenpflege")
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["shampoo", "shampoo:shampoo_dandruff", "conditioner"],
+  )
+})
+
+const oilPreWash = recommendation({
+  category: "oil",
+  role: "pre_wash_fibre_treatment",
+  decisionKey: "decision:oil:pre_wash_fibre_treatment:gap",
+  productId: "oil-pre-wash",
+  productName: "Reichhaltiges Vorwäsche-Öl",
+  imageUrl: "https://example.com/oil-pre-wash.webp",
+  authorityVersion: "personal-plan.oil.v2",
+  factFingerprint: "facts-oil-pre-wash",
+  reasoning: {
+    productCriteria: "Vor der Wäsche in die Längen einziehen und Struktur stützen.",
+    fit: "Deine Längen vertragen vor der Wäsche eine reichhaltigere Pflege.",
+    frequency: "jede 2. Haarwäsche",
+  },
+})
+
+const oilDryFinish = recommendation({
+  category: "oil",
+  role: "dry_finish",
+  decisionKey: "decision:oil:dry_finish:gap",
+  productId: "oil-dry-finish",
+  productName: "Leichtes Finish-Öl",
+  imageUrl: "https://example.com/oil-dry-finish.webp",
+  authorityVersion: "personal-plan.oil.v2",
+  factFingerprint: "facts-oil-dry-finish",
+  commerce: {
+    priceEur: 24.9,
+    purchaseLinkStatus: "available" as const,
+    netContentValue: 50,
+    netContentUnit: "ml" as const,
+    priceLabel: "24,90 €",
+    netContentLabel: "50 ml",
+    availabilityLabel: "Aktuell verfügbar",
+    productUrl: "https://example.com/oil-dry-finish",
+    affiliateDisclosure: null,
+  },
+  reasoning: {
+    productCriteria: "Mit kleiner Dosierung glätten und Glanz geben, ohne schwer zu wirken.",
+    fit: "Deine raueren Spitzen profitieren von einem gezielten Finish.",
+    frequency: "bei Bedarf",
+  },
+})
+
+const oilPlan: PlanStartReadyViewModel = {
+  ...readyPlan,
+  basis: {
+    ...readyPlan.basis,
+    cards: [
+      card({
+        id: "oil",
+        category: "oil",
+        categoryLabel: "Haaröl",
+        targetType: "Reichhaltige Vorwäsche",
+        purpose: "Glättet Frizz und gibt Glanz, ohne unnötig zu beschweren.",
+        pills: ["Vorwäsche", "Finish & Glanz"],
+        frequency: "jede 2. Haarwäsche",
+        imageUrl: null,
+      }),
+    ],
+  },
+  optional: null,
+}
+
+test("a secondary role becomes its own card right after its category's primary card", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    oilPlan,
+    previewResponse([oilPreWash, oilDryFinish]),
+  )
+
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["oil", "oil:dry_finish"],
+  )
+  const [primary, secondary] = applied.basis.cards
+  assert.equal(primary?.product?.name, "Reichhaltiges Vorwäsche-Öl")
+  assert.equal(primary?.targetType, "Reichhaltige Vorwäsche")
+
+  // Same card pattern, same category identity — only the role changes.
+  assert.equal(secondary?.category, "oil")
+  assert.equal(secondary?.categoryLabel, "Haaröl")
+  assert.equal(secondary?.tone, "basis")
+  assert.equal(secondary?.statusLabel, "Basis")
+  assert.equal(secondary?.product?.name, "Leichtes Finish-Öl")
+  assert.equal(secondary?.product?.priceLabel, "24,90 €")
+  assert.equal(secondary?.imageUrl, "https://example.com/oil-dry-finish.webp")
+  assert.equal(secondary?.imageAlt, "Produktbild: Leichtes Finish-Öl")
+  assert.equal(secondary?.fallbackNote ?? null, null)
+
+  // The role is what makes the second card readable: type subline, purpose and
+  // pill all name this role instead of repeating the category's lead role.
+  assert.equal(secondary?.targetType, "Finish")
+  assert.equal(secondary?.purpose, "Schließt die Routine als Finish für die Längen ab.")
+  assert.deepEqual(secondary?.pills, ["Finish & Glanz"])
+  assert.equal(secondary?.frequency, "bei Bedarf")
+  assert.deepEqual(secondary?.detailBlocks, [
+    {
+      title: "Worauf es beim Produkt ankommt",
+      body: "Mit kleiner Dosierung glätten und Glanz geben, ohne schwer zu wirken.",
+    },
+    {
+      title: "Warum das zu deinem Haar passt",
+      body: "Deine raueren Spitzen profitieren von einem gezielten Finish.",
+    },
+    { title: "Empfohlener Rhythmus", body: "bei Bedarf" },
+  ])
+})
+
+test("the optional count names the cards on the page, not the categories behind them", () => {
+  const optionalOilPlan: PlanStartReadyViewModel = {
+    ...readyPlan,
+    optional: {
+      ...readyPlan.optional!,
+      countLabel: "1 Vorschlag",
+      cards: [
+        card({
+          id: "oil",
+          category: "oil",
+          tone: "optional",
+          statusLabel: "Optional",
+          categoryLabel: "Haaröl",
+          targetType: "Reichhaltige Vorwäsche",
+          imageUrl: null,
+        }),
+      ],
+    },
+  }
+
+  const applied = applyStage1ProductExamplePreviews(
+    optionalOilPlan,
+    previewResponse([oilPreWash, oilDryFinish]),
+  )
+
+  assert.equal(applied.optional?.cards.length, 2)
+  assert.equal(applied.optional?.countLabel, "2 Vorschläge")
+  // A single suggestion keeps the singular.
+  assert.equal(
+    applyStage1ProductExamplePreviews(optionalOilPlan, previewResponse([oilPreWash])).optional
+      ?.countLabel,
+    "1 Vorschlag",
+  )
+})
+
+test("the basis count keeps counting categories after the per-role expansion", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    readyPlan,
+    previewResponse([
+      recommendation(),
+      recommendation({
+        role: "shampoo_dandruff",
+        decisionKey: "decision:shampoo:shampoo_dandruff:gap",
+        productName: "Anti-Schuppen Shampoo",
+      }),
+    ]),
+  )
+
+  assert.equal(applied.basis.cards.length, 3)
+  // "N Kategorien" stays literally true: two categories, three cards.
+  assert.equal(applied.basis.countLabel, "2 Kategorien")
+})
+
+test("a secondary role without a product adds no card at all", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    oilPlan,
+    previewResponse([
+      oilPreWash,
+      {
+        kind: "fallback",
+        category: "oil",
+        role: "dry_finish",
+        decisionKey: "decision:oil:dry_finish:gap",
+        authorityVersion: "personal-plan.oil.v2",
+        fallback: "post_refinement",
+      },
+    ]),
+  )
+
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["oil"],
+  )
+})
+
+test("the lead card is never duplicated as a secondary card", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    oilPlan,
+    previewResponse([
+      {
+        kind: "fallback",
+        category: "oil",
+        role: "pre_wash_fibre_treatment",
+        decisionKey: "decision:oil:pre_wash_fibre_treatment:gap",
+        authorityVersion: "personal-plan.oil.v2",
+        fallback: "post_refinement",
+      },
+      oilDryFinish,
+    ]),
+  )
+
+  // The only recommendation leads the category card; nothing repeats below it.
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["oil"],
+  )
+  assert.equal(applied.basis.cards[0]?.product?.name, "Leichtes Finish-Öl")
+})
+
+test("the secondary-role card renders the role in its subline and keeps the category styling", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    oilPlan,
+    previewResponse([oilPreWash, oilDryFinish]),
+  )
+  const html = renderToStaticMarkup(<NeedCard card={applied.basis.cards[1]!} />)
+
+  assert.match(html, /Leichtes Finish-Öl/)
+  assert.match(html, /Finish · 24,90 €/)
+  assert.match(html, /Haaröl/)
+  // The Oil category accent still applies even though the card id is per-role.
+  assert.match(html, /bg-\[#A85F70\]/)
+  assert.match(html, /data-plan-start-card="oil:dry_finish"/)
 })
 
 test("the screen disclaimer stays honest when no category has a product yet", () => {
   const withProduct = card({ product: { ...productFixture } })
-  const withFallback = card({ id: "mask", fallbackNote: NEED_CARD_FALLBACK_NOTE })
+  const withFallback = card({ id: "mask", category: "mask", fallbackNote: NEED_CARD_FALLBACK_NOTE })
 
   assert.equal(
     planStartProductDisclaimer([withProduct, withFallback]),
@@ -560,7 +798,11 @@ test("renders every Stage 1 category with its approved shell and dot palette", (
   } as const
 
   for (const [id, expectedClasses] of Object.entries(categoryStyles)) {
-    const html = renderToStaticMarkup(<NeedCard card={card({ id, imageUrl: null })} />)
+    const html = renderToStaticMarkup(
+      <NeedCard
+        card={card({ id, category: id as NeedCardViewModel["category"], imageUrl: null })}
+      />,
+    )
     for (const expectedClass of expectedClasses) {
       assert.ok(html.includes(expectedClass), `expected ${id} to include ${expectedClass}`)
     }
@@ -572,6 +814,7 @@ test("keeps Optional and Pausiert as explicit status text without replacing cate
     <NeedCard
       card={card({
         id: "oil",
+        category: "oil",
         tone: "optional",
         statusLabel: "Optional",
         imageUrl: card().imageUrl,
@@ -596,7 +839,13 @@ test("keeps Optional and Pausiert as explicit status text without replacing cate
 
 test("uses a neutral shell and dot for malformed legacy category IDs", () => {
   const html = renderToStaticMarkup(
-    <NeedCard card={card({ id: "legacy-category", imageUrl: null })} />,
+    <NeedCard
+      card={card({
+        id: "legacy-category",
+        category: "legacy-category" as NeedCardViewModel["category"],
+        imageUrl: null,
+      })}
+    />,
   )
 
   assert.match(html, /border-\[rgba\(31,26,20,0\.07\)\] bg-white/)

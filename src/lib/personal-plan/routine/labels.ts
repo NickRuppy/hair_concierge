@@ -24,6 +24,34 @@ const purposeLabels: Record<string, string> = {
   scalp_exfoliant: "Kopfhaut-Peeling",
 }
 
+/**
+ * One sentence per role saying what that role does. Shared with the Stage-1
+ * plan-start cards: a category with several roles renders one card per role,
+ * and the secondary card needs role-level copy instead of the category-level
+ * presentation (`decision-presentation.ts`), which is identical for all roles
+ * of a category.
+ */
+const purposeDescriptions: Record<string, string> = {
+  shampoo_everyday: "Regelmäßige Reinigung für deine Kopfhaut.",
+  shampoo_dandruff: "Hilft, deine Kopfhautpflege gezielter einzuplanen.",
+  conditioner_rinse_out: "Pflegt und entwirrt die Längen nach der Haarwäsche.",
+  post_wash_leave_in: "Gibt den Längen Pflege, die im Haar bleibt.",
+  pre_heat_application: "Bereitet die Längen auf Hitze-Styling vor.",
+  intensive_conditioning_mask: "Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.",
+  pre_wash_fibre_treatment: "Pflegt die Längen vor der Haarwäsche.",
+  leave_on_fibre_conditioning: "Bleibt im Haar und ergänzt die Pflege nach der Wäsche.",
+  dry_finish: "Schließt die Routine als Finish für die Längen ab.",
+  residue_reset: "Entfernt Rückstände, wenn die Routine einen Reset braucht.",
+  mineral_reset: "Hilft gegen mineralische Ablagerungen in den Längen.",
+  root_refresh_bridge: "Frischt den Ansatz zwischen Haarwäschen auf.",
+  pre_heat_protection: "Schützt dein Haar vor passender Hitze-Anwendung.",
+  specialized_bond_treatment: "Ergänzt die Routine, wenn Strukturpflege sinnvoll ist.",
+  scalp_comfort: "Beruhigt die Kopfhaut, wenn sie zusätzliche Pflege braucht.",
+  scalp_flake_oil_adjunct: "Ergänzt die Kopfhautpflege punktuell.",
+  density_claim_tonic: "Unterstützt die Kopfhautpflege als Leave-on-Schritt.",
+  scalp_exfoliant: "Löst Schuppen und Rückstände kontrolliert von der Kopfhaut.",
+}
+
 const categoryLabels: Record<string, string> = {
   shampoo: "Shampoo",
   conditioner: "Conditioner",
@@ -47,4 +75,9 @@ export function routinePurposeLabel(value: string) {
 
 export function routineCategoryLabel(value: string) {
   return labelFor(categoryLabels, value)
+}
+
+/** `null` when the role has no dedicated sentence — callers own the fallback. */
+export function routineRolePurposeDescription(value: string): string | null {
+  return purposeDescriptions[value] ?? null
 }
