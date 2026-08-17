@@ -16,6 +16,20 @@ import {
   unsupportedEvaluation,
 } from "../shared"
 
+/**
+ * K18 Leave-In Molecular Repair Hair Mask — Nick's explicit product decision
+ * (2026-08-17): when several Bondbuilder candidates evaluate equally ideal,
+ * this is the default pick. Production carries a permanent three-way ideal tie
+ * (Olaplex No.3, Epres, K18), and without a default the category stayed
+ * uncovered for every Stage-1 preview and every direct acceptance.
+ *
+ * It is a default among equals, NOT a superiority claim: the tie keeps its
+ * `bondbuilder.equal_shortlist` caution and the recommendation carries its own
+ * rule id (`bondbuilder.stage3.tie_default`) so nothing reads as "verified
+ * best".
+ */
+export const BONDBUILDER_TIE_DEFAULT_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+
 export function recommendationForBondbuilder(product: Stage3BondbuilderFacts, supportive = false) {
   return {
     recommendationId: `recommendation:bondbuilder:${product.productId}`,
@@ -29,6 +43,18 @@ export function recommendationForBondbuilder(product: Stage3BondbuilderFacts, su
     authorityRuleId: supportive
       ? "bondbuilder.stage3.validated_add_on"
       : "bondbuilder.stage3.validated_standalone",
+  }
+}
+
+/**
+ * The same recommendation, relabelled for the tie case. The reason line stays
+ * deliberately modest — it names a house default, not a better product.
+ */
+function tieDefaultRecommendationForBondbuilder(product: Stage3BondbuilderFacts) {
+  return {
+    ...recommendationForBondbuilder(product),
+    reason: "Unsere Standardwahl, wenn mehrere Produkte gleich gut passen.",
+    authorityRuleId: "bondbuilder.stage3.tie_default",
   }
 }
 
@@ -164,6 +190,13 @@ export function evaluateBondbuilderAuthority(
       )
       .filter((candidate) => evaluateProduct(input, candidate).verdict === "ideal")
     const multiple = ideal.length > 1
+    // A tie resolves to the house default only when that exact product is on
+    // the shortlist; any other tie keeps the need uncovered.
+    const tieDefault = multiple
+      ? (ideal.find((candidate) => candidate.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) ??
+        null)
+      : null
+    const selected = ideal.length === 1 ? ideal[0] : tieDefault
     return knownEvaluation(sharedInput, {
       verdict: ideal.length === 0 ? "unknown" : "ideal",
       criteria: multiple
@@ -176,11 +209,14 @@ export function evaluateBondbuilderAuthority(
             ),
           ]
         : [],
-      allowedActions:
-        ideal.length === 1 ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: ideal.length === 1 ? recommendationForBondbuilder(ideal[0]) : null,
+      allowedActions: selected ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
+      recommendation: !selected
+        ? null
+        : tieDefault
+          ? tieDefaultRecommendationForBondbuilder(tieDefault)
+          : recommendationForBondbuilder(selected),
       productFactFingerprint: null,
-      recommendationFactFingerprint: ideal.length === 1 ? ideal[0].factFingerprint : null,
+      recommendationFactFingerprint: selected?.factFingerprint ?? null,
     })
   }
   const missing = commonUnknownFacts(sharedInput)

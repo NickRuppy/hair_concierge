@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
+import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "../../../src/lib/personal-plan/products/authority/evaluate"
 import type {
   Stage3AuthorityCommonProductFacts,
@@ -425,6 +426,90 @@ for (const category of [
     assert.ok(result.allowedActions.includes("leave_uncovered"))
   })
 }
+
+function bondbuilderCandidate(productId: string, displayName: string) {
+  const facts = knownFacts("bondbuilder")
+  if (facts.category !== "bondbuilder") throw new Error("expected Bondbuilder fixture")
+  return Object.assign(facts, {
+    productId,
+    displayName,
+    recommendable: true,
+    factFingerprint: `facts-${productId}`,
+  })
+}
+
+function bondbuilderGapInput(candidates: ReturnType<typeof bondbuilderCandidate>[]) {
+  const gap = input("bondbuilder", "known")
+  gap.capturedProductId = null
+  gap.subjectIdentity = null
+  gap.productFacts = null
+  gap.recommendationCandidates = candidates as never
+  return gap
+}
+
+test("a Bondbuilder tie defaults to K18 without claiming it is the better product", () => {
+  const k18 = bondbuilderCandidate(
+    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    "K18 Leave-In Molecular Repair Hair Mask",
+  )
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
+      k18,
+      bondbuilderCandidate("epres", "Epres Bond Repair Treatment"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.equal(
+    result.recommendation?.reason,
+    "Unsere Standardwahl, wenn mehrere Produkte gleich gut passen.",
+  )
+  assert.equal(result.recommendationFactFingerprint, k18.factFingerprint)
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+  // The "several equally suitable products" fact stays visible: the default is
+  // a choice among equals, not a superiority claim.
+  assert.ok(
+    result.criteria.some(
+      (entry) => entry.criterionId === "bondbuilder.equal_shortlist" && entry.result === "caution",
+    ),
+  )
+})
+
+test("a Bondbuilder tie without the default product still leaves the need uncovered", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
+      bondbuilderCandidate("epres", "Epres Bond Repair Treatment"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation, null)
+  assert.equal(result.recommendationFactFingerprint, null)
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("a single ideal Bondbuilder candidate keeps the standalone rule, not the tie default", () => {
+  const only = bondbuilderCandidate(
+    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    "K18 Leave-In Molecular Repair Hair Mask",
+  )
+  const result = evaluateStage3Authority(bondbuilderGapInput([only]))
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
+  assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
+})
 
 test("only owned-fit authority policies advance for this semantic correction", () => {
   assert.deepEqual(
