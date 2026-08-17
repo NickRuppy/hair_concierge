@@ -737,12 +737,14 @@ for (const scenario of [
     assert.equal(selected?.recommendation.authorityRuleId, scenario.authorityRuleId)
   })
 
-  // Mask and Oil deliberately excluded below: their uncovered-role selection
-  // was widened (Task 3c/3d) to rank in a supportive candidate via the
-  // shared coverage-ranking comparator -- Mask's optional-tier-only gate was
-  // lifted, and Oil gained the adjacent-weight supportive fallback. Shampoo
-  // and Bondbuilder keep the strict (ideal-only) uncovered-role behavior.
-  if (scenario.name === "Mask" || scenario.name === "Oil") continue
+  // Mask, Oil and Shampoo deliberately excluded below: their uncovered-role
+  // selection was widened (Task 3c/3d/3e) to rank in a supportive candidate
+  // via the shared coverage-ranking comparator -- Mask's optional-tier-only
+  // gate was lifted, Oil gained the adjacent-weight supportive fallback, and
+  // Shampoo gained a supportive fallback for non-dandruff roles (dandruff
+  // stays strict, see below). Bondbuilder keeps the strict (ideal-only)
+  // uncovered-role behavior.
+  if (scenario.name === "Mask" || scenario.name === "Oil" || scenario.name === "Shampoo") continue
   test(`uncovered ${scenario.name} remains strict for the same supportive candidate`, () => {
     const input = authorityInput(scenario.category, scenario.role, {
       productFacts: null,
@@ -757,6 +759,48 @@ for (const scenario of [
     assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
   })
 }
+
+test("uncovered Shampoo now ranks in a supportive candidate for the everyday role", () => {
+  const input = authorityInput("shampoo", "shampoo_everyday", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      factsFor("shampoo", "shampoo_everyday", "supportive-candidate", {
+        cleansingIntensity: "gentle",
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["supportive-candidate", "supportive"]],
+  )
+  assert.equal(selected?.recommendation.productId, "supportive-candidate")
+  assert.equal(
+    selected?.recommendation.authorityRuleId,
+    "shampoo.selection.verified_supportive_intensity",
+  )
+})
+
+test("uncovered Shampoo dandruff role remains strict for the same supportive candidate", () => {
+  const input = authorityInput("shampoo", "shampoo_dandruff", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      factsFor("shampoo", "shampoo_dandruff", "supportive-candidate", {
+        cleansingIntensity: "gentle",
+      }),
+    ],
+  })
+
+  assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
+  assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
+})
 
 test("uncovered Mask now ranks in the best-available supportive candidate for a required tier", () => {
   const input = authorityInput("mask", "intensive_conditioning_mask", {

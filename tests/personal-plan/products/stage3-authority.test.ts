@@ -299,6 +299,37 @@ function input(
   }
 }
 
+function shampooUncoveredCandidate(overrides: {
+  productId: string
+  displayName: string
+  catalogSortOrder: number
+  role: "shampoo_everyday" | "shampoo_dandruff"
+  shampooBucket: "normal" | "schuppen"
+  scalpRoute: "balanced" | "dandruff"
+  cleansingIntensity: "gentle" | "regular" | "clarifying"
+}) {
+  const facts = knownFacts("shampoo")
+  if (facts.category !== "shampoo") throw new Error("expected Shampoo fixture")
+  Object.assign(facts, {
+    productId: overrides.productId,
+    displayName: overrides.displayName,
+    catalogSortOrder: overrides.catalogSortOrder,
+    recommendable: true,
+    factFingerprint: `facts-${overrides.productId}`,
+    protocols: [
+      {
+        role: overrides.role,
+        status: "verified_complete",
+        fingerprint: `protocol-${overrides.productId}`,
+      },
+    ],
+  })
+  facts.spec.shampooBucket = overrides.shampooBucket
+  facts.spec.scalpRoute = overrides.scalpRoute
+  facts.spec.cleansingIntensity = overrides.cleansingIntensity
+  return facts
+}
+
 function heatCandidate(input: {
   productId: string
   displayName: string
@@ -610,6 +641,142 @@ test("Shampoo with ambiguous or incomplete semantic facts remains unknown", () =
   assert.equal(result.status, "unknown")
   if (result.status !== "unknown") return
   assert.ok(result.missingFacts.includes("shampoo.target_fit"))
+})
+
+test("Shampoo uncovered-role recommendation falls back to a supportive candidate, ranked by the shared comparator", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  // Both supportive (cleansing intensity off-target); array-first has the
+  // worse catalogSortOrder, so array order alone would pick the wrong one.
+  const worseSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-supportive-worse-order",
+    displayName: "Schlechtere Katalogposition",
+    catalogSortOrder: 9,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "gentle",
+  })
+  const betterSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-supportive-better-order",
+    displayName: "Bessere Katalogposition",
+    catalogSortOrder: 1,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "clarifying",
+  })
+  shampooInput.recommendationCandidates = [worseSortOrder, betterSortOrder]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "shampoo-supportive-better-order")
+  assert.equal(
+    result.recommendation?.authorityRuleId,
+    "shampoo.selection.verified_supportive_intensity",
+  )
+})
+
+test("Shampoo uncovered-role recommendation still prefers an ideal candidate over a supportive one", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  const supportive = shampooUncoveredCandidate({
+    productId: "shampoo-supportive",
+    displayName: "Unterstützend",
+    catalogSortOrder: 1,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "gentle",
+  })
+  const ideal = shampooUncoveredCandidate({
+    productId: "shampoo-ideal",
+    displayName: "Ideal",
+    catalogSortOrder: 9,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+  shampooInput.recommendationCandidates = [supportive, ideal]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "shampoo-ideal")
+  assert.equal(result.recommendation?.authorityRuleId, "shampoo.selection.verified_role_fit")
+})
+
+test("Shampoo uncovered-role recommendation ranks two ideal candidates by catalog order, not array order", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  const worseSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-ideal-worse-order",
+    displayName: "Schlechtere Katalogposition",
+    catalogSortOrder: 9,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+  const betterSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-ideal-better-order",
+    displayName: "Bessere Katalogposition",
+    catalogSortOrder: 1,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+  shampooInput.recommendationCandidates = [worseSortOrder, betterSortOrder]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "shampoo-ideal-better-order")
+})
+
+test("Shampoo dandruff role stays ideal-only: no supportive fallback even when only supportive candidates exist", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.role = "shampoo_dandruff"
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  const supportiveOnly = shampooUncoveredCandidate({
+    productId: "shampoo-dandruff-supportive",
+    displayName: "Unterstützend (Schuppen)",
+    catalogSortOrder: 1,
+    role: "shampoo_dandruff",
+    shampooBucket: "schuppen",
+    scalpRoute: "dandruff",
+    cleansingIntensity: "gentle",
+  })
+  shampooInput.recommendationCandidates = [supportiveOnly]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "unknown")
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+  assert.equal(result.recommendation, null)
 })
 
 test("Conditioner with complete nonmatching semantic facts is a known mismatch, not unknown", () => {
