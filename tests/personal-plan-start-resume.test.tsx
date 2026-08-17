@@ -151,6 +151,91 @@ test("plan-start stays at Stage 1 when refinement has not created a persisted se
   assert.equal(resumeReads, 1)
 })
 
+test("a first visit offers direct acceptance before the Stage 1 snapshot exists", async () => {
+  // Access is read before `loadStage1Plan` creates the Stage-1 snapshot, so a
+  // fresh buyer is still pre-`stage2` at this point — in both shapes that can
+  // produce. Neither may cost them the accept button on the fork.
+  const firstVisitAccessShapes: PlanStartPageDeps["loadJourneyAccess"][] = [
+    async () => ({
+      kind: "personal_plan_start",
+      frontier: "stage1",
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+    }),
+    async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage1",
+      nextHref: "/plan-start",
+      allowed: { ...allowed, stage2: false },
+    }),
+  ]
+
+  for (const loadJourneyAccess of firstVisitAccessShapes) {
+    const deps: ResumeAwareDeps = {
+      enabled: () => true,
+      stage2Enabled: () => true,
+      stage3Enabled: () => true,
+      stage4Enabled: () => true,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess,
+      loadExistingRefinementSession: async () => null,
+    }
+
+    assert.deepEqual(await resolvePlanStartPageState(deps), {
+      state: "production",
+      initialJourney: { stage: "stage1", directAcceptanceAvailable: true },
+    })
+  }
+})
+
+test("a disabled Stage 2 keeps the first visit refine-only instead of offering acceptance", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => false,
+    stage3Enabled: () => true,
+    stage4Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan_start",
+      frontier: "stage1",
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+    }),
+    loadExistingRefinementSession: async () => null,
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), {
+    state: "production",
+    initialJourney: { stage: "stage1", refinementAvailable: false },
+  })
+})
+
+test("a Stage 3 resume never offers direct acceptance", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    stage3Enabled: () => true,
+    stage4Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage3",
+      nextHref: "/plan-start",
+      allowed: { ...allowed, stage3: true },
+    }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), {
+    state: "production",
+    initialJourney: { stage: "stage3", refinedVersionId: "refined-1" },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
+})
+
 test("plan-start re-entry selects the persisted Stage 2 session after the first saved answer", async () => {
   const deps: ResumeAwareDeps = {
     enabled: () => true,

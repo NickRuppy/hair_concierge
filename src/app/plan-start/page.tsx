@@ -110,17 +110,25 @@ export async function resolvePlanStartPageState(
       ...bootstrap,
     })
     const stage2Enabled = deps.stage2Enabled()
-    if (!stage2Enabled || access.kind !== "personal_plan" || !access.allowed.stage2) {
-      return production(
-        stage2Enabled ? { stage: "stage1" } : { stage: "stage1", refinementAvailable: false },
-      )
-    }
-    // Mirrors the accept route's gate: reachable Stage 2 plus the Stage 3 and 4
-    // flags it drives headlessly.
+    // Mirrors the accept route's flag set: Stage 2 plus the Stage 3 and 4 flags
+    // it drives headlessly. Deliberately NOT keyed on `access.allowed.stage2`:
+    // access is read before `loadStage1Plan` creates the Stage-1 snapshot, so a
+    // first-visit buyer is still pre-Stage-2 here and would lose the accept
+    // button on their own fork screen. This flag only gates the fork's UI —
+    // `POST /api/personal-plan/accept-ideal-plan` re-validates real access,
+    // Stage 2 progress and seen state server-side before accepting anything.
     const directAcceptance =
-      deps.stage3Enabled?.() && deps.stage4Enabled?.()
+      stage2Enabled && deps.stage3Enabled?.() && deps.stage4Enabled?.()
         ? ({ directAcceptanceAvailable: true } as const)
         : {}
+
+    if (!stage2Enabled || access.kind !== "personal_plan" || !access.allowed.stage2) {
+      return production(
+        stage2Enabled
+          ? { stage: "stage1", ...directAcceptance }
+          : { stage: "stage1", refinementAvailable: false },
+      )
+    }
 
     const refinement = await deps.loadExistingRefinementSession(userId)
     if (!refinement) {
