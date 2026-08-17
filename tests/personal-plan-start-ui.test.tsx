@@ -51,6 +51,7 @@ const productFixture: NonNullable<NeedCardViewModel["product"]> = {
   priceLabel: "17,95 €",
   netContentLabel: "300 ml",
   availabilityLabel: "Aktuell verfügbar",
+  purchaseLinkStatus: "available",
   productUrl: "https://example.com/redken",
 }
 
@@ -180,6 +181,7 @@ test("binds only source-matched authority previews to their exact category cards
     priceLabel: "9,90 €",
     netContentLabel: "200 ml",
     availabilityLabel: "Aktuell verfügbar",
+    purchaseLinkStatus: "available",
     productUrl: "https://example.com/conditioner-light",
   })
   // The card reasoning now comes from the recommended product, not from the
@@ -362,6 +364,9 @@ test("the detail sheet shows product facts, the three reasoning blocks and the s
   assert.match(html, /17,95 €/)
   assert.match(html, /300 ml/)
   assert.match(html, /Aktuell verfügbar/)
+  // Only a confirmed-available purchase link may read as green.
+  assert.match(html, /data-availability-tone="available"/)
+  assert.match(html, /text-\[#356b45\]/)
   for (const block of baseDetailBlocks) assert.ok(html.includes(block.title))
   assert.ok(html.includes(PRODUCT_REFINEMENT_HINT))
   assert.match(html, /Zum Produkt/)
@@ -375,6 +380,7 @@ test("the detail sheet drops the CTA when no verified purchase link exists", () 
         product: {
           ...productFixture,
           availabilityLabel: "Derzeit kein verifizierter Produktlink",
+          purchaseLinkStatus: "unavailable",
           productUrl: null,
         },
       })}
@@ -383,6 +389,26 @@ test("the detail sheet drops the CTA when no verified purchase link exists", () 
 
   assert.match(html, /Derzeit kein verifizierter Produktlink/)
   assert.doesNotMatch(html, /Zum Produkt/)
+  // An unavailable (or unknown) purchase link must not be styled as available.
+  assert.match(html, /data-availability-tone="muted"/)
+  assert.doesNotMatch(html, /text-\[#356b45\]/)
+})
+
+test("an unconfirmed availability is styled neutrally rather than green", () => {
+  const html = renderToStaticMarkup(
+    <ProductDetailSheetBody
+      card={card({
+        product: {
+          ...productFixture,
+          availabilityLabel: "Aktuelle Verfügbarkeit nicht bestätigt",
+          purchaseLinkStatus: null,
+        },
+      })}
+    />,
+  )
+
+  assert.match(html, /data-availability-tone="muted"/)
+  assert.doesNotMatch(html, /text-\[#356b45\]/)
 })
 
 test("the fallback sheet explains the need without commerce or CTA", () => {

@@ -193,3 +193,53 @@ test("the irritated + oily scalp cohort is refused direct acceptance up front", 
     blockedCategories: ["scalp_care"],
   })
 })
+
+/**
+ * `defaultsWouldAddScalpCareRoles` (product-previews.ts) mirrors FOUR
+ * scalp-care predicates; the two cohorts above only exercise the `oily` one.
+ * These three cover the rest — dry oiliness, dry dandruff, and
+ * hair_loss_or_thinning — each combined with reported irritation, because
+ * irritation is what defers Scalp Care at Stage 1 in the first place.
+ * A cohort that diverges must be refused up front, never discovered as a 409.
+ */
+const IRRITATED_DRY_ENVELOPE: PersonalPlanQuizSubmissionEnvelope = {
+  ...STAGE1_STAGE2_LAB_ENVELOPE,
+  answers: { ...STAGE1_STAGE2_LAB_ENVELOPE.answers, scalpOiliness: "dry" },
+}
+
+const IRRITATED_DRY_DANDRUFF_ENVELOPE: PersonalPlanQuizSubmissionEnvelope = {
+  ...STAGE1_STAGE2_LAB_ENVELOPE,
+  answers: {
+    ...STAGE1_STAGE2_LAB_ENVELOPE.answers,
+    scalpOiliness: "balanced",
+    scalpConcerns: ["irritated", "dry_dandruff"],
+  },
+}
+
+const IRRITATED_HAIR_LOSS_ENVELOPE: PersonalPlanQuizSubmissionEnvelope = {
+  ...STAGE1_STAGE2_LAB_ENVELOPE,
+  answers: {
+    ...STAGE1_STAGE2_LAB_ENVELOPE.answers,
+    scalpOiliness: "balanced",
+    currentConcerns: ["dry_lengths", "hair_loss_or_thinning"],
+    concernRecurrence: { concernId: "dry_lengths", frequency: "often" },
+  },
+}
+
+for (const [name, envelope] of [
+  ["irritated + dry scalp", IRRITATED_DRY_ENVELOPE],
+  ["irritated + dry dandruff", IRRITATED_DRY_DANDRUFF_ENVELOPE],
+  ["irritated + hair loss or thinning", IRRITATED_HAIR_LOSS_ENVELOPE],
+] as const) {
+  test(`the ${name} cohort either joins cleanly or is refused up front`, async () => {
+    await assertSeenStateJoin(envelope)
+
+    const { directAcceptance } = await previewPayload(envelope)
+    if (directAcceptance.available) return
+    assert.equal(directAcceptance.reason, "refinement_required")
+    assert.ok(
+      directAcceptance.blockedCategories.includes("scalp_care"),
+      "a scalp-care divergence must name scalp_care in blockedCategories",
+    )
+  })
+}

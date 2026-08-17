@@ -55,7 +55,7 @@ export type PlanForkPreviewState = {
    * the secondary roles of a multi-role category, where the card only ever
    * renders the category's lead role.
    */
-  additionalItems: { productName: string; priceLabel: string | null }[]
+  additionalItems: { decisionKey: string; productName: string; priceLabel: string | null }[]
   /** Set when at least one role has no product yet, which the accept contract rejects. */
   fallbackNotice: string | null
   /**
@@ -101,6 +101,7 @@ export function derivePlanForkPreviewState(
         (preview) => leadByCategory.get(preview.category)?.decisionKey !== preview.decisionKey,
       )
       .map((preview) => ({
+        decisionKey: preview.decisionKey,
         productName: preview.productName,
         priceLabel: preview.commerce.priceLabel,
       })),
@@ -292,7 +293,7 @@ export function PlanForkScreen({
                 <ul className="mt-1.5 flex flex-col gap-1">
                   {previewState.additionalItems.map((item) => (
                     <li
-                      key={item.productName}
+                      key={item.decisionKey}
                       className="flex items-baseline justify-between gap-3 text-[11.5px] leading-[1.35] text-[#5f5954]"
                     >
                       <span>{item.productName}</span>

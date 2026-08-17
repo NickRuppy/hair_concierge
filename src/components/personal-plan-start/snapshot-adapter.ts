@@ -211,6 +211,7 @@ export function applyStage1ProductExamplePreviews(
             priceLabel: preview.commerce.priceLabel,
             netContentLabel: preview.commerce.netContentLabel,
             availabilityLabel: preview.commerce.availabilityLabel,
+            purchaseLinkStatus: preview.commerce.purchaseLinkStatus,
             productUrl: preview.commerce.productUrl,
           },
           fallbackNote: null,

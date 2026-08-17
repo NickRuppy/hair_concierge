@@ -70,7 +70,16 @@ export function ProductDetailSheetBody({ card }: { card: NeedCardViewModel }) {
             {product.netContentLabel ? (
               <span className="text-[#6a6560]">{product.netContentLabel}</span>
             ) : null}
-            <span className="text-[12px] font-semibold text-[#356b45]">
+            <span
+              data-availability-tone={
+                product.purchaseLinkStatus === "available" ? "available" : "muted"
+              }
+              className={
+                product.purchaseLinkStatus === "available"
+                  ? "text-[12px] font-semibold text-[#356b45]"
+                  : "text-[12px] font-semibold text-[#6a6560]"
+              }
+            >
               {product.availabilityLabel}
             </span>
           </span>

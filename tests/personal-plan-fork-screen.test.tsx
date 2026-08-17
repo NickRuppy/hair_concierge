@@ -132,8 +132,14 @@ test("only roles the Stage-1 cards never showed become the disclosure list", () 
   )
 
   assert.ok(state)
+  // The decisionKey is the stable per-role identity the list keys on: two roles
+  // can legitimately disclose the same product name.
   assert.deepEqual(state.additionalItems, [
-    { productName: "Leave-in Hitzeschutz", priceLabel: "21,50 €" },
+    {
+      decisionKey: "decision:leave_in:pre_heat_application:gap",
+      productName: "Leave-in Hitzeschutz",
+      priceLabel: "21,50 €",
+    },
   ])
 })
 
