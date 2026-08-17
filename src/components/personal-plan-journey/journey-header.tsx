@@ -149,7 +149,7 @@ export function PersonalPlanJourneyHeader({
                   />
                   <span
                     className={cn(
-                      "mt-1 block truncate text-center text-[8px] font-bold sm:text-[9px]",
+                      "mt-1 block truncate text-center text-[10px] font-bold",
                       current
                         ? "text-[var(--brand-plum-darkest)]"
                         : complete
