@@ -234,11 +234,20 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     expect(stage2Requests).toBe(0)
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
     await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
+
+    // The old direct Stage-2 handoff is now a fork screen: the Stage-2 gateway
+    // must stay untouched until "Feinschliff starten" is pressed.
+    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
+    expect(stage2Requests).toBe(0)
+    const refineButton = page.getByRole("button", { name: "Feinschliff starten · ca. 2 Min." })
+    await expect(refineButton).toBeVisible()
+    // This scenario's journey does not report direct-acceptance availability, so
+    // the plum "Plan direkt übernehmen" CTA must not render alongside it.
+    await expect(page.getByRole("button", { name: "Plan direkt übernehmen" })).toHaveCount(0)
+
+    await refineButton.click()
     expect(stage2Requests).toBe(1)
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
-    await expect(
-      page.getByRole("heading", { name: "Jetzt machen wir ihn zu deinem." }),
-    ).toHaveCount(0)
   })
 
   test("keeps the forward-only Optional action inside 320, 375, and 390px viewports", async ({
@@ -321,43 +330,32 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(labPath)
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     expect(stage2Requests).toBe(0)
-    await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
-
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
-    await expect(
-      page.getByRole("alert").filter({ hasText: "Feinschliff konnte nicht geöffnet werden" }),
-    ).toBeVisible()
-    await expect
-      .poll(() =>
-        page.evaluate(() => {
-          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })
-          const maximum = document.documentElement.scrollHeight - window.innerHeight
-          return Math.round(maximum - window.scrollY)
-        }),
-      )
-      .toBe(0)
-    const clearance = await page.evaluate(() => {
-      const dock = document.querySelector<HTMLElement>('nav[aria-label="Idealplan-Seiten"]')
-      const optionalScreen = document.querySelector<HTMLElement>(
-        '[data-plan-start-screen="optional"]',
-      )
-      const finalCard = document.querySelector<HTMLElement>(
-        '[data-plan-start-screen="optional"] [data-plan-start-card-list] article:last-child',
-      )
-      if (!dock || !optionalScreen || !finalCard) {
-        throw new Error("Expected Optional dock, screen, and final card")
-      }
-      return {
-        cardBottom: finalCard.getBoundingClientRect().bottom,
-        dockTop: dock.getBoundingClientRect().top,
-        mainPaddingBottom: getComputedStyle(optionalScreen.querySelector("main")!).paddingBottom,
-      }
-    })
-    expect(clearance.mainPaddingBottom).toBe("104px")
-    expect(clearance.cardBottom).toBeLessThanOrEqual(clearance.dockTop)
-    expect(stage2Requests).toBe(1)
 
+    // "Auf meine Produkte abstimmen" now hands off to the fork screen, not the
+    // Stage-2 gateway directly, so the Bedarfsplan (the fork's assumptions/plan
+    // summary) renders before Stage 2 is ever requested.
     await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
+    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
+    expect(stage2Requests).toBe(0)
+
+    // Only pressing "Feinschliff starten" opens Stage 2 — this is where the
+    // "cannot open" failure and its retry now live.
+    const refineButton = page.getByRole("button", { name: "Feinschliff starten · ca. 2 Min." })
+    await refineButton.click()
+    await expect.poll(() => stage2Requests).toBe(1)
+    await expect(
+      page
+        .getByRole("alert")
+        .filter({
+          hasText: "Der Feinschliff konnte nicht geladen werden. Versuche es noch einmal.",
+        }),
+    ).toBeVisible()
+    // The fork (the retained Bedarfsplan/plan summary) stays on screen behind
+    // the error, so the user can retry without losing their place.
+    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
+
+    await refineButton.click()
     await expect.poll(() => stage2Requests).toBe(2)
   })
 
@@ -430,6 +428,12 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
+
+    // The fork screen is the production Stage-2 entry point now; only
+    // "Feinschliff starten" resumes the already-completed Stage-2 session.
+    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
+    await page.getByRole("button", { name: "Feinschliff starten · ca. 2 Min." }).click()
+
     await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toHaveCount(0)
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
     await expect
