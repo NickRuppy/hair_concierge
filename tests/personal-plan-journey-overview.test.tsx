@@ -86,6 +86,9 @@ test("shared chapter transition renders the approved stage-specific copy and one
   assert.match(chapter, /Anwendung ansehen/)
   assert.equal((chapter.match(/<button/g) ?? []).length, 1)
   assert.match(chapter, /data-personal-plan-chapter="5"/)
-  assert.match(chapter, /h-dvh/)
-  assert.match(chapter, /max-height:519px[^\"]*overflow-y-auto/)
+  // Variante D (2026-08-17): the page scrolls naturally under a sticky header
+  // instead of squeezing all five cards into one locked viewport.
+  assert.match(chapter, /min-h-dvh/)
+  assert.doesNotMatch(chapter, /overflow-hidden/)
+  assert.doesNotMatch(chapter, /max-height:519px/)
 })

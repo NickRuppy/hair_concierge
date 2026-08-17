@@ -71,29 +71,28 @@ export function PersonalPlanChapterTransition({
 
   return (
     <div
-      className="flex h-dvh min-h-0 flex-col overflow-hidden bg-[var(--background,#fdfbf9)] text-[var(--foreground)] [@media(max-height:519px)]:overflow-y-auto"
+      className="flex min-h-dvh flex-col bg-[var(--background,#fdfbf9)] text-[var(--foreground)]"
       data-personal-plan-chapter={currentStage}
     >
       <PersonalPlanJourneyHeader
         currentStage={currentStage}
         onBack={onBack}
         backLabel={backLabel}
-        sticky={false}
         centeredBrand
       />
-      <main className="personal-plan-cookie-clearance mx-auto flex min-h-0 w-full max-w-[430px] flex-1 flex-col px-3 pb-[76px] pt-2 [@media(min-height:731px)]:pb-[84px] sm:max-w-[560px] sm:px-5">
-        <section className="flex min-h-0 flex-1 flex-col">
-          <div className="flex-none px-2 pb-2 pt-1 text-center">
-            <h1 className="mx-auto max-w-[23ch] text-balance font-header text-[21px] leading-[1.12] text-[var(--brand-plum-darkest)] [@media(min-height:731px)]:text-[24px] sm:text-[26px]">
+      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] px-3 pb-[calc(var(--landing-sticky-cta-offset,76px)+20px)] pt-5 sm:max-w-[560px] sm:px-5">
+        <section>
+          <div className="px-2 pb-2 text-center">
+            <h1 className="mx-auto max-w-[17ch] text-balance font-header text-[clamp(28px,8vw,32px)] leading-[1.15] text-[var(--brand-plum-darkest)]">
               {chapter.title}
             </h1>
-            <p className="mx-auto mt-1 max-w-[38ch] text-balance text-[10px] leading-[1.35] text-[var(--text-sub)] [@media(min-height:731px)]:mt-1.5 [@media(min-height:731px)]:text-xs sm:text-[13px]">
+            <p className="mx-auto mt-3 max-w-[26ch] text-balance text-[16px] leading-[1.5] text-[var(--text-sub)]">
               {chapter.description}
             </p>
             {errorMessage ? (
               <p
                 role="alert"
-                className="mx-auto mt-1 max-w-[38ch] text-[10px] leading-[1.3] text-[#a3434b]"
+                className="mx-auto mt-1 max-w-[38ch] text-[13px] leading-[1.4] text-[#a3434b]"
               >
                 {errorMessage}
               </p>

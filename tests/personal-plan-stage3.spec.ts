@@ -218,9 +218,17 @@ test.describe("Personal Plan products lab", () => {
     const routineChapter = page.locator('[data-personal-plan-chapter="4"]')
     await expect(routineChapter).toBeVisible()
     await expect(page.getByRole("heading", { name: "Deine Produktauswahl steht." })).toBeVisible()
-    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(
-      await page.evaluate(() => window.innerHeight),
-    )
+    // Variante D: the transition scrolls naturally; the auto-focus must leave
+    // the current stage card fully visible above the fixed CTA dock.
+    const focusCardClear = await page.evaluate(() => {
+      const card = document.querySelector('[data-stage-state="current"]')
+      const dock = document.querySelector("footer")
+      if (!card || !dock) return false
+      const cardRect = card.getBoundingClientRect()
+      const dockRect = dock.getBoundingClientRect()
+      return cardRect.top >= 0 && cardRect.bottom <= dockRect.top
+    })
+    expect(focusCardClear).toBe(true)
     await page.getByRole("button", { name: "Routine ansehen" }).click()
 
     await page.waitForURL((url) => url.pathname !== labPath)

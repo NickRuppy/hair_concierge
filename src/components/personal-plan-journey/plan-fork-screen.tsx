@@ -227,33 +227,33 @@ export function PlanForkScreen({
         sticky={false}
         centeredBrand
       />
-      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] flex-1 px-3 pb-[188px] pt-3 sm:max-w-[560px] sm:px-5">
-        <h1 className="mx-auto max-w-[23ch] text-balance text-center font-header text-[21px] leading-[1.12] text-[var(--brand-plum-darkest)] [@media(min-height:731px)]:text-[24px] sm:text-[26px]">
+      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] flex-1 px-3 pb-[calc(var(--landing-sticky-cta-offset,188px)+20px)] pt-3 sm:max-w-[560px] sm:px-5">
+        <h1 className="mx-auto max-w-[17ch] text-balance text-center font-header text-[clamp(28px,8vw,32px)] leading-[1.15] text-[var(--brand-plum-darkest)]">
           {PLAN_FORK_TITLE}
         </h1>
-        <p className="mx-auto mt-1.5 max-w-[36ch] text-balance text-center text-[11.5px] leading-[1.4] text-[var(--text-sub)] sm:text-[13px]">
+        <p className="mx-auto mt-3 max-w-[28ch] text-balance text-center text-[16px] leading-[1.5] text-[var(--text-sub)]">
           {PLAN_FORK_LEAD}
         </p>
 
         {noticeMessage ? (
           <p
             role="status"
-            className="mx-auto mt-3 max-w-[38ch] rounded-[12px] bg-[var(--brand-plum-ice)] px-3 py-2 text-center text-[11px] leading-[1.35] text-[var(--brand-plum-dark)]"
+            className="mx-auto mt-3 max-w-[38ch] rounded-[12px] bg-[var(--brand-plum-ice)] px-3 py-2 text-center text-[13px] leading-[1.4] text-[var(--brand-plum-dark)]"
           >
             {noticeMessage}
           </p>
         ) : null}
 
         {showsAcceptPath && previewState ? (
-          <section className="mt-4 rounded-[14px] bg-[#f6efe7] px-3.5 py-3">
-            <h2 className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#4a304d]">
+          <section className="mt-4 rounded-[16px] bg-[#f6efe7] px-[18px] py-4">
+            <h2 className="text-[11px] font-extrabold uppercase tracking-[0.08em] text-[#4a304d]">
               {PLAN_FORK_ASSUMPTIONS_TITLE}
             </h2>
-            <ul className="mt-1.5 flex flex-col gap-1">
+            <ul className="mt-2.5 flex flex-col gap-[7px]">
               {assumptions.map((assumption) => (
                 <li
                   key={assumption.id}
-                  className="flex items-baseline gap-1.5 text-[11.5px] leading-[1.35] text-[#5f5954]"
+                  className="flex items-baseline gap-2 text-[14px] leading-[1.4] text-[#5f5954]"
                 >
                   <span aria-hidden="true" className="font-extrabold text-[#a77d31]">
                     ·
@@ -262,7 +262,7 @@ export function PlanForkScreen({
                 </li>
               ))}
             </ul>
-            <p className="mt-2 text-[10px] leading-[1.35] text-[#8a837c]">
+            <p className="mt-3 text-[12.5px] leading-[1.4] text-[#8a837c]">
               {PLAN_FORK_ASSUMPTIONS_NOTE}
             </p>
           </section>
@@ -293,35 +293,35 @@ export function PlanForkScreen({
               onClick={onAccept}
               disabled={acceptBlocked || busy}
               aria-busy={acceptStatus === "pending"}
-              className="min-h-[46px] w-full rounded-[12px] border-[1.5px] border-[var(--brand-plum)] bg-transparent px-4 text-[13px] font-bold text-[var(--brand-plum)] transition hover:bg-[var(--brand-plum-ice)] disabled:cursor-not-allowed disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.45)] focus-visible:ring-offset-2"
+              className="min-h-[50px] w-full rounded-[12px] border-[1.5px] border-[var(--brand-plum)] bg-transparent px-4 text-[15px] font-bold text-[var(--brand-plum)] transition hover:bg-[var(--brand-plum-ice)] disabled:cursor-not-allowed disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.45)] focus-visible:ring-offset-2"
             >
               {acceptStatus === "pending" ? PLAN_FORK_ACCEPT_PENDING_LABEL : PLAN_FORK_ACCEPT_LABEL}
             </button>
           ) : null}
 
           {acceptBlockedNotice && showsAcceptPath ? (
-            <p className="text-center text-[10px] leading-[1.35] text-[#8a837c]">
+            <p className="text-center text-[12px] leading-[1.4] text-[#8a837c]">
               {acceptBlockedNotice}
             </p>
           ) : null}
 
           {refineStatus === "error" ? (
-            <p role="alert" className="text-center text-[10.5px] leading-[1.3] text-[#a3434b]">
+            <p role="alert" className="text-center text-[12px] leading-[1.4] text-[#a3434b]">
               {PLAN_FORK_REFINE_ERROR}
             </p>
           ) : null}
           {acceptStatus === "error" ? (
-            <p role="alert" className="text-center text-[10.5px] leading-[1.3] text-[#a3434b]">
+            <p role="alert" className="text-center text-[12px] leading-[1.4] text-[#a3434b]">
               {PLAN_FORK_ACCEPT_ERROR}
             </p>
           ) : null}
           {acceptStatus === "unavailable" ? (
-            <p role="alert" className="text-center text-[10.5px] leading-[1.3] text-[#a3434b]">
+            <p role="alert" className="text-center text-[12px] leading-[1.4] text-[#a3434b]">
               {PLAN_FORK_ACCEPT_UNAVAILABLE}
             </p>
           ) : null}
 
-          <p className="text-center text-[9.5px] leading-[1.35] text-[#8a837c]">
+          <p className="text-center text-[12px] leading-[1.4] text-[#8a837c]">
             {PLAN_FORK_MICROCOPY}
           </p>
         </div>
