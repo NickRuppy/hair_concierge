@@ -299,6 +299,37 @@ function input(
   }
 }
 
+function shampooUncoveredCandidate(overrides: {
+  productId: string
+  displayName: string
+  catalogSortOrder: number
+  role: "shampoo_everyday" | "shampoo_dandruff"
+  shampooBucket: "normal" | "schuppen"
+  scalpRoute: "balanced" | "dandruff"
+  cleansingIntensity: "gentle" | "regular" | "clarifying"
+}) {
+  const facts = knownFacts("shampoo")
+  if (facts.category !== "shampoo") throw new Error("expected Shampoo fixture")
+  Object.assign(facts, {
+    productId: overrides.productId,
+    displayName: overrides.displayName,
+    catalogSortOrder: overrides.catalogSortOrder,
+    recommendable: true,
+    factFingerprint: `facts-${overrides.productId}`,
+    protocols: [
+      {
+        role: overrides.role,
+        status: "verified_complete",
+        fingerprint: `protocol-${overrides.productId}`,
+      },
+    ],
+  })
+  facts.spec.shampooBucket = overrides.shampooBucket
+  facts.spec.scalpRoute = overrides.scalpRoute
+  facts.spec.cleansingIntensity = overrides.cleansingIntensity
+  return facts
+}
+
 function heatCandidate(input: {
   productId: string
   displayName: string
@@ -612,6 +643,142 @@ test("Shampoo with ambiguous or incomplete semantic facts remains unknown", () =
   assert.ok(result.missingFacts.includes("shampoo.target_fit"))
 })
 
+test("Shampoo uncovered-role recommendation falls back to a supportive candidate, ranked by the shared comparator", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  // Both supportive (cleansing intensity off-target); array-first has the
+  // worse catalogSortOrder, so array order alone would pick the wrong one.
+  const worseSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-supportive-worse-order",
+    displayName: "Schlechtere Katalogposition",
+    catalogSortOrder: 9,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "gentle",
+  })
+  const betterSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-supportive-better-order",
+    displayName: "Bessere Katalogposition",
+    catalogSortOrder: 1,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "clarifying",
+  })
+  shampooInput.recommendationCandidates = [worseSortOrder, betterSortOrder]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "shampoo-supportive-better-order")
+  assert.equal(
+    result.recommendation?.authorityRuleId,
+    "shampoo.selection.verified_supportive_intensity",
+  )
+})
+
+test("Shampoo uncovered-role recommendation still prefers an ideal candidate over a supportive one", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  const supportive = shampooUncoveredCandidate({
+    productId: "shampoo-supportive",
+    displayName: "Unterstützend",
+    catalogSortOrder: 1,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "gentle",
+  })
+  const ideal = shampooUncoveredCandidate({
+    productId: "shampoo-ideal",
+    displayName: "Ideal",
+    catalogSortOrder: 9,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+  shampooInput.recommendationCandidates = [supportive, ideal]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "shampoo-ideal")
+  assert.equal(result.recommendation?.authorityRuleId, "shampoo.selection.verified_role_fit")
+})
+
+test("Shampoo uncovered-role recommendation ranks two ideal candidates by catalog order, not array order", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  const worseSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-ideal-worse-order",
+    displayName: "Schlechtere Katalogposition",
+    catalogSortOrder: 9,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+  const betterSortOrder = shampooUncoveredCandidate({
+    productId: "shampoo-ideal-better-order",
+    displayName: "Bessere Katalogposition",
+    catalogSortOrder: 1,
+    role: "shampoo_everyday",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+  shampooInput.recommendationCandidates = [worseSortOrder, betterSortOrder]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "shampoo-ideal-better-order")
+})
+
+test("Shampoo dandruff role stays ideal-only: no supportive fallback even when only supportive candidates exist", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  shampooInput.role = "shampoo_dandruff"
+  shampooInput.capturedProductId = null
+  shampooInput.subjectIdentity = null
+  shampooInput.productFacts = null
+
+  const supportiveOnly = shampooUncoveredCandidate({
+    productId: "shampoo-dandruff-supportive",
+    displayName: "Unterstützend (Schuppen)",
+    catalogSortOrder: 1,
+    role: "shampoo_dandruff",
+    shampooBucket: "schuppen",
+    scalpRoute: "dandruff",
+    cleansingIntensity: "gentle",
+  })
+  shampooInput.recommendationCandidates = [supportiveOnly]
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "unknown")
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+  assert.equal(result.recommendation, null)
+})
+
 test("Conditioner with complete nonmatching semantic facts is a known mismatch, not unknown", () => {
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   if (conditionerInput.productFacts?.category !== "conditioner") {
@@ -843,7 +1010,7 @@ test("Mask v4 fails closed when required canonical functional benefits are missi
   assert.ok(result.missingFacts.includes("mask.functional_benefits"))
 })
 
-test("optional Mask selects the best image-backed supportive candidate while basis stays ideal-only", () => {
+test("Mask selects the best image-backed supportive candidate regardless of need tier", () => {
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.capturedProductId = null
   maskInput.subjectIdentity = null
@@ -891,13 +1058,16 @@ test("optional Mask selects the best image-backed supportive candidate while bas
     assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
   }
 
+  // Nick's decision (Task 3d): supportive candidates are eligible for every
+  // need tier, not only "optional" -- required (basis) slots also get a
+  // best-available supportive pick instead of falling back to uncovered.
   maskInput.categoryDecision.needTier = "basis"
   const basis = evaluate([oneCaution])
   assert.equal(basis.status, "known")
   if (basis.status !== "known") return
-  assert.equal(basis.verdict, "unknown")
-  assert.equal(basis.recommendation, null)
-  assert.deepEqual(basis.allowedActions, ["leave_uncovered"])
+  assert.equal(basis.verdict, "supportive")
+  assert.equal(basis.recommendation?.productId, "z-one-caution")
+  assert.deepEqual(basis.allowedActions, ["plan_recommendation", "leave_uncovered"])
 
   maskInput.categoryDecision.needTier = "optional"
   oneCaution.presentationImageUrl = null
@@ -1581,4 +1751,522 @@ test("Scalp Care keeps comfort complementary while root reset suppresses only ex
   assert.equal(exfoliant.recommendation, null)
   assert.deepEqual(exfoliant.allowedActions, ["leave_uncovered"])
   assert.match(exfoliant.criteria[0]?.explanation ?? "", /Tiefenreinigung.*Kopfhaut-Peeling/)
+})
+
+function leaveInTargetForCoverageTests() {
+  return {
+    ...(TARGETS.leave_in as Record<string, unknown>),
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "high",
+  } as never
+}
+
+function leaveInCoverageCandidate(overrides: {
+  productId: string
+  displayName: string
+  catalogSortOrder: number
+  weight: "light" | "medium" | "rich"
+  careDirection: "moisture" | "balanced" | "protein"
+  repairSupportLevel: "low" | "medium" | "high"
+}) {
+  const facts = knownFacts("leave_in")
+  if (facts.category !== "leave_in") throw new Error("expected Leave-in fixture")
+  Object.assign(facts, {
+    productId: overrides.productId,
+    displayName: overrides.displayName,
+    catalogSortOrder: overrides.catalogSortOrder,
+    recommendable: true,
+    factFingerprint: `facts-${overrides.productId}`,
+  })
+  facts.spec.weight = overrides.weight
+  facts.spec.careDirection = overrides.careDirection
+  facts.spec.repairSupportLevel = overrides.repairSupportLevel
+  return facts
+}
+
+test("Leave-in uncovered-role recommendation ranks candidates by displayed coverage, not catalog order", () => {
+  const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  leaveInInput.capturedProductId = null
+  leaveInInput.subjectIdentity = null
+  leaveInInput.productFacts = null
+  leaveInInput.categoryDecision.target = leaveInTargetForCoverageTests()
+
+  // A: 1/3 dimensions match the target, listed first in catalog order.
+  const lowCoverage = leaveInCoverageCandidate({
+    productId: "leave-in-low-coverage",
+    displayName: "Wenig Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "medium",
+    careDirection: "balanced",
+    repairSupportLevel: "high",
+  })
+  // B: 2/3 dimensions match the target, listed last in catalog order.
+  const highCoverage = leaveInCoverageCandidate({
+    productId: "leave-in-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 9,
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "medium",
+  })
+  leaveInInput.recommendationCandidates = [lowCoverage, highCoverage]
+
+  const result = evaluateStage3Authority(leaveInInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "leave-in-high-coverage")
+})
+
+test("Leave-in uncovered-role recommendation still prefers an ideal candidate over better-covered supportive ones", () => {
+  const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  leaveInInput.capturedProductId = null
+  leaveInInput.subjectIdentity = null
+  leaveInInput.productFacts = null
+  leaveInInput.categoryDecision.target = leaveInTargetForCoverageTests()
+
+  const ideal = leaveInCoverageCandidate({
+    productId: "leave-in-ideal",
+    displayName: "Ideal",
+    catalogSortOrder: 50,
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "high",
+  })
+  const betterCoveredSupportive = leaveInCoverageCandidate({
+    productId: "leave-in-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "medium",
+  })
+  leaveInInput.recommendationCandidates = [betterCoveredSupportive, ideal]
+
+  const result = evaluateStage3Authority(leaveInInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "leave-in-ideal")
+})
+
+test("Leave-in uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  leaveInInput.capturedProductId = null
+  leaveInInput.subjectIdentity = null
+  leaveInInput.productFacts = null
+  leaveInInput.categoryDecision.target = leaveInTargetForCoverageTests()
+
+  // Identical fit on every axis (same verdict, same coverage, same caution
+  // count) -- only catalogSortOrder differs, so the lower one must win.
+  const laterInCatalog = leaveInCoverageCandidate({
+    productId: "leave-in-tie-later",
+    displayName: "Später im Katalog",
+    catalogSortOrder: 5,
+    weight: "medium",
+    careDirection: "balanced",
+    repairSupportLevel: "high",
+  })
+  const earlierInCatalog = leaveInCoverageCandidate({
+    productId: "leave-in-tie-earlier",
+    displayName: "Früher im Katalog",
+    catalogSortOrder: 2,
+    weight: "medium",
+    careDirection: "balanced",
+    repairSupportLevel: "high",
+  })
+  leaveInInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]
+
+  const result = evaluateStage3Authority(leaveInInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "leave-in-tie-earlier")
+})
+
+function conditionerTargetForCoverageTests() {
+  return {
+    ...(TARGETS.conditioner as Record<string, unknown>),
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "high",
+  } as never
+}
+
+function conditionerCoverageCandidate(overrides: {
+  productId: string
+  displayName: string
+  catalogSortOrder: number
+  weight: "light" | "medium" | "rich"
+  balance: "moisture" | "balanced" | "protein"
+  repairSupportLevel: "low" | "medium" | "high"
+}) {
+  const facts = knownFacts("conditioner")
+  if (facts.category !== "conditioner") throw new Error("expected Conditioner fixture")
+  Object.assign(facts, {
+    productId: overrides.productId,
+    displayName: overrides.displayName,
+    catalogSortOrder: overrides.catalogSortOrder,
+    recommendable: true,
+    factFingerprint: `facts-${overrides.productId}`,
+  })
+  facts.spec.weight = overrides.weight
+  facts.spec.proteinMoistureBalance = overrides.balance
+  facts.spec.balanceDirection = overrides.balance
+  facts.spec.repairSupportLevel = overrides.repairSupportLevel
+  return facts
+}
+
+test("Conditioner uncovered-role recommendation ranks candidates by displayed coverage, not catalog order", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  conditionerInput.capturedProductId = null
+  conditionerInput.subjectIdentity = null
+  conditionerInput.productFacts = null
+  conditionerInput.categoryDecision.target = conditionerTargetForCoverageTests()
+
+  const lowCoverage = conditionerCoverageCandidate({
+    productId: "conditioner-low-coverage",
+    displayName: "Wenig Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "medium",
+    balance: "balanced",
+    repairSupportLevel: "high",
+  })
+  const highCoverage = conditionerCoverageCandidate({
+    productId: "conditioner-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 9,
+    weight: "rich",
+    balance: "moisture",
+    repairSupportLevel: "medium",
+  })
+  conditionerInput.recommendationCandidates = [lowCoverage, highCoverage]
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "conditioner-high-coverage")
+})
+
+test("Conditioner uncovered-role recommendation still prefers an ideal candidate over better-covered supportive ones", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  conditionerInput.capturedProductId = null
+  conditionerInput.subjectIdentity = null
+  conditionerInput.productFacts = null
+  conditionerInput.categoryDecision.target = conditionerTargetForCoverageTests()
+
+  const ideal = conditionerCoverageCandidate({
+    productId: "conditioner-ideal",
+    displayName: "Ideal",
+    catalogSortOrder: 50,
+    weight: "rich",
+    balance: "moisture",
+    repairSupportLevel: "high",
+  })
+  const betterCoveredSupportive = conditionerCoverageCandidate({
+    productId: "conditioner-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "rich",
+    balance: "moisture",
+    repairSupportLevel: "medium",
+  })
+  conditionerInput.recommendationCandidates = [betterCoveredSupportive, ideal]
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "conditioner-ideal")
+})
+
+test("Conditioner uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  conditionerInput.capturedProductId = null
+  conditionerInput.subjectIdentity = null
+  conditionerInput.productFacts = null
+  conditionerInput.categoryDecision.target = conditionerTargetForCoverageTests()
+
+  const laterInCatalog = conditionerCoverageCandidate({
+    productId: "conditioner-tie-later",
+    displayName: "Später im Katalog",
+    catalogSortOrder: 5,
+    weight: "medium",
+    balance: "balanced",
+    repairSupportLevel: "high",
+  })
+  const earlierInCatalog = conditionerCoverageCandidate({
+    productId: "conditioner-tie-earlier",
+    displayName: "Früher im Katalog",
+    catalogSortOrder: 2,
+    weight: "medium",
+    balance: "balanced",
+    repairSupportLevel: "high",
+  })
+  conditionerInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "conditioner-tie-earlier")
+})
+
+function oilLeaveOnInput(targetWeight: "light" | "medium" | "rich" | null) {
+  const oilInput = input("oil", "known") as Stage3AuthorityInput<"oil">
+  oilInput.role = "leave_on_fibre_conditioning"
+  oilInput.subjectKey = "decision:oil:leave_on_fibre_conditioning:owned-1"
+  oilInput.capturedProductId = null
+  oilInput.subjectIdentity = null
+  oilInput.productFacts = null
+  oilInput.categoryDecision.roles = ["leave_on_fibre_conditioning"]
+  oilInput.categoryDecision.target = {
+    category: "oil",
+    roles: ["leave_on_fibre_conditioning"],
+    roleTargets: [
+      {
+        role: "leave_on_fibre_conditioning",
+        tier: "basis",
+        weight: targetWeight,
+        functionalBenefits: [],
+      },
+    ],
+  } as never
+  return oilInput
+}
+
+function oilCoverageCandidate(overrides: {
+  productId: string
+  catalogSortOrder: number
+  weight: "light" | "medium" | "rich" | null
+  role?: "leave_on_fibre_conditioning" | "dry_finish" | "pre_wash_fibre_treatment"
+}) {
+  const facts = knownFacts("oil")
+  if (facts.category !== "oil") throw new Error("expected Oil fixture")
+  const role = overrides.role ?? "leave_on_fibre_conditioning"
+  Object.assign(facts, {
+    productId: overrides.productId,
+    displayName: overrides.productId,
+    catalogSortOrder: overrides.catalogSortOrder,
+    recommendable: true,
+    factFingerprint: `facts-${overrides.productId}`,
+    protocols: [
+      { role, status: "verified_complete", fingerprint: `protocol-${overrides.productId}` },
+    ],
+  })
+  facts.spec.roleSupport = { [role]: true }
+  facts.spec.weight = overrides.weight
+  facts.spec.targetThicknessEligible = true
+  return facts
+}
+
+test("Oil uncovered-role recommendation ranks exact-weight ideal candidates by coverage/sortOrder, not array order", () => {
+  // Regression: old code picked the first exact-weight candidate in array
+  // order. A is listed first with a worse catalogSortOrder; the comparator
+  // must promote B.
+  const oilInput = oilLeaveOnInput("light")
+  const worseSortOrderFirst = oilCoverageCandidate({
+    productId: "oil-exact-a",
+    catalogSortOrder: 5,
+    weight: "light",
+  })
+  const betterSortOrderSecond = oilCoverageCandidate({
+    productId: "oil-exact-b",
+    catalogSortOrder: 2,
+    weight: "light",
+  })
+  oilInput.recommendationCandidates = [worseSortOrderFirst, betterSortOrderSecond]
+
+  const result = evaluateStage3Authority(oilInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, "oil-exact-b")
+  assert.equal(result.recommendation?.authorityRuleId, "oil.recommendation.role_verified")
+})
+
+test("Oil uncovered-role recommendation falls back to an adjacent-weight supportive candidate", () => {
+  const oilInput = oilLeaveOnInput("light")
+  const adjacent = oilCoverageCandidate({
+    productId: "oil-adjacent",
+    catalogSortOrder: 1,
+    weight: "medium",
+  })
+  oilInput.recommendationCandidates = [adjacent]
+
+  const result = evaluateStage3Authority(oilInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, "oil-adjacent")
+  assert.equal(
+    result.recommendation?.authorityRuleId,
+    "oil.recommendation.role_verified_supportive_weight",
+  )
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+})
+
+test("Oil uncovered-role recommendation prefers an exact-weight candidate over a better-sorted adjacent one", () => {
+  const oilInput = oilLeaveOnInput("light")
+  const exact = oilCoverageCandidate({
+    productId: "oil-exact",
+    catalogSortOrder: 9,
+    weight: "light",
+  })
+  const adjacentEarlier = oilCoverageCandidate({
+    productId: "oil-adjacent-early",
+    catalogSortOrder: 1,
+    weight: "medium",
+  })
+  oilInput.recommendationCandidates = [adjacentEarlier, exact]
+
+  const result = evaluateStage3Authority(oilInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, "oil-exact")
+  assert.equal(result.recommendation?.authorityRuleId, "oil.recommendation.role_verified")
+})
+
+test("Oil uncovered-role recommendation excludes distance-2 and null-weight leave-on candidates but ignores weight for non-leave-on roles", () => {
+  const oilInput = oilLeaveOnInput("light")
+  const farCandidate = oilCoverageCandidate({
+    productId: "oil-far",
+    catalogSortOrder: 1,
+    weight: "rich",
+  })
+  const nullWeightCandidate = oilCoverageCandidate({
+    productId: "oil-null-weight",
+    catalogSortOrder: 2,
+    weight: null,
+  })
+  oilInput.recommendationCandidates = [farCandidate, nullWeightCandidate]
+
+  const result = evaluateStage3Authority(oilInput as never)
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation, null)
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+
+  const preWashInput = input("oil", "known") as Stage3AuthorityInput<"oil">
+  preWashInput.role = "pre_wash_fibre_treatment"
+  preWashInput.subjectKey = "decision:oil:pre_wash_fibre_treatment:owned-1"
+  preWashInput.capturedProductId = null
+  preWashInput.subjectIdentity = null
+  preWashInput.productFacts = null
+  preWashInput.categoryDecision.roles = ["pre_wash_fibre_treatment"]
+  preWashInput.categoryDecision.target = {
+    category: "oil",
+    roles: ["pre_wash_fibre_treatment"],
+    roleTargets: [
+      { role: "pre_wash_fibre_treatment", tier: "basis", weight: null, functionalBenefits: [] },
+    ],
+  } as never
+  const preWashCandidate = oilCoverageCandidate({
+    productId: "oil-pre-wash",
+    catalogSortOrder: 1,
+    weight: "rich",
+    role: "pre_wash_fibre_treatment",
+  })
+  preWashInput.recommendationCandidates = [preWashCandidate]
+
+  const preWashResult = evaluateStage3Authority(preWashInput as never)
+  assert.equal(preWashResult.status, "known")
+  if (preWashResult.status !== "known") return
+  assert.equal(preWashResult.recommendation?.productId, "oil-pre-wash")
+  assert.equal(preWashResult.recommendation?.authorityRuleId, "oil.recommendation.role_verified")
+})
+
+test("Oil uncovered-role recommendation preserves no-recommendation behavior when the leave-on target weight is unknown", () => {
+  const oilInput = oilLeaveOnInput(null)
+  const candidate = oilCoverageCandidate({
+    productId: "oil-any-weight",
+    catalogSortOrder: 1,
+    weight: "light",
+  })
+  oilInput.recommendationCandidates = [candidate]
+
+  const result = evaluateStage3Authority(oilInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation, null)
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+})
+
+test("Mask uncovered-role recommendation ranks in a supportive candidate for a required tier", () => {
+  const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  maskInput.capturedProductId = null
+  maskInput.subjectIdentity = null
+  maskInput.productFacts = null
+  maskInput.categoryDecision.needTier = "basis"
+  if (maskInput.categoryDecision.target?.category !== "mask") throw new Error("expected target")
+  maskInput.categoryDecision.target.repairSupportLevel = "high"
+  const supportiveCandidate = knownFacts("mask")
+  if (supportiveCandidate.category !== "mask") throw new Error("expected Mask fixture")
+  Object.assign(supportiveCandidate, {
+    productId: "mask-required-supportive",
+    displayName: "Erforderlich Unterstützend",
+    recommendable: true,
+    presentationImageUrl: "https://example.com/required.webp",
+    factFingerprint: "facts-required-supportive",
+  })
+  supportiveCandidate.spec.weight = "rich"
+  supportiveCandidate.spec.repairSupportLevel = "high"
+  maskInput.recommendationCandidates = [supportiveCandidate]
+
+  const result = evaluateStage3Authority(maskInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "mask-required-supportive")
+  assert.equal(result.recommendation?.authorityRuleId, "mask.stage3.validated_supportive_candidate")
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+})
+
+test("Mask uncovered-role recommendation still prefers an ideal candidate over a supportive one at a required tier", () => {
+  const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  maskInput.capturedProductId = null
+  maskInput.subjectIdentity = null
+  maskInput.productFacts = null
+  maskInput.categoryDecision.needTier = "basis"
+  const ideal = knownFacts("mask")
+  const supportive = knownFacts("mask")
+  if (ideal.category !== "mask" || supportive.category !== "mask") {
+    throw new Error("expected Mask fixtures")
+  }
+  Object.assign(ideal, {
+    productId: "mask-required-ideal",
+    displayName: "Ideal",
+    recommendable: true,
+    presentationImageUrl: "https://example.com/ideal.webp",
+    catalogSortOrder: 50,
+    factFingerprint: "facts-required-ideal",
+  })
+  Object.assign(supportive, {
+    productId: "mask-required-supportive-2",
+    displayName: "Unterstützend",
+    recommendable: true,
+    presentationImageUrl: "https://example.com/supportive.webp",
+    catalogSortOrder: 1,
+    factFingerprint: "facts-required-supportive-2",
+  })
+  supportive.spec.weight = "rich"
+  maskInput.recommendationCandidates = [supportive, ideal]
+
+  const result = evaluateStage3Authority(maskInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "mask-required-ideal")
 })

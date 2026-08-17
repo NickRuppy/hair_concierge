@@ -1,6 +1,8 @@
 import type { PlanRepairSupportLevel } from "@/lib/personal-plan/types"
 
 import type { Stage3CriterionResult } from "../../contracts"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
+import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import type {
   Stage3AuthorityInput,
   Stage3CategoryAuthorityAdapter,
@@ -205,9 +207,30 @@ export const evaluateLeaveInAuthority: Stage3CategoryAuthorityAdapter<"leave_in"
     const candidates = input.recommendationCandidates
       .filter((item) => item.recommendable)
       .map((item) => ({ item, result: evaluateFacts(input, item) }))
-    const selected =
-      candidates.find(({ result }) => result.verdict === "ideal") ??
-      candidates.find(({ result }) => result.verdict === "supportive")
+    const rankable = candidates
+      .filter(
+        (
+          candidate,
+        ): candidate is typeof candidate & { result: { verdict: "ideal" | "supportive" } } =>
+          candidate.result.verdict === "ideal" || candidate.result.verdict === "supportive",
+      )
+      .map((candidate) => ({
+        candidate,
+        rank: {
+          verdict: candidate.result.verdict,
+          targetMatchCount: candidateDimensionCoverage(
+            input as never,
+            candidate.item,
+            candidate.result.criteria,
+          ).matches,
+          cautionCount: candidate.result.criteria.filter((c) => c.result === "caution").length,
+          catalogSortOrder: candidate.item.catalogSortOrder,
+          priceEur: candidate.item.priceEur ?? null,
+          productId: candidate.item.productId,
+        } satisfies RankableCandidate,
+      }))
+      .sort((left, right) => compareRankableCandidates(left.rank, right.rank))
+    const selected = rankable[0]?.candidate
     if (!selected)
       return knownEvaluation(input as never, {
         verdict: "unknown",

@@ -7,6 +7,8 @@ import type {
 
 import type { Stage3CriterionResult } from "../../contracts"
 import type { Stage3AuthorityEvaluation, Stage3AuthorityInput, Stage3MaskFacts } from "../contracts"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
+import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import {
   commonUnknownFacts,
   criterion,
@@ -256,28 +258,25 @@ export function evaluateMaskAuthority(
       )
       .map((candidate) => ({ candidate, assessment: evaluateProduct(input, candidate) }))
       .filter(
-        ({ assessment }) =>
-          assessment?.verdict === "ideal" ||
-          (input.categoryDecision.needTier === "optional" && assessment?.verdict === "supportive"),
+        (entry): entry is typeof entry & { assessment: { verdict: "ideal" | "supportive" } } =>
+          entry.assessment?.verdict === "ideal" || entry.assessment?.verdict === "supportive",
       )
-      .sort((left, right) => {
-        const verdictDifference =
-          (left.assessment?.verdict === "ideal" ? 0 : 1) -
-          (right.assessment?.verdict === "ideal" ? 0 : 1)
-        if (verdictDifference !== 0) return verdictDifference
-        const cautionDifference =
-          (left.assessment?.criteria.filter((entry) => entry.result === "caution").length ?? 0) -
-          (right.assessment?.criteria.filter((entry) => entry.result === "caution").length ?? 0)
-        if (cautionDifference !== 0) return cautionDifference
-        const catalogOrderDifference =
-          (left.candidate.catalogSortOrder ?? Number.MAX_SAFE_INTEGER) -
-          (right.candidate.catalogSortOrder ?? Number.MAX_SAFE_INTEGER)
-        return (
-          catalogOrderDifference ||
-          left.candidate.displayName.localeCompare(right.candidate.displayName, "de") ||
-          left.candidate.productId.localeCompare(right.candidate.productId)
-        )
-      })[0]
+      .map((entry) => ({
+        entry,
+        rank: {
+          verdict: entry.assessment.verdict,
+          targetMatchCount: candidateDimensionCoverage(
+            input as never,
+            entry.candidate,
+            entry.assessment.criteria,
+          ).matches,
+          cautionCount: entry.assessment.criteria.filter((c) => c.result === "caution").length,
+          catalogSortOrder: entry.candidate.catalogSortOrder,
+          priceEur: entry.candidate.priceEur ?? null,
+          productId: entry.candidate.productId,
+        } satisfies RankableCandidate,
+      }))
+      .sort((left, right) => compareRankableCandidates(left.rank, right.rank))[0]?.entry
     return knownEvaluation(sharedInput, {
       // A recommendation can be ideal; an absent owned product cannot be.
       // Keep the uncovered state explicit when the catalog yields no candidate.

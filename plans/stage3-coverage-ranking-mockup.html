@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stage 3 Ranking — Vorher / Nachher</title>
+<style>
+  :root {
+    --bg: #faf8f5; --card: #fff; --ink: #2b2733; --muted: #7a7485;
+    --plum: #5b3a70; --plum-soft: #efe9f4; --gold: #a8842c; --gold-soft: #fdf6e3;
+    --green: #2e7d4f; --green-soft: #e8f5ec; --line: #e8e3dc;
+  }
+  body { margin: 0; padding: 32px 20px; background: var(--bg); color: var(--ink);
+         font: 15px/1.5 -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 28px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+  .panel h2 { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 14px; }
+  .panel.before h2 { color: #b0483a; }
+  .panel.after h2 { color: var(--green); }
+  .prodcard { border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .prodcard.selected { border: 2px solid var(--plum); }
+  .tag { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+  .tag.best { color: var(--gold); }
+  .tag.alt { color: var(--gold); opacity: .8; }
+  .pname { font-weight: 600; font-size: 16px; }
+  .checks { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-size: 12px; border-radius: 999px; padding: 2px 10px; }
+  .chip.ok { background: var(--green-soft); color: var(--green); }
+  .chip.warn { background: var(--gold-soft); color: var(--gold); }
+  .score { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .score b.bad { color: #b0483a; } .score b.good { color: var(--green); }
+  .note { margin-top: 18px; padding: 12px 14px; background: var(--plum-soft); border-radius: 10px;
+          font-size: 13.5px; color: var(--plum); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>„Wähle dein Leave-in" — Ranking-Fix</h1>
+  <p class="sub">Gleiche Oberfläche, gleiche Karten, gleiche Tabelle. Es ändert sich nur, welches Produkt auf welcher Karte landet: Die #1-Karte zeigt nie weniger grüne Häkchen als eine Alternative.</p>
+  <div class="cols">
+    <div class="panel before">
+      <h2>Vorher (heute live)</h2>
+      <div class="prodcard selected">
+        <div class="tag best">Beste verfügbare Option</div>
+        <div class="pname">Pantene Bonding Leave-In</div>
+        <div class="checks">
+          <span class="chip warn">Pflegegewicht −</span>
+          <span class="chip warn">Pflegerichtung −</span>
+          <span class="chip ok">Repair ✓</span>
+        </div>
+        <div class="score">Zieltreffer: <b class="bad">1 / 3</b> · gewinnt nur durch Katalogreihenfolge</div>
+      </div>
+      <div class="prodcard">
+        <div class="tag alt">Alternative 1 · Passt teilweise</div>
+        <div class="pname">Cantu Leave-In Repair Cream</div>
+        <div class="checks">
+          <span class="chip ok">Pflegegewicht ✓</span>
+          <span class="chip ok">Pflegerichtung ✓</span>
+          <span class="chip warn">Repair −</span>
+        </div>
+        <div class="score">Zieltreffer: <b class="good">2 / 3</b> · trotzdem nur Alternative</div>
+      </div>
+    </div>
+    <div class="panel after">
+      <h2>Nachher (Coverage-Ranking)</h2>
+      <div class="prodcard selected">
+        <div class="tag best">Beste verfügbare Option</div>
+        <div class="pname">Cantu Leave-In Repair Cream</div>
+        <div class="checks">
+          <span class="chip ok">Pflegegewicht ✓</span>
+          <span class="chip ok">Pflegerichtung ✓</span>
+          <span class="chip warn">Repair −</span>
+        </div>
+        <div class="score">Zieltreffer: <b class="good">2 / 3</b> · beste Abdeckung gewinnt</div>
+      </div>
+      <div class="prodcard">
+        <div class="tag alt">Alternative 1 · Passt teilweise</div>
+        <div class="pname">Pantene Bonding Leave-In</div>
+        <div class="checks">
+          <span class="chip warn">Pflegegewicht −</span>
+          <span class="chip warn">Pflegerichtung −</span>
+          <span class="chip ok">Repair ✓</span>
+        </div>
+        <div class="score">Zieltreffer: <b class="bad">1 / 3</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    Neu sichtbar außerdem: Shampoo (außer Anti-Schuppen) und <em>required</em> Masken-Slots zeigen künftig eine „passt teilweise"-Empfehlung statt gar keiner — im bestehenden Karten-Pattern, kein neues UI.
+  </div>
+</div>
+</body>
+</html>

@@ -1,6 +1,8 @@
 import type { PlanCategoryTarget, PlanProductRole } from "@/lib/personal-plan/types"
 
 import type { Stage3AuthorityEvaluation, Stage3AuthorityInput, Stage3OilFacts } from "../contracts"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
+import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import {
   commonUnknownFacts,
   criterion,
@@ -41,23 +43,64 @@ function isLeaveOnRole(
   return role === "leave_on_fibre_conditioning" || role === "dry_finish"
 }
 
-function candidateForRole(input: OilInput, targetWeight: string | null): Stage3OilFacts | null {
-  return (
-    input.recommendationCandidates.find((candidate) => {
-      const roleSupport = candidate.spec.roleSupport[input.role]
-      return (
-        candidate.isActive &&
-        candidate.lifecycleStatus === "active" &&
-        candidate.recommendable &&
-        roleSupport === true &&
-        candidate.spec.targetThicknessEligible === true &&
-        commonUnknownFacts({ ...input, productFacts: candidate }).length === 0 &&
-        hasCompleteProtocol(candidate, input) &&
-        (!isLeaveOnRole(input.role) ||
-          (candidate.spec.weight !== null && candidate.spec.weight === targetWeight))
-      )
-    }) ?? null
-  )
+function eligibleOilCandidates(input: OilInput): Stage3OilFacts[] {
+  return input.recommendationCandidates.filter((candidate) => {
+    const roleSupport = candidate.spec.roleSupport[input.role]
+    return (
+      candidate.isActive &&
+      candidate.lifecycleStatus === "active" &&
+      candidate.recommendable &&
+      roleSupport === true &&
+      candidate.spec.targetThicknessEligible === true &&
+      commonUnknownFacts({ ...input, productFacts: candidate }).length === 0 &&
+      hasCompleteProtocol(candidate, input)
+    )
+  })
+}
+
+// Weight verdict for a single candidate. Non-leave-on roles ignore weight
+// entirely. Leave-on roles require an exact match for "ideal"; a candidate
+// one step away on OIL_WEIGHTS from a known target is "supportive". A null
+// candidate weight, a null target weight, or a distance greater than one
+// excludes the candidate (returns null) -- preserving the prior behavior
+// where a null targetWeight never yielded a leave-on recommendation.
+function oilWeightVerdict(
+  candidate: Stage3OilFacts,
+  input: OilInput,
+  targetWeight: string | null,
+): "ideal" | "supportive" | null {
+  if (!isLeaveOnRole(input.role)) return "ideal"
+  if (candidate.spec.weight !== null && candidate.spec.weight === targetWeight) return "ideal"
+  if (candidate.spec.weight === null || targetWeight === null) return null
+  const candidateIndex = OIL_WEIGHTS.indexOf(candidate.spec.weight as (typeof OIL_WEIGHTS)[number])
+  const targetIndex = OIL_WEIGHTS.indexOf(targetWeight as (typeof OIL_WEIGHTS)[number])
+  if (candidateIndex < 0 || targetIndex < 0) return null
+  return Math.abs(candidateIndex - targetIndex) === 1 ? "supportive" : null
+}
+
+function bestOilCandidate(
+  input: OilInput,
+  targetWeight: string | null,
+): { candidate: Stage3OilFacts; verdict: "ideal" | "supportive" } | null {
+  const rankable = eligibleOilCandidates(input)
+    .map((candidate) => ({ candidate, verdict: oilWeightVerdict(candidate, input, targetWeight) }))
+    .filter(
+      (entry): entry is { candidate: Stage3OilFacts; verdict: "ideal" | "supportive" } =>
+        entry.verdict !== null,
+    )
+    .map((entry) => ({
+      entry,
+      rank: {
+        verdict: entry.verdict,
+        targetMatchCount: candidateDimensionCoverage(input as never, entry.candidate, []).matches,
+        cautionCount: entry.verdict === "supportive" ? 1 : 0,
+        catalogSortOrder: entry.candidate.catalogSortOrder,
+        priceEur: entry.candidate.priceEur ?? null,
+        productId: entry.candidate.productId,
+      } satisfies RankableCandidate,
+    }))
+    .sort((left, right) => compareRankableCandidates(left.rank, right.rank))
+  return rankable[0]?.entry ?? null
 }
 
 export function recommendationForOil(
@@ -99,16 +142,18 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
   const targetWeight = roleTarget.weight
 
   if (!input.productFacts) {
-    const candidate = candidateForRole(input, targetWeight)
+    const best = bestOilCandidate(input, targetWeight)
     return knownEvaluation(input, {
       verdict: "mismatch",
       criteria: [
         criterion("oil.role", "Öl-Rolle", "fail", "Für diese Rolle ist kein Produkt zugeordnet."),
       ],
-      allowedActions: candidate ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: candidate ? recommendationForOil(candidate, input) : null,
+      allowedActions: best ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
+      recommendation: best
+        ? recommendationForOil(best.candidate, input, best.verdict === "supportive")
+        : null,
       productFactFingerprint: null,
-      recommendationFactFingerprint: candidate?.factFingerprint ?? null,
+      recommendationFactFingerprint: best?.candidate.factFingerprint ?? null,
     })
   }
 
@@ -137,7 +182,7 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
     roleSupport === false ||
     facts.spec.targetThicknessEligible === false
   ) {
-    const candidate = candidateForRole(input, targetWeight)
+    const best = bestOilCandidate(input, targetWeight)
     return knownEvaluation(input, {
       verdict: "mismatch",
       criteria: [
@@ -152,12 +197,14 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
               : "Das Produkt ist nicht für die bestätigte Haardicke verifiziert.",
         ),
       ],
-      allowedActions: candidate
+      allowedActions: best
         ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
         : ["acknowledge_override", "leave_uncovered"],
-      recommendation: candidate ? recommendationForOil(candidate, input) : null,
+      recommendation: best
+        ? recommendationForOil(best.candidate, input, best.verdict === "supportive")
+        : null,
       productFactFingerprint: facts.factFingerprint,
-      recommendationFactFingerprint: candidate?.factFingerprint ?? null,
+      recommendationFactFingerprint: best?.candidate.factFingerprint ?? null,
     })
   }
 

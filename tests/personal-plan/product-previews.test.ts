@@ -587,12 +587,14 @@ test("returns an exact-fit Mask preview and falls back on an unsuitable thicknes
   assert.equal(asFallback(unsuitable.previews[0]!).fallback, "post_refinement")
 })
 
-test("uses a source-bound supportive Mask only for an optional Mask decision, falling back for basis", async () => {
-  // Mask's own candidate search (mask.ts) only admits a supportive candidate
-  // into `eligible` when needTier === "optional" — that gate is internal to
-  // the Mask authority and is untouched by the Stage 1
-  // stage1ExampleVerdictAllowed loosening, so a basis Mask decision still
-  // has no recommendation to evaluate and must fall back.
+test("uses a source-bound supportive Mask for both optional and required (basis) Mask decisions", async () => {
+  // Mask's uncovered-role candidate search (mask.ts) used to admit a
+  // supportive candidate into `eligible` only when needTier === "optional".
+  // Task 3d lifted that restriction: supportive candidates are eligible for
+  // every need tier now (Nick's decision -- required slots also get a
+  // best-available supportive pick), so a basis Mask decision surfaces the
+  // same recommendation as optional. Previews show what the engine
+  // recommends.
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -663,7 +665,9 @@ test("uses a source-bound supportive Mask only for an optional Mask decision, fa
   assert.equal(optionalRecommendation.verdict, "supportive")
 
   assert.equal(basis.previews.length, 1)
-  assert.equal(asFallback(basis.previews[0]!).fallback, "post_refinement")
+  const basisRecommendation = asRecommendation(basis.previews[0]!)
+  assert.equal(basisRecommendation.productId, "mask-supportive-fit")
+  assert.equal(basisRecommendation.verdict, "supportive")
 })
 
 test("returns an exact-fit Bondbuilder preview and falls back on an unsuitable thickness", async () => {
