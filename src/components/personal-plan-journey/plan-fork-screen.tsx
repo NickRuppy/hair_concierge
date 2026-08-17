@@ -5,10 +5,7 @@ import { useEffect, useRef } from "react"
 import { buttonVariants } from "@/components/ui/button"
 import { CATEGORY_LABELS } from "@/lib/personal-plan/decision-presentation"
 import type { DirectAcceptanceAssumption } from "@/lib/personal-plan/direct-acceptance/defaults"
-import {
-  stage1LeadRolePreviewByCategory,
-  type Stage1ProductExamplePreviewResponse,
-} from "@/lib/personal-plan/product-preview-contract"
+import type { Stage1ProductExamplePreviewResponse } from "@/lib/personal-plan/product-preview-contract"
 import { cn } from "@/lib/utils"
 
 import { PersonalPlanJourneyHeader } from "./journey-header"
@@ -19,7 +16,6 @@ export const PLAN_FORK_LEAD =
 export const PLAN_FORK_ASSUMPTIONS_TITLE = "Dafür haben wir angenommen"
 export const PLAN_FORK_ASSUMPTIONS_NOTE =
   "Der Feinschliff ersetzt diese Annahmen durch deine echten Angaben."
-export const PLAN_FORK_ADDITIONAL_TITLE = "Außerdem in deinem Plan"
 export const PLAN_FORK_REFINE_LABEL = "Feinschliff starten · ca. 2 Min."
 export const PLAN_FORK_ACCEPT_LABEL = "Plan direkt übernehmen"
 export const PLAN_FORK_ACCEPT_PENDING_LABEL = "Plan wird übernommen …"
@@ -50,12 +46,6 @@ export type PlanForkSeenRole = {
 
 export type PlanForkPreviewState = {
   seenRoles: PlanForkSeenRole[]
-  /**
-   * Recommendations direct acceptance would buy that no Stage-1 card showed:
-   * the secondary roles of a multi-role category, where the card only ever
-   * renders the category's lead role.
-   */
-  additionalItems: { decisionKey: string; productName: string; priceLabel: string | null }[]
   /** Set when at least one role has no product yet, which the accept contract rejects. */
   fallbackNotice: string | null
   /**
@@ -81,7 +71,6 @@ export function derivePlanForkPreviewState(
   )
   if (recommendations.length === 0) return null
 
-  const leadByCategory = stage1LeadRolePreviewByCategory(response.previews)
   const fallbackCategories = [
     ...new Set(
       response.previews.flatMap((preview) =>
@@ -91,20 +80,14 @@ export function derivePlanForkPreviewState(
   ]
 
   return {
+    // Stays per-role and complete: the accept contract compares this set to the
+    // server's Stage-3 evaluations and rejects any difference. Every role the
+    // payload recommends is echoed here, independent of how Stage 1 renders it.
     seenRoles: recommendations.map((preview) => ({
       decisionKey: preview.decisionKey,
       productId: preview.productId,
       factFingerprint: preview.factFingerprint,
     })),
-    additionalItems: recommendations
-      .filter(
-        (preview) => leadByCategory.get(preview.category)?.decisionKey !== preview.decisionKey,
-      )
-      .map((preview) => ({
-        decisionKey: preview.decisionKey,
-        productName: preview.productName,
-        priceLabel: preview.commerce.priceLabel,
-      })),
     refinementRequiredNotice: directAcceptanceBlockedNotice(response.directAcceptance),
     fallbackNotice:
       fallbackCategories.length === 0
@@ -262,52 +245,27 @@ export function PlanForkScreen({
         ) : null}
 
         {showsAcceptPath && previewState ? (
-          <>
-            <section className="mt-4 rounded-[14px] bg-[#f6efe7] px-3.5 py-3">
-              <h2 className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#4a304d]">
-                {PLAN_FORK_ASSUMPTIONS_TITLE}
-              </h2>
-              <ul className="mt-1.5 flex flex-col gap-1">
-                {assumptions.map((assumption) => (
-                  <li
-                    key={assumption.id}
-                    className="flex items-baseline gap-1.5 text-[11.5px] leading-[1.35] text-[#5f5954]"
-                  >
-                    <span aria-hidden="true" className="font-extrabold text-[#a77d31]">
-                      ·
-                    </span>
-                    <span>{assumption.label}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-2 text-[10px] leading-[1.35] text-[#8a837c]">
-                {PLAN_FORK_ASSUMPTIONS_NOTE}
-              </p>
-            </section>
-
-            {previewState.additionalItems.length > 0 ? (
-              <section className="mt-2.5 rounded-[14px] border border-[#ece6df] px-3.5 py-3">
-                <h2 className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[var(--brand-plum-dark)]">
-                  {PLAN_FORK_ADDITIONAL_TITLE}
-                </h2>
-                <ul className="mt-1.5 flex flex-col gap-1">
-                  {previewState.additionalItems.map((item) => (
-                    <li
-                      key={item.decisionKey}
-                      className="flex items-baseline justify-between gap-3 text-[11.5px] leading-[1.35] text-[#5f5954]"
-                    >
-                      <span>{item.productName}</span>
-                      {item.priceLabel ? (
-                        <span className="shrink-0 font-bold text-[var(--brand-plum-dark)]">
-                          {item.priceLabel}
-                        </span>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-          </>
+          <section className="mt-4 rounded-[14px] bg-[#f6efe7] px-3.5 py-3">
+            <h2 className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#4a304d]">
+              {PLAN_FORK_ASSUMPTIONS_TITLE}
+            </h2>
+            <ul className="mt-1.5 flex flex-col gap-1">
+              {assumptions.map((assumption) => (
+                <li
+                  key={assumption.id}
+                  className="flex items-baseline gap-1.5 text-[11.5px] leading-[1.35] text-[#5f5954]"
+                >
+                  <span aria-hidden="true" className="font-extrabold text-[#a77d31]">
+                    ·
+                  </span>
+                  <span>{assumption.label}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-[10px] leading-[1.35] text-[#8a837c]">
+              {PLAN_FORK_ASSUMPTIONS_NOTE}
+            </p>
+          </section>
         ) : null}
       </main>
 

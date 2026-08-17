@@ -8,7 +8,13 @@ import type {
 import {
   stage1LeadRolePreviewByCategory,
   type Stage1ProductExamplePreviewResponse,
+  type Stage1ProductExampleRecommendation,
+  type Stage1ProductExampleRolePreview,
 } from "@/lib/personal-plan/product-preview-contract"
+import {
+  routinePurposeLabel,
+  routineRolePurposeDescription,
+} from "@/lib/personal-plan/routine/labels"
 import {
   CATEGORY_LABELS,
   DETAIL_TITLE_FIT,
@@ -74,6 +80,7 @@ function cardFromDecision(decision: PlanCategoryDecision): NeedCardViewModel | n
 
   return {
     id: decision.category,
+    category: decision.category,
     tone: decision.needTier,
     categoryLabel: CATEGORY_LABELS[decision.category],
     statusLabel:
@@ -184,6 +191,59 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
   }
 }
 
+function withRecommendation(
+  card: NeedCardViewModel,
+  preview: Stage1ProductExampleRecommendation,
+): NeedCardViewModel {
+  return {
+    ...card,
+    imageUrl: preview.imageUrl,
+    imageAlt: `Produktbild: ${preview.productName}`,
+    product: {
+      name: preview.productName,
+      priceLabel: preview.commerce.priceLabel,
+      netContentLabel: preview.commerce.netContentLabel,
+      availabilityLabel: preview.commerce.availabilityLabel,
+      purchaseLinkStatus: preview.commerce.purchaseLinkStatus,
+      productUrl: preview.commerce.productUrl,
+    },
+    fallbackNote: null,
+    detailBlocks: [
+      { title: DETAIL_TITLE_PRODUCT, body: preview.reasoning.productCriteria },
+      { title: DETAIL_TITLE_FIT, body: preview.reasoning.fit },
+      { title: DETAIL_TITLE_FREQUENCY, body: preview.reasoning.frequency },
+    ],
+  }
+}
+
+/**
+ * A category can plan more than one role, and each role buys its own product.
+ * Every role beyond the one leading the category card therefore renders its own
+ * card in the same pattern, directly after it — otherwise the extra products
+ * would only ever appear as a bare name-and-price list on the fork screen,
+ * which read as undisclosed extras.
+ *
+ * Role-level copy comes from the shared Routine label vocabulary: the payload's
+ * `reasoning` is derived per category (see `decision-presentation.ts`), so it is
+ * identical for every role and cannot make the role legible on its own. The
+ * frequency line reuses the payload's `reasoning.frequency`, which is the
+ * category cadence — no role-specific cadence copy exists today.
+ */
+function secondaryRoleCard(
+  card: NeedCardViewModel,
+  preview: Stage1ProductExampleRecommendation,
+): NeedCardViewModel {
+  const rolePill = ROLE_PILLS[preview.role]
+  return {
+    ...withRecommendation(card, preview),
+    id: `${preview.category}:${preview.role}`,
+    targetType: routinePurposeLabel(preview.role),
+    purpose: routineRolePurposeDescription(preview.role) ?? card.purpose,
+    pills: rolePill ? [rolePill] : [],
+    frequency: preview.reasoning.frequency,
+  }
+}
+
 export function applyStage1ProductExamplePreviews(
   plan: PlanStartReadyViewModel,
   response: Stage1ProductExamplePreviewResponse,
@@ -196,42 +256,45 @@ export function applyStage1ProductExamplePreviews(
   ) {
     return plan
   }
-  const previews = stage1LeadRolePreviewByCategory(response.previews)
+  const leadPreviews = stage1LeadRolePreviewByCategory(response.previews)
+  const previewsByCategory = new Map<Stage1Category, Stage1ProductExampleRolePreview[]>()
+  for (const preview of response.previews) {
+    const entries = previewsByCategory.get(preview.category)
+    if (entries) entries.push(preview)
+    else previewsByCategory.set(preview.category, [preview])
+  }
+
   const apply = (screen: NeedPlanScreenViewModel): NeedPlanScreenViewModel => ({
     ...screen,
-    cards: screen.cards.map((card) => {
-      const preview = previews.get(card.id as Stage1Category)
-      if (preview?.kind === "recommendation") {
-        return {
-          ...card,
-          imageUrl: preview.imageUrl,
-          imageAlt: `Produktbild: ${preview.productName}`,
-          product: {
-            name: preview.productName,
-            priceLabel: preview.commerce.priceLabel,
-            netContentLabel: preview.commerce.netContentLabel,
-            availabilityLabel: preview.commerce.availabilityLabel,
-            purchaseLinkStatus: preview.commerce.purchaseLinkStatus,
-            productUrl: preview.commerce.productUrl,
-          },
-          fallbackNote: null,
-          detailBlocks: [
-            { title: DETAIL_TITLE_PRODUCT, body: preview.reasoning.productCriteria },
-            { title: DETAIL_TITLE_FIT, body: preview.reasoning.fit },
-            { title: DETAIL_TITLE_FREQUENCY, body: preview.reasoning.frequency },
-          ],
-        }
-      }
-      if (preview?.kind === "fallback") {
-        return {
-          ...card,
-          imageUrl: null,
-          imageAlt: `Noch kein Produktbild für ${card.categoryLabel}.`,
-          product: null,
-          fallbackNote: NEED_CARD_FALLBACK_NOTE,
-        }
-      }
-      return { ...card, imageUrl: null, product: null, fallbackNote: null }
+    cards: screen.cards.flatMap((card): NeedCardViewModel[] => {
+      // Always derived from the un-expanded plan (see `displayedPlan` in
+      // plan-start-flow.tsx), so every card here is still a category card.
+      const category = card.category
+      const lead = leadPreviews.get(category)
+      const leadCard: NeedCardViewModel =
+        lead?.kind === "recommendation"
+          ? withRecommendation(card, lead)
+          : lead?.kind === "fallback"
+            ? {
+                ...card,
+                imageUrl: null,
+                imageAlt: `Noch kein Produktbild für ${card.categoryLabel}.`,
+                product: null,
+                fallbackNote: NEED_CARD_FALLBACK_NOTE,
+              }
+            : { ...card, imageUrl: null, product: null, fallbackNote: null }
+
+      // Only roles that actually resolved to a buyable product become cards;
+      // a secondary fallback has nothing to show and stays covered by the
+      // category card's own post-refinement state.
+      const secondaryCards = (previewsByCategory.get(category) ?? [])
+        .filter(
+          (preview): preview is Stage1ProductExampleRecommendation =>
+            preview.kind === "recommendation" && preview.decisionKey !== lead?.decisionKey,
+        )
+        .map((preview) => secondaryRoleCard(card, preview))
+
+      return [leadCard, ...secondaryCards]
     }),
   })
   return {

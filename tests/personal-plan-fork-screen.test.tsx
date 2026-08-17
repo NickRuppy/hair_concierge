@@ -126,29 +126,12 @@ test("the accept payload echoes every recommendation role with its exact pinned 
   ])
 })
 
-test("only roles the Stage-1 cards never showed become the disclosure list", () => {
-  const state = derivePlanForkPreviewState(
-    previewResponse([recommendation(), leadLeaveIn, secondaryLeaveIn]),
-  )
-
-  assert.ok(state)
-  // The decisionKey is the stable per-role identity the list keys on: two roles
-  // can legitimately disclose the same product name.
-  assert.deepEqual(state.additionalItems, [
-    {
-      decisionKey: "decision:leave_in:pre_heat_application:gap",
-      productName: "Leave-in Hitzeschutz",
-      priceLabel: "21,50 €",
-    },
-  ])
-})
-
-test("a single-role plan discloses nothing extra", () => {
+test("a single-role plan has nothing left to disclose", () => {
   const state = derivePlanForkPreviewState(previewResponse([recommendation()]))
 
   assert.ok(state)
-  assert.deepEqual(state.additionalItems, [])
   assert.equal(state.fallbackNotice, null)
+  assert.equal(state.refinementRequiredNotice, null)
 })
 
 test("an open product choice blocks direct acceptance and names the category", () => {
@@ -324,7 +307,7 @@ test("both ways out are explicit buttons with the refinement leading", () => {
   assert.doesNotMatch(html, /disabled=""/)
 })
 
-test("secondary-role products the cards never showed are disclosed before accepting", () => {
+test("the fork no longer re-lists secondary-role products as a bare delta block", () => {
   const html = renderToStaticMarkup(
     <PlanForkScreen
       assumptions={assumptions}
@@ -337,10 +320,10 @@ test("secondary-role products the cards never showed are disclosed before accept
     />,
   )
 
-  assert.match(html, /Außerdem in deinem Plan/)
-  assert.match(html, /Leave-in Hitzeschutz/)
-  assert.match(html, /21,50 €/)
-  // The card-leading products are not repeated as an "extra".
+  // Every recommendation role now has its own Stage-1 card, so nothing on the
+  // fork is undisclosed and the name-plus-price delta list is gone.
+  assert.doesNotMatch(html, /Außerdem in deinem Plan/)
+  assert.doesNotMatch(html, /Leave-in Hitzeschutz/)
   assert.doesNotMatch(html, /Leave-in Basis/)
 })
 
