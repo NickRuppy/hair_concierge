@@ -9,6 +9,7 @@ import {
   loadActiveRoutineCatalogProductPresentation,
   loadOwnerRefinedNeedSnapshot,
   loadOwnerPendingRoutineProposal,
+  loadOwnerRoutineNudgeState,
   loadOwnerRoutinePlan,
   loadOwnerRoutineVersion,
   type PersonalPlanRoutineReadClient,
@@ -100,16 +101,14 @@ export async function loadPersonalPlanRoutineView(input: {
 }): Promise<PersonalPlanRoutineView | { status: "no_personal_plan" }> {
   const plan = await loadOwnerRoutinePlan(input.client, input.userId)
   if (!plan) return { status: "no_personal_plan" }
-  const nudge = {
-    unrefinedDirectAccept: plan.unrefined_direct_accept === true,
-    nudgeDismissedUntil:
-      typeof plan.nudge_dismissed_until === "string" ? plan.nudge_dismissed_until : null,
-  }
   const shouldLoadProposal =
     input.enabled &&
     input.includePendingProposal !== false &&
     Boolean(plan.pending_routine_proposal_id)
-  const [active, proposal] = await Promise.all([
+  const [nudge, active, proposal] = await Promise.all([
+    // Cosmetic and deliberately failure-tolerant: a missing column or a failed
+    // read hides the nudge, it never fails the Routine page.
+    loadOwnerRoutineNudgeState(input.client, input.userId),
     plan.active_routine_version_id
       ? loadOwnerRoutineVersion(input.client, input.userId, plan.id, plan.active_routine_version_id)
       : null,

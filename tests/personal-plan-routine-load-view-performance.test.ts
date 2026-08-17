@@ -250,13 +250,24 @@ test("surfaces a valid pending corrective successor instead of looping an invali
         async maybeSingle() {
           if (table === "personal_plans") {
             return {
-              data: { id: ids.plan, revision: 4, source_revision: 7, active_routine_version_id: ids.active, pending_routine_proposal_id: ids.proposal },
+              data: {
+                id: ids.plan,
+                revision: 4,
+                source_revision: 7,
+                active_routine_version_id: ids.active,
+                pending_routine_proposal_id: ids.proposal,
+              },
               error: null,
             }
           }
           if (table === "personal_plan_routine_proposals") {
             return {
-              data: { id: ids.proposal, candidate_routine_version_id: ids.candidate, source_revision: 7, delta: { schemaVersion: 1, direct: [], consequential: [], unchangedItemCount: 0 } },
+              data: {
+                id: ids.proposal,
+                candidate_routine_version_id: ids.candidate,
+                source_revision: 7,
+                delta: { schemaVersion: 1, direct: [], consequential: [], unchangedItemCount: 0 },
+              },
               error: null,
             }
           }
@@ -276,7 +287,13 @@ test("surfaces a valid pending corrective successor instead of looping an invali
             }
           }
           if (table === "personal_plan_need_versions") {
-            return { data: { id: ids.refined, output_snapshot: { renderedOrder: ["conditioner", "shampoo"] } }, error: null }
+            return {
+              data: {
+                id: ids.refined,
+                output_snapshot: { renderedOrder: ["conditioner", "shampoo"] },
+              },
+              error: null,
+            }
           }
           return { data: null, error: null }
         },
@@ -323,7 +340,11 @@ test("routine view starts independent active-version and proposal reads together
   releaseActive()
   const view = await viewPromise
   assert.equal(view.status, "active")
+  // The second `personal_plans` read is the failure-tolerant nudge state; it
+  // starts in the SAME parallel batch as the version and proposal reads, so it
+  // costs no extra round-trip.
   assert.deepEqual(calls, [
+    "personal_plans",
     "personal_plans",
     "personal_plan_routine_versions",
     "personal_plan_routine_proposals",
@@ -346,6 +367,7 @@ test("accepted-routine-only reads omit pending proposal and candidate queries", 
 
   assert.equal(view.status, "active")
   assert.deepEqual(calls, [
+    "personal_plans",
     "personal_plans",
     "personal_plan_routine_versions",
     "personal_plan_need_versions",
@@ -450,6 +472,7 @@ test("routine view hydrates active catalog presentation in one bounded non-seman
 
   assert.equal(view.status, "active")
   assert.deepEqual(calls, [
+    "personal_plans",
     "personal_plans",
     "personal_plan_routine_versions",
     "personal_plan_need_versions",
