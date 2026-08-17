@@ -938,6 +938,93 @@ test("single-role categories are byte-identical to before: no id change, no grou
   assert.equal(conditioner.product?.name, "Leichter Conditioner")
 })
 
+// `adaptInitialNeedSnapshotToPlanStartViewModel`'s paused-only-optional merge
+// physically relocates a paused optional-tone card onto Basis but does not
+// touch its `tone` field — it stays "optional" even though the card now lives
+// in `basis.cards` and `optional` is null. Placement here must follow the
+// screen the card is already on, not that stale tone, or applying previews
+// would resurrect the very Optional page the merge suppressed.
+const pausedOnlyOptionalPlan: PlanStartReadyViewModel = {
+  ...readyPlan,
+  basis: {
+    ...readyPlan.basis,
+    progress: 100,
+    cards: [
+      card(),
+      card({
+        id: "dry_shampoo",
+        category: "dry_shampoo",
+        tone: "optional",
+        categoryLabel: "Trockenshampoo",
+        statusLabel: "Pausiert",
+        targetType: "Aktuell nicht anwenden",
+        paused: true,
+        frequency: "später: bei Bedarf",
+        imageUrl: null,
+      }),
+    ],
+  },
+  optional: null,
+}
+
+test("a paused-merge card (optional tone, living on Basis) does not resurrect the Optional page", () => {
+  const applied = applyStage1ProductExamplePreviews(pausedOnlyOptionalPlan, previewResponse([]))
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  const dryShampoo = findCard(applied.basis.cards, (item) => item.id === "dry_shampoo")
+  assert.ok(dryShampoo)
+  assert.equal(dryShampoo?.statusLabel, "Pausiert")
+  assert.equal(dryShampoo?.tone, "optional")
+})
+
+test("the paused-merge card still resurrects nothing once other categories get real previews", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    pausedOnlyOptionalPlan,
+    previewResponse([recommendation()]),
+  )
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  assert.deepEqual(
+    applied.basis.cards.map((item) => item.id),
+    ["shampoo", "dry_shampoo"],
+  )
+})
+
+test("an optional screen that redistributes down to zero final cards is dropped", () => {
+  // Artificial: `roleTones` pulls this optional-tone category's only role
+  // back to "basis", so nothing is left to keep the Optional page alive.
+  const drainingOptionalPlan: PlanStartReadyViewModel = {
+    ...readyPlan,
+    optional: {
+      ...readyPlan.optional!,
+      cards: [
+        card({
+          id: "oil",
+          category: "oil",
+          tone: "optional",
+          statusLabel: "Optional",
+          categoryLabel: "Haaröl",
+          imageUrl: null,
+          roleTones: { pre_wash_fibre_treatment: "basis" },
+        }),
+      ],
+    },
+  }
+
+  const applied = applyStage1ProductExamplePreviews(
+    drainingOptionalPlan,
+    previewResponse([oilPreWash]),
+  )
+
+  assert.equal(applied.optional, null)
+  assert.equal(applied.basis.progress, 100)
+  // The role entry itself still renders — just relocated to Basis.
+  const oilCard = findCard(applied.basis.cards, (item) => item.category === "oil")
+  assert.equal(oilCard?.product?.name, "Reichhaltiges Vorwäsche-Öl")
+})
+
 test("the screen disclaimer stays honest when no category has a product yet", () => {
   const withProduct = card({ product: { ...productFixture } })
   const withFallback = card({ id: "mask", category: "mask", fallbackNote: NEED_CARD_FALLBACK_NOTE })

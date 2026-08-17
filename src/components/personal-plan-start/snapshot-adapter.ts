@@ -379,21 +379,30 @@ export function applyStage1ProductExamplePreviews(
     else previewsByCategory.set(preview.category, [preview])
   }
 
-  // Every current category card, Basis then Optional — always derived from
-  // the un-expanded plan (see `displayedPlan` in plan-start-flow.tsx), so
-  // each one is still a plain category card, never a group from an earlier
-  // application. A category's roles can now split across both screens (a
-  // per-role tier can disagree with the category's aggregate tier), so both
-  // source lists are read together and re-partitioned below.
-  const sourceCards: NeedCardViewModel[] = [
-    ...(plan.basis.cards as NeedCardViewModel[]),
-    ...((plan.optional?.cards ?? []) as NeedCardViewModel[]),
+  // Every current category card, tagged with the screen it physically lives
+  // on — always derived from the un-expanded plan (see `displayedPlan` in
+  // plan-start-flow.tsx), so each one is still a plain category card, never a
+  // group from an earlier application. The origin screen and the card's own
+  // `tone` can disagree: `adaptInitialNeedSnapshotToPlanStartViewModel`'s
+  // paused-only-optional merge physically moves a paused optional-tone card
+  // onto Basis without changing its `tone`. Role ENTRIES (recommendation-
+  // backed) are placed by their own per-role tone below; a category with no
+  // resolved role stays exactly where it already renders.
+  const sourceCards: Array<{ card: NeedCardViewModel; originScreen: "basis" | "optional" }> = [
+    ...(plan.basis.cards as NeedCardViewModel[]).map((card) => ({
+      card,
+      originScreen: "basis" as const,
+    })),
+    ...((plan.optional?.cards ?? []) as NeedCardViewModel[]).map((card) => ({
+      card,
+      originScreen: "optional" as const,
+    })),
   ]
 
   const basisEntries: NeedCardViewModel[] = []
   const optionalEntries: NeedCardViewModel[] = []
 
-  for (const card of sourceCards) {
+  for (const { card, originScreen } of sourceCards) {
     const category = card.category
     const recommendations = (previewsByCategory.get(category) ?? [])
       .filter(
@@ -403,8 +412,11 @@ export function applyStage1ProductExamplePreviews(
       .sort((a, b) => roleRank(category, a.role) - roleRank(category, b.role))
 
     if (recommendations.length === 0) {
+      // No role resolved to a product — the category card is carried over
+      // unchanged to the screen it already lives on, never re-bucketed by
+      // `tone` (see the paused-merge note above).
       const resultCard = categoryOnlyCard(card, leadPreviews.get(category))
-      const bucket = resultCard.tone === "basis" ? basisEntries : optionalEntries
+      const bucket = originScreen === "basis" ? basisEntries : optionalEntries
       bucket.push(resultCard)
       continue
     }
@@ -419,12 +431,16 @@ export function applyStage1ProductExamplePreviews(
 
   const finalBasisCards = groupByCategory(basisEntries, "basis")
   const finalOptionalCards = groupByCategory(optionalEntries, "optional")
-  const hasOptionalNow = Boolean(plan.optional) || finalOptionalCards.length > 0
+  // Optional-screen existence follows what actually ended up on it, not
+  // whether it started non-null — an Optional page that redistributes down to
+  // zero final cards must disappear (and Basis must reflect that), just like
+  // a page that gains its first entries must appear.
+  const hasOptionalNow = finalOptionalCards.length > 0
 
   const basis: NeedPlanScreenViewModel = {
     ...plan.basis,
     cards: finalBasisCards,
-    progress: hasOptionalNow ? 50 : plan.basis.progress,
+    progress: hasOptionalNow ? 50 : 100,
   }
 
   const optional: NeedPlanScreenViewModel | null = hasOptionalNow
