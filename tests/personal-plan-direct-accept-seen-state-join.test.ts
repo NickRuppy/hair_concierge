@@ -4,8 +4,12 @@ import test from "node:test"
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "../src/app/labs/personal-plan-stage-1-2/fixture"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
 import { buildDirectAcceptanceStage2Defaults } from "../src/lib/personal-plan/direct-acceptance/defaults"
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+import type { Stage3BondbuilderFacts } from "../src/lib/personal-plan/products/authority/contracts"
+import { evaluateStage3Authority } from "../src/lib/personal-plan/products/authority/evaluate"
 import { stage3DecisionKey } from "../src/lib/personal-plan/products/contracts"
 import { buildStage3EntryContext } from "../src/lib/personal-plan/products/stage2-entry-adapter"
+import type { PlanHairThickness } from "../src/lib/personal-plan/types"
 import {
   computeStage1ProductExamplePreviews,
   type Stage1ProductExamplePreviewCandidateLoader,
@@ -124,13 +128,8 @@ async function assertSeenStateJoin(envelope: PersonalPlanQuizSubmissionEnvelope)
   )
 }
 
-/**
- * The subject keys the accept chain evaluates: direct acceptance answers
- * `currentProductCategories: []`, so the Stage-3 draft holds no captured
- * products and every required role of the refined plan is an uncovered role
- * keyed `decision:<category>:<role>:gap`.
- */
-function acceptChainRoleKeys(envelope: PersonalPlanQuizSubmissionEnvelope): string[] {
+/** The refined need version the synthetic Stage-2 defaults produce. */
+function refinedSnapshot(envelope: PersonalPlanQuizSubmissionEnvelope) {
   const triggerContext = deriveStage2TriggerContext(initialSnapshot(envelope))
   const defaults = buildDirectAcceptanceStage2Defaults(triggerContext)
   const refined = computeNeedPlan({
@@ -146,8 +145,17 @@ function acceptChainRoleKeys(envelope: PersonalPlanQuizSubmissionEnvelope): stri
     }),
   })
   if (refined.status !== "ready") throw new Error("refined snapshot is not ready")
+  return refined.snapshot
+}
 
-  const entry = buildStage3EntryContext(refined.snapshot, {
+/**
+ * The subject keys the accept chain evaluates: direct acceptance answers
+ * `currentProductCategories: []`, so the Stage-3 draft holds no captured
+ * products and every required role of the refined plan is an uncovered role
+ * keyed `decision:<category>:<role>:gap`.
+ */
+function acceptChainRoleKeys(envelope: PersonalPlanQuizSubmissionEnvelope): string[] {
+  const entry = buildStage3EntryContext(refinedSnapshot(envelope), {
     personalPlanId: PERSONAL_PLAN_ID,
     refinedVersionId: REFINED_NEED_VERSION_ID,
   })
@@ -225,6 +233,158 @@ const IRRITATED_HAIR_LOSS_ENVELOPE: PersonalPlanQuizSubmissionEnvelope = {
     concernRecurrence: { concernId: "dry_lengths", frequency: "often" },
   },
 }
+
+/**
+ * THE STRONG FORM OF THE JOIN.
+ *
+ * Every cohort above loads an EMPTY catalog, so every preview is a fallback and
+ * the assertions can only compare decision KEYS. But `seenRoles` echoes three
+ * values per role — `decisionKey`, `productId` and `factFingerprint` — and
+ * `buildDirectAcceptanceIntents` rejects a value mismatch exactly as hard as a
+ * missing key. A key-set-only net therefore proves key-set stability, nothing
+ * about the products.
+ *
+ * This cohort supplies a real (fake) catalog carrying the production Bondbuilder
+ * situation — three equally ideal candidates, one of them the tie default — and
+ * joins at value level. The two sides are genuinely different computations:
+ * the preview evaluates the authority against the INITIAL snapshot's category
+ * decision, while the accept chain evaluates it against the REFINED snapshot the
+ * synthetic Stage-2 defaults produce. If the tie default ever resolved
+ * differently on the two sides (a different product, or the same product with a
+ * different fingerprint), the whole cohort would meet a 409 — and it must fail
+ * here instead.
+ */
+const BONDBUILDER_TIE_ROLE = "specialized_bond_treatment" as const
+
+/**
+ * Pinned as a LITERAL on purpose. Importing
+ * `BONDBUILDER_TIE_DEFAULT_PRODUCT_ID` would make this fixture move with the
+ * production constant, so the join would keep passing self-consistently even if
+ * the default silently changed to another product. The catalog id is the
+ * product decision — it belongs in the test as data.
+ */
+const K18_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+
+function bondbuilderTieCandidates(thickness: PlanHairThickness): Stage3BondbuilderFacts[] {
+  const candidate = (productId: string, displayName: string): Stage3BondbuilderFacts => ({
+    productId,
+    displayName,
+    category: "bondbuilder",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    // Deliberately pinned to the initial snapshot's thickness rather than made
+    // universally suitable: a thickness drift between the two snapshots must
+    // break this join loudly instead of being papered over.
+    suitableThicknesses: [thickness],
+    knownReaction: false,
+    protocols: [
+      { role: BONDBUILDER_TIE_ROLE, status: "verified_complete", fingerprint: `p-${productId}` },
+    ],
+    presentationImageUrl: `https://example.com/${productId}.webp`,
+    factFingerprint: `facts-${productId}`,
+    spec: {
+      applicationMode: "pre_shampoo",
+      treatmentMode: "rinse_out",
+      productFormat: "treatment",
+      usageProtocol: "course",
+      relationship: "standalone",
+    },
+  })
+
+  return [
+    candidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
+    candidate(K18_PRODUCT_ID, "K18 Leave-In Molecular Repair Hair Mask"),
+    candidate("epres", "Epres Bond Repair Treatment"),
+  ]
+}
+
+/**
+ * What the accept chain's own authority evaluation produces for the uncovered
+ * Bondbuilder subject of the REFINED plan — the server side of the join.
+ */
+function acceptChainBondbuilderEvaluation(
+  envelope: PersonalPlanQuizSubmissionEnvelope,
+  candidates: Stage3BondbuilderFacts[],
+) {
+  const refined = refinedSnapshot(envelope)
+  const entry = buildStage3EntryContext(refined, {
+    personalPlanId: PERSONAL_PLAN_ID,
+    refinedVersionId: REFINED_NEED_VERSION_ID,
+  })
+  const requirement = entry.orderedCategories.find((item) => item.category === "bondbuilder")
+  if (!requirement) throw new Error("the refined plan has no bondbuilder requirement")
+  if (!requirement.requiredRoles.includes(BONDBUILDER_TIE_ROLE)) {
+    throw new Error("the refined plan does not require the bondbuilder tie role")
+  }
+  const categoryDecision = refined.decisions.find((item) => item.category === "bondbuilder")
+  if (!categoryDecision) throw new Error("the refined snapshot has no bondbuilder decision")
+
+  return evaluateStage3Authority({
+    category: "bondbuilder",
+    authorityVersion: CATEGORY_ROLE_POLICIES.bondbuilder.authorityVersion,
+    refinedVersionId: REFINED_NEED_VERSION_ID,
+    refinedInputHash: refined.inputHash,
+    subjectKey: stage3DecisionKey("bondbuilder", BONDBUILDER_TIE_ROLE, null),
+    role: BONDBUILDER_TIE_ROLE,
+    // Direct acceptance answers `currentProductCategories: []`, so the subject
+    // is an uncovered gap with no captured product.
+    capturedProductId: null,
+    subjectIdentity: null,
+    categoryDecision,
+    coverage: refined.coverage,
+    hairThickness: refined.profile.hair.thickness,
+    productFacts: null,
+    recommendationCandidates: candidates,
+    heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
+  } as never)
+}
+
+test("the Bondbuilder tie cohort joins on product identity, not only on role keys", async () => {
+  const envelope = CALM_SCALP_ENVELOPE
+  const initial = initialSnapshot(envelope)
+  const candidates = bondbuilderTieCandidates(initial.profile.hair.thickness)
+
+  const response = await computeStage1ProductExamplePreviews({
+    personalPlanId: PERSONAL_PLAN_ID,
+    sourceNeedVersionId: INITIAL_NEED_VERSION_ID,
+    snapshot: initial,
+    loadCandidates: async (selection) =>
+      selection.category === "bondbuilder" ? candidates : ([] as never),
+  })
+
+  const decisionKey = stage3DecisionKey("bondbuilder", BONDBUILDER_TIE_ROLE, null)
+  const preview = response.previews.find((entry) => entry.decisionKey === decisionKey)
+  assert.ok(preview, "the tie cohort must produce a bondbuilder preview")
+  assert.equal(
+    preview.kind,
+    "recommendation",
+    "the tie default must resolve to a buyable product, not a fallback",
+  )
+  if (preview.kind !== "recommendation") throw new Error("unreachable")
+  assert.equal(preview.productId, K18_PRODUCT_ID)
+
+  const server = acceptChainBondbuilderEvaluation(envelope, candidates)
+  assert.equal(server.status, "known")
+  if (server.status !== "known") throw new Error("unreachable")
+
+  // The two values the client echoes at accept time, compared to the two the
+  // server will compute for the same subject.
+  assert.equal(
+    server.recommendation?.productId,
+    preview.productId,
+    "the accept chain must plan exactly the product the preview showed",
+  )
+  assert.equal(
+    server.recommendationFactFingerprint,
+    preview.factFingerprint,
+    "the accept chain must plan it on exactly the facts the preview echoed",
+  )
+  assert.deepEqual(response.directAcceptance, { available: true })
+
+  // And the key-level invariant still holds for this cohort.
+  await assertSeenStateJoin(envelope)
+})
 
 for (const [name, envelope] of [
   ["irritated + dry scalp", IRRITATED_DRY_ENVELOPE],

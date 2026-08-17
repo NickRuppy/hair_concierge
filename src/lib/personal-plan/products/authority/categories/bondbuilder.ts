@@ -27,6 +27,12 @@ import {
  * `bondbuilder.equal_shortlist` caution and the recommendation carries its own
  * rule id (`bondbuilder.stage3.tie_default`) so nothing reads as "verified
  * best".
+ *
+ * Note for analytics: the same situation persists two different honest rule
+ * ids — picking this product interactively in Stage 3 persists
+ * `validated_standalone` (that path evaluates the chosen product on its own),
+ * while a direct acceptance persists `tie_default`. Anything keyed on
+ * `tie_default` therefore sees only the direct-accept half of the cohort.
  */
 export const BONDBUILDER_TIE_DEFAULT_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
