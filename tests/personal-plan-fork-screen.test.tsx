@@ -261,7 +261,7 @@ test("the fork renders this user's real default assumptions, not example copy", 
   assert.doesNotMatch(html, /Gelegentliches Hitzestyling/)
 })
 
-test("the fork keeps the personal-plan column width and scales its type at sm", () => {
+test("the fork keeps the personal-plan column width and the shared fluid type scale", () => {
   // Without this the screen renders mobile-scale type inside an unbounded
   // desktop viewport. Content column and action dock share one width so the
   // CTAs stay under the copy; the type scale follows the chapter transition.
@@ -284,11 +284,10 @@ test("the fork keeps the personal-plan column width and scales its type at sm", 
     assert.match(classes, /\bmx-auto\b/)
     assert.match(classes, /(?:^|\s)sm:max-w-\[560px\](?:\s|$)/)
   }
-  assert.match(
-    html,
-    /text-\[21px\][^"]*\[@media\(min-height:731px\)\]:text-\[24px\][^"]*sm:text-\[26px\]/,
-  )
-  assert.match(html, /text-\[11\.5px\][^"]*sm:text-\[13px\]/)
+  // Variante D (2026-08-17): fluid H1 and a 16px lead, matching the chapter
+  // transitions.
+  assert.match(html, /text-\[clamp\(28px,8vw,32px\)\]/)
+  assert.match(html, /text-\[16px\]/)
 })
 
 test("both ways out are explicit buttons with the refinement leading", () => {
