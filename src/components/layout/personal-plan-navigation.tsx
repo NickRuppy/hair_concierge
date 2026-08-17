@@ -1,6 +1,6 @@
 "use client"
 
-import { CircleUserRound, ListChecks, MessageCircle, Rows3, UserRound } from "lucide-react"
+import { ListChecks, MessageCircle, Rows3, UserRound } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -62,7 +62,6 @@ export function PersonalPlanNavigationView({
               )
             })}
           </nav>
-          <CircleUserRound className="h-6 w-6 text-primary" aria-hidden="true" />
         </div>
       </header>
 
