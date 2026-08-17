@@ -4,84 +4,31 @@ import Image from "next/image"
 import { ChevronRight, Clock3 } from "lucide-react"
 import { useState } from "react"
 
-import type { PlanFrequencyTarget, Stage1Category } from "@/lib/personal-plan/types"
+import type { Stage1Category } from "@/lib/personal-plan/types"
 import { cn } from "@/lib/utils"
 
+import {
+  isNeedCardGroup,
+  NEED_CARD_FALLBACK_NOTE,
+  type NeedCardGroupViewModel,
+  type NeedCardTone,
+  type NeedCardViewModel,
+} from "./plan-start-cards"
 import { ProductDetailSheet } from "./product-detail-sheet"
 
-export type NeedCardTone = "basis" | "optional"
-
-/** The concrete catalog pick that leads the card once previews are loaded. */
-export type NeedCardProduct = {
-  name: string
-  priceLabel: string | null
-  netContentLabel: string | null
-  /** Null when availability is unknown — the line is omitted instead of guessing. */
-  availabilityLabel: string | null
-  /** Drives the availability line's tone: only "available" reads as green. */
-  purchaseLinkStatus?: "available" | "unavailable" | null
-  /** Only set when the purchase link is available and safe. */
-  productUrl: string | null
-}
-
-/** Honest state for a category without a qualifying product recommendation. */
-export const NEED_CARD_FALLBACK_NOTE = "Produktempfehlung folgt nach dem Feinschliff"
-
-export type NeedCardViewModel = {
-  /**
-   * Unique per rendered card. It is the category for a category's leading card
-   * and `<category>:<role>` for every further role of that category, which each
-   * render their own card.
-   */
-  id: string
-  /** The category the card belongs to — drives the accent styling. */
-  category: Stage1Category
-  tone: NeedCardTone
-  categoryLabel: string
-  statusLabel: "Basis" | "Optional" | "Pausiert"
-  targetType: string
-  purpose: string
-  pills: string[]
-  frequency: string
-  imageUrl: string | null
-  imageAlt?: string
-  paused?: boolean
-  product?: NeedCardProduct | null
-  fallbackNote?: string | null
-  detailBlocks: Array<{
-    title: string
-    body: string
-  }>
-  /**
-   * This category's per-role need tiers, keyed by role — only set for
-   * categories the engine tiers per role (oil today). Empty/absent for every
-   * other category, which keeps its single aggregate `tone` for every role.
-   */
-  roleTones?: Record<string, NeedCardTone>
-  /** The raw decision frequency, so per-role cadence copy can be derived later. */
-  frequencyTarget?: PlanFrequencyTarget | null
-}
-
-/**
- * Same-tier, same-category role entries render as one group instead of a run
- * of visually identical sibling cards — `members` are the individual role
- * cards a category's preview expansion produced.
- */
-export type NeedCardGroupViewModel = {
-  kind: "group"
-  id: string
-  category: Stage1Category
-  tone: NeedCardTone
-  categoryLabel: string
-  statusLabel: "Basis" | "Optional" | "Pausiert"
-  members: NeedCardViewModel[]
-}
-
-export type PlanStartCardViewModel = NeedCardViewModel | NeedCardGroupViewModel
-
-export function isNeedCardGroup(card: PlanStartCardViewModel): card is NeedCardGroupViewModel {
-  return "members" in card && (card as NeedCardGroupViewModel).kind === "group"
-}
+// Re-exported so existing importers (the barrel, tests, other client
+// components) keep working unchanged. Server-reachable modules must import
+// these from "./plan-start-cards" directly instead — see that module's
+// header comment for why.
+export {
+  isNeedCardGroup,
+  NEED_CARD_FALLBACK_NOTE,
+  type NeedCardGroupViewModel,
+  type NeedCardProduct,
+  type NeedCardTone,
+  type NeedCardViewModel,
+  type PlanStartCardViewModel,
+} from "./plan-start-cards"
 
 const CATEGORY_CARD_STYLES = {
   shampoo: { shellClassName: "border-[#E2D4B8] bg-[#F5F0E5]", dotClassName: "bg-[#A77D31]" },
