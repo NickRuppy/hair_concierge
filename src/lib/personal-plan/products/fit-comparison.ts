@@ -21,7 +21,7 @@ import {
 } from "./authority/categories/axis-fit"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
-import { compareRankableCandidates } from "./candidate-ranking"
+import { compareRankableCandidates, type RankableCandidate } from "./candidate-ranking"
 import {
   candidateDimensionCoverage,
   comparisonDimensions,
@@ -130,7 +130,10 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
 ): Stage3FitComparison {
   const authorityInput = input as unknown as Stage3AuthorityInput
   const authorityEvaluation = subjectEvaluation ?? evaluateStage3Authority(authorityInput)
-  const selectedCandidates = boundedSelectedComparisonCandidateAssessments(authorityInput)
+  const selectedCandidates = boundedSelectedComparisonCandidateAssessments(
+    authorityInput,
+    authorityEvaluation,
+  )
   const entries = [
     ...currentComparisonProductEntries(authorityInput, authorityEvaluation),
     ...alternativeProductEntries(authorityInput, selectedCandidates),
@@ -281,8 +284,10 @@ function formatNumber(value: number): string {
 
 function selectedComparisonCandidateAssessments(
   input: Stage3AuthorityInput,
+  subjectEvaluation?: Stage3AuthorityEvaluation,
 ): CandidateAssessment[] {
   const currentProductId = input.productFacts?.productId ?? null
+  const pinnedRecommendationProductId = authorityRecommendationProductId(input, subjectEvaluation)
   return input.recommendationCandidates
     .filter(
       (candidate) =>
@@ -295,11 +300,28 @@ function selectedComparisonCandidateAssessments(
     .filter((candidate): candidate is CandidateAssessment => candidate !== null)
     .filter((candidate) => candidate.targetCount > 0 && candidate.targetMatchCount > 0)
     .sort((left, right) =>
-      compareRankableCandidates(toRankableCandidate(left), toRankableCandidate(right)),
+      compareWithAuthorityPin(
+        toRankableCandidate(left),
+        toRankableCandidate(right),
+        pinnedRecommendationProductId,
+      ),
     )
 }
 
-function toRankableCandidate(candidate: CandidateAssessment) {
+/**
+ * The authority adapter's own recommendation (e.g. Bondbuilder's K18 tie-default) is the
+ * product `evaluateStage3Authority` would hand back for this exact input. Reuses an
+ * already-computed evaluation when the caller has one to avoid evaluating twice.
+ */
+function authorityRecommendationProductId(
+  input: Stage3AuthorityInput,
+  subjectEvaluation?: Stage3AuthorityEvaluation,
+): string | null {
+  const evaluation = subjectEvaluation ?? evaluateStage3Authority(input)
+  return evaluation.status === "known" ? (evaluation.recommendation?.productId ?? null) : null
+}
+
+function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate {
   return {
     verdict: candidate.verdict,
     targetMatchCount: candidate.targetMatchCount,
@@ -310,10 +332,36 @@ function toRankableCandidate(candidate: CandidateAssessment) {
   }
 }
 
+/**
+ * Invariant: the authority's pinned recommendation only breaks ties among candidates already
+ * equal on verdict, coverage, and cautions — it never overrides those fields. Implemented by
+ * running the shared comparator twice: once with catalogSortOrder/priceEur/productId neutralized
+ * (isolating verdict/coverage/cautions), then — only on a genuine tie — the pin, then the full
+ * comparator (which restores catalogSortOrder/priceEur/productId) for the remaining tiebreaks.
+ */
+function compareWithAuthorityPin(
+  left: RankableCandidate,
+  right: RankableCandidate,
+  pinnedProductId: string | null,
+): number {
+  const coverageOrder = compareRankableCandidates(
+    { ...left, catalogSortOrder: 0, priceEur: 0, productId: "" },
+    { ...right, catalogSortOrder: 0, priceEur: 0, productId: "" },
+  )
+  if (coverageOrder !== 0) return coverageOrder
+  if (pinnedProductId) {
+    const pinOrder =
+      Number(right.productId === pinnedProductId) - Number(left.productId === pinnedProductId)
+    if (pinOrder !== 0) return pinOrder
+  }
+  return compareRankableCandidates(left, right)
+}
+
 function boundedSelectedComparisonCandidateAssessments(
   input: Stage3AuthorityInput,
+  subjectEvaluation?: Stage3AuthorityEvaluation,
 ): CandidateAssessment[] {
-  return selectedComparisonCandidateAssessments(input).slice(
+  return selectedComparisonCandidateAssessments(input, subjectEvaluation).slice(
     0,
     STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
   )

@@ -8,6 +8,7 @@ import type {
   Stage3CategoryProductFacts,
 } from "../../../src/lib/personal-plan/products/authority/contracts"
 import { stage3AuthorityFactFingerprint } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import { evaluateStage3Authority } from "../../../src/lib/personal-plan/products/authority/evaluate"
 import type {
   PersonalPlanCategory,
   Stage3FitVerdict,
@@ -24,6 +25,7 @@ import {
   STAGE3_RENDERED_DIMENSION_CAP,
   type Stage3FitComparisonDimension,
 } from "../../../src/lib/personal-plan/products/comparison-dimensions"
+import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { PlanProductRole } from "../../../src/lib/personal-plan/types"
 
 const RICH_COMPARISON_CATEGORY_ROLES = new Set<string>([
@@ -328,7 +330,7 @@ for (const [category, role] of [
   })
 }
 
-test("uncovered roles rank the authority recommendation before ideal, supportive, and catalog order", () => {
+test("uncovered roles rank ideal verdict above tied supportive candidates, then by catalog order", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
     productFacts: null,
     capturedProductId: null,
@@ -984,6 +986,48 @@ test("Conditioner shows concrete dimensions only, with thickness as the fourth r
   )
 })
 
+// FIX 4: the fourth dimension (suitable_thicknesses) is the sole differentiator between two
+// otherwise-equal supportive candidates. Both match weight/care_direction/repair_support
+// identically; only "covers-thickness" also covers the confirmed hair thickness ("coarse"),
+// so it must win both the authority's own uncovered-role recommendation and the alternatives
+// order.
+test("uncovered Conditioner ranks the candidate covering the confirmed thickness above an equal peer", () => {
+  const input = {
+    ...authorityInput("conditioner", "conditioner_rinse_out", {
+      productFacts: null,
+      capturedProductId: null,
+      subjectIdentity: null,
+      candidates: [
+        factsFor("conditioner", "conditioner_rinse_out", "misses-thickness", {
+          sortOrder: 1,
+          weight: "medium",
+          suitableThicknesses: ["fine", "normal"],
+        }),
+        factsFor("conditioner", "conditioner_rinse_out", "covers-thickness", {
+          sortOrder: 9,
+          weight: "medium",
+          suitableThicknesses: ["fine", "normal", "coarse"],
+        }),
+      ],
+    }),
+    hairThickness: "coarse" as const,
+  }
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+    [
+      ["covers-thickness", "supportive"],
+      ["misses-thickness", "supportive"],
+    ],
+  )
+  assert.equal(
+    findStage3SelectedComparisonCandidate(input, "covers-thickness")?.recommendation.productId,
+    "covers-thickness",
+  )
+})
+
 test("Shampoo compares confirmed route observations against the derived route target", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("shampoo", "shampoo_everyday", {
@@ -1309,6 +1353,76 @@ test("Bondbuilder Anwendung does not invent a leave-in instruction for a rinse-o
   assert.ok(contradictoryValue)
   assert.notEqual(contradictoryValue.valueLabel, "Leave-in nach der Wäsche")
   assert.equal(contradictoryValue.valueLabel, "Ausspülen")
+})
+
+// Regression for the reintroduced authority-recommendation tiebreak (PR #444's K18 tie-default):
+// three standalone candidates tie on verdict, coverage, and cautions, so only the pin can decide
+// between them. K18 carries the worst catalogSortOrder of the three, so this only passes when the
+// pin is applied strictly after verdict/coverage/cautions and strictly before catalog order.
+test("Bondbuilder tie-default pin decides the order only after verdict, coverage, and cautions tie", () => {
+  const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      factsFor("bondbuilder", "specialized_bond_treatment", "olaplex-no3", { sortOrder: 1 }),
+      factsFor("bondbuilder", "specialized_bond_treatment", "epres", { sortOrder: 2 }),
+      factsFor("bondbuilder", "specialized_bond_treatment", BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, {
+        sortOrder: 3, // worse catalog order than both alternatives above
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => candidate.productId),
+    [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-no3", "epres"],
+  )
+})
+
+// Inverse guard for the same invariant: when candidates are NOT tied on coverage, the pin must
+// never override it. "partial-coverage-pin" misses the care_direction dimension (its
+// balanceDirection is "balanced" against a "moisture" target — a caution, not a fail, so it stays
+// ideal) while "full-coverage" matches all four displayed dimensions. The evaluation is patched to
+// pin the lower-coverage candidate — mirroring the shape a future tie-default-style rule could
+// take for this category — to prove the pin still loses to displayed coverage.
+test("higher displayed coverage beats the pinned authority recommendation when candidates are not tied", () => {
+  const input = authorityInput("conditioner", "conditioner_rinse_out", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      factsFor("conditioner", "conditioner_rinse_out", "partial-coverage-pin", {
+        sortOrder: 1,
+        weight: "light",
+        balanceDirection: "balanced",
+      }),
+      factsFor("conditioner", "conditioner_rinse_out", "full-coverage", {
+        sortOrder: 9,
+        weight: "light",
+        balanceDirection: "moisture",
+      }),
+    ],
+  })
+
+  const realEvaluation = evaluateStage3Authority(input as unknown as Stage3AuthorityInput)
+  assert.equal(realEvaluation.status, "known")
+  assert.ok(realEvaluation.status === "known" && realEvaluation.recommendation)
+  const pinnedEvaluation =
+    realEvaluation.status === "known" && realEvaluation.recommendation
+      ? {
+          ...realEvaluation,
+          recommendation: { ...realEvaluation.recommendation, productId: "partial-coverage-pin" },
+        }
+      : realEvaluation
+
+  const comparison = buildStage3FitComparison(input, pinnedEvaluation)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => candidate.productId),
+    ["full-coverage", "partial-coverage-pin"],
+  )
 })
 
 for (const [label, overrides] of [
