@@ -1582,3 +1582,270 @@ test("Scalp Care keeps comfort complementary while root reset suppresses only ex
   assert.deepEqual(exfoliant.allowedActions, ["leave_uncovered"])
   assert.match(exfoliant.criteria[0]?.explanation ?? "", /Tiefenreinigung.*Kopfhaut-Peeling/)
 })
+
+function leaveInTargetForCoverageTests() {
+  return {
+    ...(TARGETS.leave_in as Record<string, unknown>),
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "high",
+  } as never
+}
+
+function leaveInCoverageCandidate(overrides: {
+  productId: string
+  displayName: string
+  catalogSortOrder: number
+  weight: "light" | "medium" | "rich"
+  careDirection: "moisture" | "balanced" | "protein"
+  repairSupportLevel: "low" | "medium" | "high"
+}) {
+  const facts = knownFacts("leave_in")
+  if (facts.category !== "leave_in") throw new Error("expected Leave-in fixture")
+  Object.assign(facts, {
+    productId: overrides.productId,
+    displayName: overrides.displayName,
+    catalogSortOrder: overrides.catalogSortOrder,
+    recommendable: true,
+    factFingerprint: `facts-${overrides.productId}`,
+  })
+  facts.spec.weight = overrides.weight
+  facts.spec.careDirection = overrides.careDirection
+  facts.spec.repairSupportLevel = overrides.repairSupportLevel
+  return facts
+}
+
+test("Leave-in uncovered-role recommendation ranks candidates by displayed coverage, not catalog order", () => {
+  const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  leaveInInput.capturedProductId = null
+  leaveInInput.subjectIdentity = null
+  leaveInInput.productFacts = null
+  leaveInInput.categoryDecision.target = leaveInTargetForCoverageTests()
+
+  // A: 1/3 dimensions match the target, listed first in catalog order.
+  const lowCoverage = leaveInCoverageCandidate({
+    productId: "leave-in-low-coverage",
+    displayName: "Wenig Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "medium",
+    careDirection: "balanced",
+    repairSupportLevel: "high",
+  })
+  // B: 2/3 dimensions match the target, listed last in catalog order.
+  const highCoverage = leaveInCoverageCandidate({
+    productId: "leave-in-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 9,
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "medium",
+  })
+  leaveInInput.recommendationCandidates = [lowCoverage, highCoverage]
+
+  const result = evaluateStage3Authority(leaveInInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "leave-in-high-coverage")
+})
+
+test("Leave-in uncovered-role recommendation still prefers an ideal candidate over better-covered supportive ones", () => {
+  const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  leaveInInput.capturedProductId = null
+  leaveInInput.subjectIdentity = null
+  leaveInInput.productFacts = null
+  leaveInInput.categoryDecision.target = leaveInTargetForCoverageTests()
+
+  const ideal = leaveInCoverageCandidate({
+    productId: "leave-in-ideal",
+    displayName: "Ideal",
+    catalogSortOrder: 50,
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "high",
+  })
+  const betterCoveredSupportive = leaveInCoverageCandidate({
+    productId: "leave-in-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "medium",
+  })
+  leaveInInput.recommendationCandidates = [betterCoveredSupportive, ideal]
+
+  const result = evaluateStage3Authority(leaveInInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "leave-in-ideal")
+})
+
+test("Leave-in uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  leaveInInput.capturedProductId = null
+  leaveInInput.subjectIdentity = null
+  leaveInInput.productFacts = null
+  leaveInInput.categoryDecision.target = leaveInTargetForCoverageTests()
+
+  // Identical fit on every axis (same verdict, same coverage, same caution
+  // count) -- only catalogSortOrder differs, so the lower one must win.
+  const laterInCatalog = leaveInCoverageCandidate({
+    productId: "leave-in-tie-later",
+    displayName: "Später im Katalog",
+    catalogSortOrder: 5,
+    weight: "medium",
+    careDirection: "balanced",
+    repairSupportLevel: "high",
+  })
+  const earlierInCatalog = leaveInCoverageCandidate({
+    productId: "leave-in-tie-earlier",
+    displayName: "Früher im Katalog",
+    catalogSortOrder: 2,
+    weight: "medium",
+    careDirection: "balanced",
+    repairSupportLevel: "high",
+  })
+  leaveInInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]
+
+  const result = evaluateStage3Authority(leaveInInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "leave-in-tie-earlier")
+})
+
+function conditionerTargetForCoverageTests() {
+  return {
+    ...(TARGETS.conditioner as Record<string, unknown>),
+    weight: "rich",
+    careDirection: "moisture",
+    repairSupportLevel: "high",
+  } as never
+}
+
+function conditionerCoverageCandidate(overrides: {
+  productId: string
+  displayName: string
+  catalogSortOrder: number
+  weight: "light" | "medium" | "rich"
+  balance: "moisture" | "balanced" | "protein"
+  repairSupportLevel: "low" | "medium" | "high"
+}) {
+  const facts = knownFacts("conditioner")
+  if (facts.category !== "conditioner") throw new Error("expected Conditioner fixture")
+  Object.assign(facts, {
+    productId: overrides.productId,
+    displayName: overrides.displayName,
+    catalogSortOrder: overrides.catalogSortOrder,
+    recommendable: true,
+    factFingerprint: `facts-${overrides.productId}`,
+  })
+  facts.spec.weight = overrides.weight
+  facts.spec.proteinMoistureBalance = overrides.balance
+  facts.spec.balanceDirection = overrides.balance
+  facts.spec.repairSupportLevel = overrides.repairSupportLevel
+  return facts
+}
+
+test("Conditioner uncovered-role recommendation ranks candidates by displayed coverage, not catalog order", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  conditionerInput.capturedProductId = null
+  conditionerInput.subjectIdentity = null
+  conditionerInput.productFacts = null
+  conditionerInput.categoryDecision.target = conditionerTargetForCoverageTests()
+
+  const lowCoverage = conditionerCoverageCandidate({
+    productId: "conditioner-low-coverage",
+    displayName: "Wenig Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "medium",
+    balance: "balanced",
+    repairSupportLevel: "high",
+  })
+  const highCoverage = conditionerCoverageCandidate({
+    productId: "conditioner-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 9,
+    weight: "rich",
+    balance: "moisture",
+    repairSupportLevel: "medium",
+  })
+  conditionerInput.recommendationCandidates = [lowCoverage, highCoverage]
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "conditioner-high-coverage")
+})
+
+test("Conditioner uncovered-role recommendation still prefers an ideal candidate over better-covered supportive ones", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  conditionerInput.capturedProductId = null
+  conditionerInput.subjectIdentity = null
+  conditionerInput.productFacts = null
+  conditionerInput.categoryDecision.target = conditionerTargetForCoverageTests()
+
+  const ideal = conditionerCoverageCandidate({
+    productId: "conditioner-ideal",
+    displayName: "Ideal",
+    catalogSortOrder: 50,
+    weight: "rich",
+    balance: "moisture",
+    repairSupportLevel: "high",
+  })
+  const betterCoveredSupportive = conditionerCoverageCandidate({
+    productId: "conditioner-high-coverage",
+    displayName: "Hohe Übereinstimmung",
+    catalogSortOrder: 1,
+    weight: "rich",
+    balance: "moisture",
+    repairSupportLevel: "medium",
+  })
+  conditionerInput.recommendationCandidates = [betterCoveredSupportive, ideal]
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "conditioner-ideal")
+})
+
+test("Conditioner uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  conditionerInput.capturedProductId = null
+  conditionerInput.subjectIdentity = null
+  conditionerInput.productFacts = null
+  conditionerInput.categoryDecision.target = conditionerTargetForCoverageTests()
+
+  const laterInCatalog = conditionerCoverageCandidate({
+    productId: "conditioner-tie-later",
+    displayName: "Später im Katalog",
+    catalogSortOrder: 5,
+    weight: "medium",
+    balance: "balanced",
+    repairSupportLevel: "high",
+  })
+  const earlierInCatalog = conditionerCoverageCandidate({
+    productId: "conditioner-tie-earlier",
+    displayName: "Früher im Katalog",
+    catalogSortOrder: 2,
+    weight: "medium",
+    balance: "balanced",
+    repairSupportLevel: "high",
+  })
+  conditionerInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "supportive")
+  assert.equal(result.recommendation?.productId, "conditioner-tie-earlier")
+})
