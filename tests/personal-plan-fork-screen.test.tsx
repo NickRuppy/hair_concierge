@@ -278,6 +278,36 @@ test("the fork renders this user's real default assumptions, not example copy", 
   assert.doesNotMatch(html, /Gelegentliches Hitzestyling/)
 })
 
+test("the fork keeps the personal-plan column width and scales its type at sm", () => {
+  // Without this the screen renders mobile-scale type inside an unbounded
+  // desktop viewport. Content column and action dock share one width so the
+  // CTAs stay under the copy; the type scale follows the chapter transition.
+  const html = renderToStaticMarkup(
+    <PlanForkScreen
+      assumptions={assumptions}
+      previewState={derivePlanForkPreviewState(previewResponse([recommendation()]))}
+      directAcceptanceAvailable
+      onRefine={() => {}}
+      onAccept={() => {}}
+    />,
+  )
+  const columnClasses = [...html.matchAll(/class="([^"]*max-w-\[430px\][^"]*)"/g)].map(
+    (match) => match[1],
+  )
+
+  // The content column and the fixed action dock's inner column.
+  assert.equal(columnClasses.length, 2)
+  for (const classes of columnClasses) {
+    assert.match(classes, /\bmx-auto\b/)
+    assert.match(classes, /(?:^|\s)sm:max-w-\[560px\](?:\s|$)/)
+  }
+  assert.match(
+    html,
+    /text-\[21px\][^"]*\[@media\(min-height:731px\)\]:text-\[24px\][^"]*sm:text-\[26px\]/,
+  )
+  assert.match(html, /text-\[11\.5px\][^"]*sm:text-\[13px\]/)
+})
+
 test("both ways out are explicit buttons with the refinement leading", () => {
   const html = renderToStaticMarkup(
     <PlanForkScreen
