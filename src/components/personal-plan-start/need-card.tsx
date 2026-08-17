@@ -4,7 +4,7 @@ import Image from "next/image"
 import { ChevronRight, Clock3 } from "lucide-react"
 import { useState } from "react"
 
-import type { Stage1Category } from "@/lib/personal-plan/types"
+import type { PlanFrequencyTarget, Stage1Category } from "@/lib/personal-plan/types"
 import { cn } from "@/lib/utils"
 
 import { ProductDetailSheet } from "./product-detail-sheet"
@@ -52,6 +52,35 @@ export type NeedCardViewModel = {
     title: string
     body: string
   }>
+  /**
+   * This category's per-role need tiers, keyed by role — only set for
+   * categories the engine tiers per role (oil today). Empty/absent for every
+   * other category, which keeps its single aggregate `tone` for every role.
+   */
+  roleTones?: Record<string, NeedCardTone>
+  /** The raw decision frequency, so per-role cadence copy can be derived later. */
+  frequencyTarget?: PlanFrequencyTarget | null
+}
+
+/**
+ * Same-tier, same-category role entries render as one group instead of a run
+ * of visually identical sibling cards — `members` are the individual role
+ * cards a category's preview expansion produced.
+ */
+export type NeedCardGroupViewModel = {
+  kind: "group"
+  id: string
+  category: Stage1Category
+  tone: NeedCardTone
+  categoryLabel: string
+  statusLabel: "Basis" | "Optional" | "Pausiert"
+  members: NeedCardViewModel[]
+}
+
+export type PlanStartCardViewModel = NeedCardViewModel | NeedCardGroupViewModel
+
+export function isNeedCardGroup(card: PlanStartCardViewModel): card is NeedCardGroupViewModel {
+  return "members" in card && (card as NeedCardGroupViewModel).kind === "group"
 }
 
 const CATEGORY_CARD_STYLES = {

@@ -10,7 +10,7 @@ import {
 } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { NeedCard, type NeedCardViewModel } from "./need-card"
+import { NeedCard, isNeedCardGroup, type PlanStartCardViewModel } from "./need-card"
 
 export type NeedPlanScreenKind = "basis" | "optional"
 
@@ -21,7 +21,7 @@ export type NeedPlanScreenViewModel = {
   lead: string
   sectionTitle: string
   countLabel: string
-  cards: NeedCardViewModel[]
+  cards: PlanStartCardViewModel[]
   progress: 50 | 100
 }
 
@@ -32,10 +32,13 @@ export const PLAN_START_PENDING_DISCLAIMER =
 
 /**
  * The catalog sentence is only honest while at least one category can still
- * get a product. If every category already fell back, say so instead.
+ * get a product. If every category already fell back, say so instead. Groups
+ * are flattened to their member cards first — the disclaimer is about every
+ * rendered product, not about the group wrapper.
  */
-export function planStartProductDisclaimer(cards: NeedCardViewModel[]): string {
-  const everyCategoryPending = cards.length > 0 && cards.every((card) => card.fallbackNote)
+export function planStartProductDisclaimer(cards: PlanStartCardViewModel[]): string {
+  const flatCards = cards.flatMap((card) => (isNeedCardGroup(card) ? card.members : [card]))
+  const everyCategoryPending = flatCards.length > 0 && flatCards.every((card) => card.fallbackNote)
   return everyCategoryPending ? PLAN_START_PENDING_DISCLAIMER : PLAN_START_CATALOG_DISCLAIMER
 }
 
@@ -138,9 +141,17 @@ export function NeedPlanScreen({
         </div>
 
         <div className="space-y-2.5" data-plan-start-card-list>
-          {screen.cards.map((card) => (
-            <NeedCard key={card.id} card={card} />
-          ))}
+          {/*
+           * Grouped rendering (a single stacked group per same-tier role
+           * cluster) is Task 2's job. Until then, a group's members render as
+           * the same individual role cards the page already showed pre-Task 1
+           * — same ids, same layout — so the build stays green on real data.
+           */}
+          {screen.cards
+            .flatMap((card) => (isNeedCardGroup(card) ? card.members : [card]))
+            .map((card) => (
+              <NeedCard key={card.id} card={card} />
+            ))}
         </div>
       </main>
       {actionPortalTarget ? createPortal(actionNav, actionPortalTarget) : actionNav}

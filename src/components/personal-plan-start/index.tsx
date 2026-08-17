@@ -1,9 +1,12 @@
 export {
   NeedCard,
   NEED_CARD_FALLBACK_NOTE,
+  isNeedCardGroup,
+  type NeedCardGroupViewModel,
   type NeedCardProduct,
   type NeedCardTone,
   type NeedCardViewModel,
+  type PlanStartCardViewModel,
 } from "./need-card"
 export {
   NeedPlanScreen,
