@@ -3,7 +3,8 @@ export type RoutineTransitionRpc = (
     | "personal_plan_stage_routine_successor"
     | "personal_plan_record_routine_no_semantic_change"
     | "personal_plan_confirm_routine_proposal"
-    | "personal_plan_reject_routine_proposal",
+    | "personal_plan_reject_routine_proposal"
+    | "personal_plan_clear_unrefined_direct_accept",
   args: Record<string, unknown>,
 ) => Promise<{ data: unknown; error: unknown | null }>
 

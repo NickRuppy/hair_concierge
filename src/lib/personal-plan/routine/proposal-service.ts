@@ -271,6 +271,21 @@ export function createRoutineProposalService(input: {
         if (outcome.outcome === "initial_proposal_not_rejectable")
           return { status: "initial_proposal_not_rejectable" }
         const revision = numberField(outcome, "revision")
+        if (inputRequest.action === "accept" && outcome.outcome === "accepted") {
+          // Best-effort: the proposal accept above has already committed. A
+          // confirmed proposal is by definition a refinement result, so any
+          // accepted proposal supersedes the unrefined-direct-accept state.
+          // A failed clear here only means the refinement nudge may reappear
+          // despite refinement being done — it must not roll back the accept.
+          try {
+            await input.rpc("personal_plan_clear_unrefined_direct_accept", {
+              p_user_id: inputRequest.userId,
+              p_personal_plan_id: plan.id,
+            })
+          } catch {
+            // See comment above: non-fatal.
+          }
+        }
         return (outcome.outcome === "accepted" || outcome.outcome === "rejected") &&
           revision !== null
           ? { status: outcome.outcome, revision }
