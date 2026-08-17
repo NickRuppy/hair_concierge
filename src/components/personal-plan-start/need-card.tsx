@@ -112,21 +112,34 @@ const NEUTRAL_CARD_STYLE = {
 
 /**
  * The full card anatomy for one member: image, name, subline, purpose,
- * pills, cadence and its own detail-sheet trigger. Used standalone (wrapped
- * in its own category shell by `NeedCard`) and stacked inside a shared
- * category shell for same-tier role groups (`NeedCardGroup`) — each entry
- * keeps an independent `open` state, so members open their own sheet.
+ * pills, cadence and its own detail-sheet trigger. Used standalone (as the
+ * card's own category-shell `<article>` — `shellClassName` set — so a
+ * single card's DOM stays exactly what it was before groups existed, with
+ * no extra wrapper element) and stacked inside a shared category shell for
+ * same-tier role groups (`NeedCardGroup`, `shellClassName` unset, renders as
+ * a plain `<div>`) — each entry keeps an independent `open` state, so
+ * members open their own sheet.
  */
-function NeedCardEntry({ card, showKicker }: { card: NeedCardViewModel; showKicker: boolean }) {
+function NeedCardEntry({
+  card,
+  showKicker,
+  shellClassName,
+}: {
+  card: NeedCardViewModel
+  showKicker: boolean
+  shellClassName?: string
+}) {
   const [open, setOpen] = useState(false)
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const hasImage = Boolean(card.imageUrl) && failedImageUrl !== card.imageUrl
   const categoryStyle = CATEGORY_CARD_STYLES[card.category] ?? NEUTRAL_CARD_STYLE
   const product = card.product ?? null
   const subline = product ? [card.targetType, product.priceLabel].filter(Boolean).join(" · ") : null
+  const Container = shellClassName ? "article" : "div"
 
   return (
-    <div
+    <Container
+      className={shellClassName}
       data-plan-start-card={card.id}
       data-plan-start-card-tone={card.tone}
       data-plan-start-card-paused={card.paused ? "true" : "false"}
@@ -227,7 +240,7 @@ function NeedCardEntry({ card, showKicker }: { card: NeedCardViewModel; showKick
       </button>
 
       <ProductDetailSheet card={card} open={open} onOpenChange={setOpen} />
-    </div>
+    </Container>
   )
 }
 
@@ -235,14 +248,14 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
   const categoryStyle = CATEGORY_CARD_STYLES[card.category] ?? NEUTRAL_CARD_STYLE
 
   return (
-    <article
-      className={cn(
+    <NeedCardEntry
+      card={card}
+      showKicker
+      shellClassName={cn(
         "overflow-hidden rounded-[19px] border shadow-[0_3px_11px_rgba(43,26,67,0.035)]",
         categoryStyle.shellClassName,
       )}
-    >
-      <NeedCardEntry card={card} showKicker />
-    </article>
+    />
   )
 }
 

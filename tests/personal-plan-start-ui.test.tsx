@@ -1112,6 +1112,26 @@ test("the card leads with the product name and a type-plus-price subline", () =>
   assert.doesNotMatch(html, /Was dein Haar braucht/)
 })
 
+test("a single card keeps all four data attributes on its outer article — no nested wrapper", () => {
+  const html = renderToStaticMarkup(<NeedCard card={card({ product: { ...productFixture } })} />)
+
+  // The root element must be the shell `<article>` itself — the same
+  // element that carries the visual card class — not a `<div>` nested
+  // one level inside it. A regression here breaks Playwright selectors
+  // like `[data-plan-start-card-list] article[data-plan-start-card-preview]`.
+  const articleOpenTag = html.match(/<article\b[^>]*>/)?.[0]
+  assert.ok(articleOpenTag, "expected the card to render as an <article>")
+  assert.match(articleOpenTag!, /rounded-\[19px\]/)
+  assert.match(articleOpenTag!, /data-plan-start-card="shampoo"/)
+  assert.match(articleOpenTag!, /data-plan-start-card-tone="basis"/)
+  assert.match(articleOpenTag!, /data-plan-start-card-paused="false"/)
+  assert.match(articleOpenTag!, /data-plan-start-card-preview="example"/)
+  // No inner element duplicates the card's own data-plan-start-card hook.
+  assert.equal(html.match(/data-plan-start-card="shampoo"/g)?.length, 1)
+  // Not a group: no group-only attribute leaks onto a standalone card.
+  assert.doesNotMatch(html, /data-plan-start-card-group/)
+})
+
 test("a fallback card keeps the category need and says the product follows later", () => {
   const html = renderToStaticMarkup(
     <NeedCard card={card({ imageUrl: null, fallbackNote: NEED_CARD_FALLBACK_NOTE })} />,
