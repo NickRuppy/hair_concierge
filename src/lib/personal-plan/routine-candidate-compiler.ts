@@ -14,6 +14,7 @@ import {
   STAGE1_CATEGORY_ORDER,
   type InitialNeedPlanSnapshot,
   type PlanCategoryDecision,
+  type PlanNeedTier,
   type PlanProductRole,
 } from "./types"
 import { semanticHash } from "./routine/canonicalize"
@@ -229,9 +230,9 @@ function assessment(decision: PlanCategoryDecision, role: string): RoutineSystem
     decision.target && "roleTargets" in decision.target ? (decision.target.roleTargets ?? []) : []
   const roleTarget = roleTargets.find(
     (candidate) => candidate.role === role && "tier" in candidate && candidate.tier,
-  ) as { tier?: string } | undefined
+  ) as { tier?: PlanNeedTier } | undefined
   const tier = roleTarget?.tier ?? decision.needTier
-  if (tier === "basis" || tier === "optional") return tier as RoutineSystemAssessment
+  if (tier === "basis" || tier === "optional") return tier
   if (tier === "not_needed") return "not_recommended"
   throw new Error(`routine_candidate_unresolved_refined_decision:${decision.category}`)
 }
