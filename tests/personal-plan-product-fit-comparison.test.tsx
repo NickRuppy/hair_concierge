@@ -635,7 +635,7 @@ test("targetless evidence outranks pending review and suppresses every committin
   assert.doesNotMatch(html, /Diese Alternative wählen/)
 })
 
-test("renders retained Conditioner target-fit evidence instead of globally filtering it", () => {
+test("renders Conditioner thickness evidence instead of globally filtering it", () => {
   const conditionerComparison: Stage3FitComparison = {
     ...comparison,
     category: "conditioner",
@@ -644,17 +644,17 @@ test("renders retained Conditioner target-fit evidence instead of globally filte
     alternatives: [],
     evidenceRows: [
       {
-        rowId: "conditioner.target_fit",
-        label: "Zielprofil-Eignung",
+        rowId: "conditioner.suitable_thicknesses",
+        label: "Geeignete Haardicke",
         target: {
-          valueLabel: "abgedeckt",
-          rationale: "Das Zielprofil muss abgedeckt sein.",
+          valueLabel: "mittel",
+          rationale: "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
           profileEvidenceLabels: [],
         },
         productValues: [
           {
             productId: "owned-shampoo",
-            valueLabel: "nicht vollständig",
+            valueLabel: "fein",
             relation: "outside_target",
           },
         ],
@@ -674,8 +674,111 @@ test("renders retained Conditioner target-fit evidence instead of globally filte
     />,
   )
 
-  assert.match(html, /Zielprofil-Eignung/)
-  assert.match(html, /nicht vollständig/)
+  assert.match(html, /Geeignete Haardicke/)
+  assert.match(html, /fein/)
+})
+
+test("explains a mismatch verdict when no visible row is outside the target", () => {
+  const allGreenComparison: Stage3FitComparison = {
+    ...comparison,
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    products: comparison.products.filter((product) => product.source === "current"),
+    alternatives: [],
+    evidenceRows: [
+      {
+        rowId: "conditioner.suitable_thicknesses",
+        label: "Geeignete Haardicke",
+        target: {
+          valueLabel: "mittel",
+          rationale: "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+          profileEvidenceLabels: [],
+        },
+        productValues: [
+          { productId: "owned-shampoo", valueLabel: "mittel", relation: "in_target" },
+        ],
+      },
+    ],
+  }
+  const mismatchEvaluation: Stage3AuthorityEvaluation = {
+    ...evaluation,
+    category: "conditioner",
+    allowedActions: ["keep_owned"],
+    criteria: [
+      {
+        criterionId: "conditioner.role",
+        label: "Haardicke + Pflegerichtung",
+        result: "fail",
+        explanation: "Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab.",
+      },
+    ],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Conditioner"
+      roleLabel="Conditioner"
+      comparison={allGreenComparison}
+      evaluation={mismatchEvaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /Warum passt dein Produkt nicht\?/)
+  assert.match(html, /Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab\./)
+})
+
+test("omits the mismatch explanation when a visible row already shows outside target", () => {
+  const redRowComparison: Stage3FitComparison = {
+    ...comparison,
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    products: comparison.products.filter((product) => product.source === "current"),
+    alternatives: [],
+    evidenceRows: [
+      {
+        rowId: "conditioner.suitable_thicknesses",
+        label: "Geeignete Haardicke",
+        target: {
+          valueLabel: "mittel",
+          rationale: "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+          profileEvidenceLabels: [],
+        },
+        productValues: [
+          { productId: "owned-shampoo", valueLabel: "fein", relation: "outside_target" },
+        ],
+      },
+    ],
+  }
+  const mismatchEvaluation: Stage3AuthorityEvaluation = {
+    ...evaluation,
+    category: "conditioner",
+    allowedActions: ["keep_owned"],
+    criteria: [
+      {
+        criterionId: "conditioner.thickness",
+        label: "Haardicke",
+        result: "fail",
+        explanation: "Das Produkt passt nicht zur bestätigten Haardicke.",
+      },
+    ],
+  }
+  const html = renderToStaticMarkup(
+    <ProductFitComparison
+      categoryLabel="Conditioner"
+      roleLabel="Conditioner"
+      comparison={redRowComparison}
+      evaluation={mismatchEvaluation}
+      displayedAlternativeIndex={0}
+      onDisplayedAlternativeChange={() => {}}
+      onAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.doesNotMatch(html, /Warum passt dein Produkt nicht\?/)
 })
 
 test("claims canonical exhaustive catalog coverage when no alternative exists", () => {

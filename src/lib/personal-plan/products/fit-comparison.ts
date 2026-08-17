@@ -531,7 +531,7 @@ function evidenceRowsFromDimensions(
   context?: Stage3EvaluationContext,
 ): Stage3FitEvidenceRow[] {
   const criteriaByProduct = criteriaByProductId(evaluation, entries, candidates)
-  const dimensionRows = dimensions.slice(0, 3).map((dimension) => ({
+  const dimensionRows = dimensions.slice(0, 4).map((dimension) => ({
     rowId: dimension.dimensionId,
     label: dimension.label,
     target:
@@ -558,9 +558,7 @@ function evidenceRowsFromDimensions(
       }
     }),
   }))
-  const leadingRow =
-    conditionerTargetFitEvidenceRow(input, entries) ??
-    bondbuilderApplicationEvidenceRow(input, entries)
+  const leadingRow = bondbuilderApplicationEvidenceRow(input, entries)
   return leadingRow ? [leadingRow, ...dimensionRows] : dimensionRows
 }
 
@@ -576,40 +574,6 @@ function criteriaByProductId(
     result.set(currentProductId, evaluation.criteria)
   for (const candidate of candidates) result.set(candidate.productId, candidate.criteria)
   return result
-}
-
-function conditionerTargetFitEvidenceRow(
-  input: Stage3AuthorityInput,
-  entries: readonly ComparisonProductEntry[],
-): Stage3FitEvidenceRow | null {
-  if (input.category !== "conditioner" || !input.categoryDecision.target) return null
-  return {
-    rowId: "conditioner.target_fit",
-    label: "Zielprofil-Eignung",
-    target: {
-      valueLabel: "abgedeckt",
-      rationale: "Das Produkt muss das bestätigte Zielprofil vollständig abdecken.",
-      profileEvidenceLabels: [],
-    },
-    productValues: entries.map(({ product, facts }) => {
-      const targetFit = facts.category === "conditioner" ? facts.spec.targetFit : "unknown"
-      return {
-        productId: product.productId,
-        valueLabel:
-          targetFit === "matched"
-            ? "abgedeckt"
-            : targetFit === "known_mismatch"
-              ? "nicht vollständig"
-              : "nicht bestätigt",
-        relation:
-          targetFit === "matched"
-            ? ("in_target" as const)
-            : targetFit === "known_mismatch"
-              ? ("outside_target" as const)
-              : ("unknown" as const),
-      }
-    }),
-  }
 }
 
 function dimensionRelation(
@@ -926,6 +890,16 @@ function conditionerDimensions(
       entries,
       (facts) => (facts.category === "conditioner" ? facts.spec.repairSupportLevel : null),
       "Die Repair-Unterstützung bleibt eine explizite Katalogachse.",
+    ),
+    dimension(
+      "conditioner.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
     ),
   ]
 }
