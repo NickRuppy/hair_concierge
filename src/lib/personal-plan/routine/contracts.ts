@@ -253,4 +253,14 @@ export type PersonalPlanRoutineView = {
     href: string
   } | null
   productPresentation?: RoutineProductPresentation
+  /**
+   * Refinement-nudge provenance from `personal_plans`. Optional so existing
+   * fixtures that construct a view literally (without this field) keep
+   * type-checking, matching `productPresentation` above; consumers must
+   * treat a missing value as "no nudge" rather than throwing.
+   */
+  nudge?: {
+    unrefinedDirectAccept: boolean
+    nudgeDismissedUntil: string | null
+  }
 }

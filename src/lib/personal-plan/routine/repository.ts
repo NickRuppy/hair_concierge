@@ -12,6 +12,8 @@ export type RoutinePlanRow = {
   source_revision: number
   active_routine_version_id: string | null
   pending_routine_proposal_id: string | null
+  unrefined_direct_accept?: boolean | null
+  nudge_dismissed_until?: string | null
 }
 export type RoutineVersionRow = {
   id: string
@@ -47,7 +49,9 @@ export async function loadOwnerRoutinePlan(
 ): Promise<RoutinePlanRow | null> {
   const { data, error } = await client
     .from("personal_plans")
-    .select("id, revision, source_revision, active_routine_version_id, pending_routine_proposal_id")
+    .select(
+      "id, revision, source_revision, active_routine_version_id, pending_routine_proposal_id, unrefined_direct_accept, nudge_dismissed_until",
+    )
     .eq("user_id", userId)
     .maybeSingle()
   if (error) throw error
