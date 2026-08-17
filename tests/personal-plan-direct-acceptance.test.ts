@@ -727,6 +727,50 @@ test("the accept chain drives Stage 2 completion, per-role planning and activati
   ])
 })
 
+/**
+ * Activation has already committed by the time provenance is written, so the
+ * Routine is live. Failing the request here would tell the user acceptance
+ * failed while it in fact succeeded — and the retry converges to `conflict`,
+ * not to a second accept. The write stays best-effort and logged.
+ */
+test("a failed provenance write still returns accepted and only logs a warning", async () => {
+  const harness = createHarness()
+  const attempts: Array<{ personalPlanId: string; refinedVersionId: string }> = []
+  harness.deps.provenance = {
+    async recordDirectAccept(input) {
+      attempts.push({
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: input.refinedVersionId,
+      })
+      throw Object.assign(new Error("direct_accept_provenance_write_failed"), { code: "42703" })
+    },
+  }
+  const warnings: unknown[][] = []
+  const originalWarn = console.warn
+  console.warn = (...args: unknown[]) => {
+    warnings.push(args)
+  }
+
+  try {
+    const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+    assert.equal(result.status, "accepted")
+    assert.equal(result.next.href, "/routine")
+  } finally {
+    console.warn = originalWarn
+  }
+
+  // The write is still ATTEMPTED — only its failure is tolerated.
+  assert.deepEqual(attempts, [
+    { personalPlanId: PERSONAL_PLAN_ID, refinedVersionId: harness.db.needVersions[0]!.id },
+  ])
+  assert.equal(warnings.length, 1)
+  assert.equal(warnings[0]![0], "personal_plan_direct_accept_provenance_write_failed")
+  assert.deepEqual(warnings[0]![1], {
+    code: "42703",
+    message: "direct_accept_provenance_write_failed",
+  })
+})
+
 test("a disabled Stage 2, 3 or 4 flag refuses the accept chain without any write", async () => {
   for (const flags of [
     { stage2Enabled: false, stage3Enabled: true, stage4Enabled: true },
