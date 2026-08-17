@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conditioner-Vergleich: vorher / nachher</title>
+<style>
+  :root {
+    --bg: #faf9f7; --card: #ffffff; --ink: #2b2140; --muted: #6f6a7d;
+    --plum: #5b3b8c; --border: #e6e2ee;
+    --pass-bg: #e9f5ec; --pass-ink: #2e7d43;
+    --warn-bg: #fdf6e3; --warn-ink: #9a7b1f;
+    --fail-bg: #fdeeee; --fail-ink: #c0392b;
+  }
+  body { margin: 0; padding: 24px; background: var(--bg); color: var(--ink);
+         font: 15px/1.5 -apple-system, "Segoe UI", sans-serif; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .note { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .wrap { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+  .panel { flex: 1 1 420px; max-width: 560px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em;
+         text-transform: uppercase; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+  .tag.before { background: var(--fail-bg); color: var(--fail-ink); }
+  .tag.after  { background: var(--pass-bg); color: var(--pass-ink); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+          padding: 16px; }
+  .summary { background: #f2effa; border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; }
+  .summary strong { font-size: 14px; }
+  .summary .counts { font-size: 12px; color: var(--muted); margin-left: 6px; }
+  .summary p { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-weight: 600; color: var(--muted); font-size: 12.5px;
+       padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  td { padding: 9px 8px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  td.ziel { color: var(--plum); }
+  .pill { display: inline-block; border-radius: 8px; padding: 1px 7px; font-size: 12.5px; }
+  .pass { background: var(--pass-bg); color: var(--pass-ink); }
+  .warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .fail { background: var(--fail-bg); color: var(--fail-ink); }
+  .removed td { background: #fdf5f5; }
+  .removed .label::after { content: " · entfällt"; color: var(--fail-ink); font-size: 11px; }
+  .added td { background: #f4faf5; }
+  .added .label::after { content: " · neu"; color: var(--pass-ink); font-size: 11px; }
+  .detail { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-top: 14px; }
+  .detail .kicker { font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+                    text-transform: uppercase; color: var(--fail-ink); }
+  .detail h3 { margin: 4px 0 6px; font-size: 15px; }
+  .detail p { margin: 4px 0; font-size: 13px; }
+</style>
+</head>
+<body>
+<h1>Dein Conditioner im Vergleich — Tabellen-Angleichung</h1>
+<p class="note">Beispiel: Dejan Garz The Foundation Conditioner vs. OGX Renewing Argan Oil of Morocco.
+Kopfzeile „Passt nicht“ kommt weiterhin aus dem Authority-Verdict; Zählung und „Im Ziel / Außerhalb“
+weiterhin aus den Tabellenzeilen — Mechanik unverändert, nur die Zeilen ändern sich.</p>
+
+<div class="wrap">
+
+  <div class="panel">
+    <span class="tag before">Vorher (heute live)</span>
+    <div class="card">
+      <div class="summary">
+        <strong>Passt nicht</strong><span class="counts">1 im Ziel · 2 mit Einschränkung · 1 außerhalb</span>
+        <p>Im Ziel: Pflegegewicht. Passt mit Einschränkung: Pflegerichtung, Repair-Unterstützung.
+           Außerhalb: Zielprofil-Eignung.</p>
+      </div>
+      <table>
+        <tr><th>Prüfpunkt</th><th>Deins</th><th>Ziel</th><th>Alternative</th></tr>
+        <tr class="removed">
+          <td class="label">Zielprofil-Eignung</td>
+          <td><span class="pill fail">nicht vollständig</span></td>
+          <td class="ziel">abgedeckt</td>
+          <td><span class="pill pass">abgedeckt</span></td>
+        </tr>
+        <tr><td>Pflegegewicht</td><td><span class="pill pass">reichhaltig</span></td>
+            <td class="ziel">reichhaltig</td><td><span class="pill pass">reichhaltig</span></td></tr>
+        <tr><td>Pflegerichtung</td><td><span class="pill warn">ausgeglichen</span></td>
+            <td class="ziel">Feuchtigkeit</td><td><span class="pill pass">Feuchtigkeit</span></td></tr>
+        <tr><td>Repair-Unterstützung</td><td><span class="pill warn">mittel</span></td>
+            <td class="ziel">hoch</td><td><span class="pill warn">mittel</span></td></tr>
+      </table>
+      <div class="detail">
+        <span class="kicker">Ausgewählter Prüfpunkt · Außerhalb des Ziels</span>
+        <h3>Zielprofil-Eignung</h3>
+        <p><b>Deins:</b> nicht vollständig. <b>Alternative:</b> abgedeckt. <b>Ziel:</b> abgedeckt.</p>
+        <p><b>Warum dieses Ziel?</b> Das Produkt muss das bestätigte Zielprofil vollständig abdecken.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <span class="tag after">Nachher (Vorschlag)</span>
+    <div class="card">
+      <div class="summary">
+        <strong>Passt nicht</strong><span class="counts">1 im Ziel · 2 mit Einschränkung · 1 außerhalb</span>
+        <p>Im Ziel: Pflegegewicht. Passt mit Einschränkung: Pflegerichtung, Repair-Unterstützung.
+           Außerhalb: Geeignete Haardicke.</p>
+      </div>
+      <table>
+        <tr><th>Prüfpunkt</th><th>Deins</th><th>Ziel</th><th>Alternative</th></tr>
+        <tr><td>Pflegegewicht</td><td><span class="pill pass">reichhaltig</span></td>
+            <td class="ziel">reichhaltig</td><td><span class="pill pass">reichhaltig</span></td></tr>
+        <tr><td>Pflegerichtung</td><td><span class="pill warn">ausgeglichen</span></td>
+            <td class="ziel">Feuchtigkeit</td><td><span class="pill pass">Feuchtigkeit</span></td></tr>
+        <tr><td>Repair-Unterstützung</td><td><span class="pill warn">mittel</span></td>
+            <td class="ziel">hoch</td><td><span class="pill warn">mittel</span></td></tr>
+        <tr class="added">
+          <td class="label">Geeignete Haardicke</td>
+          <td><span class="pill fail">Fein</span></td>
+          <td class="ziel">Mittel</td>
+          <td><span class="pill pass">Fein, Mittel, Kräftig</span></td>
+        </tr>
+      </table>
+      <div class="detail">
+        <span class="kicker">Ausgewählter Prüfpunkt · Außerhalb des Ziels</span>
+        <h3>Geeignete Haardicke</h3>
+        <p><b>Deins:</b> Fein. <b>Alternative:</b> Fein, Mittel, Kräftig. <b>Ziel:</b> Mittel.</p>
+        <p><b>Warum dieses Ziel?</b> Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

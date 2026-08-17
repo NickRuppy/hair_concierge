@@ -67,9 +67,9 @@ function evaluateFacts(input: Stage3AuthorityInput<"conditioner">, facts: Stage3
       criteria: [
         criterion(
           "conditioner.role",
-          "Conditioner-Zielprofil",
+          "Haardicke + Pflegerichtung",
           "fail",
-          "Das Produkt deckt das erforderliche Conditioner-Zielprofil nicht ab.",
+          "Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab.",
         ),
       ],
     }

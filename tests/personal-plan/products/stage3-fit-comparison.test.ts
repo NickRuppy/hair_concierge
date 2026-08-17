@@ -69,7 +69,7 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
       assert.ok(comparison.products.length >= 1)
       assert.ok(comparison.products.length <= STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT + 1)
       assert.ok(comparison.alternatives.length <= STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
-      assert.ok(comparison.dimensions.length <= 3)
+      assert.ok(comparison.dimensions.length <= 4)
       assert.ok(comparison.evidenceRows!.length > 0)
       assert.ok(comparison.evidenceRows!.length <= 4)
       assert.ok(
@@ -838,24 +838,43 @@ test("evidence rows carry exact server-owned current and candidate target relati
   ])
 })
 
-test("Conditioner retains aggregate target-fit evidence until its concrete matrix is complete", () => {
+test("Conditioner shows concrete dimensions only, with thickness as the fourth row", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("conditioner", "conditioner_rinse_out", {
       productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
         targetFit: "known_mismatch",
         balanceDirection: "balanced",
+        suitableThicknesses: ["fine"],
       }),
       candidates: [factsFor("conditioner", "conditioner_rinse_out", "candidate")],
     }),
   )
 
   assert.equal(comparison.mode, "comparison")
-  assert.equal(comparison.evidenceRows?.length, 4)
   assert.deepEqual(
-    comparison.evidenceRows?.find((row) => row.rowId === "conditioner.target_fit")
-      ?.productValues[0],
-    { productId: "owned", valueLabel: "nicht vollständig", relation: "outside_target" },
+    comparison.evidenceRows?.map((row) => row.rowId),
+    [
+      "conditioner.weight",
+      "conditioner.care_direction",
+      "conditioner.repair_support",
+      "conditioner.suitable_thicknesses",
+    ],
   )
+  const thickness = comparison.evidenceRows?.find(
+    (row) => row.rowId === "conditioner.suitable_thicknesses",
+  )
+  assert.equal(thickness?.label, "Geeignete Haardicke")
+  assert.equal(thickness?.target?.valueLabel, "mittel")
+  assert.deepEqual(thickness?.productValues[0], {
+    productId: "owned",
+    valueLabel: "fein",
+    relation: "outside_target",
+  })
+  assert.deepEqual(thickness?.productValues[1], {
+    productId: "candidate",
+    valueLabel: "fein, mittel",
+    relation: "in_target",
+  })
   assert.deepEqual(
     comparison.evidenceRows?.find((row) => row.rowId === "conditioner.care_direction")
       ?.productValues[0],

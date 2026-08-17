@@ -477,14 +477,21 @@ function ComparisonReview({
         </Button>
       ) : null}
       {visibleRows.length > 0 && selectedAlternative ? (
-        <EvidenceMatrix
-          key={evidenceMatrixKey(visibleRows, ownedProductId, selectedAlternative.productId)}
-          rows={visibleRows}
-          firstProductId={ownedProductId}
-          secondProductId={selectedAlternative.productId}
-          firstLabel="Deins"
-          secondLabel="Alternative"
-        />
+        <>
+          <EvidenceMatrix
+            key={evidenceMatrixKey(visibleRows, ownedProductId, selectedAlternative.productId)}
+            rows={visibleRows}
+            firstProductId={ownedProductId}
+            secondProductId={selectedAlternative.productId}
+            firstLabel="Deins"
+            secondLabel="Alternative"
+          />
+          <UnexplainedMismatchEvidence
+            evaluation={evaluation}
+            rows={visibleRows}
+            productId={ownedProductId}
+          />
+        </>
       ) : (
         <CompactEvidence evaluation={evaluation} selectedAlternative={selectedAlternative} />
       )}
@@ -538,7 +545,14 @@ function FitOnlyReview({
       />
       <ProductCard product={product} label="Dein Produkt" />
       {evidenceRows.length > 0 && productId ? (
-        <OwnedEvidenceMatrix rows={evidenceRows} productId={productId} />
+        <>
+          <OwnedEvidenceMatrix rows={evidenceRows} productId={productId} />
+          <UnexplainedMismatchEvidence
+            evaluation={evaluation}
+            rows={evidenceRows}
+            productId={productId}
+          />
+        </>
       ) : null}
       <p className="mt-3 px-1 text-xs leading-relaxed text-muted-foreground">
         <span className="font-semibold text-foreground">Vollständiger Katalog geprüft.</span>{" "}
@@ -1427,6 +1441,37 @@ function OwnedEvidenceMatrix({
           })}
         </tbody>
       </table>
+    </section>
+  )
+}
+
+function UnexplainedMismatchEvidence({
+  evaluation,
+  rows,
+  productId,
+}: {
+  evaluation: Stage3AuthorityEvaluation
+  rows: Stage3FitEvidenceRow[]
+  productId?: string
+}) {
+  if (!productId) return null
+  if (evaluation.status !== "known" || evaluation.verdict !== "mismatch") return null
+  if (rows.some((row) => relationFor(row, productId) === "outside_target")) return null
+  const failing = evaluation.criteria.filter((criterion) => criterion.result === "fail")
+  if (!failing.length) return null
+  return (
+    <section
+      className="mt-4 rounded-2xl border border-border bg-card p-4"
+      aria-label="Warum passt dein Produkt nicht"
+    >
+      <h2 className="text-sm font-semibold text-foreground">Warum passt dein Produkt nicht?</h2>
+      <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
+        {failing.slice(0, 3).map((criterion) => (
+          <li key={criterion.criterionId}>
+            <strong className="text-foreground">{criterion.label}:</strong> {criterion.explanation}
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }
