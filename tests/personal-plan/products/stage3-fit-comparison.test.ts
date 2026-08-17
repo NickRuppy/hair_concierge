@@ -737,6 +737,12 @@ for (const scenario of [
     assert.equal(selected?.recommendation.authorityRuleId, scenario.authorityRuleId)
   })
 
+  // Mask and Oil deliberately excluded below: their uncovered-role selection
+  // was widened (Task 3c/3d) to rank in a supportive candidate via the
+  // shared coverage-ranking comparator -- Mask's optional-tier-only gate was
+  // lifted, and Oil gained the adjacent-weight supportive fallback. Shampoo
+  // and Bondbuilder keep the strict (ideal-only) uncovered-role behavior.
+  if (scenario.name === "Mask" || scenario.name === "Oil") continue
   test(`uncovered ${scenario.name} remains strict for the same supportive candidate`, () => {
     const input = authorityInput(scenario.category, scenario.role, {
       productFacts: null,
@@ -751,6 +757,52 @@ for (const scenario of [
     assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
   })
 }
+
+test("uncovered Mask now ranks in the best-available supportive candidate for a required tier", () => {
+  const input = authorityInput("mask", "intensive_conditioning_mask", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      factsFor("mask", "intensive_conditioning_mask", "supportive-candidate", { weight: "rich" }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["supportive-candidate", "supportive"]],
+  )
+  assert.equal(selected?.recommendation.productId, "supportive-candidate")
+  assert.equal(
+    selected?.recommendation.authorityRuleId,
+    "mask.stage3.validated_supportive_candidate",
+  )
+})
+
+test("uncovered Oil now ranks in an adjacent-weight supportive candidate", () => {
+  const input = authorityInput("oil", "dry_finish", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [factsFor("oil", "dry_finish", "supportive-candidate", { weight: "medium" })],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["supportive-candidate", "supportive"]],
+  )
+  assert.equal(selected?.recommendation.productId, "supportive-candidate")
+  assert.equal(
+    selected?.recommendation.authorityRuleId,
+    "oil.recommendation.role_verified_supportive_weight",
+  )
+})
 
 test("complete comparison excludes a two-step Oil weight gap from supportive alternatives", () => {
   const input = authorityInput("oil", "dry_finish", {
