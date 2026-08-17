@@ -19,6 +19,23 @@ function findElement(
   if (!React.isValidElement(node)) return null
   const element = node as ReactElement<Record<string, unknown>>
   if (predicate(element)) return element
+  // Function components (e.g. `<RoutineRefinementNudge .../>`) are opaque
+  // React elements until invoked — their real markup only exists once the
+  // component function runs. Expand them here so the search can reach
+  // markup nested inside sub-components, not just the caller's own JSX.
+  // Components that use hooks throw outside a real render pass (no
+  // dispatcher is active here); swallow that and fall through to the plain
+  // children traversal below, which is what already worked for those.
+  if (typeof element.type === "function") {
+    try {
+      const rendered = (element.type as (props: unknown) => ReactNode)(element.props)
+      const match = findElement(rendered, predicate)
+      if (match) return match
+    } catch {
+      // Not expandable outside a real render (e.g. uses hooks) — fall
+      // through to the children traversal.
+    }
+  }
   for (const child of React.Children.toArray(
     (element.props as { children?: ReactNode }).children,
   )) {
@@ -794,4 +811,60 @@ test("presents every structured cadence kind and keeps a user override authorita
     },
   }) as unknown as RoutinePayloadV1["items"][number]
   assert.equal(routineCadenceLabel(overridden), "Täglich")
+})
+
+test("renders the refinement nudge banner with the mockup copy and wires dismiss/refine", () => {
+  const routine = payload([item()])
+  const view: PersonalPlanRoutineView = {
+    ...proposalView(routine),
+    status: "active",
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+  }
+  let dismissed = 0
+  let refined = 0
+  const tree = RoutinePage({
+    view,
+    nudgeVisible: true,
+    onDismissNudge: () => {
+      dismissed += 1
+    },
+    onRefineNudge: () => {
+      refined += 1
+    },
+  })
+
+  const heading = findElement(
+    tree,
+    (element) =>
+      typeof element.props.children === "object" &&
+      JSON.stringify(element.props.children).includes("Dein Plan basiert noch auf Annahmen."),
+  )
+  assert.ok(heading, "expected the nudge headline to render")
+
+  const dismissButton = findElement(
+    tree,
+    (element) => element.props["aria-label"] === "Hinweis schließen",
+  )
+  assert.ok(dismissButton)
+  ;(dismissButton.props.onClick as () => void)()
+  assert.equal(dismissed, 1)
+
+  const refineButton = findElement(tree, (element) => element.props.children === "Jetzt verfeinern")
+  assert.ok(refineButton)
+  ;(refineButton.props.onClick as () => void)()
+  assert.equal(refined, 1)
+})
+
+test("hides the refinement nudge banner once nudgeVisible is false", () => {
+  const routine = payload([item()])
+  const view: PersonalPlanRoutineView = {
+    ...proposalView(routine),
+    status: "active",
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+  }
+  const tree = RoutinePage({ view, nudgeVisible: false })
+  const refineButton = findElement(tree, (element) => element.props.children === "Jetzt verfeinern")
+  assert.equal(refineButton, null)
 })

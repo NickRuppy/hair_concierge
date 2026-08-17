@@ -13,8 +13,9 @@ import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfoli
 
 import { routineCategoryLabel } from "./routine-item-card"
 
-import { hasChosenPlannedProduct } from "./routine-status"
+import { RoutineRefinementNudge } from "./routine-refinement-nudge"
 import { RoutineSection } from "./routine-section"
+import { hasChosenPlannedProduct } from "./routine-status"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
 
@@ -26,6 +27,9 @@ export type RoutinePageProps = {
   onItemDetail?: (item: RoutineItem) => void
   portfolioPresentation?: PortfolioPresentation | null
   onOpenApplication?: () => void
+  nudgeVisible?: boolean
+  onDismissNudge?: () => void
+  onRefineNudge?: () => void
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -55,6 +59,9 @@ export function RoutinePage({
   onItemDetail,
   portfolioPresentation = null,
   onOpenApplication,
+  nudgeVisible = false,
+  onDismissNudge,
+  onRefineNudge,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -186,6 +193,9 @@ export function RoutinePage({
               </div>
             </div>
           </header>
+          {nudgeVisible && onDismissNudge && onRefineNudge ? (
+            <RoutineRefinementNudge onDismiss={onDismissNudge} onRefine={onRefineNudge} />
+          ) : null}
           <RoutineSection
             title="Deine Basis"
             items={basisItems}
