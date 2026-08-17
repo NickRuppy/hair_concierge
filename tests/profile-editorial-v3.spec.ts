@@ -17,8 +17,15 @@ test.describe.serial("@ci profile editorial v3", () => {
     // Ensure the configured development test user exists.
     // by re-establishing a known password on every run so the shared account
     // remains deterministic across reruns.
-    const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 })
-    const existing = list.users.find((u) => u.email === EMAIL)
+    // Paginate: the shared project has grown past one page of users, and a
+    // first-page-only lookup misses the fixture user and crashes on createUser.
+    let existing: { id: string } | undefined
+    for (let page = 1; ; page++) {
+      const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 })
+      if (error) throw error
+      existing = data.users.find((u) => u.email === EMAIL)
+      if (existing || data.users.length < 200) break
+    }
     let userId: string
 
     if (existing) {
