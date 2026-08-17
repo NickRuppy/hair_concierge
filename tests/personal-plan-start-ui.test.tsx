@@ -444,6 +444,59 @@ test("a secondary role becomes its own card right after its category's primary c
   ])
 })
 
+test("the optional count names the cards on the page, not the categories behind them", () => {
+  const optionalOilPlan: PlanStartReadyViewModel = {
+    ...readyPlan,
+    optional: {
+      ...readyPlan.optional!,
+      countLabel: "1 Vorschlag",
+      cards: [
+        card({
+          id: "oil",
+          category: "oil",
+          tone: "optional",
+          statusLabel: "Optional",
+          categoryLabel: "Haaröl",
+          targetType: "Reichhaltige Vorwäsche",
+          imageUrl: null,
+        }),
+      ],
+    },
+  }
+
+  const applied = applyStage1ProductExamplePreviews(
+    optionalOilPlan,
+    previewResponse([oilPreWash, oilDryFinish]),
+  )
+
+  assert.equal(applied.optional?.cards.length, 2)
+  assert.equal(applied.optional?.countLabel, "2 Vorschläge")
+  // A single suggestion keeps the singular.
+  assert.equal(
+    applyStage1ProductExamplePreviews(optionalOilPlan, previewResponse([oilPreWash])).optional
+      ?.countLabel,
+    "1 Vorschlag",
+  )
+})
+
+test("the basis count keeps counting categories after the per-role expansion", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    readyPlan,
+    previewResponse([
+      recommendation(),
+      recommendation({
+        role: "shampoo_dandruff",
+        decisionKey: "decision:shampoo:shampoo_dandruff:gap",
+        productName: "Anti-Schuppen Shampoo",
+      }),
+    ]),
+  )
+
+  assert.equal(applied.basis.cards.length, 3)
+  // "N Kategorien" stays literally true: two categories, three cards.
+  assert.equal(applied.basis.countLabel, "2 Kategorien")
+})
+
 test("a secondary role without a product adds no card at all", () => {
   const applied = applyStage1ProductExamplePreviews(
     oilPlan,

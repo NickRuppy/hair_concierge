@@ -104,15 +104,23 @@ function cardFromDecision(decision: PlanCategoryDecision): NeedCardViewModel | n
   }
 }
 
+/**
+ * Basis counts categories, Optional counts the suggestions on the page. Only
+ * the Optional label therefore has to be recomputed once the per-role expansion
+ * has added cards — "N Kategorien" stays literally true either way.
+ */
+function countLabelFor(kind: "basis" | "optional", count: number): string {
+  return kind === "basis"
+    ? `${count} ${count === 1 ? "Kategorie" : "Kategorien"}`
+    : `${count} ${count === 1 ? "Vorschlag" : "Vorschläge"}`
+}
+
 function screenFor(
   kind: "basis" | "optional",
   cards: NeedCardViewModel[],
   hasOptionalPage: boolean,
 ): NeedPlanScreenViewModel {
-  const countLabel =
-    kind === "basis"
-      ? `${cards.length} ${cards.length === 1 ? "Kategorie" : "Kategorien"}`
-      : `${cards.length} ${cards.length === 1 ? "Vorschlag" : "Vorschläge"}`
+  const countLabel = countLabelFor(kind, cards.length)
 
   return {
     kind,
@@ -264,9 +272,8 @@ export function applyStage1ProductExamplePreviews(
     else previewsByCategory.set(preview.category, [preview])
   }
 
-  const apply = (screen: NeedPlanScreenViewModel): NeedPlanScreenViewModel => ({
-    ...screen,
-    cards: screen.cards.flatMap((card): NeedCardViewModel[] => {
+  const apply = (screen: NeedPlanScreenViewModel): NeedPlanScreenViewModel => {
+    const cards = screen.cards.flatMap((card): NeedCardViewModel[] => {
       // Always derived from the un-expanded plan (see `displayedPlan` in
       // plan-start-flow.tsx), so every card here is still a category card.
       const category = card.category
@@ -295,8 +302,17 @@ export function applyStage1ProductExamplePreviews(
         .map((preview) => secondaryRoleCard(card, preview))
 
       return [leadCard, ...secondaryCards]
-    }),
-  })
+    })
+
+    // The Optional page counts suggestions, so its label has to follow the
+    // expansion; Basis keeps the category count it was built with.
+    return {
+      ...screen,
+      cards,
+      countLabel:
+        screen.kind === "optional" ? countLabelFor("optional", cards.length) : screen.countLabel,
+    }
+  }
   return {
     ...plan,
     basis: apply(plan.basis),
