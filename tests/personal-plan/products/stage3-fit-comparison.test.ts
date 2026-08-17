@@ -18,6 +18,12 @@ import {
   stage3CriterionEvidenceRelation,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
 } from "../../../src/lib/personal-plan/products/fit-comparison"
+import {
+  candidateDimensionCoverage,
+  renderedDimensions,
+  STAGE3_RENDERED_DIMENSION_CAP,
+  type Stage3FitComparisonDimension,
+} from "../../../src/lib/personal-plan/products/comparison-dimensions"
 import type { PlanProductRole } from "../../../src/lib/personal-plan/types"
 
 const RICH_COMPARISON_CATEGORY_ROLES = new Set<string>([
@@ -1413,6 +1419,174 @@ test("comparison excludes a known Leave-in candidate with zero displayed target 
     ["one-of-three"],
   )
   assert.equal(findStage3SelectedComparisonCandidate(input, "zero-of-three"), null)
+})
+
+// Regression: production bug where an uncovered leave-in role pinned the authority's
+// "official" recommendation (the first supportive candidate in list order) ahead of coverage,
+// so a 1-of-3-dimension product outranked a 2-of-3 alternative (real case: leave-in,
+// Pantene vs Cantu). `low-coverage-first` is listed first so the leave-in authority adapter
+// picks it as its recommendation (it scans recommendationCandidates in order and returns the
+// first supportive match) while carrying worse displayed-dimension coverage and a lower
+// catalogSortOrder — exactly the shape that used to win under the old pinning order.
+test("uncovered leave-in role ranks displayed coverage over the pinned authority recommendation", () => {
+  const input = authorityInput("leave_in", "post_wash_leave_in", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      factsFor("leave_in", "post_wash_leave_in", "low-coverage-first", {
+        sortOrder: 1,
+        weight: "light", // matches target -> 1 dimension match
+        careDirection: "balanced", // caution vs. target "moisture" -> no match, keeps verdict supportive
+        repairSupportLevel: "high", // caution vs. target "medium" -> no match
+      }),
+      factsFor("leave_in", "post_wash_leave_in", "high-coverage-second", {
+        sortOrder: 9,
+        weight: "light", // matches target -> dimension match
+        careDirection: "moisture", // matches target -> dimension match
+        repairSupportLevel: "low", // caution vs. target "medium" -> no match, keeps verdict supportive
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => candidate.productId),
+    ["high-coverage-second", "low-coverage-first"],
+  )
+  assert.ok(
+    comparison.alternatives.every((candidate) => candidate.verdict === "supportive"),
+    "both fixtures must stay supportive so coverage — not verdict — decides the order",
+  )
+})
+
+// Same fixture, covered role (a current product is present): the covered branch never pinned
+// the authority recommendation, so this already ordered correctly before the rewire. Kept as a
+// regression guard so the shared comparator doesn't reintroduce the uncovered-role bug here too.
+test("covered leave-in role ranks the same fixture by displayed coverage", () => {
+  const input = authorityInput("leave_in", "post_wash_leave_in", {
+    productFacts: factsFor("leave_in", "post_wash_leave_in", "owned", {
+      recommendable: false,
+    }),
+    candidates: [
+      factsFor("leave_in", "post_wash_leave_in", "low-coverage-first", {
+        sortOrder: 1,
+        weight: "light",
+        careDirection: "balanced",
+        repairSupportLevel: "high",
+      }),
+      factsFor("leave_in", "post_wash_leave_in", "high-coverage-second", {
+        sortOrder: 9,
+        weight: "light",
+        careDirection: "moisture",
+        repairSupportLevel: "low",
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => candidate.productId),
+    ["high-coverage-second", "low-coverage-first"],
+  )
+})
+
+// Verdict dominance: mask's axis rules can mark a candidate "ideal" (every axis within one
+// step) while its exact-position dimension coverage stays low, and mark another candidate
+// "supportive" (one axis two steps off) while its coverage is higher. The comparator must still
+// rank verdict before coverage.
+test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
+  const input = authorityInput("mask", "intensive_conditioning_mask", {
+    productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
+      recommendable: false,
+    }),
+    candidates: [
+      factsFor("mask", "intensive_conditioning_mask", "fewer-matches-ideal", {
+        sortOrder: 5,
+        weight: "medium", // one step from target "light" -> mask treats this as "pass"
+        careDirection: "protein", // mask always treats care direction as "pass"
+        repairSupportLevel: "medium", // exact match -> the only displayed-dimension match
+      }),
+      factsFor("mask", "intensive_conditioning_mask", "more-matches-supportive", {
+        sortOrder: 1,
+        weight: "rich", // two steps from target "light" -> caution, keeps a match miss too
+        careDirection: "moisture", // exact match
+        repairSupportLevel: "medium", // exact match
+      }),
+    ],
+  })
+
+  const comparison = buildStage3FitComparison(input)
+
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => candidate.productId),
+    ["fewer-matches-ideal", "more-matches-supportive"],
+  )
+  const idealCandidate = comparison.alternatives.find(
+    (candidate) => candidate.productId === "fewer-matches-ideal",
+  )
+  const supportiveCandidate = comparison.alternatives.find(
+    (candidate) => candidate.productId === "more-matches-supportive",
+  )
+  assert.equal(idealCandidate?.verdict, "ideal")
+  assert.equal(supportiveCandidate?.verdict, "supportive")
+})
+
+test("renderedDimensions caps a synthetic dimension list at STAGE3_RENDERED_DIMENSION_CAP", () => {
+  assert.equal(STAGE3_RENDERED_DIMENSION_CAP, 3)
+  const synthetic: Stage3FitComparisonDimension[] = Array.from({ length: 5 }, (_, index) => ({
+    dimensionId: `synthetic.${index}`,
+    label: `Dimension ${index}`,
+    presentationKind: "binary",
+    stops: [],
+    targetPosition: null,
+    productPositions: [],
+    reason: "test fixture",
+  }))
+
+  assert.deepEqual(
+    renderedDimensions(synthetic).map((dimension) => dimension.dimensionId),
+    ["synthetic.0", "synthetic.1", "synthetic.2"],
+  )
+})
+
+test("candidateDimensionCoverage counts only rendered rich dimensions and falls back to the compact schema", () => {
+  const richInput = authorityInput("mask", "intensive_conditioning_mask", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [],
+  })
+  const richCandidate = factsFor("mask", "intensive_conditioning_mask", "rich-candidate", {
+    weight: "light",
+    careDirection: "moisture",
+    repairSupportLevel: "medium",
+  })
+  assert.deepEqual(
+    candidateDimensionCoverage(richInput as unknown as Stage3AuthorityInput, richCandidate, []),
+    { matches: 3, total: 3 },
+  )
+
+  const compactInput = authorityInput("heat_protectant", "pre_heat_protection", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [],
+  })
+  const compactCandidate = factsFor("heat_protectant", "pre_heat_protection", "compact-candidate")
+  assert.deepEqual(
+    candidateDimensionCoverage(compactInput as unknown as Stage3AuthorityInput, compactCandidate, [
+      {
+        criterionId: "heat_protectant.capability",
+        label: "Verifizierter Hitzeschutz",
+        result: "pass",
+        explanation: "verified",
+      },
+    ]),
+    { matches: 1, total: 1 },
+  )
 })
 
 function authorityInput<C extends PersonalPlanCategory>(

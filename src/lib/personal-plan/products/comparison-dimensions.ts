@@ -48,7 +48,7 @@ export type ComparisonProductEntry = {
   facts: Stage3CategoryProductFacts
 }
 
-export const STAGE3_RENDERED_DIMENSION_CAP = 3
+export const STAGE3_RENDERED_DIMENSION_CAP = 4
 
 export function renderedDimensions(
   dimensions: readonly Stage3FitComparisonDimension[],
@@ -223,6 +223,16 @@ function conditionerDimensions(
       entries,
       (facts) => (facts.category === "conditioner" ? facts.spec.repairSupportLevel : null),
       "Die Repair-Unterstützung bleibt eine explizite Katalogachse.",
+    ),
+    dimension(
+      "conditioner.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
     ),
   ]
 }
