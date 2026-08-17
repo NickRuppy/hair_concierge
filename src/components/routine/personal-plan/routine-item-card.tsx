@@ -5,7 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
-import { routineCategoryLabel, routinePurposeLabel } from "@/lib/personal-plan/routine/labels"
+import {
+  routineCategoryLabel,
+  routinePurposeLabel,
+  routineRolePurposeDescription,
+} from "@/lib/personal-plan/routine/labels"
 import {
   routinePresentationLabels,
   type PortfolioPresentation,
@@ -16,27 +20,6 @@ import { getRoutineStatus, hasChosenPlannedProduct, RoutineStatusBadge } from ".
 type RoutineItem = RoutinePayloadV1["items"][number]
 
 export { routineCategoryLabel, routinePurposeLabel }
-
-const purposeDescriptions: Record<string, string> = {
-  shampoo_everyday: "Regelmäßige Reinigung für deine Kopfhaut.",
-  shampoo_dandruff: "Hilft, deine Kopfhautpflege gezielter einzuplanen.",
-  conditioner_rinse_out: "Pflegt und entwirrt die Längen nach der Haarwäsche.",
-  post_wash_leave_in: "Gibt den Längen Pflege, die im Haar bleibt.",
-  pre_heat_application: "Bereitet die Längen auf Hitze-Styling vor.",
-  intensive_conditioning_mask: "Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.",
-  pre_wash_fibre_treatment: "Pflegt die Längen vor der Haarwäsche.",
-  leave_on_fibre_conditioning: "Bleibt im Haar und ergänzt die Pflege nach der Wäsche.",
-  dry_finish: "Schließt die Routine als Finish für die Längen ab.",
-  residue_reset: "Entfernt Rückstände, wenn die Routine einen Reset braucht.",
-  mineral_reset: "Hilft gegen mineralische Ablagerungen in den Längen.",
-  root_refresh_bridge: "Frischt den Ansatz zwischen Haarwäschen auf.",
-  pre_heat_protection: "Schützt dein Haar vor passender Hitze-Anwendung.",
-  specialized_bond_treatment: "Ergänzt die Routine, wenn Strukturpflege sinnvoll ist.",
-  scalp_comfort: "Beruhigt die Kopfhaut, wenn sie zusätzliche Pflege braucht.",
-  scalp_flake_oil_adjunct: "Ergänzt die Kopfhautpflege punktuell.",
-  density_claim_tonic: "Unterstützt die Kopfhautpflege als Leave-on-Schritt.",
-  scalp_exfoliant: "Löst Schuppen und Rückstände kontrolliert von der Kopfhaut.",
-}
 
 const timingLabelsByRole: Record<string, string> = {
   shampoo_everyday: "Haarwäsche",
@@ -153,7 +136,7 @@ export function routineCadenceLabel(item: RoutineItem): string {
 
 function routinePurposeDescription(item: RoutineItem) {
   return (
-    purposeDescriptions[item.purposeKey] ??
+    routineRolePurposeDescription(item.purposeKey) ??
     `${routineCategoryLabel(item.category)} passend zu deinem Idealplan.`
   )
 }
