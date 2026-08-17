@@ -12,7 +12,6 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
-import { stage1ProductExamplePreviewRequestUrl } from "@/lib/personal-plan/product-preview-contract"
 import { loadExistingStage2RefinementSession } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
@@ -21,6 +20,8 @@ import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/ses
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage2Enabled,
+  isPersonalPlanStage3Enabled,
+  isPersonalPlanStage4Enabled,
 } from "@/lib/personal-plan/release"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -33,6 +34,13 @@ export const metadata: Metadata = {
 export type PlanStartPageDeps = {
   enabled: () => boolean
   stage2Enabled: () => boolean
+  /**
+   * Direct acceptance drives Stage 2 → 3 → 4 headlessly, so the fork may only
+   * offer it when the accept route's own flag set is satisfied. Fail closed:
+   * an unwired caller gets the refine-only fork.
+   */
+  stage3Enabled?: () => boolean
+  stage4Enabled?: () => boolean
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   loadExistingRefinementSession: (userId: string) => Promise<Stage2RefinementSession | null>
@@ -41,6 +49,18 @@ export type PlanStartPageDeps = {
 
 export type PlanStartSearchParams = {
   repairRoutineVersionId?: string | string[]
+  /** `1` = explicit re-entry into Stage 2 (the Routine refinement nudge). */
+  refine?: string | string[]
+}
+
+/**
+ * The Routine refinement nudge links to `/plan-start?refine=1`. Without it, a
+ * directly accepted plan has a COMPLETE refinement draft, so the resolver would
+ * seed the completed session and Stage 2 would auto-hand off straight into
+ * Stage 3 — the user would never see the Feinschliff again.
+ */
+export function parseRefineParam(value: string | string[] | undefined): boolean {
+  return (Array.isArray(value) ? value[0] : value) === "1"
 }
 
 export type PlanStartPageState =
@@ -56,7 +76,7 @@ export type PlanStartPageState =
 
 export async function resolvePlanStartPageState(
   deps: PlanStartPageDeps,
-  options: { repairRoutineVersionId?: string } = {},
+  options: { repairRoutineVersionId?: string; refine?: boolean } = {},
 ): Promise<PlanStartPageState> {
   if (!deps.enabled()) return { state: "unavailable" }
   const userId = await deps.getUserId()
@@ -95,14 +115,30 @@ export async function resolvePlanStartPageState(
         stage2Enabled ? { stage: "stage1" } : { stage: "stage1", refinementAvailable: false },
       )
     }
+    // Mirrors the accept route's gate: reachable Stage 2 plus the Stage 3 and 4
+    // flags it drives headlessly.
+    const directAcceptance =
+      deps.stage3Enabled?.() && deps.stage4Enabled?.()
+        ? ({ directAcceptanceAvailable: true } as const)
+        : {}
 
     const refinement = await deps.loadExistingRefinementSession(userId)
     if (!refinement) {
-      return production({ stage: "stage1" })
+      return production({ stage: "stage1", ...directAcceptance })
     }
     const initialRefinementSession = isUsableInitialRefinementSession(refinement)
       ? refinement
       : undefined
+    // An explicit refine request outranks every later-stage resume: it exists
+    // precisely to stop the completed draft from being handed off again.
+    if (options.refine) {
+      return production(
+        { stage: "stage2", returningToRefinement: true, ...directAcceptance },
+        initialRefinementSession
+          ? { personalPlanId: access.personalPlanId, initialRefinementSession }
+          : undefined,
+      )
+    }
     if (
       options.repairRoutineVersionId &&
       refinement.status === "complete" &&
@@ -137,7 +173,7 @@ export async function resolvePlanStartPageState(
       )
     }
     return production(
-      { stage: "stage2" },
+      { stage: "stage2", ...directAcceptance },
       initialRefinementSession
         ? { personalPlanId: access.personalPlanId, initialRefinementSession }
         : undefined,
@@ -169,6 +205,8 @@ export default async function PlanStartPage({
     {
       enabled: isPersonalPlanAppV1Enabled,
       stage2Enabled: isPersonalPlanStage2Enabled,
+      stage3Enabled: isPersonalPlanStage3Enabled,
+      stage4Enabled: isPersonalPlanStage4Enabled,
       getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
       loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
       loadExistingRefinementSession: async (userId) =>
@@ -185,7 +223,10 @@ export default async function PlanStartPage({
         return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
       },
     },
-    { repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId) },
+    {
+      repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId),
+      refine: parseRefineParam(params.refine),
+    },
   )
   if (state.state === "paid_pending") redirect("/plan-bereit")
   if (state.state === "unavailable") return <PlanStartFlow state="unavailable" />
@@ -220,23 +261,11 @@ export function Stage1ProductExamplePreviewWarmup({
   ) {
     return null
   }
-  const previewUrl = stage1ProductExamplePreviewRequestUrl({
-    personalPlanId: initialPlan.personalPlanId,
-    sourceInputHash: initialPlan.sourceInputHash,
-  })
-  return (
-    <>
-      <link rel="preconnect" href="https://pqdkhefxsxkyeqelqegq.supabase.co" />
-      <link
-        rel="preload"
-        as="fetch"
-        href={previewUrl}
-        type="application/json"
-        crossOrigin="anonymous"
-        fetchPriority="low"
-      />
-    </>
-  )
+  // The preview JSON response is Cache-Control: no-store (it now carries
+  // prices), so a preload hint for it can never be reused by the client's
+  // real fetch — it would just be a second, wasted request. Product images
+  // are still cacheable, so keep the storage-origin preconnect for them.
+  return <link rel="preconnect" href="https://pqdkhefxsxkyeqelqegq.supabase.co" />
 }
 
 function parseUuidParam(value: string | string[] | undefined): string | undefined {

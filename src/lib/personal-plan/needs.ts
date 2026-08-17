@@ -240,6 +240,10 @@ function buildScalpBuildupAssessment(
   }
 }
 
+// keep in sync with defaultsWouldAddScalpCareRoles (product-previews.ts):
+// that mirror assumes this stub returns no facts, so `scalp_exfoliant` can
+// never fire. Implementing it here means the mirror (and the joint invariant
+// test) must gain the same predicate.
 function scalpBuildupSourceFacts(currentProductLoad: PlanCurrentProductLoad): string[] {
   void currentProductLoad
   return []

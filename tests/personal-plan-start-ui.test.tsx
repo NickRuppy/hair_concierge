@@ -8,14 +8,20 @@ import {
   Stage1ProductExamplePreviewWarmup,
 } from "../src/app/plan-start/page"
 import {
+  NEED_CARD_FALLBACK_NOTE,
   NeedCard,
+  PLAN_START_CATALOG_DISCLAIMER,
+  PLAN_START_PENDING_DISCLAIMER,
+  PRODUCT_REFINEMENT_HINT,
   PlanStartFlow,
   PlanStartLoading,
   PlanStartRetryableError,
   PlanStartUnavailable,
+  ProductDetailSheetBody,
   adaptInitialNeedSnapshotToPlanStartViewModel,
   applyStage1ProductExamplePreviews,
   interpretPlanStartApiResponse,
+  planStartProductDisclaimer,
   type NeedCardViewModel,
   type PlanStartReadyViewModel,
 } from "../src/components/personal-plan-start"
@@ -39,6 +45,15 @@ const baseDetailBlocks: NeedCardViewModel["detailBlocks"] = [
   },
   { title: "Empfohlener Rhythmus", body: "Zwei- bis dreimal pro Woche." },
 ]
+
+const productFixture: NonNullable<NeedCardViewModel["product"]> = {
+  name: "Redken All Soft Shampoo",
+  priceLabel: "17,95 €",
+  netContentLabel: "300 ml",
+  availabilityLabel: "Aktuell verfügbar",
+  purchaseLinkStatus: "available",
+  productUrl: "https://example.com/redken",
+}
 
 function card(overrides: Partial<NeedCardViewModel> = {}): NeedCardViewModel {
   return {
@@ -86,14 +101,13 @@ const readyPlan: PlanStartReadyViewModel = {
         statusLabel: "Pausiert",
         targetType: "Aktuell nicht anwenden",
         paused: true,
-        initiallyOpen: true,
         frequency: "später: bei Bedarf",
       }),
     ],
   },
 }
 
-test("warms the source-keyed preview request in server-rendered Stage 1 HTML", () => {
+test("warms only the image origin in server-rendered Stage 1 HTML, without a wasted no-store preload", () => {
   const previewUrl = stage1ProductExamplePreviewRequestUrl({
     personalPlanId: "plan-1",
     sourceInputHash: "input-1",
@@ -110,41 +124,81 @@ test("warms the source-keyed preview request in server-rendered Stage 1 HTML", (
     "/api/personal-plan/stage-1/previews?personalPlanId=plan-1&sourceInputHash=input-1",
   )
   assert.match(html, /rel="preconnect" href="https:\/\/pqdkhefxsxkyeqelqegq\.supabase\.co"/)
-  assert.match(
-    html,
-    /rel="preload" as="fetch" href="\/api\/personal-plan\/stage-1\/previews\?personalPlanId=plan-1&amp;sourceInputHash=input-1" type="application\/json" crossorigin="anonymous" fetchPriority="low"/,
-  )
-  assert.equal(STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL, "private, max-age=60, must-revalidate")
+  // The preview response is Cache-Control: no-store (see below), so a
+  // rel=preload as=fetch hint for it can never be reused by the client's
+  // real fetch — it would only add a second, wasted request. Product
+  // images stay cacheable, so only the storage-origin preconnect remains.
+  assert.doesNotMatch(html, /rel="preload"/)
+  assert.equal(STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL, "no-store")
 })
 
 test("binds only source-matched authority previews to their exact category cards", () => {
   const response = {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     personalPlanId: "plan-1",
     sourceNeedVersionId: "need-1",
     sourceInputHash: "input-1",
+    directAcceptance: { available: true as const },
     previews: [
       {
+        kind: "recommendation" as const,
         category: "conditioner" as const,
         role: "conditioner_rinse_out" as const,
+        decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
         productId: "conditioner-light",
         productName: "Leichter Conditioner",
         imageUrl: "https://example.com/conditioner-light.webp",
         verdict: "ideal" as const,
         authorityVersion: "personal-plan.conditioner.v3",
+        factFingerprint: "facts-conditioner-light",
+        commerce: {
+          priceEur: 9.9,
+          purchaseLinkStatus: "available" as const,
+          netContentValue: 200,
+          netContentUnit: "ml" as const,
+          priceLabel: "9,90 €",
+          netContentLabel: "200 ml",
+          availabilityLabel: "Aktuell verfügbar",
+          productUrl: "https://example.com/conditioner-light",
+          affiliateDisclosure:
+            "Affiliate-Hinweis: Bei einem Kauf über diesen Link erhalten wir möglicherweise eine Provision.",
+        },
+        reasoning: {
+          productCriteria: "Pflege, Glättung und Kämmbarkeit passend zum Gewicht deines Haars.",
+          fit: "Deine Längen brauchen nach der Wäsche eine verlässliche Basispflege.",
+          frequency: "nach jeder Haarwäsche",
+        },
       },
     ],
   }
 
   const applied = applyStage1ProductExamplePreviews(readyPlan, response)
-  assert.equal(
-    applied.basis.cards.find((item) => item.id === "conditioner")?.imageUrl,
-    "https://example.com/conditioner-light.webp",
-  )
-  assert.match(
-    applied.basis.cards.find((item) => item.id === "conditioner")?.imageAlt ?? "",
-    /Leichter Conditioner.*finale Produktauswahl/,
-  )
+  const conditioner = applied.basis.cards.find((item) => item.id === "conditioner")
+  assert.equal(conditioner?.imageUrl, "https://example.com/conditioner-light.webp")
+  assert.equal(conditioner?.imageAlt, "Produktbild: Leichter Conditioner")
+  assert.deepEqual(conditioner?.product, {
+    name: "Leichter Conditioner",
+    priceLabel: "9,90 €",
+    netContentLabel: "200 ml",
+    availabilityLabel: "Aktuell verfügbar",
+    purchaseLinkStatus: "available",
+    productUrl: "https://example.com/conditioner-light",
+  })
+  // The card reasoning now comes from the recommended product, not from the
+  // generic category presentation.
+  assert.deepEqual(conditioner?.detailBlocks, [
+    {
+      title: "Worauf es beim Produkt ankommt",
+      body: "Pflege, Glättung und Kämmbarkeit passend zum Gewicht deines Haars.",
+    },
+    {
+      title: "Warum das zu deinem Haar passt",
+      body: "Deine Längen brauchen nach der Wäsche eine verlässliche Basispflege.",
+    },
+    { title: "Empfohlener Rhythmus", body: "nach jeder Haarwäsche" },
+  ])
+  // Categories without a payload entry keep no stale product.
+  assert.equal(applied.basis.cards.find((item) => item.id === "shampoo")?.product ?? null, null)
   assert.equal(
     applyStage1ProductExamplePreviews(readyPlan, {
       ...response,
@@ -152,6 +206,228 @@ test("binds only source-matched authority previews to their exact category cards
     }),
     readyPlan,
   )
+})
+
+function recommendation(overrides: Record<string, unknown> = {}) {
+  return {
+    kind: "recommendation" as const,
+    category: "shampoo" as const,
+    role: "shampoo_everyday" as const,
+    decisionKey: "decision:shampoo:shampoo_everyday:gap",
+    productId: "redken-all-soft",
+    productName: "Redken All Soft Shampoo",
+    imageUrl: "https://example.com/redken.webp",
+    verdict: "ideal" as const,
+    authorityVersion: "personal-plan.shampoo.v3",
+    factFingerprint: "facts-redken",
+    commerce: {
+      priceEur: 17.95,
+      purchaseLinkStatus: "available" as const,
+      netContentValue: 300,
+      netContentUnit: "ml" as const,
+      priceLabel: "17,95 €",
+      netContentLabel: "300 ml",
+      availabilityLabel: "Aktuell verfügbar",
+      productUrl: "https://example.com/redken",
+      affiliateDisclosure: null,
+    },
+    reasoning: {
+      productCriteria: "Sanfte Tenside, die reinigen, ohne die Kopfhaut auszutrocknen.",
+      fit: "Deine Kopfhaut braucht sanfte Reinigung.",
+      frequency: "2x pro Woche",
+    },
+    ...overrides,
+  }
+}
+
+function previewResponse(previews: unknown[]) {
+  return {
+    schemaVersion: 2 as const,
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    sourceInputHash: "input-1",
+    directAcceptance: { available: true },
+    previews,
+  } as Parameters<typeof applyStage1ProductExamplePreviews>[1]
+}
+
+test("a fallback role turns the category card into the honest post-refinement state", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    readyPlan,
+    previewResponse([
+      {
+        kind: "fallback",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        decisionKey: "decision:shampoo:shampoo_everyday:gap",
+        authorityVersion: "personal-plan.shampoo.v3",
+        fallback: "post_refinement",
+      },
+    ]),
+  )
+  const shampoo = applied.basis.cards.find((item) => item.id === "shampoo")
+
+  assert.equal(shampoo?.product ?? null, null)
+  assert.equal(shampoo?.fallbackNote, NEED_CARD_FALLBACK_NOTE)
+  assert.equal(shampoo?.imageUrl, null)
+  assert.equal(shampoo?.imageAlt, "Noch kein Produktbild für Shampoo.")
+  // The generic category reasoning survives so the sheet still explains the need.
+  assert.deepEqual(shampoo?.detailBlocks, baseDetailBlocks)
+})
+
+test("a real recommendation for any role beats a fallback for the same category", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    readyPlan,
+    previewResponse([
+      {
+        kind: "fallback",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        decisionKey: "decision:shampoo:shampoo_everyday:gap",
+        authorityVersion: "personal-plan.shampoo.v3",
+        fallback: "post_refinement",
+      },
+      recommendation({
+        role: "shampoo_dandruff",
+        decisionKey: "decision:shampoo:shampoo_dandruff:gap",
+        productName: "Anti-Schuppen Shampoo",
+      }),
+    ]),
+  )
+
+  assert.equal(
+    applied.basis.cards.find((item) => item.id === "shampoo")?.product?.name,
+    "Anti-Schuppen Shampoo",
+  )
+})
+
+test("the primary role wins when several roles deliver a recommendation", () => {
+  const applied = applyStage1ProductExamplePreviews(
+    readyPlan,
+    previewResponse([
+      recommendation({
+        role: "shampoo_dandruff",
+        decisionKey: "decision:shampoo:shampoo_dandruff:gap",
+        productName: "Anti-Schuppen Shampoo",
+      }),
+      recommendation(),
+    ]),
+  )
+
+  assert.equal(
+    applied.basis.cards.find((item) => item.id === "shampoo")?.product?.name,
+    "Redken All Soft Shampoo",
+  )
+})
+
+test("the screen disclaimer stays honest when no category has a product yet", () => {
+  const withProduct = card({ product: { ...productFixture } })
+  const withFallback = card({ id: "mask", fallbackNote: NEED_CARD_FALLBACK_NOTE })
+
+  assert.equal(
+    planStartProductDisclaimer([withProduct, withFallback]),
+    PLAN_START_CATALOG_DISCLAIMER,
+  )
+  assert.equal(planStartProductDisclaimer([withFallback]), PLAN_START_PENDING_DISCLAIMER)
+  // Before the previews land no card is a decided fallback — keep the catalog line.
+  assert.equal(planStartProductDisclaimer([card()]), PLAN_START_CATALOG_DISCLAIMER)
+})
+
+test("the card leads with the product name and a type-plus-price subline", () => {
+  const html = renderToStaticMarkup(<NeedCard card={card({ product: { ...productFixture } })} />)
+
+  assert.match(html, /Redken All Soft Shampoo/)
+  assert.match(html, /Sanft reinigend · 17,95 €/)
+  assert.match(html, /aria-haspopup="dialog"/)
+  assert.doesNotMatch(html, />Beispiel</)
+  assert.doesNotMatch(html, /Was dein Haar braucht/)
+})
+
+test("a fallback card keeps the category need and says the product follows later", () => {
+  const html = renderToStaticMarkup(
+    <NeedCard card={card({ imageUrl: null, fallbackNote: NEED_CARD_FALLBACK_NOTE })} />,
+  )
+
+  assert.match(html, /Sanft reinigend/)
+  assert.match(html, /Produktempfehlung folgt nach dem Feinschliff/)
+  assert.match(html, /data-plan-start-card-image-slot="reserved"/)
+  assert.doesNotMatch(html, /€/)
+})
+
+test("the detail sheet shows product facts, the three reasoning blocks and the shop CTA", () => {
+  const html = renderToStaticMarkup(
+    <ProductDetailSheetBody card={card({ product: { ...productFixture } })} />,
+  )
+
+  assert.match(html, /Shampoo · Sanft reinigend/)
+  assert.match(html, /Redken All Soft Shampoo/)
+  assert.match(html, /17,95 €/)
+  assert.match(html, /300 ml/)
+  assert.match(html, /Aktuell verfügbar/)
+  // Only a confirmed-available purchase link may read as green.
+  assert.match(html, /data-availability-tone="available"/)
+  assert.match(html, /text-\[#356b45\]/)
+  for (const block of baseDetailBlocks) assert.ok(html.includes(block.title))
+  assert.ok(html.includes(PRODUCT_REFINEMENT_HINT))
+  assert.match(html, /Zum Produkt/)
+  assert.doesNotMatch(html, /Ich habe es schon gekauft|Affiliate|Stand: /)
+})
+
+test("the detail sheet drops the CTA when no verified purchase link exists", () => {
+  const html = renderToStaticMarkup(
+    <ProductDetailSheetBody
+      card={card({
+        product: {
+          ...productFixture,
+          availabilityLabel: "Derzeit kein verifizierter Produktlink",
+          purchaseLinkStatus: "unavailable",
+          productUrl: null,
+        },
+      })}
+    />,
+  )
+
+  assert.match(html, /Derzeit kein verifizierter Produktlink/)
+  assert.doesNotMatch(html, /Zum Produkt/)
+  // An unavailable (or unknown) purchase link must not be styled as available.
+  assert.match(html, /data-availability-tone="muted"/)
+  assert.doesNotMatch(html, /text-\[#356b45\]/)
+})
+
+test("an unknown availability renders no availability line at all", () => {
+  const html = renderToStaticMarkup(
+    <ProductDetailSheetBody
+      card={card({
+        product: {
+          ...productFixture,
+          // Unknown availability is null, not a guessed "nicht bestätigt" copy.
+          availabilityLabel: null,
+          purchaseLinkStatus: null,
+        },
+      })}
+    />,
+  )
+
+  // No line beats an empty or invented one: the tone span must not render,
+  // so there is neither a stray green line nor an empty tinted placeholder.
+  assert.doesNotMatch(html, /data-availability-tone/)
+  assert.doesNotMatch(html, /text-\[#356b45\]/)
+  assert.doesNotMatch(html, /nicht bestätigt/)
+  // The rest of the product line still renders.
+  assert.match(html, /Redken All Soft Shampoo/)
+})
+
+test("the fallback sheet explains the need without commerce or CTA", () => {
+  const html = renderToStaticMarkup(
+    <ProductDetailSheetBody
+      card={card({ imageUrl: null, fallbackNote: NEED_CARD_FALLBACK_NOTE })}
+    />,
+  )
+
+  assert.match(html, /Sanft reinigend/)
+  assert.match(html, /Produktempfehlung folgt nach dem Feinschliff/)
+  for (const block of baseDetailBlocks) assert.ok(html.includes(block.title))
+  assert.doesNotMatch(html, /Zum Produkt|€/)
 })
 
 function computedSnapshot(
@@ -184,11 +460,9 @@ test("renders the signed-off Basis shell with folded cards and example-preview g
   assert.match(html, /Basierend auf deiner Haaranalyse sind das die Grundlagen/)
   assert.match(html, /Optionale Empfehlungen/)
   assert.match(html, /data-plan-start-card-preview="example"/)
-  assert.match(
-    html,
-    /Bilder zeigen nur Beispiele für die Produktart\. Ein konkretes Produkt wählen wir später\./,
-  )
-  assert.match(html, />Beispiel<\/span>/)
+  assert.ok(html.includes(PLAN_START_CATALOG_DISCLAIMER))
+  assert.doesNotMatch(html, /Bilder zeigen nur Beispiele/)
+  assert.doesNotMatch(html, />Beispiel<\/span>/)
   assert.match(html, /data-plan-start-card-preview="absent"/)
   assert.match(html, /data-plan-start-card-image-slot="reserved"/)
   assert.match(html, /aria-expanded="false"/)
@@ -268,8 +542,7 @@ test("renders paused cards as visible included categories with need details", ()
   assert.match(html, /data-plan-start-card-paused="true"/)
   assert.match(html, /Pausiert/)
   assert.match(html, /Aktuell nicht anwenden/)
-  assert.match(html, /Was dein Haar braucht/)
-  assert.match(html, /aria-expanded="true"/)
+  assert.match(html, /aria-haspopup="dialog"/)
 })
 
 test("renders every Stage 1 category with its approved shell and dot palette", () => {

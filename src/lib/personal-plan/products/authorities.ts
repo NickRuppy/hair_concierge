@@ -117,7 +117,10 @@ export function stage1ExampleVerdictAllowed(
   verdict: "ideal" | "supportive",
 ): boolean {
   if (verdict === "ideal") return true
-  return decision.category === "mask" && decision.needTier === "optional"
+  // A supportive verdict here is already the authority's best available pick
+  // for the role (it only recommends supportive once no ideal candidate
+  // exists), so both basis and optional categories may surface it.
+  return decision.needTier === "basis" || decision.needTier === "optional"
 }
 
 export function allowsMultipleProductsForRole(

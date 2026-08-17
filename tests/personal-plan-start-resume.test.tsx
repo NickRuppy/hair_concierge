@@ -3,13 +3,18 @@ import test from "node:test"
 import type React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { resolvePlanStartPageState, type PlanStartPageDeps } from "../src/app/plan-start/page"
+import {
+  parseRefineParam,
+  resolvePlanStartPageState,
+  type PlanStartPageDeps,
+} from "../src/app/plan-start/page"
 import {
   completeStage2ProductKindCorrection,
   loadPlanStartStage2HandoffBootstrap,
   loadPlanStartStage3Bootstrap,
   PlanStartProductionGate,
   recoverPlanStartStage3Load,
+  refinementAutoHandoffEnabled,
   shouldRequestPlanStartOnMount,
   Stage3ProductKindCorrectionError,
   stage3LoadRecoveryMode,
@@ -675,4 +680,85 @@ test("product-kind correction completion failure preserves a saved session for c
     { loadStage3Bootstrap: "refined-retry" },
   ])
   assert.equal(retry.bootstrap.entryContext.refinedVersionId, "refined-retry")
+})
+
+/**
+ * FINDING C. After a direct accept the refinement draft is COMPLETE, so a bare
+ * `/plan-start` seeds the completed session, `deriveRefinementEntryMode` maps it
+ * to "bridge", and the bridge auto-hands off straight into Stage 3 — the
+ * Routine nudge's "Jetzt verfeinern" would never show the Feinschliff. The
+ * `?refine=1` param forces the same Stage-2 re-entry the in-session
+ * "Zurück zum Feinschliff" return uses: `returningToRefinement`, which
+ * suppresses the auto-handoff.
+ */
+test("refine=1 re-enters Stage 2 instead of resuming Stage 3, and suppresses the auto-handoff", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage3",
+      nextHref: "/plan-start",
+      allowed: { ...allowed, stage3: true },
+    }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  // Without the param the completed draft resumes Stage 3 (the reported bug).
+  assert.deepEqual(await resolvePlanStartPageState(deps), {
+    state: "production",
+    initialJourney: { stage: "stage3", refinedVersionId: "refined-1" },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
+
+  const refined = await resolvePlanStartPageState(deps, { refine: true })
+  assert.deepEqual(refined, {
+    state: "production",
+    initialJourney: { stage: "stage2", returningToRefinement: true },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
+  assert.equal(
+    refined.state === "production" && refinementAutoHandoffEnabled(refined.initialJourney),
+    false,
+    "an explicit refine request must not auto-hand off into Stage 3",
+  )
+})
+
+test("refine=1 outranks a repair request and only accepts the exact param value", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage5",
+      nextHref: "/anwendung",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
+    }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  const state = await resolvePlanStartPageState(deps, {
+    refine: true,
+    repairRoutineVersionId: "44444444-4444-4444-8444-444444444444",
+  })
+  assert.deepEqual(state, {
+    state: "production",
+    initialJourney: { stage: "stage2", returningToRefinement: true },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
+
+  assert.equal(parseRefineParam("1"), true)
+  assert.equal(parseRefineParam(["1", "0"]), true)
+  assert.equal(parseRefineParam("true"), false)
+  assert.equal(parseRefineParam(undefined), false)
+
+  // A normal (non-refine) journey keeps the auto-handoff.
+  assert.equal(refinementAutoHandoffEnabled({ stage: "stage2" }), true)
 })

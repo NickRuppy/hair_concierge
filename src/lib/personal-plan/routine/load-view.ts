@@ -9,6 +9,7 @@ import {
   loadActiveRoutineCatalogProductPresentation,
   loadOwnerRefinedNeedSnapshot,
   loadOwnerPendingRoutineProposal,
+  loadOwnerRoutineNudgeState,
   loadOwnerRoutinePlan,
   loadOwnerRoutineVersion,
   type PersonalPlanRoutineReadClient,
@@ -59,9 +60,9 @@ async function hasMatchingSourceCategoryOrder(input: {
       const actual = uniqueCategoryOrder(payload)
       return Boolean(
         expected &&
-          actual &&
-          expected.length === actual.length &&
-          expected.every((category, index) => category === actual[index]),
+        actual &&
+        expected.length === actual.length &&
+        expected.every((category, index) => category === actual[index]),
       )
     }),
   )
@@ -104,7 +105,10 @@ export async function loadPersonalPlanRoutineView(input: {
     input.enabled &&
     input.includePendingProposal !== false &&
     Boolean(plan.pending_routine_proposal_id)
-  const [active, proposal] = await Promise.all([
+  const [nudge, active, proposal] = await Promise.all([
+    // Cosmetic and deliberately failure-tolerant: a missing column or a failed
+    // read hides the nudge, it never fails the Routine page.
+    loadOwnerRoutineNudgeState(input.client, input.userId),
     plan.active_routine_version_id
       ? loadOwnerRoutineVersion(input.client, input.userId, plan.id, plan.active_routine_version_id)
       : null,
@@ -129,6 +133,7 @@ export async function loadPersonalPlanRoutineView(input: {
       client: input.client,
       payloads: [activeVersion?.payload ?? null],
     }),
+    nudge,
   })
   const incompleteView = () => ({
     personalPlanId: plan.id,
@@ -138,6 +143,7 @@ export async function loadPersonalPlanRoutineView(input: {
     activeVersion: null,
     pendingProposal: null,
     productPresentation: { catalogProducts: [] },
+    nudge,
   })
   const repairRequiredView = (routineVersion: { id: string; payload: RoutinePayloadV1 }) => ({
     personalPlanId: plan.id,
@@ -152,6 +158,7 @@ export async function loadPersonalPlanRoutineView(input: {
       href: `/plan-start?repairRoutineVersionId=${encodeURIComponent(routineVersion.id)}`,
     },
     productPresentation: { catalogProducts: [] },
+    nudge,
   })
   if (!input.enabled)
     return {
@@ -204,6 +211,7 @@ export async function loadPersonalPlanRoutineView(input: {
               delta: routineProposalDeltaV1Schema.parse(proposal.delta),
               candidate: candidatePayload,
             },
+            nudge,
           }
         }
       }
@@ -263,6 +271,7 @@ export async function loadPersonalPlanRoutineView(input: {
       delta: routineProposalDeltaV1Schema.parse(proposal.delta),
       candidate: candidatePayload,
     },
+    nudge,
   }
 }
 

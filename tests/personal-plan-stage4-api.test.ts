@@ -5,6 +5,7 @@ import { createPersonalPlanRoutineAttentionRouteHandlers } from "../src/app/api/
 import { createPersonalPlanRoutineRouteHandlers } from "../src/app/api/personal-plan/routine/route"
 import { createPersonalPlanRoutineProposalRouteHandlers } from "../src/app/api/personal-plan/routine/proposals/route"
 import { createPersonalPlanRoutineResolveRouteHandlers } from "../src/app/api/personal-plan/routine/proposals/[proposalId]/resolve/route"
+import { createPersonalPlanRoutineNudgeDismissRouteHandlers } from "../src/app/api/personal-plan/routine/nudge/dismiss/route"
 import type { PersonalPlanRoutineReadClient } from "../src/lib/personal-plan/routine/repository"
 
 const ids = {
@@ -306,4 +307,75 @@ test("initial proposal rejection remains a typed unambiguous non-mutating error"
     [response.status, await response.json()],
     [422, { error: "initial_proposal_not_rejectable" }],
   )
+})
+
+test("nudge dismiss requires auth, gates on Stage 4, and returns the typed snooze result", async () => {
+  const unauthenticated = await createPersonalPlanRoutineNudgeDismissRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => null,
+    loadJourneyAccess: async () => stage4Access,
+    service: () => ({ dismiss: async () => assert.fail("must not be constructed") }) as never,
+  }).POST()
+  assert.deepEqual(
+    [unauthenticated.status, await unauthenticated.json()],
+    [401, { error: "unauthorized" }],
+  )
+
+  const disabled = await createPersonalPlanRoutineNudgeDismissRouteHandlers({
+    enabled: () => false,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
+    service: () => ({ dismiss: async () => assert.fail("must not be constructed") }) as never,
+  }).POST()
+  assert.deepEqual(
+    [disabled.status, await disabled.json()],
+    [404, { error: "personal_plan_not_available" }],
+  )
+
+  let constructed = false
+  const beyondFrontier = await createPersonalPlanRoutineNudgeDismissRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: ids.plan,
+      frontier: "stage3",
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
+    }),
+    service: () => {
+      constructed = true
+      return { dismiss: async () => assert.fail("must not be constructed") } as never
+    },
+  }).POST()
+  assert.deepEqual(
+    [beyondFrontier.status, await beyondFrontier.json()],
+    [409, { error: "stage_not_ready" }],
+  )
+  assert.equal(constructed, false)
+
+  const success = await createPersonalPlanRoutineNudgeDismissRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
+    service: () =>
+      ({
+        dismiss: async () => ({
+          status: "dismissed",
+          nudgeDismissedUntil: "2026-08-17T12:00:00.000Z",
+        }),
+      }) as never,
+  }).POST()
+  assert.deepEqual(
+    [success.status, await success.json(), success.headers.get("Cache-Control")],
+    [200, { status: "dismissed", nudgeDismissedUntil: "2026-08-17T12:00:00.000Z" }, "no-store"],
+  )
+
+  const noPlan = await createPersonalPlanRoutineNudgeDismissRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
+    service: () => ({ dismiss: async () => ({ status: "no_personal_plan" }) }) as never,
+  }).POST()
+  assert.deepEqual([noPlan.status, await noPlan.json()], [404, { error: "no_personal_plan" }])
 })

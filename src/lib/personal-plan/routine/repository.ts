@@ -13,6 +13,21 @@ export type RoutinePlanRow = {
   active_routine_version_id: string | null
   pending_routine_proposal_id: string | null
 }
+
+/**
+ * The cosmetic refinement-nudge state. Deliberately NOT part of
+ * `RoutinePlanRow`: its columns ship in a migration that may land after the
+ * code, so the Routine page must never select them in its load-bearing read.
+ */
+export type RoutineNudgeState = {
+  unrefinedDirectAccept: boolean
+  nudgeDismissedUntil: string | null
+}
+
+const NUDGE_STATE_UNAVAILABLE: RoutineNudgeState = {
+  unrefinedDirectAccept: false,
+  nudgeDismissedUntil: null,
+}
 export type RoutineVersionRow = {
   id: string
   payload: unknown
@@ -52,6 +67,45 @@ export async function loadOwnerRoutinePlan(
     .maybeSingle()
   if (error) throw error
   return data as RoutinePlanRow | null
+}
+
+/**
+ * Failure-tolerant read of the nudge columns. Any error — including the
+ * `42703 undefined_column` a pre-migration deploy returns — degrades to
+ * "no nudge" instead of failing the Routine page, which must render for every
+ * user regardless of deploy ordering.
+ */
+export async function loadOwnerRoutineNudgeState(
+  client: PersonalPlanRoutineReadClient,
+  userId: string,
+): Promise<RoutineNudgeState> {
+  try {
+    const { data, error } = await client
+      .from("personal_plans")
+      .select("unrefined_direct_accept, nudge_dismissed_until")
+      .eq("user_id", userId)
+      .maybeSingle()
+    if (error) {
+      console.warn("personal_plan_routine_nudge_state_unavailable", {
+        code: (error as { code?: unknown } | null)?.code ?? null,
+      })
+      return NUDGE_STATE_UNAVAILABLE
+    }
+    const row = (data ?? null) as {
+      unrefined_direct_accept?: unknown
+      nudge_dismissed_until?: unknown
+    } | null
+    return {
+      unrefinedDirectAccept: row?.unrefined_direct_accept === true,
+      nudgeDismissedUntil:
+        typeof row?.nudge_dismissed_until === "string" ? row.nudge_dismissed_until : null,
+    }
+  } catch (error) {
+    console.warn("personal_plan_routine_nudge_state_unavailable", {
+      code: (error as { code?: unknown } | null)?.code ?? null,
+    })
+    return NUDGE_STATE_UNAVAILABLE
+  }
 }
 export async function loadOwnerRoutineVersion(
   client: PersonalPlanRoutineReadClient,

@@ -1,0 +1,346 @@
+<title>Idealplan Konkret</title>
+<style>
+  :root{
+    --page-bg:#faf8f5; --page-ink:#2b2622; --page-sub:#6f6961; --page-line:#e6e0d8;
+    --page-card:#ffffff; --page-accent:#6b50a0; --page-accent-soft:#f2eefa;
+    --rec-bg:#edf7ef; --rec-ink:#356b45;
+  }
+  :root:not([data-theme="light"]){}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --page-bg:#1c1920; --page-ink:#ece7e0; --page-sub:#a39c92; --page-line:#37323d;
+      --page-card:#262230; --page-accent:#b7a3dd; --page-accent-soft:#322b42;
+      --rec-bg:#243b2c; --rec-ink:#9fd4ae;
+    }
+  }
+  :root[data-theme="dark"]{
+    --page-bg:#1c1920; --page-ink:#ece7e0; --page-sub:#a39c92; --page-line:#37323d;
+    --page-card:#262230; --page-accent:#b7a3dd; --page-accent-soft:#322b42;
+    --rec-bg:#243b2c; --rec-ink:#9fd4ae;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page-bg);color:var(--page-ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+  .wrap{max-width:1060px;margin:0 auto;padding:40px 20px 80px}
+  h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:34px;margin:0 0 6px;text-wrap:balance}
+  .lede{color:var(--page-sub);max-width:62ch;margin:0 0 8px}
+  .decisions{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+  .decisions span{font-size:12px;font-weight:600;background:var(--page-accent-soft);color:var(--page-accent);
+    border-radius:999px;padding:4px 12px}
+  section{margin-top:56px}
+  h2{font-family:Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+  .secnote{color:var(--page-sub);font-size:14px;max-width:68ch;margin:0 0 22px}
+  .row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+  .col{display:flex;flex-direction:column;gap:10px}
+  .collabel{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--page-sub)}
+  .collabel.rec{color:var(--rec-ink);background:var(--rec-bg);border-radius:999px;padding:3px 10px;align-self:flex-start}
+  .caption{font-size:12.5px;color:var(--page-sub);max-width:38ch}
+  .callout{background:var(--page-card);border:1px solid var(--page-line);border-radius:12px;
+    padding:14px 18px;font-size:13.5px;color:var(--page-sub);max-width:72ch;margin:20px 0 0}
+  .callout strong{color:var(--page-ink)}
+
+  /* ---------- phone frame ---------- */
+  .phone{width:340px;background:#fdfbf9;border:1px solid #d9d2c8;border-radius:28px;
+    padding:10px 10px 16px;box-shadow:0 12px 40px rgba(40,25,60,.10);color:#3a3835;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .screen{background:#fdfbf9;border-radius:20px;overflow:hidden;position:relative}
+  .cardonly{width:340px;background:#fdfbf9;border:1px solid #d9d2c8;border-radius:20px;
+    padding:14px;box-shadow:0 12px 40px rgba(40,25,60,.08);color:#3a3835}
+
+  /* app header + rail */
+  .apphead{display:flex;flex-direction:column;gap:7px;padding:12px 14px 10px;
+    border-bottom:1px solid rgba(107,80,160,.10);background:rgba(253,251,249,.96)}
+  .wordmark{font-family:Georgia,serif;font-size:19px;color:#2a1845;text-align:center}
+  .rail{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+  .rail i{height:5px;border-radius:999px;background:#e8e4df;display:block}
+  .rail i.done{background:#6b50a0}.rail i.cur{background:#3d2a62}
+  .raillabels{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-size:7.5px;font-weight:700;color:#736f69;text-align:center}
+  .raillabels b{color:#2a1845}.raillabels s{text-decoration:none;color:#6b50a0}
+
+  /* stage-1 card */
+  .pcard{border-radius:19px;border:1px solid #E2D4B8;background:#F5F0E5;overflow:hidden;
+    box-shadow:0 3px 11px rgba(43,26,67,.035)}
+  .pcard .hd{display:grid;grid-template-columns:66px minmax(0,1fr) 16px;gap:12px;align-items:center;padding:12px}
+  .imgslot{position:relative;height:82px;width:66px;border-radius:14px;background:#f3efe8;
+    box-shadow:inset 0 0 0 1px rgba(31,26,20,.04);display:grid;place-items:center}
+  .badge{position:absolute;bottom:4px;left:4px;border-radius:999px;background:rgba(41,26,67,.8);
+    padding:2px 6px;font-size:7px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+  .overline{display:flex;align-items:center;gap:5px;font-size:8.5px;font-weight:800;
+    letter-spacing:.11em;text-transform:uppercase;color:#6B50A0}
+  .overline i{height:6px;width:6px;border-radius:999px;background:#A77D31;display:inline-block}
+  .ttl{font-size:13.5px;line-height:1.18;color:#291a43;font-weight:700;margin:3px 0 2px}
+  .sub{font-size:10px;color:#6a5f8a;font-weight:600;margin:0 0 3px}
+  .purpose{font-size:9.8px;line-height:1.32;color:#5f5954;margin:0}
+  .pills{display:flex;gap:4px;margin-top:5px}
+  .pill{border-radius:999px;border:1px solid rgba(107,80,160,.15);background:rgba(255,255,255,.7);
+    padding:2px 6px;font-size:7.8px;font-weight:700;color:#62507e;white-space:nowrap}
+  .freq{display:flex;align-items:center;gap:6px;border-top:1px solid rgba(67,55,48,.08);
+    margin:8px 12px 0;padding:6px 0 10px;font-size:8.8px;font-weight:700;color:#665e58}
+  .freq i{height:15px;width:15px;border-radius:999px;background:rgba(107,80,160,.11);color:#6B50A0;
+    display:grid;place-items:center;font-size:8px;font-style:normal}
+  .chev{color:rgba(31,26,20,.38);font-size:11px}
+  .price-inline{font-weight:800;color:#291a43}
+
+  /* screen body generic */
+  .body{padding:14px 14px 0}
+  .ovl{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6e6863;margin:0 0 4px}
+  .h1{font-family:Georgia,serif;font-size:22px;line-height:1.14;color:#291a43;margin:0 0 5px;text-wrap:balance}
+  .lead{font-size:11.5px;color:#706a65;margin:0 0 10px}
+  .disc{font-size:10.5px;color:#8a837c;margin:0 0 10px}
+
+  /* bottom sheet */
+  .sheetstage{position:relative;background:#cfc8c0;border-radius:20px;overflow:hidden;min-height:560px}
+  .dim{position:absolute;inset:0;background:rgba(0,0,0,.2)}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:#fdfbf9;border-radius:18px 18px 0 0;
+    box-shadow:0 -4px 32px rgba(0,0,0,.3);padding:8px 20px 20px}
+  .handle{height:5px;width:40px;border-radius:999px;background:rgba(110,104,99,.3);margin:0 auto 12px}
+  .eyebrow{font-size:12px;font-weight:600;color:#6b50a0;margin:0 0 2px}
+  .pname{font-size:20px;font-weight:700;letter-spacing:-.01em;color:#291a43;margin:0 0 10px}
+  .sheetgrid{display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:start;margin-bottom:12px}
+  .sheetimg{height:110px;border-radius:14px;background:#f3efe8;box-shadow:inset 0 0 0 1px rgba(31,26,20,.04);
+    display:grid;place-items:center}
+  .facts{display:flex;flex-direction:column;gap:3px;font-size:12.5px}
+  .facts .p{font-size:17px;font-weight:800;color:#291a43}
+  .facts .ml{color:#6a6560}
+  .avail{color:#356b45;font-weight:600;font-size:12px}
+  .fresh{color:#8a837c;font-size:11px}
+  .fitbox{border:1px solid #e8e4df;border-radius:11px;background:#f8f5f2;padding:10px 12px;margin-bottom:10px}
+  .fitbox b{display:block;font-size:11px;color:#291a43;margin-bottom:2px}
+  .fitbox p{margin:0;font-size:11px;line-height:1.45;color:#625d58}
+  .refhint{font-size:10.5px;color:#6a5f8a;background:rgba(107,80,160,.08);border-radius:9px;
+    padding:7px 10px;margin-bottom:12px}
+  .aff{font-size:9.5px;color:#8a837c;margin:0 0 10px}
+  .cta{display:block;width:100%;border:0;border-radius:999px;background:#d4616a;color:#fff;
+    font-size:14px;font-weight:700;padding:15px 0;text-align:center;font-family:inherit}
+  .cta.mid{padding:12px 0;font-size:13px}
+  .ghost{display:block;width:100%;border:1.5px solid #6b50a0;border-radius:12px;background:transparent;
+    color:#6b50a0;font-size:12.5px;font-weight:600;padding:10px 0;text-align:center;margin-top:8px;font-family:inherit}
+  .txtlink{display:block;text-align:center;font-size:12px;font-weight:600;color:#6b50a0;
+    margin-top:12px;text-decoration:underline;text-underline-offset:3px}
+
+  /* fork screen */
+  .fork{display:flex;flex-direction:column;min-height:560px}
+  .fork .mid{flex:1;padding:22px 18px 0;text-align:center}
+  .fork .h1{font-size:21px;max-width:23ch;margin:0 auto 6px}
+  .fork .lead{max-width:36ch;margin:0 auto 16px;font-size:11px}
+  .assume{background:#f6efe7;border-radius:14px;padding:12px 14px;text-align:left;margin:0 0 14px}
+  .assume b{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4a304d;display:block;margin-bottom:6px}
+  .assume ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+  .assume li{font-size:11px;color:#5f5954;display:flex;gap:7px;align-items:baseline}
+  .assume li::before{content:"·";color:#a77d31;font-weight:800}
+  .assume p{margin:8px 0 0;font-size:9.5px;color:#8a837c}
+  .dock{border-top:1px solid #ece6df;background:rgba(253,251,249,.95);padding:10px 14px 14px}
+  .choice{display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:4px}
+  .chcard{border-radius:16px;border:1.5px solid #e8e4df;background:#fff;padding:12px 14px;position:relative}
+  .chcard.sel{border-color:#6b50a0;background:#eee5f8;box-shadow:0 8px 22px -20px rgba(42,24,69,.7)}
+  .chcard b{display:block;font-size:13px;color:#291a43;margin-bottom:2px}
+  .chcard p{margin:0;font-size:10.5px;color:#6a6560;line-height:1.35}
+  .chtag{position:absolute;top:10px;right:12px;font-size:8px;font-weight:800;letter-spacing:.08em;
+    text-transform:uppercase;color:#6b50a0;background:rgba(107,80,160,.14);border-radius:999px;padding:2px 7px}
+
+  /* routine banner mock */
+  .nudge{border-radius:14px;border:1px solid rgba(107,80,160,.18);background:#f2eefa;
+    padding:11px 13px;display:flex;flex-direction:column;gap:8px;margin:12px 14px}
+  .nudge p{margin:0;font-size:11px;line-height:1.4;color:#3d2a62}
+  .nudge .b{align-self:flex-start;border:0;border-radius:999px;background:#6b50a0;color:#fff;
+    font-size:11px;font-weight:700;padding:7px 14px;font-family:inherit}
+  .skelrow{display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid #efe9e2}
+  .skelrow .im{height:44px;width:36px;border-radius:9px;background:#f3efe8;flex:none}
+  .skelrow .tx{flex:1}
+  .skelrow .l1{height:8px;width:60%;border-radius:4px;background:#e8e2da;margin-bottom:5px}
+  .skelrow .l2{height:7px;width:40%;border-radius:4px;background:#efe9e2}
+  svg.bottle{display:block}
+</style>
+
+<div class="wrap">
+  <h1>Idealplan Konkret</h1>
+  <p class="lede">Mockups für Approach A: Der Idealplan zeigt sofort konkrete Produkte mit Preis und Kauf-Link. Danach entscheidet der Nutzer auf dem Übergangsscreen: Plan direkt übernehmen (schneller Weg, schaltet Routine &amp; Anwendung frei) oder verfeinern (heutiger Weg).</p>
+  <div class="decisions">
+    <span>Entschieden: ehrliches Framing statt Pinning</span>
+    <span>Entschieden: Übernahme = akzeptierte Routine</span>
+    <span>Entschieden: Karte 1a (Produkt führt)</span>
+    <span>Entschieden: Weiche 3a mit zwei klaren CTAs</span>
+    <span>Entschieden: Nudge dismissbar, kehrt täglich zurück</span>
+    <span>Offen: Affiliate-Kennzeichnungspflicht (rechtlich prüfen)</span>
+  </div>
+
+  <!-- ================= SECTION 1 ================= -->
+  <section>
+    <h2>1 · Idealplan-Karte: konkret statt Beispiel</h2>
+    <p class="secnote">Links der Ist-Zustand (Beispielbild, Name unterdrückt). Rechts die gewählte Variante: der Produktname führt, Typ + Preis als Unterzeile. Die generalisierbare Begründung (Produkttyp, warum er passt, Rhythmus) bleibt erhalten — sie öffnet sich beim Tippen im Detail-Sheet aus Abschnitt 2.</p>
+    <div class="row">
+      <div class="col">
+        <div class="collabel">Heute (Ist-Zustand)</div>
+        <div class="cardonly">
+          <div class="pcard">
+            <div class="hd">
+              <div class="imgslot">
+                <svg class="bottle" width="30" height="56" viewBox="0 0 30 56" style="filter:blur(2px);opacity:.55">
+                  <rect x="10" y="0" width="10" height="8" rx="2" fill="#a77d31"/>
+                  <rect x="4" y="9" width="22" height="46" rx="6" fill="#c9b98f"/>
+                </svg>
+                <span class="badge">Beispiel</span>
+              </div>
+              <div>
+                <div class="overline"><i></i>Shampoo</div>
+                <p class="ttl">Sanft reinigend</p>
+                <p class="purpose">Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.</p>
+                <div class="pills"><span class="pill">sanft</span><span class="pill">Kopfhaut</span></div>
+              </div>
+              <span class="chev">⌄</span>
+            </div>
+            <div class="freq"><i>◷</i>2×/Woche</div>
+          </div>
+        </div>
+        <p class="caption">Bild trägt den Hinweis „Beispiel“, Alt-Text verspricht die Produktwahl für später.</p>
+      </div>
+
+      <div class="col">
+        <div class="collabel rec">Gewählt · Produkt führt</div>
+        <div class="cardonly">
+          <div class="pcard">
+            <div class="hd">
+              <div class="imgslot">
+                <svg class="bottle" width="30" height="56" viewBox="0 0 30 56">
+                  <rect x="10" y="0" width="10" height="8" rx="2" fill="#8a2f3a"/>
+                  <rect x="4" y="9" width="22" height="46" rx="6" fill="#e8e2d8"/>
+                  <rect x="7" y="20" width="16" height="18" rx="2" fill="#c94f5c"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline"><i></i>Shampoo</div>
+                <p class="ttl">Redken All Soft Shampoo</p>
+                <p class="sub">Sanft reinigend · <span class="price-inline">17,95&nbsp;€</span></p>
+                <p class="purpose">Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.</p>
+                <div class="pills"><span class="pill">sanft</span><span class="pill">Kopfhaut</span></div>
+              </div>
+              <span class="chev">›</span>
+            </div>
+            <div class="freq"><i>◷</i>2×/Woche</div>
+          </div>
+        </div>
+        <p class="caption">Produktname als Titel, Typ + Preis als Unterzeile. Chevron zeigt nach rechts: Tippen öffnet das Detail-Sheet.</p>
+      </div>
+
+    </div>
+    <div class="callout"><strong>Screen-Copy ändert sich mit:</strong> Der Disclaimer „Bilder zeigen nur Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.“ entfällt und wird zu „Für jede Kategorie haben wir das passendste Produkt aus unserem Katalog gewählt.“ — Kategorien, für die (noch) kein Produkt die Qualitätsprüfung besteht, zeigen ehrlich „Produktempfehlung folgt nach dem Feinschliff“ statt einer stillen Lücke.</div>
+  </section>
+
+  <!-- ================= SECTION 2 ================= -->
+  <section>
+    <h2>2 · Produkt-Detail-Sheet auf dem Idealplan</h2>
+    <p class="secnote">Beim Tippen auf eine Karte öffnet sich das Bottom-Sheet: Produkt, Preis, Größe, Kauf-CTA — und darunter dieselben drei Begründungsblöcke, die heute im aufklappbaren Kartenbereich stehen („Was dein Haar braucht“). Kein Datums-Stempel, kein „schon gekauft“-Button.</p>
+    <div class="row">
+      <div class="col">
+        <div class="collabel rec">Vorschlag</div>
+        <div class="phone">
+          <div class="screen sheetstage">
+            <div class="dim"></div>
+            <div class="sheet">
+              <div class="handle"></div>
+              <p class="eyebrow">Shampoo · Sanft reinigend</p>
+              <p class="pname">Redken All Soft Shampoo</p>
+              <div class="sheetgrid">
+                <div class="sheetimg">
+                  <svg class="bottle" width="38" height="76" viewBox="0 0 30 56">
+                    <rect x="10" y="0" width="10" height="8" rx="2" fill="#8a2f3a"/>
+                    <rect x="4" y="9" width="22" height="46" rx="6" fill="#e8e2d8"/>
+                    <rect x="7" y="20" width="16" height="18" rx="2" fill="#c94f5c"/>
+                  </svg>
+                </div>
+                <div class="facts">
+                  <span class="p">17,95&nbsp;€</span>
+                  <span class="ml">300&nbsp;ml</span>
+                  <span class="avail">Aktuell verfügbar</span>
+                </div>
+              </div>
+              <div class="fitbox" style="margin-bottom:6px">
+                <b>Worauf es beim Produkt ankommt</b>
+                <p>Sanfte Tenside, die reinigen, ohne deine Kopfhaut auszutrocknen — kein aggressives Sulfat-Profil.</p>
+              </div>
+              <div class="fitbox" style="margin-bottom:6px">
+                <b>Warum das zu deinem Haar passt</b>
+                <p>Deine Kopfhaut braucht sanfte Reinigung, und deine Längen vertragen keine stark entfettenden Formeln.</p>
+              </div>
+              <div class="fitbox">
+                <b>Empfohlener Rhythmus</b>
+                <p>2×/Woche — häufiger nur, wenn deine Kopfhaut schneller nachfettet.</p>
+              </div>
+              <p class="refhint">Nach dem Feinschliff prüfen wir, ob es eine noch bessere Wahl für dich gibt.</p>
+              <button class="cta">Zum Produkt</button>
+            </div>
+          </div>
+        </div>
+        <p class="caption">Die drei Blöcke entsprechen 1:1 dem heutigen Aufklapp-Inhalt — die generalisierbare Begründung bleibt für jede Kategorie sichtbar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 3 ================= -->
+  <section>
+    <h2>3 · Der Übergangsscreen: übernehmen oder verfeinern</h2>
+    <p class="secnote">Der heutige Kapitelscreen nach Stage 1 wird zur Weiche. Der Feinschliff führt (Coral-CTA), aber die Übernahme ist ein gleichwertig klarer, eigenständiger Button — kein versteckter Textlink. Der Annahmen-Block macht die Default-Annahmen transparent.</p>
+    <div class="row">
+
+      <div class="col">
+        <div class="collabel rec">Gewählt · Feinschliff führt, beide Wege klar</div>
+        <div class="phone"><div class="screen fork">
+          <div class="apphead">
+            <div class="wordmark">chaarlie</div>
+            <div class="rail"><i class="done"></i><i class="cur"></i><i></i><i></i><i></i></div>
+            <div class="raillabels"><s>Idealplan</s><b>Feinschliff</b><span>Produkte</span><span>Routine</span><span>Anwendung</span></div>
+          </div>
+          <div class="mid">
+            <p class="h1">Dein Idealplan steht.</p>
+            <p class="lead">Du kannst ihn direkt umsetzen — oder wir passen ihn an deinen Alltag und deine Produkte an.</p>
+            <div class="assume">
+              <b>Dafür haben wir angenommen</b>
+              <ul>
+                <li>Haarwäsche etwa 2× pro Woche</li>
+                <li>Gelegentliches Hitzestyling</li>
+                <li>Deine vorhandenen Produkte sind noch nicht berücksichtigt</li>
+              </ul>
+              <p>Der Feinschliff ersetzt diese Annahmen durch deine echten Angaben.</p>
+            </div>
+          </div>
+          <div class="dock">
+            <button class="cta mid">Feinschliff starten · ca. 2 Min.</button>
+            <button class="ghost">Plan direkt übernehmen</button>
+            <p style="margin:8px 0 0;text-align:center;font-size:9.5px;color:#8a837c">Nichts ist endgültig — verfeinern kannst du jederzeit später.</p>
+          </div>
+        </div></div>
+        <p class="caption">Coral führt zum empfohlenen Feinschliff; die Übernahme steht direkt darunter als klarer Plum-Outline-Button.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= SECTION 4 ================= -->
+  <section>
+    <h2>4 · Nach der Übernahme: der Feinschliff-Anker</h2>
+    <p class="secnote">Wer direkt übernimmt, landet in der vollen App (Routine, Anwendung, Chat, Profil). Die Routine trägt dauerhaft einen ruhigen Hinweis, bis der Feinschliff gemacht ist — das ist der Rückweg für die „sophisticated users“.</p>
+    <div class="row">
+      <div class="col">
+        <div class="collabel">Routine-Seite mit Feinschliff-Nudge</div>
+        <div class="phone"><div class="screen">
+          <div class="apphead">
+            <div class="wordmark">chaarlie</div>
+            <div class="rail"><i class="done"></i><i class="done"></i><i class="done"></i><i class="cur"></i><i></i></div>
+            <div class="raillabels"><s>Idealplan</s><s>Feinschliff</s><s>Produkte</s><b>Routine</b><span>Anwendung</span></div>
+          </div>
+          <div class="nudge" style="position:relative">
+            <span style="position:absolute;top:8px;right:10px;font-size:12px;color:#6b50a0;font-weight:700">✕</span>
+            <p style="padding-right:18px"><strong>Dein Plan basiert noch auf Annahmen.</strong> Der Feinschliff passt ihn in ca. 2 Minuten an deinen Alltag und deine Produkte an.</p>
+            <button class="b">Jetzt verfeinern</button>
+          </div>
+          <div class="skelrow"><div class="im"></div><div class="tx"><div class="l1"></div><div class="l2"></div></div></div>
+          <div class="skelrow"><div class="im"></div><div class="tx"><div class="l1"></div><div class="l2"></div></div></div>
+          <div class="skelrow"><div class="im"></div><div class="tx"><div class="l1"></div><div class="l2"></div></div></div>
+          <div style="height:14px"></div>
+        </div></div>
+        <p class="caption">Dismissbar über das ✕ — kehrt am nächsten Tag zurück, solange der Feinschliff aussteht. Nach abgeschlossenem Feinschliff verschwindet er dauerhaft; verbesserte Empfehlungen werden als „Noch besser für dich“ markiert.</p>
+      </div>
+    </div>
+    <div class="callout"><strong>Hinweis zur Treue der Mockups:</strong> Farben, Radien, Typo-Größen und Copy-Stil folgen den echten Tokens aus <code>globals.css</code> und den Komponenten (Playfair/Jakarta hier durch Systemschriften angenähert). Produktbild und Preis sind Platzhalter — die Daten existieren bereits im Stage-1-Preview-Payload bzw. Product-Detail-Service.</div>
+  </section>
+</div>

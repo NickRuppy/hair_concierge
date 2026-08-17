@@ -10,8 +10,13 @@ import {
   type Stage2HandoffPayload,
 } from "@/components/personal-plan-refinement/refinement-flow"
 import {
+  PLAN_FORK_STALE_NOTICE,
   PersonalPlanStageEntrance,
   PersonalPlanViewTransition,
+  PlanForkScreen,
+  acceptStatusAfterStale,
+  derivePlanForkPreviewState,
+  interpretAcceptIdealPlanResponse,
   type PersonalPlanTransitionDirection,
 } from "@/components/personal-plan-journey"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
@@ -38,6 +43,8 @@ import {
   type Stage2CompleteResult,
 } from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
+import { directAcceptanceAssumptions } from "@/lib/personal-plan/direct-acceptance/defaults"
 import {
   isStage1ProductExamplePreviewResponse,
   stage1ProductExamplePreviewRequestUrl,
@@ -61,12 +68,36 @@ export type PlanStartReadyViewModel = {
   optional: NeedPlanScreenViewModel | null
   personalPlanId?: string
   sourceInputHash?: string
+  /** Drives the fork screen's assumption list without touching the Stage-2 gateway. */
+  stage2TriggerContext?: Stage2TriggerContext
 }
 
 export type PlanStartInitialJourney =
-  | { stage: "stage1"; refinementAvailable?: boolean }
-  | { stage: "stage2"; refinementAvailable?: boolean }
+  | { stage: "stage1"; refinementAvailable?: boolean; directAcceptanceAvailable?: boolean }
+  | {
+      stage: "stage2"
+      refinementAvailable?: boolean
+      directAcceptanceAvailable?: boolean
+      /**
+       * Explicit Stage-2 re-entry (`/plan-start?refine=1`, the Routine
+       * refinement nudge). Suppresses the bridge auto-handoff exactly like the
+       * in-session "Zurück zum Feinschliff" return from Stage 3 does, so a
+       * completed draft does not bounce the user straight back to Stage 3.
+       */
+      returningToRefinement?: boolean
+    }
   | { stage: "stage3"; refinedVersionId: string; repairRoutineVersionId?: string }
+
+/**
+ * Whether Stage 2's bridge may hand off into Stage 3 on its own. An explicit
+ * refine request (`/plan-start?refine=1`, the Routine refinement nudge) must
+ * not: after a direct accept the draft is already complete, so an auto-handoff
+ * would bounce the user straight back to Stage 3 without ever showing the
+ * Feinschliff.
+ */
+export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJourney): boolean {
+  return !(initialJourney.stage === "stage2" && initialJourney.returningToRefinement === true)
+}
 
 export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
 
@@ -376,6 +407,25 @@ export async function loadPlanStartStage2HandoffBootstrap(input: {
   }
 }
 
+export async function requestAcceptIdealPlan(
+  seenRoles: readonly { decisionKey: string; productId: string; factFingerprint: string }[],
+): Promise<ReturnType<typeof interpretAcceptIdealPlanResponse>> {
+  try {
+    const response = await fetch("/api/personal-plan/accept-ideal-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      cache: "no-store",
+      body: JSON.stringify({ seenRoles }),
+    })
+    return interpretAcceptIdealPlanResponse(
+      response.status,
+      await response.json().catch(() => null),
+    )
+  } catch {
+    return { kind: "error" }
+  }
+}
+
 export function performPersonalPlanRoutineHandoff(
   handoff: Stage3RoutineHandoff,
   dependencies: {
@@ -402,7 +452,15 @@ export function PlanStartCustomerJourney({
   reloadServerFrontier?: () => void
   replaceRoute?: (href: string) => void
 }) {
-  const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
+  const [stage, setStage] = useState<"stage1" | "fork" | "stage2" | "stage3">(
+    () => initialJourney.stage,
+  )
+  const [acceptStatus, setAcceptStatus] = useState<"idle" | "pending" | "error" | "unavailable">(
+    "idle",
+  )
+  const [forkNotice, setForkNotice] = useState<string | null>(null)
+  /** Consecutive `seen_state_stale` responses; resets on any other outcome. */
+  const staleAcceptCountRef = useRef(0)
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
@@ -415,7 +473,9 @@ export function PlanStartCustomerJourney({
   const pendingStage3BootstrapRef = useRef<Stage2RefinementSession | null>(null)
   const stage3JourneyStartedRef = useRef(false)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
-  const [returningToRefinement, setReturningToRefinement] = useState(false)
+  const [returningToRefinement, setReturningToRefinement] = useState(
+    () => !refinementAutoHandoffEnabled(initialJourney),
+  )
   const stage1ReturnStepRef = useRef<FlowStep>("basis")
   const [stage3LoadState, setStage3LoadState] = useState<
     "idle" | "loading" | Stage3LoadRecoveryMode
@@ -609,6 +669,83 @@ export function PlanStartCustomerJourney({
     }
   }, [stage2Gateway, stage2LoadState])
 
+  const forkPreviewState = useMemo(
+    () => derivePlanForkPreviewState(productExamplePreviews),
+    [productExamplePreviews],
+  )
+
+  const openRoutineHref = useCallback(
+    (href: string) => {
+      markPersonalPlanStageNavigation("/routine")
+      replaceRoute(href)
+    },
+    [replaceRoute],
+  )
+
+  const acceptIdealPlanDirectly = useCallback(async () => {
+    if (
+      !forkPreviewState ||
+      forkPreviewState.fallbackNotice ||
+      forkPreviewState.refinementRequiredNotice ||
+      acceptStatus === "pending"
+    ) {
+      return
+    }
+    setAcceptStatus("pending")
+    setForkNotice(null)
+    const outcome = await requestAcceptIdealPlan(forkPreviewState.seenRoles)
+    if (outcome.kind === "accepted" || outcome.kind === "plan_already_accepted") {
+      openRoutineHref(outcome.href)
+      return
+    }
+    if (outcome.kind === "refinement_in_progress") {
+      setAcceptStatus("idle")
+      void enterStage2()
+      return
+    }
+    if (outcome.kind === "seen_state_stale") {
+      // The server would plan other products than the user just saw. Re-render
+      // the fork from fresh previews instead of accepting something unseen.
+      //
+      // A second consecutive stale response means re-fetching did not converge:
+      // the mismatch is structural (the server plans a role the preview payload
+      // does not contain at all), so retrying can only loop while telling the
+      // user their recommendations were "updated". Stop, and send them down the
+      // path that does work.
+      staleAcceptCountRef.current += 1
+      const nextStatus = acceptStatusAfterStale(staleAcceptCountRef.current)
+      setAcceptStatus(nextStatus)
+      if (nextStatus === "unavailable") {
+        setForkNotice(null)
+        return
+      }
+      setForkNotice(PLAN_FORK_STALE_NOTICE)
+      if (!plan?.personalPlanId || !plan.sourceInputHash) {
+        setProductExamplePreviews(null)
+        return
+      }
+      try {
+        const refreshed = await requestStage1ProductExamplePreviews({
+          personalPlanId: plan.personalPlanId,
+          sourceInputHash: plan.sourceInputHash,
+        })
+        setProductExamplePreviews(refreshed)
+      } catch {
+        setProductExamplePreviews(null)
+      }
+      return
+    }
+    staleAcceptCountRef.current = 0
+    setAcceptStatus("error")
+  }, [
+    acceptStatus,
+    enterStage2,
+    forkPreviewState,
+    openRoutineHref,
+    plan?.personalPlanId,
+    plan?.sourceInputHash,
+  ])
+
   const openRoutine = useCallback(
     (handoff: Stage3RoutineHandoff) => {
       performPersonalPlanRoutineHandoff(handoff, {
@@ -619,6 +756,38 @@ export function PlanStartCustomerJourney({
     [replaceRoute],
   )
 
+  if (stage === "fork") {
+    return (
+      <PlanForkScreen
+        assumptions={directAcceptanceAssumptions(
+          plan?.stage2TriggerContext ?? {
+            relevantCategories: [],
+            hasReportedIrritatedScalp: false,
+            dryShampooBridgeEligibility: "unknown",
+          },
+        )}
+        previewState={forkPreviewState}
+        directAcceptanceAvailable={
+          initialJourney.stage !== "stage3" &&
+          initialJourney.directAcceptanceAvailable === true &&
+          Boolean(plan?.stage2TriggerContext)
+        }
+        refineStatus={stage2LoadState}
+        acceptStatus={acceptStatus}
+        noticeMessage={forkNotice}
+        onRefine={() => void enterStage2()}
+        onAccept={() => void acceptIdealPlanDirectly()}
+        onBack={() => {
+          // Leaving to Stage 1 and returning is a real remount of the fork, so
+          // the retired accept path gets a clean slate.
+          staleAcceptCountRef.current = 0
+          setAcceptStatus("idle")
+          setForkNotice(null)
+          setStage("stage1")
+        }}
+      />
+    )
+  }
   if (stage === "stage2") {
     // The ref deliberately retains the latest persisted seed across stage switches.
     const initialStage2Session = stage2SeedRef.current
@@ -686,11 +855,12 @@ export function PlanStartCustomerJourney({
       refinementAvailable={
         initialJourney.stage === "stage3" || initialJourney.refinementAvailable !== false
       }
-      continuationStatus={stage2LoadState}
       initialStep={stage1ReturnStepRef.current}
       onContinueToRefinement={(sourceStep) => {
+        // The fork is the Stage-2 entry point and must render before any
+        // Stage-2 gateway load, so its own error state can never block it.
         stage1ReturnStepRef.current = sourceStep
-        void enterStage2()
+        setStage("fork")
       }}
     />
   )
@@ -717,7 +887,6 @@ export function PlanStartFlow(
     initialStep?: FlowStep
     onContinueToRefinement?: (sourceStep: FlowStep) => void
     refinementAvailable?: boolean
-    continuationStatus?: "idle" | "loading" | "error"
   },
 ) {
   const [step, setStep] = useState<FlowStep>(() =>
@@ -745,7 +914,6 @@ export function PlanStartFlow(
           screen={props.plan.optional}
           hasOptionalPage
           showJourneyHeader={false}
-          nextStatus={props.continuationStatus}
           onNext={
             canRefine && props.onContinueToRefinement
               ? () => props.onContinueToRefinement?.("optional")
@@ -759,7 +927,6 @@ export function PlanStartFlow(
         screen={props.plan.basis}
         hasOptionalPage={hasOptionalPage}
         showJourneyHeader={false}
-        nextStatus={hasOptionalPage ? "idle" : props.continuationStatus}
         onNext={
           hasOptionalPage
             ? () => {

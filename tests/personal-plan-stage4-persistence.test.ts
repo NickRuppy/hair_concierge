@@ -341,3 +341,82 @@ test("proposal service stages a whole successor with database source metadata an
     [ids.active, ids.refined, ids.portfolio, ids.draft],
   )
 })
+
+test("accepting a proposal clears unrefined_direct_accept after confirmation commits", async () => {
+  const calls: { name: string; args: Record<string, unknown> }[] = []
+  const service = createRoutineProposalService({
+    repository: repository(),
+    rpc: async (name, args) => {
+      calls.push({ name, args })
+      if (name === "personal_plan_confirm_routine_proposal") {
+        return { data: { outcome: "accepted", revision: 4 }, error: null }
+      }
+      if (name === "personal_plan_clear_unrefined_direct_accept") {
+        return { data: { outcome: "cleared" }, error: null }
+      }
+      throw new Error(`unexpected rpc: ${name}`)
+    },
+  })
+  const result = await service.resolve({
+    userId: "owner",
+    proposalId: "proposal-1",
+    action: "accept",
+    expectedRevision: 3,
+  })
+  assert.deepEqual(result, { status: "accepted", revision: 4 })
+  assert.deepEqual(
+    calls.map((call) => call.name),
+    ["personal_plan_confirm_routine_proposal", "personal_plan_clear_unrefined_direct_accept"],
+  )
+  assert.deepEqual([calls[1].args.p_user_id, calls[1].args.p_personal_plan_id], ["owner", ids.plan])
+})
+
+test("rejecting a proposal never calls the unrefined_direct_accept clear RPC", async () => {
+  const calls: { name: string; args: Record<string, unknown> }[] = []
+  const service = createRoutineProposalService({
+    repository: repository(),
+    rpc: async (name, args) => {
+      calls.push({ name, args })
+      return { data: { outcome: "rejected", revision: 4 }, error: null }
+    },
+  })
+  const result = await service.resolve({
+    userId: "owner",
+    proposalId: "proposal-1",
+    action: "reject",
+    expectedRevision: 3,
+  })
+  assert.deepEqual(result, { status: "rejected", revision: 4 })
+  assert.deepEqual(
+    calls.map((call) => call.name),
+    ["personal_plan_reject_routine_proposal"],
+  )
+})
+
+test("a failing unrefined_direct_accept clear does not roll back a committed acceptance", async () => {
+  const calls: string[] = []
+  const service = createRoutineProposalService({
+    repository: repository(),
+    rpc: async (name) => {
+      calls.push(name)
+      if (name === "personal_plan_confirm_routine_proposal") {
+        return { data: { outcome: "accepted", revision: 4 }, error: null }
+      }
+      if (name === "personal_plan_clear_unrefined_direct_accept") {
+        throw new Error("simulated rpc failure")
+      }
+      throw new Error(`unexpected rpc: ${name}`)
+    },
+  })
+  const result = await service.resolve({
+    userId: "owner",
+    proposalId: "proposal-1",
+    action: "accept",
+    expectedRevision: 3,
+  })
+  assert.deepEqual(result, { status: "accepted", revision: 4 })
+  assert.deepEqual(calls, [
+    "personal_plan_confirm_routine_proposal",
+    "personal_plan_clear_unrefined_direct_accept",
+  ])
+})
