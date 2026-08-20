@@ -16,7 +16,6 @@ import {
 } from "react"
 import {
   Activity,
-  ArrowLeft,
   Briefcase,
   Brush,
   CalendarX,
@@ -118,11 +117,9 @@ import { resolvePrimaryPersonalPlanConcern } from "@/lib/personal-plan-quiz/hair
 import {
   DAILY_TIME_OPTIONS,
   EARLY_PROOF_TESTIMONIAL,
-  PERSONAL_PLAN_ASSET_BASE,
   PREPARATION_TESTIMONIALS,
   QUESTION_CONFIGS,
   TEXTURE_COPY,
-  TEXTURE_OPTIONS,
   getConcernOptions,
   getGoalOptions,
   getLengthOptions,
@@ -131,6 +128,14 @@ import {
   type QuizOption,
   type QuizQuestionConfig,
 } from "./quiz-data"
+import {
+  PersonalPlanQuizFrame,
+  PersonalPlanQuizTextureQuestion,
+} from "./personal-plan-quiz-first-screen"
+import type { FreshPersonalPlanQuizEntry } from "./progressive-entry-contract"
+import { PERSONAL_PLAN_ASSET_BASE, TEXTURE_QUESTION_CONFIG } from "./texture-question"
+
+export { PersonalPlanQuizFieldTestBanner as PersonalPlanFieldTestBanner } from "./personal-plan-quiz-first-screen"
 
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
 
@@ -219,16 +224,13 @@ type PreparedPlanState =
   | { status: "ready"; claim: PreparedPlanClaim; error: null }
   | { status: "error"; claim: null; error: string }
 
-const SECTION_LABELS: Array<{
-  id: ReturnType<typeof getPersonalPlanQuizSectionId>
-  label: string
-}> = [
-  { id: "hair_profile", label: "Profil" },
-  { id: "goals_and_context", label: "Ziele" },
-  { id: "analysis", label: "Analyse" },
-  { id: "plan_direction", label: "Plan" },
-  { id: "completion", label: "Ergebnis" },
-]
+const PERSONAL_PLAN_SECTION_IDS = [
+  "hair_profile",
+  "goals_and_context",
+  "analysis",
+  "plan_direction",
+  "completion",
+] as const satisfies ReadonlyArray<ReturnType<typeof getPersonalPlanQuizSectionId>>
 
 const ICONS: Record<QuizIconKey, LucideIcon> = {
   comb: Brush,
@@ -338,8 +340,8 @@ function getSettledSectionIndicesForRestoredJourney(
   for (let index = 0; index < journey.length - 1; index += 1) {
     const currentSection = getPersonalPlanQuizSectionId(journey[index])
     const nextSection = getPersonalPlanQuizSectionId(journey[index + 1])
-    const currentSectionIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
-    const nextSectionIndex = SECTION_LABELS.findIndex((section) => section.id === nextSection)
+    const currentSectionIndex = PERSONAL_PLAN_SECTION_IDS.indexOf(currentSection)
+    const nextSectionIndex = PERSONAL_PLAN_SECTION_IDS.indexOf(nextSection)
     if (currentSectionIndex >= 0 && nextSectionIndex > currentSectionIndex) {
       settled.add(currentSectionIndex)
     }
@@ -385,115 +387,6 @@ function savePreparedPlanClaim(storage: Storage, claim: PreparedPlanClaim): void
   } catch {
     // The active React state remains sufficient for the current tab.
   }
-}
-
-function ScreenHeader({
-  canGoBack,
-  onBack,
-  progress,
-  screen,
-  settledSectionIndices,
-}: {
-  canGoBack: boolean
-  onBack: () => void
-  progress: number
-  screen: PersonalPlanQuizScreenId
-  settledSectionIndices: ReadonlySet<number>
-}) {
-  const currentSection = getPersonalPlanQuizSectionId(screen)
-  const currentSectionIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
-
-  return (
-    <header className="sticky top-0 z-30 border-b border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur">
-      <div className="mx-auto grid max-w-[44rem] grid-cols-[4.5rem_minmax(0,1fr)_4.5rem] items-center">
-        <button
-          aria-label="Zurück"
-          aria-hidden={!canGoBack}
-          className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--brand-plum-darkest)] shadow-sm ring-1 ring-black/5 transition hover:bg-[var(--brand-plum-ice)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] sm:h-11 sm:w-11",
-            !canGoBack && "pointer-events-none opacity-0",
-          )}
-          disabled={!canGoBack}
-          onClick={onBack}
-          tabIndex={canGoBack ? 0 : -1}
-          type="button"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <span className="justify-self-center font-header text-xl font-medium text-[var(--brand-plum-darkest)]">
-          chaarlie
-        </span>
-        {/* Empty third cell keeps the wordmark optically centred; the stepper
-            below is the only stage indicator. */}
-        <span aria-hidden="true" />
-      </div>
-      <div className="mx-auto mt-2 max-w-[44rem]" aria-label="Fortschritt">
-        <div className="relative h-2" data-layout="progress-track-with-dots">
-          <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-[var(--brand-plum-light)]">
-            <div
-              className="h-full rounded-full bg-[var(--brand-plum)] transition-[width] duration-500 ease-out"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 grid grid-cols-5 gap-1"
-            data-layout="progress-dot-overlay"
-          >
-            {SECTION_LABELS.map((section, index) => {
-              const state =
-                index < currentSectionIndex
-                  ? "done"
-                  : index === currentSectionIndex
-                    ? "current"
-                    : "todo"
-              return (
-                <span className="flex items-center justify-center" key={section.id}>
-                  <span
-                    data-personal-plan-section-settled={
-                      settledSectionIndices.has(index) ? "true" : undefined
-                    }
-                    className={cn(
-                      "h-2 w-2 rounded-full ring-2 ring-[hsl(var(--background))] transition-[background-color,box-shadow] duration-300 ease-out",
-                      settledSectionIndices.has(index) && "personal-plan-section-settle",
-                      state === "done" && "bg-[var(--brand-plum)]",
-                      state === "current" &&
-                        "bg-[var(--brand-plum)] shadow-[0_0_0_3px_rgba(var(--brand-plum-rgb),0.14)]",
-                      state === "todo" && "bg-[var(--brand-plum-light)]",
-                    )}
-                  />
-                </span>
-              )
-            })}
-          </div>
-        </div>
-        <ol className="mt-1 grid grid-cols-5 gap-1">
-          {SECTION_LABELS.map((section, index) => {
-            const state =
-              index < currentSectionIndex
-                ? "done"
-                : index === currentSectionIndex
-                  ? "current"
-                  : "todo"
-            return (
-              <li className="flex items-center justify-center" key={section.id}>
-                <span
-                  className={cn(
-                    "text-[8px] font-semibold uppercase tracking-[0.04em] sm:text-[9px]",
-                    state === "todo"
-                      ? "text-[var(--text-caption)]"
-                      : "text-[var(--brand-plum-darkest)]",
-                  )}
-                >
-                  {section.label}
-                </span>
-              </li>
-            )
-          })}
-        </ol>
-      </div>
-    </header>
-  )
 }
 
 /**
@@ -598,7 +491,7 @@ function OptionCard({
   selected,
   visualLayout,
   multi,
-  priority,
+  preloadImage,
   intensity,
   onClick,
 }: {
@@ -606,7 +499,7 @@ function OptionCard({
   selected: boolean
   visualLayout?: QuizQuestionConfig["visualLayout"]
   multi?: boolean
-  priority?: boolean
+  preloadImage?: boolean
   intensity?: OptionIntensity | null
   onClick: () => void
 }) {
@@ -634,8 +527,8 @@ function OptionCard({
             alt={option.imageAlt ?? ""}
             className="object-cover object-center transition duration-300 group-hover:scale-[1.03]"
             fill
-            fetchPriority={priority ? "high" : "auto"}
-            priority={priority}
+            fetchPriority={preloadImage ? "high" : "auto"}
+            preload={preloadImage}
             sizes="120px"
             src={option.image}
           />
@@ -717,8 +610,8 @@ function OptionCard({
                   : "object-cover object-top",
             )}
             fill
-            fetchPriority={priority ? "high" : "auto"}
-            priority={priority}
+            fetchPriority={preloadImage ? "high" : "auto"}
+            preload={preloadImage}
             sizes={
               visualLayout === "grid"
                 ? "(max-width: 640px) 45vw, 320px"
@@ -925,8 +818,9 @@ function QuestionScreen({
           <Image
             alt={config.contextImageAlt ?? ""}
             className="object-cover"
+            fetchPriority="high"
             fill
-            priority
+            preload
             sizes="(max-width: 640px) 92vw, 640px"
             src={config.contextImage}
             style={
@@ -957,7 +851,7 @@ function QuestionScreen({
                 multi={config.multi}
                 onClick={() => onSelect(option.value)}
                 option={option}
-                priority={config.field === "texture" && optionIndex === 0}
+                preloadImage={config.field === "texture" && optionIndex === 0}
                 selected={selected.includes(option.value)}
                 visualLayout={config.visualLayout}
               />
@@ -1116,8 +1010,9 @@ function ContextPanelLayout({
         <Image
           alt={imageAlt ?? ""}
           className="object-cover"
+          fetchPriority="high"
           fill
-          priority
+          preload
           sizes="(max-width: 640px) 92vw, 272px"
           src={image}
           style={imagePosition ? { objectPosition: imagePosition } : undefined}
@@ -1141,8 +1036,9 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         <Image
           alt="Drei lachende Frauen"
           className="object-cover"
+          fetchPriority="high"
           fill
-          priority
+          preload
           sizes="(max-width: 640px) 92vw, 640px"
           src={`${PERSONAL_PLAN_ASSET_BASE}/proof-community.webp`}
           style={{ objectPosition: "50% 32%" }}
@@ -1424,8 +1320,9 @@ function ReframeScreen({ onContinue }: { onContinue: () => void }) {
         <Image
           alt=""
           className="object-cover"
+          fetchPriority="high"
           fill
-          priority
+          preload
           sizes="(max-width: 640px) 90vw, 272px"
           src={`${PERSONAL_PLAN_ASSET_BASE}/causal-reframe.webp`}
           style={{ objectPosition: "50% 8%" }}
@@ -2247,23 +2144,14 @@ const DISABLED_PERSONAL_PLAN_RESUME_BOOTSTRAP: PersonalPlanQuizResumeBootstrap =
   snapshot: null,
 }
 
-export function PersonalPlanFieldTestBanner({ surface }: { surface: "quiz" | "offer" }) {
-  return (
-    <p
-      className="mx-auto w-full max-w-[40rem] rounded-xl border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-4 py-2 text-center text-sm font-semibold text-[var(--brand-plum-darkest)]"
-      data-personal-plan-field-test-banner={surface}
-    >
-      Kostenloser Chaarlie Produkttest · keine Zahlung erforderlich
-    </p>
-  )
-}
-
 export function PersonalPlanQuiz({
   resume = DISABLED_PERSONAL_PLAN_RESUME_BOOTSTRAP,
   fieldTest = false,
+  entry,
 }: {
   resume?: PersonalPlanQuizResumeBootstrap
   fieldTest?: boolean
+  entry?: FreshPersonalPlanQuizEntry
 }) {
   const router = useRouter()
   const initialServerDraft =
@@ -2281,7 +2169,7 @@ export function PersonalPlanQuiz({
     () => initialServerDraft?.history ?? [],
   )
   const [answers, setAnswers] = useState<PersonalPlanQuizAnswers>(
-    () => initialServerDraft?.answers ?? {},
+    () => initialServerDraft?.answers ?? (entry?.texture ? { texture: entry.texture } : {}),
   )
   const [ephemeral, setEphemeral] = useState<PersonalPlanQuizEphemeralState>({})
   const [currentConcernNoteOpen, setCurrentConcernNoteOpen] = useState(false)
@@ -2305,7 +2193,12 @@ export function PersonalPlanQuiz({
   const transitionActiveLayerRef = useRef<HTMLDivElement | null>(null)
   const settledSectionIndicesRef = useRef(new Set(settledSectionIndices))
   const autoAdvanceTimer = useRef<number | null>(null)
-  const quizStartedRef = useRef(false)
+  const goNextRef = useRef<(answers?: PersonalPlanQuizAnswers) => void>(() => {})
+  const quizStartedRef = useRef(Boolean(entry?.quizStarted))
+  const suppressInitialTextureScreenViewRef = useRef(
+    Boolean(entry?.suppressInitialTextureScreenView),
+  )
+  const entrySelectionSupersededRef = useRef(false)
   const quizCompletedRef = useRef(false)
   const preparationRequestRef = useRef<{ answersKey: string; promise: Promise<void> } | null>(null)
   const latestAnswersKeyRef = useRef(getAnswersKey(answers))
@@ -2353,6 +2246,7 @@ export function PersonalPlanQuiz({
       const restored = choosePersonalPlanQuizResumeDraft(localDraft, serverSnapshot)
       const draft = restored.draft
       if (draft) {
+        entrySelectionSupersededRef.current = true
         latestDraftRef.current = draft
         setScreen(draft.screen)
         setHistory(draft.history)
@@ -2524,6 +2418,10 @@ export function PersonalPlanQuiz({
 
   useEffect(() => {
     if (!draftReady) return
+    if (suppressInitialTextureScreenViewRef.current) {
+      suppressInitialTextureScreenViewRef.current = false
+      if (screen === "texture") return
+    }
     trackAppEvent("personal_plan_quiz_screen_viewed", {
       quizVersion: "v2",
       screenId: screen,
@@ -2583,8 +2481,8 @@ export function PersonalPlanQuiz({
   function settleCompletedSection(next: PersonalPlanQuizScreenId) {
     const currentSection = getPersonalPlanQuizSectionId(screen)
     const nextSection = getPersonalPlanQuizSectionId(next)
-    const currentIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
-    const nextIndex = SECTION_LABELS.findIndex((section) => section.id === nextSection)
+    const currentIndex = PERSONAL_PLAN_SECTION_IDS.indexOf(currentSection)
+    const nextIndex = PERSONAL_PLAN_SECTION_IDS.indexOf(nextSection)
     if (nextIndex <= currentIndex || settledSectionIndicesRef.current.has(currentIndex)) return
     settledSectionIndicesRef.current.add(currentIndex)
     setSettledSectionIndices(new Set(settledSectionIndicesRef.current))
@@ -2623,6 +2521,26 @@ export function PersonalPlanQuiz({
     autoAdvanceTimer.current = window.setTimeout(() => goNext(answerSnapshot), AUTO_ADVANCE_MS)
   }
 
+  useEffect(() => {
+    if (
+      !draftReady ||
+      !entry?.texture ||
+      entry.selectedAt === undefined ||
+      entrySelectionSupersededRef.current
+    ) {
+      return
+    }
+    const remainingMs = Math.max(0, AUTO_ADVANCE_MS - (Date.now() - entry.selectedAt))
+    if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current)
+    autoAdvanceTimer.current = window.setTimeout(
+      () => goNextRef.current({ texture: entry.texture }),
+      remainingMs,
+    )
+    return () => {
+      if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current)
+    }
+  }, [draftReady, entry?.selectedAt, entry?.texture])
+
   function goBack() {
     const previous = history.at(-1)
     if (!previous) return
@@ -2634,6 +2552,7 @@ export function PersonalPlanQuiz({
   }
   useEffect(() => {
     goBackRef.current = goBack
+    goNextRef.current = goNext
   })
 
   // The in-app back button drives the browser history so the two stay in sync;
@@ -2784,14 +2703,12 @@ export function PersonalPlanQuiz({
 
   function renderScreen() {
     if (screen === "texture") {
-      return renderQuestion({
-        field: "texture",
-        title: "Welche Haarstruktur hast du?",
-        helper: "Wähle das Bild, das deinem natürlichen Haar am nächsten kommt.",
-        options: TEXTURE_OPTIONS,
-        visual: true,
-        visualLayout: "grid",
-      })
+      return (
+        <PersonalPlanQuizTextureQuestion
+          onSelect={(texture) => selectSingle(TEXTURE_QUESTION_CONFIG, texture)}
+          selected={answers.texture}
+        />
+      )
     }
     if (screen === "early_proof") return <ProofScreen onContinue={() => goNext()} />
     if (screen === "goals") {
@@ -3043,35 +2960,27 @@ export function PersonalPlanQuiz({
     return null
   }
 
+  const currentSectionIndex = PERSONAL_PLAN_SECTION_IDS.indexOf(
+    getPersonalPlanQuizSectionId(screen),
+  )
+
   return (
-    <div
-      className="min-h-screen bg-[hsl(var(--background))]"
-      data-personal-plan-client-ready={draftReady ? "true" : "false"}
+    <PersonalPlanQuizFrame
+      canGoBack={history.length > 0}
+      clientReady={draftReady}
+      currentSectionIndex={currentSectionIndex}
+      fieldTest={fieldTest}
+      onBack={handleHeaderBack}
+      progress={progress}
+      settledSectionIndices={settledSectionIndices}
     >
-      <ScreenHeader
-        canGoBack={history.length > 0}
-        onBack={handleHeaderBack}
-        progress={progress}
-        screen={screen}
-        settledSectionIndices={settledSectionIndices}
-      />
-      {/* The 7rem bottom reserve only pays for the fixed MobileBottomAction dock.
-          Its exact complement — the viewport range where the action renders inline —
-          drops back to a normal 3rem page padding. */}
-      <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4 [@media(min-width:640px)_and_(min-height:701px)]:scroll-pb-12 [@media(min-width:640px)_and_(min-height:701px)]:pb-12">
-        <div className="w-full">
-          {fieldTest ? <PersonalPlanFieldTestBanner surface="quiz" /> : null}
-          <div className={fieldTest ? "mt-4" : undefined}>
-            <PersonalPlanScreenTransition
-              activeLayerRef={transitionActiveLayerRef}
-              onOutgoingComplete={completeOutgoingLayer}
-              outgoing={outgoingLayer}
-            >
-              {renderScreen()}
-            </PersonalPlanScreenTransition>
-          </div>
-        </div>
-      </main>
-    </div>
+      <PersonalPlanScreenTransition
+        activeLayerRef={transitionActiveLayerRef}
+        onOutgoingComplete={completeOutgoingLayer}
+        outgoing={outgoingLayer}
+      >
+        {renderScreen()}
+      </PersonalPlanScreenTransition>
+    </PersonalPlanQuizFrame>
   )
 }

@@ -35,7 +35,7 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
 
   assert.match(
     landing,
-    /<PersonalPlanQuiz fieldTest=\{personalPlanFieldTest\} resume=\{personalPlanQuizResume\} \/>/,
+    /<PersonalPlanQuizEntry fieldTest=\{personalPlanFieldTest\} resume=\{personalPlanQuizResume\} \/>/,
   )
   assert.match(quiz, /fetch\("\/api\/quiz\/personal-plan-prepare"/)
   assert.match(quiz, /artifactId/)
@@ -60,6 +60,7 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
 
 test("personal-plan quiz silently orchestrates server drafts without adding UI or leaking ephemeral state", () => {
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+  const frame = read("src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx")
   const serverClient = read("src/lib/personal-plan-quiz/server-draft-client.ts")
 
   assert.match(quiz, /resume\?: PersonalPlanQuizResumeBootstrap/)
@@ -68,7 +69,7 @@ test("personal-plan quiz silently orchestrates server drafts without adding UI o
   assert.match(quiz, /pushPersonalPlanQuizHistoryState\(\{ ppq: next \}\)/)
   assert.match(quiz, /const onPageHide = \(event: PageTransitionEvent\) =>/)
   assert.match(quiz, /if \(!shouldFlushPersonalPlanQuizDraftOnPageHide\(event\)\) return/)
-  assert.match(quiz, /data-personal-plan-client-ready=\{draftReady \? "true" : "false"\}/)
+  assert.match(frame, /data-personal-plan-client-ready=\{clientReady \? "true" : "false"\}/)
   assert.match(
     quiz,
     /stripPersonalPlanQuizResumeTokenFromCurrentUrl\(\)[\s\S]{0,240}void getServerDraftSession\(\)\.revoke\(\)[\s\S]{0,360}router\.push/,
@@ -111,6 +112,7 @@ test("personal-plan result reveal owns future pacing but not offer-view tracking
 
 test("personal-plan quiz uses approved consent and milestone ownership", () => {
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+  const entry = read("src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx")
 
   assert.match(quiz, /recordBrowserFunnelMilestone\(\s*"quiz_started"/)
   assert.match(quiz, /quizStartedRef\.current = true/)
@@ -121,6 +123,12 @@ test("personal-plan quiz uses approved consent and milestone ownership", () => {
   assert.match(quiz, /trackAppEvent\("quiz_completed"/)
   assert.match(quiz, /trackAppEvent\("quiz_lead_captured"/)
   assert.match(quiz, /funnelEventId: funnelEventIdRef\.current/)
+  assert.match(entry, /recordBrowserFunnelMilestone\("quiz_started"/)
+  assert.match(entry, /trackAppEvent\("quiz_started"/)
+  assert.match(entry, /trackAppEvent\("personal_plan_quiz_screen_viewed"/)
+  assert.match(quiz, /const quizStartedRef = useRef\(Boolean\(entry\?\.quizStarted\)\)/)
+  assert.match(quiz, /suppressInitialTextureScreenViewRef/)
+  assert.doesNotMatch(entry, /savePersonalPlanQuizDraft|createPersonalPlanQuizServerDraftSession/)
 })
 
 test("personal-plan quiz tracks semantic screen views without answer payloads", () => {
@@ -137,25 +145,28 @@ test("personal-plan quiz tracks semantic screen views without answer payloads", 
 test("personal-plan quiz UI reflects the approved visual journey constraints", () => {
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
   const data = read("src/components/personal-plan-quiz/quiz-data.ts")
+  const firstScreen = read("src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx")
+  const texture = read("src/components/personal-plan-quiz/texture-question.ts")
+  const fullSurface = quiz + firstScreen + texture
 
-  assert.match(quiz, /SECTION_LABELS/)
-  assert.match(quiz, /SECTION_LABELS\.map/)
-  assert.match(quiz, /currentSectionIndex/)
-  assert.match(quiz, /data-layout="progress-track-with-dots"/)
-  assert.match(quiz, /data-layout="progress-dot-overlay"/)
-  assert.match(quiz, /absolute inset-0 grid grid-cols-5/)
+  assert.match(firstScreen, /PERSONAL_PLAN_SECTION_LABELS/)
+  assert.match(firstScreen, /PERSONAL_PLAN_SECTION_LABELS\.map/)
+  assert.match(firstScreen, /currentSectionIndex/)
+  assert.match(firstScreen, /data-layout="progress-track-with-dots"/)
+  assert.match(firstScreen, /data-layout="progress-dot-overlay"/)
+  assert.match(firstScreen, /absolute inset-0 grid grid-cols-5/)
   // R003: the section/checkpoint progress stays free of numbers. The preparation
   // LoadingScreen bar intentionally shows a live percentage (Nick, 2026-07-29).
-  assert.doesNotMatch(quiz, /Schritt \d+ von|SECTION_LABELS[\s\S]{0,400}Math\.round/)
+  assert.doesNotMatch(firstScreen, /Schritt \d+ von|SECTION_LABELS[\s\S]{0,400}Math\.round/)
   assert.match(quiz, /Math\.round\(progress\)/)
   assert.match(quiz, /config\.multi \? \(/)
   assert.match(data, /Feuchtigkeit ohne Beschweren/)
   assert.match(data, /Weniger Haarbruch und bessere Längenretention/)
   assert.match(quiz, /Nichts davon/)
   assert.doesNotMatch(data, /value: "none", label: "Nichts davon"/)
-  assert.match(quiz, /Welche Haarstruktur hast du\?/)
-  assert.doesNotMatch(quiz, /Persönliche Haaranalyse für deinen Haarpflegeplan/)
-  assert.doesNotMatch(quiz, /Um dich wohlzufühlen mit gesundem und schönem Haar/)
+  assert.match(firstScreen, /Welche Haarstruktur hast du\?/)
+  assert.doesNotMatch(fullSurface, /Persönliche Haaranalyse für deinen Haarpflegeplan/)
+  assert.doesNotMatch(fullSurface, /Um dich wohlzufühlen mit gesundem und schönem Haar/)
   assert.match(quiz, /4\.000\+[\s\S]*Antworten aus unserer Haarpflege-Umfrage/)
   assert.match(data, /L\. · Chaarlie-Kundin/)
   assert.match(quiz, /Hast du schon Produkte gekauft, die dann doch nicht gepasst haben\?/)
@@ -165,15 +176,16 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.match(quiz, /window\.scrollTo\(0, 0\)/)
   assert.doesNotMatch(quiz, /bg-\[#edf8ef\]|bg-\[#e7f3e9\] px-4 py-2/)
   assert.match(data, /visualLayout: "thumbnail"/)
-  assert.match(quiz, /visualLayout: "grid"/)
-  assert.match(quiz, /grid-cols-2 auto-rows-fr/)
-  assert.match(quiz, /config\.options\.map\(\(option, optionIndex\) =>/)
-  assert.match(quiz, /priority=\{config\.field === "texture" && optionIndex === 0\}/)
-  assert.match(quiz, /fetchPriority=\{priority \? "high" : "auto"\}/)
-  assert.match(quiz, /\? "\(max-width: 640px\) 45vw, 320px"/)
+  assert.match(texture, /visualLayout: "grid"/)
+  assert.match(firstScreen, /grid-cols-2 auto-rows-fr/)
+  assert.match(firstScreen, /TEXTURE_OPTIONS\.map\(\(option, optionIndex\) =>/)
+  assert.match(firstScreen, /fetchPriority=\{optionIndex === 0 \? "high" : "auto"\}/)
+  assert.match(firstScreen, /preload=\{optionIndex === 0\}/)
+  assert.doesNotMatch(firstScreen, /\bpriority(?:=|\s*$)/m)
+  assert.match(firstScreen, /sizes="\(max-width: 640px\) 45vw, 320px"/)
   assert.match(quiz, /ausgewählt · Weiter/)
-  assert.match(quiz, /min-h-\[calc\(100dvh-84px\)\]/)
-  assert.match(quiz, /max-height:700px/)
+  assert.match(firstScreen, /min-h-\[calc\(100dvh-84px\)\]/)
+  assert.match(fullSurface, /max-height:700px/)
   assert.match(quiz, /const MIDPOINT_REVEAL_MS = 350/)
   assert.match(quiz, /const MIDPOINT_CHECK_DELAY_MS = 500/)
   // The midpoint summary never auto-advances; it waits for an explicit Weiter.
@@ -191,7 +203,7 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.match(quiz, /personal-plan-multi-count/)
   assert.match(quiz, /personal-plan-analysis-settle/)
   assert.match(quiz, /personal-plan-profile-row/)
-  assert.match(quiz, /data-personal-plan-section-settled/)
+  assert.match(firstScreen, /data-personal-plan-section-settled/)
   assert.match(quiz, /getProfileSummaryImage\(answers\.texture, answers\.hairLength\)/)
   assert.match(quiz, /aspect-\[2\/1\]/)
   assert.match(quiz, /grid grid-cols-2 gap-1\.5/)
