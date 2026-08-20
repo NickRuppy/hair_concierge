@@ -36,6 +36,32 @@ export type ScanSessionState = {
   hintChangedAt: number
 }
 
+/**
+ * Restart the scan attempt inside a session whose camera is still running — the flow
+ * returns to scanning after a result/pending sheet is closed or a resolve error bounces
+ * back. Every guard that would otherwise suppress a second read of the same product
+ * (`lastFiredValue`, `hasDecoded`), the search fallback's one-shot `timeoutFired`, and
+ * the hint/telemetry window all start over.
+ *
+ * Mutates in place on purpose: the detection loop closed over this exact object when the
+ * camera started, so assigning a replacement object to the ref would never reach it.
+ *
+ * Deliberately NOT reset: `paused` and `detecting` are camera/loop lifecycle state rather
+ * than scan-attempt state. Clearing `paused` here would leave the loop stopped with no
+ * pending `visibilitychange` left to restart it; clearing `detecting` could let a second
+ * `detect()` start while one is still in flight.
+ */
+export function restartScanSessionState(session: ScanSessionState, now: number): void {
+  const { paused, detecting } = session
+  Object.assign(session, createScanSessionState(), {
+    paused,
+    detecting,
+    startTime: now,
+    lastDetectionTime: now,
+    hintChangedAt: now,
+  })
+}
+
 export function createScanSessionState(): ScanSessionState {
   return {
     paused: false,

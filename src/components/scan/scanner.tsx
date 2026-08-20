@@ -9,7 +9,7 @@ import {
   type ScanTelemetry,
 } from "@/lib/scan/guidance"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
-import { createScanSessionState } from "@/lib/scan/scanner-session"
+import { createScanSessionState, restartScanSessionState } from "@/lib/scan/scanner-session"
 import { cn } from "@/lib/utils"
 
 // Type-only import: erased at build time, so this does NOT pull the zxing-wasm ponyfill
@@ -24,6 +24,13 @@ export type ScanDecodedIdentifier = { type: "ean"; value: string }
 type ScannerProps = {
   /** Parent controls camera lifecycle: mount/permission/detection only run while true. */
   active: boolean
+  /**
+   * Bump to start a fresh scan attempt on the same, still-running camera: the parent does
+   * this every time the flow returns to scanning (see `ScanFlow`'s `returnToScanning`).
+   * Without it a page that has resolved one product keeps that session's `lastFiredValue`
+   * / `hasDecoded` / `timeoutFired` guards forever and the next scan never fires.
+   */
+  sessionEpoch?: number
   onDecoded: (identifier: ScanDecodedIdentifier) => void
   onUnavailable: (reason: ScanUnavailableReason) => void
   /** Fires once, ~3s after start, if no stable read has happened yet. Scanner keeps running. */
@@ -59,7 +66,13 @@ const ZXING_READER_WASM_PATH = "/wasm/zxing_reader-3.1.3.wasm"
 // same page load don't need to redo this.
 let zxingWasmOverrideConfigured = false
 
-export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: ScannerProps) {
+export function Scanner({
+  active,
+  sessionEpoch = 0,
+  onDecoded,
+  onUnavailable,
+  onTimeout,
+}: ScannerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const lumaCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const rotationCanvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -396,6 +409,22 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
       detectorRef.current = null
     }
   }, [active])
+
+  /**
+   * Session restart without a camera restart. The effect above owns the camera and keys
+   * only on `active` — which stays `true` for the whole `/scan` visit, because the sheet
+   * slides up *over* a still-running camera so "Nochmal scannen" is instant. That leaves
+   * the session guards (`lastFiredValue`, `hasDecoded`, `timeoutFired`) set for the rest
+   * of the page's life, so this second effect resets them in place on every epoch bump.
+   * Remounting the Scanner instead would re-run `getUserMedia` and blank the viewfinder
+   * on every re-scan.
+   */
+  useEffect(() => {
+    if (!active) return
+    restartScanSessionState(sessionRef.current, performance.now())
+    setHint(SCAN_HINT_DEFAULT)
+    setFlashActive(false)
+  }, [active, sessionEpoch])
 
   if (!active) return null
 

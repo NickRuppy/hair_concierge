@@ -76,6 +76,8 @@ export function ScanFlow({
   const [saveOpen, setSaveOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  // Bumped on every return to the scanning step; see `returnToScanning`.
+  const [scanEpoch, setScanEpoch] = useState(0)
   const sheetOpenRef = useRef(false)
   // Reset at the start of every scanning window (mount + each "Nochmal scannen") so
   // `scan_decoded`'s `ms_to_decode` measures this attempt, not the whole page visit.
@@ -89,13 +91,24 @@ export function ScanFlow({
     analytics.track("scan_started", {})
   }, [analytics])
 
-  const closeSheet = useCallback(() => {
+  /**
+   * The single way back to the scanning step. The camera never stops (the sheet slides up
+   * over it), so the scanner's session guards have to be restarted explicitly: `scanEpoch`
+   * does that (see `Scanner`'s `sessionEpoch`). Without it the same product could never be
+   * scanned twice on one page visit and the 3s search-fallback timeout never re-armed.
+   */
+  const returnToScanning = useCallback(() => {
     setStep({ kind: "scanning" })
-    setSaveOpen(false)
-    setSubmitError(null)
+    setScanEpoch((epoch) => epoch + 1)
     scanSessionStartRef.current = performance.now()
     analytics.track("scan_started", {})
   }, [analytics])
+
+  const closeSheet = useCallback(() => {
+    setSaveOpen(false)
+    setSubmitError(null)
+    returnToScanning()
+  }, [returnToScanning])
 
   const resolve = useCallback(
     async (body: { identifier: ScanIdentifier } | { productId: string }) => {
@@ -112,7 +125,7 @@ export function ScanFlow({
             title: RESOLVE_ERRORS[payload?.error ?? ""] ?? GENERIC_ERROR,
             variant: "destructive",
           })
-          setStep({ kind: "scanning" })
+          returnToScanning()
           return
         }
         const result = (await response.json()) as ScanResolveResult
@@ -132,10 +145,10 @@ export function ScanFlow({
         }
       } catch {
         toast({ title: GENERIC_ERROR, variant: "destructive" })
-        setStep({ kind: "scanning" })
+        returnToScanning()
       }
     },
-    [toast, analytics],
+    [toast, analytics, returnToScanning],
   )
 
   const handleDecoded = useCallback(
@@ -237,6 +250,7 @@ export function ScanFlow({
       {cameraAvailable ? (
         <Scanner
           active
+          sessionEpoch={scanEpoch}
           onDecoded={handleDecoded}
           onUnavailable={handleUnavailable}
           onTimeout={handleTimeout}
