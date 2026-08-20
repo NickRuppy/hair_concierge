@@ -58,19 +58,9 @@ test("completed quiz opens the stored funnel offer on the canonical result route
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
     await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
 
-    await expect(page.getByText("Deine Angaben sind gespeichert", { exact: true })).toBeVisible({
-      timeout: 45_000,
+    await expect(page.getByRole("button", { name: "Ja, zeig mir meine Analyse" })).toBeVisible({
+      timeout: 15_000,
     })
-    await expect(
-      page.getByText("Playwright Route, wir stellen deine Haaranalyse zusammen.", {
-        exact: true,
-      }),
-    ).toBeVisible()
-    await expect(
-      page.getByText("Wir verbinden deine Angaben zu Haar, Zielen und Problemen.", {
-        exact: true,
-      }),
-    ).toBeVisible()
 
     const { data: lead, error } = await admin
       .from("leads")
@@ -82,28 +72,9 @@ test("completed quiz opens the stored funnel offer on the canonical result route
 
     if (error) throw error
 
-    await expect(
-      page.getByRole("heading", {
-        name: "Playwright Route, deine Haaranalyse ist bereit.",
-        exact: true,
-      }),
-    ).toBeVisible({ timeout: 45_000 })
-    await expect(
-      page.getByText("Deine wichtigsten Prioritäten und Routine-Bausteine warten auf dich.", {
-        exact: true,
-      }),
-    ).toBeVisible()
-    const revealAnalysis = page.getByRole("button", {
-      name: "Meine Haaranalyse ansehen",
-      exact: true,
-    })
-    await expect(revealAnalysis).toBeVisible()
-
-    expect(new URL(page.url()).pathname).toBe("/quiz")
-    await page.waitForTimeout(500)
     expect(new URL(page.url()).pathname).toBe("/quiz")
 
-    await revealAnalysis.click()
+    await page.getByRole("button", { name: "Ja, zeig mir meine Analyse" }).click()
     await page.waitForURL((url) => url.pathname === `/result/${lead.id}`, { timeout: 15_000 })
     expect(new URL(page.url()).searchParams.get("entry")).toBe("quiz_completion")
 

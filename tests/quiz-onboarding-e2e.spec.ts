@@ -32,37 +32,9 @@ async function revealGuidedStoryPricing(page: Page) {
   await page.getByRole("button", { name: "Ja, mit Chaarlie starten", exact: true }).click()
 }
 
-async function waitForPreparedHairAnalysis(page: Page, name: string) {
-  await expect(page.getByText("Deine Angaben sind gespeichert", { exact: true })).toBeVisible({
-    timeout: 45_000,
-  })
-  await expect(
-    page.getByText(`${name}, wir stellen deine Haaranalyse zusammen.`, { exact: true }),
-  ).toBeVisible()
-  await expect(
-    page.getByText("Wir verbinden deine Angaben zu Haar, Zielen und Problemen.", {
-      exact: true,
-    }),
-  ).toBeVisible()
-  await expect(
-    page.getByRole("heading", {
-      name: `${name}, deine Haaranalyse ist bereit.`,
-      exact: true,
-    }),
-  ).toBeVisible({ timeout: 45_000 })
-  await expect(
-    page.getByText("Deine wichtigsten Prioritäten und Routine-Bausteine warten auf dich.", {
-      exact: true,
-    }),
-  ).toBeVisible()
-
-  const revealAnalysis = page.getByRole("button", {
-    name: "Meine Haaranalyse ansehen",
-    exact: true,
-  })
-  await expect(revealAnalysis).toBeVisible()
-  expect(new URL(page.url()).pathname).toBe("/quiz")
-  await page.waitForTimeout(500)
+async function waitForPreparedHairAnalysis(page: Page) {
+  const revealAnalysis = page.getByRole("button", { name: "Ja, zeig mir meine Analyse" })
+  await expect(revealAnalysis).toBeVisible({ timeout: 15_000 })
   expect(new URL(page.url()).pathname).toBe("/quiz")
 
   return revealAnalysis
@@ -273,7 +245,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     })
 
     await test.step("Verify the lead stays captured before auth without analyze", async () => {
-      const revealAnalysis = await waitForPreparedHairAnalysis(page, "Playwright")
+      const revealAnalysis = await waitForPreparedHairAnalysis(page)
 
       await expect
         .poll(
@@ -573,7 +545,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
 
-      const revealAnalysis = await waitForPreparedHairAnalysis(page, "Playwright Return")
+      const revealAnalysis = await waitForPreparedHairAnalysis(page)
       const latestLead = await fetchLatestLead()
       expect(latestLead?.id).toBeTruthy()
 

@@ -102,25 +102,10 @@ test("approved public copy uses serious, non-medical product framing", () => {
   assert.match(valueSource, /Transparente Datennutzung/)
   assert.match(footerSource, /Strukturierte Haarpflege-Auswertung auf Basis deiner Angaben/)
   assert.match(faqSource, /Chaarlie sicher bereitzustellen und zu verbessern/)
-  assert.match(analysisSource, /Deine Angaben sind gespeichert/)
-  assert.match(analysisSource, /wir stellen deine Haaranalyse zusammen\./)
-  assert.match(
-    analysisSource,
-    /Während wir rechnen, zeigen wir dir, wie dein Plan dich Schritt für Schritt unterstützen kann\./,
-  )
-  assert.match(
-    analysisSource,
-    /QUIZ_ANALYSIS_STEPS\s*=\s*\[\s*"Dein Haarprofil wird ausgewertet",\s*"Deine wichtigsten Pflegehebel werden sortiert",\s*"Dein persönlicher Plan wird zusammengestellt",\s*\]\s*as const/,
-  )
-  assert.match(analysisSource, /label: "Heute"/)
-  assert.match(analysisSource, /label: "Nach 7 Tagen"/)
-  assert.match(analysisSource, /label: "Nach 4 Wochen"/)
-  assert.match(analysisSource, /deine Haaranalyse ist bereit\./)
-  assert.match(
-    analysisSource,
-    /Deine wichtigsten Prioritäten und Routine-Bausteine warten auf dich\./,
-  )
-  assert.match(analysisSource, /Meine Haaranalyse ansehen/)
+  assert.match(analysisSource, /bereit für den nächsten Schritt mit deinem Haar\?/)
+  assert.match(analysisSource, /Ja, zeig mir meine Analyse/)
+  assert.match(analysisSource, /Deine Haaranalyse wird erstellt\./)
+  assert.doesNotMatch(analysisSource, /Meine Haaranalyse ansehen/)
   assert.doesNotMatch(analysisSource, /DEIN PROFIL WIRD ERSTELLT/)
   assert.doesNotMatch(analysisSource, /Deine Angaben zur Haarstruktur werden ausgewertet/)
   assert.doesNotMatch(analysisSource, /Deine Pflegebedürfnisse werden eingeordnet/)

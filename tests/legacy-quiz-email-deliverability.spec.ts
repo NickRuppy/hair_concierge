@@ -119,7 +119,9 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
 
     await page.getByRole("button", { name: "Weiter" }).click()
     await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
-    await expect(page.getByText("Deine Angaben sind gespeichert", { exact: true })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Ja, zeig mir meine Analyse" })).toBeVisible({
+      timeout: 15_000,
+    })
     expect(submissionCount).toBe(2)
   })
 
