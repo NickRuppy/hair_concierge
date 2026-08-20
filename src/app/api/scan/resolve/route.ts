@@ -18,7 +18,10 @@ import {
 import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
-import { isProductSearchQuarantined } from "@/lib/scan/catalog-eligibility"
+import {
+  isProductSearchQuarantined,
+  loadQuarantinedProductIdsAmong,
+} from "@/lib/scan/catalog-eligibility"
 import { lookupCatalogProductByIdentifier, validateEanInput } from "@/lib/scan/identifier-lookup"
 import { findOpenScanSubmission } from "@/lib/scan/pending-submission"
 import {
@@ -29,7 +32,7 @@ import {
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
 import { buildScanVerdict, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
 import { loadScanSavedState } from "@/lib/scan/saved-state"
-import type { ScanResolveResult } from "@/lib/scan/types"
+import type { ScanResolveResult, ScanVerdictPayload } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -67,6 +70,7 @@ export type ScanResolveRouteDeps = {
   findOpenScanSubmission: typeof findOpenScanSubmission
   lookupCatalogProductByIdentifier: typeof lookupCatalogProductByIdentifier
   isProductSearchQuarantined: typeof isProductSearchQuarantined
+  loadQuarantinedProductIdsAmong: typeof loadQuarantinedProductIdsAmong
   loadScanEvaluationContext: typeof loadScanEvaluationContext
   loadScanProductFacts: typeof loadScanProductFacts
   loadRecommendationCandidates: typeof loadStage3RecommendationCandidates
@@ -269,8 +273,17 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       const scannedRow = presentationRows.find((row) => row.id === productId)
       if (!scannedRow) throw new Error("scan_resolve_presentation_row_missing")
 
+      // Ruling R7 applies to what we RECOMMEND too, not just to what we resolve. The
+      // Stage-3 candidate loader has no disposition filter, so a quarantined product could
+      // be offered as an alternative on a surface that refuses to resolve or save it. Done
+      // on the final (≤3) list rather than on the candidate pool: same outcome, one small
+      // keyed query instead of filtering the whole catalog.
+      const eligibleVerdict = await withEligibleAlternatives(verdict, (ids) =>
+        deps.loadQuarantinedProductIdsAmong(client, ids),
+      )
+
       return ok({
-        ...presentScanVerdictPayload(verdict, presentationRows),
+        ...presentScanVerdictPayload(eligibleVerdict, presentationRows),
         product: toScanProductHeader(scannedRow),
         snapshotSource: context.snapshotSource,
         savedState,
@@ -279,6 +292,27 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       console.error("[scan] resolve failed", error)
       return fail("temporarily_unavailable", 503)
     }
+  }
+}
+
+/**
+ * Drops disposition-quarantined products from an `in_catalog` verdict's alternatives.
+ * Leaving the list empty is fine — the sheet only renders the section when it has entries.
+ */
+async function withEligibleAlternatives(
+  verdict: ScanVerdictPayload,
+  loadQuarantined: (productIds: string[]) => Promise<Set<string>>,
+): Promise<ScanVerdictPayload> {
+  if (verdict.kind !== "in_catalog" || verdict.alternatives.length === 0) return verdict
+  const quarantined = await loadQuarantined(
+    verdict.alternatives.map((alternative) => alternative.productId),
+  )
+  if (quarantined.size === 0) return verdict
+  return {
+    ...verdict,
+    alternatives: verdict.alternatives.filter(
+      (alternative) => !quarantined.has(alternative.productId),
+    ),
   }
 }
 
@@ -348,6 +382,7 @@ export const POST = createScanResolveRouteHandler({
   findOpenScanSubmission,
   lookupCatalogProductByIdentifier,
   isProductSearchQuarantined,
+  loadQuarantinedProductIdsAmong,
   loadScanEvaluationContext,
   loadScanProductFacts,
   loadRecommendationCandidates: loadStage3RecommendationCandidates,

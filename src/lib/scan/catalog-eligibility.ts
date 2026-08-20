@@ -43,3 +43,52 @@ export async function loadQuarantinedProductIds(client: SupabaseClient): Promise
   if (error) throw new Error("scan_catalog_eligibility_check_failed")
   return new Set(((data ?? []) as Array<{ product_id: string }>).map((row) => row.product_id))
 }
+
+/**
+ * Same check narrowed to a known handful of ids — for a short list already in hand
+ * (alternatives, a wishlist page) where loading the whole disposition table would be
+ * wasteful. Returns the subset that is quarantined.
+ */
+export async function loadQuarantinedProductIdsAmong(
+  client: SupabaseClient,
+  productIds: readonly string[],
+): Promise<Set<string>> {
+  const unique = [...new Set(productIds)]
+  if (unique.length === 0) return new Set()
+  const { data, error } = await client
+    .from("personal_plan_product_search_dispositions")
+    .select("product_id")
+    .in("product_id", unique)
+  if (error) throw new Error("scan_catalog_eligibility_check_failed")
+  return new Set(((data ?? []) as Array<{ product_id: string }>).map((row) => row.product_id))
+}
+
+/**
+ * The catalog-lifecycle half of scan eligibility: `is_active` alone is not enough, because
+ * a discontinued or otherwise non-active `lifecycle_status` product still carries
+ * `is_active = true` in this catalog. Every other scan surface already filters on both
+ * columns (`searchScanCatalog`, `loadActiveProductById`, both save paths) — this constant
+ * keeps the identifier lookup on the same predicate instead of re-deriving it.
+ */
+export const SCAN_ACTIVE_LIFECYCLE_STATUS = "active"
+
+/** Returns the ids that are eligible to be surfaced by scan: active AND not quarantined. */
+export async function filterScanEligibleProductIds(
+  client: SupabaseClient,
+  productIds: readonly string[],
+): Promise<Set<string>> {
+  const unique = [...new Set(productIds)]
+  if (unique.length === 0) return new Set()
+  const [{ data, error }, quarantined] = await Promise.all([
+    client
+      .from("products")
+      .select("id")
+      .in("id", unique)
+      .eq("is_active", true)
+      .eq("lifecycle_status", SCAN_ACTIVE_LIFECYCLE_STATUS),
+    loadQuarantinedProductIdsAmong(client, unique),
+  ])
+  if (error) throw new Error("scan_catalog_eligibility_check_failed")
+  const active = new Set(((data ?? []) as Array<{ id: string }>).map((row) => row.id))
+  return new Set(unique.filter((id) => active.has(id) && !quarantined.has(id)))
+}

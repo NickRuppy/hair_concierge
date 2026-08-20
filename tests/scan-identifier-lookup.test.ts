@@ -78,6 +78,8 @@ test("lookupCatalogProductByIdentifier: normalizes whitespace and matches active
     products: (calls) => {
       assert.deepEqual(calls.filters.get("id"), ["prod-1"])
       assert.equal(calls.filters.get("is_active"), true)
+      // Both columns: `is_active` alone still lets a discontinued product resolve.
+      assert.equal(calls.filters.get("lifecycle_status"), "active")
       return { data: [{ id: "prod-1", category_key: "shampoo" }], error: null }
     },
   })
@@ -148,6 +150,24 @@ test("lookupCatalogProductByIdentifier: inactive-only match is a miss", async ()
     value: "4006381333931",
   })
   assert.equal(result, null)
+})
+
+test("lookupCatalogProductByIdentifier: a discontinued product is filtered out too", async () => {
+  const seen: Array<Map<string, unknown>> = []
+  const { client } = stubClient({
+    product_identifiers: () => ({ data: [{ product_id: "prod-discontinued" }], error: null }),
+    products: (calls) => {
+      seen.push(calls.filters)
+      // The lifecycle filter is applied in the query, so the row never comes back.
+      return { data: [], error: null }
+    },
+  })
+  const result = await lookupCatalogProductByIdentifier(client as never, {
+    type: "ean",
+    value: "4006381333931",
+  })
+  assert.equal(result, null)
+  assert.equal(seen[0].get("lifecycle_status"), "active")
 })
 
 test("lookupCatalogProductByIdentifier: no identifier row is a miss", async () => {

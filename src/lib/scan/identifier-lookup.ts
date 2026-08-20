@@ -4,6 +4,8 @@ import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 
+import { SCAN_ACTIVE_LIFECYCLE_STATUS } from "./catalog-eligibility"
+
 /**
  * The three barcode-shaped identifier types the catalog stores. Scan only ever produces
  * an EAN read, but the lookup treats them as interchangeable — mirrors
@@ -45,11 +47,15 @@ export async function lookupCatalogProductByIdentifier(
   ]
   if (productIds.length === 0) return null
 
+  // Both columns, matching every other scan catalog read (`searchScanCatalog`,
+  // `loadActiveProductById`, the two save paths): `is_active` alone still lets a
+  // `lifecycle_status = 'discontinued'` product resolve to a full verdict + buy link.
   const { data: productRows, error: productError } = await client
     .from("products")
     .select("id, category_key")
     .in("id", productIds)
     .eq("is_active", true)
+    .eq("lifecycle_status", SCAN_ACTIVE_LIFECYCLE_STATUS)
   if (productError) throw new Error("scan_identifier_lookup_failed")
 
   const activeProducts = (productRows ?? []) as ActiveProductRow[]

@@ -70,10 +70,11 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     findOpenScanSubmission: async () => null,
     lookupCatalogProductByIdentifier: async () => ({ productId, category: "shampoo" }),
     isProductSearchQuarantined: async () => false,
+    loadQuarantinedProductIdsAmong: async () => new Set<string>(),
     loadScanEvaluationContext: async () => context,
     loadScanProductFacts: async () => null,
     loadRecommendationCandidates: async () => [],
-    loadScanSavedState: async () => null,
+    loadScanSavedState: async () => ({ state: null, managedByScan: false }),
     buildScanVerdict: () => inCatalogVerdict,
     loadActiveProductById: async () => ({ id: productId, category: "shampoo" }),
     loadPresentationRows: async () => [presentationRow],
@@ -281,7 +282,7 @@ test("scan resolve: identifier hit resolves a verdict with snapshotSource and sa
         buildScanVerdictCalls.push(input)
         return inCatalogVerdict
       },
-      loadScanSavedState: async () => "merkliste",
+      loadScanSavedState: async () => ({ state: "merkliste" as const, managedByScan: true }),
     }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
@@ -290,7 +291,7 @@ test("scan resolve: identifier hit resolves a verdict with snapshotSource and sa
     ...inCatalogVerdict,
     product: expectedProductHeader,
     snapshotSource: "refined",
-    savedState: "merkliste",
+    savedState: { state: "merkliste", managedByScan: true },
   })
   assert.equal(buildScanVerdictCalls.length, 1)
 })
@@ -340,6 +341,50 @@ test("scan resolve: alternatives are enriched with brand and purchase link", asy
   const body = await response.json()
   assert.equal(body.alternatives[0].brand, "Kérastase")
   assert.equal(body.alternatives[0].purchaseUrl, "https://shop.test/b")
+})
+
+test("scan resolve: a quarantined alternative is never offered (ruling R7)", async () => {
+  const goodId = "33333333-3333-4333-8333-333333333333"
+  const quarantinedId = "44444444-4444-4444-8444-444444444444"
+  const alternative = (id: string, displayName: string) => ({
+    productId: id,
+    displayName,
+    imageUrl: null,
+    priceLabel: null,
+    netContentLabel: null,
+    verdict: "ideal" as const,
+    verdictLabel: "Passt",
+  })
+  let askedFor: string[] = []
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      buildScanVerdict: () => ({
+        ...inCatalogVerdict,
+        verdict: "mismatch",
+        alternatives: [
+          alternative(quarantinedId, "Zurückgestelltes Shampoo"),
+          alternative(goodId, "Sanftes Shampoo"),
+        ],
+      }),
+      loadQuarantinedProductIdsAmong: async (_client, ids) => {
+        askedFor = [...ids]
+        return new Set([quarantinedId])
+      },
+      loadPresentationRows: async () => [
+        presentationRow,
+        { ...presentationRow, id: goodId, name: "Sanftes Shampoo" },
+        { ...presentationRow, id: quarantinedId, name: "Zurückgestelltes Shampoo" },
+      ],
+    }),
+  )
+  const response = await handler(request({ productId }))
+  const body = await response.json()
+  // Only the ≤3 offered alternatives are checked, not the whole candidate pool.
+  assert.deepEqual(askedFor, [quarantinedId, goodId])
+  assert.deepEqual(
+    body.alternatives.map((entry: { productId: string }) => entry.productId),
+    [goodId],
+  )
 })
 
 test("scan resolve: productId path resolves the same way as an identifier hit", async () => {
