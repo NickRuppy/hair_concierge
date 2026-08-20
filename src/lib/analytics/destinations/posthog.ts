@@ -439,6 +439,38 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         source: data.source,
       }
     }
+    case "scan_started":
+    case "scan_not_found":
+      return {}
+    case "scan_decoded": {
+      const data = payload as AppEventMap["scan_decoded"]
+      return { ms_to_decode: data.msToDecode, format: data.format }
+    }
+    case "scan_result_shown": {
+      const data = payload as AppEventMap["scan_result_shown"]
+      return {
+        verdict: data.verdict,
+        category: data.category,
+        in_catalog: data.inCatalog,
+        snapshot_source: data.snapshotSource,
+      }
+    }
+    case "scan_submission_created": {
+      const data = payload as AppEventMap["scan_submission_created"]
+      return { category: data.category }
+    }
+    case "scan_fallback_search_used": {
+      const data = payload as AppEventMap["scan_fallback_search_used"]
+      return { trigger: data.trigger }
+    }
+    case "scan_saved": {
+      const data = payload as AppEventMap["scan_saved"]
+      return { kind: data.kind, verdict: data.verdict }
+    }
+    case "scan_buy_clicked": {
+      const data = payload as AppEventMap["scan_buy_clicked"]
+      return { verdict: data.verdict }
+    }
     case "subscription_started":
       return payload
     case "waitlist_signup_completed": {

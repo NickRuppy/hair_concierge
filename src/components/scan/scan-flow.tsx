@@ -1,8 +1,9 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
+import { scanAnalytics, type ScanAnalyticsPort } from "@/lib/scan/scan-analytics"
 import type { ScanSavedState } from "@/lib/scan/saved-state"
 import type {
   ScanPendingSubmissionResult,
@@ -56,7 +57,13 @@ const CAMERA_UNAVAILABLE_COPY: Record<ScanUnavailableReason, string> = {
   insecure: "Die Kamera braucht eine sichere Verbindung — nutze so lange die Suche.",
 }
 
-export function ScanFlow() {
+/**
+ * `analytics` defaults to the real consent-aware port (mirrors how the Stage 3 pages use
+ * `stage3BaselineAnalytics` directly): `/scan/page.tsx` is a Server Component and cannot
+ * pass a port object as a prop across the RSC boundary, so the default parameter here is
+ * what actually wires production tracking. Tests / other callers can still override it.
+ */
+export function ScanFlow({ analytics = scanAnalytics }: { analytics?: ScanAnalyticsPort } = {}) {
   const { toast } = useToast()
   const [step, setStep] = useState<ScanFlowStep>({ kind: "scanning" })
   const [cameraAvailable, setCameraAvailable] = useState(true)
@@ -67,15 +74,25 @@ export function ScanFlow() {
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const sheetOpenRef = useRef(false)
+  // Reset at the start of every scanning window (mount + each "Nochmal scannen") so
+  // `scan_decoded`'s `ms_to_decode` measures this attempt, not the whole page visit.
+  const scanSessionStartRef = useRef(0)
 
   const sheetOpen = step.kind !== "scanning"
   sheetOpenRef.current = sheetOpen || searchOpen || wishlistOpen
+
+  useEffect(() => {
+    scanSessionStartRef.current = performance.now()
+    analytics.track("scan_started", {})
+  }, [analytics])
 
   const closeSheet = useCallback(() => {
     setStep({ kind: "scanning" })
     setSaveOpen(false)
     setSubmitError(null)
-  }, [])
+    scanSessionStartRef.current = performance.now()
+    analytics.track("scan_started", {})
+  }, [analytics])
 
   const resolve = useCallback(
     async (body: { identifier: ScanIdentifier } | { productId: string }) => {
@@ -96,35 +113,55 @@ export function ScanFlow() {
           return
         }
         const result = (await response.json()) as ScanResolveResult
-        if (result.kind === "unknown_product") setStep({ kind: "unknown", unknown: result })
-        else if (result.kind === "pending_submission") setStep({ kind: "pending", pending: result })
-        else setStep({ kind: "result", result })
+        if (result.kind === "unknown_product") {
+          analytics.track("scan_not_found", {})
+          setStep({ kind: "unknown", unknown: result })
+        } else if (result.kind === "pending_submission") {
+          setStep({ kind: "pending", pending: result })
+        } else {
+          analytics.track("scan_result_shown", {
+            verdict: resultVerdictLabel(result),
+            category: result.product.category,
+            inCatalog: result.kind === "in_catalog",
+            snapshotSource: result.snapshotSource,
+          })
+          setStep({ kind: "result", result })
+        }
       } catch {
         toast({ title: GENERIC_ERROR, variant: "destructive" })
         setStep({ kind: "scanning" })
       }
     },
-    [toast],
+    [toast, analytics],
   )
 
   const handleDecoded = useCallback(
     (identifier: ScanDecodedIdentifier) => {
       if (sheetOpenRef.current) return
+      analytics.track("scan_decoded", {
+        msToDecode: Math.round(performance.now() - scanSessionStartRef.current),
+        format: identifier.value.length === 8 ? "ean_8" : "ean_13",
+      })
       void resolve({ identifier })
     },
-    [resolve],
+    [resolve, analytics],
   )
 
-  const handleUnavailable = useCallback((reason: ScanUnavailableReason) => {
-    setCameraAvailable(false)
-    setSearchOpen(true)
-    setCameraNotice(CAMERA_UNAVAILABLE_COPY[reason])
-  }, [])
+  const handleUnavailable = useCallback(
+    (reason: ScanUnavailableReason) => {
+      setCameraAvailable(false)
+      setSearchOpen(true)
+      setCameraNotice(CAMERA_UNAVAILABLE_COPY[reason])
+      analytics.track("scan_fallback_search_used", { trigger: "denied" })
+    },
+    [analytics],
+  )
 
   const handleTimeout = useCallback(() => {
     if (sheetOpenRef.current) return
     setSearchOpen(true)
-  }, [])
+    analytics.track("scan_fallback_search_used", { trigger: "timeout" })
+  }, [analytics])
 
   const openFromProductId = useCallback(
     (productId: string) => {
@@ -158,6 +195,7 @@ export function ScanFlow() {
           await resolve({ productId: result.productId })
           return
         }
+        analytics.track("scan_submission_created", { category: input.category })
         setStep({
           kind: "pending",
           pending: {
@@ -173,7 +211,7 @@ export function ScanFlow() {
         setSubmitting(false)
       }
     },
-    [resolve],
+    [resolve, analytics],
   )
 
   const updateSavedState = useCallback((savedState: ScanSavedState) => {
@@ -210,7 +248,10 @@ export function ScanFlow() {
         Barcode nicht lesbar?{" "}
         <button
           type="button"
-          onClick={() => setSearchOpen(true)}
+          onClick={() => {
+            setSearchOpen(true)
+            analytics.track("scan_fallback_search_used", { trigger: "manual" })
+          }}
           className="font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
         >
           Produkt suchen
@@ -229,7 +270,9 @@ export function ScanFlow() {
               product={step.result.product}
               savedState={step.result.savedState}
               onSave={() => setSaveOpen(true)}
-              onBuy={() => undefined}
+              onBuy={() =>
+                analytics.track("scan_buy_clicked", { verdict: resultVerdictLabel(step.result) })
+              }
             />
           ) : undefined
         }
@@ -265,7 +308,17 @@ export function ScanFlow() {
           productId={step.result.product.productId}
           savedState={step.result.savedState}
           onOpenChange={setSaveOpen}
-          onSavedStateChange={updateSavedState}
+          onSavedStateChange={(savedState) => {
+            updateSavedState(savedState)
+            // Only the save direction is `scan_saved`; a removal (savedState -> null)
+            // isn't a "save" event.
+            if (savedState) {
+              analytics.track("scan_saved", {
+                kind: savedState,
+                verdict: resultVerdictLabel(step.result),
+              })
+            }
+          }}
         />
       ) : null}
 
@@ -286,6 +339,14 @@ export function ScanFlow() {
       />
     </div>
   )
+}
+
+/**
+ * The `verdict` analytics property: the fit verdict on `in_catalog`, or the need
+ * mode ("not_needed" / "deferred") when the category reached no fit verdict at all.
+ */
+function resultVerdictLabel(result: ScanResolvedVerdictResult): string {
+  return result.kind === "in_catalog" ? result.verdict : result.mode
 }
 
 function sheetTitle(step: ScanFlowStep): string {
