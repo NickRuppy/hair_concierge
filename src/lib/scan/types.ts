@@ -1,5 +1,13 @@
-import type { Stage3CriterionResult } from "@/lib/personal-plan/products/contracts"
+import type {
+  PersonalPlanCategory,
+  Stage3CriterionResult,
+} from "@/lib/personal-plan/products/contracts"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
+
+import type { ScanIdentifierType } from "./identifier-lookup"
+import type { ScanOpenSubmissionStatus } from "./pending-submission"
+import type { ScanSnapshotSource } from "./profile-context"
+import type { ScanSavedState } from "./saved-state"
 
 /**
  * Render-ready contract for the scan result sheet. Everything here is already
@@ -87,3 +95,32 @@ export type ScanNotNeededVerdictPayload = {
 }
 
 export type ScanVerdictPayload = ScanInCatalogVerdictPayload | ScanNotNeededVerdictPayload
+
+/**
+ * The three shapes `POST /api/scan/resolve` can return. The two verdict payloads above
+ * gain `snapshotSource` (which profile snapshot the verdict was evaluated against — see
+ * `ScanEvaluationContext`) and `savedState` (merkliste/routine/neither — see
+ * `saved-state.ts`); the other two branches short-circuit before a verdict exists at all.
+ */
+export type ScanResolvedVerdictResult = ScanVerdictPayload & {
+  snapshotSource: ScanSnapshotSource
+  savedState: ScanSavedState
+}
+
+export type ScanPendingSubmissionResult = {
+  kind: "pending_submission"
+  submissionId: string
+  headline: string
+  status: ScanOpenSubmissionStatus
+}
+
+export type ScanUnknownProductResult = {
+  kind: "unknown_product"
+  identifier: { type: ScanIdentifierType; value: string }
+  categories: Array<{ key: PersonalPlanCategory; label: string }>
+}
+
+export type ScanResolveResult =
+  | ScanResolvedVerdictResult
+  | ScanPendingSubmissionResult
+  | ScanUnknownProductResult

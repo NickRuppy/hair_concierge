@@ -61,6 +61,9 @@ export function scanNotNeededSubtitle(category: PersonalPlanCategory): string {
 
 export const SCAN_DEFERRED_HEADLINE = "Das klären wir noch"
 
+/** `POST /api/scan/resolve` and `POST /api/scan/submit`: an open submission exists. */
+export const SCAN_PENDING_SUBMISSION_HEADLINE = "Wir prüfen dein Produkt"
+
 /** "steht … noch aus" mirrors the plan fork's wording for an open decision. */
 export function scanDeferredSubtitle(category: PersonalPlanCategory): string {
   return `Für ${CATEGORY_COPY[category].label} steht deine Einschätzung noch aus`

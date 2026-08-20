@@ -116,3 +116,11 @@ export const PAYMENT_SUPPORT_IP_RATE_LIMIT: RateLimitConfig = {
   limit: 5,
   windowMs: 10 * 60_000,
 }
+
+// Shared budget across the scan feature's user-facing lookup/creation routes
+// (resolve, search, submit) — one bucket per user, not per route.
+export const SCAN_RATE_LIMIT: RateLimitConfig = {
+  prefix: "scan",
+  limit: 30,
+  windowMs: 60_000,
+}
