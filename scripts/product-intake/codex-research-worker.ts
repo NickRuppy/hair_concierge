@@ -120,12 +120,15 @@ type WorkerOptions = {
 type BrandResolutionPromptContext = {
   submitted_brand_text: string | null
   submitted_product_name_text: string | null
+  scanned_identifier: ScannedIdentifierPacketValue
   lookup_text: string
   resolved_brand: JsonRecord | null
   nearby_brand_options: JsonRecord[]
   catalog_summary: JsonRecord
   rules: string[]
 }
+
+type ScannedIdentifierPacketValue = { type: string; value: string } | null
 
 type SupabaseQueryResult<T> = {
   data: T | null
@@ -148,10 +151,7 @@ const CATEGORY_SPEC_KEYS = {
   ],
   oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
   dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: [
-    "product_deep_cleansing_shampoo_specs",
-    "product_application_protocols",
-  ],
+  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
   bondbuilder: [
     "product_bondbuilder_specs",
     "product_relationships",
@@ -179,10 +179,7 @@ const REQUIRED_CATEGORY_SPEC_KEYS = {
   ],
   oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
   dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: [
-    "product_deep_cleansing_shampoo_specs",
-    "product_application_protocols",
-  ],
+  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
   bondbuilder: ["product_bondbuilder_specs", "product_application_protocols"],
   heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
   scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
@@ -261,7 +258,15 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
 
   for (const job of jobs) {
     const detail = await loadProductIntakeSubmissionDetail(options.supabase, job.submission_id)
-    const brandResolutionContext = await loadBrandResolutionContext(options.supabase, detail)
+    const scannedIdentifier = await loadScannedIdentifierForSubmission(
+      options.supabase,
+      job.submission_id,
+    )
+    const brandResolutionContext = await loadBrandResolutionContext(
+      options.supabase,
+      detail,
+      scannedIdentifier,
+    )
     const promptPacketPath = writePromptPacket(
       job,
       options.workerId,
@@ -1017,10 +1022,9 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
         balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
         ingredient_flags: [...CONDITIONER_INGREDIENT_FLAGS],
       },
-      product_application_protocols: applicationProtocolResearchContract(
-        "conditioner",
-        ["conditioner_rinse_out"],
-      ),
+      product_application_protocols: applicationProtocolResearchContract("conditioner", [
+        "conditioner_rinse_out",
+      ]),
     }
   }
 
@@ -1347,9 +1351,39 @@ function normalizeResearchOutputForCategory(
 async function loadBrandResolutionContext(
   supabase: ReturnType<typeof createSupabaseClientFromEnv>,
   detail: ProductIntakeSubmissionDetail | null,
+  scannedIdentifier: ScannedIdentifierPacketValue,
 ): Promise<BrandResolutionPromptContext> {
   const catalogInput = await loadBrandResolutionCatalogForWorker(supabase)
-  return buildBrandResolutionPromptContext(detail, catalogInput)
+  return buildBrandResolutionPromptContext(detail, catalogInput, scannedIdentifier)
+}
+
+/**
+ * Scan intake's strongest research seed (WP4): product_submissions.scanned_identifier_type/
+ * value (migration 20260820100100), fetched directly here rather than through
+ * ProductIntakeSubmissionDetail/loadProductIntakeSubmissionDetail (packages/product-intake-core),
+ * which is out of this task's file scope and doesn't select these columns. Null for every
+ * non-scan submission (both columns are null there by the DB CHECK).
+ */
+async function loadScannedIdentifierForSubmission(
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
+  submissionId: string,
+): Promise<ScannedIdentifierPacketValue> {
+  const { data, error } = await supabase
+    .from("product_submissions")
+    .select("scanned_identifier_type, scanned_identifier_value")
+    .eq("id", submissionId)
+    .maybeSingle()
+  if (error) {
+    throw new Error(`load scanned identifier for product-intake Codex worker: ${error.message}`)
+  }
+
+  const row = data as {
+    scanned_identifier_type: string | null
+    scanned_identifier_value: string | null
+  } | null
+  if (!row?.scanned_identifier_type || !row.scanned_identifier_value) return null
+
+  return { type: row.scanned_identifier_type, value: row.scanned_identifier_value }
 }
 
 async function loadBrandResolutionCatalogForWorker(
@@ -1390,6 +1424,7 @@ function requireSupabaseData<T>(result: SupabaseQueryResult<T>, label: string): 
 function buildBrandResolutionPromptContext(
   detail: ProductIntakeSubmissionDetail | null,
   catalogInput: BrandResolutionCatalogInput,
+  scannedIdentifier: ScannedIdentifierPacketValue,
 ): BrandResolutionPromptContext {
   const catalog = buildBrandResolutionCatalog(catalogInput)
   const submittedBrand = detail?.brand ?? null
@@ -1415,6 +1450,7 @@ function buildBrandResolutionPromptContext(
   return {
     submitted_brand_text: submittedBrand,
     submitted_product_name_text: submittedProductName,
+    scanned_identifier: scannedIdentifier,
     lookup_text: lookupText,
     resolved_brand: resolvedBrand,
     nearby_brand_options: resolvedBrand ? [] : nearbyBrandOptions(lookupText, catalogInput.brands),

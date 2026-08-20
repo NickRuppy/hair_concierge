@@ -8,6 +8,7 @@ import {
   type ProductIdentityBrand,
   type ProductIdentityProductLine,
 } from "@/lib/product-identity/brand-resolution"
+import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 import { matchProductIntake } from "@/lib/product-intake/product-matching"
 import {
   ProductIntakePersistenceError,
@@ -40,12 +41,29 @@ export type {
 const REPLACEMENT_CONFLICT_MESSAGE =
   "Du hast für diese Kategorie bereits ein Produkt hinterlegt. Möchtest du es durch dieses Produkt ersetzen?"
 
-const OPEN_SUBMISSION_STATUSES = [
+export const OPEN_SUBMISSION_STATUSES = [
   "pending_review",
   "researching",
   "ready_for_review",
   "needs_more_info",
 ] as const
+
+// Scan intake's source flows into product_submissions.source (widened by migration
+// 20260820100000 to allow 'scan'), but user_product_usage.source's DB CHECK still only
+// allows onboarding/chat/profile/script — that table wasn't widened. usageSourceForDb
+// below maps "scan" -> null wherever params.source reaches a user_product_usage write,
+// while product_submissions writes and the returned result/intake-history keep "scan"
+// verbatim. See repository-types.ts's ProductIntakeSubmissionRow.source comment.
+type SubmittableProductIntakeSource = ProductSubmissionSource | "scan"
+
+function usageSourceForDb(source: SubmittableProductIntakeSource): ProductSubmissionSource | null {
+  return source === "scan" ? null : source
+}
+
+type ScannedIdentifierValue = {
+  type: "ean" | "gtin" | "barcode"
+  value: string
+}
 
 export class ProductIntakeConflictError extends Error {
   readonly category: ProductIntakeCategoryKey
@@ -68,7 +86,7 @@ export class ProductIntakeOwnershipError extends Error {
 
 export type SubmitProductIntakeParams = {
   userId: string
-  source: ProductSubmissionSource
+  source: SubmittableProductIntakeSource
   input: ProductIntakeSubmissionInput
   repository: ProductIntakeRepository
   now?: () => string
@@ -368,7 +386,7 @@ function isSamePendingUsageEdit(params: {
 }
 
 function isSameOnboardingUsageReference(params: {
-  source: ProductSubmissionSource
+  source: SubmittableProductIntakeSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow | null
 }) {
@@ -382,7 +400,7 @@ function isSameOnboardingUsageReference(params: {
 
 function buildIntakeHistory(
   input: ProductIntakeSubmissionInput,
-  source: ProductSubmissionSource,
+  source: SubmittableProductIntakeSource,
   now: string,
 ) {
   return [
@@ -416,7 +434,7 @@ function buildIntakeHistory(
 async function updatePendingSubmissionInPlace(params: {
   repository: ProductIntakeRepository
   userId: string
-  source: ProductSubmissionSource
+  source: SubmittableProductIntakeSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow
   now: string
@@ -494,7 +512,7 @@ async function updatePendingSubmissionInPlace(params: {
       product_submission_id: submissionId,
       match_status: "pending_review",
       intake_method: params.input.intake_method,
-      source: params.source,
+      source: usageSourceForDb(params.source),
       front_image_path: frontImagePath,
       updated_at: params.now,
     })
@@ -642,7 +660,7 @@ function resolveInputIdentity(params: {
 async function upsertMatchedUsage(params: {
   repository: ProductIntakeRepository
   userId: string
-  source: ProductSubmissionSource
+  source: SubmittableProductIntakeSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow | null
   productId: string
@@ -657,7 +675,7 @@ async function upsertMatchedUsage(params: {
     frequencyRange: params.input.frequency_range,
     brandText: params.input.brand_text ?? null,
     intakeMethod: params.input.intake_method,
-    source: params.source,
+    source: usageSourceForDb(params.source),
     now: params.now,
   })
 }
@@ -665,9 +683,10 @@ async function upsertMatchedUsage(params: {
 async function createPendingSubmission(params: {
   repository: ProductIntakeRepository
   userId: string
-  source: ProductSubmissionSource
+  source: SubmittableProductIntakeSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow | null
+  scannedIdentifier: ScannedIdentifierValue | null
   now: string
 }): Promise<{
   submission: ProductIntakeSubmissionRow
@@ -757,6 +776,8 @@ async function createPendingSubmission(params: {
       researched_payload: {},
       intake_history: buildIntakeHistory(params.input, params.source, params.now),
       approved_product_id: null,
+      scanned_identifier_type: params.scannedIdentifier?.type ?? null,
+      scanned_identifier_value: params.scannedIdentifier?.value ?? null,
     })
     insertedSubmissionId = submission.id
 
@@ -770,7 +791,7 @@ async function createPendingSubmission(params: {
         frequencyRange: params.input.frequency_range,
         brandText: params.input.brand_text ?? null,
         intakeMethod: params.input.intake_method,
-        source: params.source,
+        source: usageSourceForDb(params.source),
         frontImagePath: committedImages.frontImagePath,
         now: params.now,
       })
@@ -840,9 +861,22 @@ export async function submitProductIntake(
     brandCatalog: buildBrandResolutionCatalog(brandCatalogInput),
   })
 
+  // Single normalization point (per WP4 brief): the scan schema stays a passthrough
+  // validator, so the scanned value is normalized here, once, before it reaches both
+  // matching and persistence. Uses the same normalizeIdentifierValue boundary as the
+  // scan feature's other identifier lookups (identifier-lookup.ts, pending-submission.ts).
+  const scannedIdentifier: ScannedIdentifierValue | null =
+    "scannedIdentifier" in params.input && params.input.scannedIdentifier
+      ? {
+          type: params.input.scannedIdentifier.type,
+          value: normalizeIdentifierValue(params.input.scannedIdentifier.value),
+        }
+      : null
+
   const match = matchProductIntake(
     {
       selectedCategoryKey: params.input.category,
+      identifier: scannedIdentifier ?? undefined,
       brandId: identity.brandId,
       productLineId: identity.productLineId,
       cleanProductName: identity.cleanProductName,
@@ -892,6 +926,7 @@ export async function submitProductIntake(
     repository: params.repository,
     userId: params.userId,
     source: params.source,
+    scannedIdentifier,
     input: params.input,
     existingUsage,
     now,

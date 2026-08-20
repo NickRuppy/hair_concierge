@@ -173,6 +173,42 @@ export const onboardingProductIntakeCancelSchema = z.object({
     .max(SUPPORTED_PRODUCT_CATEGORY_KEYS.length),
 })
 
+// Scan intake (source "scan"): unknown-scanned-EAN flow. Brand/product name stay
+// optional here (the 2-step unknown-product UI names both optional — "der Barcode
+// reicht meist schon"); category is user-picked and required. Modeled after
+// `identifierSchema` in category-validators.ts:222-248, but deliberately WITHOUT its
+// value transform (which strips non-alphanumerics for barcode types): this schema is a
+// passthrough validator only. The single normalization point for the stored/matched
+// value is `normalizeIdentifierValue` (product-identity/normalize.ts:34), applied once
+// in submissions.ts before persist/match, so it produces the same normalized form as
+// the scan feature's other identifier boundaries (identifier-lookup.ts, pending-submission.ts).
+const scanIdentifierTypeSchema = z.enum(["ean", "gtin", "barcode"])
+
+export const scanProductIntakeIdentifierSchema = z
+  .object({
+    type: scanIdentifierTypeSchema,
+    value: trimmedString.pipe(z.string().min(1)),
+  })
+  .strict()
+
+export type ScanProductIntakeIdentifierInput = z.infer<typeof scanProductIntakeIdentifierSchema>
+
+export const scanProductIntakeSubmissionSchema = z.object({
+  intake_method: z.literal("manual").default("manual"),
+  category: productIntakeCategorySchema,
+  frequency_range: productIntakeFrequencySchema,
+  brand_text: optionalTrimmedString,
+  brand_id: uuidString.optional(),
+  product_line_id: uuidString.nullable().optional(),
+  product_name_text: optionalTrimmedString.pipe(z.string().max(240).optional()),
+  scannedIdentifier: scanProductIntakeIdentifierSchema.optional(),
+  replace_existing_confirmed: z.boolean().default(false),
+})
+
+export type ScanProductIntakeSubmissionInput = z.infer<typeof scanProductIntakeSubmissionSchema> & {
+  frequency_range: ProductFrequency
+}
+
 export type OnboardingProductIntakeSubmissionInput = z.infer<
   typeof onboardingProductIntakeSubmissionSchema
 > & {
@@ -186,6 +222,7 @@ export type ChatProductIntakeSubmissionInput = z.infer<typeof chatProductIntakeS
 export type ProductIntakeSubmissionInput =
   | OnboardingProductIntakeSubmissionInput
   | ChatProductIntakeSubmissionInput
+  | ScanProductIntakeSubmissionInput
 
 export type PersonalPlanProductIntakeSubmissionInput = z.infer<
   typeof personalPlanProductIntakeSubmissionSchema

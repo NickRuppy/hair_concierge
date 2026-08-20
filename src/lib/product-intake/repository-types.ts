@@ -46,7 +46,12 @@ export type ProductIntakeSubmissionRow = {
   user_product_usage_id: string | null
   user_product_id: string | null
   personal_plan_request_fingerprint?: string | null
-  source: ProductIntakeSubmissionSource
+  // "scan" is additive to ProductIntakeSubmissionSource (types.ts) rather than folded
+  // into that shared type: scan's source only ever reaches product_submissions.source
+  // (widened by migration 20260820100000), never user_product_usage.source, which the
+  // DB CHECK still restricts to onboarding/chat/profile/script. See submissions.ts's
+  // usageSourceForDb for the write-side mapping this keeps safe.
+  source: ProductIntakeSubmissionSource | "scan"
   source_conversation_id: string | null
   intake_method: "manual" | "photo"
   category: ProductIntakeCategoryKey
@@ -55,6 +60,12 @@ export type ProductIntakeSubmissionRow = {
   frequency_range: ProductFrequency
   front_image_path: string | null
   barcode_image_path: string | null
+  // Populated only for scan-sourced submissions (migration 20260820100100); both null
+  // for onboarding/chat/personal_plan. Value is stored NORMALIZED (normalizeIdentifierValue).
+  // Optional (like the other DB-nullable trailing fields below) so existing fixtures/rows
+  // built before this column existed don't need updating.
+  scanned_identifier_type?: "ean" | "gtin" | "barcode" | null
+  scanned_identifier_value?: string | null
   front_image_validation_status:
     | "valid_product_front"
     | "uncertain"
@@ -130,7 +141,10 @@ export type ProductIntakeRepository = {
     frequencyRange: ProductFrequency
     brandText: string | null
     intakeMethod: "manual" | "photo"
-    source: ProductSubmissionSource
+    // null covers scan submissions: user_product_usage.source's DB CHECK doesn't allow
+    // "scan" (only product_submissions.source was widened), so callers map "scan" -> null
+    // before reaching this repository call (see submissions.ts usageSourceForDb).
+    source: ProductSubmissionSource | null
     now: string
   }) => Promise<ProductIntakeUsageRow>
   replaceUsageWithPendingSubmission: (params: {
@@ -142,7 +156,7 @@ export type ProductIntakeRepository = {
     frequencyRange: ProductFrequency
     brandText: string | null
     intakeMethod: "manual" | "photo"
-    source: ProductSubmissionSource
+    source: ProductSubmissionSource | null
     frontImagePath: string | null
     now: string
   }) => Promise<{
@@ -188,7 +202,7 @@ export type ProductIntakeRepository = {
   insertProductSubmission: (
     row: Partial<ProductIntakeSubmissionRow> & {
       user_id: string
-      source: ProductSubmissionSource
+      source: ProductSubmissionSource | "scan"
       intake_method: "manual" | "photo"
       category: ProductIntakeCategoryKey
       frequency_range: ProductFrequency

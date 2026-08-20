@@ -10,9 +10,11 @@ import { createDefaultAgentV2ConversationState } from "../src/lib/agent-v2/produ
 import {
   chatProductIntakeSubmissionSchema,
   onboardingProductIntakeSubmissionSchema,
+  scanProductIntakeSubmissionSchema,
 } from "../src/lib/product-intake/schemas"
 import {
   cancelProductIntakeUsage,
+  OPEN_SUBMISSION_STATUSES,
   ProductIntakeConflictError,
   ProductIntakeOwnershipError,
   submitProductIntake,
@@ -22,6 +24,7 @@ import {
 } from "../src/lib/product-intake/submissions"
 import type { ProductIntakeCatalog } from "../src/lib/product-intake/product-matching"
 import type { BrandResolutionCatalogInput } from "../src/lib/product-identity/brand-resolution"
+import { normalizeIdentifierValue } from "../src/lib/product-identity/normalize"
 import type { ProductFrequency, ProductIntakeCategoryKey } from "../src/lib/types"
 
 const USER_ID = "11111111-1111-4111-8111-111111111111"
@@ -95,6 +98,7 @@ type FakeRepoOptions = {
   failMatchedUsage?: boolean
   failSubmissionLink?: boolean
   submissions?: ProductIntakeSubmissionRow[]
+  catalog?: ProductIntakeCatalog
 }
 
 function makeUsage(
@@ -179,10 +183,12 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
     })
   }
 
+  const activeCatalog = options.catalog ?? catalog
+
   const repository: ProductIntakeRepository = {
     async loadCatalog(params) {
       catalogModes.push(params?.eligibilityMode ?? "default")
-      return catalog
+      return activeCatalog
     },
     async loadBrandResolutionCatalog() {
       return brandCatalog
@@ -452,6 +458,54 @@ test("manual intake schemas require category, frequency, brand identity, and pro
     }).success,
     false,
   )
+})
+
+test("scan intake schema keeps brand and product name optional, requires category, and validates the scanned identifier shape", () => {
+  const minimal = scanProductIntakeSubmissionSchema.parse({
+    category: "mask",
+    frequency_range: "weekly_1x",
+  })
+  assert.equal(minimal.intake_method, "manual")
+  assert.equal(minimal.brand_text, undefined)
+  assert.equal(minimal.product_name_text, undefined)
+  assert.equal(minimal.scannedIdentifier, undefined)
+
+  const withIdentifier = scanProductIntakeSubmissionSchema.parse({
+    category: "mask",
+    frequency_range: "weekly_1x",
+    scannedIdentifier: { type: "ean", value: "4006381333931" },
+  })
+  assert.deepEqual(withIdentifier.scannedIdentifier, { type: "ean", value: "4006381333931" })
+
+  assert.equal(
+    scanProductIntakeSubmissionSchema.safeParse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "manufacturer_sku", value: "4006381333931" },
+    }).success,
+    false,
+    "identifier type is restricted to ean/gtin/barcode, unlike category-validators' identifierSchema",
+  )
+
+  assert.equal(
+    scanProductIntakeSubmissionSchema.safeParse({
+      frequency_range: "weekly_1x",
+    }).success,
+    false,
+    "category stays required (user-picked, per plans/scan-mvp.md WP4)",
+  )
+})
+
+test("scan intake schema is a passthrough validator: it trims the identifier value but does not normalize it", () => {
+  const parsed = scanProductIntakeSubmissionSchema.parse({
+    category: "mask",
+    frequency_range: "weekly_1x",
+    scannedIdentifier: { type: "barcode", value: "  ABC-123  " },
+  })
+
+  // Only whitespace is trimmed here; case-folding/whitespace-collapse happens once in
+  // submissions.ts via normalizeIdentifierValue before persist/match (see there).
+  assert.equal(parsed.scannedIdentifier?.value, "ABC-123")
 })
 
 test("matched manual intake links user usage to the existing product without creating a submission", async () => {
@@ -1358,6 +1412,127 @@ test("chat intake verifies source conversation ownership and preserves owned con
       }),
     ProductIntakeOwnershipError,
   )
+})
+
+test("OPEN_SUBMISSION_STATUSES is exported for src/lib/scan/pending-submission.ts to share (no duplicated literal set)", () => {
+  assert.deepEqual([...OPEN_SUBMISSION_STATUSES].sort(), [
+    "needs_more_info",
+    "pending_review",
+    "ready_for_review",
+    "researching",
+  ])
+})
+
+test("scan submission with a cataloged EAN auto-links via identifier_category_exact and creates no submission row", async () => {
+  const catalogWithIdentifier: ProductIntakeCatalog = {
+    ...catalog,
+    identifiers: [
+      {
+        product_id: "product-garnier-mask",
+        identifier_type: "ean",
+        identifier_value: "4006381333931",
+        source: null,
+      },
+    ],
+  }
+  const fake = createFakeRepository({ catalog: catalogWithIdentifier })
+
+  const result = await submitProductIntake({
+    userId: USER_ID,
+    source: "scan",
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "ean", value: "4006381333931" },
+    }),
+    repository: fake.repository,
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(result.status, "matched")
+  assert.equal(result.source, "scan")
+  assert.equal(result.match.reason, "identifier_category_exact")
+  assert.equal(result.matched_product_id, "product-garnier-mask")
+  assert.equal(result.submission, null)
+  assert.equal(fake.usage?.product_id, "product-garnier-mask")
+  // user_product_usage.source's DB CHECK doesn't allow "scan" (only
+  // product_submissions.source was widened) -- the write-side mapping stores null there.
+  assert.equal(fake.usage?.source, null)
+  assert.deepEqual(fake.calls, ["replace_usage_matched:product-garnier-mask"])
+})
+
+test("unknown scanned EAN creates a pending submission with the normalized identifier persisted", async () => {
+  const fake = createFakeRepository()
+
+  const result = await submitProductIntake({
+    userId: USER_ID,
+    source: "scan",
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "ean", value: "9999999999999" },
+    }),
+    repository: fake.repository,
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(result.status, "pending_review")
+  assert.equal(result.source, "scan")
+  assert.equal(result.matched_product_id, null)
+  assert.equal(fake.submissions.length, 1)
+  assert.equal(fake.submissions[0].source, "scan")
+  assert.equal(fake.submissions[0].scanned_identifier_type, "ean")
+  assert.equal(fake.submissions[0].scanned_identifier_value, "9999999999999")
+  assert.equal(fake.usage?.product_submission_id, fake.submissions[0].id)
+  // Same DB-CHECK constraint as the matched-path test above.
+  assert.equal(fake.usage?.source, null)
+})
+
+test("scan submission normalizes the scanned identifier once before it is matched and persisted", async () => {
+  const fake = createFakeRepository()
+  const rawValue = "  AB-12  "
+
+  const result = await submitProductIntake({
+    userId: USER_ID,
+    source: "scan",
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "barcode", value: rawValue },
+    }),
+    repository: fake.repository,
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  const expectedNormalized = normalizeIdentifierValue(rawValue)
+  assert.equal(expectedNormalized, "ab-12")
+  assert.equal(result.status, "pending_review")
+  assert.equal(fake.submissions[0].scanned_identifier_value, expectedNormalized)
+})
+
+test("scan submission omits scanned_identifier columns and matchProductIntake's identifier when no identifier was scanned", async () => {
+  const fake = createFakeRepository()
+
+  const result = await submitProductIntake({
+    userId: USER_ID,
+    source: "scan",
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      brand_text: "Unbekannte Marke",
+      product_name_text: "Mystery Maske",
+    }),
+    repository: fake.repository,
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(result.status, "pending_review")
+  // "Unbekannte Marke" does not resolve against the brand catalog, so matching falls
+  // through to needs_more_info/insufficient_identity -- submitProductIntake still
+  // creates the pending submission generically (unchanged pre-existing behavior).
+  assert.equal(result.match.reason, "insufficient_identity")
+  assert.equal(fake.submissions[0].scanned_identifier_type, null)
+  assert.equal(fake.submissions[0].scanned_identifier_value, null)
 })
 
 test("route handler returns controlled disabled response before auth or persistence", async () => {

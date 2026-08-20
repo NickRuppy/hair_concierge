@@ -1,24 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import type { ProductIntakeSubmissionRow } from "@/lib/product-intake/repository-types"
+import { OPEN_SUBMISSION_STATUSES } from "@/lib/product-intake/submissions"
 
-/**
- * The subset of `product_submissions.status` that means "still open, don't ask again" —
- * no shared named constant exists in `product-intake` today (checked repository-types.ts
- * and review-workflow.ts), so this is the scan feature's own copy of the status literals
- * the migrations already gate on (see 20260616120000/20260617120000).
- */
-const SCAN_OPEN_SUBMISSION_STATUSES = [
-  "pending_review",
-  "researching",
-  "ready_for_review",
-  "needs_more_info",
-] as const satisfies readonly Extract<
-  ProductIntakeSubmissionRow["status"],
-  "pending_review" | "researching" | "ready_for_review" | "needs_more_info"
->[]
-
-export type ScanOpenSubmissionStatus = (typeof SCAN_OPEN_SUBMISSION_STATUSES)[number]
+export type ScanOpenSubmissionStatus = (typeof OPEN_SUBMISSION_STATUSES)[number]
 
 export type ScanPendingSubmission = {
   submissionId: string
@@ -41,7 +25,7 @@ export async function findOpenScanSubmission(
     .select("id, status")
     .eq("user_id", userId)
     .eq("scanned_identifier_value", normalizedValue)
-    .in("status", SCAN_OPEN_SUBMISSION_STATUSES)
+    .in("status", OPEN_SUBMISSION_STATUSES)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle()

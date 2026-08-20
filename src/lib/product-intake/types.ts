@@ -26,7 +26,9 @@ export type ProductIntakeSubmittedSubmission = {
 
 export type ProductIntakeSubmissionResult = {
   status: ProductIntakeSubmissionStatus
-  source: ProductSubmissionSource
+  // Widened locally (not in types.ts's shared ProductSubmissionSource) to cover the scan
+  // intake path — see repository-types.ts's ProductIntakeSubmissionRow.source comment.
+  source: ProductSubmissionSource | "scan"
   intake_method: ProductIntakeMethod
   category: ProductIntakeCategoryKey
   frequency_range: ProductFrequency
