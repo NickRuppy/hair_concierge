@@ -21,11 +21,16 @@ import type { MessageContext, ProductIntakeOffer, ProductSubmission } from "@/li
 
 const ONBOARDING_REVIEW_CONVERSATION_TITLE = "Produktprüfung"
 
+/**
+ * `source` is widened beyond `ProductSubmission["source"]` because the DB column also
+ * accepts `"scan"` (migration 20260820100000) — the shared row type deliberately did not
+ * fold it in (see `repository-types.ts`), but the notification reads whatever the review
+ * pipeline resolved, so it has to be able to see and branch on it.
+ */
 export type ProductSubmissionForNotification = Pick<
   ProductSubmission,
   | "id"
   | "user_id"
-  | "source"
   | "source_conversation_id"
   | "user_product_usage_id"
   | "intake_method"
@@ -41,7 +46,7 @@ export type ProductSubmissionForNotification = Pick<
   | "user_facing_next_step"
   | "user_facing_missing_fields"
   | "notification_sent_at"
->
+> & { source: ProductSubmission["source"] | "scan" }
 
 export type ProductIntakeNotificationResult =
   | { sent: true; conversationId: string; messageId: string }
@@ -111,12 +116,24 @@ export function buildProductIntakeReviewMessage(
   const label = productLabel(submission) || "dein Produkt"
 
   if (submission.status === "approved" || submission.status === "matched_existing") {
+    // A scan submission is a research request only: `submitScanProductIntake` writes no
+    // `user_product_usage` row and never claims the product as something the user uses
+    // ("Benutze ich schon" is a separate, explicit action). The shared copy below promises
+    // a routine link that does not exist for this path, so scan gets its own sentence.
+    if (submission.source === "scan") {
+      return [
+        `Gute Nachrichten: Wir haben **${label}** geprüft und in unseren Katalog aufgenommen.`,
+        "Scanne es noch einmal oder öffne den Scan-Bereich, um zu sehen, ob es zu deinem Haar passt.",
+      ].join("\n\n")
+    }
     return [
       `Gute Nachrichten: Wir haben **${label}** geprüft und in deiner Routine verknüpft.`,
       "Du kannst mich jetzt konkret dazu fragen, und ich berücksichtige es bei passenden Empfehlungen.",
     ].join("\n\n")
   }
 
+  // `needs_more_info` and `rejected` make no routine claim in either wording — they only
+  // describe the submission itself — so both paths stay shared with the other sources.
   if (submission.status === "needs_more_info") {
     return [
       `Danke für die Produktangaben zu **${label}**. Wir brauchen noch eine kleine Ergänzung, bevor wir es sauber prüfen können.`,
