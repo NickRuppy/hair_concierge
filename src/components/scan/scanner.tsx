@@ -9,6 +9,7 @@ import {
   type ScanTelemetry,
 } from "@/lib/scan/guidance"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
+import { createScanSessionState } from "@/lib/scan/scanner-session"
 import { cn } from "@/lib/utils"
 
 // Type-only import: erased at build time, so this does NOT pull the zxing-wasm ponyfill
@@ -40,6 +41,24 @@ const LUMA_SAMPLE_INTERVAL_MS = 500 // ~2x/second
 const LUMA_SAMPLE_SIZE = 16
 const FLASH_DURATION_MS = 220
 
+// Self-hosted zxing-wasm reader binary. `barcode-detector`'s default `locateFile`
+// fetches this from https://fastly.jsdelivr.net/npm/zxing-wasm@<version>/... at runtime —
+// we override it so no request ever leaves our origin. MUST stay pinned to the exact
+// zxing-wasm version `barcode-detector` depends on (currently zxing-wasm@3.1.3, via
+// barcode-detector@3.2.2 — see package.json). The file was copied verbatim from
+// `node_modules/zxing-wasm/dist/reader/zxing_reader.wasm` (sha256
+// 2ebda08a93eea3efcd8399cda6b276e6a0b1de4fec60b4d8988a047de4c6d1ba, matching the
+// package's own exported `ZXING_WASM_SHA256`) into `public/wasm/`. When either package
+// bumps its zxing-wasm version: re-copy the file, keep the version in the filename (so a
+// stale cached copy can never be served from a URL that also serves the new one), and
+// update this constant.
+const ZXING_READER_WASM_PATH = "/wasm/zxing_reader-3.1.3.wasm"
+
+// Module-scope, not per-session: the override only needs to be registered once for the
+// page's lifetime (zxing-wasm caches it internally), so repeated scan sessions on the
+// same page load don't need to redo this.
+let zxingWasmOverrideConfigured = false
+
 export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: ScannerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const lumaCanvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -49,26 +68,13 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
   const detectorRef = useRef<BarcodeDetector | null>(null)
   const frameHandleRef = useRef<number | null>(null)
   const frameKindRef = useRef<"rvfc" | "raf" | null>(null)
-  const pausedRef = useRef(false)
-  const detectingRef = useRef(false)
 
-  const frameCounterRef = useRef(0)
-  const detectionAttemptsRef = useRef(0)
-  const lastRawValueRef = useRef<string | null>(null)
-  const consecutiveMatchRef = useRef(0)
-  const lastFiredValueRef = useRef<string | null>(null)
-  const hasDecodedRef = useRef(false)
-  const timeoutFiredRef = useRef(false)
+  // All per-session mutable state lives in one object, reset in one place at the start
+  // of every session (see `createScanSessionState`) — see task-7-report.md fix round 1
+  // for the bug class this closes (stale `paused`/`lastFiredValue`/etc. across a
+  // close→reopen or a background/visibility cycle).
+  const sessionRef = useRef(createScanSessionState())
 
-  const startTimeRef = useRef(0)
-  const lastDetectionTimeRef = useRef(0)
-  const lastBoundingBoxRatioRef = useRef<number | null>(null)
-  const meanLumaRef = useRef<number | null>(null)
-  const lastLumaSampleTimeRef = useRef(0)
-  const rawDetectionsWithoutStableReadRef = useRef(0)
-
-  const hintRef = useRef<ScanHint | null>(null)
-  const hintChangedAtRef = useRef(0)
   const [hint, setHint] = useState<ScanHint>(SCAN_HINT_DEFAULT)
   const [flashActive, setFlashActive] = useState(false)
 
@@ -91,9 +97,17 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
     if (!active) return
     let cancelled = false
 
+    // Session start: one reset point for every mutable field a prior session could have
+    // left in a non-default state (paused, dedupe/debounce counters, hint, telemetry).
+    sessionRef.current = createScanSessionState()
+    setHint(SCAN_HINT_DEFAULT)
+    setFlashActive(false)
+
+    const session = sessionRef.current
+
     function scheduleFrame() {
       const video = videoRef.current
-      if (!video || cancelled || pausedRef.current) return
+      if (!video || cancelled || session.paused) return
       if (typeof video.requestVideoFrameCallback === "function") {
         frameKindRef.current = "rvfc"
         frameHandleRef.current = video.requestVideoFrameCallback(() => tick())
@@ -136,10 +150,10 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
     }
 
     function fireStableDecode(value: string) {
-      hasDecodedRef.current = true
-      rawDetectionsWithoutStableReadRef.current = 0
-      lastRawValueRef.current = null
-      consecutiveMatchRef.current = 0
+      session.hasDecoded = true
+      session.rawDetectionsWithoutStableRead = 0
+      session.lastRawValue = null
+      session.consecutiveMatch = 0
       setFlashActive(true)
       window.setTimeout(() => setFlashActive(false), FLASH_DURATION_MS)
       onDecodedRef.current({ type: "ean", value })
@@ -147,41 +161,48 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
 
     function handleRawDetections(results: DetectedBarcode[], video: HTMLVideoElement) {
       const now = performance.now()
-      lastDetectionTimeRef.current = now
+      session.lastDetectionTime = now
 
       const primary = results[0]
       const frameArea = video.videoWidth * video.videoHeight
-      lastBoundingBoxRatioRef.current =
+      session.lastBoundingBoxRatio =
         frameArea > 0 ? (primary.boundingBox.width * primary.boundingBox.height) / frameArea : null
 
       const rawValue = primary.rawValue
-      if (rawValue === lastRawValueRef.current) {
-        consecutiveMatchRef.current += 1
+      if (rawValue === session.lastRawValue) {
+        session.consecutiveMatch += 1
       } else {
-        lastRawValueRef.current = rawValue
-        consecutiveMatchRef.current = 1
+        session.lastRawValue = rawValue
+        session.consecutiveMatch = 1
       }
 
-      rawDetectionsWithoutStableReadRef.current += 1
+      session.rawDetectionsWithoutStableRead += 1
 
-      if (consecutiveMatchRef.current >= STABLE_READ_REQUIRED_MATCHES) {
+      if (session.consecutiveMatch >= STABLE_READ_REQUIRED_MATCHES) {
         const validated = validateEanInput(rawValue)
-        if (validated.ok && lastFiredValueRef.current !== validated.value) {
-          lastFiredValueRef.current = validated.value
+        if (validated.ok && session.lastFiredValue !== validated.value) {
+          session.lastFiredValue = validated.value
           fireStableDecode(validated.value)
         }
         // Reset the streak either way: an invalid-checksum read still needs to re-earn
         // two fresh consecutive matches before we try validating again (cheap, avoids
         // revalidating a stationary bad read every single frame).
-        consecutiveMatchRef.current = 0
+        session.consecutiveMatch = 0
       }
+    }
+
+    async function ensureLocalWasmOverride() {
+      if (zxingWasmOverrideConfigured) return
+      const { setZXingModuleOverrides } = await import("barcode-detector/ponyfill")
+      setZXingModuleOverrides({ locateFile: () => ZXING_READER_WASM_PATH })
+      zxingWasmOverrideConfigured = true
     }
 
     async function runDetectionCycle() {
       const video = videoRef.current
       const detector = detectorRef.current
-      if (!video || !detector || detectingRef.current) return
-      detectingRef.current = true
+      if (!video || !detector || session.detecting) return
+      session.detecting = true
       try {
         let results: DetectedBarcode[] = []
         try {
@@ -190,9 +211,9 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
           results = []
         }
 
-        detectionAttemptsRef.current += 1
+        session.detectionAttempts += 1
         const noRawHit = results.length === 0
-        if (noRawHit && detectionAttemptsRef.current % ROTATION_RETRY_INTERVAL === 0) {
+        if (noRawHit && session.detectionAttempts % ROTATION_RETRY_INTERVAL === 0) {
           const rotated = getRotatedFrame(video)
           if (rotated) {
             try {
@@ -204,9 +225,13 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
           }
         }
 
+        // Re-check after the await points: teardown (unmount / `active` -> false) can
+        // land while `detect()` is in flight, and a late resolution must not mutate a
+        // torn-down session's state or fire callbacks into a session that no longer exists.
+        if (cancelled) return
         if (results.length > 0) handleRawDetections(results, video)
       } finally {
-        detectingRef.current = false
+        session.detecting = false
       }
     }
 
@@ -214,8 +239,8 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
       const video = videoRef.current
       const canvas = lumaCanvasRef.current
       if (!video || !canvas || video.readyState < 2) return
-      if (now - lastLumaSampleTimeRef.current < LUMA_SAMPLE_INTERVAL_MS) return
-      lastLumaSampleTimeRef.current = now
+      if (now - session.lastLumaSampleTime < LUMA_SAMPLE_INTERVAL_MS) return
+      session.lastLumaSampleTime = now
       const ctx = canvas.getContext("2d", { willReadFrequently: true })
       if (!ctx) return
       ctx.drawImage(video, 0, 0, LUMA_SAMPLE_SIZE, LUMA_SAMPLE_SIZE)
@@ -230,41 +255,41 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
       for (let i = 0; i < data.length; i += 4) {
         sum += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
       }
-      meanLumaRef.current = pixelCount > 0 ? sum / pixelCount : null
+      session.meanLuma = pixelCount > 0 ? sum / pixelCount : null
     }
 
     function updateHint(now: number) {
       const telemetry: ScanTelemetry = {
-        msSinceStart: now - startTimeRef.current,
-        msSinceLastDetection: now - lastDetectionTimeRef.current,
-        lastBoundingBoxRatio: lastBoundingBoxRatioRef.current,
-        meanLuma: meanLumaRef.current,
-        rawDetectionsWithoutStableRead: rawDetectionsWithoutStableReadRef.current,
+        msSinceStart: now - session.startTime,
+        msSinceLastDetection: now - session.lastDetectionTime,
+        lastBoundingBoxRatio: session.lastBoundingBoxRatio,
+        meanLuma: session.meanLuma,
+        rawDetectionsWithoutStableRead: session.rawDetectionsWithoutStableRead,
       }
       const result = nextScanHint(telemetry, {
-        currentHint: hintRef.current,
-        msSinceLastHintChange: now - hintChangedAtRef.current,
+        currentHint: session.hint,
+        msSinceLastHintChange: now - session.hintChangedAt,
       })
       if (result !== null) {
-        hintRef.current = result
-        hintChangedAtRef.current = now
+        session.hint = result
+        session.hintChangedAt = now
         setHint(result)
       }
     }
 
     function checkTimeout(now: number) {
-      if (timeoutFiredRef.current || hasDecodedRef.current) return
-      if (now - startTimeRef.current >= SCAN_TIMEOUT_MS) {
-        timeoutFiredRef.current = true
+      if (session.timeoutFired || session.hasDecoded) return
+      if (now - session.startTime >= SCAN_TIMEOUT_MS) {
+        session.timeoutFired = true
         onTimeoutRef.current()
       }
     }
 
     function tick() {
-      if (cancelled || pausedRef.current) return
+      if (cancelled || session.paused) return
       const now = performance.now()
-      frameCounterRef.current += 1
-      const dueForDetection = frameCounterRef.current % DETECTION_FRAME_INTERVAL === 0
+      session.frameCounter += 1
+      const dueForDetection = session.frameCounter % DETECTION_FRAME_INTERVAL === 0
 
       const afterDetection = () => {
         if (cancelled) return
@@ -283,10 +308,10 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
 
     function handleVisibilityChange() {
       if (document.hidden) {
-        pausedRef.current = true
+        session.paused = true
         cancelFrame()
-      } else if (pausedRef.current) {
-        pausedRef.current = false
+      } else if (session.paused) {
+        session.paused = false
         scheduleFrame()
       }
     }
@@ -340,18 +365,18 @@ export function Scanner({ active, onDecoded, onUnavailable, onTimeout }: Scanner
       if (cancelled) return
 
       // Lazy-load the WASM-backed ponyfill only after permission is granted (bundle-size
-      // boundary — see report).
+      // boundary — see report). Registering the same-origin wasm override before the
+      // first `detect()` call ensures zxing-wasm never falls back to fetching from jsDelivr.
+      await ensureLocalWasmOverride()
+      if (cancelled) return
       const { BarcodeDetector: BarcodeDetectorCtor } = await import("barcode-detector/ponyfill")
       if (cancelled) return
       detectorRef.current = new BarcodeDetectorCtor({ formats: [...DETECTOR_FORMATS] })
 
       const now = performance.now()
-      startTimeRef.current = now
-      lastDetectionTimeRef.current = now
-      lastLumaSampleTimeRef.current = 0
-      hintChangedAtRef.current = now
-      timeoutFiredRef.current = false
-      hasDecodedRef.current = false
+      session.startTime = now
+      session.lastDetectionTime = now
+      session.hintChangedAt = now
 
       document.addEventListener("visibilitychange", handleVisibilityChange)
       scheduleFrame()
