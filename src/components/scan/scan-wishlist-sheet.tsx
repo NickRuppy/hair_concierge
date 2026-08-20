@@ -35,11 +35,14 @@ export function ScanWishlistSheet({
   open,
   onOpenChange,
   onOpenProduct,
+  onBuy,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   /** Tapping an entry resolves it as a scan result again. */
   onOpenProduct: (productId: string) => void
+  /** A "Kaufen ↗" in this list is a buy click too; the list carries no verdict. */
+  onBuy: (productId: string) => void
 }) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [entries, setEntries] = useState<ScanWishlistEntry[]>([])
@@ -146,6 +149,7 @@ export function ScanWishlistSheet({
                       href={entry.purchaseUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => onBuy(entry.productId)}
                       className="inline-flex shrink-0 items-center gap-1 text-[12px] font-semibold text-[var(--brand-coral-dark)] underline-offset-4 hover:underline"
                     >
                       Kaufen

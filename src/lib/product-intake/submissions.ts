@@ -959,7 +959,7 @@ export type SubmitScanProductIntakeParams = {
  * source='scan' (see migration 20260808062620's product_submissions_association_path_check,
  * which only constrains source='personal_plan'). One-open-submission-per-EAN semantics
  * for the anchorless case are enforced by idx_product_submissions_one_open_scan
- * (migration 20260820120000), a scan-scoped sibling of the usage-keyed and
+ * (migration 20260820103000), a scan-scoped sibling of the usage-keyed and
  * user_product-keyed partial unique indexes the legacy paths rely on.
  */
 export async function submitScanProductIntake(

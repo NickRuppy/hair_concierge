@@ -302,6 +302,11 @@ export function ScanFlow({
             result={step.result}
             onRescan={closeSheet}
             onOpenAlternative={openFromProductId}
+            // An alternative's "Kaufen ↗" reports the verdict of the payload it was
+            // offered under — the scanned product's — not the alternative's own pill.
+            onBuyAlternative={() =>
+              analytics.track("scan_buy_clicked", { verdict: resultVerdictLabel(step.result) })
+            }
           />
         ) : null}
         {step.kind === "unknown" ? (
@@ -355,6 +360,10 @@ export function ScanFlow({
         open={wishlistOpen}
         onOpenChange={setWishlistOpen}
         onOpenProduct={openFromProductId}
+        // The Merkliste list carries no verdict of its own; "merkliste" is the surface the
+        // click came from. `verdict` is a plain string in the event map, so this is legal
+        // and keeps every buy click in one event.
+        onBuy={() => analytics.track("scan_buy_clicked", { verdict: "merkliste" })}
       />
     </div>
   )

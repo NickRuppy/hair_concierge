@@ -10,6 +10,12 @@ import {
   type ScanAnalyticsPort,
 } from "../src/lib/scan/scan-analytics"
 
+/**
+ * Fixture values below stay inside the real domains the scan surface emits:
+ * `snapshotSource` is `ScanSnapshotSource` ("refined" | "initial"), and
+ * `scan_buy_clicked.verdict` is a `ScanVerdict`, a `ScanNeedMode` ("not_needed" |
+ * "deferred"), or "merkliste" for a buy click out of the Merkliste sheet.
+ */
 const scanEventNames = [
   "scan_started",
   "scan_decoded",
@@ -75,7 +81,7 @@ test("Scan analytics factory only fires with analytics consent", () => {
     verdict: "ideal",
     category: "shampoo",
     inCatalog: true,
-    snapshotSource: "profile",
+    snapshotSource: "refined",
   })
   consented.track("scan_not_found", {})
   consented.track("scan_submission_created", { category: "conditioner" })
@@ -92,7 +98,7 @@ test("Scan analytics factory only fires with analytics consent", () => {
         verdict: "ideal",
         category: "shampoo",
         inCatalog: true,
-        snapshotSource: "profile",
+        snapshotSource: "refined",
       },
     },
     { eventName: "scan_not_found", payload: {} },
@@ -118,13 +124,13 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
       verdict: "not_needed",
       category: "oil",
       inCatalog: false,
-      snapshotSource: "fallback",
+      snapshotSource: "initial",
     })
     postHogDestination.track("scan_not_found", {})
     postHogDestination.track("scan_submission_created", { category: "mask" })
     postHogDestination.track("scan_fallback_search_used", { trigger: "manual" })
     postHogDestination.track("scan_saved", { kind: "merkliste", verdict: "supportive" })
-    postHogDestination.track("scan_buy_clicked", { verdict: "deferred" })
+    postHogDestination.track("scan_buy_clicked", { verdict: "merkliste" })
   } finally {
     posthog.capture = originalCapture
   }
@@ -134,12 +140,12 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
     ["scan_decoded", { ms_to_decode: 900, format: "ean_8" }],
     [
       "scan_result_shown",
-      { verdict: "not_needed", category: "oil", in_catalog: false, snapshot_source: "fallback" },
+      { verdict: "not_needed", category: "oil", in_catalog: false, snapshot_source: "initial" },
     ],
     ["scan_not_found", {}],
     ["scan_submission_created", { category: "mask" }],
     ["scan_fallback_search_used", { trigger: "manual" }],
     ["scan_saved", { kind: "merkliste", verdict: "supportive" }],
-    ["scan_buy_clicked", { verdict: "deferred" }],
+    ["scan_buy_clicked", { verdict: "merkliste" }],
   ])
 })

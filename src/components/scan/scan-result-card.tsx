@@ -52,10 +52,13 @@ export function ScanResultCard({
   result,
   onRescan,
   onOpenAlternative,
+  onBuyAlternative,
 }: {
   result: ScanResolvedVerdictResult
   onRescan: () => void
   onOpenAlternative: (productId: string) => void
+  /** An alternative's "Kaufen ↗" is a buy click too — same event as the footer's. */
+  onBuyAlternative: (productId: string) => void
 }) {
   const sections =
     result.kind === "not_needed"
@@ -127,7 +130,11 @@ export function ScanResultCard({
       ) : null}
 
       {result.kind === "in_catalog" && result.alternatives.length > 0 ? (
-        <Alternatives alternatives={result.alternatives} onOpen={onOpenAlternative} />
+        <Alternatives
+          alternatives={result.alternatives}
+          onOpen={onOpenAlternative}
+          onBuy={onBuyAlternative}
+        />
       ) : null}
 
       <button
@@ -236,9 +243,11 @@ function CoveredBy({ entries }: { entries: Array<{ label: string; detail: string
 function Alternatives({
   alternatives,
   onOpen,
+  onBuy,
 }: {
   alternatives: ScanAlternativePresentation[]
   onOpen: (productId: string) => void
+  onBuy: (productId: string) => void
 }) {
   return (
     <section>
@@ -284,6 +293,7 @@ function Alternatives({
                     href={alternative.purchaseUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => onBuy(alternative.productId)}
                     className="inline-flex items-center gap-1 text-[12px] font-semibold text-[var(--brand-coral-dark)] underline-offset-4 hover:underline"
                   >
                     Kaufen

@@ -35,6 +35,7 @@ const noindexRoutes = [
   "/profile/:path*",
   "/result/:path*",
   "/routine/:path*",
+  "/scan/:path*",
   "/welcome/:path*",
   "/warteliste/:path*",
 ]

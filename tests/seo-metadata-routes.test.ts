@@ -408,6 +408,7 @@ test("private and unstable routes receive response-level noindex headers", async
     "/profile/:path*",
     "/result/:path*",
     "/routine/:path*",
+    "/scan/:path*",
     "/welcome/:path*",
   ]) {
     assert.ok(noindexSources.includes(source), source)
