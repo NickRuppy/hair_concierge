@@ -261,6 +261,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(latestLead?.id).toBeTruthy()
 
       await revealAnalysis.click()
+      await expect(page.getByText("Einen Moment", { exact: false })).toBeVisible({ timeout: 5_000 })
       await page.waitForURL((url) => url.pathname === `/result/${latestLead!.id}`, {
         timeout: 15_000,
       })
@@ -550,6 +551,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(latestLead?.id).toBeTruthy()
 
       await revealAnalysis.click()
+      await expect(page.getByText("Einen Moment", { exact: false })).toBeVisible({ timeout: 5_000 })
       await page.waitForURL((url) => url.pathname === `/result/${latestLead!.id}`, {
         timeout: 15_000,
       })

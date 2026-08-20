@@ -104,6 +104,13 @@ test("commit view shows exactly one question and both approved buttons, nothing 
   assert.doesNotMatch(html, /%/)
   assert.doesNotMatch(html, /Meine Haaranalyse ansehen/)
   assert.doesNotMatch(html, /Nach 4 Wochen|Nach 7 Tagen/)
+
+  // A persistent (always-mounted) role="status" live region is present from the
+  // commit phase onward so screen readers pick it up before it first gets content,
+  // but it carries no loading/ready copy yet.
+  assert.match(html, /role="status"/)
+  assert.doesNotMatch(html, /Einen Moment/)
+  assert.doesNotMatch(html, />Bereit\.</)
 })
 
 test("pending commit disables both buttons against double taps", () => {
