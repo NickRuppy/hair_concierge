@@ -5,6 +5,7 @@ import {
   createScanSubmitRouteHandler,
   type ScanSubmitRouteDeps,
 } from "../src/app/api/scan/submit/route"
+import { validateEanInput } from "../src/lib/scan/identifier-lookup"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 const productId = "22222222-2222-4222-8222-222222222222"
@@ -14,6 +15,7 @@ function baseDeps(overrides: Partial<ScanSubmitRouteDeps> = {}): ScanSubmitRoute
   return {
     getUserId: async () => userId,
     checkRateLimit: async () => ({ allowed: true }),
+    validateEanInput,
     createAdminClient: () => ({}) as never,
     createRepository: () => ({}) as never,
     submit: async () => ({
@@ -69,6 +71,40 @@ test("scan submit: a non-ean identifier type is rejected (v1 surface is ean-only
     request({ identifier: { type: "gtin", value: "4006381333931" }, category: "shampoo" }),
   )
   assert.equal(response.status, 400)
+})
+
+test("scan submit: a non-EAN value is rejected with invalid_identifier, same as resolve", async () => {
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      submit: async () => {
+        throw new Error("must not be called")
+      },
+    }),
+  )
+  for (const value of ["not-a-barcode", "123", "40063813339311", "4006381333930"]) {
+    const response = await handler(request({ ...validBody, identifier: { type: "ean", value } }))
+    assert.equal(response.status, 400, value)
+    assert.deepEqual(await response.json(), { error: "invalid_identifier" }, value)
+  }
+})
+
+test("scan submit: the validated (trimmed) identifier is what reaches the submission", async () => {
+  let capturedInput: { scannedIdentifier?: unknown } | undefined
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      submit: async ({ input }) => {
+        capturedInput = input
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+          match: { status: "insufficient_identity" } as never,
+        }
+      },
+    }),
+  )
+  await handler(request({ ...validBody, identifier: { type: "ean", value: "  4006381333931  " } }))
+  assert.deepEqual(capturedInput?.scannedIdentifier, { type: "ean", value: "4006381333931" })
 })
 
 test("scan submit: already_in_catalog maps to 200 with productId only", async () => {

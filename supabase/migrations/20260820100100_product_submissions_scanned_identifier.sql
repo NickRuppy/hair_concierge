@@ -16,6 +16,8 @@
 -- explicit IS NOT NULL guards; with type set and value NULL, `value <> ''`
 -- evaluates to NULL, so `FALSE OR (TRUE AND NULL)` = NULL, which CHECK does
 -- not treat as a violation -- the half-set row would have passed silently.
+-- (The `<> ''` emptiness test has since been replaced by the barcode-shape
+-- regex below; the IS NOT NULL guards stay for exactly the same reason.)
 
 ALTER TABLE public.product_submissions
   ADD COLUMN IF NOT EXISTS scanned_identifier_type text;
@@ -26,6 +28,13 @@ ALTER TABLE public.product_submissions
 ALTER TABLE public.product_submissions
   DROP CONSTRAINT IF EXISTS product_submissions_scanned_identifier_check;
 
+-- The value pattern mirrors the application boundary (validateEanInput in
+-- src/lib/scan/identifier-lookup.ts, enforced by both /api/scan/resolve and
+-- /api/scan/submit): digits only, EAN-8 or EAN-13. The DB cannot check the GS1
+-- check digit cheaply, but it can refuse anything that is not barcode-shaped, so
+-- a future writer that skips the route layer still cannot store free text in the
+-- column the catalog lookup keys on.
+
 ALTER TABLE public.product_submissions
   ADD CONSTRAINT product_submissions_scanned_identifier_check
   CHECK (
@@ -34,9 +43,22 @@ ALTER TABLE public.product_submissions
       scanned_identifier_type IS NOT NULL
       AND scanned_identifier_type IN ('ean', 'gtin', 'barcode')
       AND scanned_identifier_value IS NOT NULL
-      AND scanned_identifier_value <> ''
+      AND scanned_identifier_value ~ '^[0-9]{8}$|^[0-9]{13}$'
     )
   );
+
+-- A scan submission with no scanned identifier would be invisible to
+-- idx_product_submissions_one_open_scan (that index is partial on
+-- scanned_identifier_value IS NOT NULL), so it could bypass the
+-- one-open-submission-per-EAN rule entirely. submitScanProductIntake always
+-- passes the identifier through; this pins that invariant at the DB level.
+
+ALTER TABLE public.product_submissions
+  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;
+
+ALTER TABLE public.product_submissions
+  ADD CONSTRAINT product_submissions_scan_requires_identifier_check
+  CHECK (source <> 'scan' OR scanned_identifier_value IS NOT NULL);
 
 -- Serves the scan flow's open-submission lookup: per-user, per-normalized-
 -- identifier ("do I already have an open submission for this scanned

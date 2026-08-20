@@ -12,6 +12,7 @@ import {
 } from "@/lib/product-intake/submissions"
 import type { ScanProductIntakeSubmissionResult } from "@/lib/product-intake/types"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { validateEanInput } from "@/lib/scan/identifier-lookup"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -38,6 +39,7 @@ const submitBodySchema = z
 export type ScanSubmitRouteDeps = {
   getUserId: () => Promise<string | null>
   checkRateLimit: typeof checkRateLimit
+  validateEanInput: typeof validateEanInput
   createAdminClient: typeof createAdminClient
   createRepository: (admin: ReturnType<typeof createAdminClient>) => ProductIntakeRepository
   submit: typeof submitScanProductIntake
@@ -70,6 +72,13 @@ export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
     const parsed = submitBodySchema.safeParse(body)
     if (!parsed.success) return fail("invalid_request", 400)
 
+    // Same gate as `POST /api/scan/resolve`: the zod schema only proves the string is
+    // non-empty, so without this a hand-rolled request could open a research submission
+    // for a value that is not an EAN at all — and the submission is the row a reviewer
+    // later attaches to the catalog. 400 `invalid_identifier` mirrors resolve exactly.
+    const validation = deps.validateEanInput(parsed.data.identifier.value)
+    if (!validation.ok) return fail("invalid_identifier", 400)
+
     const input: ScanProductIntakeSubmissionInput = {
       intake_method: "manual",
       category: parsed.data.category,
@@ -80,7 +89,7 @@ export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
       frequency_range: null,
       brand_text: parsed.data.brandText,
       product_name_text: parsed.data.productNameText,
-      scannedIdentifier: parsed.data.identifier,
+      scannedIdentifier: { type: "ean", value: validation.value },
       replace_existing_confirmed: false,
     }
 
@@ -113,6 +122,7 @@ function toResponse(result: ScanProductIntakeSubmissionResult) {
 export const POST = createScanSubmitRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   checkRateLimit,
+  validateEanInput,
   createAdminClient,
   createRepository: createSupabaseProductIntakeRepository,
   submit: submitScanProductIntake,
