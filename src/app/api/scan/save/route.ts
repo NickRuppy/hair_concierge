@@ -56,6 +56,7 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
         } else {
           const result = await deps.saveRoutine(client, userId, parsed.productId)
           if (result.outcome === "product_not_found") return fail("product_not_found", 404)
+          if (result.outcome === "product_not_saveable") return fail("product_not_saveable", 409)
         }
         return NextResponse.json(
           { ok: true, kind: parsed.kind, productId: parsed.productId },

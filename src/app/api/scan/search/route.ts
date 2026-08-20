@@ -8,6 +8,7 @@ import {
   type PersonalPlanCategory,
 } from "@/lib/personal-plan/products/contracts"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { loadQuarantinedProductIds } from "@/lib/scan/catalog-eligibility"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -22,6 +23,10 @@ import { createClient } from "@/lib/supabase/server"
 const MIN_QUERY_LENGTH = 2
 const MAX_QUERY_LENGTH = 120
 const MAX_RESULTS = 8
+// Catalog sits around 256 active products today, well under this cap, so an in-Node
+// filter over one page is fine. If the catalog ever approaches 1000 rows this silently
+// truncates instead of erroring — worth adding a `totalCapped`-style truncation signal
+// (mirroring inventory-search.ts's `totalCapped`) before that happens.
 const CANDIDATE_LOAD_LIMIT = 1000
 
 export type ScanSearchResult = {
@@ -93,18 +98,26 @@ export async function searchScanCatalog(
   client: SupabaseClient,
   query: string,
 ): Promise<ScanSearchResult[]> {
-  const { data, error } = await client
-    .from("products")
-    .select("id, name, brand, category_key, image_url, sort_order")
-    .eq("is_active", true)
-    .eq("lifecycle_status", "active")
-    .in("category_key", PERSONAL_PLAN_PRODUCT_CATEGORIES)
-    .limit(CANDIDATE_LOAD_LIMIT)
+  const [{ data, error }, quarantinedIds] = await Promise.all([
+    client
+      .from("products")
+      .select("id, name, brand, category_key, image_url, sort_order")
+      .eq("is_active", true)
+      .eq("lifecycle_status", "active")
+      .in("category_key", PERSONAL_PLAN_PRODUCT_CATEGORIES)
+      .limit(CANDIDATE_LOAD_LIMIT),
+    loadQuarantinedProductIds(client),
+  ])
   if (error) throw new Error("scan_search_catalog_unavailable")
 
   const normalizedQuery = query.toLocaleLowerCase()
-  const matches = ((data ?? []) as CandidateRow[]).filter((row) =>
-    `${row.brand ?? ""} ${row.name}`.toLocaleLowerCase().includes(normalizedQuery),
+  // Ruling R7: a disposition-quarantined product (personal_plan_product_search_dispositions)
+  // never surfaces via scan search — same predicate personal_plan_create_or_reuse_user_product
+  // enforces server-side (see catalog-eligibility.ts).
+  const matches = ((data ?? []) as CandidateRow[]).filter(
+    (row) =>
+      !quarantinedIds.has(row.id) &&
+      `${row.brand ?? ""} ${row.name}`.toLocaleLowerCase().includes(normalizedQuery),
   )
 
   matches.sort((left, right) => {

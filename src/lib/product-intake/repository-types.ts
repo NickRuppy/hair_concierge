@@ -55,7 +55,9 @@ export type ProductIntakeSubmissionRow = {
   category: ProductIntakeCategoryKey
   brand_text: string | null
   product_name_text: string | null
-  frequency_range: ProductFrequency
+  // Nullable only for source: "scan" (migration 20260820110000 relaxes the DB constraint
+  // accordingly) — every other source still always writes a real value.
+  frequency_range: ProductFrequency | null
   front_image_path: string | null
   barcode_image_path: string | null
   // Populated only for scan-sourced submissions (migration 20260820100100); both null
@@ -200,7 +202,8 @@ export type ProductIntakeRepository = {
       source: ProductSubmissionSource | "scan"
       intake_method: "manual" | "photo"
       category: ProductIntakeCategoryKey
-      frequency_range: ProductFrequency
+      // Nullable only for source: "scan" — see ProductIntakeSubmissionRow.frequency_range.
+      frequency_range: ProductFrequency | null
     },
   ) => Promise<ProductIntakeSubmissionRow>
   updateProductSubmission: (

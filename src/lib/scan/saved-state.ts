@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { isProductSearchQuarantined } from "./catalog-eligibility"
+
 /**
  * Where a scanned/matched catalog product currently sits for this user, outside the
  * evaluated-verdict question itself. `"merkliste"` = saved to the scan wishlist
@@ -64,13 +66,17 @@ export async function removeScanWishlistProduct(
   if (error) throw new Error("scan_wishlist_remove_failed")
 }
 
-export type ScanRoutineSaveResult = { outcome: "saved" } | { outcome: "product_not_found" }
+export type ScanRoutineSaveResult =
+  | { outcome: "saved" }
+  | { outcome: "product_not_found" }
+  | { outcome: "product_not_saveable" }
 
 type ActiveProductRow = {
   id: string
   name: string | null
   brand: string | null
   category_key: string
+  origin: string | null
 }
 
 /**
@@ -83,6 +89,11 @@ type ActiveProductRow = {
  * per category (see migration 20260808062620's opening comment), so this never needs to
  * touch or replace an existing different product in the same category — it only ever
  * adds this exact product, or no-ops if it's already owned.
+ *
+ * Ruling R7: mirrors the RPC's FULL eligibility predicate (migration
+ * `20260811212000_...gate.sql:267-280`), not just the active-product check — a
+ * disposition-quarantined product is refused, and a non-curated (`user_submitted`) product
+ * is only saveable when the user already owns that exact product elsewhere.
  */
 export async function saveScanRoutineProduct(
   client: SupabaseClient,
@@ -91,7 +102,7 @@ export async function saveScanRoutineProduct(
 ): Promise<ScanRoutineSaveResult> {
   const { data: product, error: productError } = await client
     .from("products")
-    .select("id, name, brand, category_key")
+    .select("id, name, brand, category_key, origin")
     .eq("id", productId)
     .eq("is_active", true)
     .eq("lifecycle_status", "active")
@@ -100,15 +111,24 @@ export async function saveScanRoutineProduct(
   const activeProduct = product as ActiveProductRow | null
   if (!activeProduct) return { outcome: "product_not_found" }
 
+  if (await isProductSearchQuarantined(client, productId)) {
+    return { outcome: "product_not_saveable" }
+  }
+
   const { data: existing, error: existingError } = await client
     .from("user_products")
     .select("id")
     .eq("user_id", userId)
     .eq("catalog_product_id", productId)
+    .eq("identity_status", "matched")
     .eq("ownership_status", "owned")
     .maybeSingle()
   if (existingError) throw new Error("scan_routine_save_failed")
   if (existing) return { outcome: "saved" }
+
+  // Not already owned, so the RPC's alternate eligibility branch doesn't apply — only a
+  // curated product may be saved for the first time this way.
+  if (activeProduct.origin !== "curated") return { outcome: "product_not_saveable" }
 
   const { error: insertError } = await client.from("user_products").insert({
     user_id: userId,

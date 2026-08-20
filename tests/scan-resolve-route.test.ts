@@ -69,6 +69,7 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     validateEanInput: () => ({ ok: true, type: "ean", value: "4006381333931" }),
     findOpenScanSubmission: async () => null,
     lookupCatalogProductByIdentifier: async () => ({ productId, category: "shampoo" }),
+    isProductSearchQuarantined: async () => false,
     loadScanEvaluationContext: async () => context,
     loadScanProductFacts: async () => null,
     loadRecommendationCandidates: async () => [],
@@ -169,6 +170,42 @@ test("scan resolve: identifier miss returns unknown_product with all 10 categori
 test("scan resolve: productId not found is 404", async () => {
   const handler = createScanResolveRouteHandler(
     baseDeps({ loadActiveProductById: async () => null }),
+  )
+  const response = await handler(request({ productId }))
+  assert.equal(response.status, 404)
+  assert.deepEqual(await response.json(), { error: "product_not_found" })
+})
+
+test("scan resolve: a non-ean identifier type is rejected (v1 surface is ean-only)", async () => {
+  const handler = createScanResolveRouteHandler(baseDeps())
+  const response = await handler(request({ identifier: { type: "gtin", value: "4006381333931" } }))
+  assert.equal(response.status, 400)
+})
+
+test("scan resolve: a disposition-quarantined identifier hit is treated as unknown_product", async () => {
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      isProductSearchQuarantined: async () => true,
+      loadScanEvaluationContext: async () => {
+        throw new Error("must not reach profile evaluation for a quarantined product")
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  const body = await response.json()
+  assert.equal(body.kind, "unknown_product")
+  assert.deepEqual(body.identifier, { type: "ean", value: "4006381333931" })
+})
+
+test("scan resolve: a disposition-quarantined productId is 404 product_not_found", async () => {
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      isProductSearchQuarantined: async () => true,
+      loadScanEvaluationContext: async () => {
+        throw new Error("must not reach profile evaluation for a quarantined product")
+      },
+    }),
   )
   const response = await handler(request({ productId }))
   assert.equal(response.status, 404)

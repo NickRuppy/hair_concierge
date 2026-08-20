@@ -62,6 +62,15 @@ test("scan save POST routine: product_not_found from the helper maps to 404", as
   assert.deepEqual(await response.json(), { error: "product_not_found" })
 })
 
+test("scan save POST routine: refused (quarantined or non-curated/not-owned) maps to 409", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({ saveRoutine: async () => ({ outcome: "product_not_saveable" }) }),
+  )
+  const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
+  assert.equal(response.status, 409)
+  assert.deepEqual(await response.json(), { error: "product_not_saveable" })
+})
+
 test("scan save POST routine: success", async () => {
   const handlers = createScanSaveRouteHandlers(baseDeps())
   const response = await handlers.POST(request("POST", { productId, kind: "routine" }))

@@ -86,27 +86,46 @@ test("scan search: an unexpected lookup error maps to 503", async () => {
 
 /**
  * `searchScanCatalog` itself, against a stub client — matching/ranking, not just the
- * route's plumbing.
+ * route's plumbing. Routes by table so the `products` query and the
+ * `personal_plan_product_search_dispositions` query (loaded concurrently) can be given
+ * independent responses.
  */
-function stubProductsClient(rows: unknown[]) {
+function stubProductsClient(
+  rows: unknown[],
+  options: { quarantinedIds?: string[]; productsError?: unknown } = {},
+) {
   const calls: { filters: Map<string, unknown>; limit?: number } = { filters: new Map() }
-  const chain = {
-    select: () => chain,
+  const productsChain = {
+    select: () => productsChain,
     eq: (column: string, value: unknown) => {
       calls.filters.set(column, value)
-      return chain
+      return productsChain
     },
     in: (column: string, values: unknown) => {
       calls.filters.set(column, values)
-      return chain
+      return productsChain
     },
     limit: (value: number) => {
       calls.limit = value
-      return chain
+      return productsChain
     },
-    then: (resolve: (value: unknown) => unknown) => resolve({ data: rows, error: null }),
+    then: (resolve: (value: unknown) => unknown) =>
+      resolve({ data: rows, error: options.productsError ?? null }),
   }
-  const client = { from: () => chain }
+  const dispositionsChain = {
+    select: () => dispositionsChain,
+    then: (resolve: (value: unknown) => unknown) =>
+      resolve({
+        data: (options.quarantinedIds ?? []).map((product_id) => ({ product_id })),
+        error: null,
+      }),
+  }
+  const client = {
+    from: (table: string) => {
+      if (table === "personal_plan_product_search_dispositions") return dispositionsChain
+      return productsChain
+    },
+  }
   return { client, calls }
 }
 
@@ -173,17 +192,38 @@ test("searchScanCatalog: caps results at 8", async () => {
 })
 
 test("searchScanCatalog: a query load error throws a stable error", async () => {
-  const chain = {
-    select: () => chain,
-    eq: () => chain,
-    in: () => chain,
-    limit: () => chain,
-    then: (resolve: (value: unknown) => unknown) =>
-      resolve({ data: null, error: { message: "boom" } }),
-  }
-  const client = { from: () => chain }
+  const { client } = stubProductsClient([], { productsError: { message: "boom" } })
   await assert.rejects(
     () => searchScanCatalog(client as never, "shampoo"),
     /scan_search_catalog_unavailable/,
+  )
+})
+
+test("searchScanCatalog: excludes a disposition-quarantined product (ruling R7)", async () => {
+  const { client } = stubProductsClient(
+    [
+      {
+        id: "1",
+        name: "Shampoo Deluxe",
+        brand: "Marke",
+        category_key: "shampoo",
+        image_url: null,
+        sort_order: 0,
+      },
+      {
+        id: "2",
+        name: "Shampoo Basic",
+        brand: "Marke",
+        category_key: "shampoo",
+        image_url: null,
+        sort_order: 1,
+      },
+    ],
+    { quarantinedIds: ["1"] },
+  )
+  const results = await searchScanCatalog(client as never, "shampoo")
+  assert.deepEqual(
+    results.map((r) => r.id),
+    ["2"],
   )
 })

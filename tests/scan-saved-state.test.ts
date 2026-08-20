@@ -146,14 +146,24 @@ test("saveScanRoutineProduct: unknown/inactive product is reported, not inserted
   assert.deepEqual(inserts, [])
 })
 
-test("saveScanRoutineProduct: already-owned row is a no-op success", async () => {
+const notQuarantined = { select: () => ({ data: null, error: null }) }
+const quarantined = { select: () => ({ data: { product_id: "prod-1" }, error: null }) }
+
+test("saveScanRoutineProduct: already-owned row is a no-op success (any origin)", async () => {
   const { client, inserts } = stubClient({
     products: {
       select: () => ({
-        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
+        data: {
+          id: "prod-1",
+          name: "Shampoo X",
+          brand: "Marke",
+          category_key: "shampoo",
+          origin: "user_submitted",
+        },
         error: null,
       }),
     },
+    personal_plan_product_search_dispositions: notQuarantined,
     user_products: { select: () => ({ data: { id: "up-1" }, error: null }) },
   })
   const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
@@ -161,14 +171,21 @@ test("saveScanRoutineProduct: already-owned row is a no-op success", async () =>
   assert.deepEqual(inserts, [])
 })
 
-test("saveScanRoutineProduct: inserts a matched/owned/scan row for a new product", async () => {
+test("saveScanRoutineProduct: inserts a matched/owned/scan row for a new curated product", async () => {
   const { client, inserts } = stubClient({
     products: {
       select: () => ({
-        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
+        data: {
+          id: "prod-1",
+          name: "Shampoo X",
+          brand: "Marke",
+          category_key: "shampoo",
+          origin: "curated",
+        },
         error: null,
       }),
     },
+    personal_plan_product_search_dispositions: notQuarantined,
     user_products: {
       select: () => ({ data: null, error: null }),
       insert: () => ({ error: null }),
@@ -191,6 +208,50 @@ test("saveScanRoutineProduct: inserts a matched/owned/scan row for a new product
       },
     },
   ])
+})
+
+test("saveScanRoutineProduct: a disposition-quarantined product is refused (ruling R7)", async () => {
+  const { client, inserts } = stubClient({
+    products: {
+      select: () => ({
+        data: {
+          id: "prod-1",
+          name: "Shampoo X",
+          brand: "Marke",
+          category_key: "shampoo",
+          origin: "curated",
+        },
+        error: null,
+      }),
+    },
+    personal_plan_product_search_dispositions: quarantined,
+    // user_products deliberately has no handler: must not be reached.
+  })
+  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
+  assert.deepEqual(result, { outcome: "product_not_saveable" })
+  assert.deepEqual(inserts, [])
+})
+
+test("saveScanRoutineProduct: a non-curated product the user does not already own is refused", async () => {
+  const { client, inserts } = stubClient({
+    products: {
+      select: () => ({
+        data: {
+          id: "prod-1",
+          name: "Shampoo X",
+          brand: "Marke",
+          category_key: "shampoo",
+          origin: "user_submitted",
+        },
+        error: null,
+      }),
+    },
+    personal_plan_product_search_dispositions: notQuarantined,
+    user_products: { select: () => ({ data: null, error: null }) },
+  })
+  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
+  assert.deepEqual(result, { outcome: "product_not_saveable" })
+  assert.deepEqual(inserts, [])
 })
 
 test("removeScanRoutineProduct: only deletes rows this helper's own intake_source created", async () => {

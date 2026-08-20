@@ -63,6 +63,14 @@ test("scan submit: a bad identifier shape is a zod rejection", async () => {
   assert.equal(response.status, 400)
 })
 
+test("scan submit: a non-ean identifier type is rejected (v1 surface is ean-only)", async () => {
+  const handler = createScanSubmitRouteHandler(baseDeps())
+  const response = await handler(
+    request({ identifier: { type: "gtin", value: "4006381333931" }, category: "shampoo" }),
+  )
+  assert.equal(response.status, 400)
+})
+
 test("scan submit: already_in_catalog maps to 200 with productId only", async () => {
   const handler = createScanSubmitRouteHandler(
     baseDeps({
@@ -90,7 +98,7 @@ test("scan submit: pending_review maps to 202 pending_submission with headline",
   })
 })
 
-test("scan submit: passes a filled-in placeholder frequency, never touching usage", async () => {
+test("scan submit: passes frequency_range null (no invented data), never touching usage", async () => {
   let capturedInput: unknown
   const handler = createScanSubmitRouteHandler(
     baseDeps({
@@ -109,7 +117,7 @@ test("scan submit: passes a filled-in placeholder frequency, never touching usag
   assert.deepEqual(capturedInput, {
     intake_method: "manual",
     category: "shampoo",
-    frequency_range: "weekly_2x",
+    frequency_range: null,
     brand_text: undefined,
     product_name_text: undefined,
     scannedIdentifier: { type: "ean", value: "4006381333931" },

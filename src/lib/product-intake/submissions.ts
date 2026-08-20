@@ -1131,6 +1131,14 @@ export async function submitPersonalPlanProductIntake(
       created.replayed &&
       (created.submission.intake_method !== "photo" || replayedPhotoIsFinalized)
     ) {
+      // frequency_range is only ever null for source: "scan" (submitScanProductIntake,
+      // a wholly separate function) — the "forged association" check above already
+      // confirmed created.submission.source === "personal_plan".
+      if (created.submission.frequency_range === null) {
+        throw new ProductIntakePersistenceError(
+          "Personal Plan product submission is missing frequency_range.",
+        )
+      }
       return {
         status: "pending_review",
         source: "personal_plan",

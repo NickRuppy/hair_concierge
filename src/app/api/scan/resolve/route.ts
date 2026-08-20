@@ -17,6 +17,7 @@ import {
 import type { PlanCategoryDecision } from "@/lib/personal-plan/types"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { isProductSearchQuarantined } from "@/lib/scan/catalog-eligibility"
 import { lookupCatalogProductByIdentifier, validateEanInput } from "@/lib/scan/identifier-lookup"
 import { findOpenScanSubmission } from "@/lib/scan/pending-submission"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
@@ -27,9 +28,15 @@ import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
+/**
+ * v1 API surface only ever needs "ean" (ruling R9): the scanner emits ean_13/ean_8 and
+ * manual entry is ean-only too. `lookupCatalogProductByIdentifier`'s DB-side matching stays
+ * `ean|gtin|barcode` (identifier-lookup.ts, unchanged) — this route just never accepts the
+ * other two from a client.
+ */
 const identifierBodySchema = z
   .object({
-    type: z.enum(["ean", "gtin", "barcode"]),
+    type: z.literal("ean"),
     value: z.string().trim().min(1).max(64),
   })
   .strict()
@@ -53,6 +60,7 @@ export type ScanResolveRouteDeps = {
   validateEanInput: typeof validateEanInput
   findOpenScanSubmission: typeof findOpenScanSubmission
   lookupCatalogProductByIdentifier: typeof lookupCatalogProductByIdentifier
+  isProductSearchQuarantined: typeof isProductSearchQuarantined
   loadScanEvaluationContext: typeof loadScanEvaluationContext
   loadScanProductFacts: typeof loadScanProductFacts
   loadRecommendationCandidates: typeof loadStage3RecommendationCandidates
@@ -106,6 +114,15 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
     const ok = (result: ScanResolveResult) =>
       NextResponse.json(result, { headers: { "Cache-Control": "no-store" } })
 
+    const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
+      kind: "unknown_product",
+      identifier: { type, value },
+      categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
+        key,
+        label: CATEGORY_COPY[key].label,
+      })),
+    })
+
     try {
       let productId: string
       let category: PersonalPlanCategory
@@ -130,22 +147,25 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           type: identifier.type,
           value: identifier.value,
         })
-        if (!hit) {
-          return ok({
-            kind: "unknown_product",
-            identifier: { type: identifier.type, value: normalizedValue },
-            categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
-              key,
-              label: CATEGORY_COPY[key].label,
-            })),
-          })
+        if (!hit) return ok(unknownProduct(identifier.type, normalizedValue))
+
+        // Ruling R7: a disposition-quarantined product (identity_ambiguous, retired, or
+        // awaiting exact analysis — personal_plan_product_search_dispositions) is not
+        // resolvable via scan either. The research/review pipeline is the right place to
+        // untangle it; treat it as though the identifier lookup missed.
+        if (await deps.isProductSearchQuarantined(client, hit.productId)) {
+          return ok(unknownProduct(identifier.type, normalizedValue))
         }
+
         productId = hit.productId
         category = hit.category
       } else {
         // Schema refine() guarantees productId is set on this branch.
         const active = await deps.loadActiveProductById(client, parsed.data.productId as string)
         if (!active) return fail("product_not_found", 404)
+        if (await deps.isProductSearchQuarantined(client, active.id)) {
+          return fail("product_not_found", 404)
+        }
         productId = active.id
         category = active.category
       }
@@ -217,6 +237,7 @@ async function loadActiveProductById(
     .select("id, category_key")
     .eq("id", productId)
     .eq("is_active", true)
+    .eq("lifecycle_status", "active")
     .maybeSingle()
   if (error) throw new Error("scan_resolve_product_lookup_failed")
   const row = data as { id: string; category_key: string } | null
@@ -230,6 +251,7 @@ export const POST = createScanResolveRouteHandler({
   validateEanInput,
   findOpenScanSubmission,
   lookupCatalogProductByIdentifier,
+  isProductSearchQuarantined,
   loadScanEvaluationContext,
   loadScanProductFacts,
   loadRecommendationCandidates: loadStage3RecommendationCandidates,

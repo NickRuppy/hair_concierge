@@ -196,7 +196,12 @@ export type ScanProductIntakeIdentifierInput = z.infer<typeof scanProductIntakeI
 export const scanProductIntakeSubmissionSchema = z.object({
   intake_method: z.literal("manual").default("manual"),
   category: productIntakeCategorySchema,
-  frequency_range: productIntakeFrequencySchema,
+  // Scan's 2-step unknown-product UI never asks for a use-frequency (plan §WP6), and
+  // submitScanProductIntake never reads/writes user_product_usage — nullable here (unlike
+  // every other intake schema) rather than inventing a value (controller ruling R8).
+  // Migration 20260820110000 relaxes product_submissions.frequency_range to NULL only
+  // for source='scan'.
+  frequency_range: productIntakeFrequencySchema.nullable(),
   brand_text: optionalTrimmedString,
   brand_id: uuidString.optional(),
   product_line_id: uuidString.nullable().optional(),
@@ -206,7 +211,7 @@ export const scanProductIntakeSubmissionSchema = z.object({
 })
 
 export type ScanProductIntakeSubmissionInput = z.infer<typeof scanProductIntakeSubmissionSchema> & {
-  frequency_range: ProductFrequency
+  frequency_range: ProductFrequency | null
 }
 
 export type OnboardingProductIntakeSubmissionInput = z.infer<
