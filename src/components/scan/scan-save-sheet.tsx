@@ -3,9 +3,11 @@
 import { useState } from "react"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
-import { useToast } from "@/components/ui/toast"
 import { MODAL_LAYER_PRIORITIES } from "@/lib/ui/modal-layer-manager"
 import type { ScanSavedState } from "@/lib/scan/saved-state"
+// The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
+// `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
+import { useToast } from "@/providers/toast-provider"
 import { cn } from "@/lib/utils"
 
 /**

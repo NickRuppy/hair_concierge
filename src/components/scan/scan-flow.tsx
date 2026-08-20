@@ -3,7 +3,6 @@
 import { useCallback, useRef, useState } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
-import { useToast } from "@/components/ui/toast"
 import type { ScanSavedState } from "@/lib/scan/saved-state"
 import type {
   ScanPendingSubmissionResult,
@@ -11,6 +10,9 @@ import type {
   ScanResolvedVerdictResult,
   ScanUnknownProductResult,
 } from "@/lib/scan/types"
+// The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
+// `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
+import { useToast } from "@/providers/toast-provider"
 
 import { ScanActionFooter } from "./scan-action-footer"
 import { ScanResultCard } from "./scan-result-card"
