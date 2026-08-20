@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { presentCatalogCommerce } from "@/lib/personal-plan/routine/commerce"
+import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -30,17 +31,29 @@ type WishlistRow = {
 
 export type ScanWishlistRouteDeps = {
   getUserId: () => Promise<string | null>
+  checkRateLimit: typeof checkRateLimit
   createAdminClient: typeof createAdminClient
   listWishlist: (client: SupabaseClient, userId: string) => Promise<ScanWishlistEntry[]>
 }
 
-const fail = (error: string, status: number) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store" } })
+const fail = (error: string, status: number, headers?: HeadersInit) =>
+  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
 
 export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
   return async function GET() {
     const userId = await deps.getUserId()
     if (!userId) return fail("unauthorized", 401)
+
+    // Same shared per-user scan budget as the other scan routes (`SCAN_RATE_LIMIT`).
+    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
+    if (!limited.allowed) {
+      const unavailable = limited.error === "service_unavailable"
+      return fail(
+        unavailable ? "temporarily_unavailable" : "rate_limited",
+        unavailable ? 503 : 429,
+        unavailable ? undefined : { "Retry-After": "60" },
+      )
+    }
 
     try {
       const client = deps.createAdminClient()
@@ -92,6 +105,7 @@ export async function listScanWishlist(
 
 export const GET = createScanWishlistRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+  checkRateLimit,
   createAdminClient,
   listWishlist: listScanWishlist,
 })

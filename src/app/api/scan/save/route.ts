@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
+import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import {
   removeScanRoutineProduct,
   removeScanWishlistProduct,
@@ -19,6 +20,7 @@ const saveBodySchema = z
 
 export type ScanSaveRouteDeps = {
   getUserId: () => Promise<string | null>
+  checkRateLimit: typeof checkRateLimit
   createAdminClient: typeof createAdminClient
   saveWishlist: typeof saveScanWishlistProduct
   removeWishlist: typeof removeScanWishlistProduct
@@ -26,10 +28,22 @@ export type ScanSaveRouteDeps = {
   removeRoutine: typeof removeScanRoutineProduct
 }
 
-const fail = (error: string, status: number) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store" } })
+const fail = (error: string, status: number, headers?: HeadersInit) =>
+  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
 
 export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
+  /** Same shared per-user scan budget the read routes use (`SCAN_RATE_LIMIT`). */
+  async function rateLimit(userId: string) {
+    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
+    if (limited.allowed) return null
+    const unavailable = limited.error === "service_unavailable"
+    return fail(
+      unavailable ? "temporarily_unavailable" : "rate_limited",
+      unavailable ? 503 : 429,
+      unavailable ? undefined : { "Retry-After": "60" },
+    )
+  }
+
   async function readBody(request: Request) {
     let body: unknown
     try {
@@ -45,6 +59,9 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
     async POST(request: Request) {
       const userId = await deps.getUserId()
       if (!userId) return fail("unauthorized", 401)
+
+      const limited = await rateLimit(userId)
+      if (limited) return limited
 
       const parsed = await readBody(request)
       if (!parsed) return fail("invalid_request", 400)
@@ -72,6 +89,9 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
       const userId = await deps.getUserId()
       if (!userId) return fail("unauthorized", 401)
 
+      const limited = await rateLimit(userId)
+      if (limited) return limited
+
       const parsed = await readBody(request)
       if (!parsed) return fail("invalid_request", 400)
 
@@ -96,6 +116,7 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
 
 const handlers = createScanSaveRouteHandlers({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+  checkRateLimit,
   createAdminClient,
   saveWishlist: saveScanWishlistProduct,
   removeWishlist: removeScanWishlistProduct,

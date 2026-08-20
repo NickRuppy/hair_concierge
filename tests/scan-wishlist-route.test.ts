@@ -12,6 +12,7 @@ const userId = "11111111-1111-4111-8111-111111111111"
 function baseDeps(overrides: Partial<ScanWishlistRouteDeps> = {}): ScanWishlistRouteDeps {
   return {
     getUserId: async () => userId,
+    checkRateLimit: async () => ({ allowed: true }),
     createAdminClient: () => ({}) as never,
     listWishlist: async () => [],
     ...overrides,
@@ -22,6 +23,30 @@ test("scan wishlist GET: unauthenticated is rejected", async () => {
   const handler = createScanWishlistRouteHandler(baseDeps({ getUserId: async () => null }))
   const response = await handler()
   assert.equal(response.status, 401)
+})
+
+test("scan wishlist GET: rate limited returns 429 with Retry-After, before any load", async () => {
+  const handler = createScanWishlistRouteHandler(
+    baseDeps({
+      checkRateLimit: async () => ({ allowed: false }),
+      listWishlist: async () => {
+        throw new Error("must not be called")
+      },
+    }),
+  )
+  const response = await handler()
+  assert.equal(response.status, 429)
+  assert.equal(response.headers.get("Retry-After"), "60")
+  assert.deepEqual(await response.json(), { error: "rate_limited" })
+})
+
+test("scan wishlist GET: rate limiter unavailable fails closed with 503", async () => {
+  const handler = createScanWishlistRouteHandler(
+    baseDeps({ checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }) }),
+  )
+  const response = await handler()
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
 })
 
 test("scan wishlist GET: returns the injected entries", async () => {
