@@ -23,7 +23,7 @@ import {
   type RouteEnvironment,
 } from "@/lib/auth/route-classification"
 
-const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/tracker"]
+const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/scan", "/tracker"]
 export const AUTHENTICATED_SESSION_RESPONSE_HEADER = "x-chaarlie-authenticated-session"
 const SUB_REQUIRED_PREFIXES = [
   "/anwendung",
@@ -38,6 +38,8 @@ const SUB_REQUIRED_PREFIXES = [
   "/api/memory",
   "/routine",
   "/api/routine",
+  "/scan",
+  "/api/scan",
   "/tracker",
   "/api/tracker",
 ]

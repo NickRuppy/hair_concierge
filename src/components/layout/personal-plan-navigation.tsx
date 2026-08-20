@@ -1,6 +1,6 @@
 "use client"
 
-import { ListChecks, MessageCircle, Rows3, UserRound } from "lucide-react"
+import { ListChecks, MessageCircle, Rows3, ScanLine, UserRound } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -13,6 +13,7 @@ import type { PersonalPlanNavigationItem } from "@/lib/personal-plan/navigation-
 const ICONS = {
   chat: MessageCircle,
   routine: ListChecks,
+  scan: ScanLine,
   application: Rows3,
   profile: UserRound,
 } as const

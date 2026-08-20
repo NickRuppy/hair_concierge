@@ -171,12 +171,18 @@ test("classifies every current protected page and API route", () => {
     "/api/routine/products",
     "/api/routine/products/example",
     "/api/routine/suggestions/example/dismiss",
+    "/api/scan/resolve",
+    "/api/scan/save",
+    "/api/scan/search",
+    "/api/scan/submit",
+    "/api/scan/wishlist",
     "/api/tracker",
     "/api/tracker/dismiss-nudge",
     "/api/tracker/log",
     "/plan-bereit/status",
     "/plan-start",
     "/plan-start/produkte",
+    "/scan",
     "/tracker",
   ]
 
@@ -402,9 +408,41 @@ test("private and unstable routes receive response-level noindex headers", async
     "/profile/:path*",
     "/result/:path*",
     "/routine/:path*",
+    "/scan/:path*",
     "/welcome/:path*",
   ]) {
     assert.ok(noindexSources.includes(source), source)
+  }
+})
+
+test("camera stays denied site-wide and is re-enabled for same-origin /scan only", async () => {
+  const headerRules = (await nextConfig.headers?.()) ?? []
+  const permissionsRules = headerRules
+    .map((rule, index) => ({
+      index,
+      source: rule.source,
+      value: rule.headers.find((header) => header.key === "Permissions-Policy")?.value,
+    }))
+    .filter((rule): rule is { index: number; source: string; value: string } => Boolean(rule.value))
+
+  const globalRule = permissionsRules.find((rule) => rule.source === "/(.*)")
+  assert.ok(globalRule, "site-wide Permissions-Policy rule is missing")
+  assert.equal(globalRule.value, "camera=(), microphone=(), geolocation=()")
+
+  // `getUserMedia` is policy-denied without this, so the scan viewfinder would break in
+  // production. Both sources are needed: `:path*` does not match the bare `/scan`.
+  for (const source of ["/scan", "/scan/:path*"]) {
+    const scanRule = permissionsRules.find((rule) => rule.source === source)
+    assert.ok(scanRule, `camera override missing for ${source}`)
+    assert.equal(scanRule.value, "camera=(self), microphone=(), geolocation=()")
+    // Next applies every matching rule in order, last write wins for a given key.
+    assert.ok(scanRule.index > globalRule.index, `${source} override must come last`)
+  }
+
+  // No other route may widen the camera policy.
+  for (const rule of permissionsRules) {
+    if (rule.source === "/scan" || rule.source === "/scan/:path*") continue
+    assert.ok(rule.value.startsWith("camera=()"), `${rule.source} must keep camera denied`)
   }
 })
 

@@ -26,6 +26,11 @@ test("sends unauthenticated app routes to login even without returning cookie", 
     getUnauthenticatedRedirectTarget("/admin/products", "", false),
     "/auth?next=%2Fadmin%2Fproducts",
   )
+  assert.equal(getUnauthenticatedRedirectTarget("/scan", "", false), "/auth?next=%2Fscan")
+  assert.equal(
+    getUnauthenticatedRedirectTarget("/api/scan/resolve", "", false),
+    "/auth?next=%2Fapi%2Fscan%2Fresolve",
+  )
 })
 
 test("keeps first-time protected routes outside the app prefixes on the quiz funnel", () => {

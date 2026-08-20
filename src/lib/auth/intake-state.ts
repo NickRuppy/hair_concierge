@@ -95,7 +95,7 @@ export function canBypassLegacyOnboardingForPersonalPlanRoutine(
 }
 
 function isAuthenticatedAppRoute(pathname: string): boolean {
-  return ["/anwendung", "/chat", "/routine"].some((prefix) => isRoute(pathname, prefix))
+  return ["/anwendung", "/chat", "/routine", "/scan"].some((prefix) => isRoute(pathname, prefix))
 }
 
 function isRoute(pathname: string, prefix: string): boolean {

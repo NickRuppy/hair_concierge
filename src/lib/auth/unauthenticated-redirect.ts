@@ -9,6 +9,7 @@ const AUTH_FIRST_PREFIXES = [
   "/onboarding",
   "/tracker",
   "/admin",
+  "/scan",
   "/api/chat",
   "/api/routine",
   "/api/tracker",
@@ -16,6 +17,9 @@ const AUTH_FIRST_PREFIXES = [
   "/api/products",
   "/api/memory",
   "/api/admin",
+  // The list's page prefixes and `/api/...` prefixes are consumed the same way (see
+  // `isAuthFirstRoute`), so the scan API belongs here next to its page.
+  "/api/scan",
 ]
 
 function isAuthFirstRoute(pathname: string): boolean {

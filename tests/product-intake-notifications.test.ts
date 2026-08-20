@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  buildProductIntakeReviewMessage,
   sendProductIntakeReviewNotification,
   type ProductSubmissionForNotification,
 } from "../src/lib/product-intake/notifications"
@@ -334,4 +335,34 @@ test("review notification treats duplicate deterministic message id as already s
   assert.ok(supabase.calls.includes("select:messages"))
   assert.ok(supabase.calls.includes("insert:messages"))
   assert.ok(supabase.calls.includes("update:conversations"))
+})
+
+test("resolved notification for a non-scan source keeps the routine-link wording", () => {
+  const message = buildProductIntakeReviewMessage(notificationSubmission({ status: "approved" }))
+  assert.match(message ?? "", /in deiner Routine verknüpft/)
+})
+
+test("resolved notification for a scan submission makes no routine claim", () => {
+  for (const status of ["approved", "matched_existing"] as const) {
+    const message =
+      buildProductIntakeReviewMessage(
+        notificationSubmission({ source: "scan", status, user_product_usage_id: null }),
+      ) ?? ""
+    // submitScanProductIntake writes no user_product_usage row, so "in deiner Routine
+    // verknüpft" would promise something that never happened.
+    assert.doesNotMatch(message, /Routine/, status)
+    assert.match(message, /Katalog/, status)
+    assert.match(message, /Scan/, status)
+    assert.match(message, /Garnier Hair Food Aloe/, status)
+  }
+})
+
+test("open-question notifications stay shared: neither wording claims a routine link", () => {
+  for (const status of ["needs_more_info", "rejected"] as const) {
+    const scan =
+      buildProductIntakeReviewMessage(notificationSubmission({ source: "scan", status })) ?? ""
+    const chat = buildProductIntakeReviewMessage(notificationSubmission({ status })) ?? ""
+    assert.equal(scan, chat, status)
+    assert.doesNotMatch(scan, /Routine/, status)
+  }
 })

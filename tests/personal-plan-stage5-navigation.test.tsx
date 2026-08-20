@@ -116,6 +116,10 @@ test("the signed navigation marks the current destination and the shell owns its
   assert.equal((navHtml.match(/>Routine</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Anwendung</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Profil</g) ?? []).length, 2)
+  // Four reachable destinations; Scan stays out of the tab bar during its
+  // stealth rollout (reachable via direct link only).
+  assert.equal(navigation.items.length, 4)
+  assert.equal(navigation.items[2]?.key, "application")
 
   const shellHtml = renderToStaticMarkup(
     createElement(AuthenticatedAppShell, {
@@ -139,7 +143,7 @@ test("the server shell owns Header presentation without changing the shared Head
   assert.equal((header.match(/href="\/anwendung"/g) ?? []).length, 0)
   assert.match(header, /RoutineAttentionIndicator/)
 
-  for (const layout of ["chat", "routine", "anwendung", "profile"]) {
+  for (const layout of ["chat", "routine", "scan", "anwendung", "profile"]) {
     const source = readFileSync(`src/app/${layout}/layout.tsx`, "utf8")
     assert.match(source, /AuthenticatedAppShell/)
     assert.match(source, /loadAuthenticatedAppNavigationAccess/)
@@ -149,6 +153,7 @@ test("the server shell owns Header presentation without changing the shared Head
     "src/app/chat/page.tsx",
     "src/app/chat/[conversationId]/page.tsx",
     "src/app/routine/page.tsx",
+    "src/app/scan/page.tsx",
     "src/app/anwendung/page.tsx",
     "src/app/anwendung/loading.tsx",
     "src/app/profile/page.tsx",

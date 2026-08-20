@@ -567,6 +567,33 @@ export type AppEventMap = {
     stepName: string
     stepNumber: number
   }
+  // Scan telemetry is deliberately bounded: no product names, EANs, or free-text.
+  // Product identification stays to category + verdict only.
+  scan_started: Record<string, never>
+  scan_decoded: {
+    msToDecode: number
+    format: string
+  }
+  scan_result_shown: {
+    verdict: string
+    category: string
+    inCatalog: boolean
+    snapshotSource: string
+  }
+  scan_not_found: Record<string, never>
+  scan_submission_created: {
+    category: string
+  }
+  scan_fallback_search_used: {
+    trigger: string
+  }
+  scan_saved: {
+    kind: string
+    verdict: string
+  }
+  scan_buy_clicked: {
+    verdict: string
+  }
   subscription_started: {
     checkoutSessionId: string
   }

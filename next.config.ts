@@ -1,6 +1,27 @@
 import type { NextConfig } from "next"
 import { withSentryConfig } from "@sentry/nextjs"
 
+/**
+ * `getUserMedia` is policy-denied when the delivering document is not allowed to use the
+ * camera, so the site-wide `camera=()` below would make the Produkt-Scan viewfinder fail
+ * in production (dev/localhost is unaffected — the header is only emitted by the server).
+ * `/scan` is the one surface that needs it, and only same-origin: everything else keeps
+ * the deny.
+ */
+const CAMERA_DENY = "camera=()"
+const CAMERA_SELF = "camera=(self)"
+const permissionsPolicy = (camera: string) => `${camera}, microphone=(), geolocation=()`
+
+/**
+ * Routes allowed to open the camera. Next evaluates EVERY matching `headers()` entry in
+ * source order and a later entry overwrites an earlier value for the same key (its route
+ * resolver does a plain `resHeaders[key] = value`; only `set-cookie` accumulates), so
+ * these entries must stay AFTER the site-wide `securityHeaders` entry in `headers()`.
+ * `/scan` and `/scan/:path*` are both listed because `:path*` does not match the bare
+ * segment on its own.
+ */
+const cameraRoutes = ["/scan", "/scan/:path*"]
+
 const securityHeaders = [
   {
     key: "Content-Security-Policy-Report-Only",
@@ -22,7 +43,7 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  { key: "Permissions-Policy", value: permissionsPolicy(CAMERA_DENY) },
 ]
 
 const noindexRoutes = [
@@ -35,6 +56,7 @@ const noindexRoutes = [
   "/profile/:path*",
   "/result/:path*",
   "/routine/:path*",
+  "/scan/:path*",
   "/welcome/:path*",
   "/warteliste/:path*",
 ]
@@ -70,6 +92,11 @@ export const nextConfig: NextConfig = {
       ...noindexRoutes.map((source) => ({
         source,
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      })),
+      // Must stay last: overrides the site-wide Permissions-Policy for /scan only.
+      ...cameraRoutes.map((source) => ({
+        source,
+        headers: [{ key: "Permissions-Policy", value: permissionsPolicy(CAMERA_SELF) }],
       })),
     ]
   },

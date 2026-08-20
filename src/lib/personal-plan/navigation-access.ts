@@ -7,9 +7,9 @@ import { loadPersonalPlanJourneyAccessForUser } from "./journey-access-loader"
 import type { PersonalPlanJourneyAccess } from "./journey-access"
 
 export type PersonalPlanNavigationItem = {
-  key: "chat" | "routine" | "application" | "profile"
-  href: "/chat" | "/routine" | "/anwendung" | "/profile"
-  label: "Chat" | "Routine" | "Anwendung" | "Profil"
+  key: "chat" | "routine" | "scan" | "application" | "profile"
+  href: "/chat" | "/routine" | "/scan" | "/anwendung" | "/profile"
+  label: "Chat" | "Routine" | "Scan" | "Anwendung" | "Profil"
 }
 
 export type AuthenticatedAppNavigationAccess =
@@ -35,6 +35,9 @@ export function toAuthenticatedAppNavigationAccess(
   const items: PersonalPlanNavigationItem[] = [{ key: "chat", href: "/chat", label: "Chat" }]
   if (access.allowed.stage4) {
     items.push({ key: "routine", href: "/routine", label: "Routine" })
+    // Stealth rollout: Scan stays reachable via direct link only — re-add the
+    // item below to relaunch the tab.
+    // items.push({ key: "scan", href: "/scan", label: "Scan" })
   }
   if (access.allowed.stage5) {
     items.push({ key: "application", href: "/anwendung", label: "Anwendung" })
