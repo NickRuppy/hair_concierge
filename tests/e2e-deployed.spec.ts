@@ -165,7 +165,7 @@ test.describe("Deployed App E2E Tests", () => {
     // Should be on scalp type question (8/10)
     await expect(page.getByText("8/10")).toBeVisible({ timeout: 10000 })
     await expect(
-      page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
+      page.getByRole("heading", { name: /Wie fühlt sich deine Kopfhaut normalerweise an/i }),
     ).toBeVisible({ timeout: 10000 })
 
     // Select a scalp type — should reveal gate question

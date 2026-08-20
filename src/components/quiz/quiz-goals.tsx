@@ -35,6 +35,8 @@ export function QuizGoals() {
   )
   const hairTexture = (answers.structure as HairTexture | undefined) ?? null
   const goals = useMemo(() => getGoalOptions(hairTexture ?? undefined), [hairTexture])
+  const hairLabel =
+    hairTexture === "coily" ? "deine Locken" : TEXTURE_COPY[hairTexture ?? "wavy"].possessive
 
   const handleToggle = useCallback(
     (goal: string) => {
@@ -71,7 +73,7 @@ export function QuizGoals() {
       </div>
 
       <h2 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-foreground outline-none focus:outline-none sm:text-[2.4rem]">
-        Was wünschst du dir für {TEXTURE_COPY[hairTexture ?? "wavy"].possessive}?
+        Was wünschst du dir für {hairLabel}?
       </h2>
       <p className="mx-auto mb-5 mt-2 max-w-xl text-center text-[15px] leading-6 text-muted-foreground">
         Wähle alles aus, was sich für deinen Plan wichtig anfühlt. Wir priorisieren daraus die

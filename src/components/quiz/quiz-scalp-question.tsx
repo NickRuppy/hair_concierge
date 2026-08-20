@@ -15,20 +15,20 @@ import { useQuizBrowserBack, useQuizBrowserHistoryEntry } from "./quiz-browser-h
 const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] = [
   {
     value: "fettig",
-    label: "Fettig",
-    description: "Ansätze werden nach 1-2 Tagen ölig",
+    label: "Eher fettig",
+    description: "Meine Ansätze werden meist nach 1–2 Tagen ölig",
     icon: "scalp-oily",
   },
   {
     value: "ausgeglichen",
     label: "Ausgeglichen",
-    description: "Kommt gut 2-3 Tage ohne Waschen klar",
+    description: "Meine Kopfhaut fühlt sich weder fettig noch trocken an",
     icon: "scalp-normal",
   },
   {
     value: "trocken",
-    label: "Trocken",
-    description: "Spannt gelegentlich, fühlt sich rau an",
+    label: "Eher trocken",
+    description: "Meine Kopfhaut spannt manchmal oder fühlt sich rau an",
     icon: "scalp-dry",
   },
 ]
@@ -193,11 +193,10 @@ export function QuizScalpQuestion() {
 
       {/* Title + instruction — always visible */}
       <h2 className="mb-2 font-header text-3xl leading-tight text-foreground outline-none focus:outline-none">
-        Wie schnell fetten deine Ansätze nach?
+        Wie fühlt sich deine Kopfhaut normalerweise an?
       </h2>
       <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-        Deine Gesichtshaut gibt dir einen guten Hinweis — ölige T-Zone deutet auf fettige Kopfhaut
-        hin.
+        Denk dabei an deine Kopfhaut und Ansätze – nicht an trockene Längen oder Spitzen.
       </p>
 
       {/* Type cards — always rendered, unselected collapse when past type phase */}

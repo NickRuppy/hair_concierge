@@ -160,7 +160,7 @@ test.describe.serial("Authenticated intake routing", () => {
     await page.getByRole("button", { name: "Gefärbt / getönt", exact: true }).click()
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-    await page.getByRole("button", { name: "Trocken", exact: true }).click()
+    await page.getByRole("button", { name: "Eher trocken", exact: true }).click()
     await expect(
       page.getByRole("heading", {
         name: /Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen/i,

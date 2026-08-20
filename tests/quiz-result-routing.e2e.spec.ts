@@ -45,7 +45,7 @@ test("completed quiz opens the stored funnel offer on the canonical result route
     await page.getByRole("button", { name: "Dehnt sich, bleibt ausgeleiert", exact: true }).click()
     await page.getByRole("button", { name: "Naturhaar", exact: true }).click()
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
-    await page.getByRole("button", { name: "Trocken", exact: true }).click()
+    await page.getByRole("button", { name: "Eher trocken", exact: true }).click()
     await page.getByRole("button", { name: "Nein", exact: true }).click()
     await page.getByRole("button", { name: "Trockenheit", exact: true }).click()
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
