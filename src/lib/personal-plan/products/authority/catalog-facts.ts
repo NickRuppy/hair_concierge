@@ -39,7 +39,7 @@ export type Stage3RecommendationCandidateSelection = {
   completeCatalog?: boolean
 }
 
-type CategorySelectionContext = Omit<
+export type CategorySelectionContext = Omit<
   Stage3RecommendationCandidateSelection,
   "category" | "completeCatalog"
 >
@@ -244,6 +244,21 @@ async function loadOneProduct(
     .maybeSingle()
   if (error) throw new Error("stage3_authority_catalog_unavailable")
   return data ? normalizeProductFacts(client, category, data as Row, selectionContext) : null
+}
+
+/**
+ * Export seam for the scan feature: a scanned product is looked up directly by id,
+ * outside any draft/candidate flow, so it needs the same single-product load `loadOneProduct`
+ * already does internally — including that it does NOT filter on `is_chaarlie_recommended`,
+ * since a scanned product may be catalogued but not recommended.
+ */
+export async function loadScanProductFacts(
+  client: AdminClient,
+  category: PersonalPlanCategory,
+  productId: string,
+  selectionContext: CategorySelectionContext,
+): Promise<Stage3CategoryProductFacts | null> {
+  return loadOneProduct(client, category, productId, selectionContext)
 }
 
 async function normalizeProductFacts(
