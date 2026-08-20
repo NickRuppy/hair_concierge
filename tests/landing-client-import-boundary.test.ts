@@ -49,6 +49,48 @@ test("landing client dependency graphs contain no static Sentry SDK import", () 
   }
 })
 
+test("fresh personal-plan entry keeps the full quiz behind a dynamic import boundary", () => {
+  const entryPath = path.join(
+    repoRoot,
+    "src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx",
+  )
+  const queue = [entryPath]
+  const visited = new Set<string>()
+
+  while (queue.length > 0) {
+    const currentPath = queue.shift()
+    assert.ok(currentPath)
+    if (visited.has(currentPath)) continue
+    visited.add(currentPath)
+    const source = readFileSync(currentPath, "utf8")
+    for (const specifier of staticValueImports(currentPath, source)) {
+      const resolved = resolveProjectImport(currentPath, specifier)
+      if (resolved) queue.push(resolved)
+    }
+  }
+
+  const visitedRelative = [...visited].map((filePath) => path.relative(repoRoot, filePath))
+  for (const excluded of [
+    "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+    "src/components/personal-plan-quiz/quiz-data.ts",
+    "src/lib/email-deliverability-shared.ts",
+    "src/lib/quiz/hair-portrait-assets.ts",
+  ]) {
+    assert.equal(
+      visitedRelative.includes(excluded),
+      false,
+      `Fresh Personal Plan entry statically reached deferred dependency: ${excluded}`,
+    )
+  }
+
+  const continuationPath = path.join(
+    repoRoot,
+    "src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts",
+  )
+  assert.equal(visited.has(continuationPath), true)
+  assert.match(readFileSync(continuationPath, "utf8"), /import\("\.\/personal-plan-quiz"\)/)
+})
+
 function hasUseClientDirective(source: string) {
   return /^\s*["']use client["']/m.test(source)
 }

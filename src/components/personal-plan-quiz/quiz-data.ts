@@ -4,6 +4,7 @@ import type {
   PersonalPlanQuizGoal,
   PersonalPlanQuizScreenId,
 } from "@/lib/personal-plan-quiz"
+import { PERSONAL_PLAN_ASSET_BASE } from "./texture-question"
 
 export type QuizIconKey =
   | "comb"
@@ -96,7 +97,6 @@ export type QuizQuestionConfig = {
   scale?: boolean
 }
 
-export const PERSONAL_PLAN_ASSET_BASE = "/images/funnels/personal-plan-quiz"
 const PROFILE_SUMMARY_IMAGE_BASE = `${PERSONAL_PLAN_ASSET_BASE}/profile-summary`
 
 const LENGTH_IMAGE_SLUGS: Record<NonNullable<PersonalPlanQuizAnswers["hairLength"]>, string> = {
@@ -146,37 +146,6 @@ export function getLengthOptions(texture: PersonalPlanQuizAnswers["texture"]): Q
     imageAlt: `${label}es Haar`,
   }))
 }
-
-export const TEXTURE_OPTIONS: QuizOption[] = [
-  {
-    value: "straight",
-    label: "Glatt",
-    description: "Die meisten Strähnen fallen eher gerade.",
-    image: `${PERSONAL_PLAN_ASSET_BASE}/texture-straight.webp`,
-    imageAlt: "Glattes Haar",
-  },
-  {
-    value: "wavy",
-    label: "Wellig",
-    description: "Dein Haar bildet sichtbare S-Formen.",
-    image: `${PERSONAL_PLAN_ASSET_BASE}/texture-wavy.webp`,
-    imageAlt: "Welliges Haar",
-  },
-  {
-    value: "curly",
-    label: "Lockig",
-    description: "Dein Haar bildet klare Locken oder Spiralen.",
-    image: `${PERSONAL_PLAN_ASSET_BASE}/texture-curly.webp`,
-    imageAlt: "Lockiges Haar",
-  },
-  {
-    value: "coily",
-    label: "Kraus",
-    description: "Dein Haar bildet sehr enge Locken, Coils oder Z-Formen.",
-    image: `${PERSONAL_PLAN_ASSET_BASE}/texture-coily.webp`,
-    imageAlt: "Krauses Haar",
-  },
-]
 
 export const TEXTURE_COPY: Record<
   NonNullable<PersonalPlanQuizAnswers["texture"]>,
