@@ -7,6 +7,7 @@ import { posthog } from "../src/lib/analytics/runtime/posthog"
 import {
   createConsentAwareScanAnalytics,
   noOpScanAnalytics,
+  scanResultShownInCatalog,
   type ScanAnalyticsPort,
 } from "../src/lib/scan/scan-analytics"
 
@@ -148,4 +149,13 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
     ["scan_saved", { kind: "merkliste", verdict: "supportive" }],
     ["scan_buy_clicked", { verdict: "merkliste" }],
   ])
+})
+
+test("scan_result_shown reports a not_needed verdict as a catalog hit, not a miss", () => {
+  const product = { productId: "prod-1", name: "Shampoo X" }
+  // Both verdict branches only exist once the barcode resolved to a catalog product.
+  assert.equal(scanResultShownInCatalog({ kind: "in_catalog", product }), true)
+  assert.equal(scanResultShownInCatalog({ kind: "not_needed", product }), true)
+  // Defensive: no product header means no catalog resolution happened.
+  assert.equal(scanResultShownInCatalog({ kind: "not_needed", product: null }), false)
 })

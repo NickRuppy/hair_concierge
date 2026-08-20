@@ -31,6 +31,12 @@ type ScannerProps = {
    * / `hasDecoded` / `timeoutFired` guards forever and the next scan never fires.
    */
   sessionEpoch?: number
+  /**
+   * Pause the DETECTION LOOP (not the camera) while a sheet covers the viewfinder. The
+   * stream stays live so reopening the scanner is instant; only the per-frame decode work
+   * stops, and it resumes the moment the sheet closes.
+   */
+  detectionPaused?: boolean
   onDecoded: (identifier: ScanDecodedIdentifier) => void
   onUnavailable: (reason: ScanUnavailableReason) => void
   /** Fires once, ~3s after start, if no stable read has happened yet. Scanner keeps running. */
@@ -69,6 +75,7 @@ let zxingWasmOverrideConfigured = false
 export function Scanner({
   active,
   sessionEpoch = 0,
+  detectionPaused = false,
   onDecoded,
   onUnavailable,
   onTimeout,
@@ -87,6 +94,11 @@ export function Scanner({
   // for the bug class this closes (stale `paused`/`lastFiredValue`/etc. across a
   // close→reopen or a background/visibility cycle).
   const sessionRef = useRef(createScanSessionState())
+  // Latest prop value, so a session that starts while a sheet is already open begins paused.
+  const detectionPausedRef = useRef(detectionPaused)
+  detectionPausedRef.current = detectionPaused
+  // Set by the camera effect; the pause effect below drives the same loop without owning it.
+  const loopControlRef = useRef<{ schedule: () => void; cancel: () => void } | null>(null)
 
   const [hint, setHint] = useState<ScanHint>(SCAN_HINT_DEFAULT)
   const [flashActive, setFlashActive] = useState(false)
@@ -113,6 +125,7 @@ export function Scanner({
     // Session start: one reset point for every mutable field a prior session could have
     // left in a non-default state (paused, dedupe/debounce counters, hint, telemetry).
     sessionRef.current = createScanSessionState()
+    sessionRef.current.sheetPaused = detectionPausedRef.current
     setHint(SCAN_HINT_DEFAULT)
     setFlashActive(false)
 
@@ -120,7 +133,7 @@ export function Scanner({
 
     function scheduleFrame() {
       const video = videoRef.current
-      if (!video || cancelled || session.paused) return
+      if (!video || cancelled || session.paused || session.sheetPaused) return
       if (typeof video.requestVideoFrameCallback === "function") {
         frameKindRef.current = "rvfc"
         frameHandleRef.current = video.requestVideoFrameCallback(() => tick())
@@ -299,7 +312,7 @@ export function Scanner({
     }
 
     function tick() {
-      if (cancelled || session.paused) return
+      if (cancelled || session.paused || session.sheetPaused) return
       const now = performance.now()
       session.frameCounter += 1
       const dueForDetection = session.frameCounter % DETECTION_FRAME_INTERVAL === 0
@@ -325,6 +338,8 @@ export function Scanner({
         cancelFrame()
       } else if (session.paused) {
         session.paused = false
+        // `scheduleFrame` re-checks `sheetPaused` itself, so a sheet open across the
+        // background/foreground cycle keeps the loop stopped.
         scheduleFrame()
       }
     }
@@ -392,6 +407,7 @@ export function Scanner({
       session.hintChangedAt = now
 
       document.addEventListener("visibilitychange", handleVisibilityChange)
+      loopControlRef.current = { schedule: scheduleFrame, cancel: cancelFrame }
       scheduleFrame()
     }
 
@@ -399,6 +415,7 @@ export function Scanner({
 
     return () => {
       cancelled = true
+      loopControlRef.current = null
       document.removeEventListener("visibilitychange", handleVisibilityChange)
       cancelFrame()
       const stream = streamRef.current
@@ -419,6 +436,23 @@ export function Scanner({
    * Remounting the Scanner instead would re-run `getUserMedia` and blank the viewfinder
    * on every re-scan.
    */
+  /**
+   * Sheet open/close. Only the detection loop is affected — `getUserMedia` and the video
+   * element are untouched, so nothing has to be re-acquired on resume. Independent of the
+   * `visibilitychange` pause: each reason owns its own flag, so closing a sheet in a
+   * hidden tab does not restart the loop.
+   */
+  useEffect(() => {
+    if (!active) return
+    const session = sessionRef.current
+    session.sheetPaused = detectionPaused
+    if (detectionPaused) {
+      loopControlRef.current?.cancel()
+    } else if (!session.paused) {
+      loopControlRef.current?.schedule()
+    }
+  }, [active, detectionPaused])
+
   useEffect(() => {
     if (!active) return
     restartScanSessionState(sessionRef.current, performance.now())

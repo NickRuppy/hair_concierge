@@ -16,6 +16,12 @@ import type { ScanHint } from "@/lib/scan/guidance"
 export type ScanSessionState = {
   /** Detection loop is paused (tab hidden) and not scheduling frame callbacks. */
   paused: boolean
+  /**
+   * Detection loop is paused because a sheet covers the viewfinder. Tracked separately
+   * from `paused` so the two reasons can never clear each other: closing a sheet while the
+   * tab is hidden must not restart the loop, and vice versa.
+   */
+  sheetPaused: boolean
   /** True while a `detector.detect()` call is in flight, to prevent overlapping calls. */
   detecting: boolean
   frameCounter: number
@@ -46,15 +52,16 @@ export type ScanSessionState = {
  * Mutates in place on purpose: the detection loop closed over this exact object when the
  * camera started, so assigning a replacement object to the ref would never reach it.
  *
- * Deliberately NOT reset: `paused` and `detecting` are camera/loop lifecycle state rather
- * than scan-attempt state. Clearing `paused` here would leave the loop stopped with no
- * pending `visibilitychange` left to restart it; clearing `detecting` could let a second
- * `detect()` start while one is still in flight.
+ * Deliberately NOT reset: `paused`, `sheetPaused` and `detecting` are camera/loop
+ * lifecycle state rather than scan-attempt state. Clearing a pause flag here would leave
+ * the loop stopped with nothing left to restart it (or restart it behind a still-open
+ * sheet); clearing `detecting` could let a second `detect()` start while one is in flight.
  */
 export function restartScanSessionState(session: ScanSessionState, now: number): void {
-  const { paused, detecting } = session
+  const { paused, sheetPaused, detecting } = session
   Object.assign(session, createScanSessionState(), {
     paused,
+    sheetPaused,
     detecting,
     startTime: now,
     lastDetectionTime: now,
@@ -65,6 +72,7 @@ export function restartScanSessionState(session: ScanSessionState, now: number):
 export function createScanSessionState(): ScanSessionState {
   return {
     paused: false,
+    sheetPaused: false,
     detecting: false,
     frameCounter: 0,
     detectionAttempts: 0,

@@ -42,6 +42,10 @@ export function ScanSearchSheet({
 
   useEffect(() => {
     if (!open) {
+      // Invalidate anything still in flight: without the bump, a response that lands
+      // after the sheet closed still writes results/status into a fresh session and the
+      // next open flashes the previous query's hits.
+      requestRef.current += 1
       setQuery("")
       setResults([])
       setStatus("idle")
@@ -51,6 +55,9 @@ export function ScanSearchSheet({
   useEffect(() => {
     const trimmed = query.trim()
     if (trimmed.length < MIN_QUERY_LENGTH) {
+      // Deleting back below the minimum cancels the pending request too — otherwise its
+      // late response would repaint results for a query the user already erased.
+      requestRef.current += 1
       setStatus("idle")
       setResults([])
       return

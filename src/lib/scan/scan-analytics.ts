@@ -20,6 +20,25 @@ export const noOpScanAnalytics: ScanAnalyticsPort = {
   track() {},
 }
 
+/**
+ * The `in_catalog` property of `scan_result_shown`.
+ *
+ * Both resolved-verdict branches describe a product the catalog already knows — the
+ * `not_needed` payload still carries the scanned product's catalog header (name, brand,
+ * price, buy link), it just reaches no fit verdict because the profile does not need that
+ * category. Reading the flag off `kind === "in_catalog"` therefore reported every
+ * "brauchst du nicht" scan as a catalog MISS, which is the same signal `scan_not_found`
+ * carries for a genuinely unknown barcode — the two were indistinguishable in the funnel.
+ * A real miss never reaches this event at all: it resolves to `unknown_product` or
+ * `pending_submission`, neither of which has a product header.
+ */
+export function scanResultShownInCatalog(result: {
+  kind: "in_catalog" | "not_needed"
+  product: unknown
+}): boolean {
+  return (result.kind === "in_catalog" || result.kind === "not_needed") && Boolean(result.product)
+}
+
 type ConsentAwareScanAnalyticsDeps = {
   loadConsent: typeof loadConsent
   trackAppEvent: ScanAnalyticsPort["track"]

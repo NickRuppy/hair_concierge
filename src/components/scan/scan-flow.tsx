@@ -3,8 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
-import { noOpScanAnalytics, type ScanAnalyticsPort } from "@/lib/scan/scan-analytics"
-import type { ScanSavedState } from "@/lib/scan/saved-state"
+import {
+  noOpScanAnalytics,
+  scanResultShownInCatalog,
+  type ScanAnalyticsPort,
+} from "@/lib/scan/scan-analytics"
+import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
 import type {
   ScanPendingSubmissionResult,
   ScanResolveResult,
@@ -84,7 +88,11 @@ export function ScanFlow({
   const scanSessionStartRef = useRef(0)
 
   const sheetOpen = step.kind !== "scanning"
-  sheetOpenRef.current = sheetOpen || searchOpen || wishlistOpen
+  // Any open sheet covers the viewfinder, so decoding behind it burns CPU/battery on
+  // frames nobody can aim. The camera stream stays live (that is what makes "Nochmal
+  // scannen" instant); only the detection loop pauses, and it resumes on close.
+  const detectionPaused = sheetOpen || searchOpen || wishlistOpen || saveOpen
+  sheetOpenRef.current = detectionPaused
 
   useEffect(() => {
     scanSessionStartRef.current = performance.now()
@@ -138,7 +146,7 @@ export function ScanFlow({
           analytics.track("scan_result_shown", {
             verdict: resultVerdictLabel(result),
             category: result.product.category,
-            inCatalog: result.kind === "in_catalog",
+            inCatalog: scanResultShownInCatalog(result),
             snapshotSource: result.snapshotSource,
           })
           setStep({ kind: "result", result })
@@ -232,7 +240,7 @@ export function ScanFlow({
     [resolve, analytics],
   )
 
-  const updateSavedState = useCallback((savedState: ScanSavedState) => {
+  const updateSavedState = useCallback((savedState: ScanSavedStatePayload) => {
     setStep((current) =>
       current.kind === "result"
         ? { kind: "result", result: { ...current.result, savedState } }
@@ -250,6 +258,7 @@ export function ScanFlow({
       {cameraAvailable ? (
         <Scanner
           active
+          detectionPaused={detectionPaused}
           sessionEpoch={scanEpoch}
           onDecoded={handleDecoded}
           onUnavailable={handleUnavailable}
@@ -336,9 +345,9 @@ export function ScanFlow({
             updateSavedState(savedState)
             // Only the save direction is `scan_saved`; a removal (savedState -> null)
             // isn't a "save" event.
-            if (savedState) {
+            if (savedState.state) {
               analytics.track("scan_saved", {
-                kind: savedState,
+                kind: savedState.state,
                 verdict: resultVerdictLabel(step.result),
               })
             }

@@ -6,6 +6,7 @@ import { createScanSessionState, restartScanSessionState } from "../src/lib/scan
 test("createScanSessionState: returns the fully-reset default shape", () => {
   assert.deepEqual(createScanSessionState(), {
     paused: false,
+    sheetPaused: false,
     detecting: false,
     frameCounter: 0,
     detectionAttempts: 0,
@@ -96,12 +97,15 @@ test("restartScanSessionState: mutates in place so the running detection loop se
 test("restartScanSessionState: keeps camera/loop lifecycle flags, not scan-attempt state", () => {
   const paused = createScanSessionState()
   paused.paused = true
+  paused.sheetPaused = true
   paused.detecting = true
 
   restartScanSessionState(paused, 10)
 
   // Clearing `paused` would leave the loop stopped with no visibilitychange left to
-  // restart it; clearing `detecting` could overlap a `detect()` still in flight.
+  // restart it; clearing `sheetPaused` would restart detection behind an open sheet;
+  // clearing `detecting` could overlap a `detect()` still in flight.
   assert.equal(paused.paused, true)
+  assert.equal(paused.sheetPaused, true)
   assert.equal(paused.detecting, true)
 })
