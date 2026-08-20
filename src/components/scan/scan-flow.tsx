@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
-import { scanAnalytics, type ScanAnalyticsPort } from "@/lib/scan/scan-analytics"
+import { noOpScanAnalytics, type ScanAnalyticsPort } from "@/lib/scan/scan-analytics"
 import type { ScanSavedState } from "@/lib/scan/saved-state"
 import type {
   ScanPendingSubmissionResult,
@@ -58,12 +58,15 @@ const CAMERA_UNAVAILABLE_COPY: Record<ScanUnavailableReason, string> = {
 }
 
 /**
- * `analytics` defaults to the real consent-aware port (mirrors how the Stage 3 pages use
- * `stage3BaselineAnalytics` directly): `/scan/page.tsx` is a Server Component and cannot
- * pass a port object as a prop across the RSC boundary, so the default parameter here is
- * what actually wires production tracking. Tests / other callers can still override it.
+ * `analytics` defaults to the safe no-op port (matches `Stage3ProductsFlow`'s default of
+ * `noOpStage3Analytics`) — a bare `<ScanFlow />` never live-tracks. Production wiring
+ * happens one layer up in `scan-page-client.tsx`, the thin client boundary that supplies
+ * the real consent-aware `scanAnalytics` instance (`/scan/page.tsx` is a Server Component
+ * and can't pass a port object as a prop across the RSC boundary itself).
  */
-export function ScanFlow({ analytics = scanAnalytics }: { analytics?: ScanAnalyticsPort } = {}) {
+export function ScanFlow({
+  analytics = noOpScanAnalytics,
+}: { analytics?: ScanAnalyticsPort } = {}) {
   const { toast } = useToast()
   const [step, setStep] = useState<ScanFlowStep>({ kind: "scanning" })
   const [cameraAvailable, setCameraAvailable] = useState(true)
@@ -152,7 +155,9 @@ export function ScanFlow({ analytics = scanAnalytics }: { analytics?: ScanAnalyt
       setCameraAvailable(false)
       setSearchOpen(true)
       setCameraNotice(CAMERA_UNAVAILABLE_COPY[reason])
-      analytics.track("scan_fallback_search_used", { trigger: "denied" })
+      // Pass the real reason through ("denied" | "no_camera" | "insecure") — `trigger`
+      // is a plain string in the event map, so the finer-grained value costs nothing.
+      analytics.track("scan_fallback_search_used", { trigger: reason })
     },
     [analytics],
   )
