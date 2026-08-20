@@ -35,7 +35,9 @@ export function toAuthenticatedAppNavigationAccess(
   const items: PersonalPlanNavigationItem[] = [{ key: "chat", href: "/chat", label: "Chat" }]
   if (access.allowed.stage4) {
     items.push({ key: "routine", href: "/routine", label: "Routine" })
-    items.push({ key: "scan", href: "/scan", label: "Scan" })
+    // Stealth rollout: Scan stays reachable via direct link only — re-add the
+    // item below to relaunch the tab.
+    // items.push({ key: "scan", href: "/scan", label: "Scan" })
   }
   if (access.allowed.stage5) {
     items.push({ key: "application", href: "/anwendung", label: "Anwendung" })

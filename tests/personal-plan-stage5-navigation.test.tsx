@@ -40,7 +40,6 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
     items: [
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "routine", href: "/routine", label: "Routine" },
-      { key: "scan", href: "/scan", label: "Scan" },
       { key: "profile", href: "/profile", label: "Profil" },
     ],
   })
@@ -50,7 +49,6 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
     items: [
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "routine", href: "/routine", label: "Routine" },
-      { key: "scan", href: "/scan", label: "Scan" },
       { key: "application", href: "/anwendung", label: "Anwendung" },
       { key: "profile", href: "/profile", label: "Profil" },
     ],
@@ -116,12 +114,12 @@ test("the signed navigation marks the current destination and the shell owns its
   assert.match(navHtml, /aria-current="page"[^>]*href="\/anwendung"/)
   assert.equal((navHtml.match(/>Chat</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Routine</g) ?? []).length, 2)
-  assert.equal((navHtml.match(/>Scan</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Anwendung</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Profil</g) ?? []).length, 2)
-  // Five reachable destinations; Scan sits in the middle (index 2 of 5).
-  assert.equal(navigation.items.length, 5)
-  assert.equal(navigation.items[2]?.key, "scan")
+  // Four reachable destinations; Scan stays out of the tab bar during its
+  // stealth rollout (reachable via direct link only).
+  assert.equal(navigation.items.length, 4)
+  assert.equal(navigation.items[2]?.key, "application")
 
   const shellHtml = renderToStaticMarkup(
     createElement(AuthenticatedAppShell, {
