@@ -415,6 +415,37 @@ test("private and unstable routes receive response-level noindex headers", async
   }
 })
 
+test("camera stays denied site-wide and is re-enabled for same-origin /scan only", async () => {
+  const headerRules = (await nextConfig.headers?.()) ?? []
+  const permissionsRules = headerRules
+    .map((rule, index) => ({
+      index,
+      source: rule.source,
+      value: rule.headers.find((header) => header.key === "Permissions-Policy")?.value,
+    }))
+    .filter((rule): rule is { index: number; source: string; value: string } => Boolean(rule.value))
+
+  const globalRule = permissionsRules.find((rule) => rule.source === "/(.*)")
+  assert.ok(globalRule, "site-wide Permissions-Policy rule is missing")
+  assert.equal(globalRule.value, "camera=(), microphone=(), geolocation=()")
+
+  // `getUserMedia` is policy-denied without this, so the scan viewfinder would break in
+  // production. Both sources are needed: `:path*` does not match the bare `/scan`.
+  for (const source of ["/scan", "/scan/:path*"]) {
+    const scanRule = permissionsRules.find((rule) => rule.source === source)
+    assert.ok(scanRule, `camera override missing for ${source}`)
+    assert.equal(scanRule.value, "camera=(self), microphone=(), geolocation=()")
+    // Next applies every matching rule in order, last write wins for a given key.
+    assert.ok(scanRule.index > globalRule.index, `${source} override must come last`)
+  }
+
+  // No other route may widen the camera policy.
+  for (const rule of permissionsRules) {
+    if (rule.source === "/scan" || rule.source === "/scan/:path*") continue
+    assert.ok(rule.value.startsWith("camera=()"), `${rule.source} must keep camera denied`)
+  }
+})
+
 test("homepage structured data links stable Organization and WebSite identities", () => {
   assert.equal(ORGANIZATION_JSON_LD["@type"], "Organization")
   assert.equal(ORGANIZATION_JSON_LD["@id"], "https://chaarlie.de/#organization")
