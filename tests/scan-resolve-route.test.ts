@@ -76,8 +76,33 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     loadScanSavedState: async () => null,
     buildScanVerdict: () => inCatalogVerdict,
     loadActiveProductById: async () => ({ id: productId, category: "shampoo" }),
+    loadPresentationRows: async () => [presentationRow],
     ...overrides,
   }
+}
+
+const presentationRow = {
+  id: productId,
+  name: "Repair Shampoo",
+  brand: "Olaplex",
+  category: "shampoo" as const,
+  imageUrl: null,
+  priceEur: 24.9,
+  currency: "EUR",
+  affiliateLink: "https://shop.test/a",
+  purchaseLinkStatus: "available" as const,
+  priceCheckedAt: "2026-08-19T00:00:00.000Z",
+}
+
+const expectedProductHeader = {
+  productId,
+  name: "Repair Shampoo",
+  brand: "Olaplex",
+  category: "shampoo",
+  categoryLabel: "Shampoo",
+  imageUrl: null,
+  priceLabel: "24,90 €",
+  purchaseUrl: "https://shop.test/a",
 }
 
 function request(body: unknown) {
@@ -236,10 +261,58 @@ test("scan resolve: identifier hit resolves a verdict with snapshotSource and sa
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), {
     ...inCatalogVerdict,
+    product: expectedProductHeader,
     snapshotSource: "refined",
     savedState: "merkliste",
   })
   assert.equal(buildScanVerdictCalls.length, 1)
+})
+
+test("scan resolve: a missing catalog presentation row fails closed with 503", async () => {
+  const handler = createScanResolveRouteHandler(baseDeps({ loadPresentationRows: async () => [] }))
+  const response = await handler(request({ productId }))
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+})
+
+test("scan resolve: alternatives are enriched with brand and purchase link", async () => {
+  const alternativeId = "33333333-3333-4333-8333-333333333333"
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      buildScanVerdict: () => ({
+        ...inCatalogVerdict,
+        verdict: "mismatch",
+        alternatives: [
+          {
+            productId: alternativeId,
+            displayName: "Sanftes Shampoo",
+            imageUrl: null,
+            priceLabel: null,
+            netContentLabel: null,
+            verdict: "ideal" as const,
+            verdictLabel: "Passt",
+          },
+        ],
+      }),
+      loadPresentationRows: async (_client, productIds) => {
+        assert.deepEqual(productIds, [productId, alternativeId])
+        return [
+          presentationRow,
+          {
+            ...presentationRow,
+            id: alternativeId,
+            name: "Sanftes Shampoo",
+            brand: "Kérastase",
+            affiliateLink: "https://shop.test/b",
+          },
+        ]
+      },
+    }),
+  )
+  const response = await handler(request({ productId }))
+  const body = await response.json()
+  assert.equal(body.alternatives[0].brand, "Kérastase")
+  assert.equal(body.alternatives[0].purchaseUrl, "https://shop.test/b")
 })
 
 test("scan resolve: productId path resolves the same way as an identifier hit", async () => {

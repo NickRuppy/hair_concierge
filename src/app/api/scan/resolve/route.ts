@@ -20,6 +20,11 @@ import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import { isProductSearchQuarantined } from "@/lib/scan/catalog-eligibility"
 import { lookupCatalogProductByIdentifier, validateEanInput } from "@/lib/scan/identifier-lookup"
 import { findOpenScanSubmission } from "@/lib/scan/pending-submission"
+import {
+  presentScanVerdictPayload,
+  toScanProductHeader,
+  type ScanCatalogPresentationRow,
+} from "@/lib/scan/product-presentation"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
 import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
 import { loadScanSavedState } from "@/lib/scan/saved-state"
@@ -67,6 +72,10 @@ export type ScanResolveRouteDeps = {
   loadScanSavedState: typeof loadScanSavedState
   buildScanVerdict: typeof buildScanVerdict
   loadActiveProductById: (client: SupabaseClient, productId: string) => Promise<ActiveProductLookup>
+  loadPresentationRows: (
+    client: SupabaseClient,
+    productIds: string[],
+  ) => Promise<ScanCatalogPresentationRow[]>
 }
 
 /**
@@ -218,9 +227,26 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         refinedInputHash: context.refinedInputHash,
       })
 
-      const savedState = await deps.loadScanSavedState(client, userId, productId)
+      // One catalog read covers the sheet's product header and the alternatives' brand +
+      // purchase link — neither exists on the authority facts the verdict is built from.
+      const alternativeIds =
+        verdict.kind === "in_catalog"
+          ? verdict.alternatives.map((alternative) => alternative.productId)
+          : []
+      const [savedState, presentationRows] = await Promise.all([
+        deps.loadScanSavedState(client, userId, productId),
+        deps.loadPresentationRows(client, [productId, ...alternativeIds]),
+      ])
 
-      return ok({ ...verdict, snapshotSource: context.snapshotSource, savedState })
+      const scannedRow = presentationRows.find((row) => row.id === productId)
+      if (!scannedRow) throw new Error("scan_resolve_presentation_row_missing")
+
+      return ok({
+        ...presentScanVerdictPayload(verdict, presentationRows),
+        product: toScanProductHeader(scannedRow),
+        snapshotSource: context.snapshotSource,
+        savedState,
+      })
     } catch (error) {
       console.error("[scan] resolve failed", error)
       return fail("temporarily_unavailable", 503)
@@ -244,6 +270,48 @@ async function loadActiveProductById(
   return row ? { id: row.id, category: row.category_key as PersonalPlanCategory } : null
 }
 
+async function loadPresentationRows(
+  client: SupabaseClient,
+  productIds: string[],
+): Promise<ScanCatalogPresentationRow[]> {
+  if (productIds.length === 0) return []
+  const { data, error } = await client
+    .from("products")
+    .select(
+      "id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at",
+    )
+    .in("id", [...new Set(productIds)])
+  if (error) throw new Error("scan_resolve_presentation_lookup_failed")
+  return ((data ?? []) as PresentationRow[]).map((row) => ({
+    id: row.id,
+    name: row.name,
+    brand: row.brand,
+    category: row.category_key as PersonalPlanCategory,
+    imageUrl: row.image_url,
+    priceEur: row.price_eur,
+    currency: row.currency,
+    affiliateLink: row.affiliate_link,
+    purchaseLinkStatus:
+      row.purchase_link_status === "available" || row.purchase_link_status === "unavailable"
+        ? row.purchase_link_status
+        : null,
+    priceCheckedAt: row.price_checked_at,
+  }))
+}
+
+type PresentationRow = {
+  id: string
+  name: string
+  brand: string | null
+  category_key: string
+  image_url: string | null
+  price_eur: number | null
+  currency: string | null
+  affiliate_link: string | null
+  purchase_link_status: string | null
+  price_checked_at: string | null
+}
+
 export const POST = createScanResolveRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   checkRateLimit,
@@ -258,4 +326,5 @@ export const POST = createScanResolveRouteHandler({
   loadScanSavedState,
   buildScanVerdict,
   loadActiveProductById,
+  loadPresentationRows,
 })

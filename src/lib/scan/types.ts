@@ -50,6 +50,31 @@ export type ScanAlternative = {
   verdictLabel: string
 }
 
+/**
+ * Commerce/identity fields the verdict core cannot know: `buildScanVerdict` works on
+ * authority facts, which deliberately carry no brand and no purchase link. The resolve
+ * route joins them on from the catalog row (see `product-presentation.ts`).
+ */
+export type ScanAlternativePresentation = ScanAlternative & {
+  brand: string | null
+  purchaseUrl: string | null
+}
+
+/**
+ * The scanned product itself, as the sheet header renders it (spec §2.1) and as the
+ * "Kaufen · <Preis>" footer slot needs it (spec §3).
+ */
+export type ScanProductHeader = {
+  productId: string
+  name: string
+  brand: string | null
+  category: PersonalPlanCategory
+  categoryLabel: string
+  imageUrl: string | null
+  priceLabel: string | null
+  purchaseUrl: string | null
+}
+
 export type ScanCoveredByEntry = {
   /** What already covers the job, e.g. "Conditioner". */
   label: string
@@ -96,13 +121,22 @@ export type ScanNotNeededVerdictPayload = {
 
 export type ScanVerdictPayload = ScanInCatalogVerdictPayload | ScanNotNeededVerdictPayload
 
+/** The verdict payload after the route joined catalog presentation onto the alternatives. */
+export type ScanPresentedVerdictPayload =
+  | (Omit<ScanInCatalogVerdictPayload, "alternatives"> & {
+      alternatives: ScanAlternativePresentation[]
+    })
+  | ScanNotNeededVerdictPayload
+
 /**
  * The three shapes `POST /api/scan/resolve` can return. The two verdict payloads above
- * gain `snapshotSource` (which profile snapshot the verdict was evaluated against — see
+ * gain `product` (the scanned catalog row as the header/footer render it),
+ * `snapshotSource` (which profile snapshot the verdict was evaluated against — see
  * `ScanEvaluationContext`) and `savedState` (merkliste/routine/neither — see
  * `saved-state.ts`); the other two branches short-circuit before a verdict exists at all.
  */
-export type ScanResolvedVerdictResult = ScanVerdictPayload & {
+export type ScanResolvedVerdictResult = ScanPresentedVerdictPayload & {
+  product: ScanProductHeader
   snapshotSource: ScanSnapshotSource
   savedState: ScanSavedState
 }
