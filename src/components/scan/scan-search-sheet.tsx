@@ -1,0 +1,155 @@
+"use client"
+
+import { useEffect, useId, useRef, useState } from "react"
+
+import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
+import { Skeleton } from "@/components/ui/skeleton"
+import type { ScanSearchResult } from "@/app/api/scan/search/route"
+
+import { ManualEanField } from "./manual-ean-field"
+import { ScanProductThumb } from "./scan-product-thumb"
+
+/**
+ * Fallback sheet (UI spec §7). Opens from the "Produkt suchen" link, after the scanner
+ * fails to get a stable read, or when the camera is unavailable — the scanner is an
+ * enhancement, this is the path that always works.
+ */
+
+const MIN_QUERY_LENGTH = 2
+const DEBOUNCE_MS = 250
+const EMPTY_COPY =
+  "Nichts gefunden — prüfe die Schreibweise oder reiche das Produkt per Barcode ein."
+const ERROR_COPY = "Die Suche ist gerade nicht erreichbar."
+
+type SearchStatus = "idle" | "loading" | "ready" | "error"
+
+export function ScanSearchSheet({
+  open,
+  onOpenChange,
+  onSelectProduct,
+  onSubmitIdentifier,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSelectProduct: (productId: string) => void
+  onSubmitIdentifier: (identifier: { type: "ean"; value: string }) => void
+}) {
+  const fieldId = useId()
+  const [query, setQuery] = useState("")
+  const [status, setStatus] = useState<SearchStatus>("idle")
+  const [results, setResults] = useState<ScanSearchResult[]>([])
+  const requestRef = useRef(0)
+
+  useEffect(() => {
+    if (!open) {
+      setQuery("")
+      setResults([])
+      setStatus("idle")
+    }
+  }, [open])
+
+  useEffect(() => {
+    const trimmed = query.trim()
+    if (trimmed.length < MIN_QUERY_LENGTH) {
+      setStatus("idle")
+      setResults([])
+      return
+    }
+    const requestId = ++requestRef.current
+    setStatus("loading")
+    const timeout = window.setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/scan/search?q=${encodeURIComponent(trimmed)}`, {
+          cache: "no-store",
+        })
+        if (!response.ok) throw new Error("search_unavailable")
+        const body = (await response.json()) as { results: ScanSearchResult[] }
+        if (requestRef.current !== requestId) return
+        setResults(body.results ?? [])
+        setStatus("ready")
+      } catch {
+        if (requestRef.current !== requestId) return
+        setStatus("error")
+      }
+    }, DEBOUNCE_MS)
+    return () => window.clearTimeout(timeout)
+  }, [query])
+
+  return (
+    <BottomSheet open={open} onOpenChange={onOpenChange}>
+      <BottomSheetContent
+        className="max-h-[85vh]"
+        contentClassName="px-4 pb-6 sm:px-5"
+        header={
+          <div className="px-4 pb-2 pt-1 sm:px-5">
+            <BottomSheetTitle className="text-[17px]">Ohne Scan finden</BottomSheetTitle>
+          </div>
+        }
+      >
+        <label htmlFor={fieldId} className="mb-1.5 block text-sm font-medium">
+          Produktname
+        </label>
+        <input
+          id={fieldId}
+          type="search"
+          autoComplete="off"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="z. B. Olaplex No. 4"
+          className="w-full rounded-[10px] border border-border bg-card px-4 py-3.5 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+        />
+
+        <div className="mt-3 min-h-[64px]" aria-live="polite">
+          {status === "loading" ? (
+            <div className="flex flex-col gap-2">
+              {[0, 1, 2].map((index) => (
+                <Skeleton key={index} className="h-[64px] w-full rounded-[12px]" />
+              ))}
+            </div>
+          ) : null}
+
+          {status === "error" ? (
+            <p className="py-4 text-center text-sm text-muted-foreground">{ERROR_COPY}</p>
+          ) : null}
+
+          {status === "ready" && results.length === 0 ? (
+            <p className="py-4 text-center text-sm leading-6 text-muted-foreground">{EMPTY_COPY}</p>
+          ) : null}
+
+          {status === "ready" && results.length > 0 ? (
+            <ul className="flex flex-col gap-2">
+              {results.map((result) => (
+                <li key={result.id}>
+                  <button
+                    type="button"
+                    onClick={() => onSelectProduct(result.id)}
+                    className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+                  >
+                    <ScanProductThumb imageUrl={result.imageUrl} label={result.name} size={44} />
+                    <span className="min-w-0">
+                      <span className="block truncate text-[13px] font-semibold text-foreground">
+                        {result.name}
+                      </span>
+                      <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
+                        {result.brand ? `${result.brand} · ` : ""}
+                        {result.categoryLabel}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+
+        <div className="my-4 flex items-center gap-3">
+          <span className="h-px flex-1 bg-border" />
+          <span className="text-xs text-muted-foreground">oder</span>
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <ManualEanField onSubmit={onSubmitIdentifier} />
+      </BottomSheetContent>
+    </BottomSheet>
+  )
+}
