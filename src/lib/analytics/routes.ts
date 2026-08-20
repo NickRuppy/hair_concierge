@@ -52,6 +52,7 @@ export const eventRoutes = {
   personal_plan_stage4_routine_viewed: { customerio: false, meta: false, posthog: true },
   pricing_viewed: { customerio: true, meta: true, posthog: true },
   purchase_completed: { customerio: false, meta: true, posthog: false },
+  quiz_analysis_commitment: { customerio: false, meta: false, posthog: true },
   quiz_completed: { customerio: true, meta: false, posthog: true },
   quiz_goals_selected: { customerio: true, meta: false, posthog: true },
   quiz_email_deliverability_rejected: { customerio: false, meta: false, posthog: true },
