@@ -43,7 +43,9 @@ type RoleTask = {
  * product. Only Shampoo needs a per-role candidate load; every other
  * category can share one load across all of its role tasks.
  */
-const ROLE_SENSITIVE_CANDIDATE_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set(["shampoo"])
+export const ROLE_SENSITIVE_CANDIDATE_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set([
+  "shampoo",
+])
 
 function candidateCacheKey(task: RoleTask): string {
   return ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(task.category)

@@ -47,12 +47,30 @@ import {
   scanTargetSubtitle,
 } from "./verdict-labels"
 
+/** The catalog facts one role is evaluated against: the scanned product plus its field. */
+export type ScanRoleFacts = {
+  productFacts: Stage3CategoryProductFacts | null
+  recommendationCandidates: Stage3CategoryProductFacts[]
+}
+
 export type BuildScanVerdictInput = {
   category: PersonalPlanCategory
   decision: PlanCategoryDecision
   /** `null` only for the edge where a not-needed category is scanned without catalog facts. */
   productFacts: Stage3CategoryProductFacts | null
   recommendationCandidates: Stage3CategoryProductFacts[]
+  /**
+   * Per-role override of the two fields above, for the categories whose derived facts
+   * genuinely differ by role. Today that is Shampoo only: `selectShampooSpec`
+   * (catalog-facts.ts) picks each product's spec row by the role-specific expected
+   * bucket/scalp route, so `shampoo_everyday` and `shampoo_dandruff` legitimately see
+   * different `spec` data for the same product — mirrors
+   * `ROLE_SENSITIVE_CANDIDATE_CATEGORIES` in `personal-plan/product-previews.ts`.
+   *
+   * Every role missing from this map (i.e. every role of every other category) falls back
+   * to the shared `productFacts` / `recommendationCandidates` above.
+   */
+  perRoleFacts?: Partial<Record<PlanProductRole, ScanRoleFacts>>
   coverage: PlanPortfolioCoverageFact[]
   hairThickness: PlanHairThickness
   heatCarrierCoverage: {
@@ -146,10 +164,10 @@ function coveredBy(
  * sheet never implies a target for a category the profile does not need.
  */
 function productOnlyDimensions(input: BuildScanVerdictInput): ScanDimension[] {
-  const facts = input.productFacts
-  if (!facts) return []
   const role = input.decision.roles[0] ?? CATEGORY_ROLE_POLICIES[input.category].allowedRoles[0]
   if (!role) return []
+  const facts = factsForRole(input, role).productFacts
+  if (!facts) return []
   const authorityInput = scanAuthorityInput(input, role)
   const dimensions = renderedDimensions(
     comparisonDimensions(authorityInput, [
@@ -173,25 +191,26 @@ function productOnlyDimensions(input: BuildScanVerdictInput): ScanDimension[] {
 /* ------------------------------------------------------------- in_catalog */
 
 function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPayload {
-  const facts = input.productFacts
-  const best = facts
-    ? selectBestRoleEvaluation(
-        input.decision.roles.map((role) => {
-          const authorityInput = scanAuthorityInput(input, role)
-          const evaluation = evaluateStage3Authority(authorityInput)
-          const criteria =
-            evaluation.status === "known" || evaluation.status === "unknown"
-              ? evaluation.criteria
-              : []
-          return {
-            role,
-            evaluation,
-            coverage: candidateDimensionCoverage(authorityInput, facts, criteria),
-          }
-        }),
-      )
-    : null
+  const best = selectBestRoleEvaluation(
+    input.decision.roles.flatMap((role) => {
+      // Role-sensitive categories carry their own facts per role (see `perRoleFacts`).
+      const facts = factsForRole(input, role).productFacts
+      if (!facts) return []
+      const authorityInput = scanAuthorityInput(input, role)
+      const evaluation = evaluateStage3Authority(authorityInput)
+      const criteria =
+        evaluation.status === "known" || evaluation.status === "unknown" ? evaluation.criteria : []
+      return [
+        {
+          role,
+          evaluation,
+          coverage: candidateDimensionCoverage(authorityInput, facts, criteria),
+        },
+      ]
+    }),
+  )
 
+  const facts = best ? factsForRole(input, best.role).productFacts : null
   if (!best || !facts) return unclearPayload(input)
 
   const authorityInput = scanAuthorityInput(input, best.role)
@@ -221,7 +240,9 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
     fitNarrative: narrative
       ? { productCriteria: narrative.productCriteria, fit: narrative.fit }
       : null,
-    alternatives: verdict === "ideal" ? [] : alternativesFrom(comparison),
+    // Ruling R12: alternatives show on every in_catalog verdict, `ideal` included — a
+    // fitting product is not a reason to hide what else would fit.
+    alternatives: alternativesFrom(comparison),
   }
 }
 
@@ -280,11 +301,20 @@ function alternativesFrom(
 
 /* ----------------------------------------------------------------- shared */
 
+function factsForRole(input: BuildScanVerdictInput, role: PlanProductRole): ScanRoleFacts {
+  return (
+    input.perRoleFacts?.[role] ?? {
+      productFacts: input.productFacts,
+      recommendationCandidates: input.recommendationCandidates,
+    }
+  )
+}
+
 function scanAuthorityInput(
   input: BuildScanVerdictInput,
   role: PlanProductRole,
 ): Stage3AuthorityInput {
-  const facts = input.productFacts
+  const { productFacts: facts, recommendationCandidates } = factsForRole(input, role)
   return {
     category: input.category,
     authorityVersion: CATEGORY_ROLE_POLICIES[input.category].authorityVersion,
@@ -305,7 +335,7 @@ function scanAuthorityInput(
     categoryDecision: input.decision as never,
     coverage: input.coverage,
     productFacts: facts,
-    recommendationCandidates: input.recommendationCandidates,
+    recommendationCandidates,
     hairThickness: input.hairThickness,
     heatCarrierCoverage: input.heatCarrierCoverage,
   }

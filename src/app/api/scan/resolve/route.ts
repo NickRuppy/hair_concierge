@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
 
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
+import { ROLE_SENSITIVE_CANDIDATE_CATEGORIES } from "@/lib/personal-plan/product-previews"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import {
   loadScanProductFacts,
@@ -14,7 +15,7 @@ import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
 } from "@/lib/personal-plan/products/contracts"
-import type { PlanCategoryDecision } from "@/lib/personal-plan/types"
+import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import { isProductSearchQuarantined } from "@/lib/scan/catalog-eligibility"
@@ -26,7 +27,7 @@ import {
   type ScanCatalogPresentationRow,
 } from "@/lib/scan/product-presentation"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
-import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
+import { buildScanVerdict, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
 import { loadScanSavedState } from "@/lib/scan/saved-state"
 import type { ScanResolveResult } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
@@ -142,27 +143,31 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         if (!validation.ok) return fail("invalid_identifier", 400)
         const normalizedValue = normalizeIdentifierValue(validation.value)
 
-        const pending = await deps.findOpenScanSubmission(client, userId, normalizedValue)
-        if (pending) {
-          return ok({
-            kind: "pending_submission",
-            submissionId: pending.submissionId,
-            headline: SCAN_PENDING_SUBMISSION_HEADLINE,
-            status: pending.status,
-          })
-        }
-
         const hit = await deps.lookupCatalogProductByIdentifier(client, {
           type: identifier.type,
           value: identifier.value,
         })
-        if (!hit) return ok(unknownProduct(identifier.type, normalizedValue))
 
         // Ruling R7: a disposition-quarantined product (identity_ambiguous, retired, or
         // awaiting exact analysis — personal_plan_product_search_dispositions) is not
         // resolvable via scan either. The research/review pipeline is the right place to
         // untangle it; treat it as though the identifier lookup missed.
-        if (await deps.isProductSearchQuarantined(client, hit.productId)) {
+        const quarantined =
+          hit !== null && (await deps.isProductSearchQuarantined(client, hit.productId))
+
+        if (!hit || quarantined) {
+          // The catalog is the authority: an open research submission only decides what
+          // this scan shows once the EAN is genuinely not (usably) in the catalog. A
+          // cataloged product must still reach its verdict while a submission is open.
+          const pending = await deps.findOpenScanSubmission(client, userId, normalizedValue)
+          if (pending) {
+            return ok({
+              kind: "pending_submission",
+              submissionId: pending.submissionId,
+              headline: SCAN_PENDING_SUBMISSION_HEADLINE,
+              status: pending.status,
+            })
+          }
           return ok(unknownProduct(identifier.type, normalizedValue))
         }
 
@@ -185,39 +190,62 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       const decision = context.snapshot.decisions.find((entry) => entry.category === category)
       if (!decision) throw new Error("scan_resolve_decision_missing")
 
-      const role = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
-      const selectionContext: CategorySelectionContext = {
-        hairThickness: context.snapshot.profile.hair.thickness,
-        role,
-        shampooTarget:
-          category === "shampoo" && decision.target?.category === "shampoo"
-            ? decision.target
-            : null,
-        conditionerTarget:
-          category === "conditioner" && decision.target?.category === "conditioner"
-            ? decision.target
-            : null,
+      const shampooTarget =
+        category === "shampoo" && decision.target?.category === "shampoo" ? decision.target : null
+      const conditionerTarget =
+        category === "conditioner" && decision.target?.category === "conditioner"
+          ? decision.target
+          : null
+
+      const loadFactsForRole = async (role: PlanProductRole): Promise<ScanRoleFacts> => {
+        const selectionContext: CategorySelectionContext = {
+          hairThickness: context.snapshot.profile.hair.thickness,
+          role,
+          shampooTarget,
+          conditionerTarget,
+        }
+        const [productFacts, recommendationCandidates] = await Promise.all([
+          deps.loadScanProductFacts(client, category, productId, selectionContext),
+          isDecisionWithoutTarget(decision)
+            ? Promise.resolve<Stage3CategoryProductFacts[]>([])
+            : deps.loadRecommendationCandidates(client, {
+                category,
+                hairThickness: selectionContext.hairThickness,
+                role,
+                shampooTarget,
+                conditionerTarget,
+                completeCatalog: true,
+              }),
+        ])
+        return { productFacts, recommendationCandidates }
       }
 
-      const [productFacts, recommendationCandidates] = await Promise.all([
-        deps.loadScanProductFacts(client, category, productId, selectionContext),
-        isDecisionWithoutTarget(decision)
-          ? Promise.resolve<Stage3CategoryProductFacts[]>([])
-          : deps.loadRecommendationCandidates(client, {
-              category,
-              hairThickness: selectionContext.hairThickness,
-              role,
-              shampooTarget: selectionContext.shampooTarget,
-              conditionerTarget: selectionContext.conditionerTarget,
-              completeCatalog: true,
-            }),
-      ])
+      /**
+       * `buildScanVerdict` evaluates EVERY role of the decision, but a category's derived
+       * facts are identical for all of its roles except Shampoo, where `selectShampooSpec`
+       * picks the spec row by the role's expected bucket/scalp route. So mirror
+       * `product-previews.ts`: one shared load for every other category, one load per role
+       * for a role-sensitive one — otherwise e.g. the dandruff role would be graded against
+       * facts loaded for the everyday role.
+       */
+      const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
+      const roleSensitive = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
+      const rolesToLoad = roleSensitive
+        ? [...new Set<PlanProductRole>([primaryRole, ...decision.roles])]
+        : [primaryRole]
+      const loadedFacts = new Map<PlanProductRole, ScanRoleFacts>(
+        await Promise.all(
+          rolesToLoad.map(async (role) => [role, await loadFactsForRole(role)] as const),
+        ),
+      )
+      const primaryFacts = loadedFacts.get(primaryRole) as ScanRoleFacts
 
       const verdict = deps.buildScanVerdict({
         category,
         decision,
-        productFacts,
-        recommendationCandidates,
+        productFacts: primaryFacts.productFacts,
+        recommendationCandidates: primaryFacts.recommendationCandidates,
+        perRoleFacts: roleSensitive ? Object.fromEntries(loadedFacts) : undefined,
         coverage: context.snapshot.coverage,
         hairThickness: context.snapshot.profile.hair.thickness,
         // No Stage3ProductDraft exists for scan — mirrors product-previews.ts's no-draft

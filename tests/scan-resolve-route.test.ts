@@ -160,13 +160,11 @@ test("scan resolve: bad EAN checksum is rejected before any lookup", async () =>
   assert.deepEqual(await response.json(), { error: "invalid_identifier" })
 })
 
-test("scan resolve: an open submission short-circuits before catalog lookup", async () => {
+test("scan resolve: an open submission answers a catalog miss", async () => {
   const handler = createScanResolveRouteHandler(
     baseDeps({
+      lookupCatalogProductByIdentifier: async () => null,
       findOpenScanSubmission: async () => ({ submissionId: "sub-1", status: "researching" }),
-      lookupCatalogProductByIdentifier: async () => {
-        throw new Error("must not be called")
-      },
     }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
@@ -177,6 +175,35 @@ test("scan resolve: an open submission short-circuits before catalog lookup", as
     headline: "Wir prüfen dein Produkt",
     status: "researching",
   })
+})
+
+test("scan resolve: a cataloged EAN resolves to a verdict even while a submission is open", async () => {
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      // The catalog is the authority: with a hit, the submission never even gets checked.
+      findOpenScanSubmission: async () => {
+        throw new Error("must not be called for a cataloged product")
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  const body = await response.json()
+  assert.equal(body.kind, "in_catalog")
+})
+
+test("scan resolve: a quarantined hit with an open submission answers pending, not unknown", async () => {
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      isProductSearchQuarantined: async () => true,
+      findOpenScanSubmission: async () => ({ submissionId: "sub-2", status: "pending_review" }),
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  const body = await response.json()
+  assert.equal(body.kind, "pending_submission")
+  assert.equal(body.submissionId, "sub-2")
 })
 
 test("scan resolve: identifier miss returns unknown_product with all 10 categories", async () => {
@@ -337,6 +364,93 @@ test("scan resolve: a not-needed decision skips the recommendation-candidates lo
   )
   const response = await handler(request({ productId }))
   assert.equal(response.status, 200)
+})
+
+/* ------------------------------------------------- role-sensitive fact loads */
+
+const twoRoleShampooContext = {
+  ...context,
+  snapshot: {
+    ...snapshot,
+    decisions: [{ ...decision, roles: ["shampoo_everyday" as const, "shampoo_dandruff" as const] }],
+  },
+}
+
+/** Facts stubbed to carry the role they were loaded for, so misuse is visible. */
+const factsLoadedFor = (role: string) => ({ productId, role }) as never
+
+test("scan resolve: a role-sensitive category loads facts and candidates per role", async () => {
+  const factsRoles: string[] = []
+  const candidateRoles: string[] = []
+  let received: { perRoleFacts?: Record<string, unknown> } | null = null
+
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      loadScanEvaluationContext: async () => twoRoleShampooContext,
+      loadScanProductFacts: async (_client, _category, _productId, selection) => {
+        factsRoles.push(selection.role)
+        return factsLoadedFor(selection.role)
+      },
+      loadRecommendationCandidates: async (_client, selection) => {
+        // The loader's input is a union; the scan route only ever passes the selection form.
+        const { role } = selection as { role: string }
+        candidateRoles.push(role)
+        return [factsLoadedFor(role)]
+      },
+      buildScanVerdict: (input) => {
+        received = input as never
+        return inCatalogVerdict
+      },
+    }),
+  )
+  const response = await handler(request({ productId }))
+  assert.equal(response.status, 200)
+
+  assert.deepEqual(factsRoles.sort(), ["shampoo_dandruff", "shampoo_everyday"])
+  assert.deepEqual(candidateRoles.sort(), ["shampoo_dandruff", "shampoo_everyday"])
+
+  const perRoleFacts = received!.perRoleFacts as Record<
+    string,
+    { productFacts: { role: string }; recommendationCandidates: Array<{ role: string }> }
+  >
+  // Each role must see the facts loaded for that role, not the first role's load.
+  assert.equal(perRoleFacts.shampoo_everyday.productFacts.role, "shampoo_everyday")
+  assert.equal(perRoleFacts.shampoo_dandruff.productFacts.role, "shampoo_dandruff")
+  assert.equal(perRoleFacts.shampoo_everyday.recommendationCandidates[0].role, "shampoo_everyday")
+  assert.equal(perRoleFacts.shampoo_dandruff.recommendationCandidates[0].role, "shampoo_dandruff")
+})
+
+test("scan resolve: a category whose facts do not vary by role loads exactly once", async () => {
+  const conditionerDecision = {
+    ...decision,
+    category: "conditioner" as const,
+    roles: ["conditioner_rinse_out" as const],
+  }
+  const factsRoles: string[] = []
+  let received: { perRoleFacts?: unknown } | null = null
+
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      loadActiveProductById: async () => ({ id: productId, category: "conditioner" }),
+      loadScanEvaluationContext: async () => ({
+        ...context,
+        snapshot: { ...snapshot, decisions: [conditionerDecision] },
+      }),
+      loadScanProductFacts: async (_client, _category, _productId, selection) => {
+        factsRoles.push(selection.role)
+        return null
+      },
+      loadPresentationRows: async () => [{ ...presentationRow, category: "conditioner" as const }],
+      buildScanVerdict: (input) => {
+        received = input as never
+        return inCatalogVerdict
+      },
+    }),
+  )
+  const response = await handler(request({ productId }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(factsRoles, ["conditioner_rinse_out"])
+  assert.equal(received!.perRoleFacts, undefined)
 })
 
 test("scan resolve: an unexpected lib error maps to 503", async () => {

@@ -96,7 +96,10 @@ export type ScanInCatalogVerdictPayload = {
   criteria: Stage3CriterionResult[]
   coverage: { matches: number; total: number } | null
   fitNarrative: { productCriteria: string; fit: string } | null
-  /** Empty on `ideal` (section hidden); at most three otherwise. */
+  /**
+   * At most three, on every verdict including `ideal` (ruling R12) — the section is only
+   * hidden when the category has nothing to offer.
+   */
   alternatives: ScanAlternative[]
 }
 

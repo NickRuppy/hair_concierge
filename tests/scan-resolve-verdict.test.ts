@@ -22,6 +22,9 @@ type FactOverrides = {
   providesHeatProtection?: boolean | null
   recommendable?: boolean
   sortOrder?: number | null
+  shampooBucket?: string | null
+  scalpRoute?: string | null
+  cleansingIntensity?: string | null
 }
 
 function commonFacts(
@@ -61,6 +64,18 @@ function factsFor(
 ): Stage3CategoryProductFacts {
   const common = commonFacts(category, role, productId, overrides)
   switch (category) {
+    case "shampoo":
+      return {
+        ...common,
+        category: "shampoo",
+        spec: {
+          thickness: "normal",
+          shampooBucket: overrides.shampooBucket ?? "normal",
+          scalpRoute: overrides.scalpRoute ?? "balanced",
+          cleansingIntensity: overrides.cleansingIntensity ?? "regular",
+          targetFit: "matched",
+        },
+      } as Stage3CategoryProductFacts
     case "conditioner":
       return {
         ...common,
@@ -153,6 +168,28 @@ function leaveInDecision(): PlanCategoryDecision {
       repairSupportLevel: "medium",
       functions: [],
       conditionerReplacementEligible: false,
+    },
+    frequency: null,
+    reasons: [],
+    executionState: "available",
+    executionPauseReason: null,
+    deferredFacts: [],
+  } as PlanCategoryDecision
+}
+
+/** Two roles on a role-sensitive category: everyday + a targeted dandruff job. */
+function shampooDecision(): PlanCategoryDecision {
+  return {
+    category: "shampoo",
+    resolution: "resolved",
+    needTier: "basis",
+    roles: ["shampoo_everyday", "shampoo_dandruff"],
+    target: {
+      category: "shampoo",
+      roles: ["shampoo_everyday", "shampoo_dandruff"],
+      scalpRoute: "balanced",
+      everydayConstraint: "standard",
+      requiresTargetedDandruffCapability: true,
     },
     frequency: null,
     reasons: [],
@@ -514,9 +551,70 @@ test("the best role wins when one role mismatches and another supports", () => {
   assert.equal(payload.verdict, "supportive")
 })
 
+/* ------------------------------------------------------ role-sensitive facts */
+
+/**
+ * Shampoo is the one category whose derived facts differ per role (`selectShampooSpec`
+ * picks the spec row by the role's expected bucket). The dandruff role must therefore be
+ * evaluated against the dandruff-loaded facts, not against whatever the first role loaded.
+ */
+test("a role-sensitive category evaluates each role against that role's own facts", () => {
+  const everydayFacts = factsFor("shampoo", "shampoo_everyday", "scanned-shampoo", {
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    // Off the everyday target's "regular" intensity: the everyday role can only be supportive.
+    cleansingIntensity: "clarifying",
+  })
+  const dandruffFacts = factsFor("shampoo", "shampoo_dandruff", "scanned-shampoo", {
+    shampooBucket: "schuppen",
+    scalpRoute: "dandruff",
+    cleansingIntensity: "regular",
+  })
+
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "shampoo",
+      decision: shampooDecision(),
+      productFacts: everydayFacts,
+      perRoleFacts: {
+        shampoo_everyday: { productFacts: everydayFacts, recommendationCandidates: [] },
+        shampoo_dandruff: { productFacts: dandruffFacts, recommendationCandidates: [] },
+      },
+    }),
+  )
+
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(payload.evaluatedRole, "shampoo_dandruff")
+  assert.equal(payload.verdict, "ideal")
+})
+
+test("without per-role facts both roles share one load — the dandruff role cannot fit", () => {
+  const everydayFacts = factsFor("shampoo", "shampoo_everyday", "scanned-shampoo", {
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "clarifying",
+  })
+
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "shampoo",
+      decision: shampooDecision(),
+      productFacts: everydayFacts,
+    }),
+  )
+
+  // The regression this guards: the dandruff role graded against everyday-loaded facts
+  // reads "schuppen" nowhere and lands on mismatch, so only the everyday role can win.
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(payload.evaluatedRole, "shampoo_everyday")
+  assert.equal(payload.verdict, "supportive")
+})
+
 /* ----------------------------------------------------------- alternatives */
 
-test("a fitting product hides the alternatives section", () => {
+test("a fitting product still offers alternatives (ruling R12)", () => {
   const payload = buildScanVerdict(
     scanInput({
       category: "conditioner",
@@ -534,7 +632,12 @@ test("a fitting product hides the alternatives section", () => {
   assert.equal(payload.kind, "in_catalog")
   if (payload.kind !== "in_catalog") return
   assert.equal(payload.verdict, "ideal")
-  assert.deepEqual(payload.alternatives, [])
+  // Ruling R12: a fitting product does not hide what else would fit.
+  assert.ok(payload.alternatives.length > 0)
+  assert.ok(payload.alternatives.length <= 3)
+  assert.ok(
+    payload.alternatives.every((alternative) => alternative.productId !== "scanned-conditioner"),
+  )
 })
 
 test("a mismatching product offers at most three alternatives", () => {
