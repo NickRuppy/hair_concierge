@@ -11,7 +11,7 @@ function baseDeps(overrides: Partial<ScanSaveRouteDeps> = {}): ScanSaveRouteDeps
     getUserId: async () => userId,
     checkRateLimit: async () => ({ allowed: true }),
     createAdminClient: () => ({}) as never,
-    saveWishlist: async () => {},
+    saveWishlist: async () => ({ outcome: "saved" }),
     removeWishlist: async () => {},
     saveRoutine: async () => ({ outcome: "saved" }),
     removeRoutine: async () => {},
@@ -79,6 +79,7 @@ test("scan save POST merkliste: calls the wishlist saver, not the routine saver"
     baseDeps({
       saveWishlist: async () => {
         calls.push("wishlist")
+        return { outcome: "saved" }
       },
       saveRoutine: async () => {
         calls.push("routine")
@@ -90,6 +91,24 @@ test("scan save POST merkliste: calls the wishlist saver, not the routine saver"
   assert.equal(response.status, 200)
   assert.deepEqual(calls, ["wishlist"])
   assert.deepEqual(await response.json(), { ok: true, kind: "merkliste", productId })
+})
+
+test("scan save POST merkliste: a refused product maps to 409, same as routine", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({ saveWishlist: async () => ({ outcome: "product_not_saveable" }) }),
+  )
+  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
+  assert.equal(response.status, 409)
+  assert.deepEqual(await response.json(), { error: "product_not_saveable" })
+})
+
+test("scan save POST merkliste: an inactive/unknown product maps to 404", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({ saveWishlist: async () => ({ outcome: "product_not_found" }) }),
+  )
+  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
+  assert.equal(response.status, 404)
+  assert.deepEqual(await response.json(), { error: "product_not_found" })
 })
 
 test("scan save POST routine: product_not_found from the helper maps to 404", async () => {

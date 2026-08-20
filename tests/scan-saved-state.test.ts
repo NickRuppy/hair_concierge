@@ -73,12 +73,39 @@ test("loadScanSavedState: wishlist row present returns merkliste before checking
 })
 
 test("loadScanSavedState: owned user_products row (no wishlist row) returns routine", async () => {
+  const seen: Array<Map<string, unknown>> = []
   const { client } = stubClient({
     scan_wishlist: { select: () => ({ data: null, error: null }) },
-    user_products: { select: () => ({ data: { id: "up-1" }, error: null }) },
+    user_products: {
+      select: ({ filters }) => {
+        seen.push(filters)
+        return { data: { id: "up-1" }, error: null }
+      },
+    },
   })
   const result = await loadScanSavedState(client as never, "user-1", "prod-1")
   assert.equal(result, "routine")
+  // Scoped like removeScanRoutineProduct's delete: only a scan-created row counts, so the
+  // sheet never offers an "Entfernen" that would silently do nothing.
+  assert.equal(seen[0].get("intake_source"), "scan")
+  assert.equal(seen[0].get("ownership_status"), "owned")
+  assert.equal(seen[0].get("user_id"), "user-1")
+  assert.equal(seen[0].get("catalog_product_id"), "prod-1")
+})
+
+test("loadScanSavedState: a Stage-3-claimed routine product is not reported as scan-saved", async () => {
+  const { client } = stubClient({
+    scan_wishlist: { select: () => ({ data: null, error: null }) },
+    // The scan-scoped query finds nothing: the row exists but came from catalog search.
+    user_products: {
+      select: ({ filters }) => ({
+        data: filters.get("intake_source") === "scan" ? null : { id: "up-1" },
+        error: null,
+      }),
+    },
+  })
+  const result = await loadScanSavedState(client as never, "user-1", "prod-1")
+  assert.equal(result, null)
 })
 
 test("loadScanSavedState: neither present returns null", async () => {
@@ -100,25 +127,57 @@ test("loadScanSavedState: a lookup error throws a stable error", async () => {
   )
 })
 
+const activeProduct = { select: () => ({ data: { id: "prod-1" }, error: null }) }
+const notQuarantined = { select: () => ({ data: null, error: null }) }
+const quarantined = { select: () => ({ data: { product_id: "prod-1" }, error: null }) }
+
 test("saveScanWishlistProduct: inserts a row scoped to user and product", async () => {
   const { client, inserts } = stubClient({
+    products: activeProduct,
+    personal_plan_product_search_dispositions: notQuarantined,
     scan_wishlist: { insert: () => ({ error: null }) },
   })
-  await saveScanWishlistProduct(client as never, "user-1", "prod-1")
+  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-1")
+  assert.deepEqual(result, { outcome: "saved" })
   assert.deepEqual(inserts, [
     { table: "scan_wishlist", payload: { user_id: "user-1", product_id: "prod-1" } },
   ])
 })
 
+test("saveScanWishlistProduct: an inactive/unknown product is reported, not inserted", async () => {
+  const { client, inserts } = stubClient({
+    products: { select: () => ({ data: null, error: null }) },
+  })
+  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-missing")
+  assert.deepEqual(result, { outcome: "product_not_found" })
+  assert.deepEqual(inserts, [])
+})
+
+test("saveScanWishlistProduct: a disposition-quarantined product is refused (ruling R7)", async () => {
+  const { client, inserts } = stubClient({
+    products: activeProduct,
+    personal_plan_product_search_dispositions: quarantined,
+    // scan_wishlist deliberately has no handler: must not be reached.
+  })
+  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-1")
+  assert.deepEqual(result, { outcome: "product_not_saveable" })
+  assert.deepEqual(inserts, [])
+})
+
 test("saveScanWishlistProduct: a unique-conflict is idempotent success", async () => {
   const { client } = stubClient({
+    products: activeProduct,
+    personal_plan_product_search_dispositions: notQuarantined,
     scan_wishlist: { insert: () => ({ error: { code: "23505", message: "duplicate key" } }) },
   })
-  await saveScanWishlistProduct(client as never, "user-1", "prod-1") // does not throw
+  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-1")
+  assert.deepEqual(result, { outcome: "saved" })
 })
 
 test("saveScanWishlistProduct: a non-conflict error still throws", async () => {
   const { client } = stubClient({
+    products: activeProduct,
+    personal_plan_product_search_dispositions: notQuarantined,
     scan_wishlist: { insert: () => ({ error: { code: "23503", message: "fk violation" } }) },
   })
   await assert.rejects(
@@ -145,9 +204,6 @@ test("saveScanRoutineProduct: unknown/inactive product is reported, not inserted
   assert.deepEqual(result, { outcome: "product_not_found" })
   assert.deepEqual(inserts, [])
 })
-
-const notQuarantined = { select: () => ({ data: null, error: null }) }
-const quarantined = { select: () => ({ data: { product_id: "prod-1" }, error: null }) }
 
 test("saveScanRoutineProduct: already-owned row is a no-op success (any origin)", async () => {
   const { client, inserts } = stubClient({

@@ -29,11 +29,16 @@ export async function loadScanSavedState(
   if (wishlistError) throw new Error("scan_saved_state_lookup_failed")
   if (wishlistRow) return "merkliste"
 
+  // Scoped to `intake_source: "scan"` on purpose, mirroring `removeScanRoutineProduct`'s
+  // delete: only a row the scan flow itself created can be removed from here, so reporting
+  // "routine" for a Stage-3-claimed product would promise an "Entfernen" that silently
+  // does nothing.
   const { data: routineRow, error: routineError } = await client
     .from("user_products")
     .select("id")
     .eq("user_id", userId)
     .eq("catalog_product_id", productId)
+    .eq("intake_source", "scan")
     .eq("ownership_status", "owned")
     .maybeSingle()
   if (routineError) throw new Error("scan_saved_state_lookup_failed")
@@ -42,15 +47,36 @@ export async function loadScanSavedState(
   return null
 }
 
+/**
+ * A Merkliste entry points at a catalog product the scan surface will later re-resolve
+ * and offer to buy, so it gets the same front gate as the routine save: the product must
+ * still be active, and ruling R7's disposition quarantine applies here too. The
+ * origin/ownership half of the routine gate does not — bookmarking is not a claim of use.
+ */
 export async function saveScanWishlistProduct(
   client: SupabaseClient,
   userId: string,
   productId: string,
-): Promise<void> {
+): Promise<ScanSaveResult> {
+  const { data: product, error: productError } = await client
+    .from("products")
+    .select("id")
+    .eq("id", productId)
+    .eq("is_active", true)
+    .eq("lifecycle_status", "active")
+    .maybeSingle()
+  if (productError) throw new Error("scan_wishlist_save_failed")
+  if (!product) return { outcome: "product_not_found" }
+
+  if (await isProductSearchQuarantined(client, productId)) {
+    return { outcome: "product_not_saveable" }
+  }
+
   const { error } = await client
     .from("scan_wishlist")
     .insert({ user_id: userId, product_id: productId })
   if (error && !isUniqueViolation(error)) throw new Error("scan_wishlist_save_failed")
+  return { outcome: "saved" }
 }
 
 export async function removeScanWishlistProduct(
@@ -66,7 +92,8 @@ export async function removeScanWishlistProduct(
   if (error) throw new Error("scan_wishlist_remove_failed")
 }
 
-export type ScanRoutineSaveResult =
+/** Outcome of either save kind: 404 on `product_not_found`, 409 on `product_not_saveable`. */
+export type ScanSaveResult =
   | { outcome: "saved" }
   | { outcome: "product_not_found" }
   | { outcome: "product_not_saveable" }
@@ -99,7 +126,7 @@ export async function saveScanRoutineProduct(
   client: SupabaseClient,
   userId: string,
   productId: string,
-): Promise<ScanRoutineSaveResult> {
+): Promise<ScanSaveResult> {
   const { data: product, error: productError } = await client
     .from("products")
     .select("id, name, brand, category_key, origin")

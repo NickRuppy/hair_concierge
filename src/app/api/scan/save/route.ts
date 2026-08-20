@@ -68,13 +68,14 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
 
       try {
         const client = deps.createAdminClient()
-        if (parsed.kind === "merkliste") {
-          await deps.saveWishlist(client, userId, parsed.productId)
-        } else {
-          const result = await deps.saveRoutine(client, userId, parsed.productId)
-          if (result.outcome === "product_not_found") return fail("product_not_found", 404)
-          if (result.outcome === "product_not_saveable") return fail("product_not_saveable", 409)
-        }
+        // Both kinds share the eligibility outcome shape (active product, ruling R7
+        // quarantine, plus the routine-only origin/ownership gate).
+        const result =
+          parsed.kind === "merkliste"
+            ? await deps.saveWishlist(client, userId, parsed.productId)
+            : await deps.saveRoutine(client, userId, parsed.productId)
+        if (result.outcome === "product_not_found") return fail("product_not_found", 404)
+        if (result.outcome === "product_not_saveable") return fail("product_not_saveable", 409)
         return NextResponse.json(
           { ok: true, kind: parsed.kind, productId: parsed.productId },
           { headers: { "Cache-Control": "no-store" } },
