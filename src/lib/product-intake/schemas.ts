@@ -219,10 +219,13 @@ export type ChatProductIntakeSubmissionInput = z.infer<typeof chatProductIntakeS
   frequency_range: ProductFrequency
 }
 
+// ScanProductIntakeSubmissionInput deliberately stays out of this union: scan intake
+// goes through the dedicated submitScanProductIntake (submissions.ts), never
+// submitProductIntake, because it must not read or write user_product_usage
+// (plans/scan-mvp.md WP4 ruling).
 export type ProductIntakeSubmissionInput =
   | OnboardingProductIntakeSubmissionInput
   | ChatProductIntakeSubmissionInput
-  | ScanProductIntakeSubmissionInput
 
 export type PersonalPlanProductIntakeSubmissionInput = z.infer<
   typeof personalPlanProductIntakeSubmissionSchema

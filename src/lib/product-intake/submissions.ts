@@ -25,10 +25,12 @@ import type { ProductIntakeCategoryKey, ProductSubmissionSource } from "@/lib/ty
 import type {
   PersonalPlanProductIntakeSubmissionInput,
   ProductIntakeSubmissionInput,
+  ScanProductIntakeSubmissionInput,
 } from "@/lib/product-intake/schemas"
 import type {
   ProductIntakePersonalPlanSubmissionResult,
   ProductIntakeSubmissionResult,
+  ScanProductIntakeSubmissionResult,
 } from "@/lib/product-intake/types"
 
 export type {
@@ -47,18 +49,6 @@ export const OPEN_SUBMISSION_STATUSES = [
   "ready_for_review",
   "needs_more_info",
 ] as const
-
-// Scan intake's source flows into product_submissions.source (widened by migration
-// 20260820100000 to allow 'scan'), but user_product_usage.source's DB CHECK still only
-// allows onboarding/chat/profile/script — that table wasn't widened. usageSourceForDb
-// below maps "scan" -> null wherever params.source reaches a user_product_usage write,
-// while product_submissions writes and the returned result/intake-history keep "scan"
-// verbatim. See repository-types.ts's ProductIntakeSubmissionRow.source comment.
-type SubmittableProductIntakeSource = ProductSubmissionSource | "scan"
-
-function usageSourceForDb(source: SubmittableProductIntakeSource): ProductSubmissionSource | null {
-  return source === "scan" ? null : source
-}
 
 type ScannedIdentifierValue = {
   type: "ean" | "gtin" | "barcode"
@@ -86,7 +76,7 @@ export class ProductIntakeOwnershipError extends Error {
 
 export type SubmitProductIntakeParams = {
   userId: string
-  source: SubmittableProductIntakeSource
+  source: ProductSubmissionSource
   input: ProductIntakeSubmissionInput
   repository: ProductIntakeRepository
   now?: () => string
@@ -386,7 +376,7 @@ function isSamePendingUsageEdit(params: {
 }
 
 function isSameOnboardingUsageReference(params: {
-  source: SubmittableProductIntakeSource
+  source: ProductSubmissionSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow | null
 }) {
@@ -400,7 +390,7 @@ function isSameOnboardingUsageReference(params: {
 
 function buildIntakeHistory(
   input: ProductIntakeSubmissionInput,
-  source: SubmittableProductIntakeSource,
+  source: ProductSubmissionSource,
   now: string,
 ) {
   return [
@@ -434,7 +424,7 @@ function buildIntakeHistory(
 async function updatePendingSubmissionInPlace(params: {
   repository: ProductIntakeRepository
   userId: string
-  source: SubmittableProductIntakeSource
+  source: ProductSubmissionSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow
   now: string
@@ -512,7 +502,7 @@ async function updatePendingSubmissionInPlace(params: {
       product_submission_id: submissionId,
       match_status: "pending_review",
       intake_method: params.input.intake_method,
-      source: usageSourceForDb(params.source),
+      source: params.source,
       front_image_path: frontImagePath,
       updated_at: params.now,
     })
@@ -610,7 +600,7 @@ async function updatePendingSubmissionInPlace(params: {
 }
 
 function resolveInputIdentity(params: {
-  input: ProductIntakeSubmissionInput
+  input: ProductIntakeSubmissionInput | ScanProductIntakeSubmissionInput
   brandCatalog: BrandResolutionCatalog
 }): {
   brandId: string | null
@@ -660,7 +650,7 @@ function resolveInputIdentity(params: {
 async function upsertMatchedUsage(params: {
   repository: ProductIntakeRepository
   userId: string
-  source: SubmittableProductIntakeSource
+  source: ProductSubmissionSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow | null
   productId: string
@@ -675,7 +665,7 @@ async function upsertMatchedUsage(params: {
     frequencyRange: params.input.frequency_range,
     brandText: params.input.brand_text ?? null,
     intakeMethod: params.input.intake_method,
-    source: usageSourceForDb(params.source),
+    source: params.source,
     now: params.now,
   })
 }
@@ -683,10 +673,9 @@ async function upsertMatchedUsage(params: {
 async function createPendingSubmission(params: {
   repository: ProductIntakeRepository
   userId: string
-  source: SubmittableProductIntakeSource
+  source: ProductSubmissionSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow | null
-  scannedIdentifier: ScannedIdentifierValue | null
   now: string
 }): Promise<{
   submission: ProductIntakeSubmissionRow
@@ -776,8 +765,6 @@ async function createPendingSubmission(params: {
       researched_payload: {},
       intake_history: buildIntakeHistory(params.input, params.source, params.now),
       approved_product_id: null,
-      scanned_identifier_type: params.scannedIdentifier?.type ?? null,
-      scanned_identifier_value: params.scannedIdentifier?.value ?? null,
     })
     insertedSubmissionId = submission.id
 
@@ -791,7 +778,7 @@ async function createPendingSubmission(params: {
         frequencyRange: params.input.frequency_range,
         brandText: params.input.brand_text ?? null,
         intakeMethod: params.input.intake_method,
-        source: usageSourceForDb(params.source),
+        source: params.source,
         frontImagePath: committedImages.frontImagePath,
         now: params.now,
       })
@@ -861,22 +848,9 @@ export async function submitProductIntake(
     brandCatalog: buildBrandResolutionCatalog(brandCatalogInput),
   })
 
-  // Single normalization point (per WP4 brief): the scan schema stays a passthrough
-  // validator, so the scanned value is normalized here, once, before it reaches both
-  // matching and persistence. Uses the same normalizeIdentifierValue boundary as the
-  // scan feature's other identifier lookups (identifier-lookup.ts, pending-submission.ts).
-  const scannedIdentifier: ScannedIdentifierValue | null =
-    "scannedIdentifier" in params.input && params.input.scannedIdentifier
-      ? {
-          type: params.input.scannedIdentifier.type,
-          value: normalizeIdentifierValue(params.input.scannedIdentifier.value),
-        }
-      : null
-
   const match = matchProductIntake(
     {
       selectedCategoryKey: params.input.category,
-      identifier: scannedIdentifier ?? undefined,
       brandId: identity.brandId,
       productLineId: identity.productLineId,
       cleanProductName: identity.cleanProductName,
@@ -926,7 +900,6 @@ export async function submitProductIntake(
     repository: params.repository,
     userId: params.userId,
     source: params.source,
-    scannedIdentifier,
     input: params.input,
     existingUsage,
     now,
@@ -945,6 +918,132 @@ export async function submitProductIntake(
       category: submission.category,
     },
     matched_product_id: null,
+    match,
+  }
+}
+
+function buildScanIntakeHistory(input: ScanProductIntakeSubmissionInput, now: string) {
+  return [
+    {
+      at: now,
+      source: "scan" as const,
+      intake_method: input.intake_method,
+      category: input.category,
+      frequency_range: input.frequency_range,
+      fields: {
+        brand_text: input.brand_text ?? null,
+        brand_id: input.brand_id ?? null,
+        product_line_id: input.product_line_id ?? null,
+        product_name_text: input.product_name_text ?? null,
+        scanned_identifier: input.scannedIdentifier ?? null,
+      },
+    },
+  ]
+}
+
+export type SubmitScanProductIntakeParams = {
+  userId: string
+  input: ScanProductIntakeSubmissionInput
+  repository: ProductIntakeRepository
+  now?: () => string
+}
+
+/**
+ * A scan submission is a RESEARCH REQUEST only (plans/scan-mvp.md WP4 ruling). Unlike
+ * submitProductIntake, this never reads or writes user_product_usage: scanning an
+ * unknown product must not occupy/replace the user's real routine slot for that
+ * category, and an already-cataloged EAN must not silently become "what the user uses"
+ * -- "Benutze ich schon" is a separate, explicit user action the API layer (Task 5)
+ * wires up elsewhere. The created product_submissions row is intentionally anchorless
+ * (user_product_usage_id and user_product_id both null); the DB tolerates this for
+ * source='scan' (see migration 20260808062620's product_submissions_association_path_check,
+ * which only constrains source='personal_plan'). One-open-submission-per-EAN semantics
+ * for the anchorless case are enforced by idx_product_submissions_one_open_scan
+ * (migration 20260820120000), a scan-scoped sibling of the usage-keyed and
+ * user_product-keyed partial unique indexes the legacy paths rely on.
+ */
+export async function submitScanProductIntake(
+  params: SubmitScanProductIntakeParams,
+): Promise<ScanProductIntakeSubmissionResult> {
+  const [catalog, brandCatalogInput] = await Promise.all([
+    params.repository.loadCatalog({ eligibilityMode: "intake_dedupe" }),
+    params.repository.loadBrandResolutionCatalog(),
+  ])
+
+  const identity = resolveInputIdentity({
+    input: params.input,
+    brandCatalog: buildBrandResolutionCatalog(brandCatalogInput),
+  })
+
+  // Single normalization point (per WP4 brief): the scan schema stays a passthrough
+  // validator, so the scanned value is normalized here, once, before it reaches both
+  // matching and persistence. Uses the same normalizeIdentifierValue boundary as the
+  // scan feature's other identifier lookups (identifier-lookup.ts, pending-submission.ts).
+  const scannedIdentifier: ScannedIdentifierValue | null = params.input.scannedIdentifier
+    ? {
+        type: params.input.scannedIdentifier.type,
+        value: normalizeIdentifierValue(params.input.scannedIdentifier.value),
+      }
+    : null
+
+  const match = matchProductIntake(
+    {
+      selectedCategoryKey: params.input.category,
+      identifier: scannedIdentifier ?? undefined,
+      brandId: identity.brandId,
+      productLineId: identity.productLineId,
+      cleanProductName: identity.cleanProductName,
+      productName: params.input.product_name_text ?? null,
+    },
+    catalog,
+  )
+
+  if (match.status === "matched" && match.productId) {
+    return {
+      kind: "already_in_catalog",
+      productId: match.productId,
+      category: params.input.category,
+      match,
+    }
+  }
+
+  const now = params.now?.() ?? new Date().toISOString()
+  const submission = await params.repository.insertProductSubmission({
+    id: randomUUID(),
+    user_id: params.userId,
+    user_product_usage_id: null,
+    user_product_id: null,
+    source: "scan",
+    source_conversation_id: null,
+    intake_method: params.input.intake_method,
+    category: params.input.category,
+    brand_text: params.input.brand_text ?? null,
+    product_name_text: params.input.product_name_text ?? null,
+    frequency_range: params.input.frequency_range,
+    front_image_path: null,
+    barcode_image_path: null,
+    front_image_validation_status: null,
+    front_image_validation_metadata: {},
+    barcode_image_validation_status: null,
+    barcode_image_validation_metadata: {},
+    previous_product_id: null,
+    previous_product_snapshot: {},
+    status: "pending_review",
+    researched_payload: {},
+    intake_history: buildScanIntakeHistory(params.input, now),
+    approved_product_id: null,
+    scanned_identifier_type: scannedIdentifier?.type ?? null,
+    scanned_identifier_value: scannedIdentifier?.value ?? null,
+  })
+
+  return {
+    kind: "pending_review",
+    category: params.input.category,
+    submission: {
+      id: submission.id,
+      status: "pending_review",
+      category: submission.category,
+    },
     match,
   }
 }

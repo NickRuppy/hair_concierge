@@ -47,10 +47,8 @@ export type ProductIntakeSubmissionRow = {
   user_product_id: string | null
   personal_plan_request_fingerprint?: string | null
   // "scan" is additive to ProductIntakeSubmissionSource (types.ts) rather than folded
-  // into that shared type: scan's source only ever reaches product_submissions.source
-  // (widened by migration 20260820100000), never user_product_usage.source, which the
-  // DB CHECK still restricts to onboarding/chat/profile/script. See submissions.ts's
-  // usageSourceForDb for the write-side mapping this keeps safe.
+  // into that shared type: submitScanProductIntake (submissions.ts) never touches
+  // user_product_usage, so this is the only table "scan" is ever written into.
   source: ProductIntakeSubmissionSource | "scan"
   source_conversation_id: string | null
   intake_method: "manual" | "photo"
@@ -141,10 +139,7 @@ export type ProductIntakeRepository = {
     frequencyRange: ProductFrequency
     brandText: string | null
     intakeMethod: "manual" | "photo"
-    // null covers scan submissions: user_product_usage.source's DB CHECK doesn't allow
-    // "scan" (only product_submissions.source was widened), so callers map "scan" -> null
-    // before reaching this repository call (see submissions.ts usageSourceForDb).
-    source: ProductSubmissionSource | null
+    source: ProductSubmissionSource
     now: string
   }) => Promise<ProductIntakeUsageRow>
   replaceUsageWithPendingSubmission: (params: {
@@ -156,7 +151,7 @@ export type ProductIntakeRepository = {
     frequencyRange: ProductFrequency
     brandText: string | null
     intakeMethod: "manual" | "photo"
-    source: ProductSubmissionSource | null
+    source: ProductSubmissionSource
     frontImagePath: string | null
     now: string
   }) => Promise<{
