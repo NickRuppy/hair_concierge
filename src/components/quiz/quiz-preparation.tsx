@@ -223,6 +223,7 @@ export function QuizPreparation() {
     <QuizAnalysis
       name={lead.name}
       onCommit={(choice) => {
+        if (resultPath) router.prefetch(resultPath)
         trackAppEvent("quiz_analysis_commitment", { choice, leadId })
       }}
       onReveal={() => {

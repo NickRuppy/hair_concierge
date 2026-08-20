@@ -17,8 +17,24 @@ const preparationSource = readFileSync(
   "utf8",
 )
 
-test("preparation does not prefetch the result route before the reveal action", () => {
-  assert.doesNotMatch(preparationSource, /router\.prefetch\(/)
+// PR #242 banned speculative prefetching of the result route because the
+// result page's server render records the `offer_viewed` funnel milestone —
+// prefetching before the user acted created premature offer views. The
+// commitment tap is the earliest point where navigation is guaranteed to
+// follow, so it is now the only allowed prefetch call site.
+test("preparation prefetches the result route only from the commitment handler", () => {
+  const prefetchMatches = preparationSource.match(/router\.prefetch\(/g) ?? []
+  assert.equal(prefetchMatches.length, 1)
+
+  const onCommitIndex = preparationSource.indexOf("onCommit={")
+  const onRevealIndex = preparationSource.indexOf("onReveal={")
+  const prefetchIndex = preparationSource.indexOf("router.prefetch(")
+
+  assert.ok(onCommitIndex !== -1 && onRevealIndex !== -1 && prefetchIndex !== -1)
+  assert.ok(
+    onCommitIndex < prefetchIndex && prefetchIndex < onRevealIndex,
+    "expected router.prefetch( to appear inside the onCommit handler, before onReveal",
+  )
 })
 
 test("preparation waits for a lead and the client auth session", () => {
