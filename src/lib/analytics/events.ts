@@ -530,6 +530,10 @@ export type AppEventMap = {
     origin: PersonalPlanStage4Origin
     outcome: PersonalPlanStage4Outcome
   }
+  quiz_analysis_commitment: {
+    choice: "ja" | "neugierig"
+    leadId?: string | null
+  }
   quiz_completed: FunnelAnalyticsEnvelope & {
     hairLength?: string
     hairTexture?: string

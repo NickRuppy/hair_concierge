@@ -1204,3 +1204,42 @@
     hsl(var(--background));
   min-height: 100vh;
 }
+
+@layer components {
+  .quiz-shimmer-bar {
+    position: relative;
+    height: 4px;
+    width: 180px;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: var(--brand-plum-light);
+  }
+  .quiz-shimmer-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: var(--brand-plum);
+    transform: translateX(-100%);
+    animation: quiz-shimmer-sweep 2.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quiz-shimmer-bar::after {
+      animation: none;
+      transform: none;
+      opacity: 0.6;
+    }
+  }
+}
+
+@keyframes quiz-shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  55% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
