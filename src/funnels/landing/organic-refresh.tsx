@@ -94,8 +94,9 @@ export default function OrganicRefreshLandingVariant() {
               <Image
                 alt="Beispielprofil mit welligem Haar"
                 className="object-cover object-center"
+                fetchPriority="high"
                 fill
-                priority
+                preload
                 sizes="(max-width: 1024px) 360px, 320px"
                 src="/images/funnels/personal-plan-quiz/profile-summary/wavy-medium.webp"
               />

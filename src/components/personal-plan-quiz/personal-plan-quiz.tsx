@@ -598,7 +598,7 @@ function OptionCard({
   selected,
   visualLayout,
   multi,
-  priority,
+  preloadImage,
   intensity,
   onClick,
 }: {
@@ -606,7 +606,7 @@ function OptionCard({
   selected: boolean
   visualLayout?: QuizQuestionConfig["visualLayout"]
   multi?: boolean
-  priority?: boolean
+  preloadImage?: boolean
   intensity?: OptionIntensity | null
   onClick: () => void
 }) {
@@ -634,8 +634,8 @@ function OptionCard({
             alt={option.imageAlt ?? ""}
             className="object-cover object-center transition duration-300 group-hover:scale-[1.03]"
             fill
-            fetchPriority={priority ? "high" : "auto"}
-            priority={priority}
+            fetchPriority={preloadImage ? "high" : "auto"}
+            preload={preloadImage}
             sizes="120px"
             src={option.image}
           />
@@ -717,8 +717,8 @@ function OptionCard({
                   : "object-cover object-top",
             )}
             fill
-            fetchPriority={priority ? "high" : "auto"}
-            priority={priority}
+            fetchPriority={preloadImage ? "high" : "auto"}
+            preload={preloadImage}
             sizes={
               visualLayout === "grid"
                 ? "(max-width: 640px) 45vw, 320px"
@@ -925,8 +925,9 @@ function QuestionScreen({
           <Image
             alt={config.contextImageAlt ?? ""}
             className="object-cover"
+            fetchPriority="high"
             fill
-            priority
+            preload
             sizes="(max-width: 640px) 92vw, 640px"
             src={config.contextImage}
             style={
@@ -957,7 +958,7 @@ function QuestionScreen({
                 multi={config.multi}
                 onClick={() => onSelect(option.value)}
                 option={option}
-                priority={config.field === "texture" && optionIndex === 0}
+                preloadImage={config.field === "texture" && optionIndex === 0}
                 selected={selected.includes(option.value)}
                 visualLayout={config.visualLayout}
               />
@@ -1116,8 +1117,9 @@ function ContextPanelLayout({
         <Image
           alt={imageAlt ?? ""}
           className="object-cover"
+          fetchPriority="high"
           fill
-          priority
+          preload
           sizes="(max-width: 640px) 92vw, 272px"
           src={image}
           style={imagePosition ? { objectPosition: imagePosition } : undefined}
@@ -1141,8 +1143,9 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         <Image
           alt="Drei lachende Frauen"
           className="object-cover"
+          fetchPriority="high"
           fill
-          priority
+          preload
           sizes="(max-width: 640px) 92vw, 640px"
           src={`${PERSONAL_PLAN_ASSET_BASE}/proof-community.webp`}
           style={{ objectPosition: "50% 32%" }}
@@ -1424,8 +1427,9 @@ function ReframeScreen({ onContinue }: { onContinue: () => void }) {
         <Image
           alt=""
           className="object-cover"
+          fetchPriority="high"
           fill
-          priority
+          preload
           sizes="(max-width: 640px) 90vw, 272px"
           src={`${PERSONAL_PLAN_ASSET_BASE}/causal-reframe.webp`}
           style={{ objectPosition: "50% 8%" }}

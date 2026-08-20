@@ -43,6 +43,7 @@ test("organic refresh landing presents a calm free analysis with optional paid p
   assert.match(html, /Kostenlose Einordnung/)
   assert.match(html, /Optionaler Plan danach/)
   assert.match(html, /Der bezahlte Plan bleibt optional/)
+  assert.equal((html.match(/fetchPriority="high"/g) ?? []).length, 2)
   assert.equal((html.match(/href="\/quiz"/g) ?? []).length, 3)
   assert.doesNotMatch(html, /Founder|Score|Countdown|Angebot läuft ab|nur heute/i)
 })

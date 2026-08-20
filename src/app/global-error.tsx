@@ -1,7 +1,8 @@
 "use client"
 
-import * as Sentry from "@sentry/nextjs"
 import { useEffect } from "react"
+
+import { captureSentryClientException } from "@/lib/observability/sentry-client-runtime"
 
 export default function GlobalError({
   error,
@@ -11,7 +12,7 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    Sentry.captureException(error)
+    captureSentryClientException(error)
   }, [error])
 
   return (
@@ -70,12 +71,8 @@ export default function GlobalError({
               cursor: "pointer",
               transition: "background-color 0.15s ease",
             }}
-            onMouseOver={(e) =>
-              ((e.target as HTMLButtonElement).style.backgroundColor = "#fff")
-            }
-            onMouseOut={(e) =>
-              ((e.target as HTMLButtonElement).style.backgroundColor = "#e5e5e5")
-            }
+            onMouseOver={(e) => ((e.target as HTMLButtonElement).style.backgroundColor = "#fff")}
+            onMouseOut={(e) => ((e.target as HTMLButtonElement).style.backgroundColor = "#e5e5e5")}
           >
             Erneut versuchen
           </button>
