@@ -71,7 +71,7 @@ BEGIN
       v_final_payload := jsonb_set(
         v_final_payload,
         '{identifiers}',
-        COALESCE(p_final_payload -> 'identifiers', '[]'::jsonb)
+        COALESCE(v_final_payload -> 'identifiers', '[]'::jsonb)
           || jsonb_build_array(
                jsonb_build_object(
                  'type', v_scanned_type,
@@ -133,6 +133,8 @@ DECLARE
   v_normalized_value text;
   v_owner_product_id uuid;
 BEGIN
+  -- Read before delegating: the base function takes the row's FOR UPDATE lock and
+  -- rewrites its status, and these two columns are not among the fields it touches.
   SELECT submission.scanned_identifier_type, submission.scanned_identifier_value
   INTO v_scanned_type, v_scanned_value
   FROM public.product_submissions AS submission
