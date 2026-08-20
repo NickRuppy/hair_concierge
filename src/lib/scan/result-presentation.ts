@@ -4,7 +4,7 @@ import type {
   Stage3CriterionResult,
 } from "@/lib/personal-plan/products/contracts"
 
-import type { ScanSavedState } from "./saved-state"
+import type { ScanSavedState, ScanSavedStatePayload } from "./saved-state"
 import type {
   ScanDimension,
   ScanDimensionState,
@@ -38,7 +38,7 @@ export type ScanFooterInput = {
   /** `null` on the `not_needed` branch, which reaches no fit verdict. */
   verdict: ScanVerdict | null
   product: ScanProductHeader
-  savedState: ScanSavedState
+  savedState: ScanSavedStatePayload
 }
 
 const SAVE_LABELS: Record<"none" | NonNullable<ScanSavedState>, string> = {
@@ -58,7 +58,7 @@ export function scanSaveButtonLabel(savedState: ScanSavedState): string {
 export function scanFooterActions(input: ScanFooterInput): ScanFooterAction[] {
   const save: ScanFooterAction = {
     kind: "save",
-    label: scanSaveButtonLabel(input.savedState),
+    label: scanSaveButtonLabel(input.savedState.state),
     tone: input.kind === "not_needed" ? "plum-solid" : "plum-outline",
   }
   const url = input.product.purchaseUrl

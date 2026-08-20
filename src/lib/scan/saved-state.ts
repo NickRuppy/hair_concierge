@@ -6,20 +6,34 @@ import { isProductSearchQuarantined } from "./catalog-eligibility"
  * Where a scanned/matched catalog product currently sits for this user, outside the
  * evaluated-verdict question itself. `"merkliste"` = saved to the scan wishlist
  * (`scan_wishlist`). `"routine"` = claimed as owned/in-use (`user_products`, an owned +
- * matched row). `null` = neither.
+ * matched row), no matter which surface created that row. `null` = neither.
  *
  * Both states are independent tables a product could in principle occupy at once; when
  * that happens this reports `"merkliste"` first (matches the brief's listed check order).
- * That priority is a minor UX call, not a hard invariant — worth revisiting once Task 8's
- * result sheet defines whether the two states are meant to be mutually exclusive.
+ * That priority is a minor UX call, not a hard invariant.
  */
 export type ScanSavedState = "merkliste" | "routine" | null
+
+/**
+ * The saved state plus who owns the row. `"routine"` is reported for ANY owned row so the
+ * sheet tells the truth ("✓ In deiner Routine" for a product the user really does use),
+ * but only a row the scan flow itself created (`intake_source: "scan"`) may be removed
+ * from here — a Stage-3 or product-intake row is managed by that surface, and offering an
+ * "Entfernen" that silently does nothing would be a lie. `managedByScan` carries that
+ * distinction to the UI; the remove paths below enforce it server-side.
+ */
+export type ScanSavedStatePayload = {
+  state: ScanSavedState
+  managedByScan: boolean
+}
+
+const NOT_SAVED: ScanSavedStatePayload = { state: null, managedByScan: false }
 
 export async function loadScanSavedState(
   client: SupabaseClient,
   userId: string,
   productId: string,
-): Promise<ScanSavedState> {
+): Promise<ScanSavedStatePayload> {
   const { data: wishlistRow, error: wishlistError } = await client
     .from("scan_wishlist")
     .select("id")
@@ -27,24 +41,34 @@ export async function loadScanSavedState(
     .eq("product_id", productId)
     .maybeSingle()
   if (wishlistError) throw new Error("scan_saved_state_lookup_failed")
-  if (wishlistRow) return "merkliste"
+  // `scan_wishlist` exists only for the scan surface, so a row here is always ours.
+  if (wishlistRow) return { state: "merkliste", managedByScan: true }
 
-  // Scoped to `intake_source: "scan"` on purpose, mirroring `removeScanRoutineProduct`'s
-  // delete: only a row the scan flow itself created can be removed from here, so reporting
-  // "routine" for a Stage-3-claimed product would promise an "Entfernen" that silently
-  // does nothing.
-  const { data: routineRow, error: routineError } = await client
+  const routine = await loadOwnedRoutineRows(client, userId, productId)
+  if (routine.length === 0) return NOT_SAVED
+  return {
+    state: "routine",
+    managedByScan: routine.some((row) => row.intake_source === "scan"),
+  }
+}
+
+type OwnedRoutineRow = { id: string; intake_source: string | null }
+
+/** Every owned+matched `user_products` row for this catalog product, whatever created it. */
+async function loadOwnedRoutineRows(
+  client: SupabaseClient,
+  userId: string,
+  productId: string,
+): Promise<OwnedRoutineRow[]> {
+  const { data, error } = await client
     .from("user_products")
-    .select("id")
+    .select("id, intake_source")
     .eq("user_id", userId)
     .eq("catalog_product_id", productId)
-    .eq("intake_source", "scan")
+    .eq("identity_status", "matched")
     .eq("ownership_status", "owned")
-    .maybeSingle()
-  if (routineError) throw new Error("scan_saved_state_lookup_failed")
-  if (routineRow) return "routine"
-
-  return null
+  if (error) throw new Error("scan_saved_state_lookup_failed")
+  return (data ?? []) as OwnedRoutineRow[]
 }
 
 /**
@@ -76,27 +100,40 @@ export async function saveScanWishlistProduct(
     .from("scan_wishlist")
     .insert({ user_id: userId, product_id: productId })
   if (error && !isUniqueViolation(error)) throw new Error("scan_wishlist_save_failed")
-  return { outcome: "saved" }
+  return { outcome: "saved", savedState: { state: "merkliste", managedByScan: true } }
 }
 
+/** Every `scan_wishlist` row belongs to the scan surface, so this can never be refused. */
 export async function removeScanWishlistProduct(
   client: SupabaseClient,
   userId: string,
   productId: string,
-): Promise<void> {
+): Promise<ScanRemoveResult> {
   const { error } = await client
     .from("scan_wishlist")
     .delete()
     .eq("user_id", userId)
     .eq("product_id", productId)
   if (error) throw new Error("scan_wishlist_remove_failed")
+  return { outcome: "removed" }
 }
 
-/** Outcome of either save kind: 404 on `product_not_found`, 409 on `product_not_saveable`. */
+/**
+ * Outcome of either save kind: 404 on `product_not_found`, 409 on `product_not_saveable`.
+ * `saved` carries the resulting state so the caller never has to guess — in particular
+ * "already owned via Stage-3" reports the truthful `managedByScan: false` instead of
+ * pretending the scan flow just created the row.
+ */
 export type ScanSaveResult =
-  | { outcome: "saved" }
+  | { outcome: "saved"; savedState: ScanSavedStatePayload }
   | { outcome: "product_not_found" }
   | { outcome: "product_not_saveable" }
+
+/**
+ * `not_removable_here` = the row exists but another surface owns it (Stage-3 / product
+ * intake). The scan sheet must say so rather than run a delete that matches nothing.
+ */
+export type ScanRemoveResult = { outcome: "removed" } | { outcome: "not_removable_here" }
 
 type ActiveProductRow = {
   id: string
@@ -142,16 +179,19 @@ export async function saveScanRoutineProduct(
     return { outcome: "product_not_saveable" }
   }
 
-  const { data: existing, error: existingError } = await client
-    .from("user_products")
-    .select("id")
-    .eq("user_id", userId)
-    .eq("catalog_product_id", productId)
-    .eq("identity_status", "matched")
-    .eq("ownership_status", "owned")
-    .maybeSingle()
-  if (existingError) throw new Error("scan_routine_save_failed")
-  if (existing) return { outcome: "saved" }
+  const existing = await loadOwnedRoutineRows(client, userId, productId)
+  if (existing.length > 0) {
+    // Already in the routine. Report the state that actually exists — inserting a second
+    // scan-owned row just to make `managedByScan` true would fake a save that never
+    // happened and hand the user an "Entfernen" that deletes half of the truth.
+    return {
+      outcome: "saved",
+      savedState: {
+        state: "routine",
+        managedByScan: existing.some((row) => row.intake_source === "scan"),
+      },
+    }
+  }
 
   // Not already owned, so the RPC's alternate eligibility branch doesn't apply — only a
   // curated product may be saved for the first time this way.
@@ -168,19 +208,26 @@ export async function saveScanRoutineProduct(
     intake_source: "scan",
   })
   if (insertError && !isUniqueViolation(insertError)) throw new Error("scan_routine_save_failed")
-  return { outcome: "saved" }
+  return { outcome: "saved", savedState: { state: "routine", managedByScan: true } }
 }
 
 /**
  * Only ever removes a row this same helper created (`intake_source: "scan"`) — a routine
- * slot filled via Stage-3 catalog search or product intake is untouched, per the brief's
- * "remove only a scan-created row" instruction.
+ * slot filled via Stage-3 catalog search or product intake is untouched. When such a
+ * foreign row is the only thing holding the product in the routine, this reports
+ * `not_removable_here` instead of running a delete that matches nothing and returning a
+ * success the UI would render as "removed".
  */
 export async function removeScanRoutineProduct(
   client: SupabaseClient,
   userId: string,
   productId: string,
-): Promise<void> {
+): Promise<ScanRemoveResult> {
+  const owned = await loadOwnedRoutineRows(client, userId, productId)
+  if (owned.length > 0 && !owned.some((row) => row.intake_source === "scan")) {
+    return { outcome: "not_removable_here" }
+  }
+
   const { error } = await client
     .from("user_products")
     .delete()
@@ -189,6 +236,7 @@ export async function removeScanRoutineProduct(
     .eq("intake_source", "scan")
     .eq("ownership_status", "owned")
   if (error) throw new Error("scan_routine_remove_failed")
+  return { outcome: "removed" }
 }
 
 function isUniqueViolation(error: unknown): boolean {

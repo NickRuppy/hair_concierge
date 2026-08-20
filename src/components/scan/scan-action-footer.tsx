@@ -3,7 +3,7 @@
 import { ExternalLink } from "lucide-react"
 
 import { scanFooterActions, type ScanFooterTone } from "@/lib/scan/result-presentation"
-import type { ScanSavedState } from "@/lib/scan/saved-state"
+import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
 import type { ScanProductHeader, ScanVerdict } from "@/lib/scan/types"
 import { cn } from "@/lib/utils"
 
@@ -40,7 +40,7 @@ export function ScanActionFooter({
   kind: "in_catalog" | "not_needed"
   verdict: ScanVerdict | null
   product: ScanProductHeader
-  savedState: ScanSavedState
+  savedState: ScanSavedStatePayload
   onSave: () => void
   onBuy: (url: string) => void
 }) {

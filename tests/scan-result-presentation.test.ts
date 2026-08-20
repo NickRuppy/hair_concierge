@@ -30,7 +30,7 @@ function footer(overrides: Partial<ScanFooterInput> = {}): ScanFooterInput {
     kind: "in_catalog",
     verdict: "ideal",
     product: buyableProduct,
-    savedState: null,
+    savedState: { state: null, managedByScan: false },
     ...overrides,
   }
 }
@@ -99,7 +99,12 @@ test("saved state morphs the save button label", () => {
   assert.equal(scanSaveButtonLabel(null), "Speichern")
   assert.equal(scanSaveButtonLabel("routine"), "✓ In deiner Routine")
   assert.equal(scanSaveButtonLabel("merkliste"), "✓ Gemerkt")
-  assert.equal(scanFooterActions(footer({ savedState: "routine" }))[1].label, "✓ In deiner Routine")
+  // Truthful for any owned row — including one Stage-3 owns, which the change sheet
+  // then refuses to remove (`managedByScan: false`).
+  assert.equal(
+    scanFooterActions(footer({ savedState: { state: "routine", managedByScan: false } }))[1].label,
+    "✓ In deiner Routine",
+  )
 })
 
 /* -------------------------------------------------------------- dimensions */

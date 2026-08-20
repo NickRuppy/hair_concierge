@@ -2,19 +2,26 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { createScanSaveRouteHandlers, type ScanSaveRouteDeps } from "../src/app/api/scan/save/route"
+import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 const productId = "22222222-2222-4222-8222-222222222222"
+
+const NOT_SAVED: ScanSavedStatePayload = { state: null, managedByScan: false }
+const MERKLISTE: ScanSavedStatePayload = { state: "merkliste", managedByScan: true }
+const SCAN_ROUTINE: ScanSavedStatePayload = { state: "routine", managedByScan: true }
+const FOREIGN_ROUTINE: ScanSavedStatePayload = { state: "routine", managedByScan: false }
 
 function baseDeps(overrides: Partial<ScanSaveRouteDeps> = {}): ScanSaveRouteDeps {
   return {
     getUserId: async () => userId,
     checkRateLimit: async () => ({ allowed: true }),
     createAdminClient: () => ({}) as never,
-    saveWishlist: async () => ({ outcome: "saved" }),
-    removeWishlist: async () => {},
-    saveRoutine: async () => ({ outcome: "saved" }),
-    removeRoutine: async () => {},
+    saveWishlist: async () => ({ outcome: "saved", savedState: MERKLISTE }),
+    removeWishlist: async () => ({ outcome: "removed" }),
+    saveRoutine: async () => ({ outcome: "saved", savedState: SCAN_ROUTINE }),
+    removeRoutine: async () => ({ outcome: "removed" }),
+    loadSavedState: async () => NOT_SAVED,
     ...overrides,
   }
 }
@@ -78,19 +85,74 @@ test("scan save POST merkliste: calls the wishlist saver, not the routine saver"
   const handlers = createScanSaveRouteHandlers(
     baseDeps({
       saveWishlist: async () => {
-        calls.push("wishlist")
-        return { outcome: "saved" }
+        calls.push("save:wishlist")
+        return { outcome: "saved", savedState: MERKLISTE }
       },
       saveRoutine: async () => {
-        calls.push("routine")
-        return { outcome: "saved" }
+        calls.push("save:routine")
+        return { outcome: "saved", savedState: SCAN_ROUTINE }
+      },
+      removeRoutine: async () => {
+        calls.push("remove:routine")
+        return { outcome: "removed" }
       },
     }),
   )
   const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
   assert.equal(response.status, 200)
-  assert.deepEqual(calls, ["wishlist"])
-  assert.deepEqual(await response.json(), { ok: true, kind: "merkliste", productId })
+  // The move happens inside this one request: save the new kind, drop the other one.
+  assert.deepEqual(calls, ["save:wishlist", "remove:routine"])
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    kind: "merkliste",
+    productId,
+    savedState: MERKLISTE,
+  })
+})
+
+test("scan save POST: the move spends exactly one rate-limit charge", async () => {
+  let charges = 0
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({
+      checkRateLimit: async () => {
+        charges += 1
+        return { allowed: true }
+      },
+    }),
+  )
+  await handlers.POST(request("POST", { productId, kind: "routine" }))
+  assert.equal(charges, 1)
+})
+
+test("scan save POST: a refused cleanup is not a failure, the save still stands", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({
+      saveWishlist: async () => ({ outcome: "saved", savedState: MERKLISTE }),
+      // A Stage-3 routine row is not the scan surface's to move.
+      removeRoutine: async () => ({ outcome: "not_removable_here" }),
+    }),
+  )
+  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    kind: "merkliste",
+    productId,
+    savedState: MERKLISTE,
+  })
+})
+
+test("scan save POST: a failed cleanup reports save_incomplete, never a silent success", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({
+      removeWishlist: async () => {
+        throw new Error("cleanup boom")
+      },
+    }),
+  )
+  const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
+  assert.equal(response.status, 500)
+  assert.deepEqual(await response.json(), { error: "save_incomplete" })
 })
 
 test("scan save POST merkliste: a refused product maps to 409, same as routine", async () => {
@@ -133,7 +195,26 @@ test("scan save POST routine: success", async () => {
   const handlers = createScanSaveRouteHandlers(baseDeps())
   const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { ok: true, kind: "routine", productId })
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    kind: "routine",
+    productId,
+    savedState: SCAN_ROUTINE,
+  })
+})
+
+test("scan save POST routine: an already-owned foreign row reports managedByScan false", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({ saveRoutine: async () => ({ outcome: "saved", savedState: FOREIGN_ROUTINE }) }),
+  )
+  const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    kind: "routine",
+    productId,
+    savedState: FOREIGN_ROUTINE,
+  })
 })
 
 test("scan save DELETE: unauthenticated is rejected", async () => {
@@ -148,15 +229,51 @@ test("scan save DELETE merkliste: calls the wishlist remover", async () => {
     baseDeps({
       removeWishlist: async () => {
         calls.push("wishlist")
+        return { outcome: "removed" }
       },
       removeRoutine: async () => {
         calls.push("routine")
+        return { outcome: "removed" }
       },
     }),
   )
   const response = await handlers.DELETE(request("DELETE", { productId, kind: "merkliste" }))
   assert.equal(response.status, 200)
   assert.deepEqual(calls, ["wishlist"])
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    kind: "merkliste",
+    productId,
+    savedState: NOT_SAVED,
+  })
+})
+
+test("scan save DELETE merkliste: reports a routine row the removal left behind", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({ loadSavedState: async () => FOREIGN_ROUTINE }),
+  )
+  const response = await handlers.DELETE(request("DELETE", { productId, kind: "merkliste" }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    kind: "merkliste",
+    productId,
+    savedState: FOREIGN_ROUTINE,
+  })
+})
+
+test("scan save DELETE routine: a foreign row is refused with 409 not_removable_here", async () => {
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({
+      removeRoutine: async () => ({ outcome: "not_removable_here" }),
+      loadSavedState: async () => {
+        throw new Error("must not be called")
+      },
+    }),
+  )
+  const response = await handlers.DELETE(request("DELETE", { productId, kind: "routine" }))
+  assert.equal(response.status, 409)
+  assert.deepEqual(await response.json(), { error: "not_removable_here" })
 })
 
 test("scan save DELETE routine: calls the routine remover, is idempotent on repeat calls", async () => {
@@ -165,6 +282,7 @@ test("scan save DELETE routine: calls the routine remover, is idempotent on repe
     baseDeps({
       removeRoutine: async () => {
         calls.push("routine")
+        return { outcome: "removed" }
       },
     }),
   )

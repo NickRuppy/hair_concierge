@@ -7,7 +7,7 @@ import type { PlanProductRole } from "@/lib/personal-plan/types"
 import type { ScanIdentifierType } from "./identifier-lookup"
 import type { ScanOpenSubmissionStatus } from "./pending-submission"
 import type { ScanSnapshotSource } from "./profile-context"
-import type { ScanSavedState } from "./saved-state"
+import type { ScanSavedStatePayload } from "./saved-state"
 
 /**
  * Render-ready contract for the scan result sheet. Everything here is already
@@ -135,13 +135,14 @@ export type ScanPresentedVerdictPayload =
  * The three shapes `POST /api/scan/resolve` can return. The two verdict payloads above
  * gain `product` (the scanned catalog row as the header/footer render it),
  * `snapshotSource` (which profile snapshot the verdict was evaluated against — see
- * `ScanEvaluationContext`) and `savedState` (merkliste/routine/neither — see
- * `saved-state.ts`); the other two branches short-circuit before a verdict exists at all.
+ * `ScanEvaluationContext`) and `savedState` (merkliste/routine/neither, plus whether the
+ * scan surface may remove that row — see `saved-state.ts`); the other two branches
+ * short-circuit before a verdict exists at all.
  */
 export type ScanResolvedVerdictResult = ScanPresentedVerdictPayload & {
   product: ScanProductHeader
   snapshotSource: ScanSnapshotSource
-  savedState: ScanSavedState
+  savedState: ScanSavedStatePayload
 }
 
 export type ScanPendingSubmissionResult = {

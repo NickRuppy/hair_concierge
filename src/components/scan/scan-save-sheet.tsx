@@ -4,7 +4,7 @@ import { useState } from "react"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { MODAL_LAYER_PRIORITIES } from "@/lib/ui/modal-layer-manager"
-import type { ScanSavedState } from "@/lib/scan/saved-state"
+import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
 // The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
 // `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
 import { useToast } from "@/providers/toast-provider"
@@ -14,6 +14,11 @@ import { cn } from "@/lib/utils"
  * "Wohin speichern?" mini-sheet (UI spec §4). Two destinations, one tap each; picking the
  * other destination moves the product instead of leaving it in both places, and picking
  * the destination it already sits in removes it.
+ *
+ * The move is one server-side request (`POST /api/scan/save` deletes the other kind
+ * itself): a client-side POST-then-DELETE pair was neither atomic — an aborted second
+ * call left the product in both lists — nor free, since it spent two scan rate-limit
+ * charges for one user action.
  */
 
 export type ScanSaveKind = "routine" | "merkliste"
@@ -45,27 +50,42 @@ const OPTIONS: Array<{
 ]
 
 const NOT_SAVEABLE_TOAST = "Dieses Produkt kann gerade nicht gespeichert werden."
+const NOT_REMOVABLE_HERE_TOAST = "Dieses Produkt wird über deine Routine verwaltet."
 const GENERIC_ERROR_TOAST = "Das hat gerade nicht geklappt. Versuch es noch einmal."
+
+type SaveApiResult =
+  | { status: "ok"; savedState: ScanSavedStatePayload }
+  | { status: "not_saveable" }
+  | { status: "not_removable_here" }
+  | { status: "error" }
 
 async function callSaveApi(
   method: "POST" | "DELETE",
   productId: string,
   kind: ScanSaveKind,
-): Promise<"ok" | "not_saveable" | "error"> {
+): Promise<SaveApiResult> {
   try {
     const response = await fetch("/api/scan/save", {
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ productId, kind }),
     })
-    if (response.ok) return "ok"
+    if (response.ok) {
+      const body = (await response.json().catch(() => null)) as {
+        savedState?: ScanSavedStatePayload
+      } | null
+      // The server is the authority on where the product sits after the move.
+      return { status: "ok", savedState: body?.savedState ?? { state: null, managedByScan: false } }
+    }
     if (response.status === 409) {
       const body = (await response.json().catch(() => null)) as { error?: string } | null
-      return body?.error === "product_not_saveable" ? "not_saveable" : "error"
+      if (body?.error === "product_not_saveable") return { status: "not_saveable" }
+      if (body?.error === "not_removable_here") return { status: "not_removable_here" }
+      return { status: "error" }
     }
-    return "error"
+    return { status: "error" }
   } catch {
-    return "error"
+    return { status: "error" }
   }
 }
 
@@ -78,44 +98,53 @@ export function ScanSaveSheet({
 }: {
   open: boolean
   productId: string
-  savedState: ScanSavedState
+  savedState: ScanSavedStatePayload
   onOpenChange: (open: boolean) => void
-  onSavedStateChange: (savedState: ScanSavedState) => void
+  onSavedStateChange: (savedState: ScanSavedStatePayload) => void
 }) {
   const { toast } = useToast()
   const [pending, setPending] = useState<ScanSaveKind | null>(null)
 
   async function choose(option: (typeof OPTIONS)[number]) {
     if (pending) return
+    // A routine row created by Stage-3 or product intake is not the scan surface's to
+    // delete (the API answers 409 `not_removable_here` too); say so instead of spending a
+    // request on a delete that can only fail.
+    if (savedState.state === option.kind && !savedState.managedByScan) {
+      toast({ title: NOT_REMOVABLE_HERE_TOAST })
+      return
+    }
+
     setPending(option.kind)
     try {
-      if (savedState === option.kind) {
+      if (savedState.state === option.kind) {
         const result = await callSaveApi("DELETE", productId, option.kind)
-        if (result !== "ok") {
+        if (result.status === "not_removable_here") {
+          toast({ title: NOT_REMOVABLE_HERE_TOAST })
+          return
+        }
+        if (result.status !== "ok") {
           toast({ title: GENERIC_ERROR_TOAST, variant: "destructive" })
           return
         }
-        onSavedStateChange(null)
+        onSavedStateChange(result.savedState)
         toast({ title: option.removedToast })
         onOpenChange(false)
         return
       }
 
+      // One request: the handler saves the new destination and drops the other one, so
+      // the product can never end up in both lists.
       const result = await callSaveApi("POST", productId, option.kind)
-      if (result === "not_saveable") {
+      if (result.status === "not_saveable") {
         toast({ title: NOT_SAVEABLE_TOAST, variant: "destructive" })
         return
       }
-      if (result === "error") {
+      if (result.status !== "ok") {
         toast({ title: GENERIC_ERROR_TOAST, variant: "destructive" })
         return
       }
-      // Moving between destinations: drop the previous one so the product never sits in
-      // both lists at once. A failed cleanup must not undo the save the user just made.
-      if (savedState && savedState !== option.kind) {
-        await callSaveApi("DELETE", productId, savedState)
-      }
-      onSavedStateChange(option.kind)
+      onSavedStateChange(result.savedState)
       toast({ title: option.savedToast })
       onOpenChange(false)
     } finally {
@@ -137,7 +166,7 @@ export function ScanSaveSheet({
       >
         <div className="flex flex-col gap-2">
           {OPTIONS.map((option) => {
-            const active = savedState === option.kind
+            const active = savedState.state === option.kind
             return (
               <button
                 key={option.kind}
