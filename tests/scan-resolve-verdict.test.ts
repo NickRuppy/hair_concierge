@@ -210,6 +210,29 @@ function notNeededMaskDecision(): PlanCategoryDecision {
   } as PlanCategoryDecision
 }
 
+/** Scalp care awaiting the buildup assessment: deferred, not settled as "not needed". */
+function deferredScalpCareDecision(): PlanCategoryDecision {
+  return {
+    category: "scalp_care",
+    resolution: "deferred_until_post_plan_onboarding",
+    needTier: null,
+    roles: [],
+    target: null,
+    frequency: null,
+    reasons: [
+      {
+        id: "scalp_care.inclusion.buildup_deferred",
+        salience: "primary",
+        evidence: [{ source: "assessment", key: "scalpBuildup" }],
+        values: {},
+      },
+    ],
+    executionState: "available",
+    executionPauseReason: null,
+    deferredFacts: ["current_product_load"],
+  } as PlanCategoryDecision
+}
+
 const COVERAGE_FACTS: PlanPortfolioCoverageFact[] = [
   {
     job: "repair_support",
@@ -231,6 +254,13 @@ const COVERAGE_FACTS: PlanPortfolioCoverageFact[] = [
     primaryCategories: ["leave_in"],
     supportingCategories: ["mask"],
     outcome: "deferred_allocation",
+  },
+  {
+    job: "scalp_flake_or_comfort",
+    ruleId: "coverage.scalp_comfort",
+    primaryCategories: ["shampoo"],
+    supportingCategories: ["scalp_care"],
+    outcome: "owned",
   },
 ]
 
@@ -268,6 +298,7 @@ test("a not_needed category answers with the need verdict instead of a fit verdi
 
   assert.equal(payload.kind, "not_needed")
   if (payload.kind !== "not_needed") return
+  assert.equal(payload.mode, "not_needed")
   assert.equal(payload.headline, "Du brauchst aktuell keine Maske")
   assert.equal(payload.subtitle, "Keine Maske in deinem Bedarf")
   assert.equal(payload.status, "neutral")
@@ -340,6 +371,56 @@ test("not_needed without a scanned product carries no dimensions", () => {
   assert.equal(payload.kind, "not_needed")
   if (payload.kind !== "not_needed") return
   assert.deepEqual(payload.dimensions, [])
+})
+
+/* ---------------------------------------------------------------- deferred */
+
+test("a deferred category says the decision is still open instead of claiming no need", () => {
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "scalp_care",
+      decision: deferredScalpCareDecision(),
+      coverage: COVERAGE_FACTS,
+    }),
+  )
+
+  assert.equal(payload.kind, "not_needed")
+  if (payload.kind !== "not_needed") return
+  assert.equal(payload.mode, "deferred")
+  assert.equal(payload.headline, "Das klären wir noch")
+  assert.equal(payload.subtitle, "Für Kopfhautprodukt steht deine Einschätzung noch aus")
+  assert.equal(payload.status, "neutral")
+  // Everything else the branch carries is unchanged by the mode.
+  assert.deepEqual(payload.reasons, [
+    "Deine Kopfhaut-Angaben sind noch nicht vollständig – das klären wir später.",
+  ])
+  assert.deepEqual(payload.coveredBy, [
+    { label: "Shampoo", detail: "Kopfhautkomfort und Schuppen" },
+  ])
+})
+
+test("deferred mode keeps the product-only dimensions of the need branch", () => {
+  const decision = {
+    ...notNeededMaskDecision(),
+    resolution: "deferred_until_post_plan_onboarding",
+    needTier: null,
+  } as PlanCategoryDecision
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "mask",
+      decision,
+      productFacts: factsFor("mask", "intensive_conditioning_mask", "scanned-mask", {
+        weight: "rich",
+      }),
+    }),
+  )
+
+  assert.equal(payload.kind, "not_needed")
+  if (payload.kind !== "not_needed") return
+  assert.equal(payload.mode, "deferred")
+  assert.ok(payload.dimensions.length > 0)
+  assert.ok(payload.dimensions.every((dimension) => dimension.targetStopIds.length === 0))
+  assert.ok(payload.dimensions.every((dimension) => dimension.state === "no_target"))
 })
 
 /* ------------------------------------------------------------ single role */

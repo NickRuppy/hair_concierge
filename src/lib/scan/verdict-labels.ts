@@ -59,6 +59,13 @@ export function scanNotNeededSubtitle(category: PersonalPlanCategory): string {
   return `${CATEGORY_NEGATION[category].nominative} ${CATEGORY_COPY[category].label} in deinem Bedarf`
 }
 
+export const SCAN_DEFERRED_HEADLINE = "Das klären wir noch"
+
+/** "steht … noch aus" mirrors the plan fork's wording for an open decision. */
+export function scanDeferredSubtitle(category: PersonalPlanCategory): string {
+  return `Für ${CATEGORY_COPY[category].label} steht deine Einschätzung noch aus`
+}
+
 export const SCAN_COVERAGE_JOB_LABELS: Record<PlanPortfolioCoverageFact["job"], string> = {
   wet_wash_cleansing: "Reinigung bei der Haarwäsche",
   dry_shampoo_bridge: "Frische zwischen den Haarwäschen",

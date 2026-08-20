@@ -67,8 +67,16 @@ export type ScanInCatalogVerdictPayload = {
   alternatives: ScanAlternative[]
 }
 
+/**
+ * `not_needed` is a settled "you don't need this"; `deferred` is "we haven't decided
+ * yet" — the same payload shape, but the headline must not claim a need verdict the
+ * decision has not reached.
+ */
+export type ScanNeedMode = "not_needed" | "deferred"
+
 export type ScanNotNeededVerdictPayload = {
   kind: "not_needed"
+  mode: ScanNeedMode
   status: Extract<ScanStatusToken, "neutral">
   headline: string
   subtitle: string

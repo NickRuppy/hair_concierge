@@ -29,16 +29,19 @@ import type {
   ScanCoveredByEntry,
   ScanDimension,
   ScanInCatalogVerdictPayload,
+  ScanNeedMode,
   ScanNotNeededVerdictPayload,
   ScanVerdictPayload,
 } from "./types"
 import {
   SCAN_COVERAGE_JOB_LABELS,
+  SCAN_DEFERRED_HEADLINE,
   SCAN_NOT_NEEDED_REASON_COPY,
   SCAN_NOT_NEEDED_STATUS,
   SCAN_SUBTITLE_WITHOUT_TARGETS,
   SCAN_VERDICT_COPY,
   scanCriterionSubtitle,
+  scanDeferredSubtitle,
   scanNotNeededHeadline,
   scanNotNeededSubtitle,
   scanTargetSubtitle,
@@ -66,9 +69,9 @@ export function buildScanVerdict(input: BuildScanVerdictInput): ScanVerdictPaylo
 }
 
 /**
- * A category the profile does not need. `needTier: null` with no target is the deferred
- * variant — it also has no target to compare against, so it takes the same branch and
- * says so through its reason copy rather than through a fit verdict.
+ * A category with no target to compare the scanned product against: either genuinely
+ * not needed, or not decided yet. Both take this branch; `needMode` keeps them apart so
+ * the headline never claims a need verdict the decision has not reached.
  */
 function isNotNeeded(decision: PlanCategoryDecision): boolean {
   if (decision.needTier === "not_needed") return true
@@ -77,14 +80,28 @@ function isNotNeeded(decision: PlanCategoryDecision): boolean {
   )
 }
 
+/**
+ * Only a settled `needTier: "not_needed"` is a real "you don't need this". Everything
+ * else reaching this branch is a decision still open — a deferred resolution, or a null
+ * tier with no target (scalp care awaiting buildup, deep cleansing awaiting product load).
+ */
+function needMode(decision: PlanCategoryDecision): ScanNeedMode {
+  return decision.needTier === "not_needed" ? "not_needed" : "deferred"
+}
+
 /* -------------------------------------------------------------- not_needed */
 
 function notNeededPayload(input: BuildScanVerdictInput): ScanNotNeededVerdictPayload {
+  const mode = needMode(input.decision)
   return {
     kind: "not_needed",
+    mode,
     status: SCAN_NOT_NEEDED_STATUS,
-    headline: scanNotNeededHeadline(input.category),
-    subtitle: scanNotNeededSubtitle(input.category),
+    headline: mode === "deferred" ? SCAN_DEFERRED_HEADLINE : scanNotNeededHeadline(input.category),
+    subtitle:
+      mode === "deferred"
+        ? scanDeferredSubtitle(input.category)
+        : scanNotNeededSubtitle(input.category),
     reasons: notNeededReasons(input.decision),
     dimensions: productOnlyDimensions(input),
     coveredBy: coveredBy(input.category, input.coverage),
