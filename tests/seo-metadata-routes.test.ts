@@ -171,12 +171,18 @@ test("classifies every current protected page and API route", () => {
     "/api/routine/products",
     "/api/routine/products/example",
     "/api/routine/suggestions/example/dismiss",
+    "/api/scan/resolve",
+    "/api/scan/save",
+    "/api/scan/search",
+    "/api/scan/submit",
+    "/api/scan/wishlist",
     "/api/tracker",
     "/api/tracker/dismiss-nudge",
     "/api/tracker/log",
     "/plan-bereit/status",
     "/plan-start",
     "/plan-start/produkte",
+    "/scan",
     "/tracker",
   ]
 

@@ -73,6 +73,7 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/plan-start",
   "/reactivate",
   "/routine",
+  "/scan",
   "/tracker",
   "/api/admin",
   "/api/billing",
@@ -85,6 +86,7 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/api/products",
   "/api/profile",
   "/api/routine",
+  "/api/scan",
   "/api/tracker",
   // The public waitlist entries above are intentionally exact; later
   // descendants must not silently inherit public access.

@@ -77,6 +77,9 @@ test("getAuthenticatedAppRedirect maps entry routes from intake state", () => {
     "/onboarding",
   )
   assert.equal(getAuthenticatedAppRedirect("/anwendung/wash_day", "ready"), null)
+  assert.equal(getAuthenticatedAppRedirect("/scan", "needs_quiz"), "/quiz")
+  assert.equal(getAuthenticatedAppRedirect("/scan", "needs_onboarding"), "/onboarding")
+  assert.equal(getAuthenticatedAppRedirect("/scan", "ready"), null)
   assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_quiz"), null)
   assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_onboarding"), "/onboarding")
   assert.equal(getAuthenticatedAppRedirect("/quiz", "ready"), "/chat")

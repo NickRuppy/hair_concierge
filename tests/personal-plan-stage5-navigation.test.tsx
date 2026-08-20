@@ -40,6 +40,7 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
     items: [
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "routine", href: "/routine", label: "Routine" },
+      { key: "scan", href: "/scan", label: "Scan" },
       { key: "profile", href: "/profile", label: "Profil" },
     ],
   })
@@ -49,6 +50,7 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
     items: [
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "routine", href: "/routine", label: "Routine" },
+      { key: "scan", href: "/scan", label: "Scan" },
       { key: "application", href: "/anwendung", label: "Anwendung" },
       { key: "profile", href: "/profile", label: "Profil" },
     ],
@@ -114,8 +116,12 @@ test("the signed navigation marks the current destination and the shell owns its
   assert.match(navHtml, /aria-current="page"[^>]*href="\/anwendung"/)
   assert.equal((navHtml.match(/>Chat</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Routine</g) ?? []).length, 2)
+  assert.equal((navHtml.match(/>Scan</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Anwendung</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Profil</g) ?? []).length, 2)
+  // Five reachable destinations; Scan sits in the middle (index 2 of 5).
+  assert.equal(navigation.items.length, 5)
+  assert.equal(navigation.items[2]?.key, "scan")
 
   const shellHtml = renderToStaticMarkup(
     createElement(AuthenticatedAppShell, {
@@ -139,7 +145,7 @@ test("the server shell owns Header presentation without changing the shared Head
   assert.equal((header.match(/href="\/anwendung"/g) ?? []).length, 0)
   assert.match(header, /RoutineAttentionIndicator/)
 
-  for (const layout of ["chat", "routine", "anwendung", "profile"]) {
+  for (const layout of ["chat", "routine", "scan", "anwendung", "profile"]) {
     const source = readFileSync(`src/app/${layout}/layout.tsx`, "utf8")
     assert.match(source, /AuthenticatedAppShell/)
     assert.match(source, /loadAuthenticatedAppNavigationAccess/)
@@ -149,6 +155,7 @@ test("the server shell owns Header presentation without changing the shared Head
     "src/app/chat/page.tsx",
     "src/app/chat/[conversationId]/page.tsx",
     "src/app/routine/page.tsx",
+    "src/app/scan/page.tsx",
     "src/app/anwendung/page.tsx",
     "src/app/anwendung/loading.tsx",
     "src/app/profile/page.tsx",
