@@ -34,6 +34,7 @@ export function ScanProductThumb({
   }
   return (
     <div
+      role="img"
       aria-label={`${label}: Bild nicht verfügbar`}
       className={cn(
         box,

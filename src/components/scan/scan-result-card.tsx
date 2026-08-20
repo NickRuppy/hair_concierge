@@ -5,6 +5,7 @@ import { ExternalLink } from "lucide-react"
 import {
   scanAlternativeMetaLine,
   scanCriterionMarker,
+  scanNotNeededSections,
   scanReasonsLabel,
 } from "@/lib/scan/result-presentation"
 import type {
@@ -56,6 +57,11 @@ export function ScanResultCard({
   onRescan: () => void
   onOpenAlternative: (productId: string) => void
 }) {
+  const sections =
+    result.kind === "not_needed"
+      ? scanNotNeededSections(result)
+      : { reasons: false, goodToKnow: false, coveredBy: false }
+
   return (
     <div className="flex flex-col gap-4">
       <ProductHeader product={result.product} />
@@ -89,7 +95,7 @@ export function ScanResultCard({
         </WhyCard>
       ) : null}
 
-      {result.kind === "not_needed" && result.reasons.length > 0 ? (
+      {result.kind === "not_needed" && sections.reasons ? (
         <WhyCard
           label={scanReasonsLabel({
             kind: "not_needed",
@@ -107,7 +113,7 @@ export function ScanResultCard({
         </WhyCard>
       ) : null}
 
-      {result.kind === "not_needed" ? (
+      {result.kind === "not_needed" && sections.goodToKnow ? (
         <section className="rounded-[14px] bg-muted px-4 py-3">
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
             {GOOD_TO_KNOW_TITLE}
@@ -116,7 +122,7 @@ export function ScanResultCard({
         </section>
       ) : null}
 
-      {result.kind === "not_needed" && result.coveredBy.length > 0 ? (
+      {result.kind === "not_needed" && sections.coveredBy ? (
         <CoveredBy entries={result.coveredBy} />
       ) : null}
 

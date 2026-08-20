@@ -7,6 +7,7 @@ import {
   scanDimensionSegments,
   scanDimensionSummary,
   scanFooterActions,
+  scanNotNeededSections,
   scanReasonsLabel,
   scanSaveButtonLabel,
   type ScanFooterInput,
@@ -206,6 +207,41 @@ test("reasons label follows the verdict and the need mode", () => {
   assert.equal(
     scanReasonsLabel({ kind: "not_needed", mode: "deferred", category: "scalp_care" }),
     "Warum das noch offen ist",
+  )
+})
+
+/* ------------------------------------------------- not_needed section flags */
+
+test("an empty not_needed payload shows headline and subtitle only", () => {
+  assert.deepEqual(scanNotNeededSections({ reasons: [], coveredBy: [] }), {
+    reasons: false,
+    goodToKnow: false,
+    coveredBy: false,
+  })
+})
+
+test("reasons alone still earn the Gut-zu-wissen card", () => {
+  assert.deepEqual(scanNotNeededSections({ reasons: ["Kein Bedarf."], coveredBy: [] }), {
+    reasons: true,
+    goodToKnow: true,
+    coveredBy: false,
+  })
+})
+
+test("coverage alone still earns the Gut-zu-wissen card", () => {
+  assert.deepEqual(
+    scanNotNeededSections({ reasons: [], coveredBy: [{ label: "Conditioner", detail: null }] }),
+    { reasons: false, goodToKnow: true, coveredBy: true },
+  )
+})
+
+test("reasons plus coverage show every not_needed section", () => {
+  assert.deepEqual(
+    scanNotNeededSections({
+      reasons: ["Kein Bedarf."],
+      coveredBy: [{ label: "Conditioner", detail: "Repair-Pflege" }],
+    }),
+    { reasons: true, goodToKnow: true, coveredBy: true },
   )
 })
 

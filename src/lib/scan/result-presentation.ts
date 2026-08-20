@@ -178,6 +178,29 @@ export function scanReasonsLabel(input: ScanReasonsLabelInput): string {
   return `Warum du ${CATEGORY_ACCUSATIVE_NEGATION[input.category]} ${CATEGORY_COPY[input.category].label} brauchst`
 }
 
+/* ------------------------------------------------- not_needed section flags */
+
+export type ScanNotNeededSections = {
+  reasons: boolean
+  goodToKnow: boolean
+  coveredBy: boolean
+}
+
+/**
+ * Which of the `not_needed` body sections may render. "Gut zu wissen" qualifies the
+ * verdict's reasoning, so it only appears next to reasoning: with neither reasons nor
+ * coverage the sheet deliberately stops after headline + subtitle, rather than showing
+ * a lone context-less card that reads like something failed to load.
+ */
+export function scanNotNeededSections(payload: {
+  reasons: readonly string[]
+  coveredBy: readonly unknown[]
+}): ScanNotNeededSections {
+  const reasons = payload.reasons.length > 0
+  const coveredBy = payload.coveredBy.length > 0
+  return { reasons, goodToKnow: reasons || coveredBy, coveredBy }
+}
+
 /* ------------------------------------------------------------ alternatives */
 
 export function scanAlternativeMetaLine(input: {
