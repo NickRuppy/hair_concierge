@@ -3,176 +3,138 @@ import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import {
-  getQuizAnalysisTimeline,
-  getQuizAnalysisProgress,
-  QUIZ_ANALYSIS_MILESTONES,
-  QUIZ_ANALYSIS_STEPS,
+  getCommitHeading,
+  getLoadingHeading,
+  getQuizTransitionPhase,
+  QUIZ_TRANSITION_LOADING_MS,
+  QUIZ_TRANSITION_READY_BEAT_MS,
   QuizAnalysisView,
-  scheduleQuizAnalysis,
+  scheduleQuizTransitionLoading,
+  scheduleQuizTransitionReveal,
   startQuizAnalysisReveal,
 } from "../src/components/quiz/quiz-analysis"
 
-test("preparation keeps a 2.4 second minimum while revealing all three rows in order", () => {
-  assert.deepEqual(getQuizAnalysisTimeline(), {
-    stepDelays: [800, 1600, 2400],
-    minimumDuration: 2400,
-  })
-  assert.deepEqual(QUIZ_ANALYSIS_STEPS, [
-    "Dein Haarprofil wird ausgewertet",
-    "Deine wichtigsten Pflegehebel werden sortiert",
-    "Dein persönlicher Plan wird zusammengestellt",
-  ])
-  assert.equal(getQuizAnalysisProgress(0, false), 8)
-  assert.equal(getQuizAnalysisProgress(1, false), 36)
-  assert.equal(getQuizAnalysisProgress(2, false), 65)
-  assert.equal(getQuizAnalysisProgress(3, false), 94)
-  assert.equal(getQuizAnalysisProgress(3, true), 100)
+test("phase resolution: commit until tapped, loading until elapsed AND ready, then ready", () => {
+  assert.equal(
+    getQuizTransitionPhase({ committed: false, loadingElapsed: false, ready: false }),
+    "commit",
+  )
+  assert.equal(
+    getQuizTransitionPhase({ committed: false, loadingElapsed: true, ready: true }),
+    "commit",
+  )
+  assert.equal(
+    getQuizTransitionPhase({ committed: true, loadingElapsed: false, ready: true }),
+    "loading",
+  )
+  assert.equal(
+    getQuizTransitionPhase({ committed: true, loadingElapsed: true, ready: false }),
+    "loading",
+  )
+  assert.equal(
+    getQuizTransitionPhase({ committed: true, loadingElapsed: true, ready: true }),
+    "ready",
+  )
 })
 
-test("preparation completes the normal row sequence without navigating", (context) => {
-  context.mock.timers.enable({ apis: ["setTimeout"] })
-  const completedSteps: number[] = []
-  let minimumCompleteCalls = 0
+test("headings personalize with a trimmed name and fall back grammatically", () => {
+  assert.equal(getCommitHeading(" Lena "), "Lena, bereit für den nächsten Schritt mit deinem Haar?")
+  assert.equal(getCommitHeading("  "), "Bereit für den nächsten Schritt mit deinem Haar?")
+  assert.equal(getLoadingHeading("Lena"), "Einen Moment, Lena.")
+  assert.equal(getLoadingHeading(""), "Einen Moment.")
+})
 
-  scheduleQuizAnalysis({
-    onMinimumComplete: () => {
-      minimumCompleteCalls += 1
-    },
-    onStepComplete: (step) => completedSteps.push(step),
+test("loading beat holds for its minimum and cleanup cancels it", (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] })
+  let elapsed = 0
+
+  scheduleQuizTransitionLoading({ onElapsed: () => (elapsed += 1), reducedMotion: false })
+  context.mock.timers.tick(QUIZ_TRANSITION_LOADING_MS - 1)
+  assert.equal(elapsed, 0)
+  context.mock.timers.tick(1)
+  assert.equal(elapsed, 1)
+
+  const cleanup = scheduleQuizTransitionLoading({
+    onElapsed: () => (elapsed += 1),
     reducedMotion: false,
   })
-
-  context.mock.timers.tick(799)
-  assert.deepEqual(completedSteps, [])
-  assert.equal(minimumCompleteCalls, 0)
-
-  context.mock.timers.tick(801)
-  assert.deepEqual(completedSteps, [1, 2])
-  assert.equal(minimumCompleteCalls, 0)
-
-  context.mock.timers.tick(800)
-  assert.deepEqual(completedSteps, [1, 2, 3])
-  assert.equal(minimumCompleteCalls, 1)
-
-  context.mock.timers.tick(10_000)
-  assert.equal(minimumCompleteCalls, 1)
-})
-
-test("reduced motion skips both the row stagger and artificial dwell", () => {
-  const completedSteps: number[] = []
-  let minimumCompleteCalls = 0
-
-  scheduleQuizAnalysis({
-    onMinimumComplete: () => {
-      minimumCompleteCalls += 1
-    },
-    onStepComplete: (step) => completedSteps.push(step),
-    reducedMotion: true,
-  })
-
-  assert.deepEqual(completedSteps, [QUIZ_ANALYSIS_STEPS.length])
-  assert.equal(minimumCompleteCalls, 1)
-})
-
-test("preparation cleanup cancels all pending callbacks", (context) => {
-  context.mock.timers.enable({ apis: ["setTimeout"] })
-  const completedSteps: number[] = []
-  let minimumCompleteCalls = 0
-
-  const cleanup = scheduleQuizAnalysis({
-    onMinimumComplete: () => {
-      minimumCompleteCalls += 1
-    },
-    onStepComplete: (step) => completedSteps.push(step),
-    reducedMotion: false,
-  })
-
   cleanup()
   context.mock.timers.tick(10_000)
-
-  assert.deepEqual(completedSteps, [])
-  assert.equal(minimumCompleteCalls, 0)
+  assert.equal(elapsed, 1)
 })
 
-test("loading view renders the approved timeline copy and accessible percentage progress", () => {
+test("ready beat waits 900ms before revealing and cleanup cancels it", (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] })
+  let reveals = 0
+
+  scheduleQuizTransitionReveal({ onReveal: () => (reveals += 1), reducedMotion: false })
+  context.mock.timers.tick(QUIZ_TRANSITION_READY_BEAT_MS - 1)
+  assert.equal(reveals, 0)
+  context.mock.timers.tick(1)
+  assert.equal(reveals, 1)
+
+  const cleanup = scheduleQuizTransitionReveal({
+    onReveal: () => (reveals += 1),
+    reducedMotion: false,
+  })
+  cleanup()
+  context.mock.timers.tick(10_000)
+  assert.equal(reveals, 1)
+})
+
+test("reduced motion skips both beats synchronously", () => {
+  let elapsed = 0
+  let reveals = 0
+  scheduleQuizTransitionLoading({ onElapsed: () => (elapsed += 1), reducedMotion: true })
+  scheduleQuizTransitionReveal({ onReveal: () => (reveals += 1), reducedMotion: true })
+  assert.equal(elapsed, 1)
+  assert.equal(reveals, 1)
+})
+
+test("commit view shows exactly one question and both approved buttons, nothing else", () => {
   const html = renderToStaticMarkup(
-    <QuizAnalysisView
-      completedSteps={1}
-      isReady={false}
-      name="Mia"
-      onReveal={() => {}}
-      revealPending={false}
-    />,
+    <QuizAnalysisView commitPending={false} name="Lena" onCommit={() => {}} phase="commit" />,
   )
 
-  assert.match(html, /Deine Angaben sind gespeichert/)
-  assert.match(html, /Mia, wir stellen deine Haaranalyse zusammen\./)
-  assert.match(
-    html,
-    /Während wir rechnen, zeigen wir dir, wie dein Plan dich Schritt für Schritt unterstützen kann\./,
+  assert.match(html, /Lena, bereit für den nächsten Schritt mit deinem Haar\?/)
+  assert.match(html, />Ja, zeig mir meine Analyse</)
+  assert.match(html, />Ich bin neugierig</)
+  assert.doesNotMatch(html, /Angaben sind gespeichert/)
+  assert.doesNotMatch(html, /role="progressbar"/)
+  assert.doesNotMatch(html, /%/)
+  assert.doesNotMatch(html, /Meine Haaranalyse ansehen/)
+  assert.doesNotMatch(html, /Nach 4 Wochen|Nach 7 Tagen/)
+})
+
+test("pending commit disables both buttons against double taps", () => {
+  const html = renderToStaticMarkup(
+    <QuizAnalysisView commitPending name="Lena" onCommit={() => {}} phase="commit" />,
   )
-  assert.match(html, /Deine wichtigsten Pflegehebel werden sortiert/)
-  for (const milestone of QUIZ_ANALYSIS_MILESTONES) assert.match(html, new RegExp(milestone.label))
-  assert.match(html, /Deine Routine wird leichter umsetzbar/)
-  assert.match(html, /data-analysis-milestone="week-one"/)
+  const disabledCount = (html.match(/<button[^>]*\sdisabled(?:=|>)/g) ?? []).length
+  assert.equal(disabledCount, 2)
+})
+
+test("loading view shows the quiet beat copy with a status region and shimmer bar", () => {
+  const html = renderToStaticMarkup(
+    <QuizAnalysisView commitPending name="Lena" onCommit={() => {}} phase="loading" />,
+  )
+
+  assert.match(html, /Einen Moment, Lena\./)
+  assert.match(html, /Deine Haaranalyse wird erstellt\./)
   assert.match(html, /role="status"/)
-  assert.match(html, /role="progressbar"/)
-  assert.match(html, /aria-valuenow="36"/)
-  assert.match(html, />36 %</)
-  assert.doesNotMatch(html, /Meine Haaranalyse ansehen/)
-  assert.doesNotMatch(html, /commit/i)
+  assert.match(html, /quiz-shimmer-bar/)
+  assert.doesNotMatch(html, /%/)
+  assert.doesNotMatch(html, /<button/)
 })
 
-test("ready view changes copy in place and reveals only the approved CTA", () => {
+test("ready view is only the beat headline", () => {
   const html = renderToStaticMarkup(
-    <QuizAnalysisView
-      completedSteps={QUIZ_ANALYSIS_STEPS.length}
-      isReady
-      name="Mia"
-      onReveal={() => {}}
-      revealPending={false}
-    />,
+    <QuizAnalysisView commitPending name="Lena" onCommit={() => {}} phase="ready" />,
   )
 
-  assert.match(html, /Mia, deine Haaranalyse ist bereit\./)
-  assert.match(html, /Deine wichtigsten Prioritäten und Routine-Bausteine warten auf dich\./)
-  assert.match(html, /aria-valuenow="100"/)
-  assert.match(html, />Meine Haaranalyse ansehen</)
-  assert.match(html, /role="progressbar"/)
-  assert.doesNotMatch(html, /<button[^>]*\sdisabled(?:=|>)/)
-})
-
-test("a slower access check keeps the final preparation row active", () => {
-  const html = renderToStaticMarkup(
-    <QuizAnalysisView
-      completedSteps={QUIZ_ANALYSIS_STEPS.length}
-      isReady={false}
-      name="Mia"
-      onReveal={() => {}}
-      revealPending={false}
-    />,
-  )
-
-  assert.match(html, /Dein Plan wird finalisiert/)
-  assert.match(html, /aria-valuenow="94"/)
-  assert.doesNotMatch(html, /Meine Haaranalyse ansehen/)
-})
-
-test("pending reveal keeps the ready screen stable and disables duplicate interaction", () => {
-  const html = renderToStaticMarkup(
-    <QuizAnalysisView
-      completedSteps={QUIZ_ANALYSIS_STEPS.length}
-      isReady
-      name="Mia"
-      onReveal={() => {}}
-      revealPending
-    />,
-  )
-
-  assert.match(html, /Mia, deine Haaranalyse ist bereit\./)
-  assert.match(html, /disabled/)
-  assert.match(html, /aria-busy="true"/)
-  assert.match(html, />Meine Haaranalyse ansehen</)
+  assert.match(html, />Bereit\.</)
+  assert.doesNotMatch(html, /<button/)
+  assert.doesNotMatch(html, /quiz-shimmer-bar/)
 })
 
 test("one user action calls the reveal callback exactly once", () => {
@@ -184,31 +146,5 @@ test("one user action calls the reveal callback exactly once", () => {
 
   assert.equal(startQuizAnalysisReveal(lock, onReveal), true)
   assert.equal(startQuizAnalysisReveal(lock, onReveal), false)
-  assert.equal(startQuizAnalysisReveal(lock, onReveal), false)
   assert.equal(revealCalls, 1)
-})
-
-test("blank restored name uses grammatical generic loading and ready headings", () => {
-  const loadingHtml = renderToStaticMarkup(
-    <QuizAnalysisView
-      completedSteps={0}
-      isReady={false}
-      name="  "
-      onReveal={() => {}}
-      revealPending={false}
-    />,
-  )
-  const readyHtml = renderToStaticMarkup(
-    <QuizAnalysisView
-      completedSteps={QUIZ_ANALYSIS_STEPS.length}
-      isReady
-      name=""
-      onReveal={() => {}}
-      revealPending={false}
-    />,
-  )
-
-  assert.match(loadingHtml, /Wir stellen deine Haaranalyse zusammen\./)
-  assert.match(readyHtml, /Deine Haaranalyse ist bereit\./)
-  assert.doesNotMatch(`${loadingHtml}${readyHtml}`, />,\s/)
 })
