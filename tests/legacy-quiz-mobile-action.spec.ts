@@ -200,6 +200,24 @@ test.describe("@ci regular quiz mobile parity", () => {
     })
   }
 
+  test("renders the aligned scalp question and answer scale", async ({ page }) => {
+    await openDraft(page, 7, { width: 390, height: 844 })
+    await page.getByRole("button", { name: "Naturhaar", exact: true }).click()
+    await page.locator('[data-quiz-bottom-action="viewport"]').locator("button").click()
+
+    await expect(
+      page.getByRole("heading", { name: "Wie fühlt sich deine Kopfhaut normalerweise an?" }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(
+        "Denk dabei an deine Kopfhaut und Ansätze – nicht an trockene Längen oder Spitzen.",
+      ),
+    ).toBeVisible()
+    await expect(page.getByRole("button", { name: "Eher fettig", exact: true })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Ausgeglichen", exact: true })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Eher trocken", exact: true })).toBeVisible()
+  })
+
   test("keeps exactly one fixed action while concerns transition to goals", async ({ page }) => {
     await openDraft(page, 8, { width: 390, height: 844 })
     await page.getByRole("button", { name: "Trockene oder strohige Längen", exact: true }).click()
@@ -219,6 +237,16 @@ test.describe("@ci regular quiz mobile parity", () => {
     expect(geometry.visibleActions).toBe(1)
     await expect(
       page.getByRole("heading", { name: "Was wünschst du dir für deine Wellen?" }),
+    ).toBeVisible()
+  })
+
+  test("uses plain German Locken wording for coily goals", async ({ page }) => {
+    await openDraft(page, 8, { width: 390, height: 844 }, { structure: "coily" })
+    await page.getByRole("button", { name: "Trockene oder strohige Längen", exact: true }).click()
+    await page.locator('[data-quiz-bottom-action="viewport"]').locator("button").click()
+
+    await expect(
+      page.getByRole("heading", { name: "Was wünschst du dir für deine Locken?" }),
     ).toBeVisible()
   })
 
@@ -373,8 +401,8 @@ test.describe("@ci regular quiz mobile parity", () => {
     ).toBeVisible()
 
     await page.goBack()
-    await expect(page.getByRole("button", { name: "Fettig", exact: true })).toBeVisible()
-    await expect(page.getByRole("button", { name: "Trocken", exact: true })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Eher fettig", exact: true })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Eher trocken", exact: true })).toBeVisible()
     await expect(
       page.getByRole("heading", {
         name: "Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen?",

@@ -237,9 +237,9 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       // Scalp question (8/10)
       await expect(page.getByText("8/10")).toBeVisible()
       await expect(
-        page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
+        page.getByRole("heading", { name: /Wie fühlt sich deine Kopfhaut normalerweise an/i }),
       ).toBeVisible()
-      await page.getByRole("button", { name: "Trocken", exact: true }).click()
+      await page.getByRole("button", { name: "Eher trocken", exact: true }).click()
       await expect(
         page.getByRole("heading", {
           name: /Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen/i,
@@ -549,9 +549,9 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await expect(page.getByText("8/10")).toBeVisible()
       await expect(
-        page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
+        page.getByRole("heading", { name: /Wie fühlt sich deine Kopfhaut normalerweise an/i }),
       ).toBeVisible()
-      await page.getByRole("button", { name: "Fettig", exact: true }).click()
+      await page.getByRole("button", { name: "Eher fettig", exact: true }).click()
       await page.getByRole("button", { name: "Nein", exact: true }).click()
       await expect(page.getByText("9/10")).toBeVisible()
       await page.getByRole("button", { name: /Etwas anderes/i }).click()
