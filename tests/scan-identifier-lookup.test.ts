@@ -96,10 +96,11 @@ test("lookupCatalogProductByIdentifier: hyphenated spelling keeps raw form and a
   const { client } = stubClient({
     product_identifiers: (calls) => {
       // Raw form stays queryable (hyphens matter for non-GTIN identifiers); the
-      // hyphen-stripped GTIN reading is queried alongside it in canonical form.
+      // hyphen-stripped GTIN reading is queried alongside it in every spelling.
       assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
         "4006-3813-33931",
         "04006381333931",
+        "4006381333931",
       ])
       return { data: [], error: null }
     },
@@ -117,6 +118,8 @@ test("lookupCatalogProductByIdentifier: leading zeros preserved", async () => {
       assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
         "00012345",
         "00000000012345",
+        "0000000012345",
+        "000000012345",
       ])
       return { data: [], error: null }
     },
@@ -225,14 +228,15 @@ test("lookupCatalogProductByIdentifier: collision picks lowest id and warns with
   }
 })
 
-test("lookupCatalogProductByIdentifier: queries raw-normalized AND canonical GTIN forms", async () => {
-  // Deploy-order safety: stored rows may be un-canonicalized (pre-migration) or
-  // canonicalized (post-migration) — the query must match either spelling.
+test("lookupCatalogProductByIdentifier: queries every GTIN spelling of the scanned number", async () => {
+  // Stored rows may hold 12-digit UPC imports, 13-digit EANs, 14-digit feed values, or
+  // the canonical form — a scan must match all of them, in either deploy order.
   const { client } = stubClient({
     product_identifiers: (calls) => {
       assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
         "0022796976116",
         "00022796976116",
+        "022796976116",
       ])
       return { data: [], error: null }
     },
@@ -244,10 +248,14 @@ test("lookupCatalogProductByIdentifier: queries raw-normalized AND canonical GTI
   })
 })
 
-test("lookupCatalogProductByIdentifier: already-canonical value queries a single deduped form", async () => {
+test("lookupCatalogProductByIdentifier: canonical input still queries the legacy spellings", async () => {
   const { client } = stubClient({
     product_identifiers: (calls) => {
-      assert.deepEqual(calls.filters.get("normalized_identifier_value"), ["00022796976116"])
+      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
+        "00022796976116",
+        "0022796976116",
+        "022796976116",
+      ])
       return { data: [], error: null }
     },
     products: () => ({ data: [], error: null }),

@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS public.scan_resolve_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  identifier_type text NOT NULL,
+  identifier_type text NOT NULL CHECK (identifier_type IN ('ean', 'gtin', 'barcode')),
   raw_value text NOT NULL,
   canonical_value text,
   outcome text NOT NULL CHECK (outcome IN ('hit', 'miss', 'pending_submission', 'quarantined', 'invalid')),

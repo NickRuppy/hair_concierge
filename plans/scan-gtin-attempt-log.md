@@ -58,21 +58,28 @@ oder 14-stellig geschrieben hat.
    kanonischen Wert als Query. `pending-submission.ts` (findOpenScanSubmission) und
    `product-matching.ts` (Intake-Dedup "nie eine bereits vergebene EAN neu zuweisen")
    auf denselben Vergleich umstellen.
-3. **Migration:** `product_intake_review_normalize_identifier_value` erweitern —
-   für `identifier_type IN ('ean','gtin','barcode')` und digits-only-Wert mit Länge
-   8/12/13/14 → lpad auf 14. Danach Recompute erzwingen (Drop/Re-Add der generated
-   column + beide Indexe, exakt nach Vorbild `20260617120000`) inkl. erneuter
-   Duplicate-Rank-Bereinigung (Kanonisierung kann bisher verschiedene Werte kollabieren).
-4. **Verifikation:** SQL-Probe nach Apply — die 3 betroffenen Produkte matchen auf ihre
-   EAN-13-Formen; `022796976116`-Scan-Simulation via resolve-Route gegen Prod-Schema
-   im Test-Setup.
-5. **Härtung (Audit-Fund 2026-08-21):** Cross-Produkt-Eindeutigkeit für Barcode-Typen
-   ist heute NICHT DB-erzwungen (nur Soft-Handling: lowest-id-wins im Lookup + Intake-
-   Dedup-Regel). Aktuell 0 Kollisionen. Nach der Kanonisierungs-Dedup: partieller
-   UNIQUE INDEX auf (normalized_identifier_value) WHERE identifier_type IN
-   ('ean','gtin','barcode') — macht die bestehende App-Regel "nie eine vergebene EAN
-   neu zuweisen" hart. Vorher prüfen: Intake-Approve/Link-RPCs (ON CONFLICT-Pfade)
-   müssen bei Verletzung sauber fehlschlagen, nicht crashen.
+3. **Query-Varianten statt Migrations-Abhängigkeit (nach Codex-Review umgebaut):**
+   `gtinQueryVariants` fragt beim Lookup ALLE Schreibweisen ab (raw, kanonisch 14,
+   plus 13/12/8 soweit führende Nullen es erlauben). Reads sind damit unabhängig vom
+   Zustand der gespeicherten Daten — der OGX-Klasse-Miss ist mit dem App-Deploy
+   behoben, ohne Migration.
+4. **DB-Kanonisierungs-Migration + UNIQUE INDEX: ABGESPALTEN (Nick-Entscheidung
+   offen).** Codex-Review 2026-08-21 fand 3 Blocker am ursprünglichen Migrationsplan:
+   (a) Dedup-Preflight muss auf dem exakten künftigen Index-Key gruppieren
+   (typ- und produktübergreifend), Cross-Produkt-Kollisionen fail-closed statt
+   lowest-rank-Delete; (b) Rollout wäre nur one-way-kompatibel gewesen — durch die
+   Query-Varianten (Punkt 3) entschärft; (c) globaler UNIQUE INDEX kollidiert mit
+   bestehenden Writern (Approve/Link-RPCs ON-CONFLICT-Key, Heat/Scalp-Enrichment-
+   Prefligths nur je Typ) und würde GTINs auch auf inaktiven Produkten reservieren.
+   Zusätzlich (Codex F7): der ältere Product-Identity-Kontrakt (Plan 2026-06-10,
+   product-identity-schema.test.ts) erlaubte BEWUSST einen Identifier auf mehreren
+   Produktzeilen (Kategorie-Nutzungen) — DB-erzwungene Eindeutigkeit wäre eine
+   Kontrakt-Umkehr und braucht eine explizite Produktentscheidung.
+   → Empfehlung: dieser Branch shippt ohne die Kanonisierungs-Migration (Reads sind
+   durch Punkt 3 abgedeckt); Migration + Uniqueness als eigenes Follow-up-Paket mit
+   Writer-Updates, wenn Nick die Kontraktfrage entschieden hat. SQL-seitige
+   Kanonisierung muss dann exakt die TS-Semantik spiegeln (Codex F6, gemeinsame
+   Fixtures).
 
 **Multi-Barcode pro Produkt (Nicks Frage, verifiziert):** bereits unterstützt — eine
 Zeile pro Nummer, FK auf products; Unique-Constraint ist (product_id, identifier_type,
@@ -92,7 +99,11 @@ zusätzliche Zeile am OGX-Produkt ergänzt, sobald er die Ziffern liefert.
    RLS: service-role-only (Vorbild `scan_wishlist`). Index auf (`canonical_value`),
    (`outcome`, `created_at`).
 2. **Route:** Write in `src/app/api/scan/resolve/route.ts` — fail-open (Log-Fehler
-   dürfen Resolve nie brechen), ein Insert pro Request, auch für `invalid` (Checksum-Fail).
+   dürfen Resolve nie brechen). NUR Barcode-Versuche (identifier-Branch): der
+   productId-Branch (Such-Sheet/Merkliste) loggt nichts — kein Barcode beteiligt,
+   würde die Miss-Quote verfälschen (Codex F4). Unauthorized/Rate-Limit/Malformed
+   enden vor dem Branch und sind bewusst außer Scope; `invalid` (Checksum) wird
+   geloggt, `quarantined` bleibt vom `miss` unterscheidbar.
 3. **Auswertung:** SQL-Rezept in `docs/` (Top-Misses nach Häufigkeit + distinct users);
    kein Admin-UI in diesem Schnitt.
 4. **Tests:** Route-Tests erweitern (npm-Shim-Runner) — Outcome-Mapping je Pfad, fail-open.
