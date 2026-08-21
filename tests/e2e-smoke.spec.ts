@@ -13,6 +13,10 @@ test.describe("Core user flows — smoke test @ci", () => {
     await expect(
       page.getByRole("link", { name: "Analyse starten", exact: true }).first(),
     ).toHaveAttribute("href", "/quiz")
+    await expect(page.getByRole("link", { name: "Anmelden", exact: true })).toHaveAttribute(
+      "href",
+      "/auth?next=/chat",
+    )
     await expect(page.locator("[data-landing-hero-cta]")).toHaveAttribute("href", "/quiz")
     // The organic landing deliberately keeps pricing out of the entry experience.
     await expect(page.getByText("Plan wählen")).toHaveCount(0)
