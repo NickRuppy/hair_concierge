@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import {
   SCAN_CONFIRM_LABEL,
@@ -106,6 +106,13 @@ export function Scanner({
 
   const [hint, setHint] = useState<ScanHint>(SCAN_HINT_DEFAULT)
   const [confirmActive, setConfirmActive] = useState(false)
+  // The confirm-off timeout is owned here so an epoch reset or a newer decode cancels
+  // the stale callback — otherwise a previous scan's timer clears the new confirm early.
+  const confirmTimerRef = useRef<number | null>(null)
+  const clearConfirmTimer = useCallback(() => {
+    if (confirmTimerRef.current !== null) window.clearTimeout(confirmTimerRef.current)
+    confirmTimerRef.current = null
+  }, [])
 
   // Latest-callback refs so the detection loop (set up once per `active` toggle) never
   // closes over a stale prop.
@@ -184,8 +191,12 @@ export function Scanner({
       session.rawDetectionsWithoutStableRead = 0
       session.lastRawValue = null
       session.consecutiveMatch = 0
+      clearConfirmTimer()
       setConfirmActive(true)
-      window.setTimeout(() => setConfirmActive(false), CONFIRM_DURATION_MS)
+      confirmTimerRef.current = window.setTimeout(() => {
+        confirmTimerRef.current = null
+        setConfirmActive(false)
+      }, CONFIRM_DURATION_MS)
       onDecodedRef.current({ type: "ean", value })
     }
 
@@ -461,8 +472,10 @@ export function Scanner({
     if (!active) return
     restartScanSessionState(sessionRef.current, performance.now())
     setHint(SCAN_HINT_DEFAULT)
+    clearConfirmTimer()
     setConfirmActive(false)
-  }, [active, sessionEpoch])
+    return clearConfirmTimer
+  }, [active, sessionEpoch, clearConfirmTimer])
 
   if (!active) return null
 

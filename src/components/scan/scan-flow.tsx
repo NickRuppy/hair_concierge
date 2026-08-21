@@ -92,6 +92,13 @@ export function ScanFlow({
   // `scan_decoded`'s `ms_to_decode` measures this attempt, not the whole page visit.
   const scanSessionStartRef = useRef(0)
 
+  // Resolve lifecycle guards. During the 400ms confirm window the step is still
+  // "scanning", so detection keeps running and a second, different EAN could fire —
+  // `resolveInFlightRef` drops those; `resolveGenRef` invalidates in-flight responses
+  // once the user has moved on (see `returnToScanning`).
+  const resolveGenRef = useRef(0)
+  const resolveInFlightRef = useRef(false)
+
   const sheetOpen = step.kind !== "scanning"
   // Any open sheet covers the viewfinder, so decoding behind it burns CPU/battery on
   // frames nobody can aim. The camera stream stays live (that is what makes "Nochmal
@@ -111,6 +118,10 @@ export function ScanFlow({
    * scanned twice on one page visit and the 3s search-fallback timeout never re-armed.
    */
   const returnToScanning = useCallback(() => {
+    // Invalidate any in-flight resolve: a late response must never repaint a step the
+    // user has already left (dismissed resolving sheet, newer scan under way).
+    resolveGenRef.current += 1
+    resolveInFlightRef.current = false
     setStep({ kind: "scanning" })
     setScanEpoch((epoch) => epoch + 1)
     scanSessionStartRef.current = performance.now()
@@ -131,16 +142,29 @@ export function ScanFlow({
       // Decode-confirm moment (Variante A): a camera decode passes `sheetDelayMs` so the
       // scanner's green "✓ Barcode erkannt" state stays visible before the sheet slides
       // up — the fetch below still starts immediately, so no time-to-verdict is lost.
-      // The timer is cleared once the request settles: a fast failure returns to
-      // scanning, and a stale timer must not push that fresh scanning state into an
-      // orphaned skeleton.
+      //
+      // Generation guard: `returnToScanning` bumps the generation, so a request whose
+      // step the user already left (dismissed sheet, newer scan) silently drops its
+      // response and timer instead of repainting a stale result.
+      const gen = ++resolveGenRef.current
+      const alive = () => resolveGenRef.current === gen
+      resolveInFlightRef.current = true
+      const settle = () => {
+        if (alive()) resolveInFlightRef.current = false
+      }
+      // Fast success must not cut the confirm moment short: the result waits out the
+      // remainder of the window (the sheet timer shows the skeleton at the boundary).
+      const confirmUntil =
+        options?.sheetDelayMs !== undefined ? performance.now() + options.sheetDelayMs : null
       let sheetTimer: number | null = null
       const clearSheetTimer = () => {
         if (sheetTimer !== null) window.clearTimeout(sheetTimer)
         sheetTimer = null
       }
       if (options?.sheetDelayMs) {
-        sheetTimer = window.setTimeout(() => setStep({ kind: "resolving" }), options.sheetDelayMs)
+        sheetTimer = window.setTimeout(() => {
+          if (alive()) setStep({ kind: "resolving" })
+        }, options.sheetDelayMs)
       } else {
         setStep({ kind: "resolving" })
       }
@@ -150,9 +174,15 @@ export function ScanFlow({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         })
+        if (!alive()) {
+          clearSheetTimer()
+          return
+        }
         if (!response.ok) {
           clearSheetTimer()
           const payload = (await response.json().catch(() => null)) as { error?: string } | null
+          if (!alive()) return
+          settle()
           toast({
             title: RESOLVE_ERRORS[payload?.error ?? ""] ?? GENERIC_ERROR,
             variant: "destructive",
@@ -161,6 +191,15 @@ export function ScanFlow({
           return
         }
         const result = (await response.json()) as ScanResolveResult
+        if (confirmUntil !== null) {
+          const remaining = confirmUntil - performance.now()
+          if (remaining > 0) await new Promise((done) => window.setTimeout(done, remaining))
+        }
+        if (!alive()) {
+          clearSheetTimer()
+          return
+        }
+        settle()
         clearSheetTimer()
         if (result.kind === "unknown_product") {
           analytics.track("scan_not_found", {})
@@ -178,6 +217,8 @@ export function ScanFlow({
         }
       } catch {
         clearSheetTimer()
+        if (!alive()) return
+        settle()
         toast({ title: GENERIC_ERROR, variant: "destructive" })
         returnToScanning()
       }
@@ -188,6 +229,7 @@ export function ScanFlow({
   const handleDecoded = useCallback(
     (identifier: ScanDecodedIdentifier) => {
       if (sheetOpenRef.current) return
+      if (resolveInFlightRef.current) return
       analytics.track("scan_decoded", {
         msToDecode: Math.round(performance.now() - scanSessionStartRef.current),
         format: identifier.value.length === 8 ? "ean_8" : "ean_13",

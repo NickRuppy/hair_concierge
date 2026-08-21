@@ -113,8 +113,8 @@ zusätzliche Zeile am OGX-Produkt ergänzt, sobald er die Ziffern liefert.
    würde die Miss-Quote verfälschen (Codex F4). Unauthorized/Rate-Limit/Malformed
    enden vor dem Branch und sind bewusst außer Scope; `invalid` (Checksum) wird
    geloggt, `quarantined` bleibt vom `miss` unterscheidbar.
-3. **Auswertung:** SQL-Rezept in `docs/` (Top-Misses nach Häufigkeit + distinct users);
-   kein Admin-UI in diesem Schnitt.
+3. **Auswertung:** SQL-Rezepte in `docs/scan-attempt-log.md` (Miss-Ranking,
+   Tagesquote, Tester-Trace); kein Admin-UI in diesem Schnitt.
 4. **Tests:** Route-Tests erweitern (npm-Shim-Runner) — Outcome-Mapping je Pfad, fail-open.
 
 ## Task 3 — Decode-Feedback UI (VARIANTE A gewählt, 2026-08-21)
@@ -167,8 +167,12 @@ bei der Routine-Platzierung (nie im Scan, nicht beim Merkliste-Save),
 Use-Kategorie). Single-Use-Kategorien: Auto-Zuordnung (heutiges Verhalten).
 Trigger: erstes Multi-Use-Produkt in Attempt-Log/Intake-Daten.
 
-## Offene Punkte vor Implementierung
+## Offene Punkte (Stand Ship, 2026-08-21)
 
-1. Nicks Variantenwahl (A/B/C) + Journey-Sign-off. [User-Facing Gate]
-2. Ziffern unter dem Barcode auf Nicks OGX-Flasche (Bestätigung `0022796976116`).
-3. Retention-Regel für `scan_resolve_events` vor Public Launch (nur notieren).
+1. ~~Variantenwahl + Journey-Sign-off~~ ERLEDIGT (Variante A, Sign-off erteilt).
+2. ~~OGX-Flaschen-Ziffern~~ ERLEDIGT: `3574661799438` (EU-EAN, J&J Frankreich) als
+   zweite Barcode-Zeile in Prod ergänzt — anderer Fall als vermutet (Multi-Barcode,
+   nicht Schreibweise).
+3. OFFEN: Retention-Regel für `scan_resolve_events` vor Public Launch.
+4. OFFEN: `scan_resolve_events`-Migration bei Deploy/Merge auf Prod anwenden.
+5. OFFEN: Feld-Verifikation nach Deploy (Variante-A-Moment, OGX-Re-Scan, Attempt-Log-Zeilen).
