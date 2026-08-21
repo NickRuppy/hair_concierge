@@ -6,6 +6,8 @@
  */
 
 export const SCAN_HINT_DEFAULT = "Barcode in den Rahmen halten" as const
+/** Pill label during the decode-confirm moment (Variante A); ✓ is rendered by the pill. */
+export const SCAN_CONFIRM_LABEL = "Barcode erkannt" as const
 export const SCAN_HINT_MOVE_CLOSER = "Etwas näher ran" as const
 export const SCAN_HINT_LESS_TILT = "Weniger kippen" as const
 export const SCAN_HINT_MORE_LIGHT = "Mehr Licht hilft" as const

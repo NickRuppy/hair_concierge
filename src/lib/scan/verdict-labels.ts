@@ -61,6 +61,10 @@ export function scanNotNeededSubtitle(category: PersonalPlanCategory): string {
 
 export const SCAN_DEFERRED_HEADLINE = "Das klären wir noch"
 
+/** Resolving sheet while the verdict loads (Variante A decode feedback). */
+export const SCAN_RESOLVING_TITLE = "Produkt wird geprüft …"
+export const SCAN_RESOLVING_SUBLINE = "Passt es zu deinem Haar?"
+
 /** `POST /api/scan/resolve` and `POST /api/scan/submit`: an open submission exists. */
 export const SCAN_PENDING_SUBMISSION_HEADLINE = "Wir prüfen dein Produkt"
 

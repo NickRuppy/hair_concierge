@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
+import { gtinQueryVariants, normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 
@@ -35,10 +35,16 @@ export async function lookupCatalogProductByIdentifier(
   const normalizedValue = normalizeIdentifierValue(identifier.value)
   if (!normalizedValue) return null
 
+  // Stored rows may hold any spelling of a GTIN (12-digit UPC imports, 13-digit EANs,
+  // 14-digit feeds, or the canonical form once stored values are canonicalized), so the
+  // query matches every spelling the padding permits. Reads are thereby independent of
+  // whether stored data was canonicalized yet.
+  const queryValues = gtinQueryVariants(normalizedValue)
+
   const { data: identifierRows, error: identifierError } = await client
     .from("product_identifiers")
     .select("product_id")
-    .eq("normalized_identifier_value", normalizedValue)
+    .in("normalized_identifier_value", queryValues)
     .in("identifier_type", BARCODE_IDENTIFIER_TYPES)
   if (identifierError) throw new Error("scan_identifier_lookup_failed")
 

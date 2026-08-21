@@ -735,3 +735,47 @@ test("category mismatch does not auto-link text matches", () => {
   assert.equal(result.candidates[0]?.product.id, "olaplex-leave-in")
   assert.equal(result.reason, "text_category_mismatch_review")
 })
+
+test("barcode identifiers match across UPC-A / EAN-13 / GTIN-14 spellings of the same number", () => {
+  const upcCatalog: ProductIntakeCatalog = {
+    products: [
+      {
+        id: "ogx-shampoo",
+        name: "Renewing + Argan Oil of Morocco Shampoo",
+        brandId: "brand-ogx",
+        productLineId: "line-argan",
+        categoryKey: "shampoo",
+        isActive: true,
+        isChaarlieRecommended: false,
+      },
+    ],
+    identifiers: [
+      {
+        productId: "ogx-shampoo",
+        identifierType: "barcode",
+        // Stored as the 12-digit UPC-A spelling, as retailer imports write it.
+        identifierValue: "022796976116",
+      },
+    ],
+  }
+
+  const scannedEan13 = matchProductIntake(
+    {
+      selectedCategoryKey: "shampoo",
+      identifier: { type: "ean", value: "0022796976116" },
+    },
+    upcCatalog,
+  )
+  assert.equal(scannedEan13.status, "matched")
+  assert.equal(scannedEan13.matchedProduct?.id, "ogx-shampoo")
+
+  const gtin14Feed = matchProductIntake(
+    {
+      selectedCategoryKey: "shampoo",
+      identifier: { type: "gtin", value: "00022796976116" },
+    },
+    upcCatalog,
+  )
+  assert.equal(gtin14Feed.status, "matched")
+  assert.equal(gtin14Feed.matchedProduct?.id, "ogx-shampoo")
+})
