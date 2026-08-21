@@ -42,6 +42,15 @@ TS-Seite muss sie nur für den Query-Wert spiegeln.
 **Entscheidungen (Nick, 2026-08-21):**
 - Scan-Attempt-Log MIT `user_id` (Stealth-Phase-Debugging; Retention-Regel vor Public Launch).
 - Kanonisches Format: GTIN-14-Padding, eine Spalte, kein Dreifach-Speichern.
+- **Ein Barcode = genau ein Produkt** (Identität ist eindeutig; ersetzt den Juni-Kontrakt
+  "ein Identifier darf auf mehreren Kategorie-Nutzungs-Zeilen stehen"). "Verwendung"
+  ist eine SEPARATE Ebene: nach der Identifikation wählbar, gehört zur User-Produkt-
+  Beziehung, nicht zur Katalog-Identität. Multi-Use-Bewertung (z. B. Conditioner als
+  Maske bewerten) = eigenes zukünftiges Feature (braucht Facts je Use-Kategorie);
+  wird durch die Eindeutigkeit weder blockiert noch vorausgesetzt.
+  → Follow-up-Paket (Kanonisierungs-Migration + Uniqueness + Writer-Updates gemäß
+  Codex F1/F3, Schema-Kontrakt-Test product-identity-schema.test.ts anpassen) ist
+  damit ENTSCHIEDEN und kann als eigener Branch geplant werden.
 
 ---
 
