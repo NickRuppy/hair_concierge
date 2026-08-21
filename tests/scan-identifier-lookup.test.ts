@@ -92,10 +92,15 @@ test("lookupCatalogProductByIdentifier: normalizes whitespace and matches active
   assert.deepEqual(result, { productId: "prod-1", category: "shampoo" })
 })
 
-test("lookupCatalogProductByIdentifier: hyphens are preserved, not stripped as noise", async () => {
+test("lookupCatalogProductByIdentifier: hyphenated spelling keeps raw form and adds canonical", async () => {
   const { client } = stubClient({
     product_identifiers: (calls) => {
-      assert.equal(calls.filters.get("normalized_identifier_value"), "4006-3813-33931")
+      // Raw form stays queryable (hyphens matter for non-GTIN identifiers); the
+      // hyphen-stripped GTIN reading is queried alongside it in canonical form.
+      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
+        "4006-3813-33931",
+        "04006381333931",
+      ])
       return { data: [], error: null }
     },
     products: () => ({ data: [], error: null }),
@@ -109,7 +114,10 @@ test("lookupCatalogProductByIdentifier: hyphens are preserved, not stripped as n
 test("lookupCatalogProductByIdentifier: leading zeros preserved", async () => {
   const { client } = stubClient({
     product_identifiers: (calls) => {
-      assert.equal(calls.filters.get("normalized_identifier_value"), "00012345")
+      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
+        "00012345",
+        "00000000012345",
+      ])
       return { data: [], error: null }
     },
     products: () => ({ data: [], error: null }),
@@ -215,4 +223,51 @@ test("lookupCatalogProductByIdentifier: collision picks lowest id and warns with
   } finally {
     console.warn = originalWarn
   }
+})
+
+test("lookupCatalogProductByIdentifier: queries raw-normalized AND canonical GTIN forms", async () => {
+  // Deploy-order safety: stored rows may be un-canonicalized (pre-migration) or
+  // canonicalized (post-migration) — the query must match either spelling.
+  const { client } = stubClient({
+    product_identifiers: (calls) => {
+      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
+        "0022796976116",
+        "00022796976116",
+      ])
+      return { data: [], error: null }
+    },
+    products: () => ({ data: [], error: null }),
+  })
+  await lookupCatalogProductByIdentifier(client as never, {
+    type: "ean",
+    value: "0022796976116",
+  })
+})
+
+test("lookupCatalogProductByIdentifier: already-canonical value queries a single deduped form", async () => {
+  const { client } = stubClient({
+    product_identifiers: (calls) => {
+      assert.deepEqual(calls.filters.get("normalized_identifier_value"), ["00022796976116"])
+      return { data: [], error: null }
+    },
+    products: () => ({ data: [], error: null }),
+  })
+  await lookupCatalogProductByIdentifier(client as never, {
+    type: "ean",
+    value: "00022796976116",
+  })
+})
+
+test("lookupCatalogProductByIdentifier: non-GTIN value falls back to raw-normalized only", async () => {
+  const { client } = stubClient({
+    product_identifiers: (calls) => {
+      assert.deepEqual(calls.filters.get("normalized_identifier_value"), ["not-a-barcode"])
+      return { data: [], error: null }
+    },
+    products: () => ({ data: [], error: null }),
+  })
+  await lookupCatalogProductByIdentifier(client as never, {
+    type: "ean",
+    value: "not-a-barcode",
+  })
 })

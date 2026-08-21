@@ -40,3 +40,18 @@ export function tokenizeProductName(input: string): string[] {
     .split(" ")
     .filter((token) => token.length > 0)
 }
+
+/**
+ * Canonical GTIN form for barcode-shaped identifiers: digits only, left-padded with
+ * zeros to 14 (GTIN-14). UPC-A (12), EAN-13 (13), EAN-8 (8), and GTIN-14 spellings of
+ * the same number all collapse to one value; real multipack GTIN-14s keep a non-zero
+ * leading indicator digit, so padding never collides with them. Returns null for
+ * anything that is not a GTIN-shaped value (callers fall back to the generic
+ * normalization).
+ */
+export function canonicalizeGtin(input: string): string | null {
+  const digits = input.replace(/[\s-]+/g, "")
+  if (!/^\d+$/.test(digits)) return null
+  if (![8, 12, 13, 14].includes(digits.length)) return null
+  return digits.padStart(14, "0")
+}

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
+import { canonicalizeGtin, normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 
@@ -35,10 +35,16 @@ export async function lookupCatalogProductByIdentifier(
   const normalizedValue = normalizeIdentifierValue(identifier.value)
   if (!normalizedValue) return null
 
+  // Stored rows may hold either spelling of a GTIN (un-canonicalized legacy imports vs.
+  // the canonical 14-digit form after the canonicalization migration), so the query
+  // matches both — this also keeps the lookup correct between code deploy and migration.
+  const canonicalValue = canonicalizeGtin(identifier.value)
+  const queryValues = [...new Set([normalizedValue, canonicalValue].filter(Boolean))] as string[]
+
   const { data: identifierRows, error: identifierError } = await client
     .from("product_identifiers")
     .select("product_id")
-    .eq("normalized_identifier_value", normalizedValue)
+    .in("normalized_identifier_value", queryValues)
     .in("identifier_type", BARCODE_IDENTIFIER_TYPES)
   if (identifierError) throw new Error("scan_identifier_lookup_failed")
 
