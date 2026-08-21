@@ -529,6 +529,7 @@ function renderQuestionBody({
             value={answer as string[] | undefined}
             multi
             allowNone
+            layout="grid"
             noneDescription="Ich nutze keine weiteren Hitze-Tools."
             onChange={onLocalAnswerChange}
           />

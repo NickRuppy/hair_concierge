@@ -3,6 +3,7 @@
 import type { ReactNode } from "react"
 
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import { ADDITIONAL_HEAT_TOOL_IMAGES, type ToolImage } from "@/components/quiz/tool-visuals"
 import type { IconName } from "@/components/ui/icon"
 import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type {
@@ -33,6 +34,7 @@ export type RefinementOption<T extends string> = {
   label: string
   description?: string
   icon?: IconName
+  image?: ToolImage
 }
 
 export const REFINEMENT_TELEMETRY_EVENTS = [
@@ -230,20 +232,41 @@ export const DRYING_ROUTE_OPTIONS = [
 ] as const satisfies readonly RefinementOption<DryingRoute>[]
 
 export const ADDITIONAL_HEAT_TOOL_OPTIONS = [
-  { value: "dryer_brush", label: "Föhnbürste", icon: "brush-round" },
+  {
+    value: "dryer_brush",
+    label: "Föhnbürste",
+    description: "Föhn und Bürste in einem Gerät.",
+    icon: "brush-round",
+    image: ADDITIONAL_HEAT_TOOL_IMAGES.dryer_brush,
+  },
   {
     value: "hot_air_styler",
     label: "Heißluft-Multistyler",
     description: "Zum Beispiel Airwrap-ähnliche Tools.",
     icon: "heat-multi-tool",
+    image: ADDITIONAL_HEAT_TOOL_IMAGES.hot_air_styler,
   },
-  { value: "straightener", label: "Glätteisen", icon: "heat-tool" },
+  {
+    value: "straightener",
+    label: "Glätteisen",
+    description: "Zwei heiße Platten zum Glätten.",
+    icon: "heat-tool",
+    image: ADDITIONAL_HEAT_TOOL_IMAGES.straightener,
+  },
   {
     value: "curling_or_wave_iron",
     label: "Lockenstab oder Welleneisen",
+    description: "Heißer Stab für Locken oder Wellen.",
     icon: "heat-curling-iron",
+    image: ADDITIONAL_HEAT_TOOL_IMAGES.curling_or_wave_iron,
   },
-  { value: "thermal_rollers", label: "Thermo-Wickler", icon: "heat-thermal-rollers" },
+  {
+    value: "thermal_rollers",
+    label: "Thermo-Wickler",
+    description: "Aufheizbare Wickler für Volumen.",
+    icon: "heat-thermal-rollers",
+    image: ADDITIONAL_HEAT_TOOL_IMAGES.thermal_rollers,
+  },
 ] as const satisfies readonly RefinementOption<AdditionalHeatTool>[]
 
 export const HEAT_PROTECTION_OPTIONS = [
@@ -310,6 +333,7 @@ export function RefinementOptions<T extends string>({
   noneDescription = "Diese Frage bewusst leer lassen.",
   noneAriaLabel,
   className,
+  layout = "list",
 }: {
   options: readonly RefinementOption<T>[]
   value: T | T[] | undefined
@@ -321,11 +345,13 @@ export function RefinementOptions<T extends string>({
   noneDescription?: string
   noneAriaLabel?: string
   className?: string
+  layout?: "list" | "grid"
 }) {
   const selectedValues = Array.isArray(value) ? value : []
+  const isGrid = layout === "grid"
 
   return (
-    <div className={cn("grid grid-cols-1 gap-2.5", className)}>
+    <div className={cn(isGrid ? "grid grid-cols-2 gap-3" : "grid grid-cols-1 gap-2.5", className)}>
       {options.map((option, index) => {
         const active = multi ? selectedValues.includes(option.value) : value === option.value
         return (
@@ -337,6 +363,13 @@ export function RefinementOptions<T extends string>({
             active={active}
             multi={multi}
             animationDelay={index * 18}
+            visual={
+              isGrid && option.image
+                ? { kind: "image", src: option.image.src, alt: option.image.alt }
+                : undefined
+            }
+            visualLayout={isGrid && option.image ? "grid" : undefined}
+            alwaysShowDescription={isGrid}
             onClick={() => {
               if (!multi) {
                 onChange(option.value)
@@ -351,7 +384,10 @@ export function RefinementOptions<T extends string>({
         )
       })}
       {multi && allowNone ? (
-        <div className="mt-1 opacity-[0.92]" data-refinement-none-option>
+        <div
+          className={cn("mt-1 opacity-[0.92]", isGrid && "col-span-2")}
+          data-refinement-none-option
+        >
           <QuizOptionCard
             ariaLabel={noneAriaLabel}
             label={noneLabel}

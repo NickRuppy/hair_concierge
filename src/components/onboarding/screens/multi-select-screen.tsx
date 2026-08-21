@@ -2,17 +2,26 @@
 
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import type { ToolImage } from "@/components/quiz/tool-visuals"
 import { Button } from "@/components/ui/button"
 import type { IconName } from "@/components/ui/icon"
 import { InfoTip } from "@/components/ui/info-tip"
 import { INFO_TIPS, type InfoTipId } from "@/lib/help/info-tips"
+import { cn } from "@/lib/utils"
 
 interface MultiSelectScreenProps {
   title: string
   subtitle?: string
   titleInfoTipId?: InfoTipId
   titleInfoLabel?: string
-  options: { value: string; label: string; icon: IconName; infoTipId?: InfoTipId }[]
+  options: {
+    value: string
+    label: string
+    icon: IconName
+    infoTipId?: InfoTipId
+    description?: string
+    image?: ToolImage
+  }[]
   selected: string[]
   onToggle: (value: string) => void
   onContinue: () => void
@@ -21,6 +30,7 @@ interface MultiSelectScreenProps {
   onNone?: () => void
   isSaving?: boolean
   continueLabel?: string
+  layout?: "list" | "grid"
 }
 
 export function MultiSelectScreen({
@@ -37,9 +47,11 @@ export function MultiSelectScreen({
   onNone,
   isSaving,
   continueLabel = "Weiter",
+  layout = "list",
 }: MultiSelectScreenProps) {
   const hasSelection = selected.length > 0
   const titleTip = titleInfoTipId ? INFO_TIPS[titleInfoTipId] : null
+  const isGrid = layout === "grid"
 
   return (
     <div>
@@ -77,7 +89,7 @@ export function MultiSelectScreen({
         </p>
       )}
 
-      <div className="space-y-3 mb-6 mt-4">
+      <div className={cn("mb-6 mt-4", isGrid ? "grid grid-cols-2 gap-3" : "space-y-3")}>
         {options.map((option, i) => {
           const tip = option.infoTipId ? INFO_TIPS[option.infoTipId] : null
 
@@ -86,10 +98,18 @@ export function MultiSelectScreen({
               key={option.value}
               icon={option.icon}
               label={option.label}
+              description={option.description}
               active={selected.includes(option.value)}
               disabled={isSaving}
               onClick={() => onToggle(option.value)}
               animationDelay={100 + i * 60}
+              visual={
+                isGrid && option.image
+                  ? { kind: "image", src: option.image.src, alt: option.image.alt }
+                  : undefined
+              }
+              visualLayout={isGrid && option.image ? "grid" : undefined}
+              alwaysShowDescription={isGrid}
               trailing={
                 tip ? (
                   <InfoTip

@@ -24,6 +24,7 @@ import {
   TOWEL_MATERIAL_ICONS,
   TOWEL_TECHNIQUE_ICONS,
 } from "@/components/onboarding/onboarding-display-config"
+import { BRUSH_TYPE_DESCRIPTIONS, BRUSH_TYPE_IMAGES } from "@/components/quiz/tool-visuals"
 import {
   getFinalContinueLabel,
   shouldReturnAfterScopeStep,
@@ -661,6 +662,8 @@ export function OnboardingFlow({
   const brushTypeWithIcon = BRUSH_TYPE_OPTIONS.map((o) => ({
     ...o,
     icon: BRUSH_TYPE_ICONS[o.value] ?? fallbackIcon,
+    image: BRUSH_TYPE_IMAGES[o.value],
+    description: BRUSH_TYPE_DESCRIPTIONS[o.value],
   }))
 
   const nightProtectionWithIcon = NIGHT_PROTECTION_OPTIONS.map((o) => ({
@@ -918,6 +921,7 @@ export function OnboardingFlow({
             options={brushTypeWithIcon}
             selected={store.brushType ?? []}
             onToggle={toggleBrushType}
+            layout="grid"
             onContinue={() => handleStepComplete("brush_type")}
             onBack={handleBack}
             continueLabel={getFinalContinueLabel(

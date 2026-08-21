@@ -28,6 +28,8 @@ interface QuizOptionCardProps {
   trailing?: ReactNode
   visual?: LegacyQuizOptionVisual
   visualLayout?: LegacyQuizOptionLayout
+  /** Grid layout only: keep the description visible on mobile and let the card grow with it. */
+  alwaysShowDescription?: boolean
 }
 
 function SelectionCheck({ multi = false }: { multi?: boolean }) {
@@ -102,6 +104,7 @@ export function QuizOptionCard({
   trailing,
   visual,
   visualLayout = "row",
+  alwaysShowDescription = false,
 }: QuizOptionCardProps) {
   const labelId = useId()
   const descriptionId = useId()
@@ -125,7 +128,9 @@ export function QuizOptionCard({
             isThumbnail
               ? "items-stretch"
               : isGrid
-                ? "h-[184px] flex-col sm:h-full sm:min-h-[184px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0"
+                ? alwaysShowDescription
+                  ? "min-h-[184px] flex-col sm:h-full"
+                  : "h-[184px] flex-col sm:h-full sm:min-h-[184px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0"
                 : "h-full min-h-[184px] flex-col",
             active
               ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
@@ -166,7 +171,9 @@ export function QuizOptionCard({
               isThumbnail
                 ? "items-center px-4 py-3"
                 : isGrid
-                  ? "h-11 items-center px-3 py-1.5 sm:h-auto sm:items-start sm:p-4 [@media(max-height:700px)]:h-10 [@media(max-height:700px)]:px-2.5 [@media(max-height:700px)]:py-1"
+                  ? alwaysShowDescription
+                    ? "items-start px-3 py-2.5 sm:p-4"
+                    : "h-11 items-center px-3 py-1.5 sm:h-auto sm:items-start sm:p-4 [@media(max-height:700px)]:h-10 [@media(max-height:700px)]:px-2.5 [@media(max-height:700px)]:py-1"
                   : "items-start p-4",
             )}
           >
@@ -182,7 +189,7 @@ export function QuizOptionCard({
                   id={descriptionId}
                   className={cn(
                     "mt-1 block text-sm leading-5 text-[var(--text-sub)]",
-                    isGrid && "hidden sm:block",
+                    isGrid && !alwaysShowDescription && "hidden sm:block",
                   )}
                 >
                   {description}
