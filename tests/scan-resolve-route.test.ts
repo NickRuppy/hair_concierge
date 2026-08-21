@@ -68,6 +68,7 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     createAdminClient: () => ({}) as never,
     validateEanInput: () => ({ ok: true, type: "ean", value: "4006381333931" }),
     findOpenScanSubmission: async () => null,
+    recordScanResolveEvent: async () => {},
     lookupCatalogProductByIdentifier: async () => ({ productId, category: "shampoo" }),
     isProductSearchQuarantined: async () => false,
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
@@ -509,4 +510,125 @@ test("scan resolve: an unexpected lib error maps to 503", async () => {
   const response = await handler(request({ productId }))
   assert.equal(response.status, 503)
   assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+})
+
+function collectEvents() {
+  const events: unknown[] = []
+  const recordScanResolveEvent = async (_client: unknown, event: unknown) => {
+    events.push(event)
+  }
+  return { events, recordScanResolveEvent }
+}
+
+test("attempt log: catalog hit records outcome hit with the matched product", async () => {
+  const { events, recordScanResolveEvent } = collectEvents()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({ recordScanResolveEvent: recordScanResolveEvent as never }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(events, [
+    {
+      userId,
+      identifierType: "ean",
+      rawValue: "4006381333931",
+      outcome: "hit",
+      matchedProductId: productId,
+    },
+  ])
+})
+
+test("attempt log: catalog miss records outcome miss", async () => {
+  const { events, recordScanResolveEvent } = collectEvents()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      lookupCatalogProductByIdentifier: async () => null,
+      recordScanResolveEvent: recordScanResolveEvent as never,
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(events, [
+    {
+      userId,
+      identifierType: "ean",
+      rawValue: "4006381333931",
+      outcome: "miss",
+      matchedProductId: null,
+    },
+  ])
+})
+
+test("attempt log: invalid checksum records outcome invalid with the raw input", async () => {
+  const { events, recordScanResolveEvent } = collectEvents()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      validateEanInput: () => ({ ok: false, reason: "checksum" }),
+      recordScanResolveEvent: recordScanResolveEvent as never,
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333930" } }))
+  assert.equal(response.status, 400)
+  assert.deepEqual(events, [
+    {
+      userId,
+      identifierType: "ean",
+      rawValue: "4006381333930",
+      outcome: "invalid",
+      matchedProductId: null,
+    },
+  ])
+})
+
+test("attempt log: quarantined hit records outcome quarantined, keeping the product id", async () => {
+  const { events, recordScanResolveEvent } = collectEvents()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      isProductSearchQuarantined: async () => true,
+      recordScanResolveEvent: recordScanResolveEvent as never,
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(events, [
+    {
+      userId,
+      identifierType: "ean",
+      rawValue: "4006381333931",
+      outcome: "quarantined",
+      matchedProductId: productId,
+    },
+  ])
+})
+
+test("attempt log: open submission records outcome pending_submission", async () => {
+  const { events, recordScanResolveEvent } = collectEvents()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      lookupCatalogProductByIdentifier: async () => null,
+      findOpenScanSubmission: async () => ({ submissionId: "sub-1", status: "researching" }),
+      recordScanResolveEvent: recordScanResolveEvent as never,
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(events, [
+    {
+      userId,
+      identifierType: "ean",
+      rawValue: "4006381333931",
+      outcome: "pending_submission",
+      matchedProductId: null,
+    },
+  ])
+})
+
+test("attempt log: resolve-by-productId (search sheet) logs nothing — no barcode involved", async () => {
+  const { events, recordScanResolveEvent } = collectEvents()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({ recordScanResolveEvent: recordScanResolveEvent as never }),
+  )
+  const response = await handler(request({ productId }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(events, [])
 })

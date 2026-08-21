@@ -24,6 +24,7 @@ import {
 } from "@/lib/scan/catalog-eligibility"
 import { lookupCatalogProductByIdentifier, validateEanInput } from "@/lib/scan/identifier-lookup"
 import { findOpenScanSubmission } from "@/lib/scan/pending-submission"
+import { recordScanResolveEvent } from "@/lib/scan/resolve-event-log"
 import {
   presentScanVerdictPayload,
   toScanProductHeader,
@@ -68,6 +69,7 @@ export type ScanResolveRouteDeps = {
   createAdminClient: typeof createAdminClient
   validateEanInput: typeof validateEanInput
   findOpenScanSubmission: typeof findOpenScanSubmission
+  recordScanResolveEvent: typeof recordScanResolveEvent
   lookupCatalogProductByIdentifier: typeof lookupCatalogProductByIdentifier
   isProductSearchQuarantined: typeof isProductSearchQuarantined
   loadQuarantinedProductIdsAmong: typeof loadQuarantinedProductIdsAmong
@@ -143,8 +145,27 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
 
       if (parsed.data.identifier) {
         const identifier = parsed.data.identifier
+        // Attempt log (fail-open, barcode attempts only — the productId branch below
+        // comes from the search sheet and involves no barcode): outcome mirrors what
+        // the user is shown; matchedProductId also survives quarantined outcomes so
+        // the operator sees which product the barcode pointed at.
+        const logAttempt = (
+          outcome: Parameters<typeof recordScanResolveEvent>[1]["outcome"],
+          matchedProductId: string | null,
+        ) =>
+          deps.recordScanResolveEvent(client, {
+            userId,
+            identifierType: identifier.type,
+            rawValue: identifier.value,
+            outcome,
+            matchedProductId,
+          })
+
         const validation = deps.validateEanInput(identifier.value)
-        if (!validation.ok) return fail("invalid_identifier", 400)
+        if (!validation.ok) {
+          await logAttempt("invalid", null)
+          return fail("invalid_identifier", 400)
+        }
         const normalizedValue = normalizeIdentifierValue(validation.value)
 
         const hit = await deps.lookupCatalogProductByIdentifier(client, {
@@ -165,6 +186,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           // cataloged product must still reach its verdict while a submission is open.
           const pending = await deps.findOpenScanSubmission(client, userId, normalizedValue)
           if (pending) {
+            await logAttempt("pending_submission", hit?.productId ?? null)
             return ok({
               kind: "pending_submission",
               submissionId: pending.submissionId,
@@ -172,9 +194,11 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
               status: pending.status,
             })
           }
+          await logAttempt(quarantined ? "quarantined" : "miss", hit?.productId ?? null)
           return ok(unknownProduct(identifier.type, normalizedValue))
         }
 
+        await logAttempt("hit", hit.productId)
         productId = hit.productId
         category = hit.category
       } else {
@@ -380,6 +404,7 @@ export const POST = createScanResolveRouteHandler({
   createAdminClient,
   validateEanInput,
   findOpenScanSubmission,
+  recordScanResolveEvent,
   lookupCatalogProductByIdentifier,
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
