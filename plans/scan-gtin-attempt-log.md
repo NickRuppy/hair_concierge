@@ -146,6 +146,27 @@ Error/Recovery: Resolve-Fehler / Rate-Limit unverändert; Log-Insert fail-open.
 - Keine Änderung der PostHog-Event-Grenzen (keine EANs in PostHog — Ruling bleibt).
 - Keine Katalog-Hygiene (z. B. OGX-Duplikat mit Doppelname) in diesem Schnitt.
 
+## Follow-up-Pakete (beide von Nick bestätigt, 2026-08-21)
+
+**A — Barcode-Eindeutigkeit hart machen (eigener Branch, entschieden):**
+DB-Kanonisierung der gespeicherten Barcode-Werte (SQL spiegelt exakt die
+TS-Semantik von `canonicalizeGtin`, gemeinsame Fixtures — Codex F6) + partieller
+UNIQUE INDEX über die Barcode-Typen. Voraussetzungen aus dem Codex-Review:
+Preflight auf dem exakten Index-Key (typ-/produktübergreifend), Cross-Produkt-
+Kollisionen fail-closed adjudizieren, Approve/Link-RPC-ON-CONFLICT-Pfade +
+Heat/Scalp-Enrichment-Prefligths auf den neuen Key umstellen, Entscheidung
+inaktive-Produkte-reservieren-GTINs treffen, Schema-Kontrakt-Test
+(product-identity-schema.test.ts:106) auf den neuen Kontrakt umschreiben.
+
+**B — "Verwendung" als eigene Ebene (geparkt bis zum ersten realen Fall):**
+Architektur: Identität (Katalog) / Bewertung (Stage-3 je Kategorie+Rolle) /
+Beziehung (user_products + Routine-Platzierung). Reihenfolge bei Bedarf:
+(1) kuratiertes Katalogfeld für Sekundär-Verwendungen, (2) Klärungsfrage erst
+bei der Routine-Platzierung (nie im Scan, nicht beim Merkliste-Save),
+(3) Bewertung gegen Use-Kategorie im Authority-Engine (braucht Facts je
+Use-Kategorie). Single-Use-Kategorien: Auto-Zuordnung (heutiges Verhalten).
+Trigger: erstes Multi-Use-Produkt in Attempt-Log/Intake-Daten.
+
 ## Offene Punkte vor Implementierung
 
 1. Nicks Variantenwahl (A/B/C) + Journey-Sign-off. [User-Facing Gate]
