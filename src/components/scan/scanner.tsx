@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import {
+  SCAN_CONFIRM_LABEL,
   SCAN_HINT_DEFAULT,
   nextScanHint,
   type ScanHint,
@@ -52,7 +53,10 @@ const STABLE_READ_REQUIRED_MATCHES = 2
 const SCAN_TIMEOUT_MS = 3000
 const LUMA_SAMPLE_INTERVAL_MS = 500 // ~2x/second
 const LUMA_SAMPLE_SIZE = 16
-const FLASH_DURATION_MS = 220
+// Decode-confirm moment (Variante A): corners + pill turn green for this long before the
+// sheet slides up. Mirrors `SCAN_CONFIRM_DELAY_MS` in scan-flow.tsx — the flow delays the
+// sheet by the same amount so the confirmation is actually visible.
+const CONFIRM_DURATION_MS = 400
 
 // Self-hosted zxing-wasm reader binary. `barcode-detector`'s default `locateFile`
 // fetches this from https://fastly.jsdelivr.net/npm/zxing-wasm@<version>/... at runtime —
@@ -101,7 +105,7 @@ export function Scanner({
   const loopControlRef = useRef<{ schedule: () => void; cancel: () => void } | null>(null)
 
   const [hint, setHint] = useState<ScanHint>(SCAN_HINT_DEFAULT)
-  const [flashActive, setFlashActive] = useState(false)
+  const [confirmActive, setConfirmActive] = useState(false)
 
   // Latest-callback refs so the detection loop (set up once per `active` toggle) never
   // closes over a stale prop.
@@ -127,7 +131,7 @@ export function Scanner({
     sessionRef.current = createScanSessionState()
     sessionRef.current.sheetPaused = detectionPausedRef.current
     setHint(SCAN_HINT_DEFAULT)
-    setFlashActive(false)
+    setConfirmActive(false)
 
     const session = sessionRef.current
 
@@ -180,8 +184,8 @@ export function Scanner({
       session.rawDetectionsWithoutStableRead = 0
       session.lastRawValue = null
       session.consecutiveMatch = 0
-      setFlashActive(true)
-      window.setTimeout(() => setFlashActive(false), FLASH_DURATION_MS)
+      setConfirmActive(true)
+      window.setTimeout(() => setConfirmActive(false), CONFIRM_DURATION_MS)
       onDecodedRef.current({ type: "ean", value })
     }
 
@@ -457,7 +461,7 @@ export function Scanner({
     if (!active) return
     restartScanSessionState(sessionRef.current, performance.now())
     setHint(SCAN_HINT_DEFAULT)
-    setFlashActive(false)
+    setConfirmActive(false)
   }, [active, sessionEpoch])
 
   if (!active) return null
@@ -466,29 +470,45 @@ export function Scanner({
     <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-black">
       <video ref={videoRef} playsInline muted className="h-full w-full object-cover" />
 
-      {/* Viewfinder corner markers */}
-      <div className="pointer-events-none absolute inset-6 sm:inset-10" aria-hidden>
-        <span className="absolute left-0 top-0 h-8 w-8 rounded-tl-lg border-l-2 border-t-2 border-white/90" />
-        <span className="absolute right-0 top-0 h-8 w-8 rounded-tr-lg border-r-2 border-t-2 border-white/90" />
-        <span className="absolute bottom-0 left-0 h-8 w-8 rounded-bl-lg border-b-2 border-l-2 border-white/90" />
-        <span className="absolute bottom-0 right-0 h-8 w-8 rounded-br-lg border-b-2 border-r-2 border-white/90" />
+      {/* Viewfinder corner markers — green + pulse during the decode-confirm moment */}
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-6 sm:inset-10",
+          confirmActive && "motion-safe:animate-pulse",
+        )}
+        aria-hidden
+      >
+        {(
+          [
+            "left-0 top-0 rounded-tl-lg border-l-2 border-t-2",
+            "right-0 top-0 rounded-tr-lg border-r-2 border-t-2",
+            "bottom-0 left-0 rounded-bl-lg border-b-2 border-l-2",
+            "bottom-0 right-0 rounded-br-lg border-b-2 border-r-2",
+          ] as const
+        ).map((corner) => (
+          <span
+            key={corner}
+            className={cn(
+              "absolute h-8 w-8 transition-colors",
+              corner,
+              confirmActive ? "border-[var(--status-ok-text)]" : "border-white/90",
+            )}
+          />
+        ))}
       </div>
 
-      {/* Hint pill */}
+      {/* Hint pill / decode-confirm pill */}
       <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center px-6">
-        <span className="rounded-full bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
-          {hint}
+        <span
+          className={cn(
+            "rounded-full px-4 py-2 text-sm font-medium text-white backdrop-blur-sm",
+            confirmActive ? "bg-[var(--status-ok-text)] font-semibold" : "bg-black/70",
+          )}
+          aria-live="polite"
+        >
+          {confirmActive ? `✓ ${SCAN_CONFIRM_LABEL}` : hint}
         </span>
       </div>
-
-      {/* Brief flash on stable decode */}
-      <div
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-0 bg-white transition-opacity duration-200",
-          flashActive ? "opacity-80" : "opacity-0",
-        )}
-      />
 
       {/* Off-screen luma sampling target, never shown */}
       <canvas

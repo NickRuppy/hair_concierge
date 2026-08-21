@@ -9,6 +9,7 @@ import {
   type ScanAnalyticsPort,
 } from "@/lib/scan/scan-analytics"
 import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
+import { SCAN_RESOLVING_SUBLINE, SCAN_RESOLVING_TITLE } from "@/lib/scan/verdict-labels"
 import type {
   ScanPendingSubmissionResult,
   ScanResolveResult,
@@ -46,6 +47,10 @@ type ScanFlowStep =
   | { kind: "result"; result: ScanResolvedVerdictResult }
   | { kind: "unknown"; unknown: ScanUnknownProductResult }
   | { kind: "pending"; pending: ScanPendingSubmissionResult }
+
+// Mirrors `CONFIRM_DURATION_MS` in scanner.tsx: the sheet waits this long after a camera
+// decode so the green "✓ Barcode erkannt" state is actually visible (Variante A).
+const SCAN_CONFIRM_DELAY_MS = 400
 
 const RESOLVE_ERRORS: Record<string, string> = {
   profile_missing: "Für den Scan brauchen wir zuerst deine Haaranalyse.",
@@ -119,8 +124,26 @@ export function ScanFlow({
   }, [returnToScanning])
 
   const resolve = useCallback(
-    async (body: { identifier: ScanIdentifier } | { productId: string }) => {
-      setStep({ kind: "resolving" })
+    async (
+      body: { identifier: ScanIdentifier } | { productId: string },
+      options?: { sheetDelayMs?: number },
+    ) => {
+      // Decode-confirm moment (Variante A): a camera decode passes `sheetDelayMs` so the
+      // scanner's green "✓ Barcode erkannt" state stays visible before the sheet slides
+      // up — the fetch below still starts immediately, so no time-to-verdict is lost.
+      // The timer is cleared once the request settles: a fast failure returns to
+      // scanning, and a stale timer must not push that fresh scanning state into an
+      // orphaned skeleton.
+      let sheetTimer: number | null = null
+      const clearSheetTimer = () => {
+        if (sheetTimer !== null) window.clearTimeout(sheetTimer)
+        sheetTimer = null
+      }
+      if (options?.sheetDelayMs) {
+        sheetTimer = window.setTimeout(() => setStep({ kind: "resolving" }), options.sheetDelayMs)
+      } else {
+        setStep({ kind: "resolving" })
+      }
       try {
         const response = await fetch("/api/scan/resolve", {
           method: "POST",
@@ -128,6 +151,7 @@ export function ScanFlow({
           body: JSON.stringify(body),
         })
         if (!response.ok) {
+          clearSheetTimer()
           const payload = (await response.json().catch(() => null)) as { error?: string } | null
           toast({
             title: RESOLVE_ERRORS[payload?.error ?? ""] ?? GENERIC_ERROR,
@@ -137,6 +161,7 @@ export function ScanFlow({
           return
         }
         const result = (await response.json()) as ScanResolveResult
+        clearSheetTimer()
         if (result.kind === "unknown_product") {
           analytics.track("scan_not_found", {})
           setStep({ kind: "unknown", unknown: result })
@@ -152,6 +177,7 @@ export function ScanFlow({
           setStep({ kind: "result", result })
         }
       } catch {
+        clearSheetTimer()
         toast({ title: GENERIC_ERROR, variant: "destructive" })
         returnToScanning()
       }
@@ -166,7 +192,7 @@ export function ScanFlow({
         msToDecode: Math.round(performance.now() - scanSessionStartRef.current),
         format: identifier.value.length === 8 ? "ean_8" : "ean_13",
       })
-      void resolve({ identifier })
+      void resolve({ identifier }, { sheetDelayMs: SCAN_CONFIRM_DELAY_MS })
     },
     [resolve, analytics],
   )
@@ -402,6 +428,10 @@ function sheetTitle(step: ScanFlowStep): string {
 function ResolvingBody() {
   return (
     <div className="flex flex-col gap-4" aria-busy="true" aria-live="polite">
+      <div>
+        <p className="text-[17px] font-bold leading-snug">{SCAN_RESOLVING_TITLE}</p>
+        <p className="mt-0.5 text-sm text-muted-foreground">{SCAN_RESOLVING_SUBLINE}</p>
+      </div>
       <div className="flex items-center gap-3">
         <Skeleton className="h-12 w-12 rounded-[10px]" />
         <div className="flex-1">
