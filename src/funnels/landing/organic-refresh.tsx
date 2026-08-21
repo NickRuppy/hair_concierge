@@ -41,17 +41,26 @@ export default function OrganicRefreshLandingVariant() {
   return (
     <main className="min-h-screen bg-[#fcfaf7] text-[var(--brand-plum-darkest)]">
       <header className="sticky top-0 z-30 border-b border-[rgba(var(--brand-plum-rgb),0.08)] bg-[#fcfaf7]/94 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
-          <Link href="/" className="font-serif text-2xl font-semibold tracking-tight">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-1 px-2 py-3 sm:gap-3 sm:px-5">
+          <Link href="/" className="shrink-0 font-serif text-2xl font-semibold tracking-tight">
             chaarlie
           </Link>
-          <Link
-            href="/quiz"
-            prefetch={false}
-            className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white shadow-[0_12px_30px_-22px_rgba(var(--brand-plum-rgb),0.85)]"
-          >
-            Analyse starten
-          </Link>
+          <nav className="flex shrink-0 items-center gap-1 sm:gap-3" aria-label="Zugang">
+            <Link
+              href="/auth?next=/chat"
+              prefetch={false}
+              className="inline-flex min-h-11 items-center rounded-md px-0.5 text-sm font-semibold text-[rgba(var(--brand-plum-rgb),0.68)] underline-offset-4 transition-colors hover:text-[var(--brand-plum-darkest)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2 sm:px-1"
+            >
+              Anmelden
+            </Link>
+            <Link
+              href="/quiz"
+              prefetch={false}
+              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-plum)] px-2.5 text-sm font-bold text-white shadow-[0_12px_30px_-22px_rgba(var(--brand-plum-rgb),0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2 sm:px-4"
+            >
+              Analyse starten
+            </Link>
+          </nav>
         </div>
       </header>
 
