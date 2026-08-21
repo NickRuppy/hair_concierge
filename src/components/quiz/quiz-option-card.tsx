@@ -129,7 +129,7 @@ export function QuizOptionCard({
               ? "items-stretch"
               : isGrid
                 ? alwaysShowDescription
-                  ? "min-h-[184px] flex-col sm:h-full"
+                  ? "h-full min-h-[184px] flex-col"
                   : "h-[184px] flex-col sm:h-full sm:min-h-[184px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0"
                 : "h-full min-h-[184px] flex-col",
             active

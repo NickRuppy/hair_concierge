@@ -134,3 +134,44 @@ test("single-select screen syncs prop changes and cancels delayed selection on b
   assert.match(source, /function handleBack\(\)/)
   assert.match(source, /cancelPendingAdvance\(\)/)
 })
+
+test("tool image grid cards keep their description visible on mobile and fill the row height", () => {
+  const html = renderToStaticMarkup(
+    <QuizOptionCard
+      label="Detangling-Bürste"
+      description="Flexible Borsten, z. B. Tangle Teezer."
+      active={false}
+      multi
+      onClick={() => {}}
+      visual={{
+        kind: "image",
+        src: "/images/tools/detangling.webp",
+        alt: "Detangling-Bürste",
+      }}
+      visualLayout="grid"
+      alwaysShowDescription
+    />,
+  )
+
+  assert.doesNotMatch(html, /\bhidden sm:block\b/)
+  assert.match(html, /Flexible Borsten, z\. B\. Tangle Teezer\./)
+  assert.match(html, /\bh-full min-h-\[184px\] flex-col\b/)
+  assert.doesNotMatch(html, /\bh-\[184px\]\b/)
+})
+
+test("tool grid options without an image fall back to the icon row card", () => {
+  const html = renderToStaticMarkup(
+    <QuizOptionCard
+      icon="brush-round"
+      label="Föhnbürste"
+      description="Föhn und Bürste in einem Gerät."
+      active={false}
+      multi
+      onClick={() => {}}
+      alwaysShowDescription
+    />,
+  )
+
+  assert.match(html, /grid-cols-\[auto_minmax\(0,1fr\)_auto\]/)
+  assert.doesNotMatch(html, /<img/)
+})

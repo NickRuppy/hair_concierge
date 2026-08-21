@@ -26,10 +26,18 @@ Zielmuster: Bild ansehen, Bild auswählen.
 
 ## Assets
 
-14 webp (640×640, `public/images/tools/`), generiert mit Codex `image_gen`
+14 webp (1216×640, `public/images/tools/`), generiert mit Codex `image_gen`
 (gpt-image, built-in mode) aus einem gemeinsamen Stil-Prompt: fotorealistischer Packshot,
 einzelnes Objekt, heller Lavendel-Hintergrund `#f2eefa` (Plum-Ice), weicher Schatten,
-matte Anthrazit-Materialien, keine Logos/Texte, 1024², dann auf 640² webp q82 verkleinert.
+matte Anthrazit-Materialien, keine Logos/Texte, 1024².
+
+Nachbearbeitung (sharp): jedes 1024²-PNG auf eine 1946×1024-Leinwand (1,9:1) erweitert —
+Basis ist das stark geblurte, gestreckte Bild selbst (Letterbox-Blur), Original mittig
+komponiert — dann auf 1216×640 webp q82 verkleinert. Grund (Codex-Review-Finding): mit
+quadratischen Assets schnitt `object-cover` auf breiten Karten bis ~50 % des Tools ab;
+`object-contain` erzeugte sichtbare Kanten, weil der Foto-Hintergrund (Studio-Falloff)
+nicht exakt Plum-Ice ist. Mit 1,9:1-Assets füllt `object-cover` jedes Media-Well
+(Seitenverhältnis stets < 1,9) randlos, ohne das Tool je vertikal zu beschneiden.
 
 Regenerier-Prompts (Stil-Block + je Tool) für Erweiterungen:
 
@@ -62,8 +70,9 @@ Regenerier-Prompts (Stil-Block + je Tool) für Erweiterungen:
 - `src/components/quiz/tool-visuals.ts` (neu): Bild-Maps + Beschreibungen für alle drei
   Fragen; Onboarding-Hitzetools teilen 4 Bilder mit dem Refinement-Set.
 - `QuizOptionCard`: neues Prop `alwaysShowDescription` (nur Grid) — Beschreibung bleibt
-  auf Mobile sichtbar, Karte wächst mit dem Inhalt statt fester Höhe. Bestehende
-  Grid-Nutzer (Haarstruktur etc.) bleiben pixel-identisch.
+  auf Mobile sichtbar, Karte füllt die Zeilenhöhe (`h-full`), sodass Karten einer Reihe
+  trotz unterschiedlich langer Texte bündig abschließen. Bestehende Grid-Nutzer
+  (Haarstruktur etc.) bleiben pixel-identisch.
 - `RefinementOptions` + `MultiSelectScreen`: neues Prop `layout="grid"` reicht
   `visual`/`visualLayout` an `QuizOptionCard` durch; nur die drei Tool-Fragen nutzen es.
 - `HeatToolsScreen`: Zeilen → Bild-Grid, bestehende Beschreibungen (Markenbeispiele) bleiben.
