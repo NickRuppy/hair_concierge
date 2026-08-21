@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
-import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { checkRateLimit, SCAN_TYPEAHEAD_RATE_LIMIT } from "@/lib/rate-limit"
 import { suggestScanBrands } from "@/lib/scan/brand-suggestions"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -33,7 +33,7 @@ export function createScanBrandsRouteHandler(deps: ScanBrandsRouteDeps) {
     const userId = await deps.getUserId()
     if (!userId) return fail("unauthorized", 401)
 
-    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
+    const limited = await deps.checkRateLimit(userId, SCAN_TYPEAHEAD_RATE_LIMIT)
     if (!limited.allowed) {
       const unavailable = limited.error === "service_unavailable"
       return fail(

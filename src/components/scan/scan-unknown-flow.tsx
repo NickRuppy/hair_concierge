@@ -55,16 +55,23 @@ export function ScanUnknownFlow({
   const suggestSeqRef = useRef(0)
   const suppressSuggestRef = useRef(false)
 
+  // Bumping the sequence here (not only on new valid queries) is what keeps a fetch
+  // that is already in flight from resurrecting chips the user just cleared or picked.
+  const invalidateSuggestions = () => {
+    suggestSeqRef.current += 1
+    setBrandSuggestions([])
+  }
+
   const handleBrandChange = (value: string) => {
     suppressSuggestRef.current = false
     setBrand(value)
-    if (value.trim().length < 2) setBrandSuggestions([])
+    if (value.trim().length < 2) invalidateSuggestions()
   }
 
   const pickBrandSuggestion = (name: string) => {
     suppressSuggestRef.current = true
     setBrand(name)
-    setBrandSuggestions([])
+    invalidateSuggestions()
   }
 
   useEffect(() => {
@@ -77,7 +84,12 @@ export function ScanUnknownFlow({
     const timer = window.setTimeout(async () => {
       try {
         const response = await fetch(`/api/scan/brands?q=${encodeURIComponent(query)}`)
-        if (!response.ok || suggestSeqRef.current !== seq) return
+        if (suggestSeqRef.current !== seq) return
+        if (!response.ok) {
+          // Chips from the previous query must not outlive a failed refresh.
+          setBrandSuggestions([])
+          return
+        }
         const payload = (await response.json()) as { brands?: string[] }
         if (suggestSeqRef.current !== seq) return
         setBrandSuggestions(
@@ -170,7 +182,12 @@ export function ScanUnknownFlow({
               placeholder="z. B. Olaplex"
             />
             {brandSuggestions.length > 0 ? (
-              <div className="mt-2 flex flex-wrap gap-1.5" aria-label="Marken-Vorschläge">
+              <div
+                className="mt-2 flex flex-wrap gap-1.5"
+                role="status"
+                aria-live="polite"
+                aria-label="Marken-Vorschläge"
+              >
                 {brandSuggestions.map((name) => (
                   <button
                     key={name}
