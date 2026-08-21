@@ -150,7 +150,8 @@ export function ScanResultCard({
 
 function ProductHeader({ product }: { product: ScanProductHeader }) {
   return (
-    <div className="flex items-center gap-3">
+    // pr-9 keeps the title clear of the sheet's absolute close button (right-3, 40px).
+    <div className="flex items-center gap-3 pr-9">
       <ScanProductThumb imageUrl={product.imageUrl} label={product.name} size={48} />
       <div className="min-w-0">
         <h2 className="break-words text-[15px] font-bold leading-snug text-foreground">

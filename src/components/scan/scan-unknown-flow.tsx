@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
-import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
+import { ChevronDown } from "lucide-react"
+
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { ScanUnknownProductResult } from "@/lib/scan/types"
+import { SCAN_UNKNOWN_HEADLINE, SCAN_UNKNOWN_QUESTION } from "@/lib/scan/verdict-labels"
 import { cn } from "@/lib/utils"
 
 /**
@@ -46,6 +48,62 @@ export function ScanUnknownFlow({
   const [brand, setBrand] = useState("")
   const [productName, setProductName] = useState("")
 
+  // Brand typeahead: debounced catalog suggestions under the field. Best-effort — any
+  // failure just means no chips. `suggestSeqRef` drops stale responses; picking a chip
+  // suppresses the refetch its own setBrand would trigger.
+  const [brandSuggestions, setBrandSuggestions] = useState<string[]>([])
+  const suggestSeqRef = useRef(0)
+  const suppressSuggestRef = useRef(false)
+
+  // Bumping the sequence here (not only on new valid queries) is what keeps a fetch
+  // that is already in flight from resurrecting chips the user just cleared or picked.
+  const invalidateSuggestions = () => {
+    suggestSeqRef.current += 1
+    setBrandSuggestions([])
+  }
+
+  const handleBrandChange = (value: string) => {
+    suppressSuggestRef.current = false
+    setBrand(value)
+    if (value.trim().length < 2) invalidateSuggestions()
+  }
+
+  const pickBrandSuggestion = (name: string) => {
+    suppressSuggestRef.current = true
+    setBrand(name)
+    invalidateSuggestions()
+  }
+
+  useEffect(() => {
+    if (suppressSuggestRef.current) return
+    const query = brand.trim()
+    // Too-short queries were already cleared in handleBrandChange (no setState here —
+    // synchronous setState in an effect cascades renders, lint react-you-might-not-need-an-effect).
+    if (query.length < 2) return
+    const seq = ++suggestSeqRef.current
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/scan/brands?q=${encodeURIComponent(query)}`)
+        if (suggestSeqRef.current !== seq) return
+        if (!response.ok) {
+          // Chips from the previous query must not outlive a failed refresh.
+          setBrandSuggestions([])
+          return
+        }
+        const payload = (await response.json()) as { brands?: string[] }
+        if (suggestSeqRef.current !== seq) return
+        setBrandSuggestions(
+          (payload.brands ?? []).filter(
+            (name) => name.toLocaleLowerCase() !== query.toLocaleLowerCase(),
+          ),
+        )
+      } catch {
+        // Typeahead is a convenience — free text always works.
+      }
+    }, 200)
+    return () => window.clearTimeout(timer)
+  }, [brand])
+
   const primary = unknown.categories.filter((entry) => PRIMARY_CATEGORIES.includes(entry.key))
   const rest = unknown.categories.filter((entry) => !PRIMARY_CATEGORIES.includes(entry.key))
   const visible = showAll ? [...primary, ...rest] : primary
@@ -56,18 +114,16 @@ export function ScanUnknownFlow({
 
       {step === 1 ? (
         <>
+          {/* Two-line header (sign-off 2026-08-21): warm headline + question; the ~24h
+              promise lives in the post-submit confirmation, the barcode in a mini line
+              below the cards. */}
           <div>
-            <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-              Neues Produkt
-            </p>
             <h2 className="font-header text-2xl leading-tight text-foreground">
-              Das kennen wir noch nicht.
+              {SCAN_UNKNOWN_HEADLINE}
             </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-sub)]">
-              Wir recherchieren es für dich — meist innerhalb von 24 Stunden. Was für ein Produkt
-              ist es?
+            <p className="mt-2 text-[15px] font-semibold leading-6 text-foreground">
+              {SCAN_UNKNOWN_QUESTION}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Barcode {unknown.identifier.value}</p>
           </div>
 
           <div className="grid gap-2">
@@ -78,29 +134,30 @@ export function ScanUnknownFlow({
                 onClick={() => setCategory(entry.key)}
                 aria-pressed={category === entry.key}
                 className={cn(
-                  "grid min-h-[64px] grid-cols-[minmax(0,1fr)] items-start gap-1 rounded-xl border p-3 text-left transition-colors",
+                  "flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors",
                   category === entry.key
                     ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
                     : "border-border bg-card hover:border-[var(--brand-plum)]/40",
                 )}
               >
-                <span className="block text-sm font-semibold text-foreground">{entry.label}</span>
-                <span className="block text-xs leading-5 text-muted-foreground">
-                  {CATEGORY_COPY[entry.key].need}
-                </span>
+                <span className="block text-[17px] font-bold text-foreground">{entry.label}</span>
               </button>
             ))}
+            {!showAll && rest.length > 0 ? (
+              <button
+                type="button"
+                onClick={() => setShowAll(true)}
+                className="flex min-h-[56px] items-center justify-between rounded-xl border border-dashed border-[var(--brand-plum-light)] p-3 text-left text-[15px] font-semibold text-[var(--brand-plum)] transition-colors hover:border-[var(--brand-plum)]"
+              >
+                <span>Weitere Produktarten</span>
+                <ChevronDown className="h-5 w-5" aria-hidden="true" />
+              </button>
+            ) : null}
           </div>
 
-          {!showAll && rest.length > 0 ? (
-            <button
-              type="button"
-              onClick={() => setShowAll(true)}
-              className="min-h-[44px] self-start text-sm font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline"
-            >
-              Weitere Produktart …
-            </button>
-          ) : null}
+          <p className="text-center text-xs tabular-nums text-muted-foreground">
+            Barcode {unknown.identifier.value}
+          </p>
 
           <PrimaryAction disabled={category === null} onClick={() => setStep(2)}>
             Weiter
@@ -110,14 +167,40 @@ export function ScanUnknownFlow({
         <>
           <div>
             <h2 className="font-header text-2xl leading-tight text-foreground">
-              Welche Marke ist es?
+              Magst du uns noch die Marke verraten?
             </h2>
             <p className="mt-2 text-sm leading-6 text-[var(--text-sub)]">
-              Alles optional — der Barcode reicht meist schon.
+              Alles optional — der Barcode reicht uns meistens schon.
             </p>
           </div>
 
-          <TextField label="Marke" value={brand} onChange={setBrand} placeholder="z. B. Olaplex" />
+          <div>
+            <TextField
+              label="Marke"
+              value={brand}
+              onChange={handleBrandChange}
+              placeholder="z. B. Olaplex"
+            />
+            {brandSuggestions.length > 0 ? (
+              <div
+                className="mt-2 flex flex-wrap gap-1.5"
+                role="status"
+                aria-live="polite"
+                aria-label="Marken-Vorschläge"
+              >
+                {brandSuggestions.map((name) => (
+                  <button
+                    key={name}
+                    type="button"
+                    onClick={() => pickBrandSuggestion(name)}
+                    className="rounded-full border border-border bg-card px-3.5 py-1.5 text-sm font-semibold text-foreground transition-colors hover:border-[var(--brand-plum)] hover:bg-[var(--brand-plum-ice)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <TextField
             label="Produktname"
             value={productName}

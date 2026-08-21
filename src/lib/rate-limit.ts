@@ -124,3 +124,11 @@ export const SCAN_RATE_LIMIT: RateLimitConfig = {
   limit: 30,
   windowMs: 60_000,
 }
+
+// Brand typeahead gets its own bucket: debounced keystrokes must never eat the shared
+// scan budget and turn the user's final submit into a 429 (Codex review 2026-08-21).
+export const SCAN_TYPEAHEAD_RATE_LIMIT: RateLimitConfig = {
+  prefix: "scan-typeahead",
+  limit: 60,
+  windowMs: 60_000,
+}
