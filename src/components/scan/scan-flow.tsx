@@ -9,7 +9,11 @@ import {
   type ScanAnalyticsPort,
 } from "@/lib/scan/scan-analytics"
 import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
-import { SCAN_RESOLVING_SUBLINE, SCAN_RESOLVING_TITLE } from "@/lib/scan/verdict-labels"
+import {
+  SCAN_RESOLVING_SUBLINE,
+  SCAN_RESOLVING_TITLE,
+  SCAN_UNKNOWN_HEADLINE,
+} from "@/lib/scan/verdict-labels"
 import type {
   ScanPendingSubmissionResult,
   ScanResolveResult,
@@ -459,7 +463,7 @@ function sheetTitle(step: ScanFlowStep): string {
     case "result":
       return step.result.kind === "in_catalog" ? step.result.verdictTitle : step.result.headline
     case "unknown":
-      return "Das kennen wir noch nicht."
+      return SCAN_UNKNOWN_HEADLINE
     case "pending":
       return step.pending.headline
     default:

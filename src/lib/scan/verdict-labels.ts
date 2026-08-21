@@ -61,6 +61,10 @@ export function scanNotNeededSubtitle(category: PersonalPlanCategory): string {
 
 export const SCAN_DEFERRED_HEADLINE = "Das klären wir noch"
 
+/** Unknown-product intake, step 1 (warm two-line header — copy sign-off 2026-08-21). */
+export const SCAN_UNKNOWN_HEADLINE = "Oh, das kennen wir noch nicht!"
+export const SCAN_UNKNOWN_QUESTION = "Was für ein Produkt ist es? Wir nehmen es gern auf."
+
 /** Resolving sheet while the verdict loads (Variante A decode feedback). */
 export const SCAN_RESOLVING_TITLE = "Produkt wird geprüft …"
 export const SCAN_RESOLVING_SUBLINE = "Passt es zu deinem Haar?"
