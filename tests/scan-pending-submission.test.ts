@@ -38,7 +38,8 @@ test("findOpenScanSubmission: open submission found", async () => {
 
   assert.deepEqual(result, { submissionId: "sub-1", status: "researching" })
   assert.equal(filters.get("user_id"), "user-1")
-  assert.equal(filters.get("scanned_identifier_value"), "4006381333931")
+  // Raw spelling plus canonical GTIN-14 form (see the dual-form test below).
+  assert.deepEqual(filters.get("scanned_identifier_value"), ["4006381333931", "04006381333931"])
   assert.deepEqual([...(filters.get("status") as string[])].sort(), [
     "needs_more_info",
     "pending_review",
@@ -53,4 +54,12 @@ test("findOpenScanSubmission: no open submission is null", async () => {
   const result = await findOpenScanSubmission(client as never, "user-1", "4006381333931")
 
   assert.equal(result, null)
+})
+
+test("findOpenScanSubmission: queries raw and canonical GTIN spellings", async () => {
+  const { client, filters } = stubClient({ data: null, error: null })
+
+  await findOpenScanSubmission(client as never, "user-1", "0022796976116")
+
+  assert.deepEqual(filters.get("scanned_identifier_value"), ["0022796976116", "00022796976116"])
 })

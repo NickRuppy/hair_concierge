@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { canonicalizeGtin } from "@/lib/product-identity/normalize"
 import { OPEN_SUBMISSION_STATUSES } from "@/lib/product-intake/submissions"
 
 export type ScanOpenSubmissionStatus = (typeof OPEN_SUBMISSION_STATUSES)[number]
@@ -20,11 +21,16 @@ export async function findOpenScanSubmission(
   userId: string,
   normalizedValue: string,
 ): Promise<ScanPendingSubmission> {
+  // Stored submissions hold whatever spelling the scanner sent at submission time;
+  // match the canonical GTIN form alongside it (mirrors the catalog lookup).
+  const canonicalValue = canonicalizeGtin(normalizedValue)
+  const queryValues = [...new Set([normalizedValue, canonicalValue].filter(Boolean))] as string[]
+
   const { data, error } = await client
     .from("product_submissions")
     .select("id, status")
     .eq("user_id", userId)
-    .eq("scanned_identifier_value", normalizedValue)
+    .in("scanned_identifier_value", queryValues)
     .in("status", OPEN_SUBMISSION_STATUSES)
     .order("created_at", { ascending: false })
     .limit(1)

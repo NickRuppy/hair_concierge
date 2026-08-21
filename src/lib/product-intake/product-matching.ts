@@ -1,4 +1,5 @@
 import {
+  canonicalizeGtin,
   normalizeIdentifierValue,
   normalizeIdentityText,
   tokenizeProductName,
@@ -165,7 +166,10 @@ function identifierTypesCompatible(inputType: string | null, catalogType: string
 function identifierValueForType(value: string, type: string): string {
   if (BARCODE_IDENTIFIER_TYPES.has(type)) {
     const normalized = normalizeIdentifierValue(value)
-    return normalized.replace(/[^\p{Letter}\p{Number}]+/gu, "")
+    const stripped = normalized.replace(/[^\p{Letter}\p{Number}]+/gu, "")
+    // Both comparison sides pass through here, so canonicalizing GTIN-shaped values
+    // makes UPC-A / EAN-13 / GTIN-14 spellings of one number compare equal.
+    return canonicalizeGtin(stripped) ?? stripped
   }
 
   return value.toLowerCase().replace(/\s+/g, "").trim()
