@@ -2082,6 +2082,87 @@ test("Stripe subscription.updated upserts the billing row when profile resolves 
   assert.equal(billing[0].current_period_end, new Date(periodEnd * 1000).toISOString())
 })
 
+test("Stripe subscription.updated falls back to the billing row by provider_subscription_id when no profile matches the customer id", async () => {
+  const periodEnd = Math.floor((Date.now() + 172_800_000) / 1000)
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "orphan-billing",
+        user_id: "user-orphan",
+        provider: "stripe",
+        provider_subscription_id: "sub_orphan",
+        provider_customer_id: "cus_old",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: pastIso(),
+      },
+    ],
+  })
+
+  const result = await handleSubscriptionUpdated(
+    {
+      id: "sub_orphan",
+      customer: "cus_missing",
+      status: "past_due",
+      cancel_at_period_end: false,
+      items: {
+        data: [
+          {
+            current_period_end: periodEnd,
+            price: { recurring: { interval: "month", interval_count: 1 } },
+          },
+        ],
+      },
+    } as any,
+    { supabase: supabase as any },
+  )
+
+  assert.deepEqual(result, { matchedCurrentSubscription: false })
+  assert.equal(billing.length, 1)
+  assert.equal(billing[0].user_id, "user-orphan")
+  assert.equal(billing[0].provider_customer_id, "cus_missing")
+  assert.equal(billing[0].provider_status, "past_due")
+  assert.equal(billing[0].entitlement_status, "past_due")
+  assert.equal(billing[0].current_period_end, new Date(periodEnd * 1000).toISOString())
+})
+
+test("Stripe subscription.updated logs an error and stays a no-op when neither profile nor billing row matches", async () => {
+  const { supabase, billing } = createSupabaseStub()
+  const originalConsoleError = console.error
+  const errorCalls: unknown[][] = []
+  console.error = (...args: unknown[]) => {
+    errorCalls.push(args)
+  }
+
+  let result: Awaited<ReturnType<typeof handleSubscriptionUpdated>>
+  try {
+    result = await handleSubscriptionUpdated(
+      {
+        id: "sub_unmatched",
+        customer: "cus_unmatched",
+        status: "active",
+        cancel_at_period_end: false,
+        items: {
+          data: [
+            {
+              current_period_end: Math.floor(Date.now() / 1000) + 86_400,
+              price: { recurring: { interval: "month", interval_count: 1 } },
+            },
+          ],
+        },
+      } as any,
+      { supabase: supabase as any },
+    )
+  } finally {
+    console.error = originalConsoleError
+  }
+
+  assert.deepEqual(result, { matchedCurrentSubscription: false })
+  assert.equal(billing.length, 0)
+  assert.equal(errorCalls.length, 1)
+  assert.match(String(errorCalls[0]?.[0]), /subscription\.updated/)
+})
+
 test("Stripe unpaid subscription updates do not create open billing access", async () => {
   const periodEnd = Math.floor((Date.now() + 172_800_000) / 1000)
   const { supabase, billing } = createSupabaseStub({
