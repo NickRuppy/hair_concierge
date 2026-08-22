@@ -24,6 +24,16 @@ export interface ManualAccessGrantRow {
 const OPEN_ENTITLEMENTS = new Set<BillingEntitlementStatus>(["active", "past_due"])
 const ACCESS_ALREADY_EXISTS_ERROR = "User already has access through an existing subscription"
 
+/**
+ * Grace window after `current_period_end` during which a row with an OPEN
+ * entitlement (active/past_due) still grants access, absorbing the delay
+ * between a payment lapsing and the provider webhook updating the row.
+ *
+ * Must stay in sync with is_current in
+ * supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql
+ */
+export const EXPIRED_ENTITLEMENT_GRACE_MS = 24 * 60 * 60 * 1000
+
 export async function upsertBillingSubscription(
   supabase: SupabaseBillingClient,
   input: BillingSubscriptionInput,
@@ -283,7 +293,14 @@ export function hasCurrentBillingAccess(
   row: BillingSubscriptionRow,
   now: Date = new Date(),
 ): boolean {
-  if (OPEN_ENTITLEMENTS.has(row.entitlement_status)) return true
+  if (OPEN_ENTITLEMENTS.has(row.entitlement_status)) {
+    // Null current_period_end is legacy/incomplete billing_subscriptions
+    // data (e.g. rows backfilled from profiles before a first webhook ever
+    // populated the period) — there's no period end to measure a grace
+    // window against, so preserve the pre-existing status-only behavior.
+    if (row.current_period_end == null) return true
+    return isWithinExpiryGrace(row.current_period_end, now)
+  }
   return (
     row.entitlement_status === "canceled" &&
     row.cancel_at_period_end &&
@@ -295,8 +312,11 @@ export function hasCurrentLegacyProfileAccess(
   profile: Pick<LegacyProfileSubscription, "subscription_status" | "current_period_end">,
   now: Date = new Date(),
 ): boolean {
-  if (profile.subscription_status === "active" || profile.subscription_status === "past_due")
-    return true
+  if (profile.subscription_status === "active" || profile.subscription_status === "past_due") {
+    // Same null-period-end fallback as hasCurrentBillingAccess above.
+    if (profile.current_period_end == null) return true
+    return isWithinExpiryGrace(profile.current_period_end, now)
+  }
   return profile.subscription_status === "canceled" && isFutureIso(profile.current_period_end, now)
 }
 
@@ -304,6 +324,12 @@ export function isFutureIso(value: string | null | undefined, now: Date = new Da
   if (!value) return false
   const timestamp = Date.parse(value)
   return Number.isFinite(timestamp) && timestamp > now.getTime()
+}
+
+function isWithinExpiryGrace(periodEndIso: string, now: Date): boolean {
+  const timestamp = Date.parse(periodEndIso)
+  if (!Number.isFinite(timestamp)) return false
+  return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS
 }
 
 function entitlementPriority(status: BillingEntitlementStatus): number {
