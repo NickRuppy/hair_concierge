@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { dispatchBillingAnalyticsDueWithStats } from "@/lib/billing/analytics-outbox"
-import { reconcileExpiredBillingEntitlements } from "@/lib/billing/entitlements"
+import {
+  reconcileExpiredBillingEntitlements,
+  type StripeSubscriptionTruthSource,
+} from "@/lib/billing/entitlements"
 import {
   reconcilePersonalPlanOneTimeFulfillmentRetries,
   type PersonalPlanOneTimeFulfillmentDispatchers,
@@ -21,6 +24,8 @@ import type { processPayPalOneTimeFulfillmentJob } from "@/lib/paypal/order-acti
 import type { getStripe } from "@/lib/stripe/client"
 import type { processStripeOneTimeFulfillmentJob } from "@/lib/stripe/checkout-activation"
 import { getStripeTierIds } from "@/lib/stripe/tier-ids"
+import { getPremiumTierId } from "@/lib/billing/tier-ids"
+import type { StripeWebhookConfigCheckResult } from "@/lib/stripe/webhook-config-check"
 import {
   emptyPaymentIntegrityCounters,
   flushPaymentMonitorTelemetry,
@@ -68,6 +73,7 @@ type ReconcileDeps = {
   reportPaidAccessMonitorFailure?: (failure: PaidAccessMonitorFailure) => unknown
   clock?: () => number
   browserRecoveryCleanup?: (limit: number) => Promise<BrowserRecoveryCleanupResult>
+  runStripeWebhookConfigCheck?: () => Promise<StripeWebhookConfigCheckResult>
 }
 
 type BrowserRecoveryCleanupResult = {
@@ -121,6 +127,7 @@ export async function GET(request: Request) {
       reportPaidAccessFinding,
       reportPaidAccessMonitorFailure,
       requireCheckInReceipt: true,
+      runStripeWebhookConfigCheck: defaultVerifyStripeWebhookConfigCheck,
     }),
   )
 }
@@ -177,19 +184,29 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
     quizDrafts: { ok: false, purged: 0 },
     resultReturns: { ok: false, purged: 0 },
   }))
+  const webhookConfig = runStripeWebhookConfigCheckBranch(deps)
   const [
     integrityBranch,
     paidAccessBranch,
     entitlementBranch,
     analyticsBranch,
     browserRecoveryCleanupResult,
-  ] = await Promise.all([integrity, paidAccess, entitlement, analytics, browserRecoveryCleanup])
+    webhookConfigBranch,
+  ] = await Promise.all([
+    integrity,
+    paidAccess,
+    entitlement,
+    analytics,
+    browserRecoveryCleanup,
+    webhookConfig,
+  ])
 
   const body: Record<string, unknown> = {
     ...entitlementBranch.result,
     paymentIntegrity: integrityBranch.summary,
     browserRecoveryCleanup: browserRecoveryCleanupResult,
   }
+  if (webhookConfigBranch.result) body.stripeWebhookConfig = webhookConfigBranch.result
   if (paidAccessBranch.summary) body.paidAccess = paidAccessBranch.summary
 
   if (oneTimeBranch.result) body.oneTimeFulfillmentRetry = oneTimeBranch.result
@@ -242,11 +259,56 @@ async function runEntitlementBranch(deps: ReconcileDeps, now: Date) {
       result: await reconcileEntitlements(deps.supabase, {
         freeTierId,
         now,
+        getPremiumTierId: () => getPremiumTierId(deps.supabase),
+        retrieveStripeSubscription: defaultRetrieveStripeSubscriptionForReconcile,
+        retrievePayPalSubscription: defaultRetrievePayPalSubscriptionForReconcile,
       }),
     }
   } catch {
     return { ok: false, result: { downgraded: 0 } }
   }
+}
+
+async function defaultRetrieveStripeSubscriptionForReconcile(
+  subscriptionId: string,
+): Promise<StripeSubscriptionTruthSource> {
+  const { getStripe } = await import("@/lib/stripe/client")
+  const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
+  return subscription as unknown as StripeSubscriptionTruthSource
+}
+
+async function defaultRetrievePayPalSubscriptionForReconcile(subscriptionId: string) {
+  const { retrievePayPalSubscription } = await import("@/lib/paypal/subscriptions")
+  return retrievePayPalSubscription(subscriptionId)
+}
+
+async function runStripeWebhookConfigCheckBranch(deps: ReconcileDeps) {
+  if (!deps.runStripeWebhookConfigCheck) return { ok: true, result: undefined }
+  try {
+    return { ok: true, result: await deps.runStripeWebhookConfigCheck() }
+  } catch {
+    return {
+      ok: false,
+      result: { status: "error" as const, reason: "webhook_config_check_failed" },
+    }
+  }
+}
+
+async function defaultVerifyStripeWebhookConfigCheck() {
+  const [{ verifyStripeWebhookConfig }, { getStripe }] = await Promise.all([
+    import("@/lib/stripe/webhook-config-check"),
+    import("@/lib/stripe/client"),
+  ])
+  const stripe = getStripe()
+  return verifyStripeWebhookConfig({
+    listWebhookEndpoints: async () => (await stripe.webhookEndpoints.list({ limit: 100 })).data,
+    webhookUrl: resolveStripeWebhookUrl(),
+  })
+}
+
+function resolveStripeWebhookUrl(): string {
+  const base = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000"
+  return new URL("/api/stripe/webhook", base).toString()
 }
 
 async function runOneTimeFulfillmentBranch(deps: ReconcileDeps) {
