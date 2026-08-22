@@ -26,9 +26,9 @@ SELECT
   b.*,
   (
     b.metadata ?| array['qa_seed', 'ci_seed', 'is_internal_test', 'seeded_by', 'local_test', 'seed_source']
-    OR b.metadata ->> 'source' IN ('chat_eval_ci', 'local_dev_login_clean_test', 'codex_link_card_test')
+    OR COALESCE(b.metadata ->> 'source', '') IN ('chat_eval_ci', 'local_dev_login_clean_test', 'codex_link_card_test')
     OR b.provider_subscription_id LIKE '%K0IN8ErFeg%' -- old test-only Stripe account
-    OR b.metadata ->> 'checkout_session_id' LIKE 'cs_test_%'
+    OR COALESCE(b.metadata ->> 'checkout_session_id', '') LIKE 'cs_test_%'
     OR b.metadata ? 'backfilled_from_profiles'
   ) AS is_test,
   (
