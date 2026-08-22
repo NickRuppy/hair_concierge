@@ -51,6 +51,13 @@ const ANALYTICS_DESTINATIONS: BillingAnalyticsDestination[] = [
 ]
 const PAYMENT_INTEGRITY_DAILY_DEADLINE_MS = 20_000
 const PAYMENT_INTEGRITY_RUNTIME_MODULE = "@/lib/billing/payment-integrity-runtime"
+// Per-request bound for a single provider call inside the expired-active
+// reconcile loop. The loop's own 20s deadline (entitlements.ts) is only
+// checked between awaits, so one stalled request could otherwise block for
+// the Stripe SDK's default 80s timeout (or indefinitely for an un-aborted
+// PayPal fetch) — comfortably past this route's own 60s maxDuration above,
+// killing the whole cron run with no telemetry.
+const PROVIDER_RECONCILE_REQUEST_TIMEOUT_MS = 10_000
 
 type ReconcileDeps = {
   supabase: SupabaseClient
@@ -294,17 +301,38 @@ function defaultCaptureEntitlementBranchFailure(error: unknown) {
   })
 }
 
-async function defaultRetrieveStripeSubscriptionForReconcile(
+export async function defaultRetrieveStripeSubscriptionForReconcile(
   subscriptionId: string,
 ): Promise<StripeSubscriptionTruthSource> {
   const { getStripe } = await import("@/lib/stripe/client")
-  const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
+  const subscription = await getStripe().subscriptions.retrieve(
+    subscriptionId,
+    {},
+    { timeout: PROVIDER_RECONCILE_REQUEST_TIMEOUT_MS },
+  )
   return subscription as unknown as StripeSubscriptionTruthSource
 }
 
-async function defaultRetrievePayPalSubscriptionForReconcile(subscriptionId: string) {
+export async function defaultRetrievePayPalSubscriptionForReconcile(subscriptionId: string) {
   const { retrievePayPalSubscription } = await import("@/lib/paypal/subscriptions")
-  return retrievePayPalSubscription(subscriptionId)
+  // paypalRequest's own fetch is otherwise un-aborted (src/lib/paypal/client.ts)
+  // — race it against a timeout that also aborts the in-flight request, same
+  // technique as withProviderTimeout in payment-integrity-runtime.ts.
+  const controller = new AbortController()
+  let timeout: NodeJS.Timeout | null = null
+  try {
+    return await Promise.race([
+      retrievePayPalSubscription(subscriptionId, { signal: controller.signal }),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => {
+          controller.abort()
+          reject(new Error("paypal subscription retrieval timed out"))
+        }, PROVIDER_RECONCILE_REQUEST_TIMEOUT_MS)
+      }),
+    ])
+  } finally {
+    if (timeout) clearTimeout(timeout)
+  }
 }
 
 async function runStripeWebhookConfigCheckBranch(deps: ReconcileDeps) {

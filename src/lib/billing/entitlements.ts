@@ -4,11 +4,7 @@ import type {
   BillingSubscriptionRow,
   SupabaseBillingClient,
 } from "./types"
-import {
-  EXPIRED_ENTITLEMENT_GRACE_MS,
-  findCurrentBillingSubscriptionForUser,
-  isFutureIso,
-} from "./subscriptions"
+import { findCurrentBillingSubscriptionForUser, isFutureIso } from "./subscriptions"
 import { stripeEntitlementStatus } from "@/lib/stripe/checkout-activation"
 import {
   derivePayPalPaidThroughDate,
@@ -24,6 +20,8 @@ type MirrorableBillingSubscription = BillingSubscriptionInput | BillingSubscript
 export type StripeSubscriptionTruthSource = {
   status?: string
   current_period_end?: number
+  cancel_at_period_end?: boolean
+  cancel_at?: number | null
   items?: { data: Array<{ current_period_end?: number }> }
 }
 
@@ -37,6 +35,21 @@ export type RetrievePayPalSubscriptionForReconcile = (
 
 export const DEFAULT_EXPIRED_ACTIVE_RECONCILE_PROVIDER_CALL_CAP = 25
 export const DEFAULT_EXPIRED_ACTIVE_RECONCILE_DEADLINE_MS = 20_000
+
+/**
+ * Candidate threshold for the expired-active reconcile branch below.
+ * Deliberately much tighter than EXPIRED_ENTITLEMENT_GRACE_MS (24h, imported
+ * from subscriptions.ts), which is the access-check grace period. If
+ * candidacy used the same 24h threshold, a once-daily cron would only ever
+ * look at a row AFTER it already fell out of the access grace and locked
+ * the customer out. This lag buffer instead makes a row a candidate as soon
+ * as its local current_period_end has passed (plus a small buffer to avoid
+ * false positives from normal renewal-webhook timing jitter), so the nightly
+ * run gets a full ~23h window to refresh provider truth and correct a missed
+ * webhook *before* the access grace ever expires. The access-check grace
+ * itself is untouched by this constant.
+ */
+export const EXPIRED_ACTIVE_RECONCILE_LAG_MS = 60 * 60 * 1000
 
 const TEST_MARKER_METADATA_KEYS = [
   "qa_seed",
@@ -171,11 +184,12 @@ export async function reconcileExpiredBillingEntitlements(
 /**
  * Second reconcile branch: billing_subscriptions rows still marked
  * active/past_due locally whose current_period_end lapsed more than
- * EXPIRED_ENTITLEMENT_GRACE_MS ago (the same grace window that keeps them
- * "current" for access checks — see hasCurrentBillingAccess in
- * subscriptions.ts). These rows outlived the grace window without a webhook
- * correcting them, so we ask the provider directly instead of trusting the
- * stale local row indefinitely.
+ * EXPIRED_ACTIVE_RECONCILE_LAG_MS ago. This threshold is intentionally much
+ * tighter than EXPIRED_ENTITLEMENT_GRACE_MS (the 24h window that keeps a
+ * stale row "current" for access checks — see hasCurrentBillingAccess in
+ * subscriptions.ts): candidacy must fire well before the access grace
+ * expires, so a missed webhook gets corrected by the next nightly run
+ * *before* the customer is ever locked out, not after.
  */
 async function reconcileExpiredActiveEntitlementsAgainstProviderTruth(
   supabase: SupabaseBillingClient,
@@ -214,15 +228,15 @@ async function reconcileExpiredActiveEntitlementsAgainstProviderTruth(
     .in("entitlement_status", ["active", "past_due"])
   if (error) throw error
 
-  const graceExpiredCandidates = ((data as BillingSubscriptionRow[] | null) ?? []).filter(
+  const lapsedCandidates = ((data as BillingSubscriptionRow[] | null) ?? []).filter(
     (row) =>
       row.current_period_end != null &&
-      Date.parse(row.current_period_end) < now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS,
+      Date.parse(row.current_period_end) < now.getTime() - EXPIRED_ACTIVE_RECONCILE_LAG_MS,
   )
-  counters.candidates = graceExpiredCandidates.length
+  counters.candidates = lapsedCandidates.length
 
   const realCandidates: BillingSubscriptionRow[] = []
-  for (const row of graceExpiredCandidates) {
+  for (const row of lapsedCandidates) {
     if (isTestMarkedBillingSubscriptionRow(row)) {
       counters.skippedTest += 1
       console.info("[billing] reconcile expired-active: skipping test-marked row", {
@@ -275,6 +289,7 @@ async function reconcileExpiredActiveEntitlementsAgainstProviderTruth(
         entitlement_status: truth.entitlementStatus,
         provider_status: truth.providerStatus,
         current_period_end: truth.currentPeriodEnd,
+        cancel_at_period_end: truth.cancelAtPeriodEnd,
       })
       counters.updated += 1
     } else {
@@ -282,6 +297,14 @@ async function reconcileExpiredActiveEntitlementsAgainstProviderTruth(
         entitlement_status: "canceled",
         provider_status: truth.providerStatus,
         current_period_end: truth.currentPeriodEnd,
+        // Preserve provider-signaled paid-through access: a canceled row
+        // only keeps hasCurrentBillingAccess true until current_period_end
+        // when cancel_at_period_end is also true (subscriptions.ts:302), so
+        // dropping this here would revoke access the customer already paid
+        // for. See normalizeStripeSubscriptionTruth /
+        // normalizePayPalSubscriptionTruth for how this is derived per
+        // provider.
+        cancel_at_period_end: truth.cancelAtPeriodEnd,
       })
       counters.canceled += 1
 
@@ -327,6 +350,7 @@ type ProviderSubscriptionTruth = {
   entitlementStatus: BillingEntitlementStatus
   providerStatus: string
   currentPeriodEnd: string | null
+  cancelAtPeriodEnd: boolean
 }
 
 function ensureStripeSubscriptionRetriever(
@@ -358,6 +382,12 @@ function normalizeStripeSubscriptionTruth(
     entitlementStatus,
     providerStatus,
     currentPeriodEnd: providerPeriodEnd ?? row.current_period_end,
+    // Read straight off provider truth, same expression
+    // handleSubscriptionUpdated uses for the live Stripe webhook
+    // (src/lib/stripe/webhook-handlers.ts) — a subscription can be
+    // "canceled" (or still active) with a scheduled/paid-through
+    // cancellation, and that must survive into the row we write here.
+    cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end || sub.cancel_at != null),
   }
 }
 
@@ -379,7 +409,6 @@ function stripeSubscriptionPeriodEndIso(sub: StripeSubscriptionTruthSource): str
 // closed (provider error, row untouched) on anything else — without
 // changing the shared mapper's behavior for its existing callers.
 const PAYPAL_CURRENT_STATUSES = new Set(["ACTIVE", "SUSPENDED"])
-const PAYPAL_LAPSED_STATUSES = new Set(["CANCELLED", "EXPIRED"])
 
 function normalizePayPalSubscriptionTruth(
   sub: PayPalSubscription,
@@ -394,10 +423,31 @@ function normalizePayPalSubscriptionTruth(
       entitlementStatus: mapPayPalSubscriptionStatus(status),
       providerStatus: status,
       currentPeriodEnd,
+      cancelAtPeriodEnd: false,
     }
   }
-  if (status && PAYPAL_LAPSED_STATUSES.has(status)) {
-    return { entitlementStatus: "canceled", providerStatus: status, currentPeriodEnd }
+  // Mirror the live PayPal webhook handler's exact convention for these two
+  // terminal statuses (src/lib/paypal/webhook-handlers.ts,
+  // BILLING.SUBSCRIPTION.CANCELLED / .EXPIRED): CANCELLED is a user-initiated
+  // cancellation that still grants access through the already-paid period
+  // (cancel_at_period_end: true, paid-through end preserved); EXPIRED means
+  // the subscription's billing cycles actually ran out, so there is no
+  // residual access to preserve.
+  if (status === "CANCELLED") {
+    return {
+      entitlementStatus: "canceled",
+      providerStatus: status,
+      currentPeriodEnd,
+      cancelAtPeriodEnd: true,
+    }
+  }
+  if (status === "EXPIRED") {
+    return {
+      entitlementStatus: "canceled",
+      providerStatus: status,
+      currentPeriodEnd,
+      cancelAtPeriodEnd: false,
+    }
   }
 
   throw new Error(
@@ -412,6 +462,7 @@ async function updateBillingSubscriptionProviderTruth(
     entitlement_status: BillingEntitlementStatus
     provider_status: string
     current_period_end: string | null
+    cancel_at_period_end: boolean
   },
 ): Promise<BillingSubscriptionRow> {
   const fullPatch = { ...patch, updated_at: new Date().toISOString() }

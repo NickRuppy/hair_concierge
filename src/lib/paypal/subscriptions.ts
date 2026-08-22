@@ -18,9 +18,11 @@ export {
 
 export async function retrievePayPalSubscription(
   subscriptionId: string,
+  options: { signal?: AbortSignal } = {},
 ): Promise<PayPalSubscription> {
   return paypalRequest<PayPalSubscription>(
     `/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    { signal: options.signal },
   )
 }
 

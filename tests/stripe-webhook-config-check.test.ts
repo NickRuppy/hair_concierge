@@ -15,6 +15,7 @@ test("verifyStripeWebhookConfig reports ok when the matching endpoint covers eve
       {
         id: "we_1",
         url: "https://app.example.com/api/stripe/webhook",
+        status: "enabled",
         enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS, "checkout.session.completed"],
       },
     ],
@@ -33,7 +34,12 @@ test("verifyStripeWebhookConfig treats a wildcard enabled_events list as coverin
   const result = await verifyStripeWebhookConfig({
     webhookUrl: "https://app.example.com/api/stripe/webhook",
     listWebhookEndpoints: async () => [
-      { id: "we_1", url: "https://app.example.com/api/stripe/webhook", enabled_events: ["*"] },
+      {
+        id: "we_1",
+        url: "https://app.example.com/api/stripe/webhook",
+        status: "enabled",
+        enabled_events: ["*"],
+      },
     ],
   })
 
@@ -47,12 +53,36 @@ test("verifyStripeWebhookConfig matches the endpoint URL ignoring trailing slash
       {
         id: "we_1",
         url: "HTTPS://App.Example.com/api/stripe/webhook/",
+        status: "enabled",
         enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS],
       },
     ],
   })
 
   assert.equal(result.status, "ok")
+})
+
+test("verifyStripeWebhookConfig reports endpoint_disabled and captures an issue when the matching endpoint is disabled", async () => {
+  const captured: StripeWebhookConfigIssue[] = []
+  const result = await verifyStripeWebhookConfig({
+    webhookUrl: "https://app.example.com/api/stripe/webhook",
+    listWebhookEndpoints: async () => [
+      {
+        id: "we_1",
+        url: "https://app.example.com/api/stripe/webhook",
+        status: "disabled",
+        enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS],
+      },
+    ],
+    captureIssue: (issue) => captured.push(issue),
+  })
+
+  assert.deepEqual(result, {
+    status: "endpoint_disabled",
+    endpointId: "we_1",
+    enabledEvents: [...REQUIRED_STRIPE_WEBHOOK_EVENTS],
+  })
+  assert.deepEqual(captured, [result])
 })
 
 test("verifyStripeWebhookConfig reports missing_events and captures an issue when required events are absent", async () => {
@@ -63,6 +93,7 @@ test("verifyStripeWebhookConfig reports missing_events and captures an issue whe
       {
         id: "we_1",
         url: "https://app.example.com/api/stripe/webhook",
+        status: "enabled",
         enabled_events: ["customer.subscription.updated", "invoice.payment_succeeded"],
       },
     ],
@@ -121,6 +152,7 @@ test("verifyStripeWebhookConfig does not capture an issue for the ok result", as
       {
         id: "we_1",
         url: "https://app.example.com/api/stripe/webhook",
+        status: "enabled",
         enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS],
       },
     ],

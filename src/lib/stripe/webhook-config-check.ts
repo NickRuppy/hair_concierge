@@ -26,6 +26,7 @@ export type StripeWebhookEndpointSummary = {
 export type StripeWebhookConfigCheckResult =
   | { status: "ok"; endpointId: string; enabledEvents: string[] }
   | { status: "endpoint_not_found"; webhookUrl: string }
+  | { status: "endpoint_disabled"; endpointId: string; enabledEvents: string[] }
   | {
       status: "missing_events"
       endpointId: string
@@ -69,6 +70,19 @@ export async function verifyStripeWebhookConfig(deps: {
     const result: StripeWebhookConfigCheckResult = {
       status: "endpoint_not_found",
       webhookUrl: deps.webhookUrl,
+    }
+    captureIssue(result)
+    return result
+  }
+
+  // A disabled endpoint delivers nothing regardless of which events it's
+  // configured for — check this before events so a disabled endpoint never
+  // reports "ok" just because its enabled_events list happens to be complete.
+  if (endpoint.status !== "enabled") {
+    const result: StripeWebhookConfigCheckResult = {
+      status: "endpoint_disabled",
+      endpointId: endpoint.id,
+      enabledEvents: endpoint.enabled_events ?? [],
     }
     captureIssue(result)
     return result
