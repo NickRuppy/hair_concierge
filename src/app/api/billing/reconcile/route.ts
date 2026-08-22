@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
+import * as Sentry from "@sentry/nextjs"
 import { dispatchBillingAnalyticsDueWithStats } from "@/lib/billing/analytics-outbox"
 import {
   reconcileExpiredBillingEntitlements,
@@ -74,6 +75,7 @@ type ReconcileDeps = {
   clock?: () => number
   browserRecoveryCleanup?: (limit: number) => Promise<BrowserRecoveryCleanupResult>
   runStripeWebhookConfigCheck?: () => Promise<StripeWebhookConfigCheckResult>
+  captureEntitlementBranchFailure?: (error: unknown) => void
 }
 
 type BrowserRecoveryCleanupResult = {
@@ -215,7 +217,9 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
     body.analyticsRetry = analyticsBranch.result
   }
 
-  if (!entitlementBranch.ok) body.entitlements = { status: "error" }
+  if (!entitlementBranch.ok) {
+    body.entitlements = { status: "error", reason: entitlementBranch.reason }
+  }
   const status =
     integrityBranch.ok &&
     paidAccessBranch.ok &&
@@ -264,9 +268,30 @@ async function runEntitlementBranch(deps: ReconcileDeps, now: Date) {
         retrievePayPalSubscription: defaultRetrievePayPalSubscriptionForReconcile,
       }),
     }
-  } catch {
-    return { ok: false, result: { downgraded: 0 } }
+  } catch (error) {
+    const captureEntitlementBranchFailure =
+      deps.captureEntitlementBranchFailure ?? defaultCaptureEntitlementBranchFailure
+    captureEntitlementBranchFailure(error)
+    // A fixed, classified reason — never the raw error message. This branch
+    // can throw whatever a DB driver or provider client surfaces, and the
+    // reconcile response is not a safe place to echo that verbatim (see the
+    // "must not leak" test coverage on this route). The full error still
+    // reaches Sentry via captureEntitlementBranchFailure above.
+    return {
+      ok: false,
+      result: { downgraded: 0 },
+      reason: "entitlement_reconcile_failed" as const,
+    }
   }
+}
+
+function defaultCaptureEntitlementBranchFailure(error: unknown) {
+  Sentry.withScope((scope) => {
+    scope.setTag("billing_reconcile.branch", "entitlements")
+    scope.setFingerprint(["billing-reconcile-entitlement-branch-failed"])
+    scope.setLevel("error")
+    Sentry.captureException(error instanceof Error ? error : new Error(String(error)))
+  })
 }
 
 async function defaultRetrieveStripeSubscriptionForReconcile(

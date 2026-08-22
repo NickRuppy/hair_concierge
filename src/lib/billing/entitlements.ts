@@ -283,11 +283,40 @@ async function reconcileExpiredActiveEntitlementsAgainstProviderTruth(
         provider_status: truth.providerStatus,
         current_period_end: truth.currentPeriodEnd,
       })
-      const premiumTierId = (await options.getPremiumTierId?.()) ?? ""
+      counters.canceled += 1
+
+      // The row itself is corrected above regardless, but if the user
+      // already holds another current subscription (e.g. they re-subscribed
+      // after this row lapsed at the provider), never overwrite a live
+      // paying customer's profile with this stale row's canceled state.
+      const currentSubscription = await findCurrentBillingSubscriptionForUser(
+        supabase,
+        row.user_id,
+        now,
+      )
+      if (currentSubscription && currentSubscription.id !== row.id) continue
+
+      const profileStatus = profileStatusForSubscription(updatedRow)
+      let premiumTierId = ""
+      if (profileStatus === "active" || profileStatus === "past_due") {
+        // Only a still-current profile status (e.g. cancel_at_period_end
+        // with a future current_period_end) needs a premium tier id at all.
+        premiumTierId = (await options.getPremiumTierId?.()) ?? ""
+        if (!premiumTierId) {
+          // Never write an empty-string tier id to profiles — skip the
+          // mirror for this row rather than corrupting subscription_tier_id.
+          counters.providerErrors += 1
+          console.error(
+            "[billing] reconcile expired-active: skipping profile mirror — no premium tier id available for a still-current canceled row",
+            { id: updatedRow.id, userId: updatedRow.user_id },
+          )
+          continue
+        }
+      }
+
       await mirrorBillingSubscriptionToProfile(supabase, updatedRow, premiumTierId, {
         freeTierId: options.freeTierId,
       })
-      counters.canceled += 1
     }
   }
 
@@ -340,18 +369,40 @@ function stripeSubscriptionPeriodEndIso(sub: StripeSubscriptionTruthSource): str
     : null
 }
 
+// mapPayPalSubscriptionStatus defaults unknown/missing status to
+// "incomplete" (correct for its other callers, e.g. checkout activation,
+// where an unrecognized status should not be treated as active). Reusing
+// that default here would route an ambiguous provider response straight
+// into the lapsed/cancel branch below and revoke a paying customer. So this
+// reconcile path classifies PayPal's raw status itself, only ever calling
+// the shared mapper on a status already confirmed to be current, and fails
+// closed (provider error, row untouched) on anything else — without
+// changing the shared mapper's behavior for its existing callers.
+const PAYPAL_CURRENT_STATUSES = new Set(["ACTIVE", "SUSPENDED"])
+const PAYPAL_LAPSED_STATUSES = new Set(["CANCELLED", "EXPIRED"])
+
 function normalizePayPalSubscriptionTruth(
   sub: PayPalSubscription,
   row: BillingSubscriptionRow,
 ): ProviderSubscriptionTruth {
-  const entitlementStatus = mapPayPalSubscriptionStatus(sub.status ?? "")
-  const providerStatus = sub.status ?? row.provider_status
+  const status = sub.status
   const providerPeriodEnd = derivePayPalPaidThroughDate(sub)
-  return {
-    entitlementStatus,
-    providerStatus,
-    currentPeriodEnd: providerPeriodEnd ?? row.current_period_end,
+  const currentPeriodEnd = providerPeriodEnd ?? row.current_period_end
+
+  if (status && PAYPAL_CURRENT_STATUSES.has(status)) {
+    return {
+      entitlementStatus: mapPayPalSubscriptionStatus(status),
+      providerStatus: status,
+      currentPeriodEnd,
+    }
   }
+  if (status && PAYPAL_LAPSED_STATUSES.has(status)) {
+    return { entitlementStatus: "canceled", providerStatus: status, currentPeriodEnd }
+  }
+
+  throw new Error(
+    `paypal subscription status is not a known current/terminal state: ${status ?? "<missing>"}`,
+  )
 }
 
 async function updateBillingSubscriptionProviderTruth(

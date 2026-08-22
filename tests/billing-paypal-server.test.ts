@@ -1450,6 +1450,192 @@ test("reconcileExpiredBillingEntitlements records a provider error and leaves th
   assert.equal(billing[0].provider_status, "active")
 })
 
+test("reconcileExpiredBillingEntitlements cancels a lapsed row but skips the profile mirror when the user holds another current subscription", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "row-a-lapsed",
+        user_id: "user-resubscribed",
+        provider: "stripe",
+        provider_subscription_id: "sub_row_a",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: lapsedIso,
+      },
+      {
+        id: "row-b-current",
+        user_id: "user-resubscribed",
+        provider: "stripe",
+        provider_subscription_id: "sub_row_b",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: futureIso(),
+      },
+    ],
+    profiles: {
+      "user-resubscribed": {
+        id: "user-resubscribed",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrieveStripeSubscription = async (id: string) => {
+    assert.equal(id, "sub_row_a")
+    return { status: "canceled" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(billing.find((row) => row.id === "row-a-lapsed")?.entitlement_status, "canceled")
+  assert.equal(billing.find((row) => row.id === "row-b-current")?.entitlement_status, "active")
+  // The user is still a live paying customer via row B — never downgraded.
+  assert.equal(profiles["user-resubscribed"].subscription_status, "active")
+  assert.equal(profiles["user-resubscribed"].subscription_tier_id, "tier-premium")
+})
+
+test("reconcileExpiredBillingEntitlements treats an unrecognized PayPal status as a provider error instead of cancelling", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-unknown-status",
+        user_id: "user-paypal-unknown",
+        provider: "paypal",
+        provider_subscription_id: "I-unknown",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrievePayPalSubscription = async () => ({ status: "APPROVAL_PENDING" })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(result.expiredActive?.canceled, 0)
+  assert.equal(result.expiredActive?.updated, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(billing[0].provider_status, "ACTIVE")
+})
+
+test("reconcileExpiredBillingEntitlements treats a PayPal response with a missing status as a provider error instead of cancelling", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-missing-status",
+        user_id: "user-paypal-missing",
+        provider: "paypal",
+        provider_subscription_id: "I-missing",
+        entitlement_status: "past_due",
+        provider_status: "SUSPENDED",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrievePayPalSubscription = async () => ({}) as any
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(billing[0].entitlement_status, "past_due")
+})
+
+test("reconcileExpiredBillingEntitlements records a provider error when the PayPal request itself throws", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-request-error",
+        user_id: "user-paypal-error",
+        provider: "paypal",
+        provider_subscription_id: "I-error",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrievePayPalSubscription = async () => {
+    throw new Error("paypal unavailable")
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(billing[0].entitlement_status, "active")
+})
+
+test("reconcileExpiredBillingEntitlements skips the profile mirror instead of writing an empty tier id when no premium tier getter is configured", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const futurePaidThrough = futureIso()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-cancel-scheduled",
+        user_id: "user-cancel-scheduled",
+        provider: "paypal",
+        provider_subscription_id: "I-cancel-scheduled",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+        cancel_at_period_end: true,
+      },
+    ],
+    profiles: {
+      "user-cancel-scheduled": {
+        id: "user-cancel-scheduled",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrievePayPalSubscription = async () => ({
+    status: "CANCELLED",
+    billing_info: { next_billing_time: futurePaidThrough },
+  })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+    // deliberately no getPremiumTierId — this is the case under test
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  const updatedRow = billing.find((row) => row.id === "paypal-cancel-scheduled")
+  assert.equal(updatedRow?.entitlement_status, "canceled")
+  assert.equal(updatedRow?.current_period_end, futurePaidThrough)
+  // Profile must be left untouched — never written with an empty tier id.
+  assert.equal(profiles["user-cancel-scheduled"].subscription_status, "active")
+  assert.equal(profiles["user-cancel-scheduled"].subscription_tier_id, "tier-premium")
+})
+
 test("billing reconcile route requires CRON_SECRET authorization", async () => {
   const { supabase } = createSupabaseStub()
 
