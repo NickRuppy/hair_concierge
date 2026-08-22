@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   assertCanStartCheckout,
   assertCanStartCheckoutForEmail,
+  EXPIRED_ENTITLEMENT_GRACE_MS,
   findCurrentManualAccessGrant,
   findCurrentBillingSubscriptionForUser,
   hasCurrentAppAccess,
@@ -12,6 +13,7 @@ import {
 } from "../src/lib/billing/subscriptions"
 import type { SupabaseBillingClient } from "../src/lib/billing/types"
 import {
+  isTestMarkedBillingSubscriptionRow,
   mirrorBillingSubscriptionToProfile,
   reconcileExpiredBillingEntitlements,
 } from "../src/lib/billing/entitlements"
@@ -1112,6 +1114,342 @@ test("reconcileExpiredBillingEntitlements skips expired rows when the user has a
   assert.equal(profiles["user-1"].subscription_tier_id, "tier-premium")
 })
 
+test("isTestMarkedBillingSubscriptionRow matches the same markers as the billing_subscriptions_classified view", () => {
+  const base = { metadata: {} as Record<string, unknown>, provider_subscription_id: "sub-1" }
+  assert.equal(isTestMarkedBillingSubscriptionRow(base), false)
+  assert.equal(isTestMarkedBillingSubscriptionRow({ ...base, metadata: { qa_seed: true } }), true)
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, metadata: { seed_source: "fixtures" } }),
+    true,
+  )
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, metadata: { source: "chat_eval_ci" } }),
+    true,
+  )
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, provider_subscription_id: "sub_K0IN8ErFeg_1" }),
+    true,
+  )
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({
+      ...base,
+      metadata: { checkout_session_id: "cs_test_123" },
+    }),
+    true,
+  )
+  // Deliberate divergence from the SQL view: backfilled rows belong to real
+  // profiles and still need their provider truth checked by this reconcile
+  // branch, so this marker alone must not trigger a skip here.
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, metadata: { backfilled_from_profiles: true } }),
+    false,
+  )
+})
+
+test("reconcileExpiredBillingEntitlements refreshes an expired-active row Stripe still reports as current", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "stripe-active",
+        user_id: "user-stripe-active",
+        provider: "stripe",
+        provider_subscription_id: "sub_still_active",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+    profiles: {
+      "user-stripe-active": {
+        id: "user-stripe-active",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const newPeriodEndUnix = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
+  const retrieveStripeSubscription = async (id: string) => {
+    assert.equal(id, "sub_still_active")
+    return { status: "active", items: { data: [{ current_period_end: newPeriodEndUnix }] } }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.checked, 1)
+  assert.equal(result.expiredActive?.updated, 1)
+  assert.equal(result.expiredActive?.canceled, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(billing[0].current_period_end, new Date(newPeriodEndUnix * 1000).toISOString())
+  assert.equal(profiles["user-stripe-active"].subscription_status, "active")
+  assert.equal(profiles["user-stripe-active"].subscription_tier_id, "tier-premium")
+})
+
+test("reconcileExpiredBillingEntitlements cancels and mirrors an expired-active row Stripe now reports as canceled", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "stripe-lapsed",
+        user_id: "user-stripe-lapsed",
+        provider: "stripe",
+        provider_subscription_id: "sub_now_canceled",
+        entitlement_status: "past_due",
+        provider_status: "past_due",
+        current_period_end: lapsedIso,
+      },
+    ],
+    profiles: {
+      "user-stripe-lapsed": {
+        id: "user-stripe-lapsed",
+        subscription_status: "past_due",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrieveStripeSubscription = async () => ({ status: "canceled" })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(billing[0].entitlement_status, "canceled")
+  assert.equal(billing[0].provider_status, "canceled")
+  assert.equal(profiles["user-stripe-lapsed"].subscription_status, "canceled")
+  assert.equal(profiles["user-stripe-lapsed"].subscription_tier_id, "tier-free")
+})
+
+test("reconcileExpiredBillingEntitlements cancels and mirrors an expired-active PayPal row the provider now reports cancelled", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-lapsed",
+        user_id: "user-paypal-lapsed",
+        provider: "paypal",
+        provider_subscription_id: "I-lapsed",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+      },
+    ],
+    profiles: {
+      "user-paypal-lapsed": {
+        id: "user-paypal-lapsed",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrievePayPalSubscription = async (id: string) => {
+    assert.equal(id, "I-lapsed")
+    return { status: "CANCELLED" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(billing[0].entitlement_status, "canceled")
+  assert.equal(billing[0].provider_status, "CANCELLED")
+  assert.equal(profiles["user-paypal-lapsed"].subscription_status, "canceled")
+  assert.equal(profiles["user-paypal-lapsed"].subscription_tier_id, "tier-free")
+})
+
+test("reconcileExpiredBillingEntitlements skips test-marked expired-active rows without calling the provider", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "seeded-active",
+        user_id: "user-seed",
+        provider: "stripe",
+        provider_subscription_id: "sub_seed",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+        metadata: { qa_seed: true },
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(providerCalls, 0)
+  assert.equal(result.expiredActive?.skippedTest, 1)
+  assert.equal(result.expiredActive?.checked, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+})
+
+test("reconcileExpiredBillingEntitlements does not treat a row still inside the grace window as a candidate", async () => {
+  const withinGraceIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS + 60_000).toISOString()
+  const { supabase } = createSupabaseStub({
+    billing: [
+      {
+        id: "within-grace",
+        user_id: "user-within-grace",
+        provider: "stripe",
+        provider_subscription_id: "sub_within_grace",
+        entitlement_status: "active",
+        current_period_end: withinGraceIso,
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(providerCalls, 0)
+  assert.equal(result.expiredActive?.candidates, 0)
+})
+
+test("reconcileExpiredBillingEntitlements caps provider calls per run and reports the cap", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase } = createSupabaseStub({
+    billing: [
+      {
+        id: "cap-1",
+        user_id: "user-cap-1",
+        provider: "stripe",
+        provider_subscription_id: "sub_cap_1",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+      {
+        id: "cap-2",
+        user_id: "user-cap-2",
+        provider: "stripe",
+        provider_subscription_id: "sub_cap_2",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+    providerCallCap: 1,
+  })
+
+  assert.equal(providerCalls, 1)
+  assert.equal(result.expiredActive?.checked, 1)
+  assert.equal(result.expiredActive?.providerCallCap, 1)
+  assert.equal(result.expiredActive?.capped, true)
+})
+
+test("reconcileExpiredBillingEntitlements stops before its deadline instead of running away", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "deadline-1",
+        user_id: "user-deadline-1",
+        provider: "stripe",
+        provider_subscription_id: "sub_deadline_1",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  let clockValue = 1_000
+  const clock = () => {
+    const value = clockValue
+    clockValue += 100_000
+    return value
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+    clock,
+    deadlineMs: 1,
+  })
+
+  assert.equal(providerCalls, 0)
+  assert.equal(result.expiredActive?.deadlineHit, true)
+  assert.equal(result.expiredActive?.checked, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+})
+
+test("reconcileExpiredBillingEntitlements records a provider error and leaves the row untouched on lookup failure", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "error-1",
+        user_id: "user-error-1",
+        provider: "stripe",
+        provider_subscription_id: "sub_error_1",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrieveStripeSubscription = async () => {
+    throw new Error("stripe unavailable")
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(result.expiredActive?.checked, 1)
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(billing[0].provider_status, "active")
+})
+
 test("billing reconcile route requires CRON_SECRET authorization", async () => {
   const { supabase } = createSupabaseStub()
 
@@ -1186,6 +1524,17 @@ test("billing reconcile route downgrades expired canceled rows and keeps future 
       resultReturns: { ok: false, purged: 0 },
     },
     downgraded: 1,
+    expiredActive: {
+      candidates: 0,
+      skippedTest: 0,
+      checked: 0,
+      updated: 0,
+      canceled: 0,
+      providerErrors: 0,
+      providerCallCap: 25,
+      capped: false,
+      deadlineHit: false,
+    },
     paymentIntegrity: successfulPaymentIntegritySummary(),
   })
   assert.equal(profiles["expired-paypal-user"].subscription_status, "canceled")
@@ -1237,6 +1586,17 @@ test("billing reconcile includes backfilled Stripe billing rows", async () => {
       resultReturns: { ok: false, purged: 0 },
     },
     downgraded: 1,
+    expiredActive: {
+      candidates: 0,
+      skippedTest: 0,
+      checked: 0,
+      updated: 0,
+      canceled: 0,
+      providerErrors: 0,
+      providerCallCap: 25,
+      capped: false,
+      deadlineHit: false,
+    },
     paymentIntegrity: successfulPaymentIntegritySummary(),
   })
   assert.equal(profiles["stripe-user"].subscription_status, "canceled")
