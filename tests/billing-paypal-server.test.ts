@@ -4,14 +4,17 @@ import test from "node:test"
 import {
   assertCanStartCheckout,
   assertCanStartCheckoutForEmail,
+  EXPIRED_ENTITLEMENT_GRACE_MS,
   findCurrentManualAccessGrant,
   findCurrentBillingSubscriptionForUser,
   hasCurrentAppAccess,
+  hasCurrentBillingAccess,
   hasCurrentManualAccess,
   upsertBillingSubscription,
 } from "../src/lib/billing/subscriptions"
 import type { SupabaseBillingClient } from "../src/lib/billing/types"
 import {
+  isTestMarkedBillingSubscriptionRow,
   mirrorBillingSubscriptionToProfile,
   reconcileExpiredBillingEntitlements,
 } from "../src/lib/billing/entitlements"
@@ -1112,6 +1115,753 @@ test("reconcileExpiredBillingEntitlements skips expired rows when the user has a
   assert.equal(profiles["user-1"].subscription_tier_id, "tier-premium")
 })
 
+test("isTestMarkedBillingSubscriptionRow matches the same markers as the billing_subscriptions_classified view", () => {
+  const base = { metadata: {} as Record<string, unknown>, provider_subscription_id: "sub-1" }
+  assert.equal(isTestMarkedBillingSubscriptionRow(base), false)
+  assert.equal(isTestMarkedBillingSubscriptionRow({ ...base, metadata: { qa_seed: true } }), true)
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, metadata: { seed_source: "fixtures" } }),
+    true,
+  )
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, metadata: { source: "chat_eval_ci" } }),
+    true,
+  )
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, provider_subscription_id: "sub_K0IN8ErFeg_1" }),
+    true,
+  )
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({
+      ...base,
+      metadata: { checkout_session_id: "cs_test_123" },
+    }),
+    true,
+  )
+  // Deliberate divergence from the SQL view: backfilled rows belong to real
+  // profiles and still need their provider truth checked by this reconcile
+  // branch, so this marker alone must not trigger a skip here.
+  assert.equal(
+    isTestMarkedBillingSubscriptionRow({ ...base, metadata: { backfilled_from_profiles: true } }),
+    false,
+  )
+})
+
+test("reconcileExpiredBillingEntitlements refreshes an expired-active row Stripe still reports as current", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "stripe-active",
+        user_id: "user-stripe-active",
+        provider: "stripe",
+        provider_subscription_id: "sub_still_active",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+    profiles: {
+      "user-stripe-active": {
+        id: "user-stripe-active",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const newPeriodEndUnix = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
+  const retrieveStripeSubscription = async (id: string) => {
+    assert.equal(id, "sub_still_active")
+    return { status: "active", items: { data: [{ current_period_end: newPeriodEndUnix }] } }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.checked, 1)
+  assert.equal(result.expiredActive?.updated, 1)
+  assert.equal(result.expiredActive?.canceled, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(billing[0].current_period_end, new Date(newPeriodEndUnix * 1000).toISOString())
+  assert.equal(profiles["user-stripe-active"].subscription_status, "active")
+  assert.equal(profiles["user-stripe-active"].subscription_tier_id, "tier-premium")
+})
+
+test("reconcileExpiredBillingEntitlements cancels and mirrors an expired-active row Stripe now reports as canceled", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "stripe-lapsed",
+        user_id: "user-stripe-lapsed",
+        provider: "stripe",
+        provider_subscription_id: "sub_now_canceled",
+        entitlement_status: "past_due",
+        provider_status: "past_due",
+        current_period_end: lapsedIso,
+      },
+    ],
+    profiles: {
+      "user-stripe-lapsed": {
+        id: "user-stripe-lapsed",
+        subscription_status: "past_due",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrieveStripeSubscription = async () => ({ status: "canceled" })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(billing[0].entitlement_status, "canceled")
+  assert.equal(billing[0].provider_status, "canceled")
+  assert.equal(profiles["user-stripe-lapsed"].subscription_status, "canceled")
+  assert.equal(profiles["user-stripe-lapsed"].subscription_tier_id, "tier-free")
+})
+
+test("reconcileExpiredBillingEntitlements cancels and mirrors an expired-active PayPal row the provider now reports cancelled", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-lapsed",
+        user_id: "user-paypal-lapsed",
+        provider: "paypal",
+        provider_subscription_id: "I-lapsed",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+      },
+    ],
+    profiles: {
+      "user-paypal-lapsed": {
+        id: "user-paypal-lapsed",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrievePayPalSubscription = async (id: string) => {
+    assert.equal(id, "I-lapsed")
+    return { status: "CANCELLED" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(billing[0].entitlement_status, "canceled")
+  assert.equal(billing[0].provider_status, "CANCELLED")
+  assert.equal(profiles["user-paypal-lapsed"].subscription_status, "canceled")
+  assert.equal(profiles["user-paypal-lapsed"].subscription_tier_id, "tier-free")
+})
+
+test("reconcileExpiredBillingEntitlements skips test-marked expired-active rows without calling the provider", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "seeded-active",
+        user_id: "user-seed",
+        provider: "stripe",
+        provider_subscription_id: "sub_seed",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+        metadata: { qa_seed: true },
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(providerCalls, 0)
+  assert.equal(result.expiredActive?.skippedTest, 1)
+  assert.equal(result.expiredActive?.checked, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+})
+
+test("reconcileExpiredBillingEntitlements does not treat a row still inside the reconcile lag buffer as a candidate", async () => {
+  const withinLagIso = new Date(Date.now() - 20 * 60 * 1000).toISOString() // 20 min ago
+  const { supabase } = createSupabaseStub({
+    billing: [
+      {
+        id: "within-lag",
+        user_id: "user-within-lag",
+        provider: "stripe",
+        provider_subscription_id: "sub_within_lag",
+        entitlement_status: "active",
+        current_period_end: withinLagIso,
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(providerCalls, 0)
+  assert.equal(result.expiredActive?.candidates, 0)
+})
+
+test("reconcileExpiredBillingEntitlements treats a row 2h past period end (still inside the 24h access grace) as a candidate and refreshes it", async () => {
+  // This is the core fix: reconcile candidacy must be tighter than the
+  // access-check grace (EXPIRED_ENTITLEMENT_GRACE_MS, 24h — see
+  // hasCurrentBillingAccess in subscriptions.ts), so provider truth gets
+  // refreshed well before a missed webhook would ever lock the customer out.
+  const twoHoursPastIso = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "two-hours-past",
+        user_id: "user-two-hours-past",
+        provider: "stripe",
+        provider_subscription_id: "sub_two_hours_past",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: twoHoursPastIso,
+      },
+    ],
+  })
+
+  const newPeriodEndUnix = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
+  let providerCalls = 0
+  const retrieveStripeSubscription = async (id: string) => {
+    providerCalls += 1
+    assert.equal(id, "sub_two_hours_past")
+    return { status: "active", items: { data: [{ current_period_end: newPeriodEndUnix }] } }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(providerCalls, 1)
+  assert.equal(result.expiredActive?.candidates, 1)
+  assert.equal(result.expiredActive?.updated, 1)
+  assert.equal(
+    billing.find((row) => row.id === "two-hours-past")?.current_period_end,
+    new Date(newPeriodEndUnix * 1000).toISOString(),
+  )
+})
+
+test("reconcileExpiredBillingEntitlements caps provider calls per run and reports the cap", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase } = createSupabaseStub({
+    billing: [
+      {
+        id: "cap-1",
+        user_id: "user-cap-1",
+        provider: "stripe",
+        provider_subscription_id: "sub_cap_1",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+      {
+        id: "cap-2",
+        user_id: "user-cap-2",
+        provider: "stripe",
+        provider_subscription_id: "sub_cap_2",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+    providerCallCap: 1,
+  })
+
+  assert.equal(providerCalls, 1)
+  assert.equal(result.expiredActive?.checked, 1)
+  assert.equal(result.expiredActive?.providerCallCap, 1)
+  assert.equal(result.expiredActive?.capped, true)
+})
+
+test("reconcileExpiredBillingEntitlements stops before its deadline instead of running away", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "deadline-1",
+        user_id: "user-deadline-1",
+        provider: "stripe",
+        provider_subscription_id: "sub_deadline_1",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  let providerCalls = 0
+  const retrieveStripeSubscription = async () => {
+    providerCalls += 1
+    return { status: "active" }
+  }
+
+  let clockValue = 1_000
+  const clock = () => {
+    const value = clockValue
+    clockValue += 100_000
+    return value
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+    clock,
+    deadlineMs: 1,
+  })
+
+  assert.equal(providerCalls, 0)
+  assert.equal(result.expiredActive?.deadlineHit, true)
+  assert.equal(result.expiredActive?.checked, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+})
+
+test("reconcileExpiredBillingEntitlements records a provider error and leaves the row untouched on lookup failure", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "error-1",
+        user_id: "user-error-1",
+        provider: "stripe",
+        provider_subscription_id: "sub_error_1",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrieveStripeSubscription = async () => {
+    throw new Error("stripe unavailable")
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(result.expiredActive?.checked, 1)
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(billing[0].provider_status, "active")
+})
+
+test("reconcileExpiredBillingEntitlements cancels a lapsed row but skips the profile mirror when the user holds another current subscription", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "row-a-lapsed",
+        user_id: "user-resubscribed",
+        provider: "stripe",
+        provider_subscription_id: "sub_row_a",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: lapsedIso,
+      },
+      {
+        id: "row-b-current",
+        user_id: "user-resubscribed",
+        provider: "stripe",
+        provider_subscription_id: "sub_row_b",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: futureIso(),
+      },
+    ],
+    profiles: {
+      "user-resubscribed": {
+        id: "user-resubscribed",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrieveStripeSubscription = async (id: string) => {
+    assert.equal(id, "sub_row_a")
+    return { status: "canceled" }
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(billing.find((row) => row.id === "row-a-lapsed")?.entitlement_status, "canceled")
+  assert.equal(billing.find((row) => row.id === "row-b-current")?.entitlement_status, "active")
+  // The user is still a live paying customer via row B — never downgraded.
+  assert.equal(profiles["user-resubscribed"].subscription_status, "active")
+  assert.equal(profiles["user-resubscribed"].subscription_tier_id, "tier-premium")
+})
+
+test("reconcileExpiredBillingEntitlements treats an unrecognized PayPal status as a provider error instead of cancelling", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-unknown-status",
+        user_id: "user-paypal-unknown",
+        provider: "paypal",
+        provider_subscription_id: "I-unknown",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrievePayPalSubscription = async () => ({ status: "APPROVAL_PENDING" })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(result.expiredActive?.canceled, 0)
+  assert.equal(result.expiredActive?.updated, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(billing[0].provider_status, "ACTIVE")
+})
+
+test("reconcileExpiredBillingEntitlements treats a PayPal response with a missing status as a provider error instead of cancelling", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-missing-status",
+        user_id: "user-paypal-missing",
+        provider: "paypal",
+        provider_subscription_id: "I-missing",
+        entitlement_status: "past_due",
+        provider_status: "SUSPENDED",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrievePayPalSubscription = async () => ({}) as any
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(billing[0].entitlement_status, "past_due")
+})
+
+test("reconcileExpiredBillingEntitlements records a provider error when the PayPal request itself throws", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-request-error",
+        user_id: "user-paypal-error",
+        provider: "paypal",
+        provider_subscription_id: "I-error",
+        entitlement_status: "active",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrievePayPalSubscription = async () => {
+    throw new Error("paypal unavailable")
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(billing[0].entitlement_status, "active")
+})
+
+test("reconcileExpiredBillingEntitlements treats a timed-out (aborted) provider request as a provider error, never a cancellation", async () => {
+  // Simulates the per-request timeout wired in route.ts
+  // (defaultRetrievePayPalSubscriptionForReconcile /
+  // defaultRetrieveStripeSubscriptionForReconcile): when a stalled provider
+  // call gets aborted, the row must be left untouched and counted as a
+  // provider error — an abort must never be treated as "provider says
+  // lapsed" and cancel a paying customer's row.
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-timeout",
+        user_id: "user-paypal-timeout",
+        provider: "paypal",
+        provider_subscription_id: "I-timeout",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+      },
+    ],
+  })
+
+  const retrievePayPalSubscription = async () => {
+    const error = new Error("paypal subscription retrieval timed out")
+    error.name = "AbortError"
+    throw error
+  }
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  assert.equal(result.expiredActive?.canceled, 0)
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(billing[0].provider_status, "ACTIVE")
+})
+
+test("reconcileExpiredBillingEntitlements skips the profile mirror instead of writing an empty tier id when no premium tier getter is configured", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const futurePaidThrough = futureIso()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-cancel-scheduled",
+        user_id: "user-cancel-scheduled",
+        provider: "paypal",
+        provider_subscription_id: "I-cancel-scheduled",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+        cancel_at_period_end: true,
+      },
+    ],
+    profiles: {
+      "user-cancel-scheduled": {
+        id: "user-cancel-scheduled",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrievePayPalSubscription = async () => ({
+    status: "CANCELLED",
+    billing_info: { next_billing_time: futurePaidThrough },
+  })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+    // deliberately no getPremiumTierId — this is the case under test
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  assert.equal(result.expiredActive?.providerErrors, 1)
+  const updatedRow = billing.find((row) => row.id === "paypal-cancel-scheduled")
+  assert.equal(updatedRow?.entitlement_status, "canceled")
+  assert.equal(updatedRow?.current_period_end, futurePaidThrough)
+  // Profile must be left untouched — never written with an empty tier id.
+  assert.equal(profiles["user-cancel-scheduled"].subscription_status, "active")
+  assert.equal(profiles["user-cancel-scheduled"].subscription_tier_id, "tier-premium")
+})
+
+test("reconcileExpiredBillingEntitlements sets cancel_at_period_end and preserves the paid-through period end when PayPal reports CANCELLED with future access", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const futurePaidThrough = futureIso()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-cancelled-future-access",
+        user_id: "user-cancelled-future-access",
+        provider: "paypal",
+        provider_subscription_id: "I-cancelled-future",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+        // Deliberately NOT pre-seeded true — proves the reconcile write is
+        // the one setting it, not merely inheriting a lucky prior value.
+        cancel_at_period_end: false,
+      },
+    ],
+    profiles: {
+      "user-cancelled-future-access": {
+        id: "user-cancelled-future-access",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrievePayPalSubscription = async () => ({
+    status: "CANCELLED",
+    billing_info: { next_billing_time: futurePaidThrough },
+  })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+    getPremiumTierId: async () => "tier-premium",
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  const updatedRow = billing.find((row) => row.id === "paypal-cancelled-future-access")
+  assert.equal(updatedRow?.entitlement_status, "canceled")
+  assert.equal(updatedRow?.cancel_at_period_end, true)
+  assert.equal(updatedRow?.current_period_end, futurePaidThrough)
+  // The already-paid period must still grant access per hasCurrentBillingAccess.
+  assert.equal(hasCurrentBillingAccess(updatedRow!, new Date()), true)
+  // The profile mirror must reflect the same "still current" status, not a
+  // hard downgrade — this is exactly what the missing cancel_at_period_end
+  // flag used to break.
+  assert.equal(profiles["user-cancelled-future-access"].subscription_status, "active")
+  assert.equal(profiles["user-cancelled-future-access"].subscription_tier_id, "tier-premium")
+})
+
+test("reconcileExpiredBillingEntitlements does not set cancel_at_period_end when PayPal reports EXPIRED", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "paypal-expired",
+        user_id: "user-paypal-expired",
+        provider: "paypal",
+        provider_subscription_id: "I-expired-cycle",
+        entitlement_status: "active",
+        provider_status: "ACTIVE",
+        current_period_end: lapsedIso,
+        cancel_at_period_end: false,
+      },
+    ],
+    profiles: {
+      "user-paypal-expired": {
+        id: "user-paypal-expired",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrievePayPalSubscription = async () => ({ status: "EXPIRED" })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrievePayPalSubscription,
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  const updatedRow = billing.find((row) => row.id === "paypal-expired")
+  assert.equal(updatedRow?.entitlement_status, "canceled")
+  assert.equal(updatedRow?.cancel_at_period_end, false)
+  assert.equal(hasCurrentBillingAccess(updatedRow!, new Date()), false)
+  assert.equal(profiles["user-paypal-expired"].subscription_status, "canceled")
+  assert.equal(profiles["user-paypal-expired"].subscription_tier_id, "tier-free")
+})
+
+test("reconcileExpiredBillingEntitlements carries Stripe's cancel_at_period_end through the lapse-path write", async () => {
+  const lapsedIso = new Date(Date.now() - EXPIRED_ENTITLEMENT_GRACE_MS - 60_000).toISOString()
+  const futureUnix = Math.floor(Date.now() / 1000) + 15 * 24 * 60 * 60
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        id: "stripe-cancel-scheduled",
+        user_id: "user-stripe-cancel-scheduled",
+        provider: "stripe",
+        provider_subscription_id: "sub_cancel_scheduled",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: lapsedIso,
+        cancel_at_period_end: false,
+      },
+    ],
+    profiles: {
+      "user-stripe-cancel-scheduled": {
+        id: "user-stripe-cancel-scheduled",
+        subscription_status: "active",
+        subscription_tier_id: "tier-premium",
+      },
+    },
+  })
+
+  const retrieveStripeSubscription = async () => ({
+    status: "canceled",
+    cancel_at_period_end: true,
+    items: { data: [{ current_period_end: futureUnix }] },
+  })
+
+  const result = await reconcileExpiredBillingEntitlements(supabase, {
+    freeTierId: "tier-free",
+    now: new Date(),
+    retrieveStripeSubscription,
+    getPremiumTierId: async () => "tier-premium",
+  })
+
+  assert.equal(result.expiredActive?.canceled, 1)
+  const updatedRow = billing.find((row) => row.id === "stripe-cancel-scheduled")
+  assert.equal(updatedRow?.entitlement_status, "canceled")
+  assert.equal(updatedRow?.cancel_at_period_end, true)
+  assert.equal(updatedRow?.current_period_end, new Date(futureUnix * 1000).toISOString())
+  assert.equal(hasCurrentBillingAccess(updatedRow!, new Date()), true)
+  assert.equal(profiles["user-stripe-cancel-scheduled"].subscription_status, "active")
+  assert.equal(profiles["user-stripe-cancel-scheduled"].subscription_tier_id, "tier-premium")
+})
+
 test("billing reconcile route requires CRON_SECRET authorization", async () => {
   const { supabase } = createSupabaseStub()
 
@@ -1186,6 +1936,17 @@ test("billing reconcile route downgrades expired canceled rows and keeps future 
       resultReturns: { ok: false, purged: 0 },
     },
     downgraded: 1,
+    expiredActive: {
+      candidates: 0,
+      skippedTest: 0,
+      checked: 0,
+      updated: 0,
+      canceled: 0,
+      providerErrors: 0,
+      providerCallCap: 25,
+      capped: false,
+      deadlineHit: false,
+    },
     paymentIntegrity: successfulPaymentIntegritySummary(),
   })
   assert.equal(profiles["expired-paypal-user"].subscription_status, "canceled")
@@ -1237,6 +1998,17 @@ test("billing reconcile includes backfilled Stripe billing rows", async () => {
       resultReturns: { ok: false, purged: 0 },
     },
     downgraded: 1,
+    expiredActive: {
+      candidates: 0,
+      skippedTest: 0,
+      checked: 0,
+      updated: 0,
+      canceled: 0,
+      providerErrors: 0,
+      providerCallCap: 25,
+      capped: false,
+      deadlineHit: false,
+    },
     paymentIntegrity: successfulPaymentIntegritySummary(),
   })
   assert.equal(profiles["stripe-user"].subscription_status, "canceled")
@@ -1720,6 +2492,87 @@ test("Stripe subscription.updated upserts the billing row when profile resolves 
   assert.equal(billing[0].entitlement_status, "past_due")
   assert.equal(billing[0].interval, "year")
   assert.equal(billing[0].current_period_end, new Date(periodEnd * 1000).toISOString())
+})
+
+test("Stripe subscription.updated falls back to the billing row by provider_subscription_id when no profile matches the customer id", async () => {
+  const periodEnd = Math.floor((Date.now() + 172_800_000) / 1000)
+  const { supabase, billing } = createSupabaseStub({
+    billing: [
+      {
+        id: "orphan-billing",
+        user_id: "user-orphan",
+        provider: "stripe",
+        provider_subscription_id: "sub_orphan",
+        provider_customer_id: "cus_old",
+        entitlement_status: "active",
+        provider_status: "active",
+        current_period_end: pastIso(),
+      },
+    ],
+  })
+
+  const result = await handleSubscriptionUpdated(
+    {
+      id: "sub_orphan",
+      customer: "cus_missing",
+      status: "past_due",
+      cancel_at_period_end: false,
+      items: {
+        data: [
+          {
+            current_period_end: periodEnd,
+            price: { recurring: { interval: "month", interval_count: 1 } },
+          },
+        ],
+      },
+    } as any,
+    { supabase: supabase as any },
+  )
+
+  assert.deepEqual(result, { matchedCurrentSubscription: false })
+  assert.equal(billing.length, 1)
+  assert.equal(billing[0].user_id, "user-orphan")
+  assert.equal(billing[0].provider_customer_id, "cus_missing")
+  assert.equal(billing[0].provider_status, "past_due")
+  assert.equal(billing[0].entitlement_status, "past_due")
+  assert.equal(billing[0].current_period_end, new Date(periodEnd * 1000).toISOString())
+})
+
+test("Stripe subscription.updated logs an error and stays a no-op when neither profile nor billing row matches", async () => {
+  const { supabase, billing } = createSupabaseStub()
+  const originalConsoleError = console.error
+  const errorCalls: unknown[][] = []
+  console.error = (...args: unknown[]) => {
+    errorCalls.push(args)
+  }
+
+  let result: Awaited<ReturnType<typeof handleSubscriptionUpdated>>
+  try {
+    result = await handleSubscriptionUpdated(
+      {
+        id: "sub_unmatched",
+        customer: "cus_unmatched",
+        status: "active",
+        cancel_at_period_end: false,
+        items: {
+          data: [
+            {
+              current_period_end: Math.floor(Date.now() / 1000) + 86_400,
+              price: { recurring: { interval: "month", interval_count: 1 } },
+            },
+          ],
+        },
+      } as any,
+      { supabase: supabase as any },
+    )
+  } finally {
+    console.error = originalConsoleError
+  }
+
+  assert.deepEqual(result, { matchedCurrentSubscription: false })
+  assert.equal(billing.length, 0)
+  assert.equal(errorCalls.length, 1)
+  assert.match(String(errorCalls[0]?.[0]), /subscription\.updated/)
 })
 
 test("Stripe unpaid subscription updates do not create open billing access", async () => {

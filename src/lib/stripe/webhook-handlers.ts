@@ -328,7 +328,7 @@ export async function handleSubscriptionUpdated(
   const s = sub as unknown as UpdatedSub
   if (typeof s.customer !== "string") throw new Error("sub.customer not a string")
   const profile = await findProfileByStripeCustomerId(deps.supabase, s.customer)
-  if (!profile) return { matchedCurrentSubscription: false }
+  if (!profile) return handleSubscriptionUpdatedWithoutMatchedProfile(s, s.customer, deps)
   const price = s.items.data[0].price
   const interval = intervalFromPrice({
     interval: price.recurring?.interval ?? price.interval ?? "",
@@ -378,6 +378,61 @@ export async function handleSubscriptionUpdated(
     deps: { defer: deps.defer },
   })
   return { matchedCurrentSubscription, profileId: profile.id }
+}
+
+/**
+ * Falls back to a provider-id lookup when no profile carries this Stripe
+ * customer id — e.g. profiles.stripe_customer_id was cleared or never
+ * synced. Previously this returned silently (200 OK, no-op), so a real
+ * subscription.updated event could leave billing_subscriptions stale
+ * forever. Now it still updates the matching billing_subscriptions row from
+ * provider truth, and only logs at error level (no silent 200) when even
+ * that lookup misses — there is genuinely nothing local to reconcile.
+ */
+async function handleSubscriptionUpdatedWithoutMatchedProfile(
+  s: UpdatedSub,
+  customerId: string,
+  deps: SubscriptionUpdateDeps,
+): Promise<SubscriptionLifecycleResult> {
+  const existingBilling = await findBillingSubscriptionByProviderId(deps.supabase, "stripe", s.id)
+  if (!existingBilling) {
+    console.error(
+      "[stripe] subscription.updated: no profile or billing_subscriptions row matched this customer/subscription",
+      { subscriptionId: s.id, customer: customerId },
+    )
+    return { matchedCurrentSubscription: false }
+  }
+
+  const price = s.items.data[0].price
+  const interval = intervalFromPrice({
+    interval: price.recurring?.interval ?? price.interval ?? "",
+    interval_count: price.recurring?.interval_count ?? price.interval_count ?? 1,
+  })
+  const periodEnd = subPeriodEndIso(s)
+  const cancelScheduledAt =
+    typeof s.cancel_at === "number"
+      ? new Date(s.cancel_at * 1000).toISOString()
+      : s.cancel_at_period_end
+        ? periodEnd
+        : null
+
+  await upsertBillingSubscription(deps.supabase, {
+    user_id: existingBilling.user_id,
+    provider: "stripe",
+    provider_customer_id: customerId,
+    provider_subscription_id: s.id,
+    provider_status: s.status,
+    entitlement_status: stripeEntitlementStatus(s.status),
+    interval,
+    current_period_end: periodEnd,
+    cancel_at_period_end: Boolean(s.cancel_at_period_end || s.cancel_at != null),
+    cancel_scheduled_at: cancelScheduledAt,
+    metadata: {
+      ...stripePricingMetadata(price.id),
+    },
+  })
+
+  return { matchedCurrentSubscription: false }
 }
 
 export interface DeleteDeps {

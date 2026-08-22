@@ -502,8 +502,34 @@ test("billing reconcile isolates entitlement failure from integrity, analytics, 
       meta: { processed: 0, delivered: 0, failed: 0 },
       funnel: { processed: 0, delivered: 0, failed: 0 },
     },
-    entitlements: { status: "error" },
+    entitlements: { status: "error", reason: "entitlement_reconcile_failed" },
   })
+})
+
+test("billing reconcile captures the entitlement branch failure to Sentry instead of swallowing it", async () => {
+  const capturedErrors: unknown[] = []
+  const thrown = new Error("db connection reset mid-run")
+
+  const response = await handleBillingReconcile(
+    request(),
+    createDeps({
+      reconcileEntitlements: async () => {
+        throw thrown
+      },
+      captureEntitlementBranchFailure: (error) => {
+        capturedErrors.push(error)
+      },
+    }),
+  )
+
+  assert.equal(response.status, 500)
+  assert.deepEqual(capturedErrors, [thrown])
+  assert.deepEqual(response.body.entitlements, {
+    status: "error",
+    reason: "entitlement_reconcile_failed",
+  })
+  assert.equal(response.body.downgraded, 0)
+  assert.equal(JSON.stringify(response.body).includes("db connection reset"), false)
 })
 
 test("billing reconcile isolates one-time fulfillment failure from other branches", async () => {
