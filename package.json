@@ -149,7 +149,8 @@
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",
-    "prepare": "node -e \"if (!process.env.npm_config_omit?.split(',').includes('dev')) process.exit(1)\" || husky"
+    "prepare": "node -e \"if (!process.env.npm_config_omit?.split(/[,\\s]+/).includes('dev')) process.exit(1)\" || husky",
+    "postinstall": "node -e \"if (!process.env.npm_config_omit?.split(/[,\\s]+/).includes('dev')) process.exit(1)\" || patch-package --error-on-fail"
   },
   "dependencies": {
     "@customerio/cdp-analytics-browser": "^0.4.16",
@@ -196,6 +197,7 @@
     "eslint-config-next": "^16.2.4",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
+    "patch-package": "^8.0.1",
     "playwright": "^1.59.1",
     "prettier": "^3.8.3",
     "sharp": "^0.34.5",

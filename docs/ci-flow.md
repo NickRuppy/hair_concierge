@@ -29,6 +29,13 @@ Add `[ci full]`, `[full ci]`, `[run all ci]`, or `[ci:full]` to the PR title or 
 
 The path classifier lives in `scripts/ci/path-rules.mjs`; its behavior is covered by `tests/ci-path-rules.test.ts`.
 
+## Dependency Patches
+
+`patches/` holds `patch-package` patches applied by `npm install` / `npm ci` (`postinstall`). Keep them minimal and documented in the patched source.
+
+- `patches/next+*.patch` — serializes the watchpack `aggregated` handler in Next's dev bundler (`next/dist/server/lib/router-utils/setup-dev-bundler.js`). Upstream runs the handler concurrently; on a slow filesystem the initial scan emits a storm of partial route snapshots, the invocations race, and if a partial snapshot assigns `fsChecker.dynamicRoutes` last, dynamic routes missing from it (for example `/labs/personal-plan-application/[dayType]`) 404 for the rest of the `next dev` process. This surfaced as the intermittent `quality-personal-plan-journey` failure on the deep-link test (`GET .../wash_day 404` in the dev-server log). Static routes are unaffected because the dev router has an `ensure` fallback for them. `next start` is unaffected.
+  - On a Next bump, `postinstall` runs `patch-package --error-on-fail`, so `npm ci` / `npm install` fail if a hunk no longer applies; a version mismatch that still applies only prints a warning — re-read the patched region in the new Next version to confirm it still serializes the handler. Re-apply the edit and run `npx patch-package next` to regenerate, or drop the patch once upstream serializes the handler. Startup still resolves on the first watcher pass (upstream behaviour), so a partial table can be current for a moment while the queue drains — instead of for the rest of the process.
+
 ## Cutover Checklist
 
 1. Merge the workflow change.

@@ -1,0 +1,43 @@
+diff --git a/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js b/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+index 2924899..179fc8b 100644
+--- a/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
++++ b/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+@@ -297,7 +297,19 @@ async function startWatcher(opts) {
+         const routeTypesFilePath = _path.default.join(distDir, 'types', 'routes.d.ts');
+         const validatorFilePath = _path.default.join(distDir, 'types', 'validator.ts');
+         let initialWatchTime = performance.now() + performance.timeOrigin;
+-        wp.on('aggregated', async ()=>{
++        // chaarlie patch (patches/next+*.patch): serialize watchpack `aggregated` handling.
++        // Upstream runs every `aggregated` event concurrently. Each invocation snapshots
++        // `wp.getTimeInfoEntries()` at its start and overwrites `opts.fsChecker.dynamicRoutes`,
++        // `appFiles` and `serverFields.appPathRoutes` at its end. On a slow filesystem the initial
++        // scan emits a storm of partial snapshots (aggregateTimeout is 5ms) and while the render
++        // server is still initializing all invocations block on the same promise inside
++        // `propagateServerField`, then race; whichever assigns last wins. If a partial snapshot wins,
++        // dynamic routes missing from it 404 for the rest of the process (static routes survive via
++        // the dev `ensure` fallback in `resolve-routes`, dynamic routes have none). Running the
++        // handlers one at a time means every invocation reads a fresh snapshot and the last one
++        // always carries the complete route set.
++        let aggregatedQueue = Promise.resolve();
++        const handleAggregated = async ()=>{
+             var _serverFields_middleware, _serverFields_middleware1;
+             let writeEnvDefinitions = false;
+             let typescriptStatusFromLastAggregation = enabledTypeScript;
+@@ -856,6 +868,17 @@ async function startWatcher(opts) {
+                     _log.warn('Failed to reload dynamic routes:', e);
+                 }
+             }
++        };
++        wp.on('aggregated', ()=>{
++            aggregatedQueue = aggregatedQueue.then(handleAggregated).catch((err)=>{
++                // Mirror the handler's own catch: fail startup loudly, warn afterwards.
++                if (!resolved) {
++                    reject(err);
++                    resolved = true;
++                } else {
++                    _log.warn('Failed to reload dynamic routes:', err);
++                }
++            });
+         });
+         wp.watch({
+             directories: [
