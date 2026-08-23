@@ -108,6 +108,8 @@ function shelfStatusSummary(day: ApplicationDayView) {
         return slot.reason === "catalog_unavailable"
           ? `${slot.categoryLabelDe}: Produkt gerade nicht verfügbar`
           : `${slot.categoryLabelDe}: Produkt noch offen`
+      // A Tool stands on the same shelf as the products, without a status.
+      if (slot.kind === "tool") return `${slot.familyLabelDe}: ${slot.typeLabelDe}`
       return `${CATEGORY_LABELS_DE[slot.category] ?? slot.category}: ${slot.productName}`
     })
     .join("; ")
@@ -180,6 +182,31 @@ function ProductSilhouette({
         />
         <path d={silhouette.path} fill="none" stroke={silhouette.color} strokeWidth="2.5" />
       </svg>
+    </span>
+  )
+}
+
+/**
+ * A Tool stands on the existing shelf as its own object, exactly like a product.
+ * There is deliberately no pill row and no capability chip below the shelf.
+ */
+function ToolSilhouette({ slot }: { slot: Extract<ApplicationShelfSlotView, { kind: "tool" }> }) {
+  return (
+    <span
+      data-application-shelf-slot="tool"
+      data-application-tool-asset={slot.assetKey}
+      className="relative z-10 grid h-32 min-w-0 max-w-24 flex-1 place-items-center"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={slot.imageUrl}
+        alt={slot.imageAltDe}
+        className="h-full w-full object-contain p-1"
+        loading="lazy"
+      />
+      <span className="sr-only">
+        {slot.familyLabelDe}: {slot.typeLabelDe}
+      </span>
     </span>
   )
 }
@@ -260,6 +287,8 @@ function ShelfRow({
       <ShelfRail />
       {slots.map((slot, rowIndex) => {
         const index = offset + rowIndex
+        if (slot.kind === "tool")
+          return <ToolSilhouette key={`${slot.assetKey}:${index}`} slot={slot} />
         return slot.kind === "open" ? (
           <OpenSilhouette key={`open:${slot.category}:${index}`} slot={slot} />
         ) : (

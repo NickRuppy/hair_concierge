@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
@@ -98,6 +99,14 @@ export const POST = createStage2CompleteRouteHandler({
   gatewayFor: (userId) =>
     createPersistedStage2RefinementGateway({
       userId,
-      persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
+      persistence: createSupabaseStage2RefinementPersistence(createAdminClient(), {
+        toolsEnabled: (userId) =>
+          isPersonalPlanToolsEnabledForUser(
+            userId,
+            createAdminClient() as unknown as Parameters<
+              typeof isPersonalPlanToolsEnabledForUser
+            >[1],
+          ),
+      }),
     }),
 })

@@ -1,4 +1,4 @@
-import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutinePayload } from "@/lib/personal-plan/routine/contracts"
 import type { RoutineProductPresentation } from "@/lib/personal-plan/routine/contracts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,7 +17,7 @@ import {
 
 import { getRoutineStatus, hasChosenPlannedProduct, RoutineStatusBadge } from "./routine-status"
 
-type RoutineItem = RoutinePayloadV1["items"][number]
+type RoutineItem = RoutinePayload["items"][number]
 
 export { routineCategoryLabel, routinePurposeLabel }
 

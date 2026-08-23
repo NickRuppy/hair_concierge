@@ -18,6 +18,7 @@ import {
   type PlanProductRole,
 } from "./types"
 import { semanticHash } from "./routine/canonicalize"
+import type { PlanToolPlan, ToolAsset, ToolGuidance, ToolOccurrence } from "./tools/contracts"
 import { applyRoutineEdits as applyEdits } from "./routine/editor"
 import { diffRoutinePayloads as diffPayloads } from "./routine/diff"
 import {
@@ -83,7 +84,12 @@ export type RoutineItem = {
 }
 
 export type RoutineCompiledPayload = {
-  schemaVersion: 1
+  /**
+   * V1 is the released strict payload. V2 is exactly V1 plus the parallel Hair
+   * Tools authority; the compiler only emits it when the immutable refined
+   * snapshot actually carries a Tool plan, so a Tools-off owner keeps writing V1.
+   */
+  schemaVersion: 1 | 2
   planId: string
   versionId: string
   parentVersionId: string | null
@@ -99,6 +105,13 @@ export type RoutineCompiledPayload = {
   sections: Array<{ key: "basis" | "optional"; itemKeys: string[] }>
   items: RoutineItem[]
   createdAt?: string
+  /**
+   * Present only on V2. Durable Tool assets never enter cadence, depletion,
+   * reorder or commerce code — only `toolOccurrences` owns event timing.
+   */
+  toolAssets?: ToolAsset[]
+  toolOccurrences?: ToolOccurrence[]
+  toolGuidance?: ToolGuidance[]
 }
 
 export type RoutineEditOperation =
@@ -138,8 +151,23 @@ export function diffRoutinePayloads(
 
 /** Excludes persistence IDs, timestamps and commerce display data from semantic equality. */
 export function hashRoutineSemantics(payload: RoutineCompiledPayload): string {
+  // Tool data enters the preimage only when it exists, and the version is pinned
+  // to 1. A V2 Routine with zero Tool rows therefore hashes exactly like the V1
+  // payload it replaces, so enabling the rollout alone never fabricates a
+  // proposed successor.
+  const toolSemantics =
+    (payload.toolAssets?.length ?? 0) > 0 ||
+    (payload.toolOccurrences?.length ?? 0) > 0 ||
+    (payload.toolGuidance?.length ?? 0) > 0
+      ? {
+          toolAssets: payload.toolAssets ?? [],
+          toolOccurrences: payload.toolOccurrences ?? [],
+          toolGuidance: payload.toolGuidance ?? [],
+        }
+      : {}
   return semanticHash({
-    schemaVersion: payload.schemaVersion,
+    ...toolSemantics,
+    schemaVersion: 1,
     source: {
       refinedVersionId: payload.source.refinedVersionId,
       compilerVersion: payload.source.compilerVersion,
@@ -468,8 +496,20 @@ export async function compileInitialRoutineCandidate(
       .map((item) => item.itemKey),
   }))
 
+  // The Tool plan is a frozen part of the refined snapshot, so it is source, not
+  // a separate authority: it belongs in the fingerprint alongside the decisions.
+  const toolPlan: PlanToolPlan | null = input.refinedNeedSnapshot.toolPlan ?? null
+  const toolPayload = toolPlan
+    ? {
+        toolAssets: toolPlan.assets,
+        toolOccurrences: toolPlan.occurrences,
+        toolGuidance: toolPlan.guidance,
+      }
+    : null
+
   const fingerprintPreimage = {
     schemaVersion: 1,
+    ...(toolPayload ?? {}),
     expectedSourceRevision: input.expectedSourceRevision,
     personalPlanId: input.personalPlanId,
     refinedVersionId: portfolio.refinedVersionId,
@@ -483,7 +523,7 @@ export async function compileInitialRoutineCandidate(
   const sourceFingerprint = semanticHash(fingerprintPreimage)
 
   const payload = {
-    schemaVersion: 1,
+    schemaVersion: toolPayload ? (2 as const) : (1 as const),
     planId: input.personalPlanId,
     versionId: "pending-sql-assignment",
     parentVersionId: null,
@@ -499,10 +539,12 @@ export async function compileInitialRoutineCandidate(
     sections,
     items,
     createdAt: "pending-sql-assignment",
+    ...(toolPayload ?? {}),
   } satisfies RoutineCompiledPayload as unknown as JsonValue
 
   return {
-    schemaVersion: 1,
+    // The stored row version must match the payload's own discriminator.
+    schemaVersion: toolPayload ? 2 : 1,
     compilerVersion: PERSONAL_PLAN_ROUTINE_COMPILER_VERSION,
     authorityVersions,
     sourceFingerprint,

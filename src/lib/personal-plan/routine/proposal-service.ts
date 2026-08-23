@@ -6,7 +6,7 @@ import {
   type RoutineCompiledPayload,
   type RoutineEditOperation,
 } from "../routine-candidate-compiler"
-import { routinePayloadV1Schema, type RoutineProposalDeltaV1 } from "./contracts"
+import { routinePayloadSchema, type RoutineProposalDeltaV1 } from "./contracts"
 import {
   loadOwnerPendingRoutineProposal,
   loadOwnerRoutinePlan,
@@ -136,7 +136,7 @@ export function createRoutineProposalService(input: {
           return { status: "conflict", reason: "revision_conflict" }
         if (loaded.plan.source_revision !== request.expectedSourceRevision)
           return { status: "conflict", reason: "source_revision_conflict" }
-        const previous = routinePayloadV1Schema.parse(
+        const previous = routinePayloadSchema.parse(
           loaded.version.payload,
         ) as RoutineCompiledPayload
         const frozen = payloadIdentities(previous)

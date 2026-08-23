@@ -12,6 +12,7 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 
 export const runtime = "nodejs"
 
@@ -19,6 +20,12 @@ export type Stage1RouteDeps = {
   getAuthenticatedUser: () => Promise<{ id: string } | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   persistence: Stage1PersistenceDependencies
+  /**
+   * Server-owned Hair Tools rollout for this user. Omitted means off: the
+   * client may never decide this, and an unwired caller keeps the current
+   * ten-category Idealplan.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
 }
 
 export async function GET() {
@@ -31,6 +38,11 @@ export async function GET() {
       getAuthenticatedUser: async () => (user ? { id: user.id } : null),
       loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
       persistence: createStage1SupabaseDependencies(createAdminClient() as never),
+      toolsEnabled: (userId) =>
+        isPersonalPlanToolsEnabledForUser(
+          userId,
+          createAdminClient() as unknown as Parameters<typeof isPersonalPlanToolsEnabledForUser>[1],
+        ),
     }),
   )
 }
@@ -70,6 +82,7 @@ export async function handleStage1LoadOrCreate(deps: Stage1RouteDeps) {
           personalPlanId: result.personalPlanId,
           needVersionId: result.needVersionId,
           outputSnapshot: result.outputSnapshot,
+          toolsEnabled: (await deps.toolsEnabled?.(user.id)) === true,
         },
       }
     case "personal_plan_not_available":

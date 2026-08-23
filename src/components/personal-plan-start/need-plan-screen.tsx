@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { NeedCard, NeedCardGroup, isNeedCardGroup, type PlanStartCardViewModel } from "./need-card"
+import { ToolBlock } from "./tool-block"
+import type { ToolBlockViewModel } from "@/lib/personal-plan/tools/presentation"
 
 export type NeedPlanScreenKind = "basis" | "optional"
 
@@ -23,6 +25,11 @@ export type NeedPlanScreenViewModel = {
   countLabel: string
   cards: PlanStartCardViewModel[]
   progress: 50 | 100
+  /**
+   * Tier-local Hair Tools block, rendered after this page's care-product cards.
+   * Null whenever the Tools rollout is off or this tier has no Tool route.
+   */
+  toolBlock?: ToolBlockViewModel | null
 }
 
 export const PLAN_START_CATALOG_DISCLAIMER =
@@ -149,6 +156,8 @@ export function NeedPlanScreen({
             ),
           )}
         </div>
+
+        {screen.toolBlock ? <ToolBlock block={screen.toolBlock} /> : null}
       </main>
       {actionPortalTarget ? createPortal(actionNav, actionPortalTarget) : actionNav}
     </section>

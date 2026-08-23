@@ -13,6 +13,13 @@ type AdminClient = SupabaseClient
 /** Server-only persistence adapter. It is intentionally supplied only to route composition. */
 export function createSupabaseStage2RefinementPersistence(
   client: AdminClient,
+  options: {
+    /**
+     * Server-owned Hair Tools rollout for this owner. Omitted means off, so the
+     * released Feinschliff question path is unchanged.
+     */
+    toolsEnabled?: (userId: string) => Promise<boolean>
+  } = {},
 ): Stage2RefinementPersistence & Stage2RefinementResumeReader {
   async function loadSource(userId: string) {
     const { data: plan, error: planError } = await client
@@ -41,9 +48,10 @@ export function createSupabaseStage2RefinementPersistence(
     return {
       plan,
       initial,
-      triggerContext: deriveStage2TriggerContext(
-        initial.output_snapshot as InitialNeedPlanSnapshot,
-      ),
+      triggerContext: {
+        ...deriveStage2TriggerContext(initial.output_snapshot as InitialNeedPlanSnapshot),
+        toolsEnabled: (await options.toolsEnabled?.(userId)) === true,
+      },
     }
   }
 

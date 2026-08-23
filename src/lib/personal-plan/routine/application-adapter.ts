@@ -1,6 +1,6 @@
 import "server-only"
 
-import type { RoutinePayloadV1 } from "./contracts"
+import type { RoutinePayload } from "./contracts"
 import { effectiveRoutineCadenceCopyDe } from "./cadence"
 import { adaptCatalogApplicationFacts } from "@/lib/routines/personal-plan/application/catalog-facts"
 import type {
@@ -157,7 +157,7 @@ export type DegradedApplicationItem = {
 /** Owner-scoped active Routine in, verified catalog identities and exact Heat guidance out. */
 export async function adaptAcceptedActiveRoutineForApplication(input: {
   client: ApplicationRoutineReadClient
-  activeVersion: { id: string; payload: RoutinePayloadV1 }
+  activeVersion: { id: string; payload: RoutinePayload }
   contractVersion?: PersonalPlanStage5ContractVersion
 }): Promise<{
   routineVersionId: string

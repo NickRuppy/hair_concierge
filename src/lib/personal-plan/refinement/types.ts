@@ -1,4 +1,6 @@
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
+import type { ToolFamily, ToolProductType } from "@/lib/personal-plan/tools/contracts"
+import type { ToolFormPageKey } from "@/lib/personal-plan/tools/labels"
 import type {
   NightProtection,
   TowelMaterial,
@@ -85,6 +87,20 @@ export type PersonalPlanRefinementAnswersV1 = {
   additionalHeatTools?: AdditionalHeatTool[]
   heatEvents?: Record<string, HeatEventAnswer>
   nightProtection?: NightProtection[]
+  /**
+   * Families the user indicated they own something in, captured by the overview.
+   *
+   * Family-keyed on purpose: the four Feinschliff sections are presentation
+   * headers and must never be persisted. Absent means the overview was never
+   * submitted (unknown); present means it was, and every family outside this
+   * list has been materialized as an explicit `[]` in `toolForms`.
+   */
+  toolFamiliesWithSomething?: ToolFamily[]
+  /**
+   * Broad reported forms per persisted Tool family. An absent key is `unknown`
+   * (skipped or migrated); `[]` is the user's explicit `Nichts davon`.
+   */
+  toolForms?: Partial<Record<ToolFamily, ToolProductType[]>>
 }
 
 export type Stage2StaticQuestionId =
@@ -99,13 +115,30 @@ export type Stage2StaticQuestionId =
   | "additional_heat_tools"
   | "night_protection"
 export type Stage2HeatEventQuestionId = `heat:${Stage2HeatEventSource}`
-export type Stage2QuestionId = Stage2StaticQuestionId | Stage2HeatEventQuestionId
+export type Stage2ToolOverviewQuestionId = "tools_overview"
+export type Stage2ToolFormQuestionId = `tools:${ToolFormPageKey}`
+export type Stage2ToolQuestionId = Stage2ToolOverviewQuestionId | Stage2ToolFormQuestionId
+export type Stage2QuestionId =
+  | Stage2StaticQuestionId
+  | Stage2HeatEventQuestionId
+  | Stage2ToolQuestionId
+
+export const STAGE2_TOOL_OVERVIEW_QUESTION_ID: Stage2ToolOverviewQuestionId = "tools_overview"
+
+export function isStage2ToolQuestionId(id: Stage2QuestionId): id is Stage2ToolQuestionId {
+  return id === STAGE2_TOOL_OVERVIEW_QUESTION_ID || id.startsWith("tools:")
+}
 export type Stage2AnswerKey = keyof PersonalPlanRefinementAnswersV1
 
 export type Stage2TriggerContext = {
   relevantCategories: Stage2ProductCategory[]
   hasReportedIrritatedScalp: boolean
   dryShampooBridgeEligibility: "unknown" | "eligible" | "ineligible"
+  /**
+   * Server-owned Hair Tools rollout. Absent/false keeps the exact current
+   * Feinschliff path; the browser never sets it.
+   */
+  toolsEnabled?: boolean
 }
 
 export type Stage2PathState = {

@@ -1,10 +1,10 @@
-import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutinePayload } from "@/lib/personal-plan/routine/contracts"
 import type { RoutineProductPresentation } from "@/lib/personal-plan/routine/contracts"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { RoutineCategoryCard } from "./routine-item-card"
 
-type RoutineItem = RoutinePayloadV1["items"][number]
+type RoutineItem = RoutinePayload["items"][number]
 
 export function RoutineSection({
   title,

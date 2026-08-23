@@ -2,6 +2,12 @@ import { RouteAwareApplicationPage } from "@/components/application/application-
 import type { ApplicationPageView } from "@/components/application/application-types"
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
 import {
+  isRoutinePayloadV2,
+  routineToolAssets,
+  routineToolGuidance,
+  routineToolOccurrences,
+} from "@/lib/personal-plan/routine/contracts"
+import {
   PERSONAL_PLAN_STAGE5_CONTRACT_VERSION,
   type PersonalPlanStage5ContractVersion,
 } from "@/lib/personal-plan/stage5-access"
@@ -187,6 +193,17 @@ export async function resolveAnwendungPage(
         routineItems: accepted.routineItems,
         compiledDayKeys: compiled.days.map((day) => day.key),
       }),
+      // Routine V2 is the single Tool authority; a strict V1 Routine simply
+      // carries no Tool rows and the days render exactly as they do today.
+      ...(isRoutinePayloadV2(activeVersion.payload)
+        ? {
+            tools: {
+              assets: routineToolAssets(activeVersion.payload),
+              occurrences: routineToolOccurrences(activeVersion.payload),
+              guidance: routineToolGuidance(activeVersion.payload),
+            },
+          }
+        : {}),
     })
     if (selectedDayType) {
       if (view.state === "ready" && view.days.some((day) => day.dayType === selectedDayType)) {

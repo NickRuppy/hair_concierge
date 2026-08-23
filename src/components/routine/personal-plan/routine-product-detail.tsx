@@ -3,11 +3,11 @@
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
-import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutinePayload } from "@/lib/personal-plan/routine/contracts"
 
 import { routineCategoryLabel, routinePurposeLabel } from "./routine-item-card"
 
-type RoutineItem = RoutinePayloadV1["items"][number]
+type RoutineItem = RoutinePayload["items"][number]
 
 export type RoutineCommerceSnapshot = {
   availabilityLabel: string | null

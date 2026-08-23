@@ -39,6 +39,14 @@ import {
   getSelectedStage2HeatEventSources,
   requiresStage2HeatProtection,
 } from "./heat-events"
+import {
+  TOOL_FAMILIES,
+  TOOL_PRODUCT_TYPES_BY_FAMILY,
+  type ToolFamily,
+  type ToolProductType,
+} from "@/lib/personal-plan/tools/contracts"
+import { TOOL_FORM_PAGES, toolFormPagesForFamilies } from "@/lib/personal-plan/tools/labels"
+import { STAGE2_TOOL_OVERVIEW_QUESTION_ID, isStage2ToolQuestionId } from "./types"
 
 const BASE_QUESTION_IDS: Stage2QuestionId[] = ["current_product_categories", "wet_wash_frequency"]
 const END_QUESTION_IDS: Stage2QuestionId[] = [
@@ -117,6 +125,29 @@ export function pruneStage2Answers(input: PathInput): Stage2PrunedAnswers {
     }
   }
 
+  if (input.triggerContext.toolsEnabled !== true) {
+    // Rollout-off must be non-destructive: hide the Tool trip, never delete what
+    // the user already reported. Deleting here would let a rollback erase
+    // additive ownership facts on the next ordinary answer save, because the
+    // pruned answer object is what gets written back.
+  } else if (answers.toolFamiliesWithSomething) {
+    // Forms are retained for families the user said they own something in, plus
+    // the explicit `[]` entries the overview materialized for the rest.
+    const activeFamilies = new Set<ToolFamily>(answers.toolFamiliesWithSomething)
+    if (answers.toolForms) {
+      const retained = Object.fromEntries(
+        Object.entries(answers.toolForms).filter(
+          ([family, forms]) =>
+            activeFamilies.has(family as ToolFamily) || (forms?.length ?? 0) === 0,
+        ),
+      ) as PersonalPlanRefinementAnswersV1["toolForms"]
+      if (Object.keys(retained ?? {}).length !== Object.keys(answers.toolForms).length) {
+        answers.toolForms = retained
+        prunedAnswerKeys.push("toolForms")
+      }
+    }
+  }
+
   const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, answers)
   const activeQuestionIds = new Set<Stage2QuestionId>(orderedQuestionIds)
   const completedQuestionIds = input.completedQuestionIds.filter((id) => activeQuestionIds.has(id))
@@ -141,8 +172,34 @@ export function getOrderedQuestionIds(
   ids.push(...END_QUESTION_IDS.slice(0, 3))
   ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
   ids.push(...END_QUESTION_IDS.slice(3))
+  ids.push(...getToolQuestionIds(triggerContext, answers))
   return ids
 }
+
+/**
+ * The visual Tool trip: one four-section overview, then short product-form pages
+ * for the selected sections only. Absent while the rollout is off, so the
+ * released Feinschliff path is byte-identical.
+ */
+export function getToolQuestionIds(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): Stage2QuestionId[] {
+  if (triggerContext.toolsEnabled !== true) return []
+  const ids: Stage2QuestionId[] = [STAGE2_TOOL_OVERVIEW_QUESTION_ID]
+  const families = answers.toolFamiliesWithSomething
+  if (!families) return ids
+  // Pages follow the persisted family facts, so the path is stable: answering a
+  // page never makes it disappear.
+  for (const page of toolFormPagesForFamilies(families)) {
+    ids.push(`tools:${page.pageKey}` as Stage2QuestionId)
+  }
+  return ids
+}
+
+const TOOL_FORM_PAGE_BY_QUESTION_ID = new Map(
+  TOOL_FORM_PAGES.map((page) => [`tools:${page.pageKey}`, page] as const),
+)
 
 export function resolveStage2Path(input: PathInput): Stage2PathState {
   return resolveStage2RefinementContract(input).path
@@ -157,9 +214,22 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
   )
   const firstUnresolvedQuestionId =
     orderedQuestionIds.find((id) => !completedQuestionIds.includes(id)) ?? null
+  // The Tool overview itself is never required: direct acceptance must be able to
+  // finish a Stage-2 draft while every Tool answer stays `unknown` rather than
+  // being coerced into an explicit none.
+  //
+  // But once the overview HAS been submitted, the product-form pages it opened
+  // are required. Without that, an API caller could complete a draft whose Tool
+  // trip is half answered, freezing a partially answered trip into an immutable
+  // refined version.
+  const overviewSubmitted = pruned.answers.toolFamiliesWithSomething !== undefined
+  const requiredQuestionIds = orderedQuestionIds.filter(
+    (id) =>
+      !isStage2ToolQuestionId(id) || (overviewSubmitted && id !== STAGE2_TOOL_OVERVIEW_QUESTION_ID),
+  )
   const path: Stage2PathState = {
     orderedQuestionIds,
-    requiredQuestionIds: orderedQuestionIds,
+    requiredQuestionIds,
     completedQuestionIds,
     firstUnresolvedQuestionId,
     prunedAnswerKeys: pruned.prunedAnswerKeys,
@@ -174,7 +244,7 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
     completedQuestionIds,
     path,
     validationErrors,
-    isComplete: firstUnresolvedQuestionId === null,
+    isComplete: requiredQuestionIds.every((id) => completedQuestionIds.includes(id)),
   }
 }
 
@@ -215,6 +285,18 @@ function isQuestionAnswerValid(
   answers: PersonalPlanRefinementAnswersV1,
 ): boolean {
   if (questionId.startsWith("heat:")) return isHeatEventAnswerValid(questionId, answers)
+  if (questionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
+    return isOrderedKnownArray<ToolFamily>(answers.toolFamiliesWithSomething, TOOL_FAMILIES)
+  }
+  if (isStage2ToolQuestionId(questionId)) {
+    const page = TOOL_FORM_PAGE_BY_QUESTION_ID.get(questionId)
+    if (!page) return false
+    const reported = answers.toolForms?.[page.family]
+    return isOrderedKnownArray<ToolProductType>(
+      reported,
+      TOOL_PRODUCT_TYPES_BY_FAMILY[page.family] as readonly ToolProductType[],
+    )
+  }
   switch (questionId) {
     case "current_product_categories":
       return isOrderedKnownArray(answers.currentProductCategories, STAGE2_PRODUCT_CATEGORIES)

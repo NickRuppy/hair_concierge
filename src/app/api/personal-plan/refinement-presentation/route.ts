@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
-import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutinePayload } from "@/lib/personal-plan/routine/contracts"
 import { routineCategoryLabel, routinePurposeLabel } from "@/lib/personal-plan/routine/labels"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
@@ -35,7 +35,7 @@ export type RefinementPresentationRouteDeps = {
 const response = (body: unknown, status = 200) =>
   NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } })
 
-type RoutineItem = RoutinePayloadV1["items"][number]
+type RoutineItem = RoutinePayload["items"][number]
 
 function routineProductSummary(item: RoutineItem): RoutineProductSummary | null {
   if (item.product.kind !== "owned" && item.product.kind !== "planned") return null

@@ -45,6 +45,14 @@ import {
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
 import { directAcceptanceAssumptions } from "@/lib/personal-plan/direct-acceptance/defaults"
+import { Stage3ToolCheckpoint } from "@/components/personal-plan-products/tool-checkpoint"
+import { buildToolPlan } from "@/lib/personal-plan/tools/assets"
+import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import {
+  buildStage1ToolBlocks,
+  type ToolCardViewModel,
+} from "@/lib/personal-plan/tools/presentation"
+import { computeToolRoutes, type ToolProfileFacts } from "@/lib/personal-plan/tools/routes"
 import {
   isStage1ProductExamplePreviewResponse,
   stage1ProductExamplePreviewRequestUrl,
@@ -71,6 +79,13 @@ export type PlanStartReadyViewModel = {
   sourceInputHash?: string
   /** Drives the fork screen's assumption list without touching the Stage-2 gateway. */
   stage2TriggerContext?: Stage2TriggerContext
+  /** Server-resolved Hair Tools rollout for this owner. Absent means off. */
+  toolsEnabled?: boolean
+  /**
+   * The narrow profile slice the Tool engine reads, so Stage 3 can recompute
+   * Tool routes from the Feinschliff answers without reloading Stage 1.
+   */
+  toolContext?: { profile: ToolProfileFacts; scalpApplicationJob: boolean }
 }
 
 export type PlanStartInitialJourney =
@@ -245,7 +260,10 @@ export function interpretPlanStartApiResponse(status: number, body: unknown): Pl
     body.status === "completed" &&
     "outputSnapshot" in body
   ) {
-    const plan = adaptInitialNeedSnapshotToPlanStartViewModel(body.outputSnapshot)
+    // The Tools rollout is decided server-side and travels with the response;
+    // the browser never turns it on for itself.
+    const toolsEnabled = "toolsEnabled" in body && body.toolsEnabled === true
+    const plan = adaptInitialNeedSnapshotToPlanStartViewModel(body.outputSnapshot, { toolsEnabled })
     const personalPlanId =
       "personalPlanId" in body && typeof body.personalPlanId === "string"
         ? body.personalPlanId
@@ -474,6 +492,10 @@ export function PlanStartCustomerJourney({
   const pendingStage3BootstrapRef = useRef<Stage2RefinementSession | null>(null)
   const stage3JourneyStartedRef = useRef(false)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
+  const [toolCheckpoint, setToolCheckpoint] = useState<{
+    handoff: Stage3RoutineHandoff
+    cards: ToolCardViewModel[]
+  } | null>(null)
   const [returningToRefinement, setReturningToRefinement] = useState(
     () => !refinementAutoHandoffEnabled(initialJourney),
   )
@@ -747,7 +769,7 @@ export function PlanStartCustomerJourney({
     plan?.sourceInputHash,
   ])
 
-  const openRoutine = useCallback(
+  const performRoutineHandoff = useCallback(
     (handoff: Stage3RoutineHandoff) => {
       performPersonalPlanRoutineHandoff(handoff, {
         markNavigation: markPersonalPlanStageNavigation,
@@ -756,6 +778,63 @@ export function PlanStartCustomerJourney({
     },
     [replaceRoute],
   )
+
+  /**
+   * Hair Tools gets one checkpoint after the care-product decisions.
+   *
+   * The cards are computed at handoff time, not memoized: the completed Stage-2
+   * session lives in a ref, so a memo would still hold the answers from before
+   * the Feinschliff and show `unknown` for facts the user actually reported.
+   */
+  const buildToolCheckpointCards = useCallback((): ToolCardViewModel[] => {
+    if (plan?.toolsEnabled !== true || !plan.toolContext) return []
+    try {
+      const answers = stage2SeedRef.current?.answers
+      const care = projectToolCareFacts(answers)
+      const inventory = { ...(answers?.toolForms ?? {}) }
+      const routes = computeToolRoutes({
+        profile: plan.toolContext.profile,
+        care,
+        inventory,
+        scalpApplicationJob: plan.toolContext.scalpApplicationJob,
+      })
+      const blocks = buildStage1ToolBlocks(buildToolPlan({ routes, inventory }), {
+        hasOptionalPage: false,
+      })
+      return blocks.basis?.cards ?? []
+    } catch {
+      // A Tool projection failure must never block the released Routine handoff.
+      return []
+    }
+  }, [plan?.toolContext, plan?.toolsEnabled])
+
+  const openRoutine = useCallback(
+    (handoff: Stage3RoutineHandoff) => {
+      const cards = buildToolCheckpointCards()
+      if (cards.length > 0) {
+        // Bounded counts only: never a Tool identity, ownership claim or purchase.
+        stage3BaselineAnalytics.track("personal_plan_tools_checkpoint_viewed", {
+          routeCount: cards.length,
+          ownedCount: cards.filter((card) => card.state === "use_yours").length,
+          gapCount: cards.filter((card) => card.state === "catalog_gap").length,
+          unknownCount: cards.filter((card) => card.state === "check_in_refinement").length,
+        })
+        setToolCheckpoint({ handoff, cards })
+        return
+      }
+      performRoutineHandoff(handoff)
+    },
+    [buildToolCheckpointCards, performRoutineHandoff],
+  )
+
+  if (toolCheckpoint) {
+    return (
+      <Stage3ToolCheckpoint
+        cards={toolCheckpoint.cards}
+        onContinue={() => performRoutineHandoff(toolCheckpoint.handoff)}
+      />
+    )
+  }
 
   if (stage === "fork") {
     return (
@@ -766,6 +845,7 @@ export function PlanStartCustomerJourney({
             hasReportedIrritatedScalp: false,
             dryShampooBridgeEligibility: "unknown",
           },
+          { toolsEnabled: plan?.toolsEnabled === true },
         )}
         previewState={forkPreviewState}
         directAcceptanceAvailable={

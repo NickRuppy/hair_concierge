@@ -1,6 +1,6 @@
 import { PRODUCT_FREQUENCY_LABELS, type ProductFrequency } from "@/lib/vocabulary/frequencies"
 
-import { getOrderedQuestionIds } from "../refinement/question-path"
+import { resolveStage2RefinementContract } from "../refinement/question-path"
 import type {
   DryShampooBridgePreference,
   PersonalPlanRefinementAnswersV1,
@@ -72,7 +72,18 @@ export function buildDirectAcceptanceStage2Defaults(
 
   // Deriving the completed set from the canonical path keeps the defaults
   // complete by construction when the Stage-2 question path changes.
-  return { answers, completedQuestionIds: getOrderedQuestionIds(triggerContext, answers) }
+  //
+  // Only the REQUIRED questions are answered. The visual Tool trip is ordered
+  // but not required, so a directly accepted plan leaves every Tool answer
+  // absent — that is `unknown`, not an invented "nothing".
+  return {
+    answers,
+    completedQuestionIds: resolveStage2RefinementContract({
+      triggerContext,
+      answers,
+      completedQuestionIds: [],
+    }).path.requiredQuestionIds,
+  }
 }
 
 export type DirectAcceptanceAssumption = {
@@ -81,9 +92,17 @@ export type DirectAcceptanceAssumption = {
   label: string
 }
 
-/** German assumption lines rendered by the fork screen before the user accepts. */
+/**
+ * German assumption lines rendered by the fork screen before the user accepts.
+ *
+ * With Hair Tools enabled the existing Night-Protection line becomes one quiet
+ * combined line. The fork gains no Tool disclaimer, panel or extra bullet: the
+ * line states a planning default and never asserts ownership, settings,
+ * attachment compatibility or the user's current technique.
+ */
 export function directAcceptanceAssumptions(
   triggerContext: Stage2TriggerContext,
+  options: { toolsEnabled?: boolean } = {},
 ): DirectAcceptanceAssumption[] {
   const washLabel = PRODUCT_FREQUENCY_LABELS[DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY]
 
@@ -112,6 +131,11 @@ export function directAcceptanceAssumptions(
     { id: "towel_handling", label: "Haare sanft mit einem Mikrofaser-Handtuch ausdrücken" },
     { id: "drying_routes", label: "Lufttrocknen, kein Föhnen" },
     { id: "additional_heat_tools", label: "Keine Hitze-Styling-Geräte" },
-    { id: "night_protection", label: "Kein besonderer Haarschutz über Nacht" },
+    {
+      id: "night_protection",
+      label: options.toolsEnabled
+        ? "Keine weiteren Tools oder besonderer Nachtschutz eingeplant"
+        : "Kein besonderer Haarschutz über Nacht",
+    },
   ]
 }

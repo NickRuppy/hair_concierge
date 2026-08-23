@@ -19,7 +19,16 @@ import {
   saveStage2SessionAnswer,
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
-import type { Stage2QuestionId, Stage2StaticQuestionId } from "@/lib/personal-plan/refinement/types"
+import {
+  isStage2ToolQuestionId,
+  type Stage2QuestionId,
+  type Stage2StaticQuestionId,
+  type Stage2ToolQuestionId,
+} from "@/lib/personal-plan/refinement/types"
+import { toolQuestionLabel } from "@/lib/personal-plan/tools/stage2"
+import { toolAnalytics } from "@/lib/personal-plan/tools/analytics"
+import { TOOL_OVERVIEW_SECTIONS } from "@/lib/personal-plan/tools/labels"
+import { STAGE2_TOOL_OVERVIEW_QUESTION_ID } from "@/lib/personal-plan/refinement/types"
 
 import { RefinementBridge } from "./refinement-bridge"
 import {
@@ -44,6 +53,7 @@ export type Stage2RefinementTelemetryFamily =
   | "heat_behavior"
   | "detangling_behavior"
   | "night_behavior"
+  | "tool_inventory"
 export type Stage2RefinementTelemetrySection = "current_products" | "hair_handling"
 
 export type Stage2RefinementTelemetryEvent =
@@ -174,6 +184,11 @@ export function RefinementFlow({
           section: getQuestionSection(nextQuestionId),
           family: getQuestionFamily(nextQuestionId),
         })
+        if (nextQuestionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
+          toolAnalytics.track("personal_plan_tools_inventory_entered", {
+            sectionCount: TOOL_OVERVIEW_SECTION_COUNT,
+          })
+        }
       }
     },
     [emit],
@@ -380,6 +395,9 @@ export function RefinementFlow({
           name: "personal_plan_stage2_answer_saved",
           family: getQuestionFamily(submittedQuestionId),
         })
+        if (isStage2ToolQuestionId(submittedQuestionId)) {
+          toolAnalytics.track("personal_plan_tools_inventory_completed", toolCounts(result.session))
+        }
         showCompletedStage2Session(result.session, result.handoff)
         return
       }
@@ -400,6 +418,9 @@ export function RefinementFlow({
         editedCompletedQuestion,
       )
       if (!nextQuestionId) {
+        if (isStage2ToolQuestionId(submittedQuestionId)) {
+          toolAnalytics.track("personal_plan_tools_inventory_completed", toolCounts(nextSession))
+        }
         setSession(nextSession)
         await completeStage2Session(nextSession)
         return
@@ -614,6 +635,17 @@ export function getCompletedHandoffForLoadedSession(
   return session.completedHandoff
 }
 
+const TOOL_OVERVIEW_SECTION_COUNT = TOOL_OVERVIEW_SECTIONS.length
+
+/** Bounded counts only: how many families the user reported versus explicitly cleared. */
+function toolCounts(session: Stage2RefinementSession) {
+  const forms = Object.values(session.answers.toolForms ?? {})
+  return {
+    reportedFamilyCount: forms.filter((entry) => (entry?.length ?? 0) > 0).length,
+    explicitNoneFamilyCount: forms.filter((entry) => entry?.length === 0).length,
+  }
+}
+
 function chooseNextQuestion(
   session: Stage2RefinementSession,
   savedQuestionId: Stage2QuestionId,
@@ -771,6 +803,7 @@ function initialRefinementView(
 
 function labelForQuestion(questionId: Stage2QuestionId): string {
   if (questionId.startsWith("heat:")) return "Häufigkeit und Hitzeschutz"
+  if (isStage2ToolQuestionId(questionId)) return toolQuestionLabel(questionId)
   const labels = {
     current_product_categories: "Aktuelle Produktarten",
     wet_wash_frequency: "Nasswasch-Rhythmus",
@@ -782,6 +815,9 @@ function labelForQuestion(questionId: Stage2QuestionId): string {
     drying_routes: "Trocknungswege",
     additional_heat_tools: "Zusätzliche Hitze-Tools",
     night_protection: "Nachtschutz",
-  } as const satisfies Record<Exclude<Stage2QuestionId, `heat:${string}`>, string>
+  } as const satisfies Record<
+    Exclude<Stage2QuestionId, `heat:${string}` | Stage2ToolQuestionId>,
+    string
+  >
   return labels[questionId as Stage2StaticQuestionId]
 }

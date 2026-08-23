@@ -486,6 +486,26 @@ export type AppEventMap = {
   }
   personal_plan_stage3_handoff: {
     outcome: PersonalPlanStage3HandoffOutcome
+    /** Parallel Hair Tools domain. Absent while the Tools rollout is off. */
+    toolRouteCount?: number
+    toolGapCount?: number
+  }
+  /**
+   * The Hair Tools checkpoint after the Stage-3 care-product decisions. Only
+   * bounded counts — never a Tool identity, an ownership claim or a purchase.
+   */
+  personal_plan_tools_checkpoint_viewed: {
+    routeCount: number
+    ownedCount: number
+    gapCount: number
+    unknownCount: number
+  }
+  personal_plan_tools_inventory_entered: {
+    sectionCount: number
+  }
+  personal_plan_tools_inventory_completed: {
+    reportedFamilyCount: number
+    explicitNoneFamilyCount: number
   }
   personal_plan_stage3_review_viewed: {
     category: PersonalPlanCategory | null

@@ -1,9 +1,6 @@
 import Link from "next/link"
 
-import type {
-  PersonalPlanRoutineView,
-  RoutinePayloadV1,
-} from "@/lib/personal-plan/routine/contracts"
+import type { PersonalPlanRoutineView, RoutinePayload } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   PersonalPlanJourneyHeader,
@@ -15,9 +12,11 @@ import { routineCategoryLabel } from "./routine-item-card"
 
 import { RoutineRefinementNudge } from "./routine-refinement-nudge"
 import { RoutineSection } from "./routine-section"
+import { RoutineToolSection } from "./routine-tool-section"
+import { routineToolAssets } from "@/lib/personal-plan/routine/contracts"
 import { hasChosenPlannedProduct } from "./routine-status"
 
-type RoutineItem = RoutinePayloadV1["items"][number]
+type RoutineItem = RoutinePayload["items"][number]
 
 export type RoutinePageProps = {
   view: PersonalPlanRoutineView
@@ -109,6 +108,9 @@ export function RoutinePage({
   const basisItems = sectionItems("basis")
   const optionalItems = sectionItems("optional").filter((item) => !isLaterOptional(item))
   const laterItems = sectionItems("optional").filter(isLaterOptional)
+  // Products first: `Deine Tools` follows every product section and stays a
+  // compact asset list, never a second Routine system.
+  const toolAssets = payload ? routineToolAssets(payload) : []
   const includedProductCount = [...basisItems, ...optionalItems].filter(
     (item) => item.state.inclusion === "included",
   ).length
@@ -223,6 +225,7 @@ export function RoutinePage({
               productPresentation={view.productPresentation}
             />
           ) : null}
+          <RoutineToolSection assets={toolAssets} />
           {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
           (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
             <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">

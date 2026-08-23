@@ -1,6 +1,7 @@
 import type { ApplicationDayView } from "./application-types"
 import { ProductApplicationBlock } from "./product-application-block"
 import { ProductlessStep } from "./productless-step"
+import { ToolUseBlock } from "./tool-use-block"
 import { UnresolvedProductBlock } from "./unresolved-product-block"
 
 export function ApplicationDay({ day }: { day: ApplicationDayView }) {
@@ -39,6 +40,8 @@ export function ApplicationDay({ day }: { day: ApplicationDayView }) {
                 step={step}
                 position={index + 1}
               />
+            ) : step.kind === "tool_use" ? (
+              <ToolUseBlock key={step.stepKey} step={step} position={index + 1} />
             ) : (
               <ProductlessStep key={step.stepKey} step={step} position={index + 1} />
             ),

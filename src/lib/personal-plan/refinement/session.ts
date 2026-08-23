@@ -5,8 +5,15 @@ import type {
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "./types"
+import { isStage2ToolQuestionId, STAGE2_TOOL_OVERVIEW_QUESTION_ID } from "./types"
 import { resolveStage2RefinementContract } from "./question-path"
 import { Stage2RefinementError } from "./gateway"
+import {
+  TOOL_FORM_PAGES,
+  toolFamiliesForSections,
+  type ToolOverviewSectionKey,
+} from "@/lib/personal-plan/tools/labels"
+import { TOOL_FAMILIES, type ToolProductType } from "@/lib/personal-plan/tools/contracts"
 
 export type Stage2RefinementHandoff = {
   refinedVersionId: string
@@ -133,6 +140,31 @@ function replaceQuestionAnswer(
   answer: unknown,
 ): PersonalPlanRefinementAnswersV1 {
   const next = structuredClone(answers)
+  if (questionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
+    // The UI answers in presentation sections; only family facts are persisted.
+    const sections = (structuredClone(answer) ?? []) as ToolOverviewSectionKey[]
+    const families = toolFamiliesForSections(sections)
+    next.toolFamiliesWithSomething = TOOL_FAMILIES.filter((family) => families.includes(family))
+    // Submitting the overview is a real answer about every family: the ones the
+    // user did not tick are explicitly empty, not unknown.
+    const forms = { ...next.toolForms }
+    for (const family of TOOL_FAMILIES) {
+      if (families.includes(family)) continue
+      forms[family] = []
+    }
+    next.toolForms = forms
+    return next
+  }
+  if (isStage2ToolQuestionId(questionId)) {
+    const page = TOOL_FORM_PAGES.find((candidate) => `tools:${candidate.pageKey}` === questionId)
+    if (page) {
+      next.toolForms = {
+        ...next.toolForms,
+        [page.family]: structuredClone(answer) as ToolProductType[],
+      }
+    }
+    return next
+  }
   if (questionId.startsWith("heat:")) {
     next.heatEvents = {
       ...next.heatEvents,
