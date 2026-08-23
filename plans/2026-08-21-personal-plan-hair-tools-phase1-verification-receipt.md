@@ -6,7 +6,9 @@ change and by the Codex review findings (Codex finding 12).
 ## Identity
 
 - Worktree: `.worktrees/personal-plan-hair-tools-current-shape`
-- Branch: `codex/personal-plan-hair-tools-current-shape` (no commits; working tree only)
+- Branch: `codex/personal-plan-hair-tools-current-shape`
+- Commit under review: `c5da10580ccb6786ee22967e87fca82839f4f55e` (the only commit
+  on this branch; nothing pushed)
 - Base: `2efd080afe9af98fb4b41d54c3d26a5446b6bd95` (== `origin/main` at implementation time)
 - Canonical content fingerprint of the verified tree, this receipt excluded:
   `30be90779b8a5cb7955407d2428f47a24f4cc3a6a045aff81c6513acf75440a2` — SHA-256
@@ -153,9 +155,132 @@ delta, and it touches load-bearing seams:
 
 Per `request-code-review`, a fix that changes reviewed content stales the receipt
 and requires a delta review of the changed content, its callers and its tests.
-That pass has not been run.
+
+**Three review lanes were dispatched over commit `c5da1058` on 2026-08-21:**
+
+1. Codex counterpart delta review at `xhigh`, briefed on each of the twelve fixes
+   and told to reuse its earlier conclusions on untouched code.
+2. An adversarial lane scoped to the ownership-truth invariant alone, briefed to
+   assume a sixth violation exists and hunt for it.
+3. An adversarial lane scoped to deterministic-rule fidelity against
+   `decision.md` and `conditional-guidance-matrix.md`, plus Anwendung step
+   sequencing.
+
+Both adversarial lanes were told explicitly that the implementation and its tests
+share one author, so agreeing tests are not evidence.
+
+Deliberate deviation, recorded rather than silent: `AGENTS.md` says to use exactly
+one counterpart lane per review pass and not to stack Codex with other review
+agents. Nick asked for both after the same author fixed five instances of one
+invariant violation. Stacking here is his explicit call.
+
+### Results — all three lanes reported 2026-08-21. Verdict: NOT MERGE-READY.
+
+Every lane returned "fixes required". Findings below are consolidated and
+deduplicated; the lane column shows independent confirmation. `codex` = counterpart
+delta lane, `own` = ownership-truth adversarial lane, `rules` = rule-fidelity
+adversarial lane, `self` = found by me while verifying a lane's claim.
+
+#### Blocking — false ownership or a false need in front of the user
+
+| #   | Defect                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Lanes              |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| C1  | `assetFormsFor` re-sorts recommended forms into canonical family order, discarding the lead form the rules computed. Cascades into B02, W02, C02 and B09 violations — straight hair renders `Grobzinkiger Kamm` where B02 mandates `Detangling-Bürste`; the heated volume route renders `Lockenstab`, which H01 does not grant `create_volume`/`set_style`                                                                                                                                   | codex, rules, self |
+| C2  | The overview materializes `[]` for un-ticked families, and that synthesized `explicit_none` **overrides genuinely reported care answers**. A user who reported blow-drying is told „Dafür fehlt dir noch ein passendes Tool". Root cause: `defaultToolSectionsFromCare`/`defaultToolFormsFromCare` have **no production call sites**, so nothing is preselected. Aggravated by `stage2.ts` copy promising „Was du auslässt, bleibt offen — wir behaupten nichts", which the code contradicts | codex, own, rules  |
+| C3  | B04's purchase-suppression verdict is written onto an asset whose lead form the plan invented, producing „Nutze deins" for a form the user explicitly denied — persisted into the refined snapshot and the Routine V2 payload                                                                                                                                                                                                                                                                | codex, own         |
+| C4  | With nothing reported, heated **and** heatless both emit `basis`: two Basis cards for one goal. `tools.styling.volume_basis` requires one shared choice counted once. `alternativeRouteKey` is written but no presentation layer reads it                                                                                                                                                                                                                                                    | codex, rules       |
+| C5  | A user who reports owning Flexi-Rods gets `explicit_none` → „Konkretes Produkt folgt", because the recommend branch discards their reported form before the ownership match                                                                                                                                                                                                                                                                                                                  | rules              |
+
+C4 and C5 are regressions introduced by the finding-3a fix in this same commit.
+
+#### Blocking — availability and compatibility
+
+| #   | Defect                                                                                                                                                                                                                                                                                                                                                                                 | Lanes |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| C6  | A **completed** Stage-2 draft can become unloadable after a rollout toggle. `createStage2RefinementSession` re-validates `isComplete` on every load; the finding-8 rule grows `requiredQuestionIds` once the overview was submitted, so a draft completed while Tools were off throws `incomplete_refinement` when they are switched on. `/plan-start` collapses that to "unavailable" | codex |
+| C7  | No compatibility decoder for drafts persisted with the old `toolSections` key. They resume at a blank overview and can then be overwritten with materialized empty families                                                                                                                                                                                                            | codex |
+
+#### High
+
+- Reported `dryingRoutes` become a _verified_ `diffuse_airflow` capability — a behaviour answer laundered into a capability proof; the word „Diffusor" never reaches the user (rules)
+- Recommended heated/heatless steps render with **zero instructions** and no heat-protection ordering; `capabilities[0]` is `create_volume`, which has no German copy. Safety-adjacent (rules)
+- Night Protection always leads `pillowcase`; N02's reason-based form map is unimplemented (rules)
+- A reported night soft-tie produces the duplicate Clips/Ties card fixture 74 forbids, at the wrong placement (rules)
+
+#### Medium and below
+
+Towel step lands after leave-in and heat protection, and `ToolPlacement` has no slot
+between `condition` and `leave_in` (contract gap); B12 texture-aware detangle
+placement unimplemented; plopping (fixtures 108-113), night continue-yours, refresh
+spray bottle, root-volume clip, definition brush, pick and Stielkamm never
+implemented; reported styling routes show no opposite-family alternative; a plain
+Föhn counts as verified `air_shape`; „Nichts davon" renders as pressed on unseen
+page 2 of a multi-page family; `conditionalReason` puts capability ahead of
+ownership; `behavior_only` persists a false `explicit_none`; three invariant guards
+(`isToolOwnershipResolved`, `normalizeToolInventory`, the preselect helpers) are
+dead code; two divergent German label maps; `careProvenance` is a call parameter,
+never a stored fact.
+
+#### Open product decision — needed before the rules can be corrected
+
+The volume-direction inference (texture/thickness) was Nick's explicit instruction,
+but `conditional-guidance-matrix.md` H08 states: "Do not infer it from density,
+thickness, texture, frizz, shine, `less_volume`." A **third** disambiguator already
+ships in `src/lib/quiz/normalization.ts`, reads density as well, and disagrees — so
+a wavy/normal-thickness profile is `less_volume` for the profile projection and
+"wants more volume" for Tools. `volume-direction.ts`'s docstring claims this cannot
+happen; that claim is false app-wide. Both lanes rate it high. Settle this first:
+it determines what the styling rules should be before they are rewritten.
+
+Related: `diffuser_or_airflow_shaping` merges two distinct spec triggers and the
+code commits to the diffuser reading. Structurally the same question — one decision
+should cover both.
+
+#### What the lanes confirmed as correct
+
+Direct-accept provenance holds — assumed facts project to no ownership, and
+accepted plans keep every Tool state `unknown`. The page-2 „Nichts davon" fix,
+rollout-off preservation, the Stage-3 state label and the Tools-off shape fix all
+hold. `withToolSteps` index arithmetic is correct for no-finish, multiple-finish,
+zero-product and Tool-only days; heat protection always precedes heated Tool use;
+nightly is always last; styling day coverage is right. The closed care-product
+enums, the Routine V1/V2 union and its readers, the durable-asset boundary and the
+fail-closed rollout are all sound. The Phase-2 3b deferral was accepted. Codex
+reviewed 136 changed paths at committed-delta fingerprint
+`13df88951cd7336724d81994433077f75efd3d80e007801c27fcf1bfd86d139d`.
+
+#### Why the test suite did not catch any of it
+
+77/77 focused tests passed against every defect above. The lanes diagnosed why: the
+"preselect" test asserts only the helpers' return values and never that the product
+calls them; the volume parity test encodes the lossy inference rather than checking
+it against the spec; B02 is tested at the route layer, before `assetFormsFor`
+reorders it; `alternativeRouteKey` is asserted but never rendered; the B04 card test
+uses a _matching_ reported form, so the substitution branch never executes. One
+author wrote both the code and the tests, and the tests inherited the same
+assumptions. Rule-by-rule fixtures keyed to the documented rule IDs would have
+caught C1, C4, C5 and most of the High tier.
+
+#### Also corrected by this pass
+
+Codex flagged that `evidence.md` describes the Carvalho comparator as "terry
+(looped bath towel)" when the paper says only "cotton towel" — my over-specification
+of the single study. To be corrected with the other fixes.
 
 ## Bottom line
+
+**NOT MERGE-READY.** Three independent review lanes over commit `c5da1058` each
+returned "fixes required": seven blocking defects, four high, and a product decision
+that must be settled before the styling rules can be corrected. Two of the blocking
+defects were introduced by the fixes in this commit; two more (C6, C7) are
+availability and compatibility problems that no automated gate can see.
+
+The architecture held. The deterministic rule fidelity did not, and the test suite
+blessed every defect. Next session: settle the volume-inference decision, then land
+C1/C4/C5 (three small independent edits that clear five of the top eight), then C2/C3
+together with the preselection wiring, then C6/C7, then re-review.
+
+The paragraph below records the state as of the fixes, before those lanes reported.
 
 **Fixes required → applied, but not re-reviewed.** Every automated gate on
 fingerprint `30be90779b8a5cb7955407d2428f47a24f4cc3a6a045aff81c6513acf75440a2` is
