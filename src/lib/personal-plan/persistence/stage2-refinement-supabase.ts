@@ -1,12 +1,33 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
+import type { PersonalPlanRefinementAnswersV1 } from "@/lib/personal-plan/refinement/types"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type {
   Stage2PersistedDraft,
   Stage2RefinementPersistence,
   Stage2RefinementResumeReader,
 } from "./stage2-refinement-service"
+
+/**
+ * Read-time compatibility decoder, not a migration. Refinement answers were
+ * briefly persisted under the key `toolSections` before it was renamed to
+ * `toolFamiliesWithSomething` (same `ToolFamily[]` shape; only the key
+ * changed). Without this, an old draft resumes at a blank Tools overview and
+ * a subsequent overview submission then materializes an explicit `[]` for
+ * every family the user had actually reported -- silently destroying their
+ * prior selections (see C7). The old value wins only when the new key is
+ * absent, so a row already written under the current key is untouched.
+ */
+export function decodeStage2RefinementAnswers(raw: unknown): PersonalPlanRefinementAnswersV1 {
+  if (!raw || typeof raw !== "object") return {} as PersonalPlanRefinementAnswersV1
+  const answers = { ...(raw as Record<string, unknown>) }
+  if (answers.toolFamiliesWithSomething === undefined && "toolSections" in answers) {
+    answers.toolFamiliesWithSomething = answers.toolSections
+  }
+  delete answers.toolSections
+  return answers as PersonalPlanRefinementAnswersV1
+}
 
 type AdminClient = SupabaseClient
 
@@ -223,7 +244,7 @@ function mapDraft(
     baseInputSnapshot: initial.input_snapshot as Stage2PersistedDraft["baseInputSnapshot"],
     pathVersion: `stage2-v${String(row.schema_version)}`,
     triggerContext,
-    answers: (row.answers ?? {}) as Stage2PersistedDraft["answers"],
+    answers: decodeStage2RefinementAnswers(row.answers),
     completedQuestionIds: (row.completed_question_ids ??
       []) as Stage2PersistedDraft["completedQuestionIds"],
     revision: Number(row.revision),

@@ -51,12 +51,20 @@ export function createStage2RefinementSession(
     completedQuestionIds: [...(input.completedQuestionIds ?? [])],
   })
   const status = input.status ?? "in_progress"
-  if (status === "complete" && !contract.isComplete) {
-    throw new Stage2RefinementError(
-      "incomplete_refinement",
-      "A complete refinement session must have a complete canonical path",
-    )
-  }
+  // INVARIANT: `status: "complete"` is only ever passed here to reconstruct an
+  // already-persisted completion (a DB row, a fixture snapshot, or a test
+  // fixture) -- the actual completion decision is made once, elsewhere
+  // (`stage2-refinement-service.ts` `complete()` / `Stage2FixtureGateway.complete()`),
+  // by checking `resolveStage2RefinementContract(...).isComplete` against the
+  // contract in force AT THAT MOMENT, before `status` is ever set to
+  // "complete". We deliberately do NOT re-derive completeness here against
+  // today's contract: a later rollout toggle (or any other question-path
+  // growth) can add newly required questions after a draft was validly
+  // completed, and re-validating on every load would make a legitimately
+  // finished draft throw `incomplete_refinement` the instant the path grows
+  // underneath it -- collapsing an already-finished user journey to
+  // "unavailable" (see C6). The stored `status` + `completedHandoff` are the
+  // source of truth for "this draft is done"; we trust them instead.
   if (status === "complete" && !input.completedHandoff) {
     throw new Stage2RefinementError(
       "incomplete_refinement",
