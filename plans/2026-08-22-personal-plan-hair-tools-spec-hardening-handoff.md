@@ -3,6 +3,21 @@
 Status: **WS0 complete. Blocked on nine spec decisions (D1–D9).** Do not resume
 implementation before they are settled with Nick.
 
+> **Update 2026-08-24 — the gate is cleared.**
+>
+> - **D1–D9 are all ruled.** The ruling ledger is
+>   `plans/2026-08-24-hair-tools-d1-d9-rulings.md` and it is the single authority
+>   for those nine decisions.
+> - **WS5 is done and committed** (`ca81dec0`), verified 1983/1983.
+> - **The amendments are applied.** Every ruling is recorded in its owning
+>   document: `docs/personal-plan/categories/tools/decision.md`,
+>   `conditional-guidance-matrix.md`, `fixtures.md` and `input-mapping.md`. The
+>   sections below therefore describe the *pre-ruling* state; where they conflict
+>   with an amended document, the amended document wins.
+> - **Still open:** the user-facing gates. The `D3a` lead copy, the drying-question
+>   change, the „Nur Finger" card and any Stage-1 card change need the WS4 mockup
+>   pass plus journey sign-off before implementation.
+
 Branch `codex/personal-plan-hair-tools-current-shape`. Nothing pushed. Four commits:
 
 | commit     | what                                                              |
