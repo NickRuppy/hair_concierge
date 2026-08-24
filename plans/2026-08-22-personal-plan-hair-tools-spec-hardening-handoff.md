@@ -1,10 +1,30 @@
 # Hair Tools — spec hardening and remediation handoff
 
-Status: **blocked on eight spec decisions.** Do not resume implementation before
-the Decisions section is settled with Nick.
+Status: **WS0 complete. Blocked on nine spec decisions (D1–D9).** Do not resume
+implementation before they are settled with Nick.
 
-Branch `codex/personal-plan-hair-tools-current-shape`, commits `c5da1058`
-(implementation) and `aa457023` (review verdict). Nothing pushed. Phase 1 is
+Branch `codex/personal-plan-hair-tools-current-shape`. Nothing pushed. Four commits:
+
+| commit     | what                                                              |
+| ---------- | ----------------------------------------------------------------- |
+| `c5da1058` | Phase 1 implementation                                            |
+| `aa457023` | three-lane review verdict — not merge-ready                       |
+| `00ce0d28` | this handoff                                                      |
+| `d706757f` | WS0 artefacts: `input-mapping.md`, `fixtures.md`, the D1–D9 brief |
+
+**Read these three, in order, and you have the whole picture — no prior conversation
+is needed:** this document; then
+`plans/2026-08-21-personal-plan-hair-tools-phase1-verification-receipt.md` for the
+finding detail; then `docs/personal-plan/categories/tools/input-mapping.md` for what
+production actually stores.
+
+WS0 findings that reshape the decisions below: the texture/thickness volume inference
+**already ships on base `2efd080a`** inline in `conditioner.ts`, so H08 contradicts
+live production rather than a Tools invention; there are **four** disagreeing
+volume-direction predicates in the codebase (`conditioner.ts`,
+`tools/volume-direction.ts`, `quiz/normalization.ts`, `offer-adapter.ts`); D1 option
+(b) as originally written is malformed; and a ninth decision (D9a) is mandatory
+because `uses_heat_protection` is read by no Personal Plan module at all. Phase 1 is
 feature-complete and **not merge-ready**: three independent review lanes returned
 seven blocking defects, four high and a product decision. The full finding list
 lives in `plans/2026-08-21-personal-plan-hair-tools-phase1-verification-receipt.md`
@@ -104,13 +124,14 @@ must validate against their completion-time contract rather than today's.
 
 ## New spec artefacts to produce
 
-1. **`docs/personal-plan/categories/tools/input-mapping.md`** — spec token →
+1. ✅ **DONE (`d706757f`) — `docs/personal-plan/categories/tools/input-mapping.md`** — spec token →
    production field → exact allowed values → what information the production
    vocabulary loses, and the ruling for each loss. Closes R1.
-2. **`docs/personal-plan/categories/tools/fixtures.md`** — one row per rule ID:
+2. ✅ **DONE (`d706757f`) — `docs/personal-plan/categories/tools/fixtures.md`** — one row per rule ID:
    concrete profile, expected tier, expected lead form, expected rule IDs. Becomes a
    table-driven test. Closes R2.
-3. Amendments to `decision.md` and `conditional-guidance-matrix.md` recording D1-D8.
+3. ⬜ Amendments to `decision.md` and `conditional-guidance-matrix.md` recording the
+   D1–D9 rulings. Blocked until Nick rules.
 
 ## Workstreams
 
@@ -178,10 +199,11 @@ identity deferral. Treat these as regression surface, not as work.
 
 1. Read this document, then the verification receipt for the finding detail.
 2. Run `branch-gate`. Reuse this worktree; the branch already carries both commits.
-3. Enter `plan-hardening-loop` for WS0 — this is spec work, not implementation.
-   Present D1-D8 as decisions with options and consequences; do not choose for Nick.
-   `$wayfinder` is available if the decision map turns out to be more tangled than
-   D1-D8 suggests.
+3. WS0 is **done** (`d706757f`). Enter `plan-hardening-loop` to walk Nick through
+   D1–D9 using the brief at the end of this document. Present options and
+   consequences; do not choose for him. Start with D1 — it is no longer a Tools
+   question but an app-wide one about four disagreeing predicates, and it gates WS2.
+   `$wayfinder` is available if the decision map proves more tangled than D1–D9.
 4. WS5 may proceed in parallel: it is a correctness and data-availability fix that
    no spec decision blocks.
 5. Only after WS0 is ratified: WS1 → WS2 → WS3/WS4/WS6 → WS7, each ending in
