@@ -16,8 +16,10 @@
 --   * active Routine, module-driven refined version → proposal is staged AND
 --     confirmed in this transaction; the caller sees `routineProposalId: null`
 --   * active Routine, anything else (today's linear refinement, the Stage-3
---     Routine-authority repair, editor edits, source reconciliation)
---     → unchanged pending proposal.
+--     Routine-authority repair, editor edits) → unchanged pending proposal.
+--     Routine source reconciliation never reaches this function at all — it
+--     runs through `personal_plan_stage_routine_source_successor`, and
+--     refined_need outbox rows are terminalized rather than recompiled here.
 -- "Module-driven" is derived from server state only, from TWO conditions:
 --   1. the refinement draft that produced the completion's refined Need version
 --      carries a non-empty `module_projections` lineage (written exclusively by
@@ -111,18 +113,27 @@ BEGIN
       v_confirm := public.personal_plan_confirm_routine_proposal(
         p_user_id, p_personal_plan_id, v_proposal.id, (v_result->>'revision')::bigint
       );
-      -- This function holds the plan row lock for the whole transaction, so a
-      -- non-accepted outcome is an invariant violation, not a race. Fail loudly
-      -- instead of leaving a "pending proposal" the caller already reported as
-      -- an activation.
-      IF v_confirm->>'outcome' <> 'accepted' THEN
+      IF v_confirm->>'outcome' = 'accepted' THEN
+        v_result := v_result || pg_catalog.jsonb_build_object(
+          'revision', (v_confirm->>'revision')::bigint,
+          'routineProposalId', NULL
+        );
+      ELSIF (v_result->>'status') = 'already_completed' THEN
+        -- Replay corner: this proposal was staged by an EARLIER transaction, so
+        -- a non-accepted outcome (typically `stale_source` — the plan's source
+        -- revision moved on since it was staged) is a recoverable state, not an
+        -- invariant violation. Degrade to today's behavior: leave the pending
+        -- proposal in place and report it, rather than turning a retryable
+        -- replay into a permanent 503. Falls through to the provenance write.
+        NULL;
+      ELSE
+        -- Fresh completion: this transaction staged the proposal itself while
+        -- holding the plan row lock, so a non-accepted outcome here is an
+        -- invariant violation, not a race. Fail loudly instead of leaving a
+        -- "pending proposal" the caller already reported as an activation.
         RAISE EXCEPTION 'refinement recompute could not activate its successor: %',
           COALESCE(v_confirm->>'outcome', 'unknown');
       END IF;
-      v_result := v_result || pg_catalog.jsonb_build_object(
-        'revision', (v_confirm->>'revision')::bigint,
-        'routineProposalId', NULL
-      );
     ELSIF v_proposal.id IS NOT NULL AND v_proposal.status = 'accepted' THEN
       -- Replay of a lost response: this transaction's predecessor already
       -- activated the successor.

@@ -36,6 +36,11 @@ test("the recompute-activation migration wraps the existing RPCs instead of copy
   // No second lifecycle implementation, and no proposal rows of its own.
   assert.doesNotMatch(source, /INSERT INTO public\.personal_plan_routine_/)
   assert.match(source, /RAISE EXCEPTION 'refinement recompute could not activate its successor/)
+  // ...but only for a proposal this transaction staged: an unconfirmable
+  // proposal on the replay path degrades to reporting it, never a 503 loop.
+  assert.match(source, /ELSIF \(v_result->>'status'\) = 'already_completed' THEN/)
+  // Source reconciliation never reaches this RPC, so it must not be listed.
+  assert.doesNotMatch(source, /editor edits, source reconciliation/)
   assert.match(source, /unrefined_direct_accept = true/)
   assert.match(source, /nudge_dismissed_until = NULL/)
   assert.match(source, /SET search_path = ''/)
@@ -91,6 +96,8 @@ function createV2Client(options: {
   world: V2World
   draftAlreadyCompleted?: boolean
   provenanceWriteFails?: boolean
+  /** Outcome of `personal_plan_confirm_routine_proposal`; defaults to accepted. */
+  confirmOutcome?: "accepted" | "stale_source"
   calls?: string[]
 }): RoutineProposalRpcClient {
   const { world } = options
@@ -110,7 +117,20 @@ function createV2Client(options: {
             world.proposals.find(
               (proposal) => proposal.candidateRoutineVersionId === routineVersionId,
             )?.id ?? null
-          if (world.plan.activeRoutineVersionId === routineVersionId) routineProposalId = null
+          // v1 delegates to `personal_plan_complete_product_draft_and_stage_routine`
+          // whenever a Routine is already active, and THAT path returns
+          // `routineProposalId` unconditionally. v1's own already-completed
+          // branch is reachable only with no active Routine, and is the sole
+          // place that nulls the id (`CASE WHEN active IS NOT DISTINCT FROM
+          // v_routine_id`). Modeling this faithfully is what makes the replay
+          // test actually reach the lineage gate and the accepted-proposal
+          // branch below.
+          if (
+            world.plan.activeRoutineVersionId === null &&
+            world.plan.activeRoutineVersionId === routineVersionId
+          ) {
+            routineProposalId = null
+          }
         } else {
           status = "completed"
           routineVersionId = `routine-${world.routineVersions.length + 1}`
@@ -153,12 +173,19 @@ function createV2Client(options: {
           if (firstFromVersion && moduleDriven) {
             const proposal = world.proposals.find((entry) => entry.id === routineProposalId)!
             if (proposal.status === "pending") {
-              proposal.status = "accepted"
-              world.plan.activeRoutineVersionId = proposal.candidateRoutineVersionId
-              world.plan.pendingProposalId = null
-              world.plan.revision += 1
-              revision = world.plan.revision
-              routineProposalId = null
+              if ((options.confirmOutcome ?? "accepted") === "accepted") {
+                proposal.status = "accepted"
+                world.plan.activeRoutineVersionId = proposal.candidateRoutineVersionId
+                world.plan.pendingProposalId = null
+                world.plan.revision += 1
+                revision = world.plan.revision
+                routineProposalId = null
+              } else if (status === "already_completed") {
+                // Recoverable replay corner: keep the pending proposal.
+                void 0
+              } else {
+                throw new Error("refinement recompute could not activate its successor")
+              }
             } else if (proposal.status === "accepted") {
               routineProposalId = null
             }
@@ -405,6 +432,80 @@ test("replaying a module-driven completion reports the activation, not a pending
     world.proposals.map((proposal) => proposal.status),
     ["accepted"],
   )
+})
+
+/**
+ * A proposal staged by an EARLIER transaction can legitimately be unconfirmable
+ * on replay (the plan's source revision moved on since). Raising there would
+ * turn a retryable replay into a permanent 503, so the corner degrades to
+ * today's behavior: the pending proposal survives and is reported.
+ */
+test("an unconfirmable proposal on the replay path degrades to its pending proposal", async () => {
+  const world: V2World = {
+    plan: {
+      activeRoutineVersionId: "routine-active",
+      pendingProposalId: "proposal-1",
+      revision: 6,
+      unrefinedDirectAccept: false,
+    },
+    proposals: [{ id: "proposal-1", candidateRoutineVersionId: "routine-1", status: "pending" }],
+    routineVersions: ["routine-1", "routine-active"],
+    routineSources: { "routine-1": "refined-module-1", "routine-active": "refined-previous" },
+  }
+  const stager = createRoutineProposalStagerRpcAdapter({
+    client: createV2Client({
+      productDraftRefinedVersionId: "refined-module-1",
+      refinementDrafts: [
+        {
+          moduleProjections: { products: { needVersionId: "refined-module-1" } },
+          resultRefinedNeedVersionId: null,
+        },
+      ],
+      world,
+      draftAlreadyCompleted: true,
+      confirmOutcome: "stale_source",
+    }),
+  })
+
+  const result = await stager.stage(stageRequest)
+
+  assert.equal(result.status, "already_completed")
+  assert.equal(
+    result.status === "already_completed" ? result.routineProposalId : "unset",
+    "proposal-1",
+  )
+  // Nothing was activated and nothing was lost: the proposal is still there.
+  assert.equal(world.plan.activeRoutineVersionId, "routine-active")
+  assert.equal(world.plan.pendingProposalId, "proposal-1")
+  assert.deepEqual(
+    world.proposals.map((proposal) => proposal.status),
+    ["pending"],
+  )
+})
+
+test("an unconfirmable proposal the completion itself staged still fails loudly", async () => {
+  const world = emptyWorld("routine-active")
+  const stager = createRoutineProposalStagerRpcAdapter({
+    client: createV2Client({
+      productDraftRefinedVersionId: "refined-module-1",
+      refinementDrafts: [
+        {
+          moduleProjections: { products: { needVersionId: "refined-module-1" } },
+          resultRefinedNeedVersionId: null,
+        },
+      ],
+      world,
+      confirmOutcome: "stale_source",
+    }),
+  })
+
+  const result = await stager.stage(stageRequest)
+
+  // The invariant violation rolls the whole completion back.
+  assert.deepEqual(result, { status: "temporarily_unavailable" })
+  assert.equal(world.plan.activeRoutineVersionId, "routine-active")
+  assert.deepEqual(world.routineVersions, ["routine-active"])
+  assert.equal(world.plan.revision, 4)
 })
 
 test("the direct-accept provenance is written by the same transaction that activates", async () => {

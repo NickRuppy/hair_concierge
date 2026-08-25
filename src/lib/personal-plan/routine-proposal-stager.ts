@@ -200,7 +200,6 @@ export type RoutineProposalRpcClient = {
   rpc(
     functionName:
       | "personal_plan_complete_product_draft_and_stage_routine"
-      | "personal_plan_complete_draft_activate_initial_v1"
       | "personal_plan_complete_draft_activate_v2",
     args: Record<string, unknown>,
   ): Promise<{ data: unknown; error: unknown | null }>

@@ -6,10 +6,8 @@ import {
   type Stage2RefinementHandoff,
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
-import {
-  getStage2ModulePathStates,
-  resolveStage2RefinementContract,
-} from "@/lib/personal-plan/refinement/question-path"
+import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import {
   applyUserAnswerProvenance,
   userAnsweredQuestionIds,
@@ -309,7 +307,11 @@ export function createStage2RefinementService(input: {
         answers: draft.answers,
         userAnsweredQuestionIds: userQuestionIds,
       })
-      const moduleStates = getStage2ModulePathStates(resolution.orderedQuestionIds, userQuestionIds)
+      // Single source of truth for module status — the same derivation the
+      // `unrefined_direct_accept` replacement reads, so the completion gate and
+      // "runs on assumptions" can never disagree. It re-resolves the path
+      // internally (pure and deterministic, so identical to `resolution`).
+      const moduleStates = stage2ModuleStates(draft)
       if (moduleStates[stage2Module].status !== "complete") {
         throw new Stage2RefinementError(
           "incomplete_refinement",
