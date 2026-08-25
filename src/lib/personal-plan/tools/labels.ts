@@ -229,6 +229,40 @@ export function toolAlternativeNote(alternatives: readonly ToolProductType[]): s
   return `Alternative: ${TOOL_PRODUCT_TYPE_LABELS[first]}, wenn diese Form besser zu dir passt`
 }
 
+/**
+ * Stage-3 „Produkt-Check" copy — D2 redesign, Nick sign-off 2026-08-25.
+ *
+ * That page mirrors the Idealplan's card grammar and shows no ownership status,
+ * so a need leads with its short name and the eligible other forms follow as one
+ * telegram „Auch ok: …" line. The Stage-1 Idealplan block is untouched and keeps
+ * `TOOL_CHOICE_GROUP_LABELS`, `TOOL_CHOICE_GROUP_NOTES` and
+ * `toolAlternativeNote` exactly as they are.
+ */
+export const TOOL_CHOICE_GROUP_STAGE3_LABELS = {
+  volume_set: "Tool für Volumen oder Form",
+  drying_textile: "Handtuch oder Tuch",
+} as const satisfies Record<ToolChoiceGroupTarget, string>
+
+/** The eligible forms a Stage-3 group names, without ranking them. */
+export const TOOL_CHOICE_GROUP_STAGE3_ALTERNATIVES = {
+  volume_set: "Warmluftbürste, Air Multi-Styler, Lockenwickler oder Föhn mit Rundbürste",
+  drying_textile: "Mikrofaser, Baumwolltuch oder Haarturban",
+} as const satisfies Record<ToolChoiceGroupTarget, string>
+
+/**
+ * The Stage-3 technique line, shown instead of the purpose where the technique
+ * is the whole recommendation (drying textiles — the 2026-08-21 evidence pass
+ * found no material ranking, AAD ranks technique).
+ */
+export const TOOL_CHOICE_GROUP_STAGE3_NOTES: Partial<Record<ToolChoiceGroupTarget, string>> = {
+  drying_textile: "Sanft ausdrücken statt rubbeln — die Technik zählt.",
+}
+
+/** „Auch ok: …" — the Stage-3 form of the alternatives line. */
+export function toolAlsoOkNote(formsLabel: string | null): string | null {
+  return formsLabel ? `Auch ok: ${formsLabel}` : null
+}
+
 export const TOOL_PRESENTATION_STATE_LABELS = {
   use_yours: "Nutze deins",
   check_in_refinement: "Im Feinschliff abgleichen",

@@ -5,20 +5,43 @@ import {
   type PlanToolRoute,
   type ToolAsset,
   type ToolChoiceGroup,
+  type ToolFamily,
   type ToolPresentationState,
   type ToolProductType,
 } from "./contracts"
 import {
   TOOL_CHOICE_GROUP_LABELS,
   TOOL_CHOICE_GROUP_NOTES,
+  TOOL_CHOICE_GROUP_STAGE3_ALTERNATIVES,
+  TOOL_CHOICE_GROUP_STAGE3_LABELS,
+  TOOL_CHOICE_GROUP_STAGE3_NOTES,
   TOOL_FAMILY_LABELS,
   TOOL_PRODUCT_TYPE_LABELS,
+  toolAlsoOkNote,
   toolAlternativeNote,
   toolImageAlt,
   toolImageSrc,
 } from "./labels"
 
 export type ToolCardTier = "basis" | "optional"
+
+/**
+ * The Stage-3 „Produkt-Check" projection of the same need — D2 redesign, Nick
+ * sign-off 2026-08-25.
+ *
+ * Stage 3 shows no ownership status at all (ownership stays in the Feinschliff
+ * and in the Routine steps), so it needs its own short title and its own
+ * telegram alternatives line. Stage 1's Idealplan block keeps reading
+ * `typeLabel`/`noteDe` and renders byte-identically.
+ */
+export type ToolCardStage3Copy = {
+  /** The need in telegram form. Equals `typeLabel` outside a choice group. */
+  title: string
+  /** Replaces `purpose` where the technique IS the recommendation. */
+  note: string | null
+  /** „Auch ok: …", or null when the need has only one eligible form. */
+  alternatives: string | null
+}
 
 /**
  * One rendered Tool card. Deliberately carries no price, cadence, availability or
@@ -28,6 +51,8 @@ export type ToolCardTier = "basis" | "optional"
 export type ToolCardViewModel = {
   id: string
   tier: ToolCardTier
+  /** The family key, so a renderer can key its own accent styling off it. */
+  family: ToolFamily
   familyLabel: string
   typeLabel: string
   purpose: string
@@ -41,6 +66,8 @@ export type ToolCardViewModel = {
    * has only one eligible form.
    */
   noteDe: string | null
+  /** Stage-3-only copy. Never read by the Stage-1 Idealplan block. */
+  stage3: ToolCardStage3Copy
 }
 
 export type ToolBlockViewModel = {
@@ -91,9 +118,11 @@ export function buildStage1ToolBlocks(
       .filter((route): route is PlanToolRoute => Boolean(route))
     const tier = strongestTier(routes)
     if (!tier) return null
+    const alternatives = alternativesFor(asset, routes)
     return {
       id: asset.assetKey,
       tier,
+      family: asset.family,
       familyLabel: TOOL_FAMILY_LABELS[asset.family],
       typeLabel: TOOL_PRODUCT_TYPE_LABELS[asset.productTypes[0]],
       purpose: asset.purposeKey,
@@ -101,7 +130,14 @@ export function buildStage1ToolBlocks(
       imageAlt: toolImageAlt(asset.productTypes[0]),
       stateLabel: TOOL_STATE_LABELS[asset.presentationState],
       state: asset.presentationState,
-      noteDe: toolAlternativeNote(alternativesFor(asset, routes)),
+      noteDe: toolAlternativeNote(alternatives),
+      stage3: {
+        title: TOOL_PRODUCT_TYPE_LABELS[asset.productTypes[0]],
+        note: null,
+        alternatives: toolAlsoOkNote(
+          alternatives.length > 0 ? TOOL_PRODUCT_TYPE_LABELS[alternatives[0]] : null,
+        ),
+      },
     }
   }
 
@@ -239,6 +275,11 @@ function choiceGroupCard(
     state: NEUTRAL_GROUP_STATE[base.state],
     stateLabel: TOOL_STATE_LABELS[NEUTRAL_GROUP_STATE[base.state]],
     noteDe: TOOL_CHOICE_GROUP_NOTES[group.target] ?? null,
+    stage3: {
+      title: TOOL_CHOICE_GROUP_STAGE3_LABELS[group.target],
+      note: TOOL_CHOICE_GROUP_STAGE3_NOTES[group.target] ?? null,
+      alternatives: toolAlsoOkNote(TOOL_CHOICE_GROUP_STAGE3_ALTERNATIVES[group.target]),
+    },
   }
 }
 

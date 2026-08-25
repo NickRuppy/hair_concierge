@@ -4,25 +4,83 @@ import Image from "next/image"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import type { ToolCardViewModel } from "@/lib/personal-plan/tools/presentation"
+import type { ToolFamily } from "@/lib/personal-plan/tools/contracts"
+import type { ToolCardTier, ToolCardViewModel } from "@/lib/personal-plan/tools/presentation"
 import { cn } from "@/lib/utils"
 
 /**
- * The Stage-3 Tool checkpoint, shown after the care-product decisions.
+ * The Stage-3 Tool checkpoint („Dein Produkt-Check"), shown after the
+ * care-product decisions.
  *
- * Phase 1 has no approved exact Tool content, so there is nothing for the user
- * to select: a reported Tool leads with `Nutze deins`, and a missing route stays
- * a useful generic product type with an honest catalog gap. The screen reuses the
- * Stage-3 whole-card grammar and one full-width sticky action; it deliberately
- * has no inline micro-CTA, no price, no cadence and no comparison dimensions.
+ * Variante D2 — pure Idealplan analog (Nick sign-off 2026-08-25). The section
+ * mirrors the Idealplan's structure: two tier blocks with a counter each, and a
+ * pastel family-tinted card per need. It deliberately shows NO ownership status:
+ * this page answers „was gehört zu deiner Routine", and „was hast du davon
+ * schon" is answered where it is actually collected and used — the Feinschliff
+ * and the Routine steps. There is nothing to select here, so the screen keeps
+ * one full-width sticky action, no inline micro-CTA, no price, no cadence and no
+ * comparison dimensions.
  */
 
+export const TOOL_CHECKPOINT_KICKER = "Dein Produkt-Check"
 export const TOOL_CHECKPOINT_TITLE = "Deine Tools"
 export const TOOL_CHECKPOINT_LEAD =
-  "Was du schon hast, nutzen wir. Für offene Routen sagen wir dir ehrlich, dass ein konkretes Produkt noch fehlt."
+  "Diese Tools gehören zu deiner Routine. Was du davon schon hast, siehst du gleich in deiner Routine."
 export const TOOL_CHECKPOINT_CTA = "Weiter zu deiner Routine"
-export const TOOL_CHECKPOINT_GAP_NOTE =
-  "Wir empfehlen hier noch kein konkretes Produkt. Sobald ein geprüftes dazukommt, siehst du es in deinem Plan."
+export const TOOL_CHECKPOINT_BASIS_SECTION = "Von uns klar empfohlen"
+export const TOOL_CHECKPOINT_OPTIONAL_SECTION = "Zusätzlich sinnvoll"
+export const TOOL_CHECKPOINT_OPTIONAL_CHIP = "Optional"
+
+export function toolCheckpointCountLabel(count: number): string {
+  return `${count} ${count === 1 ? "Tool" : "Tools"}`
+}
+
+/**
+ * One pastel shell plus its accent dot per Tool family, in the Idealplan
+ * category-card idiom (`CATEGORY_CARD_STYLES` in `need-card.tsx`): a soft tinted
+ * background, a slightly deeper border and a saturated dot next to the uppercase
+ * family label. The four families the signed-off mockup shows use its exact
+ * values; the remaining four reuse the Idealplan's existing category hues so the
+ * eight read as one palette.
+ */
+export const TOOL_FAMILY_CARD_STYLES = {
+  airflow: { shell: "border-[#DFE9F2] bg-[#EEF3F8]", dot: "bg-[#6D9CC4]", label: "text-[#3D6A92]" },
+  heated_styling: {
+    shell: "border-[#E5D6C8] bg-[#F5F0EA]",
+    dot: "bg-[#C8845A]",
+    label: "text-[#9A5330]",
+  },
+  heatless_styling: {
+    shell: "border-[#E2D0D4] bg-[#F5EDEF]",
+    dot: "bg-[#C08494]",
+    label: "text-[#8C4A5C]",
+  },
+  brushes_combs: {
+    shell: "border-[#EEE7D8] bg-[#F7F3EA]",
+    dot: "bg-[#C9A24A]",
+    label: "text-[#8A6D2F]",
+  },
+  securing_sectioning: {
+    shell: "border-[#DCE2C6] bg-[#F1F3E9]",
+    dot: "bg-[#9FB268]",
+    label: "text-[#67793A]",
+  },
+  wash_application: {
+    shell: "border-[#CADEDB] bg-[#EBF3F2]",
+    dot: "bg-[#5FA39C]",
+    label: "text-[#2B6F69]",
+  },
+  night_protection: {
+    shell: "border-[#E6DCF2] bg-[#F3EEF8]",
+    dot: "bg-[#9B7FD1]",
+    label: "text-[#6A4FA3]",
+  },
+  drying_textiles: {
+    shell: "border-[#DCEBE0] bg-[#EEF5EF]",
+    dot: "bg-[#6FAE8C]",
+    label: "text-[#3E7D5B]",
+  },
+} as const satisfies Record<ToolFamily, { shell: string; dot: string; label: string }>
 
 export function Stage3ToolCheckpoint({
   cards,
@@ -33,7 +91,8 @@ export function Stage3ToolCheckpoint({
   onContinue: () => void
   continueDisabled?: boolean
 }) {
-  const hasGap = cards.some((card) => card.state === "catalog_gap")
+  const basisCards = cards.filter((card) => card.tier === "basis")
+  const optionalCards = cards.filter((card) => card.tier === "optional")
 
   return (
     <section
@@ -41,8 +100,11 @@ export function Stage3ToolCheckpoint({
       data-stage3-tool-checkpoint
     >
       <main className="mx-auto flex w-full max-w-[430px] flex-1 flex-col px-3 pb-[7rem] pt-6 sm:max-w-[560px] sm:px-5">
+        <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#6B50A0]">
+          {TOOL_CHECKPOINT_KICKER}
+        </div>
         <h1
-          className="font-header text-[23px] leading-[1.14] text-[#291a43] outline-none sm:text-[28px]"
+          className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] outline-none sm:text-[28px]"
           data-personal-plan-transition-focus
           tabIndex={-1}
         >
@@ -52,17 +114,16 @@ export function Stage3ToolCheckpoint({
           {TOOL_CHECKPOINT_LEAD}
         </p>
 
-        <ul className="mt-5 space-y-3" data-stage3-tool-list>
-          {cards.map((card) => (
-            <ToolCheckpointCard key={card.id} card={card} />
-          ))}
-        </ul>
-
-        {hasGap ? (
-          <p className="mt-4 text-[11.5px] leading-relaxed text-[#706a65]">
-            {TOOL_CHECKPOINT_GAP_NOTE}
-          </p>
-        ) : null}
+        <ToolCheckpointTierBlock
+          tier="basis"
+          title={TOOL_CHECKPOINT_BASIS_SECTION}
+          cards={basisCards}
+        />
+        <ToolCheckpointTierBlock
+          tier="optional"
+          title={TOOL_CHECKPOINT_OPTIONAL_SECTION}
+          cards={optionalCards}
+        />
       </main>
 
       <nav
@@ -85,22 +146,45 @@ export function Stage3ToolCheckpoint({
   )
 }
 
+/** One Idealplan-style tier block: heading, right-aligned counter, its cards. */
+function ToolCheckpointTierBlock({
+  tier,
+  title,
+  cards,
+}: {
+  tier: ToolCardTier
+  title: string
+  cards: readonly ToolCardViewModel[]
+}) {
+  if (cards.length === 0) return null
+
+  return (
+    <section className="mt-5" aria-label={title} data-stage3-tool-tier={tier}>
+      <div className="mb-2.5 flex items-baseline justify-between px-0.5">
+        <strong className="text-[14px] text-[#291a43]">{title}</strong>
+        <span className="text-[9.5px] font-extrabold uppercase tracking-[0.10em] text-[#6B50A0]">
+          {toolCheckpointCountLabel(cards.length)}
+        </span>
+      </div>
+      <ul className="space-y-3" data-stage3-tool-list={tier}>
+        {cards.map((card) => (
+          <ToolCheckpointCard key={card.id} card={card} />
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 function ToolCheckpointCard({ card }: { card: ToolCardViewModel }) {
   const [imageFailed, setImageFailed] = useState(false)
-  const owned = card.state === "use_yours"
+  const style = TOOL_FAMILY_CARD_STYLES[card.family]
 
   return (
     <li
       data-stage3-tool-card={card.id}
-      data-stage3-tool-state={card.state}
-      className={cn(
-        "flex items-start gap-3 rounded-2xl border bg-white px-3 py-3",
-        owned
-          ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
-          : "border-[rgba(31,26,20,0.07)]",
-      )}
+      className={cn("flex items-start gap-3 rounded-[18px] border px-3 py-3", style.shell)}
     >
-      <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f6f2ee]">
+      <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-[rgba(31,26,20,0.05)] bg-white">
         {imageFailed ? (
           <span aria-hidden="true" className="h-6 w-6 rounded-full bg-[#ded5cb]" />
         ) : (
@@ -115,37 +199,39 @@ function ToolCheckpointCard({ card }: { card: ToolCardViewModel }) {
           />
         )}
       </span>
-      {/* The state sits under the purpose so long German labels never squeeze
-          the product type at 320–390px. */}
       <span className="min-w-0 flex-1">
-        <span className="block text-[9.5px] font-extrabold uppercase tracking-[0.10em] text-[#6e6863]">
-          {card.familyLabel}
-        </span>
-        <span className="block text-[14px] font-semibold leading-snug text-[#291a43]">
-          {card.typeLabel}
-        </span>
-        <span className="mt-0.5 block text-[11.5px] leading-snug text-[#706a65]">
-          {card.purpose}
-        </span>
-        {card.noteDe ? (
-          <span className="mt-0.5 block text-[11.5px] leading-snug text-[#706a65]">
-            {card.noteDe}
-          </span>
-        ) : null}
         <span
           className={cn(
-            "mt-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold",
-            owned ? "bg-[var(--brand-plum)] text-white" : "bg-[#f1edf7] text-[#6B50A0]",
+            "flex items-start gap-1.5 text-[9.5px] font-extrabold uppercase tracking-[0.10em]",
+            style.label,
           )}
         >
-          {/*
-            Always the card's own state label. Collapsing every non-owned card to
-            "Konkretes Produkt folgt" would turn "we do not know whether you own
-            one" into "you are missing one" — inventing an answer the user never
-            gave.
-          */}
-          {card.stateLabel}
+          <span
+            aria-hidden="true"
+            className={cn("mt-[3px] h-1.5 w-1.5 shrink-0 rounded-full", style.dot)}
+          />
+          <span className="min-w-0">{card.familyLabel}</span>
+          {card.tier === "optional" ? (
+            <span className="ml-auto shrink-0 rounded-full border border-[#ece6df] bg-white px-2 py-0.5 text-[8.5px] font-extrabold uppercase tracking-[0.08em] text-[#7c7488]">
+              {TOOL_CHECKPOINT_OPTIONAL_CHIP}
+            </span>
+          ) : null}
         </span>
+        <span className="mt-1 block text-[15px] font-bold leading-snug text-[#291a43]">
+          {card.stage3.title}
+        </span>
+        {/*
+          The technique line replaces the purpose where the technique IS the
+          recommendation, so the card never says the same thing twice.
+        */}
+        <span className="mt-0.5 block text-[12px] leading-snug text-[#706a65]">
+          {card.stage3.note ?? card.purpose}
+        </span>
+        {card.stage3.alternatives ? (
+          <span className="mt-1 block text-[11.5px] leading-snug text-[#706a65]">
+            {card.stage3.alternatives}
+          </span>
+        ) : null}
       </span>
     </li>
   )
