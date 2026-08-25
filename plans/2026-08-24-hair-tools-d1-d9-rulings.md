@@ -285,6 +285,28 @@ Flag dispositions:
 - `loose_tied`/`pineapple` ruled techniques (derived), keeping fixtures 74/102;
   named night products remain reported.
 
+## Adversarial re-check on the remediation (2026-08-25): REFUTED → fixed same day
+
+The focused re-check confirmed the four original blockers dead but found the
+new group projection itself defective. All fixed in the follow-up commit, each
+with a rendered-card guard in the harness:
+
+- Group card now always carries the **group tier** (fixture 48: basis needs no
+  longer render as optional, and the neutral card's visuals come from a member
+  at the group's tier).
+- A group fulfilled by a card-less reported-use member shows the strongest
+  remaining member as `H06`'s one optional alternative instead of deleting it
+  (fixture 46 guard).
+- `C01` unlock restricted to actual SET forms: heatless (all forms are sets)
+  or heated `heated_rollers`; a Glätteisen/Lockenstab never unlocks clips
+  (fixtures 42/49 stay securing-free, 127 passes).
+- D4 reason precedence inside resolved states: no eligible reported form ⇒
+  `unknown_ownership`, never `unverified_capability` (fixture 128 guard).
+- Stale test title/comments corrected; harness id-parser accepts decorated
+  cells; row 128's ownership half explicitly deferred to WS3 in the oracle.
+- Recorded, inert: the drying-textile card's DOM id moved from the asset key to
+  `group:drying_textile` (no selector consumers; React key only).
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
