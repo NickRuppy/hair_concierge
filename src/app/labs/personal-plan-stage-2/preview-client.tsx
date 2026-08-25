@@ -100,12 +100,17 @@ function triggerContextForScenario(scenario: Stage2PreviewScenario): Stage2Trigg
       relevantCategories: ["shampoo", "mask", "heat_protectant"],
       hasReportedIrritatedScalp: false,
       dryShampooBridgeEligibility: "ineligible",
+      // Labs-only: without this the fail-closed rollout gate removes the whole
+      // Tools trip from the interactive preview, so the capture pages were
+      // unreachable for reviewers.
+      toolsEnabled: true,
     }
   }
   return {
     relevantCategories: ["shampoo", "mask", "heat_protectant", "oil", "dry_shampoo"],
     hasReportedIrritatedScalp: true,
     dryShampooBridgeEligibility: "eligible",
+    toolsEnabled: true,
   }
 }
 
