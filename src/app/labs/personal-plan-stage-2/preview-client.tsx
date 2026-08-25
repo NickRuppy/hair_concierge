@@ -160,6 +160,9 @@ function completedQuestionsForScenario(scenario: Stage2PreviewScenario): Stage2Q
       "drying_routes",
       "additional_heat_tools",
       "night_protection",
+      // The labs trigger context enables the Tools trip, so a "complete"
+      // fixture must have completed its overview too.
+      "tools_overview",
     ]
   }
   return []
@@ -173,5 +176,6 @@ function completeAnswers(): PersonalPlanRefinementAnswersV1 {
     dryingRoutes: ["air_dry"],
     additionalHeatTools: [],
     nightProtection: [],
+    toolFamiliesWithSomething: [],
   }
 }
