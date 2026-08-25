@@ -97,7 +97,7 @@ Submitting the family overview makes every unchecked family explicitly empty. A 
 
    > „Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht."
 
-   The copy gate is closed; only the WS4 **implementation** of this copy is still pending.
+   The copy gate is closed and the WS4 implementation **landed 2026-08-25** — the ratified lead copy ships verbatim in `TOOL_OVERVIEW_LEAD`.
 
 **`D3c`, ruled 2026-08-24 — merge per form, never replace per family.** An answered Tool page **adds and confirms** forms; care-derived facts survive unless the Tool answer explicitly contradicts them. This precedence rule applies to **all eight families**, not only drying. Synthesized emptiness must never overwrite a reported care answer: a user who reported `additionalHeatTools` and then submits a heated-styling page keeps that evidence. The former drying-only sentence ("`drying_method` remains the source of the dominant drying behavior") is retired together with the dominant-drying-method concept — see the drying-routes ruling below.
 
@@ -672,7 +672,7 @@ Implementation must add regression coverage showing Shampoo, Conditioner, Leave-
 Category blockers:
 
 - all eight category passes and cross-category ownership/readiness rules are complete;
-- the WS4 evidence review and user-journey sign-off were **obtained on 2026-08-25** (mockup evidence `plans/mockups/ws4-2026-08-25/`); the lead copy, the drying-question change and the „Nur Finger" / Wildschweinborsten cards are ratified and only their **implementation** is pending;
+- the WS4 evidence review and user-journey sign-off were **obtained on 2026-08-25** (mockup evidence `plans/mockups/ws4-2026-08-25/`); the lead copy, the drying-question change and the „Nur Finger" / Wildschweinborsten cards are ratified **and implemented (WS4 landed 2026-08-25)**.
 - the production-current Stage 1/direct-accept placement requires current mockup review and journey sign-off;
 - the production-current plan requires final counterpart review before implementation.
 
@@ -702,7 +702,7 @@ Confirmation status:
 - shared ownership/readiness decisions `D12` and `D14` were confirmed and reconciled on 2026-08-05;
 - legacy Heat-protection compatibility was explicitly resolved on 2026-08-05 (completed false trusted, incomplete pre-question false unknown) and **reversed on 2026-08-24 by `D9a`**: the legacy boolean stays unread and coverage is read per heat event from `protectionConsistency`;
 - Nick ruled the nine open spec gates `D1`-`D9` on 2026-08-24; the ledger is `plans/2026-08-24-hair-tools-d1-d9-rulings.md`. Two of them are **formal reversals of previously confirmed decisions**: `D1` reverses `H08`'s "never infer volume direction", and `D9a` reverses the `I01` legacy-boolean exception. The remaining rulings (`D2`-`D8`, `D9b`, `D9c`) settle gaps rather than reverse decisions;
-- the user-facing gates for WS4 are **cleared**: the `D3a` lead copy („Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht."), the removal of „Nichts davon" from the drying question, and the „Nur Finger" plus Wildschweinborsten cards passed evidence review and journey sign-off on 2026-08-25; their implementation is still outstanding. Any **further** Stage-1 card change still needs its own mockup review plus journey sign-off before implementation;
+- the user-facing gates for WS4 are **cleared and its implementation landed 2026-08-25**: the `D3a` lead copy, the drying-question change, care-answer preselection, and the „Nur Finger" plus Wildschweinborsten cards all ship; `STAGE2_QUESTION_PATH_VERSION = 2` with decoders and the `D8` schema-snapshot test are live.
 - the refreshed A1-A2-B-C-D mockup and full designed journey were approved by Nick on 2026-08-05;
 - the delegated external evidence review supporting airflow and Heat-protection decisions is complete for the current planning scope;
 - the original complete-matrix counterpart review and the 2026-08-20 production-shape plan review were reconciled; the current Phase-1/Phase-2 scope choice remains with Nick;

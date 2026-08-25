@@ -287,3 +287,21 @@ fingerprint `30be90779b8a5cb7955407d2428f47a24f4cc3a6a045aff81c6513acf75440a2` i
 green and all twelve counterpart findings are resolved or explicitly deferred.
 A counterpart delta review over the fix set remains outstanding before this branch
 should be treated as ready to ship.
+
+---
+
+## Addendum 2026-08-25 — remediation complete; this receipt is historical
+
+Everything above describes commit `c5da1058` and its three-lane review. The
+branch was subsequently remediated end-to-end and this receipt's "NOT
+MERGE-READY" bottom line **no longer describes the tree**. The record of the
+remediation — rulings D1–D9/R1–R4, workstreams WS0–WS7, two adversarial rounds
+on the rule fidelity plus one on the remediation itself, the WS4 gate
+clearances, the ready-check rulings, and the whole-branch Codex review with its
+fix set — lives in `plans/2026-08-24-hair-tools-d1-d9-rulings.md`, which is the
+authoritative status document for this branch. All seven blocking findings
+above (C1–C7) are fixed and guarded by rendered-output tests; the fixture
+oracle (`docs/personal-plan/categories/tools/fixtures.md` v3) is enforced by a
+table-driven harness that parses the oracle at test time. Current suite state
+at the time of this addendum: `test:personal-plan` 2139, `test:personal-plan:nested`
+582, `ci:verify` clean.
