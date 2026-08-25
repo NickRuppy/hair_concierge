@@ -1,141 +1,66 @@
-# Launch Stress Testing
+# Launch Traffic Checks
 
-Use these checks before inviting a larger beta group. They are designed to start read-only and only create leads or AI/chat traffic when explicitly enabled.
+The repository has two deliberately separate k6 paths:
 
-## Setup
+- `scripts/k6/launch-flow.js` can model **read-only landing traffic on a non-production target**. It refuses Chaarlie production aliases and has no POST requests, provider calls, authentication bypass, or database writes.
+- `scripts/k6/production-smoke.js` performs one human-volume, read-only production smoke. It has exact route expectations and cannot enable a higher-volume profile.
 
-Install k6 locally:
+The current launch does not have an eligible isolated target because Supabase preview branching requires a paid organization upgrade. Do not point a Vercel preview at production Supabase merely to make the non-production harness runnable.
 
-```bash
-brew install k6
-```
+## Current evidence and limitation
 
-Pick a target:
+Historical PostHog traffic provides the launch envelope:
 
-```bash
-export K6_BASE_URL="https://chaarlie.de"
-export K6_RUN_ID="2026-05-31-public-smoke"
-```
+- peak day: 1,074 `/lp/haarplan` pageviews;
+- peak hour: 152 landing pageviews, 61 quiz starts, and 27 leads;
+- peak minute: 7 landing pageviews.
 
-For preview deployments, use the Vercel preview URL instead. Run write or AI modes against preview first.
+Twenty sequential read-only production samples were collected on 2026-08-25:
 
-Requests include `x-chaarlie-load-test: launch-readiness` and `x-chaarlie-load-run: <K6_RUN_ID>` so logs and firewall events can be filtered.
+| Target                                       | Status         |    p50 |    p95 |      p99 |
+| -------------------------------------------- | -------------- | -----: | -----: | -------: |
+| `/lp/haarplan`                               | 20/20 HTTP 200 | 207 ms | 356 ms | 1,140 ms |
+| nonexistent `/result/<uuid>` database lookup | 20/20 HTTP 404 | 401 ms | 664 ms | 1,313 ms |
 
-## Commands
+These are unloaded health and latency observations, not capacity proof. Database write saturation, shared-IP contention, and 2x/5x capacity remain untested. The simpler launch path is acceptable only while the influencer forecast does not materially exceed the historical envelope and the launch-day monitoring and rollback gate is complete.
 
-```bash
-npm run stress:smoke
-npm run stress:average
-npm run stress:spike
-npm run stress:safety
-npm run stress:soak
-```
+## Optional non-production read-only profiles
 
-Profiles:
-
-- `smoke`: 1 virtual mobile user for 1 minute.
-- `average`: ramps from 5 to 15 concurrent users.
-- `spike`: jumps up to 50 concurrent users.
-- `safety`: ramps up to 75-100 concurrent users.
-- `soak`: 15 users for 30 minutes by default.
-
-Override soak length when needed:
+Use these only if a genuinely isolated non-production target exists later. First inspect without sending traffic:
 
 ```bash
-K6_SOAK_VUS=10 K6_SOAK_DURATION=45m npm run stress:soak
+k6 inspect \
+  -e K6_BASE_URL=https://isolated-preview.example \
+  -e K6_ISOLATED_TARGET_ACK=read-only-nonproduction-confirmed \
+  scripts/k6/launch-flow.js
 ```
 
-The script includes human-ish pauses between page views. Tune them if a test is meant to model slower or faster browsing:
+The command names remain stable:
+
+| Command                  |  Landing arrival rate | Default duration |
+| ------------------------ | --------------------: | ---------------: |
+| `npm run stress:smoke`   |              1/minute |         1 minute |
+| `npm run stress:average` | 152/hour (historical) |       15 minutes |
+| `npm run stress:spike`   |           304/hour 2x |        5 minutes |
+| `npm run stress:safety`  |           760/hour 5x |        5 minutes |
+| `npm run stress:soak`    |           304/hour 2x |       30 minutes |
+
+Every profile uses `constant-arrival-rate` and GETs only `/lp/haarplan`. The harness exits before traffic when the target is absent, is not HTTPS, is a production alias, or lacks the exact acknowledgement.
+
+Do not treat a read-only landing pass as evidence that lead persistence, email delivery, payment preparation, rate limiting, or database write capacity passed.
+
+## Production smoke
+
+Production permits only one read-only, one-iteration smoke:
 
 ```bash
-K6_THINK_TIME_MIN=4 K6_THINK_TIME_MAX=12 npm run stress:average
+K6_BASE_URL=https://chaarlie.de \
+K6_PRODUCTION_SMOKE_ACK=human-volume-read-only \
+npm run stress:production-smoke
 ```
 
-## Optional Write Paths
+Run it once before launch and once after the reviewed Dublin deployment. Record the deployment SHA, timestamp, route statuses, and any edge mitigation. Never run the non-production average, spike, safety, or soak profiles against production.
 
-By default the script only hits public mobile pages. Enable database-writing quiz lead traffic deliberately:
+## Reopen the staging decision when needed
 
-```bash
-K6_WRITE_MODE=1 npm run stress:average
-```
-
-The former AI-backed quiz analysis path is retired. The stress script should not call
-`/api/quiz/analyze`; that endpoint is kept only as a 410 tombstone.
-
-To exercise authenticated `/chat`, copy a short-lived browser session cookie from a dedicated paid test user:
-
-```bash
-K6_SESSION_COOKIE='sb-...=...; hc_returning=1' npm run stress:smoke
-```
-
-To post chat messages and spend OpenAI tokens:
-
-```bash
-K6_SESSION_COOKIE='sb-...=...; hc_returning=1' K6_CHAT_MODE=1 npm run stress:smoke
-```
-
-Keep `K6_CHAT_MODE` low volume. Do not combine it with `stress:safety` unless OpenAI/Supabase/Vercel limits and cost ceilings have been checked.
-
-## What To Watch During A Run
-
-- Vercel function errors, duration, and cold starts.
-- Supabase API/database errors, auth 429s, and connection pressure.
-- OpenAI 429s/timeouts and total token spend.
-- Stripe and PayPal webhooks if checkout-adjacent flows are being manually tested.
-- Sentry errors, release health, and replay-on-error sessions.
-- PostHog funnel drop-offs for quiz/result/pricing/chat.
-
-## Stop Conditions
-
-Stop the run if any of these happen:
-
-- sustained `http_req_failed` over 5%;
-- p95 request duration above 3s for public pages;
-- `x-vercel-mitigated: deny` responses from the Vercel edge;
-- repeated 429s from Supabase Auth, quiz APIs, chat, or OpenAI;
-- Vercel function timeouts or memory pressure;
-- unexpected paid checkout creation or payment-provider side effects.
-
-If Vercel edge mitigation appears during a local run, pause testing from that IP and rerun with slower think time or a distributed runner. A single laptop can look more bot-like than 15 real mobile users because all traffic comes from one source IP with perfectly repeated paths.
-
-## Mobile Performance
-
-Run Lighthouse mobile checks for the public launch pages:
-
-```bash
-LH_BASE_URL="https://chaarlie.de" npm run perf:mobile
-```
-
-Defaults:
-
-- paths: `/`, `/quiz`, `/pricing`, `/auth`;
-- output: `tmp/lighthouse/*.report.html` and `tmp/lighthouse/*.report.json`;
-- thresholds: LCP <= 2500ms, CLS <= 0.1, TBT <= 300ms.
-- Lighthouse package: `lighthouse@12.8.2` by default, override with `LH_LIGHTHOUSE_PACKAGE` if needed.
-
-Customize when needed:
-
-```bash
-LH_PATHS="/,/quiz,/result/example" LH_LCP_MS=2500 LH_CLS=0.1 LH_TBT_MS=300 npm run perf:mobile
-```
-
-Lighthouse cannot measure field INP. Use it as the lab responsiveness check, then confirm real-user INP in field analytics once beta traffic starts.
-
-### Current Baseline
-
-First homepage run on May 31, 2026:
-
-- `/`: LCP 5320ms, CLS 0.000, TBT 81ms.
-
-The LCP element was the hero H1 (`Weißt du, was deine Haare wirklich brauchen?`). Lighthouse attributed most of the delay to render delay, not server response time. Treat this as a focused follow-up for font/render/script timing on the landing hero before relying on paid traffic.
-
-## Manual Companion Checks
-
-Run these manually on mobile Safari/Chrome before and after load:
-
-- landing -> quiz -> result -> pricing;
-- checkout test subscription -> welcome -> password or magic link -> onboarding/chat;
-- close browser/app after chat, reopen `/chat`, verify login/resume behavior;
-- logout/login again for the same paid test user;
-- expired/duplicate auth link behavior;
-- cancellation or failed-payment entitlement behavior in Stripe test mode.
+Use a Supabase Pro preview branch or another fully isolated environment before launch if the forecast materially exceeds the historical envelope, if a new write-heavy journey ships, or if monitoring shows saturation risk. Any future write-capacity test needs isolated data, disabled real provider delivery, explicit cleanup, and a fresh reviewed plan; it must not add a dormant load-test authorization path to production routes.

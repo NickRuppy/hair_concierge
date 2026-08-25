@@ -1,6 +1,6 @@
 # Launch Readiness Checklist
 
-Use this as the working checklist before inviting the 100-user beta group.
+Use this as the working checklist before the public influencer launch.
 
 ## Already Covered In Repo
 
@@ -10,9 +10,9 @@ Use this as the working checklist before inviting the 100-user beta group.
 - Billing tests: Stripe webhook handlers, entitlement gating, duplicate/idempotent webhook handling, PayPal subscription server flows.
 - Sentry setup: server/client error capture, tracing sample rate, replay-on-error.
 - Security headers: CSP report-only, frame blocking, content-type sniffing protection, referrer policy, permissions policy.
-- Launch stress tooling: k6 smoke/average/spike/safety/soak profiles and Lighthouse mobile wrapper.
+- Launch traffic tooling: fail-closed read-only non-production landing profiles, a separate one-iteration read-only production smoke, and Lighthouse mobile wrapper.
 
-## Must Do Before Inviting Users
+## Must Do Before Launch
 
 - Merge and deploy the returning-mobile-user hotfix.
 - Run one manual mobile happy path on production:
@@ -24,10 +24,12 @@ Use this as the working checklist before inviting the 100-user beta group.
 - Run Stripe test subscription golden path with real test checkout, not only webhook fixture triggers.
 - Confirm production Stripe webhook endpoint is registered, live, and receiving events.
 - Confirm Supabase Auth email limits and custom SMTP/deliverability settings for invite bursts.
-- Confirm OpenAI project usage/rate/cost limits for the expected beta window.
+- Confirm OpenAI project usage/rate/cost limits for the expected launch window.
 - Confirm Supabase spend cap and project limits are acceptable for launch day.
 - Confirm Sentry alerts route somewhere visible during launch.
-- Confirm Vercel firewall behavior before running more production load from one IP.
+- Confirm Vercel firewall visibility and ordinary-user behavior without generating production load.
+- Confirm the influencer forecast does not materially exceed the historical peak hour of 152 landing pageviews, 61 quiz starts, and 27 leads.
+- Record that write-path and 2x/5x capacity are not experimentally proven on the simpler launch path.
 
 ## Strong Follow-Ups
 
@@ -35,7 +37,8 @@ Use this as the working checklist before inviting the 100-user beta group.
 - Decide whether CSP can move from report-only to enforced after reviewing reports.
 - Add a synthetic production smoke monitor for `/`, `/quiz`, `/auth`, `/pricing`, and `/chat` auth redirect behavior.
 - Add a dedicated paid production test user for authenticated k6 chat smoke with very low volume.
-- Run average-load and spike k6 profiles from a distributed runner or with slower think time to avoid single-IP Vercel mitigation.
+- Provision a fully isolated environment and reopen write-capacity testing before any future forecast materially above the historical envelope.
+- Investigate shared-IP contention if monitoring or real-user evidence shows legitimate 429s; do not weaken the production limiter pre-emptively.
 
 ## Stop-Go Criteria
 
