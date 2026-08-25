@@ -798,7 +798,7 @@ export function PlanStartCustomerJourney({
         inventory,
         scalpApplicationJob: plan.toolContext.scalpApplicationJob,
       })
-      const blocks = buildStage1ToolBlocks(buildToolPlan({ routes, inventory }), {
+      const blocks = buildStage1ToolBlocks(buildToolPlan({ routes }), {
         hasOptionalPage: false,
       })
       return blocks.basis?.cards ?? []

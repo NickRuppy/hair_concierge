@@ -161,8 +161,10 @@ test("direct-accept planning defaults never become Tool ownership", () => {
 
   // The identical answers, if a user had actually reported them, are evidence.
   const reported = projectToolCareFacts(defaults.answers, "reported")
+  // D4 (2026-08-24): air-drying is a behaviour, not the claim „ich besitze
+  // keinen Föhn", so the air-dry-only branch projects no `airflow` entry at all
+  // and the route's ownership honestly stays `unknown` (fixtures 3, 4).
   assert.deepEqual(projectToolInventoryFromCareFacts(reported), {
-    airflow: [],
     heated_styling: [],
     drying_textiles: ["microfiber_towel"],
     night_protection: [],

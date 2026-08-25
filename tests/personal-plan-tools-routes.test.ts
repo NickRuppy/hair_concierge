@@ -235,9 +235,20 @@ test("securing aids stay subordinate to a real supporting step", () => {
   const withoutJob = routes({ answers: { hairLength: "long" } })
   assert.equal(find(withoutJob, "securing_support"), null)
 
-  const withJob = routes({
+  // C01/C02 + D12 (fixtures 74, 102): a night method is NOT a securing parent —
+  // its soft tie is owned by Night Protection, and letting it fire here produced
+  // the duplicate Clips/Ties card. A real sectioning job still does.
+  const nightOnly = routes({
     answers: { hairLength: "long", currentConcerns: ["breakage"] },
     care: { towelTechnique: "rough_rubbing", nightProtection: ["loose_tied"] },
+  })
+  assert.equal(find(nightOnly, "securing_support"), null)
+
+  const withJob = computeToolRoutes({
+    profile: toolProfileFactsFromPlanProfile(profile({ hairLength: "long" })),
+    care: EMPTY_TOOL_CARE_FACTS,
+    inventory: {},
+    scalpApplicationJob: true,
   })
   assert.equal(find(withJob, "securing_support")?.tier, "optional")
 })
@@ -297,7 +308,7 @@ test("fine straight hair with the volume goal reads as wanting more volume", () 
   assert.equal(heatless?.tier, "basis", "both approaches are one shared basis choice")
   // D5: the peer relationship is the first-class `volume_set` choice group, not
   // an ad-hoc route-to-route link that no presentation layer ever read.
-  const group = buildToolPlan({ routes: list, inventory: {} }).choiceGroups.find(
+  const group = buildToolPlan({ routes: list }).choiceGroups.find(
     (candidate) => candidate.target === "volume_set",
   )
   assert.deepEqual(
@@ -371,10 +382,9 @@ test("a reported viable route is prioritized instead of recommending a purchase"
   // The peer survives as a referenceable alternative but is no longer a need.
   assert.equal(find(list, "heated_volume_set")?.tier, "not_needed")
   // D5: the peer stays a group member, and the reported route leads the group.
-  const group = buildToolPlan({
-    routes: list,
-    inventory: { heatless_styling: ["setting_roller"] },
-  }).choiceGroups.find((candidate) => candidate.target === "volume_set")
+  const group = buildToolPlan({ routes: list }).choiceGroups.find(
+    (candidate) => candidate.target === "volume_set",
+  )
   assert.ok(group?.memberRouteKeys.includes(routeKeyFor("heated_volume_set")))
   assert.equal(group?.fulfilledBy, routeKeyFor("heatless_volume_set"))
 })
@@ -486,10 +496,7 @@ test("an owned viable route suppresses the peer as a requirement", () => {
   assert.notEqual(heated?.tier, "basis")
 
   // And it must not produce a second missing-product card either.
-  const plan = buildToolPlan({
-    routes: list,
-    inventory: { heatless_styling: ["setting_roller"] },
-  })
+  const plan = buildToolPlan({ routes: list })
   assert.equal(
     plan.assets.filter((asset) => asset.family === "heated_styling").length,
     0,

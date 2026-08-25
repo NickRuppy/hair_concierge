@@ -39,8 +39,7 @@ function checkpointCards(answers: PersonalPlanRefinementAnswersV1) {
     scalpApplicationJob: false,
   })
   return (
-    buildStage1ToolBlocks(buildToolPlan({ routes, inventory }), { hasOptionalPage: false }).basis
-      ?.cards ?? []
+    buildStage1ToolBlocks(buildToolPlan({ routes }), { hasOptionalPage: false }).basis?.cards ?? []
   )
 }
 

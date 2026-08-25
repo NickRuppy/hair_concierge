@@ -284,7 +284,7 @@ function stage1ToolBlocks(
       inventory: {},
       scalpApplicationJob: hasSectionedScalpApplication(snapshot),
     })
-    return buildStage1ToolBlocks(buildToolPlan({ routes, inventory: {} }), {
+    return buildStage1ToolBlocks(buildToolPlan({ routes }), {
       hasOptionalPage: options.hasOptionalPage,
     })
   } catch {

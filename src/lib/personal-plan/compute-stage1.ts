@@ -109,7 +109,6 @@ export function computeNeedPlan(input: ComputeNeedPlanInput): ComputeNeedPlanRes
           inventory: input.tools.inventory,
           scalpApplicationJob: hasSectionedScalpApplication(decisions),
         }),
-        inventory: input.tools.inventory,
       })
     : null
 

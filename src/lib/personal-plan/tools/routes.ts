@@ -15,8 +15,9 @@ import {
 } from "./contracts"
 import {
   EMPTY_TOOL_CARE_FACTS,
-  inventoryFor,
+  mergeToolInventories,
   projectToolInventoryFromCareFacts,
+  reportedFormsFor,
   type ToolCareFacts,
   type ToolInventory,
 } from "./facts"
@@ -73,6 +74,16 @@ type DraftRoute = {
   tier: "basis" | "optional" | "not_needed"
   resolution: ToolResolution
   recommendedProductTypes: ToolProductType[]
+  /**
+   * The subset of `recommendedProductTypes` a broad reported answer actually
+   * PROVES the route's capability with. Defaults to all of them.
+   *
+   * An empty list means no broad answer can prove it: `A06`/`D2a` (a drying
+   * behaviour never proves a diffuser attachment), `H10`/`A04` (an unidentified
+   * device never proves the exact volume capability), `B04` (a reported brush
+   * suppresses the purchase without granting `detangle`).
+   */
+  capabilityVerifyingForms?: ToolProductType[]
   requiredCapabilities: ToolCapability[]
   ruleIds: string[]
 }
@@ -86,7 +97,43 @@ const NIGHT_SIGNAL_CONCERNS = new Set([
   "tangling",
   "frizz_flyaways",
 ])
-const NIGHT_SIGNAL_GOALS = new Set(["frizz_surface", "shape_definition", "strength_ends"])
+/** `D9c`, 2026-08-24: `manageability_styling` joins the set as frizz-adjacent. */
+const NIGHT_SIGNAL_GOALS = new Set([
+  "frizz_surface",
+  "shape_definition",
+  "strength_ends",
+  "manageability_styling",
+])
+/** `N02`: long/very-long PLUS one of these picks the length/tip sleeve. */
+const NIGHT_SLEEVE_CONCERNS = new Set(["breakage", "split_ends", "tangling"])
+/** `R4`, 2026-08-24: `optional_strong` extends to `split_ends` for V2 reachability. */
+const NIGHT_STRONG_CONCERNS = new Set(["breakage", "split_ends"])
+
+/**
+ * Inherent job of a reported styling form (`H05`, `H06`, `H01`).
+ *
+ * The broad label proves nothing about an exact product (`H03`) — these sets
+ * only decide which reported-use rule ID the route carries and whether the
+ * neutral peer approach is worth showing as one alternative.
+ */
+const STRAIGHTENING_FORMS = new Set<ToolProductType>([
+  "flat_iron",
+  "heated_brush",
+  "heated_multi_styler",
+])
+const CURL_WAVE_FORMS = new Set<ToolProductType>([
+  "curling_iron",
+  "curling_wand",
+  "wave_iron",
+  "automatic_curler",
+  "heated_rollers",
+  "heated_multi_styler",
+  "heatless_curling_band",
+  "setting_roller",
+  "foam_roller",
+  "flexi_rod",
+  "setting_former",
+])
 
 /**
  * Deterministic Phase-1 Tool route computation.
@@ -101,16 +148,20 @@ const NIGHT_SIGNAL_GOALS = new Set(["frizz_surface", "shape_definition", "streng
  */
 export function computeToolRoutes(rawInput: ToolRouteInput): PlanToolRoute[] {
   // Canonical care answers already imply ownership; the Tool inventory only adds
-  // what those questions never covered, and an explicit Tool answer wins.
+  // what those questions never covered.
   //
-  // The two sources stay distinguishable (D4): a family the user answered is
-  // `reported`, a family projected from a care behaviour is `derived`. „Du
-  // föhnst" is a behaviour, not the sentence „du besitzt einen Föhn".
+  // D3c: merge per form, never replace per family. An answered Tool page adds and
+  // confirms forms; the care-derived evidence survives it (fixture 124). The two
+  // sources stay distinguishable (D4): a family the user answered is `reported`,
+  // a family projected from a care behaviour is `derived`. „Du föhnst" is a
+  // behaviour, not the sentence „du besitzt einen Föhn".
   const derivedInventory = projectToolInventoryFromCareFacts(rawInput.care)
   const input: ToolRouteInput = {
     ...rawInput,
-    inventory: { ...derivedInventory, ...rawInput.inventory },
+    inventory: mergeToolInventories(derivedInventory, rawInput.inventory),
   }
+  // D4: with both a derived and a reported fact present, provenance records the
+  // stronger `reported`.
   const provenanceFor = (family: ToolFamily) =>
     rawInput.inventory[family] !== undefined ? ("reported" as const) : ("derived" as const)
   const drafts: DraftRoute[] = [
@@ -137,7 +188,8 @@ export function computeToolRoutes(rawInput: ToolRouteInput): PlanToolRoute[] {
       ruleIds: [...new Set(draft.ruleIds)].sort(),
       reportedOwnership: reportedOwnershipFor(input.inventory, family, draft, provenanceFor),
       coverage: coverageFor(input.inventory, family, draft, provenanceFor),
-      // No Phase-1 rule defers yet; WS2 wires the missing-input reasons.
+      // No Phase-1 rule defers yet; the missing-input reasons (fixture 114) are
+      // a separate workstream.
       deferredFacts: [],
     } satisfies PlanToolRoute)
   })
@@ -151,6 +203,10 @@ export function computeToolRoutes(rawInput: ToolRouteInput): PlanToolRoute[] {
  * explicit none. Otherwise: absent/`null` stays `unknown`, `[]` is an explicit
  * none, and any reported form is `owned_generic` and is named in `forms` so the
  * card can talk about THEIR tool rather than the ideal one.
+ *
+ * `D9b`: a fingers-only answer carries no product form, so it lands on
+ * `explicit_none` with `forms: []` — the user answered, and what they own is no
+ * product. That is true, and it is what the fixtures assert (10, 11, 56).
  */
 function reportedOwnershipFor(
   inventory: ToolInventory,
@@ -161,7 +217,7 @@ function reportedOwnershipFor(
   if (draft.resolution === "behavior_only") {
     return { state: "unknown", provenance: null, forms: [] }
   }
-  const reported = inventoryFor(inventory, family)
+  const reported = reportedFormsFor(inventory, family)
   if (reported === null) return { state: "unknown", provenance: null, forms: [] }
   const provenance = provenanceFor(family)
   if (reported.length === 0) return { state: "explicit_none", provenance, forms: [] }
@@ -185,7 +241,7 @@ function coverageFor(
   if (draft.resolution === "behavior_only") {
     return { state: "not_applicable", capabilityVerified: true }
   }
-  const reported = inventoryFor(inventory, family)
+  const reported = reportedFormsFor(inventory, family)
   const capabilityVerified = capabilityVerifiedFor(reported, draft)
   if (reported === null || reported.length === 0) {
     return { state: "uncovered", capabilityVerified }
@@ -203,7 +259,8 @@ function coverageFor(
 
 /**
  * True when the reported form itself proves the route's capability. A broad form
- * accepted only through B04 coverage does not.
+ * accepted only through B04 coverage does not, and neither does a behaviour
+ * answer or an unidentified device — see `capabilityVerifyingForms`.
  */
 function capabilityVerifiedFor(
   reported: readonly ToolProductType[] | null,
@@ -211,7 +268,8 @@ function capabilityVerifiedFor(
 ): boolean {
   if (reported === null || reported.length === 0) return true
   if (draft.recommendedProductTypes.length === 0) return true
-  return reported.some((type) => draft.recommendedProductTypes.includes(type))
+  const verifying = draft.capabilityVerifyingForms ?? draft.recommendedProductTypes
+  return reported.some((type) => verifying.includes(type))
 }
 
 function goalSet(profile: ToolProfileFacts): Set<string> {
@@ -222,20 +280,42 @@ function concernSet(profile: ToolProfileFacts): Set<string> {
   return new Set(profile.concerns)
 }
 
+function shapedTexture(profile: ToolProfileFacts): boolean {
+  return profile.texture === "wavy" || profile.texture === "curly" || profile.texture === "coily"
+}
+
 /**
- * Reads the direction of the ambiguous `volume_balance` goal through the one
- * shared predicate in `../volume-direction`, which Conditioner weight also uses.
- * Texture never *creates* a styling route here; it only resolves the direction of
- * a goal the user actually named.
+ * The direction of the merged `volume_balance` goal (`D1`, ruled 2026-08-24).
+ *
+ * `active` — the volume/set routes fire. `inferred` — the direction came from the
+ * ratified texture/thickness predicate rather than from something the user said,
+ * so every route reaching its tier this way must carry
+ * `tools.styling.volume_direction_inferred` and disclose it.
+ *
+ * The concern `low_volume_or_weighed_down` TRIGGERS the routes on its own AND
+ * OVERRIDES the inference to volume_up regardless of texture and thickness:
+ * explicit signal beats inference, so those routes are not inferred and must not
+ * carry the marker. The override lives here, at the Tools boundary — the shared
+ * `volume-direction.ts` predicate stays bit-identical for Conditioner weight.
  */
-function wantsMoreVolume(profile: ToolProfileFacts): boolean {
-  return sharedWantsMoreVolume({
+type VolumeDirectionSignal = { active: boolean; inferred: boolean }
+
+function volumeSignal(profile: ToolProfileFacts): VolumeDirectionSignal {
+  if (concernSet(profile).has("low_volume_or_weighed_down")) {
+    return { active: true, inferred: false }
+  }
+  const active = sharedWantsMoreVolume({
     texture: profile.texture,
     thickness: profile.thickness,
     hasVolumeGoal: goalSet(profile).has("volume_balance"),
     hasDefinitionGoal: goalSet(profile).has("shape_definition"),
     hasLostShapeConcern: concernSet(profile).has("lost_shape"),
   })
+  return { active, inferred: active }
+}
+
+function withInferenceMarker(signal: VolumeDirectionSignal, ruleIds: string[]): string[] {
+  return signal.inferred ? [...ruleIds, "tools.styling.volume_direction_inferred"] : ruleIds
 }
 
 /** True once an airflow approach already covers the shared volume/set goal. */
@@ -249,24 +329,32 @@ function airShapingCoversVolume(input: ToolRouteInput): boolean {
 
 function airflowRoutes(input: ToolRouteInput): DraftRoute[] {
   const { care, profile } = input
-  if (!care.dryingRoutes) return []
+  // D2: `null` and `[]` are BOTH unanswered. A legacy stored `[]` never falls
+  // into the air-dry branch and supports no drying assumption in either
+  // direction (fixture A-x1).
+  if (!care.dryingRoutes || care.dryingRoutes.length === 0) return []
 
   const goals = goalSet(profile)
   const wantsDefinition = goals.has("shape_definition")
-  const wantsVolume = wantsMoreVolume(profile)
-  const shapedTexture =
-    profile.texture === "wavy" || profile.texture === "curly" || profile.texture === "coily"
+  const volume = volumeSignal(profile)
+  const shaped = shapedTexture(profile)
+  // D2: every ticked route counts. Each member triggers its own guidance and the
+  // profile is a blow-drying profile for every rule keyed on a blow-dry member.
   const blowDries = care.dryingRoutes.includes("ordinary_blow_dry")
   const diffuses = care.dryingRoutes.includes("diffuser_or_airflow_shaping")
 
   const drafts: DraftRoute[] = []
 
-  if (diffuses || (blowDries && shapedTexture && wantsDefinition)) {
+  if (diffuses || (blowDries && shaped && wantsDefinition)) {
     drafts.push({
       target: "drying_diffused",
       tier: "basis",
       resolution: "tool_type",
       recommendedProductTypes: ["hair_dryer", "air_multi_styler"],
+      // A06 + D2a: reporting the drying behaviour is not evidence of a
+      // diffuser-capable device, so no broad answer verifies this route and the
+      // copy stays conditional.
+      capabilityVerifyingForms: [],
       requiredCapabilities: ["dry_hair", "diffuse_airflow"],
       ruleIds: ["tools.airflow.basis", "tools.airflow.diffuser_path"],
     })
@@ -281,7 +369,7 @@ function airflowRoutes(input: ToolRouteInput): DraftRoute[] {
     })
   }
 
-  if (wantsVolume && (blowDries || diffuses)) {
+  if (volume.active && (blowDries || diffuses)) {
     // The air-shaping approach sits inside the shared volume/set basis. It may
     // coexist with the separate drying path; one device that supplies both
     // capabilities deduplicates into a single asset downstream.
@@ -290,12 +378,14 @@ function airflowRoutes(input: ToolRouteInput): DraftRoute[] {
       tier: "basis",
       resolution: "tool_type",
       recommendedProductTypes: ["hot_air_brush", "air_multi_styler", "hair_dryer"],
+      // A04/H10: a plain Föhn shapes only together with a Rundbürste, and an
+      // unidentified Warmluftbürste never proves the exact volume capability.
+      capabilityVerifyingForms: [],
       requiredCapabilities: ["air_shape", "create_volume"],
-      ruleIds: [
+      ruleIds: withInferenceMarker(volume, [
         "tools.airflow.air_shape_basis",
         "tools.styling.volume_basis",
-        "tools.styling.volume_direction_inferred",
-      ],
+      ]),
     })
   }
 
@@ -303,24 +393,30 @@ function airflowRoutes(input: ToolRouteInput): DraftRoute[] {
 
   // Air drying: never imply the user should stop, but keep matching optional
   // styling support visible when they named a definition or volume goal.
-  if (wantsDefinition && shapedTexture) {
+  //
+  // R2 (2026-08-24): the definition disjunct is texture-gated. `straight` plus
+  // `shape_definition` activates no tool route from the definition goal
+  // (fixture 4b). The volume disjunct stays ungated (fixture 48).
+  if (wantsDefinition && shaped) {
     drafts.push({
       target: "drying_diffused",
       tier: "optional",
       resolution: "tool_type",
       recommendedProductTypes: ["hair_dryer", "air_multi_styler"],
+      capabilityVerifyingForms: [],
       requiredCapabilities: ["dry_hair", "diffuse_airflow"],
       ruleIds: ["tools.airflow.optional_goal"],
     })
   }
-  if (wantsVolume) {
+  if (volume.active) {
     drafts.push({
       target: "air_shaping_volume",
       tier: "optional",
       resolution: "tool_type",
       recommendedProductTypes: ["hot_air_brush", "air_multi_styler", "hair_dryer"],
+      capabilityVerifyingForms: [],
       requiredCapabilities: ["air_shape", "create_volume"],
-      ruleIds: ["tools.airflow.optional_goal", "tools.styling.volume_direction_inferred"],
+      ruleIds: withInferenceMarker(volume, ["tools.airflow.optional_goal"]),
     })
   }
   return drafts
@@ -328,57 +424,136 @@ function airflowRoutes(input: ToolRouteInput): DraftRoute[] {
 
 // --- heated / heatless styling ------------------------------------------------
 
+type SetFamilySpec = {
+  target: "heated_volume_set" | "heatless_volume_set"
+  reported: ToolProductType[]
+  generic: ToolProductType[]
+}
+
 /**
- * The current quiz collapses "mehr Volumen" and "weniger Volumen" into the single
- * `volume_balance` goal, so no answer can prove a created-style need. Per the
- * category policy's missing-required-field rule, Phase 1 therefore never
- * recommends a heated or heatless styling tool. Reported ownership still creates
- * safe use guidance and an executable occurrence — it just never creates a need.
+ * The shared volume/set need (`H07`) plus reported-use guidance (`H05`, `H06`).
+ *
+ * Nothing here infers a desired style. The volume routes fire only when the
+ * ruled direction resolves to volume_up; a reported form creates guidance and an
+ * executable occurrence but never a purchase need.
  */
 function stylingRoutes(input: ToolRouteInput): DraftRoute[] {
-  const heated = inventoryFor(input.inventory, "heated_styling") ?? []
-  const heatless = inventoryFor(input.inventory, "heatless_styling") ?? []
+  const heated = reportedFormsFor(input.inventory, "heated_styling") ?? []
+  const heatless = reportedFormsFor(input.inventory, "heatless_styling") ?? []
+  const volume = volumeSignal(input.profile)
   // Fulfilment counts once: when an airflow approach already covers the shared
   // volume/set goal, no heated or heatless requirement is added on top.
-  const wantsVolume = wantsMoreVolume(input.profile) && !airShapingCoversVolume(input)
+  const wantsVolume = volume.active && !airShapingCoversVolume(input)
   // Fulfilment counts once across the shared choice. If the user already owns a
   // viable route, the other one is a genuine alternative — never a second basis
   // requirement telling them to acquire the peer as well.
   const alreadyCovered = heated.length > 0 || heatless.length > 0
 
-  const drafts: DraftRoute[] = []
-  const push = (
-    target: "heated_volume_set" | "heatless_volume_set",
-    reported: readonly ToolProductType[],
-    generic: ToolProductType[],
-  ) => {
-    const recommend = wantsVolume && (reported.length > 0 || !alreadyCovered)
-    // The suppressed peer is still emitted at `not_needed` so it stays a
-    // referenceable alternative. It produces no asset and no card, so the user
-    // never sees a second "you are missing this" Tool.
-    if (!recommend && reported.length === 0 && !wantsVolume) return
-    drafts.push({
-      target,
-      // Ownership never creates or removes the underlying need; it only decides
-      // whether the plan recommends acquiring anything.
-      tier: recommend ? "basis" : "not_needed",
-      resolution: "tool_type",
-      recommendedProductTypes: recommend ? generic : [...reported],
-      requiredCapabilities: recommend ? ["create_volume", "set_style"] : [],
-      ruleIds: recommend
-        ? ["tools.styling.volume_basis", "tools.styling.volume_direction_inferred"]
-        : ["tools.styling.reported_straighten", "tools.styling.reported_curl_wave"],
-    })
+  const heatedSpec: SetFamilySpec = {
+    target: "heated_volume_set",
+    reported: heated,
+    generic: ["heated_rollers", "heated_brush", "curling_iron"],
+  }
+  const heatlessSpec: SetFamilySpec = {
+    target: "heatless_volume_set",
+    reported: heatless,
+    generic: ["setting_roller", "foam_roller", "heatless_curling_band"],
   }
 
+  const drafts: DraftRoute[] = []
   // Heated and heatless are neutral peers for the same outcome; neither is
   // presented as the safer or better route. Their peer relationship is the
-  // `volume_set` choice group (D5), built in `assets.ts` — the old ad-hoc
-  // `alternativeRouteKey` link could only ever chain two routes and was read by
-  // no presentation layer.
-  push("heated_volume_set", heated, ["heated_rollers", "heated_brush", "curling_iron"])
-  push("heatless_volume_set", heatless, ["setting_roller", "foam_roller", "heatless_curling_band"])
+  // `volume_set` choice group (D5), built in `assets.ts`.
+  for (const [spec, peer] of [
+    [heatedSpec, heatlessSpec],
+    [heatlessSpec, heatedSpec],
+  ] as const) {
+    const recommend = wantsVolume && (spec.reported.length > 0 || !alreadyCovered)
+    if (recommend) {
+      drafts.push({
+        target: spec.target,
+        // Ownership never creates or removes the underlying need; it only decides
+        // whether the plan recommends acquiring anything.
+        tier: "basis",
+        resolution: "tool_type",
+        // C5: a reported viable form LEADS (A04/H07 prioritize it). Discarding it
+        // here made a Flexi-Rod owner read „Konkretes Produkt folgt" for a tool
+        // they already have.
+        recommendedProductTypes: orderedUnion(spec.reported, spec.generic),
+        capabilityVerifyingForms: [],
+        requiredCapabilities: ["create_volume", "set_style"],
+        ruleIds: withInferenceMarker(volume, ["tools.styling.volume_basis"]),
+      })
+      continue
+    }
+    if (spec.reported.length > 0) {
+      // H05/H06: the reported form proves an existing behaviour, so the product
+      // need is `not_needed` while use guidance and its occurrence stay. Exactly
+      // one reported-use rule fires per inherent job (fixtures 8, 42, 45, 46).
+      drafts.push({
+        target: spec.target,
+        tier: "not_needed",
+        resolution: "tool_type",
+        recommendedProductTypes: [...spec.reported],
+        requiredCapabilities: [],
+        ruleIds: reportedUseRuleIds(spec.reported),
+      })
+      continue
+    }
+    if (wantsVolume) {
+      // The suppressed peer is still emitted at `not_needed` so it stays a
+      // referenceable alternative. It produces no asset and no card, so the user
+      // never sees a second "you are missing this" Tool.
+      drafts.push({
+        target: spec.target,
+        tier: "not_needed",
+        resolution: "tool_type",
+        recommendedProductTypes: [],
+        requiredCapabilities: [],
+        ruleIds: [],
+      })
+      continue
+    }
+    if (peer.reported.some((form) => CURL_WAVE_FORMS.has(form))) {
+      // H06 / `tools.heatless.reported_curl_wave`: a reported created-curl form
+      // reveals the neutral peer approach as ONE optional alternative. A
+      // straightening-only report reveals nothing (fixture 42).
+      drafts.push({
+        target: spec.target,
+        tier: "optional",
+        resolution: "tool_type",
+        recommendedProductTypes: [...spec.generic],
+        capabilityVerifyingForms: [],
+        requiredCapabilities: ["create_volume", "set_style"],
+        ruleIds: ["tools.styling.reported_curl_wave"],
+      })
+    }
+  }
   return drafts
+}
+
+/** Reported forms first, in their own order, then the plan's own forms. */
+function orderedUnion(
+  reported: readonly ToolProductType[],
+  generic: readonly ToolProductType[],
+): ToolProductType[] {
+  return [...new Set<ToolProductType>([...reported, ...generic])]
+}
+
+function reportedUseRuleIds(reported: readonly ToolProductType[]): string[] {
+  const ruleIds: string[] = []
+  if (reported.some((form) => STRAIGHTENING_FORMS.has(form))) {
+    ruleIds.push("tools.styling.reported_straighten")
+  }
+  if (reported.some((form) => CURL_WAVE_FORMS.has(form))) {
+    ruleIds.push("tools.styling.reported_curl_wave")
+  }
+  return ruleIds
+}
+
+/** True once a heated or heatless set approach is actually the user's (`C01`). */
+function hasSelectedSetApproach(input: ToolRouteInput): boolean {
+  return (reportedFormsFor(input.inventory, "heatless_styling") ?? []).length > 0
 }
 
 // --- brushes and combs --------------------------------------------------------
@@ -393,21 +568,34 @@ function brushRoutes(input: ToolRouteInput): DraftRoute[] {
   // only reported behaviour was drying roughly. No brush-friction input exists
   // yet; when one does, add it here.
   const mismatch = concerns.has("tangling")
+  // B01/B03: fingers fully cover the foundation only for `very_short`. From
+  // `short` upward the physical need stands, and a fingers-only answer does not
+  // close it — `reportedFormsFor` already reads that answer as no product
+  // (fixtures 10, 11, 56).
   const needsPhysicalTool = LENGTHS_NEEDING_A_PHYSICAL_TOOL.has(profile.length)
 
   const drafts: DraftRoute[] = []
   if (needsPhysicalTool || mismatch) {
-    const reported = inventoryFor(inventory, "brushes_combs")
+    const reported = reportedFormsFor(inventory, "brushes_combs")
     const covered = Boolean(reported && reported.length > 0)
+    const forms = detanglingFormsFor(profile)
     drafts.push({
       target: "detangling_foundation",
       tier: "basis",
       resolution: "tool_type",
-      recommendedProductTypes: detanglingFormsFor(profile),
+      recommendedProductTypes: forms,
+      // B03/B04: only the two lead forms are foundational detangling forms. The
+      // tail form stays an eligible alternative but does not grant an unverified
+      // `detangle` capability (fixtures 9, 60b).
+      capabilityVerifyingForms: forms.slice(0, 2),
       requiredCapabilities: ["detangle", "distribute_product"],
       // B04: any reported physical brush or comb normally suppresses another
-      // foundational purchase, even when its primary job is styling or smoothing.
-      coverageMode: "any_reported_form",
+      // foundational purchase, even when its primary job is styling or
+      // smoothing — but B05's correction WINS over that broad coverage. With a
+      // concrete mismatch signal only a form that can actually serve the
+      // foundation covers it, so a Styling-Bürste owner is no longer told
+      // „Nutze deins" about a brush they do not have (fixture 61).
+      coverageMode: mismatch ? "matching_form" : "any_reported_form",
       ruleIds: [
         "tools.brush.foundation",
         ...(mismatch ? ["tools.brush.mismatch"] : []),
@@ -419,11 +607,11 @@ function brushRoutes(input: ToolRouteInput): DraftRoute[] {
   // A specialized brush is optional only when an air-shaping job actually exists
   // and no reported form already covers it.
   const airShaping = airflowRoutes(input).some((route) => route.target === "air_shaping_volume")
-  const reportedBrushes = inventoryFor(inventory, "brushes_combs") ?? []
+  const reportedBrushes = reportedFormsFor(inventory, "brushes_combs") ?? []
   const hasShapingForm = reportedBrushes.some(
     (form) => form === "round_brush" || form === "styling_brush" || form === "vent_brush",
   )
-  if (airShaping && !hasShapingForm && wantsMoreVolume(profile)) {
+  if (airShaping && !hasShapingForm && volumeSignal(profile).active) {
     drafts.push({
       target: "specialized_brush_job",
       tier: "optional",
@@ -456,17 +644,23 @@ function detanglingFormsFor(profile: ToolProfileFacts): ToolProductType[] {
 
 // --- securing and sectioning --------------------------------------------------
 
+/**
+ * `C01`: never standalone, never `basis`, and only under a real parent event.
+ *
+ * The Night-Protection parent is deliberately absent here. `C02` resolves it to
+ * a soft tie/Scrunchie that is OWNED BY Night Protection, and `D12` forbids the
+ * same physical product producing both a Clips/Ties and a Night card — which is
+ * exactly the duplicate fixtures 74 and 102 record. A `loose_tied` or `pineapple`
+ * answer therefore acts through the Night route alone.
+ */
 function securingRoutes(input: ToolRouteInput): DraftRoute[] {
-  const nightProtection = input.care.nightProtection ?? []
-  const needsLooseSecuring =
-    nightProtection.includes("loose_tied") || nightProtection.includes("pineapple")
-  const hasSettingRoute = (inventoryFor(input.inventory, "heatless_styling") ?? []).length > 0
-  if (!needsLooseSecuring && !hasSettingRoute && !input.scalpApplicationJob) return []
+  if (!hasSelectedSetApproach(input) && !input.scalpApplicationJob) return []
   return [
     {
       target: "securing_support",
       tier: "optional",
       resolution: "tool_type",
+      // C02: the sectioning/application parent resolves to a Sectioning-Clip.
       recommendedProductTypes: ["sectioning_clip", "claw_clip", "soft_hair_tie", "scrunchie"],
       requiredCapabilities: ["section_hair", "secure_gently"],
       ruleIds: ["tools.securing.optional"],
@@ -483,6 +677,9 @@ function washApplicationRoutes(input: ToolRouteInput): DraftRoute[] {
       target: "wash_application_support",
       tier: "optional",
       resolution: "tool_type",
+      // W02: targeted scalp application defaults to the applicator bottle. The
+      // order is binding (D6) — the canonical family order would lead with the
+      // scalp brush, which W02 explicitly makes use-yours-only.
       recommendedProductTypes: ["applicator_bottle", "applicator_comb", "scalp_brush"],
       requiredCapabilities: ["apply_product"],
       ruleIds: ["tools.wash_application.optional"],
@@ -497,7 +694,8 @@ function nightProtectionRoutes(input: ToolRouteInput): DraftRoute[] {
   const concerns = concernSet(profile)
   const goals = goalSet(profile)
   const roughRubbing = care.towelTechnique === "rough_rubbing"
-  const strong = concerns.has("breakage") && roughRubbing
+  // R4 (2026-08-24): `breakage` OR `split_ends`, restoring V2 reachability.
+  const strong = [...concerns].some((concern) => NIGHT_STRONG_CONCERNS.has(concern)) && roughRubbing
   const otherSignal =
     profile.length === "long" ||
     profile.length === "very_long" ||
@@ -511,11 +709,32 @@ function nightProtectionRoutes(input: ToolRouteInput): DraftRoute[] {
       // Never basis: the evidence for overnight benefit stays modest.
       tier: "optional",
       resolution: "tool_type",
-      recommendedProductTypes: ["pillowcase", "bonnet", "soft_night_tie", "length_tip_sleeve"],
+      recommendedProductTypes: nightFormsFor(profile),
       requiredCapabilities: ["reduce_surface_friction"],
       ruleIds: strong ? ["tools.night.optional_strong"] : ["tools.night.optional_other"],
     },
   ]
+}
+
+/**
+ * `N02`'s reason-based main form, in the binding order (`D6`).
+ *
+ * Long/very-long plus breakage, split ends or tangling -> length/tip sleeve;
+ * otherwise a definition-led wavy/curly/coily pattern -> bonnet; every other
+ * eligible case -> pillowcase. The remaining forms stay eligible behind it; a
+ * reported form still leads by filtering, in `assets.ts`.
+ */
+function nightFormsFor(profile: ToolProfileFacts): ToolProductType[] {
+  const concerns = concernSet(profile)
+  const longHair = profile.length === "long" || profile.length === "very_long"
+  const lead: ToolProductType =
+    longHair && [...concerns].some((concern) => NIGHT_SLEEVE_CONCERNS.has(concern))
+      ? "length_tip_sleeve"
+      : shapedTexture(profile) && goalSet(profile).has("shape_definition")
+        ? "bonnet"
+        : "pillowcase"
+  const rest: ToolProductType[] = ["pillowcase", "bonnet", "soft_night_tie", "length_tip_sleeve"]
+  return [lead, ...rest.filter((form) => form !== lead)]
 }
 
 // --- drying textiles ----------------------------------------------------------

@@ -196,7 +196,7 @@ test('D4: „Nutze deins" needs the actual form, acquisition suppression needs c
     answers: { hairLength: "long", texture: "straight" },
     inventory: { brushes_combs: ["round_brush"] },
   })
-  const plan = buildToolPlan({ routes: list, inventory: { brushes_combs: ["round_brush"] } })
+  const plan = buildToolPlan({ routes: list })
   const asset = plan.assets.find((candidate) => candidate.family === "brushes_combs")
   assert.ok(asset)
   assert.notEqual(
@@ -209,10 +209,7 @@ test('D4: „Nutze deins" needs the actual form, acquisition suppression needs c
     answers: { hairLength: "long", texture: "straight" },
     inventory: { brushes_combs: ["detangling_brush"] },
   })
-  const ownedPlan = buildToolPlan({
-    routes: owns,
-    inventory: { brushes_combs: ["detangling_brush"] },
-  })
+  const ownedPlan = buildToolPlan({ routes: owns })
   assert.equal(
     ownedPlan.assets.find((candidate) => candidate.family === "brushes_combs")?.presentationState,
     "use_yours",
@@ -221,7 +218,7 @@ test('D4: „Nutze deins" needs the actual form, acquisition suppression needs c
 
 test("D4: the conditional reason puts ownership ahead of capability", () => {
   const list = routes({ answers: { hairLength: "long" } })
-  const plan = buildToolPlan({ routes: list, inventory: {} })
+  const plan = buildToolPlan({ routes: list })
   const foundation = plan.occurrences.find((occurrence) =>
     occurrence.routeKey.endsWith("detangling_foundation"),
   )
@@ -229,7 +226,6 @@ test("D4: the conditional reason puts ownership ahead of capability", () => {
 
   const none = buildToolPlan({
     routes: routes({ answers: { hairLength: "long" }, inventory: { brushes_combs: [] } }),
-    inventory: { brushes_combs: [] },
   })
   assert.equal(
     none.occurrences.find((occurrence) => occurrence.routeKey.endsWith("detangling_foundation"))
@@ -245,7 +241,7 @@ test("D5: one shared need is one group with several members and single fulfilmen
   const list = routes({
     answers: { texture: "straight", thickness: "fine", goals: ["volume_balance"] },
   })
-  const plan = buildToolPlan({ routes: list, inventory: {} })
+  const plan = buildToolPlan({ routes: list })
   const group = plan.choiceGroups.find((candidate) => candidate.target === "volume_set")
   assert.ok(group, "the shared volume/set choice is one group")
   assert.equal(group.groupKey, choiceGroupKeyFor("volume_set"))
@@ -262,10 +258,7 @@ test("D5: any covered member fulfils the whole group and a reported member leads
     answers: { texture: "straight", thickness: "fine", goals: ["volume_balance"] },
     inventory: { heatless_styling: ["setting_roller"] },
   })
-  const plan = buildToolPlan({
-    routes: list,
-    inventory: { heatless_styling: ["setting_roller"] },
-  })
+  const plan = buildToolPlan({ routes: list })
   const group = plan.choiceGroups.find((candidate) => candidate.target === "volume_set")
   assert.equal(group?.fulfilledBy, routeKeyFor("heatless_volume_set"))
   assert.ok(group?.memberRouteKeys.includes(routeKeyFor("heated_volume_set")))
@@ -294,7 +287,7 @@ test("D5: the group can express the three-way A04 choice", () => {
 
 test("D5: the neutral drying-textile group is expressed as a choice group", () => {
   const list = routes({ care: { towelMaterial: "frottee", towelTechnique: "gentle_press" } })
-  const plan = buildToolPlan({ routes: list, inventory: {} })
+  const plan = buildToolPlan({ routes: list })
   const group = plan.choiceGroups.find((candidate) => candidate.target === "drying_textile")
   assert.ok(group, "the ad-hoc neutral drying-textile group is now a first-class group")
   assert.deepEqual(group.memberRouteKeys, [routeKeyFor("drying_textile_upgrade")])
@@ -304,7 +297,7 @@ test("D5: the plan rejects a group whose member route does not exist", () => {
   const list = routes({
     answers: { texture: "straight", thickness: "fine", goals: ["volume_balance"] },
   })
-  const plan = buildToolPlan({ routes: list, inventory: {} })
+  const plan = buildToolPlan({ routes: list })
   assert.equal(
     planToolPlanSchema.safeParse({
       ...plan,
@@ -331,7 +324,7 @@ test("D6: the rendered lead form follows the route order, not the family order",
   const foundation = find(list, "detangling_foundation")
   assert.equal(foundation?.recommendedProductTypes[0], "detangling_brush")
 
-  const plan = buildToolPlan({ routes: list, inventory: {} })
+  const plan = buildToolPlan({ routes: list })
   const asset = plan.assets.find((candidate) => candidate.family === "brushes_combs")
   assert.deepEqual(
     asset?.productTypes,
@@ -356,7 +349,7 @@ test("D6: every projected asset form list is a subsequence of its route order", 
       nightProtection: null,
     },
   })
-  const plan = buildToolPlan({ routes: list, inventory: {} })
+  const plan = buildToolPlan({ routes: list })
   const byKey = new Map(plan.routes.map((route) => [route.routeKey, route]))
   for (const asset of plan.assets) {
     for (const routeKey of asset.routeKeys) {

@@ -87,6 +87,41 @@ export const TOOL_PRODUCT_TYPES = TOOL_FAMILIES.flatMap(
   (family) => TOOL_PRODUCT_TYPES_BY_FAMILY[family] as readonly ToolProductType[],
 ) as readonly ToolProductType[]
 
+/**
+ * Answer-only tokens (`D9b`, ruled 2026-08-24; token fixed 2026-08-25).
+ *
+ * „Nur Finger" is a real answer, not a product: „ich benutze nur meine Finger"
+ * and „ich habe keine Bürste" are different users and must stop sharing the one
+ * „Nichts davon" answer. `fingers` is the value the legacy onboarding enum
+ * already uses (`BRUSH_TYPES` in `src/lib/vocabulary/onboarding-care.ts`), so no
+ * second spelling of the same answer exists.
+ *
+ * It is deliberately NOT a `ToolProductType`: it never appears in
+ * `TOOL_PRODUCT_TYPES_BY_FAMILY`, never in a route's `recommendedProductTypes`,
+ * never as an asset lead form. It is never recommendable, and it is legal only
+ * inside the reported `brushes_combs` set.
+ */
+export const TOOL_ANSWER_ONLY_FORMS = ["fingers"] as const
+export type ToolAnswerOnlyForm = (typeof TOOL_ANSWER_ONLY_FORMS)[number]
+
+export const TOOL_ANSWER_ONLY_FORMS_BY_FAMILY: Partial<
+  Record<ToolFamily, readonly ToolAnswerOnlyForm[]>
+> = {
+  brushes_combs: ["fingers"],
+}
+
+/** What a reported Tool answer may contain: real forms plus the answer-only tokens. */
+export type ToolReportedForm = ToolProductType | ToolAnswerOnlyForm
+
+export function isToolAnswerOnlyForm(value: string): value is ToolAnswerOnlyForm {
+  return (TOOL_ANSWER_ONLY_FORMS as readonly string[]).includes(value)
+}
+
+/** Narrows a reported answer to the forms the plan may actually recommend. */
+export function toolProductTypesOf(forms: readonly ToolReportedForm[]): ToolProductType[] {
+  return forms.filter((form): form is ToolProductType => !isToolAnswerOnlyForm(form))
+}
+
 const PRODUCT_TYPE_FAMILY = new Map<ToolProductType, ToolFamily>(
   TOOL_FAMILIES.flatMap((family) =>
     (TOOL_PRODUCT_TYPES_BY_FAMILY[family] as readonly ToolProductType[]).map(

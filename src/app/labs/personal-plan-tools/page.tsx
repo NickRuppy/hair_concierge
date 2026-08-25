@@ -94,7 +94,7 @@ export default async function PersonalPlanToolsLabPage({
     inventory,
     scalpApplicationJob: false,
   })
-  const refinedToolPlan = buildToolPlan({ routes: refinedRoutes, inventory })
+  const refinedToolPlan = buildToolPlan({ routes: refinedRoutes })
   const checkpointCards =
     buildStage1ToolBlocks(refinedToolPlan, { hasOptionalPage: false }).basis?.cards ?? []
 

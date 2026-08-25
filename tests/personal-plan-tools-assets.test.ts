@@ -40,7 +40,7 @@ function planFor(input: {
     inventory,
     scalpApplicationJob: input.scalpApplicationJob ?? false,
   })
-  return buildToolPlan({ routes, inventory })
+  return buildToolPlan({ routes })
 }
 
 test("one physical Tool covering several routes gets one asset and several occurrences", () => {

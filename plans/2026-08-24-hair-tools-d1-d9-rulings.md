@@ -194,6 +194,34 @@ mobile viewport, DOM-level mockups on the labs harness).
   unticked persisted as „hat nichts"; drilldowns merge-never-delete with the
   two new brush cards; plan renders per D4–D7.
 
+## WS2 completion + flag dispositions (2026-08-25)
+
+WS2 (rule fidelity) landed: table-driven fixture harness
+(`tests/personal-plan-tools-fixtures.test.ts`) with a 128-row coverage guard;
+2078 + 582 tests green. Orchestrator dispositions of WS2's flags:
+
+- **Fixtures 35/47 (three volume members at once):** owner **WS4** — needs the
+  group-aware one-card Stage-1 projection (part of the signed-off journey);
+  until then air-shaping `basis` suppresses the peers to avoid three basis
+  cards for one need.
+- **Fixture 12:** contradiction resolved in the row (coverage of a set-parent
+  unlocks securing support; ownership never bypasses the mechanism).
+- **Fixture 49:** tier clarified to `basis` + `covered_by_report`.
+- **Fixture 98 (N03 alternative):** rule specified (first functionally
+  different form in route order renders as the „Alternative:" line); owner
+  **WS3**.
+- **Fixture 114 (deferredFacts Stage-1 card):** owner **WS4** (mockup gate).
+- **`fingers` persistence half** (answers schema + question path): owner
+  **WS4**, with the D8 path-version bump.
+- **Securing set-parent reads heatless only** (C01 says heated/heatless):
+  owner **WS3** — add the heated-set parent with its own fixture.
+- API change accepted: `buildToolPlan` no longer takes `inventory`; routes'
+  `reportedOwnership` is the single source of reported forms (fixes the
+  Kissenbezug-lead defect, fixtures 74/102).
+- Merge refinements recorded in `decision.md` D3c: behaviour stand-ins
+  superseded by the user's own family answer; explicit family-wide „Nichts
+  davon" beats projections.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.

@@ -21,7 +21,6 @@ import {
   type ToolProductType,
   type ToolRouteTarget,
 } from "./contracts"
-import { inventoryFor, type ToolInventory } from "./facts"
 import { TOOL_PRODUCT_TYPE_LABELS, TOOL_ROUTE_PURPOSE_COPY } from "./labels"
 
 /**
@@ -31,10 +30,7 @@ import { TOOL_PRODUCT_TYPE_LABELS, TOOL_ROUTE_PURPOSE_COPY } from "./labels"
  * it serves several routes. Timing lives only on occurrences: assets carry no
  * cadence, replacement, reorder or acquisition state by construction.
  */
-export function buildToolPlan(input: {
-  routes: readonly PlanToolRoute[]
-  inventory: ToolInventory
-}): PlanToolPlan {
+export function buildToolPlan(input: { routes: readonly PlanToolRoute[] }): PlanToolPlan {
   const assets = new Map<string, ToolAsset>()
   const occurrences: ToolOccurrence[] = []
   const guidance: ToolGuidance[] = []
@@ -55,7 +51,7 @@ export function buildToolPlan(input: {
     // uncovered `not_needed` route is nothing at all.
     if (route.tier === "not_needed" && !isToolRouteCovered(route.coverage.state)) continue
 
-    const forms = assetFormsFor(route, input.inventory)
+    const forms = assetFormsFor(route)
     if (forms.length === 0) continue
     assertRouteFormOrder(route, forms)
     const lead = forms[0]
@@ -126,12 +122,17 @@ function dedupe<T>(values: readonly T[]): T[] {
  * in particular this function must never re-sort through
  * `TOOL_PRODUCT_TYPES_BY_FAMILY`, which is what silently overrode `B02` and `W02`.
  *
+ * The reported forms come from the ROUTE (`D4`), not from a second inventory
+ * argument. Passing the raw Tool answers alongside gave two sources that could
+ * disagree: a `loose_tied` sleeper's derived soft tie lives only on the route, so
+ * the card led with a Kissenbezug they never mentioned (fixtures 74, 102).
+ *
  * A reported form leads whenever it can serve the route; otherwise the plan shows
  * its own recommended forms. Either way the result is a subsequence of the route
  * order, asserted by `assertRouteFormOrder`.
  */
-function assetFormsFor(route: PlanToolRoute, inventory: ToolInventory): ToolProductType[] {
-  const reported = inventoryFor(inventory, route.family) ?? []
+function assetFormsFor(route: PlanToolRoute): ToolProductType[] {
+  const reported = route.reportedOwnership.forms
   const eligibleReported = reported.filter(
     (form) =>
       route.recommendedProductTypes.length === 0 || route.recommendedProductTypes.includes(form),
