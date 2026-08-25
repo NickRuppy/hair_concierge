@@ -150,7 +150,33 @@ export type ToolOverviewSectionKey = (typeof TOOL_OVERVIEW_SECTIONS)[number]["ke
  * and alt text stay identical.
  */
 export function toolImageSrc(form: ToolReportedForm): string {
-  return `/images/personal-plan/tools/${form}.svg`
+  const photo = TOOL_FORM_PHOTOS[form]
+  return photo ? `/images/tools/${photo}.webp` : `/images/personal-plan/tools/${form}.svg`
+}
+
+/**
+ * The generated photo Bildkarten (PR #460, `public/images/tools/*.webp`),
+ * preferred over the line-art fallback wherever one exists — the same
+ * treatment the Feinschliff heat-tools question already ships. Forms without
+ * a photo keep the line art until the image pipeline generates theirs
+ * (tracked follow-up in the rulings ledger). Keys on the right are the photo
+ * file names, which follow the legacy quiz vocabulary.
+ */
+const TOOL_FORM_PHOTOS: Partial<Record<ToolReportedForm, string>> = {
+  hair_dryer: "blow_dryer",
+  hot_air_brush: "dryer_brush",
+  air_multi_styler: "hot_air_styler",
+  flat_iron: "straightener",
+  curling_iron: "curling_or_wave_iron",
+  curling_wand: "curling_or_wave_iron",
+  wave_iron: "wave_iron",
+  heated_rollers: "thermal_rollers",
+  wide_tooth_comb: "wide_tooth_comb",
+  detangling_brush: "detangling",
+  paddle_brush: "paddle",
+  round_brush: "round",
+  boar_bristle: "boar_bristle",
+  fingers: "fingers",
 }
 
 /** The card label for anything a reported answer may contain (`D9b`). */

@@ -639,18 +639,25 @@ test("once the overview is submitted its product-form pages become required", ()
 })
 
 test("every capture card resolves to a real image file — nothing 404s", () => {
-  const root = new URL("../public/images/personal-plan/tools/", import.meta.url)
+  // Cards may carry a photo Bildkarte (/images/tools/*.webp) or the line-art
+  // fallback (/images/personal-plan/tools/*.svg); both must exist on disk.
+  const publicRoot = new URL("../public/", import.meta.url)
+  const resolve = (imageUrl: string) => new URL(imageUrl.replace(/^\//, ""), publicRoot)
   for (const page of TOOL_FORM_PAGES) {
     const presentation = toolFormPagePresentation(page.pageKey)
     assert.ok(presentation, page.pageKey)
     for (const option of presentation!.options) {
-      const file = new URL(option.imageUrl.replace("/images/personal-plan/tools/", ""), root)
-      assert.ok(existsSync(file), `${option.value} has no image at ${option.imageUrl}`)
+      assert.ok(
+        existsSync(resolve(option.imageUrl)),
+        `${option.value} has no image at ${option.imageUrl}`,
+      )
       assert.ok(option.imageAlt.length > 0)
     }
   }
   for (const option of TOOL_OVERVIEW_OPTIONS) {
-    const file = new URL(option.imageUrl.replace("/images/personal-plan/tools/", ""), root)
-    assert.ok(existsSync(file), `${option.value} has no image at ${option.imageUrl}`)
+    assert.ok(
+      existsSync(resolve(option.imageUrl)),
+      `${option.value} has no image at ${option.imageUrl}`,
+    )
   }
 })
