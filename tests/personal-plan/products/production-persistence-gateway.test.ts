@@ -24,8 +24,10 @@ import type {
 } from "../../../src/lib/personal-plan/products/contracts"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
+  STAGE3_DECISION_DEFERRAL_REASONS,
   stage3InventoryDispositionKey,
   validateStage3Draft,
+  type Stage3DecisionDeferralReason,
 } from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import { isValidPersistedCategoryDecision } from "../../../src/lib/personal-plan/products/authority/category-decision-schema"
@@ -2468,7 +2470,7 @@ test("pending authority decisions distinguish keep_pending from leave_uncovered"
 test("a server-derived deferral persists its reason on the uncovered decision", async () => {
   const pending = pendingAuthorityDraft()
 
-  async function resolve(deferralReason: "refinement_required" | "no_product") {
+  async function resolve(deferralReason: Stage3DecisionDeferralReason) {
     const gateway = createProductionStage3ProductsGateway({
       userId: "owner-a",
       persistence: persistence(pending),
@@ -2494,8 +2496,10 @@ test("a server-derived deferral persists its reason on the uncovered decision", 
   assert.equal(refinement.deferralReason, "refinement_required")
   assert.deepEqual(validateStage3Draft({ ...pending, decisions: [refinement] }), [])
 
-  const noProduct = await resolve("no_product")
-  assert.equal(noProduct.deferralReason, "no_product")
+  // Every reason of the union has to survive the same write path.
+  for (const reason of STAGE3_DECISION_DEFERRAL_REASONS) {
+    assert.equal((await resolve(reason)).deferralReason, reason)
+  }
 })
 
 test("a deferral reason on any other action is rejected before persistence", async () => {

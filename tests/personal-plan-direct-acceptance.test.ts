@@ -293,6 +293,9 @@ const MULTI_ROLE_EVALUATIONS: Stage3AuthorityEvaluation[] = [
   knownEvaluation("oil", "dry_finish", "p-oil-finish"),
 ]
 
+/** A cohort whose Idealplan previewed nothing — spelled out, never defaulted. */
+const NO_PREVIEWED_ROLES: ReadonlySet<string> = new Set()
+
 function seenRolesFor(evaluations: Stage3AuthorityEvaluation[]): DirectAcceptanceSeenRole[] {
   return evaluations.map((evaluation) => {
     if (evaluation.status !== "known" || !evaluation.recommendation) {
@@ -310,6 +313,7 @@ test("every role gets its own planned-purchase intent, not one per category", ()
   const intents = buildDirectAcceptanceIntents(
     MULTI_ROLE_EVALUATIONS,
     seenRolesFor(MULTI_ROLE_EVALUATIONS),
+    NO_PREVIEWED_ROLES,
   )
 
   assert.equal(intents.length, MULTI_ROLE_EVALUATIONS.length)
@@ -332,7 +336,7 @@ test("a changed recommendation fact fingerprint rejects the accept request", () 
   seen[2] = { ...seen[2]!, factFingerprint: "fingerprint-stale" }
 
   assert.throws(
-    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen),
+    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen, NO_PREVIEWED_ROLES),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
 })
@@ -342,7 +346,7 @@ test("a changed recommended product rejects the accept request", () => {
   seen[0] = { ...seen[0]!, productId: "p-shampoo-other" }
 
   assert.throws(
-    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen),
+    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen, NO_PREVIEWED_ROLES),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
 })
@@ -350,14 +354,18 @@ test("a changed recommended product rejects the accept request", () => {
 test("a seen role the server does not evaluate rejects the accept request", () => {
   assert.throws(
     () =>
-      buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [
-        ...seenRolesFor(MULTI_ROLE_EVALUATIONS),
-        {
-          decisionKey: "decision:mask:intensive_conditioning_mask:gap",
-          productId: "p-mask",
-          factFingerprint: "fingerprint-p-mask",
-        },
-      ]),
+      buildDirectAcceptanceIntents(
+        MULTI_ROLE_EVALUATIONS,
+        [
+          ...seenRolesFor(MULTI_ROLE_EVALUATIONS),
+          {
+            decisionKey: "decision:mask:intensive_conditioning_mask:gap",
+            productId: "p-mask",
+            factFingerprint: "fingerprint-p-mask",
+          },
+        ],
+        NO_PREVIEWED_ROLES,
+      ),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
 })
@@ -365,7 +373,8 @@ test("a seen role the server does not evaluate rejects the accept request", () =
 test("a duplicated seen role rejects the accept request", () => {
   const seen = seenRolesFor(MULTI_ROLE_EVALUATIONS)
   assert.throws(
-    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [...seen, seen[0]!]),
+    () =>
+      buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [...seen, seen[0]!], NO_PREVIEWED_ROLES),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
 })
@@ -381,7 +390,11 @@ test("an unseen role becomes a deferred decision while seen roles stay pinned", 
   const unseen = knownEvaluation("scalp_care", "scalp_flake_oil_adjunct", "p-scalp")
   const evaluations = [...MULTI_ROLE_EVALUATIONS, unseen]
 
-  const intents = buildDirectAcceptanceIntents(evaluations, seenRolesFor(MULTI_ROLE_EVALUATIONS))
+  const intents = buildDirectAcceptanceIntents(
+    evaluations,
+    seenRolesFor(MULTI_ROLE_EVALUATIONS),
+    NO_PREVIEWED_ROLES,
+  )
 
   assert.equal(intents.length, evaluations.length)
   const deferred = intents.filter((intent) => intent.action === "leave_uncovered")
@@ -400,7 +413,7 @@ test("an unseen role becomes a deferred decision while seen roles stay pinned", 
   )
 })
 
-test("a role previewed as a fallback defers with no_product", () => {
+test("a previewed role the engine cannot fill either defers with no_product", () => {
   const fallbackRole: Stage3AuthorityEvaluation = {
     status: "unknown",
     category: "mask",
@@ -426,11 +439,12 @@ test("a role previewed as a fallback defers with no_product", () => {
 })
 
 /**
- * A previewed role the server CAN still plan is deferred all the same: the
- * person never echoed it, so nothing may be bought for it. Only the reason
- * differs, because the Idealplan did show the role.
+ * A previewed role the server CAN still plan is deferred all the same — the
+ * person never echoed it, so nothing may be bought for it. But the engine HAS a
+ * product here, so calling it a product gap would be a lie: the Idealplan just
+ * could not present it (missing packshot, fingerprint churn, verdict gating).
  */
-test("a previewed but unechoed role is deferred rather than silently planned", () => {
+test("a previewed role the engine can fill defers as preview_unavailable", () => {
   const previewed = knownEvaluation("mask", "intensive_conditioning_mask", "p-mask")
 
   const intents = buildDirectAcceptanceIntents([previewed], [], new Set([previewed.subjectKey]))
@@ -440,13 +454,50 @@ test("a previewed but unechoed role is deferred rather than silently planned", (
       type: "resolve_decision",
       subjectKey: previewed.subjectKey,
       action: "leave_uncovered",
-      deferralReason: "no_product",
+      deferralReason: "preview_unavailable",
     },
   ])
 })
 
+/**
+ * The reason turns on the EVALUATION, not only on previewability: same
+ * previewed key, no buyable recommendation behind it, different reason.
+ */
+test("the same previewed key without a buyable recommendation defers as no_product", () => {
+  const previewedKey = "decision:mask:intensive_conditioning_mask:gap"
+  const unbuyable: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "mask",
+    subjectKey: previewedKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+
+  const intents = buildDirectAcceptanceIntents([unbuyable], [], new Set([previewedKey]))
+
+  assert.equal(intents[0]?.deferralReason, "no_product")
+})
+
+/** One subject, one evaluation — a duplicate makes the seen-state join ambiguous. */
+test("a duplicated server evaluation rejects the accept request", () => {
+  assert.throws(
+    () =>
+      buildDirectAcceptanceIntents(
+        [...MULTI_ROLE_EVALUATIONS, MULTI_ROLE_EVALUATIONS[0]!],
+        seenRolesFor(MULTI_ROLE_EVALUATIONS),
+        NO_PREVIEWED_ROLES,
+      ),
+    (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
+  )
+})
+
 test("an empty seen set defers every role instead of rejecting the request", () => {
-  const intents = buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [])
+  const intents = buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [], NO_PREVIEWED_ROLES)
 
   assert.equal(intents.length, MULTI_ROLE_EVALUATIONS.length)
   for (const intent of intents) {
@@ -470,7 +521,7 @@ test("an unseen role whose authority forbids leaving it uncovered gets no intent
     coverageRuleIds: [],
   }
 
-  assert.deepEqual(buildDirectAcceptanceIntents([unsupported], []), [])
+  assert.deepEqual(buildDirectAcceptanceIntents([unsupported], [], NO_PREVIEWED_ROLES), [])
 })
 
 test("a role without a usable recommendation cannot be accepted directly", () => {
@@ -488,13 +539,17 @@ test("a role without a usable recommendation cannot be accepted directly", () =>
 
   assert.throws(
     () =>
-      buildDirectAcceptanceIntents(evaluations, [
-        {
-          decisionKey: "decision:mask:intensive_conditioning_mask:gap",
-          productId: "p-mask",
-          factFingerprint: "fingerprint-p-mask",
-        },
-      ]),
+      buildDirectAcceptanceIntents(
+        evaluations,
+        [
+          {
+            decisionKey: "decision:mask:intensive_conditioning_mask:gap",
+            productId: "p-mask",
+            factFingerprint: "fingerprint-p-mask",
+          },
+        ],
+        NO_PREVIEWED_ROLES,
+      ),
     (error: unknown) =>
       error instanceof DirectAcceptanceError && error.code === "recommendation_unavailable",
   )

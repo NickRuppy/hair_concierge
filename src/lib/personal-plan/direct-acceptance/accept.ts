@@ -121,13 +121,19 @@ export type AcceptIdealPlanDeps = {
 export function buildDirectAcceptanceIntents(
   evaluations: readonly Stage3AuthorityEvaluation[],
   seenRoles: readonly DirectAcceptanceSeenRole[],
-  /** Decision keys the Idealplan previewed — see `deferralReasonFor`. */
-  previewedRoleKeys: ReadonlySet<string> = new Set(),
+  /**
+   * Decision keys the Idealplan previewed — see `deferralReasonFor`. Required:
+   * a defaulted empty set would silently downgrade every deferral reason.
+   */
+  previewedRoleKeys: ReadonlySet<string>,
 ): Stage3AuthoritySemanticIntent[] {
   const seenByKey = new Map(seenRoles.map((role) => [role.decisionKey, role]))
   const evaluatedKeys = new Set(evaluations.map((evaluation) => evaluation.subjectKey))
   if (
     seenByKey.size !== seenRoles.length ||
+    // One subject, one evaluation is a server invariant; a duplicate would make
+    // the seen-state join ambiguous and produce two intents for one subject.
+    evaluatedKeys.size !== evaluations.length ||
     seenRoles.some((role) => !evaluatedKeys.has(role.decisionKey))
   ) {
     throw new DirectAcceptanceError("seen_state_stale")
@@ -145,7 +151,7 @@ export function buildDirectAcceptanceIntents(
           type: "resolve_decision" as const,
           subjectKey: evaluation.subjectKey,
           action: "leave_uncovered" as const,
-          deferralReason: deferralReasonFor(evaluation.subjectKey, previewedRoleKeys),
+          deferralReason: deferralReasonFor(evaluation, previewedRoleKeys),
         },
       ]
     }
@@ -174,17 +180,35 @@ export function buildDirectAcceptanceIntents(
 }
 
 /**
- * Server truth only: a role the Idealplan previewed but the client did not echo
- * was previewed as a fallback — Stage 1 found no buyable product for it
- * (`no_product`). A role the Idealplan never previewed at all only exists
- * because the synthetic refinement defaults answered a deferred Stage-1 fact,
- * so its product choice belongs to the refinement (`refinement_required`).
+ * Server truth only — two independent facts, three reasons:
+ *
+ *   - the role was NOT previewable at all → it exists only because the
+ *     synthetic refinement defaults answered a deferred Stage-1 fact, so its
+ *     product choice belongs to the refinement: `refinement_required`.
+ *   - it was previewable and the engine has no buyable recommendation either →
+ *     a real product gap: `no_product`.
+ *   - it was previewable and the engine DOES have a buyable recommendation, but
+ *     the person never echoed it → the Idealplan could not present it (missing
+ *     packshot, fingerprint churn, verdict gating): `preview_unavailable`.
+ *     Deferring it is still right — nothing unseen may be bought — but claiming
+ *     a product gap would be false.
  */
 function deferralReasonFor(
-  subjectKey: string,
+  evaluation: Stage3AuthorityEvaluation,
   previewedRoleKeys: ReadonlySet<string>,
 ): Stage3DecisionDeferralReason {
-  return previewedRoleKeys.has(subjectKey) ? "no_product" : "refinement_required"
+  if (!previewedRoleKeys.has(evaluation.subjectKey)) return "refinement_required"
+  return hasBuyableRecommendation(evaluation) ? "preview_unavailable" : "no_product"
+}
+
+/** Exactly the shape `plan_recommendation` requires of a seen role. */
+function hasBuyableRecommendation(evaluation: Stage3AuthorityEvaluation): boolean {
+  return (
+    evaluation.status === "known" &&
+    Boolean(evaluation.recommendation) &&
+    Boolean(evaluation.recommendationFactFingerprint) &&
+    evaluation.allowedActions.includes("plan_recommendation")
+  )
 }
 
 export async function acceptIdealPlan(

@@ -162,9 +162,6 @@ function portfolio(createdAt = "2026-08-08T08:00:00.000Z"): ProposedProductPortf
         role: "intensive_conditioning_mask",
         reason: "inactive",
         linkedDecisionKey: "decision:mask:intensive_conditioning_mask:none",
-        // A server-derived deferral rides along on the uncovered role; the
-        // compiled item must stay an excluded no-product slot regardless.
-        deferralReason: "refinement_required",
       },
     ],
     createdAt,
