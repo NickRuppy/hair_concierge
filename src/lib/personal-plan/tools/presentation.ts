@@ -153,10 +153,17 @@ function groupOwning(plan: PlanToolPlan, asset: ToolAsset): ToolChoiceGroup | nu
 /**
  * The single card a choice group renders (`D5`).
  *
- * Fulfilled: the fulfilling member's own card, ownership state and all. Not
- * fulfilled: one neutral card naming the eligible approaches together, with no
- * ownership claim at all — a „Nutze deins" here would say the need is met while
- * the group says it is not.
+ * The card represents the NEED, so its tier is always the group's tier — the
+ * strongest member tier — never whichever member happens to supply the visuals
+ * (`decision.md` D5: "a group with one `basis` member is a `basis` group").
+ *
+ * Fulfilled: the fulfilling member's own card, ownership state and all. When
+ * the fulfilling member is a reported-use route that renders no card of its own
+ * (`not_needed` — the user already owns it), the group instead shows the
+ * strongest remaining member as the ONE optional alternative `H06` promises,
+ * at that member's own tier. Not fulfilled: one neutral card naming the
+ * eligible approaches together, with no ownership claim at all — a
+ * „Nutze deins" here would say the need is met while the group says it is not.
  */
 function choiceGroupCard(
   plan: PlanToolPlan,
@@ -169,23 +176,43 @@ function choiceGroupCard(
   const memberAssets = group.memberRouteKeys
     .map((key) => assets.find((asset) => asset.routeKeys.includes(key)))
     .filter((asset): asset is ToolAsset => asset !== undefined)
+  const groupTier: ToolCardTier | null =
+    group.tier === "basis" ? "basis" : group.tier === "optional" ? "optional" : null
   if (group.fulfilledBy !== null) {
     const lead = memberAssets.find((asset) => asset.routeKeys.includes(group.fulfilledBy!))
     // A mixed asset already rendered its own card above; it is not repeated.
-    if (lead && groupOwning(plan, lead) !== null) return assetCard(lead)
+    if (!lead || groupOwning(plan, lead) === null) return null
+    const card = assetCard(lead)
+    if (card) return { ...card, tier: groupTier ?? card.tier }
+    // H06: the fulfilling member is reported-use only and shows no card; the
+    // strongest remaining member stays visible as the one optional alternative.
+    for (const peer of memberAssets) {
+      if (peer === lead) continue
+      const peerCard = assetCard(peer)
+      if (peerCard) return peerCard
+    }
     return null
   }
-  const [representative] = memberAssets
+  if (groupTier === null) return null
+  // The visuals come from a member that actually carries the group's tier, so a
+  // `basis` group never borrows an optional member's image and family.
+  const representative =
+    memberAssets.find((asset) => assetCard(asset)?.tier === groupTier) ?? memberAssets[0]
   if (!representative) return null
   const base = assetCard(representative)
   if (!base) return null
-  const leadRoute = plan.routes.find((route) => route.routeKey === group.memberRouteKeys[0])
+  const representativeRoute = plan.routes.find(
+    (route) =>
+      representative.routeKeys.includes(route.routeKey) &&
+      group.memberRouteKeys.includes(route.routeKey),
+  )
   return {
     ...base,
     id: group.groupKey,
+    tier: groupTier,
     typeLabel: TOOL_CHOICE_GROUP_LABELS[group.target],
     // The need is the group's, not the representative member's.
-    purpose: leadRoute?.purposeKey ?? base.purpose,
+    purpose: representativeRoute?.purposeKey ?? base.purpose,
     state: NEUTRAL_GROUP_STATE[base.state],
     stateLabel: TOOL_STATE_LABELS[NEUTRAL_GROUP_STATE[base.state]],
     noteDe: TOOL_CHOICE_GROUP_NOTES[group.target] ?? null,

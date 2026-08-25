@@ -612,6 +612,14 @@ const STYLING_ROWS: FixtureRow[] = [
       assert.equal(context.lead("heatless_volume_set"), "setting_roller")
       assert.equal(context.route("heated_volume_set")?.tier, "optional")
       exact(context, "heated_volume_set", ["tools.styling.reported_curl_wave"])
+      // Re-check finding 2: the group is fulfilled by the reported roller whose
+      // own reported-use route renders no card — H06's ONE optional alternative
+      // (the heated peer) must still be visible, not silently deleted.
+      const heatedPeerCard = context
+        .cardIds("optional")
+        .concat(context.cardIds("basis"))
+        .find((id) => id.includes("heated_styling"))
+      assert.ok(heatedPeerCard, "the H06 heated alternative still renders a card")
     },
   },
   {
@@ -688,6 +696,14 @@ const STYLING_ROWS: FixtureRow[] = [
         "tools.airflow.optional_goal",
         "tools.styling.volume_direction_inferred",
       ])
+      // Re-check finding 1: the rendered group card carries the GROUP tier —
+      // two basis members make it a basis card even though the (first-listed)
+      // air-shaping member is only optional.
+      assert.ok(
+        context.cardIds("basis").includes(choiceGroupKeyFor("volume_set")),
+        "the volume group card renders in the basis block",
+      )
+      assert.ok(!context.cardIds("optional").includes(choiceGroupKeyFor("volume_set")))
     },
   },
   {
@@ -1070,14 +1086,18 @@ const WASH_ROWS: FixtureRow[] = [
     check: (context) => {
       const route = context.route("wash_application_support")
       assert.equal(route?.tier, "optional")
-      // FLAGGED ORACLE ROW: fixtures.md row 128 names the rule ID
-      // `tools.wash.application_support`; no such rule exists. The shipped and
-      // documented id — decision.md's rule table and fixtures 14/81 — is
-      // `tools.wash_application.optional`, which is what is asserted here.
+      // Row 128's rule-ID cell was corrected to `tools.wash_application.optional`
+      // in the oracle (645a262a); asserted verbatim here.
       exact(context, "wash_application_support", ["tools.wash_application.optional"])
       // W02: a reported scalp brush stays use-yours on its own scalp-care job.
       // It never leads targeted application and never fulfils it.
       assert.equal(context.lead("wash_application_support"), "applicator_bottle")
+      // D4 reason precedence: the blocker is unknown ownership of a suitable
+      // tool, not an unverified capability of the (ineligible) scalp brush.
+      assert.equal(
+        context.occurrence("wash_application_support")?.conditionalReason,
+        "unknown_ownership",
+      )
       assert.equal(
         route?.recommendedProductTypes.includes("scalp_brush"),
         false,
@@ -1772,8 +1792,11 @@ function parseLiveFixtureIds(): string[] {
     if (cell === undefined) continue
     // A fixture row's first cell is the fixture number and nothing else: a plain
     // number, the `4b` variant, or one of the `A-x…` rows production forces.
-    if (!/^(\d{1,3}|4b|A-x\d+)$/.test(cell)) continue
-    if (!ids.includes(cell)) ids.push(cell)
+    // Strip bold/code decoration so a row written `| **129** |` cannot be
+    // silently skipped by the parser.
+    const undecorated = cell.replace(/[*`_]/g, "").trim()
+    if (!/^(\d{1,3}|4b|A-x\d+)$/.test(undecorated)) continue
+    if (!ids.includes(undecorated)) ids.push(undecorated)
   }
   return ids
 }

@@ -295,8 +295,18 @@ function conditionalReasonFor(route: PlanToolRoute): ToolConditionalReason {
       return "explicit_none"
     case "catalog_gap":
       return "catalog_gap"
-    default:
+    default: {
+      // Ownership outranks capability also inside the resolved states: when the
+      // family-level report contains no form eligible for THIS need (a reported
+      // scalp brush on the applicator need, fixture 128), the blocker is that we
+      // do not know they own a suitable tool — not that an owned one is
+      // unverified.
+      const eligibleReported = route.reportedOwnership.forms.some((form) =>
+        route.recommendedProductTypes.includes(form),
+      )
+      if (!eligibleReported) return "unknown_ownership"
       return route.coverage.capabilityVerified ? "unknown_ownership" : "unverified_capability"
+    }
   }
 }
 

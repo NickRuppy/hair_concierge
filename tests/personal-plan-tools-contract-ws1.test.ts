@@ -253,12 +253,7 @@ test("D5: one shared need is one group with several members and single fulfilmen
   assert.equal(group.fulfilledBy, null, "nothing is covered yet")
 })
 
-test("D5: a covered member fulfils the group only when its capability is verified", () => {
-  // Amended 2026-08-25 (entailed by `A04`/`H10`): the reported Lockenwickler
-  // covers the volume need, but the plan cannot vouch that this exact device
-  // sets volume — so the group stays UNFULFILLED and renders neutrally, while
-  // the covered route keeps its own conditional use-yours and the peer stays a
-  // visible eligible approach.
+test("D5 (refined 2026-08-25): reported fulfils, derived-unverified never does", () => {
   // D5 refined 2026-08-25: a REPORTED eligible form fulfils even while its
   // exact capability is unverified — H10's conditional wording carries the
   // uncertainty; fulfilment counts once.

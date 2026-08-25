@@ -583,12 +583,22 @@ function reportedUseRuleIds(reported: readonly ToolProductType[]): string[] {
  * side and ignored it entirely on the other.
  */
 function hasSelectedSetApproach(input: ToolRouteInput): boolean {
-  return stylingRoutes(input).some(
-    (draft) =>
-      (draft.target === "heated_volume_set" || draft.target === "heatless_volume_set") &&
-      coversDraft(input.inventory, TOOL_ROUTE_TARGET_FAMILY[draft.target], draft),
-  )
+  return stylingRoutes(input).some((draft) => {
+    if (draft.target === "heatless_volume_set") {
+      return coversDraft(input.inventory, "heatless_styling", draft)
+    }
+    if (draft.target !== "heated_volume_set") return false
+    if (!coversDraft(input.inventory, "heated_styling", draft)) return false
+    // C01 names a heated/heatless SET: hair wound and held while it cools, which
+    // is what needs clips/pins. Every heatless form is a set; on the heated side
+    // only Thermoroller qualify — a Glätteisen or Lockenstab is heated styling
+    // but not a set and must not unlock securing support (fixtures 42, 49, 127).
+    const reported = reportedFormsFor(input.inventory, "heated_styling") ?? []
+    return reported.some((form) => HEATED_SET_FORMS.includes(form))
+  })
 }
+
+const HEATED_SET_FORMS: readonly string[] = ["heated_rollers"]
 
 // --- brushes and combs --------------------------------------------------------
 
