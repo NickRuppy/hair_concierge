@@ -27,6 +27,7 @@ import type {
 import type {
   PersonalPlanRefinementAnswersV1,
   Stage2AnswerProvenance,
+  Stage2ModuleProjections,
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "../src/lib/personal-plan/refinement/types"
@@ -422,6 +423,7 @@ function createRefinementDb() {
     answers: PersonalPlanRefinementAnswersV1
     completedQuestionIds: Stage2QuestionId[]
     answerProvenance: Stage2AnswerProvenance
+    moduleProjections: Stage2ModuleProjections
     revision: number
     resultRefinedNeedVersionId: string | null
     updatedAt: number
@@ -458,6 +460,7 @@ function createRefinementDb() {
       answers: structuredClone(row.answers),
       completedQuestionIds: [...row.completedQuestionIds],
       answerProvenance: { ...row.answerProvenance },
+      moduleProjections: structuredClone(row.moduleProjections),
       revision: row.revision,
       status: row.status,
       refinedVersionId: row.resultRefinedNeedVersionId,
@@ -475,6 +478,7 @@ function createRefinementDb() {
       answers: {},
       completedQuestionIds: [],
       answerProvenance: {},
+      moduleProjections: {},
       revision: 0,
       resultRefinedNeedVersionId: null,
       updatedAt: (clock += 1),
@@ -547,6 +551,55 @@ function createRefinementDb() {
       plan.currentRefinedNeedVersionId = needVersion.id
       sourceChanges.push({ sourceKind: "refined_need", sourceKey: needVersion.id })
       return { outcome: "completed", refinedVersionId: needVersion.id }
+    },
+    // Mirrors `personal_plan_complete_stage2_module`
+    // (20260825130000_personal_plan_complete_stage2_module.sql): lineage replay
+    // short-circuit, revision CAS, hash-collision reuse, head advance — the
+    // draft stays `in_progress` at its current revision. Direct acceptance
+    // never takes this path; it exists so the fake stays a full stand-in for
+    // the Stage-2 persistence contract.
+    async completeModule(input) {
+      const row = drafts.find((candidate) => candidate.id === input.draft.id)
+      if (!row) return { outcome: "stale_source" }
+      const projected = row.moduleProjections[input.module]
+      if (projected && projected.projectedAtRevision === input.expectedRevision) {
+        return {
+          outcome: "already_projected",
+          refinedVersionId: projected.needVersionId,
+          stage3Handoff: projected.stage3Handoff,
+        }
+      }
+      if (row.status !== "in_progress" || row.revision !== input.expectedRevision) {
+        return { outcome: "revision_conflict", revision: row.revision }
+      }
+      if (!/^[0-9a-f]{64}$/.test(input.inputHash)) throw new Error("invalid_refined_need")
+      let needVersion = needVersions.find((candidate) => candidate.inputHash === input.inputHash)
+      if (!needVersion) {
+        sequence += 1
+        needVersion = { id: `refined-${sequence}`, inputHash: input.inputHash }
+        needVersions.push(needVersion)
+      }
+      const stage3Handoff = input.module === "products"
+      row.moduleProjections = {
+        ...row.moduleProjections,
+        [input.module]: {
+          needVersionId: needVersion.id,
+          projectedAtRevision: row.revision,
+          stage3Handoff,
+        },
+      }
+      row.updatedAt = clock += 1
+      for (const productDraft of productDrafts) {
+        if (
+          productDraft.status === "active" &&
+          productDraft.refinedNeedVersionId !== needVersion.id
+        ) {
+          productDraft.status = "stale"
+        }
+      }
+      plan.currentRefinedNeedVersionId = needVersion.id
+      sourceChanges.push({ sourceKind: "refined_need", sourceKey: needVersion.id })
+      return { outcome: "completed", refinedVersionId: needVersion.id, stage3Handoff }
     },
   }
 

@@ -221,6 +221,154 @@ test("Stage 2 final save reuses one authorized gateway for durable save and comp
   })
 })
 
+test("Stage 2 module save completes exactly the requested module on the same gateway", async () => {
+  const calls: string[] = []
+  const savedSession = { ...session, revision: 3 }
+  const moduleCompletion = {
+    module: "products" as const,
+    refinedVersionId: "refined-7",
+    status: "in_progress" as const,
+    stage3Handoff: true,
+    nextHref: "/plan-start" as const,
+  }
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => {
+            calls.push("save")
+            return savedSession
+          },
+          complete: async () => {
+            calls.push("complete")
+            return { refinedVersionId: "refined-1", nextHref: "/plan-start" }
+          },
+          completeModule: async ({ module: stage2Module, expectedRevision }) => {
+            calls.push(`completeModule:${stage2Module}:${expectedRevision}`)
+            return moduleCompletion
+          },
+        }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 2,
+        completeModuleAfterSave: "products",
+      }),
+    }),
+  )
+
+  assert.deepEqual(calls, ["save", "completeModule:products:3"])
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    moduleCompletion,
+  })
+})
+
+test("Stage 2 module save rejects an unknown module and a doubled completion request", async () => {
+  let saves = 0
+  const handler = createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => {
+            saves += 1
+            return session
+          },
+        }),
+    }),
+  )
+  const patch = (body: unknown) =>
+    handler.PATCH(
+      new Request("http://test/api/personal-plan/stage-2", {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    )
+  const base = { questionId: "night_protection", answer: [], expectedRevision: 0 }
+
+  let response = await patch({ ...base, completeModuleAfterSave: "colour" })
+  assert.deepEqual([response.status, await response.json()], [400, { error: "invalid_request" }])
+
+  response = await patch({
+    ...base,
+    completeAfterSave: true,
+    completeModuleAfterSave: "habits",
+  })
+  assert.deepEqual([response.status, await response.json()], [400, { error: "invalid_request" }])
+  assert.equal(saves, 0)
+})
+
+test("Stage 2 module save reports a durable saved page when the module completion fails", async () => {
+  const savedSession = { ...session, revision: 1 }
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => {
+            throw new Stage2RefinementError("revision_conflict")
+          },
+        }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "night_protection",
+        answer: [],
+        expectedRevision: 0,
+        completeModuleAfterSave: "habits",
+      }),
+    }),
+  )
+
+  assert.equal(response.status, 409)
+  assert.deepEqual(await response.json(), {
+    error: "revision_conflict",
+    savedSession: JSON.parse(JSON.stringify(savedSession)),
+  })
+})
+
+test("Stage 2 save without a completion flag stays a plain save for existing clients", async () => {
+  const calls: string[] = []
+  const savedSession = { ...session, revision: 1 }
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => {
+            calls.push("save")
+            return savedSession
+          },
+          complete: async () => {
+            calls.push("complete")
+            return { refinedVersionId: "refined-1", nextHref: "/plan-start" }
+          },
+          completeModule: async () => {
+            calls.push("completeModule")
+            throw new Error("unexpected module completion")
+          },
+        }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "night_protection",
+        answer: [],
+        expectedRevision: 0,
+      }),
+    }),
+  )
+
+  assert.deepEqual(calls, ["save"])
+  assert.deepEqual(await response.json(), JSON.parse(JSON.stringify(savedSession)))
+})
+
 test("Stage 2 final save reports a durable saved page when completion fails", async () => {
   const savedSession = { ...session, revision: 1 }
   const response = await createStage2RouteHandlers(

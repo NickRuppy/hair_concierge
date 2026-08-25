@@ -9,6 +9,11 @@ import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
 import { createRefinedNeedSnapshot } from "@/lib/personal-plan/refinement/production-persistence-gateway"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "../fixtures"
 
+/** Module completion is exercised in stage2-module-completion.test.ts. */
+const notCalled = async (): Promise<never> => {
+  throw new Error("unexpected persistence call")
+}
+
 const context: Stage2TriggerContext = {
   relevantCategories: ["shampoo"],
   hasReportedIrritatedScalp: false,
@@ -28,6 +33,7 @@ function draft(overrides: Partial<Stage2PersistedDraft> = {}): Stage2PersistedDr
     answers: {},
     completedQuestionIds: [],
     answerProvenance: {},
+    moduleProjections: {},
     revision: 0,
     status: "in_progress",
     refinedVersionId: null,
@@ -58,6 +64,7 @@ test("Stage 2 service prunes server-side and persists the canonical next revisio
         return { outcome: "saved" as const, revision: 1 }
       },
       complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+      completeModule: notCalled,
     },
   })
   await service.load()
@@ -97,6 +104,7 @@ test("Stage 2 service marks a saved answer's provenance as user", async () => {
         return { outcome: "saved" as const, revision: 1 }
       },
       complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+      completeModule: notCalled,
     },
   })
   await service.load()
@@ -142,6 +150,7 @@ test("Stage 2 service flips an existing assumed answer to user when the user re-
         return { outcome: "saved" as const, revision: 2 }
       },
       complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+      completeModule: notCalled,
     },
   })
   await service.load()
@@ -191,6 +200,7 @@ test("Stage 2 service prunes provenance for ids a path change dropped from compl
         return { outcome: "saved" as const, revision: 2 }
       },
       complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+      completeModule: notCalled,
     },
   })
   await service.load()
@@ -225,6 +235,7 @@ test("Stage 2 service maps CAS loss to a typed reloadable revision conflict", as
       }),
       save: async () => ({ outcome: "revision_conflict" as const, revision: 4 }),
       complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+      completeModule: notCalled,
     },
   })
   await service.load()
@@ -258,6 +269,7 @@ test("Stage 2 service refuses completion before the authoritative path is comple
       }),
       save: async () => ({ outcome: "saved" as const, revision: 1 }),
       complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+      completeModule: notCalled,
     },
   })
   await assert.rejects(
@@ -310,6 +322,7 @@ test("Stage 2 re-edit creates an in-progress successor without rewriting complet
         revision: successor.revision + 1,
       }),
       complete: async () => ({ outcome: "completed", refinedVersionId: "refined-2" }),
+      completeModule: notCalled,
     },
   })
 
