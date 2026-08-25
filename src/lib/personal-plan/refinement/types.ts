@@ -115,3 +115,14 @@ export type Stage2PathState = {
   firstUnresolvedQuestionId: Stage2QuestionId | null
   prunedAnswerKeys: Stage2AnswerKey[]
 }
+
+/** Fixed two-value split of the refinement path. No abstraction for hypothetical further modules. */
+export const STAGE2_MODULES = ["products", "habits"] as const
+export type Stage2Module = (typeof STAGE2_MODULES)[number]
+export type Stage2ModuleStatus = "open" | "complete"
+export type Stage2ModulePathState = {
+  questionIds: Stage2QuestionId[]
+  completedQuestionIds: Stage2QuestionId[]
+  openQuestionIds: Stage2QuestionId[]
+  status: Stage2ModuleStatus
+}
