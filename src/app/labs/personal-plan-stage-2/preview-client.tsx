@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
+import { useRouter } from "next/navigation"
 
 import {
   RefinementFlow,
@@ -37,6 +38,7 @@ export function Stage2PreviewClient({
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
   autoHandoff?: boolean
 }) {
+  const router = useRouter()
   const gateway = useMemo(
     () => createPreviewGateway(scenario, triggerContext),
     [scenario, triggerContext],
@@ -49,7 +51,12 @@ export function Stage2PreviewClient({
         onSecondaryExit={() => {
           // Preview-safe no-op: the customer component must not invent an Idealplan href.
         }}
-        onHandoff={onHandoff}
+        onHandoff={
+          onHandoff ??
+          // Labs-only: the harness has no Stage 3 behind it, so the handoff CTA
+          // jumps to the Stage-3 preview instead of rendering a dead button.
+          (() => router.push("/labs/personal-plan-tools?section=stage3"))
+        }
         autoHandoff={autoHandoff}
       />
     </div>
