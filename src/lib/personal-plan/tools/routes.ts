@@ -16,13 +16,17 @@ import {
 import {
   EMPTY_TOOL_CARE_FACTS,
   mergeToolInventories,
+  projectToolCareProvenance,
   projectToolInventoryFromCareFacts,
   reportedFormsFor,
   type ToolCareFacts,
   type ToolInventory,
 } from "./facts"
 import { TOOL_ROUTE_PURPOSE_COPY } from "./labels"
-import { wantsMoreVolume as sharedWantsMoreVolume } from "../volume-direction"
+import {
+  volumeDirectionInputFor,
+  wantsMoreVolume as sharedWantsMoreVolume,
+} from "../volume-direction"
 
 export { EMPTY_TOOL_CARE_FACTS }
 
@@ -160,10 +164,17 @@ export function computeToolRoutes(rawInput: ToolRouteInput): PlanToolRoute[] {
     ...rawInput,
     inventory: mergeToolInventories(derivedInventory, rawInput.inventory),
   }
-  // D4: with both a derived and a reported fact present, provenance records the
-  // stronger `reported`.
+  // D4, clarified 2026-08-25: provenance follows what the answer IS, not which
+  // store it arrived through. A Tool-page answer is reported; a care answer is
+  // reported when it names a concrete thing (`additionalHeatTools`,
+  // `nightProtection`, `towel.material`, and their „Nichts davon" forms) and
+  // derived only when the plan projected an unnamed device from a behaviour.
+  // With both present, provenance records the stronger `reported`.
+  const careProvenance = projectToolCareProvenance(rawInput.care)
   const provenanceFor = (family: ToolFamily) =>
-    rawInput.inventory[family] !== undefined ? ("reported" as const) : ("derived" as const)
+    rawInput.inventory[family] !== undefined
+      ? ("reported" as const)
+      : (careProvenance[family] ?? ("derived" as const))
   const drafts: DraftRoute[] = [
     ...airflowRoutes(input),
     ...stylingRoutes(input),
@@ -243,18 +254,26 @@ function coverageFor(
   }
   const reported = reportedFormsFor(inventory, family)
   const capabilityVerified = capabilityVerifiedFor(reported, draft)
-  if (reported === null || reported.length === 0) {
-    return { state: "uncovered", capabilityVerified }
-  }
-  const covers =
-    draft.coverageMode === "any_reported_form" ||
-    draft.recommendedProductTypes.length === 0 ||
-    reported.some((type) => draft.recommendedProductTypes.includes(type))
-  if (!covers) return { state: "uncovered", capabilityVerified }
+  if (!coversDraft(inventory, family, draft)) return { state: "uncovered", capabilityVerified }
   return {
     state: provenanceFor(family) === "reported" ? "covered_by_report" : "covered_by_derived",
     capabilityVerified,
   }
+}
+
+/**
+ * Whether a reported form covers this draft at all, independent of where the
+ * fact came from. Provenance only decides WHICH covered state is written, so
+ * rules that ask "is this route covered?" — `C01`'s set parent — read this.
+ */
+function coversDraft(inventory: ToolInventory, family: ToolFamily, draft: DraftRoute): boolean {
+  const reported = reportedFormsFor(inventory, family)
+  if (reported === null || reported.length === 0) return false
+  return (
+    draft.coverageMode === "any_reported_form" ||
+    draft.recommendedProductTypes.length === 0 ||
+    reported.some((type) => draft.recommendedProductTypes.includes(type))
+  )
 }
 
 /**
@@ -304,25 +323,20 @@ function volumeSignal(profile: ToolProfileFacts): VolumeDirectionSignal {
   if (concernSet(profile).has("low_volume_or_weighed_down")) {
     return { active: true, inferred: false }
   }
-  const active = sharedWantsMoreVolume({
-    texture: profile.texture,
-    thickness: profile.thickness,
-    hasVolumeGoal: goalSet(profile).has("volume_balance"),
-    hasDefinitionGoal: goalSet(profile).has("shape_definition"),
-    hasLostShapeConcern: concernSet(profile).has("lost_shape"),
-  })
+  // The shared adapter owns which profile fields feed the predicate; hand-rolling
+  // that mapping here is how two copies of one rule start to drift.
+  const active = sharedWantsMoreVolume(
+    volumeDirectionInputFor({
+      hair: { texture: profile.texture, thickness: profile.thickness },
+      goals: profile.goals,
+      concerns: profile.concerns,
+    }),
+  )
   return { active, inferred: active }
 }
 
 function withInferenceMarker(signal: VolumeDirectionSignal, ruleIds: string[]): string[] {
   return signal.inferred ? [...ruleIds, "tools.styling.volume_direction_inferred"] : ruleIds
-}
-
-/** True once an airflow approach already covers the shared volume/set goal. */
-function airShapingCoversVolume(input: ToolRouteInput): boolean {
-  return airflowRoutes(input).some(
-    (route) => route.target === "air_shaping_volume" && route.tier === "basis",
-  )
 }
 
 // --- airflow -----------------------------------------------------------------
@@ -441,9 +455,12 @@ function stylingRoutes(input: ToolRouteInput): DraftRoute[] {
   const heated = reportedFormsFor(input.inventory, "heated_styling") ?? []
   const heatless = reportedFormsFor(input.inventory, "heatless_styling") ?? []
   const volume = volumeSignal(input.profile)
-  // Fulfilment counts once: when an airflow approach already covers the shared
-  // volume/set goal, no heated or heatless requirement is added on top.
-  const wantsVolume = volume.active && !airShapingCoversVolume(input)
+  // D5: air shaping, heated setting and heatless setting are the three eligible
+  // approaches to ONE need, so all three are emitted and compared inside the
+  // `volume_set` choice group. Deleting the peers whenever an air-shaping basis
+  // existed made the group unrepresentable (fixtures 35, 47); fulfilment is
+  // counted once by the GROUP, not by suppressing routes.
+  const wantsVolume = volume.active
   // Fulfilment counts once across the shared choice. If the user already owns a
   // viable route, the other one is a genuine alternative — never a second basis
   // requirement telling them to acquire the peer as well.
@@ -488,8 +505,13 @@ function stylingRoutes(input: ToolRouteInput): DraftRoute[] {
     }
     if (spec.reported.length > 0) {
       // H05/H06: the reported form proves an existing behaviour, so the product
-      // need is `not_needed` while use guidance and its occurrence stay. Exactly
-      // one reported-use rule fires per inherent job (fixtures 8, 42, 45, 46).
+      // need is `not_needed` while use guidance and its occurrence stay.
+      //
+      // INVARIANT: one reported-use rule per job the reported forms ACTUALLY
+      // have. A single-job form emits exactly one (fixtures 8, 42, 45, 46); a
+      // `heated_multi_styler` legitimately emits both `reported_straighten` and
+      // `reported_curl_wave`, because it really does both. What is forbidden is
+      // emitting a job no reported form has — the fixture-8 divergence.
       drafts.push({
         target: spec.target,
         tier: "not_needed",
@@ -551,9 +573,21 @@ function reportedUseRuleIds(reported: readonly ToolProductType[]): string[] {
   return ruleIds
 }
 
-/** True once a heated or heatless set approach is actually the user's (`C01`). */
+/**
+ * True once a heated **or** heatless set approach is actually the user's (`C01`).
+ *
+ * `C01` names "a selected heated/Heatless set" as the securing parent, so the
+ * predicate reads the COVERAGE of the emitted set routes — the mechanism
+ * fixture 12 states and fixture 127 completes on the heated side. Reading raw
+ * `heatless_styling` inventory instead let ownership bypass the mechanism on one
+ * side and ignored it entirely on the other.
+ */
 function hasSelectedSetApproach(input: ToolRouteInput): boolean {
-  return (reportedFormsFor(input.inventory, "heatless_styling") ?? []).length > 0
+  return stylingRoutes(input).some(
+    (draft) =>
+      (draft.target === "heated_volume_set" || draft.target === "heatless_volume_set") &&
+      coversDraft(input.inventory, TOOL_ROUTE_TARGET_FAMILY[draft.target], draft),
+  )
 }
 
 // --- brushes and combs --------------------------------------------------------
@@ -679,8 +713,14 @@ function washApplicationRoutes(input: ToolRouteInput): DraftRoute[] {
       resolution: "tool_type",
       // W02: targeted scalp application defaults to the applicator bottle. The
       // order is binding (D6) — the canonical family order would lead with the
-      // scalp brush, which W02 explicitly makes use-yours-only.
-      recommendedProductTypes: ["applicator_bottle", "applicator_comb", "scalp_brush"],
+      // scalp brush.
+      //
+      // The scalp brush is deliberately NOT in this list: `W02` makes a reported
+      // scalp brush use-yours for its own scalp-care job only, so it may neither
+      // lead this card nor fulfil targeted application (fixture 128). Listing it
+      // here did both — a reported brush became the lead form and covered the
+      // applicator need it cannot serve.
+      recommendedProductTypes: ["applicator_bottle", "applicator_comb"],
       requiredCapabilities: ["apply_product"],
       ruleIds: ["tools.wash_application.optional"],
     },

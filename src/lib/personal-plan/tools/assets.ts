@@ -202,9 +202,26 @@ const COVERAGE_LEAD_ORDER: readonly ToolCoverageState[] = [
   "covered_by_selection",
 ]
 
+/**
+ * The member that fulfils the whole group, or null (`D5`).
+ *
+ * Amended and refined 2026-08-25 (entailed by `A04`/`H10` plus the confirmed
+ * "prioritize a reported viable route" clause): a member fulfils the group when
+ * the user REPORTED an eligible form (`covered_by_report` — fulfilment counts
+ * once; unverified capability only softens the copy to `H10`'s conditional
+ * use-yours), or when it is covered with verified capability. Derived,
+ * unverified coverage never fulfils: a plain Föhn projected from the drying
+ * behaviour shapes only together with a Rundbürste, so the group stays
+ * unfulfilled and neutral while that member renders conditional use-yours.
+ */
 function leadingCoveredMember(members: readonly PlanToolRoute[]): PlanToolRoute | null {
+  const eligible = members.filter(
+    (route) =>
+      route.coverage.state === "covered_by_report" ||
+      (isToolRouteCovered(route.coverage.state) && route.coverage.capabilityVerified),
+  )
   for (const state of COVERAGE_LEAD_ORDER) {
-    const member = members.find((route) => route.coverage.state === state)
+    const member = eligible.find((route) => route.coverage.state === state)
     if (member) return member
   }
   return null

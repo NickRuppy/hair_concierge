@@ -1,9 +1,12 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import { buildPlanProfile } from "@/lib/personal-plan/input"
 import { buildToolPlan } from "@/lib/personal-plan/tools/assets"
 import {
+  assetKeyFor,
+  choiceGroupKeyFor,
   routeKeyFor,
   type PlanToolPlan,
   type PlanToolRoute,
@@ -14,6 +17,7 @@ import {
   type ToolProductType,
   type ToolRouteTarget,
 } from "@/lib/personal-plan/tools/contracts"
+import { TOOL_CHOICE_GROUP_LABELS } from "@/lib/personal-plan/tools/labels"
 import {
   EMPTY_TOOL_CARE_FACTS,
   inventoryFor,
@@ -93,8 +97,10 @@ type FixtureContext = {
   lead: (target: ToolRouteTarget) => ToolProductType | null
   group: (target: ToolChoiceGroupTarget) => ToolChoiceGroup | null
   occurrence: (target: ToolRouteTarget) => ToolOccurrence | null
-  /** Stage-1 card the asset for this route renders into, if any. */
+  /** Stage-1 card the asset (or its choice group) for this route renders into. */
   card: (target: ToolRouteTarget) => { tier: string; stateLabel: string; typeLabel: string } | null
+  /** The rendered Stage-1 card ids, per tier block. */
+  cardIds: (tier: "basis" | "optional") => string[]
 }
 
 function evaluate(input: FixtureInput): FixtureContext {
@@ -136,13 +142,23 @@ function evaluate(input: FixtureInput): FixtureContext {
       plan.occurrences.find((candidate) => candidate.routeKey === routeKeyFor(target)) ?? null,
     card: (target) => {
       const found = asset(target)
-      if (!found) return null
+      // D5: a route inside a choice group renders through the group's single
+      // card, so the lookup accepts either identity.
+      const owningGroup = plan.choiceGroups.find((candidate) =>
+        candidate.memberRouteKeys.includes(routeKeyFor(target)),
+      )
+      if (!found && !owningGroup) return null
       const all = [...(blocks.basis?.cards ?? []), ...(blocks.optional?.cards ?? [])]
-      const match = all.find((candidate) => candidate.id === found.assetKey)
+      const match = all.find(
+        (candidate) =>
+          (found !== null && candidate.id === found.assetKey) ||
+          (owningGroup !== undefined && candidate.id === owningGroup.groupKey),
+      )
       return match
         ? { tier: match.tier, stateLabel: match.stateLabel, typeLabel: match.typeLabel }
         : null
     },
+    cardIds: (tier) => (blocks[tier]?.cards ?? []).map((candidate) => candidate.id),
   }
 }
 
@@ -276,6 +292,22 @@ const AIRFLOW_ROWS: FixtureRow[] = [
         "tools.styling.volume_direction_inferred",
       ])
       assert.equal(context.route("air_shaping_volume")?.reportedOwnership.provenance, "derived")
+      // D5: the air-shaping approach is one member of the shared volume choice —
+      // it never deletes its heated and heatless peers.
+      const group = context.group("volume_set")
+      assert.equal(group?.tier, "basis")
+      assert.deepEqual(group?.memberRouteKeys, [
+        routeKeyFor("air_shaping_volume"),
+        routeKeyFor("heated_volume_set"),
+        routeKeyFor("heatless_volume_set"),
+      ])
+      for (const target of ["heated_volume_set", "heatless_volume_set"] as const) {
+        assert.equal(context.route(target)?.tier, "basis")
+        exact(context, target, [
+          "tools.styling.volume_basis",
+          "tools.styling.volume_direction_inferred",
+        ])
+      }
 
       // (a) frizz and shine never supply the direction.
       const frizz = evaluate({
@@ -316,6 +348,55 @@ const AIRFLOW_ROWS: FixtureRow[] = [
     },
   },
   {
+    id: "35",
+    name: "tools-airflow-shape-unreported-choice",
+    input: {
+      care: { dryingRoutes: ["ordinary_blow_dry"] },
+      answers: { goals: ["volume_balance"] },
+      inventory: { airflow: [] },
+    },
+    check: (context) => {
+      const group = context.group("volume_set")
+      assert.equal(group?.tier, "basis")
+      // All three eligible approaches are members — the air-shaping basis no
+      // longer deletes its peers.
+      assert.deepEqual(group?.memberRouteKeys, [
+        routeKeyFor("air_shaping_volume"),
+        routeKeyFor("heated_volume_set"),
+        routeKeyFor("heatless_volume_set"),
+      ])
+      // Nothing is covered, so the group renders with no ownership claim at all.
+      assert.equal(group?.fulfilledBy, null, "no partial fulfilment, no lead")
+      exact(context, "air_shaping_volume", [
+        "tools.airflow.air_shape_basis",
+        "tools.styling.volume_basis",
+        "tools.styling.volume_direction_inferred",
+      ])
+      for (const target of ["heated_volume_set", "heatless_volume_set"] as const) {
+        exact(context, target, [
+          "tools.styling.volume_basis",
+          "tools.styling.volume_direction_inferred",
+        ])
+      }
+      exact(context, "drying_standard", ["tools.airflow.basis"])
+      assert.equal(context.route("air_shaping_volume")?.reportedOwnership.state, "explicit_none")
+      // One need, one card: three member routes must not render three basis cards.
+      assert.deepEqual(context.cardIds("basis"), [
+        assetKeyFor("airflow", "hair_dryer"),
+        choiceGroupKeyFor("volume_set"),
+        assetKeyFor("brushes_combs", "detangling_brush"),
+      ])
+      assert.equal(
+        context.card("air_shaping_volume")?.typeLabel,
+        TOOL_CHOICE_GROUP_LABELS.volume_set,
+      )
+      assert.equal(
+        context.card("heated_volume_set")?.typeLabel,
+        TOOL_CHOICE_GROUP_LABELS.volume_set,
+      )
+    },
+  },
+  {
     id: "36",
     name: "tools-airflow-shape-reported",
     input: {
@@ -326,6 +407,27 @@ const AIRFLOW_ROWS: FixtureRow[] = [
     check: (context) => {
       const group = context.group("volume_set")
       assert.equal(group?.tier, "basis")
+      assert.deepEqual(group?.memberRouteKeys, [
+        routeKeyFor("air_shaping_volume"),
+        routeKeyFor("heated_volume_set"),
+        routeKeyFor("heatless_volume_set"),
+      ])
+      // A reported form changes lead and coverage, never the rule-ID set.
+      exact(context, "air_shaping_volume", [
+        "tools.airflow.air_shape_basis",
+        "tools.styling.volume_basis",
+        "tools.styling.volume_direction_inferred",
+      ])
+      for (const target of ["heated_volume_set", "heatless_volume_set"] as const) {
+        exact(context, target, [
+          "tools.styling.volume_basis",
+          "tools.styling.volume_direction_inferred",
+        ])
+      }
+      // D5 as refined 2026-08-25: a REPORTED eligible form fulfils the group
+      // even while its exact capability is unverified — fulfilment counts once
+      // and H10's conditional use-yours wording carries the uncertainty. Row 36
+      // is satisfiable exactly as written.
       assert.equal(group?.fulfilledBy, routeKeyFor("air_shaping_volume"))
       const route = context.route("air_shaping_volume")
       assert.equal(route?.reportedOwnership.state, "owned_generic")
@@ -357,6 +459,14 @@ const AIRFLOW_ROWS: FixtureRow[] = [
       // every rule keyed on a blow-dry member.
       assert.equal(context.route("drying_standard")?.tier, "basis")
       assert.equal(context.route("drying_standard")?.reportedOwnership.state, "owned_generic")
+      // REPRESENTABILITY NOTE — the row's other half, „air-dry guidance", is
+      // NOT asserted here because it has no representation to assert.
+      // `docs/personal-plan/categories/tools/fixtures.md` §1, fixture 3
+      // („tools-airflow-air-dry"), states it: "`tools.airflow.none` has no route
+      // representation; absence is the result." So air-drying produces no route,
+      // asset, occurrence or guidance entry, and the only executable half of
+      // A-x2 is the blow-dry member above. If a rule ever emits air-dry
+      // guidance, assert it here.
     },
   },
   {
@@ -441,9 +551,16 @@ const STYLING_ROWS: FixtureRow[] = [
     name: "tools-heated-reported-flat-iron",
     input: { care: { additionalHeatTools: ["straightener"] } },
     check: (context) => {
-      assert.equal(context.route("heated_volume_set")?.tier, "not_needed")
+      const route = context.route("heated_volume_set")
+      assert.equal(route?.tier, "not_needed")
       exact(context, "heated_volume_set", ["tools.styling.reported_straighten"])
       assert.equal(context.lead("heated_volume_set"), "flat_iron")
+      // D4 (clarified 2026-08-25): `additionalHeatTools` NAMES a concrete tool,
+      // so the answer is `reported` wherever it was asked — only behaviour
+      // projections are `derived`.
+      assert.equal(route?.reportedOwnership.state, "owned_generic")
+      assert.equal(route?.reportedOwnership.provenance, "reported")
+      assert.equal(route?.coverage.state, "covered_by_report")
       assert.equal(context.card("heated_volume_set"), null, "not_needed renders no Stage-1 card")
       const occurrence = context.occurrence("heated_volume_set")
       assert.deepEqual(occurrence?.anchor, { kind: "styling_session" })
@@ -475,9 +592,13 @@ const STYLING_ROWS: FixtureRow[] = [
     name: "tools-created-curl-reported-heated",
     input: { care: { additionalHeatTools: ["curling_or_wave_iron"] } },
     check: (context) => {
-      assert.equal(context.route("heated_volume_set")?.tier, "not_needed")
+      const route = context.route("heated_volume_set")
+      assert.equal(route?.tier, "not_needed")
       exact(context, "heated_volume_set", ["tools.styling.reported_curl_wave"])
       assert.equal(context.lead("heated_volume_set"), "curling_iron")
+      // D4: a named care answer is `reported`.
+      assert.equal(route?.reportedOwnership.provenance, "reported")
+      assert.equal(route?.coverage.state, "covered_by_report")
       assert.equal(context.route("heatless_volume_set")?.tier, "optional")
     },
   },
@@ -491,6 +612,50 @@ const STYLING_ROWS: FixtureRow[] = [
       assert.equal(context.lead("heatless_volume_set"), "setting_roller")
       assert.equal(context.route("heated_volume_set")?.tier, "optional")
       exact(context, "heated_volume_set", ["tools.styling.reported_curl_wave"])
+    },
+  },
+  {
+    id: "47",
+    name: "tools-volume-blow-dry-approaches",
+    input: {
+      care: { dryingRoutes: ["ordinary_blow_dry"] },
+      answers: { goals: ["volume_balance"] },
+    },
+    check: (context) => {
+      const group = context.group("volume_set")
+      assert.equal(group?.tier, "basis")
+      // Air shaping, heated setting and heatless setting are compared inside ONE
+      // group; only one must ever be fulfilled.
+      assert.deepEqual(group?.memberRouteKeys, [
+        routeKeyFor("air_shaping_volume"),
+        routeKeyFor("heated_volume_set"),
+        routeKeyFor("heatless_volume_set"),
+      ])
+      // The derived Föhn covers the air-shaping member but the plan cannot vouch
+      // for it (`A04`/`H10`), so `D5` (amended 2026-08-25) leaves the group
+      // unfulfilled: neutral render, no ownership claim.
+      assert.equal(context.route("air_shaping_volume")?.coverage.state, "covered_by_derived")
+      assert.equal(context.route("air_shaping_volume")?.coverage.capabilityVerified, false)
+      assert.equal(group?.fulfilledBy, null)
+      exact(context, "air_shaping_volume", [
+        "tools.airflow.air_shape_basis",
+        "tools.styling.volume_basis",
+        "tools.styling.volume_direction_inferred",
+      ])
+      for (const target of ["heated_volume_set", "heatless_volume_set"] as const) {
+        assert.equal(context.route(target)?.tier, "basis")
+        exact(context, target, [
+          "tools.styling.volume_basis",
+          "tools.styling.volume_direction_inferred",
+        ])
+      }
+      exact(context, "drying_standard", ["tools.airflow.basis"])
+      // One card per need: the drying path plus one neutral group card.
+      assert.deepEqual(context.cardIds("basis"), [
+        assetKeyFor("airflow", "hair_dryer"),
+        choiceGroupKeyFor("volume_set"),
+        assetKeyFor("brushes_combs", "detangling_brush"),
+      ])
     },
   },
   {
@@ -536,6 +701,10 @@ const STYLING_ROWS: FixtureRow[] = [
       const route = context.route("heated_volume_set")
       assert.equal(route?.reportedOwnership.state, "owned_generic")
       assert.deepEqual(route?.reportedOwnership.forms, ["heated_multi_styler"])
+      // Tier clarified 2026-08-25: `basis` + `covered_by_report` — the need
+      // stands, the purchase push does not.
+      assert.equal(route?.tier, "basis")
+      assert.equal(route?.coverage.state, "covered_by_report")
       assert.equal(route?.coverage.capabilityVerified, false, "never assume the exact capability")
       // Conditional use-yours, never a duplicate purchase.
       assert.equal(context.lead("heated_volume_set"), "heated_multi_styler")
@@ -816,6 +985,21 @@ const SECURING_ROWS: FixtureRow[] = [
     },
   },
   {
+    id: "127",
+    name: "tools-securing-heated-set-parent",
+    input: { inventory: { heated_styling: ["heated_rollers"] } },
+    check: (context) => {
+      // C01 names "a selected heated/Heatless set" as a securing parent. The
+      // unlock predicate reads COVERAGE of any heated or heatless set route —
+      // the symmetric twin of fixture 12.
+      assert.equal(context.route("heated_volume_set")?.coverage.state, "covered_by_report")
+      assert.equal(context.route("securing_support")?.tier, "optional")
+      exact(context, "securing_support", ["tools.securing.optional"])
+      assert.equal(context.lead("securing_support"), "sectioning_clip")
+      assert.equal(context.route("securing_support")?.reportedOwnership.state, "unknown")
+    },
+  },
+  {
     id: "76",
     name: "tools-securing-reported-compatible",
     input: { scalpApplicationJob: true, inventory: { securing_sectioning: ["claw_clip"] } },
@@ -880,6 +1064,36 @@ const WASH_ROWS: FixtureRow[] = [
     },
   },
   {
+    id: "128",
+    name: "tools-wash-scalp-brush-not-lead",
+    input: { scalpApplicationJob: true, inventory: { wash_application: ["scalp_brush"] } },
+    check: (context) => {
+      const route = context.route("wash_application_support")
+      assert.equal(route?.tier, "optional")
+      // FLAGGED ORACLE ROW: fixtures.md row 128 names the rule ID
+      // `tools.wash.application_support`; no such rule exists. The shipped and
+      // documented id — decision.md's rule table and fixtures 14/81 — is
+      // `tools.wash_application.optional`, which is what is asserted here.
+      exact(context, "wash_application_support", ["tools.wash_application.optional"])
+      // W02: a reported scalp brush stays use-yours on its own scalp-care job.
+      // It never leads targeted application and never fulfils it.
+      assert.equal(context.lead("wash_application_support"), "applicator_bottle")
+      assert.equal(
+        route?.recommendedProductTypes.includes("scalp_brush"),
+        false,
+        "the scalp brush is not in the applicator route's eligible lead set",
+      )
+      assert.equal(route?.coverage.state, "uncovered")
+      assert.equal(
+        context.asset("wash_application_support")?.productTypes.includes("scalp_brush"),
+        false,
+      )
+      // The reported brush is still what the user told us; only the applicator
+      // need stays open. Its own use-yours route is WS3 (fixture 85).
+      assert.deepEqual(route?.reportedOwnership.forms, ["scalp_brush"])
+    },
+  },
+  {
     id: "86",
     name: "tools-wash-scalp-signal-no-brush",
     input: { scalpApplicationJob: false },
@@ -912,6 +1126,8 @@ const NIGHT_ROWS: FixtureRow[] = [
       exact(context, "night_protection", ["tools.night.optional_strong"])
       assert.equal(context.lead("night_protection"), "pillowcase")
       assert.equal(context.route("night_protection")?.reportedOwnership.state, "explicit_none")
+      // D4: the user's own „Nichts davon"-class answer is `reported`.
+      assert.equal(context.route("night_protection")?.reportedOwnership.provenance, "reported")
 
       // R4: the V2 token `split_ends` reaches the strong tier too.
       const v2 = evaluate({
@@ -953,7 +1169,12 @@ const NIGHT_ROWS: FixtureRow[] = [
     check: (context) => {
       assert.equal(context.route("night_protection")?.tier, "optional")
       assert.equal(context.lead("night_protection"), "bonnet")
-      assert.equal(context.route("night_protection")?.reportedOwnership.state, "owned_generic")
+      const ownership = context.route("night_protection")?.reportedOwnership
+      assert.equal(ownership?.state, "owned_generic")
+      // D4: „Ich schlafe auf einem Satin-Bonnet" NAMES a product — it is a
+      // report, wherever it was asked.
+      assert.equal(ownership?.provenance, "reported")
+      assert.equal(context.route("night_protection")?.coverage.state, "covered_by_report")
     },
   },
   {
@@ -985,6 +1206,7 @@ const NIGHT_ROWS: FixtureRow[] = [
       // N02's reason-based map, asserted on the RENDERED lead.
       assert.equal(context.lead("night_protection"), "length_tip_sleeve")
       assert.equal(context.route("night_protection")?.reportedOwnership.state, "explicit_none")
+      assert.equal(context.route("night_protection")?.reportedOwnership.provenance, "reported")
     },
   },
   {
@@ -998,6 +1220,7 @@ const NIGHT_ROWS: FixtureRow[] = [
       assert.equal(context.route("night_protection")?.tier, "optional")
       assert.equal(context.lead("night_protection"), "bonnet")
       assert.equal(context.route("night_protection")?.reportedOwnership.state, "explicit_none")
+      assert.equal(context.route("night_protection")?.reportedOwnership.provenance, "reported")
     },
   },
   {
@@ -1007,6 +1230,7 @@ const NIGHT_ROWS: FixtureRow[] = [
     check: (context) => {
       assert.equal(context.lead("night_protection"), "pillowcase")
       assert.equal(context.route("night_protection")?.reportedOwnership.state, "explicit_none")
+      assert.equal(context.route("night_protection")?.reportedOwnership.provenance, "reported")
     },
   },
   {
@@ -1023,7 +1247,9 @@ const NIGHT_ROWS: FixtureRow[] = [
     name: "tools-night-explicit-none",
     input: { answers: { hairLength: "long" }, care: { nightProtection: [] } },
     check: (context) => {
-      assert.equal(context.route("night_protection")?.reportedOwnership.state, "explicit_none")
+      const ownership = context.route("night_protection")?.reportedOwnership
+      assert.equal(ownership?.state, "explicit_none")
+      assert.equal(ownership?.provenance, "reported")
       assert.equal(context.lead("night_protection"), "pillowcase")
     },
   },
@@ -1110,6 +1336,13 @@ const TEXTILE_ROWS: FixtureRow[] = [
       assert.equal(context.route("drying_textile_upgrade")?.tier, "optional")
       assert.equal(context.route("drying_textile_upgrade")?.reportedOwnership.state, "unknown")
       assert.equal(context.route("drying_textile_upgrade")?.reportedOwnership.provenance, null)
+      // D5: the neutral textile group renders as ONE card through the choice
+      // group now, with exactly the copy the family-keyed special case used.
+      assert.equal(
+        context.card("drying_textile_upgrade")?.typeLabel,
+        TOOL_CHOICE_GROUP_LABELS.drying_textile,
+      )
+      assert.deepEqual(context.cardIds("optional"), [choiceGroupKeyFor("drying_textile")])
     },
   },
   {
@@ -1211,6 +1444,16 @@ const LIFECYCLE_ROWS: FixtureRow[] = [
       assert.equal(context.card("detangling_foundation")?.tier, "basis")
       assert.equal(context.card("night_protection")?.tier, "optional")
       assert.equal(context.card("drying_textile_upgrade")?.tier, "optional")
+      // Block exactness: each block contains exactly the named members and
+      // nothing else, in family order.
+      assert.deepEqual(context.cardIds("basis"), [
+        assetKeyFor("airflow", "hair_dryer"),
+        assetKeyFor("brushes_combs", "detangling_brush"),
+      ])
+      assert.deepEqual(context.cardIds("optional"), [
+        assetKeyFor("night_protection", "length_tip_sleeve"),
+        choiceGroupKeyFor("drying_textile"),
+      ])
     },
   },
   {
@@ -1494,12 +1737,6 @@ export const SKIPPED: Record<string, string> = {
   "79": "NOT APPLICABLE (C05 deferred)",
 
   // Flagged to the orchestrator rather than implemented — see the WS2 handback.
-  "35":
-    "FLAGGED — requires all three volume_set members to be emitted at once; today " +
-    "the air-shaping basis suppresses the heated/heatless peers. Emitting them " +
-    "without a group-aware Stage-1 card projection would render three basis " +
-    "cards for one need (WS4 owns that projection).",
-  "47": "FLAGGED — same as 35: three group members with a blow-dry + volume profile.",
   "98":
     "FLAGGED — N03's 'at most one functionally different alternative' needs a " +
     "non-reported form to survive the reported-form filter in assetFormsFor; the " +
@@ -1512,32 +1749,57 @@ export const SKIPPED: Record<string, string> = {
 
 const RETIRED = new Set(["122", "123"])
 
-test("every live fixture row is executed or skip-listed with its owner", () => {
+/**
+ * The oracle's live row ids, parsed from `fixtures.md` itself.
+ *
+ * The previous guard compared a hand-written `1..126` range against a hand-
+ * written count — a constant expression that could only ever fail if someone
+ * edited both halves. Reading the document means a row added to the oracle fails
+ * this suite until it is encoded or skip-listed, which is the whole point of
+ * having an oracle. Read-only: the test never writes the file.
+ */
+const FIXTURE_TABLE_PATH = new URL(
+  "../docs/personal-plan/categories/tools/fixtures.md",
+  import.meta.url,
+)
+
+function parseLiveFixtureIds(): string[] {
+  const source = readFileSync(FIXTURE_TABLE_PATH, "utf8")
+  const ids: string[] = []
+  for (const line of source.split("\n")) {
+    if (!line.startsWith("|")) continue
+    const cell = line.slice(1).split("|")[0]?.trim()
+    if (cell === undefined) continue
+    // A fixture row's first cell is the fixture number and nothing else: a plain
+    // number, the `4b` variant, or one of the `A-x…` rows production forces.
+    if (!/^(\d{1,3}|4b|A-x\d+)$/.test(cell)) continue
+    if (!ids.includes(cell)) ids.push(cell)
+  }
+  return ids
+}
+
+test("the executor covers exactly the live rows in fixtures.md", () => {
+  const oracleIds = parseLiveFixtureIds()
+  assert.ok(
+    oracleIds.length > 120,
+    `fixtures.md parsed as only ${oracleIds.length} rows — the parser or the table changed shape`,
+  )
+
   const implemented = new Set(IMPLEMENTED_ROWS.map((row) => row.id))
   // 40, 50, 51 and 125 run through the heat-protection executor above.
   for (const id of ["40", "50", "51", "125"]) implemented.add(id)
 
-  const all = [
-    ...Array.from({ length: 126 }, (_, index) => String(index + 1)),
-    "4b",
-    "A-x1",
-    "A-x2",
-    "A-x3",
-  ]
-  const missing: string[] = []
-  const doubled: string[] = []
-  for (const id of all) {
-    const isImplemented = implemented.has(id)
-    const isSkipped = id in SKIPPED
-    if (!isImplemented && !isSkipped) missing.push(id)
-    if (isImplemented && isSkipped && !RETIRED.has(id)) doubled.push(id)
-  }
-  assert.deepEqual(missing, [], "these fixture rows are neither executed nor skip-listed")
-  assert.deepEqual(doubled, [], "these fixture rows are both executed and skip-listed")
+  const covered = new Set([...implemented, ...Object.keys(SKIPPED)])
+  const missing = oracleIds.filter((id) => !covered.has(id))
+  const phantom = [...covered].filter((id) => !oracleIds.includes(id))
+  const doubled = [...implemented].filter((id) => id in SKIPPED && !RETIRED.has(id))
 
-  assert.equal(
-    all.length - RETIRED.size,
-    128,
-    "fixtures.md v3 records 128 live rows; the executor must enumerate the same set",
+  assert.deepEqual(missing, [], "these fixtures.md rows are neither executed nor skip-listed")
+  assert.deepEqual(phantom, [], "these ids are covered here but no longer exist in fixtures.md")
+  assert.deepEqual(doubled, [], "these fixture rows are both executed and skip-listed")
+  assert.deepEqual(
+    [...covered].sort(),
+    [...oracleIds].sort(),
+    "executed ∪ skipped must equal the oracle's live row set",
   )
 })

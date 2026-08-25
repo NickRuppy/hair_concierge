@@ -173,20 +173,9 @@ export const TOOL_CHOICE_GROUP_NOTES: Partial<Record<ToolChoiceGroupTarget, stri
     "Entscheidend ist die Technik, nicht das Material: sanft ausdrücken statt rubbeln.",
 }
 
-/**
- * @deprecated Superseded by `TOOL_CHOICE_GROUP_LABELS` (`D5`). The plan now
- * carries a first-class `drying_textile` choice group; this family-keyed map is
- * only still read by the current Stage-1 card projection and is removed when
- * WS2/WS4 move that projection onto `PlanToolPlan.choiceGroups`.
- */
-export const TOOL_NEUTRAL_GROUP_LABELS: Partial<Record<ToolFamily, string>> = {
-  drying_textiles: TOOL_CHOICE_GROUP_LABELS.drying_textile,
-}
-
-/** @deprecated See `TOOL_NEUTRAL_GROUP_LABELS`. */
-export const TOOL_NEUTRAL_GROUP_NOTES: Partial<Record<ToolFamily, string>> = {
-  drying_textiles: TOOL_CHOICE_GROUP_NOTES.drying_textile,
-}
+// The family-keyed `TOOL_NEUTRAL_GROUP_LABELS` / `_NOTES` maps are gone: `D5`
+// subsumes the ad-hoc neutral drying-textile group into the first-class choice
+// group above, and the Stage-1 projection now reads `PlanToolPlan.choiceGroups`.
 
 /** German alternative line for families that legitimately lead with one form. */
 export function toolAlternativeNote(alternatives: readonly ToolProductType[]): string | null {

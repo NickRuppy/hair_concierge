@@ -253,15 +253,56 @@ test("D5: one shared need is one group with several members and single fulfilmen
   assert.equal(group.fulfilledBy, null, "nothing is covered yet")
 })
 
-test("D5: any covered member fulfils the whole group and a reported member leads", () => {
-  const list = routes({
+test("D5: a covered member fulfils the group only when its capability is verified", () => {
+  // Amended 2026-08-25 (entailed by `A04`/`H10`): the reported Lockenwickler
+  // covers the volume need, but the plan cannot vouch that this exact device
+  // sets volume — so the group stays UNFULFILLED and renders neutrally, while
+  // the covered route keeps its own conditional use-yours and the peer stays a
+  // visible eligible approach.
+  // D5 refined 2026-08-25: a REPORTED eligible form fulfils even while its
+  // exact capability is unverified — H10's conditional wording carries the
+  // uncertainty; fulfilment counts once.
+  const reportedUnverified = routes({
     answers: { texture: "straight", thickness: "fine", goals: ["volume_balance"] },
     inventory: { heatless_styling: ["setting_roller"] },
   })
-  const plan = buildToolPlan({ routes: list })
-  const group = plan.choiceGroups.find((candidate) => candidate.target === "volume_set")
-  assert.equal(group?.fulfilledBy, routeKeyFor("heatless_volume_set"))
-  assert.ok(group?.memberRouteKeys.includes(routeKeyFor("heated_volume_set")))
+  const covered = find(reportedUnverified, "heatless_volume_set")
+  assert.equal(covered?.coverage.state, "covered_by_report")
+  assert.equal(covered?.coverage.capabilityVerified, false)
+  const fulfilledByReport = buildToolPlan({ routes: reportedUnverified }).choiceGroups.find(
+    (candidate) => candidate.target === "volume_set",
+  )
+  assert.equal(
+    fulfilledByReport?.fulfilledBy,
+    routeKeyFor("heatless_volume_set"),
+    "a reported eligible form fulfils the shared need",
+  )
+
+  // Derived, unverified coverage never fulfils: the plain Föhn projected from
+  // the drying behaviour is a device the plan cannot vouch for (A04/H10).
+  const derivedUnverified = routes({
+    answers: { texture: "straight", thickness: "fine", goals: ["volume_balance"] },
+    care: { dryingRoutes: ["ordinary_blow_dry"] },
+  })
+  const derivedMember = find(derivedUnverified, "air_shaping_volume")
+  assert.equal(derivedMember?.coverage.state, "covered_by_derived")
+  assert.equal(derivedMember?.coverage.capabilityVerified, false)
+  const unfulfilled = buildToolPlan({ routes: derivedUnverified }).choiceGroups.find(
+    (candidate) => candidate.target === "volume_set",
+  )
+  assert.equal(unfulfilled?.fulfilledBy, null, "an unvouched derived device never fulfils")
+  assert.ok(unfulfilled?.memberRouteKeys.includes(routeKeyFor("heated_volume_set")))
+
+  // A reported form whose own use route recommends exactly that form IS
+  // verified, and one such member fulfils the whole group.
+  const verified = routes({ inventory: { heated_styling: ["curling_iron"] } })
+  const useRoute = find(verified, "heated_volume_set")
+  assert.equal(useRoute?.coverage.capabilityVerified, true)
+  const fulfilled = buildToolPlan({ routes: verified }).choiceGroups.find(
+    (candidate) => candidate.target === "volume_set",
+  )
+  assert.equal(fulfilled?.fulfilledBy, routeKeyFor("heated_volume_set"))
+  assert.ok(fulfilled?.memberRouteKeys.includes(routeKeyFor("heatless_volume_set")))
 })
 
 test("D5: the group can express the three-way A04 choice", () => {

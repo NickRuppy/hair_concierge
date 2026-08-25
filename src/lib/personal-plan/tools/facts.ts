@@ -29,6 +29,7 @@ import {
   TOOL_PRODUCT_TYPES_BY_FAMILY,
   toolProductTypesOf,
   type ToolFamily,
+  type ToolOwnershipProvenance,
   type ToolProductType,
   type ToolReportedForm,
 } from "./contracts"
@@ -115,8 +116,12 @@ export function inventoryFor(
  *
  * A fingers-only answer therefore reads as `[]` here: the user answered, and
  * what they own is no product. That is exactly the ruled route-level state —
- * `explicit_none` with no forms — while the `fingers` answer itself survives in
- * the inventory for the finger exceptions in `B01`/`B03`/`B04`.
+ * `explicit_none` with no forms.
+ *
+ * The raw `fingers` token still survives in the inventory and is readable
+ * through `inventoryFor`, but no rule reads it today: `B01`/`B03`'s finger
+ * exception is carried entirely by the length gate, and the stripping performed
+ * here is what fixtures 10, 11 and 56 actually guard.
  */
 export function reportedFormsFor(
   inventory: ToolInventory,
@@ -261,11 +266,49 @@ export function uncoveredToolHeatProtectionEvents(care: ToolCareFacts): ToolHeat
  */
 export function projectToolInventoryFromCareFacts(care: ToolCareFacts): ToolDerivedInventory {
   const inventory: ToolDerivedInventory = {}
+  for (const [family, entry] of careInventoryEntries(care)) {
+    inventory[family] = entry.forms
+  }
+  return inventory
+}
+
+/**
+ * Where each projected family's evidence came from (`D4`, clarified 2026-08-25).
+ *
+ * Provenance follows **what the answer is**, not which store it arrived through.
+ * A care answer that NAMES a concrete thing — `additionalHeatTools`,
+ * `nightProtection`, `towel.material`, and every „Nichts davon"-class answer to
+ * one of them — is a `reported` fact: „Ich schlafe auf einem Satin-Bonnet" is a
+ * report wherever it was asked. Only a **behaviour projection** that infers an
+ * unnamed device is `derived`: today `dryingRoutes → hair_dryer` („du föhnst"
+ * proves a dryer exists but names none) and the `loose_tied` / `pineapple`
+ * night TECHNIQUES, which are ways of tying hair rather than a reported tie.
+ *
+ * Both facts are read off the same projection pass, so the two can never drift.
+ */
+export function projectToolCareProvenance(care: ToolCareFacts): ToolCareProvenanceByFamily {
+  const provenance: ToolCareProvenanceByFamily = {}
+  for (const [family, entry] of careInventoryEntries(care)) {
+    provenance[family] = entry.provenance
+  }
+  return provenance
+}
+
+export type ToolCareProvenanceByFamily = Partial<Record<ToolFamily, ToolOwnershipProvenance>>
+
+type CareInventoryEntry = { forms: ToolProductType[]; provenance: ToolOwnershipProvenance }
+
+/**
+ * Existing canonical answers preselect the visual inventory, each entry carrying
+ * the provenance of the answer it came from.
+ */
+function careInventoryEntries(care: ToolCareFacts): [ToolFamily, CareInventoryEntry][] {
+  const entries = new Map<ToolFamily, CareInventoryEntry>()
   // Direct acceptance's planning defaults are not the user's answers. Reading
   // them as inventory would fabricate "du besitzt ein Mikrofaser-Handtuch" and
   // three explicit "du besitzt nichts" answers the user never gave. Everything
   // stays `unknown` until they actually resolve it in Feinschliff.
-  if (care.provenance === "assumed") return inventory
+  if (care.provenance === "assumed") return []
 
   // `D2`: `[]` is unanswered, never „ich lufttrockne". `D4`: reporting the
   // behaviour reports the device, but air-drying is not a claim about owning or
@@ -275,15 +318,24 @@ export function projectToolInventoryFromCareFacts(care: ToolCareFacts): ToolDeri
     const usesAirflow = care.dryingRoutes.some(
       (route) => route === "ordinary_blow_dry" || route === "diffuser_or_airflow_shaping",
     )
-    if (usesAirflow) inventory.airflow = ["hair_dryer"]
+    // The one true behaviour projection: a device is inferred, never named.
+    if (usesAirflow) entries.set("airflow", { forms: ["hair_dryer"], provenance: "derived" })
   }
 
   if (care.additionalHeatTools) {
-    inventory.heated_styling = care.additionalHeatTools.flatMap(mapAdditionalHeatTool)
+    entries.set("heated_styling", {
+      forms: care.additionalHeatTools.flatMap(mapAdditionalHeatTool),
+      provenance: "reported",
+    })
     // A hot-air brush or multi-styler is airflow, not direct-contact heat.
     const airflowForms = care.additionalHeatTools.flatMap(mapAdditionalHeatToolAirflow)
     if (airflowForms.length > 0) {
-      inventory.airflow = dedupe([...(inventory.airflow ?? []), ...airflowForms])
+      // A named form outranks the behaviour stand-in: provenance records the
+      // stronger `reported`.
+      entries.set("airflow", {
+        forms: dedupe([...(entries.get("airflow")?.forms ?? []), ...airflowForms]),
+        provenance: "reported",
+      })
     }
   }
 
@@ -293,16 +345,30 @@ export function projectToolInventoryFromCareFacts(care: ToolCareFacts): ToolDeri
     // so the honest projection is no entry at all — writing `[]` would store
     // „du besitzt kein Trocknungstextil", a sentence the user never said
     // (fixtures 21, 104, 113). `no_towel` stays a real explicit none.
-    if (forms.length > 0) inventory.drying_textiles = forms
-    else if (care.towelMaterial === "no_towel") inventory.drying_textiles = []
+    if (forms.length > 0 || care.towelMaterial === "no_towel") {
+      entries.set("drying_textiles", { forms, provenance: "reported" })
+    }
   }
 
   if (care.nightProtection) {
-    inventory.night_protection = dedupe(care.nightProtection.flatMap(mapNightProtection))
+    const named = care.nightProtection.some(
+      (protection) => !NIGHT_PROTECTION_TECHNIQUES.has(protection),
+    )
+    entries.set("night_protection", {
+      forms: dedupe(care.nightProtection.flatMap(mapNightProtection)),
+      // A technique-only answer („locker zusammengebunden", „Pineapple") is a
+      // behaviour: the soft tie is projected onto it, never stated by the user
+      // (fixtures 74, 102). An empty answer is a real „Nichts davon" and stays
+      // `reported`.
+      provenance: named || care.nightProtection.length === 0 ? "reported" : "derived",
+    })
   }
 
-  return inventory
+  return [...entries]
 }
+
+/** Night answers that describe how the hair is worn, not a product that is owned. */
+const NIGHT_PROTECTION_TECHNIQUES = new Set<NightProtection>(["loose_tied", "pineapple"])
 
 function dedupe(values: readonly ToolProductType[]): ToolProductType[] {
   return [...new Set(values)]

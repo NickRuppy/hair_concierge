@@ -349,7 +349,7 @@ test("wavy hair that also wants definition reads as control, not more volume", (
   assert.equal(find(volumeUp, "heated_volume_set")?.tier, "basis")
 })
 
-test("blow drying covers the shared volume basis through air shaping, not extra tools", () => {
+test("blow drying makes air shaping one member of the shared volume choice", () => {
   const list = routes({
     answers: { texture: "straight", thickness: "fine", goals: ["volume_balance"] },
     care: { dryingRoutes: ["ordinary_blow_dry"] },
@@ -357,9 +357,18 @@ test("blow drying covers the shared volume basis through air shaping, not extra 
   const airShape = find(list, "air_shaping_volume")
   assert.equal(airShape?.tier, "basis")
   assert.ok(airShape?.ruleIds.includes("tools.airflow.air_shape_basis"))
-  // Fulfilment counts once: a covered volume goal adds no heated/heatless need.
-  assert.equal(find(list, "heated_volume_set"), null)
-  assert.equal(find(list, "heatless_volume_set"), null)
+  // D5: fulfilment is counted once BY THE GROUP, not by deleting the peers.
+  // Suppressing them here made the three-way A04 choice unrepresentable
+  // (fixtures 35, 47); one card per need is the Stage-1 projection's job.
+  const group = buildToolPlan({ routes: list }).choiceGroups.find(
+    (candidate) => candidate.target === "volume_set",
+  )
+  assert.deepEqual(group?.memberRouteKeys, [
+    routeKeyFor("air_shaping_volume"),
+    routeKeyFor("heated_volume_set"),
+    routeKeyFor("heatless_volume_set"),
+  ])
+  assert.equal(group?.fulfilledBy, null, "a derived Föhn is not a vouched air-shaping device")
   assert.equal(find(list, "drying_standard")?.tier, "basis", "the drying path stays separate")
 })
 
@@ -386,6 +395,11 @@ test("a reported viable route is prioritized instead of recommending a purchase"
     (candidate) => candidate.target === "volume_set",
   )
   assert.ok(group?.memberRouteKeys.includes(routeKeyFor("heated_volume_set")))
+  // D5 as refined 2026-08-25: the REPORTED roller fulfils the group even while
+  // its exact capability is unverified — H10's conditional wording carries the
+  // uncertainty, and fulfilment counts once (no purchase push, no extra card).
+  assert.equal(find(list, "heatless_volume_set")?.coverage.state, "covered_by_report")
+  assert.equal(find(list, "heatless_volume_set")?.coverage.capabilityVerified, false)
   assert.equal(group?.fulfilledBy, routeKeyFor("heatless_volume_set"))
 })
 
