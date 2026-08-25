@@ -129,6 +129,23 @@ function ToolOptionCard({
       <span className="relative flex h-32 w-full shrink-0 items-center justify-center overflow-hidden bg-[var(--brand-plum-ice)] [@media(max-height:700px)]:h-24">
         {imageFailed ? (
           <span aria-hidden="true" className="h-8 w-8 rounded-full bg-[var(--brand-plum-light)]" />
+        ) : option.imageUrl.endsWith(".webp") ? (
+          // Photo Bildkarten are 1.9:1 letterbox-blur compositions (see
+          // plans/tool-bildkarten.md): the packshot sits on a blurred copy of
+          // itself so `object-cover` can crop safely. A centered square window
+          // crops back to exactly the original packshot — showing the full 1.9 canvas (as
+          // `object-contain` did) exposes them as ghost shapes on wide cards.
+          <span className="relative h-full aspect-square max-w-full overflow-hidden">
+            <Image
+              alt={option.imageAlt}
+              src={option.imageUrl}
+              width={160}
+              height={160}
+              className="h-full w-full object-cover"
+              onError={() => setImageFailed(true)}
+              unoptimized
+            />
+          </span>
         ) : (
           <Image
             alt={option.imageAlt}
