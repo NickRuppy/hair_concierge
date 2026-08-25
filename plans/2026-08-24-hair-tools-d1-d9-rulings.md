@@ -261,6 +261,30 @@ Accepted findings and dispositions:
 - Vectors that held: Conditioner parity, contract invariants (40k-profile
   sample, 0 throws), regression surface, API changes.
 
+## WS2 remediation landed (2026-08-25) + flag dispositions
+
+All adversarial-lane blockers fixed test-first: provenance per-source
+(`projectToolCareProvenance`, one pass for provenance and coverage), all three
+volume_set members emitted with group-aware one-card Stage-1 rendering
+(deprecated neutral-label map deleted), C01 heated+heatless securing parent
+(fixture 127), W02 scalp-brush exclusion (fixture 128), harness parses live
+fixture ids from fixtures.md (mutation-verified). 2082+582 green.
+
+Flag dispositions:
+- **fulfilledBy refined (orchestrator, entailed):** `covered_by_report` fulfils
+  (conditional H10 wording when capability unverified); covered+verified
+  fulfils; derived unverified never fulfils. Fixture 36 satisfiable as
+  written. Recorded in decision.md D5.
+- **Fixture 128 oracle typo fixed** (rule id `tools.wash_application.optional`;
+  `scalpApplicationJob` is a top-level route input).
+- Two pre-existing tests updated because they encoded pre-amendment semantics
+  (peer deletion; any-covered-fulfils) — neither is on the confirmed-sound
+  regression list.
+- `TOOL_CHOICE_GROUP_LABELS.volume_set` copy names only airflow forms while
+  the group can span heated/heatless — WS4 mockup-gate item.
+- `loose_tied`/`pineapple` ruled techniques (derived), keeping fixtures 74/102;
+  named night products remain reported.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
