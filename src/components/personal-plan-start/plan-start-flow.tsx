@@ -47,7 +47,7 @@ import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
 import { directAcceptanceAssumptions } from "@/lib/personal-plan/direct-acceptance/defaults"
 import { Stage3ToolCheckpoint } from "@/components/personal-plan-products/tool-checkpoint"
 import { buildToolPlan } from "@/lib/personal-plan/tools/assets"
-import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import { normalizeToolInventory, projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
 import {
   buildStage1ToolBlocks,
   type ToolCardViewModel,
@@ -791,7 +791,7 @@ export function PlanStartCustomerJourney({
     try {
       const answers = stage2SeedRef.current?.answers
       const care = projectToolCareFacts(answers)
-      const inventory = { ...(answers?.toolForms ?? {}) }
+      const inventory = normalizeToolInventory(answers?.toolForms)
       const routes = computeToolRoutes({
         profile: plan.toolContext.profile,
         care,

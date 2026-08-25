@@ -1,10 +1,14 @@
 import {
+  isToolAnswerOnlyForm,
   TOOL_FAMILIES,
   TOOL_PRODUCT_TYPES_BY_FAMILY,
+  TOOL_ANSWER_ONLY_FORMS_BY_FAMILY,
   TOOL_ROUTE_TARGETS,
+  type ToolAnswerOnlyForm,
   type ToolChoiceGroupTarget,
   type ToolFamily,
   type ToolProductType,
+  type ToolReportedForm,
   type ToolRouteTarget,
 } from "./contracts"
 
@@ -72,6 +76,22 @@ export const TOOL_PRODUCT_TYPE_LABELS = {
   drying_wrap: "Haarturban / Wrap",
 } as const satisfies Record<ToolProductType, string>
 
+/**
+ * Answer-only tokens (`D9b`). „Nur Finger" is a real answer about how the user
+ * handles their hair, never a product the plan may recommend — so it carries a
+ * label and a card image, but never a product-type label lookup.
+ *
+ * Kept identical to the legacy onboarding enum's label (`BRUSH_TYPE_LABELS`).
+ */
+export const TOOL_ANSWER_ONLY_FORM_LABELS = {
+  fingers: "Nur Finger",
+} as const satisfies Record<ToolAnswerOnlyForm, string>
+
+/** Short clarifying line under an answer-only card. Product cards carry none. */
+export const TOOL_ANSWER_ONLY_FORM_HINTS = {
+  fingers: "Du entwirrst mit den Händen.",
+} as const satisfies Record<ToolAnswerOnlyForm, string>
+
 /** Short purpose line under the product type. Never replaces the category name. */
 export const TOOL_ROUTE_PURPOSE_COPY = {
   drying_standard: "Zum Trocknen deiner Haare mit Luft",
@@ -129,8 +149,8 @@ export type ToolOverviewSectionKey = (typeof TOOL_OVERVIEW_SECTIONS)[number]["ke
  * with the approved photo/cut-out set needs no code change: the slot, filename
  * and alt text stay identical.
  */
-export function toolImageSrc(productType: ToolProductType): string {
-  return `/images/personal-plan/tools/${productType}.svg`
+export function toolImageSrc(form: ToolReportedForm): string {
+  return `/images/personal-plan/tools/${form}.svg`
 }
 
 export function toolFamilyPlaceholderSrc(family: ToolFamily): string {
@@ -145,14 +165,22 @@ export function toolFamilyLabel(family: ToolFamily): string {
   return TOOL_FAMILY_LABELS[family]
 }
 
+/** The card label for anything a reported answer may contain (`D9b`). */
+export function toolReportedFormLabel(form: ToolReportedForm): string {
+  return isToolAnswerOnlyForm(form)
+    ? TOOL_ANSWER_ONLY_FORM_LABELS[form]
+    : TOOL_PRODUCT_TYPE_LABELS[form]
+}
+
 /** German alt text: recognizable form plus its family, never a marketing claim. */
-export function toolImageAlt(productType: ToolProductType): string {
-  const family = TOOL_FAMILIES.find((candidate) =>
-    (TOOL_PRODUCT_TYPES_BY_FAMILY[candidate] as readonly string[]).includes(productType),
+export function toolImageAlt(form: ToolReportedForm): string {
+  const label = toolReportedFormLabel(form)
+  const family = TOOL_FAMILIES.find(
+    (candidate) =>
+      (TOOL_PRODUCT_TYPES_BY_FAMILY[candidate] as readonly string[]).includes(form) ||
+      (TOOL_ANSWER_ONLY_FORMS_BY_FAMILY[candidate] ?? []).includes(form as ToolAnswerOnlyForm),
   )
-  return family
-    ? `${TOOL_PRODUCT_TYPE_LABELS[productType]} – ${TOOL_FAMILY_LABELS[family]}`
-    : TOOL_PRODUCT_TYPE_LABELS[productType]
+  return family ? `${label} – ${TOOL_FAMILY_LABELS[family]}` : label
 }
 
 export function toolRoutePurpose(target: ToolRouteTarget): string {
@@ -171,7 +199,11 @@ export function toolRoutePurpose(target: ToolRouteTarget): string {
  * ranks technique instead.
  */
 export const TOOL_CHOICE_GROUP_LABELS = {
-  volume_set: "Eine davon reicht: Warmluftbürste, Air Multi-Styler oder Föhn mit Rundbürste",
+  // The group spans all three volume-set members — airflow, heated AND heatless
+  // (`TOOL_CHOICE_GROUP_MEMBERS.volume_set`) — so the neutral card must not name
+  // airflow forms only. Queued for the pre-ship copy-review screenshot pass.
+  volume_set:
+    "Eine davon reicht: Warmluftbürste, Air Multi-Styler, Lockenwickler oder Föhn mit Rundbürste",
   drying_textile: "Mikrofaser-Handtuch, Baumwolltuch oder Haarturban",
 } as const satisfies Record<ToolChoiceGroupTarget, string>
 
@@ -201,9 +233,19 @@ export const TOOL_PRESENTATION_STATE_LABELS = {
 export const ALL_TOOL_ROUTE_TARGETS: readonly ToolRouteTarget[] = TOOL_ROUTE_TARGETS
 
 /**
- * Product-form capture pages. Each page shows at most four large visual options,
- * so a family with more recognizable forms is split across ordered pages rather
- * than compressed into a dense row.
+ * Product-form capture pages.
+ *
+ * A page shows a small set of large visual options; a family with more
+ * recognizable forms is split across ordered pages rather than compressed into
+ * a dense row. `brushes_combs:1` is the one page that carries six: the WS4
+ * mockup that was reviewed and signed off on 2026-08-25
+ * (`plans/mockups/ws4-2026-08-25/brushes-page-new-cards-viewport.png`) places
+ * „Wildschweinborsten-Bürste" (`R3`) and „Nur Finger" (`D9b`) on the first
+ * Bürsten page, next to the four foundation forms, so a fingers-only user can
+ * say so without paging past brushes they do not own.
+ *
+ * Pages need NOT follow the canonical family order: the persisted answer is
+ * sorted into `TOOL_REPORTED_FORMS_BY_FAMILY` order when it is written.
  */
 export const TOOL_FORM_PAGES = [
   {
@@ -234,7 +276,14 @@ export const TOOL_FORM_PAGES = [
   {
     pageKey: "brushes_combs:1",
     family: "brushes_combs",
-    forms: ["wide_tooth_comb", "detangling_brush", "paddle_brush", "vent_brush"],
+    forms: [
+      "wide_tooth_comb",
+      "detangling_brush",
+      "paddle_brush",
+      "vent_brush",
+      "boar_bristle",
+      "fingers",
+    ],
   },
   {
     pageKey: "brushes_combs:2",
@@ -269,12 +318,13 @@ export const TOOL_FORM_PAGES = [
 ] as const satisfies ReadonlyArray<{
   pageKey: string
   family: ToolFamily
-  forms: readonly ToolProductType[]
+  forms: readonly ToolReportedForm[]
 }>
 
 export type ToolFormPageKey = (typeof TOOL_FORM_PAGES)[number]["pageKey"]
 
-export const TOOL_MAX_OPTIONS_PER_PAGE = 4
+/** Six on the ratified Bürsten page (see `TOOL_FORM_PAGES`), four everywhere else. */
+export const TOOL_MAX_OPTIONS_PER_PAGE = 6
 
 export function toolFormPagesForFamilies(
   families: readonly ToolFamily[],

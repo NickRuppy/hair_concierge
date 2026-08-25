@@ -25,6 +25,7 @@ export function ToolVisualMultiSelect({
   onChange,
   nothingLabel = "Nichts davon",
   ariaLabel,
+  answered = true,
 }: {
   options: readonly ToolVisualOption[]
   /** `null` means the page has not been answered yet. */
@@ -32,7 +33,17 @@ export function ToolVisualMultiSelect({
   onChange: (next: string[], announcement?: string) => void
   nothingLabel?: string
   ariaLabel: string
+  /**
+   * Whether `selected` is the user's own submitted answer.
+   *
+   * A care-derived preselection (`D3a`) can legitimately carry only forms that
+   * live on another page of the same family. That must not light up „Nichts
+   * davon" here: the user never said it, and a pre-lit „Nichts davon" is a claim
+   * about the whole page. Touching the page makes it their answer again.
+   */
+  answered?: boolean
 }) {
+  const [touched, setTouched] = useState(false)
   const current = selected ?? []
   // A family can span several pages, and every page receives the whole family
   // array. Anything not offered on THIS page belongs to another page and must
@@ -41,9 +52,10 @@ export function ToolVisualMultiSelect({
   const foreign = current.filter((value) => !isOnThisPage(value))
   const onThisPage = current.filter(isOnThisPage)
   // "Nothing" is page-local: it answers this page, not the whole family.
-  const nothingSelected = selected !== null && onThisPage.length === 0
+  const nothingSelected = (answered || touched) && selected !== null && onThisPage.length === 0
 
   const toggle = (value: string) => {
+    setTouched(true)
     const ordered = options
       .map((option) => option.value)
       .filter((candidate) =>
@@ -73,7 +85,10 @@ export function ToolVisualMultiSelect({
         type="button"
         aria-pressed={nothingSelected}
         data-tool-nothing-option
-        onClick={() => onChange([...foreign], nothingLabel)}
+        onClick={() => {
+          setTouched(true)
+          onChange([...foreign], nothingLabel)
+        }}
         className={cn(
           "mt-3 w-full rounded-2xl border px-4 py-3 text-left text-[15px] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
           nothingSelected
@@ -128,7 +143,18 @@ function ToolOptionCard({
       </span>
       <span className="flex w-full flex-1 items-start gap-2 px-3 pb-3 pt-2">
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]">
+          {/*
+            German compound names („Wildschweinborsten-Bürste") are longer than
+            the two-column card is wide. `min-w-0` alone only lets the box
+            shrink — the unbreakable word still overflows and runs under the
+            selection circle. `hyphens-auto` (with the document's `lang="de"`)
+            breaks it at a real syllable, and `break-words` is the fallback for
+            anything the hyphenation dictionary does not know.
+          */}
+          <span
+            lang="de"
+            className="block hyphens-auto break-words text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]"
+          >
             {option.label}
           </span>
           {option.hint ? (

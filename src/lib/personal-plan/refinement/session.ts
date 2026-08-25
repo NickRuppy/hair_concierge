@@ -1,19 +1,21 @@
 import type {
   HeatEventAnswer,
   PersonalPlanRefinementAnswersV1,
+  Stage2HeatEventSource,
   Stage2PathState,
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "./types"
 import { isStage2ToolQuestionId, STAGE2_TOOL_OVERVIEW_QUESTION_ID } from "./types"
 import { resolveStage2RefinementContract } from "./question-path"
+import { requiresStage2HeatProtection } from "./heat-events"
 import { Stage2RefinementError } from "./gateway"
 import {
   TOOL_FORM_PAGES,
   toolFamiliesForSections,
   type ToolOverviewSectionKey,
 } from "@/lib/personal-plan/tools/labels"
-import { TOOL_FAMILIES, type ToolProductType } from "@/lib/personal-plan/tools/contracts"
+import { sortToolReportedForms, TOOL_FAMILIES } from "@/lib/personal-plan/tools/contracts"
 
 export type Stage2RefinementHandoff = {
   refinedVersionId: string
@@ -166,17 +168,32 @@ function replaceQuestionAnswer(
   if (isStage2ToolQuestionId(questionId)) {
     const page = TOOL_FORM_PAGES.find((candidate) => `tools:${candidate.pageKey}` === questionId)
     if (page) {
+      // The pages of one family share one array, and a page hands back its own
+      // options plus everything it did not offer. Canonicalizing here is what
+      // lets a page carry forms out of family order (the ratified Bürsten page
+      // does) and lets an already-answered earlier page be edited afterwards.
       next.toolForms = {
         ...next.toolForms,
-        [page.family]: structuredClone(answer) as ToolProductType[],
+        [page.family]: sortToolReportedForms(
+          page.family,
+          (structuredClone(answer) ?? []) as string[],
+        ),
       }
     }
     return next
   }
   if (questionId.startsWith("heat:")) {
+    const source = questionId.slice("heat:".length) as Stage2HeatEventSource
+    const submitted = (structuredClone(answer) ?? {}) as HeatEventAnswer
+    // `R1`: the diffuser source no longer asks for heat protection, so a value
+    // carried along from a legacy answer is dropped on write instead of being
+    // re-persisted under a contract that forbids it.
+    const { protectionConsistency, ...rest } = submitted
     next.heatEvents = {
       ...next.heatEvents,
-      [questionId]: structuredClone(answer) as HeatEventAnswer,
+      [questionId]: requiresStage2HeatProtection(source)
+        ? { ...rest, protectionConsistency }
+        : rest,
     }
     return next
   }

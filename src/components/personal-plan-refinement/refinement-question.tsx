@@ -24,7 +24,8 @@ import {
   type TowelTechnique,
   type WetWashFrequency,
 } from "@/lib/personal-plan/refinement/types"
-import type { ToolProductType } from "@/lib/personal-plan/tools/contracts"
+import type { ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
+import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
 import {
   TOOL_NOTHING_LABEL,
   TOOL_OVERVIEW_LEAD,
@@ -32,6 +33,8 @@ import {
   TOOL_OVERVIEW_TITLE,
   TOOL_SECTION_LABEL,
   toolFormPagePresentation,
+  toolFormPreselection,
+  toolOverviewPreselection,
 } from "@/lib/personal-plan/tools/stage2"
 import {
   toolSectionsForFamilies,
@@ -102,13 +105,20 @@ export function getAnswerForQuestion(
   if (questionId.startsWith("heat:")) return answers.heatEvents?.[questionId]
   if (questionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
     // Persisted as families; the overview renders presentation sections.
+    // Unanswered falls back to what the care answers already imply (`D3a`
+    // condition 1) — a starting value the user can untick, never an answer of
+    // its own until they submit the page.
     return answers.toolFamiliesWithSomething
       ? toolSectionsForFamilies(answers.toolFamiliesWithSomething)
-      : undefined
+      : toolOverviewPreselection(projectToolCareFacts(answers))
   }
   if (isStage2ToolQuestionId(questionId)) {
     const page = toolFormPagePresentation(questionId.slice("tools:".length))
-    return page ? answers.toolForms?.[page.family] : undefined
+    if (!page) return undefined
+    return (
+      answers.toolForms?.[page.family] ??
+      toolFormPreselection(projectToolCareFacts(answers), page.family)
+    )
   }
   switch (questionId) {
     case "current_product_categories":
@@ -141,7 +151,13 @@ export function isLocalAnswerComplete(questionId: Stage2QuestionId, answer: unkn
     if (!heatAnswer?.frequency) return false
     return requiresStage2HeatProtection(source) ? Boolean(heatAnswer.protectionConsistency) : true
   }
-  if (Array.isArray(answer)) return questionId === "oil_purposes" ? answer.length > 0 : true
+  // `D2`: the drying question lost „Nichts davon" and now requires at least one
+  // way the hair actually dries.
+  if (Array.isArray(answer)) {
+    return questionId === "oil_purposes" || questionId === "drying_routes"
+      ? answer.length > 0
+      : true
+  }
   if (questionId === "towel_handling") {
     const towel = answer as { material?: TowelMaterial; technique?: TowelTechnique } | undefined
     if (!towel?.material) return false
@@ -296,11 +312,13 @@ function renderQuestionBody({
       lead: TOOL_OVERVIEW_LEAD,
       body: (
         <ToolVisualMultiSelect
+          key={questionId}
           ariaLabel={TOOL_OVERVIEW_TITLE}
           options={TOOL_OVERVIEW_OPTIONS}
           selected={(answer as ToolOverviewSectionKey[] | undefined) ?? null}
           onChange={(next) => onLocalAnswerChange(next)}
           nothingLabel={TOOL_NOTHING_LABEL}
+          answered={session.answers.toolFamiliesWithSomething !== undefined}
         />
       ),
     }
@@ -315,11 +333,13 @@ function renderQuestionBody({
       lead: page.lead,
       body: (
         <ToolVisualMultiSelect
+          key={questionId}
           ariaLabel={page.title}
           options={page.options}
-          selected={(answer as ToolProductType[] | undefined) ?? null}
+          selected={(answer as ToolReportedForm[] | undefined) ?? null}
           onChange={(next) => onLocalAnswerChange(next)}
           nothingLabel={TOOL_NOTHING_LABEL}
+          answered={session.answers.toolForms?.[page.family] !== undefined}
         />
       ),
     }
@@ -567,14 +587,15 @@ function renderQuestionBody({
       return {
         sectionLabel: "Wie du dein Haar behandelst",
         title: "Wie trocknet dein Haar meistens weiter?",
+        // `D2`: „Nichts davon" is gone and at least one route is required. The
+        // ratified mockup keeps this lead and communicates the forced pick
+        // through the disabled „Weiter" — no new sentence was signed off.
         lead: "Mehrere Wege dürfen parallel vorkommen.",
         body: (
           <RefinementOptions
             options={DRYING_ROUTE_OPTIONS}
             value={answer as string[] | undefined}
             multi
-            allowNone
-            noneDescription="Keiner dieser Wege trifft gerade zu."
             onChange={onLocalAnswerChange}
           />
         ),

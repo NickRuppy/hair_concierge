@@ -7,7 +7,11 @@ import {
 import { hashPersonalPlanNeedVersionInput, type JsonValue } from "@/lib/personal-plan/persistence"
 import { PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION } from "@/lib/personal-plan/persistence/stage1-service"
 import { buildPlanRoutineContextFromCompletedRefinement } from "./stage1-adapter"
-import { projectToolCareFacts, type ToolCareProvenance } from "@/lib/personal-plan/tools/facts"
+import {
+  normalizeToolInventory,
+  projectToolCareFacts,
+  type ToolCareProvenance,
+} from "@/lib/personal-plan/tools/facts"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type {
   PersonalPlanRefinementAnswersV1,
@@ -71,7 +75,9 @@ export function createRefinedNeedSnapshot(input: {
       ? {
           tools: {
             care: projectToolCareFacts(input.answers, input.careProvenance ?? "reported"),
-            inventory: { ...(input.answers.toolForms ?? {}) },
+            // Persisted JSON, so it is normalized rather than trusted: unknown
+            // tokens are dropped and every family keeps its tri-state.
+            inventory: normalizeToolInventory(input.answers.toolForms),
           },
         }
       : {}),

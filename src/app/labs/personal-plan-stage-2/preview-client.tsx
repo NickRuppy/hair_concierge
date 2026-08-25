@@ -158,7 +158,7 @@ function completeAnswers(): PersonalPlanRefinementAnswersV1 {
     currentProductCategories: ["shampoo"],
     wetWashFrequency: "weekly_2x",
     towel: { material: "no_towel" },
-    dryingRoutes: [],
+    dryingRoutes: ["air_dry"],
     additionalHeatTools: [],
     nightProtection: [],
   }

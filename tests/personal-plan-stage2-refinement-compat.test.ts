@@ -29,7 +29,7 @@ test("C6: a completed draft finished while a mid-draft rollout toggle wiped its 
     currentProductCategories: [],
     wetWashFrequency: "weekly_1x" as const,
     towel: { material: "no_towel" as const },
-    dryingRoutes: [],
+    dryingRoutes: ["air_dry" as const],
     additionalHeatTools: [],
     toolFamiliesWithSomething: ["airflow" as const],
     toolForms: { airflow: ["hair_dryer" as const] },
@@ -104,7 +104,7 @@ const legacyRawRow = {
   currentProductCategories: [],
   wetWashFrequency: "weekly_1x",
   towel: { material: "no_towel" },
-  dryingRoutes: [],
+  dryingRoutes: ["air_dry" as const],
   additionalHeatTools: [],
   nightProtection: [],
   // The pre-rename shape: same array, old key.
@@ -182,6 +182,100 @@ test("C7 regression: after decoding, saving an unrelated answer does not materia
   // into a synthesized `explicit_none` for a family the user actually reported.
   assert.deepEqual(next.answers.toolFamiliesWithSomething, ["wash_application"])
   assert.deepEqual(next.answers.toolForms?.wash_application, ["scalp_brush"])
+})
+
+// ---------------------------------------------------------------------------
+// D8 / path version 2 -- the WS4 contract changes must not invalidate a row
+// that was completed under path version 1.
+// ---------------------------------------------------------------------------
+
+test("D8: a row completed with an empty drying answer stays complete after the ≥1 rule lands", () => {
+  const legacyCompleted = {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_1x" as const,
+    towel: { material: "no_towel" as const },
+    // Path version 1 accepted this as a completing answer. Version 2 does not.
+    dryingRoutes: [],
+    additionalHeatTools: [],
+    nightProtection: [],
+  }
+  const reloaded = createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext: baseTriggerContext,
+    answers: legacyCompleted,
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+      "night_protection",
+    ],
+    status: "complete",
+    completedHandoff: { refinedVersionId: "fixture-refined", nextHref: "/plan-start" },
+  })
+  assert.equal(reloaded.status, "complete")
+  assert.equal(reloaded.completedHandoff?.refinedVersionId, "fixture-refined")
+  // The stored `[]` survives untouched -- it is read as "unanswered" by the
+  // engine, never rewritten or deleted.
+  assert.deepEqual(reloaded.answers.dryingRoutes, [])
+
+  // An in-progress draft with the same answer correctly re-opens the question:
+  // only a finished journey is protected, not an unfinished one.
+  const inProgress = createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext: baseTriggerContext,
+    answers: legacyCompleted,
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+      "night_protection",
+    ],
+  })
+  assert.equal(inProgress.path.firstUnresolvedQuestionId, "drying_routes")
+})
+
+test("D8/R1: the decoder drops a legacy diffuser protectionConsistency at the persistence boundary", () => {
+  const legacyRow = {
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: {
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_2x", protectionConsistency: "no" },
+      "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+    },
+  }
+  const decoded = decodeStage2RefinementAnswers(legacyRow)
+  assert.deepEqual(decoded.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "weekly_2x",
+  })
+  assert.deepEqual(
+    decoded.heatEvents?.["heat:straightener"],
+    { frequency: "weekly_1x", protectionConsistency: "always" },
+    "a source that still asks the question keeps its answer",
+  )
+  // Read-only: the raw row is never mutated.
+  assert.equal(
+    legacyRow.heatEvents["heat:diffuser_airflow_shaping"].protectionConsistency,
+    "no",
+    "the decode never writes back to the row it was given",
+  )
+})
+
+test("D8: the two decoders compose -- a legacy row decodes both its Tool key and its heat event", () => {
+  const decoded = decodeStage2RefinementAnswers({
+    ...legacyRawRow,
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: {
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_2x", protectionConsistency: "unsure" },
+    },
+  })
+  assert.deepEqual(decoded.toolFamiliesWithSomething, ["wash_application"])
+  assert.equal((decoded as Record<string, unknown>).toolSections, undefined)
+  assert.deepEqual(decoded.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "weekly_2x",
+  })
 })
 
 test("C7 regression: resubmitting the decoded overview with the same family keeps its previously reported forms, instead of materializing an empty explicit_none", () => {

@@ -1,11 +1,18 @@
-import type { ToolFamily, ToolProductType } from "./contracts"
 import {
+  isToolAnswerOnlyForm,
+  sortToolReportedForms,
+  type ToolFamily,
+  type ToolProductType,
+  type ToolReportedForm,
+} from "./contracts"
+import {
+  TOOL_ANSWER_ONLY_FORM_HINTS,
   TOOL_FAMILY_LABELS,
   TOOL_FORM_PAGES,
   TOOL_OVERVIEW_SECTIONS,
-  TOOL_PRODUCT_TYPE_LABELS,
   toolImageAlt,
   toolImageSrc,
+  toolReportedFormLabel,
   type ToolOverviewSectionKey,
 } from "./labels"
 import { projectToolInventoryFromCareFacts, type ToolCareFacts } from "./facts"
@@ -53,14 +60,20 @@ export const TOOL_OVERVIEW_OPTIONS: ToolOverviewOption[] = TOOL_OVERVIEW_SECTION
 )
 
 export const TOOL_OVERVIEW_TITLE = "Welche Bereiche nutzt du bereits?"
+/**
+ * Ratified 2026-08-25 (`D3a`): an unticked card means „hat nichts", so the lead
+ * has to say that. The withdrawn promise („Was du auslässt, bleibt offen — wir
+ * behaupten nichts") stated the opposite of the ruling.
+ */
 export const TOOL_OVERVIEW_LEAD =
-  "Wähle die Bereiche, in denen du schon etwas hast. Was du auslässt, bleibt offen — wir behaupten nichts."
+  "Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht."
 export const TOOL_SECTION_LABEL = "Deine Tools"
 export const TOOL_NOTHING_LABEL = "Nichts davon"
 
 export type ToolFormOption = {
-  value: ToolProductType
+  value: ToolReportedForm
   label: string
+  hint?: string
   imageUrl: string
   imageAlt: string
 }
@@ -102,9 +115,12 @@ export function toolFormPagePresentation(pageKey: string): ToolFormPagePresentat
         : "Mehrfachauswahl möglich.",
     pageIndex,
     pageCount,
-    options: (page.forms as readonly ToolProductType[]).map((form) => ({
+    options: (page.forms as readonly ToolReportedForm[]).map((form) => ({
       value: form,
-      label: TOOL_PRODUCT_TYPE_LABELS[form],
+      label: toolReportedFormLabel(form),
+      // Only the answer-only cards („Nur Finger") need a clarifying line; a
+      // product card is named by its own form.
+      ...(isToolAnswerOnlyForm(form) ? { hint: TOOL_ANSWER_ONLY_FORM_HINTS[form] } : {}),
       imageUrl: toolImageSrc(form),
       imageAlt: toolImageAlt(form),
     })),
@@ -149,4 +165,31 @@ export function defaultToolFormsFromCare(
     if (Array.isArray(forms) && forms.length > 0) defaults[family as ToolFamily] = [...forms]
   }
   return defaults
+}
+
+/**
+ * The overview's starting value (`D3a` condition 1).
+ *
+ * `undefined` means "nothing implied, so nothing is pre-ticked" — never `[]`,
+ * which is the user's own „Nichts davon" and would pre-select a claim they
+ * never made.
+ */
+export function toolOverviewPreselection(
+  care: ToolCareFacts,
+): ToolOverviewSectionKey[] | undefined {
+  const sections = defaultToolSectionsFromCare(care)
+  return sections.length > 0 ? sections : undefined
+}
+
+/**
+ * A drilldown's starting value: everything the care answers imply for the whole
+ * family, in canonical order. The pages of one family share the family array, so
+ * this is deliberately family-scoped rather than page-scoped.
+ */
+export function toolFormPreselection(
+  care: ToolCareFacts,
+  family: ToolFamily,
+): ToolReportedForm[] | undefined {
+  const forms = defaultToolFormsFromCare(care)[family]
+  return forms && forms.length > 0 ? sortToolReportedForms(family, forms) : undefined
 }

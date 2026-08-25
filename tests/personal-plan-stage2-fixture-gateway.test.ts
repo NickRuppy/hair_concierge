@@ -18,7 +18,7 @@ const completeAnswers = {
   currentProductCategories: [],
   wetWashFrequency: "weekly_1x" as const,
   towel: { material: "no_towel" as const },
-  dryingRoutes: [],
+  dryingRoutes: ["air_dry" as const],
   additionalHeatTools: [],
   nightProtection: [],
 }
@@ -184,7 +184,7 @@ test("completion rejects an unresolved path and repeats one deterministic opaque
     expectedRevision: session.revision,
   })
   for (const [questionId, answer] of [
-    ["drying_routes", []],
+    ["drying_routes", ["air_dry"]],
     ["additional_heat_tools", []],
     ["night_protection", []],
   ] as const) {
@@ -245,7 +245,7 @@ test("one-shot completion failure preserves progress and retries truthfully", as
     expectedRevision: session.revision,
   })
   for (const [questionId, answer] of [
-    ["drying_routes", []],
+    ["drying_routes", ["air_dry"]],
     ["additional_heat_tools", []],
     ["night_protection", []],
   ] as const) {

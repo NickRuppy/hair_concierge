@@ -1,5 +1,5 @@
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
-import type { ToolFamily, ToolProductType } from "@/lib/personal-plan/tools/contracts"
+import type { ToolFamily, ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
 import type { ToolFormPageKey } from "@/lib/personal-plan/tools/labels"
 import type {
   NightProtection,
@@ -99,9 +99,32 @@ export type PersonalPlanRefinementAnswersV1 = {
   /**
    * Broad reported forms per persisted Tool family. An absent key is `unknown`
    * (skipped or migrated); `[]` is the user's explicit `Nichts davon`.
+   *
+   * Values are `ToolReportedForm`: a family may carry an answer-only token
+   * („Nur Finger", `D9b`) beside its real forms. Route logic strips those.
    */
-  toolForms?: Partial<Record<ToolFamily, ToolProductType[]>>
+  toolForms?: Partial<Record<ToolFamily, ToolReportedForm[]>>
 }
+
+/**
+ * The `D8` path version of the persisted refinement contract (standing rule,
+ * ruled 2026-08-24).
+ *
+ * Any change to a persisted answer key, or to the meaning of a question's
+ * completion predicate, bumps this and ships a decoder. Completed rows validate
+ * against their completion-time contract, never against today's — the load-time
+ * half of that is `createStage2RefinementSession`, which trusts the stored
+ * `status` + handoff instead of re-deriving completeness.
+ *
+ * Enforcement: `tests/personal-plan-stage2-answer-schema-snapshot.test.ts`
+ * pins the answer keys and the required-question semantics against this number.
+ *
+ * | Version | Change | Decoder |
+ * | --- | --- | --- |
+ * | 1 | the shipped Feinschliff contract | `toolSections` → `toolFamiliesWithSomething` (WS5/C7) |
+ * | 2 | `drying_routes` no longer completes on `[]` (`D2`); `toolForms.brushes_combs` may carry `fingers` (`D9b`); `heatEvents["heat:diffuser_airflow_shaping"].protectionConsistency` is forbidden (`R1`) | legacy `[]` drying answers stay readable but stop completing the question; an absent `fingers` token is simply absent; the diffuser source's stored `protectionConsistency` is dropped on read |
+ */
+export const STAGE2_QUESTION_PATH_VERSION = 2
 
 export type Stage2StaticQuestionId =
   | "current_product_categories"

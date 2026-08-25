@@ -115,6 +115,35 @@ export const TOOL_ANSWER_ONLY_FORMS_BY_FAMILY: Partial<
 /** What a reported Tool answer may contain: real forms plus the answer-only tokens. */
 export type ToolReportedForm = ToolProductType | ToolAnswerOnlyForm
 
+/**
+ * The canonical order of everything a family's reported answer may contain.
+ *
+ * The persisted answer arrays are validated as an ordered, duplicate-free subset
+ * of this list, so the stored value of a family is one canonical array rather
+ * than "whatever order the pages happened to be walked in". Answer-only tokens
+ * sort after the real forms: they are an addition to the taxonomy, never a
+ * member of it.
+ */
+export const TOOL_REPORTED_FORMS_BY_FAMILY = Object.fromEntries(
+  TOOL_FAMILIES.map((family) => [
+    family,
+    [
+      ...(TOOL_PRODUCT_TYPES_BY_FAMILY[family] as readonly ToolProductType[]),
+      ...(TOOL_ANSWER_ONLY_FORMS_BY_FAMILY[family] ?? []),
+    ] as readonly ToolReportedForm[],
+  ]),
+) as Record<ToolFamily, readonly ToolReportedForm[]>
+
+/** Canonical order + de-duplication for one family's reported answer. */
+export function sortToolReportedForms(
+  family: ToolFamily,
+  forms: readonly string[],
+): ToolReportedForm[] {
+  const order = TOOL_REPORTED_FORMS_BY_FAMILY[family]
+  const selected = new Set(forms)
+  return order.filter((form) => selected.has(form))
+}
+
 export function isToolAnswerOnlyForm(value: string): value is ToolAnswerOnlyForm {
   return (TOOL_ANSWER_ONLY_FORMS as readonly string[]).includes(value)
 }

@@ -37,13 +37,14 @@ import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import {
   createStage2HeatEventId,
   getSelectedStage2HeatEventSources,
+  ignoresStoredStage2HeatProtection,
   requiresStage2HeatProtection,
 } from "./heat-events"
 import {
   TOOL_FAMILIES,
-  TOOL_PRODUCT_TYPES_BY_FAMILY,
+  TOOL_REPORTED_FORMS_BY_FAMILY,
   type ToolFamily,
-  type ToolProductType,
+  type ToolReportedForm,
 } from "@/lib/personal-plan/tools/contracts"
 import { TOOL_FORM_PAGES, toolFormPagesForFamilies } from "@/lib/personal-plan/tools/labels"
 import { STAGE2_TOOL_OVERVIEW_QUESTION_ID, isStage2ToolQuestionId } from "./types"
@@ -292,9 +293,11 @@ function isQuestionAnswerValid(
     const page = TOOL_FORM_PAGE_BY_QUESTION_ID.get(questionId)
     if (!page) return false
     const reported = answers.toolForms?.[page.family]
-    return isOrderedKnownArray<ToolProductType>(
+    // The family's answer may carry its answer-only tokens („Nur Finger",
+    // `D9b`) beside its real forms, in the one canonical order.
+    return isOrderedKnownArray<ToolReportedForm>(
       reported,
-      TOOL_PRODUCT_TYPES_BY_FAMILY[page.family] as readonly ToolProductType[],
+      TOOL_REPORTED_FORMS_BY_FAMILY[page.family],
     )
   }
   switch (questionId) {
@@ -322,7 +325,12 @@ function isQuestionAnswerValid(
     case "towel_handling":
       return isTowelHandlingValid(answers)
     case "drying_routes":
-      return isOrderedKnownArray<DryingRoute>(answers.dryingRoutes, DRYING_ROUTES)
+      // `D2` (ruled 2026-08-24, path version 2): „Nichts davon" is gone and at
+      // least one route is required — an empty set never described a real head
+      // of hair, and the engine already reads a legacy `[]` as unanswered. A row
+      // completed under path version 1 stays complete: completion is trusted
+      // from the stored status, never re-derived (`D8`).
+      return isOrderedKnownArray<DryingRoute>(answers.dryingRoutes, DRYING_ROUTES, true)
     case "additional_heat_tools":
       return isOrderedKnownArray<AdditionalHeatTool>(
         answers.additionalHeatTools,
@@ -349,7 +357,13 @@ function isHeatEventAnswerValid(
   const source = questionId.slice("heat:".length) as Stage2HeatEventSource
   const event = answers.heatEvents?.[questionId]
   if (!event || !isOneOf<ProductFrequency>(event.frequency, PRODUCT_FREQUENCIES)) return false
-  return requiresStage2HeatProtection(source)
-    ? isOneOf<HeatProtectionConsistency>(event.protectionConsistency, HEAT_PROTECTION_CONSISTENCIES)
-    : event.protectionConsistency === undefined
+  if (requiresStage2HeatProtection(source)) {
+    return isOneOf<HeatProtectionConsistency>(
+      event.protectionConsistency,
+      HEAT_PROTECTION_CONSISTENCIES,
+    )
+  }
+  // `R1` + `D8`: a row written while the diffuser question still existed keeps
+  // its stored value. It is ignored, never a reason to re-open the question.
+  return ignoresStoredStage2HeatProtection(source) || event.protectionConsistency === undefined
 }

@@ -155,7 +155,7 @@ test("completion distinguishes completed empty multi-select pages from unanswere
     currentProductCategories: [],
     wetWashFrequency: "does_not_wash" as const,
     towel: { material: "no_towel" as const },
-    dryingRoutes: [],
+    dryingRoutes: ["air_dry" as const],
     additionalHeatTools: [],
     nightProtection: [],
   }
@@ -238,4 +238,100 @@ test("an invalid marked-complete answer is absent from both canonical completion
   })
   assert.equal(contract.completedQuestionIds.includes("current_product_categories"), false)
   assert.equal(contract.path.completedQuestionIds.includes("current_product_categories"), false)
+})
+
+test("D2: an empty drying answer no longer completes the question", () => {
+  const empty = resolveStage2RefinementContract({
+    triggerContext: neutralContext,
+    answers: { dryingRoutes: [] },
+    completedQuestionIds: ["drying_routes"],
+  })
+  assert.equal(empty.completedQuestionIds.includes("drying_routes"), false)
+  assert.ok(empty.validationErrors.includes("drying_routes is invalid or incomplete"))
+
+  for (const dryingRoutes of [
+    ["air_dry"],
+    ["air_dry", "ordinary_blow_dry"],
+    ["ordinary_blow_dry", "diffuser_or_airflow_shaping"],
+  ] as const) {
+    const contract = resolveStage2RefinementContract({
+      triggerContext: neutralContext,
+      answers: { dryingRoutes: [...dryingRoutes] },
+      completedQuestionIds: ["drying_routes"],
+    })
+    assert.ok(
+      contract.completedQuestionIds.includes("drying_routes"),
+      `${dryingRoutes.join("+")} must complete the question`,
+    )
+  }
+  // The legacy `[]` is still readable data — it is not pruned or rewritten.
+  assert.deepEqual(
+    pruneStage2Answers({
+      triggerContext: neutralContext,
+      answers: { dryingRoutes: [] },
+      completedQuestionIds: ["drying_routes"],
+    }).answers.dryingRoutes,
+    [],
+  )
+})
+
+test("R1: the diffuser heat event is complete without protection and tolerates a legacy value", () => {
+  const withoutValue = resolveStage2RefinementContract({
+    triggerContext: neutralContext,
+    answers: {
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_1x" } },
+    },
+    completedQuestionIds: ["heat:diffuser_airflow_shaping"],
+  })
+  assert.ok(withoutValue.completedQuestionIds.includes("heat:diffuser_airflow_shaping"))
+
+  const legacy = resolveStage2RefinementContract({
+    triggerContext: neutralContext,
+    answers: {
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      heatEvents: {
+        "heat:diffuser_airflow_shaping": { frequency: "weekly_1x", protectionConsistency: "no" },
+      },
+    },
+    completedQuestionIds: ["heat:diffuser_airflow_shaping"],
+  })
+  assert.ok(
+    legacy.completedQuestionIds.includes("heat:diffuser_airflow_shaping"),
+    "a row written under the old contract stays complete",
+  )
+
+  // An airflow-shaping source that still asks the question keeps demanding it.
+  const dryerBrush = resolveStage2RefinementContract({
+    triggerContext: neutralContext,
+    answers: {
+      additionalHeatTools: ["dryer_brush"],
+      heatEvents: { "heat:dryer_brush": { frequency: "weekly_1x" } },
+    },
+    completedQuestionIds: ["heat:dryer_brush"],
+  })
+  assert.equal(dryerBrush.completedQuestionIds.includes("heat:dryer_brush"), false)
+})
+
+test("D9b: `fingers` is a valid brushes answer and is rejected in every other family", () => {
+  const context = { ...neutralContext, toolsEnabled: true }
+  const brushes = resolveStage2RefinementContract({
+    triggerContext: context,
+    answers: {
+      toolFamiliesWithSomething: ["brushes_combs"],
+      toolForms: { brushes_combs: ["wide_tooth_comb", "fingers"] },
+    },
+    completedQuestionIds: ["tools_overview", "tools:brushes_combs:1"],
+  })
+  assert.ok(brushes.completedQuestionIds.includes("tools:brushes_combs:1"))
+
+  const elsewhere = resolveStage2RefinementContract({
+    triggerContext: context,
+    answers: {
+      toolFamiliesWithSomething: ["wash_application"],
+      toolForms: { wash_application: ["fingers" as never] },
+    },
+    completedQuestionIds: ["tools_overview", "tools:wash_application:1"],
+  })
+  assert.equal(elsewhere.completedQuestionIds.includes("tools:wash_application:1"), false)
 })

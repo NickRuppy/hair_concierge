@@ -301,7 +301,7 @@ test("an ineligible bridge, no wet washing and no heat remain explicit canonical
     currentProductCategories: [],
     wetWashFrequency: "does_not_wash",
     towel: { material: "no_towel" },
-    dryingRoutes: [],
+    dryingRoutes: ["air_dry"],
     additionalHeatTools: [],
     nightProtection: [],
   }
@@ -342,7 +342,7 @@ test("an existing Dry Shampoo records an accepted bridge without asking the brid
     wetWashFrequency: "weekly_2x",
     dryShampooVisibleHairColor: "dark",
     towel: { material: "no_towel" },
-    dryingRoutes: [],
+    dryingRoutes: ["air_dry"],
     additionalHeatTools: [],
     nightProtection: [],
   }

@@ -202,7 +202,7 @@ test("automatic Stage 3 bootstrap keeps the meaningful Feinschliff bridge visibl
       currentProductCategories: [],
       wetWashFrequency: "weekly_1x",
       towel: { material: "no_towel" },
-      dryingRoutes: [],
+      dryingRoutes: ["air_dry"],
       additionalHeatTools: [],
       nightProtection: [],
     },

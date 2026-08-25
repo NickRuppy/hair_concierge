@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { existsSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -17,20 +18,33 @@ import type {
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "@/lib/personal-plan/refinement/types"
-import { TOOL_FORM_PAGES, TOOL_OVERVIEW_SECTIONS } from "@/lib/personal-plan/tools/labels"
+import {
+  TOOL_FORM_PAGES,
+  TOOL_MAX_OPTIONS_PER_PAGE,
+  TOOL_OVERVIEW_SECTIONS,
+} from "@/lib/personal-plan/tools/labels"
 import {
   defaultToolFormsFromCare,
   defaultToolSectionsFromCare,
+  TOOL_OVERVIEW_LEAD,
   TOOL_OVERVIEW_OPTIONS,
   toolFormPagePresentation,
 } from "@/lib/personal-plan/tools/stage2"
-import { EMPTY_TOOL_CARE_FACTS, projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import { TOOL_PRODUCT_TYPES } from "@/lib/personal-plan/tools/contracts"
+import {
+  EMPTY_TOOL_CARE_FACTS,
+  projectToolCareFacts,
+  reportedFormsFor,
+} from "@/lib/personal-plan/tools/facts"
 import {
   computeToolRoutes,
   toolProfileFactsFromPlanProfile,
 } from "@/lib/personal-plan/tools/routes"
 import { buildPlanProfile } from "@/lib/personal-plan/input"
-import { RefinementQuestion } from "@/components/personal-plan-refinement/refinement-question"
+import {
+  getAnswerForQuestion,
+  RefinementQuestion,
+} from "@/components/personal-plan-refinement/refinement-question"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 const BASE_CONTEXT: Stage2TriggerContext = {
@@ -43,6 +57,17 @@ const COMPLETE_CARE_ANSWERS: PersonalPlanRefinementAnswersV1 = {
   currentProductCategories: [],
   wetWashFrequency: "weekly_2x",
   towel: { material: "mikrofaser", technique: "gentle_press" },
+  dryingRoutes: ["air_dry"],
+  additionalHeatTools: [],
+  heatEvents: {},
+  nightProtection: [],
+}
+
+/** Care answered, but nothing that implies owning a Tool. */
+const EMPTY_CARE_ANSWERS: PersonalPlanRefinementAnswersV1 = {
+  currentProductCategories: [],
+  wetWashFrequency: "weekly_2x",
+  towel: { material: "no_towel" },
   dryingRoutes: ["air_dry"],
   additionalHeatTools: [],
   heatEvents: {},
@@ -81,11 +106,19 @@ test("the Tool trip starts with one overview and opens only selected sections", 
   )
 })
 
-test("no product-form page ever shows more than four large options", () => {
+test("a product-form page stays inside the ratified card budget", () => {
   for (const page of TOOL_FORM_PAGES) {
-    assert.ok(page.forms.length <= 4, `${page.pageKey} shows ${page.forms.length} options`)
+    assert.ok(
+      page.forms.length <= TOOL_MAX_OPTIONS_PER_PAGE,
+      `${page.pageKey} shows ${page.forms.length} options`,
+    )
     assert.ok(page.forms.length >= 1)
   }
+  // Only the ratified Bürsten page carries six; every other page keeps four.
+  const oversized = TOOL_FORM_PAGES.filter((page) => page.forms.length > 4).map(
+    (page) => page.pageKey,
+  )
+  assert.deepEqual(oversized, ["brushes_combs:1"])
   assert.equal(TOOL_OVERVIEW_OPTIONS.length, 4)
 })
 
@@ -327,7 +360,22 @@ test("a product-form page names the persisted family, not a purpose header", () 
   assert.equal(page?.title, "Welche Bürsten & Kämme nutzt du?")
   assert.equal(page?.sectionLabel, "Entwirren & Fixieren")
   assert.equal(page?.pageCount, 2)
-  assert.ok(page!.options.length <= 4)
+  assert.ok(page!.options.length <= TOOL_MAX_OPTIONS_PER_PAGE)
+  // `R3` + `D9b`: the ratified Bürsten page carries the restored
+  // Wildschweinborsten-Bürste and the „Nur Finger" answer-only card.
+  assert.deepEqual(
+    page!.options.map((option) => option.value),
+    [
+      "wide_tooth_comb",
+      "detangling_brush",
+      "paddle_brush",
+      "vent_brush",
+      "boar_bristle",
+      "fingers",
+    ],
+  )
+  assert.equal(page!.options.at(-2)?.label, "Wildschweinborsten-Bürste")
+  assert.equal(page!.options.at(-1)?.label, "Nur Finger")
 })
 
 test("turning the rollout off hides the Tool trip without deleting stored answers", () => {
@@ -361,6 +409,204 @@ test("turning the rollout off hides the Tool trip without deleting stored answer
   assert.deepEqual(backOn.answers.toolForms, { wash_application: ["scalp_brush"] })
 })
 
+// --- WS4: ratified copy, preselection, the two new Bürsten cards -------------
+
+const CARE_DONE: Stage2QuestionId[] = [
+  "current_product_categories",
+  "wet_wash_frequency",
+  "towel_handling",
+  "drying_routes",
+  "additional_heat_tools",
+  "night_protection",
+]
+
+const CARE_WITH_TOOLS: PersonalPlanRefinementAnswersV1 = {
+  ...COMPLETE_CARE_ANSWERS,
+  dryingRoutes: ["ordinary_blow_dry"],
+  heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_2x" } },
+  nightProtection: ["silk_satin_bonnet"],
+}
+
+function completedIdsFor(answers: PersonalPlanRefinementAnswersV1): Stage2QuestionId[] {
+  // The heat questions the care answers themselves open must be answered before
+  // the Tool trip becomes the current question.
+  return [
+    ...CARE_DONE,
+    ...Object.keys(answers.heatEvents ?? {}).map((id) => id as Stage2QuestionId),
+  ]
+}
+
+function toolSession(
+  answers: PersonalPlanRefinementAnswersV1,
+  completed = completedIdsFor(answers),
+) {
+  return createStage2RefinementSession({
+    pathVersion: "test",
+    triggerContext: { ...BASE_CONTEXT, toolsEnabled: true },
+    answers,
+    completedQuestionIds: completed,
+  })
+}
+
+function renderQuestion(session: ReturnType<typeof toolSession>, questionId: Stage2QuestionId) {
+  return renderToStaticMarkup(
+    <RefinementQuestion
+      session={session}
+      questionId={questionId}
+      localAnswer={undefined}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+      showJourneyHeader={false}
+      focusOnQuestionChange={false}
+    />,
+  )
+}
+
+test("D3a: the overview lead states the ruling instead of the withdrawn promise", () => {
+  assert.equal(
+    TOOL_OVERVIEW_LEAD,
+    "Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht.",
+  )
+  const markup = renderQuestion(toolSession(COMPLETE_CARE_ANSWERS), "tools_overview")
+  assert.ok(markup.includes("Nicht gewählt = hast du nicht."))
+  assert.equal(
+    markup.includes("bleibt offen"),
+    false,
+    "the withdrawn promise must not survive anywhere on the page",
+  )
+})
+
+test("D3a: care answers preselect the overview and the drilldowns", () => {
+  // The unanswered overview starts from what the care answers already imply.
+  assert.deepEqual(getAnswerForQuestion(CARE_WITH_TOOLS, "tools_overview"), [
+    "trocknen_stylen",
+    "tuecher_nachtschutz",
+  ])
+  assert.deepEqual(getAnswerForQuestion(CARE_WITH_TOOLS, "tools:airflow:1"), ["hair_dryer"])
+  // Nothing implied stays unanswered — never an explicit `[]`, which would
+  // pre-select a „Nichts davon" the user never said.
+  assert.equal(getAnswerForQuestion(COMPLETE_CARE_ANSWERS, "tools:brushes_combs:1"), undefined)
+  assert.equal(getAnswerForQuestion(EMPTY_CARE_ANSWERS, "tools_overview"), undefined)
+
+  const markup = renderQuestion(toolSession(CARE_WITH_TOOLS), "tools_overview")
+  assert.match(markup, /aria-pressed="true"[^>]*data-tool-option="trocknen_stylen"/)
+  assert.match(markup, /aria-pressed="false"[^>]*data-tool-option="waschen_auftragen"/)
+  assert.match(markup, /aria-pressed="false"[^>]*data-tool-nothing-option/)
+})
+
+test("D3a: submitting the preselected overview unchanged keeps the care-implied families", () => {
+  const session = toolSession(CARE_WITH_TOOLS)
+  const preselected = getAnswerForQuestion(session.answers, "tools_overview")
+  const submitted = saveStage2SessionAnswer(session, {
+    questionId: "tools_overview",
+    answer: preselected,
+  })
+  assert.deepEqual(submitted.answers.toolFamiliesWithSomething, [
+    "airflow",
+    "heated_styling",
+    "heatless_styling",
+    "night_protection",
+    "drying_textiles",
+  ])
+  // The families behind the kept sections are NOT overwritten with a synthesized
+  // emptiness; only the unticked ones become an explicit none (`D3a`/`D3c`).
+  assert.equal(submitted.answers.toolForms?.airflow, undefined)
+  assert.equal(submitted.answers.toolForms?.night_protection, undefined)
+  assert.deepEqual(submitted.answers.toolForms?.brushes_combs, [])
+  assert.deepEqual(submitted.answers.toolForms?.wash_application, [])
+})
+
+test('a preselection that lives on another page never pre-lights „Nichts davon"', () => {
+  // `heated_rollers` is on heated_styling page 2. Page 1 offers none of the
+  // preselected forms — but the user has not answered page 1, so a lit
+  // „Nichts davon" would claim something they never said.
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    ...COMPLETE_CARE_ANSWERS,
+    additionalHeatTools: ["thermal_rollers"],
+    heatEvents: { "heat:thermal_rollers": { frequency: "weekly_1x", protectionConsistency: "no" } },
+  }
+  assert.deepEqual(getAnswerForQuestion(answers, "tools:heated_styling:1"), ["heated_rollers"])
+  const markup = renderQuestion(toolSession(answers), "tools:heated_styling:1")
+  assert.match(markup, /aria-pressed="false"[^>]*data-tool-nothing-option/)
+
+  // Once the page IS the user's own answer, the empty page reads as „Nichts davon".
+  const answered = toolSession({
+    ...answers,
+    toolFamiliesWithSomething: ["heated_styling"],
+    toolForms: { heated_styling: ["heated_rollers"] },
+  })
+  const answeredMarkup = renderQuestion(answered, "tools:heated_styling:1")
+  assert.match(answeredMarkup, /aria-pressed="true"[^>]*data-tool-nothing-option/)
+})
+
+test('R3 + D9b: the Bürsten page carries Wildschweinborsten-Bürste and „Nur Finger"', () => {
+  const markup = renderQuestion(toolSession(COMPLETE_CARE_ANSWERS), "tools:brushes_combs:1")
+  assert.ok(markup.includes('data-tool-option="boar_bristle"'))
+  assert.ok(markup.includes('data-tool-option="fingers"'))
+  assert.ok(markup.includes("Wildschweinborsten-Bürste"))
+  assert.ok(markup.includes("Nur Finger"))
+  assert.ok(markup.includes("Du entwirrst mit den Händen."))
+  assert.ok(markup.includes('data-tool-option-count="6"'))
+  // The long compound label must be allowed to break instead of running under
+  // the selection circle.
+  assert.ok(markup.includes("hyphens-auto"))
+  assert.ok(markup.includes("break-words"))
+})
+
+test("D9b: `fingers` round-trips as a persisted brushes answer and never becomes a product", () => {
+  const opened = saveStage2SessionAnswer(toolSession(COMPLETE_CARE_ANSWERS), {
+    questionId: "tools_overview",
+    answer: ["entwirren_fixieren"],
+  })
+  const answered = saveStage2SessionAnswer(opened, {
+    questionId: "tools:brushes_combs:1",
+    answer: ["fingers"],
+  })
+  assert.deepEqual(answered.answers.toolForms?.brushes_combs, ["fingers"])
+  assert.ok(answered.completedQuestionIds.includes("tools:brushes_combs:1"))
+  // The route layer strips it: the user answered, and what they own is no product.
+  assert.deepEqual(reportedFormsFor({ brushes_combs: ["fingers"] }, "brushes_combs"), [])
+  assert.equal(
+    (TOOL_PRODUCT_TYPES as readonly string[]).includes("fingers"),
+    false,
+    "`fingers` is never a recommendable product type",
+  )
+})
+
+test("a family answer is stored in canonical order whatever order the pages were walked", () => {
+  const opened = saveStage2SessionAnswer(toolSession(COMPLETE_CARE_ANSWERS), {
+    questionId: "tools_overview",
+    answer: ["entwirren_fixieren"],
+  })
+  // Page 1 carries `boar_bristle`, which sorts AFTER page 2's `round_brush`.
+  const page1 = saveStage2SessionAnswer(opened, {
+    questionId: "tools:brushes_combs:1",
+    answer: ["detangling_brush", "boar_bristle", "fingers"],
+  })
+  const page2 = saveStage2SessionAnswer(page1, {
+    questionId: "tools:brushes_combs:2",
+    answer: ["detangling_brush", "boar_bristle", "fingers", "round_brush"],
+  })
+  assert.deepEqual(page2.answers.toolForms?.brushes_combs, [
+    "detangling_brush",
+    "round_brush",
+    "boar_bristle",
+    "fingers",
+  ])
+  assert.ok(page2.completedQuestionIds.includes("tools:brushes_combs:2"))
+
+  // And an already-answered earlier page stays editable afterwards.
+  const edited = saveStage2SessionAnswer(page2, {
+    questionId: "tools:brushes_combs:1",
+    answer: ["round_brush", "wide_tooth_comb"],
+  })
+  assert.deepEqual(edited.answers.toolForms?.brushes_combs, ["wide_tooth_comb", "round_brush"])
+})
+
 test("once the overview is submitted its product-form pages become required", () => {
   const context = { ...BASE_CONTEXT, toolsEnabled: true }
   const careDone: Stage2QuestionId[] = [
@@ -390,4 +636,21 @@ test("once the overview is submitted its product-form pages become required", ()
   })
   assert.equal(directAccept.isComplete, true)
   assert.equal(directAccept.path.requiredQuestionIds.includes("tools_overview"), false)
+})
+
+test("every capture card resolves to a real image file — nothing 404s", () => {
+  const root = new URL("../public/images/personal-plan/tools/", import.meta.url)
+  for (const page of TOOL_FORM_PAGES) {
+    const presentation = toolFormPagePresentation(page.pageKey)
+    assert.ok(presentation, page.pageKey)
+    for (const option of presentation!.options) {
+      const file = new URL(option.imageUrl.replace("/images/personal-plan/tools/", ""), root)
+      assert.ok(existsSync(file), `${option.value} has no image at ${option.imageUrl}`)
+      assert.ok(option.imageAlt.length > 0)
+    }
+  }
+  for (const option of TOOL_OVERVIEW_OPTIONS) {
+    const file = new URL(option.imageUrl.replace("/images/personal-plan/tools/", ""), root)
+    assert.ok(existsSync(file), `${option.value} has no image at ${option.imageUrl}`)
+  }
 })

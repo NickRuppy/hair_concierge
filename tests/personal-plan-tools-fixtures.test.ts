@@ -42,6 +42,15 @@ import {
   toolProfileFactsFromPlanProfile,
 } from "@/lib/personal-plan/tools/routes"
 import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import {
+  createStage2RefinementSession,
+  saveStage2SessionAnswer,
+} from "@/lib/personal-plan/refinement/session"
+import {
+  defaultToolFormsFromCare,
+  defaultToolSectionsFromCare,
+  TOOL_OVERVIEW_LEAD,
+} from "@/lib/personal-plan/tools/stage2"
 import type { PersonalPlanRefinementAnswersV1 } from "@/lib/personal-plan/refinement/types"
 import type { PersonalPlanQuizSubmissionEnvelope } from "@/lib/personal-plan-quiz/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
@@ -2248,6 +2257,86 @@ test("fixture 125 — tools-heat-protection-legacy-diffuser-value-ignored", () =
   assert.equal(event.protectionConsistency, null)
 })
 
+test("fixture 116 — tools-onboarding-submitted-unchecked", () => {
+  const triggerContext = {
+    relevantCategories: [],
+    hasReportedIrritatedScalp: false,
+    dryShampooBridgeEligibility: "ineligible" as const,
+    toolsEnabled: true,
+  }
+  // The care answers that make the preselection real: the user already told us
+  // they blow-dry, so the airflow section arrives pre-ticked (`D3a` condition 1).
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x",
+    towel: { material: "no_towel" },
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_2x" } },
+    nightProtection: [],
+  }
+  const care = careFrom(answers)
+  assert.deepEqual(
+    defaultToolSectionsFromCare(care),
+    ["trocknen_stylen"],
+    "the care-implied section is pre-ticked, so an unticked card is a real choice",
+  )
+  assert.deepEqual(defaultToolFormsFromCare(care).airflow, ["hair_dryer"])
+
+  // Condition 2: the withdrawn promise is gone and the ratified copy is shipped.
+  assert.equal(
+    TOOL_OVERVIEW_LEAD,
+    "Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht.",
+  )
+
+  const session = saveStage2SessionAnswer(
+    createStage2RefinementSession({
+      pathVersion: "test",
+      triggerContext,
+      answers,
+      completedQuestionIds: [
+        "current_product_categories",
+        "wet_wash_frequency",
+        "towel_handling",
+        "drying_routes",
+        "additional_heat_tools",
+        "heat:ordinary_blow_dry",
+        "night_protection",
+      ],
+    }),
+    { questionId: "tools_overview", answer: ["trocknen_stylen"] },
+  )
+
+  assert.deepEqual(session.answers.toolFamiliesWithSomething, [
+    "airflow",
+    "heated_styling",
+    "heatless_styling",
+  ])
+  // `D3a`: every unchecked family is an explicit none — no unknowns remain.
+  for (const family of [
+    "brushes_combs",
+    "securing_sectioning",
+    "wash_application",
+    "night_protection",
+    "drying_textiles",
+  ] as const) {
+    assert.deepEqual(session.answers.toolForms?.[family], [], `${family} must be an explicit none`)
+  }
+  // The checked families stay open for their own pages rather than being
+  // answered on the user's behalf.
+  for (const family of ["airflow", "heated_styling", "heatless_styling"] as const) {
+    assert.equal(session.answers.toolForms?.[family], undefined)
+  }
+  // `D3c`: the care-implied airflow evidence survives the submit — the overview
+  // never writes synthesized emptiness over a preselection the user kept.
+  const merged = mergeToolInventories(
+    projectToolInventoryFromCareFacts(care),
+    session.answers.toolForms ?? {},
+  )
+  assert.deepEqual(inventoryFor(merged, "airflow"), ["hair_dryer"])
+  assert.deepEqual(inventoryFor(merged, "brushes_combs"), [])
+})
+
 // --- coverage of the oracle ---------------------------------------------------
 
 /**
@@ -2295,9 +2384,6 @@ export const SKIPPED: Record<string, string> = {
   "88": "no production input",
   "92": "no production input (no independent brush-friction signal)",
 
-  // WS4 — Feinschliff capture, copy and the „Nur Finger" card.
-  "116": "WS4 (overview submit semantics, preselection wiring, ratified lead copy)",
-
   // C05 deferred to Stage 2 by decision.
   "79": "NOT APPLICABLE (C05 deferred)",
 
@@ -2305,7 +2391,13 @@ export const SKIPPED: Record<string, string> = {
   "114":
     "FLAGGED — deferredFacts wiring. Emitting a route for `towelMaterial=null` " +
     "adds a Stage-1 card for every pre-Feinschliff user, which needs the WS4 " +
-    "mockup gate.",
+    "mockup gate. WS4 (2026-08-25) confirmed the flag rather than clearing it: " +
+    "the ratified WS4 evidence covers the overview copy, the drying question " +
+    "and the two Bürsten cards — not a new Stage-1 textile card. No Phase-1 " +
+    "rule takes a conservative lower tier on a missing input today either " +
+    "(`routes.ts` returns `deferredFacts: []` because the families that could " +
+    "defer emit nothing at all), so there is no existing route to attach a " +
+    "reason fact to without first emitting the card the gate covers.",
 }
 
 const RETIRED = new Set(["122", "123"])
@@ -2350,8 +2442,9 @@ test("the executor covers exactly the live rows in fixtures.md", () => {
   )
 
   const implemented = new Set(IMPLEMENTED_ROWS.map((row) => row.id))
-  // 40, 50, 51 and 125 run through the heat-protection executor above.
-  for (const id of ["40", "50", "51", "125"]) implemented.add(id)
+  // 40, 50, 51 and 125 run through the heat-protection executor above; 116 runs
+  // through the Feinschliff capture executor (it judges the session, not a route).
+  for (const id of ["40", "50", "51", "116", "125"]) implemented.add(id)
 
   const covered = new Set([...implemented, ...Object.keys(SKIPPED)])
   const missing = oracleIds.filter((id) => !covered.has(id))
