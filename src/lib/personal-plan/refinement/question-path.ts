@@ -219,7 +219,8 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
   const pruned = pruneStage2Answers(input)
   const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, pruned.answers)
   const completedQuestionIds = orderedQuestionIds.filter(
-    (id) => pruned.completedQuestionIds.includes(id) && isQuestionAnswerValid(id, pruned.answers),
+    (id) =>
+      pruned.completedQuestionIds.includes(id) && isStage2QuestionAnswerValid(id, pruned.answers),
   )
   const firstUnresolvedQuestionId =
     orderedQuestionIds.find((id) => !completedQuestionIds.includes(id)) ?? null
@@ -231,7 +232,7 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
     prunedAnswerKeys: pruned.prunedAnswerKeys,
   }
   const validationErrors = orderedQuestionIds.flatMap((questionId) =>
-    isQuestionAnswerValid(questionId, pruned.answers)
+    isStage2QuestionAnswerValid(questionId, pruned.answers)
       ? []
       : [`${questionId} is invalid or incomplete`],
   )
@@ -276,7 +277,12 @@ function isOrderedKnownArray<T extends string>(
   )
 }
 
-function isQuestionAnswerValid(
+/**
+ * Whether the stored answer for one canonical question is structurally usable.
+ * The single validity oracle for the path model — also the resolver's test for
+ * "this question is still open" (see `assumed-defaults.ts`).
+ */
+export function isStage2QuestionAnswerValid(
   questionId: Stage2QuestionId,
   answers: PersonalPlanRefinementAnswersV1,
 ): boolean {
