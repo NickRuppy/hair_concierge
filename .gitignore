@@ -265,3 +265,6 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-launch-v1/scalp/isana-professional-aha-pha-scalp-peeling.json
 !/data/catalog-enrichment/personal-plan-launch-v1/scalp/loreal-elvital-fiber-booster-scalp-serum.json
 !/data/catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum.json
+!plans/mockups/ws4-2026-08-25/*.png
+!plans/mockups/ready-check-2026-08-25/*.png
+!plans/mockups/stage3-tools-clarity-2026-08-25/*.png
