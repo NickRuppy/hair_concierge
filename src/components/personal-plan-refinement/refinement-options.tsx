@@ -44,6 +44,7 @@ export const REFINEMENT_TELEMETRY_EVENTS = [
   "personal_plan_stage2_save_failed",
   "personal_plan_stage2_resumed",
   "personal_plan_stage2_completed",
+  "personal_plan_stage2_module_completed",
   "personal_plan_stage2_bridge_viewed",
   "personal_plan_stage2_handoff_failed",
 ] as const

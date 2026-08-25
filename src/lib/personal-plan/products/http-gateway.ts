@@ -16,13 +16,21 @@ export function createHttpStage3ProductsGateway({
   fetch: fetcher = fetch,
 }: { fetch?: FetchLike } = {}): Stage3ProductsGateway {
   return {
-    loadOrCreate: async ({ personalPlanId, refinedVersionId, repairRoutineVersionId }) =>
+    loadOrCreate: async ({
+      personalPlanId,
+      refinedVersionId,
+      repairRoutineVersionId,
+      rebuildOnStaleRefinedVersion,
+    }) =>
       request<Stage3DraftResponse>(
         fetcher,
         `/api/personal-plan/stage-3?${new URLSearchParams({
           personalPlanId,
           refinedVersionId,
           ...(repairRoutineVersionId ? { repairRoutineVersionId } : {}),
+          // Strictly opt-in (see the route's `rebuildStale` contract): only a
+          // module-driven re-entry may be rebuilt on the current version.
+          ...(rebuildOnStaleRefinedVersion && !repairRoutineVersionId ? { rebuildStale: "1" } : {}),
         })}`,
         { method: "GET" },
       ),

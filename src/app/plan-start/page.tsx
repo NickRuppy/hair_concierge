@@ -16,6 +16,10 @@ import { loadExistingStage2RefinementSession } from "@/lib/personal-plan/persist
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
 import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
+import {
+  parseStage2RefineEntry,
+  type Stage2ModuleEntryRequest,
+} from "@/lib/personal-plan/refinement/module-scope"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import {
   isPersonalPlanAppV1Enabled,
@@ -49,7 +53,11 @@ export type PlanStartPageDeps = {
 
 export type PlanStartSearchParams = {
   repairRoutineVersionId?: string | string[]
-  /** `1` = explicit re-entry into Stage 2 (the Routine refinement nudge). */
+  /**
+   * `1` = explicit re-entry into Stage 2 (the Routine refinement nudge),
+   * resolved to the first open module. `products` / `habits` are the module
+   * deep links the Routine banner and the Profil rows use.
+   */
   refine?: string | string[]
 }
 
@@ -60,7 +68,15 @@ export type PlanStartSearchParams = {
  * Stage 3 — the user would never see the Feinschliff again.
  */
 export function parseRefineParam(value: string | string[] | undefined): boolean {
-  return (Array.isArray(value) ? value[0] : value) === "1"
+  return parseStage2RefineEntry(value).refine
+}
+
+/** The module a refine deep link asks for; `1` defers the choice to the session. */
+export function parseRefineModuleParam(
+  value: string | string[] | undefined,
+): Stage2ModuleEntryRequest | undefined {
+  const entry = parseStage2RefineEntry(value)
+  return entry.refine ? entry.module : undefined
 }
 
 export type PlanStartPageState =
@@ -76,7 +92,11 @@ export type PlanStartPageState =
 
 export async function resolvePlanStartPageState(
   deps: PlanStartPageDeps,
-  options: { repairRoutineVersionId?: string; refine?: boolean } = {},
+  options: {
+    repairRoutineVersionId?: string
+    refine?: boolean
+    refineModule?: Stage2ModuleEntryRequest
+  } = {},
 ): Promise<PlanStartPageState> {
   if (!deps.enabled()) return { state: "unavailable" }
   const userId = await deps.getUserId()
@@ -141,7 +161,12 @@ export async function resolvePlanStartPageState(
     // precisely to stop the completed draft from being handed off again.
     if (options.refine) {
       return production(
-        { stage: "stage2", returningToRefinement: true, ...directAcceptance },
+        {
+          stage: "stage2",
+          returningToRefinement: true,
+          ...(options.refineModule ? { refineModule: options.refineModule } : {}),
+          ...directAcceptance,
+        },
         initialRefinementSession
           ? { personalPlanId: access.personalPlanId, initialRefinementSession }
           : undefined,
@@ -234,6 +259,7 @@ export default async function PlanStartPage({
     {
       repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId),
       refine: parseRefineParam(params.refine),
+      refineModule: parseRefineModuleParam(params.refine),
     },
   )
   if (state.state === "paid_pending") redirect("/plan-bereit")

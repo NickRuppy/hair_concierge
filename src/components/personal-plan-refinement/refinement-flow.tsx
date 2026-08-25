@@ -14,12 +14,24 @@ import {
   type Stage2RefinementErrorCode,
   type Stage2RefinementGateway,
   type Stage2CompleteResult,
+  type Stage2ModuleCompletionResult,
 } from "@/lib/personal-plan/refinement/gateway"
+import {
+  deriveStage2EntryMode,
+  resolveStage2EntryModule,
+  resolveStage2FlowEntryView,
+  scopeStage2SessionToModule,
+  type Stage2ModuleEntryRequest,
+} from "@/lib/personal-plan/refinement/module-scope"
 import {
   saveStage2SessionAnswer,
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
-import type { Stage2QuestionId, Stage2StaticQuestionId } from "@/lib/personal-plan/refinement/types"
+import type {
+  Stage2Module,
+  Stage2QuestionId,
+  Stage2StaticQuestionId,
+} from "@/lib/personal-plan/refinement/types"
 
 import { RefinementBridge } from "./refinement-bridge"
 import {
@@ -65,9 +77,20 @@ export type Stage2RefinementTelemetryEvent =
   | { name: "personal_plan_stage2_completed" }
   | { name: "personal_plan_stage2_bridge_viewed" }
   | { name: "personal_plan_stage2_handoff_failed" }
+  | { name: "personal_plan_stage2_module_completed"; module: Stage2Module }
 
 export type Stage2HandoffPayload = {
   handoff: Stage2CompleteResult
+  session: Stage2RefinementSession
+}
+
+/**
+ * A module finished WITHOUT handing the user into Stage 3 — today only
+ * "habits before products". The flow emits; the host routes (back to
+ * `/routine`). No toast UI here (Task 2.6 owns it).
+ */
+export type Stage2ModuleCompletionPayload = {
+  moduleCompletion: Stage2ModuleCompletionResult
   session: Stage2RefinementSession
 }
 
@@ -77,9 +100,7 @@ export function deriveRefinementEntryMode(
   session: Stage2RefinementSession,
   directEntry: boolean,
 ): Extract<RefinementMode, "invitation" | "resume" | "question" | "bridge"> {
-  if (session.status === "complete") return "bridge"
-  if (session.completedQuestionIds.length > 0) return "resume"
-  return directEntry ? "question" : "invitation"
+  return deriveStage2EntryMode(session, directEntry)
 }
 
 export function shouldReturnToStage1FromQuestion(input: {
@@ -89,7 +110,7 @@ export function shouldReturnToStage1FromQuestion(input: {
 }): boolean {
   return (
     input.directEntry &&
-    input.session.completedQuestionIds.length === 0 &&
+    input.session.path.completedQuestionIds.length === 0 &&
     input.session.path.orderedQuestionIds.indexOf(input.activeQuestionId) === 0
   )
 }
@@ -100,22 +121,47 @@ export function RefinementFlow({
   onTelemetry,
   onSecondaryExit,
   onHandoff,
+  onModuleComplete,
   autoHandoff = true,
   directEntry = false,
   stageEntrance = false,
+  moduleEntry,
 }: {
   gateway: Stage2RefinementGateway
   initialSession?: Stage2RefinementSession
   onTelemetry?: (event: Stage2RefinementTelemetryEvent) => void
   onSecondaryExit?: () => void
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
+  onModuleComplete?: (payload: Stage2ModuleCompletionPayload) => void | Promise<void>
   autoHandoff?: boolean
   directEntry?: boolean
   stageEntrance?: boolean
+  /**
+   * Module-scoped entry. `products` / `habits` walk only that module;
+   * `first_open` (the plain `?refine=1` re-entry) resolves against the loaded
+   * session and falls back to the legacy linear flow when nothing is open.
+   */
+  moduleEntry?: Stage2ModuleEntryRequest
 }) {
+  const initialModule = useMemo(
+    () => (initialSession ? resolveStage2EntryModule(initialSession, moduleEntry ?? null) : null),
+    [initialSession, moduleEntry],
+  )
+  // The module is chosen once, at entry. Finishing it must not silently
+  // re-scope the running flow onto the other module.
+  const moduleRef = useRef<Stage2Module | null>(initialModule)
+  const scopeSession = useCallback(
+    (session: Stage2RefinementSession) => scopeStage2SessionToModule(session, moduleRef.current),
+    [],
+  )
   const initialView = useMemo(
-    () => initialRefinementView(initialSession, directEntry),
-    [directEntry, initialSession],
+    () =>
+      initialRefinementView(
+        initialSession ? scopeStage2SessionToModule(initialSession, initialModule) : undefined,
+        directEntry,
+        initialModule !== null,
+      ),
+    [directEntry, initialModule, initialSession],
   )
   const [session, setSession] = useState<Stage2RefinementSession | null>(
     initialView?.session ?? null,
@@ -192,9 +238,16 @@ export function RefinementFlow({
 
     gateway
       .load()
-      .then(async (loadedSession) => {
+      .then(async (rawSession) => {
         if (cancelled || generationRef.current !== generation) return
-        if (loadedSession.status === "complete") {
+        moduleRef.current = resolveStage2EntryModule(rawSession, moduleEntry ?? null)
+        const loadedSession = scopeSession(rawSession)
+        const entry = resolveStage2FlowEntryView({
+          session: loadedSession,
+          moduleScoped: moduleRef.current !== null,
+          directEntry,
+        })
+        if (entry.bridge) {
           const handoff = getCompletedHandoffForLoadedSession(loadedSession)
           if (cancelled || generationRef.current !== generation) return
           setSession(loadedSession)
@@ -206,27 +259,18 @@ export function RefinementFlow({
           return
         }
 
-        const firstUnresolved = loadedSession.path.firstUnresolvedQuestionId
-        if (!firstUnresolved) {
-          const finalQuestionId = getBridgeBackQuestionId(loadedSession)
-          setActiveFromSession(loadedSession, finalQuestionId, {
-            liveMessage: "Deine Antworten sind gespeichert. Die Übergabe ist noch offen.",
-            status: "completion_failed",
-          })
-          setMode("question")
-          return
-        }
-
-        setActiveFromSession(loadedSession, firstUnresolved)
-
-        const entryMode = deriveRefinementEntryMode(loadedSession, directEntry)
-        if (loadedSession.completedQuestionIds.length === 0) {
-          setMode(entryMode)
-          emit({ name: "personal_plan_stage2_started" })
-        } else {
-          setMode(entryMode)
-          emit({ name: "personal_plan_stage2_resumed" })
-        }
+        setActiveFromSession(loadedSession, entry.activeQuestionId, {
+          liveMessage: entry.liveMessage,
+          status: entry.status,
+        })
+        setMode(entry.mode)
+        if (entry.status === "completion_failed") return
+        emit({
+          name:
+            loadedSession.path.completedQuestionIds.length === 0
+              ? "personal_plan_stage2_started"
+              : "personal_plan_stage2_resumed",
+        })
       })
       .catch(() => {
         if (cancelled || generationRef.current !== generation) return
@@ -238,7 +282,7 @@ export function RefinementFlow({
     return () => {
       cancelled = true
     }
-  }, [directEntry, emit, gateway, initialSession, setActiveFromSession])
+  }, [directEntry, emit, gateway, initialSession, moduleEntry, scopeSession, setActiveFromSession])
 
   const begin = useCallback(() => {
     if (!session?.path.firstUnresolvedQuestionId) return
@@ -258,7 +302,7 @@ export function RefinementFlow({
         onSecondaryExit?.()
         return
       }
-      setMode(session.completedQuestionIds.length > 0 ? "resume" : "invitation")
+      setMode(session.path.completedQuestionIds.length > 0 ? "resume" : "invitation")
       return
     }
     setActiveFromSession(session, previousQuestionId)
@@ -311,6 +355,20 @@ export function RefinementFlow({
     [emit],
   )
 
+  const showCompletionFailure = useCallback(
+    (nextSession: Stage2RefinementSession, error: unknown) => {
+      const code = error instanceof Stage2RefinementError ? error.code : "completion_failed"
+      emit({ name: "personal_plan_stage2_save_failed", errorCode: code })
+      setBridge(null)
+      setActiveFromSession(nextSession, getBridgeBackQuestionId(nextSession), {
+        liveMessage: completionFailureMessage(code),
+        status: code === "incomplete_refinement" ? "stale_refinement" : "completion_failed",
+      })
+      setMode("question")
+    },
+    [emit, setActiveFromSession],
+  )
+
   const completeStage2Session = useCallback(
     async (nextSession: Stage2RefinementSession) => {
       setSession(nextSession)
@@ -318,26 +376,119 @@ export function RefinementFlow({
         const handoff = await gateway.complete({ expectedRevision: nextSession.revision })
         showCompletedStage2Session(nextSession, handoff)
       } catch (error) {
-        const code = error instanceof Stage2RefinementError ? error.code : "completion_failed"
-        emit({ name: "personal_plan_stage2_save_failed", errorCode: code })
-        setBridge(null)
-        setActiveFromSession(nextSession, getBridgeBackQuestionId(nextSession), {
-          liveMessage:
-            "Antwort gespeichert. Die Übergabe ist fehlgeschlagen und kann direkt wiederholt werden.",
-          status: "completion_failed",
-        })
-        setMode("question")
+        showCompletionFailure(nextSession, error)
       }
     },
-    [emit, gateway, setActiveFromSession, showCompletedStage2Session],
+    [gateway, showCompletedStage2Session, showCompletionFailure],
   )
+
+  /**
+   * One module finished. `complete` means the server ran the unchanged full
+   * completion (this was the closing module); `stage3Handoff` means Modul 1 —
+   * bridge into Stage 3. Anything else (habits before products) hands back to
+   * the host, which returns the user to their Routine.
+   */
+  const applyModuleCompletion = useCallback(
+    async (
+      nextSession: Stage2RefinementSession,
+      moduleCompletion: Stage2ModuleCompletionResult,
+    ) => {
+      const handoff: Stage2CompleteResult = {
+        refinedVersionId: moduleCompletion.refinedVersionId,
+        nextHref: moduleCompletion.nextHref,
+      }
+      emit({ name: "personal_plan_stage2_module_completed", module: moduleCompletion.module })
+      if (moduleCompletion.status === "complete") {
+        showCompletedStage2Session(nextSession, handoff)
+        return
+      }
+      if (moduleCompletion.stage3Handoff) {
+        setSession(nextSession)
+        setBridge(handoff)
+        setMode("bridge")
+        setStatus("saved")
+        setLiveMessage("Feinschliff gespeichert.")
+        emit({ name: "personal_plan_stage2_bridge_viewed" })
+        return
+      }
+      setSession(nextSession)
+      setStatus("saved")
+      setLiveMessage("Feinschliff gespeichert.")
+      await onModuleComplete?.({ moduleCompletion, session: nextSession })
+    },
+    [emit, onModuleComplete, showCompletedStage2Session],
+  )
+
+  const completeStage2Module = useCallback(
+    async (nextSession: Stage2RefinementSession, stage2Module: Stage2Module) => {
+      setSession(nextSession)
+      const completeModule = gateway.completeModule?.bind(gateway)
+      if (!completeModule) {
+        // A gateway that cannot project a module leaves the answer saved rather
+        // than closing the whole draft behind the user's back.
+        setStatus("saved")
+        setLiveMessage("Antwort gespeichert.")
+        setMode("question")
+        return
+      }
+      try {
+        await applyModuleCompletion(
+          nextSession,
+          await completeModule({ module: stage2Module, expectedRevision: nextSession.revision }),
+        )
+      } catch (error) {
+        showCompletionFailure(nextSession, error)
+      }
+    },
+    [applyModuleCompletion, gateway, showCompletionFailure],
+  )
+
+  const reloadFromGateway = useCallback(async () => {
+    try {
+      const loaded = scopeSession(await gateway.load())
+      const entry = resolveStage2FlowEntryView({
+        session: loaded,
+        moduleScoped: moduleRef.current !== null,
+        directEntry,
+      })
+      if (entry.bridge) {
+        setSession(loaded)
+        setBridge(getCompletedHandoffForLoadedSession(loaded))
+        setMode("bridge")
+        setStatus("idle")
+        setLiveMessage("")
+        emit({ name: "personal_plan_stage2_bridge_viewed" })
+        return
+      }
+      setActiveFromSession(loaded, entry.activeQuestionId, {
+        liveMessage:
+          entry.status === "idle" ? "Neuer Fortschritt wurde geladen." : entry.liveMessage,
+        status: entry.status === "idle" ? "revision_conflict" : entry.status,
+      })
+      setMode("question")
+    } catch {
+      setStatus("save_failed")
+      setLiveMessage("Speichern fehlgeschlagen. Der neuere Stand konnte nicht geladen werden.")
+      setMode("question")
+    }
+  }, [directEntry, emit, gateway, scopeSession, setActiveFromSession])
 
   const handleSubmit = useCallback(async () => {
     if (!session || !activeQuestionId) return
     if (status === "saving") return
+    if (status === "stale_refinement") {
+      setStatus("saving")
+      setLiveMessage("Dein Feinschliff-Stand wird neu geladen.")
+      await reloadFromGateway()
+      return
+    }
     if (status === "completion_failed" && session.path.firstUnresolvedQuestionId === null) {
       setStatus("saving")
       setLiveMessage("Übergabe wird erneut versucht.")
+      if (moduleRef.current) {
+        await completeStage2Module(session, moduleRef.current)
+        return
+      }
       await completeStage2Session(session)
       return
     }
@@ -350,10 +501,12 @@ export function RefinementFlow({
     setStatus("saving")
     setLiveMessage("Antwort wird gespeichert.")
     try {
-      const locallyAdvanced = saveStage2SessionAnswer(submittedSession, {
-        questionId: submittedQuestionId,
-        answer: submittedAnswer,
-      })
+      const locallyAdvanced = scopeSession(
+        saveStage2SessionAnswer(submittedSession, {
+          questionId: submittedQuestionId,
+          answer: submittedAnswer,
+        }),
+      )
       const willCompletePage =
         chooseNextQuestion(locallyAdvanced, submittedQuestionId, editedCompletedQuestion) === null
       const optimisticNextQuestionId = chooseNextQuestion(
@@ -368,8 +521,25 @@ export function RefinementFlow({
         })
         setMode("question")
       }
+      const stage2Module = moduleRef.current
+      const saveAnswerAndCompleteModule = gateway.saveAnswerAndCompleteModule?.bind(gateway)
+      if (willCompletePage && stage2Module && saveAnswerAndCompleteModule) {
+        const result = await saveAnswerAndCompleteModule({
+          module: stage2Module,
+          questionId: submittedQuestionId,
+          answer: submittedAnswer,
+          expectedRevision: submittedSession.revision,
+        })
+        if (saveGenerationRef.current !== saveGeneration) return
+        emit({
+          name: "personal_plan_stage2_answer_saved",
+          family: getQuestionFamily(submittedQuestionId),
+        })
+        await applyModuleCompletion(scopeSession(result.session), result.moduleCompletion)
+        return
+      }
       const saveAnswerAndComplete = gateway.saveAnswerAndComplete?.bind(gateway)
-      if (willCompletePage && saveAnswerAndComplete) {
+      if (willCompletePage && !stage2Module && saveAnswerAndComplete) {
         const result = await saveAnswerAndComplete({
           questionId: submittedQuestionId,
           answer: submittedAnswer,
@@ -380,14 +550,16 @@ export function RefinementFlow({
           name: "personal_plan_stage2_answer_saved",
           family: getQuestionFamily(submittedQuestionId),
         })
-        showCompletedStage2Session(result.session, result.handoff)
+        showCompletedStage2Session(scopeSession(result.session), result.handoff)
         return
       }
-      const nextSession = await gateway.saveAnswer({
-        questionId: submittedQuestionId,
-        answer: submittedAnswer,
-        expectedRevision: submittedSession.revision,
-      })
+      const nextSession = scopeSession(
+        await gateway.saveAnswer({
+          questionId: submittedQuestionId,
+          answer: submittedAnswer,
+          expectedRevision: submittedSession.revision,
+        }),
+      )
       if (saveGenerationRef.current !== saveGeneration) return
       emit({
         name: "personal_plan_stage2_answer_saved",
@@ -401,6 +573,10 @@ export function RefinementFlow({
       )
       if (!nextQuestionId) {
         setSession(nextSession)
+        if (stage2Module) {
+          await completeStage2Module(nextSession, stage2Module)
+          return
+        }
         await completeStage2Session(nextSession)
         return
       }
@@ -422,51 +598,13 @@ export function RefinementFlow({
           name: "personal_plan_stage2_answer_saved",
           family: getQuestionFamily(submittedQuestionId),
         })
-        emit({ name: "personal_plan_stage2_save_failed", errorCode: error.code })
-        setBridge(null)
-        setActiveFromSession(error.savedSession, getBridgeBackQuestionId(error.savedSession), {
-          liveMessage:
-            "Antwort gespeichert. Die Übergabe ist fehlgeschlagen und kann direkt wiederholt werden.",
-          status: "completion_failed",
-        })
-        setMode("question")
+        showCompletionFailure(scopeSession(error.savedSession), error)
         return
       }
       if (error instanceof Stage2RefinementError && error.code === "revision_conflict") {
         emit({ name: "personal_plan_stage2_save_failed", errorCode: "revision_conflict" })
-        try {
-          const loaded = await gateway.load()
-          if (loaded.status === "complete") {
-            const handoff = getCompletedHandoffForLoadedSession(loaded)
-            setSession(loaded)
-            setBridge(handoff)
-            setMode("bridge")
-            setStatus("idle")
-            setLiveMessage("")
-            emit({ name: "personal_plan_stage2_bridge_viewed" })
-            return
-          }
-          const nextQuestionId = loaded.path.firstUnresolvedQuestionId
-          if (!nextQuestionId) {
-            setActiveFromSession(loaded, getBridgeBackQuestionId(loaded), {
-              liveMessage: "Deine Antworten sind gespeichert. Die Übergabe ist noch offen.",
-              status: "completion_failed",
-            })
-            setMode("question")
-            return
-          }
-          setActiveFromSession(loaded, nextQuestionId, {
-            liveMessage: "Neuer Fortschritt wurde geladen.",
-            status: "revision_conflict",
-          })
-          setMode("question")
-          return
-        } catch {
-          setStatus("save_failed")
-          setLiveMessage("Speichern fehlgeschlagen. Der neuere Stand konnte nicht geladen werden.")
-          setMode("question")
-          return
-        }
+        await reloadFromGateway()
+        return
       }
       const code = error instanceof Stage2RefinementError ? error.code : "save_failed"
       emit({ name: "personal_plan_stage2_save_failed", errorCode: code })
@@ -481,13 +619,18 @@ export function RefinementFlow({
     }
   }, [
     activeQuestionId,
+    applyModuleCompletion,
+    completeStage2Module,
     completeStage2Session,
     emit,
     gateway,
     localAnswer,
+    reloadFromGateway,
+    scopeSession,
     session,
     setActiveFromSession,
     showCompletedStage2Session,
+    showCompletionFailure,
     status,
   ])
 
@@ -502,6 +645,8 @@ export function RefinementFlow({
       ) {
         setStatus("idle")
       }
+      // `stale_refinement` deliberately survives an edit: the only useful next
+      // action is reloading the Feinschliff-Stand, not saving on top of it.
     },
     [status],
   )
@@ -612,6 +757,17 @@ export function getCompletedHandoffForLoadedSession(
     )
   }
   return session.completedHandoff
+}
+
+/**
+ * M-7: the module gate (resolver path) and the delegated full close (stored
+ * answers incl. assumed ones) can disagree, which surfaces as a 422
+ * `incomplete_refinement`. Retrying the handoff cannot fix that — say so.
+ */
+export function completionFailureMessage(code: Stage2RefinementErrorCode): string {
+  return code === "incomplete_refinement"
+    ? "Bitte lade neu — dein Feinschliff-Stand hat sich geändert."
+    : "Antwort gespeichert. Die Übergabe ist fehlgeschlagen und kann direkt wiederholt werden."
 }
 
 function chooseNextQuestion(
@@ -730,42 +886,20 @@ type InitialRefinementView = {
 function initialRefinementView(
   session: Stage2RefinementSession | undefined,
   directEntry: boolean,
+  moduleScoped: boolean,
 ): InitialRefinementView | null {
   if (!session) return null
-  if (session.status === "complete") {
-    return {
-      session,
-      activeQuestionId: null,
-      localAnswer: undefined,
-      status: "idle",
-      mode: "bridge",
-      liveMessage: "",
-      bridge: getCompletedHandoffForLoadedSession(session),
-    }
-  }
-  const firstUnresolvedQuestionId = session.path.firstUnresolvedQuestionId
-  if (!firstUnresolvedQuestionId) {
-    const finalQuestionId = getBridgeBackQuestionId(session)
-    return {
-      session,
-      activeQuestionId: finalQuestionId,
-      localAnswer: finalQuestionId
-        ? getAnswerForQuestion(session.answers, finalQuestionId)
-        : undefined,
-      status: "completion_failed",
-      mode: "question",
-      liveMessage: "Deine Antworten sind gespeichert. Die Übergabe ist noch offen.",
-      bridge: null,
-    }
-  }
+  const entry = resolveStage2FlowEntryView({ session, moduleScoped, directEntry })
   return {
     session,
-    activeQuestionId: firstUnresolvedQuestionId,
-    localAnswer: getAnswerForQuestion(session.answers, firstUnresolvedQuestionId),
-    status: "idle",
-    mode: deriveRefinementEntryMode(session, directEntry),
-    liveMessage: "",
-    bridge: null,
+    activeQuestionId: entry.activeQuestionId,
+    localAnswer: entry.activeQuestionId
+      ? getAnswerForQuestion(session.answers, entry.activeQuestionId)
+      : undefined,
+    status: entry.status,
+    mode: entry.mode,
+    liveMessage: entry.liveMessage,
+    bridge: entry.bridge ? getCompletedHandoffForLoadedSession(session) : null,
   }
 }
 

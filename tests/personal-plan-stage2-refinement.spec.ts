@@ -399,6 +399,47 @@ test.describe("Stage 2 refinement Labs preview", () => {
       .toBe(true)
   })
 
+  test("a module entry walks only its own module and finishes it", async ({ page }) => {
+    // Modul 2 with Modul 1 already answered: the flow must open on the habits
+    // section, never show a products question, and finish at the bridge.
+    await openLab(page, "module-habits")
+    await expect(
+      page.getByRole("heading", { name: "Wie trocknest du dein Haar direkt nach der Wäsche an?" }),
+    ).toBeVisible()
+    await expect(page.getByText("Wie du dein Haar behandelst")).toBeVisible()
+    await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
+    // The module's first question is its boundary: back exits the flow instead
+    // of walking into the other module.
+    await page.getByRole("button", { name: "Zurück" }).click()
+    await expect(
+      page.getByRole("heading", { name: "Wie trocknest du dein Haar direkt nach der Wäsche an?" }),
+    ).toBeVisible()
+    await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
+
+    await chooseAndContinue(page, "Kein Handtuch oder Tuch")
+    await chooseNoneAndContinue(page)
+    await chooseNoneAndContinue(page)
+    await chooseNoneAndContinue(page)
+
+    await expect(page.locator("[data-refined-version-id]")).toBeVisible()
+    await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
+  })
+
+  test("a module 1 entry hands the finished module into Stage 3", async ({ page }) => {
+    await openLab(page, "module-products")
+    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
+    await chooseAndContinue(page, "Shampoo")
+    await chooseAndContinue(page, "2×/Woche")
+
+    // Products is not the closing module here, so the version id must come from
+    // the module projection rather than the full completion.
+    await expect(page.locator("[data-refined-version-id]")).toHaveAttribute(
+      "data-refined-version-id",
+      /-products-r\d+$/,
+    )
+    await expect(page.getByRole("button", { name: /Produkte erfassen/ })).toBeVisible()
+  })
+
   test("unknown preview scenarios return 404", async ({ page }) => {
     await openLab(page, "not-a-scenario")
     await expect(page.getByText("404")).toBeVisible()

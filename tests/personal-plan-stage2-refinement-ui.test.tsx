@@ -538,6 +538,7 @@ test("telemetry events are code-owned and expose only coarse safe properties", (
     "personal_plan_stage2_save_failed",
     "personal_plan_stage2_resumed",
     "personal_plan_stage2_completed",
+    "personal_plan_stage2_module_completed",
     "personal_plan_stage2_bridge_viewed",
     "personal_plan_stage2_handoff_failed",
   ])
@@ -557,9 +558,15 @@ test("telemetry events are code-owned and expose only coarse safe properties", (
 
   assert.deepEqual(Object.keys(viewed).sort(), ["family", "name", "section"])
   assert.deepEqual(Object.keys(failed).sort(), ["errorCode", "name"])
+  const moduleCompleted: Stage2RefinementTelemetryEvent = {
+    name: "personal_plan_stage2_module_completed",
+    module: "products",
+  }
+
   assert.deepEqual(Object.keys(handoffFailed), ["name"])
+  assert.deepEqual(Object.keys(moduleCompleted).sort(), ["module", "name"])
   assert.doesNotMatch(
-    JSON.stringify([viewed, failed, handoffFailed]),
+    JSON.stringify([viewed, failed, handoffFailed, moduleCompleted]),
     /questionId|answer|category|irritation|frequency|root/i,
   )
 })
@@ -580,6 +587,7 @@ test("Labs previews are development guarded and keep fixture-gateway behind Labs
   )
   assert.match(previewSource, /fixture-gateway/)
   assert.match(previewSource, /ready|conditional|save-error|conflict|resume/)
+  assert.match(previewSource, /module-products/)
 
   const srcRoot = path.resolve(new URL("../src", import.meta.url).pathname)
   const importers: string[] = []

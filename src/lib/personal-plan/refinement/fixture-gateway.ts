@@ -1,12 +1,17 @@
-import type {
-  PersonalPlanRefinementAnswersV1,
-  Stage2QuestionId,
-  Stage2TriggerContext,
+import {
+  STAGE2_MODULES,
+  type PersonalPlanRefinementAnswersV1,
+  type Stage2Module,
+  type Stage2QuestionId,
+  type Stage2TriggerContext,
 } from "./types"
 import {
   Stage2RefinementError,
+  type Stage2CompleteModuleInput,
   type Stage2CompleteResult,
+  type Stage2ModuleCompletionResult,
   type Stage2RefinementGateway,
+  type Stage2SaveAndCompleteModuleResult,
   type Stage2SaveAnswerInput,
 } from "./gateway"
 import {
@@ -16,7 +21,7 @@ import {
   type Stage2RefinementHandoff,
   type Stage2RefinementSession,
 } from "./session"
-import { resolveStage2RefinementContract } from "./question-path"
+import { getStage2ModulePathStates, resolveStage2RefinementContract } from "./question-path"
 
 export type Stage2FixtureRuntimeEnvironment = "development" | "test" | "production"
 
@@ -98,6 +103,55 @@ export class Stage2FixtureGateway implements Stage2RefinementGateway {
     return structuredClone(completedHandoff)
   }
 
+  /**
+   * Fixture counterpart of the persisted module completion. The fixture has no
+   * provenance map, so module status is derived from the completed path — for a
+   * fixture every completed answer IS a user answer. The closing module
+   * delegates to `complete()`, mirroring the service, so Labs sees the same two
+   * outcomes production does.
+   */
+  async completeModule(input: Stage2CompleteModuleInput): Promise<Stage2ModuleCompletionResult> {
+    this.assertRevision(input.expectedRevision)
+    const moduleStates = getStage2ModulePathStates(
+      this.session.path.orderedQuestionIds,
+      this.session.path.completedQuestionIds,
+    )
+    if (moduleStates[input.module].status !== "complete") {
+      throw new Stage2RefinementError(
+        "incomplete_refinement",
+        `Stage 2 module is incomplete: ${input.module}/${moduleStates[input.module].openQuestionIds[0]}`,
+      )
+    }
+    const stage3Handoff = input.module === "products"
+    if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
+      const handoff = await this.complete({ expectedRevision: input.expectedRevision })
+      return { ...handoff, module: input.module, status: "complete", stage3Handoff }
+    }
+    return {
+      module: input.module,
+      status: "in_progress",
+      stage3Handoff,
+      nextHref: "/plan-start",
+      refinedVersionId: createFixtureModuleVersionId(
+        this.session.pathVersion,
+        this.session.revision,
+        input.module,
+      ),
+    }
+  }
+
+  async saveAnswerAndCompleteModule(
+    input: Stage2SaveAnswerInput & { module: Stage2Module },
+  ): Promise<Stage2SaveAndCompleteModuleResult> {
+    const { module: stage2Module, ...saveInput } = input
+    const session = await this.saveAnswer(saveInput)
+    const moduleCompletion = await this.completeModule({
+      module: stage2Module,
+      expectedRevision: session.revision,
+    })
+    return { session, moduleCompletion }
+  }
+
   failNextSave(): void {
     this.shouldFailNextSave = true
   }
@@ -128,9 +182,20 @@ export function createStage2FixtureGateway(
 }
 
 function createFixtureHandoff(pathVersion: string, revision: number): Stage2RefinementHandoff {
-  const safePathVersion = pathVersion.replace(/[^a-zA-Z0-9_-]/g, "-")
   return {
-    refinedVersionId: `fixture-refined-${safePathVersion}-r${revision}`,
+    refinedVersionId: `fixture-refined-${safeFixtureId(pathVersion)}-r${revision}`,
     nextHref: "/plan-start",
   }
+}
+
+function createFixtureModuleVersionId(
+  pathVersion: string,
+  revision: number,
+  stage2Module: Stage2Module,
+): string {
+  return `fixture-refined-${safeFixtureId(pathVersion)}-${stage2Module}-r${revision}`
+}
+
+function safeFixtureId(value: string): string {
+  return value.replace(/[^a-zA-Z0-9_-]/g, "-")
 }

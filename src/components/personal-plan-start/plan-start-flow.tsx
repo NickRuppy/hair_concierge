@@ -9,6 +9,7 @@ import {
   RefinementFlow,
   type Stage2HandoffPayload,
 } from "@/components/personal-plan-refinement/refinement-flow"
+import type { Stage2ModuleEntryRequest } from "@/lib/personal-plan/refinement/module-scope"
 import {
   PLAN_FORK_STALE_NOTICE,
   PersonalPlanStageEntrance,
@@ -86,6 +87,11 @@ export type PlanStartInitialJourney =
        * completed draft does not bounce the user straight back to Stage 3.
        */
       returningToRefinement?: boolean
+      /**
+       * Module deep link (`?refine=products|habits`, or `first_open` for the
+       * plain `?refine=1` re-entry). The flow then walks only that module.
+       */
+      refineModule?: Stage2ModuleEntryRequest
     }
   | { stage: "stage3"; refinedVersionId: string; repairRoutineVersionId?: string }
 
@@ -375,6 +381,13 @@ export async function loadPlanStartStage3Bootstrap(input: {
   personalPlanId: string
   refinedVersionId: string
   repairRoutineVersionId?: string
+  /**
+   * Module-driven Stage-3 (re-)entry: a later module completion stales the
+   * draft this version produced, so the load must rebuild on the plan's
+   * CURRENT refined version instead of dead-ending. A repair load keeps
+   * failing closed — it must plan against exactly the version it names.
+   */
+  rebuildOnStaleRefinedVersion?: boolean
 }): Promise<Stage3Bootstrap> {
   const loaded = await input.gateway.loadOrCreate({
     draftId: "client-derived",
@@ -383,6 +396,9 @@ export async function loadPlanStartStage3Bootstrap(input: {
     refinedVersionId: input.refinedVersionId,
     ...(input.repairRoutineVersionId
       ? { repairRoutineVersionId: input.repairRoutineVersionId }
+      : {}),
+    ...(input.rebuildOnStaleRefinedVersion && !input.repairRoutineVersionId
+      ? { rebuildOnStaleRefinedVersion: true }
       : {}),
     requirements: [],
   })
@@ -517,13 +533,17 @@ export function PlanStartCustomerJourney({
     }
   }, [plan?.personalPlanId, plan?.sourceInputHash, stage])
   const loadStage3Bootstrap = useCallback(
-    async (refinedVersionId: string): Promise<Stage3Bootstrap> => {
+    async (
+      refinedVersionId: string,
+      options: { rebuildOnStaleRefinedVersion?: boolean } = {},
+    ): Promise<Stage3Bootstrap> => {
       return loadPlanStartStage3Bootstrap({
         gateway: stage3Gateway,
         personalPlanId,
         refinedVersionId,
         repairRoutineVersionId:
           initialJourney.stage === "stage3" ? initialJourney.repairRoutineVersionId : undefined,
+        rebuildOnStaleRefinedVersion: options.rebuildOnStaleRefinedVersion,
       })
     },
     [initialJourney, personalPlanId, stage3Gateway],
@@ -536,9 +556,12 @@ export function PlanStartCustomerJourney({
   }, [])
   const handleHandoff = useCallback(
     async ({ handoff, session }: Stage2HandoffPayload) => {
+      // Stage-2 -> Stage-3 always arrives from a completion, so this is the
+      // module-driven re-entry path the stale rebuild exists for.
       const bootstrap = await loadPlanStartStage2HandoffBootstrap({
         handoff,
-        loadStage3Bootstrap,
+        loadStage3Bootstrap: (refinedVersionId) =>
+          loadStage3Bootstrap(refinedVersionId, { rebuildOnStaleRefinedVersion: true }),
         reloadServerFrontier,
       })
       if (!bootstrap) return
@@ -796,11 +819,17 @@ export function PlanStartCustomerJourney({
       <RefinementFlow
         gateway={stage2Gateway}
         initialSession={initialStage2Session}
+        moduleEntry={initialJourney.stage === "stage2" ? initialJourney.refineModule : undefined}
         onSecondaryExit={() => {
           stage2SeedRef.current = undefined
           void enterStage1()
         }}
         onHandoff={handleHandoff}
+        onModuleComplete={() => {
+          // Modul 2 without a Stage-3 handoff (habits first): the user belongs
+          // back on their Routine. The toast is Task 2.6.
+          openRoutineHref("/routine")
+        }}
         autoHandoff={!returningToRefinement}
         directEntry
         stageEntrance={stage2EnteredLocally}
