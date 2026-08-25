@@ -330,8 +330,9 @@ test("the save RPC keeps a 5-argument compatibility overload for the migrate-the
   )
   assert.equal(legacy[0]!.result.outcome, "saved")
   assert.equal(legacy[0]!.result.revision, 1)
-  // An empty provenance map is exactly the legacy read semantics: a completed id
-  // with no entry is treated as 'user' by userAnsweredQuestionIds().
+  // Nothing is invented for the newly completed id: a completed id with no
+  // entry is treated as 'user' by userAnsweredQuestionIds(), which is exactly
+  // what a write from the pre-provenance build means.
   assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})
 
   // The 6-argument path is untouched and still writes provenance.
@@ -350,6 +351,59 @@ test("the save RPC keeps a 5-argument compatibility overload for the migrate-the
   assert.equal(current[0]!.result.outcome, "saved")
   assert.equal(current[0]!.result.revision, 2)
   assert.deepEqual(await provenanceOf(pg, id(2, 2)), { wet_wash_frequency: "user" })
+})
+
+test("the 5-argument compatibility overload preserves backfilled provenance instead of wiping it", async (t) => {
+  const pg = await migratedDatabase(t)
+  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)
+  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })
+  // Backfills to a MIX: `wet_wash_frequency` deviates from the assumption, the
+  // rest of the synthetic set does not.
+  await insertDraft(pg, {
+    draftId: id(2, 2),
+    planId: id(1, 1),
+    userId: id(9, 9),
+    status: "in_progress",
+    answers: { ...synthetic.answers, wetWashFrequency: "daily" },
+    completedQuestionIds: synthetic.completedQuestionIds,
+  })
+
+  await pg.exec(await readFile(MIGRATION, "utf8"))
+
+  const backfilled = await provenanceOf(pg, id(2, 2))
+  assert.equal(backfilled.wet_wash_frequency, "user")
+  assert.equal(backfilled.night_protection, "assumed")
+  assert.equal(backfilled.drying_routes, "assumed")
+
+  // A straggler save from the still-live old build: it drops `night_protection`
+  // from the completed set and reports a brand-new id it has no provenance for.
+  const keptQuestionIds = synthetic.completedQuestionIds.filter(
+    (questionId) => questionId !== "night_protection",
+  )
+  const { rows } = await pg.query<{ result: { outcome: string; revision: number } }>(
+    `SELECT public.personal_plan_save_refinement_draft(
+       $1::uuid, $2::uuid, 0::bigint, $3::jsonb, $4::text[]
+     ) AS result`,
+    [
+      id(9, 9),
+      id(2, 2),
+      JSON.stringify({ ...synthetic.answers, wetWashFrequency: "daily" }),
+      `{${[...keptQuestionIds, "oil_purposes"].join(",")}}`,
+    ],
+  )
+  assert.equal(rows[0]!.result.outcome, "saved")
+
+  const afterLegacySave = await provenanceOf(pg, id(2, 2))
+  // Kept ids keep their exact labels — the backfilled 'assumed' cohort survives.
+  assert.deepEqual(
+    afterLegacySave,
+    Object.fromEntries(keptQuestionIds.map((questionId) => [questionId, backfilled[questionId]!])),
+  )
+  // Dropped id is gone (prune semantics), new id is not invented.
+  assert.equal("night_protection" in afterLegacySave, false)
+  assert.equal("oil_purposes" in afterLegacySave, false)
+  assert.equal(afterLegacySave.wet_wash_frequency, "user")
+  assert.equal(afterLegacySave.drying_routes, "assumed")
 })
 
 test("the 6-argument save RPC still rejects a non-object provenance payload", async (t) => {

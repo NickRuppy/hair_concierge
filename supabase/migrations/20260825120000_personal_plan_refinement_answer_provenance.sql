@@ -194,17 +194,40 @@ GRANT EXECUTE ON FUNCTION public.personal_plan_save_refinement_draft(uuid,uuid,b
 -- breaking every Stage-2 answer save and every direct acceptance (both go
 -- through this RPC).
 --
--- It delegates to the 6-argument version with an empty provenance map. That is
--- exactly the semantics the old build had: `userAnsweredQuestionIds()` treats a
--- completed id with no provenance entry as 'user' (legacy data), so a save from
--- the old build reads back as pre-provenance data rather than as an assumption.
+-- It must be NON-DESTRUCTIVE. The 6-argument body REPLACES answer_provenance
+-- outright (new code depends on that: it recomputes the whole map per save), so
+-- delegating with an empty map would let one straggler save from the old build
+-- wipe the provenance this migration just backfilled — resurrecting the false
+-- "4 von 4" for exactly the auto-accepted cohort the backfill exists to protect.
+--
+-- Instead the overload carries the stored map forward, filtered to the ids the
+-- caller still reports as completed. That mirrors `pruneAnswerProvenance()`
+-- (refinement/answer-provenance.ts): entries for ids that dropped off the path
+-- go away, entries for surviving ids keep their label, and nothing is invented
+-- for a newly completed id — a completed id with no entry is read as 'user'
+-- (legacy data) by `userAnsweredQuestionIds()`, which is exactly what a write
+-- from the pre-provenance build means.
+--
+-- The subquery reads the pre-update row (arguments are evaluated before the
+-- call) and the 6-argument body's revision CAS still guards the write, so a
+-- concurrent save cannot be silently overwritten — it returns revision_conflict.
 CREATE OR REPLACE FUNCTION public.personal_plan_save_refinement_draft(
   p_user_id uuid, p_draft_id uuid, p_expected_revision bigint, p_answers jsonb,
   p_completed_question_ids text[]
 ) RETURNS jsonb LANGUAGE sql SECURITY DEFINER SET search_path = '' AS $$
   SELECT public.personal_plan_save_refinement_draft(
-    p_user_id, p_draft_id, p_expected_revision, p_answers,
-    p_completed_question_ids, '{}'::jsonb
+    p_user_id, p_draft_id, p_expected_revision, p_answers, p_completed_question_ids,
+    COALESCE(
+      (
+        SELECT pg_catalog.jsonb_object_agg(entry.key, entry.value)
+          FROM public.personal_plan_refinement_drafts AS draft,
+               LATERAL pg_catalog.jsonb_each(draft.answer_provenance) AS entry
+         WHERE draft.id = p_draft_id
+           AND draft.user_id = p_user_id
+           AND entry.key = ANY(p_completed_question_ids)
+      ),
+      '{}'::jsonb
+    )
   );
 $$;
 
