@@ -142,6 +142,38 @@ conflict, this file wins over both until those amendments are merged.
 - `evidence.md` Carvalho comparator „terry (looped bath towel)" → „cotton
   towel" (WS7).
 
+## Second-round rulings R1–R4 (2026-08-24, post-amendment)
+
+Ruled by Nick after the amendment pass surfaced them:
+
+- **R1 — Drop the legacy heat question now.** The Stage-2 heat-protection
+  question for the `diffuser_airflow_shaping` source is removed (it contradicts
+  the D2a diffuser tier `not_needed`). `protectionConsistency` becomes forbidden
+  for that source. Per D8: path-version bump + decode rule — stored values for
+  the source are ignored on read; rows completed under the old contract stay
+  complete. Implementation lands with WS4.
+- **R2 — Texture gate for definition paths.** The definition-driven diffuser
+  path (`A03`) and the Definitionsbürste (`B09`) activate only for
+  `wavy | curly | coily`. Straight + `shape_definition` activates no tool route
+  from the definition goal (fixture 4b is the negative assertion).
+- **R3 — Wildschweinborsten-Bürste is included.** `boar_bristle` joins the
+  `brushes_combs` product types and the Feinschliff Bürsten-page. It exists in
+  the legacy onboarding enum (`BRUSH_TYPES` in
+  `src/lib/vocabulary/onboarding-care.ts`) and was silently dropped when the
+  Tools form list was rebuilt — Nick ruled its restoration. Needs card image +
+  copy in WS4; fixture 60 keeps its boar-bristle expectation.
+- **R4 — Strong Nachtschutz tier reachable again.** `tools.night.optional_strong`
+  triggers on `breakage` **or `split_ends`**, restoring reachability for V2
+  profiles (fixture 15 gains the V2 variant).
+
+Also resolved by the orchestrator as entailed (no new decision): fixture 7
+rewritten as the control-direction negative (D1 makes its premise expressible
+again); the residual `less_volume` clauses in `decision.md`/fixture 43 restated
+against a control-resolved direction; fixture 60(b) `capabilityVerified=false`
+confirmed as entailed by D4 + B04's own text; the „Nur Finger" persisted token
+name and the deferred-fact marker on `PlanToolRoute` (fixture 114) are
+implementation choices assigned to WS4 and WS1 respectively.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
