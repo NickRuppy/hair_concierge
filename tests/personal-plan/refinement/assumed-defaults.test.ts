@@ -141,12 +141,30 @@ test("rule assume:heat_event:ordinary_airflow_minimum assumes the lowest frequen
   assert.ok(resolution.appliedRuleIds.includes("assume:heat_event:ordinary_airflow_minimum"))
 })
 
-test("rule assume:heat_event:protected_minimum assumes lowest frequency plus consistent protection", () => {
+test("rule assume:heat_event:protected_minimum assumes the lowest frequency and an explicitly unknown protection state", () => {
   const resolution = resolve(triggerContext(), { additionalHeatTools: ["straightener"] })
   assert.deepEqual(resolution.answers.heatEvents, {
-    "heat:straightener": { frequency: "less_than_monthly", protectionConsistency: "always" },
+    "heat:straightener": { frequency: "less_than_monthly", protectionConsistency: "unsure" },
   })
   assert.ok(resolution.appliedRuleIds.includes("assume:heat_event:protected_minimum"))
+})
+
+test("no heat-protection assumption ever claims the user protects or skips protection", () => {
+  const resolution = resolve(triggerContext(), {
+    dryingRoutes: ["ordinary_blow_dry", "diffuser_or_airflow_shaping"],
+    additionalHeatTools: [
+      "dryer_brush",
+      "hot_air_styler",
+      "straightener",
+      "curling_or_wave_iron",
+      "thermal_rollers",
+    ],
+  })
+  const assumedConsistencies = Object.values(resolution.answers.heatEvents ?? {})
+    .map((event) => event.protectionConsistency)
+    .filter((consistency) => consistency !== undefined)
+  assert.equal(assumedConsistencies.length, 6)
+  for (const consistency of assumedConsistencies) assert.equal(consistency, "unsure")
 })
 
 test("rule assume:night_protection:none assumes no special night protection", () => {
@@ -434,7 +452,7 @@ test("a user-answered heat event survives while its siblings are assumed", () =>
     "heat:straightener": { frequency: "weekly_2x", protectionConsistency: "sometimes" },
     "heat:thermal_rollers": {
       frequency: "less_than_monthly",
-      protectionConsistency: "always",
+      protectionConsistency: "unsure",
     },
   })
 })

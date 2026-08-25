@@ -58,7 +58,7 @@ export const STAGE2_ASSUMED_DRY_SHAMPOO_VISIBLE_HAIR_COLOR: DryShampooVisibleHai
   "light_blonde"
 export const STAGE2_ASSUMED_OIL_PURPOSES: readonly OilPurpose[] = ["prewash_lengths"]
 export const STAGE2_ASSUMED_HEAT_EVENT_FREQUENCY: ProductFrequency = "less_than_monthly"
-export const STAGE2_ASSUMED_HEAT_PROTECTION_CONSISTENCY: HeatProtectionConsistency = "always"
+export const STAGE2_ASSUMED_HEAT_PROTECTION_CONSISTENCY: HeatProtectionConsistency = "unsure"
 
 /* ── the rule table ──────────────────────────────────────────────────────── */
 
@@ -221,7 +221,7 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
     condition:
       "the user selected an airflow-shaping or direct-contact-heat source but left its event open",
     rationale:
-      "Same minimal frequency as the ordinary-airflow rule. Protection `always` is the pair member that changes recommendations least relative to no heat: `no`, `sometimes` or `unsure` would each invent a heat-protection need the Idealplan never showed. Protection consistency reaches no recommendation today, so this rule is currently frequency-only in effect.",
+      "Same minimal frequency as the ordinary-airflow rule. Protection is `unsure` because that is the only option that truthfully encodes the app's knowledge state: the user never made any statement about heat protection, and `always` would be a positive behavioural claim on their behalf. Assuming `always` would additionally suppress the best-supported cosmetic recommendation in hair care — a heat protectant for a confirmed direct-contact-tool user — the moment this field gains a consumer (domain review, fix round 1). `no` would go the other way and invent a failure the user never reported.",
     matches: ({ questionId }) => requiresStage2HeatProtection(heatEventSource(questionId)),
     write: ({ answers, questionId }) =>
       writeHeatEvent(answers, questionId, {
