@@ -333,6 +333,33 @@ test("Stage 2 module save reports a durable saved page when the module completio
   })
 })
 
+test("Stage 2 module save fails closed on a gateway that cannot project a module", async () => {
+  const savedSession = { ...session, revision: 1 }
+  const response = await createStage2RouteHandlers(
+    deps({
+      // `completeModule` is optional; fixture gateways do not implement it. The
+      // answer must still be durably saved and reported back to the caller.
+      gatewayFor: () => gateway({ saveAnswer: async () => savedSession }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "night_protection",
+        answer: [],
+        expectedRevision: 0,
+        completeModuleAfterSave: "products",
+      }),
+    }),
+  )
+
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), {
+    error: "temporarily_unavailable",
+    savedSession: JSON.parse(JSON.stringify(savedSession)),
+  })
+})
+
 test("Stage 2 save without a completion flag stays a plain save for existing clients", async () => {
   const calls: string[] = []
   const savedSession = { ...session, revision: 1 }

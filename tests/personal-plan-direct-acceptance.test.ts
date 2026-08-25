@@ -433,7 +433,11 @@ function createRefinementDb() {
   const needVersions: Array<{ id: string; inputHash: string }> = []
   const productDrafts: Array<{ id: string; status: string; refinedNeedVersionId: string }> = []
   const sourceChanges: Array<{ sourceKind: string; sourceKey: string }> = []
-  const plan = { currentRefinedNeedVersionId: null as string | null }
+  const plan = {
+    currentRefinedNeedVersionId: null as string | null,
+    // Matches every draft's base_initial_need_version_id until Stage 1 recomputes.
+    currentInitialNeedVersionId: INITIAL_NEED_VERSION_ID as string | null,
+  }
   let clock = 0
   let sequence = 0
 
@@ -561,8 +565,19 @@ function createRefinementDb() {
     async completeModule(input) {
       const row = drafts.find((candidate) => candidate.id === input.draft.id)
       if (!row) return { outcome: "stale_source" }
+      // Guard order mirrors the SQL: the moved-source check precedes the replay
+      // branch, and a replay fires only for a still-open draft with a recorded
+      // version id — never handing back a version the draft no longer owns.
+      if (plan.currentInitialNeedVersionId !== input.draft.baseInitialNeedVersionId) {
+        return { outcome: "stale_source" }
+      }
       const projected = row.moduleProjections[input.module]
-      if (projected && projected.projectedAtRevision === input.expectedRevision) {
+      if (
+        projected &&
+        row.status === "in_progress" &&
+        projected.needVersionId !== undefined &&
+        projected.projectedAtRevision === input.expectedRevision
+      ) {
         return {
           outcome: "already_projected",
           refinedVersionId: projected.needVersionId,

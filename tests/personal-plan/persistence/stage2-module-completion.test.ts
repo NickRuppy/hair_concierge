@@ -94,7 +94,11 @@ function createModuleRefinementDb(seed: {
   const needVersions: Array<{ id: string; inputHash: string }> = []
   const productDrafts: Array<{ id: string; status: string; refinedNeedVersionId: string }> = []
   const sourceChanges: Array<{ sourceKind: string; sourceKey: string }> = []
-  const plan = { currentRefinedNeedVersionId: null as string | null }
+  const plan = {
+    currentRefinedNeedVersionId: null as string | null,
+    // Matches the draft's base_initial_need_version_id until Stage 1 recomputes.
+    currentInitialNeedVersionId: "initial-1" as string | null,
+  }
   const moduleCalls: ModuleCompletionCall[] = []
   const moduleOutcomes: string[] = []
   const completeCalls: Array<{ expectedRevision: number; inputHash: string }> = []
@@ -179,8 +183,20 @@ function createModuleRefinementDb(seed: {
         inputSnapshot: input.inputSnapshot,
         inputHash: input.inputHash,
       })
+      // Guard order mirrors the SQL: a moved Stage-1 source invalidates every
+      // recorded projection, so it is checked BEFORE the replay branch, and the
+      // replay only fires for a still-open draft with a recorded version id.
+      if (plan.currentInitialNeedVersionId !== input.draft.baseInitialNeedVersionId) {
+        moduleOutcomes.push("stale_source")
+        return { outcome: "stale_source" }
+      }
       const projected = row.moduleProjections[input.module]
-      if (projected && projected.projectedAtRevision === input.expectedRevision) {
+      if (
+        projected &&
+        row.status === "in_progress" &&
+        projected.needVersionId !== undefined &&
+        projected.projectedAtRevision === input.expectedRevision
+      ) {
         moduleOutcomes.push("already_projected")
         return {
           outcome: "already_projected",
@@ -408,6 +424,66 @@ test("a lost revision race maps to a typed revision conflict and writes nothing"
   assert.equal(db.needVersions.length, 0)
   assert.deepEqual(db.row.moduleProjections, {})
   assert.equal(db.plan.currentRefinedNeedVersionId, null)
+})
+
+test("a moved Stage-1 source maps to a reloadable conflict and writes nothing", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  // Stage 1 recomputed: the plan's initial need moved away from the draft's base.
+  db.plan.currentInitialNeedVersionId = "initial-2"
+  const service = createService(db)
+
+  await assert.rejects(
+    () => service.completeModule({ module: "products", expectedRevision: 2 }),
+    (error: { code?: string; message?: string }) =>
+      error.code === "revision_conflict" &&
+      error.message === "The initial need changed; reload refinement",
+  )
+  assert.deepEqual(db.moduleOutcomes, ["stale_source"])
+  assert.equal(db.needVersions.length, 0)
+  assert.deepEqual(db.row.moduleProjections, {})
+  assert.equal(db.plan.currentRefinedNeedVersionId, null)
+})
+
+test("a recorded projection is not replayed once the draft closed or its source moved", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const first = await createService(db).completeModule({ module: "products", expectedRevision: 2 })
+  const replayInput = {
+    userId: "user-1",
+    draft: await db.persistence.loadOrCreate("user-1"),
+    module: "products" as const,
+    expectedRevision: 2,
+    inputSnapshot: {},
+    outputSnapshot: {},
+    inputHash: "a".repeat(64),
+    schemaVersion: 1,
+    computationVersion: "test",
+  }
+
+  // The draft closed in the meantime (full completion, staling): a replay must
+  // reload rather than receive a success for a version that is no longer the draft's.
+  db.row.status = "complete"
+  assert.deepEqual(await db.persistence.completeModule(replayInput), {
+    outcome: "revision_conflict",
+    revision: 2,
+  })
+
+  // The Stage-1 source moved: the recorded version no longer descends from it.
+  db.row.status = "in_progress"
+  db.plan.currentInitialNeedVersionId = "initial-2"
+  assert.deepEqual(await db.persistence.completeModule(replayInput), { outcome: "stale_source" })
+
+  assert.equal(db.needVersions.length, 1)
+  assert.equal(db.row.moduleProjections.products?.needVersionId, first.refinedVersionId)
 })
 
 test("completing the second module closes the draft exactly like today's full completion", async () => {

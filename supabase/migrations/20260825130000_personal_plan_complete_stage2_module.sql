@@ -21,7 +21,7 @@ ALTER TABLE public.personal_plan_refinement_drafts
     CHECK (pg_catalog.jsonb_typeof(module_projections) = 'object');
 
 COMMENT ON COLUMN public.personal_plan_refinement_drafts.module_projections IS
-  'Stage-2 module id (''products''|''habits'') -> {needVersionId, projectedAtRevision, stage3Handoff}. Written by personal_plan_complete_stage2_module. `stage3Handoff` is the persisted Modul-1 handoff marker (true only for ''products''), so the Stage-3 entry survives a reload while the draft is still in_progress. Empty on drafts that were only ever completed in full.';
+  'Stage-2 module id (''products''|''habits'') -> {needVersionId, projectedAtRevision, projectedAt, stage3Handoff}. Written by personal_plan_complete_stage2_module. `stage3Handoff` is the persisted Modul-1 handoff marker (true only for ''products''), so the Stage-3 entry survives a reload while the draft is still in_progress. In practice the map holds AT MOST ONE entry: only a module completion that leaves the draft open writes here, and the closing module delegates to personal_plan_complete_refinement_draft (draft status ''complete'' + result_refined_need_version_id is that path''s record). Empty on drafts that were only ever completed in full.';
 
 -- Atomic module completion.
 --
@@ -57,16 +57,26 @@ BEGIN
   SELECT * INTO v_plan FROM public.personal_plans WHERE id=p_personal_plan_id AND user_id=p_user_id FOR UPDATE;
   SELECT * INTO v_draft FROM public.personal_plan_refinement_drafts WHERE id=p_draft_id AND personal_plan_id=p_personal_plan_id AND user_id=p_user_id FOR UPDATE;
   IF v_plan.id IS NULL OR v_draft.id IS NULL THEN RETURN jsonb_build_object('outcome','invalid_source'); END IF;
-  IF p_module NOT IN ('products','habits') THEN RETURN jsonb_build_object('outcome','invalid_source','reasonCode','invalid_module'); END IF;
+  IF p_module IS NULL OR p_module NOT IN ('products','habits') THEN RETURN jsonb_build_object('outcome','invalid_source','reasonCode','invalid_module'); END IF;
 
   -- The Modul-1 handoff marker is a property of the module, never of the
   -- caller: only `products` hands off into Stage 3.
   v_stage3_handoff := p_module = 'products';
 
+  -- A moved Stage-1 source invalidates every recorded projection, so it is
+  -- checked BEFORE the replay branch: a replay must never hand back a version
+  -- that no longer descends from the plan's current initial need.
+  IF v_plan.current_initial_need_version_id IS DISTINCT FROM v_draft.base_initial_need_version_id THEN
+    RETURN jsonb_build_object('outcome','stale_source','currentInitialNeedVersionId',v_plan.current_initial_need_version_id);
+  END IF;
+
   -- (a) Replay of a lost response: the draft revision is unchanged by a module
-  -- completion, so an identical retry matches the recorded lineage entry.
+  -- completion, so an identical retry matches the recorded lineage entry. It is
+  -- only a replay while the draft is still open — a draft closed since (full
+  -- completion, staling) must reload instead of receiving a stale success.
   v_projection := v_draft.module_projections -> p_module;
   IF v_projection IS NOT NULL
+     AND v_draft.status = 'in_progress'
      AND (v_projection ->> 'needVersionId') IS NOT NULL
      AND (v_projection ->> 'projectedAtRevision')::bigint = p_expected_revision THEN
     RETURN jsonb_build_object(
@@ -80,9 +90,6 @@ BEGIN
   IF v_draft.status <> 'in_progress' OR v_draft.revision <> p_expected_revision THEN
     RETURN jsonb_build_object('outcome','revision_conflict','currentRevision',v_draft.revision);
   END IF;
-  IF v_plan.current_initial_need_version_id IS DISTINCT FROM v_draft.base_initial_need_version_id THEN
-    RETURN jsonb_build_object('outcome','stale_source','currentInitialNeedVersionId',v_plan.current_initial_need_version_id);
-  END IF;
   IF p_schema_version<=0 OR p_computation_version='' OR p_input_hash !~ '^[0-9a-f]{64}$'
      OR pg_catalog.jsonb_typeof(p_input_snapshot)<>'object' OR pg_catalog.jsonb_typeof(p_output_snapshot)<>'object' THEN
     RETURN jsonb_build_object('outcome','invalid_source','reasonCode','invalid_refined_need');
@@ -95,6 +102,11 @@ BEGIN
     SELECT id INTO v_need_id FROM public.personal_plan_need_versions
       WHERE personal_plan_id=p_personal_plan_id AND parent_need_version_id=v_draft.base_initial_need_version_id
         AND kind='refined' AND input_hash=p_input_hash;
+  END IF;
+  -- Neither insert nor re-select produced a row: fail loudly instead of writing
+  -- NULL into the lineage and into current_refined_need_version_id.
+  IF v_need_id IS NULL THEN
+    RETURN jsonb_build_object('outcome','invalid_source','reasonCode','refined_need_unavailable');
   END IF;
 
   -- (c) Lineage only: status stays 'in_progress', revision stays put, answers untouched.
