@@ -6,6 +6,7 @@ import { routineCategoryLabel, routinePurposeLabel } from "@/lib/personal-plan/r
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import type { PersonalPlanRefinementAnswersV1 } from "@/lib/personal-plan/refinement/types"
+import { decodeStage2RefinementAnswers } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -114,7 +115,11 @@ export function createRefinementPresentationRouteHandlers(deps: RefinementPresen
             plan.current_refined_need_version_id,
           )
           if (draft) {
-            answers = (draft.answers ?? {}) as PersonalPlanRefinementAnswersV1
+            // `D8`: stored answers are read through the same compatibility
+            // decoders every other Stage 2 read uses. Casting here would let
+            // the legacy `toolSections` key and the `R1`-forbidden diffuser
+            // `protectionConsistency` value out to /profile.
+            answers = decodeStage2RefinementAnswers(draft.answers)
             completedQuestionIds = Array.isArray(draft.completed_question_ids)
               ? (draft.completed_question_ids as string[])
               : []

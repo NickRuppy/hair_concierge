@@ -74,17 +74,25 @@ export async function handleStage1LoadOrCreate(deps: Stage1RouteDeps) {
     userId: user.id,
   })
   switch (result.status) {
-    case "completed":
+    case "completed": {
+      const toolsEnabled = (await deps.toolsEnabled?.(user.id)) === true
       return {
         status: 200,
         body: {
           status: "completed",
           personalPlanId: result.personalPlanId,
           needVersionId: result.needVersionId,
-          outputSnapshot: result.outputSnapshot,
-          toolsEnabled: (await deps.toolsEnabled?.(user.id)) === true,
+          // Fail-closed rollout boundary. The stored snapshot may carry a Tool
+          // plan from an earlier enabled computation; a gated-off owner must
+          // never receive it, and client-side filtering is not a boundary.
+          // The stored row is untouched — only the projection is removed.
+          outputSnapshot: toolsEnabled
+            ? result.outputSnapshot
+            : withoutStage1ToolPlan(result.outputSnapshot),
+          toolsEnabled,
         },
       }
+    }
     case "personal_plan_not_available":
       return { status: 404, body: { error: "personal_plan_not_available" } }
     case "activation_pending":
@@ -94,6 +102,14 @@ export async function handleStage1LoadOrCreate(deps: Stage1RouteDeps) {
     case "temporarily_unavailable":
       return { status: 503, body: { error: "temporarily_unavailable" } }
   }
+}
+
+function withoutStage1ToolPlan(snapshot: unknown): unknown {
+  if (!snapshot || typeof snapshot !== "object" || Array.isArray(snapshot)) return snapshot
+  if (!("toolPlan" in snapshot)) return snapshot
+  const filtered = { ...(snapshot as Record<string, unknown>) }
+  delete filtered.toolPlan
+  return filtered
 }
 
 function toResponse(result: Awaited<ReturnType<typeof handleStage1LoadOrCreate>>) {

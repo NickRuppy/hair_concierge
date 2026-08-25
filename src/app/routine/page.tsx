@@ -4,6 +4,9 @@ import { PersonalPlanRoutineClient } from "@/components/routine/personal-plan"
 import { RoutinePageClient } from "@/components/routine/routine-page-client"
 import { RetryRefreshButton } from "@/components/ui/retry-refresh-button"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
+import { stripRoutineToolPayload } from "@/lib/personal-plan/routine/decode-stored"
+import type { PersonalPlanRoutineView } from "@/lib/personal-plan/routine/contracts"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import {
   loadOwnerPortfolioPresentation,
@@ -34,11 +37,41 @@ export type RoutinePageResolverDeps = {
     enabled: boolean
   }) => ReturnType<typeof loadPersonalPlanRoutineView>
   stage4Enabled: () => boolean
+  /**
+   * Server-owned Hair Tools rollout for this owner. Omitted means off: the
+   * browser may never decide this, and an unwired caller renders the released
+   * product-only Routine.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
   readPortfolioPresentation?: (
     userId: string,
     planId: string,
     portfolioVersionId: string,
   ) => Promise<PortfolioPresentation | null>
+}
+
+/** Removes every Tool projection from a loaded Routine view. */
+function withoutRoutineToolProjection<T extends { status: string }>(view: T): T {
+  const loaded = view as unknown as PersonalPlanRoutineView
+  return {
+    ...view,
+    ...(loaded.activeVersion?.payload
+      ? {
+          activeVersion: {
+            ...loaded.activeVersion,
+            payload: stripRoutineToolPayload(loaded.activeVersion.payload),
+          },
+        }
+      : {}),
+    ...(loaded.pendingProposal?.candidate
+      ? {
+          pendingProposal: {
+            ...loaded.pendingProposal,
+            candidate: stripRoutineToolPayload(loaded.pendingProposal.candidate),
+          },
+        }
+      : {}),
+  }
 }
 
 export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
@@ -53,8 +86,14 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
     }
 
     const enabled = deps.stage4Enabled()
-    const view = await deps.readView({ userId, enabled })
-    if (view.status === "no_personal_plan") return { kind: "legacy" as const }
+    const loadedView = await deps.readView({ userId, enabled })
+    if (loadedView.status === "no_personal_plan") return { kind: "legacy" as const }
+    // Fail-closed rollout boundary: a gated-off owner is served the released
+    // product-only Routine. The stored Tool facts are untouched.
+    const view =
+      (await deps.toolsEnabled?.(userId)) === true
+        ? loadedView
+        : withoutRoutineToolProjection(loadedView)
     const routinePayload =
       view.status === "proposal" ? view.pendingProposal?.candidate : view.activeVersion?.payload
     const portfolioVersionId = routinePayload?.source.productPortfolioVersionId
@@ -94,6 +133,11 @@ const defaultDeps: RoutinePageResolverDeps = {
       enabled,
     }),
   stage4Enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
+  toolsEnabled: (userId) =>
+    isPersonalPlanToolsEnabledForUser(
+      userId,
+      createAdminClient() as unknown as Parameters<typeof isPersonalPlanToolsEnabledForUser>[1],
+    ),
   readPortfolioPresentation: (userId, planId, portfolioVersionId) =>
     loadOwnerPortfolioPresentation(
       createAdminClient() as unknown as PersonalPlanRoutineReadClient,

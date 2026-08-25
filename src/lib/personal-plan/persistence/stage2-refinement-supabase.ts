@@ -2,9 +2,10 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import { ignoresStoredStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
-import type {
-  PersonalPlanRefinementAnswersV1,
-  Stage2HeatEventSource,
+import {
+  STAGE2_QUESTION_PATH_VERSION,
+  type PersonalPlanRefinementAnswersV1,
+  type Stage2HeatEventSource,
 } from "@/lib/personal-plan/refinement/types"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type {
@@ -155,7 +156,11 @@ export function createSupabaseStage2RefinementPersistence(
           user_id: userId,
           personal_plan_id: plan.id,
           base_initial_need_version_id: initial.id,
-          schema_version: 1,
+          // `D8`: a new draft is written under the contract in force now. The
+          // derived `pathVersion` follows the stored column, so an existing v1
+          // row keeps reading as `stage2-v1` and completing under its own
+          // completion-time contract.
+          schema_version: STAGE2_QUESTION_PATH_VERSION,
           answers: {},
           completed_question_ids: [],
         })

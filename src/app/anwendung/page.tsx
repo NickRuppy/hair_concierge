@@ -19,6 +19,7 @@ import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import {
   loadCachedAuthenticatedAppUserId,
   loadCachedPersonalPlanJourneyAccessForUser,
@@ -63,6 +64,11 @@ export type AnwendungResolverDeps = {
   createReadClient: () => AdminReadClient
   appEnabled: () => boolean
   stage4Enabled: () => boolean
+  /**
+   * Server-owned Hair Tools rollout for this owner. Omitted means off, so a
+   * gated-off owner never receives a Tool step even from a stored V2 Routine.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
 }
 
@@ -113,6 +119,7 @@ export async function resolveAnwendungPage(
       return { state: "no_active_routine" }
     }
     const client = deps.createReadClient()
+    const toolsEnabled = (await deps.toolsEnabled?.(userId)) === true
     const contractVersion = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
     const content = deps.loadContent(contractVersion)
     const [activeVersion, dayDefinitions, protocols] = await Promise.all([
@@ -195,7 +202,9 @@ export async function resolveAnwendungPage(
       }),
       // Routine V2 is the single Tool authority; a strict V1 Routine simply
       // carries no Tool rows and the days render exactly as they do today.
-      ...(isRoutinePayloadV2(activeVersion.payload)
+      // The rollout gate is fail-closed and server-owned: a gated-off owner
+      // gets the released product-only day, stored Tool facts untouched.
+      ...(toolsEnabled && isRoutinePayloadV2(activeVersion.payload)
         ? {
             tools: {
               assets: routineToolAssets(activeVersion.payload),
@@ -245,6 +254,11 @@ const defaultDeps: AnwendungResolverDeps = {
   createReadClient: createAdminReadClient,
   appEnabled: isPersonalPlanAppV1Enabled,
   stage4Enabled: isPersonalPlanStage4Enabled,
+  toolsEnabled: (userId) =>
+    isPersonalPlanToolsEnabledForUser(
+      userId,
+      createAdminClient() as unknown as Parameters<typeof isPersonalPlanToolsEnabledForUser>[1],
+    ),
   reportFailure: capturePersonalPlanApplicationFailure,
 }
 

@@ -18,7 +18,8 @@ import {
   type PlanProductRole,
 } from "./types"
 import { semanticHash } from "./routine/canonicalize"
-import type { PlanToolPlan, ToolAsset, ToolGuidance, ToolOccurrence } from "./tools/contracts"
+import type { ToolAsset, ToolGuidance, ToolOccurrence } from "./tools/contracts"
+import { decodeStoredPlanToolRows } from "./tools/decode-stored"
 import { applyRoutineEdits as applyEdits } from "./routine/editor"
 import { diffRoutinePayloads as diffPayloads } from "./routine/diff"
 import {
@@ -498,12 +499,17 @@ export async function compileInitialRoutineCandidate(
 
   // The Tool plan is a frozen part of the refined snapshot, so it is source, not
   // a separate authority: it belongs in the fingerprint alongside the decisions.
-  const toolPlan: PlanToolPlan | null = input.refinedNeedSnapshot.toolPlan ?? null
-  const toolPayload = toolPlan
+  //
+  // The snapshot is stored as opaque JSON, so its Tool slice may still carry the
+  // pre-`D7` anchor shape. It is decoded and validated before it is copied: a V2
+  // Routine whose own readers would reject its Tool rows must never be written.
+  // An undecodable slice compiles to a strict product-only V1 Routine instead.
+  const toolRows = decodeStoredPlanToolRows(input.refinedNeedSnapshot.toolPlan ?? null)
+  const toolPayload = toolRows
     ? {
-        toolAssets: toolPlan.assets,
-        toolOccurrences: toolPlan.occurrences,
-        toolGuidance: toolPlan.guidance,
+        toolAssets: toolRows.assets,
+        toolOccurrences: toolRows.occurrences,
+        toolGuidance: toolRows.guidance,
       }
     : null
 

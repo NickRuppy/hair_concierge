@@ -1,10 +1,10 @@
 import {
-  routinePayloadSchema,
   routineProposalDeltaV1Schema,
   type PersonalPlanRoutineView,
   type RoutinePayload,
   type RoutineProductPresentation,
 } from "./contracts"
+import { parseStoredRoutinePayload } from "./decode-stored"
 import {
   loadActiveRoutineCatalogProductPresentation,
   loadOwnerRefinedNeedSnapshot,
@@ -122,7 +122,7 @@ export async function loadPersonalPlanRoutineView(input: {
       : null,
   ])
   const activeVersion = active
-    ? { id: active.id, payload: routinePayloadSchema.parse(active.payload) }
+    ? { id: active.id, payload: parseStoredRoutinePayload(active.payload) }
     : null
   const viewBase = async () => ({
     personalPlanId: plan.id,
@@ -185,7 +185,7 @@ export async function loadPersonalPlanRoutineView(input: {
         proposal.candidate_routine_version_id,
       )
       if (candidate) {
-        const candidatePayload = routinePayloadSchema.parse(candidate.payload)
+        const candidatePayload = parseStoredRoutinePayload(candidate.payload)
         if (
           await hasMatchingSourceCategoryOrder({
             client: input.client,
@@ -242,7 +242,7 @@ export async function loadPersonalPlanRoutineView(input: {
       status: activeVersion ? "active" : "personal_plan_incomplete",
       pendingProposal: null,
     }
-  const candidatePayload = routinePayloadSchema.parse(candidate.payload)
+  const candidatePayload = parseStoredRoutinePayload(candidate.payload)
   if (
     !(await hasMatchingSourceCategoryOrder({
       client: input.client,
@@ -280,7 +280,7 @@ export async function loadPersonalPlanActiveRoutineVersion(input: {
   userId: string
   planId: string
   activeRoutineVersionId: string
-}): Promise<{ id: string; payload: ReturnType<typeof routinePayloadSchema.parse> } | null> {
+}): Promise<{ id: string; payload: RoutinePayload } | null> {
   const active = await loadOwnerRoutineVersion(
     input.client,
     input.userId,
@@ -288,7 +288,7 @@ export async function loadPersonalPlanActiveRoutineVersion(input: {
     input.activeRoutineVersionId,
   )
   if (!active) return null
-  const payload = routinePayloadSchema.parse(active.payload)
+  const payload = parseStoredRoutinePayload(active.payload)
   const matchesImmutableSource = await hasMatchingSourceCategoryOrder({
     client: input.client,
     userId: input.userId,
