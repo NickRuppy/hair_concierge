@@ -290,25 +290,39 @@ function withToolSteps(
     rank: number
     placement: ToolPlacement
     relativeToStep: ToolOccurrenceAnchor["relativeToStep"]
+    /** Nick's ready-check ruling 2026-08-25: the Applikator renders BEFORE its
+     * scalp product — you pick up the tool, then apply the product with it. All
+     * other ties stay product-first (heat protection before the heated tool). */
+    toolFirst: boolean
     step: ApplicationOuterStepView
   }
+  // Ready-check ruling 2026-08-25: when the towel card renders at
+  // post_rinse_towel_dry, the separate rough-rubbing correction line is dropped —
+  // its message lives in the card. Users without a towel card keep the firm line.
+  const towelCardPresent = hasDryingTextileStepAtTowelDry(projection.sections)
   const pending: Pending[] = [
     ...projection.sections.map((section) => ({
       rank: dayAnchorIndex(section.anchor),
       placement: section.placement,
       relativeToStep: section.anchor.relativeToStep,
+      toolFirst: section.assetKey.startsWith("asset:wash_application:"),
       step: section as ApplicationOuterStepView,
     })),
-    ...projection.transitions.map((transition) => ({
-      rank: dayAnchorIndex(transition.anchor),
-      placement: transition.placement,
-      relativeToStep: transition.anchor.relativeToStep,
-      step: {
-        kind: "transition" as const,
-        stepKey: transition.stepKey,
-        copyDe: transition.copyDe,
-      },
-    })),
+    ...projection.transitions
+      .filter(
+        (transition) => !(towelCardPresent && transition.stepKey.includes("gentle_towel_handling")),
+      )
+      .map((transition) => ({
+        rank: dayAnchorIndex(transition.anchor),
+        placement: transition.placement,
+        relativeToStep: transition.anchor.relativeToStep,
+        toolFirst: false,
+        step: {
+          kind: "transition" as const,
+          stepKey: transition.stepKey,
+          copyDe: transition.copyDe,
+        },
+      })),
   ].sort((left, right) => left.rank - right.rank)
 
   const nightly = pending.filter((entry) => entry.placement === "nightly")
@@ -319,7 +333,9 @@ function withToolSteps(
   const merged: ApplicationOuterStepView[] = []
   let cursor = 0
   for (const entry of inDay) {
-    let target = productRanks.filter((rank) => rank <= entry.rank).length
+    let target = productRanks.filter((rank) =>
+      entry.toolFirst ? rank < entry.rank : rank <= entry.rank,
+    ).length
     // An optional refinement INSIDE the position: sit immediately after (or
     // before) the named product step when the day actually contains it. The
     // graph position still decides everything else, so this can never move a

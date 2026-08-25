@@ -166,6 +166,7 @@ function renderWashDay(input: {
   occurrences?: readonly ToolOccurrence[]
   guidance?: readonly ToolGuidance[]
   blocks?: readonly Block[]
+  assets?: readonly ToolAsset[]
   /** Overrides the plain product-only sequence, e.g. to inject a compiler transition. */
   outerSequence?: readonly OuterSequenceEntry[]
 }) {
@@ -188,7 +189,7 @@ function renderWashDay(input: {
       { key: "rest_day", label: "Pausentag", summary: "", sortOrder: 80 },
     ] as never,
     tools: {
-      assets: ASSETS,
+      assets: input.assets ?? ASSETS,
       occurrences: input.occurrences ?? OCCURRENCES,
       guidance: input.guidance ?? [],
     },
@@ -452,4 +453,58 @@ test("a wash-phase Tool never leaks onto the styling day", () => {
     guidance: [],
   })
   assert.equal(projection.sections.length, 0)
+})
+
+// --- ready-check rulings 2026-08-25 --------------------------------------------
+
+const APPLICATOR = asset(
+  "asset:wash_application:applicator_bottle",
+  "wash_application",
+  "applicator_bottle",
+  ["apply_product"],
+  "Applikatorflasche",
+)
+
+test("the Applikator renders BEFORE its scalp product (ready-check ruling)", () => {
+  const { order } = renderWashDay({
+    assets: [...ASSETS, APPLICATOR],
+    occurrences: [occurrence(APPLICATOR, "apply_product", "wet_cleanse")],
+  })
+  const applicatorAt = order.indexOf(`tool:${APPLICATOR.assetKey}`)
+  assert.ok(applicatorAt >= 0)
+  assert.ok(
+    applicatorAt < order.indexOf("step:shampoo"),
+    "you pick up the applicator, then apply the product with it",
+  )
+})
+
+test("the rough-rubbing correction line merges into the towel card when both render", () => {
+  const guidance: ToolGuidance[] = [
+    {
+      guidanceKey: "guidance:tool:drying_textiles:gentle_towel_handling",
+      routeKey: "tool:drying_textiles:gentle_towel_handling",
+      anchor: atDayAnchor("post_rinse_towel_dry"),
+      copyKey: "personal_plan.tools.guidance.gentle_towel_handling",
+      strength: "firm",
+    },
+  ]
+  // Towel card present: the separate correction line is dropped — its message
+  // lives in the card (ready-check ruling 2026-08-25).
+  const withCard = renderWashDay({
+    occurrences: [occurrence(TOWEL, "absorb_water", "post_rinse_towel_dry")],
+    guidance,
+  })
+  assert.equal(
+    withCard.order.some((id) => id.includes("gentle_towel_handling")),
+    false,
+    "one towel line only when the card renders",
+  )
+  assert.ok(withCard.order.includes(`tool:${TOWEL.assetKey}`))
+  // No towel card: rough-rubbing users keep the firm correction.
+  const withoutCard = renderWashDay({ occurrences: [], guidance })
+  assert.equal(
+    withoutCard.order.some((id) => id.includes("gentle_towel_handling")),
+    true,
+    "the firm correction survives without a towel card",
+  )
 })
