@@ -14,7 +14,7 @@ import { assessPersonalPlanHair } from "@/lib/personal-plan-quiz/hair-assessment
 import { adaptLegacyQuizAnswersForAssessment } from "@/lib/personal-plan-quiz/offer-adapter"
 import type { PersonalPlanDiagnosticDimension } from "@/components/personal-plan-offer/types"
 
-const ORGANIC_PLAN_OFFER_REVISION = "organic_plan_v2"
+const ORGANIC_PLAN_OFFER_REVISION = "organic_plan_v3"
 
 const planHighlights: ReadonlyArray<{ emphasis: string; prefix?: string; rest: string }> = [
   {

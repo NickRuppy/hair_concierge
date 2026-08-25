@@ -3,7 +3,7 @@
 import { createElement, useEffect, useState } from "react"
 import Script from "next/script"
 
-const WISTIA_MEDIA_ID = "hofntlzjgj"
+const WISTIA_MEDIA_ID = "nwrpfub965"
 const WISTIA_ASPECT_RATIO = "1.7777777777777777"
 const WISTIA_PLAYER_SCRIPT = "https://fast.wistia.com/player.js"
 const WISTIA_MEDIA_SCRIPT = `https://fast.wistia.com/embed/${WISTIA_MEDIA_ID}.js`
@@ -28,10 +28,10 @@ export function WistiaVideo() {
   const player = createElement("wistia-player", {
     "aria-label": "Video zu deinem persönlichen Haarplan",
     aspect: WISTIA_ASPECT_RATIO,
-    autoplay: "false",
+    autoplay: "true",
     "media-id": WISTIA_MEDIA_ID,
-    preload: "metadata",
-    "silent-autoplay": "false",
+    preload: "auto",
+    "silent-autoplay": "true",
   })
 
   return (
