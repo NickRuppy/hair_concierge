@@ -180,7 +180,7 @@ test("occurrences own event timing, not assets", () => {
 
 test("the Tool plan rejects duplicate physical assets and dangling occurrences", () => {
   const plan = {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     routes: [
       {
         routeKey: "tool:brushes_combs:detangling_foundation",
@@ -191,12 +191,19 @@ test("the Tool plan rejects duplicate physical assets and dangling occurrences",
         recommendedProductTypes: ["wide_tooth_comb" as const],
         requiredCapabilities: ["detangle" as const],
         purposeKey: "tool.purpose.detangle_distribute",
-        ownership: "owned_generic" as const,
+        // D4: what the user reported, and separately whether the plan still
+        // recommends acquiring anything.
+        reportedOwnership: {
+          state: "owned_generic" as const,
+          provenance: "reported" as const,
+          forms: ["wide_tooth_comb" as const],
+        },
+        coverage: { state: "covered_by_report" as const, capabilityVerified: true },
         ruleIds: ["tools.brush.foundation"],
-        alternativeRouteKey: null,
-        capabilityVerified: true,
+        deferredFacts: [],
       },
     ],
+    choiceGroups: [],
     assets: [asset],
     occurrences: [occurrence],
     guidance: [],
@@ -227,8 +234,9 @@ test("the Tool plan rejects duplicate physical assets and dangling occurrences",
 
 test("selected_exact is never reachable in a Phase 1 plan", () => {
   const parsed = planToolPlanSchema.parse({
-    schemaVersion: 1,
+    schemaVersion: 2,
     routes: [],
+    choiceGroups: [],
     assets: [],
     occurrences: [],
     guidance: [],

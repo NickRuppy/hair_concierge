@@ -65,7 +65,10 @@ test("an explicitly missing route stays a useful generic type with an honest gap
   const cards = checkpointCards({ ...CARE_ANSWERS, toolForms: { brushes_combs: [] } })
   const brush = cards.find((card) => card.familyLabel === "Bürsten & Kämme")
   assert.equal(brush?.state, "catalog_gap")
-  assert.equal(brush?.typeLabel, "Grobzinkiger Kamm", "the generic form stays visible and useful")
+  // D6: the route order is the lead-form decision. B02 gives a straight profile
+  // the Detangling-Bürste; the old expectation was the canonical family order
+  // leaking through `assetFormsFor`.
+  assert.equal(brush?.typeLabel, "Detangling-Bürste", "the generic form stays visible and useful")
 
   const markup = renderToStaticMarkup(<Stage3ToolCheckpoint cards={cards} onContinue={() => {}} />)
   assert.ok(markup.includes("Konkretes Produkt folgt"))
@@ -137,7 +140,7 @@ test("towel forms are named as a neutral group, never silently ranked", () => {
 test("families that legitimately lead with one form name their alternative", () => {
   const cards = checkpointCards({ ...CARE_ANSWERS, toolForms: { brushes_combs: [] } })
   const brush = cards.find((card) => card.familyLabel === "Bürsten & Kämme")
-  assert.equal(brush?.typeLabel, "Grobzinkiger Kamm", "brushes keep one recommended form")
+  assert.equal(brush?.typeLabel, "Detangling-Bürste", "brushes keep one recommended form")
   assert.ok(
     brush?.noteDe?.startsWith("Alternative: "),
     `expected an alternative line, got ${String(brush?.noteDe)}`,

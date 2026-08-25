@@ -2,6 +2,7 @@ import {
   TOOL_FAMILIES,
   TOOL_PRODUCT_TYPES_BY_FAMILY,
   TOOL_ROUTE_TARGETS,
+  type ToolChoiceGroupTarget,
   type ToolFamily,
   type ToolProductType,
   type ToolRouteTarget,
@@ -46,6 +47,8 @@ export const TOOL_PRODUCT_TYPE_LABELS = {
   paddle_brush: "Paddle-Bürste",
   vent_brush: "Vent-Bürste",
   round_brush: "Rundbürste",
+  // Kept identical to the legacy onboarding enum's label (`BRUSH_TYPE_LABELS`).
+  boar_bristle: "Wildschweinborsten-Bürste",
   styling_brush: "Styling-/Definitionsbürste",
   hair_pick: "Afro-Pick",
   sectioning_comb: "Stiel-/Abteilkamm",
@@ -150,22 +153,39 @@ export function toolRoutePurpose(target: ToolRouteTarget): string {
 }
 
 /**
- * Families where the evidence supports NO ranking between the eligible forms.
+ * German copy for the first-class choice groups (`D5`, ruled 2026-08-24). One
+ * card per need; the members are listed neutrally and one covered member fulfils
+ * the whole group.
  *
- * Drying textiles are the confirmed case (fixtures 104 and 113): a 2026-08-21
- * evidence pass found microfiber-vs-terry has only a plausible mechanism and one
- * weak study, and microfiber-vs-smooth-cotton-jersey is unmeasured at every
- * tier. AAD treats towel and T-shirt as interchangeable and ranks technique
- * instead. So all eligible forms are named together and the technique carries
- * the guidance.
+ * Drying textiles are the confirmed neutral case (fixtures 104 and 113): a
+ * 2026-08-21 evidence pass found microfiber-vs-terry has only a plausible
+ * mechanism and one weak study, and microfiber-vs-smooth-cotton-jersey is
+ * unmeasured at every tier. AAD treats towel and T-shirt as interchangeable and
+ * ranks technique instead.
  */
-export const TOOL_NEUTRAL_GROUP_LABELS: Partial<Record<ToolFamily, string>> = {
-  drying_textiles: "Mikrofaser-Handtuch, Baumwolltuch oder Haarturban",
+export const TOOL_CHOICE_GROUP_LABELS = {
+  volume_set: "Eine davon reicht: Warmluftbürste, Air Multi-Styler oder Föhn mit Rundbürste",
+  drying_textile: "Mikrofaser-Handtuch, Baumwolltuch oder Haarturban",
+} as const satisfies Record<ToolChoiceGroupTarget, string>
+
+export const TOOL_CHOICE_GROUP_NOTES: Partial<Record<ToolChoiceGroupTarget, string>> = {
+  drying_textile:
+    "Entscheidend ist die Technik, nicht das Material: sanft ausdrücken statt rubbeln.",
 }
 
+/**
+ * @deprecated Superseded by `TOOL_CHOICE_GROUP_LABELS` (`D5`). The plan now
+ * carries a first-class `drying_textile` choice group; this family-keyed map is
+ * only still read by the current Stage-1 card projection and is removed when
+ * WS2/WS4 move that projection onto `PlanToolPlan.choiceGroups`.
+ */
+export const TOOL_NEUTRAL_GROUP_LABELS: Partial<Record<ToolFamily, string>> = {
+  drying_textiles: TOOL_CHOICE_GROUP_LABELS.drying_textile,
+}
+
+/** @deprecated See `TOOL_NEUTRAL_GROUP_LABELS`. */
 export const TOOL_NEUTRAL_GROUP_NOTES: Partial<Record<ToolFamily, string>> = {
-  drying_textiles:
-    "Entscheidend ist die Technik, nicht das Material: sanft ausdrücken statt rubbeln.",
+  drying_textiles: TOOL_CHOICE_GROUP_NOTES.drying_textile,
 }
 
 /** German alternative line for families that legitimately lead with one form. */

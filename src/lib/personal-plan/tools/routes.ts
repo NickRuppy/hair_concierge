@@ -6,9 +6,10 @@ import {
   toolRouteSchema,
   type PlanToolRoute,
   type ToolCapability,
+  type ToolCoverage,
   type ToolFamily,
-  type ToolOwnershipState,
   type ToolProductType,
+  type ToolReportedOwnership,
   type ToolResolution,
   type ToolRouteTarget,
 } from "./contracts"
@@ -74,7 +75,6 @@ type DraftRoute = {
   recommendedProductTypes: ToolProductType[]
   requiredCapabilities: ToolCapability[]
   ruleIds: string[]
-  alternativeRouteKey?: string | null
 }
 
 const LENGTHS_NEEDING_A_PHYSICAL_TOOL = new Set(["short", "medium", "long", "very_long"])
@@ -100,12 +100,19 @@ const NIGHT_SIGNAL_GOALS = new Set(["frizz_surface", "shape_definition", "streng
  *    drying, heat, towel and Night-Protection routes appear after Feinschliff.
  */
 export function computeToolRoutes(rawInput: ToolRouteInput): PlanToolRoute[] {
-  // Canonical care answers already report ownership; the Tool inventory only
-  // adds what those questions never covered, and an explicit Tool answer wins.
+  // Canonical care answers already imply ownership; the Tool inventory only adds
+  // what those questions never covered, and an explicit Tool answer wins.
+  //
+  // The two sources stay distinguishable (D4): a family the user answered is
+  // `reported`, a family projected from a care behaviour is `derived`. „Du
+  // föhnst" is a behaviour, not the sentence „du besitzt einen Föhn".
+  const derivedInventory = projectToolInventoryFromCareFacts(rawInput.care)
   const input: ToolRouteInput = {
     ...rawInput,
-    inventory: { ...projectToolInventoryFromCareFacts(rawInput.care), ...rawInput.inventory },
+    inventory: { ...derivedInventory, ...rawInput.inventory },
   }
+  const provenanceFor = (family: ToolFamily) =>
+    rawInput.inventory[family] !== undefined ? ("reported" as const) : ("derived" as const)
   const drafts: DraftRoute[] = [
     ...airflowRoutes(input),
     ...stylingRoutes(input),
@@ -127,34 +134,71 @@ export function computeToolRoutes(rawInput: ToolRouteInput): PlanToolRoute[] {
       recommendedProductTypes: draft.recommendedProductTypes,
       requiredCapabilities: draft.requiredCapabilities,
       purposeKey: TOOL_ROUTE_PURPOSE_COPY[draft.target],
-      ownership: ownershipFor(input.inventory, family, draft),
       ruleIds: [...new Set(draft.ruleIds)].sort(),
-      alternativeRouteKey: draft.alternativeRouteKey ?? null,
-      capabilityVerified: capabilityVerifiedFor(input.inventory, family, draft),
+      reportedOwnership: reportedOwnershipFor(input.inventory, family, draft, provenanceFor),
+      coverage: coverageFor(input.inventory, family, draft, provenanceFor),
+      // No Phase-1 rule defers yet; WS2 wires the missing-input reasons.
+      deferredFacts: [],
     } satisfies PlanToolRoute)
   })
 }
 
 /**
- * A behaviour-only route has nothing to own. Otherwise the family answer decides:
- * absent/`null` stays `unknown`, `[]` is an explicit none, and a reported form
- * that can serve the route is `owned_generic`.
+ * What the user told us about this family (`D4`), independent of whether the
+ * reported form can serve this particular route.
+ *
+ * A behaviour-only route has nothing to own — it is `unknown`, never a fabricated
+ * explicit none. Otherwise: absent/`null` stays `unknown`, `[]` is an explicit
+ * none, and any reported form is `owned_generic` and is named in `forms` so the
+ * card can talk about THEIR tool rather than the ideal one.
  */
-function ownershipFor(
+function reportedOwnershipFor(
   inventory: ToolInventory,
   family: ToolFamily,
   draft: DraftRoute,
-): ToolOwnershipState {
-  if (draft.resolution === "behavior_only") return "explicit_none"
+  provenanceFor: (family: ToolFamily) => "reported" | "derived",
+): ToolReportedOwnership {
+  if (draft.resolution === "behavior_only") {
+    return { state: "unknown", provenance: null, forms: [] }
+  }
   const reported = inventoryFor(inventory, family)
-  if (reported === null) return "unknown"
-  if (reported.length === 0) return "explicit_none"
-  if (draft.coverageMode === "any_reported_form") return "owned_generic"
-  const eligible =
-    draft.recommendedProductTypes.length === 0
-      ? reported
-      : reported.filter((type) => draft.recommendedProductTypes.includes(type))
-  return eligible.length > 0 ? "owned_generic" : "explicit_none"
+  if (reported === null) return { state: "unknown", provenance: null, forms: [] }
+  const provenance = provenanceFor(family)
+  if (reported.length === 0) return { state: "explicit_none", provenance, forms: [] }
+  return { state: "owned_generic", provenance, forms: [...new Set(reported)] }
+}
+
+/**
+ * Whether the plan still recommends acquiring something (`D4`).
+ *
+ * This is where `B04` duplicate suppression lands: `any_reported_form` means any
+ * reported physical form in the family covers the purchase, even when its primary
+ * job differs. It never claims the user owns the ideal form, and it never claims
+ * the covering form can do the job — that is `capabilityVerified`.
+ */
+function coverageFor(
+  inventory: ToolInventory,
+  family: ToolFamily,
+  draft: DraftRoute,
+  provenanceFor: (family: ToolFamily) => "reported" | "derived",
+): ToolCoverage {
+  if (draft.resolution === "behavior_only") {
+    return { state: "not_applicable", capabilityVerified: true }
+  }
+  const reported = inventoryFor(inventory, family)
+  const capabilityVerified = capabilityVerifiedFor(reported, draft)
+  if (reported === null || reported.length === 0) {
+    return { state: "uncovered", capabilityVerified }
+  }
+  const covers =
+    draft.coverageMode === "any_reported_form" ||
+    draft.recommendedProductTypes.length === 0 ||
+    reported.some((type) => draft.recommendedProductTypes.includes(type))
+  if (!covers) return { state: "uncovered", capabilityVerified }
+  return {
+    state: provenanceFor(family) === "reported" ? "covered_by_report" : "covered_by_derived",
+    capabilityVerified,
+  }
 }
 
 /**
@@ -162,11 +206,9 @@ function ownershipFor(
  * accepted only through B04 coverage does not.
  */
 function capabilityVerifiedFor(
-  inventory: ToolInventory,
-  family: ToolFamily,
+  reported: readonly ToolProductType[] | null,
   draft: DraftRoute,
 ): boolean {
-  const reported = inventoryFor(inventory, family)
   if (reported === null || reported.length === 0) return true
   if (draft.recommendedProductTypes.length === 0) return true
   return reported.some((type) => draft.recommendedProductTypes.includes(type))
@@ -309,7 +351,6 @@ function stylingRoutes(input: ToolRouteInput): DraftRoute[] {
     target: "heated_volume_set" | "heatless_volume_set",
     reported: readonly ToolProductType[],
     generic: ToolProductType[],
-    alternative: "heated_volume_set" | "heatless_volume_set",
   ) => {
     const recommend = wantsVolume && (reported.length > 0 || !alreadyCovered)
     // The suppressed peer is still emitted at `not_needed` so it stays a
@@ -327,25 +368,16 @@ function stylingRoutes(input: ToolRouteInput): DraftRoute[] {
       ruleIds: recommend
         ? ["tools.styling.volume_basis", "tools.styling.volume_direction_inferred"]
         : ["tools.styling.reported_straighten", "tools.styling.reported_curl_wave"],
-      // Heated and heatless are neutral peers for the same outcome; neither is
-      // presented as the safer or better route.
-      alternativeRouteKey:
-        recommend || (heated.length > 0 && heatless.length > 0) ? routeKeyFor(alternative) : null,
     })
   }
 
-  push(
-    "heated_volume_set",
-    heated,
-    ["heated_rollers", "heated_brush", "curling_iron"],
-    "heatless_volume_set",
-  )
-  push(
-    "heatless_volume_set",
-    heatless,
-    ["setting_roller", "foam_roller", "heatless_curling_band"],
-    "heated_volume_set",
-  )
+  // Heated and heatless are neutral peers for the same outcome; neither is
+  // presented as the safer or better route. Their peer relationship is the
+  // `volume_set` choice group (D5), built in `assets.ts` — the old ad-hoc
+  // `alternativeRouteKey` link could only ever chain two routes and was read by
+  // no presentation layer.
+  push("heated_volume_set", heated, ["heated_rollers", "heated_brush", "curling_iron"])
+  push("heatless_volume_set", heatless, ["setting_roller", "foam_roller", "heatless_curling_band"])
   return drafts
 }
 

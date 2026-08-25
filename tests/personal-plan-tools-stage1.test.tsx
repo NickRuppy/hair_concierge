@@ -191,7 +191,7 @@ test("a directly accepted plan leaves every Tool route unknown", () => {
   for (const route of routes) {
     if (route.resolution === "behavior_only") continue
     assert.equal(
-      route.ownership,
+      route.reportedOwnership.state,
       "unknown",
       `${route.routeKey} must stay unknown after a direct accept`,
     )

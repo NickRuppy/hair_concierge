@@ -275,7 +275,12 @@ test("a reused known answer produces ownership without a second question", () =>
     scalpApplicationJob: false,
   })
   const drying = routes.find((route) => route.target === "drying_diffused")
-  assert.equal(drying?.ownership, "owned_generic")
+  assert.equal(drying?.reportedOwnership.state, "owned_generic")
+  assert.equal(
+    drying?.reportedOwnership.provenance,
+    "derived",
+    "a reused drying answer is a behaviour we projected, not a Tool the user reported (D4)",
+  )
 })
 
 test("the overview renders four large image sections and an explicit none", () => {

@@ -51,7 +51,7 @@ test("Stage 1 computes only routes the initial quiz can actually prove", () => {
   const foundation = find(list, "detangling_foundation")
   assert.equal(foundation?.tier, "basis")
   assert.equal(foundation?.resolution, "tool_type")
-  assert.equal(foundation?.ownership, "unknown")
+  assert.equal(foundation?.reportedOwnership.state, "unknown")
   assert.ok(foundation?.ruleIds.includes("tools.brush.foundation"))
 })
 
@@ -71,7 +71,7 @@ test("a reported brush covers the foundation without a second recommendation", (
     inventory: { brushes_combs: ["wide_tooth_comb"] },
   })
   const foundation = find(list, "detangling_foundation")
-  assert.equal(foundation?.ownership, "owned_generic")
+  assert.equal(foundation?.reportedOwnership.state, "owned_generic")
   assert.ok(foundation?.ruleIds.includes("tools.brush.reported_coverage"))
   assert.equal(
     list.filter((route) => route.family === "brushes_combs" && route.tier === "basis").length,
@@ -89,7 +89,7 @@ test("tangling reopens the detangling correction even when a brush is reported",
   assert.equal(foundation?.tier, "basis")
   assert.ok(foundation?.ruleIds.includes("tools.brush.mismatch"))
   assert.equal(
-    foundation?.ownership,
+    foundation?.reportedOwnership.state,
     "owned_generic",
     "the correction never erases what the user reported",
   )
@@ -97,7 +97,7 @@ test("tangling reopens the detangling correction even when a brush is reported",
 
 test("explicit none stays explicit and never becomes unknown", () => {
   const list = routes({ answers: { hairLength: "long" }, inventory: { brushes_combs: [] } })
-  assert.equal(find(list, "detangling_foundation")?.ownership, "explicit_none")
+  assert.equal(find(list, "detangling_foundation")?.reportedOwnership.state, "explicit_none")
 })
 
 test("blow drying makes one airflow drying path basis, diffuser replaces standard", () => {
@@ -171,7 +171,7 @@ test("reported heated tools create use guidance, never a purchase need", () => {
   })
   const heated = find(list, "heated_volume_set")
   assert.equal(heated?.tier, "not_needed")
-  assert.equal(heated?.ownership, "owned_generic")
+  assert.equal(heated?.reportedOwnership.state, "owned_generic")
   assert.ok(
     heated?.ruleIds.includes("tools.styling.reported_curl_wave") ||
       heated?.ruleIds.includes("tools.styling.reported_straighten"),
@@ -185,7 +185,7 @@ test("night protection is optional at most and never basis", () => {
   })
   const night = find(strong, "night_protection")
   assert.equal(night?.tier, "optional")
-  assert.equal(night?.ownership, "explicit_none")
+  assert.equal(night?.reportedOwnership.state, "explicit_none")
   assert.ok(night?.ruleIds.includes("tools.night.optional_strong"))
 
   const none = routes({
@@ -196,7 +196,7 @@ test("night protection is optional at most and never basis", () => {
 
 test("unknown night-protection ownership stays unknown, not none", () => {
   const list = routes({ answers: { hairLength: "long" }, care: { nightProtection: null } })
-  assert.equal(find(list, "night_protection")?.ownership, "unknown")
+  assert.equal(find(list, "night_protection")?.reportedOwnership.state, "unknown")
 })
 
 test("rough rubbing is firm behaviour-only guidance, never a mandatory purchase", () => {
@@ -295,8 +295,16 @@ test("fine straight hair with the volume goal reads as wanting more volume", () 
   const heatless = find(list, "heatless_volume_set")
   assert.equal(heated?.tier, "basis")
   assert.equal(heatless?.tier, "basis", "both approaches are one shared basis choice")
-  assert.equal(heated?.alternativeRouteKey, routeKeyFor("heatless_volume_set"))
-  assert.equal(heatless?.alternativeRouteKey, routeKeyFor("heated_volume_set"))
+  // D5: the peer relationship is the first-class `volume_set` choice group, not
+  // an ad-hoc route-to-route link that no presentation layer ever read.
+  const group = buildToolPlan({ routes: list, inventory: {} }).choiceGroups.find(
+    (candidate) => candidate.target === "volume_set",
+  )
+  assert.deepEqual(
+    [...(group?.memberRouteKeys ?? [])].sort(),
+    [routeKeyFor("heated_volume_set"), routeKeyFor("heatless_volume_set")].sort(),
+  )
+  assert.equal(group?.fulfilledBy, null)
   assert.ok(heated?.ruleIds.includes("tools.styling.volume_basis"))
   assert.ok(
     heated?.ruleIds.includes("tools.styling.volume_direction_inferred"),
@@ -359,14 +367,16 @@ test("a reported viable route is prioritized instead of recommending a purchase"
     answers: { texture: "straight", thickness: "fine", goals: ["volume_balance"] },
     inventory: { heatless_styling: ["setting_roller"] },
   })
-  assert.equal(find(list, "heatless_volume_set")?.ownership, "owned_generic")
+  assert.equal(find(list, "heatless_volume_set")?.reportedOwnership.state, "owned_generic")
   // The peer survives as a referenceable alternative but is no longer a need.
   assert.equal(find(list, "heated_volume_set")?.tier, "not_needed")
-  assert.equal(
-    find(list, "heatless_volume_set")?.alternativeRouteKey,
-    routeKeyFor("heated_volume_set"),
-    "the alternative reference still resolves to a real route",
-  )
+  // D5: the peer stays a group member, and the reported route leads the group.
+  const group = buildToolPlan({
+    routes: list,
+    inventory: { heatless_styling: ["setting_roller"] },
+  }).choiceGroups.find((candidate) => candidate.target === "volume_set")
+  assert.ok(group?.memberRouteKeys.includes(routeKeyFor("heated_volume_set")))
+  assert.equal(group?.fulfilledBy, routeKeyFor("heatless_volume_set"))
 })
 
 test("one device covering drying and air shaping stays one physical asset", () => {
@@ -377,8 +387,8 @@ test("one device covering drying and air shaping stays one physical asset", () =
   })
   const drying = find(list, "drying_standard")
   const airShape = find(list, "air_shaping_volume")
-  assert.equal(drying?.ownership, "owned_generic")
-  assert.equal(airShape?.ownership, "owned_generic")
+  assert.equal(drying?.reportedOwnership.state, "owned_generic")
+  assert.equal(airShape?.reportedOwnership.state, "owned_generic")
 })
 
 test("a volume goal alone never creates a specialized brush purchase without air shaping", () => {
@@ -416,7 +426,7 @@ test("B04: any reported physical brush suppresses another foundational purchase"
     inventory: { brushes_combs: ["round_brush"] },
   })
   const foundation = find(list, "detangling_foundation")
-  assert.equal(foundation?.ownership, "owned_generic")
+  assert.equal(foundation?.reportedOwnership.state, "owned_generic")
   assert.ok(foundation?.ruleIds.includes("tools.brush.reported_coverage"))
 })
 
@@ -427,7 +437,12 @@ test("B04: reported coverage never fabricates a verified detangling capability",
   })
   const foundation = find(list, "detangling_foundation")
   assert.equal(
-    foundation?.capabilityVerified,
+    foundation?.coverage.state,
+    "covered_by_report",
+    "B04 writes coverage — the purchase is suppressed",
+  )
+  assert.equal(
+    foundation?.coverage.capabilityVerified,
     false,
     "a styling form does not prove it detangles gently",
   )
@@ -436,7 +451,7 @@ test("B04: reported coverage never fabricates a verified detangling capability",
     answers: { hairLength: "long", texture: "straight" },
     inventory: { brushes_combs: ["detangling_brush"] },
   })
-  assert.equal(find(real, "detangling_foundation")?.capabilityVerified, true)
+  assert.equal(find(real, "detangling_foundation")?.coverage.capabilityVerified, true)
 })
 
 test("B05: rough towel rubbing is not a brush mismatch signal", () => {
@@ -466,7 +481,7 @@ test("an owned viable route suppresses the peer as a requirement", () => {
   const heated = find(list, "heated_volume_set")
 
   assert.equal(heatless?.tier, "basis", "the owned route stays the primary approach")
-  assert.equal(heatless?.ownership, "owned_generic")
+  assert.equal(heatless?.reportedOwnership.state, "owned_generic")
   // The peer must not become a second basis need: owning one covers the job.
   assert.notEqual(heated?.tier, "basis")
 
