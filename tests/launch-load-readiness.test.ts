@@ -5,9 +5,11 @@ import test from "node:test"
 test("Vercel functions are pinned to Dublin beside the production database", () => {
   const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
     regions?: string[]
+    git?: { deploymentEnabled?: Record<string, boolean> }
   }
 
   assert.deepEqual(config.regions, ["dub1"])
+  assert.deepEqual(config.git?.deploymentEnabled, { main: true, "**": false })
 })
 
 test("isolated launch load tests fail closed instead of defaulting to production", () => {

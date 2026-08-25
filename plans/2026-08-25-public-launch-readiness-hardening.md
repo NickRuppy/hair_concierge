@@ -72,6 +72,8 @@ The Vercel project was changed from Node 24.x to Node 22.x, matching `.nvmrc` an
 
 `vercel.json` adds the pending Dublin default. Actual `dub1` execution can be proven only after the reviewed configuration is deployed. Deployment and promotion are separate gates.
 
+The first draft-PR push exposed that Vercel's existing `"*": false` rule did not match the namespaced `codex/...` branch. The resulting Preview was SSO-protected, received no authenticated application traffic, and proved its functions were built in `dub1`, but it inherited Preview-scoped production service variables and is not an eligible staging target. Replace the branch fallback with `"**": false`, verify the next namespaced push is skipped, and remove that exact Preview deployment after recording the receipt.
+
 Twenty sequential production read-only samples established an unloaded comparison point:
 
 | Target                                       | Status         |    p50 |    p95 |      p99 |
