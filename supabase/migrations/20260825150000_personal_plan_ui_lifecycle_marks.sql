@@ -25,13 +25,19 @@
 --
 -- Deploy-order note (mirrors src/lib/personal-plan/routine/repository.ts:72-108):
 -- this is a NEW TABLE, so any pre-migration deploy sees `42P01 undefined_table`
--- (or the RPC/policy simply not existing yet) on every read and write. The
--- repository functions in src/lib/personal-plan/lifecycle/repository.ts
--- degrade every read to "no marks" (banner visible, nav dot shown) on ANY
--- error and swallow write errors the same way, so deploy order between this
--- migration and the code that calls it is non-load-bearing in either
--- direction — the worst case pre-migration is a banner/nav-dot that doesn't
--- remember a dismissal/visit yet.
+-- on every read and write. The repository functions in
+-- src/lib/personal-plan/lifecycle/repository.ts split READS from WRITES on
+-- this:
+--   - READS degrade every error to "no marks" (banner visible, nav dot
+--     shown), so a pre-migration deploy of the reading code is safe: the
+--     page renders as if nothing had ever been dismissed/visited.
+--   - WRITES throw on error instead of being swallowed, so a pre-migration
+--     dismiss/visit call FAILS LOUD. Callers (PR 2 Tasks 2.3/2.9) must
+--     tolerate that write failure — e.g. an optimistic client-side dismiss
+--     that doesn't persist yet — until this migration has landed.
+-- Net effect: applying this migration before or after the code deploy is
+-- safe either way; the only pre-migration gap is that dismissals/visits
+-- don't persist (and their write calls error) until it lands.
 
 CREATE TABLE IF NOT EXISTS public.personal_plan_ui_lifecycle_marks (
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
