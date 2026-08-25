@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { createAcceptIdealPlanRouteHandler } from "../src/app/api/personal-plan/accept-ideal-plan/route"
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "../src/app/labs/personal-plan-stage-1-2/fixture"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
 import {
@@ -8,6 +9,7 @@ import {
   buildDirectAcceptanceIntents,
   DirectAcceptanceError,
   type AcceptIdealPlanDeps,
+  type AcceptIdealPlanInput,
   type DirectAcceptanceSeenRole,
   type DirectAcceptanceStage3Gateway,
 } from "../src/lib/personal-plan/direct-acceptance/accept"
@@ -31,7 +33,11 @@ import type {
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "../src/lib/personal-plan/refinement/types"
-import type { Stage3AuthorityEvaluation } from "../src/lib/personal-plan/products/authority/contracts"
+import { stage1PreviewedRoleDecisionKeys } from "../src/lib/personal-plan/product-previews"
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthoritySemanticIntent,
+} from "../src/lib/personal-plan/products/authority/contracts"
 import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
 import { PRODUCT_FREQUENCY_LABELS } from "../src/lib/vocabulary/frequencies"
 
@@ -341,15 +347,7 @@ test("a changed recommended product rejects the accept request", () => {
   )
 })
 
-test("a missing or extra seen role rejects the accept request", () => {
-  assert.throws(
-    () =>
-      buildDirectAcceptanceIntents(
-        MULTI_ROLE_EVALUATIONS,
-        seenRolesFor(MULTI_ROLE_EVALUATIONS).slice(1),
-      ),
-    (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
-  )
+test("a seen role the server does not evaluate rejects the accept request", () => {
   assert.throws(
     () =>
       buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [
@@ -362,6 +360,117 @@ test("a missing or extra seen role rejects the accept request", () => {
       ]),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
+})
+
+test("a duplicated seen role rejects the accept request", () => {
+  const seen = seenRolesFor(MULTI_ROLE_EVALUATIONS)
+  assert.throws(
+    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [...seen, seen[0]!]),
+    (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
+  )
+})
+
+/* ── Deferred roles: the server decides for what the client never saw ── */
+
+/**
+ * A role the client never previewed is not a stale seen state — it is a gap.
+ * The server leaves it uncovered explicitly instead of failing the request, and
+ * every role the client DID see keeps its exact pinning in the same pass.
+ */
+test("an unseen role becomes a deferred decision while seen roles stay pinned", () => {
+  const unseen = knownEvaluation("scalp_care", "scalp_flake_oil_adjunct", "p-scalp")
+  const evaluations = [...MULTI_ROLE_EVALUATIONS, unseen]
+
+  const intents = buildDirectAcceptanceIntents(evaluations, seenRolesFor(MULTI_ROLE_EVALUATIONS))
+
+  assert.equal(intents.length, evaluations.length)
+  const deferred = intents.filter((intent) => intent.action === "leave_uncovered")
+  assert.deepEqual(deferred, [
+    {
+      type: "resolve_decision",
+      subjectKey: unseen.subjectKey,
+      action: "leave_uncovered",
+      // Never previewed → the Idealplan never asked the person about it.
+      deferralReason: "refinement_required",
+    },
+  ])
+  assert.deepEqual(
+    intents.filter((intent) => intent.action === "plan_recommendation").map((i) => i.subjectKey),
+    MULTI_ROLE_EVALUATIONS.map((evaluation) => evaluation.subjectKey),
+  )
+})
+
+test("a role previewed as a fallback defers with no_product", () => {
+  const fallbackRole: Stage3AuthorityEvaluation = {
+    status: "unknown",
+    category: "mask",
+    subjectKey: "decision:mask:intensive_conditioning_mask:gap",
+    missingFacts: ["no candidate"],
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  }
+
+  const intents = buildDirectAcceptanceIntents(
+    [...MULTI_ROLE_EVALUATIONS, fallbackRole],
+    seenRolesFor(MULTI_ROLE_EVALUATIONS),
+    new Set([fallbackRole.subjectKey]),
+  )
+
+  assert.deepEqual(intents.at(-1), {
+    type: "resolve_decision",
+    subjectKey: fallbackRole.subjectKey,
+    action: "leave_uncovered",
+    deferralReason: "no_product",
+  })
+})
+
+/**
+ * A previewed role the server CAN still plan is deferred all the same: the
+ * person never echoed it, so nothing may be bought for it. Only the reason
+ * differs, because the Idealplan did show the role.
+ */
+test("a previewed but unechoed role is deferred rather than silently planned", () => {
+  const previewed = knownEvaluation("mask", "intensive_conditioning_mask", "p-mask")
+
+  const intents = buildDirectAcceptanceIntents([previewed], [], new Set([previewed.subjectKey]))
+
+  assert.deepEqual(intents, [
+    {
+      type: "resolve_decision",
+      subjectKey: previewed.subjectKey,
+      action: "leave_uncovered",
+      deferralReason: "no_product",
+    },
+  ])
+})
+
+test("an empty seen set defers every role instead of rejecting the request", () => {
+  const intents = buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [])
+
+  assert.equal(intents.length, MULTI_ROLE_EVALUATIONS.length)
+  for (const intent of intents) {
+    assert.equal(intent.action, "leave_uncovered")
+    assert.equal(intent.deferralReason, "refinement_required")
+  }
+})
+
+/**
+ * `leave_uncovered` is the authority's own action, not this flow's escape
+ * hatch: an evaluation that forbids it gets no forged decision, and completion
+ * reports the draft as not ready.
+ */
+test("an unseen role whose authority forbids leaving it uncovered gets no intent", () => {
+  const unsupported: Stage3AuthorityEvaluation = {
+    status: "unsupported",
+    category: "mask",
+    subjectKey: "decision:mask:intensive_conditioning_mask:gap",
+    reason: "category_unsupported",
+    allowedActions: [],
+    coverageRuleIds: [],
+  }
+
+  assert.deepEqual(buildDirectAcceptanceIntents([unsupported], []), [])
 })
 
 test("a role without a usable recommendation cannot be accepted directly", () => {
@@ -654,7 +763,12 @@ function fakeStage3Draft(overrides: Partial<Stage3ProductDraft> = {}): Stage3Pro
 type Stage3Call =
   | { kind: "loadOrCreate"; personalPlanId: string; refinedVersionId: string }
   | { kind: "evaluateDecisions" }
-  | { kind: "resolveDecisions"; expectedRevision: number; subjectKeys: string[] }
+  | {
+      kind: "resolveDecisions"
+      expectedRevision: number
+      subjectKeys: string[]
+      intents: Stage3AuthoritySemanticIntent[]
+    }
   | { kind: "complete"; expectedRevision: number }
 
 /**
@@ -686,6 +800,7 @@ function createFakeStage3Gateway(options: {
         kind: "resolveDecisions",
         expectedRevision: input.expectedRevision,
         subjectKeys: input.intents.map((intent) => intent.subjectKey),
+        intents: structuredClone(input.intents),
       })
       draft = { ...draft, revision: input.expectedRevision + 1 }
       return { status: "saved", draft }
@@ -878,6 +993,119 @@ test("a stale seen state aborts before any Stage 3 decision is written", async (
     ["loadOrCreate", "evaluateDecisions"],
   )
   assert.deepEqual(harness.provenanceCalls, [])
+})
+
+/* ── Deferred roles through the whole accept chain ── */
+
+/** The initial Idealplan of the lab cohort, i.e. what its cards could show. */
+function labPreviewedRoleKeys(): ReadonlySet<string> {
+  const initial = computeNeedPlan({
+    rawEnvelope: STAGE1_STAGE2_LAB_ENVELOPE,
+    artifactId: ARTIFACT_ID,
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-16T09:00:00.000Z",
+  })
+  if (initial.status !== "ready") throw new Error("unreachable")
+  return stage1PreviewedRoleDecisionKeys(initial.snapshot)
+}
+
+/**
+ * The scalp-care cohort that Stage 1 defers: the synthetic defaults answer the
+ * deferred irritation question, which materializes a Scalp Care role the client
+ * could never have previewed. It used to make the whole accept a 409; now the
+ * server defers exactly that role and the plan is accepted.
+ */
+test("a blocked category the client never saw is accepted as a deferred decision", async () => {
+  const blocked = knownEvaluation("scalp_care", "scalp_flake_oil_adjunct", "p-scalp")
+  assert.equal(
+    labPreviewedRoleKeys().has(blocked.subjectKey),
+    false,
+    "the fixture must model a role the Idealplan never previewed",
+  )
+  const harness = createHarness({ evaluations: [...MULTI_ROLE_EVALUATIONS, blocked] })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  assert.equal(result.status, "accepted")
+  const resolveCall = harness.stage3Calls.find((call) => call.kind === "resolveDecisions")
+  assert.ok(resolveCall && resolveCall.kind === "resolveDecisions")
+  assert.deepEqual(
+    resolveCall.intents.filter((intent) => intent.action === "leave_uncovered"),
+    [
+      {
+        type: "resolve_decision",
+        subjectKey: blocked.subjectKey,
+        action: "leave_uncovered",
+        deferralReason: "refinement_required",
+      },
+    ],
+  )
+  assert.equal(
+    resolveCall.intents.filter((intent) => intent.action === "plan_recommendation").length,
+    MULTI_ROLE_EVALUATIONS.length,
+  )
+})
+
+/**
+ * The role WAS on a card, but as a "wird nach der Verfeinerung konkret"
+ * fallback, so the client echoes nothing for it. The deferral reason must say
+ * that no product was available, not that a refinement answer is missing.
+ */
+test("a role the Idealplan previewed without a buyable product defers as no_product", async () => {
+  const previewedKey = [...labPreviewedRoleKeys()][0]
+  assert.ok(previewedKey, "the lab cohort must preview at least one role")
+  const [, category, role] = previewedKey.split(":")
+  const fallbackRole: Stage3AuthorityEvaluation = {
+    status: "unknown",
+    category: category as Stage3AuthorityEvaluation["category"],
+    subjectKey: previewedKey,
+    missingFacts: ["no candidate"],
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  }
+  assert.ok(role)
+  const harness = createHarness({ evaluations: [fallbackRole] })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: [] })
+
+  assert.equal(result.status, "accepted")
+  const resolveCall = harness.stage3Calls.find((call) => call.kind === "resolveDecisions")
+  assert.ok(resolveCall && resolveCall.kind === "resolveDecisions")
+  assert.deepEqual(resolveCall.intents, [
+    {
+      type: "resolve_decision",
+      subjectKey: previewedKey,
+      action: "leave_uncovered",
+      deferralReason: "no_product",
+    },
+  ])
+})
+
+/** Nothing buyable at all: acceptance still succeeds, with every role deferred. */
+test("an Idealplan without a single buyable role is accepted with everything deferred", async () => {
+  const evaluations: Stage3AuthorityEvaluation[] = MULTI_ROLE_EVALUATIONS.map((evaluation) => ({
+    status: "unknown",
+    category: evaluation.category,
+    subjectKey: evaluation.subjectKey,
+    missingFacts: ["no candidate"],
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  }))
+  const harness = createHarness({ evaluations })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: [] })
+
+  assert.equal(result.status, "accepted")
+  assert.equal(result.next.href, "/routine")
+  const resolveCall = harness.stage3Calls.find((call) => call.kind === "resolveDecisions")
+  assert.ok(resolveCall && resolveCall.kind === "resolveDecisions")
+  assert.deepEqual(
+    resolveCall.intents.map((intent) => intent.action),
+    evaluations.map(() => "leave_uncovered"),
+  )
 })
 
 /* ── Guards against destroying real work ── */
@@ -1103,6 +1331,71 @@ test("a leftover synthetic in_progress draft does not block a real Stage 2", asy
   })
   assert.deepEqual(saved.answers.currentProductCategories, ["shampoo"])
   assert.equal(db.drafts.length, 1, "no second in_progress draft is created")
+})
+
+/* ── Request contract ── */
+
+function acceptRoute(
+  received: Array<AcceptIdealPlanInput>,
+): (request: Request) => Promise<Response> {
+  return createAcceptIdealPlanRouteHandler({
+    enabled: () => true,
+    getUserId: async () => USER_ID,
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      frontier: "stage2",
+      allowed: { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false },
+      nextHref: "/plan-start",
+      personalPlanId: PERSONAL_PLAN_ID,
+    }),
+    checkRateLimit: (async () => ({ allowed: true })) as never,
+    accept: async (_userId, input) => {
+      received.push(input)
+      return {
+        status: "accepted",
+        personalPlanId: PERSONAL_PLAN_ID,
+        refinedVersionId: REFINED_NEED_VERSION_ID,
+        productDraftId: DRAFT_ID,
+        productPortfolioVersionId: "portfolio-1",
+        next: { stage: 4, href: "/routine" },
+      }
+    },
+  })
+}
+
+function acceptRequest(body: unknown): Request {
+  return new Request("https://example.com/api/personal-plan/accept-ideal-plan", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  })
+}
+
+/**
+ * An Idealplan whose roles the client cannot echo is an accept with an
+ * explicitly EMPTY seen set — not a malformed request. Everything that is
+ * genuinely malformed still is.
+ */
+test("the accept route takes an explicitly empty seen set and still rejects malformed payloads", async () => {
+  const received: AcceptIdealPlanInput[] = []
+  const route = acceptRoute(received)
+
+  const accepted = await route(acceptRequest({ seenRoles: [] }))
+  assert.equal(accepted.status, 200)
+  assert.deepEqual(received, [{ seenRoles: [] }])
+
+  for (const malformed of [
+    {},
+    { seenRoles: null },
+    { seenRoles: {} },
+    { seenRoles: [{ decisionKey: "decision:mask:intensive_conditioning_mask:gap" }] },
+    { seenRoles: [], extra: true },
+  ]) {
+    const response = await route(acceptRequest(malformed))
+    assert.equal(response.status, 400, `payload must be rejected: ${JSON.stringify(malformed)}`)
+    assert.deepEqual(await response.json(), { error: "invalid_request" })
+  }
+  assert.equal(received.length, 1, "no malformed payload may reach the accept chain")
 })
 
 test("a lost completion response replays as already_completed, not a constraint error", async () => {

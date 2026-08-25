@@ -9,6 +9,7 @@ import type {
 import type {
   PersonalPlanCategory,
   Stage3CriterionResult,
+  Stage3DecisionDeferralReason,
   Stage3FitVerdict,
   Stage3ProductIdentity,
   Stage3Recommendation,
@@ -33,6 +34,13 @@ export type Stage3AuthoritySemanticIntent = {
   action: Stage3AuthorityActionKind
   selectedCandidateId?: string
   selectedCandidateFactFingerprint?: string
+  /**
+   * Only valid together with `leave_uncovered`, and only for server-authored
+   * intents: the client request schema
+   * (`app/api/personal-plan/stage-3/route.ts`) is `.strict()` and does not
+   * accept this field.
+   */
+  deferralReason?: Stage3DecisionDeferralReason
 }
 
 export type Stage3AuthorityProtocolFact = {

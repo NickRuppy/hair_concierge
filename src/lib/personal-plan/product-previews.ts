@@ -53,21 +53,19 @@ function candidateCacheKey(task: RoleTask): string {
     : task.category
 }
 
-export async function computeStage1ProductExamplePreviews(input: {
-  personalPlanId: string
-  sourceNeedVersionId: string
-  snapshot: InitialNeedPlanSnapshot
-  loadCandidates: Stage1ProductExamplePreviewCandidateLoader
-}): Promise<Stage1ProductExamplePreviewResponse> {
-  const decisions = new Map(
-    input.snapshot.decisions.map((decision) => [decision.category, decision]),
-  )
+/**
+ * Every role the Idealplan previews for this snapshot — as a recommendation OR
+ * as a fallback card, both of which carry the same decision key.
+ *
+ * Only categories that actually render a Stage 1 card produce a preview;
+ * deferred and not-needed decisions never surface one.
+ */
+function stage1PreviewRoleTasks(snapshot: InitialNeedPlanSnapshot): RoleTask[] {
+  const decisions = new Map(snapshot.decisions.map((decision) => [decision.category, decision]))
   const roleTasks: RoleTask[] = []
-  for (const category of input.snapshot.renderedOrder) {
+  for (const category of snapshot.renderedOrder) {
     const decision = decisions.get(category)
     if (!decision?.target || decision.target.category !== category) continue
-    // Only categories that will actually render a Stage 1 card need a
-    // preview; deferred/not-needed decisions never surface one.
     if (decision.needTier !== "basis" && decision.needTier !== "optional") continue
     if (decision.resolution === "deferred_until_post_plan_onboarding") continue
     const allowedRoles = CATEGORY_ROLE_POLICIES[category].allowedRoles
@@ -75,6 +73,36 @@ export async function computeStage1ProductExamplePreviews(input: {
       if (allowedRoles.includes(role as never)) roleTasks.push({ category, decision, role })
     }
   }
+  return roleTasks
+}
+
+/**
+ * The Stage-3 decision keys the Idealplan previewed, i.e. exactly the roles a
+ * client could have echoed as `seenRoles`.
+ *
+ * Direct acceptance uses this to tell its two deferral reasons apart: a role
+ * the client did not echo was either previewed but unbuyable (`no_product`, a
+ * fallback card) or never previewed at all (`refinement_required`). Sharing
+ * this one predicate with the preview computation above is what keeps the two
+ * sides from drifting.
+ */
+export function stage1PreviewedRoleDecisionKeys(
+  snapshot: InitialNeedPlanSnapshot,
+): ReadonlySet<string> {
+  return new Set(
+    stage1PreviewRoleTasks(snapshot).map((task) =>
+      stage3DecisionKey(task.category, task.role, null),
+    ),
+  )
+}
+
+export async function computeStage1ProductExamplePreviews(input: {
+  personalPlanId: string
+  sourceNeedVersionId: string
+  snapshot: InitialNeedPlanSnapshot
+  loadCandidates: Stage1ProductExamplePreviewCandidateLoader
+}): Promise<Stage1ProductExamplePreviewResponse> {
+  const roleTasks = stage1PreviewRoleTasks(input.snapshot)
 
   // One candidate load per category (Shampoo: per role — see
   // ROLE_SENSITIVE_CANDIDATE_CATEGORIES above), reused across every role

@@ -280,6 +280,8 @@ function projectNonExecutableDecision(
       role: decision.role,
       reason: capturedGap?.reason ?? decision.choiceState,
       linkedDecisionKey: decision.decisionKey,
+      // Carries the server-derived deferral through to every portfolio reader.
+      ...(decision.deferralReason ? { deferralReason: decision.deferralReason } : {}),
     })
   }
 }

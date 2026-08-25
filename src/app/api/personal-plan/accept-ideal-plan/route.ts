@@ -46,6 +46,9 @@ const rate: RateLimitConfig = {
 
 const bodySchema = z
   .object({
+    // Explicitly empty is a legitimate payload: an Idealplan whose roles the
+    // client could not show as buyable recommendations accepts with every role
+    // deferred. A MISSING or malformed `seenRoles` is still `invalid_request`.
     seenRoles: z
       .array(
         z
@@ -56,7 +59,6 @@ const bodySchema = z
           })
           .strict(),
       )
-      .min(1)
       .max(40),
   })
   .strict()

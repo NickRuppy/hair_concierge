@@ -12,6 +12,7 @@ import { buildStage3EntryContext } from "../src/lib/personal-plan/products/stage
 import type { PlanHairThickness } from "../src/lib/personal-plan/types"
 import {
   computeStage1ProductExamplePreviews,
+  stage1PreviewedRoleDecisionKeys,
   type Stage1ProductExamplePreviewCandidateLoader,
 } from "../src/lib/personal-plan/product-previews"
 import {
@@ -96,6 +97,13 @@ function categoryOf(decisionKey: string): string {
  */
 async function assertSeenStateJoin(envelope: PersonalPlanQuizSubmissionEnvelope) {
   const { roleKeys: seen, directAcceptance } = await previewPayload(envelope)
+  // The accept flow tells its two deferral reasons apart by asking which roles
+  // the Idealplan previewed at all. That predicate must stay the payload's own.
+  assert.deepEqual(
+    [...stage1PreviewedRoleDecisionKeys(initialSnapshot(envelope))].sort(),
+    seen,
+    "the previewed-role predicate must match the payload it is derived from",
+  )
   const evaluated = acceptChainRoleKeys(envelope)
   const serverOnly = evaluated.filter((key) => !seen.includes(key))
   const clientOnly = seen.filter((key) => !evaluated.includes(key))

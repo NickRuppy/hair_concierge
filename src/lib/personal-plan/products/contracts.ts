@@ -75,6 +75,22 @@ export type Stage3DraftStatus = (typeof STAGE3_DRAFT_STATUS_VALUES)[number]
 export const STAGE3_FIT_VERDICTS = ["ideal", "supportive", "mismatch", "unknown"] as const
 export type Stage3FitVerdict = (typeof STAGE3_FIT_VERDICTS)[number]
 
+/**
+ * Why a role was left uncovered by a SERVER-derived `leave_uncovered` decision.
+ *
+ * - `refinement_required` — the role never reached the person: the Idealplan
+ *   previewed no card for it (a deferred Stage-1 decision the synthetic
+ *   refinement defaults materialized), so its product choice belongs to the
+ *   refinement, not to a silent purchase.
+ * - `no_product` — the role WAS previewed, but with no buyable product behind
+ *   it (a `kind:"fallback"` preview).
+ *
+ * Only the server writes this: it is derived from the plan's own preview and
+ * evaluation state, never from a client payload.
+ */
+export const STAGE3_DECISION_DEFERRAL_REASONS = ["refinement_required", "no_product"] as const
+export type Stage3DecisionDeferralReason = (typeof STAGE3_DECISION_DEFERRAL_REASONS)[number]
+
 export const STAGE3_CHOICE_STATES = [
   "owned_active",
   "owned_override",
@@ -305,6 +321,8 @@ export type Stage3ProductDecision = {
   limitationAcknowledged: boolean
   /** The authority action that produced this decision, retained for replay. */
   resolutionAction?: Stage3AuthorityActionKind
+  /** Server-derived reason for a `leave_uncovered` decision. Never client-set. */
+  deferralReason?: Stage3DecisionDeferralReason
   authorityEvidence?: Stage3DecisionAuthorityEvidenceV1
 }
 
@@ -492,6 +510,12 @@ export type Stage3UncoveredRole = {
     | "no_product_owned"
     | "not_ready_to_decide"
   linkedDecisionKey: string
+  /**
+   * Present only for a server-derived deferral (see
+   * `STAGE3_DECISION_DEFERRAL_REASONS`). It is the read surface downstream
+   * placeholder copy keys off; `reason` above stays the capture-level fact.
+   */
+  deferralReason?: Stage3DecisionDeferralReason
 }
 
 export type ProposedProductPortfolio = {
@@ -628,6 +652,7 @@ export const stage3ProductDecisionSchema: z.ZodType<Stage3ProductDecision> = z
         "leave_uncovered",
       ])
       .optional(),
+    deferralReason: z.enum(STAGE3_DECISION_DEFERRAL_REASONS).optional(),
     authorityEvidence: z
       .object({
         schemaVersion: z.literal(1),
@@ -693,6 +718,13 @@ export const stage3ProductDecisionSchema: z.ZodType<Stage3ProductDecision> = z
         code: "custom",
         message: "planned_purchase requires a recommendation",
         path: ["recommendation"],
+      })
+    }
+    if (decision.deferralReason && decision.choiceState !== "unassigned") {
+      ctx.addIssue({
+        code: "custom",
+        message: "a deferral reason is only valid for an uncovered decision",
+        path: ["deferralReason"],
       })
     }
     if (decision.choiceState === "pending_review" && decision.verdict !== "unknown") {
@@ -947,6 +979,7 @@ const stage3UncoveredRoleSchema: z.ZodType<Stage3UncoveredRole> = z
       "not_ready_to_decide",
     ]),
     linkedDecisionKey: idSchema,
+    deferralReason: z.enum(STAGE3_DECISION_DEFERRAL_REASONS).optional(),
   })
   .strict()
 

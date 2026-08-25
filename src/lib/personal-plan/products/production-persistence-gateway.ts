@@ -1118,6 +1118,9 @@ export function createProductionStage3ProductsGateway(
       ) {
         throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
       }
+      if (intent.deferralReason && intent.action !== "leave_uncovered") {
+        throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
+      }
       const selectedCandidate = validateSelectedCandidate(intent, review)
       return buildAuthorityDecision(
         subjects[index]!,
@@ -1273,6 +1276,11 @@ function buildAuthorityDecision(
     recommendation,
     limitationAcknowledged: intent.action === "acknowledge_override",
     resolutionAction: intent.action,
+    // Persisted with the decision itself, so the reason survives every later
+    // read of the draft and of the portfolio projected from it.
+    ...(intent.action === "leave_uncovered" && intent.deferralReason
+      ? { deferralReason: intent.deferralReason }
+      : {}),
     authorityEvidence: {
       schemaVersion: 1,
       subjectKey: subject.decisionKey,

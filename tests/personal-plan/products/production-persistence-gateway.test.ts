@@ -25,6 +25,7 @@ import type {
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   stage3InventoryDispositionKey,
+  validateStage3Draft,
 } from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import { isValidPersistedCategoryDecision } from "../../../src/lib/personal-plan/products/authority/category-decision-schema"
@@ -2456,6 +2457,79 @@ test("pending authority decisions distinguish keep_pending from leave_uncovered"
 
   assert.equal(kept.choiceState, "pending_review")
   assert.equal(skipped.choiceState, "unassigned")
+})
+
+/**
+ * A server-derived deferral records WHY the role was left uncovered, on the
+ * decision itself — the draft is the only place that reason has to survive, so
+ * no schema migration is involved. Direct acceptance is the writer
+ * (`direct-acceptance/accept.ts`); the reason is never taken from a client.
+ */
+test("a server-derived deferral persists its reason on the uncovered decision", async () => {
+  const pending = pendingAuthorityDraft()
+
+  async function resolve(deferralReason: "refinement_required" | "no_product") {
+    const gateway = createProductionStage3ProductsGateway({
+      userId: "owner-a",
+      persistence: persistence(pending),
+    })
+    const result = await gateway.resolveDecision({
+      draftId: pending.draftId,
+      expectedRevision: pending.revision,
+      intent: {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+        action: "leave_uncovered",
+        deferralReason,
+      },
+    })
+    assert.equal(result.status, "saved")
+    if (result.status !== "saved") throw new Error("expected a saved deferral")
+    return result.draft.decisions[0]!
+  }
+
+  const refinement = await resolve("refinement_required")
+  assert.equal(refinement.choiceState, "unassigned")
+  assert.equal(refinement.resolutionAction, "leave_uncovered")
+  assert.equal(refinement.deferralReason, "refinement_required")
+  assert.deepEqual(validateStage3Draft({ ...pending, decisions: [refinement] }), [])
+
+  const noProduct = await resolve("no_product")
+  assert.equal(noProduct.deferralReason, "no_product")
+})
+
+test("a deferral reason on any other action is rejected before persistence", async () => {
+  const pending = pendingAuthorityDraft()
+  let saves = 0
+  const base = persistence(pending)
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...base,
+      save: async (input) => {
+        saves += 1
+        return base.save(input)
+      },
+    },
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.resolveDecision({
+        draftId: pending.draftId,
+        expectedRevision: pending.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+          action: "keep_pending",
+          deferralReason: "no_product",
+        },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3AuthorityMutationError &&
+      error.code === "stage3_authority_action_invalid",
+  )
+  assert.equal(saves, 0)
 })
 
 test("forged subjects, actions, candidates and stale sources fail closed before persistence", async () => {

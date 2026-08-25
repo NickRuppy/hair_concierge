@@ -978,6 +978,44 @@ test("Stage 3 PATCH accepts semantic decision intent without accepting a client 
   })
 })
 
+/**
+ * A deferral reason is server truth (direct acceptance derives it from the
+ * plan's own preview state). No client may author one, so the request schema
+ * must reject the field outright rather than forward it.
+ */
+test("Stage 3 PATCH rejects a client-authored deferral reason", async () => {
+  let received: unknown = null
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          resolveDecision: async (input: unknown) => {
+            received = input
+            return { status: "saved", draft }
+          },
+        }) as never,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+          action: "leave_uncovered",
+          deferralReason: "no_product",
+        },
+      }),
+    }),
+  )
+
+  assert.equal(response!.status, 400)
+  assert.equal(received, null)
+})
+
 test("Stage 3 PATCH transports selected replacement intents and exposes an invalid replacement as a conflict", async () => {
   let received: unknown = null
   const handlers = createStage3RouteHandlers(
