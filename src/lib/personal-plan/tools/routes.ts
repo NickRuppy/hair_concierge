@@ -394,7 +394,11 @@ function airflowRoutes(input: ToolRouteInput): DraftRoute[] {
       recommendedProductTypes: ["hot_air_brush", "air_multi_styler", "hair_dryer"],
       // A04/H10: a plain Föhn shapes only together with a Rundbürste, and an
       // unidentified Warmluftbürste never proves the exact volume capability.
-      capabilityVerifyingForms: [],
+      //
+      // B08/`tools.brush.manual_air_shape`: a reported Rundbürste is the missing
+      // half of the „Föhn plus Rundbürste" approach, so the pair — and only the
+      // pair — does prove it (fixtures 55, 65).
+      capabilityVerifyingForms: hasReportedRoundBrush(input) ? ["hair_dryer"] : [],
       requiredCapabilities: ["air_shape", "create_volume"],
       ruleIds: withInferenceMarker(volume, [
         "tools.airflow.air_shape_basis",
@@ -655,7 +659,8 @@ function brushRoutes(input: ToolRouteInput): DraftRoute[] {
   const hasShapingForm = reportedBrushes.some(
     (form) => form === "round_brush" || form === "styling_brush" || form === "vent_brush",
   )
-  if (airShaping && !hasShapingForm && volumeSignal(profile).active) {
+  const volume = volumeSignal(profile)
+  if (airShaping && !hasShapingForm && volume.active) {
     drafts.push({
       target: "specialized_brush_job",
       tier: "optional",
@@ -665,7 +670,93 @@ function brushRoutes(input: ToolRouteInput): DraftRoute[] {
       ruleIds: ["tools.brush.specialized_optional"],
     })
   }
+
+  // `B09`/`tools.brush.manual_air_shape`: the reported Rundbürste is the manual
+  // half of the shared „Föhn plus Rundbürste" volume approach. It is use-yours,
+  // never another volume requirement — the need itself lives in the shared
+  // `volume_set` group, which the completed pair fulfils (fixtures 55, 65).
+  if (airShaping && volume.active && reportedBrushes.includes("round_brush")) {
+    drafts.push({
+      target: "manual_air_shaping",
+      tier: "not_needed",
+      resolution: "tool_type",
+      recommendedProductTypes: ["round_brush"],
+      requiredCapabilities: ["airflow_shape", "create_volume"],
+      ruleIds: ["tools.brush.manual_air_shape"],
+    })
+  }
+
+  // `B09`/`R2`: the Definitionsbürste is gated to `wavy | curly | coily`.
+  // `straight` plus `shape_definition` activates no tool route from the
+  // definition goal (fixtures 66, 4b). Texture alone never activates it.
+  if (goalSet(profile).has("shape_definition") && shapedTexture(profile)) {
+    drafts.push({
+      target: "definition_brush_job",
+      tier: "optional",
+      resolution: "tool_type",
+      recommendedProductTypes: ["styling_brush"],
+      requiredCapabilities: ["define_pattern"],
+      ruleIds: ["tools.brush.definition_optional"],
+    })
+  }
+
+  // `B09`/`tools.brush.pick_optional`, corrected by `D1`: curly and coily
+  // resolve to CONTROL, so the volume goal alone never reaches this route. The
+  // explicit `low_volume_or_weighed_down` concern — which overrides the
+  // inference — is the surviving trigger (fixture 67).
+  if (
+    concerns.has("low_volume_or_weighed_down") &&
+    (profile.texture === "curly" || profile.texture === "coily")
+  ) {
+    drafts.push({
+      target: "pick_job",
+      tier: "optional",
+      resolution: "tool_type",
+      recommendedProductTypes: ["hair_pick"],
+      requiredCapabilities: ["create_volume"],
+      ruleIds: ["tools.brush.pick_optional"],
+    })
+  }
+
+  // `B09`/`tools.brush.reported_dry_style`: a reported Paddle- or Vent-Bürste
+  // keeps its own legitimate dry-styling job as use-yours guidance — no
+  // purchase, no new need.
+  //
+  // A form that already LEADS the detangling foundation is deliberately excluded:
+  // it is the same physical brush, and one physical Tool has one card and one
+  // Routine row (fixtures 9, 60b).
+  const foundationForms =
+    drafts.find((draft) => draft.target === "detangling_foundation")?.recommendedProductTypes ?? []
+  const dryStyleForms = reportedBrushes.filter(
+    (form) => DRY_STYLING_FORMS.has(form) && !foundationForms.includes(form),
+  )
+  if (dryStyleForms.length > 0) {
+    drafts.push({
+      target: "dry_styling_brush",
+      tier: "not_needed",
+      resolution: "tool_type",
+      recommendedProductTypes: dryStyleForms,
+      requiredCapabilities: ["smooth"],
+      ruleIds: ["tools.brush.reported_dry_style"],
+    })
+  }
   return drafts
+}
+
+/**
+ * `B09`: the forms whose real job is dry styling rather than detangling.
+ *
+ * Exactly the two the rule names. „Pneumatikbürste" is deliberately absent: the
+ * matrix records it as an exact construction property of a qualifying brush
+ * form, not another top-level product type — and `boar_bristle` (`R3`) is a
+ * bristle material, whose reported coverage flows through `B04` as usual
+ * (fixture 60 variant (c)) rather than through a dry-styling job of its own.
+ */
+const DRY_STYLING_FORMS = new Set<ToolProductType>(["paddle_brush", "vent_brush"])
+
+/** The manual half of the „Föhn plus Rundbürste" air-shaping approach (`B08`). */
+function hasReportedRoundBrush(input: ToolRouteInput): boolean {
+  return (reportedFormsFor(input.inventory, "brushes_combs") ?? []).includes("round_brush")
 }
 
 /**
@@ -708,14 +799,28 @@ function detanglingFormsFor(profile: ToolProfileFacts): ToolProductType[] {
  * answer therefore acts through the Night route alone.
  */
 function securingRoutes(input: ToolRouteInput): DraftRoute[] {
-  if (!hasSelectedSetApproach(input) && !input.scalpApplicationJob) return []
+  // C02 resolves each active parent to ONE minimal recognizable form, and C01
+  // merges every active reason into one collapsed optional result — so the
+  // parents decide the route's binding lead order, not a fixed array.
+  const sectioningParent = input.scalpApplicationJob || hasSelectedSetApproach(input)
+  // C01's fourth parent, restated 2026-08-25 against `D1`: root-volume clipping
+  // when the volume direction resolves to volume_up (inferred, or through the
+  // `low_volume_or_weighed_down` override). C02 resolves it to a Root-Volume-Clip.
+  const rootVolumeParent = volumeSignal(input.profile).active
+  if (!sectioningParent && !rootVolumeParent) return []
+
+  const leads: ToolProductType[] = []
+  // C02: Sectioning-Clip for sectioning/application; the exact set-support form
+  // stays deferred (`C05`), so a set parent uses the same generic clip.
+  if (sectioningParent) leads.push("sectioning_clip")
+  if (rootVolumeParent) leads.push("root_volume_clip")
+  const alternatives: ToolProductType[] = ["claw_clip", "soft_hair_tie", "scrunchie"]
   return [
     {
       target: "securing_support",
       tier: "optional",
       resolution: "tool_type",
-      // C02: the sectioning/application parent resolves to a Sectioning-Clip.
-      recommendedProductTypes: ["sectioning_clip", "claw_clip", "soft_hair_tie", "scrunchie"],
+      recommendedProductTypes: [...leads, ...alternatives.filter((form) => !leads.includes(form))],
       requiredCapabilities: ["section_hair", "secure_gently"],
       ruleIds: ["tools.securing.optional"],
     },
@@ -725,26 +830,39 @@ function securingRoutes(input: ToolRouteInput): DraftRoute[] {
 // --- wash and application aids ------------------------------------------------
 
 function washApplicationRoutes(input: ToolRouteInput): DraftRoute[] {
-  if (!input.scalpApplicationJob) return []
-  return [
-    {
-      target: "wash_application_support",
-      tier: "optional",
+  const drafts: DraftRoute[] = []
+  // W01/W02: a reported scalp brush is use-yours on its OWN scalp-care job. It
+  // needs no parent event and creates no need — and because it lives on its own
+  // route it can never lead or fulfil targeted application (fixtures 85, 128).
+  if ((reportedFormsFor(input.inventory, "wash_application") ?? []).includes("scalp_brush")) {
+    drafts.push({
+      target: "scalp_brush_use",
+      tier: "not_needed",
       resolution: "tool_type",
-      // W02: targeted scalp application defaults to the applicator bottle. The
-      // order is binding (D6) — the canonical family order would lead with the
-      // scalp brush.
-      //
-      // The scalp brush is deliberately NOT in this list: `W02` makes a reported
-      // scalp brush use-yours for its own scalp-care job only, so it may neither
-      // lead this card nor fulfil targeted application (fixture 128). Listing it
-      // here did both — a reported brush became the lead form and covered the
-      // applicator need it cannot serve.
-      recommendedProductTypes: ["applicator_bottle", "applicator_comb"],
-      requiredCapabilities: ["apply_product"],
-      ruleIds: ["tools.wash_application.optional"],
-    },
-  ]
+      recommendedProductTypes: ["scalp_brush"],
+      requiredCapabilities: ["wash_scalp_assist"],
+      ruleIds: ["tools.wash_application.reported_scalp_brush"],
+    })
+  }
+  if (!input.scalpApplicationJob) return drafts
+  drafts.push({
+    target: "wash_application_support",
+    tier: "optional",
+    resolution: "tool_type",
+    // W02: targeted scalp application defaults to the applicator bottle. The
+    // order is binding (D6) — the canonical family order would lead with the
+    // scalp brush.
+    //
+    // The scalp brush is deliberately NOT in this list: `W02` makes a reported
+    // scalp brush use-yours for its own scalp-care job only, so it may neither
+    // lead this card nor fulfil targeted application (fixture 128). Listing it
+    // here did both — a reported brush became the lead form and covered the
+    // applicator need it cannot serve.
+    recommendedProductTypes: ["applicator_bottle", "applicator_comb"],
+    requiredCapabilities: ["apply_product"],
+    ruleIds: ["tools.wash_application.optional"],
+  })
+  return drafts
 }
 
 // --- night protection ---------------------------------------------------------
@@ -762,7 +880,24 @@ function nightProtectionRoutes(input: ToolRouteInput): DraftRoute[] {
     [...concerns].some((concern) => NIGHT_SIGNAL_CONCERNS.has(concern)) ||
     [...goals].some((goal) => NIGHT_SIGNAL_GOALS.has(goal))
 
-  if (!strong && !otherSignal) return []
+  if (!strong && !otherSignal) {
+    // N04: a reported Night-Protection method is real current behaviour, so it
+    // is preserved as a nightly „continue yours" step even with no relevance
+    // trigger. Ownership alone creates no need and no card — hence `not_needed`,
+    // which renders an occurrence but never an Idealplan card (fixtures 17, 94).
+    const reported = reportedFormsFor(input.inventory, "night_protection") ?? []
+    if (reported.length === 0) return []
+    return [
+      {
+        target: "night_protection",
+        tier: "not_needed",
+        resolution: "tool_type",
+        recommendedProductTypes: [...new Set(reported)],
+        requiredCapabilities: ["reduce_surface_friction"],
+        ruleIds: [],
+      },
+    ]
+  }
   return [
     {
       target: "night_protection",
@@ -800,10 +935,13 @@ function nightFormsFor(profile: ToolProfileFacts): ToolProductType[] {
 // --- drying textiles ----------------------------------------------------------
 
 function dryingTextileRoutes(input: ToolRouteInput): DraftRoute[] {
-  const { care } = input
+  const { care, profile } = input
+  // The whole family waits for the towel answer. Plopping needs a textile to
+  // execute with, so telling someone to plop before we know whether they towel
+  // at all would be exactly the conservative guess this engine refuses to make.
   if (!care.towelMaterial) return []
   // An explicit "no towel" answer must not produce a textile product, a rubbing
-  // assumption or a plopping route.
+  // assumption or a plopping route (`T02`, `T03`, fixtures 107, 109).
   if (care.towelMaterial === "no_towel") return []
 
   const drafts: DraftRoute[] = []
@@ -817,16 +955,54 @@ function dryingTextileRoutes(input: ToolRouteInput): DraftRoute[] {
       ruleIds: ["tools.towel.technique"],
     })
   }
+  const reportedTextiles = reportedFormsFor(input.inventory, "drying_textiles") ?? []
   if (care.towelMaterial === "frottee") {
     drafts.push({
       target: "drying_textile_upgrade",
       tier: "optional",
       resolution: "tool_type",
       // Neutral group: no profile input ranks material or form quality.
-      recommendedProductTypes: ["microfiber_towel", "smooth_cotton_cloth", "drying_wrap"],
+      recommendedProductTypes: [...NEUTRAL_TEXTILE_FORMS],
       requiredCapabilities: ["absorb_water"],
       ruleIds: ["tools.towel.optional_material"],
+    })
+  } else if (reportedTextiles.length > 0 && care.towelTechnique !== "rough_rubbing") {
+    // T02: a reported microfiber/cotton/wrap form is use-yours, not another
+    // purchase (fixture 106). `not_needed` renders the step without a card.
+    //
+    // Rough rubbing is deliberately excluded: there the firm technique
+    // correction owns that same moment of the day (fixtures 20, 105), and a
+    // second „nutze deins" step beside it would say the same thing twice.
+    drafts.push({
+      target: "drying_textile_use",
+      tier: "not_needed",
+      resolution: "tool_type",
+      recommendedProductTypes: [...NEUTRAL_TEXTILE_FORMS],
+      requiredCapabilities: ["absorb_water"],
+      ruleIds: ["tools.towel.reported_suitable"],
+    })
+  }
+  // T03/T04/T05: for wavy/curly/coily plus a definition goal, plopping is a
+  // DEFAULT wash-routine technique — never a collapsed optional tip and never a
+  // purchase. `behavior_only` is what makes „an ordinary suitable T-Shirt
+  // executes it" true by construction: the route can produce no product, so a
+  // dedicated wrap can never become a basis buy (fixtures 108, 110, 111).
+  if (shapedTexture(profile) && goalSet(profile).has("shape_definition")) {
+    drafts.push({
+      target: "textile_plop",
+      tier: "basis",
+      resolution: "behavior_only",
+      recommendedProductTypes: [],
+      requiredCapabilities: [],
+      ruleIds: ["tools.textile.plop"],
     })
   }
   return drafts
 }
+
+/** `T01`/`T06`: one neutral practical choice; no stored property ranks them. */
+const NEUTRAL_TEXTILE_FORMS: ToolProductType[] = [
+  "microfiber_towel",
+  "smooth_cotton_cloth",
+  "drying_wrap",
+]

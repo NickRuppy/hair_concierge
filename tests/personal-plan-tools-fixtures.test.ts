@@ -9,6 +9,8 @@ import {
   assetKeyFor,
   atDayAnchor,
   choiceGroupKeyFor,
+  dayAnchorIndex,
+  placementForAnchor,
   routeKeyFor,
   type PlanToolPlan,
   type PlanToolRoute,
@@ -107,7 +109,9 @@ type FixtureContext = {
    */
   section: (target: ToolRouteTarget, dayType: ApplicationDayTypeKey) => ToolUseSectionView | null
   /** Stage-1 card the asset (or its choice group) for this route renders into. */
-  card: (target: ToolRouteTarget) => { tier: string; stateLabel: string; typeLabel: string } | null
+  card: (
+    target: ToolRouteTarget,
+  ) => { tier: string; stateLabel: string; typeLabel: string; noteDe: string | null } | null
   /** The rendered Stage-1 card ids, per tier block. */
   cardIds: (tier: "basis" | "optional") => string[]
 }
@@ -176,7 +180,12 @@ function evaluate(input: FixtureInput): FixtureContext {
           (owningGroup !== undefined && candidate.id === owningGroup.groupKey),
       )
       return match
-        ? { tier: match.tier, stateLabel: match.stateLabel, typeLabel: match.typeLabel }
+        ? {
+            tier: match.tier,
+            stateLabel: match.stateLabel,
+            typeLabel: match.typeLabel,
+            noteDe: match.noteDe,
+          }
         : null
     },
     cardIds: (tier) => (blocks[tier]?.cards ?? []).map((candidate) => candidate.id),
@@ -1037,6 +1046,112 @@ const BRUSH_ROWS: FixtureRow[] = [
       assert.equal(context.route("detangling_foundation")?.reportedOwnership.state, "explicit_none")
     },
   },
+  {
+    id: "55",
+    name: "tools-airflow-manual-round-brush",
+    input: {
+      care: { dryingRoutes: ["ordinary_blow_dry"] },
+      answers: { goals: ["volume_balance"] },
+      inventory: { brushes_combs: ["round_brush"] },
+    },
+    check: (context) => {
+      const route = context.route("manual_air_shaping")
+      assert.equal(route?.tier, "not_needed")
+      exact(context, "manual_air_shaping", ["tools.brush.manual_air_shape"])
+      // The Rundbürste finally leads a route of its own: `air_shaping_volume`
+      // lives in `airflow`, so it never could.
+      assert.equal(context.lead("manual_air_shaping"), "round_brush")
+      assert.equal(route?.coverage.state, "covered_by_report")
+      assert.equal(context.asset("manual_air_shaping")?.presentationState, "use_yours")
+      // „prioritize the manual approach … do not add another volume tool
+      // requirement": the reported brush is the missing half of `B08`'s
+      // Föhn-plus-Rundbürste approach, so the shared volume need is fulfilled.
+      assert.equal(context.route("air_shaping_volume")?.coverage.capabilityVerified, true)
+      assert.equal(context.group("volume_set")?.fulfilledBy, routeKeyFor("air_shaping_volume"))
+      // No second shaping brush beside the one they already reported.
+      absent(context, "specialized_brush_job")
+      assert.equal(context.card("manual_air_shaping"), null, "use-yours never adds a card")
+    },
+  },
+  {
+    id: "65",
+    name: "tools-brush-round-volume",
+    input: {
+      care: { dryingRoutes: ["ordinary_blow_dry"] },
+      answers: { goals: ["volume_balance"] },
+      inventory: { brushes_combs: ["round_brush"] },
+    },
+    check: (context) => {
+      // „link to the shared pre-dry/air-shape session": one parent session key,
+      // never a second inferred weekly schedule.
+      const session = context.occurrence("air_shaping_volume")?.sessionKey
+      assert.ok(session)
+      assert.equal(context.occurrence("drying_standard")?.sessionKey, session)
+      assert.equal(context.occurrence("manual_air_shaping")?.sessionKey, session)
+      // Order inside the session comes from the graph, not from a sequence field.
+      assert.equal(context.occurrence("manual_air_shaping")?.anchor.position, "heat_tool")
+      // „reuse the dryer": one airflow asset serves drying and shaping.
+      assert.equal(
+        context.plan.assets.filter((asset) => asset.family === "airflow").length,
+        1,
+        "the reported dryer is reused, never duplicated",
+      )
+    },
+  },
+  {
+    id: "66",
+    name: "tools-brush-definition-optional",
+    input: { answers: { texture: "curly", goals: ["shape_definition"] } },
+    check: (context) => {
+      assert.equal(context.route("definition_brush_job")?.tier, "optional")
+      exact(context, "definition_brush_job", ["tools.brush.definition_optional"])
+      assert.equal(context.lead("definition_brush_job"), "styling_brush")
+      assert.equal(context.card("definition_brush_job")?.tier, "optional")
+      // R2: `straight` plus `shape_definition` activates nothing (fixture 4b).
+      absent(evaluate({ answers: { goals: ["shape_definition"] } }), "definition_brush_job")
+      // Texture alone never activates it either.
+      absent(evaluate({ answers: { texture: "curly" } }), "definition_brush_job")
+    },
+  },
+  {
+    id: "67",
+    name: "tools-brush-pick-optional",
+    // The oracle's Input cell still carries the pre-`D1` premise, and its own
+    // note says to update it once this route lands: `coily` resolves to CONTROL,
+    // so `volume_balance` alone can no longer reach a volume route. The live
+    // trigger is the concern that OVERRIDES the inference.
+    input: { answers: { texture: "coily", currentConcerns: ["low_volume_or_weighed_down"] } },
+    check: (context) => {
+      assert.equal(context.route("pick_job")?.tier, "optional")
+      exact(context, "pick_job", ["tools.brush.pick_optional"])
+      assert.equal(context.lead("pick_job"), "hair_pick")
+      // One collapsed optional approach, never another required volume product.
+      assert.equal(context.card("pick_job")?.tier, "optional")
+      // `D1`: the merged goal alone resolves to control and reaches nothing.
+      absent(evaluate({ answers: { texture: "coily", goals: ["volume_balance"] } }), "pick_job")
+      // The Pick is a curly/coily form; the same concern on straight hair is not it.
+      absent(evaluate({ answers: { currentConcerns: ["low_volume_or_weighed_down"] } }), "pick_job")
+    },
+  },
+  {
+    id: "68",
+    name: "tools-brush-reported-dry-style",
+    input: { inventory: { brushes_combs: ["vent_brush"] } },
+    check: (context) => {
+      const route = context.route("dry_styling_brush")
+      assert.equal(route?.tier, "not_needed")
+      exact(context, "dry_styling_brush", ["tools.brush.reported_dry_style"])
+      assert.equal(context.lead("dry_styling_brush"), "vent_brush")
+      assert.equal(route?.coverage.state, "covered_by_report")
+      assert.equal(context.asset("dry_styling_brush")?.presentationState, "use_yours")
+      // Use-yours/reference guidance only: no new purchase and no card.
+      assert.equal(context.card("dry_styling_brush"), null)
+      assert.equal(context.occurrence("dry_styling_brush")?.anchor.position, "styling_session")
+      // One physical brush, one row: a reported form that already LEADS the
+      // detangling foundation keeps its single card there (fixtures 9, 60b).
+      absent(evaluate({ inventory: { brushes_combs: ["paddle_brush"] } }), "dry_styling_brush")
+    },
+  },
 ]
 
 // --- 4. Clips, ties and securing ----------------------------------------------
@@ -1079,6 +1194,34 @@ const SECURING_ROWS: FixtureRow[] = [
     name: "tools-securing-no-parent",
     input: { answers: { hairLength: "very_long" } },
     check: (context) => absent(context, "securing_support"),
+  },
+  {
+    id: "73",
+    name: "tools-securing-root-volume-parent",
+    // `C01`'s fourth parent, restated 2026-08-25 against `D1`. P0 is
+    // straight/normal, so the ratified predicate resolves the merged
+    // `volume_balance` goal to volume_up and the parent is active.
+    input: { answers: { goals: ["volume_balance"] } },
+    check: (context) => {
+      assert.equal(context.route("securing_support")?.tier, "optional")
+      exact(context, "securing_support", ["tools.securing.optional"])
+      // `C02` resolves the root-volume parent to the Root-Volume-Clip.
+      assert.equal(context.lead("securing_support"), "root_volume_clip")
+      // One collapsed optional result, never another volume basis.
+      assert.equal(context.card("securing_support")?.tier, "optional")
+      // A control-resolved direction reaches no securing route at all.
+      absent(
+        evaluate({ answers: { texture: "curly", goals: ["volume_balance"] } }),
+        "securing_support",
+      )
+      // The explicit concern overrides the inference and activates it anyway.
+      assert.equal(
+        evaluate({
+          answers: { texture: "curly", currentConcerns: ["low_volume_or_weighed_down"] },
+        }).route("securing_support")?.tier,
+        "optional",
+      )
+    },
   },
   {
     id: "74",
@@ -1223,8 +1366,37 @@ const WASH_ROWS: FixtureRow[] = [
         false,
       )
       // The reported brush is still what the user told us; only the applicator
-      // need stays open. Its own use-yours route is WS3 (fixture 85).
+      // need stays open.
       assert.deepEqual(route?.reportedOwnership.forms, ["scalp_brush"])
+      // The deferred ownership half (WS3, companion of fixture 85): the brush IS
+      // visible as use-yours — on its own scalp-care job, never on this card.
+      assert.equal(context.lead("scalp_brush_use"), "scalp_brush")
+      assert.equal(context.asset("scalp_brush_use")?.presentationState, "use_yours")
+      assert.equal(context.card("scalp_brush_use"), null)
+    },
+  },
+  {
+    id: "85",
+    name: "tools-wash-reported-scalp-brush",
+    input: { scalpApplicationJob: false, inventory: { wash_application: ["scalp_brush"] } },
+    check: (context) => {
+      // W01/W02: reported-use only. It needs no parent event, creates no need
+      // and lives on its own scalp-care route.
+      const route = context.route("scalp_brush_use")
+      assert.equal(route?.tier, "not_needed")
+      assert.equal(context.lead("scalp_brush_use"), "scalp_brush")
+      assert.equal(route?.coverage.state, "covered_by_report")
+      assert.equal(context.asset("scalp_brush_use")?.presentationState, "use_yours")
+      assert.equal(context.card("scalp_brush_use"), null, "no purchase, no card")
+      // No proactive parent, so the applicator need never appears.
+      absent(context, "wash_application_support")
+      // Gentle guidance only — never a growth or hair-loss claim.
+      const section = context.section("scalp_brush_use", "wash_day")
+      assert.ok(section, "the reported brush becomes a real use-yours step")
+      const copy = section.actionsDe.join(" ")
+      for (const overreach of ["Wachstum", "Haarausfall", "repariert"]) {
+        assert.equal(copy.includes(overreach), false, `W01 forbids the claim „${overreach}"`)
+      }
     },
   },
   {
@@ -1436,6 +1608,72 @@ const NIGHT_ROWS: FixtureRow[] = [
     },
   },
   {
+    id: "17",
+    name: "tools-night-no-signal",
+    input: { care: { nightProtection: ["silk_satin_pillow"] } },
+    check: (context) => {
+      const route = context.route("night_protection")
+      // N04: real current behaviour is preserved; ownership alone creates
+      // neither a need nor a shopping card, so the tier is `not_needed`.
+      assert.equal(route?.tier, "not_needed")
+      exact(context, "night_protection", [])
+      assert.equal(context.lead("night_protection"), "pillowcase")
+      assert.equal(route?.reportedOwnership.state, "owned_generic")
+      assert.equal(route?.reportedOwnership.provenance, "reported")
+      // … as a nightly continue-yours step.
+      const occurrence = context.occurrence("night_protection")
+      assert.equal(occurrence?.anchor.position, "nightly")
+      assert.equal(occurrence?.executable, true)
+      assert.ok(context.section("night_protection", "rest_day"), "nightly happens every day")
+      assert.equal(context.card("night_protection"), null, "no optional need, no shopping card")
+    },
+  },
+  {
+    id: "94",
+    name: "tools-night-no-signal-reported",
+    input: { care: { nightProtection: ["length_tip_accessory"] } },
+    check: (context) => {
+      assert.equal(context.route("night_protection")?.tier, "not_needed")
+      exact(context, "night_protection", [])
+      assert.equal(context.lead("night_protection"), "length_tip_sleeve")
+      assert.equal(context.occurrence("night_protection")?.anchor.position, "nightly")
+      assert.equal(context.card("night_protection"), null)
+    },
+  },
+  {
+    id: "98",
+    name: "tools-night-reported-alternative",
+    input: { answers: { hairLength: "long" }, care: { nightProtection: ["silk_satin_bonnet"] } },
+    check: (context) => {
+      assert.equal(context.route("night_protection")?.tier, "optional")
+      exact(context, "night_protection", ["tools.night.optional_other"])
+      // N03: the reported form stays primary.
+      assert.equal(context.lead("night_protection"), "bonnet")
+      // The one surviving alternative is the FIRST form in the route's binding
+      // order whose intended coverage differs from the reported lead — here the
+      // pillowcase, ahead of the bonnet in `N02`'s order.
+      assert.deepEqual(context.route("night_protection")?.recommendedProductTypes, [
+        "pillowcase",
+        "bonnet",
+        "soft_night_tie",
+        "length_tip_sleeve",
+      ])
+      assert.equal(
+        context.card("night_protection")?.noteDe,
+        "Alternative: Glatter Kissenbezug, wenn diese Form besser zu dir passt",
+      )
+      // … rendered as the „Alternative:" line only, never as a second card.
+      assert.equal(
+        context.plan.assets.filter((asset) => asset.family === "night_protection").length,
+        1,
+      )
+      assert.equal(
+        context.cardIds("optional").filter((id) => id.includes("night_protection")).length,
+        1,
+      )
+    },
+  },
+  {
     id: "126",
     name: "tools-night-manageability-trigger",
     input: { answers: { goals: ["manageability_styling"] }, care: { nightProtection: null } },
@@ -1449,6 +1687,35 @@ const NIGHT_ROWS: FixtureRow[] = [
 ]
 
 // --- 7. Drying textiles -------------------------------------------------------
+
+/** The `T05` plopping guidance entry — the route produces nothing else. */
+function plopGuidance(context: FixtureContext) {
+  const entry = context.plan.guidance.find(
+    (candidate) => candidate.routeKey === routeKeyFor("textile_plop"),
+  )
+  assert.ok(entry, "the plopping route must produce a guidance entry")
+  return entry
+}
+
+/** The rendered plopping step on a day, as the user reads it. */
+function plopStep(context: FixtureContext, dayType: ApplicationDayTypeKey) {
+  const entry = plopGuidance(context)
+  return (
+    projectToolsForDay({
+      dayType,
+      assets: context.plan.assets,
+      occurrences: context.plan.occurrences,
+      guidance: context.plan.guidance,
+    }).transitions.find((candidate) => candidate.stepKey === entry.guidanceKey) ?? null
+  )
+}
+
+/** Every Stage-1 card the drying-textile family renders, across both blocks. */
+function textileCardIds(context: FixtureContext): string[] {
+  return [...context.cardIds("basis"), ...context.cardIds("optional")].filter((id) =>
+    id.includes("drying_textile"),
+  )
+}
 
 const TEXTILE_ROWS: FixtureRow[] = [
   {
@@ -1525,6 +1792,135 @@ const TEXTILE_ROWS: FixtureRow[] = [
       assert.equal(
         context.routes.some((route) => route.family === "drying_textiles"),
         false,
+      )
+    },
+  },
+  {
+    id: "106",
+    name: "tools-textile-reported-suitable",
+    input: { care: { towelMaterial: "mikrofaser", towelTechnique: "gentle_press" } },
+    check: (context) => {
+      // T02: a reported suitable form is use-yours, never another purchase.
+      const route = context.route("drying_textile_use")
+      assert.equal(route?.tier, "not_needed")
+      assert.equal(context.lead("drying_textile_use"), "microfiber_towel")
+      assert.equal(route?.coverage.state, "covered_by_report")
+      assert.equal(context.asset("drying_textile_use")?.presentationState, "use_yours")
+      assert.equal(context.card("drying_textile_use"), null, "no duplicate purchase")
+      assert.equal(
+        context.occurrence("drying_textile_use")?.anchor.position,
+        "post_rinse_towel_dry",
+      )
+      // Only `frottee` creates the optional upgrade (fixture 105 keeps it away).
+      absent(context, "drying_textile_upgrade")
+    },
+  },
+  {
+    id: "108",
+    name: "tools-textile-plop-default",
+    input: {
+      answers: { texture: "curly", goals: ["shape_definition"] },
+      care: { towelMaterial: "tshirt", towelTechnique: "gentle_press" },
+    },
+    check: (context) => {
+      const route = context.route("textile_plop")
+      // T03: a DEFAULT wash-routine technique, not a collapsed optional tip.
+      assert.equal(route?.tier, "basis")
+      assert.equal(route?.resolution, "behavior_only")
+      exact(context, "textile_plop", ["tools.textile.plop"])
+      // T04: a technique, never a product — so no wrap can become a basis buy.
+      assert.equal(context.asset("textile_plop"), null)
+      assert.equal(context.occurrence("textile_plop"), null)
+      const guidance = plopGuidance(context)
+      assert.equal(guidance.strength, "supportive")
+      const step = plopStep(context, "wash_day")
+      assert.ok(step, "the technique renders as an ordinary routine step")
+      // gather/scrunch gently, never rub or twist tightly …
+      assert.match(step.copyDe, /nicht rubbeln/)
+      assert.match(step.copyDe, /ohne Zug/)
+      // … and no universal duration is prescribed.
+      for (const duration of ["Minute", "Stunde", "Sekunde"]) {
+        assert.equal(step.copyDe.includes(duration), false, `T05 forbids „${duration}"`)
+      }
+    },
+  },
+  {
+    id: "109",
+    name: "tools-textile-plop-no-towel-override",
+    input: {
+      answers: { texture: "curly", goals: ["shape_definition"] },
+      care: { towelMaterial: "no_towel" },
+    },
+    check: (context) => {
+      absent(context, "textile_plop")
+      assert.equal(
+        context.routes.some((route) => route.family === "drying_textiles"),
+        false,
+        "`no_towel` overrides the plopping default and every textile product",
+      )
+    },
+  },
+  {
+    id: "110",
+    name: "tools-textile-plop-owned",
+    input: {
+      answers: { texture: "curly", goals: ["shape_definition"] },
+      care: { towelMaterial: "tshirt", towelTechnique: "gentle_press" },
+      inventory: { drying_textiles: ["smooth_cotton_cloth"] },
+    },
+    check: (context) => {
+      assert.equal(context.route("textile_plop")?.tier, "basis")
+      // „execute with the owned form …"
+      assert.equal(context.lead("drying_textile_use"), "smooth_cotton_cloth")
+      assert.equal(context.asset("drying_textile_use")?.presentationState, "use_yours")
+      // „… and recommend no product."
+      assert.deepEqual(textileCardIds(context), [])
+    },
+  },
+  {
+    id: "111",
+    name: "tools-textile-plop-unreported",
+    input: {
+      answers: { texture: "curly", goals: ["shape_definition"] },
+      care: { towelMaterial: "tshirt", towelTechnique: "gentle_press" },
+      inventory: { drying_textiles: [] },
+    },
+    check: (context) => {
+      // The technique stays executable with an ordinary suitable T-Shirt …
+      assert.equal(context.route("textile_plop")?.tier, "basis")
+      assert.ok(plopStep(context, "wash_day"))
+      // … and an explicit „nothing" never turns a wrap into a basis product.
+      absent(context, "drying_textile_use", "drying_textile_upgrade")
+      assert.deepEqual(textileCardIds(context), [])
+    },
+  },
+  {
+    id: "112",
+    name: "tools-textile-plop-placement",
+    input: {
+      answers: { texture: "curly", goals: ["shape_definition"] },
+      care: {
+        towelMaterial: "tshirt",
+        towelTechnique: "gentle_press",
+        dryingRoutes: ["diffuser_or_airflow_shaping"],
+      },
+    },
+    check: (context) => {
+      const guidance = plopGuidance(context)
+      // D7: after the damp Leave-in/styling application …
+      assert.equal(guidance.anchor.position, "damp_leave_on")
+      assert.equal(placementForAnchor(guidance.anchor), "post_wash")
+      // … and strictly before the drying occurrence.
+      const drying = context.occurrence("drying_diffused")
+      assert.ok(drying)
+      assert.ok(
+        dayAnchorIndex(guidance.anchor) < dayAnchorIndex(drying.anchor),
+        "plopping precedes drying on the shared graph",
+      )
+      // The towel step is a different, earlier occurrence — plopping does not
+      // anchor at `post_rinse_towel_dry` (the 2026-08-25 `D7` correction).
+      assert.ok(
+        dayAnchorIndex(atDayAnchor("post_rinse_towel_dry")) < dayAnchorIndex(guidance.anchor),
       )
     },
   },
@@ -1887,29 +2283,17 @@ export const SKIPPED: Record<string, string> = {
 
   // No production input exists for the trigger.
   "28": "no production input (no pain/tightness field)",
+  // `B09`'s Stielkamm needs a SELECTED parting/sectioning step. `scalpApplicationJob`
+  // is not it: `C02` already resolves that parent to a Sectioning-Clip, and
+  // fixture 88 forbids a second sectioning aid for the same event.
   "69": "no production input (no selected parting step)",
   "72": "no production input (no selected parting step)",
-  "73": "no production input (no root-volume parent)",
+  // `W01`'s second proactive parent — a SELECTED between-wash curl/wave refresh
+  // step — has no production field, so the water spray bottle has no trigger.
   "83": "no production input (no between-wash refresh step)",
   "84": "no production input (no refresh parent)",
   "88": "no production input",
   "92": "no production input (no independent brush-friction signal)",
-
-  // WS3 — the route target does not exist yet.
-  "17": "WS3 (night continue-yours occurrence)",
-  "55": "WS3 (tools.brush.manual_air_shape route)",
-  "65": "WS3 (round-brush volume route)",
-  "66": "WS3 (Definitionsbürste route)",
-  "67": "WS3 (Pick route)",
-  "68": "WS3 (reported dry-style route)",
-  "85": "WS3 (reported scalp-brush use-yours route)",
-  "94": "WS3 (night continue-yours occurrence)",
-  "106": "WS3 (reported-suitable textile use-yours route)",
-  "108": "WS3 (tools.textile.plop route)",
-  "109": "WS3 (re-assert after the plop route lands)",
-  "110": "WS3 (tools.textile.plop route)",
-  "111": "WS3 (tools.textile.plop route)",
-  "112": "WS3 (tools.textile.plop route)",
 
   // WS4 — Feinschliff capture, copy and the „Nur Finger" card.
   "116": "WS4 (overview submit semantics, preselection wiring, ratified lead copy)",
@@ -1917,11 +2301,7 @@ export const SKIPPED: Record<string, string> = {
   // C05 deferred to Stage 2 by decision.
   "79": "NOT APPLICABLE (C05 deferred)",
 
-  // Flagged to the orchestrator rather than implemented — see the WS2 handback.
-  "98":
-    "FLAGGED — N03's 'at most one functionally different alternative' needs a " +
-    "non-reported form to survive the reported-form filter in assetFormsFor; the " +
-    "rule for which alternative survives is not stated in the spec.",
+  // Flagged to the orchestrator rather than implemented.
   "114":
     "FLAGGED — deferredFacts wiring. Emitting a route for `towelMaterial=null` " +
     "adds a Stage-1 card for every pre-Feinschliff user, which needs the WS4 " +

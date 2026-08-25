@@ -81,10 +81,17 @@ export const TOOL_ROUTE_PURPOSE_COPY = {
   heatless_volume_set: "Um Volumen oder eine Form ohne Hitze zu setzen",
   detangling_foundation: "Zum sanften Entwirren und Verteilen von Produkt",
   specialized_brush_job: "Für das Formen oder Abteilen beim Styling",
+  manual_air_shaping: "Um mit Föhn und Rundbürste Form und Ansatzvolumen zu geben",
+  definition_brush_job: "Um dein Muster beim Stylen zu definieren",
+  pick_job: "Um das Haar am Ansatz locker anzuheben",
+  dry_styling_brush: "Zum Stylen im trockenen Haar",
   securing_support: "Zum Abteilen und lockeren Fixieren",
   wash_application_support: "Um Produkt gezielt aufzutragen und zu verteilen",
+  scalp_brush_use: "Um die Kopfhaut beim Waschen sanft zu bearbeiten",
   night_protection: "Für weniger Reibung über Nacht",
   drying_textile_upgrade: "Um Wasser sanft aufzunehmen",
+  drying_textile_use: "Um Wasser sanft aufzunehmen",
+  textile_plop: "Damit dein Muster beim Antrocknen erhalten bleibt",
   gentle_towel_handling: "Sanft ausdrücken statt rubbeln",
 } as const satisfies Record<ToolRouteTarget, string>
 

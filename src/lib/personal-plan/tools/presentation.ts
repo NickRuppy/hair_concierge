@@ -1,3 +1,4 @@
+import { nightFunctionalAlternative } from "./assets"
 import {
   TOOL_FAMILY_ORDER,
   type PlanToolPlan,
@@ -5,6 +6,7 @@ import {
   type ToolAsset,
   type ToolChoiceGroup,
   type ToolPresentationState,
+  type ToolProductType,
 } from "./contracts"
 import {
   TOOL_CHOICE_GROUP_LABELS,
@@ -99,7 +101,7 @@ export function buildStage1ToolBlocks(
       imageAlt: toolImageAlt(asset.productTypes[0]),
       stateLabel: TOOL_STATE_LABELS[asset.presentationState],
       state: asset.presentationState,
-      noteDe: toolAlternativeNote(asset.productTypes.slice(1)),
+      noteDe: toolAlternativeNote(alternativesFor(asset, routes)),
     }
   }
 
@@ -133,6 +135,27 @@ export function buildStage1ToolBlocks(
         ? { title: TOOL_BLOCK_TITLE, lead: TOOL_BLOCK_OPTIONAL_LEAD, cards: optional }
         : null,
   }
+}
+
+/**
+ * The forms the „Alternative: …" line may name (`N03`, `H06`).
+ *
+ * Normally the eligible forms behind the lead. When a reported form filtered the
+ * asset down to itself, Night Protection still promises exactly one genuinely
+ * different alternative — derived from the route, because the asset cannot carry
+ * a form that would break `D6`'s binding order (fixture 98).
+ */
+function alternativesFor(
+  asset: ToolAsset,
+  routes: readonly PlanToolRoute[],
+): readonly ToolProductType[] {
+  const behind = asset.productTypes.slice(1)
+  if (behind.length > 0) return behind
+  for (const route of routes) {
+    const alternative = nightFunctionalAlternative(route, asset.productTypes[0])
+    if (alternative) return [alternative]
+  }
+  return []
 }
 
 /**

@@ -248,10 +248,17 @@ const FALLBACK_CAPABILITY: Record<ToolRouteTarget, ToolCapability> = {
   heatless_volume_set: "set_style",
   detangling_foundation: "detangle",
   specialized_brush_job: "airflow_shape",
+  manual_air_shaping: "airflow_shape",
+  definition_brush_job: "define_pattern",
+  pick_job: "create_volume",
+  dry_styling_brush: "smooth",
   securing_support: "section_hair",
   wash_application_support: "apply_product",
+  scalp_brush_use: "wash_scalp_assist",
   night_protection: "reduce_surface_friction",
   drying_textile_upgrade: "absorb_water",
+  drying_textile_use: "absorb_water",
+  textile_plop: "plop",
   gentle_towel_handling: "absorb_water",
 }
 
@@ -277,10 +284,25 @@ const ANCHOR_POSITIONS: Record<ToolRouteTarget, ToolDayAnchor> = {
   heatless_volume_set: "styling_session",
   detangling_foundation: "post_rinse_towel_dry",
   specialized_brush_job: "styling_session",
+  // `B09`: the Rundbürste is used DURING the air-shaping half of the session, so
+  // it shares that position and, below, that session key.
+  manual_air_shaping: "heat_tool",
+  // „optional in the conditioned/post-Leave-in definition event".
+  definition_brush_job: "damp_leave_on",
+  // „optional finishing/root-volume event", i.e. on dry hair at the end.
+  pick_job: "dry_finish",
+  dry_styling_brush: "styling_session",
   securing_support: "styling_session",
   wash_application_support: "wet_cleanse",
+  scalp_brush_use: "wet_cleanse",
   night_protection: "nightly",
   drying_textile_upgrade: "post_rinse_towel_dry",
+  drying_textile_use: "post_rinse_towel_dry",
+  // `T05`: after the damp Leave-in/styling application and before the drying
+  // occurrence (`dry_pre_heat` / `dry_finish`). The graph position alone makes
+  // both halves of that sentence true: the view adapter places a tool step after
+  // every product step at or before its position.
+  textile_plop: "damp_leave_on",
   gentle_towel_handling: "post_rinse_towel_dry",
 }
 
@@ -333,7 +355,45 @@ function airShapingSessionTargets(routes: readonly PlanToolRoute[]): Set<ToolRou
   if (!targets.has("air_shaping_volume")) return new Set()
   const preDry = AIR_SHAPING_PRE_DRY_TARGETS.filter((target) => targets.has(target))
   if (preDry.length === 0) return new Set()
-  return new Set<ToolRouteTarget>(["air_shaping_volume", ...preDry])
+  const session = new Set<ToolRouteTarget>(["air_shaping_volume", ...preDry])
+  // `B09`/fixture 65: the manual Rundbürste half belongs to the SAME parent
+  // session — it is one styling session with one cadence, not a second one.
+  if (targets.has("manual_air_shaping")) session.add("manual_air_shaping")
+  return session
+}
+
+/**
+ * `N03`: at most ONE genuinely different alternative beside a reported form.
+ *
+ * A reported Night method filters the asset down to that one form (`D4`: the
+ * card names THEIR tool), so `productTypes.slice(1)` is empty and the promised
+ * alternative never rendered (fixture 98). The surviving alternative is the
+ * FIRST form in the route's binding `recommendedProductTypes` order (`D6`) whose
+ * function differs from the reported lead — and it renders as the „Alternative:"
+ * line only, never as a second card.
+ *
+ * „Functionally different" is `N05`'s intended-coverage split, the one functional
+ * property the category stores. A second pillow-surface form beside a reported
+ * pillowcase would be a material claim, which `N03` forbids.
+ */
+const NIGHT_COVERAGE_CLASS: Partial<Record<ToolProductType, string>> = {
+  pillowcase: "pillow_surface",
+  bonnet: "whole_hair",
+  length_tip_sleeve: "lengths_ends",
+  soft_night_tie: "gathered_lengths",
+}
+
+export function nightFunctionalAlternative(
+  route: PlanToolRoute,
+  lead: ToolProductType,
+): ToolProductType | null {
+  if (route.family !== "night_protection") return null
+  const leadClass = NIGHT_COVERAGE_CLASS[lead]
+  return (
+    route.recommendedProductTypes.find(
+      (form) => form !== lead && NIGHT_COVERAGE_CLASS[form] !== leadClass,
+    ) ?? null
+  )
 }
 
 /**

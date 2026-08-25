@@ -163,6 +163,10 @@ const CONDITIONAL_NOTES_DE: Record<ToolConditionalReason, string> = {
 const GUIDANCE_COPY_DE: Record<string, string> = {
   "personal_plan.tools.guidance.gentle_towel_handling":
     "Drücke das Wasser sanft aus oder scrunche es ein – rubbel nicht.",
+  // T04/T05: an ordinary T-Shirt executes this; no product is required and no
+  // universal duration is prescribed — you take it off when it feels right.
+  "personal_plan.tools.guidance.textile_plop":
+    "Lege die Längen locker in ein T-Shirt oder Tuch und wickle es ohne Zug ein – nicht rubbeln, nicht fest drehen. Nimm es ab, wenn die Längen nur noch feucht sind.",
 }
 
 export type ToolDayProjection = {

@@ -259,10 +259,28 @@ export const TOOL_ROUTE_TARGETS = [
   "heatless_volume_set",
   "detangling_foundation",
   "specialized_brush_job",
+  // `B09`'s four specialized brush jobs are separate targets, not one merged
+  // one: they have different parents, capabilities, day anchors and rule IDs,
+  // and two of them can legitimately be active at once (a wavy profile that
+  // wants both definition and volume).
+  "manual_air_shaping",
+  "definition_brush_job",
+  "pick_job",
+  "dry_styling_brush",
   "securing_support",
   "wash_application_support",
+  // `W02`: a reported scalp brush is use-yours on its OWN scalp-care job. It is
+  // a separate route precisely so it can never lead or fulfil the applicator
+  // need (fixtures 85, 128).
+  "scalp_brush_use",
   "night_protection",
   "drying_textile_upgrade",
+  // `T02`: a reported suitable textile is use-yours, never another purchase
+  // (fixture 106). Separate from the `frottee` upgrade, which fixture 105
+  // requires to stay absent.
+  "drying_textile_use",
+  // `T03`/`T05`: plopping is a default wash-routine TECHNIQUE, never a product.
+  "textile_plop",
   "gentle_towel_handling",
 ] as const
 export type ToolRouteTarget = (typeof TOOL_ROUTE_TARGETS)[number]
@@ -275,10 +293,17 @@ export const TOOL_ROUTE_TARGET_FAMILY = {
   heatless_volume_set: "heatless_styling",
   detangling_foundation: "brushes_combs",
   specialized_brush_job: "brushes_combs",
+  manual_air_shaping: "brushes_combs",
+  definition_brush_job: "brushes_combs",
+  pick_job: "brushes_combs",
+  dry_styling_brush: "brushes_combs",
   securing_support: "securing_sectioning",
   wash_application_support: "wash_application",
+  scalp_brush_use: "wash_application",
   night_protection: "night_protection",
   drying_textile_upgrade: "drying_textiles",
+  drying_textile_use: "drying_textiles",
+  textile_plop: "drying_textiles",
   gentle_towel_handling: "drying_textiles",
 } as const satisfies Record<ToolRouteTarget, ToolFamily>
 

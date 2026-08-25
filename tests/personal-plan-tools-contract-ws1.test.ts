@@ -342,7 +342,11 @@ test("D5: the plan rejects a group whose member route does not exist", () => {
           groupKey: choiceGroupKeyFor("volume_set"),
           target: "volume_set",
           tier: "basis",
-          memberRouteKeys: [routeKeyFor("securing_support")],
+          // A target this profile genuinely cannot produce: there is no scalp
+          // application job. (`securing_support` used to be the example; WS3's
+          // `C01` root-volume parent made it a real route for a volume_up
+          // profile, which quietly turned this into a no-op assertion.)
+          memberRouteKeys: [routeKeyFor("wash_application_support")],
           fulfilledBy: null,
         },
       ],
