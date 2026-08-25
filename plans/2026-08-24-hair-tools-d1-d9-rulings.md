@@ -307,6 +307,31 @@ with a rendered-card guard in the harness:
 - Recorded, inert: the drying-textile card's DOM id moved from the asset key to
   `group:drying_textile` (no selector consumers; React key only).
 
+## WS6 landed (2026-08-25) + flag dispositions
+
+Shared 11-position day graph adopted (`TOOL_DAY_ANCHORS` imported from the
+Application contract — one graph, not a copy); `ToolPlacement` derived via the
+D7 table; towel step before Leave-in/heat protection on the rendered Waschtag;
+B12 both branches keyed off the route's binding lead form; A09 linked pair on
+`dry_pre_heat`→`heat_tool` with one shared session key; total German capability
+copy (blank instruction blocks now impossible by type); anchor-based day
+gating. `planToolPlanSchema` v3 (unshipped). Fixtures 37/54/64/78/103
+un-skipped; 2098+582 green. Dispositions:
+
+- **A09 reading accepted:** drying route + air-shaping route as the two linked
+  occurrences, one asset when a multi-styler covers both (fixture 38 shape).
+- **Waschtag duplication risk → WS7:** the product compiler's
+  `state_transition` „Sanft mit einem Handtuch ausdrücken" now sits adjacent to
+  the towel Tool step at the same position — dedupe at the view-adapter level;
+  verify visually in ready-check.
+- **Applicator ordering → walkthrough question:** `wash_application_support`
+  renders after the cleanse product (product-first tie-break); whether the
+  Applikator should precede its scalp product is Nick's UX call at ready-check.
+- `specialized_brush_job` stays at `styling_session` (unruled; WS7 note).
+- **New German strings** (heated/heatless/securing/night instruction copy, list
+  in the WS6 handback) queued for the pre-ship copy-review screenshot pass
+  together with WS4's copy.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
