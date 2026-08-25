@@ -222,6 +222,45 @@ WS2 (rule fidelity) landed: table-driven fixture harness
   superseded by the user's own family answer; explicit family-wide „Nichts
   davon" beats projections.
 
+## Adversarial lane verdict on WS1+WS2 (2026-08-25): REFUTED — remediation open
+
+The independent adversarial lane refuted "the rules now match the spec".
+Accepted findings and dispositions:
+
+- **Process defect (orchestrator):** fixture dispositions for rows 12/49/98
+  were committed inside WS2's implementation commit — an oracle edited beside
+  the code it judges. Standing rule from now on: **oracle edits always land in
+  their own docs-only commit, never mixed with implementation.** Row 12's
+  self-contradictory tail is fixed.
+- **Provenance per-source bug (blocker):** named care answers
+  (`additionalHeatTools`, `nightProtection`, `towel.*`) were stamped `derived`.
+  Clarified in `decision.md` D4: provenance follows what the answer is, not the
+  store; only behaviour projections are derived. Remediation: fix
+  `provenanceFor`, assert provenance on fixtures 15/19/42/45/95/96/97/100.
+- **Volume group (blocker):** all three `volume_set` members must be emitted
+  (air-shaping basis no longer deletes peers) — fixtures 35/36/47 at
+  route+group layer are WS2-remediation scope; the one-card group-aware
+  Stage-1 projection is pulled into remediation too (its journey is already
+  signed off). New `fulfilledBy` rule in `decision.md` D5: requires
+  `capabilityVerified` — an unvouched plain Föhn never fulfils the group.
+- **C01 heated-set securing parent (should-fix):** implement heated+heatless;
+  new fixture 127.
+- **W02 scalp brush (should-fix):** must never lead or fulfil targeted
+  application; new fixture 128.
+- **Harness hardening (should-fix):** add the omitted assertions (34/36 group
+  membership + per-member rule IDs, 49 coverage.state, A-x2 representability
+  note, 31 block-exactness); replace the constant-expression coverage guard
+  with one that parses live fixture ids from fixtures.md.
+- **Nits accepted:** per-form reported-use rule IDs (multi-styler = both jobs,
+  single-job forms = one); false `fingers` comment in facts.ts; routes.ts to
+  call `volumeDirectionInputFor` instead of hand-rolling it.
+- **Noted, not remediation:** N01-vs-B05 friction asymmetry (oracle-blessed;
+  revisit in WS7); fixture 75 merge-of-one (WS3, together with restoring the
+  C01 night parent without re-creating the fixture-74 duplicate);
+  `normalizeToolInventory` uncalled (WS4 capture page).
+- Vectors that held: Conditioner parity, contract invariants (40k-profile
+  sample, 0 throws), regression surface, API changes.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.

@@ -191,6 +191,7 @@ coverage {
 ```
 
 - `provenance` is `null` **exactly** when `state` is `unknown`; a resolved state always names its source.
+- **Which source is which (clarified 2026-08-25, adversarial lane):** provenance is decided by what the user's answer *is*, not by which store it arrived through. A **named answer** — a Tool-page form, and equally the care answers that name concrete things: `additionalHeatTools`, `nightProtection`, `towel.material`/`towel.technique` — is `reported` („Ich schlafe auf einem Satin-Bonnet" is a report, wherever it was asked). Only a **behaviour projection** that infers an unnamed device (today: `dryingRoutes → hair_dryer`) is `derived`. An `explicit_none` produced by a user's „Nichts davon"-class answer is likewise `reported`.
 - `forms` is empty **exactly** when the state is `unknown` or `explicit_none` — an absent ownership cannot name a form — and every named form belongs to the route's family.
 - A `behavior_only` route has `reportedOwnership.state = unknown` **and** `coverage.state = not_applicable`: there is nothing to own and nothing to acquire. Conversely, a product route may never carry `not_applicable`.
 - `capabilityVerified` is the reason half of coverage: a form accepted only through `B04` duplicate suppression covers the purchase without proving it can perform the route, so it stays `false` and its guidance stays conditional.
@@ -295,7 +296,7 @@ ToolChoiceGroup {
 
 - **Tier** is the strongest member tier, `basis > optional > not_needed`. A group with one `basis` member is a `basis` group even when its other members are optional.
 - **Members** are listed in `memberRouteKeys` reading order; `behavior_only` routes are excluded from every group, and **a route belongs to at most one group** (a route counted in two groups would be counted twice).
-- **`fulfilledBy`** is either a member whose `coverage.state` is covered, or `null`. It may never name an uncovered member.
+- **`fulfilledBy`** is either a member whose `coverage.state` is covered, or `null`. It may never name an uncovered member. **Amended 2026-08-25 (adversarial lane, entailed by `H10`):** it additionally requires the member's `capabilityVerified` to be true — a device the plan cannot vouch for (e.g. a plain Föhn for air shaping, `A04`/`H10`) never fulfils the shared need; the group stays unfulfilled while that member renders conditional use-yours, and the peers remain visible eligible approaches.
 - **Volume group** (`volume_set`) members, in order: `air_shaping_volume`, `heated_volume_set`, `heatless_volume_set`.
 - **Textile group** (`drying_textile`) has exactly one member, the `drying_textile_upgrade` route. Its three forms (`microfiber_towel`, `smooth_cotton_cloth`, `drying_wrap`) stay **inside** that route, neutral, in route order — the group does not spread them across members.
 
