@@ -232,7 +232,7 @@ export function createSupabaseStage2RefinementPersistence(
  * audit timestamp per entry that no read path needs. An unreadable or legacy
  * entry degrades to "no projection recorded" rather than a hard load failure.
  */
-function mapModuleProjections(value: unknown): Stage2ModuleProjections {
+export function mapModuleProjections(value: unknown): Stage2ModuleProjections {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {}
   const projections: Stage2ModuleProjections = {}
   for (const stage2Module of STAGE2_MODULES) {
