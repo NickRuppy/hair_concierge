@@ -82,7 +82,7 @@ The main interactive session (intended: Fable 5) is the orchestrator: it decompo
 **Codex (GPT) — reviewer & second-opinion lane:**
 
 - Use the `codex:codex-rescue` agent (via the Agent tool with `subagent_type: "codex:codex-rescue"`), never the `/codex:rescue` skill (it stalls silently).
-- Do not pin a model — it inherits the global Codex default from `~/.codex/config.toml`, so it tracks the configured default. Add `--effort xhigh` for these deeper passes.
+- Do not pin a model — it inherits the global Codex default from `~/.codex/config.toml`, so it tracks the configured default. Add `--effort high` for these deeper passes.
 - Use for: whole-branch review before push (see "Finishing a Feature Branch"), plan review on non-trivial plans, and any "stuck / want an independent second opinion" moment.
 - Every review brief must explicitly say: `read-only, review only, do not edit files`; never pass `--write`.
 - A session invoked as a reviewer is terminal: review and return the verdict; do not dispatch the other model for another review.
