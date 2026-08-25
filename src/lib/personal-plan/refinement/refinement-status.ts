@@ -48,8 +48,14 @@ export const refinementStatusResponseSchema = z.object({
    * The persisted Modul-1 handoff marker (`module_projections.products.stage3Handoff`,
    * Task 1.4): true once the `products` module has been completed at least once, so
    * Stage-3 re-entry survives a reload even while the draft is still `in_progress`.
+   *
+   * Named for what it is, not what a consumer might do with it: this is a persistent
+   * "has `products` ever handed off" fact, not a one-shot "pending, still needs
+   * consuming" signal — Task 1.4's data model has no "consumed" state, so it never
+   * resets. A consumer that needs one-shot behavior (e.g. auto-navigate to Stage 3
+   * exactly once) must track "already consumed" on its own side.
    */
-  module1HandoffPending: z.boolean(),
+  module1HandedOff: z.boolean(),
   banner: refinementStatusBannerSchema,
 })
 export type RefinementStatusResponse = z.infer<typeof refinementStatusResponseSchema>
@@ -82,7 +88,7 @@ export function buildRefinementStatusResponse(input: {
       completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,
       totalSteps: TOTAL_STEPS,
     },
-    module1HandoffPending: input.moduleProjections.products?.stage3Handoff === true,
+    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,
     banner: {
       visible: nextOpenModule !== null && !dismissed,
       module: nextOpenModule,

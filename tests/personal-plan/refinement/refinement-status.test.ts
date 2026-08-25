@@ -54,7 +54,7 @@ test("a fresh plan with no draft: both modules open, progress 2/4, banner points
   )
   assert.ok(result.modules[0].openQuestionCount > 0)
   assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })
-  assert.equal(result.module1HandoffPending, false)
+  assert.equal(result.module1HandedOff, false)
   assert.deepEqual(result.banner, { visible: true, module: "products", dismissed: false })
 })
 
@@ -103,7 +103,7 @@ test("products module complete via lineage: 3/4 and the handoff marker is surfac
   assert.equal(result.modules.find((m) => m.module === "products")?.status, "complete")
   assert.equal(result.modules.find((m) => m.module === "habits")?.status, "open")
   assert.deepEqual(result.progress, { completedSteps: 3, totalSteps: 4 })
-  assert.equal(result.module1HandoffPending, true)
+  assert.equal(result.module1HandedOff, true)
   // The next open module is habits now, and it has never been dismissed.
   assert.deepEqual(result.banner, { visible: true, module: "habits", dismissed: false })
 })
@@ -146,7 +146,7 @@ test("both modules complete: 4/4, no open module left, banner not visible", () =
     ["complete", "complete"],
   )
   assert.deepEqual(result.progress, { completedSteps: 4, totalSteps: 4 })
-  assert.equal(result.module1HandoffPending, true)
+  assert.equal(result.module1HandedOff, true)
   assert.deepEqual(result.banner, { visible: false, module: null, dismissed: false })
 })
 

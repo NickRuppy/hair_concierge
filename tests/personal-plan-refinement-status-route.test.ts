@@ -27,8 +27,17 @@ function planRow(overrides: Partial<Row> = {}): Row {
   }
 }
 
-function needVersionRow(): Row {
-  return { id: ids.initialNeed, output_snapshot: INITIAL_NEED_SNAPSHOT }
+function needVersionRow(overrides: Partial<Row> = {}): Row {
+  return {
+    id: ids.initialNeed,
+    user_id: ids.user,
+    output_snapshot: INITIAL_NEED_SNAPSHOT,
+    // A quiz-sourced initial need version always carries one of these; the read loader
+    // treats a row with neither as legacy/unusable data (mirrors stage2-refinement-supabase.ts).
+    stage1_source_lead_id: "lead-1",
+    prepared_artifact_source_id: null,
+    ...overrides,
+  }
 }
 
 /**
@@ -123,7 +132,7 @@ test("fresh plan with no refinement draft: both modules open, progress 2/4", asy
     ],
   )
   assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })
-  assert.equal(body.module1HandoffPending, false)
+  assert.equal(body.module1HandedOff, false)
   assert.deepEqual(body.banner, { visible: true, module: "products", dismissed: false })
 })
 
@@ -181,7 +190,7 @@ test("products module complete via lineage: 3/4 and the handoff marker is set", 
   )
   assert.equal(body.modules.find((m: { module: string }) => m.module === "habits").status, "open")
   assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })
-  assert.equal(body.module1HandoffPending, true)
+  assert.equal(body.module1HandedOff, true)
   assert.deepEqual(body.banner, { visible: true, module: "habits", dismissed: false })
 })
 
@@ -229,7 +238,7 @@ test("both modules complete: 4/4", async () => {
     ["complete", "complete"],
   )
   assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })
-  assert.equal(body.module1HandoffPending, true)
+  assert.equal(body.module1HandedOff, true)
   assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })
 })
 
@@ -298,6 +307,17 @@ test("in_progress draft wins over a completed draft on the same initial need ver
   assert.equal(res.status, 200)
   // Reads the in_progress row, not the (also present) complete one.
   assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })
+})
+
+test("initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503", async () => {
+  const res = await handlersFor({
+    personal_plans: [planRow()],
+    personal_plan_need_versions: [
+      needVersionRow({ stage1_source_lead_id: null, prepared_artifact_source_id: null }),
+    ],
+  }).GET()
+
+  assert.equal(res.status, 503)
 })
 
 test("no personal plan: typed 404", async () => {

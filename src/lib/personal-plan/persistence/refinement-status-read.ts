@@ -58,17 +58,33 @@ async function loadPlan(
   return data as PlanRow | null
 }
 
+type NeedVersionRow = {
+  output_snapshot: unknown
+  prepared_artifact_source_id: string | null
+  stage1_source_lead_id: string | null
+}
+
+/**
+ * Mirrors the sanity check in `loadSource` (stage2-refinement-supabase.ts): scoped to
+ * the owning user, and a need version with neither `prepared_artifact_source_id` nor
+ * `stage1_source_lead_id` is legacy/unusable data, not a modeled "empty" state.
+ */
 async function loadInitialNeedSnapshot(
   client: RefinementStatusReadClient,
+  userId: string,
   initialNeedVersionId: string,
 ): Promise<InitialNeedPlanSnapshot> {
   const { data, error } = await client
     .from("personal_plan_need_versions")
-    .select("output_snapshot")
+    .select("output_snapshot,prepared_artifact_source_id,stage1_source_lead_id")
     .eq("id", initialNeedVersionId)
+    .eq("user_id", userId)
     .maybeSingle()
-  if (error || !data) throw new Error("refinement_status_initial_need_unavailable")
-  return (data as { output_snapshot: unknown }).output_snapshot as InitialNeedPlanSnapshot
+  const row = data as NeedVersionRow | null
+  if (error || !row || (!row.prepared_artifact_source_id && !row.stage1_source_lead_id)) {
+    throw new Error("refinement_status_initial_need_unavailable")
+  }
+  return row.output_snapshot as InitialNeedPlanSnapshot
 }
 
 /** Mirrors `loadExistingFromSource` in stage2-refinement-supabase.ts: an in_progress
@@ -116,7 +132,7 @@ export async function loadRefinementStatusSource(
   }
 
   const triggerContext = deriveStage2TriggerContext(
-    await loadInitialNeedSnapshot(client, plan.current_initial_need_version_id),
+    await loadInitialNeedSnapshot(client, userId, plan.current_initial_need_version_id),
   )
   const draft = await loadCurrentDraft(client, plan.id, plan.current_initial_need_version_id)
 
