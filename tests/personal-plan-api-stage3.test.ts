@@ -705,7 +705,7 @@ test("Stage 3 GET can create a server-owned Routine authority repair draft befor
   assert.deepEqual(body.requirements, repairRequirements)
 })
 
-test("Stage 3 GET opts a plain load into the re-entry rebuild on the current refined version", async () => {
+test("Stage 3 GET never opts into the re-entry rebuild without the explicit request flag", async () => {
   const loadCalls: Array<{ rebuildOnStaleRefinedVersion?: boolean }> = []
   const response = await createStage3RouteHandlers(
     deps({
@@ -726,7 +726,84 @@ test("Stage 3 GET opts a plain load into the re-entry rebuild on the current ref
   assert.equal(response!.status, 200)
   assert.deepEqual(
     loadCalls.map((call) => call.rebuildOnStaleRefinedVersion),
+    [false],
+  )
+})
+
+test("Stage 3 GET opts a plain load into the re-entry rebuild only with rebuildStale=1", async () => {
+  const loadCalls: Array<{ rebuildOnStaleRefinedVersion?: boolean }> = []
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async (input) => {
+          loadCalls.push(input)
+          return { status: "active", draft, requirements }
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}&rebuildStale=1`,
+    ),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(
+    loadCalls.map((call) => call.rebuildOnStaleRefinedVersion),
     [true],
+  )
+})
+
+test("Stage 3 GET without the rebuild flag propagates a stale refined source unchanged", async () => {
+  let loadCalls = 0
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => {
+          loadCalls += 1
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+
+  assert.equal(response!.status, 409)
+  assert.deepEqual(await response!.json(), { error: "stale_refined_source" })
+  assert.equal(loadCalls, 1)
+})
+
+test("Stage 3 GET keeps the repair load out of the rebuild even with rebuildStale=1", async () => {
+  const loadCalls: Array<{ rebuildOnStaleRefinedVersion?: boolean }> = []
+  const repairRoutineVersionId = "11111111-1111-4111-8111-111111111111"
+  const response = await createStage3RouteHandlers(
+    deps({
+      repairServiceFor: () => ({
+        createOrLoad: async () => ({ requirements }),
+      }),
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async (input) => {
+          loadCalls.push(input)
+          return { status: "active", draft, requirements }
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}&repairRoutineVersionId=${repairRoutineVersionId}&rebuildStale=1`,
+    ),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(
+    loadCalls.map((call) => call.rebuildOnStaleRefinedVersion),
+    [false],
   )
 })
 

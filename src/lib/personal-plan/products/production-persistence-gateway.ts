@@ -375,6 +375,12 @@ export function createProductionStage3ProductsGateway(
    * caller that must plan against exactly the version it named. With it, the
    * stale request is discarded and the draft is rebuilt on the CURRENT version.
    *
+   * The opt-in is never inferred: the Stage-3 route only sets it for a caller
+   * that asked for it explicitly (`?rebuildStale=1`). Today's full Stage-2
+   * completion already stales Stage-3 drafts on the happy path, so rebuilding
+   * by default would hand the current client a draft on a version it did not
+   * ask for and change live behaviour.
+   *
    * The staled draft's captures, role assignments and decisions are NOT
    * migrated — they were made against a need version that no longer describes
    * the user (plan decision: accepted for test users, Task 1.6a). Exactly one
