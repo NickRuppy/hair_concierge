@@ -362,6 +362,32 @@ verifying air-shaping capability. 16 fixture rows red→green (stash-verified);
   present (missing source fact ⇒ nothing).
 - New German purpose/guidance strings queued for the pre-ship copy pass.
 
+## WS4 landed (2026-08-25) + flag dispositions
+
+All signed-off capture changes implemented and live-verified: ratified overview
+copy verbatim; care-answer preselection as real answer state (C2 closed);
+drying question 3-options/≥1-required with legacy `[]` readable; Bürsten-page
+with „Wildschweinborsten-Bürste" + „Nur Finger" (new line-art SVGs, label
+collision fixed, no 404s); `fingers` persisted as answer-only token; R1
+heat-question dropped for the diffuser source with read-boundary decode;
+`STAGE2_QUESTION_PATH_VERSION = 2` with a documented decoder table; the D8
+schema-snapshot test enforcing key + completion-semantics changes
+(mutation-verified). 2135+582 green. Dispositions:
+
+- **Fixture 114: WS4 correctly refused** — a new visible card outside the
+  signed-off evidence; deferred to a post-Phase-1 decision (oracle row updated).
+- **Six cards per page** (`TOOL_MAX_OPTIONS_PER_PAGE` 4→6, matching the
+  approved mockup exactly) — confirm at ready-check.
+- **Path version is a code constant**, not the DB `schema_version` column; no
+  migration. Sufficient for D8's read-boundary decode on an unshipped feature;
+  a DB-level bump would be a separate decision.
+- `answered`-prop semantics and direct-acceptance preselection defaults →
+  covered by the final whole-branch review.
+- `normalizeToolInventory` now called at both capture boundaries (old WS2
+  observation closed).
+- New strings for the copy pass: the corrected `volume_set` group label and the
+  „Nur Finger" hint „Du entwirrst mit den Händen."
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
