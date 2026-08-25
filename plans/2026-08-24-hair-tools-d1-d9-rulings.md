@@ -332,6 +332,36 @@ un-skipped; 2098+582 green. Dispositions:
   in the WS6 handback) queued for the pre-ship copy-review screenshot pass
   together with WS4's copy.
 
+## WS3 landed (2026-08-25) + flag dispositions
+
+Seven new route targets (plopping as behaviour-only guidance per T03/T04,
+towel continue-yours, manual air-shaping in the A09 session, Definitionsbürste,
+Pick, dry-styling brush, scalp-brush own route) plus N04 continue-yours, the
+C01 root-volume securing parent, N03's functional alternative (derived at
+presentation level so `D6`'s binding order is never violated), and Rundbürste
+verifying air-shaping capability. 16 fixture rows red→green (stash-verified);
+2114+582 green. Dispositions:
+
+- **Night securing parent: correctly NOT implemented** — C02 resolves it to the
+  soft tie the Night route already owns; D12 forbids the duplicate. No case
+  yields a different product. Closed.
+- **W01 refresh spray: not implementable** — "a selected between-wash refresh
+  step" has no production input. Fixtures 83/84 stay skipped; the missing
+  input joins the D2b-era question backlog.
+- **Stielkamm: skipped** — its parting/sectioning parent has no input and
+  wiring it to `scalpApplicationJob` recreates the fixture-88 duplicate.
+- **Fixture 73 widening → walkthrough:** amended C01 gives every volume_up
+  profile an optional Ansatzvolumen-Clips card; Nick judges it on the live
+  screen at ready-check.
+- **Fixtures 67/73 input cells reconciled** in the oracle (docs-only commit).
+- `boar_bristle` stays out of dry-styling forms (B09 names Paddle/Vent/
+  Pneumatik; also the only form without an image — unreachable until the WS4
+  Bildkarte lands).
+- Judgment calls accepted: `drying_textile_use` suppressed beside the firm
+  rough-rubbing correction; textile family fires only with a towel answer
+  present (missing source fact ⇒ nothing).
+- New German purpose/guidance strings queued for the pre-ship copy pass.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
