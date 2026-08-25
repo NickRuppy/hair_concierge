@@ -37,6 +37,8 @@ test("launch stress scripts expose the expected k6 profiles", () => {
     assert.match(script, new RegExp(profileFlag))
     assert.match(script, /scripts\/k6\/launch-flow\.js/)
   }
+
+  assert.match(packageJson.scripts?.["stress:production-smoke"] ?? "", /production-smoke\.js/)
 })
 
 test("mobile performance script is exposed", () => {
