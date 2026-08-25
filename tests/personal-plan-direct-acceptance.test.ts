@@ -26,6 +26,7 @@ import type {
 } from "../src/lib/personal-plan/persistence/stage2-refinement-service"
 import type {
   PersonalPlanRefinementAnswersV1,
+  Stage2AnswerProvenance,
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "../src/lib/personal-plan/refinement/types"
@@ -420,6 +421,7 @@ function createRefinementDb() {
     status: "in_progress" | "complete" | "stale"
     answers: PersonalPlanRefinementAnswersV1
     completedQuestionIds: Stage2QuestionId[]
+    answerProvenance: Stage2AnswerProvenance
     revision: number
     resultRefinedNeedVersionId: string | null
     updatedAt: number
@@ -455,6 +457,7 @@ function createRefinementDb() {
       triggerContext,
       answers: structuredClone(row.answers),
       completedQuestionIds: [...row.completedQuestionIds],
+      answerProvenance: { ...row.answerProvenance },
       revision: row.revision,
       status: row.status,
       refinedVersionId: row.resultRefinedNeedVersionId,
@@ -471,6 +474,7 @@ function createRefinementDb() {
       status: "in_progress",
       answers: {},
       completedQuestionIds: [],
+      answerProvenance: {},
       revision: 0,
       resultRefinedNeedVersionId: null,
       updatedAt: (clock += 1),
@@ -489,6 +493,7 @@ function createRefinementDb() {
         insertDraft({
           answers: structuredClone(draft.answers),
           completedQuestionIds: [...draft.completedQuestionIds],
+          answerProvenance: { ...draft.answerProvenance },
           revision: draft.revision,
         }),
       )
@@ -501,6 +506,7 @@ function createRefinementDb() {
       }
       row.answers = structuredClone(input.answers)
       row.completedQuestionIds = [...input.completedQuestionIds]
+      row.answerProvenance = { ...input.answerProvenance }
       row.revision += 1
       row.updatedAt = clock += 1
       return { outcome: "saved", revision: row.revision }
@@ -885,6 +891,45 @@ test("a double accept stays idempotent and returns the same receipt", async () =
     ],
   )
   assert.equal(harness.provenanceCalls.length, 2)
+})
+
+/* ── Provenance: synthetic defaults are never mistaken for real answers ── */
+
+test("direct acceptance marks every synthetic default answer's provenance assumed", async () => {
+  const harness = createHarness()
+
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  const row = harness.db.drafts[0]!
+  const defaults = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  assert.deepEqual(
+    Object.keys(row.answerProvenance).sort(),
+    [...defaults.completedQuestionIds].sort(),
+  )
+  for (const value of Object.values(row.answerProvenance)) {
+    assert.equal(value, "assumed")
+  }
+})
+
+test("a real Stage 2 answer replacing a synthetic default flips its provenance to user", async () => {
+  const harness = createHarness()
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  const gateway = createPersistedStage2RefinementGateway({
+    userId: USER_ID,
+    persistence: harness.db.persistence,
+  })
+  const completedSession = await gateway.load()
+  await gateway.saveAnswer({
+    questionId: "wet_wash_frequency",
+    answer: "daily_1x",
+    expectedRevision: completedSession.revision,
+  })
+
+  const reopenedRow = harness.db.drafts.find((row) => row.status === "in_progress")!
+  assert.equal(reopenedRow.answerProvenance.wet_wash_frequency, "user")
+  // Every other carried-over default answer is still assumed.
+  assert.equal(reopenedRow.answerProvenance.current_product_categories, "assumed")
 })
 
 /* ── Post-accept refinement: the two SQL constraint paths ── */

@@ -27,6 +27,7 @@ function draft(overrides: Partial<Stage2PersistedDraft> = {}): Stage2PersistedDr
     triggerContext: context,
     answers: {},
     completedQuestionIds: [],
+    answerProvenance: {},
     revision: 0,
     status: "in_progress",
     refinedVersionId: null,
@@ -71,6 +72,138 @@ test("Stage 2 service prunes server-side and persists the canonical next revisio
       .currentProductCategories,
     [],
   )
+})
+
+test("Stage 2 service marks a saved answer's provenance as user", async () => {
+  let saved: unknown
+  const service = createStage2RefinementService({
+    userId: "user-1",
+    snapshotBuilder: () => ({
+      inputSnapshot: {},
+      outputSnapshot: {},
+      inputHash: "a".repeat(64),
+      schemaVersion: 1,
+      computationVersion: "test",
+    }),
+    persistence: {
+      loadOrCreate: async () => draft(),
+      reopen: async ({ draft: current }) => ({
+        ...current,
+        status: "in_progress",
+        refinedVersionId: null,
+      }),
+      save: async (input) => {
+        saved = input
+        return { outcome: "saved" as const, revision: 1 }
+      },
+      complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+    },
+  })
+  await service.load()
+  await service.saveAnswer({
+    questionId: "current_product_categories",
+    answer: [],
+    expectedRevision: 0,
+  })
+  assert.deepEqual((saved as { answerProvenance: Record<string, string> }).answerProvenance, {
+    current_product_categories: "user",
+  })
+})
+
+test("Stage 2 service flips an existing assumed answer to user when the user re-answers it", async () => {
+  let saved: unknown
+  const service = createStage2RefinementService({
+    userId: "user-1",
+    snapshotBuilder: () => ({
+      inputSnapshot: {},
+      outputSnapshot: {},
+      inputHash: "a".repeat(64),
+      schemaVersion: 1,
+      computationVersion: "test",
+    }),
+    persistence: {
+      loadOrCreate: async () =>
+        draft({
+          answers: { wetWashFrequency: "weekly_2x", currentProductCategories: [] },
+          completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+          answerProvenance: {
+            current_product_categories: "assumed",
+            wet_wash_frequency: "assumed",
+          },
+          revision: 1,
+        }),
+      reopen: async ({ draft: current }) => ({
+        ...current,
+        status: "in_progress",
+        refinedVersionId: null,
+      }),
+      save: async (input) => {
+        saved = input
+        return { outcome: "saved" as const, revision: 2 }
+      },
+      complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+    },
+  })
+  await service.load()
+  await service.saveAnswer({
+    questionId: "wet_wash_frequency",
+    answer: "daily_1x",
+    expectedRevision: 1,
+  })
+  assert.deepEqual((saved as { answerProvenance: Record<string, string> }).answerProvenance, {
+    current_product_categories: "assumed",
+    wet_wash_frequency: "user",
+  })
+})
+
+test("Stage 2 service prunes provenance for ids a path change dropped from completion", async () => {
+  let saved: unknown
+  const service = createStage2RefinementService({
+    userId: "user-1",
+    snapshotBuilder: () => ({
+      inputSnapshot: {},
+      outputSnapshot: {},
+      inputHash: "a".repeat(64),
+      schemaVersion: 1,
+      computationVersion: "test",
+    }),
+    persistence: {
+      loadOrCreate: async () =>
+        draft({
+          answers: {
+            currentProductCategories: ["dry_shampoo"],
+            dryShampooVisibleHairColor: "brown",
+          },
+          completedQuestionIds: ["current_product_categories", "dry_shampoo_visible_hair_color"],
+          answerProvenance: {
+            current_product_categories: "assumed",
+            dry_shampoo_visible_hair_color: "assumed",
+          },
+          revision: 1,
+        }),
+      reopen: async ({ draft: current }) => ({
+        ...current,
+        status: "in_progress",
+        refinedVersionId: null,
+      }),
+      save: async (input) => {
+        saved = input
+        return { outcome: "saved" as const, revision: 2 }
+      },
+      complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
+    },
+  })
+  await service.load()
+  // Switching away from dry shampoo drops dry_shampoo_visible_hair_color
+  // from the canonical path, so its provenance entry must be pruned too.
+  await service.saveAnswer({
+    questionId: "current_product_categories",
+    answer: [],
+    expectedRevision: 1,
+  })
+  assert.deepEqual((saved as { answerProvenance: Record<string, string> }).answerProvenance, {
+    current_product_categories: "user",
+  })
 })
 
 test("Stage 2 service maps CAS loss to a typed reloadable revision conflict", async () => {

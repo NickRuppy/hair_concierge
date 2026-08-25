@@ -8,6 +8,7 @@ import type {
 } from "../products/authority/contracts"
 import type { Stage3AuthorityProductionGateway } from "../products/production-persistence-gateway"
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
+import { buildAssumedAnswerProvenance } from "../refinement/answer-provenance"
 import { semanticHash } from "../routine/canonicalize"
 
 import {
@@ -269,6 +270,9 @@ async function completeSyntheticRefinement(
     expectedRevision: draft.revision,
     answers: defaults.answers,
     completedQuestionIds: defaults.completedQuestionIds,
+    // Every synthetic default this write produces is an assumption, never a
+    // real answer — see refinement/answer-provenance.ts.
+    answerProvenance: buildAssumedAnswerProvenance(defaults.completedQuestionIds),
   })
   if (saved.outcome !== "saved") throw new DirectAcceptanceError("conflict")
 

@@ -7,8 +7,10 @@ import {
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
 import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import { applyUserAnswerProvenance } from "@/lib/personal-plan/refinement/answer-provenance"
 import type {
   PersonalPlanRefinementAnswersV1,
+  Stage2AnswerProvenance,
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "@/lib/personal-plan/refinement/types"
@@ -38,6 +40,8 @@ export type Stage2PersistedDraft = {
   triggerContext: Stage2TriggerContext
   answers: PersonalPlanRefinementAnswersV1
   completedQuestionIds: Stage2QuestionId[]
+  /** Canonical question id -> `user` | `assumed`. See `refinement/answer-provenance.ts`. */
+  answerProvenance: Stage2AnswerProvenance
   revision: number
   status: "in_progress" | "complete" | "stale"
   refinedVersionId: string | null
@@ -52,6 +56,7 @@ export type Stage2RefinementPersistence = {
     expectedRevision: number
     answers: PersonalPlanRefinementAnswersV1
     completedQuestionIds: Stage2QuestionId[]
+    answerProvenance: Stage2AnswerProvenance
   }): Promise<
     { outcome: "saved"; revision: number } | { outcome: "revision_conflict"; revision: number }
   >
@@ -165,12 +170,18 @@ export function createStage2RefinementService(input: {
       ) {
         throw new Stage2RefinementError("invalid_answer", "The refinement payload is too large")
       }
+      const nextAnswerProvenance = applyUserAnswerProvenance({
+        previous: draft.answerProvenance,
+        answeredQuestionId: parsed.data.questionId as Stage2QuestionId,
+        completedQuestionIds: next.completedQuestionIds,
+      })
       const saved = await input.persistence.save({
         userId: input.userId,
         draft,
         expectedRevision: parsed.data.expectedRevision,
         answers: next.answers,
         completedQuestionIds: next.completedQuestionIds,
+        answerProvenance: nextAnswerProvenance,
       })
       if (saved.outcome === "revision_conflict") {
         cached = null
@@ -180,6 +191,7 @@ export function createStage2RefinementService(input: {
         ...draft,
         answers: next.answers,
         completedQuestionIds: next.completedQuestionIds,
+        answerProvenance: nextAnswerProvenance,
         revision: saved.revision,
       }
       return stage2SessionFromPersistedDraft(cached)

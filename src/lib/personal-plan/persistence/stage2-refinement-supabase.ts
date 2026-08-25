@@ -54,7 +54,7 @@ export function createSupabaseStage2RefinementPersistence(
     const { data: current, error: currentError } = await client
       .from("personal_plan_refinement_drafts")
       .select(
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,revision,status,result_refined_need_version_id",
       )
       .eq("personal_plan_id", plan.id)
       .eq("base_initial_need_version_id", initial.id)
@@ -66,7 +66,7 @@ export function createSupabaseStage2RefinementPersistence(
     const { data: completed, error: completedError } = await client
       .from("personal_plan_refinement_drafts")
       .select(
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,revision,status,result_refined_need_version_id",
       )
       .eq("personal_plan_id", plan.id)
       .eq("base_initial_need_version_id", initial.id)
@@ -97,9 +97,10 @@ export function createSupabaseStage2RefinementPersistence(
           schema_version: 1,
           answers: {},
           completed_question_ids: [],
+          answer_provenance: {},
         })
         .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,revision,status,result_refined_need_version_id",
         )
         .single()
       if (!createError && created) return mapDraft(created, triggerContext, initial)
@@ -108,7 +109,7 @@ export function createSupabaseStage2RefinementPersistence(
       const { data: raced, error: racedError } = await client
         .from("personal_plan_refinement_drafts")
         .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,revision,status,result_refined_need_version_id",
         )
         .eq("personal_plan_id", plan.id)
         .eq("base_initial_need_version_id", initial.id)
@@ -125,10 +126,11 @@ export function createSupabaseStage2RefinementPersistence(
         schema_version: draft.schemaVersion,
         answers: draft.answers,
         completed_question_ids: draft.completedQuestionIds,
+        answer_provenance: draft.answerProvenance,
         revision: draft.revision,
       }
       const columns =
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id"
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,revision,status,result_refined_need_version_id"
       const { data: created, error } = await client
         .from("personal_plan_refinement_drafts")
         .insert(insert)
@@ -157,6 +159,7 @@ export function createSupabaseStage2RefinementPersistence(
         p_expected_revision: input.expectedRevision,
         p_answers: input.answers,
         p_completed_question_ids: input.completedQuestionIds,
+        p_answer_provenance: input.answerProvenance,
       })
       if (error || !data) throw new Error("stage2_save_failed")
       if (data.outcome === "revision_conflict")
@@ -218,6 +221,7 @@ function mapDraft(
     answers: (row.answers ?? {}) as Stage2PersistedDraft["answers"],
     completedQuestionIds: (row.completed_question_ids ??
       []) as Stage2PersistedDraft["completedQuestionIds"],
+    answerProvenance: (row.answer_provenance ?? {}) as Stage2PersistedDraft["answerProvenance"],
     revision: Number(row.revision),
     status: row.status as Stage2PersistedDraft["status"],
     refinedVersionId:

@@ -126,3 +126,14 @@ export type Stage2ModulePathState = {
   openQuestionIds: Stage2QuestionId[]
   status: Stage2ModuleStatus
 }
+
+/**
+ * Per-answer provenance: was a completed question id answered directly by the
+ * user, or written by direct acceptance's synthetic Stage-2 defaults? Keyed
+ * by canonical question id; an id with no entry is legacy data written before
+ * this map existed (see `userAnsweredQuestionIds` in `answer-provenance.ts`
+ * for how that is defaulted).
+ */
+export const STAGE2_ANSWER_PROVENANCE_VALUES = ["user", "assumed"] as const
+export type Stage2AnswerProvenanceValue = (typeof STAGE2_ANSWER_PROVENANCE_VALUES)[number]
+export type Stage2AnswerProvenance = Partial<Record<Stage2QuestionId, Stage2AnswerProvenanceValue>>

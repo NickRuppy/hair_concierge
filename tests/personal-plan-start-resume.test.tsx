@@ -110,6 +110,7 @@ test("the passive Stage 2 resume read preserves the exact saved question positio
     },
     answers: { currentProductCategories: ["shampoo"] },
     completedQuestionIds: ["current_product_categories"],
+    answerProvenance: { current_product_categories: "user" },
     revision: 1,
     status: "in_progress",
     refinedVersionId: null,
