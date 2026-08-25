@@ -388,6 +388,35 @@ schema-snapshot test enforcing key + completion-semantics changes
 - New strings for the copy pass: the corrected `volume_set` group label and the
   „Nur Finger" hint „Du entwirrst mit den Händen."
 
+## Ready-check + whole-branch review closed (2026-08-25)
+
+Ready-check rulings by Nick (all implemented, commit `7f9a8bb7`): copy set
+approved as written; towel correction line merges into the towel card;
+Applikator renders before its scalp product; the broad root-volume-clip
+optional card stays. Live walkthrough screenshots in
+`plans/mockups/ready-check-2026-08-25/`.
+
+Whole-branch Codex review (`fixes-required`, five findings) resolved:
+- **F1** branch-era Routine V2 rows decode forward (pre-D7 anchors, missing
+  sessionKey); an undecodable Tool slice degrades the Routine to product-only,
+  never a 503 (`decode-stored.ts` ×2, wired at all read paths + the
+  candidate-compiler copy).
+- **F2** rollout gate fail-closed at the server boundaries: Routine page,
+  Anwendung page, stage-1 API all strip Tool projections when the gate is off;
+  stored facts untouched.
+- **F3** Stage-2 drafts persist `schema_version = STAGE2_QUESTION_PATH_VERSION`
+  (2); v1 rows still load via the unconditional decoders.
+- **F4** the refinement-presentation route composes the decoders.
+- **F5** docs made current (`33c40e74`): WS4 status lines, receipt marked
+  historical with a remediation addendum.
+- Accepted flag: decoding a legacy dev Routine row changes its semantic hash,
+  so source-sync can now stage a successor proposal where it previously threw —
+  strictly better than the 503; dev/labs rows only.
+
+Final state: 28 commits over origin/main (`b540d2ca`), suites 2164 + 582,
+`ci:verify` clean. **Awaiting Nick's explicit push authorization; merge is a
+separate authorization after that.**
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
