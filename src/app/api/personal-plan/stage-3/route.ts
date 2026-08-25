@@ -337,6 +337,11 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
           requirements: [],
           personalPlanId: parsed.data.personalPlanId,
           refinedVersionId: parsed.data.refinedVersionId,
+          // Stage-3 re-entry: a Stage-2 (module) completion may have advanced
+          // the refined head and staled this draft while the user was away.
+          // The repair load is excluded — its requirements were derived for the
+          // version the caller named, so it must not silently follow the head.
+          rebuildOnStaleRefinedVersion: !parsed.data.repairRoutineVersionId,
         })
         if (repairRequirements) loaded.requirements = repairRequirements
         const usesReviewBundles =

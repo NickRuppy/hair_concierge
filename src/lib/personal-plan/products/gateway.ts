@@ -146,6 +146,14 @@ export type Stage3ProductsGateway = {
     repairRoutineVersionId?: string
     requirements: Stage3CategoryRequirement[]
     authoritySnapshot?: Stage3AuthoritySnapshotV1
+    /**
+     * Stage-3 re-entry after a Stage-2 completion staled this version's draft:
+     * discard the stale request and rebuild on the plan's CURRENT refined
+     * version instead of dead-ending. Opt-in, because a caller that must plan
+     * against exactly the version it names (direct acceptance) has to keep
+     * failing closed.
+     */
+    rebuildOnStaleRefinedVersion?: boolean
   }): Promise<Stage3DraftResponse>
   search(input: {
     /** Owner-bound draft whose signed authority context drives assessment readiness. */
@@ -185,7 +193,16 @@ export type Stage3ProductsGateway = {
     refinedVersionId: string
   }): Promise<Stage3DraftResponse>
   loadCompletionReceipt?(input: { draftId: string }): Promise<Stage3CompletionReceiptResponse>
-  complete(input: { draftId: string; expectedRevision: number }): Promise<Stage3CompleteResponse>
+  complete(input: {
+    draftId: string
+    expectedRevision: number
+    /**
+     * Direct acceptance only: record the `unrefined_direct_accept` provenance
+     * in the SAME transaction that activates the Routine, so a failed write
+     * fails the accept instead of silently suppressing the refinement nudge.
+     */
+    markUnrefinedDirectAccept?: boolean
+  }): Promise<Stage3CompleteResponse>
 }
 
 export type Stage3ManualIntakeInput = {

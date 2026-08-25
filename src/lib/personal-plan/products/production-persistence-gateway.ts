@@ -367,6 +367,54 @@ export function createProductionStage3ProductsGateway(
     return cached
   }
 
+  /**
+   * Stage-3 re-entry after a Stage-2 (module) completion advanced the plan's
+   * refined-need head and staled this version's product draft.
+   *
+   * Without the opt-in a stale version is a hard stop, which is right for a
+   * caller that must plan against exactly the version it named. With it, the
+   * stale request is discarded and the draft is rebuilt on the CURRENT version.
+   *
+   * The staled draft's captures, role assignments and decisions are NOT
+   * migrated — they were made against a need version that no longer describes
+   * the user (plan decision: accepted for test users, Task 1.6a). Exactly one
+   * rebuild is attempted, and only for a genuinely different version, so a
+   * stale error from any other cause can never loop.
+   */
+  async function loadOrCreateOnCurrentRefinedVersion(input: {
+    personalPlanId: string
+    refinedVersionId: string
+    rebuildOnStaleRefinedVersion?: boolean
+  }) {
+    try {
+      return await options.persistence.loadOrCreate({
+        userId: options.userId,
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: input.refinedVersionId,
+      })
+    } catch (error) {
+      if (
+        !input.rebuildOnStaleRefinedVersion ||
+        !(error instanceof Stage3AuthoritySnapshotError) ||
+        error.code !== "stale_refined_source"
+      ) {
+        throw error
+      }
+      const currentRefinedVersionId = await options.persistence.loadCurrentRefinedVersionId({
+        userId: options.userId,
+        personalPlanId: input.personalPlanId,
+      })
+      if (!currentRefinedVersionId || currentRefinedVersionId === input.refinedVersionId) {
+        throw error
+      }
+      return await options.persistence.loadOrCreate({
+        userId: options.userId,
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: currentRefinedVersionId,
+      })
+    }
+  }
+
   async function assertCurrentRefinedSource(draft: Stage3ProductDraft) {
     const currentRefinedVersionId = await options.persistence.loadCurrentRefinedVersionId({
       userId: options.userId,
@@ -662,13 +710,7 @@ export function createProductionStage3ProductsGateway(
       return { status: "saved", draft: persisted.draft }
     },
     async loadOrCreate(input): Promise<Stage3DraftResponse> {
-      const loaded = await repairLoadedDraft(
-        await options.persistence.loadOrCreate({
-          userId: options.userId,
-          personalPlanId: input.personalPlanId,
-          refinedVersionId: input.refinedVersionId,
-        }),
-      )
+      const loaded = await repairLoadedDraft(await loadOrCreateOnCurrentRefinedVersion(input))
       cached = loaded
       return {
         status: loaded.draft.status,
@@ -957,6 +999,7 @@ export function createProductionStage3ProductsGateway(
         expectedSourceRevision,
         portfolio: { schemaVersion: portfolio.schemaVersion, snapshot: portfolio as never },
         candidate,
+        markUnrefinedDirectAccept: input.markUnrefinedDirectAccept,
       })
       if (staged.status === "stale_source") {
         cached = null

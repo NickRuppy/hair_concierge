@@ -698,9 +698,36 @@ test("Stage 3 GET can create a server-owned Routine authority repair draft befor
       requirements: [],
       personalPlanId: draft.personalPlanId,
       refinedVersionId: draft.refinedVersionId,
+      // A repair load must plan against exactly the version it named.
+      rebuildOnStaleRefinedVersion: false,
     },
   ])
   assert.deepEqual(body.requirements, repairRequirements)
+})
+
+test("Stage 3 GET opts a plain load into the re-entry rebuild on the current refined version", async () => {
+  const loadCalls: Array<{ rebuildOnStaleRefinedVersion?: boolean }> = []
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async (input) => {
+          loadCalls.push(input)
+          return { status: "active", draft, requirements }
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(
+    loadCalls.map((call) => call.rebuildOnStaleRefinedVersion),
+    [true],
+  )
 })
 
 test("Stage 3 GET returns stale source when Routine repair source is not owner-current", async () => {

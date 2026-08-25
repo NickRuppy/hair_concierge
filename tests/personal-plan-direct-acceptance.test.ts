@@ -824,7 +824,7 @@ type Stage3Call =
       subjectKeys: string[]
       intents: Stage3AuthoritySemanticIntent[]
     }
-  | { kind: "complete"; expectedRevision: number }
+  | { kind: "complete"; expectedRevision: number; markUnrefinedDirectAccept?: boolean }
 
 /**
  * Stateful Stage-3 fake: `complete` flips the draft to completed and activates a
@@ -835,6 +835,8 @@ function createFakeStage3Gateway(options: {
   calls: Stage3Call[]
   planState: { activeRoutineVersionId: string | null }
   evaluations?: Stage3AuthorityEvaluation[]
+  /** Mirrors an RPC-side provenance failure: the whole completion rolls back. */
+  failProvenanceWrite?: boolean
 }): DirectAcceptanceStage3Gateway {
   let draft = fakeStage3Draft()
   return {
@@ -861,7 +863,15 @@ function createFakeStage3Gateway(options: {
       return { status: "saved", draft }
     },
     async complete(input) {
-      options.calls.push({ kind: "complete", expectedRevision: input.expectedRevision })
+      options.calls.push({
+        kind: "complete",
+        expectedRevision: input.expectedRevision,
+        markUnrefinedDirectAccept: input.markUnrefinedDirectAccept,
+      })
+      if (input.markUnrefinedDirectAccept && options.failProvenanceWrite) {
+        // One transaction: the provenance write failing rolls back activation.
+        throw new Error("stage3_completion_unavailable")
+      }
       draft = { ...draft, status: "completed" }
       options.planState.activeRoutineVersionId = "routine-1"
       return {
@@ -882,7 +892,6 @@ type Harness = {
   deps: AcceptIdealPlanDeps
   db: RefinementDb
   stage3Calls: Stage3Call[]
-  provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }>
   planState: { activeRoutineVersionId: string | null }
 }
 
@@ -892,17 +901,16 @@ function createHarness(
     db?: RefinementDb
     activeRoutineVersionId?: string | null
     evaluations?: Stage3AuthorityEvaluation[]
+    failProvenanceWrite?: boolean
   } = {},
 ): Harness {
   const db = overrides.db ?? createRefinementDb()
   const stage3Calls: Stage3Call[] = []
-  const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
   const planState = { activeRoutineVersionId: overrides.activeRoutineVersionId ?? null }
 
   return {
     db,
     stage3Calls,
-    provenanceCalls,
     planState,
     deps: {
       userId: USER_ID,
@@ -917,15 +925,8 @@ function createHarness(
         calls: stage3Calls,
         planState,
         evaluations: overrides.evaluations,
+        failProvenanceWrite: overrides.failProvenanceWrite,
       }),
-      provenance: {
-        async recordDirectAccept(input) {
-          provenanceCalls.push({
-            personalPlanId: input.personalPlanId,
-            refinedVersionId: input.refinedVersionId,
-          })
-        },
-      },
     },
   }
 }
@@ -966,53 +967,28 @@ test("the accept chain drives Stage 2 completion, per-role planning and activati
   assert.ok(completeCall && completeCall.kind === "complete")
   assert.equal(completeCall.expectedRevision, resolveCall.expectedRevision + 1)
 
-  assert.deepEqual(harness.provenanceCalls, [
-    { personalPlanId: PERSONAL_PLAN_ID, refinedVersionId: harness.db.needVersions[0]!.id },
-  ])
+  // Provenance is part of the completion transaction, not a follow-up write.
+  assert.equal(completeCall.markUnrefinedDirectAccept, true)
 })
 
 /**
- * Activation has already committed by the time provenance is written, so the
- * Routine is live. Failing the request here would tell the user acceptance
- * failed while it in fact succeeded — and the retry converges to `conflict`,
- * not to a second accept. The write stays best-effort and logged.
+ * The provenance write now lives INSIDE the completion transaction, so its
+ * failure rolls the activation back with it. Nothing is half-persisted: no
+ * active Routine, no completed product draft, and the caller sees the failure
+ * instead of a silently unmarked plan.
  */
-test("a failed provenance write still returns accepted and only logs a warning", async () => {
-  const harness = createHarness()
-  const attempts: Array<{ personalPlanId: string; refinedVersionId: string }> = []
-  harness.deps.provenance = {
-    async recordDirectAccept(input) {
-      attempts.push({
-        personalPlanId: input.personalPlanId,
-        refinedVersionId: input.refinedVersionId,
-      })
-      throw Object.assign(new Error("direct_accept_provenance_write_failed"), { code: "42703" })
-    },
-  }
-  const warnings: unknown[][] = []
-  const originalWarn = console.warn
-  console.warn = (...args: unknown[]) => {
-    warnings.push(args)
-  }
+test("a failed provenance write fails the whole accept and activates nothing", async () => {
+  const harness = createHarness({ failProvenanceWrite: true })
 
-  try {
-    const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
-    assert.equal(result.status, "accepted")
-    assert.equal(result.next.href, "/routine")
-  } finally {
-    console.warn = originalWarn
-  }
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) => error instanceof Error && error.message === "stage3_completion_unavailable",
+  )
 
-  // The write is still ATTEMPTED — only its failure is tolerated.
-  assert.deepEqual(attempts, [
-    { personalPlanId: PERSONAL_PLAN_ID, refinedVersionId: harness.db.needVersions[0]!.id },
-  ])
-  assert.equal(warnings.length, 1)
-  assert.equal(warnings[0]![0], "personal_plan_direct_accept_provenance_write_failed")
-  assert.deepEqual(warnings[0]![1], {
-    code: "42703",
-    message: "direct_accept_provenance_write_failed",
-  })
+  assert.equal(harness.planState.activeRoutineVersionId, null)
+  const completeCall = harness.stage3Calls.find((call) => call.kind === "complete")
+  assert.ok(completeCall && completeCall.kind === "complete")
+  assert.equal(completeCall.markUnrefinedDirectAccept, true)
 })
 
 test("a disabled Stage 2, 3 or 4 flag refuses the accept chain without any write", async () => {
@@ -1030,7 +1006,6 @@ test("a disabled Stage 2, 3 or 4 flag refuses the accept chain without any write
     )
     assert.deepEqual(harness.db.drafts, [])
     assert.deepEqual(harness.stage3Calls, [])
-    assert.deepEqual(harness.provenanceCalls, [])
   }
 })
 
@@ -1047,7 +1022,6 @@ test("a stale seen state aborts before any Stage 3 decision is written", async (
     harness.stage3Calls.map((call) => call.kind),
     ["loadOrCreate", "evaluateDecisions"],
   )
-  assert.deepEqual(harness.provenanceCalls, [])
 })
 
 /* ── Deferred roles through the whole accept chain ── */
@@ -1184,7 +1158,6 @@ test("a partially answered real Stage 2 refuses the accept and writes nothing", 
   assert.deepEqual(db.drafts, before, "the real answers must survive untouched")
   assert.deepEqual(db.needVersions, [])
   assert.deepEqual(harness.stage3Calls, [])
-  assert.deepEqual(harness.provenanceCalls, [])
 })
 
 test("an interrupted synthetic save resumes instead of being treated as real work", async () => {
@@ -1215,7 +1188,6 @@ test("an active Routine this flow did not create refuses the accept", async () =
   )
   assert.deepEqual(harness.db.needVersions, [])
   assert.deepEqual(harness.stage3Calls, [])
-  assert.deepEqual(harness.provenanceCalls, [])
 })
 
 test("a double accept stays idempotent and returns the same receipt", async () => {
@@ -1241,7 +1213,12 @@ test("a double accept stays idempotent and returns the same receipt", async () =
       "complete",
     ],
   )
-  assert.equal(harness.provenanceCalls.length, 2)
+  assert.equal(
+    harness.stage3Calls.filter(
+      (call) => call.kind === "complete" && call.markUnrefinedDirectAccept === true,
+    ).length,
+    2,
+  )
 })
 
 /* ── Provenance: synthetic defaults are never mistaken for real answers ── */

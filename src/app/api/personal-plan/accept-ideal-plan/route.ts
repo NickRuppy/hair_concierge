@@ -172,16 +172,6 @@ export const POST = createAcceptIdealPlanRouteHandler({
             client: admin as unknown as RoutineProposalRpcClient,
           }),
         }),
-        provenance: {
-          async recordDirectAccept({ personalPlanId }) {
-            const { error } = await admin
-              .from("personal_plans")
-              .update({ unrefined_direct_accept: true, nudge_dismissed_until: null })
-              .eq("id", personalPlanId)
-              .eq("user_id", userId)
-            if (error) throw new Error("direct_accept_provenance_write_failed")
-          },
-        },
       },
       input,
     )

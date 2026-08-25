@@ -78,14 +78,6 @@ export type DirectAcceptanceStage3Gateway = Pick<
   "loadOrCreate" | "evaluateDecisions" | "resolveDecisions" | "complete"
 >
 
-export type DirectAcceptanceProvenanceWriter = {
-  recordDirectAccept(input: {
-    userId: string
-    personalPlanId: string
-    refinedVersionId: string
-  }): Promise<void>
-}
-
 export type DirectAcceptancePlanStateReader = {
   loadActiveRoutineVersionId(input: {
     userId: string
@@ -99,7 +91,6 @@ export type AcceptIdealPlanDeps = {
   refinementPersistence: Stage2RefinementPersistence
   planState: DirectAcceptancePlanStateReader
   stage3Gateway: DirectAcceptanceStage3Gateway
-  provenance: DirectAcceptanceProvenanceWriter
 }
 
 /**
@@ -247,30 +238,16 @@ export async function acceptIdealPlan(
     }
   }
 
+  // The provenance write is part of THIS transaction (see
+  // `personal_plan_complete_draft_activate_v2`): if it fails, the activation
+  // rolls back with it, so the plan can never end up live-but-unmarked.
   const completed = await deps.stage3Gateway.complete({
     draftId: draft.draftId,
     expectedRevision: draft.revision,
+    markUnrefinedDirectAccept: true,
   })
   if (completed.status === "conflict") throw new DirectAcceptanceError("conflict")
   if (completed.status === "not_ready") throw new DirectAcceptanceError("acceptance_not_ready")
-
-  // Best-effort: activation above has already committed, so the Routine is
-  // live. A failed provenance write only means the refinement nudge may not
-  // appear — it must never tell the user acceptance failed (and a retry would
-  // converge to `conflict`, not to a second accept). Mirrors the same tradeoff
-  // in routine/proposal-service.ts.
-  try {
-    await deps.provenance.recordDirectAccept({
-      userId: deps.userId,
-      personalPlanId,
-      refinedVersionId,
-    })
-  } catch (error) {
-    console.warn("personal_plan_direct_accept_provenance_write_failed", {
-      code: (error as { code?: unknown } | null)?.code ?? null,
-      message: error instanceof Error ? error.message : String(error),
-    })
-  }
 
   return {
     status: "accepted",
