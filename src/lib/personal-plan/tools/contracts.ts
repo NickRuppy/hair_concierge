@@ -219,11 +219,6 @@ export const TOOL_OWNERSHIP_STATES = [
 ] as const
 export type ToolOwnershipState = (typeof TOOL_OWNERSHIP_STATES)[number]
 
-/** True only when the user actually answered. `unknown` and `catalog_gap` are not answers. */
-export function isToolOwnershipResolved(state: ToolOwnershipState): boolean {
-  return state !== "unknown" && state !== "catalog_gap"
-}
-
 /**
  * Where an ownership fact came from (`D4`, ruled 2026-08-24).
  *
@@ -347,8 +342,8 @@ export function routeKeyFor(target: ToolRouteTarget): ToolRouteKey {
  *
  * `volume_set` is the one shared air/heated/heatless volume-set choice named by
  * `tools.styling.volume_basis`, `A04`, `H07` and `B08`. `drying_textile` is the
- * neutral textile group that used to live in the ad-hoc
- * `TOOL_NEUTRAL_GROUP_LABELS` map.
+ * neutral textile group: towel, T-shirt and wrap are named together and the
+ * technique carries the guidance (`docs/personal-plan/categories/tools/evidence.md`).
  */
 export const TOOL_CHOICE_GROUP_TARGETS = ["volume_set", "drying_textile"] as const
 export type ToolChoiceGroupTarget = (typeof TOOL_CHOICE_GROUP_TARGETS)[number]

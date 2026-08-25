@@ -10,7 +10,11 @@ import type {
 } from "@/lib/routines/personal-plan/application/compiler"
 import type { ApplicationDayTypeDefinition } from "@/lib/routines/personal-plan/application/repository"
 
-import { projectToolsForDay, type ToolPlacement } from "@/lib/personal-plan/tools/application"
+import {
+  projectToolsForDay,
+  type ToolPlacement,
+  type ToolUseSectionView,
+} from "@/lib/personal-plan/tools/application"
 import {
   dayAnchorIndex,
   TOOL_DAY_ANCHORS,
@@ -20,6 +24,7 @@ import {
   type ToolOccurrence,
   type ToolOccurrenceAnchor,
 } from "@/lib/personal-plan/tools/contracts"
+import { TOOL_FAMILY_LABELS } from "@/lib/personal-plan/tools/labels"
 
 import type {
   ApplicationDayView,
@@ -102,7 +107,31 @@ export function toApplicationPageView({
       throw new Error(`missing active day definition for ${day.key}`)
     }
 
-    const productSteps: ApplicationOuterStepView[] = day.outerSequence.map((step, index) => {
+    const toolProjection = tools
+      ? projectToolsForDay({
+          dayType: day.key,
+          assets: tools.assets,
+          occurrences: tools.occurrences,
+          guidance: tools.guidance,
+        })
+      : null
+
+    // The product compiler emits its own generic transition line whenever a
+    // product's anchor is `post_rinse_towel_dry` ("Sanft mit einem Handtuch
+    // ausdrücken."). Since WS6 a drying-textile Tool step (towel, T-shirt,
+    // wrap) can anchor at that same graph position and say the same thing in
+    // its own copy. Drop the compiler's generic line in that case — the Tool
+    // step alone carries the instruction. The compiler's own output and
+    // semantics are untouched; a day without a drying-textile Tool step keeps
+    // the transition exactly as compiled.
+    const suppressGenericTowelTransition = Boolean(
+      toolProjection && hasDryingTextileStepAtTowelDry(toolProjection.sections),
+    )
+    const effectiveOuterSequence = day.outerSequence.filter(
+      (step) => !(suppressGenericTowelTransition && isTowelDryTransition(step)),
+    )
+
+    const productSteps: ApplicationOuterStepView[] = effectiveOuterSequence.map((step, index) => {
       if (step.kind === "product") return productStep(step.block)
       if (step.kind === "unresolved_product") {
         return {
@@ -122,16 +151,7 @@ export function toApplicationPageView({
       }
     })
 
-    const toolProjection = tools
-      ? projectToolsForDay({
-          dayType: day.key,
-          assets: tools.assets,
-          occurrences: tools.occurrences,
-          guidance: tools.guidance,
-        })
-      : null
-
-    const productShelf = day.outerSequence.flatMap<ApplicationShelfSlotView>((step) => {
+    const productShelf = effectiveOuterSequence.flatMap<ApplicationShelfSlotView>((step) => {
       if (step.kind === "product")
         return [
           {
@@ -162,13 +182,19 @@ export function toApplicationPageView({
       summaryDe: definition.summary,
       cadenceDe: cadenceByDay[day.key] ?? null,
       steps: toolProjection
-        ? withToolSteps(productSteps, productAnchorRanks(day), toolProjection, finishStepIndex(day))
+        ? withToolSteps(
+            productSteps,
+            productAnchorRanks(effectiveOuterSequence),
+            toolProjection,
+            finishStepIndex(effectiveOuterSequence),
+          )
         : productSteps,
       isPartial: Boolean(day.isPartial),
       provisionalProductCount: day.productBlocks.filter((block) => block.status === "provisional")
         .length,
-      unresolvedProductCount: day.outerSequence.filter((step) => step.kind === "unresolved_product")
-        .length,
+      unresolvedProductCount: effectiveOuterSequence.filter(
+        (step) => step.kind === "unresolved_product",
+      ).length,
       // Tools stand on the same shelf as the products; no pill row is added.
       shelf: [...productShelf, ...(toolProjection?.shelf ?? [])],
     }
@@ -185,13 +211,15 @@ export function toApplicationPageView({
   return { state: "ready", days }
 }
 
+type DayOuterSequence = CompiledApplicationViewV1["days"][number]["outerSequence"]
+
 /**
  * Index of the first finishing product (a `dry_finish` Oil or equivalent), or -1.
  * Drying and styling Tools must be used BEFORE the finish is applied — appending
  * them after it would tell the user to finish, then style.
  */
-function finishStepIndex(day: CompiledApplicationViewV1["days"][number]): number {
-  return day.outerSequence.findIndex(
+function finishStepIndex(outerSequence: DayOuterSequence): number {
+  return outerSequence.findIndex(
     (step) => step.kind === "product" && step.block.roles.includes("finish"),
   )
 }
@@ -205,15 +233,40 @@ function finishStepIndex(day: CompiledApplicationViewV1["days"][number]): number
  * inherits the position of the step before it, so it stays glued where the
  * compiler put it instead of jumping to a bucket of its own.
  */
-function productAnchorRanks(day: CompiledApplicationViewV1["days"][number]): number[] {
+function productAnchorRanks(outerSequence: DayOuterSequence): number[] {
   let carried = -1
-  return day.outerSequence.map((step) => {
+  return outerSequence.map((step) => {
     const anchor =
       step.kind === "product" ? (step.block.anchor as ToolDayAnchor | undefined) : undefined
     const index = anchor ? TOOL_DAY_ANCHORS.indexOf(anchor) : -1
     if (index >= 0) carried = index
     return carried
   })
+}
+
+/**
+ * True for the compiler's own generic transition into the towel-dry graph
+ * position (`toAnchor === "post_rinse_towel_dry"`) — the line this dedupe may
+ * suppress. Every other transition (into `wet_cleanse`, `damp_leave_on`, etc.)
+ * is untouched.
+ */
+function isTowelDryTransition(step: DayOuterSequence[number]): boolean {
+  return step.kind === "state_transition" && step.toAnchor === "post_rinse_towel_dry"
+}
+
+/**
+ * Whether the Tool projection already renders a drying-textile Tool step
+ * (towel, T-shirt, wrap) at the towel-dry graph position. When it does, the
+ * compiler's generic transition line would repeat the same instruction the
+ * Tool step already gives, so the view drops the generic line and keeps the
+ * Tool step as the single source of the instruction.
+ */
+function hasDryingTextileStepAtTowelDry(sections: readonly ToolUseSectionView[]): boolean {
+  return sections.some(
+    (section) =>
+      section.anchor.position === "post_rinse_towel_dry" &&
+      section.familyLabelDe === TOOL_FAMILY_LABELS.drying_textiles,
+  )
 }
 
 /**

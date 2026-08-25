@@ -153,18 +153,6 @@ export function toolImageSrc(form: ToolReportedForm): string {
   return `/images/personal-plan/tools/${form}.svg`
 }
 
-export function toolFamilyPlaceholderSrc(family: ToolFamily): string {
-  return `/images/personal-plan/tools/family-${family}.svg`
-}
-
-export function toolProductTypeLabel(productType: ToolProductType): string {
-  return TOOL_PRODUCT_TYPE_LABELS[productType]
-}
-
-export function toolFamilyLabel(family: ToolFamily): string {
-  return TOOL_FAMILY_LABELS[family]
-}
-
 /** The card label for anything a reported answer may contain (`D9b`). */
 export function toolReportedFormLabel(form: ToolReportedForm): string {
   return isToolAnswerOnlyForm(form)
@@ -181,10 +169,6 @@ export function toolImageAlt(form: ToolReportedForm): string {
       (TOOL_ANSWER_ONLY_FORMS_BY_FAMILY[candidate] ?? []).includes(form as ToolAnswerOnlyForm),
   )
   return family ? `${label} – ${TOOL_FAMILY_LABELS[family]}` : label
-}
-
-export function toolRoutePurpose(target: ToolRouteTarget): string {
-  return TOOL_ROUTE_PURPOSE_COPY[target]
 }
 
 /**
@@ -211,10 +195,6 @@ export const TOOL_CHOICE_GROUP_NOTES: Partial<Record<ToolChoiceGroupTarget, stri
   drying_textile:
     "Entscheidend ist die Technik, nicht das Material: sanft ausdrücken statt rubbeln.",
 }
-
-// The family-keyed `TOOL_NEUTRAL_GROUP_LABELS` / `_NOTES` maps are gone: `D5`
-// subsumes the ad-hoc neutral drying-textile group into the first-class choice
-// group above, and the Stage-1 projection now reads `PlanToolPlan.choiceGroups`.
 
 /** German alternative line for families that legitimately lead with one form. */
 export function toolAlternativeNote(alternatives: readonly ToolProductType[]): string | null {

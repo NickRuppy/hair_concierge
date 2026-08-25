@@ -12,7 +12,6 @@ import {
   TOOL_RESOLUTIONS,
   TOOL_ROUTE_TARGETS,
   TOOL_ROUTE_TARGET_FAMILY,
-  isToolOwnershipResolved,
   planToolPlanSchema,
   routeKeyFor,
   toolAssetSchema,
@@ -105,11 +104,6 @@ test("resolution and ownership vocabularies stay distinct and complete", () => {
     [...TOOL_OWNERSHIP_STATES],
     ["unknown", "explicit_none", "owned_generic", "selected_exact", "owned_exact", "catalog_gap"],
   )
-  // Unknown is never a resolved answer; coercing it would invent user input.
-  assert.equal(isToolOwnershipResolved("unknown"), false)
-  assert.equal(isToolOwnershipResolved("explicit_none"), true)
-  assert.equal(isToolOwnershipResolved("owned_generic"), true)
-  assert.equal(isToolOwnershipResolved("catalog_gap"), false)
 })
 
 const asset = {

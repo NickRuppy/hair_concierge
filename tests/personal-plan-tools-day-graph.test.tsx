@@ -158,18 +158,26 @@ const HEAT_PROTECTION = block(
 )
 const FINISH_OIL = block("oil", "Finish-Öl", ["finish"], "oil", "dry_finish")
 
+type OuterSequenceEntry =
+  | { kind: "product"; block: Block }
+  | { kind: "state_transition"; fromAnchor: string; toAnchor: string; copyDe: string }
+
 function renderWashDay(input: {
   occurrences?: readonly ToolOccurrence[]
   guidance?: readonly ToolGuidance[]
   blocks?: readonly Block[]
+  /** Overrides the plain product-only sequence, e.g. to inject a compiler transition. */
+  outerSequence?: readonly OuterSequenceEntry[]
 }) {
   const blocks = input.blocks ?? [SHAMPOO, CONDITIONER, LEAVE_IN, HEAT_PROTECTION, FINISH_OIL]
+  const outerSequence =
+    input.outerSequence ?? blocks.map((entry) => ({ kind: "product" as const, block: entry }))
   const view = toApplicationPageView({
     compiled: {
       days: [
         {
           key: "wash_day",
-          outerSequence: blocks.map((entry) => ({ kind: "product" as const, block: entry })),
+          outerSequence,
           productBlocks: blocks,
         },
         { key: "rest_day", outerSequence: [], productBlocks: [] },
@@ -259,6 +267,70 @@ test("the towel step renders before Leave-in and heat protection on the Waschtag
   assert.ok(conditionerAt < towelAt, "a real wash day towels after rinsing the conditioner out")
   assert.ok(towelAt < leaveInAt, "the towel comes before the Leave-in is applied")
   assert.ok(towelAt < heatProtectionAt, "the towel comes before heat protection")
+})
+
+// --- WS7: the compiler's own towel transition dedupes against the Tool step -
+
+const TOWEL_TRANSITION_COPY_DE = "Sanft mit einem Handtuch ausdrücken."
+
+const SEQUENCE_WITH_COMPILER_TOWEL_TRANSITION: OuterSequenceEntry[] = [
+  { kind: "product", block: SHAMPOO },
+  { kind: "product", block: CONDITIONER },
+  {
+    kind: "state_transition",
+    fromAnchor: "post_cleanse_rinse_off",
+    toAnchor: "post_rinse_towel_dry",
+    copyDe: TOWEL_TRANSITION_COPY_DE,
+  },
+  { kind: "product", block: LEAVE_IN },
+  { kind: "product", block: HEAT_PROTECTION },
+  { kind: "product", block: FINISH_OIL },
+]
+
+function towelInstructionCount(day: ReturnType<typeof renderWashDay>["day"]): number {
+  return day.steps.filter((step) => {
+    if (step.kind === "transition") return step.copyDe === TOWEL_TRANSITION_COPY_DE
+    if (step.kind === "tool_use") return step.assetKey === TOWEL.assetKey
+    return false
+  }).length
+}
+
+test("a drying-textile Tool step suppresses the compiler's own towel transition", () => {
+  const { day } = renderWashDay({
+    outerSequence: SEQUENCE_WITH_COMPILER_TOWEL_TRANSITION,
+    occurrences: [occurrence(TOWEL, "absorb_water", "post_rinse_towel_dry")],
+  })
+  assert.equal(
+    towelInstructionCount(day),
+    1,
+    "exactly one towel instruction renders once the Tool step covers the same position",
+  )
+  const genericTransitionStillPresent = day.steps.some(
+    (step) => step.kind === "transition" && step.copyDe === TOWEL_TRANSITION_COPY_DE,
+  )
+  assert.equal(genericTransitionStillPresent, false, "the compiler's generic line is dropped")
+})
+
+test("a day without a towel Tool step keeps the compiler's own towel transition", () => {
+  const { day } = renderWashDay({
+    outerSequence: SEQUENCE_WITH_COMPILER_TOWEL_TRANSITION,
+    // No towel occurrence at all — a brush at the same position must not
+    // suppress the compiler's line, only a drying-textile Tool step may.
+    occurrences: [occurrence(COMB, "detangle", "post_rinse_towel_dry")],
+  })
+  assert.equal(
+    towelInstructionCount(day),
+    1,
+    "the compiler's towel transition still renders when nothing dedupes it",
+  )
+  const genericTransitionStillPresent = day.steps.some(
+    (step) => step.kind === "transition" && step.copyDe === TOWEL_TRANSITION_COPY_DE,
+  )
+  assert.equal(
+    genericTransitionStillPresent,
+    true,
+    "no drying-textile Tool step means nothing to dedupe against",
+  )
 })
 
 test("behaviour-only towel guidance lands at the same graph position", () => {

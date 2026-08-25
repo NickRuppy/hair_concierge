@@ -615,6 +615,14 @@ function brushRoutes(input: ToolRouteInput): DraftRoute[] {
   // B05 names, and using it here invented brush corrections for people whose
   // only reported behaviour was drying roughly. No brush-friction input exists
   // yet; when one does, add it here.
+  //
+  // This is a deliberate asymmetry with `nightProtectionRoutes` below, which
+  // DOES read the same `towelTechnique === "rough_rubbing"` fact as its N01
+  // `optional_strong` friction signal. B05 needs proof of a brush-specific
+  // pattern the towel fact cannot give; N01 asks a broader "is friction
+  // happening to this hair" question the towel fact answers directly.
+  // Oracle-blessed (fixture 15) 2026-08-24 — do not "fix" one side to match the
+  // other without re-opening that ruling.
   const mismatch = concerns.has("tangling")
   // B01/B03: fingers fully cover the foundation only for `very_short`. From
   // `short` upward the physical need stands, and a fingers-only answer does not
@@ -871,6 +879,14 @@ function nightProtectionRoutes(input: ToolRouteInput): DraftRoute[] {
   const { profile, care } = input
   const concerns = concernSet(profile)
   const goals = goalSet(profile)
+  // N01: rough towel rubbing is read here as the `optional_strong` friction
+  // signal. `brushRoutes` above (B05) deliberately REFUSES this same
+  // `towelTechnique === "rough_rubbing"` fact as a brush-friction signal — a
+  // towel behaviour is not proof of the "friction-heavy reported brush
+  // pattern" B05 requires. N01's question is broader ("is friction happening
+  // to this hair overnight"), which the towel fact answers directly. Oracle-
+  // blessed (fixture 15) 2026-08-24 — do not "fix" one side to match the other
+  // without re-opening that ruling.
   const roughRubbing = care.towelTechnique === "rough_rubbing"
   // R4 (2026-08-24): `breakage` OR `split_ends`, restoring V2 reachability.
   const strong = [...concerns].some((concern) => NIGHT_STRONG_CONCERNS.has(concern)) && roughRubbing
