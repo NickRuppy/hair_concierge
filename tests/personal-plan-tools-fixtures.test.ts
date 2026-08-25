@@ -3,9 +3,11 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import { buildPlanProfile } from "@/lib/personal-plan/input"
+import { projectToolsForDay } from "@/lib/personal-plan/tools/application"
 import { buildToolPlan } from "@/lib/personal-plan/tools/assets"
 import {
   assetKeyFor,
+  atDayAnchor,
   choiceGroupKeyFor,
   routeKeyFor,
   type PlanToolPlan,
@@ -17,7 +19,9 @@ import {
   type ToolProductType,
   type ToolRouteTarget,
 } from "@/lib/personal-plan/tools/contracts"
+import type { ToolUseSectionView } from "@/lib/personal-plan/tools/application"
 import { TOOL_CHOICE_GROUP_LABELS } from "@/lib/personal-plan/tools/labels"
+import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
 import {
   EMPTY_TOOL_CARE_FACTS,
   inventoryFor,
@@ -97,6 +101,11 @@ type FixtureContext = {
   lead: (target: ToolRouteTarget) => ToolProductType | null
   group: (target: ToolChoiceGroupTarget) => ToolChoiceGroup | null
   occurrence: (target: ToolRouteTarget) => ToolOccurrence | null
+  /**
+   * The RENDERED Anwendung section for this route on the given day — the copy
+   * the user actually reads, not the occurrence row behind it.
+   */
+  section: (target: ToolRouteTarget, dayType: ApplicationDayTypeKey) => ToolUseSectionView | null
   /** Stage-1 card the asset (or its choice group) for this route renders into. */
   card: (target: ToolRouteTarget) => { tier: string; stateLabel: string; typeLabel: string } | null
   /** The rendered Stage-1 card ids, per tier block. */
@@ -140,6 +149,18 @@ function evaluate(input: FixtureInput): FixtureContext {
     group: (target) => plan.choiceGroups.find((candidate) => candidate.target === target) ?? null,
     occurrence: (target) =>
       plan.occurrences.find((candidate) => candidate.routeKey === routeKeyFor(target)) ?? null,
+    section: (target, dayType) => {
+      const found = plan.occurrences.find((candidate) => candidate.routeKey === routeKeyFor(target))
+      if (!found) return null
+      return (
+        projectToolsForDay({
+          dayType,
+          assets: plan.assets,
+          occurrences: plan.occurrences,
+          guidance: plan.guidance,
+        }).sections.find((candidate) => candidate.stepKey === found.occurrenceKey) ?? null
+      )
+    },
     card: (target) => {
       const found = asset(target)
       // D5: a route inside a choice group renders through the group's single
@@ -563,7 +584,7 @@ const STYLING_ROWS: FixtureRow[] = [
       assert.equal(route?.coverage.state, "covered_by_report")
       assert.equal(context.card("heated_volume_set"), null, "not_needed renders no Stage-1 card")
       const occurrence = context.occurrence("heated_volume_set")
-      assert.deepEqual(occurrence?.anchor, { kind: "styling_session" })
+      assert.deepEqual(occurrence?.anchor, atDayAnchor("heat_tool"))
       assert.equal(occurrence?.executable, true)
       // A straightening report reveals no heatless alternative.
       absent(context, "heatless_volume_set")
@@ -732,6 +753,37 @@ const STYLING_ROWS: FixtureRow[] = [
     },
   },
   {
+    id: "54",
+    name: "tools-styling-optional-every-wash",
+    input: { inventory: { heated_styling: ["flat_iron"] } },
+    check: (context) => {
+      const occurrence = context.occurrence("heated_volume_set")
+      assert.ok(occurrence)
+      // D7: a heated Tool session belongs to the heat position of the shared
+      // graph, which is what makes heat protection precede it by construction.
+      assert.equal(occurrence.anchor.position, "heat_tool")
+      for (const dayType of [
+        "wash_day",
+        "intensive_care_day",
+        "bond_repair_day",
+        "clarifying_wash_day",
+        "styling_day",
+      ] as const) {
+        assert.ok(
+          context.section("heated_volume_set", dayType),
+          `${dayType} carries the styling session`,
+        )
+      }
+      for (const dayType of ["refresh_day", "between_wash_care_day", "rest_day"] as const) {
+        assert.equal(
+          context.section("heated_volume_set", dayType),
+          null,
+          `${dayType} has no styling session`,
+        )
+      }
+    },
+  },
+  {
     id: "119",
     name: "tools-onboarding-complex-type",
     input: {
@@ -873,6 +925,49 @@ const BRUSH_ROWS: FixtureRow[] = [
     },
   },
   {
+    id: "64",
+    name: "tools-brush-routine-placement",
+    input: { answers: { texture: "curly" } },
+    check: (context) => {
+      // B12 (a): curly and coily detangle in the conditioned wet/damp phase.
+      assert.equal(
+        context.occurrence("detangling_foundation")?.anchor.position,
+        "post_cleanse_rinse_off",
+      )
+      assert.equal(
+        evaluate({ answers: { texture: "coily" } }).occurrence("detangling_foundation")?.anchor
+          .position,
+        "post_cleanse_rinse_off",
+      )
+      // Definition-led wavy follows the same branch (B02/B12 share one
+      // population); every other wavy profile does not.
+      assert.equal(
+        evaluate({ answers: { texture: "wavy", goals: ["shape_definition"] } }).occurrence(
+          "detangling_foundation",
+        )?.anchor.position,
+        "post_cleanse_rinse_off",
+      )
+      assert.equal(
+        evaluate({ answers: { texture: "wavy" } }).occurrence("detangling_foundation")?.anchor
+          .position,
+        "post_rinse_towel_dry",
+      )
+      // B12 (b): straight detangles after partial drying.
+      assert.equal(
+        evaluate({ answers: { texture: "straight" } }).occurrence("detangling_foundation")?.anchor
+          .position,
+        "post_rinse_towel_dry",
+      )
+      // B12 (c): very short plus fingers creates no separate brush step at all.
+      const veryShort = evaluate({
+        answers: { hairLength: "very_short" },
+        inventory: { brushes_combs: ["fingers"] },
+      })
+      assert.equal(veryShort.route("detangling_foundation"), null)
+      assert.equal(veryShort.occurrence("detangling_foundation"), null)
+    },
+  },
+  {
     id: "60",
     name: "tools-brush-any-reported-physical",
     input: { inventory: { brushes_combs: ["round_brush"] } },
@@ -958,6 +1053,25 @@ const SECURING_ROWS: FixtureRow[] = [
       assert.equal(context.route("securing_support")?.reportedOwnership.state, "unknown")
       // The co-emitted `not_needed` set route produces no Stage-1 card.
       assert.equal(context.card("heatless_volume_set"), null)
+    },
+  },
+  {
+    id: "78",
+    name: "tools-securing-tension-fallback",
+    input: { scalpApplicationJob: true },
+    check: (context) => {
+      const section = context.section("securing_support", "wash_day")
+      assert.ok(section, "the securing step renders on the wash day")
+      // C04: the low-tension fallback is part of the step the user reads, not a
+      // separate note somewhere else.
+      assert.ok(
+        section.actionsDe.some((action) => action.includes("Nur so fest wie nötig")),
+        `the C04 tension line is missing from ${JSON.stringify(section.actionsDe)}`,
+      )
+      assert.ok(
+        section.actionsDe.some((action) => /zieht oder wehtut/.test(action)),
+        "the loosen/remove clause is missing",
+      )
     },
   },
   {
@@ -1293,6 +1407,35 @@ const NIGHT_ROWS: FixtureRow[] = [
     },
   },
   {
+    id: "103",
+    name: "tools-night-guidance-boundary",
+    input: {
+      answers: { hairLength: "long" },
+      care: { nightProtection: ["silk_satin_bonnet"] },
+    },
+    check: (context) => {
+      // The nightly step exists on every day, so any day renders it.
+      const section = context.section("night_protection", "rest_day")
+      assert.ok(section)
+      assert.equal(section.placement, "nightly")
+      // N06: comfortable coverage, loose fit, and loosen/reposition/remove on
+      // pulling or pain.
+      assert.ok(
+        section.actionsDe.some((action) => action.includes("bequem")),
+        `comfortable-coverage guidance missing from ${JSON.stringify(section.actionsDe)}`,
+      )
+      assert.ok(
+        section.actionsDe.some((action) => /zieht oder wehtut/.test(action)),
+        "the N06 loosen/reposition/remove clause is missing",
+      )
+      // N06 boundary: containment and style preservation only.
+      const copy = section.actionsDe.join(" ")
+      for (const overreach of ["repariert", "Wachstum", "verhindert", "Bruch"]) {
+        assert.equal(copy.includes(overreach), false, `N06 forbids the claim „${overreach}"`)
+      }
+    },
+  },
+  {
     id: "126",
     name: "tools-night-manageability-trigger",
     input: { answers: { goals: ["manageability_styling"] }, care: { nightProtection: null } },
@@ -1474,6 +1617,31 @@ const LIFECYCLE_ROWS: FixtureRow[] = [
         assetKeyFor("night_protection", "length_tip_sleeve"),
         choiceGroupKeyFor("drying_textile"),
       ])
+    },
+  },
+  {
+    id: "37",
+    name: "tools-airflow-linked-occurrences",
+    input: {
+      care: { dryingRoutes: ["ordinary_blow_dry"] },
+      answers: { goals: ["volume_balance"] },
+    },
+    check: (context) => {
+      const preDry = context.occurrence("drying_standard")
+      const airShape = context.occurrence("air_shaping_volume")
+      assert.ok(preDry && airShape, "both halves of the linked pair exist")
+      // D7: the pair sits on the shared day graph in graph order — the ordering
+      // comes from the graph, not from a separate sequence field.
+      assert.equal(preDry.anchor.position, "dry_pre_heat")
+      assert.equal(airShape.anchor.position, "heat_tool")
+      // A09: one parent styling session, one cadence. Two occurrences must never
+      // be read as two inferred weekly schedules.
+      assert.ok(preDry.sessionKey, "the pre-dry half carries the session key")
+      assert.equal(preDry.sessionKey, airShape.sessionKey)
+      const schedules = new Set(
+        [preDry, airShape].map((occurrence) => occurrence.sessionKey ?? occurrence.occurrenceKey),
+      )
+      assert.equal(schedules.size, 1, "the linked pair schedules once")
     },
   },
   {
@@ -1742,13 +1910,6 @@ export const SKIPPED: Record<string, string> = {
   "110": "WS3 (tools.textile.plop route)",
   "111": "WS3 (tools.textile.plop route)",
   "112": "WS3 (tools.textile.plop route)",
-
-  // WS6 — day-anchor graph, placement and session keys.
-  "37": "WS6 (linked occurrences on the shared day graph, one cadence)",
-  "54": "WS6 (Anwendung projection per ApplicationDayTypeKey)",
-  "64": "WS6 (B12 detangle timing anchors)",
-  "78": "WS6 (C04 tension line in the Anwendung step)",
-  "103": "WS6 (N06 loosen/remove clause in the guidance copy)",
 
   // WS4 — Feinschliff capture, copy and the „Nur Finger" card.
   "116": "WS4 (overview submit semantics, preselection wiring, ratified lead copy)",

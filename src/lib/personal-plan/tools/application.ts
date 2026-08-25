@@ -1,11 +1,16 @@
 import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
 
-import type {
-  ToolAsset,
-  ToolCapability,
-  ToolConditionalReason,
-  ToolGuidance,
-  ToolOccurrence,
+import {
+  dayAnchorIndex,
+  placementForAnchor,
+  type ToolAsset,
+  type ToolCapability,
+  type ToolConditionalReason,
+  type ToolDayAnchor,
+  type ToolGuidance,
+  type ToolOccurrence,
+  type ToolOccurrenceAnchor,
+  type ToolPlacement,
 } from "./contracts"
 import { TOOL_FAMILY_LABELS, TOOL_PRODUCT_TYPE_LABELS, toolImageAlt, toolImageSrc } from "./labels"
 
@@ -31,7 +36,9 @@ export type ToolUseSectionView = {
   actionsDe: string[]
   /** Non-null when this use cannot be executed yet; the step stays visible and honest. */
   conditionalNoteDe: string | null
-  /** Anchor position inside the day's ordered sequence. */
+  /** Position on the shared day graph — the ordering authority (`D7`). */
+  anchor: ToolOccurrenceAnchor
+  /** Coarse phase, DERIVED from `anchor`. */
   placement: ToolPlacement
 }
 
@@ -44,7 +51,9 @@ export type ToolShelfSlotView = {
   familyLabelDe: string
 }
 
-export type ToolPlacement = "wash" | "post_wash" | "drying" | "styling" | "nightly"
+// Ordering is the graph's job (`D7`); `ToolPlacement` only groups a rendered
+// step into its coarse phase.
+export { type ToolPlacement } from "./contracts"
 
 const WASH_DAYS = new Set<ApplicationDayTypeKey>([
   "wash_day",
@@ -63,16 +72,19 @@ const STYLING_DAYS = new Set<ApplicationDayTypeKey>([
   "styling_day",
 ])
 
-/** Ordered anchor slots inside one day. */
-export const TOOL_PLACEMENT_ORDER: readonly ToolPlacement[] = [
-  "wash",
-  "post_wash",
-  "drying",
-  "styling",
-  "nightly",
-]
-
-const CAPABILITY_ACTIONS_DE: Partial<Record<ToolCapability, string[]>> = {
+/**
+ * German instructions per capability.
+ *
+ * The record is TOTAL on purpose: a recommended Tool step that renders with an
+ * empty instruction block is a step the user cannot act on, and the missing
+ * `create_volume` and `airflow_shape` entries are exactly how heated, heatless
+ * and shaping-brush steps shipped with nothing under the heading. A new
+ * capability now fails the type check instead of silently rendering blank.
+ *
+ * Register: telegram-short, du-form, „empfohlen" rather than „nötig, sonst
+ * Schaden".
+ */
+const CAPABILITY_ACTIONS_DE: Record<ToolCapability, string[]> = {
   detangle: [
     "Beginne in den Spitzen und arbeite dich nach oben.",
     "Löse Knoten sanft; zieh nicht durch.",
@@ -83,13 +95,55 @@ const CAPABILITY_ACTIONS_DE: Partial<Record<ToolCapability, string[]>> = {
     "Nimm den Diffusor-Aufsatz, wenn dein Gerät einen hat.",
     "Führe die Längen locker in den Aufsatz, statt sie zu bewegen.",
   ],
+  concentrate_airflow: [
+    "Setz die Stylingdüse auf und richte den Luftstrom auf eine Partie.",
+    "Führe ihn von oben nach unten mit.",
+  ],
   air_shape: ["Arbeite in Partien und lass jede Partie kurz auskühlen."],
+  airflow_shape: [
+    "Führe die Bürste mit dem Luftstrom durch eine Partie.",
+    "Lass jede Partie kurz auskühlen, bevor du sie loslässt.",
+  ],
+  straighten: [
+    "Arbeite in dünnen Partien und zieh in einem ruhigen Zug durch.",
+    "Geh pro Partie nur einmal durch, wenn es reicht.",
+  ],
+  smooth: ["Arbeite in Partien von oben nach unten, ohne Druck."],
+  curl: [
+    "Wickle eine Partie auf und halte sie nur kurz.",
+    "Lass jede Locke auskühlen, bevor du sie anfasst.",
+  ],
+  wave: ["Arbeite in Partien und setz die Wellen locker.", "Lass sie vollständig auskühlen."],
+  create_volume: [
+    "Arbeite in Partien und heb sie am Ansatz leicht ab.",
+    "Lass die Form vollständig auskühlen oder trocknen, bevor du sie löst.",
+  ],
   set_style: ["Setze in Partien und lass die Form vollständig auskühlen oder trocknen."],
-  section_hair: ["Teile das Haar in Partien, damit du überall gleichmäßig arbeiten kannst."],
-  secure_gently: ["Binde locker; nimm es ab, sobald es zieht."],
+  define_pattern: [
+    "Arbeite in Partien und stör das Muster so wenig wie möglich.",
+    "Fass es danach so wenig wie möglich an.",
+  ],
+  preserve_shape: ["Leg die Form locker ab, damit sie erhalten bleibt."],
+  section_hair: [
+    "Teile das Haar in Partien, damit du überall gleichmäßig arbeiten kannst.",
+    // C04: the low-tension fallback belongs to the step itself, not to a note
+    // somewhere else. Proactive guidance — no claim about how you clip today.
+    "Nur so fest wie nötig — lös es, setz es um oder nimm es ab, wenn es zieht oder wehtut.",
+  ],
+  secure_gently: [
+    "Binde locker; nimm es ab, sobald es zieht.",
+    "Nur so fest wie nötig — lös es, setz es um oder nimm es ab, wenn es zieht oder wehtut.",
+  ],
+  hold_hair: ["Halte die Partie locker; nichts soll spannen."],
   apply_product: ["Setze das Produkt gezielt am Ansatz oder auf der Kopfhaut auf."],
   wash_scalp_assist: ["Arbeite mit leichtem Druck in kreisenden Bewegungen."],
-  reduce_surface_friction: ["Nutze es über Nacht so, wie es für dich bequem ist."],
+  // N06: comfortable coverage, loose fit, and loosen/reposition/remove on
+  // pulling or pain. Containment and style preservation only — no repair,
+  // growth or breakage-prevention claim.
+  reduce_surface_friction: [
+    "Deck den gewünschten Bereich bequem ab; getragene Formen sitzen locker am Ansatz.",
+    "Lös es, setz es um oder nimm es ab, wenn es zieht oder wehtut.",
+  ],
   contain_hair: ["Halte die Längen locker zusammen; nichts soll spannen."],
   absorb_water: ["Drücke das Wasser sanft aus, statt zu rubbeln."],
   plop: ["Lege die Längen locker in das Tuch und wickle es ohne Zug ein."],
@@ -115,7 +169,12 @@ export type ToolDayProjection = {
   shelf: ToolShelfSlotView[]
   sections: ToolUseSectionView[]
   /** Behaviour-only guidance, rendered as ordinary transition steps. */
-  transitions: Array<{ stepKey: string; copyDe: string; placement: ToolPlacement }>
+  transitions: Array<{
+    stepKey: string
+    copyDe: string
+    anchor: ToolOccurrenceAnchor
+    placement: ToolPlacement
+  }>
 }
 
 export function projectToolsForDay(input: {
@@ -130,8 +189,8 @@ export function projectToolsForDay(input: {
   const shelf: ToolShelfSlotView[] = []
 
   for (const occurrence of input.occurrences) {
-    const placement = placementFor(occurrence.anchor)
-    if (!placement || !occursOn(input.dayType, placement)) continue
+    if (!occursOn(input.dayType, occurrence.anchor)) continue
+    const placement = placementForAnchor(occurrence.anchor)
     const asset = assetByKey.get(occurrence.assetKey)
     if (!asset) continue
     const lead = asset.productTypes[0]
@@ -145,10 +204,11 @@ export function projectToolsForDay(input: {
       imageUrl: toolImageSrc(lead),
       imageAltDe: toolImageAlt(lead),
       purposeDe: asset.purposeKey,
-      actionsDe: CAPABILITY_ACTIONS_DE[occurrence.capability] ?? [],
+      actionsDe: CAPABILITY_ACTIONS_DE[occurrence.capability],
       conditionalNoteDe: occurrence.executable
         ? null
         : CONDITIONAL_NOTES_DE[occurrence.conditionalReason ?? "unknown_ownership"],
+      anchor: occurrence.anchor,
       placement,
     })
 
@@ -167,47 +227,54 @@ export function projectToolsForDay(input: {
   }
 
   const transitions = input.guidance.flatMap((entry) => {
-    const placement = placementFor(entry.anchor)
-    if (!placement || !occursOn(input.dayType, placement)) return []
+    if (!occursOn(input.dayType, entry.anchor)) return []
     const copyDe = GUIDANCE_COPY_DE[entry.copyKey]
     if (!copyDe) return []
-    return [{ stepKey: entry.guidanceKey, copyDe, placement }]
+    return [
+      {
+        stepKey: entry.guidanceKey,
+        copyDe,
+        anchor: entry.anchor,
+        placement: placementForAnchor(entry.anchor),
+      },
+    ]
   })
 
-  // Sections and guidance are returned in day order so every caller renders the
-  // same sequence: wash aids, detangling, drying, styling, then the nightly step.
+  // Sections and guidance are returned in graph order so every caller renders
+  // the same sequence, and so the view adapter can interleave them with the
+  // product steps that sit on the very same graph.
   return {
     shelf,
-    sections: [...sections].sort(byPlacement),
-    transitions: [...transitions].sort(byPlacement),
+    sections: [...sections].sort(byAnchor),
+    transitions: [...transitions].sort(byAnchor),
   }
 }
 
-function byPlacement(
-  left: { placement: ToolPlacement },
-  right: { placement: ToolPlacement },
+function byAnchor(
+  left: { anchor: ToolOccurrenceAnchor },
+  right: { anchor: ToolOccurrenceAnchor },
 ): number {
-  return (
-    TOOL_PLACEMENT_ORDER.indexOf(left.placement) - TOOL_PLACEMENT_ORDER.indexOf(right.placement)
-  )
+  return dayAnchorIndex(left.anchor) - dayAnchorIndex(right.anchor)
 }
 
-function placementFor(anchor: ToolOccurrence["anchor"]): ToolPlacement | null {
-  switch (anchor.kind) {
-    case "wash_day":
-      return anchor.phase
-    case "nightly":
-      return "nightly"
-    case "styling_session":
-      return "styling"
-    case "after_step":
-    case "before_step":
-      return "post_wash"
-  }
-}
+/**
+ * Which days a graph position can occur on.
+ *
+ * The wash positions belong to a wash day. The drying and styling positions
+ * belong to every day on which a styling session can genuinely happen — the
+ * four wash days plus the styling day — so a Glätteisen session no longer
+ * disappears from the Stylingtag just because it moved onto the heat position.
+ * `nightly` happens every day.
+ */
+const STYLING_SESSION_ANCHORS = new Set<ToolDayAnchor>([
+  "dry_pre_heat",
+  "heat_tool",
+  "dry_finish",
+  "styling_session",
+])
 
-function occursOn(dayType: ApplicationDayTypeKey, placement: ToolPlacement): boolean {
-  if (placement === "nightly") return true
-  if (placement === "styling") return STYLING_DAYS.has(dayType)
+function occursOn(dayType: ApplicationDayTypeKey, anchor: ToolOccurrenceAnchor): boolean {
+  if (anchor.position === "nightly") return true
+  if (STYLING_SESSION_ANCHORS.has(anchor.position)) return STYLING_DAYS.has(dayType)
   return WASH_DAYS.has(dayType)
 }

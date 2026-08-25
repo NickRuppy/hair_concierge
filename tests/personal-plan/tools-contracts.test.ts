@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  atDayAnchor,
   TOOL_CAPABILITIES,
   TOOL_FAMILIES,
   TOOL_FAMILY_ORDER,
@@ -154,7 +155,8 @@ const occurrence = {
   assetKey: asset.assetKey,
   routeKey: "tool:brushes_combs:detangling_foundation",
   capability: "detangle" as const,
-  anchor: { kind: "after_step" as const, stepKey: "conditioner_rinse_out" },
+  anchor: atDayAnchor("post_rinse_towel_dry", { side: "after", stepKey: "conditioner_rinse_out" }),
+  sessionKey: null,
   executable: true,
   conditionalReason: null,
 }
@@ -180,7 +182,7 @@ test("occurrences own event timing, not assets", () => {
 
 test("the Tool plan rejects duplicate physical assets and dangling occurrences", () => {
   const plan = {
-    schemaVersion: 2 as const,
+    schemaVersion: 3 as const,
     routes: [
       {
         routeKey: "tool:brushes_combs:detangling_foundation",
@@ -234,7 +236,7 @@ test("the Tool plan rejects duplicate physical assets and dangling occurrences",
 
 test("selected_exact is never reachable in a Phase 1 plan", () => {
   const parsed = planToolPlanSchema.parse({
-    schemaVersion: 2,
+    schemaVersion: 3,
     routes: [],
     choiceGroups: [],
     assets: [],

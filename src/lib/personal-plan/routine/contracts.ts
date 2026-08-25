@@ -169,6 +169,11 @@ export const routinePayloadV1Schema = z
  * V1 stays untouched and strict. Readers accept the discriminated union below,
  * so a stored V1 payload keeps loading unchanged while a Tools-enabled owner
  * gets one durable, versioned source for Routine and Anwendung alike.
+ *
+ * The embedded Tool rows follow the Tool plan's own `schemaVersion` (3 since
+ * `D7`: graph anchors plus `A09` session keys). V2 is not re-versioned for
+ * that: the Tools rollout is unshipped and default-off, so a V2 payload only
+ * exists in pre-release dev rows and is recomputed rather than migrated.
  */
 export const routinePayloadV2Schema = routinePayloadV1Schema
   .extend({

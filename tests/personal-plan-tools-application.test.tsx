@@ -5,7 +5,12 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { ApplicationDay } from "@/components/application/application-day"
 import type { ApplicationDayView } from "@/components/application/application-types"
 import { projectToolsForDay } from "@/lib/personal-plan/tools/application"
-import type { ToolAsset, ToolGuidance, ToolOccurrence } from "@/lib/personal-plan/tools/contracts"
+import {
+  atDayAnchor,
+  type ToolAsset,
+  type ToolGuidance,
+  type ToolOccurrence,
+} from "@/lib/personal-plan/tools/contracts"
 
 const COMB: ToolAsset = {
   assetKey: "asset:brushes_combs:wide_tooth_comb",
@@ -53,7 +58,8 @@ const OCCURRENCES: ToolOccurrence[] = [
     assetKey: BONNET.assetKey,
     routeKey: "tool:night_protection:night_protection",
     capability: "reduce_surface_friction",
-    anchor: { kind: "nightly" },
+    anchor: atDayAnchor("nightly"),
+    sessionKey: null,
     executable: true,
     conditionalReason: null,
   },
@@ -62,7 +68,8 @@ const OCCURRENCES: ToolOccurrence[] = [
     assetKey: COMB.assetKey,
     routeKey: "tool:brushes_combs:detangling_foundation",
     capability: "detangle",
-    anchor: { kind: "wash_day", phase: "post_wash" },
+    anchor: atDayAnchor("post_rinse_towel_dry"),
+    sessionKey: null,
     executable: true,
     conditionalReason: null,
   },
@@ -71,7 +78,8 @@ const OCCURRENCES: ToolOccurrence[] = [
     assetKey: DRYER.assetKey,
     routeKey: "tool:airflow:drying_diffused",
     capability: "diffuse_airflow",
-    anchor: { kind: "wash_day", phase: "drying" },
+    anchor: atDayAnchor("dry_pre_heat"),
+    sessionKey: null,
     executable: false,
     conditionalReason: "unknown_ownership",
   },
@@ -83,7 +91,7 @@ const GUIDANCE: ToolGuidance[] = [
   {
     guidanceKey: "guidance:tool:drying_textiles:gentle_towel_handling",
     routeKey: "tool:drying_textiles:gentle_towel_handling",
-    anchor: { kind: "wash_day", phase: "drying" },
+    anchor: atDayAnchor("post_rinse_towel_dry"),
     copyKey: "personal_plan.tools.guidance.gentle_towel_handling",
     strength: "firm",
   },
@@ -174,7 +182,7 @@ test("styling Tools are not dropped on intensive-care, bond-repair or clarifying
         {
           ...COMB_OCCURRENCE,
           occurrenceKey: "occurrence:styling",
-          anchor: { kind: "styling_session" },
+          anchor: atDayAnchor("styling_session"),
         },
       ],
       guidance: [],
@@ -194,7 +202,7 @@ test("one physical Tool never produces duplicate shelf objects", () => {
         occurrenceKey: "occurrence:tool:brushes_combs:specialized_brush_job:styling_session",
         routeKey: "tool:brushes_combs:specialized_brush_job",
         capability: "distribute_product",
-        anchor: { kind: "styling_session" },
+        anchor: atDayAnchor("styling_session"),
       },
     ],
     guidance: [],

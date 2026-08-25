@@ -11,7 +11,15 @@ import type {
 import type { ApplicationDayTypeDefinition } from "@/lib/routines/personal-plan/application/repository"
 
 import { projectToolsForDay, type ToolPlacement } from "@/lib/personal-plan/tools/application"
-import type { ToolAsset, ToolGuidance, ToolOccurrence } from "@/lib/personal-plan/tools/contracts"
+import {
+  dayAnchorIndex,
+  TOOL_DAY_ANCHORS,
+  type ToolAsset,
+  type ToolDayAnchor,
+  type ToolGuidance,
+  type ToolOccurrence,
+  type ToolOccurrenceAnchor,
+} from "@/lib/personal-plan/tools/contracts"
 
 import type {
   ApplicationDayView,
@@ -154,7 +162,7 @@ export function toApplicationPageView({
       summaryDe: definition.summary,
       cadenceDe: cadenceByDay[day.key] ?? null,
       steps: toolProjection
-        ? withToolSteps(productSteps, toolProjection, finishStepIndex(day))
+        ? withToolSteps(productSteps, productAnchorRanks(day), toolProjection, finishStepIndex(day))
         : productSteps,
       isPartial: Boolean(day.isPartial),
       provisionalProductCount: day.productBlocks.filter((block) => block.status === "provisional")
@@ -178,12 +186,6 @@ export function toApplicationPageView({
 }
 
 /**
- * Splices the Tool sections and behaviour-only guidance into the day's ordered
- * sequence: wash aids before the product steps, detangling and drying after
- * them, then styling, then the nightly step last. Product steps keep their
- * relative order untouched.
- */
-/**
  * Index of the first finishing product (a `dry_finish` Oil or equivalent), or -1.
  * Drying and styling Tools must be used BEFORE the finish is applied — appending
  * them after it would tell the user to finish, then style.
@@ -194,39 +196,90 @@ function finishStepIndex(day: CompiledApplicationViewV1["days"][number]): number
   )
 }
 
+/**
+ * The graph position each product step occupies, in the day's own order.
+ *
+ * Product blocks carry their protocol's `APPLICATION_SEQUENCE_ANCHORS` anchor,
+ * which is the same graph the Tool occurrences anchor onto (`D7`). A step
+ * without a usable anchor — an unresolved product, a compiler transition —
+ * inherits the position of the step before it, so it stays glued where the
+ * compiler put it instead of jumping to a bucket of its own.
+ */
+function productAnchorRanks(day: CompiledApplicationViewV1["days"][number]): number[] {
+  let carried = -1
+  return day.outerSequence.map((step) => {
+    const anchor =
+      step.kind === "product" ? (step.block.anchor as ToolDayAnchor | undefined) : undefined
+    const index = anchor ? TOOL_DAY_ANCHORS.indexOf(anchor) : -1
+    if (index >= 0) carried = index
+    return carried
+  })
+}
+
+/**
+ * Splices the Tool sections and behaviour-only guidance into the day's ordered
+ * sequence by GRAPH POSITION (`D7`), not by a five-slot bucket of its own.
+ *
+ * A Tool step renders after every product step at or before its position and
+ * before the first product step past it. At an equal position the product goes
+ * first — you apply the heat protection, then you reach for the tool.
+ *
+ * Two ordering guarantees survive unchanged: nothing but the nightly step
+ * renders after the finishing product, and the nightly step is always last.
+ */
 function withToolSteps(
   productSteps: readonly ApplicationOuterStepView[],
+  productRanks: readonly number[],
   projection: ReturnType<typeof projectToolsForDay>,
   finishIndex: number,
 ): ApplicationOuterStepView[] {
-  const byPlacement = new Map<ToolPlacement, ApplicationOuterStepView[]>()
-  const push = (placement: ToolPlacement, step: ApplicationOuterStepView) => {
-    const bucket = byPlacement.get(placement) ?? []
-    bucket.push(step)
-    byPlacement.set(placement, bucket)
+  type Pending = {
+    rank: number
+    placement: ToolPlacement
+    relativeToStep: ToolOccurrenceAnchor["relativeToStep"]
+    step: ApplicationOuterStepView
   }
-  for (const section of projection.sections) push(section.placement, section)
-  for (const transition of projection.transitions) {
-    push(transition.placement, {
-      kind: "transition",
-      stepKey: transition.stepKey,
-      copyDe: transition.copyDe,
-    })
-  }
+  const pending: Pending[] = [
+    ...projection.sections.map((section) => ({
+      rank: dayAnchorIndex(section.anchor),
+      placement: section.placement,
+      relativeToStep: section.anchor.relativeToStep,
+      step: section as ApplicationOuterStepView,
+    })),
+    ...projection.transitions.map((transition) => ({
+      rank: dayAnchorIndex(transition.anchor),
+      placement: transition.placement,
+      relativeToStep: transition.anchor.relativeToStep,
+      step: {
+        kind: "transition" as const,
+        stepKey: transition.stepKey,
+        copyDe: transition.copyDe,
+      },
+    })),
+  ].sort((left, right) => left.rank - right.rank)
 
-  const before = byPlacement.get("wash") ?? []
-  const middle = (["post_wash", "drying", "styling"] as const).flatMap(
-    (placement) => byPlacement.get(placement) ?? [],
-  )
-  const nightly = byPlacement.get("nightly") ?? []
-
+  const nightly = pending.filter((entry) => entry.placement === "nightly")
+  const inDay = pending.filter((entry) => entry.placement !== "nightly")
   // Everything except the nightly step belongs before the finishing product.
-  const cut = finishIndex >= 0 ? finishIndex : productSteps.length
-  return [
-    ...before,
-    ...productSteps.slice(0, cut),
-    ...middle,
-    ...productSteps.slice(cut),
-    ...nightly,
-  ]
+  const cap = finishIndex >= 0 ? finishIndex : productSteps.length
+
+  const merged: ApplicationOuterStepView[] = []
+  let cursor = 0
+  for (const entry of inDay) {
+    let target = productRanks.filter((rank) => rank <= entry.rank).length
+    // An optional refinement INSIDE the position: sit immediately after (or
+    // before) the named product step when the day actually contains it. The
+    // graph position still decides everything else, so this can never move a
+    // step into another phase.
+    if (entry.relativeToStep) {
+      const at = productSteps.findIndex((step) => step.stepKey === entry.relativeToStep?.stepKey)
+      if (at >= 0) target = entry.relativeToStep.side === "after" ? at + 1 : at
+    }
+    target = Math.min(target, cap)
+    target = Math.max(target, cursor)
+    while (cursor < target) merged.push(productSteps[cursor++])
+    merged.push(entry.step)
+  }
+  while (cursor < productSteps.length) merged.push(productSteps[cursor++])
+  return [...merged, ...nightly.map((entry) => entry.step)]
 }

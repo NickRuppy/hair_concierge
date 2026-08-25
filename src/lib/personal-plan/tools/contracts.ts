@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { APPLICATION_SEQUENCE_ANCHORS } from "@/lib/routines/personal-plan/application/contracts"
+
 import type { PlanNeedTier } from "../types"
 
 /**
@@ -552,18 +554,81 @@ export const TOOL_CONDITIONAL_REASONS = [
 ] as const
 export type ToolConditionalReason = (typeof TOOL_CONDITIONAL_REASONS)[number]
 
-export const toolOccurrenceAnchorSchema = z.discriminatedUnion("kind", [
-  z
-    .object({
-      kind: z.literal("wash_day"),
-      phase: z.enum(["wash", "post_wash", "drying", "styling"]),
-    })
-    .strict(),
-  z.object({ kind: z.literal("after_step"), stepKey: boundedKey }).strict(),
-  z.object({ kind: z.literal("before_step"), stepKey: boundedKey }).strict(),
-  z.object({ kind: z.literal("nightly") }).strict(),
-  z.object({ kind: z.literal("styling_session") }).strict(),
-])
+/**
+ * The shared day-anchor graph (`D7`, ruled 2026-08-24).
+ *
+ * Tool occurrences anchor onto the SAME ordering the Application compiler
+ * already uses, in its extended 11-position form: the nine
+ * `APPLICATION_SEQUENCE_ANCHORS`, then `styling_session`, then `nightly`.
+ * `styling_session` and `nightly` are explicit members of the one graph, not a
+ * second parallel ordering, and `nightly` is always last.
+ *
+ * Tool steps and product steps therefore interleave by construction instead of
+ * being ordered by two mechanisms that drift apart — the defect that rendered
+ * the towel step after Leave-in and heat protection.
+ */
+export const TOOL_DAY_ANCHORS = [
+  ...APPLICATION_SEQUENCE_ANCHORS,
+  "styling_session",
+  "nightly",
+] as const
+export type ToolDayAnchor = (typeof TOOL_DAY_ANCHORS)[number]
+export const toolDayAnchorSchema = z.enum(TOOL_DAY_ANCHORS)
+
+/**
+ * The coarse phase a day's steps are grouped into. It is DERIVED from the graph
+ * (`D7`'s derivation table) and never defined beside it.
+ */
+export type ToolPlacement = "wash" | "post_wash" | "drying" | "styling" | "nightly"
+
+const PLACEMENT_BY_DAY_ANCHOR: Record<ToolDayAnchor, ToolPlacement> = {
+  pre_wash: "wash",
+  wet_cleanse: "wash",
+  post_cleanse_rinse_off: "wash",
+  post_rinse_towel_dry: "post_wash",
+  timed_treatment: "post_wash",
+  damp_leave_on: "post_wash",
+  dry_pre_heat: "drying",
+  heat_tool: "drying",
+  dry_finish: "drying",
+  styling_session: "styling",
+  nightly: "nightly",
+}
+
+/**
+ * Where one occurrence sits in the day.
+ *
+ * `position` is the graph position and is the only thing that decides ordering
+ * and placement. `relativeToStep` is an optional refinement INSIDE that
+ * position — "immediately after the conditioner block" — which is why a
+ * step-relative anchor can no longer collapse into a phase of its own.
+ */
+export const toolOccurrenceAnchorSchema = z
+  .object({
+    position: toolDayAnchorSchema,
+    relativeToStep: z
+      .object({ side: z.enum(["after", "before"]), stepKey: boundedKey })
+      .strict()
+      .nullable(),
+  })
+  .strict()
+
+/** Terse constructor for the anchors the engine writes. */
+export function atDayAnchor(
+  position: ToolDayAnchor,
+  relativeToStep: { side: "after" | "before"; stepKey: string } | null = null,
+): ToolOccurrenceAnchor {
+  return { position, relativeToStep }
+}
+
+export function placementForAnchor(anchor: ToolOccurrenceAnchor): ToolPlacement {
+  return PLACEMENT_BY_DAY_ANCHOR[anchor.position]
+}
+
+/** Position of an anchor in the extended graph; the single ordering authority. */
+export function dayAnchorIndex(anchor: ToolOccurrenceAnchor): number {
+  return TOOL_DAY_ANCHORS.indexOf(anchor.position)
+}
 
 export const toolOccurrenceSchema = z
   .object({
@@ -572,6 +637,12 @@ export const toolOccurrenceSchema = z
     routeKey: boundedKey,
     capability: toolCapabilitySchema,
     anchor: toolOccurrenceAnchorSchema,
+    /**
+     * `A09`: linked occurrences that belong to ONE parent session share one key
+     * and therefore one cadence. Two linked halves are never two inferred
+     * weekly schedules. `null` for an occurrence that stands on its own.
+     */
+    sessionKey: boundedKey.nullable(),
     executable: z.boolean(),
     conditionalReason: z.enum(TOOL_CONDITIONAL_REASONS).nullable(),
   })
@@ -608,17 +679,23 @@ export const toolGuidanceSchema = z
 /**
  * Persisted Tool plan.
  *
- * `schemaVersion` 2 is the `D4`/`D5`/`D6` contract: routes split ownership from
- * coverage and choice groups are first class. Version 1 payloads exist only in
- * pre-release dev rows — the feature is unshipped and default-off — and are never
- * re-validated on read: `InitialNeedPlanSnapshot` is stored and loaded as opaque
- * JSON and Stage 1 recomputes its Tool blocks from the profile rather than from
- * the stored plan. No decoder is therefore required; a version-1 payload simply
- * carries the older route shape and is replaced on the next computation.
+ * `schemaVersion` 3 is the `D7` contract: an occurrence anchors onto the shared
+ * extended 11-position day graph (`{ position, relativeToStep }` instead of the
+ * old five-slot `{ kind, phase }` union) and carries a `sessionKey` so `A09`'s
+ * linked pair reads as one parent session. Version 2 was the `D4`/`D5`/`D6`
+ * contract: routes split ownership from coverage and choice groups are first
+ * class.
+ *
+ * Version 1 and 2 payloads exist only in pre-release dev rows — the feature is
+ * unshipped and default-off — and are never re-validated on read:
+ * `InitialNeedPlanSnapshot` is stored and loaded as opaque JSON and Stage 1
+ * recomputes its Tool blocks from the profile rather than from the stored plan.
+ * No decoder is therefore required; an older payload simply carries the older
+ * shape and is replaced on the next computation.
  */
 export const planToolPlanSchema = z
   .object({
-    schemaVersion: z.literal(2),
+    schemaVersion: z.literal(3),
     routes: z.array(toolRouteSchema).max(32),
     choiceGroups: z.array(toolChoiceGroupSchema).max(8),
     assets: z.array(toolAssetSchema).max(32),

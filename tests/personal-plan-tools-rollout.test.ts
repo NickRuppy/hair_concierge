@@ -63,7 +63,7 @@ test("a Tools-off snapshot is byte-identical to today's ten-category snapshot", 
 test("a Tools-on snapshot adds the parallel plan additively", () => {
   const on = snapshotFor({ care: EMPTY_TOOL_CARE_FACTS, inventory: {} })
   assert.ok(on.toolPlan)
-  assert.equal(on.toolPlan?.schemaVersion, 2)
+  assert.equal(on.toolPlan?.schemaVersion, 3)
   // The care-product side of the snapshot is untouched.
   const off = snapshotFor()
   assert.deepEqual(on.decisions, off.decisions)

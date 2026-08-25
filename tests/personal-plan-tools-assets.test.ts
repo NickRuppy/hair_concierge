@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { buildPlanProfile } from "@/lib/personal-plan/input"
 import { buildToolPlan } from "@/lib/personal-plan/tools/assets"
+import { atDayAnchor } from "@/lib/personal-plan/tools/contracts"
 import {
   computeToolRoutes,
   EMPTY_TOOL_CARE_FACTS,
@@ -125,7 +126,7 @@ test("behaviour-only routes produce guidance, never a fake Tool card", () => {
   )
   const guidance = plan.guidance.find((entry) => entry.routeKey.endsWith("gentle_towel_handling"))
   assert.equal(guidance?.strength, "firm")
-  assert.deepEqual(guidance?.anchor, { kind: "wash_day", phase: "drying" })
+  assert.deepEqual(guidance?.anchor, atDayAnchor("post_rinse_towel_dry"))
 })
 
 test("night protection only occurs nightly and stays conditional while unknown", () => {
@@ -133,7 +134,7 @@ test("night protection only occurs nightly and stays conditional while unknown",
   const occurrence = plan.occurrences.find((candidate) =>
     candidate.routeKey.endsWith("night_protection"),
   )
-  assert.deepEqual(occurrence?.anchor, { kind: "nightly" })
+  assert.deepEqual(occurrence?.anchor, atDayAnchor("nightly"))
   assert.equal(occurrence?.executable, false)
 })
 
@@ -147,7 +148,7 @@ test("a reported heated tool appears once with no need and an executable use ste
   assert.equal(heated[0].presentationState, "use_yours")
   const occurrence = plan.occurrences.find((candidate) => candidate.assetKey === heated[0].assetKey)
   assert.equal(occurrence?.executable, true)
-  assert.deepEqual(occurrence?.anchor, { kind: "styling_session" })
+  assert.deepEqual(occurrence?.anchor, atDayAnchor("heat_tool"))
 })
 
 test("the built plan always satisfies the strict Tool plan contract", () => {

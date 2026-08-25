@@ -1,5 +1,6 @@
 import {
   assetKeyFor,
+  atDayAnchor,
   choiceGroupKeyFor,
   isToolRouteCovered,
   occurrenceKeyFor,
@@ -14,6 +15,7 @@ import {
   type ToolChoiceGroup,
   type ToolConditionalReason,
   type ToolCoverageState,
+  type ToolDayAnchor,
   type ToolGuidance,
   type ToolOccurrence,
   type ToolOccurrenceAnchor,
@@ -22,6 +24,7 @@ import {
   type ToolRouteTarget,
 } from "./contracts"
 import { TOOL_PRODUCT_TYPE_LABELS, TOOL_ROUTE_PURPOSE_COPY } from "./labels"
+import { COMB_LED_DETANGLING_LEAD } from "./routes"
 
 /**
  * Turns computed routes into the durable Phase-1 Tool plan.
@@ -34,13 +37,14 @@ export function buildToolPlan(input: { routes: readonly PlanToolRoute[] }): Plan
   const assets = new Map<string, ToolAsset>()
   const occurrences: ToolOccurrence[] = []
   const guidance: ToolGuidance[] = []
+  const sessionTargets = airShapingSessionTargets(input.routes)
 
   for (const route of input.routes) {
     if (route.resolution === "behavior_only") {
       guidance.push({
         guidanceKey: `guidance:${route.routeKey}`,
         routeKey: route.routeKey,
-        anchor: anchorFor(route.target),
+        anchor: anchorFor(route),
         copyKey: `personal_plan.tools.guidance.${route.target}`,
         // Towel technique is the one firm correction; everything else stays supportive.
         strength: route.target === "gentle_towel_handling" ? "firm" : "supportive",
@@ -85,7 +89,7 @@ export function buildToolPlan(input: { routes: readonly PlanToolRoute[] }): Plan
       })
     }
 
-    const anchor = anchorFor(route.target)
+    const anchor = anchorFor(route)
     // B04: a broad reported form can suppress a purchase without proving it can
     // perform the route. Such a step stays visible but fails closed locally, so
     // we never tell someone to detangle with a form we cannot vouch for.
@@ -96,13 +100,14 @@ export function buildToolPlan(input: { routes: readonly PlanToolRoute[] }): Plan
       routeKey: route.routeKey,
       capability: capabilities[0],
       anchor,
+      sessionKey: sessionTargets.has(route.target) ? AIR_SHAPING_SESSION_KEY : null,
       executable,
       conditionalReason: executable ? null : conditionalReasonFor(route),
     })
   }
 
   return planToolPlanSchema.parse({
-    schemaVersion: 2,
+    schemaVersion: 3,
     routes: [...input.routes],
     choiceGroups: buildChoiceGroups(input.routes),
     assets: [...assets.values()],
@@ -250,36 +255,85 @@ const FALLBACK_CAPABILITY: Record<ToolRouteTarget, ToolCapability> = {
   gentle_towel_handling: "absorb_water",
 }
 
-const ANCHORS: Record<ToolRouteTarget, ToolOccurrenceAnchor> = {
-  drying_standard: { kind: "wash_day", phase: "drying" },
-  drying_diffused: { kind: "wash_day", phase: "drying" },
-  air_shaping_volume: { kind: "styling_session" },
-  heated_volume_set: { kind: "styling_session" },
-  heatless_volume_set: { kind: "styling_session" },
-  detangling_foundation: { kind: "wash_day", phase: "post_wash" },
-  specialized_brush_job: { kind: "styling_session" },
-  securing_support: { kind: "styling_session" },
-  wash_application_support: { kind: "wash_day", phase: "wash" },
-  night_protection: { kind: "nightly" },
-  drying_textile_upgrade: { kind: "wash_day", phase: "drying" },
-  gentle_towel_handling: { kind: "wash_day", phase: "drying" },
+/**
+ * Where each route's use lands on the shared day graph (`D7`, ruled 2026-08-24).
+ *
+ * The towel/drying-textile step is the correction this table encodes: a real
+ * wash day towels right after rinsing, BEFORE the Leave-in and the heat
+ * protection go on — not somewhere in a coarse „drying" bucket after them.
+ *
+ * Heated setting sits at `heat_tool`, which is what makes „heat protection
+ * precedes heated Tool use" true by construction rather than by a separate
+ * ordering rule: the heat-protection product's own protocol anchor is
+ * `dry_pre_heat`, one position earlier on the same graph.
+ */
+const ANCHOR_POSITIONS: Record<ToolRouteTarget, ToolDayAnchor> = {
+  drying_standard: "dry_pre_heat",
+  drying_diffused: "dry_pre_heat",
+  air_shaping_volume: "heat_tool",
+  heated_volume_set: "heat_tool",
+  // Heatless setting applies no heat, so it belongs to the styling session and
+  // not to the heat position.
+  heatless_volume_set: "styling_session",
+  detangling_foundation: "post_rinse_towel_dry",
+  specialized_brush_job: "styling_session",
+  securing_support: "styling_session",
+  wash_application_support: "wet_cleanse",
+  night_protection: "nightly",
+  drying_textile_upgrade: "post_rinse_towel_dry",
+  gentle_towel_handling: "post_rinse_towel_dry",
 }
 
-function anchorFor(target: ToolRouteTarget): ToolOccurrenceAnchor {
-  return ANCHORS[target]
+/**
+ * `B12` (`D7`): texture-aware detangle timing.
+ *
+ * Curly, coily and definition-led wavy detangle in the conditioned wet/damp
+ * phase; straight and every other wavy profile detangle after partial drying.
+ *
+ * That population is read off the route's own binding lead form rather than
+ * from a second copy of the texture predicate: `B02` assigns the comb lead to
+ * exactly the `B12` wet/damp population, and `D6` makes
+ * `recommendedProductTypes` authoritative and unreorderable. One decision, one
+ * place — which is the drift `D7` was ruled to end.
+ */
+function anchorFor(route: PlanToolRoute): ToolOccurrenceAnchor {
+  if (route.target === "detangling_foundation") {
+    return atDayAnchor(
+      route.recommendedProductTypes[0] === COMB_LED_DETANGLING_LEAD
+        ? "post_cleanse_rinse_off"
+        : "post_rinse_towel_dry",
+    )
+  }
+  return atDayAnchor(ANCHOR_POSITIONS[route.target])
 }
 
 function anchorKeyOf(anchor: ToolOccurrenceAnchor): string {
-  switch (anchor.kind) {
-    case "wash_day":
-      return `wash_day_${anchor.phase}`
-    case "after_step":
-      return `after_${anchor.stepKey}`
-    case "before_step":
-      return `before_${anchor.stepKey}`
-    default:
-      return anchor.kind
-  }
+  if (!anchor.relativeToStep) return anchor.position
+  return `${anchor.position}_${anchor.relativeToStep.side}_${anchor.relativeToStep.stepKey}`
+}
+
+/**
+ * `A09`: the pre-drying occurrence and the air-shaping occurrence are two steps
+ * of ONE parent styling session. They share a session key, and therefore one
+ * cadence — never two inferred weekly schedules. Their order inside the session
+ * comes from the graph (`dry_pre_heat` → `heat_tool`), not from a sequence
+ * field.
+ *
+ * The pair only exists when both halves do: an air-shaping route with no drying
+ * route (an air-dryer who named a volume goal) is a single occurrence.
+ */
+const AIR_SHAPING_SESSION_KEY = "session:air_shaping"
+const AIR_SHAPING_PRE_DRY_TARGETS: readonly ToolRouteTarget[] = [
+  "drying_standard",
+  "drying_diffused",
+]
+
+function airShapingSessionTargets(routes: readonly PlanToolRoute[]): Set<ToolRouteTarget> {
+  const targets = new Set(routes.map((route) => route.target))
+  if (!targets.has("air_shaping_volume")) return new Set()
+  const preDry = AIR_SHAPING_PRE_DRY_TARGETS.filter((target) => targets.has(target))
+  if (preDry.length === 0) return new Set()
+  return new Set<ToolRouteTarget>(["air_shaping_volume", ...preDry])
 }
 
 /**

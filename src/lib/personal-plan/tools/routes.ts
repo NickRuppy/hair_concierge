@@ -674,6 +674,16 @@ function brushRoutes(input: ToolRouteInput): DraftRoute[] {
  * `wavy + definition -> wide_tooth_comb`; other `wavy -> detangling_brush`.
  * The remaining forms stay eligible alternatives; the map only decides the lead.
  */
+/**
+ * The lead form `B02` assigns to the comb-led population.
+ *
+ * `B02` (lead form) and `B12` (`D7` detangle timing) address the SAME
+ * population — curly, coily and definition-led wavy — so the lead this map
+ * assigns is also the machine-readable trace of that population. `assets.ts`
+ * reads it instead of keeping a second copy of the texture predicate.
+ */
+export const COMB_LED_DETANGLING_LEAD: ToolProductType = "wide_tooth_comb"
+
 function detanglingFormsFor(profile: ToolProfileFacts): ToolProductType[] {
   const combLed =
     profile.texture === "curly" ||
@@ -682,8 +692,8 @@ function detanglingFormsFor(profile: ToolProfileFacts): ToolProductType[] {
   const tail: ToolProductType[] =
     profile.texture === "curly" || profile.texture === "coily" ? ["hair_pick"] : ["paddle_brush"]
   return combLed
-    ? ["wide_tooth_comb", "detangling_brush", ...tail]
-    : ["detangling_brush", "wide_tooth_comb", ...tail]
+    ? [COMB_LED_DETANGLING_LEAD, "detangling_brush", ...tail]
+    : ["detangling_brush", COMB_LED_DETANGLING_LEAD, ...tail]
 }
 
 // --- securing and sectioning --------------------------------------------------

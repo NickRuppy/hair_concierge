@@ -16,7 +16,11 @@ import {
 import { hashRoutineSemantics } from "@/lib/personal-plan/routine-candidate-compiler"
 import type { RoutineCompiledPayload } from "@/lib/personal-plan/routine-candidate-compiler"
 import { applyRoutineEdits } from "@/lib/personal-plan/routine/editor"
-import type { ToolAsset, ToolOccurrence } from "@/lib/personal-plan/tools/contracts"
+import {
+  atDayAnchor,
+  type ToolAsset,
+  type ToolOccurrence,
+} from "@/lib/personal-plan/tools/contracts"
 
 const PLAN_ID = "11111111-1111-4111-8111-111111111111"
 const REFINED_ID = "22222222-2222-4222-8222-222222222222"
@@ -100,7 +104,8 @@ const TOOL_OCCURRENCES: ToolOccurrence[] = [
     assetKey: TOOL_ASSET.assetKey,
     routeKey: "tool:brushes_combs:detangling_foundation",
     capability: "detangle",
-    anchor: { kind: "wash_day", phase: "post_wash" },
+    anchor: atDayAnchor("post_rinse_towel_dry"),
+    sessionKey: null,
     executable: true,
     conditionalReason: null,
   },
@@ -109,7 +114,8 @@ const TOOL_OCCURRENCES: ToolOccurrence[] = [
     assetKey: TOOL_ASSET.assetKey,
     routeKey: "tool:brushes_combs:specialized_brush_job",
     capability: "airflow_shape",
-    anchor: { kind: "styling_session" },
+    anchor: atDayAnchor("styling_session"),
+    sessionKey: null,
     executable: true,
     conditionalReason: null,
   },
