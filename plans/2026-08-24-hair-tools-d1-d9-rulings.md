@@ -417,6 +417,21 @@ Final state: 28 commits over origin/main (`b540d2ca`), suites 2164 + 582,
 `ci:verify` clean. **Awaiting Nick's explicit push authorization; merge is a
 separate authorization after that.**
 
+## Post-ship review additions (2026-08-25, Nick's review)
+
+- **Photo Bildkarten wired** (`b71aab49`): `toolImageSrc` prefers the PR #460
+  photos (`/images/tools/*.webp`, incl. boar_bristle + fingers) with line-art
+  fallback. Still photo-less (image-pipeline backlog): vent_brush,
+  styling_brush, hair_pick, sectioning_comb, heated_brush, automatic_curler,
+  and the heatless/night/textile/securing/wash families.
+- **QA account is not post-payment**: `qa-test@hairconscierge.test` exists but
+  has no subscription/purchase, no lead, no enrollment, and the tester-grant
+  chain (campaign + funnel session + lead + prepared artifact, all NOT NULL)
+  makes a manual grant non-trivial. Local review path of record is the labs
+  harness (`/labs/personal-plan-stage-2` interactive flow,
+  `/labs/personal-plan-tools` per stage). Provisioning a real post-payment QA
+  account is an open infra follow-up.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
