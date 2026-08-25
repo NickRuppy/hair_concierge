@@ -432,6 +432,24 @@ separate authorization after that.**
   `/labs/personal-plan-tools` per stage). Provisioning a real post-payment QA
   account is an open infra follow-up.
 
+## Tool-Checkpoint redesign — Variante D2 (2026-08-25, Nick's review)
+
+Nick's field test of the Stage-3 Tool-Checkpoint showed the page failed its
+comprehension job (it mixed "what your hair needs" with per-card ownership
+status and never stated its own model). Mockup exploration in
+`plans/mockups/stage3-tools-clarity-2026-08-25/` (variants A/B/C, then D, then
+**D2 — signed off**): the Stage-3 Tools section becomes a **pure Idealplan
+analog** — two tier blocks („Von uns klar empfohlen" / „Zusätzlich sinnvoll"
+with counters and OPTIONAL chip), pastel family cards, „Auch ok:"-alternatives,
+kicker „Dein Produkt-Check", lead „Diese Tools gehören zu deiner Routine. Was
+du davon schon hast, siehst du gleich in deiner Routine." — and **no ownership
+status on this page**. Ownership stays where it lives: captured in the
+Feinschliff deep dives, shown on the Routine steps.
+
+Accepted trade-off: the „Im Feinschliff angeben"-nudge for unknown areas moves
+downstream (first surfaces on the Routine step). Rides the open PR;
+presentation-only.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.
