@@ -2,8 +2,9 @@
 category: tools
 document_type: decision
 status: confirmed
-decision_version: 3
-last_reviewed_at: 2026-08-24
+decision_version: 4
+last_reviewed_at: 2026-08-25
+version_note: "v4 (2026-08-25) — counterpart-review reconciliation: stale pre-ruling mirrors corrected and the D4-D7 contract seams written against the implemented WS1 contract."
 current_runtime_revision_reviewed: 37319140
 current_reconciliation_plan: plans/2026-08-12-personal-plan-hair-tools-current-shape.md
 evidence_file: docs/personal-plan/categories/tools/evidence.md
@@ -45,7 +46,7 @@ The category does not inventory, identify, compare, or issue a fit verdict on an
 | `airflow` | dryer, hot-air brush, multi-styler airflow; diffuser or concentrator capability | dry hair, direct airflow, preserve pattern, support root/shape work | repair, guaranteed anti-frizz, attachment compatibility inference |
 | `heated_styling` | straightener, curling/waving iron, hot brush, heated rollers, heated multi-styler | straighten, curl/wave, create volume or shape | repair, universal damage prevention |
 | `heatless_styling` | rollers, rods, ribbon/band, setting formers | curl/wave, create volume or shape without direct heat | guaranteed safer use regardless of tension |
-| `brushes_combs` | wide-tooth comb, detangling brush, paddle/vent/round brush, pick, styling comb | detangle, distribute, smooth, shape, support airflow styling | diagnosis of technique from product form |
+| `brushes_combs` | wide-tooth comb, detangling brush, paddle/vent/round brush, Wildschweinborsten-Bürste (`boar_bristle`, restored 2026-08-24 under `R3`), pick, styling comb | detangle, distribute, smooth, shape, support airflow styling | diagnosis of technique from product form |
 | `securing_sectioning` | soft ties, scrunchies, claw/sectioning clips, pins, headbands | hold, section, support a set or another plan step | independent mandatory ownership |
 | `wash_application` | gentle scalp/shampoo brush, shower detangler, applicator bottle/comb, sectioning aid | controlled placement, distribution, wash-day access, optional comfort | growth, anti-shedding, medical treatment |
 | `night_protection` | pillowcase, bonnet, loose securing, pineapple, length/tip accessory | low-friction option, containment, style preservation | repair, split-end reversal, growth |
@@ -92,7 +93,11 @@ Submitting the family overview makes every unchecked family explicitly empty. A 
 **`D3a`, ruled 2026-08-24 — an unticked overview card means „hat nichts".** For every family behind an unticked card the submitted overview persists explicit none, and there are no unknown families left after submit. Two conditions make that fair and are part of the ruling, not optional polish:
 
 1. **Preselection.** The existing preselect helpers (`defaultToolSectionsFromCare` / `defaultToolFormsFromCare`) must be wired up, so everything the user's care answers already imply arrives pre-ticked. The user corrects a filled-in picture instead of building one from nothing.
-2. **Honest lead copy.** The current promise „Was du auslässt, bleibt offen — wir behaupten nichts" is **withdrawn**; it states the opposite of the ruling. The replacement says what the submit actually does, in the same telegram register, for example: „Wähle die Bereiche, in denen du schon etwas hast. Nicht ausgewählt heißt für uns: hast du nicht." Final wording goes through the WS4 mockup pass with journey sign-off before implementation.
+2. **Honest lead copy.** The current promise „Was du auslässt, bleibt offen — wir behaupten nichts" is **withdrawn**; it states the opposite of the ruling. **Ratified 2026-08-25** — evidence review confirmed and user-journey sign-off obtained (Nick; mockup evidence `plans/mockups/ws4-2026-08-25/`, see the rulings ledger) — the final lead copy is:
+
+   > „Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht."
+
+   The copy gate is closed; only the WS4 **implementation** of this copy is still pending.
 
 **`D3c`, ruled 2026-08-24 — merge per form, never replace per family.** An answered Tool page **adds and confirms** forms; care-derived facts survive unless the Tool answer explicitly contradicts them. This precedence rule applies to **all eight families**, not only drying. Synthesized emptiness must never overwrite a reported care answer: a user who reported `additionalHeatTools` and then submits a heated-styling page keeps that evidence. The former drying-only sentence ("`drying_method` remains the source of the dominant drying behavior") is retired together with the dominant-drying-method concept — see the drying-routes ruling below.
 
@@ -161,6 +166,35 @@ A route carries **two independent facts**, never one field doing both jobs:
 
 Care-derived facts are kept — the ruling does not create new unknowns — but presentation may phrase them behaviourally rather than as an ownership assertion: „Du föhnst — nutze deinen Föhn" instead of „Du besitzt einen Föhn". Terry-towel (`towel.material = frottee`) and `loose_tied` / `pineapple` reports are stored as **what the user actually said** — a towel material and a nightly technique — and never as "owns no drying textile" or "owns a soft tie".
 
+**When both a derived and a reported fact exist for the same route, `provenance` records the stronger `reported`, and `forms` is the union of both** — the derived evidence is never deleted by the arrival of an answer (`D3c`).
+
+#### The implemented contract (WS1, `src/lib/personal-plan/tools/contracts.ts`)
+
+The two facts are these exact shapes. Every fixture's `D4` notation uses these value domains and no others:
+
+```ts
+reportedOwnership {
+  state: ToolOwnershipState        // unknown | explicit_none | owned_generic
+                                   // | selected_exact | owned_exact | catalog_gap
+  provenance: "reported" | "derived" | null   // null iff state is unknown
+  forms: ToolProductType[]         // empty iff unknown or explicit_none;
+                                   // every form inside the route's own family
+}
+
+coverage {
+  state: "uncovered" | "covered_by_report" | "covered_by_derived"
+       | "covered_by_selection" | "not_applicable"
+  capabilityVerified: boolean
+}
+```
+
+- `provenance` is `null` **exactly** when `state` is `unknown`; a resolved state always names its source.
+- `forms` is empty **exactly** when the state is `unknown` or `explicit_none` — an absent ownership cannot name a form — and every named form belongs to the route's family.
+- A `behavior_only` route has `reportedOwnership.state = unknown` **and** `coverage.state = not_applicable`: there is nothing to own and nothing to acquire. Conversely, a product route may never carry `not_applicable`.
+- `capabilityVerified` is the reason half of coverage: a form accepted only through `B04` duplicate suppression covers the purchase without proving it can perform the route, so it stays `false` and its guidance stays conditional.
+
+**Which form the card leads with.** The card leads with the **first eligible reported form in the route's binding `recommendedProductTypes` order** — "eligible" meaning the form appears in that array. A reported form outside the eligible set **never leads**; it acts through `coverage` only (`B04`). When no reported form is eligible, the route's own recommended forms lead in their own order. Example: a straight profile reporting `paddle_brush` and `round_brush` on `detangling_foundation` (recommended order `detangling_brush, wide_tooth_comb, paddle_brush`) leads with `paddle_brush`; the `round_brush` is not a foundation form and only suppresses the purchase (fixture 9).
+
 ## Need-tier rules
 
 Ownership never creates or removes the underlying need. Aggregate each family independently; then group included results visually.
@@ -170,7 +204,7 @@ Ownership never creates or removes the underlying need. Aggregate each family in
 | `tools.airflow.basis` | `dryingRoutes` contains any blow-dry member (`ordinary_blow_dry` or `diffuser_or_airflow_shaping`) | one drying path = `basis` | choose standard or diffuser path below; wins over optional; every ticked member counts (`D2`) |
 | `tools.airflow.diffuser_path` | `dryingRoutes` contains `diffuser_or_airflow_shaping`, or contains `ordinary_blow_dry` plus `hair_texture in {wavy, curly, coily}` and `goals` contains `shape_definition` | diffuser-drying path with required `diffuse_airflow` capability | replaces the standard path for that drying job; texture alone never triggers it; the behaviour answer never proves the capability (`A06`, `D2a`) |
 | `tools.airflow.air_shape_basis` | `dryingRoutes` contains a blow-dry member and the volume direction resolves to volume_up (see the volume-direction ruling) | air-shaping approach inside the shared volume/set `basis` | may coexist with the separate drying path; once volume/set is covered, do not add heated/heatless requirements; deduplicate one device that covers both |
-| `tools.airflow.optional_goal` | `dryingRoutes = ["air_dry"]` (air-dry only, no blow-dry member) **and** either `goals` contains `shape_definition` or the volume direction resolves to volume_up | matching diffuser or air-shaping path = `optional` | never imply the user should stop air-drying; preserve optional styling support |
+| `tools.airflow.optional_goal` | `dryingRoutes = ["air_dry"]` (air-dry only, no blow-dry member) **and** either (`goals` contains `shape_definition` **and** `hair_texture in {wavy, curly, coily}`) or the volume direction resolves to volume_up | matching diffuser or air-shaping path = `optional` | never imply the user should stop air-drying; preserve optional styling support. **Amended 2026-08-24 (`R2`):** the definition disjunct carries the texture gate — `straight` plus `shape_definition` activates no tool route from the definition goal (fixture 4b). The volume disjunct is ungated: a `straight` profile whose direction resolves to volume_up still reaches this rule (fixture 48) |
 | `tools.airflow.none` | no airflow basis/optional rule | `not_needed` | ordinary air-drying does not create a dryer purchase |
 | `tools.styling.volume_basis` | volume direction resolves to volume_up (inferred predicate, or `concerns` contains `low_volume_or_weighed_down`) | one shared air/heated/heatless volume-set choice = `basis` | present eligible approaches neutrally, prioritize a reported viable route, and count fulfillment once |
 | `tools.styling.reported_straighten` | `styling_tools` reports an inherent straightening form | owned product need = `not_needed`; preserve an optional-use routine branch and safe guidance | no proactive straightening shopping or inference from texture, frizz, shine, or a control-resolved volume direction (`D1`, 2026-08-24) |
@@ -220,7 +254,8 @@ The `Bürsten & Kämme` page gets an explicit **„Nur Finger"** non-product opt
 
 - „Nichts davon" stops doing double duty. „Ich benutze nur meine Finger" and „Ich habe keine Bürste" are different users and are stored as different answers.
 - The finger exceptions in `B01`, `B03` and `B04` become expressible: for `very_short` hair „Nur Finger" fully covers the handling foundation and produces no product card; from `short` upward it does **not** close the physical detangling need.
-- The card goes through the WS4 mockup pass.
+- The card goes through the WS4 mockup pass (mockup review and journey sign-off obtained 2026-08-25; implementation pending).
+- **Persisted token, fixed 2026-08-25 (implementation ruling under `D9b` + `D8`): the token is `fingers`.** It matches the value the legacy onboarding enum already uses (`BRUSH_TYPES` in `src/lib/vocabulary/onboarding-care.ts`, label „Nur Finger"), so no second spelling of the same answer exists. It is allowed **only** inside the reported `brushes_combs` set (`toolForms.brushes_combs`). It is **not** a `ToolProductType`: it never appears in `TOOL_PRODUCT_TYPES_BY_FAMILY`, never in a route's `recommendedProductTypes`, never as an asset lead form — it is never recommendable. Adding the key rides the `D8` path-version discipline.
 
 ## Route, capability, and reported-use behavior
 
@@ -244,11 +279,35 @@ A shared need with several eligible approaches is represented by a first-class `
 - **A reported member always leads** (`D4`), and the group renders with the lead member's ownership state.
 - The group mechanism **subsumes** the ad-hoc neutral drying-textile group; that special case is removed rather than kept beside it.
 
+#### The implemented contract (WS1, `contracts.ts` / `assets.ts`)
+
+```ts
+ToolChoiceGroup {
+  groupKey: `group:${target}`
+  target: "volume_set" | "drying_textile"
+  tier: "basis" | "optional" | "not_needed"   // the strongest member tier
+  memberRouteKeys: ToolRouteKey[]             // ordered: the group's reading order
+  fulfilledBy: ToolRouteKey | null            // a member whose coverage is covered
+}
+```
+
+- **Tier** is the strongest member tier, `basis > optional > not_needed`. A group with one `basis` member is a `basis` group even when its other members are optional.
+- **Members** are listed in `memberRouteKeys` reading order; `behavior_only` routes are excluded from every group, and **a route belongs to at most one group** (a route counted in two groups would be counted twice).
+- **`fulfilledBy`** is either a member whose `coverage.state` is covered, or `null`. It may never name an uncovered member.
+- **Volume group** (`volume_set`) members, in order: `air_shaping_volume`, `heated_volume_set`, `heatless_volume_set`.
+- **Textile group** (`drying_textile`) has exactly one member, the `drying_textile_upgrade` route. Its three forms (`microfiber_towel`, `smooth_cotton_cloth`, `drying_wrap`) stay **inside** that route, neutral, in route order — the group does not spread them across members.
+
+**Lead rule.** The lead is `fulfilledBy` when it is set. When `fulfilledBy` is `null` the group renders **neutrally, with no ownership claim at all** — no member leads and no „Nutze deins" (fixtures 35, 47). Among several covered members the order is `covered_by_report` > `covered_by_derived` > `covered_by_selection`; ties inside one coverage state break by member order.
+
+**Precedence against `D6`.** „A reported member leads" operates at **group level** — it selects `fulfilledBy` and therefore the leading member — and it **never reorders any route's `recommendedProductTypes`**. Inside a route, reported forms lead by **filtering**, not by sorting: when at least one eligible reported form exists, only reported forms render, and their order remains the route's own. The rendered form list is always a subsequence of `recommendedProductTypes`.
+
 ### Lead-form order is binding (`D6`, ruled 2026-08-24)
 
 The route's `recommendedProductTypes` **order is authoritative**. No downstream dedup, merge, or projection may reorder it — in particular `assetFormsFor` must preserve route order instead of re-sorting through the canonical family order. This is the rule that makes `B02`, `N02`, `W02` and `C02` statable at all; none of them had a governing sentence before.
 
-Enforcement is a rendered-output test per lead-form rule (fixtures 57, 59b, 14, 81, 95, 96) plus an order-stability assertion inside `buildToolPlan`. Route-layer assertions are not sufficient: the reordering defect survived a green suite precisely because it was only tested at the route layer.
+Enforcement is a rendered-output test per lead-form rule — `B02` fixtures 57 and fixture 59 variant (b), `W02` fixtures 14 and 81, `N02` fixtures 95 and 96, and `C02` fixture 75 — plus an order-stability assertion inside `buildToolPlan`. Route-layer assertions are not sufficient: the reordering defect survived a green suite precisely because it was only tested at the route layer.
+
+**Merged order across routes (`assets.ts`).** Two routes' assets merge into one physical Tool **only when family and lead form are both identical**; different leads never merge. On a merge the **first-emitted route's form order is the base**, and the later route's remaining forms append in their own order (first-occurrence dedup, so no form appears twice and no existing position moves). Route emission order is the fixed deterministic builder sequence, not a per-profile ordering, so the merged result is stable for a given profile.
 
 A diffuser or concentrator is a capability/attachment, not a family. If a user broadly reports a dryer, say to use it if it has the needed capability. If diffuser compatibility is unknown, do not claim compatibility, do not add another question, and do not add a fallback to shopping. Show one concrete verified diffuser-capable example as reference only until the missing route is established. A reported diffuser-drying **behaviour** is not compatibility evidence (`D2a`): it selects the diffuser route but leaves the capability unverified.
 
@@ -283,20 +342,41 @@ Product allocation never increases event frequency. Optional routes enter execut
 
 ### Shared day-anchor graph (`D7`, ruled 2026-08-24)
 
-Tool occurrences anchor onto the **shared nine-position wash-day graph** `APPLICATION_SEQUENCE_ANCHORS`, the same ordering the Application compiler already uses. `ToolPlacement` is **derived** from that graph rather than defined separately, so tool steps and product steps interleave correctly by construction instead of being ordered by two mechanisms that drift.
+Tool occurrences anchor onto the shared wash-day graph `APPLICATION_SEQUENCE_ANCHORS` — the same ordering the Application compiler already uses — in its **extended 11-position** form. `ToolPlacement` is **derived** from that graph rather than defined separately, so tool steps and product steps interleave correctly by construction instead of being ordered by two mechanisms that drift.
+
+**The effective graph is the extended 11-position graph:** the nine application anchors, extended by `styling_session` and then `nightly`, in that order after `dry_finish`. `nightly` is always last — an existing confirmed invariant. They are explicit members of the one shared graph, not a second parallel ordering. This document, the matrix and the fixtures call it the **extended 11-position graph** consistently:
+
+```text
+pre_wash → wet_cleanse → post_cleanse_rinse_off → post_rinse_towel_dry
+→ timed_treatment → damp_leave_on → dry_pre_heat → heat_tool → dry_finish
+→ styling_session → nightly
+```
 
 Ratified per rule:
 
 | Rule | Anchor |
 |---|---|
-| towel / drying-textile step (`T05`) | `post_rinse_towel_dry` |
+| towel / drying-textile step (the drying-textile occurrence, `T05`'s textile half) | `post_rinse_towel_dry` |
+| `T05` plopping | after `damp_leave_on` (i.e. after Leave-in/styling application) and before the drying occurrence (`dry_pre_heat` / `dry_finish`) |
 | `B12` detangle, conditioned wet/damp phase (curly/coily and definition-led wavy) | `post_cleanse_rinse_off` |
 | `B12` detangle, after partial drying (straight and other wavy) | `post_rinse_towel_dry` |
 | `A09` linked pre-dry → air-shape pair | `dry_pre_heat` → `heat_tool` |
 
-`nightly` and `styling_session` are added as **explicit members of the shared graph**, kept ordered after `dry_finish`. They are not a second parallel ordering.
+**Correction 2026-08-25:** `T05` plopping does **not** anchor at `post_rinse_towel_dry`. That anchor belongs to the towel step (the drying-textile occurrence). Plopping sits after the damp product application and before drying, matching the matrix `T05` row and fixture 112.
+
+**Anchor → `ToolPlacement` derivation.** `ToolPlacement` is not defined separately; it is this projection of the extended graph:
+
+| Anchor | `ToolPlacement` |
+|---|---|
+| `pre_wash`, `wet_cleanse`, `post_cleanse_rinse_off` | `wash` |
+| `post_rinse_towel_dry`, `timed_treatment`, `damp_leave_on` | `post_wash` |
+| `dry_pre_heat`, `heat_tool`, `dry_finish` | `drying` |
+| `styling_session` | `styling` |
+| `nightly` | `nightly` |
 
 The linked air-shaping occurrences remain distinct tool steps but are never counted as independent weekly schedules. Exact product protocol decides starting state and whether pre-drying uses a conventional Föhn, the same device mode/attachment, or a direct dry-and-shape workflow.
+
+**`A09` session contract.** The linked pre-dry and air-shape occurrences share **one parent styling session** through a shared session key and carry **one cadence**; their ordering inside that session comes from the graph (`dry_pre_heat` → `heat_tool`), not from a separate sequence field. WS6 implements the session key on occurrences. That is the whole contract — nothing further about session identity is specified here.
 
 ## Multiple products and minimization
 
@@ -453,9 +533,9 @@ The default card displays the confirmed minimal subset. Expanded explanation may
 1. `tools-airflow-blow-dry`: `drying_method = blow_dry` -> airflow `basis`; reported dryer yields conditional use-first copy.
 2. `tools-airflow-diffuser`: `drying_method = blow_dry_diffuser` -> airflow `basis`; diffuser is a required capability, not a separate family.
 3. `tools-airflow-air-dry`: ordinary `air_dry`, no styling goal -> `not_needed`.
-4. `tools-airflow-air-dry-definition`: `air_dry + curl_definition` -> airflow `optional`, never a forced dryer purchase.
+4. `tools-airflow-air-dry-definition`: `air_dry + shape_definition` **plus `hair_texture in {wavy, curly, coily}`** (`R2` texture gate) -> airflow `optional`, never a forced dryer purchase. Fixture 4b is the negative: `straight + shape_definition + air_dry` activates no tool route from the definition goal — no diffuser path and no Definitionsbürste.
 5. `tools-styling-natural-definition-boundary`: `curl_definition` -> no heated/heatless curl-creation need; natural-pattern support stays with diffuser/definition routes.
-6. `tools-styling-volume-choice`: explicit canonical `volume` -> one shared `basis` choice group across eligible air-shaping, heated, and heatless approaches; fulfillment once suppresses additional required tools.
+6. `tools-styling-volume-choice`: `goals` contains `volume_balance` and the direction **resolves to volume_up** (inferred predicate per `D1`, or `concerns` contains `low_volume_or_weighed_down`, which triggers on its own and overrides the inference) -> one shared `basis` choice group across eligible air-shaping, heated, and heatless approaches; fulfillment once suppresses additional required tools.
 7. `tools-styling-control-direction-negative`: `volume_balance` resolving to `control` (e.g. curly/normal, no definition goal, no weighed-down concern) -> no `volume_basis` route, no Basis card (rewritten 2026-08-24 under `D1`).
 8. `tools-styling-reported-without-goal`: reported curling iron but no explicit desired-style goal -> owned product need remains `not_needed`; preserve use guidance and show a heatless alternative only as optional.
 9. `tools-brush-foundation`: `hair_length = medium` -> one physical detangling `basis`; two reported physical forms normally suppress another purchase and never create two basis cards.
@@ -483,7 +563,7 @@ The default card displays the confirmed minimal subset. Expanded explanation may
 31. `tools-salience-many`: a profile with airflow, styling, and brush basis results shows all three after deduplication; optional Night Protection, clips, and towel upgrade remain in one collapsed section.
 32. `tools-airflow-goal-diffuser`: `blow_dry + wavy/curly/coily + curl_definition` -> diffuser path `basis`; no claim that the user already diffuses.
 33. `tools-airflow-diffuser-unknown-owned`: reported dryer plus required diffuser with unknown compatibility -> conditional use-first copy and verified reference example, no question and no shopping item.
-34. `tools-airflow-volume-basis`: `volume + planned blow-dry` -> independent air-shaping `basis`; frizz/shine do not trigger it.
+34. `tools-airflow-volume-basis`: `volume_balance` resolving to volume_up (inferred per `D1`, or via the `low_volume_or_weighed_down` override) plus a planned blow-dry route -> independent air-shaping `basis`; frizz/shine do not trigger it.
 35. `tools-airflow-shape-unreported-choice`: no viable air-shaping approach reported -> neutral Stage 2 choice among eligible Warmluftbürste, Air Multi-Styler, and Föhn-plus-Rundbürste approaches, no profile-derived default.
 36. `tools-airflow-shape-reported`: one air-shaping form reported -> prioritize it conditionally without judging the exact unidentified device.
 37. `tools-airflow-linked-occurrences`: pre-dry and air-shape are two ordered occurrences with one parent styling-session cadence, never two inferred weekly schedules.
@@ -496,15 +576,15 @@ The default card displays the confirmed minimal subset. Expanded explanation may
 44. `tools-created-curl-definition-boundary`: `curl_definition` without a reported curl-creation tool -> no Lockenstab or Heatless-Lockenband recommendation.
 45. `tools-created-curl-reported-heated`: reported Lockenstab/Welleneisen -> use the owned form first and show one heatless approach below as optional; do not assign an invented cadence.
 46. `tools-created-curl-reported-heatless`: reported heatless form -> prioritize it and keep the heated form as an optional alternative; the family drilldown never creates a new goal.
-47. `tools-volume-blow-dry-approaches`: explicit `volume + planned blow-dry` -> one shared need may compare air shaping, heated setting, and heatless setting; only one must be fulfilled.
-48. `tools-volume-air-dry-approaches`: explicit `volume + air-dry` -> heated and heatless are main neutral approaches; air shaping stays optional because it would add blow-drying.
+47. `tools-volume-blow-dry-approaches`: `volume_balance` resolving to volume_up (inferred, or via the `low_volume_or_weighed_down` override) plus a planned blow-dry route -> one shared need may compare air shaping, heated setting, and heatless setting; only one must be fulfilled.
+48. `tools-volume-air-dry-approaches`: `volume_balance` resolving to volume_up (inferred, or via the `low_volume_or_weighed_down` override) plus air-dry only -> heated and heatless are main neutral approaches; air shaping stays optional because it would add blow-drying.
 49. `tools-styling-ambiguous-owned-capability`: broadly reported Multi-Styler/Heizbürste with unknown exact volume capability -> conditional use-yours plus verified reference, never assumed coverage or duplicate shopping.
 50. `tools-direct-heat-protection-covered`: selected direct-contact heated route whose event reports `protectionConsistency = always` -> dependency fully covered for that event and no duplicate Heat-protection recommendation; no exact protection-temperature claim. (Rewritten 2026-08-24 per `D9a`.)
 51. `tools-direct-heat-protection-missing`: selected direct-contact heated route whose event reports `protectionConsistency = no` or `unsure` -> Heat protection remains an uncovered `basis` dependency for that event; `sometimes` instead yields the consistency nudge at tier „empfohlen". (Rewritten 2026-08-24 per `D9a`.)
 52. `tools-heated-contact-mode`: continuous-pass tool -> explicit keep-moving guidance; stationary-by-design tool -> verified hold/set-and-release guidance instead.
 53. `tools-heatless-protocol-unknown`: exact heatless candidate missing supported use state, securing/setup, or applicable sequence/duration -> candidate remains `unknown` and cannot be confidently recommended.
 54. `tools-styling-optional-every-wash`: selected styling method appears after every wash as an explicitly optional branch; its presence never asserts completion on every wash day.
-55. `tools-airflow-manual-round-brush`: explicit `volume + planned blow-dry` with a reported Föhn and compatible Rundbürste -> prioritize the manual approach, reuse the Föhn for drying, and do not add another volume tool requirement.
+55. `tools-airflow-manual-round-brush`: `volume_balance` resolving to volume_up (inferred, or via the `low_volume_or_weighed_down` override) plus a planned blow-dry route, with a reported Föhn and compatible Rundbürste -> prioritize the manual approach, reuse the Föhn for drying, and do not add another volume tool requirement.
 56. `tools-brush-short-fingers-only`: `short+` plus reported fingers and no physical brush/comb -> physical detangling foundation remains uncovered.
 57. `tools-brush-straight-default`: straight `short+` with explicitly no brush -> Detangling-Bürste is the one saved foundational form.
 58. `tools-brush-curly-coily-default`: curly/coily `short+` with explicitly no brush -> Grobzinkiger Kamm is the one saved foundational form.
@@ -515,14 +595,14 @@ The default card displays the confirmed minimal subset. Expanded explanation may
 63. `tools-brush-explicit-none`: `brush_type = []` for `short+` -> the saved texture-aware foundation may enter shopping; guidance becomes exact only after acquisition.
 64. `tools-brush-routine-placement`: curly/coily/definition-led wavy detangle in conditioned wet/damp phase; straight/other wavy after partial drying; very-short fingers create no separate step.
 65. `tools-brush-round-volume`: selected Föhn-plus-Rundbürste volume approach -> link to the shared pre-dry/air-shape session, reuse the dryer, and do not add another volume need.
-66. `tools-brush-definition-optional`: `curl_definition` -> Definitionsbürste may appear collapsed as optional; texture alone and catalog presence never activate it.
-67. `tools-brush-pick-optional`: `volume + curly/coily` -> Pick may appear as one collapsed optional root-volume approach, not another required volume product.
+66. `tools-brush-definition-optional`: `shape_definition` **plus `hair_texture in {wavy, curly, coily}`** (`R2` texture gate) -> Definitionsbürste may appear collapsed as optional; texture alone and catalog presence never activate it, and `straight + shape_definition` activates nothing.
+67. `tools-brush-pick-optional`: under `D1` `curly`/`coily` resolve to **control**, so the surviving trigger is `concerns` contains `low_volume_or_weighed_down` (which overrides the inference) plus `curly`/`coily` -> Pick may appear as one collapsed optional root-volume approach, not another required volume product.
 68. `tools-brush-reported-dry-style`: reported Paddle-/Vent-/Pneumatik form with no selected parent job -> use-yours/reference guidance only, no new purchase or cadence.
 69. `tools-brush-sectioning-parent`: selected styling/application event with a real parting step -> Stielkamm optional inside that event; no standalone need or fixed section count.
 70. `tools-brush-minimal-facts`: exact brush lacks a route-relevant use-state or verified blow-dry use when heat-assisted -> `unknown`; missing geometry/material/bristle measurements do not block V1.
 71. `tools-securing-no-parent`: long/dense hair or reported catalog availability without a named parent event -> Clips/Ties `not_needed`.
 72. `tools-securing-sectioning-parent`: selected styling/application step needs sectioning -> one Sectioning-Clip route is collapsed optional; no bundle.
-73. `tools-securing-root-volume-parent`: explicit `volume` plus selected root-clipping approach -> one Root-Volume-Clip route is collapsed optional, never another volume basis.
+73. `tools-securing-root-volume-parent`: `volume_balance` resolving to volume_up (inferred, or via the `low_volume_or_weighed_down` override) plus a selected root-clipping approach -> one Root-Volume-Clip route is collapsed optional, never another volume basis.
 74. `tools-securing-night-owner`: selected Night Protection loose-tie route -> soft tie/Scrunchie is owned by Night Protection and cannot produce a duplicate Clips/Ties card.
 75. `tools-securing-many-parents`: several eligible parent events -> one merged collapsed Clips/Ties result and at most one Stage 2 example.
 76. `tools-securing-reported-compatible`: compatible broad securing form reported -> use-yours guidance; no additional example/purchase unless a distinct uncovered parent form remains selected.
@@ -574,7 +654,13 @@ The default card displays the confirmed minimal subset. Expanded explanation may
 122. **RETIRED 2026-08-24 (`D9a`)** — `tools-heat-protection-completed-false` described an impossible situation: production never defaults `protectionConsistency`, and the legacy `uses_heat_protection` boolean is not read.
 123. **RETIRED 2026-08-24 (`D9a`)** — `tools-heat-protection-incomplete-default`, same reason.
 
-The executable form of this matrix, in production field names and values, is `docs/personal-plan/categories/tools/fixtures.md`. Rulings of 2026-08-24 that change expected outcomes above: `D1` (fixtures 6, 34-36, 47, 48, 55, 65, 67, 73 gain the ratified predicate plus the `low_volume_or_weighed_down` trigger/override), `D2a` and the mixed-set/empty-set rules (fixtures 1-4, 32), `D3a` (fixture 116 — unticked stays explicit none, now with preselection), `D6` (lead forms in fixtures 57, 59b, 14, 81, 95, 96 are rule-specified and binding), and `D9b` (fixtures 10, 11, 56, 64 become expressible through the „Nur Finger" option).
+The executable form of this matrix, in production field names and values, is `docs/personal-plan/categories/tools/fixtures.md`. Rulings of 2026-08-24 that change expected outcomes above: `D1` (fixtures 6, 34-36, 47, 48, 55, 65, 67, 73 gain the ratified predicate plus the `low_volume_or_weighed_down` trigger/override), `D2a` and the mixed-set/empty-set rules (fixtures 1-4, 32), `D3a` (fixture 116 — unticked stays explicit none, now with preselection), `D6` (lead forms in fixtures 57, fixture 59 variant (b), 14, 81, 95, 96 and — for `C02` — 75 are rule-specified and binding), and `D9b` (fixtures 10, 11, 56, 64 become expressible through the „Nur Finger" option, whose persisted token is `fingers`).
+
+Three fixture numbers were added on 2026-08-25 during the counterpart-review reconciliation; they live in `fixtures.md` with the rest of the executable table, and numbers are never reused or renumbered:
+
+124. `tools-onboarding-merge-per-form`: a care-reported `straightener` plus an answered heated-styling Tool page reporting `curling_iron` -> the family's forms are the **union**, the care-derived straightener evidence survives, nothing is deleted (`D3c`), and provenance records the stronger `reported` (`D4`).
+125. `tools-heat-protection-legacy-diffuser-value-ignored`: a completed Stage-2 row whose `heatEvents` still carry `protectionConsistency` for the diffuser source loads **complete**, the stored value is **ignored**, and no recommendation derives from it (`R1` + `D8`).
+126. `tools-night-manageability-trigger`: `goals = ["manageability_styling"]` with no other Night trigger -> `optional` on `night_protection` with `tools.night.optional_other` and the `N02` lead form (`D9c`).
 
 Implementation must add regression coverage showing Shampoo, Conditioner, Leave-in, shared coverage, shopping, acquisition, and proposed-plan mechanics remain unchanged.
 
@@ -583,6 +669,7 @@ Implementation must add regression coverage showing Shampoo, Conditioner, Leave-
 Category blockers:
 
 - all eight category passes and cross-category ownership/readiness rules are complete;
+- the WS4 evidence review and user-journey sign-off were **obtained on 2026-08-25** (mockup evidence `plans/mockups/ws4-2026-08-25/`); the lead copy, the drying-question change and the „Nur Finger" / Wildschweinborsten cards are ratified and only their **implementation** is pending;
 - the production-current Stage 1/direct-accept placement requires current mockup review and journey sign-off;
 - the production-current plan requires final counterpart review before implementation.
 
@@ -612,10 +699,10 @@ Confirmation status:
 - shared ownership/readiness decisions `D12` and `D14` were confirmed and reconciled on 2026-08-05;
 - legacy Heat-protection compatibility was explicitly resolved on 2026-08-05 (completed false trusted, incomplete pre-question false unknown) and **reversed on 2026-08-24 by `D9a`**: the legacy boolean stays unread and coverage is read per heat event from `protectionConsistency`;
 - Nick ruled the nine open spec gates `D1`-`D9` on 2026-08-24; the ledger is `plans/2026-08-24-hair-tools-d1-d9-rulings.md`. Two of them are **formal reversals of previously confirmed decisions**: `D1` reverses `H08`'s "never infer volume direction", and `D9a` reverses the `I01` legacy-boolean exception. The remaining rulings (`D2`-`D8`, `D9b`, `D9c`) settle gaps rather than reverse decisions;
-- the user-facing gates still apply per workstream: the `D3a` lead copy, the removal of „Nichts davon" from the drying question, the „Nur Finger" card, and any Stage-1 card change need mockup review plus journey sign-off before implementation;
+- the user-facing gates for WS4 are **cleared**: the `D3a` lead copy („Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht."), the removal of „Nichts davon" from the drying question, and the „Nur Finger" plus Wildschweinborsten cards passed evidence review and journey sign-off on 2026-08-25; their implementation is still outstanding. Any **further** Stage-1 card change still needs its own mockup review plus journey sign-off before implementation;
 - the refreshed A1-A2-B-C-D mockup and full designed journey were approved by Nick on 2026-08-05;
 - the delegated external evidence review supporting airflow and Heat-protection decisions is complete for the current planning scope;
 - the original complete-matrix counterpart review and the 2026-08-20 production-shape plan review were reconciled; the current Phase-1/Phase-2 scope choice remains with Nick;
 - Nick explicitly confirmed the complete onboarding -> Stage 1 -> Stage 2 -> Stage 3 designed journey on 2026-08-04;
 - the progressive ownership drilldown and optional every-wash styling branch remain confirmed;
-- implementation readiness is paused only for current mockup review, production-shape counterpart reconciliation, and explicit final journey sign-off.
+- implementation readiness: the WS4 mockup review and journey sign-off are **done (2026-08-25)** and the counterpart-review reconciliation of this document set is complete; what remains is the WS4 implementation itself and the production-shape reconciliation tracked in `plans/2026-08-12-personal-plan-hair-tools-current-shape.md`.

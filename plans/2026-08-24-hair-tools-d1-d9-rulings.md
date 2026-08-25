@@ -202,3 +202,54 @@ mobile viewport, DOM-level mockups on the labs harness).
 - User-facing gates still apply per workstream: WS4's copy/option changes and
   any Stage-1 card changes need mockup review + journey sign-off before
   implementation.
+
+## Counterpart-review reconciliation — findings ledger (2026-08-25)
+
+A counterpart review at content head `bec59a41` raised 37 findings against the
+four spec documents. Each was verified by the orchestrator, dictated as a
+disposition, and applied on 2026-08-25 to `decision.md`,
+`conditional-guidance-matrix.md`, `fixtures.md` and `input-mapping.md`. No code
+was changed. One row per finding:
+
+| # | Disposition |
+| --- | --- |
+| 1 | accepted-fixed — `tools.airflow.optional_goal` carries the `R2` texture gate on its **definition disjunct** (the volume disjunct stays ungated, or fixture 48 would die); decision.md fixture 4 gains the gate and names 4b as the negative |
+| 2 | accepted-fixed — decision.md fixture 66 (Definitionsbürste) gains the `R2` gate |
+| 3 | accepted-fixed — decision.md fixture entries 6, 34, 47, 48, 55, 67, 73 restated as `volume_balance` + resolved direction (`D1` inference, `low_volume_or_weighed_down` trigger/override) |
+| 4 | accepted-fixed — matrix rows `tools.heated.volume_set`, `tools.heatless.volume_set`, `tools.brush.manual_air_shape`, `tools.brush.pick_optional` restated; the Pick trigger is `low_volume_or_weighed_down` + curly/coily only |
+| 5 | accepted-fixed — decision-log `H08` → `confirmed, reversed 2026-08-24`, pointing at the new `H08` text |
+| 6 | accepted-fixed — decision-log `H12` → `confirmed, amended 2026-08-24`, five heatless groups named |
+| 7 | accepted-fixed — decision-log `H15` → `confirmed, reversed 2026-08-24` (`D9a`), per-event `protectionConsistency`, only `always` covers |
+| 8 | accepted-fixed — input-mapping heat-event schema and diffuser rows carry `R1`: `protectionConsistency` forbidden for `diffuser_airflow_shaping`, stored values ignored on read, path-version bump + decode rule, completed rows stay complete |
+| 9 | accepted-fixed — fixture 40 rewritten: `protectionConsistency` only on non-diffuser sources; the diffuser source raises no question and legacy values are ignored |
+| 10 | accepted-fixed — input-mapping `curl_definition` row records the `R2` gate; "must gain the gate or accept straight activation" language removed |
+| 11 | accepted-fixed — fixture 4 premise gains `wavy \| curly \| coily`, 4b is the straight negative, post-ruling delta says RULED |
+| 12 | accepted-fixed — input-mapping brush taxonomy and §S4 record `boar_bristle` as a shipped `brushes_combs` product type (`R3`) |
+| 13 | accepted-fixed — decision.md V1 charter lists Wildschweinborsten-Bürste among the recognizable brush forms |
+| 14 | accepted-fixed — fixtures.md post-ruling delta: `boar_bristle` now has a production form, so fixture 60 variant (c) is executable |
+| 15 | accepted-fixed — input-mapping breakage row, divergence 6 and the status paragraph record `R4` (`optional_strong` extends to `split_ends`); the accept-or-extend status is gone |
+| 16 | accepted-fixed — decision.md `D7` anchor table corrected: the towel/drying-textile occurrence anchors at `post_rinse_towel_dry`; `T05` plopping sits after `damp_leave_on` and before the drying occurrence, matching matrix `T05` and fixture 112 |
+| 17 | **accepted-fixed, flagged** — fixture 4's ownership is no longer a plain `explicit_none`. The literal "derived marking convention" could not be applied: `contracts.ts` forbids a provenance on `unknown`, and the `D4` standing note forbids `explicit_none` for derivation 2. Recorded as `unknown` (`provenance: null`) with the air-dry answer stored as the behaviour it is and the consequence on `coverage`; the standing note was extended to say this explicitly. Needs a confirming look |
+| 18 | accepted-fixed — fixture 32's ownership carries the `(derived)` marking |
+| 19 | accepted-fixed — fixtures 22, 36, 49, 119 are executable as written; the required inputs moved into the Input cells and the Notes no longer instruct the implementer |
+| 20 | accepted-fixed — fixtures 35, 36, 47, 48 carry exact per-member rule-ID sets (a `ToolChoiceGroup` has no rule-ID field, so the exact set is asserted per member route). Derived, not quoted: on fixture 48 the air-shaping member reaches only `optional`, so it carries `tools.airflow.optional_goal` + `tools.styling.volume_direction_inferred` and **not** `tools.styling.volume_basis` |
+| 21 | accepted-fixed — new fixture **124** `tools-onboarding-merge-per-form`; decision.md's `D4` section states that provenance records the stronger `reported` and forms are the union |
+| 22 | accepted-fixed — new fixture **125** (legacy diffuser `protectionConsistency` ignored, row still complete) plus §10 item 6, the `D8` schema-snapshot test that fails the build on an unbumped key change |
+| 23 | accepted-fixed — token fixed as `fingers` in decision.md (`D9b`), input-mapping and fixtures 10, 11, 56, 64; placeholder language removed. Flagged: the ruling fixes the **token**, so the fixtures state the reported set and `forms: []` and do **not** assert a route-level `reportedOwnership.state` for a fingers-only answer — that state was not ruled |
+| 24 | accepted-fixed — new fixture **126** `tools-night-manageability-trigger`: `optional` on `night_protection`, exact set `{tools.night.optional_other}`, `N02` lead `pillowcase` |
+| 25 | accepted-fixed — decision.md `D4` carries the transcribed `reportedOwnership` / `coverage` shapes and the `behavior_only` invariant; fixture notation aligned to those domains (including fixtures 74/102, where `derived` was written as if it were a state) |
+| 26 | accepted-fixed — the first-eligible-reported-form rule is written into `D4`. **Fixture 9 cross-check: consistent, no contradiction.** For a straight profile the foundation order is `detangling_brush, wide_tooth_comb, paddle_brush`; the reported `paddle_brush` is eligible and leads, the reported `round_brush` is not a foundation form and acts through coverage only |
+| 27 | accepted-fixed — decision.md `D5` carries the transcribed `ToolChoiceGroup` contract, its member lists and the one-group-per-route invariant |
+| 28 | accepted-fixed — `D5` lead rule written: `fulfilledBy` leads, `null` renders neutral with no ownership claim, report > derived > selection, ties by member order |
+| 29 | accepted-fixed — `D5`/`D6` precedence written: group-level lead selection never reorders a route; inside a route reported forms lead by filtering, subsequence invariant preserved |
+| 30 | accepted-fixed — `D6` merged-order rule written from `assets.ts`: merge only on identical family **and** lead form, first-emitted route's order is the base, first-occurrence dedup, fixed builder emission order |
+| 31 | accepted-fixed — every `59b` reference now reads "fixture 59 variant (b)" (decision.md ×2, fixtures.md §10, input-mapping §3) |
+| 32 | accepted-fixed — `C02`'s rendered-order fixture is the existing **fixture 75**; no row invented. It is named in the `D6` enforcement list, in input-mapping and in §10 item 3, and its row now demands the rendered `ToolAsset.productTypes[0]` |
+| 33 | accepted-fixed — the graph is named the **extended 11-position graph** consistently (nine anchors + `styling_session` + `nightly`, nightly always last) |
+| 34 | accepted-fixed — the anchor → `ToolPlacement` derivation table is in `D7` |
+| 35 | accepted-fixed — `A09` session contract stated: one shared session key, one cadence, ordering from the graph, WS6 implements the key — and nothing beyond that |
+| 36 | accepted-fixed — the ratified `D3a` copy („Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht.") replaces the draft in decision.md (§`D3a` and the three status lines) and in input-mapping's mirror row; "pending WS4 review" removed, implementation-pending kept |
+| 37 | accepted-fixed — matrix Current checkpoint records the WS4 mockup pass and journey sign-off as DONE (2026-08-25) with WS4 implementation outstanding |
+
+Document versions after the pass: `decision.md` **v4**, `conditional-guidance-matrix.md`
+**v3**, `fixtures.md` **v3**, `input-mapping.md` **v3**, all `last_updated 2026-08-25`.
