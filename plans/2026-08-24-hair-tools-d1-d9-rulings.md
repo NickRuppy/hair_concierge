@@ -174,6 +174,26 @@ confirmed as entailed by D4 + B04's own text; the „Nur Finger" persisted token
 name and the deferred-fact marker on `PlanToolRoute` (fixture 114) are
 implementation choices assigned to WS4 and WS1 respectively.
 
+## WS4 planning gates — cleared 2026-08-25
+
+Evidence review **confirmed** and user-journey sign-off **obtained** (Nick,
+2026-08-25). Mockup evidence: `plans/mockups/ws4-2026-08-25/` (real components,
+mobile viewport, DOM-level mockups on the labs harness).
+
+- **Final overview lead copy (ratified):** „Wähle die Bereiche, aus denen du
+  schon Produkte hast. Nicht gewählt = hast du nicht."
+- Drying question: „Nichts davon" removed, ≥1 selection required
+  (`drying-question-current.png` → `drying-question-proposed.png`).
+- Bürsten-page: „Wildschweinborsten-Bürste" + „Nur Finger" cards added
+  (`brushes-page-new-cards-viewport.png`). Implementation notes: the long
+  label collides with the selection circle in the current card layout — WS4
+  must fix label wrapping; both cards need Bildkarten-pipeline images.
+- Signed-off journey (6 steps): resume-safe entry; 3-option forced-pick drying
+  question; heat question dropped for pure-diffuser users (R1), kept per event
+  otherwise; overview with care-answer preselection + the ratified copy,
+  unticked persisted as „hat nichts"; drilldowns merge-never-delete with the
+  two new brush cards; plan renders per D4–D7.
+
 ## Workstream unblocking
 
 - WS5 done and committed (`ca81dec0`), verified 1983/1983.

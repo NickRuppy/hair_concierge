@@ -96,7 +96,7 @@ earlier wording treated them as one and implied comparisons that were never made
 | Comparison                                              | What is actually known                                                                                                           | Strength                            |
 | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
 | Rough rubbing vs gentle press/scrunch/wrap — any fabric | AAD guidance is explicit and consistent                                                                                          | Strong professional guidance        |
-| Microfiber vs **terry** (looped bath towel)             | Loop geometry is a plausible mechanism; one small study on bleached, straight-to-wavy hair with an abrasion-torture damage proxy | Plausible mechanism, one weak study |
+| Microfiber vs **cotton towel** (Carvalho says only "cotton towel"; terry loop geometry is our reading, not the paper's) | Loop geometry is a plausible mechanism; one small study on bleached, straight-to-wavy hair with an abrasion-torture damage proxy | Plausible mechanism, one weak study |
 | Microfiber vs **smooth cotton jersey / T-shirt**        | No measurement located at any evidence tier. This comparison has never been tested, as opposed to tested and found inconclusive  | Absent                              |
 | Microfiber towel vs microfiber **turban/wrap**          | Same material; no comparison exists                                                                                              | Absent                              |
 
