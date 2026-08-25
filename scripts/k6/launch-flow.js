@@ -3,7 +3,11 @@ import { check } from "k6"
 import { Rate } from "k6/metrics"
 
 const ISOLATED_TARGET_ACK = "read-only-nonproduction-confirmed"
-const PRODUCTION_HOSTS = new Set(["chaarlie.de", "www.chaarlie.de"])
+const PRODUCTION_HOSTS = new Set([
+  "chaarlie.de",
+  "www.chaarlie.de",
+  "hair-concierge.vercel.app",
+])
 const rawBaseUrl = __ENV.K6_BASE_URL
 const profile = __ENV.K6_PROFILE || "smoke"
 

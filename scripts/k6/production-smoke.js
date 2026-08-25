@@ -35,6 +35,7 @@ export const options = {
 export default function () {
   for (const { path, expectedStatuses } of routes) {
     const response = http.get(`${baseUrl}${path}`, {
+      redirects: 0,
       headers: { "user-agent": "ChaarlieLaunchProductionSmoke/1.0" },
       tags: { endpoint: path },
     })

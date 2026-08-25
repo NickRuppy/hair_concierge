@@ -17,6 +17,7 @@ test("isolated launch load tests fail closed instead of defaulting to production
 
   assert.doesNotMatch(source, /K6_BASE_URL\s*\|\|\s*["']https:\/\/chaarlie\.de/)
   assert.match(source, /K6_ISOLATED_TARGET_ACK/)
+  assert.match(source, /hair-concierge\.vercel\.app/)
   assert.match(source, /includes\(["']@["']\)/)
   assert.match(source, /endsWith\(["']\.["']\)/)
   assert.match(source, /constant-arrival-rate/)
@@ -36,6 +37,7 @@ test("production smoke has a separate read-only harness", () => {
   assert.doesNotMatch(source, /http\.post/)
   assert.doesNotMatch(source, /status\s*<\s*500/)
   assert.match(source, /expectedStatuses/)
+  assert.match(source, /redirects:\s*0/)
 })
 
 test("production routes contain no preview load-test authorization seam", () => {
