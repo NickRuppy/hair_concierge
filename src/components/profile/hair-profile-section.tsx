@@ -67,6 +67,9 @@ function HairProfileRow({ row }: { row: HairProfileSectionRow }) {
         {done ? "✓" : row.step}
       </span>
       <span className="min-w-0 flex-1">
+        {/* The ✓/number chip and its colours are decorative; the state itself
+            must reach assistive tech as text. */}
+        <span className="sr-only">{done ? "Erledigt: " : "Offen: "}</span>
         <span
           className={cn(
             "block text-[15px]",
@@ -91,7 +94,9 @@ function HairProfileRow({ row }: { row: HairProfileSectionRow }) {
 
   const className = cn(
     "flex items-center gap-3 rounded-[16px] border px-[15px] py-3.5",
-    done ? "border-border/60 bg-muted/40" : "border-border bg-card",
+    // Warm done tone straight from the mockup (`.prow.done`) — the lavender
+    // `--muted` token would pull the row out of the port's warm palette.
+    done ? "border-border bg-[#f6f3f0]" : "border-border bg-card",
   )
 
   if (row.href) {

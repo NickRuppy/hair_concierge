@@ -51,6 +51,20 @@ export function toAuthenticatedAppNavigationAccess(
   }
 }
 
+/**
+ * Whether this user sees the Routine tab — i.e. whether `/routine` is a real
+ * destination for them rather than the deliberately hidden "Routine nicht
+ * verfügbar" page. Deliberately derived from the SAME item list the navigation
+ * renders, so the two can never drift apart.
+ *
+ * The Profil tab's Haarprofil section links „Dein Idealplan" at the plan view
+ * (`/routine`) and presents it as done, so it stays absent for a mid-journey
+ * buyer who has not reached Stage 4 yet (Task 2.5, review round 1).
+ */
+export function hasRoutineTabAccess(access: AuthenticatedAppNavigationAccess): boolean {
+  return access.kind === "personal_plan" && access.items.some((item) => item.key === "routine")
+}
+
 export async function resolveAuthenticatedAppNavigationAccess(
   deps: AuthenticatedAppNavigationResolverDeps,
 ): Promise<AuthenticatedAppNavigationAccess> {

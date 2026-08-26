@@ -125,15 +125,17 @@ test("the products module handoff plus its live Stage-3 draft resume Stage 3", a
   )
 })
 
-test("no Stage-3 draft for that refined version: no resume", async () => {
-  assert.equal(
+test("reloading on the bridge — handoff done, Stage-3 draft not created yet — resumes Stage 3", async () => {
+  // The Stage-3 journey bootstrap creates the draft itself (today's tap-"weiter"
+  // path), so an absent draft is the pre-tap reload point, not a blocker.
+  assert.deepEqual(
     await resumeFor({
       personal_plans: [planRow()],
       personal_plan_need_versions: [needVersionRow()],
       personal_plan_refinement_drafts: [refinementDraftRow()],
       personal_plan_product_drafts: [],
     }),
-    null,
+    { refinedVersionId: ids.refined },
   )
 })
 
@@ -152,15 +154,46 @@ test("a finished or stale Stage-3 draft is not a resume target", async () => {
   }
 })
 
-test("a Stage-3 draft of another owner is not a resume target", async () => {
-  assert.equal(
+test("an open draft still wins when a stale row for the same version is lying around", async () => {
+  assert.deepEqual(
+    await resumeFor({
+      personal_plans: [planRow()],
+      personal_plan_need_versions: [needVersionRow()],
+      personal_plan_refinement_drafts: [refinementDraftRow()],
+      personal_plan_product_drafts: [
+        stage3DraftRow({ id: "66666666-6666-4666-8666-666666666666", status: "stale" }),
+        stage3DraftRow(),
+      ],
+    }),
+    { refinedVersionId: ids.refined },
+  )
+})
+
+test("another owner's Stage-3 draft neither resumes nor blocks — it is simply not read", async () => {
+  // Owner scoping only: the foreign row is invisible, so this falls back to the
+  // bridge-reload case (no draft of this owner yet) and resumes.
+  assert.deepEqual(
     await resumeFor({
       personal_plans: [planRow()],
       personal_plan_need_versions: [needVersionRow()],
       personal_plan_refinement_drafts: [refinementDraftRow()],
       personal_plan_product_drafts: [stage3DraftRow({ user_id: "someone-else" })],
     }),
-    null,
+    { refinedVersionId: ids.refined },
+  )
+})
+
+test("a completed Stage-3 draft of another owner cannot block this owner's resume", async () => {
+  assert.deepEqual(
+    await resumeFor({
+      personal_plans: [planRow()],
+      personal_plan_need_versions: [needVersionRow()],
+      personal_plan_refinement_drafts: [refinementDraftRow()],
+      personal_plan_product_drafts: [
+        stage3DraftRow({ user_id: "someone-else", status: "completed" }),
+      ],
+    }),
+    { refinedVersionId: ids.refined },
   )
 })
 

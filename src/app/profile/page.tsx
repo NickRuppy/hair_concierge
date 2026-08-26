@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { HairProfileSection } from "@/components/profile/hair-profile-section"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
+import { useProfileRoutineAccess } from "@/components/profile/profile-routine-access"
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
 import {
   filterRetainedPersonalPlanProductRows,
@@ -521,6 +522,11 @@ export default function ProfilePage() {
   const { toast } = useToast()
   const supabase = useMemo(() => createClient(), [])
   const userId = user?.id ?? null
+  // Task 2.5: the Haarprofil section presents „Dein Idealplan" as done and links
+  // it at the plan view (`/routine`). Both are premature for a buyer who has not
+  // reached Stage 4 — the Routine tab is hidden for them and `/routine` renders
+  // its unavailable state. Same signal, so the two can never disagree.
+  const hasRoutineAccess = useProfileRoutineAccess()
 
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
   const [profileLoading, setProfileLoading] = useState(true)
@@ -635,7 +641,7 @@ export default function ProfilePage() {
      * absent rather than rendering a broken card.
      */
     async function loadRefinementStatus() {
-      if (!userId) {
+      if (!userId || !hasRoutineAccess) {
         if (active) setRefinementStatus(null)
         return
       }
@@ -655,7 +661,7 @@ export default function ProfilePage() {
     return () => {
       active = false
     }
-  }, [userId])
+  }, [userId, hasRoutineAccess])
 
   useEffect(() => {
     let active = true
@@ -1199,7 +1205,7 @@ export default function ProfilePage() {
           </h1>
         </div>
 
-        {refinementStatus ? (
+        {hasRoutineAccess && refinementStatus ? (
           <HairProfileSection
             view={buildHairProfileSection({
               status: refinementStatus,

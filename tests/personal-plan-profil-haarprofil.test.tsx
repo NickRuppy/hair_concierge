@@ -1,6 +1,13 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
+
+import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
+import {
+  hasRoutineTabAccess,
+  toAuthenticatedAppNavigationAccess,
+} from "../src/lib/personal-plan/navigation-access"
 
 import { HairProfileSection } from "../src/components/profile/hair-profile-section"
 import {
@@ -189,6 +196,66 @@ test("a finished module row renders the quiet edit link instead of a row link", 
   assert.match(html, /Angaben ändern/)
   assert.equal(html.match(/href="\/plan-start\?refine=products"/g)?.length, 1)
   assert.match(html, /4 von 4/)
+})
+
+// ————————————— access gate: pre-routine cohort vs. routine cohort —————————————
+
+function journeyAccess(stage4: boolean): PersonalPlanJourneyAccess {
+  return {
+    kind: "personal_plan",
+    personalPlanId: "plan-1",
+    frontier: stage4 ? "stage4" : "stage3",
+    nextHref: stage4 ? "/routine" : "/plan-start",
+    allowed: { stage1: true, stage2: true, stage3: true, stage4, stage5: false },
+  }
+}
+
+test("the section's gate is exactly the signal that shows the Routine tab", () => {
+  // Routine cohort: the tab exists, so `/routine` is a real plan view and
+  // „Dein Idealplan ✓" is a truthful row.
+  assert.equal(hasRoutineTabAccess(toAuthenticatedAppNavigationAccess(journeyAccess(true))), true)
+  // Mid-journey buyer: no Routine tab, `/routine` renders its hidden
+  // unavailable state — the section must stay absent, like the no-plan state.
+  assert.equal(hasRoutineTabAccess(toAuthenticatedAppNavigationAccess(journeyAccess(false))), false)
+  assert.equal(hasRoutineTabAccess({ kind: "legacy" }), false)
+  assert.equal(
+    hasRoutineTabAccess(
+      toAuthenticatedAppNavigationAccess({
+        kind: "personal_plan_start",
+        frontier: "stage1",
+        nextHref: "/plan-start",
+        allowed: {
+          stage1: true,
+          stage2: false,
+          stage3: false,
+          stage4: false,
+          stage5: false,
+        },
+      }),
+    ),
+    false,
+  )
+})
+
+test("the Profil page gates both the status read and the section on that signal", () => {
+  const source = readFileSync("src/app/profile/page.tsx", "utf8")
+  assert.match(source, /const hasRoutineAccess = useProfileRoutineAccess\(\)/)
+  assert.match(source, /if \(!userId \|\| !hasRoutineAccess\)/)
+  assert.match(source, /\{hasRoutineAccess && refinementStatus \? \(/)
+
+  const layout = readFileSync("src/app/profile/layout.tsx", "utf8")
+  assert.match(layout, /hasRoutineAccess=\{hasRoutineTabAccess\(navigation\)\}/)
+})
+
+test("done and open rows carry their state as text, not only as colour", () => {
+  const html = renderToStaticMarkup(
+    <HairProfileSection
+      view={buildHairProfileSection({ status: statusResponse("complete", "open") })}
+    />,
+  )
+
+  assert.equal(html.match(/Erledigt: /g)?.length, 3)
+  assert.equal(html.match(/Offen: /g)?.length, 1)
 })
 
 test("the progress bar exposes an accessible value", () => {
