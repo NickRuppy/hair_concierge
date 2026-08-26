@@ -13,7 +13,7 @@ const baseUrl = rawBaseUrl.replace(/\/$/, "")
 const routes = [
   { path: "/lp/haarplan", expectedStatuses: [200] },
   { path: "/quiz", expectedStatuses: [200] },
-  { path: "/pricing", expectedStatuses: [200] },
+  { path: "/pricing", expectedStatuses: [307], expectedLocation: "/quiz" },
   { path: "/auth", expectedStatuses: [200, 302, 307, 308] },
 ]
 
@@ -33,16 +33,21 @@ export const options = {
 }
 
 export default function () {
-  for (const { path, expectedStatuses } of routes) {
+  for (const { path, expectedStatuses, expectedLocation } of routes) {
     const response = http.get(`${baseUrl}${path}`, {
       redirects: 0,
       headers: { "user-agent": "ChaarlieLaunchProductionSmoke/1.0" },
       tags: { endpoint: path },
     })
-    check(response, {
+    const routeChecks = {
       [`${path} returns an expected status`]: (result) => expectedStatuses.includes(result.status),
       [`${path} is not edge-mitigated`]: (result) =>
         result.headers["X-Vercel-Mitigated"] !== "deny",
-    })
+    }
+    if (expectedLocation) {
+      routeChecks[`${path} redirects to ${expectedLocation}`] = (result) =>
+        result.headers.Location === expectedLocation
+    }
+    check(response, routeChecks)
   }
 }
