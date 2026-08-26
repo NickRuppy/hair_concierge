@@ -153,10 +153,13 @@ test("the rendered nav shows a dot only on an unvisited, non-routine tab", () =>
   if (navigation.kind !== "personal_plan") return
   assert.deepEqual([...navigation.unvisitedNavSurfaces].sort(), ["application", "profile"].sort())
 
+  // pathname pinned to "/chat" — an already-visited surface, not one of the
+  // two unvisited ones under test — so this test's dot assertions are
+  // unaffected by the active-tab suppression covered separately below.
   const html = renderToStaticMarkup(
     createElement(PersonalPlanNavigationView, {
       items: navigation.items,
-      pathname: "/anwendung",
+      pathname: "/chat",
       unvisitedNavSurfaces: navigation.unvisitedNavSurfaces,
     }),
   )
@@ -182,6 +185,58 @@ test("the rendered nav shows a dot only on an unvisited, non-routine tab", () =>
       assert.doesNotMatch(link!, /data-nav-unvisited-dot/)
     }
     for (const href of ["/anwendung", "/profile"]) {
+      const link = linkFor(nav, href)
+      assert.ok(link, `expected a nav link for ${href}`)
+      assert.match(link!, /data-nav-unvisited-dot="true"/)
+    }
+  }
+})
+
+test("fix round 1: the active tab never dots even when it's still in unvisitedNavSurfaces (the deferred after() write hasn't landed yet)", () => {
+  // Simulates the very first visit to /anwendung: the server read that
+  // produced `unvisitedNavSurfaces` ran BEFORE this render's visit-marking
+  // write (deferred via after()), so "application" is still unvisited on
+  // the render that's currently showing it.
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
+    available: true,
+    visitedSurfaces: new Set(),
+  })
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+  assert.ok(
+    navigation.unvisitedNavSurfaces.has("application"),
+    "test setup: application must be unvisited",
+  )
+
+  const html = renderToStaticMarkup(
+    createElement(PersonalPlanNavigationView, {
+      items: navigation.items,
+      pathname: "/anwendung",
+      unvisitedNavSurfaces: navigation.unvisitedNavSurfaces,
+    }),
+  )
+
+  const headerNav = html.match(
+    /<nav aria-label="Personal-Plan-Navigation"[^>]*>[\s\S]*?<\/nav>/,
+  )?.[0]
+  const mobileNav = html.match(
+    /<nav aria-label="Personal-Plan-Navigation \(mobil\)"[^>]*>[\s\S]*?<\/nav>/,
+  )?.[0]
+  assert.ok(headerNav && mobileNav, "expected both the header and mobile nav markup")
+
+  const linkFor = (nav: string, href: string) =>
+    nav.match(new RegExp(`<a[^>]*href="${href}"[^>]*>[\\s\\S]*?</a>`))?.[0]
+
+  for (const nav of [headerNav!, mobileNav!]) {
+    // The active tab (application/"/anwendung") never dots, active-tab
+    // suppression aside from persisted visited state.
+    const activeLink = linkFor(nav, "/anwendung")
+    assert.ok(activeLink, "expected a nav link for /anwendung")
+    assert.doesNotMatch(activeLink!, /data-nav-unvisited-dot/)
+
+    // Every OTHER unvisited, non-active, non-routine surface still dots —
+    // the suppression is scoped to the active tab only.
+    for (const href of ["/chat", "/profile"]) {
       const link = linkFor(nav, href)
       assert.ok(link, `expected a nav link for ${href}`)
       assert.match(link!, /data-nav-unvisited-dot="true"/)

@@ -37,6 +37,18 @@ const ICONS = {
   profile: UserRound,
 } as const
 
+/**
+ * `unvisitedNavSurfaces` reflects the server read from BEFORE this render's
+ * visit-marking write (that write is deferred via `after()` and lands after
+ * the response, per `schedulePersonalPlanNavSurfaceVisit`). So on a
+ * surface's very first visit, the surface being rendered right now is still
+ * in `unvisitedNavSurfaces` — without this, the dot would flash on the tab
+ * the user is currently looking at. Render-side fix, not a persistence fix:
+ * `active` (the current pathname's own item) is always excluded from the
+ * dot regardless of what `unvisitedNavSurfaces` says. The persisted write
+ * logic is untouched — the very next navigation reads the now-updated
+ * state from the server and the dot is simply gone.
+ */
 export function PersonalPlanNavigationView({
   items,
   pathname,
@@ -79,7 +91,7 @@ export function PersonalPlanNavigationView({
                   {item.label}
                   {item.key === "routine" ? (
                     <RoutineAttentionIndicator hasPendingProposal={hasPendingRoutineProposal} />
-                  ) : unvisitedNavSurfaces.has(item.key) ? (
+                  ) : unvisitedNavSurfaces.has(item.key) && !active ? (
                     <NavUnvisitedDot />
                   ) : null}
                 </Link>
@@ -112,7 +124,7 @@ export function PersonalPlanNavigationView({
                 <Icon className="h-5 w-5" aria-hidden="true" />
                 {item.key === "routine" ? (
                   <RoutineAttentionIndicator hasPendingProposal={hasPendingRoutineProposal} />
-                ) : unvisitedNavSurfaces.has(item.key) ? (
+                ) : unvisitedNavSurfaces.has(item.key) && !active ? (
                   <NavUnvisitedDot />
                 ) : null}
               </span>
