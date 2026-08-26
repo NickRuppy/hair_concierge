@@ -14,6 +14,7 @@ export {
   acceptStatusAfterStale,
   deriveAcceptIdealPlanSeenRoles,
   interpretAcceptIdealPlanResponse,
+  resolveStage1PreviewLoadState,
   runAcceptIdealPlanFlow,
   type AcceptIdealPlanFlowEffect,
   type AcceptIdealPlanOutcome,

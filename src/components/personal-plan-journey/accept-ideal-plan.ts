@@ -129,6 +129,26 @@ export function interpretAcceptIdealPlanResponse(
  */
 export type Stage1PreviewLoadState = "not_requested" | "loading" | "ready" | "unavailable"
 
+/**
+ * `not_requested` may only ever mean "previews were never requestable".
+ *
+ * The state is owned by an effect, and effects do not run during server
+ * rendering and run only after the first client paint. So on every render where
+ * previews ARE requestable but the effect has not moved the state yet — the
+ * server render, the first hydration, and again whenever the plan itself
+ * arrives late from `enterStage1()` — the stored `not_requested` is not the
+ * truth about what the user saw; the truth is that the previews are still
+ * coming. Reading it literally would enable the accept CTA for exactly that
+ * window, and a click there posts an empty seen state, which the server turns
+ * into an all-deferred (productless) routine.
+ */
+export function resolveStage1PreviewLoadState(
+  state: Stage1PreviewLoadState,
+  previewsRequestable: boolean,
+): Stage1PreviewLoadState {
+  return state === "not_requested" && previewsRequestable ? "loading" : state
+}
+
 export function acceptIdealPlanReadiness(
   state: Stage1PreviewLoadState,
 ): "accept" | "wait" | "refine" {

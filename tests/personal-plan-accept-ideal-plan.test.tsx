@@ -11,6 +11,7 @@ import {
   acceptStatusAfterStale,
   deriveAcceptIdealPlanSeenRoles,
   interpretAcceptIdealPlanResponse,
+  resolveStage1PreviewLoadState,
   runAcceptIdealPlanFlow,
   type AcceptIdealPlanOutcome,
   type AcceptIdealPlanSeenRole,
@@ -23,6 +24,7 @@ import {
   PLAN_START_REFINE_PENDING_LABEL,
 } from "../src/components/personal-plan-start/need-plan-screen"
 import {
+  PlanStartCustomerJourney,
   PlanStartFlow,
   planStartCtaState,
   requestAcceptIdealPlan,
@@ -425,6 +427,77 @@ function renderPlanStart(props: Partial<React.ComponentProps<typeof PlanStartFlo
     />,
   )
 }
+
+function renderJourney(
+  props: Partial<React.ComponentProps<typeof PlanStartCustomerJourney>> = {},
+): string {
+  return renderToStaticMarkup(
+    <PlanStartCustomerJourney
+      initialPlan={{
+        basis: readyPlanScreen,
+        optional: null,
+        personalPlanId: "plan-1",
+        sourceInputHash: "input-1",
+      }}
+      initialJourney={{ stage: "stage1", directAcceptanceAvailable: true }}
+      personalPlanId="plan-1"
+      {...props}
+    />,
+  )
+}
+
+/**
+ * B1. Effects do not run on the server and run only AFTER the first client
+ * paint, so an initial `not_requested` would read as "previews were never
+ * requestable" for exactly one render — and a click in that window posts
+ * `seenRoles: []`, which the server turns into an all-deferred, productless
+ * routine. The first paint must therefore already know that previews ARE
+ * coming.
+ */
+test("the server-rendered Idealplan CTA is held whenever previews are still coming", () => {
+  const requestable = renderJourney()
+
+  assert.match(requestable, new RegExp(PLAN_START_ACCEPT_LABEL))
+  assert.match(requestable, /aria-busy="true"/)
+  assert.match(requestable, /disabled=""/)
+})
+
+test("a plan whose previews are not requestable keeps its CTA live from the first paint", () => {
+  // No `sourceInputHash`: the effect will never request previews, so an empty
+  // seen state is the truth and the all-deferred acceptance is legitimate.
+  const notRequestable = renderJourney({
+    initialPlan: { basis: readyPlanScreen, optional: null, personalPlanId: "plan-1" },
+  })
+
+  assert.match(notRequestable, new RegExp(PLAN_START_ACCEPT_LABEL))
+  assert.doesNotMatch(notRequestable, /aria-busy="true"/)
+  assert.doesNotMatch(notRequestable, /disabled=""/)
+})
+
+/**
+ * B1, defense in depth. The accept handler recomputes readiness from the same
+ * fact rather than trusting the stored state: a plan that arrives from
+ * `enterStage1()` re-opens the very same window (render before effect), and the
+ * handler must not accept blind inside it.
+ */
+test("an unrequested state reads as loading exactly while previews are requestable", () => {
+  assert.equal(resolveStage1PreviewLoadState("not_requested", true), "loading")
+  assert.equal(
+    acceptIdealPlanReadiness(resolveStage1PreviewLoadState("not_requested", true)),
+    "wait",
+  )
+  assert.equal(resolveStage1PreviewLoadState("not_requested", false), "not_requested")
+  assert.equal(
+    acceptIdealPlanReadiness(resolveStage1PreviewLoadState("not_requested", false)),
+    "accept",
+  )
+
+  // A state the effect already owns is never rewritten in either direction.
+  for (const state of ["loading", "ready", "unavailable"] as const) {
+    assert.equal(resolveStage1PreviewLoadState(state, true), state)
+    assert.equal(resolveStage1PreviewLoadState(state, false), state)
+  }
+})
 
 test("the Idealplan CTA leads to the routine once acceptance is the only path", () => {
   const html = renderPlanStart({ nextIntent: "accept" })

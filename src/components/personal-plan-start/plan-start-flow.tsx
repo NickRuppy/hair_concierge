@@ -21,6 +21,7 @@ import {
   acceptIdealPlanReadiness,
   deriveAcceptIdealPlanSeenRoles,
   interpretAcceptIdealPlanResponse,
+  resolveStage1PreviewLoadState,
   runAcceptIdealPlanFlow,
   type AcceptIdealPlanSeenRole,
   type PersonalPlanTransitionDirection,
@@ -567,7 +568,29 @@ export function PlanStartCustomerJourney({
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
-  const [previewLoadState, setPreviewLoadState] = useState<Stage1PreviewLoadState>("not_requested")
+  /**
+   * The Stage-1 preview request this render would make, or `null` when previews
+   * are not requestable at all. One fact with three consumers — the effect that
+   * fetches them, the initial load state, and the accept guard — so the CTA can
+   * never be live on a render whose previews are still on their way.
+   */
+  const previewRequest = useMemo(
+    () =>
+      stage === "stage1" && plan?.personalPlanId && plan.sourceInputHash
+        ? { personalPlanId: plan.personalPlanId, sourceInputHash: plan.sourceInputHash }
+        : null,
+    [plan?.personalPlanId, plan?.sourceInputHash, stage],
+  )
+  const [previewLoadState, setPreviewLoadState] = useState<Stage1PreviewLoadState>(() =>
+    resolveStage1PreviewLoadState("not_requested", previewRequest !== null),
+  )
+  // Defense in depth for the same window on every later render: a plan that
+  // arrives from `enterStage1()` makes previews requestable one render before
+  // the effect can mark them loading.
+  const resolvedPreviewLoadState = resolveStage1PreviewLoadState(
+    previewLoadState,
+    previewRequest !== null,
+  )
   const [stage1LoadState, setStage1LoadState] = useState<"idle" | "loading" | "error">("idle")
   const [stage2LoadState, setStage2LoadState] = useState<"idle" | "loading" | "error">("idle")
   const [stage2EnteredLocally, setStage2EnteredLocally] = useState(false)
@@ -596,9 +619,8 @@ export function PlanStartCustomerJourney({
   )
 
   useEffect(() => {
-    const personalPlanId = plan?.personalPlanId
-    const sourceInputHash = plan?.sourceInputHash
-    if (stage !== "stage1" || !personalPlanId || !sourceInputHash) return
+    if (!previewRequest) return
+    const { personalPlanId, sourceInputHash } = previewRequest
     let cancelled = false
     setPreviewLoadState("loading")
     // The previews are no longer presentation-only: they ARE the seen state the
@@ -630,7 +652,7 @@ export function PlanStartCustomerJourney({
     return () => {
       cancelled = true
     }
-  }, [plan?.personalPlanId, plan?.sourceInputHash, stage])
+  }, [previewRequest])
   const loadStage3Bootstrap = useCallback(
     async (
       refinedVersionId: string,
@@ -830,7 +852,7 @@ export function PlanStartCustomerJourney({
    */
   const acceptIdealPlanDirectly = useCallback(async () => {
     if (acceptStatus === "pending") return
-    const readiness = acceptIdealPlanReadiness(previewLoadState)
+    const readiness = acceptIdealPlanReadiness(resolvedPreviewLoadState)
     // The CTA is disabled while previews load, so this only guards a race.
     if (readiness === "wait") return
     if (readiness === "refine") {
@@ -878,7 +900,7 @@ export function PlanStartCustomerJourney({
     openRoutineHref,
     plan?.personalPlanId,
     plan?.sourceInputHash,
-    previewLoadState,
+    resolvedPreviewLoadState,
     seenRoles,
   ])
 
@@ -886,7 +908,7 @@ export function PlanStartCustomerJourney({
     acceptAvailable,
     acceptStatus,
     stage2LoadState,
-    previewLoadState,
+    previewLoadState: resolvedPreviewLoadState,
   })
 
   const openRoutine = useCallback(
