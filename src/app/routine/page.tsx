@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 
 import { PersonalPlanRoutineClient } from "@/components/routine/personal-plan"
+import type { RoutineRefinementBannerViewModel } from "@/components/routine/personal-plan/routine-refinement-banner"
 import { RoutinePageClient } from "@/components/routine/routine-page-client"
 import { RetryRefreshButton } from "@/components/ui/retry-refresh-button"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
@@ -9,6 +10,7 @@ import {
   loadOwnerPortfolioPresentation,
   type PortfolioPresentation,
 } from "@/lib/personal-plan/routine/portfolio-presentation"
+import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refinement-status-loader"
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
@@ -39,6 +41,13 @@ export type RoutinePageResolverDeps = {
     planId: string,
     portfolioVersionId: string,
   ) => Promise<PortfolioPresentation | null>
+  /**
+   * The Routine refinement banner's data (Task 2.3): module, progress, and
+   * visibility straight from the refinement-status API contract (Task 1.7).
+   * Optional and failure-tolerant like `readPortfolioPresentation` above — a
+   * missing dep or a failed read just means no banner, never a broken page.
+   */
+  readRefinementBanner?: (userId: string) => Promise<RoutineRefinementBannerViewModel | null>
 }
 
 export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
@@ -70,11 +79,22 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
         // Presentation must not substitute or hide an otherwise valid Routine.
       }
     }
+    let refinementBanner: RoutineRefinementBannerViewModel | null = null
+    if (deps.readRefinementBanner) {
+      try {
+        refinementBanner = await deps.readRefinementBanner(userId)
+      } catch {
+        // Cosmetic and deliberately failure-tolerant, like the presentation
+        // load above: a failed banner read must never hide or break the
+        // Routine itself.
+      }
+    }
     return {
       kind: "personal_plan" as const,
       view,
       enabled,
       portfolioPresentation,
+      refinementBanner,
       stage5Reachable: canAccessPersonalPlanJourneyStage(journey, "stage5"),
     }
   } catch {
@@ -101,6 +121,20 @@ const defaultDeps: RoutinePageResolverDeps = {
       planId,
       portfolioVersionId,
     ),
+  readRefinementBanner: async (userId) => {
+    const result = await loadRefinementStatusForUser(
+      createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
+      userId,
+    )
+    if (result.status !== "ok" || !result.data.banner.visible || !result.data.banner.module) {
+      return null
+    }
+    return {
+      module: result.data.banner.module,
+      completedSteps: result.data.progress.completedSteps,
+      totalSteps: result.data.progress.totalSteps,
+    }
+  },
 }
 
 export function RoutineUnavailableState({
@@ -147,6 +181,7 @@ export default async function RoutinePage() {
       enabled={resolved.enabled}
       stage5Reachable={resolved.stage5Reachable}
       portfolioPresentation={resolved.portfolioPresentation}
+      initialRefinementBanner={resolved.refinementBanner}
     />
   )
 }

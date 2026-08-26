@@ -23,10 +23,6 @@ import type {
   RoutineProductRef,
 } from "@/lib/personal-plan/routine-candidate-compiler"
 import type { RoutineProductDetail as RoutineProductDetailData } from "@/lib/personal-plan/routine/product-detail-service"
-import {
-  ROUTINE_REFINEMENT_NUDGE_HREF,
-  shouldShowRoutineRefinementNudge,
-} from "@/lib/personal-plan/routine/nudge"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
@@ -38,6 +34,7 @@ import { routineCategoryLabel, routinePurposeLabel } from "./routine-item-card"
 import { RoutinePage } from "./routine-page"
 import { RoutineProductDetail } from "./routine-product-detail"
 import { RoutineProposalSheet, type RoutineProposalSheetDeltaEntry } from "./routine-proposal-sheet"
+import type { RoutineRefinementBannerViewModel } from "./routine-refinement-banner"
 
 type RoutineViewResponse = PersonalPlanRoutineView | { status: "no_personal_plan" }
 type Mode = "overview" | "editor" | "application_transition"
@@ -197,11 +194,13 @@ export function PersonalPlanRoutineClient({
   enabled,
   stage5Reachable,
   portfolioPresentation = null,
+  initialRefinementBanner = null,
 }: {
   initialView: PersonalPlanRoutineView
   enabled: boolean
   stage5Reachable: boolean
   portfolioPresentation?: PortfolioPresentation | null
+  initialRefinementBanner?: RoutineRefinementBannerViewModel | null
 }) {
   const router = useRouter()
   const [view, setView] = React.useState(initialView)
@@ -223,22 +222,27 @@ export function PersonalPlanRoutineClient({
   }, [router])
   // Optimistic, session-local hide so the banner disappears immediately on
   // dismiss without waiting for a reload; the server write (which re-arms
-  // for the next visit) happens best-effort alongside it.
-  const [nudgeDismissedLocally, setNudgeDismissedLocally] = React.useState(false)
-  const dismissNudge = React.useCallback(() => {
-    setNudgeDismissedLocally(true)
-    void fetch("/api/personal-plan/routine/nudge/dismiss", { method: "POST" }).catch(() => {
+  // the banner for whichever module becomes the next open one) happens
+  // best-effort alongside it — write failures (e.g. pre-migration) are
+  // tolerated silently, matching the lifecycle store's documented contract.
+  const [bannerDismissedLocally, setBannerDismissedLocally] = React.useState(false)
+  const dismissRefinementBanner = React.useCallback(() => {
+    if (!initialRefinementBanner) return
+    setBannerDismissedLocally(true)
+    void fetch("/api/personal-plan/refinement-status/dismiss", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ module: initialRefinementBanner.module }),
+    }).catch(() => {
       // Best-effort: the banner stays hidden for this visit even if the
       // write fails; the next full page load reflects the server's state.
     })
-  }, [])
-  const refineFromNudge = React.useCallback(() => {
+  }, [initialRefinementBanner])
+  const refineFromBanner = React.useCallback(() => {
+    if (!initialRefinementBanner) return
     markPersonalPlanStageNavigation("/plan-start")
-    // `?refine=1` forces a real Stage-2 re-entry: after a direct accept the
-    // refinement draft is already complete, so a bare /plan-start would seed the
-    // completed session and auto-hand off into Stage 3.
-    router.push(ROUTINE_REFINEMENT_NUDGE_HREF)
-  }, [router])
+    router.push(`/plan-start?refine=${initialRefinementBanner.module}`)
+  }, [router, initialRefinementBanner])
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
   const [detail, setDetail] = React.useState<RoutineProductDetailData | null>(null)
   const [detailOpen, setDetailOpen] = React.useState(false)
@@ -281,13 +285,7 @@ export function PersonalPlanRoutineClient({
   const isInitial = Boolean(pending && !view.activeVersion)
   const seed = editorSeed(view)
   const canEdit = enabled && Boolean(seed)
-  const nudgeVisible =
-    !nudgeDismissedLocally &&
-    shouldShowRoutineRefinementNudge({
-      unrefinedDirectAccept: view.nudge?.unrefinedDirectAccept ?? false,
-      nudgeDismissedUntil: view.nudge?.nudgeDismissedUntil ?? null,
-      now: Date.now(),
-    })
+  const refinementBanner = !bannerDismissedLocally ? initialRefinementBanner : null
   const entrySyncTiming = routineEntrySyncTiming({
     enabled,
     hasPendingProposal: Boolean(pending),
@@ -586,9 +584,9 @@ export function PersonalPlanRoutineClient({
         onItemDetail={(item) => void openDetail(item)}
         portfolioPresentation={portfolioPresentation}
         onOpenApplication={openApplication}
-        nudgeVisible={nudgeVisible}
-        onDismissNudge={dismissNudge}
-        onRefineNudge={refineFromNudge}
+        refinementBanner={refinementBanner}
+        onDismissRefinementBanner={dismissRefinementBanner}
+        onRefineFromBanner={refineFromBanner}
       />
       {pending ? (
         <RoutineProposalSheet

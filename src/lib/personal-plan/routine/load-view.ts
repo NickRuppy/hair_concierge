@@ -9,7 +9,6 @@ import {
   loadActiveRoutineCatalogProductPresentation,
   loadOwnerRefinedNeedSnapshot,
   loadOwnerPendingRoutineProposal,
-  loadOwnerRoutineNudgeState,
   loadOwnerRoutinePlan,
   loadOwnerRoutineVersion,
   type PersonalPlanRoutineReadClient,
@@ -105,10 +104,7 @@ export async function loadPersonalPlanRoutineView(input: {
     input.enabled &&
     input.includePendingProposal !== false &&
     Boolean(plan.pending_routine_proposal_id)
-  const [nudge, active, proposal] = await Promise.all([
-    // Cosmetic and deliberately failure-tolerant: a missing column or a failed
-    // read hides the nudge, it never fails the Routine page.
-    loadOwnerRoutineNudgeState(input.client, input.userId),
+  const [active, proposal] = await Promise.all([
     plan.active_routine_version_id
       ? loadOwnerRoutineVersion(input.client, input.userId, plan.id, plan.active_routine_version_id)
       : null,
@@ -133,7 +129,6 @@ export async function loadPersonalPlanRoutineView(input: {
       client: input.client,
       payloads: [activeVersion?.payload ?? null],
     }),
-    nudge,
   })
   const incompleteView = () => ({
     personalPlanId: plan.id,
@@ -143,7 +138,6 @@ export async function loadPersonalPlanRoutineView(input: {
     activeVersion: null,
     pendingProposal: null,
     productPresentation: { catalogProducts: [] },
-    nudge,
   })
   const repairRequiredView = (routineVersion: { id: string; payload: RoutinePayloadV1 }) => ({
     personalPlanId: plan.id,
@@ -158,7 +152,6 @@ export async function loadPersonalPlanRoutineView(input: {
       href: `/plan-start?repairRoutineVersionId=${encodeURIComponent(routineVersion.id)}`,
     },
     productPresentation: { catalogProducts: [] },
-    nudge,
   })
   if (!input.enabled)
     return {
@@ -211,7 +204,6 @@ export async function loadPersonalPlanRoutineView(input: {
               delta: routineProposalDeltaV1Schema.parse(proposal.delta),
               candidate: candidatePayload,
             },
-            nudge,
           }
         }
       }
@@ -271,7 +263,6 @@ export async function loadPersonalPlanRoutineView(input: {
       delta: routineProposalDeltaV1Schema.parse(proposal.delta),
       candidate: candidatePayload,
     },
-    nudge,
   }
 }
 

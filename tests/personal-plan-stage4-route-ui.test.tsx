@@ -126,6 +126,52 @@ test("Routine resolver loads v3 presentation from an initial proposal candidate"
   assert.equal(loadedPortfolioVersionId, "portfolio-1")
 })
 
+test("Routine resolver threads the refinement banner view model through from readRefinementBanner", async () => {
+  const result = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
+    stage4Enabled: () => true,
+    readView: async () => activeView,
+    readRefinementBanner: async (userId) => {
+      assert.equal(userId, "user-1")
+      return { module: "products", completedSteps: 2, totalSteps: 4 }
+    },
+  })
+  assert.equal(result.kind, "personal_plan")
+  if (result.kind === "personal_plan") {
+    assert.deepEqual(result.refinementBanner, {
+      module: "products",
+      completedSteps: 2,
+      totalSteps: 4,
+    })
+  }
+})
+
+test("Routine resolver degrades to no banner when readRefinementBanner is absent or fails", async () => {
+  const withoutDep = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
+    stage4Enabled: () => true,
+    readView: async () => activeView,
+  })
+  assert.equal(withoutDep.kind, "personal_plan")
+  if (withoutDep.kind === "personal_plan") assert.equal(withoutDep.refinementBanner, null)
+
+  const withFailingDep = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
+    stage4Enabled: () => true,
+    readView: async () => activeView,
+    readRefinementBanner: async () => {
+      throw new Error("temporarily_unavailable")
+    },
+  })
+  assert.equal(withFailingDep.kind, "personal_plan")
+  if (withFailingDep.kind === "personal_plan") {
+    assert.equal(withFailingDep.refinementBanner, null)
+  }
+})
+
 test("Routine unavailable recovery offers an explicit reload action", () => {
   const html = renderToStaticMarkup(
     RoutineUnavailableState({

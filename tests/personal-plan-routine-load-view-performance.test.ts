@@ -340,11 +340,7 @@ test("routine view starts independent active-version and proposal reads together
   releaseActive()
   const view = await viewPromise
   assert.equal(view.status, "active")
-  // The second `personal_plans` read is the failure-tolerant nudge state; it
-  // starts in the SAME parallel batch as the version and proposal reads, so it
-  // costs no extra round-trip.
   assert.deepEqual(calls, [
-    "personal_plans",
     "personal_plans",
     "personal_plan_routine_versions",
     "personal_plan_routine_proposals",
@@ -367,7 +363,6 @@ test("accepted-routine-only reads omit pending proposal and candidate queries", 
 
   assert.equal(view.status, "active")
   assert.deepEqual(calls, [
-    "personal_plans",
     "personal_plans",
     "personal_plan_routine_versions",
     "personal_plan_need_versions",
@@ -472,7 +467,6 @@ test("routine view hydrates active catalog presentation in one bounded non-seman
 
   assert.equal(view.status, "active")
   assert.deepEqual(calls, [
-    "personal_plans",
     "personal_plans",
     "personal_plan_routine_versions",
     "personal_plan_need_versions",

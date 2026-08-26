@@ -13,7 +13,10 @@ import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfoli
 
 import { routineCategoryLabel } from "./routine-item-card"
 
-import { RoutineRefinementNudge } from "./routine-refinement-nudge"
+import {
+  RoutineRefinementBanner,
+  type RoutineRefinementBannerViewModel,
+} from "./routine-refinement-banner"
 import { RoutineSection } from "./routine-section"
 import { hasChosenPlannedProduct } from "./routine-status"
 
@@ -27,9 +30,9 @@ export type RoutinePageProps = {
   onItemDetail?: (item: RoutineItem) => void
   portfolioPresentation?: PortfolioPresentation | null
   onOpenApplication?: () => void
-  nudgeVisible?: boolean
-  onDismissNudge?: () => void
-  onRefineNudge?: () => void
+  refinementBanner?: RoutineRefinementBannerViewModel | null
+  onDismissRefinementBanner?: () => void
+  onRefineFromBanner?: () => void
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -59,9 +62,9 @@ export function RoutinePage({
   onItemDetail,
   portfolioPresentation = null,
   onOpenApplication,
-  nudgeVisible = false,
-  onDismissNudge,
-  onRefineNudge,
+  refinementBanner = null,
+  onDismissRefinementBanner,
+  onRefineFromBanner,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -114,6 +117,23 @@ export function RoutinePage({
   ).length
   const hasBlockingBasisGap = basisItems.some(isBlockingBasisGap)
   const canOpenApplication = Boolean(view.activeVersion && stage5Reachable && !hasBlockingBasisGap)
+  const banner =
+    refinementBanner && onDismissRefinementBanner && onRefineFromBanner ? (
+      <RoutineRefinementBanner
+        module={refinementBanner.module}
+        completedSteps={refinementBanner.completedSteps}
+        totalSteps={refinementBanner.totalSteps}
+        onDismiss={onDismissRefinementBanner}
+        onRefine={onRefineFromBanner}
+      />
+    ) : null
+  // Position (mockup v3, decided 25.08.2026): above the routine blocks while
+  // `products` is the open module (the first, more prominent ask), below
+  // them once `products` is done and `habits` is open (a quieter second
+  // ask). Both the position and the copy switch on the same `module` value
+  // the refinement-status API already returned — nothing here re-derives it.
+  const bannerAboveBlocks = banner && refinementBanner?.module === "products" ? banner : null
+  const bannerBelowBlocks = banner && refinementBanner?.module === "habits" ? banner : null
 
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
@@ -193,9 +213,7 @@ export function RoutinePage({
               </div>
             </div>
           </header>
-          {nudgeVisible && onDismissNudge && onRefineNudge ? (
-            <RoutineRefinementNudge onDismiss={onDismissNudge} onRefine={onRefineNudge} />
-          ) : null}
+          {bannerAboveBlocks}
           <RoutineSection
             title="Deine Basis"
             items={basisItems}
@@ -223,6 +241,7 @@ export function RoutinePage({
               productPresentation={view.productPresentation}
             />
           ) : null}
+          {bannerBelowBlocks}
           {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
           (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
             <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">

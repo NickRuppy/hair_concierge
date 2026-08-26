@@ -19,7 +19,7 @@ function findElement(
   if (!React.isValidElement(node)) return null
   const element = node as ReactElement<Record<string, unknown>>
   if (predicate(element)) return element
-  // Function components (e.g. `<RoutineRefinementNudge .../>`) are opaque
+  // Function components (e.g. `<RoutineRefinementBanner .../>`) are opaque
   // React elements until invoked — their real markup only exists once the
   // component function runs. Expand them here so the search can reach
   // markup nested inside sub-components, not just the caller's own JSX.
@@ -813,35 +813,48 @@ test("presents every structured cadence kind and keeps a user override authorita
   assert.equal(routineCadenceLabel(overridden), "Täglich")
 })
 
-test("renders the refinement nudge banner with the mockup copy and wires dismiss/refine", () => {
-  const routine = payload([item()])
-  const view: PersonalPlanRoutineView = {
+function activeViewFor(routine: RoutinePayloadV1): PersonalPlanRoutineView {
+  return {
     ...proposalView(routine),
     status: "active",
     activeVersion: { id: routine.versionId, payload: routine },
     pendingProposal: null,
   }
+}
+
+test("fresh state (products open, 2 von 4): banner renders above the routine blocks", () => {
+  const routine = payload([item()])
+  const view = activeViewFor(routine)
   let dismissed = 0
   let refined = 0
+  const html = renderToStaticMarkup(
+    <RoutinePage
+      view={view}
+      refinementBanner={{ module: "products", completedSteps: 2, totalSteps: 4 }}
+      onDismissRefinementBanner={() => {
+        dismissed += 1
+      }}
+      onRefineFromBanner={() => {
+        refined += 1
+      }}
+    />,
+  )
+
+  assert.match(html, /Mach deinen Plan genauer\./)
+  assert.match(html, />2 von 4</)
+  assert.match(html, /Weiter · 2 Min\./)
+  assert.ok(html.indexOf("Mach deinen Plan genauer.") < html.indexOf("Deine Basis"))
+
   const tree = RoutinePage({
     view,
-    nudgeVisible: true,
-    onDismissNudge: () => {
+    refinementBanner: { module: "products", completedSteps: 2, totalSteps: 4 },
+    onDismissRefinementBanner: () => {
       dismissed += 1
     },
-    onRefineNudge: () => {
+    onRefineFromBanner: () => {
       refined += 1
     },
   })
-
-  const heading = findElement(
-    tree,
-    (element) =>
-      typeof element.props.children === "object" &&
-      JSON.stringify(element.props.children).includes("Dein Plan basiert noch auf Annahmen."),
-  )
-  assert.ok(heading, "expected the nudge headline to render")
-
   const dismissButton = findElement(
     tree,
     (element) => element.props["aria-label"] === "Hinweis schließen",
@@ -850,21 +863,51 @@ test("renders the refinement nudge banner with the mockup copy and wires dismiss
   ;(dismissButton.props.onClick as () => void)()
   assert.equal(dismissed, 1)
 
-  const refineButton = findElement(tree, (element) => element.props.children === "Jetzt verfeinern")
-  assert.ok(refineButton)
+  const refineButton = findElement(
+    tree,
+    (element) =>
+      element.type === "button" &&
+      Boolean(element.props.children) &&
+      JSON.stringify(element.props.children).includes("Weiter"),
+  )
+  assert.ok(refineButton, "expected the banner CTA button to render")
   ;(refineButton.props.onClick as () => void)()
   assert.equal(refined, 1)
 })
 
-test("hides the refinement nudge banner once nudgeVisible is false", () => {
+test("post-module-1 state (habits open, 3 von 4): banner renders below the routine blocks with quieter copy", () => {
   const routine = payload([item()])
-  const view: PersonalPlanRoutineView = {
-    ...proposalView(routine),
-    status: "active",
-    activeVersion: { id: routine.versionId, payload: routine },
-    pendingProposal: null,
-  }
-  const tree = RoutinePage({ view, nudgeVisible: false })
-  const refineButton = findElement(tree, (element) => element.props.children === "Jetzt verfeinern")
-  assert.equal(refineButton, null)
+  const view = activeViewFor(routine)
+  const html = renderToStaticMarkup(
+    <RoutinePage
+      view={view}
+      refinementBanner={{ module: "habits", completedSteps: 3, totalSteps: 4 }}
+      onDismissRefinementBanner={() => undefined}
+      onRefineFromBanner={() => undefined}
+    />,
+  )
+
+  assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
+  assert.match(html, />3 von 4</)
+  assert.match(html, /Weiter · 3 Min\./)
+  assert.ok(html.indexOf("Deine Basis") < html.indexOf("Noch ein Schritt"))
+})
+
+test("dismissed state: refinementBanner absent renders no banner", () => {
+  const routine = payload([item()])
+  const view = activeViewFor(routine)
+  const html = renderToStaticMarkup(<RoutinePage view={view} refinementBanner={null} />)
+
+  assert.doesNotMatch(html, /Mach deinen Plan genauer\./)
+  assert.doesNotMatch(html, /Noch ein Schritt: deine Gewohnheiten\./)
+  assert.doesNotMatch(html, /Hinweis schließen/)
+})
+
+test("all-done state: no refinementBanner prop at all renders no banner", () => {
+  const routine = payload([item()])
+  const view = activeViewFor(routine)
+  const html = renderToStaticMarkup(<RoutinePage view={view} />)
+
+  assert.doesNotMatch(html, /Hinweis schließen/)
+  assert.doesNotMatch(html, /von 4/)
 })
