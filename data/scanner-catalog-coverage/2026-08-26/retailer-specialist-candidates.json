@@ -1,0 +1,2677 @@
+{
+  "schema_version": 1,
+  "researched_at": "2026-08-26",
+  "market": "DE",
+  "scope": {
+    "categories": [
+      "dry_shampoo",
+      "heat_protectant",
+      "deep_cleansing_shampoo",
+      "scalp_care",
+      "bondbuilder"
+    ],
+    "phase_1_target_context": {
+      "dry_shampoo": 7,
+      "heat_protectant": 5,
+      "deep_cleansing_shampoo": 3,
+      "scalp_care": 2,
+      "bondbuilder": 2
+    },
+    "pilot_context": "Only five total products are expected to enter the frozen pilot after parent reconciliation and selection.",
+    "intent": "Retailer-specialist Phase-1 candidate pool for later live catalog matching, GTIN ownership checks, and pilot prioritization."
+  },
+  "methodology": [
+    "Used current observable German retailer search/PDP renderings from dm, Rossmann, Mueller, and selected official/brand pages when retailer coverage was thin.",
+    "Treated multi-retailer presence, category listing order, in-stock or delivery wording, review counts, sponsored/listing prominence, and exact PDP availability as popularity or visibility proxies only.",
+    "Excluded exact products that were readily discoverable as currently active in data/scanner-catalog-coverage/2026-08-26/live-baseline.json or current launch enrichment artifacts.",
+    "Preserved lane=new_candidate on every row while updating per-row reconciliation_status after live active baseline, global identifier ownership, open-submission overlap, and strict category-fit triage.",
+    "Captured canonical GTIN-14 only where a retailer/official source visibly exposed a GTIN/EAN-like product code, and only after checksum validation."
+  ],
+  "candidate_defaults": {
+    "lane": "new_candidate",
+    "reconciliation_mode": "set_per_candidate_after_live_reconciliation",
+    "gtin_status": "not_reconciled",
+    "ingredient_analysis_status": "not_started",
+    "category_fact_status": "not_started",
+    "database_write_status": "not_authorized"
+  },
+  "content_fingerprint_algorithm": "sha256 of stable JSON excluding content_fingerprint",
+  "content_fingerprint": "6d2e2a2d9fcdbb7be4c4c582203a5d2d496610d134355311d3d28fdfc126e2c0",
+  "known_active_exclusion_basis": {
+    "source_file": "data/scanner-catalog-coverage/2026-08-26/live-baseline.json",
+    "active_counts_seen": {
+      "dry_shampoo": 10,
+      "heat_protectant": 7,
+      "deep_cleansing_shampoo": 5,
+      "scalp_care": 8,
+      "bondbuilder": 3
+    },
+    "notable_exact_exclusions": [
+      "Balea Trockenshampoo Kopfhaut Sensitive",
+      "Balea Trockenshampoo Schaum Kopfhaut Sensitive",
+      "Batiste Trockenshampoo Original",
+      "Batiste Trockenshampoo Blond",
+      "Batiste Trockenshampoo Bruenett",
+      "Batiste Trockenshampoo dunkel",
+      "Batiste Trockenshampoo Sensible Kopfhaut",
+      "got2b Trockenshampoo Extra Volumen",
+      "got2b Trockenshampoo Liquid to Dry",
+      "Isana Trockenshampoo Jedes Haar",
+      "Balea Hitzeschutzspray 2-Phasen",
+      "Balea Hitzeschutzspray Ultralight",
+      "got2b Hitzeschutzspray Schutzengel",
+      "Jean&Len Hitzeschutzspray beat the heat",
+      "L'Oreal Paris Elvital Dream Length Defeat the Heat Hitzeschutzspray",
+      "taft Aloe Boost Hydra Protect Hitzeschutzspray",
+      "taft x Gliss Lovely Long Hitzeschutzspray",
+      "Balea Professional Kopfhautpflege Peeling Tiefenreinigung",
+      "Balea Professional Kopfhautpflege Serum Sensitive",
+      "Eucerin DermoCapillaire Urea Kopfhautberuhigendes Intensiv-Tonikum",
+      "Gliss Scalp Balance Klaerendes Serum",
+      "Head & Shoulders Derma X Pro Kopfhaut-Feuchtigkeitspflege Leave-In Serum",
+      "Isana Professional Kopfhautpeeling Tiefenreinigung",
+      "L'Oreal Paris Elvital Fiber Booster Anti-Haarverlust Serum",
+      "The Ordinary Multi-Peptide Serum for Hair Density",
+      "Balea Professional Shampoo Tiefenreinigung",
+      "Gliss Scalp Balance Tiefenreinigungs-Shampoo",
+      "Isana Professional Shampoo Tiefenreinigung",
+      "Neqi x @_the.beautiful.people Deep Cleansing Shampoo",
+      "Swiss-O-Par Tiefenreinigung Shampoo",
+      "Epres Bond Repair Treatment",
+      "K18 Leave-In Molecular Repair Hair Mask",
+      "OLAPLEX No.3PLUS Complete Repair Treatment"
+    ]
+  },
+  "source_quality_notes": {
+    "dry_shampoo": "Rossmann category/PDP evidence was strongest: many exact rows exposed size, price, review counts, and several visible GTINs. dm and Mueller added cross-retailer support for Batiste and category breadth.",
+    "heat_protectant": "dm category evidence exposed 18 products and strong review counts; Rossmann and Mueller confirmed several non-active exact candidates. Some heat-protectant-adjacent leave-in/styling sprays need category-contract reconciliation before import.",
+    "deep_cleansing_shampoo": "The strict Tiefenreinigung/Deep Cleansing shelf is materially thinner than dry shampoo or heat protectant. Ten rows are possible only by including clarifying, detox, anti-residue, and oil-control shampoo candidates with explicit unresolved category-fit blockers.",
+    "scalp_care": "Rossmann and Mueller have enough scalp tonics/serums/oils for a ten-row pool. Many carry density or hair-loss-adjacent marketing, so later product copy must stay cosmetic and medically conservative.",
+    "bondbuilder": "The mass-retail bond-repair shelf has enough exact products for ten candidates only if leave-in, mask, pre-shampoo, spray-conditioner, and bonding-oil formats are all held for later category-fit review. Shampoo/conditioner rows were deliberately deprioritized except where retailer visibility was unusually strong."
+  },
+  "candidates": [
+    {
+      "candidate_id": "dry-shampoo-001",
+      "category": "dry_shampoo",
+      "priority_rank": 1,
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Volumen & Frische, Kornblume & Niacinamid",
+      "package_size": "200 ml",
+      "canonical_gtin14": "04072600721902",
+      "gtin_evidence": {
+        "value_seen": "4072600721902",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-guhl-trockenshampoo-volumen-und-frische-kornblume-und-niacinamid-silikonfrei-200-ml-online-kaufen/p/4072600721902"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-guhl-trockenshampoo-volumen-und-frische-kornblume-und-niacinamid-silikonfrei-200-ml-online-kaufen/p/4072600721902",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible with 200 ml size, 3.99 EUR, in-cart state, delivery window, and 123 reviews on the category listing."
+        }
+      ],
+      "priority_rationale": "Newer broad-shelf Guhl aerosol with visible PDP, strong category listing evidence, and validated GTIN.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04072600721902",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Exact Rossmann PDP, validated GTIN, no active-baseline name match, and no live GTIN owner across active/inactive product identifiers."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-002",
+      "category": "dry_shampoo",
+      "priority_rank": 2,
+      "canonical_brand": "got2b",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Extra Frisch",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-frisch/p/4015100800203",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Exact Rossmann PDP resolved for the 200 ml Extra Frisch product; live cart state was not claimed because the retailer transiently redirected to maintenance during verification."
+        }
+      ],
+      "priority_rationale": "Highest observed dry-shampoo review count in the Rossmann listing among not-readily-active exact products.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Current Rossmann category evidence with strong review signal; no exact active-baseline name match and no open-submission overlap. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-003",
+      "category": "dry_shampoo",
+      "priority_rank": 3,
+      "canonical_brand": "NIVEA",
+      "product_line": "Fresh & Mild",
+      "clean_name": "Trockenshampoo ohne Rueckstaende, mittlere Haartoene",
+      "package_size": "200 ml",
+      "canonical_gtin14": "04005900756015",
+      "gtin_evidence": {
+        "value_seen": "4005900756015",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-nivea-trockenshampoo-fresh-und-mild-ohne-rueckstaende-mittlere-haartoene-vegan-200-ml-online-kaufen/p/4005900756015"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-nivea-trockenshampoo-fresh-und-mild-ohne-rueckstaende-mittlere-haartoene-vegan-200-ml-online-kaufen/p/4005900756015",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible with 200 ml size, 3.99 EUR, in-cart state, delivery window, variant family, and 437 category reviews."
+        }
+      ],
+      "priority_rationale": "Large mainstream brand, color-fit variant, visible GTIN, and high review count.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04005900756015",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Exact Rossmann PDP, validated GTIN, no active-baseline name match, and no live GTIN owner across active/inactive product identifiers."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-004",
+      "category": "dry_shampoo",
+      "priority_rank": 4,
+      "canonical_brand": "ISANA",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Dunkles Haar, Anti-Fett-Formel",
+      "package_size": "200 ml",
+      "canonical_gtin14": "04305615596723",
+      "gtin_evidence": {
+        "value_seen": "4305615596723",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-dunkles-haar-anti-fett-formel-extra-volumen-200-ml-online-kaufen/p/4305615596723"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-dunkles-haar-anti-fett-formel-extra-volumen-200-ml-online-kaufen/p/4305615596723",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible with 200 ml size, 1.99 EUR, cart and delivery state, and article number 029408."
+        }
+      ],
+      "priority_rationale": "Strong own-brand colored-hair coverage gap relative to current active dry-shampoo set.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04305615596723",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Exact Rossmann PDP and validated GTIN; no exact active-baseline name match, no open-submission overlap, and no live GTIN owner."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-005",
+      "category": "dry_shampoo",
+      "priority_rank": 5,
+      "canonical_brand": "Batiste",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Volumen",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-batiste-trockenshampoo-volumen-mit-aufpolsterndem-kollagen-200-ml-online-kaufen/p/5010724532966",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Exact current Rossmann PDP for the 200 ml Volumen product."
+        }
+      ],
+      "priority_rationale": "Multi-retailer Batiste variant not in the known active exact set, with a clear volume job.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "dm plus Rossmann visibility for Batiste Volumen; current active set has other Batiste variants but no exact Volumen identity. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-006",
+      "category": "dry_shampoo",
+      "priority_rank": 6,
+      "canonical_brand": "Batiste",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Cherry",
+      "package_size": "200 ml",
+      "canonical_gtin14": "05010724526798",
+      "gtin_evidence": {
+        "value_seen": "5010724526798",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-batiste-trockenshampoo-cherry-fruchtiger-duft-200-ml-online-kaufen/p/5010724526798"
+      },
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/1476443/batiste-trockenshampoo-cherry",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible with 200 ml size, 3.75 EUR category signal, and 234 category reviews."
+        },
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-batiste-trockenshampoo-cherry-fruchtiger-duft-200-ml-online-kaufen/p/5010724526798",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible in stock with 200 ml size, 3.99 EUR, and 99 reviews."
+        },
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/batiste-dry-shampoo-cherry-200ml-2044078/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP/listing visible with 200 ml size, 3.75 EUR, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Excellent multi-retailer visibility and validated GTIN; lower rank only because Batiste already has several active variants.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "05010724526798",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "dm/Rossmann/Mueller visibility, validated GTIN, and no live GTIN owner; active set has other Batiste variants but not Cherry."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-007",
+      "category": "dry_shampoo",
+      "priority_rank": 7,
+      "canonical_brand": "ISANA",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Helles Haar",
+      "package_size": "200 ml",
+      "canonical_gtin14": "04305615596716",
+      "gtin_evidence": {
+        "value_seen": "4305615596716",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-helles-haar-anti-fett-formel-langanhaltende-frische-und-volumen-200-ml-online-kaufen/p/4305615596716"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-helles-haar-anti-fett-formel-langanhaltende-frische-und-volumen-200-ml-online-kaufen/p/4305615596716",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible with 200 ml size, 1.99 EUR, cart and delivery state, and article number 029406."
+        }
+      ],
+      "priority_rationale": "Own-brand light-hair variant with high observed review count and no exact active match in the baseline.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04305615596716",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Exact Rossmann PDP and validated GTIN; no exact active-baseline name match, no open-submission overlap, and no live GTIN owner."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-008",
+      "category": "dry_shampoo",
+      "priority_rank": 8,
+      "canonical_brand": "Guhl",
+      "product_line": "30 Sek",
+      "clean_name": "Trockenshampoo Pure Frische, Wasserminze & Niacinamid",
+      "package_size": "200 ml",
+      "canonical_gtin14": "04072600721704",
+      "gtin_evidence": {
+        "value_seen": "4072600721704",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-guhl-30-sek-trockenshampoo-pure-frische-wasserminze-und-niacinamid-vegan-und-rueckstandsfrei/p/4072600721704"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-guhl-30-sek-trockenshampoo-pure-frische-wasserminze-und-niacinamid-vegan-und-rueckstandsfrei/p/4072600721704",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible with 200 ml size, 3.99 EUR, in-cart state, delivery window, and 133 category reviews."
+        }
+      ],
+      "priority_rationale": "Second Guhl shelf-visible aerosol with validated GTIN and meaningful freshening variant.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04072600721704",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Exact Rossmann PDP, validated GTIN, no active-baseline name match, and no live GTIN owner across active/inactive product identifiers."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-009",
+      "category": "dry_shampoo",
+      "priority_rank": 9,
+      "canonical_brand": "NIVEA",
+      "product_line": "Fresh Volume",
+      "clean_name": "Trockenshampoo extra Volumen, alle Haartypen",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/trockenshampoo/c/olcat3_6076269",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Category page listed 200 ml size, 3.99 EUR, and 203 reviews."
+        }
+      ],
+      "priority_rationale": "Mainstream non-Batiste volume alternative with clear job-to-be-done and current retailer listing.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Rossmann listing evidence for NIVEA Fresh Volume; no exact active-baseline match and no open-submission overlap. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "dry-shampoo-010",
+      "category": "dry_shampoo",
+      "priority_rank": 10,
+      "canonical_brand": "ISANA PROFESSIONAL",
+      "product_line": "Plex",
+      "clean_name": "Trockenshampoo, Antioxidans-Komplex, Repair-Effekt",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/trockenshampoo/c/olcat3_6076269",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Category page listed 200 ml size, 2.49 EUR, and 79 reviews."
+        }
+      ],
+      "priority_rationale": "Chemically treated-hair positioning may diversify the dry-shampoo scanner shelf; needs later claim/category review.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Rossmann listing evidence for ISANA Professional Plex dry shampoo; dry-shampoo category fit is clear, but claim wording should be reviewed later."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-001",
+      "category": "heat_protectant",
+      "priority_rank": 1,
+      "canonical_brand": "syoss",
+      "product_line": null,
+      "clean_name": "Hitzeschutz Spray Keratin Heat",
+      "package_size": "200 ml",
+      "canonical_gtin14": "04015100860146",
+      "gtin_evidence": {
+        "value_seen": "4015100860146",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-hitzeschutz-spray-keratin-heat/p/4015100860146"
+      },
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/3047023/syoss-hitzeschutzspray-keratin",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP/listing visible with 200 ml size, 4.95 EUR, in-stock category signal, and 437-438 reviews."
+        },
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-hitzeschutz-spray-keratin-heat/p/4015100860146",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible in stock with 200 ml size, 4.49 EUR, and 383 reviews."
+        },
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/syoss-keratin-heat-hitzeschutz-spray-IPN3077884/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP/listing visible with 200 ml size, 4.95 EUR, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Strongest cross-retailer heat candidate with validated GTIN; exact active conflict still unresolved because baseline has a similar but not identical syoss candidate gap.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04015100860146",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "dm/Rossmann/Mueller visibility, validated GTIN, and no live GTIN owner; no exact active syoss heat identity in baseline."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-002",
+      "category": "heat_protectant",
+      "priority_rank": 2,
+      "canonical_brand": "OGX",
+      "product_line": "Bond Protein Repair",
+      "clean_name": "Hitzeschutzspray",
+      "package_size": "193 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/haare/haarstyling/hitzeschutzspray-und-co",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm heat-protectant category page listed 193 ml size, 12.95 EUR, in stock, and 210 reviews."
+        }
+      ],
+      "priority_rationale": "Premium-leaning drugstore heat spray with bond-repair positioning; useful scanner bridge between heat and repair shelves.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_heat_vs_repair",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Explicit Hitzeschutzspray listing on dm with strong review signal; confirmed as heat despite bond-repair positioning. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-003",
+      "category": "heat_protectant",
+      "priority_rank": 3,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Diamond Sleek",
+      "clean_name": "Leave-In Spray Shine-Coat Glaettungsspray",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/haare/haarstyling/hitzeschutzspray-und-co",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm heat-protectant category page listed 150 ml size, 7.95 EUR, in stock, and 217 reviews."
+        },
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarwasser/c/olcat3_4133133",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann hairwater/specialty listing included the same 150 ml Shine-Coat spray with 196 reviews."
+        }
+      ],
+      "priority_rationale": "Visible at multiple retailers and fills smoothing/shine heat-protection-adjacent demand.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_leave_in_vs_heat",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "medium",
+        "rationale": "Visible in heat-protectant shelf, but exact name is leave-in/shine-coat smoothing spray and Rossmann evidence came from a hairwater listing, so category-fit remains ambiguous."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-004",
+      "category": "heat_protectant",
+      "priority_rank": 4,
+      "canonical_brand": "John Frieda",
+      "product_line": "Frizz Ease",
+      "clean_name": "Hitzeschirm Hitzeschutz Spray",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/john-frieda-frizz-ease-hitzeschirm-hitzeschutz-spray-PPN3176953/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP/listing visible with 200 ml size, 9.95 EUR, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Recognizable specialist frizz/heat product at Mueller; adds non-Henkel/L'Oreal brand diversity.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Exact Mueller Hitzeschirm/Hitzeschutz spray PDP; no exact active-baseline match and no open-submission overlap. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-005",
+      "category": "heat_protectant",
+      "priority_rank": 5,
+      "canonical_brand": "syoss",
+      "product_line": "Keratin Volume",
+      "clean_name": "Foehnschutz-Spray",
+      "package_size": "200 ml",
+      "canonical_gtin14": "04015100860160",
+      "gtin_evidence": {
+        "value_seen": "4015100860160",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-foehnschutz-spray-keratin-volume/p/4015100860160"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-foehnschutz-spray-keratin-volume/p/4015100860160",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible in stock with 200 ml size, 4.49 EUR, delivery window, and 330 reviews."
+        },
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/c/drogerie/pflege/haarpflege/haarstyling/frisiermittel/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller styling listing showed syoss Foehnschutz-Spray Keratin Volume, 200 ml, 4.95 EUR, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Validated-GTIN blow-dry heat candidate with high review visibility and a different styling route than flat-iron sprays.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04015100860160",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Rossmann plus Mueller visibility, validated GTIN, and no live GTIN owner; explicit blow-dry heat-protectant format."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-006",
+      "category": "heat_protectant",
+      "priority_rank": 6,
+      "canonical_brand": "DEJAN GARZ",
+      "product_line": null,
+      "clean_name": "Hitzeschutzspray The Foundation",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/haare/haarstyling/hitzeschutzspray-und-co",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm heat-protectant category page listed 150 ml size, 9.95 EUR, in stock, and 415 reviews."
+        }
+      ],
+      "priority_rationale": "High review count and newer creator/professional positioning; good pilot wild-card after mass-market basics.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "dm heat-protectant listing with strong review signal; no exact active-baseline match and no open-submission overlap. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-007",
+      "category": "heat_protectant",
+      "priority_rank": 7,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": null,
+      "clean_name": "Hitzeschutzspray Wunderoel, stark geschaedigtes Haar",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/haare/haarstyling/hitzeschutzspray-und-co",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm heat-protectant category page listed 150 ml size, 5.95 EUR, in stock, and 382 reviews."
+        }
+      ],
+      "priority_rationale": "Strong review visibility and care-plus-heat positioning at mass retailer.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_oil_vs_heat",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "dm listing names Hitzeschutzspray Wunderoel; confirmed as heat with later oil/leave-in copy caution. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-008",
+      "category": "heat_protectant",
+      "priority_rank": 8,
+      "canonical_brand": "AVEO",
+      "product_line": null,
+      "clean_name": "Hitzeschutzspray Protect",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/aveo-hitzeschutzspray-protect-2733316/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP visible in stock with 200 ml size, 1.95 EUR, home delivery, and filiale logistics."
+        }
+      ],
+      "priority_rationale": "Low-price Mueller own-brand scanner candidate that broadens retailer coverage beyond dm/Rossmann.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Exact Mueller Hitzeschutzspray Protect PDP; no exact active-baseline match and no open-submission overlap. GTIN remains unavailable."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-009",
+      "category": "heat_protectant",
+      "priority_rank": 9,
+      "canonical_brand": "BIOTURM",
+      "product_line": null,
+      "clean_name": "Hitzeschutz-Spray",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/bioturm-hitzeschutz-spray-IPN3054603/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP visible in stock with heat-protection copy and all-hair-types wording."
+        }
+      ],
+      "priority_rationale": "Naturkosmetik/specialist-style option where heat shelf otherwise skews mass aerosol.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "exact_size_confirmation",
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Exact Mueller Hitzeschutz-Spray PDP; no exact active-baseline match and no open-submission overlap. Size still needs final confirmation."
+      }
+    },
+    {
+      "candidate_id": "heat-protectant-010",
+      "category": "heat_protectant",
+      "priority_rank": 10,
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Hitzeschutzspray Locken & Styling 2in1",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/haare/haarstyling/hitzeschutzspray-und-co",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm heat-protectant category page listed 150 ml size, 1.95 EUR, in stock, and 87 reviews."
+        }
+      ],
+      "priority_rationale": "Cheap, visible, curl-positioned own-brand supplement to the two active Balea heat sprays.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "dm heat-protectant listing names Hitzeschutzspray Locken & Styling 2in1; no exact active-baseline match and no open-submission overlap."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-001",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 1,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Coco Water",
+      "clean_name": "Klaerendes Shampoo",
+      "package_size": "250 ml",
+      "canonical_gtin14": "03600541970397",
+      "gtin_evidence": {
+        "value_seen": "3600541970397",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-coco-water-klaerendes-shampoo/p/3600541970397"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-coco-water-klaerendes-shampoo/p/3600541970397",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "PDP visible with clarifying/oily-root copy; category listing showed 250 ml size, 1.89 EUR, and 228 reviews."
+        }
+      ],
+      "priority_rationale": "Best mass-retail clarifying candidate outside known active strict Tiefenreinigung rows, with validated GTIN.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "deep_cleansing_category_fit",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "03600541970397",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Exact clarifying/oily-root Rossmann PDP with validated GTIN; reset-focus fit is sebum/buildup rather than generic shampoo, and no live GTIN owner."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-002",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 2,
+      "canonical_brand": "BIOTURM",
+      "product_line": null,
+      "clean_name": "Tiefenreinigung Shampoo",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/bioturm-tiefenreinigung-shampoo-IPN3054416/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP visible with 200 ml size, 9.95 EUR, online and filiale availability; copy names residue/particle removal."
+        }
+      ],
+      "priority_rationale": "Exact Tiefenreinigung PDP and clear residue-removal positioning; fills premium/natural-store lane.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Exact Mueller Tiefenreinigung PDP with residue/particle removal wording; fits reset-focus contract despite missing GTIN."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-003",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 3,
+      "canonical_brand": "AVEO Professional",
+      "product_line": null,
+      "clean_name": "Shampoo Deep Cleansing",
+      "package_size": "250 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/aveo-professional-shampoo-deep-cleansing-PPN3152135/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP/listing visible with 250 ml size, 1.25 EUR sale signal, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Exact Deep Cleansing own-brand candidate with clean scanner relevance and strong price coverage.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Exact Mueller Deep Cleansing shampoo PDP; fits reset-focus contract despite missing GTIN."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-004",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 4,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Hydra Hyaluronic Pure",
+      "clean_name": "Entfettendes Shampoo",
+      "package_size": "300 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/3137917/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-pure",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible with 300 ml size and oil-control/salicylic-acid cleansing copy."
+        },
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/c/olcat2_4133009",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann hair-care listing showed 300 ml size and 2.99 EUR price."
+        }
+      ],
+      "priority_rationale": "Highly visible current L'Oreal oil-control shampoo; category fit is plausible but not strict enough for import without review.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "deep_cleansing_category_fit",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Oil-control cleansing PDP/listing evidence fits sebum/buildup reset focus, but should stay below explicit Tiefenreinigung rows."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-005",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 5,
+      "canonical_brand": "lavera NATURKOSMETIK",
+      "product_line": null,
+      "clean_name": "Shampoo Fresh & Clear",
+      "package_size": "250 ml",
+      "canonical_gtin14": "04021457666881",
+      "gtin_evidence": {
+        "value_seen": "4021457666881",
+        "checksum_valid": true,
+        "source_url": "https://www.dm.de/p/d/3133453/lavera-naturkosmetik-shampoo-fresh-und-clear"
+      },
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/3133453/lavera-naturkosmetik-shampoo-fresh-und-clear",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible with 250 ml size, 5.45 EUR, 12 reviews, explicit GTIN, and styling-residue/oil-removal copy; current category availability showed not deliverable."
+        }
+      ],
+      "priority_rationale": "Validated-GTIN natural-cosmetics clarifying candidate, but availability makes it a lower pilot pick.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_availability_recheck",
+        "live_catalog_match",
+        "gtin_ownership",
+        "deep_cleansing_category_fit",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04021457666881",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "dm PDP includes styling-residue/oil-removal wording and validated GTIN; confirmed fit, but availability recheck remains a pilot-risk blocker."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-006",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 6,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Tonerde Absolue",
+      "clean_name": "Pflegeshampoo",
+      "package_size": "300 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/marken/elvital",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm Elvital brand page currently described Tonerde Absolue as freshness/purity and quick-oil-control line."
+        }
+      ],
+      "priority_rationale": "Popular oil-control line likely scanner-relevant; exact PDP and pack/GTIN need follow-up before promotion.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "exact_pdp_url",
+        "exact_package_size",
+        "gtin",
+        "live_catalog_match",
+        "deep_cleansing_category_fit",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Only brand-page oil-control line evidence was captured; exact PDP/package identity and strict reset-focus fit are not strong enough."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-007",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 7,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Coco Water",
+      "clean_name": "Shampoo Coco Water, fettiger Ansatz & trockene Spitzen",
+      "package_size": "300 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible with 300 ml size and excess-sebum cleansing copy; category signal showed mixed availability."
+        }
+      ],
+      "priority_rationale": "Same core line as the high-priority Rossmann 250 ml row; kept separate because pack/retailer identity may differ.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "gtin",
+        "package_identity_vs_250ml",
+        "live_catalog_match",
+        "deep_cleansing_category_fit",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Likely same Coco Water family as row 001 and not an independently strict reset shampoo; package identity remains unclear."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-008",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 8,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": null,
+      "clean_name": "Anti-Schuppen Shampoo",
+      "package_size": "250 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-shampoo-anti-schuppen/p/3600541979994",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible with 250 ml size and anti-flake cleansing copy."
+        }
+      ],
+      "priority_rationale": "Scalp/flake cleansing candidate only; held low because it may belong in shampoo/scalp rather than deep cleansing.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_shampoo_vs_deep_cleansing",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Anti-dandruff shampoo visibility is not enough for the current deep-cleansing reset-focus contract."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-009",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 9,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Locken Methode",
+      "clean_name": "Feuchtigkeitsauffuellendes Shampoo N1",
+      "package_size": "250 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-locken-methode-feuchtigkeitsauffuellendes-shampoo/p/3600542571739",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible and references routine sequencing with a N0 pre-shampoo and N1 shampoo."
+        }
+      ],
+      "priority_rationale": "Curly-method routine identity may matter for scanner coverage, but not a strict reset shampoo.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "exact_size_confirmation",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_shampoo_vs_deep_cleansing",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Curly-method moisturizing shampoo does not meet reset-focus deep-cleansing contract."
+      }
+    },
+    {
+      "candidate_id": "deep-cleansing-shampoo-010",
+      "category": "deep_cleansing_shampoo",
+      "priority_rank": 10,
+      "canonical_brand": "Herbal Essences",
+      "product_line": null,
+      "clean_name": "Shampoo Limettenduft Tiefenreinigung & Glanz",
+      "package_size": "350 ml",
+      "canonical_gtin14": "08006530123556",
+      "gtin_evidence": {
+        "value_seen": "8006530123556",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-tiefenreinugung-und-glanz-limettenduft/p/8006530123556"
+      },
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/3115708/herbal-essences-shampoo-limettenduft-tiefenreinigung-und-glanz",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible in stock with 350 ml size, 3.95 EUR, 4.8 rating across 126 reviews, and residue-removal copy."
+        },
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-tiefenreinugung-und-glanz-limettenduft/p/8006530123556",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible and brand listing showed 350 ml size, 3.99 EUR, and 78 reviews; URL exposes validated GTIN."
+        },
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/herbal-essences-tiefenreinugung-glanz-limettenduft-shampoo-PPN3159516/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP/brand listing visible with 350 ml size, sale price, online availability, and filiale availability."
+        }
+      ],
+      "priority_rationale": "Exact Tiefenreinigung product with current dm/Rossmann/Mueller visibility and validated GTIN; kept below stricter candidates because of possible active-submission overlap.",
+      "lane": "new_candidate",
+      "reconciliation_status": "existing_product_match",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "active_submission_overlap",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": "41b99629-5a1c-402f-a486-d41780e89e66",
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "owned_by_existing_product",
+          "canonical_gtin14": "08006530123556",
+          "owner_product_id": "41b99629-5a1c-402f-a486-d41780e89e66",
+          "owner": {
+            "product_id": "41b99629-5a1c-402f-a486-d41780e89e66",
+            "brand": "Herbal Essences",
+            "name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+            "category_key": "shampoo",
+            "is_active": true,
+            "lifecycle_status": "active"
+          },
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "not_new_existing_live_product",
+        "confidence": "high",
+        "rationale": "Candidate GTIN is already owned by live active product 41b99629-5a1c-402f-a486-d41780e89e66; not a new candidate for this lane."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-001",
+      "category": "scalp_care",
+      "priority_rank": 1,
+      "canonical_brand": "Balea",
+      "product_line": "Natural Beauty",
+      "clean_name": "Kopfhaut Tonikum",
+      "package_size": "150 ml",
+      "canonical_gtin14": "04066447793529",
+      "gtin_evidence": {
+        "value_seen": "4066447793529",
+        "checksum_valid": true,
+        "source_url": "https://www.dm.de/p/d/2970703/balea-kopfhaut-tonikum-natural-beauty"
+      },
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/2970703/balea-kopfhaut-tonikum-natural-beauty",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible in stock with 150 ml size, 4.0 rating across 101 reviews, and explicit GTIN."
+        }
+      ],
+      "priority_rationale": "Low-price dm own-brand scalp tonic with clean GTIN and no exact active match in the current scalp set.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04066447793529",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Exact dm scalp tonic PDP, validated GTIN, no live GTIN owner, and no exact active-baseline match. Keep copy cosmetic."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-002",
+      "category": "scalp_care",
+      "priority_rank": 2,
+      "canonical_brand": "ISANA PROFESSIONAL",
+      "product_line": null,
+      "clean_name": "Haar & Kopfhaut Tonikum Rosmarin",
+      "package_size": "150 ml",
+      "canonical_gtin14": "04068134002327",
+      "gtin_evidence": {
+        "value_seen": "4068134002327",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haar-und-kopfhaut-tonikum-rosmarin/p/4068134002327"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haar-und-kopfhaut-tonikum-rosmarin/p/4068134002327",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP/category visible with 150 ml size, 2.99 EUR, and 313 reviews."
+        }
+      ],
+      "priority_rationale": "Strong own-brand scalp tonic candidate with validated GTIN and high category-review signal.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04068134002327",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Exact Rossmann scalp tonic PDP, validated GTIN, no live GTIN owner, and strong review signal. Keep rosemary/hair-growth-adjacent copy conservative."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-003",
+      "category": "scalp_care",
+      "priority_rank": 3,
+      "canonical_brand": "Plantur 39",
+      "product_line": null,
+      "clean_name": "Phyto-Coffein Tonikum",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarwasser/c/olcat3_4133133",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann hairwater listing showed 200 ml size, 9.99 EUR, and in-cart state."
+        }
+      ],
+      "priority_rationale": "Mainstream scalp-tonic brand with clear shelf visibility; medical-adjacent claims require careful later copy boundaries.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Current Rossmann hairwater listing and clear scalp-tonic brand; no exact active-baseline match. Medical-adjacent claims require conservative copy."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-004",
+      "category": "scalp_care",
+      "priority_rank": 4,
+      "canonical_brand": "Alpecin",
+      "product_line": null,
+      "clean_name": "Coffein-Liquid",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/c/drogerie/pflege/haarpflege/haarpflege/spezialprodukte/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller specialty-haircare listing showed 200 ml size, 9.95 EUR, online and filiale availability."
+        },
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/alle-marken/alpecin/c/online-dachmarke_4455042",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann Alpecin brand page currently described liquids for post-wash application."
+        }
+      ],
+      "priority_rationale": "Major German scalp tonic brand; useful scanner candidate if claims are constrained to cosmetic/supportive framing.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "exact_pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Mueller and Rossmann brand visibility for a major scalp liquid; no exact active-baseline match. Medical-adjacent claims require conservative copy."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-005",
+      "category": "scalp_care",
+      "priority_rank": 5,
+      "canonical_brand": "Plantur",
+      "product_line": "DMG Clinical",
+      "clean_name": "Kopfhaut Serum",
+      "package_size": "125 ml",
+      "canonical_gtin14": "04008666770011",
+      "gtin_evidence": {
+        "value_seen": "4008666770011",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-dr-wolff-plantur-dmg-clinical-haarserum/p/4008666770011"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-dr-wolff-plantur-dmg-clinical-haarserum/p/4008666770011",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible with serum claims; Mueller listing showed 125 ml size, 19.95 EUR, online and filiale availability."
+        },
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/b/plantur/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller Plantur brand listing showed DMG Clinical Kopfhaut Serum, 125 ml, 19.95 EUR."
+        }
+      ],
+      "priority_rationale": "Cross-retailer scalp serum with validated GTIN; high claim risk keeps it below cosmetic tonics.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "medical_claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04008666770011",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Rossmann/Mueller visibility, validated GTIN, and no live GTIN owner; high claim risk but category identity is scalp serum."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-006",
+      "category": "scalp_care",
+      "priority_rank": 6,
+      "canonical_brand": "Alterra",
+      "product_line": null,
+      "clean_name": "Kopfhaut-Elixier Bio-Hafer",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/kopfhautpflege-und-kopfhautpeeling/c/olcat3_12842887",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann scalp-care category page listed 150 ml size and 61 reviews."
+        }
+      ],
+      "priority_rationale": "Naturkosmetik scalp-comfort candidate and direct own-brand counterpart to existing dm/Rossmann scalp rows.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Rossmann scalp-care category listing for Kopfhaut-Elixier; no exact active-baseline match and no open-submission overlap."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-007",
+      "category": "scalp_care",
+      "priority_rank": 7,
+      "canonical_brand": "Guhl",
+      "product_line": "Kraft + Fuelle",
+      "clean_name": "Kopfhaut Tonikum",
+      "package_size": "125 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/kopfhautpflege-und-kopfhautpeeling/c/olcat3_12842887",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann scalp-care category page listed 125 ml size and 4.99 EUR price."
+        },
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/c/drogerie/pflege/haarpflege/haarpflege/spezialprodukte/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller specialty-haircare listing showed 125 ml size, 4.95 EUR, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Cross-retailer scalp tonic with mainstream brand trust and lower price than pharma-like tonics.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Rossmann plus Mueller visibility for Kopfhaut Tonikum; no exact active-baseline match. Keep fullness claims cosmetic."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-008",
+      "category": "scalp_care",
+      "priority_rank": 8,
+      "canonical_brand": "ISANA",
+      "product_line": null,
+      "clean_name": "Tonikum Coffein",
+      "package_size": "150 ml",
+      "canonical_gtin14": "04305615348018",
+      "gtin_evidence": {
+        "value_seen": "4305615348018",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-tonikum-coffein/p/4305615348018"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-tonikum-coffein/p/4305615348018",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible with caffeine-tonic positioning and explicit GTIN in URL."
+        }
+      ],
+      "priority_rationale": "Validated-GTIN budget scalp tonic; lower priority because hair-loss-adjacent language needs stricter handling.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "exact_size_confirmation",
+        "live_catalog_match",
+        "gtin_ownership",
+        "medical_claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04305615348018",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "high",
+        "rationale": "Exact Rossmann caffeine tonic PDP, validated GTIN, and no live GTIN owner; medical/hair-loss-adjacent phrasing needs strict copy boundary."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-009",
+      "category": "scalp_care",
+      "priority_rank": 9,
+      "canonical_brand": "Bali Curls",
+      "product_line": null,
+      "clean_name": "Rosemary Scalp & Hair Oil",
+      "package_size": "30 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/c/drogerie/pflege/haarpflege/haarpflege/spezialprodukte/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller specialty-haircare listing showed 30 ml size, 9.95 EUR, new badge, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "New scalp-oil format useful for scanner coverage, but needs later oil-vs-scalp category boundary review.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_scalp_care_vs_oil",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "medium",
+        "rationale": "Mueller specialty listing is current, but rosemary scalp and hair oil may belong in oil rather than scalp-care product contract."
+      }
+    },
+    {
+      "candidate_id": "scalp-care-010",
+      "category": "scalp_care",
+      "priority_rank": 10,
+      "canonical_brand": "Santé",
+      "product_line": null,
+      "clean_name": "Grow Mode On Tonikum",
+      "package_size": "75 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarwasser/c/olcat3_4133133",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann hairwater listing showed 75 ml size, 5.99 EUR, and 61 reviews."
+        }
+      ],
+      "priority_rationale": "Smaller natural-cosmetics tonic with enough listing signal for candidate review; claim phrasing needs caution.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "claim_boundary",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Rossmann hairwater listing for tonic format; no exact active-baseline match. Growth wording needs conservative handling."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-001",
+      "category": "bondbuilder",
+      "priority_rank": 1,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Bond Repair",
+      "clean_name": "Pre-Shampoo Anti-Haarschaeden",
+      "package_size": "200 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/1679220/l-oreal-paris-elvital-pre-shampoo-bond-repair-anti-haarschaeden",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible with 200 ml size, 8.95 EUR, in stock, 748 review category signal, and explicit pre-shampoo bond-repair copy."
+        },
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/elvital-pre-shampoo-bond-repair-2868614/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP/listing visible with 200 ml size, 8.95 EUR, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Best mass-retail bond-treatment candidate after excluding active OLAPLEX/K18/Epres; format maps closest to a treatment lane.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "bondbuilder_category_fit",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Pre-shampoo Bond Repair treatment has the best standalone treatment fit among non-active mass-retail rows; no exact active-baseline match."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-002",
+      "category": "bondbuilder",
+      "priority_rank": 2,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Bond Repair",
+      "clean_name": "Leave-In Haarserum Anti-Haarschaeden",
+      "package_size": "150 ml",
+      "canonical_gtin14": "03600524075576",
+      "gtin_evidence": {
+        "value_seen": "3600524075576",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden/p/3600524075576"
+      },
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm PDP visible with 150 ml size and bond-repair leave-in copy."
+        },
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden/p/3600524075576",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible and URL exposes validated GTIN."
+        }
+      ],
+      "priority_rationale": "High-visibility L'Oreal leave-in bond product with validated GTIN; needs category-contract fit because current bondbuilder formats are narrower.",
+      "lane": "new_candidate",
+      "reconciliation_status": "new_candidate_confirmed",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "category_boundary_bondbuilder_vs_leave_in",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "03600524075576",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "accepted_for_category_contract",
+        "confidence": "medium",
+        "rationale": "Leave-in Bond Repair serum is a standalone specialized bond-repair product with validated GTIN and no live GTIN owner; narrower current bond formats make it medium confidence."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-003",
+      "category": "bondbuilder",
+      "priority_rank": 3,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "miracles Bond Repair",
+      "clean_name": "Intensive Haarmaske",
+      "package_size": "300 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/haare/haarpflege/haarkur-und-haarmaske",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm mask category page listed 300 ml size, 7.95 EUR, in stock, and bond-repair naming."
+        }
+      ],
+      "priority_rationale": "Mass-market bond-repair mask with current dm visibility; useful if pilot wants affordable bond-adjacent option.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_bondbuilder_vs_mask",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Bond-named intensive mask is likely an ordinary mask under the stricter standalone bond-treatment contract."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-004",
+      "category": "bondbuilder",
+      "priority_rank": 4,
+      "canonical_brand": "Balea PROFESSIONAL",
+      "product_line": "Plex Care",
+      "clean_name": "Haarmaske 2in1",
+      "package_size": "250 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/marken/balea-professional-216786",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm Balea Professional brand page listed Haarmaske 2in1 Plex Care, 250 ml, 2.75 EUR, and in-stock status."
+        },
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/marken/balea/marken-highlights-plex-care-1604336",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm Plex Care highlight page described the line for chemically treated/damaged hair with repair technology."
+        }
+      ],
+      "priority_rationale": "Cheap dm-own Plex candidate; strong scanner utility, but likely mask-format boundary needs parent decision.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "exact_pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_bondbuilder_vs_mask",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Plex Care 2-in-1 mask is useful broad-pool evidence but not strict standalone bond treatment."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-005",
+      "category": "bondbuilder",
+      "priority_rank": 5,
+      "canonical_brand": "Gliss",
+      "product_line": "Oil Nutritive",
+      "clean_name": "Naehrpflege 4-in-1 Bonding Haarmaske",
+      "package_size": "400 ml",
+      "canonical_gtin14": "04015100813531",
+      "gtin_evidence": {
+        "value_seen": "4015100813531",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-oil-nutritive-naehrpflege-4-in-1-bonding-haarmaske/p/4015100813531"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-oil-nutritive-naehrpflege-4-in-1-bonding-haarmaske/p/4015100813531",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible; brand category page showed 400 ml size, 4.75 EUR, and 521 reviews."
+        }
+      ],
+      "priority_rationale": "Very high review signal among bond-named masks, with visible validated GTIN.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "category_boundary_bondbuilder_vs_mask",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04015100813531",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Gliss 4-in-1 bonding mask has strong visibility and validated GTIN but remains ordinary mask format under strict bondbuilder triage."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-006",
+      "category": "bondbuilder",
+      "priority_rank": 6,
+      "canonical_brand": "Gliss",
+      "product_line": "Liquid Silk",
+      "clean_name": "Glanz 4-in-1 Bonding Haarmaske",
+      "package_size": "400 ml",
+      "canonical_gtin14": "04015100813913",
+      "gtin_evidence": {
+        "value_seen": "4015100813913",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-glanz-4-in-1-bonding-haarmaske/p/4015100813913"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-glanz-4-in-1-bonding-haarmaske/p/4015100813913",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible; brand category page showed 400 ml size, 4.75 EUR, and 512 reviews."
+        }
+      ],
+      "priority_rationale": "Second high-review Gliss bonding-mask variant; useful candidate if scanner matching needs common grocery/drugstore EANs.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "category_boundary_bondbuilder_vs_mask",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04015100813913",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Second Gliss bonding-mask variant is high-review but not strict standalone bond treatment; near-duplicate risk."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-007",
+      "category": "bondbuilder",
+      "priority_rank": 7,
+      "canonical_brand": "Gliss",
+      "product_line": "Total Repair",
+      "clean_name": "Reparatur 4-in-1 Bonding Haarmaske",
+      "package_size": "400 ml",
+      "canonical_gtin14": "04015100813517",
+      "gtin_evidence": {
+        "value_seen": "4015100813517",
+        "checksum_valid": true,
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-total-repair-reparatur-4-in-1-bonding-haarmaske/p/4015100813517"
+      },
+      "sources": [
+        {
+          "retailer": "Rossmann",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-total-repair-reparatur-4-in-1-bonding-haarmaske/p/4015100813517",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Rossmann PDP visible; brand page showed 400 ml size, 4.75 EUR, and 507 reviews."
+        }
+      ],
+      "priority_rationale": "Another highly visible bond-named Gliss mask; keep unresolved to avoid overfilling pilot with near-duplicates.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "live_catalog_match",
+        "gtin_ownership",
+        "category_boundary_bondbuilder_vs_mask",
+        "near_duplicate_variant_review",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "unowned_valid_gtin_after_live_identifier_check",
+          "canonical_gtin14": "04015100813517",
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Third Gliss bonding-mask variant is high-review but not strict standalone bond treatment; near-duplicate risk."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-008",
+      "category": "bondbuilder",
+      "priority_rank": 8,
+      "canonical_brand": "Bali Curls",
+      "product_line": null,
+      "clean_name": "Bonding Leave-In Cream",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/p/bali-curls-bonding-leave-in-cream-PPN3157616/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller PDP visible in stock with 150 ml size, 9.95 EUR, online and filiale availability; copy names Bond Repair technology."
+        }
+      ],
+      "priority_rationale": "Curly-hair bond-positioned leave-in with specialty-retailer visibility; category fit needs decision.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_bondbuilder_vs_leave_in",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Bonding leave-in cream is curly-care leave-in format rather than clearly specialized bond treatment."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-009",
+      "category": "bondbuilder",
+      "priority_rank": 9,
+      "canonical_brand": "Bali Curls",
+      "product_line": null,
+      "clean_name": "Bonding Oil",
+      "package_size": "30 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "Mueller",
+          "url": "https://www.mueller.de/b/bali-curls/",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "Mueller Bali Curls brand listing showed Bonding Oil, 30 ml, 12.95 EUR, online and filiale availability."
+        }
+      ],
+      "priority_rationale": "Specialist curly bond-oil candidate; likely oil-vs-bondbuilder boundary issue makes it low priority.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "exact_pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_bondbuilder_vs_oil",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Bonding oil is oil format rather than clearly specialized standalone bond treatment."
+      }
+    },
+    {
+      "candidate_id": "bondbuilder-010",
+      "category": "bondbuilder",
+      "priority_rank": 10,
+      "canonical_brand": "Balea PROFESSIONAL",
+      "product_line": "Plex Care",
+      "clean_name": "Sprueh-Conditioner",
+      "package_size": "150 ml",
+      "canonical_gtin14": null,
+      "gtin_evidence": null,
+      "sources": [
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/marken/balea-professional-216786",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm Balea Professional brand page listed Sprueh-Conditioner Plex Care, 150 ml, 2.75 EUR, in-stock status, and 66 reviews."
+        },
+        {
+          "retailer": "dm",
+          "url": "https://www.dm.de/marken/balea/marken-highlights-plex-care-1604336",
+          "accessed_at": "2026-08-26",
+          "visibility_signal": "dm Plex Care highlight page described the line for chemically treated/damaged hair with repair technology."
+        }
+      ],
+      "priority_rationale": "Cheap dm Plex line extension; retained as broad-pool candidate but likely belongs in leave-in/conditioner unless parent widens bondbuilder contract.",
+      "lane": "new_candidate",
+      "reconciliation_status": "ambiguous_hold",
+      "unresolved_fields": [
+        "exact_pdp_url",
+        "gtin",
+        "live_catalog_match",
+        "category_boundary_bondbuilder_vs_conditioner",
+        "final_category_specs",
+        "application_protocol"
+      ],
+      "reconciliation_review": {
+        "reviewed_at": "2026-08-26",
+        "baseline_scope": "Compared against 259 active identities from live-baseline.json, 107 live product_identifiers across 282 live products including inactive owners, and 8 resolved open submissions.",
+        "matched_product_id": null,
+        "matched_open_submission_id": null,
+        "gtin_ownership": {
+          "status": "not_provided",
+          "canonical_gtin14": null,
+          "owner_product_id": null,
+          "checked_against": "live product_identifiers identifier_value canonicalized client-side"
+        },
+        "category_fit_triage": "ambiguous_after_strict_category_fit_triage",
+        "confidence": "low",
+        "rationale": "Plex Care spray conditioner likely belongs in conditioner/leave-in, not strict bondbuilder treatment."
+      }
+    }
+  ],
+  "counts": {
+    "total": 50,
+    "by_category": {
+      "dry_shampoo": 10,
+      "heat_protectant": 10,
+      "deep_cleansing_shampoo": 10,
+      "scalp_care": 10,
+      "bondbuilder": 10
+    },
+    "gtin14_present": 17,
+    "by_reconciliation_status": {
+      "existing_product_match": 1,
+      "open_submission_overlap": 0,
+      "new_candidate_confirmed": 35,
+      "ambiguous_hold": 14
+    },
+    "confirmed_new_by_category": {
+      "dry_shampoo": 10,
+      "heat_protectant": 9,
+      "deep_cleansing_shampoo": 5,
+      "scalp_care": 9,
+      "bondbuilder": 2
+    },
+    "gtin14_unowned_valid": 16,
+    "gtin14_owned_by_existing_product": 1,
+    "open_submission_overlaps": 0
+  },
+  "explicit_blockers": [
+    {
+      "category": "deep_cleansing_shampoo",
+      "blocker": "Five confirmed-new rows fit the current reset-focus contract; four rows remain ambiguous holds and Herbal Essences Tiefenreinigung & Glanz is an existing live product match by GTIN."
+    },
+    {
+      "category": "bondbuilder",
+      "blocker": "Only two confirmed-new rows responsibly fit strict standalone specialized bond treatment. The broader ten-row market pool is mostly masks, oils, leave-ins, or spray conditioners with bond/Plex marketing and should not be used to pad Phase1B."
+    },
+    {
+      "category": "scalp_care",
+      "blocker": "Many high-visibility scalp products use hair-loss/density/growth marketing. Any later Chaarlie copy or classification must avoid unreviewed medical claims; scalp-care-009 remains an oil-vs-scalp ambiguous hold."
+    }
+  ],
+  "verification": {
+    "json_parse": "passed after reconciliation update",
+    "gtin_checksum": "17/17 included canonical_gtin14 values validated locally; 16 unowned in live identifiers and 1 owned by an existing active product",
+    "external_access": "Retailer and search-result evidence accessed on 2026-08-26; reconciliation used local live-baseline export and read-only Supabase selects on 2026-08-26",
+    "live_baseline_reconciliation": "259 active identities from live-baseline.json; 282 live products and 107 product_identifiers checked for inactive-owner GTIN ownership; 8 resolved open submissions checked",
+    "supabase_writes": "none",
+    "git_operations": "none"
+  },
+  "reconciliation_summary": {
+    "reconciled_at": "2026-08-26",
+    "baseline": {
+      "active_identity_count": 259,
+      "active_baseline_source": "data/scanner-catalog-coverage/2026-08-26/live-baseline.json",
+      "active_baseline_exported_at": "2026-08-26T13:07:10.806Z",
+      "live_products_checked_for_identifier_ownership": 282,
+      "live_identifier_rows_checked": 107,
+      "identifier_check_method": "Read-only Supabase select from product_identifiers and products; canonicalized identifier_value client-side because live canonical_gtin14 column is not present.",
+      "resolved_open_submissions_checked": 8
+    },
+    "status_values": [
+      "existing_product_match",
+      "open_submission_overlap",
+      "new_candidate_confirmed",
+      "ambiguous_hold"
+    ],
+    "status_counts_by_category": {
+      "dry_shampoo": {
+        "new_candidate_confirmed": 10
+      },
+      "heat_protectant": {
+        "new_candidate_confirmed": 9,
+        "ambiguous_hold": 1
+      },
+      "deep_cleansing_shampoo": {
+        "new_candidate_confirmed": 5,
+        "ambiguous_hold": 4,
+        "existing_product_match": 1
+      },
+      "scalp_care": {
+        "new_candidate_confirmed": 9,
+        "ambiguous_hold": 1
+      },
+      "bondbuilder": {
+        "new_candidate_confirmed": 2,
+        "ambiguous_hold": 8
+      }
+    },
+    "confirmed_new_counts_by_category": {
+      "dry_shampoo": 10,
+      "heat_protectant": 9,
+      "deep_cleansing_shampoo": 5,
+      "scalp_care": 9,
+      "bondbuilder": 2
+    },
+    "phase1b_targets": {
+      "dry_shampoo": 7,
+      "heat_protectant": 5,
+      "deep_cleansing_shampoo": 3,
+      "scalp_care": 2,
+      "bondbuilder": 2
+    },
+    "target_result": {
+      "dry_shampoo": "met: 10 confirmed-new for target 7",
+      "heat_protectant": "met: 9 confirmed-new for target 5; one leave-in/shine spray held",
+      "deep_cleansing_shampoo": "met with caution: 5 confirmed-new for target 3 after reset-focus triage; one GTIN-owned active product removed from new pool",
+      "scalp_care": "met: 9 confirmed-new for target 2; medically adjacent notes preserved",
+      "bondbuilder": "thin: 2 confirmed-new for target 2, but no responsible expansion to 4 under strict standalone bond-treatment contract"
+    },
+    "open_submission_overlap_count": 0,
+    "existing_product_match_count": 1,
+    "ambiguous_hold_count": 14,
+    "gtin_ownership_summary": {
+      "included_valid_gtin14": 17,
+      "unowned_valid_gtin14": 16,
+      "owned_by_existing_product": 1,
+      "not_provided": 33,
+      "invalid_gtin14": 0
+    },
+    "strict_category_fit_notes": {
+      "deep_cleansing_shampoo": "Confirmed only exact/explicit clarifying, residue-removal, oil-control, or Tiefenreinigung rows aligned to reset-focus use; held ordinary anti-dandruff, moisturizing routine shampoo, vague oil-control brand page, and duplicate/pack ambiguity.",
+      "bondbuilder": "Confirmed only Elvital pre-shampoo Bond Repair and leave-in Bond Repair serum as plausible standalone specialized bond treatments; held ordinary masks, oil, leave-in cream, and spray conditioner despite bond/Plex marketing.",
+      "scalp_care": "Confirmed scalp tonics/serums/elixirs with conservative notes; held rosemary scalp-and-hair oil at oil-vs-scalp boundary."
+    },
+    "existing_matches": [
+      {
+        "candidate_id": "deep-cleansing-shampoo-010",
+        "canonical_gtin14": "08006530123556",
+        "product_id": "41b99629-5a1c-402f-a486-d41780e89e66",
+        "identity": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+        "category_key": "shampoo",
+        "is_active": true,
+        "match_basis": "live product_identifiers.identifier_value canonicalized to candidate GTIN-14"
+      }
+    ],
+    "open_submission_overlaps": [],
+    "pilot_ready_shortlist": [
+      {
+        "candidate_id": "dry-shampoo-006",
+        "identity": "Batiste Trockenshampoo Cherry, 200 ml",
+        "canonical_gtin14": "05010724526798",
+        "why": "best dry-shampoo multi-retailer signal; unowned valid GTIN"
+      },
+      {
+        "candidate_id": "dry-shampoo-001",
+        "identity": "Guhl Trockenshampoo Volumen & Frische, Kornblume & Niacinamid, 200 ml",
+        "canonical_gtin14": "04072600721902",
+        "why": "exact Rossmann PDP and unowned valid GTIN; adds non-Batiste brand"
+      },
+      {
+        "candidate_id": "heat-protectant-001",
+        "identity": "syoss Hitzeschutz Spray Keratin Heat, 200 ml",
+        "canonical_gtin14": "04015100860146",
+        "why": "dm/Rossmann/Mueller coverage and unowned valid GTIN"
+      },
+      {
+        "candidate_id": "heat-protectant-005",
+        "identity": "syoss Keratin Volume Foehnschutz-Spray, 200 ml",
+        "canonical_gtin14": "04015100860160",
+        "why": "clear blow-dry heat format with unowned valid GTIN"
+      },
+      {
+        "candidate_id": "deep-cleansing-shampoo-001",
+        "identity": "Garnier Fructis Coco Water Klaerendes Shampoo, 250 ml",
+        "canonical_gtin14": "03600541970397",
+        "why": "reset-focus sebum/buildup fit and unowned valid GTIN"
+      },
+      {
+        "candidate_id": "deep-cleansing-shampoo-002",
+        "identity": "BIOTURM Tiefenreinigung Shampoo, 200 ml",
+        "canonical_gtin14": null,
+        "why": "explicit residue-removal reset shampoo; exact Mueller PDP"
+      },
+      {
+        "candidate_id": "scalp-care-002",
+        "identity": "ISANA PROFESSIONAL Haar & Kopfhaut Tonikum Rosmarin, 150 ml",
+        "canonical_gtin14": "04068134002327",
+        "why": "strong review signal and unowned valid GTIN; use conservative copy"
+      },
+      {
+        "candidate_id": "scalp-care-001",
+        "identity": "Balea Natural Beauty Kopfhaut Tonikum, 150 ml",
+        "canonical_gtin14": "04066447793529",
+        "why": "exact dm PDP and unowned valid GTIN; affordable scalp tonic"
+      },
+      {
+        "candidate_id": "bondbuilder-001",
+        "identity": "L'Oreal Paris Elvital Bond Repair Pre-Shampoo Anti-Haarschaeden, 200 ml",
+        "canonical_gtin14": null,
+        "why": "best strict standalone bond-treatment fit in mass retail"
+      },
+      {
+        "candidate_id": "bondbuilder-002",
+        "identity": "L'Oreal Paris Elvital Bond Repair Leave-In Haarserum Anti-Haarschaeden, 150 ml",
+        "canonical_gtin14": "03600524075576",
+        "why": "validated unowned GTIN and plausible standalone bond serum; medium confidence"
+      }
+    ]
+  }
+}

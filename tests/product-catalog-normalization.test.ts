@@ -3,7 +3,11 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import { normalizeUsageFacts, productSnapshotRow } from "../scripts/product-identity/export-catalog"
-import { buildApplyPlan } from "../scripts/product-identity/apply-normalization"
+import {
+  assertCanonicalIdentifierPlanOwnership,
+  assertExistingCanonicalIdentifierOwnersAvailable,
+  buildApplyPlan,
+} from "../scripts/product-identity/apply-normalization"
 import {
   normalizeAlias,
   validateNormalizationAgainstSnapshot,
@@ -449,6 +453,92 @@ test("buildApplyPlan deduplicates identifiers by database-normalized value", () 
   })
 
   assert.equal(plan.identifiers.length, 1)
+})
+
+test("buildApplyPlan deduplicates same-product canonical GTIN retries but keeps distinct package GTINs", () => {
+  const plan = buildApplyPlan({
+    products: [
+      {
+        product_id: "product-1",
+        current_brand: "Brand",
+        current_name: "Product",
+        current_category: "Shampoo",
+        canonical_brand: "Brand",
+        canonical_category_key: "shampoo",
+        product_line: null,
+        clean_name: "Product",
+        aliases: [
+          {
+            alias: "Brand",
+            resolves_to: "brand",
+            canonical_brand: "Brand",
+            product_line: null,
+          },
+        ],
+        known_titles: ["Brand Product"],
+        identifiers: [
+          { type: "ean", value: "0022796976116" },
+          { type: "gtin", value: "00022796976116" },
+          { type: "ean", value: "4006381333931" },
+        ],
+        review_status: "reviewed",
+      },
+    ],
+  })
+
+  assert.deepEqual(
+    plan.identifiers.map((identifier) => identifier.value),
+    ["0022796976116", "4006381333931"],
+  )
+})
+
+test("canonical GTIN ownership rejects cross-type conflicts across products", () => {
+  assert.throws(
+    () =>
+      assertCanonicalIdentifierPlanOwnership([
+        { product_id: "product-1", type: "ean", value: "0022796976116" },
+        { product_id: "product-2", type: "gtin", value: "00022796976116" },
+      ]),
+    /assigned to both product-1 and product-2/,
+  )
+})
+
+test("bulk normalization rejects a canonical GTIN owned by another database product", async () => {
+  const response = {
+    data: [
+      {
+        product_id: "database-product",
+        identifier_type: "gtin",
+        identifier_value: "00022796976116",
+        canonical_gtin14: "00022796976116",
+      },
+    ],
+    error: null,
+  }
+  const query = {
+    select: () => query,
+    in: () => Promise.resolve(response),
+  }
+  const client = { from: () => query }
+
+  await assert.rejects(
+    assertExistingCanonicalIdentifierOwnersAvailable(client as never, [
+      { product_id: "incoming-product", type: "ean", value: "0022796976116" },
+    ]),
+    /database has database-product.*mapping has incoming-product/,
+  )
+})
+
+test("bulk normalization apply has an explicit write kill switch before mutations", () => {
+  const source = readFileSync("scripts/product-identity/apply-normalization.ts", "utf8")
+
+  assert.match(source, /--disable-writes/)
+  assert.match(source, /PRODUCT_IDENTITY_APPLY_DISABLE_WRITES/)
+  assert.ok(source.indexOf("assertWriteGuards(options)") < source.lastIndexOf("upsertBrands("))
+  assert.ok(
+    source.indexOf("assertExistingCanonicalIdentifierOwnersAvailable(supabase, plan.identifiers)") <
+      source.lastIndexOf("upsertBrands("),
+  )
 })
 
 test("reviewed catalog uses corrected canonical product identities for Phase A rows", () => {

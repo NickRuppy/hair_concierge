@@ -53,7 +53,25 @@ export function canonicalizeGtin(input: string): string | null {
   const digits = input.replace(/[\s-]+/g, "")
   if (!/^\d+$/.test(digits)) return null
   if (![8, 12, 13, 14].includes(digits.length)) return null
+  if (!hasValidGs1CheckDigit(digits)) return null
   return digits.padStart(14, "0")
+}
+
+export function hasValidGs1CheckDigit(digits: string): boolean {
+  // Keep this algorithm in parity with the generated-column helper
+  // public.product_identifier_has_valid_gs1_check_digit in the GTIN migration.
+  if (!/^\d+$/.test(digits) || digits.length < 2) return false
+
+  const values = digits.split("").map(Number)
+  const checkDigit = values[values.length - 1]
+  const body = values.slice(0, -1)
+  const sum = body.reduce((total, digit, index) => {
+    const positionFromRight = body.length - 1 - index
+    const weight = positionFromRight % 2 === 0 ? 3 : 1
+    return total + digit * weight
+  }, 0)
+  const expectedCheckDigit = (10 - (sum % 10)) % 10
+  return expectedCheckDigit === checkDigit
 }
 
 /**

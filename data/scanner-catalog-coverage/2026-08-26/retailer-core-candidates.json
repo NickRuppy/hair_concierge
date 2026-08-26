@@ -1,0 +1,3527 @@
+{
+  "schema_version": 1,
+  "researched_at": "2026-08-26",
+  "market": "DE",
+  "scope": {
+    "categories": [
+      "shampoo",
+      "conditioner",
+      "mask",
+      "leave_in",
+      "oil"
+    ],
+    "phase_1_target_context": {
+      "shampoo": 7,
+      "conditioner": 8,
+      "mask": 6,
+      "leave_in": 8,
+      "oil": 6
+    },
+    "intent": "Retailer-visibility candidate pool for later live catalog reconciliation and GTIN ownership checks."
+  },
+  "methodology": [
+    "Used current observable German retailer pages and search-result renderings from dm, Rossmann, Mueller, and selected specialist/brand pages as prioritization signals.",
+    "Treated category listing order, availability, review count, sponsored placement, retailer PDP existence, and repeated retailer presence as visibility evidence only, never market-share proof.",
+    "Kept candidate_lane unresolved until a later live database reconciliation can decide existing GTIN backfill versus genuinely new product intake.",
+    "Captured GTIN only where it was explicit in a retailer PDP snippet/page or in a retailer URL whose path is the visible product identifier; no GTINs were inferred from names."
+  ],
+  "source_pages": [
+    {
+      "retailer": "dm",
+      "category": "shampoo",
+      "url": "https://www.dm.de/haare/haarpflege/shampoo",
+      "observable_signal": "288 Produkte category page with product rows, prices, availability, and review counts."
+    },
+    {
+      "retailer": "dm",
+      "category": "conditioner",
+      "url": "https://www.dm.de/haare/haarpflege/conditioner",
+      "observable_signal": "165 Produkte category page with product rows, prices, availability, and review counts."
+    },
+    {
+      "retailer": "dm",
+      "category": "mask",
+      "url": "https://www.dm.de/haare/haarpflege/haarkur-und-haarmaske",
+      "observable_signal": "151 Produkte category page with product rows, prices, availability, and review counts."
+    },
+    {
+      "retailer": "dm",
+      "category": "leave_in",
+      "url": "https://www.dm.de/haare/haarpflege/leave-in",
+      "observable_signal": "61 Produkte category page with product rows, prices, availability, and review counts."
+    },
+    {
+      "retailer": "dm",
+      "category": "oil",
+      "url": "https://www.dm.de/haare/haarpflege/haaroel",
+      "observable_signal": "34 Produkte category page with product rows, prices, availability, and review counts."
+    }
+  ],
+  "candidate_defaults": {
+    "catalog_reconciliation_status": "unresolved",
+    "gtin_status": "not_reconciled",
+    "ingredient_analysis_status": "not_started",
+    "database_write_status": "not_authorized"
+  },
+  "candidates": [
+    {
+      "candidate_id": "conditioner-001",
+      "category": "conditioner",
+      "priority_rank": 1,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Glycolic Gloss",
+      "clean_name": "Conditioner Glycolic Gloss",
+      "package_size": "150 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1343859/l-oreal-paris-elvital-conditioner-glycolic-gloss",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm conditioner PDP/category visibility on 2026-08-26; category page showed 2629 reviews, 6.95 EUR, in stock.",
+      "uncertainty": "Exact catalog presence and canonical brand spelling require live reconciliation.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active conditioner has Elvital Glycolic Gloss conditioner identity; active Elvital match is Fiber Booster, not Glycolic Gloss.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-002",
+      "category": "conditioner",
+      "priority_rank": 2,
+      "canonical_brand": "syoss",
+      "product_line": "Intense Keratin",
+      "clean_name": "Conditioner Intense Keratin",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3047026/syoss-conditioner-intense-keratin",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm conditioner listing on 2026-08-26; sponsored placement, 592 reviews, 3.95 EUR, in stock.",
+      "uncertainty": "Sponsored listing order is a visibility signal only.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+          "identity": {
+            "canonical_brand": "Syoss",
+            "product_line": null,
+            "clean_name": "Syoss Intense Keratin Conditioner",
+            "category_key": "conditioner"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact category, brand, and clean-name match: Syoss Intense Keratin Conditioner.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-003",
+      "category": "conditioner",
+      "priority_rank": 3,
+      "canonical_brand": "schauma",
+      "product_line": null,
+      "clean_name": "Conditioner Repair & Pflege",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1588736/schauma-conditioner-repair-und-pflege",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm conditioner listing on 2026-08-26; sponsored placement, 566 reviews, 1.95 EUR, in stock.",
+      "uncertainty": "Later catalog reconciliation must decide if this is a new row or GTIN-only backfill.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Schauma Repair & Pflege conditioner identity in live baseline.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-004",
+      "category": "conditioner",
+      "priority_rank": 4,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Grow Abundant",
+      "clean_name": "Conditioner Grow Abundant Anti-Haarverlust",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3115707/pantene-pro-v-conditioner-grow-abundant-anti-haarverlust",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm conditioner listing on 2026-08-26; 510 reviews, 7.95 EUR, in stock.",
+      "uncertainty": "Medically adjacent hair-loss claims must be handled conservatively if promoted later.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "No active conditioner in the Pantene Grow Abundant/Grow Abundance line; active match is shampoo only.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-005",
+      "category": "conditioner",
+      "priority_rank": 5,
+      "canonical_brand": "Balea med",
+      "product_line": null,
+      "clean_name": "Conditioner Ultra Sensitive",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+      "gtin": "4066447966022",
+      "gtin_source_url": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm PDP exposed GTIN on 2026-08-26; category listing showed 215 reviews but not currently deliverable.",
+      "uncertainty": "Availability was mixed: search/PDP crawled current, category page displayed not lieferbar.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+          "identity": {
+            "canonical_brand": "Balea",
+            "product_line": "Med",
+            "clean_name": "Balea Med Ultra Sensitive Conditioner",
+            "category_key": "conditioner"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Balea Med Ultra Sensitive Conditioner identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4066447966022",
+          "canonical_gtin14": "04066447966022",
+          "owners": [],
+          "researched_existing_package": {
+            "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+            "category": "conditioner",
+            "identity": "Balea | Med | Balea Med Ultra Sensitive Conditioner",
+            "wave": "pilot",
+            "gtin_research_status": "evidence_backed_pilot",
+            "source_scope": "all product_identifiers rows with identifier_type ean, gtin, or barcode, including inactive product owners"
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-006",
+      "category": "conditioner",
+      "priority_rank": 6,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Repair & Care",
+      "clean_name": "Conditioner Repair & Care",
+      "package_size": "350 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1491712/pantene-pro-v-conditioner-repair-und-care",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm brand/category visibility on 2026-08-26; listed with multi-size signal and strong review count.",
+      "uncertainty": "PDP URL should be rechecked because dm listing showed a size family.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "No active classic Pantene Pro-V Repair & Care conditioner; active Pantene conditioners are Miracles/Moisture Boost variants.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-007",
+      "category": "conditioner",
+      "priority_rank": 7,
+      "canonical_brand": "Herbal Essences",
+      "product_line": "Blütensanft",
+      "clean_name": "Conditioner Blütensanft Rosenduft",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3054741/herbal-essences-conditioner-bluetensanft-rosenduft",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm conditioner listing on 2026-08-26; 1438 reviews, 3.95 EUR, in stock.",
+      "uncertainty": "PDP URL should be rechecked before any import package.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Herbal Essences Bluetensanft/Rosenduft conditioner; active Herbal Essences conditioner is Aloe Vera.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-008",
+      "category": "conditioner",
+      "priority_rank": 8,
+      "canonical_brand": "Langhaarmaedchen",
+      "product_line": "Beautiful Curls",
+      "clean_name": "Conditioner Beautiful Curls",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm conditioner listing on 2026-08-26; dm-brand graphic, 118 reviews, 4.95 EUR, in stock.",
+      "uncertainty": "Brand display uses uppercase/umlaut; canonicalization should normalize in later step.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+          "identity": {
+            "canonical_brand": "Langhaarmädchen",
+            "product_line": null,
+            "clean_name": "Langhaarmädchen Beautiful Curls Conditioner",
+            "category_key": "conditioner"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Langhaarmaedchen Beautiful Curls Conditioner identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-009",
+      "category": "conditioner",
+      "priority_rank": 9,
+      "canonical_brand": "OGX",
+      "product_line": "Thick & Full",
+      "clean_name": "Conditioner Biotin & Collagen",
+      "package_size": "385 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm conditioner listing on 2026-08-26; 178 reviews, 6.95 EUR, in stock.",
+      "uncertainty": "Existing catalog snapshot suggests likely existing backfill, but live DB not checked in this slice.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+          "identity": {
+            "canonical_brand": "OGX",
+            "product_line": "Biotin & Collagen",
+            "clean_name": "OGX Biotin & Collagen Conditioner",
+            "category_key": "conditioner"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact OGX Biotin & Collagen Conditioner identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-010",
+      "category": "conditioner",
+      "priority_rank": 10,
+      "canonical_brand": "NIVEA",
+      "product_line": "Power Repair",
+      "clean_name": "Conditioner Power Repair",
+      "package_size": "200 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm conditioner listing on 2026-08-26; 870 reviews, 2.95 EUR, in stock.",
+      "uncertainty": "Later GTIN lookup required.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+          "identity": {
+            "canonical_brand": "Nivea",
+            "product_line": null,
+            "clean_name": "Nivea Power Repair Conditioner",
+            "category_key": "conditioner"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Nivea Power Repair Conditioner identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-011",
+      "category": "conditioner",
+      "priority_rank": 11,
+      "canonical_brand": "Being",
+      "product_line": "Big Hair",
+      "clean_name": "Conditioner",
+      "package_size": "354 ml",
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-conditioner/p/4895248005926",
+      "gtin": "4895248005926",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-conditioner/p/4895248005926",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP verified 2026-08-26; 354 ml, GTIN 4895248005926, in stock.",
+      "uncertainty": "Exact brand-table spelling and final conditioner property payload still require intake review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Being Big Hair conditioner identity in live baseline; exact Rossmann PDP verified with GTIN and 354 ml package size.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4895248005926",
+          "canonical_gtin14": "04895248005926",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-012",
+      "category": "conditioner",
+      "priority_rank": 12,
+      "canonical_brand": "Pomelo+Co",
+      "product_line": "Shine Therapy",
+      "clean_name": "Conditioner",
+      "package_size": "200 ml",
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-pomeloco-shine-therapy-conditioner/p/4260625261989",
+      "gtin": "4260625261989",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-pomeloco-shine-therapy-conditioner/p/4260625261989",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; listed 9.99 EUR, in cart, delivery date shown.",
+      "uncertainty": "Exact brand spelling with accent/symbol should be normalized against brand table.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+          "identity": {
+            "canonical_brand": "Pomélo+Co",
+            "product_line": null,
+            "clean_name": "Pomélo+Co Shine Therapy Conditioner",
+            "category_key": "conditioner"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Pomelo+Co Shine Therapy Conditioner identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4260625261989",
+          "canonical_gtin14": "04260625261989",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-013",
+      "category": "conditioner",
+      "priority_rank": 13,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Hydra Hyaluronic Pure",
+      "clean_name": "Conditioner Hydra Hyaluronic Pure",
+      "package_size": "200 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3044953/l-oreal-paris-elvital-conditioner-hydra-hyaluronic-pure",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP crawled 2026-08-26; 200 ml, 3.45 EUR, 310 reviews, in-stock listing.",
+      "uncertainty": "Exact formula and category facts not researched.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Elvital Hydra Hyaluronic Pure conditioner identity; active conditioner set has Fiber Booster/Glycolic Gloss candidates but not this exact product.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-014",
+      "category": "conditioner",
+      "priority_rank": 14,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Oil Repair",
+      "clean_name": "Conditioner Oil Repair",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1521044/garnier-fructis-conditioner-oil-repair",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP crawled 2026-08-26; 250 ml, dry-hair conditioner product details.",
+      "uncertainty": "GTIN not captured in source result.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Fructis Oil Repair conditioner identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-015",
+      "category": "conditioner",
+      "priority_rank": 15,
+      "canonical_brand": "Garnier Wahre Schätze",
+      "product_line": "Honig Schätze",
+      "clean_name": "Spülung strapaziertes & brüchiges Haar",
+      "package_size": "200 ml",
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-spuelung-honig-schaetze-strapaziertes-und-bruechiges-haar/p/3600542461481",
+      "gtin": "3600542461481",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-spuelung-honig-schaetze-strapaziertes-und-bruechiges-haar/p/3600542461481",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26 and brand listing showed 1847 reviews, 200 ml, 2.49 EUR.",
+      "uncertainty": "Brand spelling/canonical line should be normalized before intake.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Wahre Schaetze Honig Schaetze conditioner identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542461481",
+          "canonical_gtin14": "03600542461481",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-016",
+      "category": "conditioner",
+      "priority_rank": 16,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Schadenlöscher",
+      "clean_name": "Conditioner Schadenlöscher",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1521043/garnier-fructis-conditioner-schadenloescher",
+      "gtin": "3600542039970",
+      "gtin_source_url": "https://www.dm.de/p/d/1521043/garnier-fructis-conditioner-schadenloescher",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP crawled 2026-08-26; dm article 1521043 and GTIN exposed.",
+      "uncertainty": "Retailer snippet mixed Oil Repair phrasing; exact front label should be checked in package stage.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Fructis Schadenloescher conditioner identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542039970",
+          "canonical_gtin14": "03600542039970",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "conditioner-017",
+      "category": "conditioner",
+      "priority_rank": 17,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Keratin Sleek",
+      "clean_name": "Conditioner Keratin Sleek Anti-Frizz",
+      "package_size": "200 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3042301/garnier-fructis-conditioner-keratin-sleek-anti-frizz",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP/brand page crawled 2026-08-26; 200 ml, 3.95 EUR, 444 reviews, in stock.",
+      "uncertainty": "Exact suitability claims require later ingredient-level pass.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Fructis Keratin Sleek conditioner identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-001",
+      "category": "leave_in",
+      "priority_rank": 1,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Sunkiss Glow",
+      "clean_name": "Leave-In Spray",
+      "package_size": "200 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+      "gtin": "8006530063807",
+      "gtin_source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm leave-in category top row on 2026-08-26; PDP search exposed GTIN and 65 reviews.",
+      "uncertainty": "Heat/UV claims require later category-property evidence review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Pantene Sunkiss Glow Leave-In Spray identity in live baseline.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "8006530063807",
+          "canonical_gtin14": "08006530063807",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-002",
+      "category": "leave_in",
+      "priority_rank": 2,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Miracles Molecular Bond Repair",
+      "clean_name": "Wunder Haarcreme Leave-In",
+      "package_size": "90 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3057700/pantene-pro-v-miracles-molecular-bond-repair-wunder-haarcreme-leave-in",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 254 reviews, 9.95 EUR, in stock.",
+      "uncertainty": "Bond-repair positioning may overlap with bondbuilder rules; classify only after ingredient/property pass.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+          "identity": {
+            "canonical_brand": "Pantene",
+            "product_line": null,
+            "clean_name": "Pantene Bonding Leave-In",
+            "category_key": "leave_in"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "Same dm PDP/line as existing Pantene Bonding Leave-In research; live identity is shortened and needs naming review before GTIN apply.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-003",
+      "category": "leave_in",
+      "priority_rank": 3,
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Liquid Silk",
+      "clean_name": "Haarkur Glanz Booster",
+      "package_size": "100 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3048906/schwarzkopf-gliss-haarkur-glanz-booster-liquid-silk",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 1045 reviews, 7.95 EUR, in stock.",
+      "uncertainty": "Could map to mask/leave-in depending on final application protocol.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "No active leave-in GLISS Liquid Silk Glanz Booster identity; active GLISS Liquid Silk entries are conditioner/mask, so category boundary must be reviewed.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-004",
+      "category": "leave_in",
+      "priority_rank": 4,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Locken Methode",
+      "clean_name": "Leave-In Creme Air Dry",
+      "package_size": "260 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3024591/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 207 reviews, 5.95 EUR, in stock.",
+      "uncertainty": "PDP URL should be rechecked before import; category fit likely but unresolved.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Fructis Locken Methode Air Dry leave-in identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-005",
+      "category": "leave_in",
+      "priority_rank": 5,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Moisture Boost HEAT&GLOW",
+      "clean_name": "Leave-In",
+      "package_size": "135 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 170 reviews, 8.95 EUR, in stock.",
+      "uncertainty": "Heat protection max temperature not captured; leave-in specs unresolved.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+          "identity": {
+            "canonical_brand": "Pantene",
+            "product_line": "Pro-V",
+            "clean_name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+            "category_key": "leave_in"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-006",
+      "category": "leave_in",
+      "priority_rank": 6,
+      "canonical_brand": "Jean&Len",
+      "product_line": "Detangle & Care",
+      "clean_name": "Leichtkaemmspray",
+      "package_size": "100 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3100954/jean-und-len-leichtkaemmspray-detangle-und-care",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm leave-in category/PDP on 2026-08-26; 44 reviews, 5.95 EUR, in stock.",
+      "uncertainty": "Canonical clean_name should be reviewed because retailer title mixes function and line.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Jean&Len Detangle & Care Leichtkaemmspray identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-007",
+      "category": "leave_in",
+      "priority_rank": 7,
+      "canonical_brand": "Herbal Essences",
+      "product_line": "Kamille",
+      "clean_name": "Leave-In Spray",
+      "package_size": "145 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3054764/herbal-essences-leave-in-spray-kamille",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 128 reviews, 5.95 EUR, in stock.",
+      "uncertainty": "PDP URL should be rechecked before downstream package creation.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Herbal Essences Kamille Leave-In Spray identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-008",
+      "category": "leave_in",
+      "priority_rank": 8,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Aloe Air Dry",
+      "clean_name": "Leave-In Creme",
+      "package_size": "400 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1632947/garnier-fructis-leave-in-creme-aloe-air-dry",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 958 reviews, 5.95 EUR, in stock.",
+      "uncertainty": "This may already exist through Hair Food/Aloe naming; dedupe required.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "No active Garnier Fructis Aloe Air Dry leave-in identity; active Garnier Hair Food Aloe Vera is a separate 3-in-1 identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-009",
+      "category": "leave_in",
+      "priority_rank": 9,
+      "canonical_brand": "Bali Curls",
+      "product_line": "Bonding Repair",
+      "clean_name": "Leave-In Cream",
+      "package_size": "150 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3105551/bali-curls-leave-in-cream-bonding-repair",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 18 reviews, 9.95 EUR, in stock.",
+      "uncertainty": "Newer/low-review item; include because curls cohort is strategically useful.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+          "identity": {
+            "canonical_brand": "Bali Curls",
+            "product_line": "Bonding Repair",
+            "clean_name": "Bali Curls Bonding Repair Leave-In Cream N°3",
+            "category_key": "leave_in"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "user_submitted"
+          },
+          "has_barcode": true
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Bali Curls Bonding Repair Leave-In Cream identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-010",
+      "category": "leave_in",
+      "priority_rank": 10,
+      "canonical_brand": "NEQI",
+      "product_line": "Diamond Glass Ultimate",
+      "clean_name": "Leave-In Spray",
+      "package_size": "180 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3057763/neqi-leave-in-spray-diamond-glass-ultimate",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm leave-in category on 2026-08-26; 75 reviews, 12.95 EUR, in stock.",
+      "uncertainty": "Existing NEQI backfill candidate likely but live ownership not checked.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+          "identity": {
+            "canonical_brand": "Neqi",
+            "product_line": "Diamond Glass",
+            "clean_name": "Neqi Diamond Glass Ultimate Styling Spray",
+            "category_key": "leave_in"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "user_submitted"
+          },
+          "has_barcode": true
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact NEQI Diamond Glass Ultimate Styling Spray identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-011",
+      "category": "leave_in",
+      "priority_rank": 11,
+      "canonical_brand": "ISANA Professional",
+      "product_line": "Hyaluron & Care",
+      "clean_name": "Leave-In Conditioner",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-care/p/4305615946733",
+      "gtin": "4305615946733",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-care/p/4305615946733",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Rossmann PDP/product identifier visible in current source results.",
+      "uncertainty": "Package size and current price need PDP read before product package.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+          "identity": {
+            "canonical_brand": "Isana",
+            "product_line": null,
+            "clean_name": "Isana Feuchtigkeits Leave-In (Hyaluron)",
+            "category_key": "leave_in"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "Active Isana Feuchtigkeits Leave-In Hyaluron identity matches functionally; retailer wording adds Professional/Hyaluron & Care.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4305615946733",
+          "canonical_gtin14": "04305615946733",
+          "owners": [],
+          "researched_existing_package": {
+            "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+            "category": "leave_in",
+            "identity": "Isana | Isana Feuchtigkeits Leave-In (Hyaluron)",
+            "wave": "pilot",
+            "gtin_research_status": "evidence_backed_pilot",
+            "source_scope": "all product_identifiers rows with identifier_type ean, gtin, or barcode, including inactive product owners"
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-012",
+      "category": "leave_in",
+      "priority_rank": 12,
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Ultimate Repair",
+      "clean_name": "Express-Repair Spuelung",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494",
+      "gtin": "4015100813494",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Rossmann PDP/product identifier visible in current source results.",
+      "uncertainty": "Retailer says Spuelung; application protocol must prove leave-in fit.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+          "identity": {
+            "canonical_brand": "Gliss",
+            "product_line": null,
+            "clean_name": "Gliss Ultimate Repair Sprüh-Conditioner",
+            "category_key": "leave_in"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "Active Gliss Ultimate Repair Sprueh-Conditioner matches; retailer calls it Express-Repair Spuelung.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4015100813494",
+          "canonical_gtin14": "04015100813494",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-013",
+      "category": "leave_in",
+      "priority_rank": 13,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Bond Repair",
+      "clean_name": "Leave-In Haarserum Anti-Haarschäden",
+      "package_size": "150 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP/category crawled 2026-08-26; 150 ml, 9.95 EUR, 797/798 reviews, in stock.",
+      "uncertainty": "Bond-repair category boundary must be reviewed against leave-in vs bondbuilder policy.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active L’Oreal Elvital Bond Repair leave-in identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-014",
+      "category": "leave_in",
+      "priority_rank": 14,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Keratin Sleek & Stay",
+      "clean_name": "Haarserum Anti-Frizz",
+      "package_size": "50 ml",
+      "retailers": [
+        "dm",
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3042323/garnier-fructis-haarserum-keratin-sleek-und-stay-anti-frizz",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP crawled 2026-08-26; 50 ml, 7.95 EUR, 863 reviews, in stock; Rossmann Garnier mask page also listed it.",
+      "uncertainty": "May be heat-protectant adjacent; leave-in category fit needs review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Fructis Keratin Sleek & Stay serum identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-015",
+      "category": "leave_in",
+      "priority_rank": 15,
+      "canonical_brand": "Garnier Wahre Schätze",
+      "product_line": "Honig Schätze",
+      "clean_name": "2in1 Pflege & Styling Leave-In Creme",
+      "package_size": "200 ml",
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-2in1-pflege-und-styling-leave-in-creme-honig-schaetze/p/3600542657884",
+      "gtin": "3600542657884",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-2in1-pflege-und-styling-leave-in-creme-honig-schaetze/p/3600542657884",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP/category crawled 2026-08-26; 200 ml, 191 reviews, heat-protection claim visible.",
+      "uncertainty": "Heat-protection max and role encoding require property review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Wahre Schaetze Honig Schaetze 2in1 leave-in cream identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542657884",
+          "canonical_gtin14": "03600542657884",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-016",
+      "category": "leave_in",
+      "priority_rank": 16,
+      "canonical_brand": "AUSSIE",
+      "product_line": "Work That Curl",
+      "clean_name": "Leave-In Creme",
+      "package_size": "160 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3136127/aussie-leave-in-creme-work-that-curl",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP crawled 2026-08-26; 160 ml, 7.95 EUR, 83 reviews, in stock.",
+      "uncertainty": "Curly-hair claims need later category/spec review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active AUSSIE Work That Curl leave-in cream identity; active AUSSIE leave-in is SOS serum.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "leave-in-017",
+      "category": "leave_in",
+      "priority_rank": 17,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Hydration SOS",
+      "clean_name": "Haarkur Hair Shake",
+      "package_size": "150 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1631800/pantene-pro-v-haarkur-hydration-sos-hair-shake",
+      "gtin": "8006540497401",
+      "gtin_source_url": "https://www.dm.de/p/d/1631800/pantene-pro-v-haarkur-hydration-sos-hair-shake",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP crawled 2026-08-26; 150 ml, 3.95 EUR, 100 reviews, in stock, leave-in spray wording and GTIN exposed.",
+      "uncertainty": "Retailer calls it Haarkur; application protocol should confirm leave-in role.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Pantene Hydration SOS Hair Shake leave-in identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "8006540497401",
+          "canonical_gtin14": "08006540497401",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-001",
+      "category": "mask",
+      "priority_rank": 1,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Glycolic Gloss",
+      "clean_name": "Haarkur 5 Minuten Haar-Laminierung",
+      "package_size": "200 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1343860/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm Elvital Glycolic Gloss page/category on 2026-08-26; 2826 reviews, 8.95 EUR, in stock.",
+      "uncertainty": "PDP URL should be rechecked before product package.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Elvital Glycolic Gloss mask/treatment identity; active Elvital mask is Hydra Hyaluronic.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-002",
+      "category": "mask",
+      "priority_rank": 2,
+      "canonical_brand": "syoss",
+      "product_line": "Intense Keratin",
+      "clean_name": "Haarmaske",
+      "package_size": "400 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3047040/syoss-haarmaske-intense-keratin",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm mask category top row on 2026-08-26; sponsored, 600 reviews, 4.95 EUR, in stock.",
+      "uncertainty": "Category page showed inconsistent base unit for 400 ml; price metadata needs PDP recheck.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
+          "identity": {
+            "canonical_brand": "Syoss",
+            "product_line": null,
+            "clean_name": "Syoss Intense Keratin",
+            "category_key": "mask"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Syoss Intense Keratin mask identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-003",
+      "category": "mask",
+      "priority_rank": 3,
+      "canonical_brand": "NEQI",
+      "product_line": "Diamond Glass",
+      "clean_name": "Haarmaske",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3057770/neqi-haarmaske-diamond-glass",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm mask category on 2026-08-26; sponsored, 22 reviews, 14.95 EUR, in stock.",
+      "uncertainty": "Strategic brand coverage rather than high review-count evidence.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active NEQI Diamond Glass mask identity; active NEQI masks are Build Boost, Gloss Glaze, Peptide Power, Repair Reveal.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-004",
+      "category": "mask",
+      "priority_rank": 4,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Hair Food Aloe Vera",
+      "clean_name": "Haarmaske 3in1 trockenes Haar",
+      "package_size": "400 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+      "gtin": "3600542511049",
+      "gtin_source_url": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Existing dm PDP URL plus dm mask category family visibility; mass-market Hair Food product.",
+      "uncertainty": "May already be in catalog; needs live dedupe.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+          "identity": {
+            "canonical_brand": "Fructis",
+            "product_line": null,
+            "clean_name": "Fructis Hair Food Aloe Vera",
+            "category_key": "mask"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Fructis Hair Food Aloe Vera mask identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542511049",
+          "canonical_gtin14": "03600542511049",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-005",
+      "category": "mask",
+      "priority_rank": 5,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Hair Food Macadamia",
+      "clean_name": "Haarkur 3in1 Maske",
+      "package_size": "400 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+      "gtin": "3600542511612",
+      "gtin_source_url": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+      "candidate_lane": "unresolved",
+      "visibility_signal": "Existing dm PDP URL plus current dm mask category family visibility.",
+      "uncertainty": "This can appear as conditioner/leave-in/mask depending on use; product role must be explicit later.",
+      "reconciliation": {
+        "status": "unresolved_identity_ambiguous",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "low",
+        "match_rationale": "Macadamia Hair Food exists as active conditioner/leave-in identity, but no active mask row; exact cross-category treatment decision is ambiguous.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542511612",
+          "canonical_gtin14": "03600542511612",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-006",
+      "category": "mask",
+      "priority_rank": 6,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Hair Food Papaya",
+      "clean_name": "Haarkur 3in1 Maske",
+      "package_size": "400 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/garnier-fructis-haarkur-papaya-hair-food-3in1-maske-p3600542511100.html",
+      "gtin": "3600542511100",
+      "gtin_source_url": "https://www.dm.de/garnier-fructis-haarkur-papaya-hair-food-3in1-maske-p3600542511100.html",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Existing dm PDP URL; same Hair Food mass-market family as current dm category candidates.",
+      "uncertainty": "Needs current PDP availability and exact formula check.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+          "identity": {
+            "canonical_brand": "Fructis",
+            "product_line": null,
+            "clean_name": "Fructis Hair Food Papaya",
+            "category_key": "mask"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Fructis Hair Food Papaya mask identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542511100",
+          "canonical_gtin14": "03600542511100",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-007",
+      "category": "mask",
+      "priority_rank": 7,
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Haarmaske 3in1 Intensivpflege",
+      "package_size": null,
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/balea-haarmaske-3in1-intensivpflege-p4066447237443.html",
+      "gtin": "4066447237443",
+      "gtin_source_url": "https://www.dm.de/balea-haarmaske-3in1-intensivpflege-p4066447237443.html",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm-owned brand PDP URL; useful low-price coverage for scanner recognition.",
+      "uncertainty": "Current availability and category facts not checked in this slice.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+          "identity": {
+            "canonical_brand": "Balea",
+            "product_line": null,
+            "clean_name": "Balea 3 in 1 Intensivmaske",
+            "category_key": "mask"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "Balea 3 in 1 Intensivmaske active identity matches, though package title/line split needs review.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4066447237443",
+          "canonical_gtin14": "04066447237443",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-008",
+      "category": "mask",
+      "priority_rank": 8,
+      "canonical_brand": "Balea Professional",
+      "product_line": "Plex Care",
+      "clean_name": "Haarmaske 2in1",
+      "package_size": null,
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1690411/balea-professional-haarmaske-plex-care-2in1",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm PDP URL from local snapshot; dm-own professional line useful for 80/20 coverage.",
+      "uncertainty": "Needs current category visibility and duplicate-row check.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+          "identity": {
+            "canonical_brand": "Balea",
+            "product_line": "Professional",
+            "clean_name": "Balea Professional Plex Care 2in1",
+            "category_key": "mask"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Balea Professional Plex Care 2in1 mask identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-009",
+      "category": "mask",
+      "priority_rank": 9,
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Liquid Silk",
+      "clean_name": "Glanz 4-in-1 Bonding Haarmaske",
+      "package_size": null,
+      "retailers": [
+        "dm",
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-glanz-4-in-1-bonding-haarmaske/p/4015100813913",
+      "gtin": "4015100813913",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-glanz-4-in-1-bonding-haarmaske/p/4015100813913",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; 512 reviews and in-stock signal; dm snapshot also has same product family.",
+      "uncertainty": "Need single canonical product identity across dm/Rossmann before assigning GTIN.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+          "identity": {
+            "canonical_brand": "Gliss",
+            "product_line": null,
+            "clean_name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+            "category_key": "mask"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact GLISS Liquid Silk 4-in-1 Bonding Haarmaske identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4015100813913",
+          "canonical_gtin14": "04015100813913",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-010",
+      "category": "mask",
+      "priority_rank": 10,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Unendlich Lang",
+      "clean_name": "Haarkur Balsam Keratin Reconstruct",
+      "package_size": "300 ml",
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarkur-balsam-unendlich-lang-keratin-reconstruct/p/8700216547802",
+      "gtin": "8700216547802",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarkur-balsam-unendlich-lang-keratin-reconstruct/p/8700216547802",
+      "candidate_lane": "unresolved",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-25/26; in stock, 4.49 EUR, delivery date shown.",
+      "uncertainty": "Only 4 visible reviews, but Pantene family has high dm visibility.",
+      "reconciliation": {
+        "status": "unresolved_identity_ambiguous",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "low",
+        "match_rationale": "Nearby active Pantene Keratin Repair & Care mask exists, but candidate URL/GTIN/name point to Unendlich Lang Keratin Reconstruct variant.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "8700216547802",
+          "canonical_gtin14": "08700216547802",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-011",
+      "category": "mask",
+      "priority_rank": 11,
+      "canonical_brand": "Being",
+      "product_line": "Mega Moisture",
+      "clean_name": "Haarmaske",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+      "gtin": "4895248006008",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP/product identifier visible in current source results.",
+      "uncertainty": "Snippet mixed related products; PDP should be opened before intake package.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Being Mega Moisture Haarmaske identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4895248006008",
+          "canonical_gtin14": "04895248006008",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-012",
+      "category": "mask",
+      "priority_rank": 12,
+      "canonical_brand": "Dejan Garz",
+      "product_line": "The Foundation",
+      "clean_name": "Haarmaske",
+      "package_size": "200 ml",
+      "retailers": [
+        "Mueller"
+      ],
+      "source_pdp_url": "https://www.mueller.de/p/dejan-garz-the-foundation-haarmaske-PPN3160408/",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Mueller PDP crawled 2026-08-26; 200 ml, 9.95 EUR, in-stock home-delivery signal.",
+      "uncertainty": "Mueller PDP did not expose GTIN in captured evidence; likely brand-table review needed.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Dejan Garz The Foundation mask; active Dejan identities are shampoo/conditioner.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-013",
+      "category": "mask",
+      "priority_rank": 13,
+      "canonical_brand": "Garnier Fructis",
+      "product_line": "Keratin Sleek",
+      "clean_name": "Haarmaske Anti-Frizz Kur",
+      "package_size": "370 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP/brand page crawled 2026-08-26; 370 ml, 5.95 EUR, 392/394 reviews, in stock.",
+      "uncertainty": "Exact repair/weight facts not researched.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier Fructis Keratin Sleek mask identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-014",
+      "category": "mask",
+      "priority_rank": 14,
+      "canonical_brand": "Garnier Wahre Schätze",
+      "product_line": "Honig Schätze",
+      "clean_name": "Haarkur 1-Minute strapaziertes & brüchiges Haar",
+      "package_size": "340 ml",
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-haarkur-1-minute-honig-schaetze-strapaziertes-und-bruechiges-haar/p/3600542509428",
+      "gtin": "3600542509428",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-haarkur-1-minute-honig-schaetze-strapaziertes-und-bruechiges-haar/p/3600542509428",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; in stock, 225 reviews, 340 ml.",
+      "uncertainty": "Rossmann also has 50 ml/3-honey variant; keep size-specific identity.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Garnier/Wahre Schaetze Honig Schaetze 1-Minute mask identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542509428",
+          "canonical_gtin14": "03600542509428",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-015",
+      "category": "mask",
+      "priority_rank": 15,
+      "canonical_brand": "Garnier Wahre Schätze",
+      "product_line": "Reiswasser Ritual & Stärke",
+      "clean_name": "Haarkur 1-Minute",
+      "package_size": "340 ml",
+      "retailers": [
+        "dm",
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1324786/wahre-schaetze-haarkur-1-minute-reiswasser-ritual-und-staerke",
+      "gtin": "3600542571586",
+      "gtin_source_url": "https://www.dm.de/p/d/1324786/wahre-schaetze-haarkur-1-minute-reiswasser-ritual-und-staerke",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP and Rossmann category crawled 2026-08-26; Rossmann listing showed 1056 reviews and 4.99 EUR.",
+      "uncertainty": "Brand may be stored as Garnier or Wahre Schaetze; normalize later.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Wahre Schaetze Reiswasser Ritual mask identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542571586",
+          "canonical_gtin14": "03600542571586",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "mask-016",
+      "category": "mask",
+      "priority_rank": 16,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Moisture Boost Keratin Protect",
+      "clean_name": "Haarmaske",
+      "package_size": "300 ml",
+      "retailers": [
+        "dm",
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3088184/pantene-pro-v-haarmaske-moisture-boost-keratin-protect",
+      "gtin": "8700216940108",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm/Rossmann PDPs crawled 2026-08-26; dm 115 reviews/4.45 EUR, Rossmann 87 reviews/4.49 EUR.",
+      "uncertainty": "Exact same-product match across dm and Rossmann must be verified by package/front label.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Pantene Moisture Boost Keratin Protect mask identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "8700216940108",
+          "canonical_gtin14": "08700216940108",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-001",
+      "category": "oil",
+      "priority_rank": 1,
+      "canonical_brand": "Dejan Garz",
+      "product_line": "The Britney",
+      "clean_name": "Violet Hair Oil",
+      "package_size": "50 ml",
+      "retailers": [
+        "dm",
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+      "gtin": "4063528101808",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-dejan-garz-violet-hair-oil-the-britney/p/4063528101808",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm oil category on 2026-08-26 showed 333/334 reviews and in-stock; Rossmann PDP exposes GTIN.",
+      "uncertainty": "Two-retailer same-product match should be confirmed before identifier write.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Dejan Garz Violet Hair Oil identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4063528101808",
+          "canonical_gtin14": "04063528101808",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-002",
+      "category": "oil",
+      "priority_rank": 2,
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": null,
+      "clean_name": "Haaröl Tägliches Öl Elixier",
+      "package_size": "75 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+      "gtin": "4015100813791",
+      "gtin_source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm oil category sponsored listing on 2026-08-26; 153 reviews, 5.95 EUR, in stock; PDP exposes GTIN.",
+      "uncertainty": "Silikon-heavy formula likely; product-fit properties require later ingredient pass.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Schwarzkopf GLISS daily oil elixir identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4015100813791",
+          "canonical_gtin14": "04015100813791",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-003",
+      "category": "oil",
+      "priority_rank": 3,
+      "canonical_brand": "OGX",
+      "product_line": "Coconut Miracle Oil",
+      "clean_name": "Haaröl",
+      "package_size": "100 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm oil category on 2026-08-26; 68 reviews, 7.95 EUR, in stock.",
+      "uncertainty": "GTIN not captured; likely existing catalog family but live check required.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+          "identity": {
+            "canonical_brand": "OGX",
+            "product_line": null,
+            "clean_name": "OGX Miracle Coconut Oil",
+            "category_key": "oil"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact OGX Miracle Coconut Oil identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-004",
+      "category": "oil",
+      "priority_rank": 4,
+      "canonical_brand": "OGX",
+      "product_line": "Moroccan Argan",
+      "clean_name": "Penetrating Oil",
+      "package_size": "100 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1470798/ogx-haaroel-moroccan-argan-penetrating-oil",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm oil category on 2026-08-26; 280 reviews, 7.95 EUR, in stock.",
+      "uncertainty": "PDP URL should be rechecked before assigning package identity.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+          "identity": {
+            "canonical_brand": "OGX",
+            "product_line": null,
+            "clean_name": "OGX Argan Oil",
+            "category_key": "oil"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "Active OGX Argan Oil identity matches Moroccan Argan Penetrating Oil family; exact package wording needs review.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-005",
+      "category": "oil",
+      "priority_rank": 5,
+      "canonical_brand": "Herbal Essences",
+      "product_line": "Arganöl Elixir",
+      "clean_name": "Haaröl Tiefenreparatur",
+      "package_size": "95 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm oil PDP/category on 2026-08-26; 95/96 reviews, 5.95 EUR, in stock.",
+      "uncertainty": "Formula/properties not researched; do not infer oil subtype.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Herbal Essences Argan Oil Elixir hair oil identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-006",
+      "category": "oil",
+      "priority_rank": 6,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Keratin Protect Oil Repair & Care",
+      "clean_name": "Trocken Öl mit Vitamin E",
+      "package_size": "100 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1710028/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm Pantene brand page on 2026-08-26; 304 reviews, 4.95 EUR, in stock.",
+      "uncertainty": "PDP URL should be rechecked; possible same identity as Rossmann Coconut Infused oil differs.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "fe974387-b487-470e-9799-69bb4249070b",
+          "identity": {
+            "canonical_brand": "Pantene",
+            "product_line": "Pro-V",
+            "clean_name": "Pantene Pro-V Keratin Protect Öl",
+            "category_key": "oil"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Pantene Pro-V Keratin Protect oil identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-007",
+      "category": "oil",
+      "priority_rank": 7,
+      "canonical_brand": "Alterra",
+      "product_line": "Nutri-Care",
+      "clean_name": "Haaröl",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-nutri-care-haaroel/p/4305615835839",
+      "gtin": "4305615835839",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-nutri-care-haaroel/p/4305615835839",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; 85 reviews and rich-care positioning captured.",
+      "uncertainty": "Package size missing in captured source.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Alterra Nutri-Care Haaroel identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4305615835839",
+          "canonical_gtin14": "04305615835839",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-008",
+      "category": "oil",
+      "priority_rank": 8,
+      "canonical_brand": "Monday Haircare",
+      "product_line": "Repair Argan",
+      "clean_name": "Haaröl",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+      "gtin": "4895248009825",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; in-stock signal and frizz/spliss positioning captured.",
+      "uncertainty": "Potentially new brand; needs brand review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Monday Repair Argan Haaroel identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4895248009825",
+          "canonical_gtin14": "04895248009825",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-009",
+      "category": "oil",
+      "priority_rank": 9,
+      "canonical_brand": "L'Oreal Paris Elvital",
+      "product_line": "Öl-Kur",
+      "clean_name": "Haaröl trockenes Haar",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-oel-kur-haaroel-trockenes-haar/p/3600523734955",
+      "gtin": "3600523734955",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-oel-kur-haaroel-trockenes-haar/p/3600523734955",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; 179 reviews, in stock, L'Oreal contact details.",
+      "uncertainty": "Captured text says heat protection to 23 C, likely a source typo; verify before category facts.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "Active L’Oreal oils are Jojoba and Midnight Serum; Rossmann Elvital Oel-Kur trockenes Haar appears distinct but needs package review.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600523734955",
+          "canonical_gtin14": "03600523734955",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-010",
+      "category": "oil",
+      "priority_rank": 10,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Coconut Infused",
+      "clean_name": "Haaröl",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-coconut-infused-haaroel/p/8001841890012",
+      "gtin": "8001841890012",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-coconut-infused-haaroel/p/8001841890012",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; in-stock signal and daily-care positioning captured.",
+      "uncertainty": "Not necessarily same as dm Pantene dry oil; keep identities separate until package check.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+          "identity": {
+            "canonical_brand": "Pantene",
+            "product_line": "Pro-V",
+            "clean_name": "Pantene Pro-V Coconut Oil",
+            "category_key": "oil"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Pantene Pro-V Coconut Oil identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "8001841890012",
+          "canonical_gtin14": "08001841890012",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-011",
+      "category": "oil",
+      "priority_rank": 11,
+      "canonical_brand": "Weleda",
+      "product_line": "Rosmarin",
+      "clean_name": "Intensiv pflegendes Haaröl",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-weleda-intensiv-pflegendes-haaroel-rosmarin/p/4001638093620",
+      "gtin": "4001638093620",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-weleda-intensiv-pflegendes-haaroel-rosmarin/p/4001638093620",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; 10 reviews, in stock, application before/after wash captured.",
+      "uncertainty": "Natural oil positioning useful; needs exact subtype and thickness suitability review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Weleda Rosmarin Haaroel; active Weleda oil is Hydra Shine Gloss Drops.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4001638093620",
+          "canonical_gtin14": "04001638093620",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-012",
+      "category": "oil",
+      "priority_rank": 12,
+      "canonical_brand": "Garnier Wahre Schätze",
+      "product_line": "Curl Revival",
+      "clean_name": "Elixir intensiv nährendes Haaröl",
+      "package_size": null,
+      "retailers": [
+        "dm",
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-curl-revival-elixir-intensiv-naehrendes-haaroel/p/3600542624336",
+      "gtin": "3600542624336",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-curl-revival-elixir-intensiv-naehrendes-haaroel/p/3600542624336",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; in-stock and three-use oil/mask/curl refresh instructions captured; dm snapshot has same GTIN-family PDP.",
+      "uncertainty": "Cross-category usage must be encoded carefully, not duplicated blindly.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+          "identity": {
+            "canonical_brand": "Garnier",
+            "product_line": "Wahre Schätze",
+            "clean_name": "Garnier Wahre Schätze Curl Revival Öl",
+            "category_key": "oil"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Garnier Wahre Schaetze Curl Revival oil identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "3600542624336",
+          "canonical_gtin14": "03600542624336",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "oil-013",
+      "category": "oil",
+      "priority_rank": 13,
+      "canonical_brand": "ISANA Professional",
+      "product_line": "Arganöl & Pflege",
+      "clean_name": "Haaröl",
+      "package_size": "100 ml",
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+      "gtin": "4068134024947",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP/category crawled 2026-08-26; 100 ml, 405 reviews, 2.79 EUR, in stock, pre/damp/dry-hair usage captured.",
+      "uncertainty": "Brand-table spelling and oil subtype require review.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Isana Professional Arganöl & Pflege hair oil identity; active Isana with same phrase is conditioner.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4068134024947",
+          "canonical_gtin14": "04068134024947",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-001",
+      "category": "shampoo",
+      "priority_rank": 1,
+      "canonical_brand": "NIVEA",
+      "product_line": "Power Repair",
+      "clean_name": "Shampoo Power Repair",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm shampoo category on 2026-08-26; sponsored/top listing, 891 reviews, 2.95 EUR, in stock.",
+      "uncertainty": "Sponsored placement is not a market-rank proof.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "No active Nivea Power Repair shampoo; active Nivea shampoo identity is a 2in1 product.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-002",
+      "category": "shampoo",
+      "priority_rank": 2,
+      "canonical_brand": "Balea med",
+      "product_line": null,
+      "clean_name": "Shampoo Ultra Sensitive",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+      "gtin": "4066447966008",
+      "gtin_source_url": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm PDP/category on 2026-08-26; 444 reviews, 1.75 EUR, in stock; PDP exposed GTIN.",
+      "uncertainty": "Likely existing product/backfill but live identifier ownership not checked.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+          "identity": {
+            "canonical_brand": "Balea",
+            "product_line": null,
+            "clean_name": "Balea Ultra Sensitive",
+            "category_key": "shampoo"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Balea Ultra Sensitive shampoo identity is active.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4066447966008",
+          "canonical_gtin14": "04066447966008",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-003",
+      "category": "shampoo",
+      "priority_rank": 3,
+      "canonical_brand": "head&shoulders",
+      "product_line": null,
+      "clean_name": "Shampoo Anti-Schuppen Classic Clean",
+      "package_size": "300 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1493045/head-und-shoulders-shampoo-anti-schuppen-classic-clean",
+      "gtin": "8001090890054",
+      "gtin_source_url": "https://www.dm.de/p/d/1493045/head-und-shoulders-shampoo-anti-schuppen-classic-clean",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm shampoo category on 2026-08-26; anti-dandruff flagship; PDP exposed GTIN.",
+      "uncertainty": "Category page also showed 500 ml size family; GTIN is for 300 ml PDP.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Head & Shoulders Classic Clean anti-dandruff shampoo; active Head & Shoulders identities are Sensitive/Dermax variants.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "8001090890054",
+          "canonical_gtin14": "08001090890054",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-004",
+      "category": "shampoo",
+      "priority_rank": 4,
+      "canonical_brand": "Herbal Essences",
+      "product_line": "Fiji",
+      "clean_name": "Shampoo",
+      "package_size": "350 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm shampoo category/brand visibility on 2026-08-26; 180-189 review signals, 3.95 EUR, in stock.",
+      "uncertainty": "GTIN not captured; formula is new/current and should be separately analyzed.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Herbal Essences Fiji shampoo identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-005",
+      "category": "shampoo",
+      "priority_rank": 5,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Grow Abundant",
+      "clean_name": "Shampoo Anti-Haarverlust",
+      "package_size": "290 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm shampoo category on 2026-08-26; 689/777 reviews, 7.95 EUR, in stock.",
+      "uncertainty": "Hair-loss claims are medically adjacent; avoid strong suitability claims without evidence.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+          "identity": {
+            "canonical_brand": "Pantene",
+            "product_line": null,
+            "clean_name": "Pantene Grow Abundance",
+            "category_key": "shampoo"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "curated"
+          },
+          "has_barcode": false
+        },
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "Active Pantene Grow Abundance identity likely matches Grow Abundant anti-hair-loss line, but wording should be reviewed.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-006",
+      "category": "shampoo",
+      "priority_rank": 6,
+      "canonical_brand": "Herbal Essences",
+      "product_line": "Limettenduft",
+      "clean_name": "Shampoo Tiefenreinigung & Glanz",
+      "package_size": "350 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3054758/herbal-essences-shampoo-limettenduft-tiefenreinigung-und-glanz",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "existing-backfill-priority",
+      "visibility_signal": "dm shampoo category on 2026-08-26; visible in top set, 3.95 EUR, in stock.",
+      "uncertainty": "Potential deep-cleansing adjacency; shampoo bucket must be reviewed later.",
+      "reconciliation": {
+        "status": "existing_product_match",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": {
+          "product_id": "41b99629-5a1c-402f-a486-d41780e89e66",
+          "identity": {
+            "canonical_brand": "Herbal Essences",
+            "product_line": "Tiefenreinigung & Glanz",
+            "clean_name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+            "category_key": "shampoo"
+          },
+          "lifecycle": {
+            "is_active": true,
+            "lifecycle_status": "active",
+            "origin": "user_submitted"
+          },
+          "has_barcode": true
+        },
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "Exact Herbal Essences Tiefenreinigung & Glanz Limettenduft identity is active.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-007",
+      "category": "shampoo",
+      "priority_rank": 7,
+      "canonical_brand": "Langhaarmaedchen",
+      "product_line": "Hydrate & Shine",
+      "clean_name": "Shampoo",
+      "package_size": "300 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/3106301/langhaarmaedchen-shampoo-hydrate-und-shine",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm shampoo category on 2026-08-26; new product graphic, dm-brand graphic, 20 reviews, 4.95 EUR, in stock.",
+      "uncertainty": "New product status makes formula and identity freshness especially important.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Langhaarmaedchen Hydrate & Shine shampoo; active Langhaarmaedchen shampoos are Beautiful Curls and Lovely Long.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-008",
+      "category": "shampoo",
+      "priority_rank": 8,
+      "canonical_brand": "Pantene Pro-V",
+      "product_line": "Repair & Care",
+      "clean_name": "Shampoo XXL",
+      "package_size": "500 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1491698/pantene-pro-v-shampoo-repair-und-care-xxl",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm shampoo category on 2026-08-26; multi-size signal, 237 reviews, 5.95 EUR, in stock.",
+      "uncertainty": "Size-specific package identity must be preserved.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Pantene Repair & Care shampoo identity.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-009",
+      "category": "shampoo",
+      "priority_rank": 9,
+      "canonical_brand": "GUHL",
+      "product_line": "Langzeit Volumen",
+      "clean_name": "Shampoo",
+      "package_size": "250 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1407125/guhl-shampoo-langzeit-volumen",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm shampoo category on 2026-08-26; sponsored, 1028 reviews, 3.95 EUR, in stock.",
+      "uncertainty": "PDP URL should be rechecked before package creation.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "medium",
+        "match_rationale": "No active Guhl Langzeit Volumen; active Guhl volume-adjacent row is Kraft & Fuelle, a distinct line/name.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-010",
+      "category": "shampoo",
+      "priority_rank": 10,
+      "canonical_brand": "Alterra",
+      "product_line": null,
+      "clean_name": "Feuchtigkeits-Shampoo",
+      "package_size": null,
+      "retailers": [
+        "Rossmann"
+      ],
+      "source_pdp_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-feuchtigkeits-shampoo/p/4305615307718",
+      "gtin": "4305615307718",
+      "gtin_source_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-feuchtigkeits-shampoo/p/4305615307718",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Rossmann PDP crawled 2026-08-26; product positioned for dry/strained hair and dry scalp.",
+      "uncertainty": "Package size not captured; scalp-route support requires full source pass.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Alterra Feuchtigkeits-Shampoo identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4305615307718",
+          "canonical_gtin14": "04305615307718",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-011",
+      "category": "shampoo",
+      "priority_rank": 11,
+      "canonical_brand": "Schauma",
+      "product_line": "3in1",
+      "clean_name": "Shampoo Intensive Reinigung",
+      "package_size": null,
+      "retailers": [
+        "Mueller"
+      ],
+      "source_pdp_url": "https://www.mueller.de/p/schauma-3in1-shampoo-intensive-reinigung-reinigende-formel-fuer-haare-koerper-gesicht-PPN3181417/",
+      "gtin": null,
+      "gtin_source_url": null,
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "Mueller PDP crawled 2026-08-19/26; 3in1 hair/body/face cleansing product with in-shop PDP.",
+      "uncertainty": "May be poor fit for strict hair-profile matching despite scanner relevance.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Schauma 3in1 Intensive Reinigung shampoo; active Schauma is Anti-Schuppen.",
+        "gtin_ownership": {
+          "status": "not_provided",
+          "gtin": null,
+          "canonical_gtin14": null,
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    },
+    {
+      "candidate_id": "shampoo-012",
+      "category": "shampoo",
+      "priority_rank": 12,
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Shampoo Intensivpflege",
+      "package_size": "300 ml",
+      "retailers": [
+        "dm"
+      ],
+      "source_pdp_url": "https://www.dm.de/p/d/1703586/balea-shampoo-intensivpflege",
+      "gtin": "4066447982657",
+      "gtin_source_url": "https://www.dm.de/p/d/1703586/balea-shampoo-intensivpflege",
+      "candidate_lane": "potentially-new",
+      "visibility_signal": "dm PDP crawled 2026-08-26; in stock, 165 reviews, GTIN exposed.",
+      "uncertainty": "dm own-brand line likely high scanner value; category properties not researched.",
+      "reconciliation": {
+        "status": "new_candidate_confirmed",
+        "checked_at": "2026-08-26T13:45:00.000Z",
+        "checked_against": {
+          "active_products_checked": 259,
+          "readiness_candidates_checked": 221,
+          "open_submission_identities_checked": 8,
+          "gtin_owner_scope_available": "live-baseline product identifiers on active products; phase1a ledger has ownership-scoped researched packages where present",
+          "limitation": "No separate inactive-owner table is embedded in live-baseline.json; inactive owner checks are available only where phase1a ledger records ownership-scoped package evidence."
+        },
+        "existing_product": null,
+        "open_submission": null,
+        "match_confidence": "high",
+        "match_rationale": "No active Balea Intensivpflege shampoo identity.",
+        "gtin_ownership": {
+          "status": "unowned_in_live_baseline_product_identifiers",
+          "gtin": "4066447982657",
+          "canonical_gtin14": "04066447982657",
+          "owners": [],
+          "researched_existing_package": null
+        }
+      }
+    }
+  ],
+  "reconciliation": {
+    "checked_at": "2026-08-26T13:45:00.000Z",
+    "source_files": {
+      "live_baseline": {
+        "path": "data/scanner-catalog-coverage/2026-08-26/live-baseline.json",
+        "content_fingerprint": "cc84636c1986bf2fe6a7fa5811ec063e2607ad2655f308220ebf16be93f27332",
+        "active_products": 259
+      },
+      "readiness_baseline": {
+        "path": "data/scanner-catalog-coverage/2026-08-26/readiness-baseline.json",
+        "content_fingerprint": "ea9580f34c131fb618a94f9434299fed7633c8bbb3242884de46c15bcb763de3",
+        "active_supported_without_barcode": 221
+      },
+      "phase1a_existing_ledger": {
+        "path": "data/scanner-catalog-coverage/2026-08-26/phase1a-existing-ledger.json",
+        "content_fingerprint": "b311cfbd18e7df99371dcf2293e8c4bdf86619b8fe9334f0c1b93d6084b64a66"
+      }
+    },
+    "counts_by_category": {
+      "conditioner": {
+        "total": 17,
+        "existing_product_match": 6,
+        "open_submission_overlap": 0,
+        "new_candidate_confirmed": 11,
+        "unresolved_identity_ambiguous": 0
+      },
+      "leave_in": {
+        "total": 17,
+        "existing_product_match": 6,
+        "open_submission_overlap": 0,
+        "new_candidate_confirmed": 11,
+        "unresolved_identity_ambiguous": 0
+      },
+      "mask": {
+        "total": 16,
+        "existing_product_match": 6,
+        "open_submission_overlap": 0,
+        "new_candidate_confirmed": 8,
+        "unresolved_identity_ambiguous": 2
+      },
+      "oil": {
+        "total": 13,
+        "existing_product_match": 5,
+        "open_submission_overlap": 0,
+        "new_candidate_confirmed": 8,
+        "unresolved_identity_ambiguous": 0
+      },
+      "shampoo": {
+        "total": 12,
+        "existing_product_match": 3,
+        "open_submission_overlap": 0,
+        "new_candidate_confirmed": 9,
+        "unresolved_identity_ambiguous": 0
+      }
+    },
+    "phase1b_new_targets": {
+      "shampoo": 7,
+      "conditioner": 8,
+      "mask": 6,
+      "leave_in": 8,
+      "oil": 6
+    },
+    "target_plus_two_met": {
+      "shampoo": true,
+      "conditioner": true,
+      "mask": true,
+      "leave_in": true,
+      "oil": true
+    },
+    "notes": [
+      "Exact absence means absent from the 259 active identities plus the 8 resolved open-submission identities embedded in live-baseline.json.",
+      "Inactive owner visibility is limited to ownership-scoped GTIN research already materialized in phase1a-existing-ledger.json; no separate inactive identifier export was embedded for this slice."
+    ]
+  },
+  "content_fingerprint": "30c6b58c15a5c11e783e858ce398f50949be4737b909ccc580f8cedeade72e48"
+}

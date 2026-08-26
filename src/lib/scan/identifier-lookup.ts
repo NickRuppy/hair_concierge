@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import { gtinQueryVariants, normalizeIdentifierValue } from "@/lib/product-identity/normalize"
+import { canonicalizeGtin, hasValidGs1CheckDigit } from "@/lib/product-identity/normalize"
 
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 
@@ -32,19 +32,13 @@ export async function lookupCatalogProductByIdentifier(
   client: SupabaseClient,
   identifier: ScanIdentifierInput,
 ): Promise<CatalogIdentifierLookupResult> {
-  const normalizedValue = normalizeIdentifierValue(identifier.value)
-  if (!normalizedValue) return null
-
-  // Stored rows may hold any spelling of a GTIN (12-digit UPC imports, 13-digit EANs,
-  // 14-digit feeds, or the canonical form once stored values are canonicalized), so the
-  // query matches every spelling the padding permits. Reads are thereby independent of
-  // whether stored data was canonicalized yet.
-  const queryValues = gtinQueryVariants(normalizedValue)
+  const canonicalGtin14 = canonicalizeGtin(identifier.value)
+  if (!canonicalGtin14) return null
 
   const { data: identifierRows, error: identifierError } = await client
     .from("product_identifiers")
     .select("product_id")
-    .in("normalized_identifier_value", queryValues)
+    .eq("canonical_gtin14", canonicalGtin14)
     .in("identifier_type", BARCODE_IDENTIFIER_TYPES)
   if (identifierError) throw new Error("scan_identifier_lookup_failed")
 
@@ -67,19 +61,17 @@ export async function lookupCatalogProductByIdentifier(
   const activeProducts = (productRows ?? []) as ActiveProductRow[]
   if (activeProducts.length === 0) return null
 
-  // Deterministic pick when the same identifier value was mistakenly attached to more
-  // than one active product: lowest id wins, both/all ids logged for operator follow-up.
   const sorted = [...activeProducts].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
-  const [winner, ...collided] = sorted
-  if (collided.length > 0) {
-    console.warn("scan_identifier_collision", {
-      normalizedValue,
-      winnerId: winner.id,
-      otherIds: collided.map((product) => product.id),
+  if (sorted.length > 1) {
+    console.error("scan_identifier_collision", {
+      canonicalGtin14,
+      productIds: sorted.map((product) => product.id),
     })
+    return null
   }
 
-  return { productId: winner.id, category: winner.category_key as PersonalPlanCategory }
+  const [product] = sorted
+  return { productId: product.id, category: product.category_key as PersonalPlanCategory }
 }
 
 export type ValidateEanInputResult =
@@ -106,15 +98,3 @@ export function validateEanInput(raw: string): ValidateEanInputResult {
  * alternate 3, 1, 3, 1, … moving further left. Uniform across EAN-8 and EAN-13 because
  * both are defined relative to the rightmost (check) digit.
  */
-function hasValidGs1CheckDigit(digits: string): boolean {
-  const values = digits.split("").map(Number)
-  const checkDigit = values[values.length - 1]
-  const body = values.slice(0, -1)
-  const sum = body.reduce((total, digit, index) => {
-    const positionFromRight = body.length - 1 - index
-    const weight = positionFromRight % 2 === 0 ? 3 : 1
-    return total + digit * weight
-  }, 0)
-  const expectedCheckDigit = (10 - (sum % 10)) % 10
-  return expectedCheckDigit === checkDigit
-}

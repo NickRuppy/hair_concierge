@@ -2,6 +2,7 @@ import { config as loadEnv } from "dotenv"
 import { existsSync, readFileSync } from "node:fs"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
+import { canonicalizeGtin } from "../../src/lib/product-identity/normalize"
 import { normalizeAlias, validateNormalizationDocument } from "./validate-normalization"
 
 const NORMALIZATION_PATH = "data/product-catalog-normalization.json"
@@ -10,6 +11,7 @@ const PROJECT_REF = "pqdkhefxsxkyeqelqegq"
 type CliOptions = {
   apply: boolean
   confirmProject: string | null
+  writesDisabled: boolean
 }
 
 type IdentifierMapping = {
@@ -73,12 +75,20 @@ type ProductIdRow = {
   id: string
 }
 
+type ExistingIdentifierOwnerRow = {
+  product_id: string
+  identifier_type: string
+  identifier_value: string
+  canonical_gtin14: string | null
+}
+
 function parseArgs(args: string[]): CliOptions {
   const confirmArg = args.find((arg) => arg.startsWith("--confirm-project="))
 
   return {
     apply: args.includes("--apply"),
     confirmProject: confirmArg ? (confirmArg.split("=", 2)[1] ?? null) : null,
+    writesDisabled: args.includes("--disable-writes"),
   }
 }
 
@@ -118,9 +128,18 @@ export function buildApplyPlan(document: NormalizationDocument) {
       })
     }
 
+    const seenCanonicalGtins = new Set<string>()
     for (const identifier of product.identifiers) {
+      const canonicalGtin = canonicalizeBarcodeIdentifier(identifier)
+      if (canonicalGtin) {
+        if (seenCanonicalGtins.has(canonicalGtin)) continue
+        seenCanonicalGtins.add(canonicalGtin)
+      }
+
       identifiers.set(
-        `${product.product_id}:${identifier.type}:${normalizeIdentifierValue(identifier.value)}`,
+        canonicalGtin
+          ? `${product.product_id}:canonical_gtin14:${canonicalGtin}`
+          : `${product.product_id}:${identifier.type}:${normalizeIdentifierValue(identifier.value)}`,
         {
           ...identifier,
           product_id: product.product_id,
@@ -159,6 +178,11 @@ function normalizeIdentifierValue(value: string): string {
   return value.trim().replace(/\s+/g, "").toLowerCase()
 }
 
+function canonicalizeBarcodeIdentifier(identifier: IdentifierMapping): string | null {
+  if (!["ean", "gtin", "barcode"].includes(identifier.type)) return null
+  return canonicalizeGtin(identifier.value)
+}
+
 function createSupabaseClientFromEnv(): SupabaseClient {
   loadEnv({ path: ".env.local" })
 
@@ -176,6 +200,14 @@ function createSupabaseClientFromEnv(): SupabaseClient {
 
 function assertWriteGuards(options: CliOptions) {
   if (!options.apply) return
+  if (
+    options.writesDisabled ||
+    ["1", "true", "yes"].includes(
+      (process.env.PRODUCT_IDENTITY_APPLY_DISABLE_WRITES ?? "").trim().toLowerCase(),
+    )
+  ) {
+    throw new Error("Product identity normalization writes are disabled by kill switch.")
+  }
   if (options.confirmProject !== PROJECT_REF) {
     throw new Error(`Writes require --confirm-project=${PROJECT_REF}.`)
   }
@@ -568,6 +600,83 @@ async function upsertProductIdentifiers(
   if (error) throw new Error(`Failed to upsert product identifiers: ${error.message}`)
 }
 
+export function assertCanonicalIdentifierPlanOwnership(
+  identifiers: Array<IdentifierMapping & { product_id: string }>,
+) {
+  const ownerByCanonical = new Map<string, string>()
+
+  for (const identifier of identifiers) {
+    const canonicalGtin = canonicalizeBarcodeIdentifier(identifier)
+    if (!canonicalGtin) {
+      if (["ean", "gtin", "barcode"].includes(identifier.type)) {
+        throw new Error(
+          `Invalid ${identifier.type} identifier for product ${identifier.product_id}: ${identifier.value}`,
+        )
+      }
+      continue
+    }
+
+    const existingProductId = ownerByCanonical.get(canonicalGtin)
+    if (existingProductId && existingProductId !== identifier.product_id) {
+      throw new Error(
+        `Canonical GTIN ${canonicalGtin} is assigned to both ${existingProductId} and ${identifier.product_id}.`,
+      )
+    }
+    ownerByCanonical.set(canonicalGtin, identifier.product_id)
+  }
+}
+
+export async function assertExistingCanonicalIdentifierOwnersAvailable(
+  supabase: SupabaseClient,
+  identifiers: Array<IdentifierMapping & { product_id: string }>,
+) {
+  assertCanonicalIdentifierPlanOwnership(identifiers)
+
+  const canonicalGtins = [
+    ...new Set(
+      identifiers.flatMap((identifier) => {
+        const canonicalGtin = canonicalizeBarcodeIdentifier(identifier)
+        return canonicalGtin ? [canonicalGtin] : []
+      }),
+    ),
+  ]
+  if (canonicalGtins.length === 0) return
+
+  const { data, error } = await supabase
+    .from("product_identifiers")
+    .select("product_id,identifier_type,identifier_value,canonical_gtin14")
+    .in("canonical_gtin14", canonicalGtins)
+
+  if (error) {
+    throw new Error(`Failed to check canonical product identifier ownership: ${error.message}`)
+  }
+
+  const incomingOwnerByCanonical = new Map(
+    identifiers.flatMap((identifier) => {
+      const canonicalGtin = canonicalizeBarcodeIdentifier(identifier)
+      return canonicalGtin ? [[canonicalGtin, identifier.product_id] as const] : []
+    }),
+  )
+
+  const conflicts = (data as ExistingIdentifierOwnerRow[]).flatMap((existing) => {
+    if (!existing.canonical_gtin14) return []
+    const incomingProductId = incomingOwnerByCanonical.get(existing.canonical_gtin14)
+    if (!incomingProductId || incomingProductId === existing.product_id) return []
+    return [
+      `${existing.canonical_gtin14}: database has ${existing.product_id} (${existing.identifier_type} ${existing.identifier_value}), mapping has ${incomingProductId}`,
+    ]
+  })
+
+  if (conflicts.length > 0) {
+    throw new Error(
+      [
+        "Refusing to apply product identity normalization because canonical GTIN ownership conflicts with existing catalog rows.",
+        ...conflicts,
+      ].join("\n"),
+    )
+  }
+}
+
 async function updateProducts(
   supabase: SupabaseClient,
   plan: ReturnType<typeof buildApplyPlan>,
@@ -611,8 +720,10 @@ async function applyNormalization(options: CliOptions, document: NormalizationDo
 
   const supabase = createSupabaseClientFromEnv()
   assertWriteGuards(options)
+  assertCanonicalIdentifierPlanOwnership(plan.identifiers)
   await assertProductsExist(supabase, plan)
   await assertProductsMatchReviewedMapping(supabase, document)
+  await assertExistingCanonicalIdentifierOwnersAvailable(supabase, plan.identifiers)
 
   const brandsByKey = await upsertBrands(supabase, plan)
   const productLinesByKey = await upsertProductLines(supabase, plan, brandsByKey)

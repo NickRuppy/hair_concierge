@@ -39,7 +39,7 @@ import { MASK_CONCENTRATIONS, MASK_INGREDIENT_FLAGS, MASK_WEIGHTS } from "@/lib/
 import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/constants"
 import { SHAMPOO_BUCKETS, SHAMPOO_SCALP_ROUTES_BY_BUCKET } from "@/lib/shampoo/constants"
 import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
-import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
+import { canonicalizeGtin, SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import { buildProductApplicationPointerV2 } from "@/lib/product-intake/catalog-enrichment/stage5-v2-builder"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
@@ -233,7 +233,7 @@ const sourceSchema = z
   })
   .strict()
 
-const identifierSchema = z
+const identifierBaseSchema = z
   .object({
     type: identifierTypeSchema,
     value: trimmedString,
@@ -246,6 +246,17 @@ const identifierSchema = z
       ? identifier.value.replace(/[^\p{Letter}\p{Number}]+/gu, "")
       : identifier.value,
   }))
+
+const identifierSchema = identifierBaseSchema.superRefine((identifier, ctx) => {
+  if (!barcodeIdentifierTypes.has(identifier.type)) return
+  if (canonicalizeGtin(identifier.value) === null) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["value"],
+      message: "barcode identifiers must be valid GS1 GTIN-8/12/13/14 values",
+    })
+  }
+})
 
 const reviewedProductSchema = z
   .object({
@@ -303,6 +314,14 @@ const researchedPayloadSchema = z
 
 const approvalPayloadSchema = researchedPayloadSchema.extend({
   final: finalPayloadSchema,
+})
+
+const legacyFinalPayloadSchema = finalPayloadSchema.extend({
+  identifiers: z.array(identifierBaseSchema).default([]),
+})
+
+const legacyApprovalPayloadSchema = researchedPayloadSchema.extend({
+  final: legacyFinalPayloadSchema,
 })
 
 export type ProductIntakeFinalReviewedPayload = z.infer<typeof finalPayloadSchema>
@@ -1177,7 +1196,10 @@ export function validateProductIntakeApprovalPayload(
   value: unknown,
   profile: ProductIntakeValidationProfile = "current",
 ): ProductIntakeApprovalValidationResult {
-  const parsed = approvalPayloadSchema.safeParse(value)
+  const parsed =
+    profile === "legacy_personal_plan_launch_v1"
+      ? legacyApprovalPayloadSchema.safeParse(value)
+      : approvalPayloadSchema.safeParse(value)
   if (!parsed.success) {
     return invalidCategoryResult(parseErrors(parsed.error))
   }
