@@ -43,11 +43,14 @@ import type {
  * `heated_styling` and `heatless_styling` each collapsed from two capture pages
  * into one, and the page keys are persisted question ids. The merged page means
  * something strictly stronger than either old page did: "this user has been
- * shown, and answered for, the whole family". So a stored completion decodes as
- * completing the merged page only when BOTH old page ids were completed — a
- * half-paged draft honestly re-opens the (now single) question rather than
- * inheriting a claim about forms the user never saw. Orphaned `:2` ids are
- * dropped either way, because no such question exists any more.
+ * shown, and answered for, the whole family". So a completion stored by a
+ * PRE-merge row (schema_version < 3) decodes as completing the merged page only
+ * when BOTH old page ids were completed — a half-paged draft honestly re-opens
+ * the (now single) question rather than inheriting a claim about forms the user
+ * never saw. A row stored under the merged contract (schema_version >= 3)
+ * writes exactly the merged id and keeps it as-is; applying the legacy rule to
+ * it would drop every fresh completion on reload. Orphaned `:2` ids are dropped
+ * in both cases, because no such question exists any more.
  *
  * This is read-time only: a row that was already *complete* keeps its status
  * through `createStage2RefinementSession`, which trusts the stored status and
@@ -64,12 +67,22 @@ const MERGED_TOOL_FORM_PAGES: ReadonlyArray<{ merged: string; sources: readonly 
   },
 ]
 
-export function decodeStage2CompletedQuestionIds(raw: unknown): Stage2QuestionId[] {
+export function decodeStage2CompletedQuestionIds(
+  raw: unknown,
+  storedSchemaVersion: number,
+): Stage2QuestionId[] {
   if (!Array.isArray(raw)) return []
   const stored = raw.filter((id): id is string => typeof id === "string")
+  // `tools:<family>:1` is ambiguous on its own: under the two-page contract it
+  // was a half-draft (page 2 unanswered), under the merged contract it IS the
+  // whole family. Only the row's stored schema_version can tell them apart —
+  // a v3 row writes exactly the merged id, and collapsing it with the legacy
+  // rule dropped every fresh completion on reload (question_not_current loop).
+  const legacyPaged = storedSchemaVersion < 3
   const survives = (id: string) => {
     const page = MERGED_TOOL_FORM_PAGES.find((candidate) => candidate.sources.includes(id))
     if (!page) return true
+    if (!legacyPaged) return id === page.merged
     // The merged id keeps its slot only when the whole family was answered;
     // every other source id is an orphan of a question that no longer exists.
     return id === page.merged && page.sources.every((source) => stored.includes(source))
@@ -324,7 +337,10 @@ function mapDraft(
     pathVersion: `stage2-v${String(row.schema_version)}`,
     triggerContext,
     answers: decodeStage2RefinementAnswers(row.answers),
-    completedQuestionIds: decodeStage2CompletedQuestionIds(row.completed_question_ids),
+    completedQuestionIds: decodeStage2CompletedQuestionIds(
+      row.completed_question_ids,
+      Number(row.schema_version),
+    ),
     revision: Number(row.revision),
     status: row.status as Stage2PersistedDraft["status"],
     refinedVersionId:

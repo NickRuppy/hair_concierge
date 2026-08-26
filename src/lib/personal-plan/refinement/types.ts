@@ -123,7 +123,7 @@ export type PersonalPlanRefinementAnswersV1 = {
  * | --- | --- | --- |
  * | 1 | the shipped Feinschliff contract | `toolSections` → `toolFamiliesWithSomething` (WS5/C7) |
  * | 2 | `drying_routes` no longer completes on `[]` (`D2`); `toolForms.brushes_combs` may carry `fingers` (`D9b`); `heatEvents["heat:diffuser_airflow_shaping"].protectionConsistency` is forbidden (`R1`) | legacy `[]` drying answers stay readable but stop completing the question; an absent `fingers` token is simply absent; the diffuser source's stored `protectionConsistency` is dropped on read |
- * | 3 | `heated_styling` and `heatless_styling` capture on ONE page each, so `tools:heated_styling:2` and `tools:heatless_styling:2` no longer exist and `tools:<family>:1` now means the whole family (Nick ruling 2026-08-26) | `decodeStage2CompletedQuestionIds`: the merged page counts as completed only when BOTH old page ids were completed; orphaned `:2` ids are dropped. Answers are untouched — `toolForms` was always family-keyed, never page-keyed |
+ * | 3 | `heated_styling` and `heatless_styling` capture on ONE page each, so `tools:heated_styling:2` and `tools:heatless_styling:2` no longer exist and `tools:<family>:1` now means the whole family (Nick ruling 2026-08-26) | `decodeStage2CompletedQuestionIds` (version-aware): for a row stored under version < 3 the merged page counts as completed only when BOTH old page ids were completed; a row stored under version >= 3 wrote exactly the merged id and keeps it as-is. Orphaned `:2` ids are dropped either way. Answers are untouched — `toolForms` was always family-keyed, never page-keyed |
  */
 export const STAGE2_QUESTION_PATH_VERSION = 3
 

@@ -247,16 +247,38 @@ test("D8: a row completed with an empty drying answer stays complete after the â
 // persisted question ids, so a stored completion has to be decoded.
 // ---------------------------------------------------------------------------
 
+test("D8/v3: a row saved under the merged contract keeps its one-page completions", () => {
+  // Regression (E2E 2026-08-26): a fresh v3 row stores exactly the merged id
+  // when the single heated/heatless page is answered. Decoding that row with
+  // the legacy both-pages rule dropped the completion on every reload, so the
+  // journey could never advance past the family (`question_not_current` loop).
+  assert.deepEqual(
+    decodeStage2CompletedQuestionIds(
+      ["tools_overview", "tools:heated_styling:1", "tools:heatless_styling:1"],
+      3,
+    ),
+    ["tools_overview", "tools:heated_styling:1", "tools:heatless_styling:1"],
+  )
+  // An orphaned `:2` id cannot be written by v3 code; if present it is noise.
+  assert.deepEqual(
+    decodeStage2CompletedQuestionIds(["tools_overview", "tools:heated_styling:2"], 3),
+    ["tools_overview"],
+  )
+})
+
 test("D8/v3: a fully paged family decodes onto the merged page id", () => {
-  const decoded = decodeStage2CompletedQuestionIds([
-    "current_product_categories",
-    "tools_overview",
-    "tools:heated_styling:1",
-    "tools:heated_styling:2",
-    "tools:heatless_styling:1",
-    "tools:heatless_styling:2",
-    "tools:brushes_combs:1",
-  ])
+  const decoded = decodeStage2CompletedQuestionIds(
+    [
+      "current_product_categories",
+      "tools_overview",
+      "tools:heated_styling:1",
+      "tools:heated_styling:2",
+      "tools:heatless_styling:1",
+      "tools:heatless_styling:2",
+      "tools:brushes_combs:1",
+    ],
+    2,
+  )
   assert.deepEqual(decoded, [
     "current_product_categories",
     "tools_overview",
@@ -270,12 +292,13 @@ test("D8/v3: a half-paged family does NOT inherit the merged page's completion",
   // The merged page means â€žthe whole family was shown and answered". A draft
   // that only ever saw page 1 never answered for the forms page 2 carried, so
   // the (now single) question honestly re-opens instead of claiming an answer.
-  assert.deepEqual(decodeStage2CompletedQuestionIds(["tools_overview", "tools:heated_styling:1"]), [
-    "tools_overview",
-  ])
+  assert.deepEqual(
+    decodeStage2CompletedQuestionIds(["tools_overview", "tools:heated_styling:1"], 2),
+    ["tools_overview"],
+  )
   // And an orphaned page-2 id alone is dropped: no such question exists.
   assert.deepEqual(
-    decodeStage2CompletedQuestionIds(["tools_overview", "tools:heatless_styling:2"]),
+    decodeStage2CompletedQuestionIds(["tools_overview", "tools:heatless_styling:2"], 2),
     ["tools_overview"],
   )
 })
@@ -291,28 +314,31 @@ test("D8/v3: unaffected families and multi-page families keep every stored id", 
     "tools:night_protection:1",
     "tools:drying_textiles:1",
   ]
-  assert.deepEqual(decodeStage2CompletedQuestionIds(stored), stored)
+  assert.deepEqual(decodeStage2CompletedQuestionIds(stored, 2), stored)
   // Read-only: the decode never mutates the array it was given.
   assert.equal(stored.length, 8)
-  assert.deepEqual(decodeStage2CompletedQuestionIds(null), [])
-  assert.deepEqual(decodeStage2CompletedQuestionIds([42, "tools_overview"]), ["tools_overview"])
+  assert.deepEqual(decodeStage2CompletedQuestionIds(null, 2), [])
+  assert.deepEqual(decodeStage2CompletedQuestionIds([42, "tools_overview"], 2), ["tools_overview"])
 })
 
 test("D8/v3: a row completed under the old two-page split stays complete on reload", () => {
   // Trust-stored-completion: a finished journey validates against its
   // completion-time contract, so the merged page never re-opens for it.
-  const completedIds = decodeStage2CompletedQuestionIds([
-    "current_product_categories",
-    "wet_wash_frequency",
-    "towel_handling",
-    "drying_routes",
-    "additional_heat_tools",
-    "night_protection",
-    "tools_overview",
-    "tools:heated_styling:1",
-    // The old page 2 was never answered -- an in-progress draft would re-open
-    // the merged question, but this row is already complete.
-  ])
+  const completedIds = decodeStage2CompletedQuestionIds(
+    [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+      "night_protection",
+      "tools_overview",
+      "tools:heated_styling:1",
+      // The old page 2 was never answered -- an in-progress draft would re-open
+      // the merged question, but this row is already complete.
+    ],
+    2,
+  )
   const reloaded = createStage2RefinementSession({
     pathVersion: "stage2-v2",
     triggerContext: { ...baseTriggerContext, toolsEnabled: true },
