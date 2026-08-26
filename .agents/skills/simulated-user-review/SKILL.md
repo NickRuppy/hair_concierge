@@ -39,7 +39,11 @@ Decide the authentication mode before navigating:
 - **Authenticated review:** Use when the user asks to test full functionality, profile, onboarding edits, chat, recommendations, saved state, subscription-gated pages, or anything behind an auth/paywall gate.
 - **Both:** Use when a release touches handoff between public and private areas, such as quiz-to-onboarding, checkout-to-welcome, or login redirects.
 
-For authenticated reviews, do not stop at the auth gate unless no safe auth path exists. First look for a repo-supported test login, seeded account, Playwright auth helper, local dev login route, or documented QA credential. For Hair Concierge local development, prefer the supported local dev login flow when available, and verify that any required app-access state is seeded too, such as an active billing subscription row when middleware gates `/onboarding`, `/chat`, or `/api/chat`.
+For authenticated reviews, do not stop at the auth gate unless no safe auth path exists. For local and preview reviews, follow `docs/local-qa-access.md` — it is the contract of record for local QA access. In short:
+
+- **Authenticated app surfaces** (`/chat`, `/profile`, `/routine`, `/scan`, `/tracker`, …): open `http://localhost:<port>/api/dev/login?next=<route>`. Requires `LOCAL_DEV_LOGIN_ENABLED=1` in `.env.local` and the `localhost` hostname (never `127.0.0.1` — it renders without hydrating). A 307 to `/quiz` from that URL means the flag is unset or the server predates it; restart the dev server.
+- **Personal Plan stage UIs in isolation**: use the dev-only `/labs/*` harnesses (no auth needed), e.g. `/labs/personal-plan-stage-2?scenario=ready`.
+- **Local post-payment handoff** (checkout → `/plan-bereit` → `/plan-start`): the dev-login account can never reach this — it has app access but no enrollment, so `/plan-start` shows the unavailable state by design. Use the local test-mode checkout recipe in `docs/local-qa-access.md` §3 instead; do not burn time trying to coax the dev-login user into the plan journey.
 
 For a production Personal Plan Stage 1–5 review, use a valid shareable field-test campaign link supplied by the user or campaign operator:
 

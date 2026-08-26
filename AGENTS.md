@@ -105,6 +105,7 @@ The reviewer is read-only and terminal: it returns a verdict and must not invoke
 - Separate cosmetic guidance from medically adjacent scalp or hair-loss guidance.
 - When evidence is mixed, keep product behavior conservative and explicit about uncertainty.
 - Supabase project ID: `pqdkhefxsxkyeqelqegq`.
+- Local QA access (dev login, `/labs` harnesses, local post-payment testing): `docs/local-qa-access.md`.
 
 ## Git workflow
 

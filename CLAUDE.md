@@ -108,6 +108,7 @@ The main interactive session (intended: Fable 5) is the orchestrator: it decompo
 - Vocabulary: `hair_texture` = pattern (straight/wavy/curly/coily), `thickness` = diameter (fine/normal/coarse)
 - No over-engineering — only build what's requested, no speculative abstractions
 - Supabase project ID: `pqdkhefxsxkyeqelqegq`
+- Local QA access (dev login, `/labs` harnesses, local post-payment testing): `docs/local-qa-access.md`
 - Use TDD (test-first) for deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, `src/lib/quiz/`
 - Keep recommendation logic as deterministic as the evidence allows
 - Do not present weak evidence as a hard rule; when evidence is mixed, keep product behavior conservative and explicit about uncertainty
