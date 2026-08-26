@@ -13,6 +13,7 @@ import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfoli
 
 import { routineCategoryLabel } from "./routine-item-card"
 
+import { RoutinePlanUpdatedToast } from "./routine-plan-updated-toast"
 import {
   RoutineRefinementBanner,
   type RoutineRefinementBannerViewModel,
@@ -33,6 +34,9 @@ export type RoutinePageProps = {
   refinementBanner?: RoutineRefinementBannerViewModel | null
   onDismissRefinementBanner?: () => void
   onRefineFromBanner?: () => void
+  /** The "✓ Plan aktualisiert" toast (Task 2.6) — its signal, and consuming it once, are the caller's job. */
+  showPlanUpdatedToast?: boolean
+  onDismissPlanUpdatedToast?: () => void
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -65,6 +69,8 @@ export function RoutinePage({
   refinementBanner = null,
   onDismissRefinementBanner,
   onRefineFromBanner,
+  showPlanUpdatedToast = false,
+  onDismissPlanUpdatedToast,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -213,6 +219,9 @@ export function RoutinePage({
               </div>
             </div>
           </header>
+          {showPlanUpdatedToast && onDismissPlanUpdatedToast ? (
+            <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />
+          ) : null}
           {bannerAboveBlocks}
           <RoutineSection
             title="Deine Basis"

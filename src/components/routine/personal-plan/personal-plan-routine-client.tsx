@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey"
 import {
@@ -27,6 +27,10 @@ import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
+import {
+  hasRoutinePlanUpdatedSignal,
+  withoutRoutinePlanUpdatedSignal,
+} from "@/lib/personal-plan/routine/plan-updated-signal"
 
 import { requestRoutineAttentionRefresh } from "./routine-attention-indicator"
 import { RoutineEditor, type RoutineProductOption } from "./routine-editor"
@@ -203,7 +207,30 @@ export function PersonalPlanRoutineClient({
   initialRefinementBanner?: RoutineRefinementBannerViewModel | null
 }) {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [view, setView] = React.useState(initialView)
+  // Task 2.6: the "✓ Plan aktualisiert" toast signal. Read once from the
+  // arrival URL (a stripped reload never carries it again — see the effect
+  // below) and never re-derived from a later `searchParams` change, so a
+  // client-side navigation elsewhere on this page cannot resurrect it.
+  const [showPlanUpdatedToast, setShowPlanUpdatedToast] = React.useState(() =>
+    hasRoutinePlanUpdatedSignal(searchParams),
+  )
+  const planUpdatedSignalConsumed = React.useRef(false)
+  React.useEffect(() => {
+    if (planUpdatedSignalConsumed.current) return
+    planUpdatedSignalConsumed.current = true
+    if (!hasRoutinePlanUpdatedSignal(searchParams)) return
+    // Strip the param immediately so a reload of this exact URL never
+    // re-shows the toast (the signal is one-shot navigation state, not
+    // persistent page state).
+    router.replace(withoutRoutinePlanUpdatedSignal(pathname, searchParams), { scroll: false })
+    // Deliberately mount-only: consume-once by design, so re-running this on
+    // a later searchParams/pathname change must never re-arm it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const dismissPlanUpdatedToast = React.useCallback(() => setShowPlanUpdatedToast(false), [])
   const [mode, setMode] = React.useState<Mode>("overview")
   // A successor proposal is intentionally non-blocking during the current
   // visit, but it must be presented again on the next Routine-page visit until
@@ -587,6 +614,8 @@ export function PersonalPlanRoutineClient({
         refinementBanner={refinementBanner}
         onDismissRefinementBanner={dismissRefinementBanner}
         onRefineFromBanner={refineFromBanner}
+        showPlanUpdatedToast={showPlanUpdatedToast}
+        onDismissPlanUpdatedToast={dismissPlanUpdatedToast}
       />
       {pending ? (
         <RoutineProposalSheet

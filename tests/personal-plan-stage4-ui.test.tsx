@@ -1075,3 +1075,56 @@ test("all-done state: no refinementBanner prop at all renders no banner", () => 
   assert.doesNotMatch(html, /Hinweis schließen/)
   assert.doesNotMatch(html, /von 4/)
 })
+
+test("Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks", () => {
+  const routine = payload([item()])
+  const view = activeViewFor(routine)
+  const html = renderToStaticMarkup(
+    <RoutinePage view={view} showPlanUpdatedToast onDismissPlanUpdatedToast={() => undefined} />,
+  )
+
+  assert.match(html, /role="status"/)
+  assert.match(html, /Plan aktualisiert/)
+  assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Deine Basis"))
+})
+
+test("Task 2.6: the plan-updated toast is absent without the signal", () => {
+  const routine = payload([item()])
+  const view = activeViewFor(routine)
+  const withoutFlag = renderToStaticMarkup(<RoutinePage view={view} />)
+  const withFlagFalse = renderToStaticMarkup(
+    <RoutinePage
+      view={view}
+      showPlanUpdatedToast={false}
+      onDismissPlanUpdatedToast={() => undefined}
+    />,
+  )
+  // Without a dismiss handler the toast must not render even if the flag is
+  // (incorrectly) set — there would be no way to ever clear it.
+  const withoutHandler = renderToStaticMarkup(<RoutinePage view={view} showPlanUpdatedToast />)
+
+  for (const html of [withoutFlag, withFlagFalse, withoutHandler]) {
+    assert.doesNotMatch(html, /Plan aktualisiert/)
+  }
+})
+
+test("Task 2.6: the plan-updated toast and the refinement banner can render on the same visit", () => {
+  const routine = payload([item()])
+  const view = activeViewFor(routine)
+  const html = renderToStaticMarkup(
+    <RoutinePage
+      view={view}
+      showPlanUpdatedToast
+      onDismissPlanUpdatedToast={() => undefined}
+      refinementBanner={{ module: "habits", completedSteps: 3, totalSteps: 4 }}
+      onDismissRefinementBanner={() => undefined}
+      onRefineFromBanner={() => undefined}
+    />,
+  )
+
+  assert.match(html, /Plan aktualisiert/)
+  assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
+  // Toast at the very top, banner further down (mockup screen 3): the two
+  // never fight for the same slot.
+  assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Noch ein Schritt"))
+})

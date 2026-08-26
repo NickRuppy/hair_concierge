@@ -57,6 +57,7 @@ import {
   type Stage1ProductExamplePreviewResponse,
 } from "@/lib/personal-plan/product-preview-contract"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
+import { withRoutinePlanUpdatedSignal } from "@/lib/personal-plan/routine/plan-updated-signal"
 
 import { isNeedCardGroup } from "./need-card"
 import {
@@ -125,6 +126,47 @@ export function planStartRefinementExitDestination(
   return initialJourney.stage === "stage2"
     ? stage2SecondaryExitDestination(initialJourney.refineModule)
     : "stage1"
+}
+
+/**
+ * Whether this Feinschliff run was launched by an EXPLICIT module deep link
+ * (the Routine banner or the Profil row) — the same test
+ * `planStartRefinementExitDestination` already uses to route a mid-flow exit
+ * back to `/routine`. `initialJourney` never changes for the life of the
+ * journey (only the local `stage` does), so this stays valid from the
+ * Stage-2 module itself through to the Stage-3 completion the `products`
+ * module hands off into.
+ */
+function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
+  return planStartRefinementExitDestination(initialJourney) === "routine"
+}
+
+/**
+ * The Routine href for a habits-first module completion (Task 2.4: "habits
+ * zuerst"). Only an explicit module entry is a refinement-driven recompute
+ * the user should be told about (Task 2.6) — `?refine=1` and the legacy
+ * linear entry never reach this branch in the first place (see
+ * `applyStage2ModuleCompletion`), but the check stays here rather than
+ * relying on that invariant silently holding.
+ */
+export function moduleCompletionRoutineHref(initialJourney: PlanStartInitialJourney): string {
+  return isExplicitModuleRefinementEntry(initialJourney)
+    ? withRoutinePlanUpdatedSignal("/routine")
+    : "/routine"
+}
+
+/**
+ * The Routine href for a Stage-3 completion (Task 2.4: Modul 1 "products" →
+ * Stage 3 → Routine). Stage 3 is also reached from a direct Idealplan accept
+ * and from an ordinary resumed Stage-3 session — neither of those is a
+ * refinement-driven recompute, so the toast (Task 2.6) only rides along when
+ * this journey started as an explicit module deep link.
+ */
+export function stage3CompletionRoutineHref(
+  initialJourney: PlanStartInitialJourney,
+  href: string,
+): string {
+  return isExplicitModuleRefinementEntry(initialJourney) ? withRoutinePlanUpdatedSignal(href) : href
 }
 
 export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
@@ -849,12 +891,21 @@ export function PlanStartCustomerJourney({
 
   const openRoutine = useCallback(
     (handoff: Stage3RoutineHandoff) => {
-      performPersonalPlanRoutineHandoff(handoff, {
-        markNavigation: markPersonalPlanStageNavigation,
-        replaceRoute,
-      })
+      performPersonalPlanRoutineHandoff(
+        {
+          ...handoff,
+          next: {
+            ...handoff.next,
+            href: stage3CompletionRoutineHref(initialJourney, handoff.next.href),
+          },
+        },
+        {
+          markNavigation: markPersonalPlanStageNavigation,
+          replaceRoute,
+        },
+      )
     },
-    [replaceRoute],
+    [initialJourney, replaceRoute],
   )
 
   if (stage === "stage2") {
@@ -876,8 +927,8 @@ export function PlanStartCustomerJourney({
         onHandoff={handleHandoff}
         onModuleComplete={() => {
           // Modul 2 without a Stage-3 handoff (habits first): the user belongs
-          // back on their Routine. The toast is Task 2.6.
-          openRoutineHref("/routine")
+          // back on their Routine, with the "Plan aktualisiert" toast (Task 2.6).
+          openRoutineHref(moduleCompletionRoutineHref(initialJourney))
         }}
         autoHandoff={!returningToRefinement}
         directEntry

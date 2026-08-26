@@ -15,7 +15,11 @@ import {
   type Stage2ModuleCompletionPayload,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
-import { planStartRefinementExitDestination } from "../src/components/personal-plan-start/plan-start-flow"
+import {
+  moduleCompletionRoutineHref,
+  planStartRefinementExitDestination,
+  stage3CompletionRoutineHref,
+} from "../src/components/personal-plan-start/plan-start-flow"
 import {
   firstOpenStage2Module,
   hostSessionFor,
@@ -533,6 +537,43 @@ test("leaving an explicit module entry returns to the Routine, not the Idealplan
   )
   assert.equal(planStartRefinementExitDestination({ stage: "stage2" }), "stage1")
   assert.equal(planStartRefinementExitDestination({ stage: "stage1" }), "stage1")
+})
+
+test("Task 2.6: a habits-first module completion signals the toast only for an explicit module entry", () => {
+  assert.equal(
+    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "habits" }),
+    "/routine?planUpdated=1",
+  )
+  assert.equal(
+    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "products" }),
+    "/routine?planUpdated=1",
+  )
+  // `?refine=1` (first_open) and the legacy linear entry are ordinary
+  // Routine visits from the toast's perspective — no signal.
+  assert.equal(
+    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "first_open" }),
+    "/routine",
+  )
+  assert.equal(moduleCompletionRoutineHref({ stage: "stage2" }), "/routine")
+  assert.equal(moduleCompletionRoutineHref({ stage: "stage1" }), "/routine")
+})
+
+test("Task 2.6: a Stage-3 completion signals the toast only when it followed an explicit module entry", () => {
+  assert.equal(
+    stage3CompletionRoutineHref({ stage: "stage2", refineModule: "products" }, "/routine"),
+    "/routine?planUpdated=1",
+  )
+  // An ordinary direct-accept or resumed Stage-3 session must never toast —
+  // nothing was explicitly re-opened from the Routine banner or Profil tab.
+  assert.equal(
+    stage3CompletionRoutineHref({ stage: "stage2", refineModule: "first_open" }, "/routine"),
+    "/routine",
+  )
+  assert.equal(stage3CompletionRoutineHref({ stage: "stage1" }, "/routine"), "/routine")
+  assert.equal(
+    stage3CompletionRoutineHref({ stage: "stage3", refinedVersionId: "refined-1" }, "/routine"),
+    "/routine",
+  )
 })
 
 type RecordedEffects = {
