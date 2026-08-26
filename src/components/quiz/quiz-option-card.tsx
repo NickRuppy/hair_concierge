@@ -156,7 +156,7 @@ export function QuizOptionCard({
                 // the blur panels as ghost shapes on these wide cards. Same
                 // treatment as the capture cards in `ToolVisualMultiSelect`.
                 <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="relative h-full max-w-full overflow-hidden aspect-square">
+                  <span className="relative h-full max-w-full overflow-hidden aspect-square [mask-image:linear-gradient(to_right,transparent,black_14%,black_86%,transparent)]">
                     <Image
                       alt={visual.alt}
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"

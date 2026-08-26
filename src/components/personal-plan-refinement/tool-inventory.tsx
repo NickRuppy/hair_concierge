@@ -143,7 +143,7 @@ function ToolOptionCard({
           // itself so `object-cover` can crop safely. A centered square window
           // crops back to exactly the original packshot — showing the full 1.9 canvas (as
           // `object-contain` did) exposes them as ghost shapes on wide cards.
-          <span className="relative h-full aspect-square max-w-full overflow-hidden">
+          <span className="relative h-full aspect-square max-w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_14%,black_86%,transparent)]">
             <Image
               alt={option.imageAlt}
               src={option.imageUrl}
