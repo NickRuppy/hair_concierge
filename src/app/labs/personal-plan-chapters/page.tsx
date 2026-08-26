@@ -9,16 +9,11 @@ const STAGES = new Set([1, 2, 3, 4, 5])
 export default async function PersonalPlanChaptersLabPage({
   searchParams,
 }: {
-  searchParams: Promise<{ stage?: string; screen?: string }>
+  searchParams: Promise<{ stage?: string }>
 }) {
   if (process.env.NODE_ENV !== "development") notFound()
 
-  const { stage: stageParam, screen } = await searchParams
-
-  if (screen === "fork") {
-    return <PersonalPlanChaptersLabClient stage={1} screen="fork" />
-  }
-
+  const { stage: stageParam } = await searchParams
   const stage = Number(stageParam ?? "1")
   if (!STAGES.has(stage)) notFound()
 

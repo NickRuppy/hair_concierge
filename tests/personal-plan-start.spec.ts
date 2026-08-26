@@ -138,10 +138,26 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     })
   })
 
-  test("preserves the signed mobile Basis and Optional journey with one direct Stage 2 handoff", async ({
+  test("preserves the signed mobile Basis and Optional journey and accepts into the routine", async ({
     page,
   }) => {
     const requestedImages = new Set<string>()
+    const acceptedSeenRoles: unknown[] = []
+    await page.route("**/api/personal-plan/accept-ideal-plan", (route) => {
+      acceptedSeenRoles.push(JSON.parse(route.request().postData() ?? "{}").seenRoles)
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ status: "accepted", next: { stage: 4, href: "/routine" } }),
+      })
+    })
+    await page.route("**/routine", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "text/html",
+        body: "<html lang='de'><body><h1>Deine Routine</h1></body></html>",
+      }),
+    )
     await page.route("**/api/personal-plan/stage-1/previews?*", (route) =>
       route.fulfill({
         status: 200,
@@ -243,21 +259,23 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     expect(await headerBack.evaluate((button) => button.getBoundingClientRect().width)).toBe(48)
     expect(stage2Requests).toBe(0)
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
-    await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
 
-    // The old direct Stage-2 handoff is now a fork screen: the Stage-2 gateway
-    // must stay untouched until "Feinschliff starten" is pressed.
-    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
+    // The fork is gone: the last Idealplan page accepts the plan and lands on
+    // the routine, without ever touching the Stage-2 gateway.
+    await expect(page.getByRole("button", { name: "Auf meine Produkte abstimmen" })).toHaveCount(0)
+    await page.getByRole("button", { name: "Zu deiner Routine" }).click()
+
+    await expect.poll(() => acceptedSeenRoles.length).toBe(1)
+    // Every previewed role is pinned in the accept payload, exactly as shown.
+    expect(acceptedSeenRoles[0]).toEqual(
+      previewResponse.previews.map((preview) => ({
+        decisionKey: preview.decisionKey,
+        productId: preview.productId,
+        factFingerprint: preview.factFingerprint,
+      })),
+    )
+    await expect(page.getByRole("heading", { name: "Deine Routine" })).toBeVisible()
     expect(stage2Requests).toBe(0)
-    const refineButton = page.getByRole("button", { name: "Feinschliff starten · ca. 2 Min." })
-    await expect(refineButton).toBeVisible()
-    // This scenario's journey does not report direct-acceptance availability, so
-    // the plum "Plan direkt übernehmen" CTA must not render alongside it.
-    await expect(page.getByRole("button", { name: "Plan direkt übernehmen" })).toHaveCount(0)
-
-    await refineButton.click()
-    expect(stage2Requests).toBe(1)
-    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
   })
 
   test("keeps the forward-only Optional action inside 320, 375, and 390px viewports", async ({
@@ -269,7 +287,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
 
       const nav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
-      const action = nav.getByRole("button", { name: "Auf meine Produkte abstimmen" })
+      const action = nav.getByRole("button", { name: "Zu deiner Routine" })
       const geometry = await action.evaluate((button) => {
         const bounds = button.getBoundingClientRect()
         const nav = button.closest("nav")!
@@ -325,11 +343,13 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     )
   })
 
-  test("retains the Bedarfsplan and offers retry when Stage 2 cannot open", async ({ page }) => {
+  test("retains the Bedarfsplan and offers retry when the plan cannot be accepted", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 320, height: 700 })
-    let stage2Requests = 0
-    await page.route("**/api/personal-plan/stage-2", (route) => {
-      stage2Requests += 1
+    let acceptRequests = 0
+    await page.route("**/api/personal-plan/accept-ideal-plan", (route) => {
+      acceptRequests += 1
       return route.fulfill({
         status: 503,
         contentType: "application/json",
@@ -339,32 +359,71 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
 
     await page.goto(labPath)
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
-    expect(stage2Requests).toBe(0)
+    expect(acceptRequests).toBe(0)
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
 
-    // "Auf meine Produkte abstimmen" now hands off to the fork screen, not the
-    // Stage-2 gateway directly, so the Bedarfsplan (the fork's assumptions/plan
-    // summary) renders before Stage 2 is ever requested.
-    await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
-    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
-    expect(stage2Requests).toBe(0)
-
-    // Only pressing "Feinschliff starten" opens Stage 2 — this is where the
-    // "cannot open" failure and its retry now live.
-    const refineButton = page.getByRole("button", { name: "Feinschliff starten · ca. 2 Min." })
-    await refineButton.click()
-    await expect.poll(() => stage2Requests).toBe(1)
+    const acceptButton = page.getByRole("button", { name: "Zu deiner Routine" })
+    await acceptButton.click()
+    await expect.poll(() => acceptRequests).toBe(1)
     await expect(
       page.getByRole("alert").filter({
-        hasText: "Der Feinschliff konnte nicht geladen werden. Versuche es noch einmal.",
+        hasText: "Dein Plan konnte nicht übernommen werden. Versuche es noch einmal.",
       }),
     ).toBeVisible()
-    // The fork (the retained Bedarfsplan/plan summary) stays on screen behind
-    // the error, so the user can retry without losing their place.
-    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
+    // The Idealplan stays on screen behind the error, so the user can retry
+    // without losing their place.
+    await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
 
-    await refineButton.click()
-    await expect.poll(() => stage2Requests).toBe(2)
+    await acceptButton.click()
+    await expect.poll(() => acceptRequests).toBe(2)
+  })
+
+  test("a seen state that cannot converge retries once, then opens the Feinschliff", async ({
+    page,
+  }) => {
+    let previewRequests = 0
+    await page.route("**/api/personal-plan/stage-1/previews?*", (route) => {
+      previewRequests += 1
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(previewResponse),
+      })
+    })
+    let acceptRequests = 0
+    await page.route("**/api/personal-plan/accept-ideal-plan", (route) => {
+      acceptRequests += 1
+      return route.fulfill({
+        status: 409,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "seen_state_stale" }),
+      })
+    })
+    // The refinement re-entry is a real route; stub only that exact path so the
+    // lab's own `/labs/personal-plan-start` page keeps rendering.
+    await page.route(
+      (url) => url.pathname === "/plan-start",
+      (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "text/html",
+          body: "<html lang='de'><body><h1>Feinschliff</h1></body></html>",
+        }),
+    )
+
+    await page.goto(labPath)
+    await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+    await expect.poll(() => previewRequests).toBeGreaterThan(0)
+    const previewsBeforeAccept = previewRequests
+
+    await page.getByRole("button", { name: "Zu deiner Routine" }).click()
+
+    // Two accept attempts (the second after one silent preview re-fetch), then
+    // the refinement — which reaches an accepted plan too.
+    await expect.poll(() => acceptRequests).toBe(2)
+    expect(previewRequests).toBe(previewsBeforeAccept + 1)
+    await expect(page.getByRole("heading", { name: "Feinschliff" })).toBeVisible()
+    expect(new URL(page.url()).search).toBe("?refine=1")
   })
 
   test("contains the reviewed surface at desktop without horizontal overflow", async ({ page }) => {
@@ -435,12 +494,9 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(productionCompositionLabPath)
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+    // This scenario reports no direct acceptance, so the CTA keeps resuming the
+    // already-completed Stage-2 session straight into Stage 3.
     await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
-
-    // The fork screen is the production Stage-2 entry point now; only
-    // "Feinschliff starten" resumes the already-completed Stage-2 session.
-    await expect(page.getByRole("heading", { name: "Dein Idealplan steht." })).toBeVisible()
-    await page.getByRole("button", { name: "Feinschliff starten · ca. 2 Min." }).click()
 
     await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toHaveCount(0)
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()

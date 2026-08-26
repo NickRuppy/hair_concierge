@@ -14,13 +14,13 @@ import {
   type Stage2ModuleEntryRequest,
 } from "@/lib/personal-plan/refinement/module-scope"
 import {
-  PLAN_FORK_STALE_NOTICE,
+  PLAN_ACCEPT_UNAVAILABLE_NOTICE,
   PersonalPlanStageEntrance,
   PersonalPlanViewTransition,
-  PlanForkScreen,
-  acceptStatusAfterStale,
-  derivePlanForkPreviewState,
+  deriveAcceptIdealPlanSeenRoles,
   interpretAcceptIdealPlanResponse,
+  runAcceptIdealPlanFlow,
+  type AcceptIdealPlanSeenRole,
   type PersonalPlanTransitionDirection,
 } from "@/components/personal-plan-journey"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
@@ -48,7 +48,6 @@ import {
 } from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
-import { directAcceptanceAssumptions } from "@/lib/personal-plan/direct-acceptance/defaults"
 import {
   isStage1ProductExamplePreviewResponse,
   stage1ProductExamplePreviewRequestUrl,
@@ -61,6 +60,7 @@ import {
   NeedPlanScreen,
   PlanStartHeader,
   Progress,
+  type NeedPlanScreenNextIntent,
   type NeedPlanScreenViewModel,
 } from "./need-plan-screen"
 import {
@@ -73,7 +73,7 @@ export type PlanStartReadyViewModel = {
   optional: NeedPlanScreenViewModel | null
   personalPlanId?: string
   sourceInputHash?: string
-  /** Drives the fork screen's assumption list without touching the Stage-2 gateway. */
+  /** The Stage-1 assumptions behind the plan, without touching the Stage-2 gateway. */
   stage2TriggerContext?: Stage2TriggerContext
 }
 
@@ -486,15 +486,10 @@ export function PlanStartCustomerJourney({
   reloadServerFrontier?: () => void
   replaceRoute?: (href: string) => void
 }) {
-  const [stage, setStage] = useState<"stage1" | "fork" | "stage2" | "stage3">(
-    () => initialJourney.stage,
-  )
+  const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
   const [acceptStatus, setAcceptStatus] = useState<"idle" | "pending" | "error" | "unavailable">(
     "idle",
   )
-  const [forkNotice, setForkNotice] = useState<string | null>(null)
-  /** Consecutive `seen_state_stale` responses; resets on any other outcome. */
-  const staleAcceptCountRef = useRef(0)
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
@@ -712,10 +707,16 @@ export function PlanStartCustomerJourney({
     }
   }, [stage2Gateway, stage2LoadState])
 
-  const forkPreviewState = useMemo(
-    () => derivePlanForkPreviewState(productExamplePreviews),
+  const seenRoles = useMemo(
+    () => deriveAcceptIdealPlanSeenRoles(productExamplePreviews),
     [productExamplePreviews],
   )
+  /**
+   * A Stage-3 resume already has a refined plan, and a build without the accept
+   * route's flag set cannot accept at all. Both keep the old refinement entry.
+   */
+  const acceptAvailable =
+    initialJourney.stage !== "stage3" && initialJourney.directAcceptanceAvailable === true
 
   const openRoutineHref = useCallback(
     (href: string) => {
@@ -725,68 +726,56 @@ export function PlanStartCustomerJourney({
     [replaceRoute],
   )
 
+  /**
+   * The Idealplan CTA. There is no fork screen to fall back to any more, so
+   * every outcome has to land somewhere the user can act: the routine, the
+   * running refinement, the refinement re-entry, or a retryable inline error.
+   */
   const acceptIdealPlanDirectly = useCallback(async () => {
-    if (
-      !forkPreviewState ||
-      forkPreviewState.fallbackNotice ||
-      forkPreviewState.refinementRequiredNotice ||
-      acceptStatus === "pending"
-    ) {
-      return
-    }
+    if (acceptStatus === "pending") return
     setAcceptStatus("pending")
-    setForkNotice(null)
-    const outcome = await requestAcceptIdealPlan(forkPreviewState.seenRoles)
-    if (outcome.kind === "accepted" || outcome.kind === "plan_already_accepted") {
-      openRoutineHref(outcome.href)
+    const effect = await runAcceptIdealPlanFlow({
+      seenRoles,
+      accept: requestAcceptIdealPlan,
+      refreshSeenRoles: async (): Promise<AcceptIdealPlanSeenRole[] | null> => {
+        if (!plan?.personalPlanId || !plan.sourceInputHash) return null
+        try {
+          const refreshed = await requestStage1ProductExamplePreviews({
+            personalPlanId: plan.personalPlanId,
+            sourceInputHash: plan.sourceInputHash,
+          })
+          setProductExamplePreviews(refreshed)
+          return deriveAcceptIdealPlanSeenRoles(refreshed)
+        } catch {
+          return null
+        }
+      },
+    })
+    if (effect.kind === "open_routine") {
+      openRoutineHref(effect.href)
       return
     }
-    if (outcome.kind === "refinement_in_progress") {
+    if (effect.kind === "continue_refinement") {
       setAcceptStatus("idle")
       void enterStage2()
       return
     }
-    if (outcome.kind === "seen_state_stale") {
-      // The server would plan other products than the user just saw. Re-render
-      // the fork from fresh previews instead of accepting something unseen.
-      //
-      // A second consecutive stale response means re-fetching did not converge:
-      // the mismatch is structural (the server plans a role the preview payload
-      // does not contain at all), so retrying can only loop while telling the
-      // user their recommendations were "updated". Stop, and send them down the
-      // path that does work.
-      staleAcceptCountRef.current += 1
-      const nextStatus = acceptStatusAfterStale(staleAcceptCountRef.current)
-      setAcceptStatus(nextStatus)
-      if (nextStatus === "unavailable") {
-        setForkNotice(null)
-        return
-      }
-      setForkNotice(PLAN_FORK_STALE_NOTICE)
-      if (!plan?.personalPlanId || !plan.sourceInputHash) {
-        setProductExamplePreviews(null)
-        return
-      }
-      try {
-        const refreshed = await requestStage1ProductExamplePreviews({
-          personalPlanId: plan.personalPlanId,
-          sourceInputHash: plan.sourceInputHash,
-        })
-        setProductExamplePreviews(refreshed)
-      } catch {
-        setProductExamplePreviews(null)
-      }
+    if (effect.kind === "open_refinement_route") {
+      // Stays "unavailable" (and therefore busy) while the route resolves: the
+      // refinement produces an accepted plan too, so this is a detour.
+      setAcceptStatus("unavailable")
+      replaceRoute(effect.href)
       return
     }
-    staleAcceptCountRef.current = 0
     setAcceptStatus("error")
   }, [
     acceptStatus,
     enterStage2,
-    forkPreviewState,
     openRoutineHref,
     plan?.personalPlanId,
     plan?.sourceInputHash,
+    replaceRoute,
+    seenRoles,
   ])
 
   const openRoutine = useCallback(
@@ -799,38 +788,6 @@ export function PlanStartCustomerJourney({
     [replaceRoute],
   )
 
-  if (stage === "fork") {
-    return (
-      <PlanForkScreen
-        assumptions={directAcceptanceAssumptions(
-          plan?.stage2TriggerContext ?? {
-            relevantCategories: [],
-            hasReportedIrritatedScalp: false,
-            dryShampooBridgeEligibility: "unknown",
-          },
-        )}
-        previewState={forkPreviewState}
-        directAcceptanceAvailable={
-          initialJourney.stage !== "stage3" &&
-          initialJourney.directAcceptanceAvailable === true &&
-          Boolean(plan?.stage2TriggerContext)
-        }
-        refineStatus={stage2LoadState}
-        acceptStatus={acceptStatus}
-        noticeMessage={forkNotice}
-        onRefine={() => void enterStage2()}
-        onAccept={() => void acceptIdealPlanDirectly()}
-        onBack={() => {
-          // Leaving to Stage 1 and returning is a real remount of the fork, so
-          // the retired accept path gets a clean slate.
-          staleAcceptCountRef.current = 0
-          setAcceptStatus("idle")
-          setForkNotice(null)
-          setStage("stage1")
-        }}
-      />
-    )
-  }
   if (stage === "stage2") {
     // The ref deliberately retains the latest persisted seed across stage switches.
     const initialStage2Session = stage2SeedRef.current
@@ -908,12 +865,28 @@ export function PlanStartCustomerJourney({
       refinementAvailable={
         initialJourney.stage === "stage3" || initialJourney.refinementAvailable !== false
       }
+      acceptAvailable={acceptAvailable}
+      nextStatus={
+        acceptAvailable
+          ? acceptStatus === "pending" || acceptStatus === "unavailable"
+            ? "loading"
+            : acceptStatus === "error"
+              ? "error"
+              : "idle"
+          : stage2LoadState
+      }
+      nextNotice={acceptStatus === "unavailable" ? PLAN_ACCEPT_UNAVAILABLE_NOTICE : null}
       initialStep={stage1ReturnStepRef.current}
-      onContinueToRefinement={(sourceStep) => {
-        // The fork is the Stage-2 entry point and must render before any
-        // Stage-2 gateway load, so its own error state can never block it.
+      onContinue={(sourceStep) => {
         stage1ReturnStepRef.current = sourceStep
-        setStage("fork")
+        // The Idealplan is accepted from here; the refinement entry only
+        // survives for journeys that cannot accept (a Stage-3 resume that
+        // walked back to Stage 1, or a build without the accept flag set).
+        if (acceptAvailable) {
+          void acceptIdealPlanDirectly()
+          return
+        }
+        void enterStage2()
       }}
     />
   )
@@ -938,8 +911,13 @@ export type FlowStep = "basis" | "optional"
 export function PlanStartFlow(
   props: PlanStartFlowProps & {
     initialStep?: FlowStep
-    onContinueToRefinement?: (sourceStep: FlowStep) => void
+    /** Leaves the Idealplan from its last page — accept, or open the Feinschliff. */
+    onContinue?: (sourceStep: FlowStep) => void
     refinementAvailable?: boolean
+    /** `true` makes the last page's CTA accept the Idealplan and open the routine. */
+    acceptAvailable?: boolean
+    nextStatus?: "idle" | "loading" | "error"
+    nextNotice?: string | null
   },
 ) {
   const [step, setStep] = useState<FlowStep>(() =>
@@ -949,7 +927,9 @@ export function PlanStartFlow(
   )
   const [direction, setDirection] = useState<PersonalPlanTransitionDirection>("forward")
   const hasOptionalPage = props.state === "ready" && Boolean(props.plan.optional)
-  const canRefine = props.refinementAvailable !== false
+  // A Stage-1-only build has nowhere to go from the Idealplan — no accept route
+  // and no Feinschliff — so it renders no continuation CTA at all.
+  const canContinue = props.refinementAvailable !== false
   const optionalImageUrls =
     props.state === "ready" && step === "basis" && props.plan.optional
       ? [
@@ -963,16 +943,18 @@ export function PlanStartFlow(
 
   const content = useMemo(() => {
     if (props.state !== "ready") return null
+    const nextIntent: NeedPlanScreenNextIntent = props.acceptAvailable ? "accept" : "refine"
     if (step === "optional" && props.plan.optional) {
       return (
         <NeedPlanScreen
           screen={props.plan.optional}
           hasOptionalPage
           showJourneyHeader={false}
+          nextIntent={nextIntent}
+          nextStatus={props.nextStatus}
+          nextNotice={props.nextNotice}
           onNext={
-            canRefine && props.onContinueToRefinement
-              ? () => props.onContinueToRefinement?.("optional")
-              : undefined
+            canContinue && props.onContinue ? () => props.onContinue?.("optional") : undefined
           }
         />
       )
@@ -982,19 +964,21 @@ export function PlanStartFlow(
         screen={props.plan.basis}
         hasOptionalPage={hasOptionalPage}
         showJourneyHeader={false}
+        nextIntent={nextIntent}
+        {...(hasOptionalPage ? {} : { nextStatus: props.nextStatus, nextNotice: props.nextNotice })}
         onNext={
           hasOptionalPage
             ? () => {
                 setDirection("forward")
                 setStep("optional")
               }
-            : canRefine && props.onContinueToRefinement
-              ? () => props.onContinueToRefinement?.("basis")
+            : canContinue && props.onContinue
+              ? () => props.onContinue?.("basis")
               : undefined
         }
       />
     )
-  }, [canRefine, hasOptionalPage, props, step])
+  }, [canContinue, hasOptionalPage, props, step])
 
   if (props.state === "unavailable") {
     return <PlanStartUnavailable profileHref={props.profileHref} supportHref={props.supportHref} />

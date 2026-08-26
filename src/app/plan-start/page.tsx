@@ -39,9 +39,9 @@ export type PlanStartPageDeps = {
   enabled: () => boolean
   stage2Enabled: () => boolean
   /**
-   * Direct acceptance drives Stage 2 → 3 → 4 headlessly, so the fork may only
-   * offer it when the accept route's own flag set is satisfied. Fail closed:
-   * an unwired caller gets the refine-only fork.
+   * Direct acceptance drives Stage 2 → 3 → 4 headlessly, so the Idealplan CTA
+   * may only accept when the accept route's own flag set is satisfied. Fail
+   * closed: an unwired caller keeps the refinement entry.
    */
   stage3Enabled?: () => boolean
   stage4Enabled?: () => boolean
@@ -134,7 +134,7 @@ export async function resolvePlanStartPageState(
     // it drives headlessly. Deliberately NOT keyed on `access.allowed.stage2`:
     // access is read before `loadStage1Plan` creates the Stage-1 snapshot, so a
     // first-visit buyer is still pre-Stage-2 here and would lose the accept
-    // button on their own fork screen. This flag only gates the fork's UI —
+    // path on their own Idealplan. This flag only gates the CTA's intent —
     // `POST /api/personal-plan/accept-ideal-plan` re-validates real access,
     // Stage 2 progress and seen state server-side before accepting anything.
     const directAcceptance =
