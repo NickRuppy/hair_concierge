@@ -20,6 +20,10 @@ import {
   parseStage2RefineEntry,
   type Stage2ModuleEntryRequest,
 } from "@/lib/personal-plan/refinement/module-scope"
+import {
+  loadModule1Stage3Resume,
+  type Module1Stage3ResumeClient,
+} from "@/lib/personal-plan/refinement/module1-stage3-resume"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import {
   isPersonalPlanAppV1Enabled,
@@ -49,6 +53,14 @@ export type PlanStartPageDeps = {
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   loadExistingRefinementSession: (userId: string) => Promise<Stage2RefinementSession | null>
   loadStage1Plan?: (userId: string) => Promise<PlanStartReadyViewModel | null>
+  /**
+   * Task 2.5: the persisted Modul-1 → Stage-3 handoff (Task 1.4) plus its still
+   * open Stage-3 draft. Completing the `products` module leaves the refinement
+   * draft `in_progress`, so without this read a reload after the handoff resumes
+   * Stage 2 instead of the Stage 3 the user was in. Optional and
+   * failure-tolerant: an unwired or failing dep keeps today's fall-through.
+   */
+  loadModule1Stage3Resume?: (userId: string) => Promise<{ refinedVersionId: string } | null>
 }
 
 export type PlanStartSearchParams = {
@@ -205,6 +217,23 @@ export async function resolvePlanStartPageState(
           : undefined,
       )
     }
+    // Resume of the Modul-1 handoff (Task 2.5). Ranked below the explicit refine
+    // entry and the repair path on purpose: both are deliberate requests, this
+    // one only rescues an undirected reload. The `products` module hands off into
+    // Stage 3 while the draft stays `in_progress`, so this is the only branch
+    // that can catch it.
+    if (refinement.status === "in_progress" && access.allowed.stage3) {
+      // An absent dep short-circuits the whole optional chain to `undefined`.
+      const resumed = await deps.loadModule1Stage3Resume?.(userId).catch(() => null)
+      if (resumed) {
+        return production(
+          { stage: "stage3", refinedVersionId: resumed.refinedVersionId },
+          initialRefinementSession
+            ? { personalPlanId: access.personalPlanId, initialRefinementSession }
+            : undefined,
+        )
+      }
+    }
     return production(
       { stage: "stage2", ...directAcceptance },
       initialRefinementSession
@@ -247,6 +276,11 @@ export default async function PlanStartPage({
           userId,
           persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
         }),
+      loadModule1Stage3Resume: async (userId) =>
+        loadModule1Stage3Resume(
+          createAdminClient() as unknown as Module1Stage3ResumeClient,
+          userId,
+        ),
       loadStage1Plan: async (userId) => {
         const result = await createStage1PersistenceService(
           createStage1SupabaseDependencies(createAdminClient() as never),
