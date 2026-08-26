@@ -272,3 +272,4 @@ test-screenshots*/
 # same directory are ~32 MB of generator output and stay untracked; the shipped
 # artefacts are the postprocessed webp in public/images/tools/.
 !plans/mockups/tool-images-review-2026-08-25/wired-*.png
+!plans/mockups/feinschliff-revisit-2026-08-26/*.png

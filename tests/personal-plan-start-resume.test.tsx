@@ -847,3 +847,30 @@ test("refine=1 outranks a repair request and only accepts the exact param value"
   // A normal (non-refine) journey keeps the auto-handoff.
   assert.equal(refinementAutoHandoffEnabled({ stage: "stage2" }), true)
 })
+
+test("an explicit Stage 2 re-entry offers the revisit on the bridge; a fresh completion does not", () => {
+  // Nick sign-off 2026-08-26: `/plan-start?refine=1` on a completed draft must
+  // open a door back into the questionnaire — the fork screen promises
+  // „verfeinern kannst du jederzeit später". A just-finished Feinschliff keeps
+  // its single forward action.
+  const session = refinementSession("complete", "refined-revisit")
+  const props = {
+    gateway: {
+      load: async () => session,
+      saveAnswer: async () => session,
+      complete: async () => {
+        throw new Error("not used")
+      },
+    },
+    initialSession: session,
+    onHandoff: async () => {},
+  } as React.ComponentProps<typeof RefinementFlow>
+
+  const reentry = renderToStaticMarkup(<RefinementFlow {...props} autoHandoff={false} />)
+  assert.match(reentry, /Feinschliff überarbeiten/)
+  assert.match(reentry, /Deine Antworten bleiben erhalten/)
+
+  // autoHandoff (the default) forwards on its own — the revisit must not show.
+  const freshCompletion = renderToStaticMarkup(<RefinementFlow {...props} />)
+  assert.doesNotMatch(freshCompletion, /Feinschliff überarbeiten/)
+})

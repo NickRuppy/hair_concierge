@@ -273,18 +273,49 @@ export function RefinementFlow({
         onSecondaryExit?.()
         return
       }
+      // A revisit of a still-complete session backs out to the bridge it came
+      // from; once an edit has re-opened the draft the session is in_progress
+      // again and the normal resume applies.
+      if (session.status === "complete" && bridge) {
+        setMode("bridge")
+        return
+      }
       setMode(session.completedQuestionIds.length > 0 ? "resume" : "invitation")
       return
     }
     setActiveFromSession(session, previousQuestionId)
     setMode("question")
-  }, [activeQuestionId, directEntry, onSecondaryExit, session, setActiveFromSession, status])
+  }, [
+    activeQuestionId,
+    bridge,
+    directEntry,
+    onSecondaryExit,
+    session,
+    setActiveFromSession,
+    status,
+  ])
 
   const handleBridgeBack = useCallback(() => {
     if (!session) return
     const finalQuestionId = getBridgeBackQuestionId(session)
     if (!finalQuestionId) return
     setActiveFromSession(session, finalQuestionId)
+    setHandoffStatus("idle")
+    setMode("question")
+  }, [session, setActiveFromSession])
+
+  /**
+   * „Feinschliff überarbeiten" (Nick sign-off 2026-08-26): walk the completed
+   * questionnaire again from its first question, every answer prefilled. The
+   * existing submit path does the rest — editing a completed question advances
+   * in order, the first save transparently re-opens the draft server-side, and
+   * the final page re-runs the completion.
+   */
+  const handleBridgeRevisit = useCallback(() => {
+    if (!session) return
+    const firstQuestionId = session.path.orderedQuestionIds[0]
+    if (!firstQuestionId) return
+    setActiveFromSession(session, firstQuestionId)
     setHandoffStatus("idle")
     setMode("question")
   }, [session, setActiveFromSession])
@@ -535,6 +566,13 @@ export function RefinementFlow({
           refinedVersionId={bridge.refinedVersionId}
           nextHref={bridge.nextHref}
           onBack={getBridgeBackQuestionId(session) ? handleBridgeBack : undefined}
+          // Only an explicit re-entry (autoHandoff off) offers the revisit; a
+          // just-finished Feinschliff keeps its single forward action.
+          onRevisit={
+            !autoHandoff && session?.path.orderedQuestionIds.length
+              ? handleBridgeRevisit
+              : undefined
+          }
           onContinue={onHandoff ? handleBridgeContinue : undefined}
           isContinuing={handoffStatus === "loading"}
           continueError={
@@ -559,7 +597,12 @@ export function RefinementFlow({
         />
       )
     }
-    const canGoBack = session.path.orderedQuestionIds.indexOf(activeQuestionId) > 0
+    // A revisit of a still-complete session can back out of question 1 to the
+    // bridge it came from (handleBack owns that branch); otherwise question 1
+    // exits to Stage 1.
+    const canGoBack =
+      session.path.orderedQuestionIds.indexOf(activeQuestionId) > 0 ||
+      (session.status === "complete" && Boolean(bridge))
     return (
       <div className="min-h-dvh bg-[var(--background)] text-[var(--text-body)]">
         <PersonalPlanJourneyHeader

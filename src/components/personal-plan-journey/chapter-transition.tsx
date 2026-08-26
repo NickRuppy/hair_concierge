@@ -19,6 +19,9 @@ export function PersonalPlanChapterTransition({
   onBack,
   backLabel,
   errorMessage,
+  secondaryActionLabel,
+  onSecondaryAction,
+  secondaryHint,
 }: {
   currentStage: PersonalPlanJourneyStage
   actionHref?: string
@@ -28,6 +31,10 @@ export function PersonalPlanChapterTransition({
   onBack?: () => void
   backLabel?: string
   errorMessage?: string
+  /** Optional quieter alternative under the primary action (e.g. re-opening a completed stage). */
+  secondaryActionLabel?: string
+  onSecondaryAction?: () => void
+  secondaryHint?: string
 }) {
   const actionDockRef = useRef<HTMLElement>(null)
   const chapter = PERSONAL_PLAN_CHAPTERS[currentStage - 1]
@@ -128,6 +135,26 @@ export function PersonalPlanChapterTransition({
               {actionLabel}
             </button>
           )}
+          {onSecondaryAction ? (
+            <>
+              <button
+                type="button"
+                onClick={onSecondaryAction}
+                disabled={actionPending}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: null }),
+                  "mt-2.5 min-h-[46px] w-full rounded-full border-[var(--brand-plum-light)] bg-transparent text-[15px] font-bold text-[var(--brand-plum-darkest)]",
+                )}
+              >
+                {secondaryActionLabel}
+              </button>
+              {secondaryHint ? (
+                <p className="mt-1.5 text-center text-[12px] leading-[1.4] text-[var(--text-sub)]">
+                  {secondaryHint}
+                </p>
+              ) : null}
+            </>
+          ) : null}
         </div>
       </footer>
     </div>
