@@ -1,76 +1,24 @@
 import { expect, test } from "@playwright/test"
 
-import { STAGE1_STAGE2_LAB_ENVELOPE } from "../src/app/labs/personal-plan-stage-1-2/fixture"
 import { prepareStage3EntryContextForLab } from "../src/app/labs/personal-plan-stage-1-2/integration"
-import { adaptInitialNeedSnapshotToPlanStartViewModel } from "../src/components/personal-plan-start/snapshot-adapter"
-import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
-import type { Stage1ProductExamplePreviewResponse } from "../src/lib/personal-plan/product-preview-contract"
-import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
-import { stage3DecisionKey } from "../src/lib/personal-plan/products/contracts"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 
-const labPath = "/labs/personal-plan-start"
+import {
+  PLAN_START_LAB_PATH,
+  PLAN_START_LAB_PERSONAL_PLAN_ID,
+  planStartLabOptionalCategories,
+  planStartLabSnapshot,
+  planStartPreviewResponse,
+} from "./personal-plan-start-preview.fixtures"
+
+const labPath = PLAN_START_LAB_PATH
 const productionCompositionLabPath = `${labPath}?scenario=production-composition`
-const personalPlanId = "20000000-0000-4000-8000-000000000001"
+const personalPlanId = PLAN_START_LAB_PERSONAL_PLAN_ID
 const refinedVersionId = "30000000-0000-4000-8000-000000000001"
 const productDraftId = "40000000-0000-4000-8000-000000000001"
 
-const computed = computeNeedPlan({
-  rawEnvelope: STAGE1_STAGE2_LAB_ENVELOPE,
-  artifactId: "10000000-0000-4000-8000-000000000001",
-  projection: "initial_quiz",
-  computationVersion: "stage1-v1",
-  createdAt: "2026-08-08T12:00:00.000Z",
-})
-if (computed.status !== "ready") throw new Error("production browser fixture failed to compute")
-const computedPlan = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot)
-if (!computedPlan) throw new Error("production browser fixture failed to adapt")
-const previewResponse = {
-  schemaVersion: 2 as const,
-  personalPlanId,
-  sourceNeedVersionId: "10000000-0000-4000-8000-000000000002",
-  sourceInputHash: computed.snapshot.inputHash,
-  previews: computed.snapshot.renderedOrder.flatMap((category) => {
-    const decision = computed.snapshot.decisions.find((item) => item.category === category)
-    const role = decision?.roles.find((candidate) =>
-      CATEGORY_ROLE_POLICIES[category].allowedRoles.includes(candidate as never),
-    )
-    if (!role) return []
-    return [
-      {
-        kind: "recommendation" as const,
-        category,
-        role,
-        decisionKey: stage3DecisionKey(category, role, null),
-        productId: `fixture-${category}`,
-        productName: `Fixture ${category}`,
-        imageUrl: `http://127.0.0.1:3217/labs/product-images/${category}.svg`,
-        verdict: "ideal" as const,
-        authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
-        factFingerprint: `fixture-fingerprint-${category}`,
-        commerce: {
-          priceEur: 12.9,
-          purchaseLinkStatus: "available" as const,
-          netContentValue: 250,
-          netContentUnit: "ml" as const,
-          priceLabel: "12,90 €",
-          netContentLabel: "250 ml",
-          availabilityLabel: "Aktuell verfügbar",
-          productUrl: "https://example.com/fixture-product",
-          affiliateDisclosure:
-            "Affiliate-Hinweis: Bei einem Kauf über diesen Link erhalten wir möglicherweise eine Provision.",
-        },
-        reasoning: {
-          productCriteria: `Fixture-Kriterien für ${category}.`,
-          fit: `Fixture-Begründung für ${category}.`,
-          frequency: "Fixture-Rhythmus.",
-        },
-      },
-    ]
-  }),
-  directAcceptance: { available: true },
-} satisfies Stage1ProductExamplePreviewResponse
-const optionalCategories = computedPlan.optional?.cards.map((card) => card.id) ?? []
+const previewResponse = planStartPreviewResponse
+const optionalCategories = planStartLabOptionalCategories
 
 const completedRefinement = createStage2RefinementSession({
   pathVersion: "stage2-fixture-v1",
@@ -542,7 +490,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
         body: JSON.stringify({
           status: "completed",
           personalPlanId,
-          outputSnapshot: computed.snapshot,
+          outputSnapshot: planStartLabSnapshot,
         }),
       }),
     )

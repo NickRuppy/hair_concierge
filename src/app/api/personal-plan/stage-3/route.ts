@@ -86,9 +86,12 @@ const loadQuerySchema = z
     refinedVersionId: identifier,
     repairRoutineVersionId: identifier.optional(),
     /**
-     * Opt-in to the Stage-2 re-entry rebuild (see `loadOrCreate` below). No
-     * client sends this today, so a plain GET keeps the pre-module behaviour:
-     * a stale refined source is a hard error, never a silent rebuild.
+     * Opt-in to the Stage-2 re-entry rebuild (see `loadOrCreate` below). The
+     * plan-start flow sets it on every Stage-2 → Stage-3 handoff, where a later
+     * module completion may have staled the draft this version produced. Every
+     * other load — a Stage-3 resume, a repair load — omits it and keeps the
+     * pre-module behaviour: a stale refined source is a hard error, never a
+     * silent rebuild.
      */
     rebuildStale: z.literal("1").optional(),
   })
