@@ -420,12 +420,14 @@ export function RefinementFlow({
             setMode("bridge")
             setStatus("saved")
             // A module is done, not the whole Feinschliff — don't overclaim (2.8).
-            setLiveMessage("Antworten gespeichert.")
+            // „Fertig." keeps the milestone audibly distinct from the per-answer
+            // „Antwort gespeichert." in the same live region.
+            setLiveMessage("Fertig. Antworten gespeichert.")
           },
           handBackToHost: async (payload) => {
             setSession(nextSession)
             setStatus("saved")
-            setLiveMessage("Antworten gespeichert.")
+            setLiveMessage("Fertig. Antworten gespeichert.")
             await onModuleComplete?.(payload)
           },
         },
@@ -482,7 +484,7 @@ export function RefinementFlow({
       setMode("question")
     } catch {
       setStatus("save_failed")
-      setLiveMessage("Speichern fehlgeschlagen. Der neuere Stand konnte nicht geladen werden.")
+      setLiveMessage("Speichern hat nicht geklappt. Der neuere Stand konnte nicht geladen werden.")
       setMode("question")
     }
   }, [directEntry, emit, gateway, setActiveFromSession, trackSession])
