@@ -559,6 +559,7 @@ function renderQuestionBody({
               </h3>
               <RefinementOptions
                 options={TOWEL_MATERIAL_OPTIONS}
+                layout="grid"
                 value={towel.material}
                 onChange={(material) =>
                   onLocalAnswerChange(

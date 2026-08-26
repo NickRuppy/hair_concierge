@@ -40,6 +40,14 @@ export const BRUSH_TYPE_DESCRIPTIONS: Record<string, string> = {
   fingers: "Du entwirrst dein Haar mit den Händen.",
 }
 
+/** Handtuch-Material (Stage-2-Refinement `towel_handling`) */
+export const TOWEL_MATERIAL_IMAGES: Record<string, ToolImage> = {
+  frottee: toolImage("frottee", "Frottee-Handtuch"),
+  mikrofaser: toolImage("microfiber_towel", "Mikrofaser-Handtuch"),
+  tshirt: toolImage("smooth_cotton_cloth", "Glattes Baumwolltuch / T-Shirt"),
+  turban_mikrofaser: toolImage("drying_wrap", "Haarturban aus Mikrofaser"),
+}
+
 /** Zusätzliche Hitze-Tools (Stage-2-Refinement `additional_heat_tools`) */
 export const ADDITIONAL_HEAT_TOOL_IMAGES: Record<string, ToolImage> = {
   dryer_brush: toolImage("dryer_brush", "Föhnbürste"),
