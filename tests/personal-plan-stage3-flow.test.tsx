@@ -49,6 +49,7 @@ import {
 import { createFixtureStage3Gateway } from "../src/lib/personal-plan/products/fixture-gateway"
 import {
   Stage3ProductsGatewayError,
+  type Stage3CompleteResponse,
   type Stage3MutationResponse,
   type Stage3ProductsGateway,
   type Stage3SearchResponse,
@@ -6064,4 +6065,112 @@ test("every committed-group reset also forgets a stale all-deselected grouped sc
       `line ${index + 1} resets the committed group but would restore a stale, action-less all-deselected screen`,
     )
   }
+})
+
+test("a bootstrap carrying an already-completed decisions draft completes to the Routine handoff instead of stranding in the decisions loader", async () => {
+  // Regression (E2E 2026-08-26): re-entering Stage 3 after completion — e.g.
+  // via the `/plan-start?refine=1` bridge — mounts the flow with a bootstrap
+  // whose draft is `status: "completed"`, `pass: "product_decisions"`. The
+  // bootstrap decision-preparation effect dragged that draft back into the
+  // decisions phase, where every subject is already resolved: no screen, no
+  // completion effect, an unresolvable "Deine Auswahl wird vorbereitet."
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "conditioner",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Pflege nach der Wäsche",
+      authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    },
+  ]
+  const subjectDraft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-completed-reentry",
+      userId: "user-completed-reentry",
+      personalPlanId: "plan-completed-reentry",
+      refinedVersionId: "refined-completed-reentry",
+      requirements,
+      now: "2026-08-26T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    completedCaptureCategories: ["conditioner"],
+    uncoveredRoles: [
+      { category: "conditioner", role: "conditioner_rinse_out", reason: "no_product_owned" },
+    ],
+  }
+  const subject = deriveStage3DecisionSubjects(subjectDraft)[0]!
+  const completedDraft: Stage3ProductDraft = {
+    ...subjectDraft,
+    status: "completed",
+    decisions: [
+      testAuthorityDecision(subject, testAuthorityEvaluation(subjectDraft, subject), {
+        subjectKey: subject.decisionKey,
+        action: "leave_uncovered",
+      } as Stage3AuthoritySemanticIntent),
+    ],
+    completedDecisionKeys: [subject.decisionKey],
+    revision: 3,
+  }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: completedDraft.personalPlanId,
+      refinedVersionId: completedDraft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [
+        { category: "conditioner", allowsMultiple: true, allowsExplicitNone: true },
+      ],
+    },
+    draft: completedDraft,
+    requirements,
+    authorityEvaluations: [],
+  }
+  let completeCalls = 0
+  let bundleCalls = 0
+  const gateway = createAuthorityTestGateway()
+  gateway.loadOrCreate = async () => {
+    throw new Error("a bootstrap re-entry must not reload the Stage 3 draft")
+  }
+  gateway.reviewDecisionBundles = async () => {
+    bundleCalls += 1
+    return []
+  }
+  gateway.complete = async (input) => {
+    completeCalls += 1
+    assert.equal(input.expectedRevision, completedDraft.revision)
+    return {
+      status: "ready_for_routine",
+      draft: {
+        ...completedDraft,
+        pass: "ready_for_routine",
+        revision: completedDraft.revision + 1,
+      },
+      portfolio: {
+        pendingProducts: [],
+        uncoveredRoles: [],
+      } as unknown as Extract<Stage3CompleteResponse, { status: "ready_for_routine" }>["portfolio"],
+      personalPlanId: completedDraft.personalPlanId,
+      refinedVersionId: completedDraft.refinedVersionId,
+      productPortfolioVersionId: "portfolio-completed-reentry",
+      routineProposalId: null,
+      next: { stage: 4, href: "/routine" },
+    }
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      bootstrap,
+      gateway,
+      searchDebounceMs: 0,
+      pendingRecoveryStorage: createMemoryPendingStage3RecoveryStorage(),
+    }),
+  )
+
+  const tree = await renderSettled(harness)
+
+  assert.equal(completeCalls, 1)
+  assert.equal(bundleCalls, 0, "a completed draft must not re-enter decision preparation")
+  assert.ok(
+    findByType(tree, PersonalPlanChapterTransition),
+    "the completed journey must reach the Routine chapter transition",
+  )
 })

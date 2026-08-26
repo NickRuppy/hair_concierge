@@ -49,7 +49,8 @@ export function ProductDetailSheetBody({ card }: { card: NeedCardViewModel }) {
 
       {product ? (
         <div className="mt-3 grid grid-cols-[84px_minmax(0,1fr)] items-start gap-3.5">
-          <span className="relative grid h-[110px] w-[84px] place-items-center overflow-hidden rounded-[14px] bg-[#f3efe8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]">
+          {/* White like the card wells: catalog packshots carry a white canvas. */}
+          <span className="relative grid h-[110px] w-[84px] place-items-center overflow-hidden rounded-[14px] bg-white shadow-[inset_0_0_0_1px_rgba(31,26,20,0.08)]">
             {card.imageUrl ? (
               <Image
                 src={card.imageUrl}

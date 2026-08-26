@@ -1,8 +1,6 @@
 "use client"
 
-import Image from "next/image"
-import { useState } from "react"
-
+import { ToolThumb } from "@/components/personal-plan-tools/tool-thumb"
 import type { ToolBlockViewModel, ToolCardViewModel } from "@/lib/personal-plan/tools/presentation"
 
 /**
@@ -33,29 +31,18 @@ export function ToolBlock({ block }: { block: ToolBlockViewModel }) {
 }
 
 function ToolRow({ card }: { card: ToolCardViewModel }) {
-  const [imageFailed, setImageFailed] = useState(false)
-
   return (
     <li
       className="flex items-start gap-3 rounded-2xl border border-[rgba(31,26,20,0.07)] bg-white px-3 py-2.5"
       data-plan-start-tool-card={card.id}
       data-plan-start-tool-state={card.state}
     >
-      <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f6f2ee]">
-        {imageFailed ? (
-          <span aria-hidden="true" className="h-5 w-5 rounded-full bg-[#ded5cb]" />
-        ) : (
-          <Image
-            src={card.imageUrl}
-            alt={card.imageAlt}
-            width={48}
-            height={48}
-            className="h-full w-full object-contain p-1.5"
-            onError={() => setImageFailed(true)}
-            unoptimized
-          />
-        )}
-      </span>
+      <ToolThumb
+        src={card.imageUrl}
+        alt={card.imageAlt}
+        size={48}
+        className="h-12 w-12 rounded-xl border border-[rgba(31,26,20,0.05)]"
+      />
       {/*
         The state stays on its own line under the purpose. Long German labels
         like "Bestand im Feinschliff prüfen" would otherwise squeeze the product

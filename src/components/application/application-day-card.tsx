@@ -2,6 +2,7 @@ import type { MouseEvent } from "react"
 import Link from "next/link"
 import { ImageIcon, Moon, PackageOpen } from "lucide-react"
 
+import { ToolThumb } from "@/components/personal-plan-tools/tool-thumb"
 import type { PersonalPlanCategory } from "@/lib/routines/personal-plan/application/contracts"
 
 import type { ApplicationDayView, ApplicationShelfSlotView } from "./application-types"
@@ -197,12 +198,11 @@ function ToolSilhouette({ slot }: { slot: Extract<ApplicationShelfSlotView, { ki
       data-application-tool-asset={slot.assetKey}
       className="relative z-10 grid h-32 min-w-0 max-w-24 flex-1 place-items-center"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <ToolThumb
         src={slot.imageUrl}
         alt={slot.imageAltDe}
-        className="h-full w-full object-contain p-1"
-        loading="lazy"
+        size={88}
+        className="h-[88px] w-[88px] rounded-[18px] border border-[rgba(31,26,20,0.05)] shadow-[0_14px_26px_-24px_rgba(44,23,72,0.9)]"
       />
       <span className="sr-only">
         {slot.familyLabelDe}: {slot.typeLabelDe}

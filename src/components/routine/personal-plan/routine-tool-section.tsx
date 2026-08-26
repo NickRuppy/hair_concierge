@@ -1,8 +1,6 @@
 "use client"
 
-import Image from "next/image"
-import { useState } from "react"
-
+import { ToolThumb } from "@/components/personal-plan-tools/tool-thumb"
 import { TOOL_FAMILY_LABELS, toolImageAlt, toolImageSrc } from "@/lib/personal-plan/tools/labels"
 import { TOOL_PRODUCT_TYPE_LABELS } from "@/lib/personal-plan/tools/labels"
 import { TOOL_STATE_LABELS } from "@/lib/personal-plan/tools/presentation"
@@ -35,7 +33,6 @@ export function RoutineToolSection({ assets }: { assets: readonly ToolAsset[] })
 }
 
 function ToolRow({ asset }: { asset: ToolAsset }) {
-  const [imageFailed, setImageFailed] = useState(false)
   const lead = asset.productTypes[0]
 
   return (
@@ -44,21 +41,12 @@ function ToolRow({ asset }: { asset: ToolAsset }) {
       data-routine-tool-row={asset.assetKey}
       data-routine-tool-state={asset.presentationState}
     >
-      <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--brand-plum-ice)]">
-        {imageFailed ? (
-          <span aria-hidden="true" className="h-4 w-4 rounded-full bg-[var(--brand-plum-light)]" />
-        ) : (
-          <Image
-            src={toolImageSrc(lead)}
-            alt={toolImageAlt(lead)}
-            width={44}
-            height={44}
-            className="h-full w-full object-contain p-1.5"
-            onError={() => setImageFailed(true)}
-            unoptimized
-          />
-        )}
-      </span>
+      <ToolThumb
+        src={toolImageSrc(lead)}
+        alt={toolImageAlt(lead)}
+        size={44}
+        className="h-11 w-11 rounded-xl border border-[rgba(31,26,20,0.05)]"
+      />
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-semibold leading-snug text-[var(--brand-plum-darkest)]">
           {TOOL_PRODUCT_TYPE_LABELS[lead]}

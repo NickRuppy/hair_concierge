@@ -610,7 +610,13 @@ export function Stage3ProductsFlow({
       !bootstrap ||
       !reviewedProductKinds ||
       bootstrapDecisionPreparationStarted.current ||
-      bootstrap.draft.pass !== "product_decisions"
+      bootstrap.draft.pass !== "product_decisions" ||
+      // A re-entry bootstrap can carry an already-completed draft (e.g. the
+      // `/plan-start?refine=1` bridge after a finished journey). Dragging it
+      // back into the decisions phase strands the user: every subject is
+      // already resolved, so no screen and no completion effect ever fires.
+      // The completed draft keeps its handoff phase and completes below.
+      bootstrap.draft.status !== "active"
     ) {
       return
     }
@@ -826,6 +832,25 @@ export function Stage3ProductsFlow({
     pendingRecoveryMode,
     phase,
   ])
+
+  useEffect(() => {
+    // A mount that lands directly in the handoff phase — a bootstrap carrying
+    // an already-completed draft — has no in-flight completion to wait for.
+    // Re-running the (idempotent) completion fetches the receipt so the
+    // chapter transition can render instead of an indefinite loading state.
+    if (
+      phase !== "handoff" ||
+      completion ||
+      pendingRecoveryMode ||
+      completionInFlight.current ||
+      (draft.status !== "completed" && draft.pass !== "ready_for_routine")
+    ) {
+      return
+    }
+    void completeFlow(draft)
+    // completeFlow owns deduplication via completionInFlight and the completion state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [completion, draft, pendingRecoveryMode, phase])
 
   useEffect(() => {
     if (

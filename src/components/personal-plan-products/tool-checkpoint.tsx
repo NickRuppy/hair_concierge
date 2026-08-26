@@ -1,8 +1,6 @@
 "use client"
 
-import Image from "next/image"
-import { useState } from "react"
-
+import { ToolThumb } from "@/components/personal-plan-tools/tool-thumb"
 import { Button } from "@/components/ui/button"
 import type { ToolFamily } from "@/lib/personal-plan/tools/contracts"
 import type { ToolCardTier, ToolCardViewModel } from "@/lib/personal-plan/tools/presentation"
@@ -176,7 +174,6 @@ function ToolCheckpointTierBlock({
 }
 
 function ToolCheckpointCard({ card }: { card: ToolCardViewModel }) {
-  const [imageFailed, setImageFailed] = useState(false)
   const style = TOOL_FAMILY_CARD_STYLES[card.family]
 
   return (
@@ -184,21 +181,12 @@ function ToolCheckpointCard({ card }: { card: ToolCardViewModel }) {
       data-stage3-tool-card={card.id}
       className={cn("flex items-start gap-3 rounded-[18px] border px-3 py-3", style.shell)}
     >
-      <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-[rgba(31,26,20,0.05)] bg-white">
-        {imageFailed ? (
-          <span aria-hidden="true" className="h-6 w-6 rounded-full bg-[#ded5cb]" />
-        ) : (
-          <Image
-            src={card.imageUrl}
-            alt={card.imageAlt}
-            width={56}
-            height={56}
-            className="h-full w-full object-contain p-1.5"
-            onError={() => setImageFailed(true)}
-            unoptimized
-          />
-        )}
-      </span>
+      <ToolThumb
+        src={card.imageUrl}
+        alt={card.imageAlt}
+        size={56}
+        className="h-14 w-14 rounded-[14px] border border-[rgba(31,26,20,0.05)]"
+      />
       <span className="min-w-0 flex-1">
         <span
           className={cn(

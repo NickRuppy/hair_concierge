@@ -1,3 +1,5 @@
+import { ToolThumb } from "@/components/personal-plan-tools/tool-thumb"
+
 import type { ToolUseSectionView } from "./application-types"
 
 /**
@@ -17,11 +19,11 @@ export function ToolUseBlock({ step, position }: { step: ToolUseSectionView; pos
       </span>
       <article className="rounded-md border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-4 shadow-[0_18px_42px_-34px_rgba(var(--brand-plum-rgb),0.78)]">
         <div className="flex min-w-0 items-start gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <ToolThumb
             src={step.imageUrl}
             alt={step.imageAltDe}
-            className="h-12 w-10 shrink-0 rounded-[10px] bg-white object-contain"
+            size={48}
+            className="h-12 w-12 rounded-[10px] border border-[var(--brand-plum-light)]"
           />
           <div className="min-w-0">
             <p className="type-caption flex flex-wrap items-center gap-2 text-[var(--text-caption)]">

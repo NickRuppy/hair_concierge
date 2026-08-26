@@ -101,7 +101,11 @@ function NeedCardEntry({
           aria-hidden={hasImage ? undefined : true}
           data-plan-start-card-image-slot={hasImage ? "loaded" : "reserved"}
           className={cn(
-            "relative grid h-[82px] w-[66px] shrink-0 place-items-center overflow-hidden rounded-[14px] bg-[#f3efe8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]",
+            // White, not the page's warm beige: catalog packshots come on their
+            // own white canvas, and any tinted well shows that canvas as a
+            // mismatched rectangle inside the frame (Nick, 2026-08-26). The
+            // inset ring alone marks the well as a deliberate image card.
+            "relative grid h-[82px] w-[66px] shrink-0 place-items-center overflow-hidden rounded-[14px] bg-white shadow-[inset_0_0_0_1px_rgba(31,26,20,0.08)]",
             "max-[360px]:h-[76px] max-[360px]:w-[58px]",
           )}
         >
