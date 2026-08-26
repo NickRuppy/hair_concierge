@@ -22,6 +22,7 @@ import {
   TOOL_FORM_PAGES,
   TOOL_MAX_OPTIONS_PER_PAGE,
   TOOL_OVERVIEW_SECTIONS,
+  toolImageSrc,
 } from "@/lib/personal-plan/tools/labels"
 import {
   defaultToolFormsFromCare,
@@ -45,6 +46,7 @@ import {
   getAnswerForQuestion,
   RefinementQuestion,
 } from "@/components/personal-plan-refinement/refinement-question"
+import { ToolVisualMultiSelect } from "@/components/personal-plan-refinement/tool-inventory"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 const BASE_CONTEXT: Stage2TriggerContext = {
@@ -114,11 +116,17 @@ test("a product-form page stays inside the ratified card budget", () => {
     )
     assert.ok(page.forms.length >= 1)
   }
-  // Only the ratified Bürsten page carries six; every other page keeps four.
+  // Nick ruling 2026-08-26: heated and heatless capture their whole family on
+  // ONE page (8 and 5 cards); the ratified Bürsten page carries six; every
+  // other page keeps four.
   const oversized = TOOL_FORM_PAGES.filter((page) => page.forms.length > 4).map(
     (page) => page.pageKey,
   )
-  assert.deepEqual(oversized, ["brushes_combs:1"])
+  assert.deepEqual(oversized, ["heated_styling:1", "heatless_styling:1", "brushes_combs:1"])
+  for (const family of ["heated_styling", "heatless_styling"] as const) {
+    const pages = TOOL_FORM_PAGES.filter((page) => page.family === family)
+    assert.equal(pages.length, 1, `${family} captures on one page`)
+  }
   assert.equal(TOOL_OVERVIEW_OPTIONS.length, 4)
 })
 
@@ -520,27 +528,40 @@ test("D3a: submitting the preselected overview unchanged keeps the care-implied 
   assert.deepEqual(submitted.answers.toolForms?.wash_application, [])
 })
 
-test('a preselection that lives on another page never pre-lights „Nichts davon"', () => {
-  // `heated_rollers` is on heated_styling page 2. Page 1 offers none of the
-  // preselected forms — but the user has not answered page 1, so a lit
-  // „Nichts davon" would claim something they never said.
-  const answers: PersonalPlanRefinementAnswersV1 = {
-    ...COMPLETE_CARE_ANSWERS,
-    additionalHeatTools: ["thermal_rollers"],
-    heatEvents: { "heat:thermal_rollers": { frequency: "weekly_1x", protectionConsistency: "no" } },
-  }
-  assert.deepEqual(getAnswerForQuestion(answers, "tools:heated_styling:1"), ["heated_rollers"])
-  const markup = renderQuestion(toolSession(answers), "tools:heated_styling:1")
-  assert.match(markup, /aria-pressed="false"[^>]*data-tool-nothing-option/)
+test('a selection that lives on another page of the family never pre-lights „Nichts davon"', () => {
+  // A family can span pages (`brushes_combs` still does), and every page of it
+  // receives the whole family array. When the only selected form belongs to
+  // another page, THIS page shows nothing ticked — but a lit „Nichts davon"
+  // would be a claim about this page that the user never made, so it stays off
+  // until the page is their own answer.
+  //
+  // Driven against the component rather than through a care preselection: since
+  // the 2026-08-26 one-page-per-family ruling, no care-projected family spans
+  // pages any more, and the guard lives here.
+  const page = toolFormPagePresentation("brushes_combs:1")
+  assert.ok(page)
+  const foreignForm = "round_brush" // brushes_combs page 2
+  assert.equal(
+    page!.options.some((option) => option.value === foreignForm),
+    false,
+    "the fixture form must not be offered on this page",
+  )
 
+  const render = (answered: boolean) =>
+    renderToStaticMarkup(
+      <ToolVisualMultiSelect
+        ariaLabel={page!.title}
+        options={page!.options}
+        selected={[foreignForm]}
+        onChange={() => {}}
+        nothingLabel="Nichts davon"
+        answered={answered}
+      />,
+    )
+
+  assert.match(render(false), /aria-pressed="false"[^>]*data-tool-nothing-option/)
   // Once the page IS the user's own answer, the empty page reads as „Nichts davon".
-  const answered = toolSession({
-    ...answers,
-    toolFamiliesWithSomething: ["heated_styling"],
-    toolForms: { heated_styling: ["heated_rollers"] },
-  })
-  const answeredMarkup = renderQuestion(answered, "tools:heated_styling:1")
-  assert.match(answeredMarkup, /aria-pressed="true"[^>]*data-tool-nothing-option/)
+  assert.match(render(true), /aria-pressed="true"[^>]*data-tool-nothing-option/)
 })
 
 test('R3 + D9b: the Bürsten page carries Wildschweinborsten-Bürste and „Nur Finger"', () => {
@@ -639,8 +660,9 @@ test("once the overview is submitted its product-form pages become required", ()
 })
 
 test("every capture card resolves to a real image file — nothing 404s", () => {
-  // Cards may carry a photo Bildkarte (/images/tools/*.webp) or the line-art
-  // fallback (/images/personal-plan/tools/*.svg); both must exist on disk.
+  // Since 2026-08-26 every form carries an approved photo Bildkarte
+  // (/images/tools/*.webp). The line-art fallback in `toolImageSrc` stays as a
+  // safety net for a form added before its photo, but no card may use it today.
   const publicRoot = new URL("../public/", import.meta.url)
   const resolve = (imageUrl: string) => new URL(imageUrl.replace(/^\//, ""), publicRoot)
   for (const page of TOOL_FORM_PAGES) {
@@ -651,6 +673,10 @@ test("every capture card resolves to a real image file — nothing 404s", () => 
         existsSync(resolve(option.imageUrl)),
         `${option.value} has no image at ${option.imageUrl}`,
       )
+      assert.ok(
+        option.imageUrl.startsWith("/images/tools/") && option.imageUrl.endsWith(".webp"),
+        `${option.value} still falls back to line art (${option.imageUrl})`,
+      )
       assert.ok(option.imageAlt.length > 0)
     }
   }
@@ -659,5 +685,16 @@ test("every capture card resolves to a real image file — nothing 404s", () => 
       existsSync(resolve(option.imageUrl)),
       `${option.value} has no image at ${option.imageUrl}`,
     )
+    assert.ok(
+      option.imageUrl.startsWith("/images/tools/") && option.imageUrl.endsWith(".webp"),
+      `${option.value} still falls back to line art (${option.imageUrl})`,
+    )
+  }
+
+  // Every `ToolReportedForm`, not only the ones a page happens to offer.
+  for (const form of TOOL_PRODUCT_TYPES) {
+    const src = toolImageSrc(form)
+    assert.ok(existsSync(resolve(src)), `${form} has no image at ${src}`)
+    assert.ok(src.endsWith(".webp"), `${form} still falls back to line art (${src})`)
   }
 })

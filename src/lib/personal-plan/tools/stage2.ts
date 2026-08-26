@@ -59,7 +59,8 @@ export const TOOL_OVERVIEW_OPTIONS: ToolOverviewOption[] = TOOL_OVERVIEW_SECTION
   }),
 )
 
-export const TOOL_OVERVIEW_TITLE = "Welche Bereiche nutzt du bereits?"
+/** Nick ruling 2026-08-26: the shortest honest question for the overview. */
+export const TOOL_OVERVIEW_TITLE = "Was hast du schon?"
 /**
  * Ratified 2026-08-25 (`D3a`): an unticked card means „hat nichts", so the lead
  * has to say that. The withdrawn promise („Was du auslässt, bleibt offen — wir

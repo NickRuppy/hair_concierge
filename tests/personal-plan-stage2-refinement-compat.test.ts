@@ -5,7 +5,10 @@ import {
   createStage2RefinementSession,
   saveStage2SessionAnswer,
 } from "../src/lib/personal-plan/refinement/session"
-import { decodeStage2RefinementAnswers } from "../src/lib/personal-plan/persistence/stage2-refinement-supabase"
+import {
+  decodeStage2CompletedQuestionIds,
+  decodeStage2RefinementAnswers,
+} from "../src/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { STAGE2_TOOL_OVERVIEW_QUESTION_ID } from "../src/lib/personal-plan/refinement/types"
 
 // WS5 -- availability and compatibility (verification receipt C6 + C7):
@@ -236,6 +239,101 @@ test("D8: a row completed with an empty drying answer stays complete after the â
     ],
   })
   assert.equal(inProgress.path.firstUnresolvedQuestionId, "drying_routes")
+})
+
+// ---------------------------------------------------------------------------
+// D8 / path version 3 -- heated_styling and heatless_styling each collapsed
+// from two capture pages into one (Nick ruling 2026-08-26). The page keys are
+// persisted question ids, so a stored completion has to be decoded.
+// ---------------------------------------------------------------------------
+
+test("D8/v3: a fully paged family decodes onto the merged page id", () => {
+  const decoded = decodeStage2CompletedQuestionIds([
+    "current_product_categories",
+    "tools_overview",
+    "tools:heated_styling:1",
+    "tools:heated_styling:2",
+    "tools:heatless_styling:1",
+    "tools:heatless_styling:2",
+    "tools:brushes_combs:1",
+  ])
+  assert.deepEqual(decoded, [
+    "current_product_categories",
+    "tools_overview",
+    "tools:heated_styling:1",
+    "tools:heatless_styling:1",
+    "tools:brushes_combs:1",
+  ])
+})
+
+test("D8/v3: a half-paged family does NOT inherit the merged page's completion", () => {
+  // The merged page means â€žthe whole family was shown and answered". A draft
+  // that only ever saw page 1 never answered for the forms page 2 carried, so
+  // the (now single) question honestly re-opens instead of claiming an answer.
+  assert.deepEqual(decodeStage2CompletedQuestionIds(["tools_overview", "tools:heated_styling:1"]), [
+    "tools_overview",
+  ])
+  // And an orphaned page-2 id alone is dropped: no such question exists.
+  assert.deepEqual(
+    decodeStage2CompletedQuestionIds(["tools_overview", "tools:heatless_styling:2"]),
+    ["tools_overview"],
+  )
+})
+
+test("D8/v3: unaffected families and multi-page families keep every stored id", () => {
+  const stored = [
+    "tools:airflow:1",
+    "tools:brushes_combs:1",
+    "tools:brushes_combs:2",
+    "tools:securing_sectioning:1",
+    "tools:securing_sectioning:2",
+    "tools:wash_application:1",
+    "tools:night_protection:1",
+    "tools:drying_textiles:1",
+  ]
+  assert.deepEqual(decodeStage2CompletedQuestionIds(stored), stored)
+  // Read-only: the decode never mutates the array it was given.
+  assert.equal(stored.length, 8)
+  assert.deepEqual(decodeStage2CompletedQuestionIds(null), [])
+  assert.deepEqual(decodeStage2CompletedQuestionIds([42, "tools_overview"]), ["tools_overview"])
+})
+
+test("D8/v3: a row completed under the old two-page split stays complete on reload", () => {
+  // Trust-stored-completion: a finished journey validates against its
+  // completion-time contract, so the merged page never re-opens for it.
+  const completedIds = decodeStage2CompletedQuestionIds([
+    "current_product_categories",
+    "wet_wash_frequency",
+    "towel_handling",
+    "drying_routes",
+    "additional_heat_tools",
+    "night_protection",
+    "tools_overview",
+    "tools:heated_styling:1",
+    // The old page 2 was never answered -- an in-progress draft would re-open
+    // the merged question, but this row is already complete.
+  ])
+  const reloaded = createStage2RefinementSession({
+    pathVersion: "stage2-v2",
+    triggerContext: { ...baseTriggerContext, toolsEnabled: true },
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x" as const,
+      towel: { material: "no_towel" as const },
+      dryingRoutes: ["air_dry" as const],
+      additionalHeatTools: [],
+      nightProtection: [],
+      toolFamiliesWithSomething: ["heated_styling" as const],
+      toolForms: { heated_styling: ["flat_iron" as const] },
+    },
+    completedQuestionIds: completedIds,
+    status: "complete",
+    completedHandoff: { refinedVersionId: "fixture-refined", nextHref: "/plan-start" },
+  })
+  assert.equal(reloaded.status, "complete")
+  assert.equal(reloaded.completedHandoff?.refinedVersionId, "fixture-refined")
+  // The user's own forms are untouched -- `toolForms` was always family-keyed.
+  assert.deepEqual(reloaded.answers.toolForms?.heated_styling, ["flat_iron"])
 })
 
 test("D8/R1: the decoder drops a legacy diffuser protectionConsistency at the persistence boundary", () => {

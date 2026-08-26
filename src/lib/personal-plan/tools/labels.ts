@@ -144,25 +144,34 @@ export type ToolOverviewSectionKey = (typeof TOOL_OVERVIEW_SECTIONS)[number]["ke
 /**
  * Stable image slot per product type.
  *
- * The files currently in `public/images/personal-plan/tools/` are coherent local
- * placeholders pending visual approval — see the README there. Replacing them
- * with the approved photo/cut-out set needs no code change: the slot, filename
- * and alt text stay identical.
+ * Every form now carries an approved photo Bildkarte (`TOOL_FORM_PHOTOS` is
+ * exhaustive over `ToolReportedForm`, so a new form fails to compile until it
+ * gets one). The line-art set in `public/images/personal-plan/tools/` is kept
+ * as a runtime safety net only — hence the deliberate widening below.
  */
 export function toolImageSrc(form: ToolReportedForm): string {
-  const photo = TOOL_FORM_PHOTOS[form]
+  const photo: string | undefined = TOOL_FORM_PHOTOS[form]
   return photo ? `/images/tools/${photo}.webp` : `/images/personal-plan/tools/${form}.svg`
 }
 
 /**
- * The generated photo Bildkarten (PR #460, `public/images/tools/*.webp`),
- * preferred over the line-art fallback wherever one exists — the same
- * treatment the Feinschliff heat-tools question already ships. Forms without
- * a photo keep the line art until the image pipeline generates theirs
- * (tracked follow-up in the rulings ledger). Keys on the right are the photo
- * file names, which follow the legacy quiz vocabulary.
+ * The generated photo Bildkarten (`public/images/tools/*.webp`), preferred over
+ * the line-art fallback — the same treatment the Feinschliff heat-tools
+ * question already ships. Keys on the right are the photo file names, which
+ * follow the legacy quiz vocabulary where one already existed.
+ *
+ * Complete since 2026-08-26: the 29 remaining forms were generated with the
+ * same style prompt and letterbox-postprocessed by
+ * `scripts/postprocess-tool-images.mjs` (see `plans/tool-bildkarten.md`), so no
+ * capture card falls back to line art any more. The SVG fallback in
+ * `toolImageSrc` stays as a safety net for a form added before its photo.
+ *
+ * Two forms deliberately share a photo with a neighbour rather than carry a
+ * near-duplicate of their own: the Lockenstab/Lockenzange pair, and the
+ * beheizter Multi-Styler, which is visually the same device class as the Air
+ * Multi-Styler. Shared photos never appear side by side on one page.
  */
-const TOOL_FORM_PHOTOS: Partial<Record<ToolReportedForm, string>> = {
+const TOOL_FORM_PHOTOS: Record<ToolReportedForm, string> = {
   hair_dryer: "blow_dryer",
   hot_air_brush: "dryer_brush",
   air_multi_styler: "hot_air_styler",
@@ -170,12 +179,42 @@ const TOOL_FORM_PHOTOS: Partial<Record<ToolReportedForm, string>> = {
   curling_iron: "curling_or_wave_iron",
   curling_wand: "curling_or_wave_iron",
   wave_iron: "wave_iron",
+  automatic_curler: "automatic_curler",
   heated_rollers: "thermal_rollers",
+  heated_brush: "heated_brush",
+  heated_multi_styler: "hot_air_styler",
+  heatless_curling_band: "heatless_curling_band",
+  setting_roller: "setting_roller",
+  foam_roller: "foam_roller",
+  flexi_rod: "flexi_rod",
+  setting_former: "setting_former",
   wide_tooth_comb: "wide_tooth_comb",
   detangling_brush: "detangling",
   paddle_brush: "paddle",
+  vent_brush: "vent_brush",
   round_brush: "round",
   boar_bristle: "boar_bristle",
+  styling_brush: "styling_brush",
+  hair_pick: "hair_pick",
+  sectioning_comb: "sectioning_comb",
+  soft_hair_tie: "soft_hair_tie",
+  scrunchie: "scrunchie",
+  claw_clip: "claw_clip",
+  sectioning_clip: "sectioning_clip",
+  root_volume_clip: "root_volume_clip",
+  hair_pin: "hair_pin",
+  headband: "headband",
+  scalp_brush: "scalp_brush",
+  applicator_bottle: "applicator_bottle",
+  applicator_comb: "applicator_comb",
+  water_spray_bottle: "water_spray_bottle",
+  pillowcase: "pillowcase",
+  bonnet: "bonnet",
+  length_tip_sleeve: "length_tip_sleeve",
+  soft_night_tie: "soft_night_tie",
+  microfiber_towel: "microfiber_towel",
+  smooth_cotton_cloth: "smooth_cotton_cloth",
+  drying_wrap: "drying_wrap",
   fingers: "fingers",
 }
 
@@ -284,6 +323,13 @@ export const ALL_TOOL_ROUTE_TARGETS: readonly ToolRouteTarget[] = TOOL_ROUTE_TAR
  * Bürsten page, next to the four foundation forms, so a fingers-only user can
  * say so without paging past brushes they do not own.
  *
+ * Nick ruling 2026-08-26: `heated_styling` and `heatless_styling` each get ONE
+ * page for the whole family (8 and 5 cards) — with photo Bildkarten the 2-column
+ * grid stays scannable, and paging through a family the user recognizes at a
+ * glance was the worse trade. `brushes_combs` keeps its two pages. The merge
+ * changed the persisted page ids, so it rode a `STAGE2_QUESTION_PATH_VERSION`
+ * bump plus a decode rule (`D8`) — see `decodeStage2CompletedQuestionIds`.
+ *
  * Pages need NOT follow the canonical family order: the persisted answer is
  * sorted into `TOOL_REPORTED_FORMS_BY_FAMILY` order when it is written.
  */
@@ -296,22 +342,27 @@ export const TOOL_FORM_PAGES = [
   {
     pageKey: "heated_styling:1",
     family: "heated_styling",
-    forms: ["flat_iron", "curling_iron", "curling_wand", "wave_iron"],
-  },
-  {
-    pageKey: "heated_styling:2",
-    family: "heated_styling",
-    forms: ["automatic_curler", "heated_rollers", "heated_brush", "heated_multi_styler"],
+    forms: [
+      "flat_iron",
+      "curling_iron",
+      "curling_wand",
+      "wave_iron",
+      "automatic_curler",
+      "heated_rollers",
+      "heated_brush",
+      "heated_multi_styler",
+    ],
   },
   {
     pageKey: "heatless_styling:1",
     family: "heatless_styling",
-    forms: ["heatless_curling_band", "setting_roller", "foam_roller"],
-  },
-  {
-    pageKey: "heatless_styling:2",
-    family: "heatless_styling",
-    forms: ["flexi_rod", "setting_former"],
+    forms: [
+      "heatless_curling_band",
+      "setting_roller",
+      "foam_roller",
+      "flexi_rod",
+      "setting_former",
+    ],
   },
   {
     pageKey: "brushes_combs:1",
@@ -363,8 +414,12 @@ export const TOOL_FORM_PAGES = [
 
 export type ToolFormPageKey = (typeof TOOL_FORM_PAGES)[number]["pageKey"]
 
-/** Six on the ratified Bürsten page (see `TOOL_FORM_PAGES`), four everywhere else. */
-export const TOOL_MAX_OPTIONS_PER_PAGE = 6
+/**
+ * Eight on the single Hitzestyling page (Nick ruling 2026-08-26 — one page per
+ * heated/heatless family), six on the ratified Bürsten page, four or five
+ * everywhere else. See `TOOL_FORM_PAGES`.
+ */
+export const TOOL_MAX_OPTIONS_PER_PAGE = 8
 
 export function toolFormPagesForFamilies(
   families: readonly ToolFamily[],

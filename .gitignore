@@ -268,3 +268,7 @@ test-screenshots*/
 !plans/mockups/ws4-2026-08-25/*.png
 !plans/mockups/ready-check-2026-08-25/*.png
 !plans/mockups/stage3-tools-clarity-2026-08-25/*.png
+# Only the wired-* review screenshots. The 29 approved source packshots in the
+# same directory are ~32 MB of generator output and stay untracked; the shipped
+# artefacts are the postprocessed webp in public/images/tools/.
+!plans/mockups/tool-images-review-2026-08-25/wired-*.png

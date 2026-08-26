@@ -65,6 +65,13 @@ export type LegacyQuizOptionVisual =
       src: string
       alt: string
       priority?: boolean
+      /**
+       * Opt-in: a 1.9:1 tool packshot (`ToolImage`) that must be cropped to its
+       * centered square window rather than shown full-bleed. Only the tool
+       * questions set it; the hair-texture, thickness and portrait visuals are
+       * full-bleed compositions and stay untouched.
+       */
+      packshot?: boolean
     }
   | {
       kind: "portrait"

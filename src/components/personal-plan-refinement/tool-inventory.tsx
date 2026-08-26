@@ -90,10 +90,13 @@ export function ToolVisualMultiSelect({
           onChange([...foreign], nothingLabel)
         }}
         className={cn(
-          "mt-3 w-full rounded-2xl border px-4 py-3 text-left text-[15px] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
+          // Same white-body, plum-border-and-ring selected state as the cards
+          // above and as `quiz-card-active`, so nothing on the page signals
+          // selection with a different treatment.
+          "mt-3 w-full rounded-2xl border bg-white px-4 py-3 text-left text-[15px] font-semibold text-[var(--brand-plum-darkest)] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
           nothingSelected
-            ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum-darkest)]"
-            : "border-[var(--brand-plum-light)] bg-white text-[var(--brand-plum-darkest)]",
+            ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
+            : "border-[var(--brand-plum-light)]",
         )}
       >
         {nothingLabel}
@@ -120,9 +123,14 @@ function ToolOptionCard({
       onClick={onToggle}
       data-tool-option={option.value}
       className={cn(
+        // The card body stays white in every state, exactly as the shared
+        // `QuizOptionCard` grid does. Tinting the selected card plum-ice also
+        // tinted its label strip, so a selected Bildkarte sat next to
+        // unselected ones with a visibly different strip (Nick, 2026-08-26).
+        // Selection reads from the plum border, ring and filled check instead.
         "personal-plan-option-card group relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border bg-white text-left transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
         selected
-          ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
+          ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
           : "border-[var(--brand-plum-light)]",
       )}
     >

@@ -6,6 +6,7 @@ import {
   STAGE2_QUESTION_PATH_VERSION,
   type PersonalPlanRefinementAnswersV1,
   type Stage2HeatEventSource,
+  type Stage2QuestionId,
 } from "@/lib/personal-plan/refinement/types"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type {
@@ -35,6 +36,47 @@ import type {
  *   row stored under the old contract. Dropping it on read is what keeps that
  *   row valid -- and therefore complete -- under today's contract (fixture 125).
  */
+/**
+ * Path version 2 -> 3 (`D8`, Nick ruling 2026-08-26 — one page per heated and
+ * heatless family).
+ *
+ * `heated_styling` and `heatless_styling` each collapsed from two capture pages
+ * into one, and the page keys are persisted question ids. The merged page means
+ * something strictly stronger than either old page did: "this user has been
+ * shown, and answered for, the whole family". So a stored completion decodes as
+ * completing the merged page only when BOTH old page ids were completed — a
+ * half-paged draft honestly re-opens the (now single) question rather than
+ * inheriting a claim about forms the user never saw. Orphaned `:2` ids are
+ * dropped either way, because no such question exists any more.
+ *
+ * This is read-time only: a row that was already *complete* keeps its status
+ * through `createStage2RefinementSession`, which trusts the stored status and
+ * handoff instead of re-deriving completeness.
+ */
+const MERGED_TOOL_FORM_PAGES: ReadonlyArray<{ merged: string; sources: readonly string[] }> = [
+  {
+    merged: "tools:heated_styling:1",
+    sources: ["tools:heated_styling:1", "tools:heated_styling:2"],
+  },
+  {
+    merged: "tools:heatless_styling:1",
+    sources: ["tools:heatless_styling:1", "tools:heatless_styling:2"],
+  },
+]
+
+export function decodeStage2CompletedQuestionIds(raw: unknown): Stage2QuestionId[] {
+  if (!Array.isArray(raw)) return []
+  const stored = raw.filter((id): id is string => typeof id === "string")
+  const survives = (id: string) => {
+    const page = MERGED_TOOL_FORM_PAGES.find((candidate) => candidate.sources.includes(id))
+    if (!page) return true
+    // The merged id keeps its slot only when the whole family was answered;
+    // every other source id is an orphan of a question that no longer exists.
+    return id === page.merged && page.sources.every((source) => stored.includes(source))
+  }
+  return stored.filter(survives) as Stage2QuestionId[]
+}
+
 export function decodeStage2RefinementAnswers(raw: unknown): PersonalPlanRefinementAnswersV1 {
   if (!raw || typeof raw !== "object") return {} as PersonalPlanRefinementAnswersV1
   const answers = { ...(raw as Record<string, unknown>) }
@@ -282,8 +324,7 @@ function mapDraft(
     pathVersion: `stage2-v${String(row.schema_version)}`,
     triggerContext,
     answers: decodeStage2RefinementAnswers(row.answers),
-    completedQuestionIds: (row.completed_question_ids ??
-      []) as Stage2PersistedDraft["completedQuestionIds"],
+    completedQuestionIds: decodeStage2CompletedQuestionIds(row.completed_question_ids),
     revision: Number(row.revision),
     status: row.status as Stage2PersistedDraft["status"],
     refinedVersionId:

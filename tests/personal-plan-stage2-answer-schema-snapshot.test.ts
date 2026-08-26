@@ -17,6 +17,7 @@ import {
   TOOL_FAMILIES,
   TOOL_REPORTED_FORMS_BY_FAMILY,
 } from "@/lib/personal-plan/tools/contracts"
+import { TOOL_FORM_PAGES } from "@/lib/personal-plan/tools/labels"
 
 /**
  * `D8` (ruled 2026-08-24, standing rule) — schema snapshot.
@@ -36,7 +37,33 @@ import {
  * from the thing it guards guards nothing.
  */
 
-const PATH_VERSION_SNAPSHOT = 2
+/**
+ * Bumped to 3 intentionally — Nick ruling 2026-08-26, one page per heated and
+ * heatless family. `tools:heated_styling:2` and `tools:heatless_styling:2` no
+ * longer exist as persisted question ids, and `tools:<family>:1` now means the
+ * whole family rather than its first page. Decoder:
+ * `decodeStage2CompletedQuestionIds` in
+ * `persistence/stage2-refinement-supabase.ts` (row in `refinement/types.ts`).
+ */
+const PATH_VERSION_SNAPSHOT = 3
+
+/**
+ * The Tool capture pages, snapshotted as persisted question ids. These ARE
+ * persisted keys (they land in `completed_question_ids`), so merging or
+ * splitting a page is exactly the `D8` event this file guards.
+ */
+const TOOL_FORM_PAGE_ID_SNAPSHOT = [
+  "tools:airflow:1",
+  "tools:heated_styling:1",
+  "tools:heatless_styling:1",
+  "tools:brushes_combs:1",
+  "tools:brushes_combs:2",
+  "tools:securing_sectioning:1",
+  "tools:securing_sectioning:2",
+  "tools:wash_application:1",
+  "tools:night_protection:1",
+  "tools:drying_textiles:1",
+]
 
 /**
  * The persisted keys, snapshotted exhaustively.
@@ -138,6 +165,14 @@ test("D8: the persisted refinement answer keys match the snapshot for this path 
     answers,
   )
   assert.ok(questionIds.length > 0)
+
+  // The Tool capture page ids are persisted too: merging or splitting a page
+  // changes what a stored completion means and needs a decoder.
+  assert.deepEqual(
+    TOOL_FORM_PAGES.map((page) => `tools:${page.pageKey}`),
+    TOOL_FORM_PAGE_ID_SNAPSHOT,
+    "a Tool capture page id changed — bump STAGE2_QUESTION_PATH_VERSION and ship a decoder (D8)",
+  )
 })
 
 test("D8: multi-select completion semantics match the snapshot", () => {

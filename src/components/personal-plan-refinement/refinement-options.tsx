@@ -365,7 +365,12 @@ export function RefinementOptions<T extends string>({
             animationDelay={index * 18}
             visual={
               isGrid && option.image
-                ? { kind: "image", src: option.image.src, alt: option.image.alt }
+                ? {
+                    kind: "image",
+                    src: option.image.src,
+                    alt: option.image.alt,
+                    packshot: option.image.packshot,
+                  }
                 : undefined
             }
             visualLayout={isGrid && option.image ? "grid" : undefined}

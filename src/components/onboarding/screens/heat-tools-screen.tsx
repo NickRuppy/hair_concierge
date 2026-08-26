@@ -87,7 +87,11 @@ export function HeatToolsScreen({
               disabled={isSaving}
               onClick={() => onToggle(option.value)}
               animationDelay={100 + i * 60}
-              visual={image ? { kind: "image", src: image.src, alt: image.alt } : undefined}
+              visual={
+                image
+                  ? { kind: "image", src: image.src, alt: image.alt, packshot: image.packshot }
+                  : undefined
+              }
               visualLayout={image ? "grid" : undefined}
               alwaysShowDescription
             />

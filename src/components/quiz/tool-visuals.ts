@@ -1,9 +1,24 @@
 export const TOOL_IMAGE_BASE = "/images/tools"
 
-export type ToolImage = { src: string; alt: string }
+export type ToolImage = {
+  src: string
+  alt: string
+  /**
+   * Every file under `TOOL_IMAGE_BASE` is a 1.9:1 letterbox-blur composition
+   * (see `plans/tool-bildkarten.md`): the square packshot sits centered on a
+   * hard-blurred, stretched copy of itself. Rendered full-bleed on a card well
+   * those side panels read as ghost shapes of the tool, so a card carrying this
+   * flag must crop to the centered square window instead.
+   *
+   * Deliberately carried by the tool image data rather than sniffed from the
+   * file extension: the hair-texture and thickness photos are full-bleed
+   * compositions and must keep rendering edge-to-edge.
+   */
+  packshot: true
+}
 
 function toolImage(file: string, alt: string): ToolImage {
-  return { src: `${TOOL_IMAGE_BASE}/${file}.webp`, alt }
+  return { src: `${TOOL_IMAGE_BASE}/${file}.webp`, alt, packshot: true }
 }
 
 /** Bürsten & Kämme (Onboarding `brush_type`) */
