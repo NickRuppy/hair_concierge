@@ -10,7 +10,7 @@ refer to that date on `main`.
 | --- | --- |
 | Authenticated app surfaces: `/chat`, `/profile`, `/routine`, `/scan`, `/tracker`, `/onboarding`, … | **Dev login** — one URL (§1) |
 | Personal Plan stage UIs in isolation (Idealplan, Feinschliff, Stage 3–5) | **`/labs` harnesses** — no auth at all (§2) |
-| The real post-payment handoff: checkout → `/plan-bereit` → `/plan-start` → Stage 1–5 | **Local test-mode checkout** (§3) |
+| The real post-payment handoff: checkout → `/welcome` auth → `/plan-bereit` → `/plan-start` | **Local test-mode checkout** (§3 — read its blocker note first) |
 | Post-payment verification in production | Field-test link or synthetic entitlement — pointers only (§4) |
 
 Do not mix them: the dev-login account can never reach the Personal Plan journey (§1 limits),
@@ -29,8 +29,12 @@ http://localhost:<port>/api/dev/login?next=/chat
 Requirements — all three, or the route 404s / bounces:
 
 1. `NODE_ENV=development` (any `next dev` server qualifies; production builds never expose this).
-2. `LOCAL_DEV_LOGIN_ENABLED=1` in `.env.local` (set on 2026-08-26; the flag is read by both
-   the middleware — `src/lib/supabase/middleware.ts` — and the route handler).
+2. `LOCAL_DEV_LOGIN_ENABLED=1` in the `.env.local` of **the checkout you are actually
+   running** (read by both the middleware — `src/lib/supabase/middleware.ts` — and the route
+   handler). `worktree:new` copies ignored env files **once, at worktree creation**
+   (`scripts/worktree-new.mjs`) — root changes never propagate to existing worktrees, so
+   verify the flag inside the task worktree before concluding anything is broken. Root
+   `.env.local` got the flag on 2026-08-26; worktrees created before then do not have it.
 3. Hostname `localhost` — and use `localhost` anyway, never `127.0.0.1`: Next dev via
    `127.0.0.1` renders but silently never hydrates.
 
@@ -75,15 +79,37 @@ entitlement, routing, or persistence — that's §3.
 
 ## 3. Local post-payment handoff (env-dependent — verify on first use)
 
-The only way to test checkout → `/plan-bereit?lead=<id>` → `/plan-start` locally with real
-routing is a real test-mode purchase, because enrollment resolution requires a one-time
-purchase whose consent row links the exact lead.
+The only way to exercise checkout → `/welcome` → `/plan-bereit?lead=<id>` → `/plan-start`
+locally with real routing is a real test-mode purchase, because enrollment resolution requires
+a one-time purchase whose consent row links the exact lead.
 
-Recipe (Personal Plan one-time purchase):
+> **⛔ Not yet blessed as a default recipe (2026-08-26).** One-time activation enqueues a
+> purchase-completed analytics event to Customer.io, Meta, and PostHog
+> (`src/lib/billing/personal-plan-one-time-activation.ts` →
+> `BILLING_ANALYTICS_EXTERNAL_DESTINATIONS` in `src/lib/billing/analytics-outbox.ts`).
+> Only the PostHog destination carries the `is_internal_test` marker; **Meta and Customer.io
+> have no internal-test suppression** — they skip only when their env keys are absent, which
+> is an accident of configuration, not a guarantee. The `billing_subscriptions_classified`
+> `is_test` views cover subscriptions only, **not** `billing_one_time_purchases`. Until
+> internal-test suppression for Meta/Customer.io is implemented and proven, a "local" test
+> purchase can create real production analytics state. Before first use: either verify those
+> destination env keys are absent locally and accept the DB-side residue consciously, or land
+> the suppression fix — then update this section.
+
+**There is currently no supported synthetic/seeded local path to Personal Plan access.** The
+dedicated QA-owner RPC was deliberately retired
+(`supabase/migrations/20260811054910_remove_personal_plan_test_owner.sql`), and seeding a
+subscription row (the Playwright `tests/tracker-page.spec.ts` pattern) yields ordinary app
+access like dev login — it cannot create the lead/consent/purchase/artifact chain
+`/plan-start` requires. If a guarded, cleanup-capable seeding helper is wanted, that is a
+deliberate design task for Nick to authorize — do not improvise one with service-role writes.
+
+Recipe (Personal Plan one-time purchase, once the blocker above is resolved):
 
 1. **Webhook forwarding:** `stripe listen --forward-to localhost:<port>/api/stripe/webhook`.
-   Put the printed dev-only `whsec_…` in `.env.local` as `STRIPE_WEBHOOK_SECRET` (it is
-   different from the dashboard endpoint's secret). Restart the dev server.
+   Put the printed dev-only `whsec_…` in the worktree's `.env.local` as
+   `STRIPE_WEBHOOK_SECRET` (it is different from the dashboard endpoint's secret). Restart
+   the dev server.
 2. **Test-mode Stripe env:** `STRIPE_SECRET_KEY` must be a test-mode key and
    `STRIPE_PRICE_ID_PERSONAL_PLAN_ONCE` a test-mode price. Note: the launch checklist
    (`docs/personal-plan-one-time-provider-setup.md`) only created **live** resources — if
@@ -102,21 +128,28 @@ Recipe (Personal Plan one-time purchase):
    Open `/result/<leadId>?qa=<token>` — the QA arm assigns and the one-time checkout becomes
    reachable. (Lead and session ids: from the result URL and the `funnel_sessions` row for
    the lead.)
-4. **Pay with a Stripe test card** (4242 4242 4242 4242). The forwarded
-   `checkout.session.completed` webhook creates the purchase + consent; `/plan-bereit` flips
-   from `paid_pending` to ready; continue into `/plan-start` Stage 1–5.
-5. Test-mode purchases are automatically excluded from the canonical billing views: the
-   `is_test` predicate matches `cs_test_…` checkout sessions
-   (`supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql`,
-   mirrored in `src/lib/billing/entitlements.ts`).
+4. **Pay with a Stripe test card** (4242 4242 4242 4242).
+5. **Complete the `/welcome` authentication step — do not skip it.** Stripe returns the buyer
+   to `/welcome`, where an unauthenticated buyer must set a password
+   (`/api/auth/set-checkout-password`) or request a magic link before entering the plan
+   (`src/app/welcome/welcome-client.tsx`). This is one of the most failure-prone parts of the
+   post-payment flow and is part of what this lane exists to test.
+6. The forwarded `checkout.session.completed` webhook creates the purchase + consent;
+   `/plan-bereit` flips from `paid_pending` to ready; continue into `/plan-start` Stage 1–5,
+   verifying lead/consent/purchase provenance, no `/onboarding` detour, and refresh/resume.
+7. **Clean up:** revoke or expire the test access via the supported path, and confirm no
+   residual auth/data/analytics state (check the outbox rows for the event).
 
 For **membership subscription** post-payment, the same `stripe listen` setup applies with the
-normal offer and the test-mode subscription price ids.
+normal offer and the test-mode subscription price ids; subscription rows created from
+`cs_test_…` sessions are classified as test by
+`supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql`, but the same
+analytics-outbox caveat applies.
 
-**Fallback — direct seeding** (when a provider round-trip isn't the point): follow the
-Playwright pattern (e.g. `tests/tracker-page.spec.ts`) — service-role upsert of the
-entitlement rows with an explicit test marker in `metadata` (`qa_seed`/`ci_seed`/`local_test`),
-never a bare row. Marker-less rows pollute `billing_subscriptions_current`.
+**Verification discipline:** local click-through on an unmerged branch is evidence for
+`ready-check` (`.agents/skills/ready-check/SKILL.md`) — run it on the exact tree under review,
+name the evidence tier used (labs / dev login / test checkout), and record what each tier does
+and does not prove in the receipt.
 
 ## 4. Production paths (pointers only)
 
