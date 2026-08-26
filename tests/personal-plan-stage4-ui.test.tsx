@@ -855,6 +855,10 @@ test("the all-deferred shape (zero-recommendation accept) renders only placehold
   )
 
   assert.match(html, /Deine Routine/)
+  // 2.8: the zero-recommendation cohort gets the honest subtitle, never a
+  // readiness claim over a page of placeholders.
+  assert.match(html, /Noch ohne konkrete Produkte\./)
+  assert.doesNotMatch(html, /Deine Routine ist bereit/)
   assert.equal((html.match(/<a[^>]*href="\/plan-start\?refine=products"[^>]*>/g) ?? []).length, 2)
   assert.doesNotMatch(html, /Mindestens ein Basis-Baustein fehlt noch/)
   assert.match(html, /href="\/anwendung"/)

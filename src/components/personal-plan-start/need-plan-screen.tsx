@@ -28,8 +28,7 @@ export type NeedPlanScreenViewModel = {
 
 export const PLAN_START_CATALOG_DISCLAIMER =
   "Für jede Kategorie haben wir das passendste Produkt aus unserem Katalog gewählt."
-export const PLAN_START_PENDING_DISCLAIMER =
-  "Deine Produktempfehlungen folgen nach dem Feinschliff."
+export const PLAN_START_PENDING_DISCLAIMER = "Passende Produkte wählen wir im Feinschliff."
 
 /**
  * The catalog sentence is only honest while at least one category can still
@@ -48,7 +47,7 @@ export type NeedPlanScreenNextIntent = "accept" | "refine"
 export type NeedPlanScreenNextStatus = "idle" | "preparing" | "loading" | "error"
 
 export const PLAN_START_ACCEPT_LABEL = "Zu deiner Routine"
-export const PLAN_START_ACCEPT_PENDING_LABEL = "Wird eingerichtet …"
+export const PLAN_START_ACCEPT_PENDING_LABEL = "Routine wird eingerichtet …"
 export const PLAN_START_REFINE_LABEL = "Auf meine Produkte abstimmen"
 export const PLAN_START_REFINE_PENDING_LABEL = "Feinschliff wird geöffnet …"
 export const PLAN_START_REFINE_ERROR =

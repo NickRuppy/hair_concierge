@@ -164,7 +164,7 @@ export function RoutinePage({
                     : successorProposal
                       ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
                       : includedProductCount === 0
-                        ? "Deine Routine ist bereit."
+                        ? "Noch ohne konkrete Produkte."
                         : `Deine Routine mit ${includedProductCount} ${includedProductCount === 1 ? "Produkt" : "Produkten"}.`}
                 </p>
                 {hasBlockingBasisGap ? (

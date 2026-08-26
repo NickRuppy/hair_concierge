@@ -454,8 +454,8 @@ test("the accepting CTA reports its own preparing, pending and error states", ()
 })
 
 /**
- * M3: the refinement detour must not read as "Wird eingerichtet …" — nothing is
- * being set up, the user is being taken to the Feinschliff.
+ * M3: the refinement detour must not read as "Routine wird eingerichtet …" —
+ * nothing is being set up, the user is being taken to the Feinschliff.
  */
 test("the refinement detour names the Feinschliff instead of claiming a setup", () => {
   const detour = renderPlanStart({

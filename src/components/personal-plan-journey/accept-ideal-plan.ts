@@ -4,11 +4,11 @@ export const PLAN_ACCEPT_ERROR =
   "Dein Plan konnte nicht übernommen werden. Versuche es noch einmal."
 /**
  * Shown once re-fetching has failed to converge, i.e. the mismatch is
- * structural rather than a race. Naming the working path beats a retry that
- * cannot succeed.
+ * structural rather than a race. It carries only the reason — the CTA next to
+ * it already reads "Feinschliff wird geöffnet …", so the destination is not
+ * repeated here (Task 2.8).
  */
-export const PLAN_ACCEPT_UNAVAILABLE_NOTICE =
-  "Die direkte Übernahme ist gerade nicht möglich. Der Feinschliff bringt dich sicher ans Ziel."
+export const PLAN_ACCEPT_UNAVAILABLE_NOTICE = "Direkt übernehmen klappt gerade nicht."
 /**
  * Where a structurally stale seen state goes. Completing the refinement also
  * produces an accepted plan, so this is a detour, not a dead end. `refine=1`

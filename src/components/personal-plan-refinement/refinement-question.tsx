@@ -229,7 +229,7 @@ export function RefinementQuestion({
                 {status === "revision_conflict"
                   ? "Wir haben neuere gespeicherte Antworten gefunden."
                   : status === "stale_refinement"
-                    ? "Bitte lade neu — dein Feinschliff-Stand hat sich geändert."
+                    ? "Dein Feinschliff-Stand hat sich geändert."
                     : status === "completion_failed"
                       ? "Deine Antwort ist gespeichert. Die Übergabe hat gerade nicht geklappt."
                       : "Speichern hat gerade nicht geklappt."}
@@ -238,7 +238,7 @@ export function RefinementQuestion({
                 {status === "revision_conflict"
                   ? "Der Stand wurde neu geladen. Du machst ohne Überschreiben bei der nächsten offenen Frage weiter."
                   : status === "stale_refinement"
-                    ? "Deine Antwort ist gespeichert. Lade den Feinschliff neu, dann machst du auf dem aktuellen Stand weiter."
+                    ? "Deine Antwort ist gespeichert. Lade neu, dann machst du auf dem aktuellen Stand weiter."
                     : status === "completion_failed"
                       ? "Du musst diese Antwort nicht noch einmal speichern. Versuche nur die Übergabe erneut."
                       : "Deine Auswahl bleibt auf dieser Seite sichtbar. Versuche das Speichern noch einmal."}

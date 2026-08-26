@@ -419,12 +419,13 @@ export function RefinementFlow({
             setBridge(handoff)
             setMode("bridge")
             setStatus("saved")
-            setLiveMessage("Feinschliff gespeichert.")
+            // A module is done, not the whole Feinschliff — don't overclaim (2.8).
+            setLiveMessage("Antworten gespeichert.")
           },
           handBackToHost: async (payload) => {
             setSession(nextSession)
             setStatus("saved")
-            setLiveMessage("Feinschliff gespeichert.")
+            setLiveMessage("Antworten gespeichert.")
             await onModuleComplete?.(payload)
           },
         },
@@ -830,8 +831,8 @@ export async function applyStage2ModuleCompletion(
  */
 export function completionFailureMessage(code: Stage2RefinementErrorCode): string {
   return code === "incomplete_refinement"
-    ? "Bitte lade neu — dein Feinschliff-Stand hat sich geändert."
-    : "Antwort gespeichert. Die Übergabe ist fehlgeschlagen und kann direkt wiederholt werden."
+    ? "Dein Feinschliff-Stand hat sich geändert."
+    : "Antwort gespeichert. Die Übergabe hat nicht geklappt."
 }
 
 function chooseNextQuestion(
