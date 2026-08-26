@@ -18,10 +18,13 @@ import {
 } from "@/lib/personal-plan/refinement/gateway"
 import {
   deriveStage2EntryMode,
+  hostSessionFor,
   resolveStage2EntryModule,
   resolveStage2FlowEntryView,
+  resolveStage2ModuleScope,
   scopeStage2SessionToModule,
   type Stage2ModuleEntryRequest,
+  type Stage2ModuleScope,
 } from "@/lib/personal-plan/refinement/module-scope"
 import {
   saveStage2SessionAnswer,
@@ -150,18 +153,26 @@ export function RefinementFlow({
   // The module is chosen once, at entry. Finishing it must not silently
   // re-scope the running flow onto the other module.
   const moduleRef = useRef<Stage2Module | null>(initialModule)
-  const scopeSession = useCallback(
-    (session: Stage2RefinementSession) => scopeStage2SessionToModule(session, moduleRef.current),
-    [],
+  const moduleScopeRef = useRef<Stage2ModuleScope>(
+    resolveStage2ModuleScope(moduleEntry, initialModule),
   )
+  /**
+   * The latest UNSCOPED session. State holds the module-scoped view, but the
+   * host must always receive the full path (see `hostSessionFor`).
+   */
+  const unscopedSessionRef = useRef<Stage2RefinementSession | null>(initialSession ?? null)
+  const trackSession = useCallback((session: Stage2RefinementSession) => {
+    unscopedSessionRef.current = session
+    return scopeStage2SessionToModule(session, moduleRef.current)
+  }, [])
   const initialView = useMemo(
     () =>
       initialRefinementView(
         initialSession ? scopeStage2SessionToModule(initialSession, initialModule) : undefined,
         directEntry,
-        initialModule !== null,
+        resolveStage2ModuleScope(moduleEntry, initialModule),
       ),
-    [directEntry, initialModule, initialSession],
+    [directEntry, initialModule, initialSession, moduleEntry],
   )
   const [session, setSession] = useState<Stage2RefinementSession | null>(
     initialView?.session ?? null,
@@ -241,10 +252,11 @@ export function RefinementFlow({
       .then(async (rawSession) => {
         if (cancelled || generationRef.current !== generation) return
         moduleRef.current = resolveStage2EntryModule(rawSession, moduleEntry ?? null)
-        const loadedSession = scopeSession(rawSession)
+        moduleScopeRef.current = resolveStage2ModuleScope(moduleEntry, moduleRef.current)
+        const loadedSession = trackSession(rawSession)
         const entry = resolveStage2FlowEntryView({
           session: loadedSession,
-          moduleScoped: moduleRef.current !== null,
+          moduleScope: moduleScopeRef.current,
           directEntry,
         })
         if (entry.bridge) {
@@ -282,7 +294,7 @@ export function RefinementFlow({
     return () => {
       cancelled = true
     }
-  }, [directEntry, emit, gateway, initialSession, moduleEntry, scopeSession, setActiveFromSession])
+  }, [directEntry, emit, gateway, initialSession, moduleEntry, setActiveFromSession, trackSession])
 
   const begin = useCallback(() => {
     if (!session?.path.firstUnresolvedQuestionId) return
@@ -322,7 +334,10 @@ export function RefinementFlow({
     if (!onHandoff || !session || !bridge || handoffStatus === "loading") return
     setHandoffStatus("loading")
     try {
-      await onHandoff({ handoff: bridge, session })
+      await onHandoff({
+        handoff: bridge,
+        session: hostSessionFor(unscopedSessionRef.current, session),
+      })
       setHandoffStatus("complete")
     } catch {
       emit({ name: "personal_plan_stage2_handoff_failed" })
@@ -341,6 +356,12 @@ export function RefinementFlow({
     (nextSession: Stage2RefinementSession, handoff: Stage2CompleteResult) => {
       const completedSession: Stage2RefinementSession = {
         ...nextSession,
+        status: "complete",
+        completedHandoff: handoff,
+      }
+      // Keep the host-facing session in lockstep, but on the FULL path.
+      unscopedSessionRef.current = {
+        ...(unscopedSessionRef.current ?? nextSession),
         status: "complete",
         completedHandoff: handoff,
       }
@@ -382,40 +403,32 @@ export function RefinementFlow({
     [gateway, showCompletedStage2Session, showCompletionFailure],
   )
 
-  /**
-   * One module finished. `complete` means the server ran the unchanged full
-   * completion (this was the closing module); `stage3Handoff` means Modul 1 —
-   * bridge into Stage 3. Anything else (habits before products) hands back to
-   * the host, which returns the user to their Routine.
-   */
   const applyModuleCompletion = useCallback(
-    async (
-      nextSession: Stage2RefinementSession,
-      moduleCompletion: Stage2ModuleCompletionResult,
-    ) => {
-      const handoff: Stage2CompleteResult = {
-        refinedVersionId: moduleCompletion.refinedVersionId,
-        nextHref: moduleCompletion.nextHref,
-      }
-      emit({ name: "personal_plan_stage2_module_completed", module: moduleCompletion.module })
-      if (moduleCompletion.status === "complete") {
-        showCompletedStage2Session(nextSession, handoff)
-        return
-      }
-      if (moduleCompletion.stage3Handoff) {
-        setSession(nextSession)
-        setBridge(handoff)
-        setMode("bridge")
-        setStatus("saved")
-        setLiveMessage("Feinschliff gespeichert.")
-        emit({ name: "personal_plan_stage2_bridge_viewed" })
-        return
-      }
-      setSession(nextSession)
-      setStatus("saved")
-      setLiveMessage("Feinschliff gespeichert.")
-      await onModuleComplete?.({ moduleCompletion, session: nextSession })
-    },
+    async (nextSession: Stage2RefinementSession, moduleCompletion: Stage2ModuleCompletionResult) =>
+      applyStage2ModuleCompletion(
+        {
+          session: nextSession,
+          hostSession: hostSessionFor(unscopedSessionRef.current, nextSession),
+          moduleCompletion,
+        },
+        {
+          emit,
+          showCompletedSession: showCompletedStage2Session,
+          showStage3Bridge: (bridgeSession, handoff) => {
+            setSession(bridgeSession)
+            setBridge(handoff)
+            setMode("bridge")
+            setStatus("saved")
+            setLiveMessage("Feinschliff gespeichert.")
+          },
+          handBackToHost: async (payload) => {
+            setSession(nextSession)
+            setStatus("saved")
+            setLiveMessage("Feinschliff gespeichert.")
+            await onModuleComplete?.(payload)
+          },
+        },
+      ),
     [emit, onModuleComplete, showCompletedStage2Session],
   )
 
@@ -445,10 +458,10 @@ export function RefinementFlow({
 
   const reloadFromGateway = useCallback(async () => {
     try {
-      const loaded = scopeSession(await gateway.load())
+      const loaded = trackSession(await gateway.load())
       const entry = resolveStage2FlowEntryView({
         session: loaded,
-        moduleScoped: moduleRef.current !== null,
+        moduleScope: moduleScopeRef.current,
         directEntry,
       })
       if (entry.bridge) {
@@ -471,7 +484,7 @@ export function RefinementFlow({
       setLiveMessage("Speichern fehlgeschlagen. Der neuere Stand konnte nicht geladen werden.")
       setMode("question")
     }
-  }, [directEntry, emit, gateway, scopeSession, setActiveFromSession])
+  }, [directEntry, emit, gateway, setActiveFromSession, trackSession])
 
   const handleSubmit = useCallback(async () => {
     if (!session || !activeQuestionId) return
@@ -501,7 +514,7 @@ export function RefinementFlow({
     setStatus("saving")
     setLiveMessage("Antwort wird gespeichert.")
     try {
-      const locallyAdvanced = scopeSession(
+      const locallyAdvanced = trackSession(
         saveStage2SessionAnswer(submittedSession, {
           questionId: submittedQuestionId,
           answer: submittedAnswer,
@@ -535,7 +548,7 @@ export function RefinementFlow({
           name: "personal_plan_stage2_answer_saved",
           family: getQuestionFamily(submittedQuestionId),
         })
-        await applyModuleCompletion(scopeSession(result.session), result.moduleCompletion)
+        await applyModuleCompletion(trackSession(result.session), result.moduleCompletion)
         return
       }
       const saveAnswerAndComplete = gateway.saveAnswerAndComplete?.bind(gateway)
@@ -550,10 +563,10 @@ export function RefinementFlow({
           name: "personal_plan_stage2_answer_saved",
           family: getQuestionFamily(submittedQuestionId),
         })
-        showCompletedStage2Session(scopeSession(result.session), result.handoff)
+        showCompletedStage2Session(trackSession(result.session), result.handoff)
         return
       }
-      const nextSession = scopeSession(
+      const nextSession = trackSession(
         await gateway.saveAnswer({
           questionId: submittedQuestionId,
           answer: submittedAnswer,
@@ -598,7 +611,7 @@ export function RefinementFlow({
           name: "personal_plan_stage2_answer_saved",
           family: getQuestionFamily(submittedQuestionId),
         })
-        showCompletionFailure(scopeSession(error.savedSession), error)
+        showCompletionFailure(trackSession(error.savedSession), error)
         return
       }
       if (error instanceof Stage2RefinementError && error.code === "revision_conflict") {
@@ -626,12 +639,12 @@ export function RefinementFlow({
     gateway,
     localAnswer,
     reloadFromGateway,
-    scopeSession,
     session,
     setActiveFromSession,
     showCompletedStage2Session,
     showCompletionFailure,
     status,
+    trackSession,
   ])
 
   const handleLocalAnswer = useCallback(
@@ -757,6 +770,56 @@ export function getCompletedHandoffForLoadedSession(
     )
   }
   return session.completedHandoff
+}
+
+export type Stage2ModuleCompletionEffects = {
+  emit: (event: Stage2RefinementTelemetryEvent) => void
+  /** The closing module: the draft is complete, exactly like the linear flow. */
+  showCompletedSession: (session: Stage2RefinementSession, handoff: Stage2CompleteResult) => void
+  /** Modul 1: the draft stays open, but the user is carried into Stage 3. */
+  showStage3Bridge: (session: Stage2RefinementSession, handoff: Stage2CompleteResult) => void
+  /** A module that hands off nowhere (habits before products) — the host routes. */
+  handBackToHost: (payload: Stage2ModuleCompletionPayload) => void | Promise<void>
+}
+
+/**
+ * The three outcomes of finishing ONE module, extracted from the component so
+ * they are drivable against a fake gateway without a DOM.
+ *
+ * - `status: "complete"` — this was the CLOSING module, so the server ran the
+ *   unchanged full completion. Byte-identical end state to today's linear flow.
+ * - `stage3Handoff` — Modul 1 (`products`): bridge into Stage 3 while the draft
+ *   stays `in_progress`.
+ * - otherwise — `habits` before `products`: nothing to hand off, so the host
+ *   decides where the user goes (today: back to the Routine).
+ *
+ * `hostSession` is deliberately separate from `session`: the flow's own view may
+ * be module-scoped (a truncated path), and that must never leave the component.
+ */
+export async function applyStage2ModuleCompletion(
+  input: {
+    session: Stage2RefinementSession
+    hostSession: Stage2RefinementSession
+    moduleCompletion: Stage2ModuleCompletionResult
+  },
+  effects: Stage2ModuleCompletionEffects,
+): Promise<void> {
+  const { session, hostSession, moduleCompletion } = input
+  const handoff: Stage2CompleteResult = {
+    refinedVersionId: moduleCompletion.refinedVersionId,
+    nextHref: moduleCompletion.nextHref,
+  }
+  effects.emit({ name: "personal_plan_stage2_module_completed", module: moduleCompletion.module })
+  if (moduleCompletion.status === "complete") {
+    effects.showCompletedSession(session, handoff)
+    return
+  }
+  if (moduleCompletion.stage3Handoff) {
+    effects.showStage3Bridge(session, handoff)
+    effects.emit({ name: "personal_plan_stage2_bridge_viewed" })
+    return
+  }
+  await effects.handBackToHost({ moduleCompletion, session: hostSession })
 }
 
 /**
@@ -886,10 +949,10 @@ type InitialRefinementView = {
 function initialRefinementView(
   session: Stage2RefinementSession | undefined,
   directEntry: boolean,
-  moduleScoped: boolean,
+  moduleScope: Stage2ModuleScope,
 ): InitialRefinementView | null {
   if (!session) return null
-  const entry = resolveStage2FlowEntryView({ session, moduleScoped, directEntry })
+  const entry = resolveStage2FlowEntryView({ session, moduleScope, directEntry })
   return {
     session,
     activeQuestionId: entry.activeQuestionId,

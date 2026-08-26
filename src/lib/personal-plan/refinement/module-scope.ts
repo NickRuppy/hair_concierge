@@ -98,6 +98,47 @@ export function resolveStage2EntryModule(
   return requested
 }
 
+/**
+ * How the flow was entered — the distinction the direct-accept cohort depends on.
+ *
+ * `explicit` is a real module deep link (banner / Profil row). `first_open` is the
+ * plain `?refine=1` re-entry, which resolves to a module only while one is open.
+ * `none` is the legacy linear entry.
+ */
+export type Stage2ModuleScope = "none" | "explicit" | "first_open"
+
+export function resolveStage2ModuleScope(
+  requested: Stage2ModuleEntryRequest | null | undefined,
+  resolvedModule: Stage2Module | null,
+): Stage2ModuleScope {
+  if (!resolvedModule || !requested) return "none"
+  return requested === "first_open" ? "first_open" : "explicit"
+}
+
+/**
+ * Where "leave the Feinschliff" goes. An explicitly requested module was entered
+ * from the Routine banner or the Profil tab, so its exit belongs back on
+ * `/routine`; `first_open` and legacy entries keep today's Idealplan exit.
+ */
+export function stage2SecondaryExitDestination(
+  requested: Stage2ModuleEntryRequest | null | undefined,
+): "routine" | "stage1" {
+  return requested && requested !== "first_open" ? "routine" : "stage1"
+}
+
+/**
+ * A module-scoped session carries a TRUNCATED path. It drives this flow's own
+ * view state and must never leave it: a host that stores it as its Stage-2 seed
+ * would remount on a path that is missing the other module's questions and read
+ * that as "all answered, handoff still open".
+ */
+export function hostSessionFor(
+  unscoped: Stage2RefinementSession | null | undefined,
+  view: Stage2RefinementSession,
+): Stage2RefinementSession {
+  return unscoped ?? view
+}
+
 export type Stage2FlowEntryView = {
   mode: "invitation" | "resume" | "question" | "bridge"
   activeQuestionId: Stage2QuestionId | null
@@ -118,16 +159,22 @@ export type Stage2FlowEntryView = {
  * at it — is an edit visit: the module is walked again from its first question,
  * and the bridge stays disarmed until the user re-completes it.
  *
- * The legacy (unscoped) entry keeps today's behaviour unchanged, including the
- * "answers saved, handoff still open" retry state.
+ * A COMPLETE draft is the direct-accept cohort: every question is answered, but
+ * by the assumption resolver rather than by the user. An explicit module deep
+ * link must therefore still open that module's first question — otherwise the
+ * banner and the Profil rows are inert for exactly the people they exist for.
+ * The first save reopens the draft server-side. `first_open` and the legacy
+ * entry keep returning today's bridge, which is what the `?refine=1` nudge
+ * cohort relies on.
  */
 export function resolveStage2FlowEntryView(input: {
   session: Stage2RefinementSession
-  moduleScoped: boolean
+  moduleScope: Stage2ModuleScope
   directEntry: boolean
 }): Stage2FlowEntryView {
-  const { session, moduleScoped, directEntry } = input
-  if (session.status === "complete") {
+  const { session, moduleScope, directEntry } = input
+  const moduleScoped = moduleScope !== "none"
+  if (session.status === "complete" && moduleScope !== "explicit") {
     return {
       mode: "bridge",
       activeQuestionId: null,

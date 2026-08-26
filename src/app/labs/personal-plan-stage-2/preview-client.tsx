@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 
 import {
   RefinementFlow,
@@ -11,7 +11,10 @@ import type {
   Stage2RefinementGateway,
   Stage2SaveAnswerInput,
 } from "@/lib/personal-plan/refinement/gateway"
-import type { Stage2ModuleEntryRequest } from "@/lib/personal-plan/refinement/module-scope"
+import {
+  stage2SecondaryExitDestination,
+  type Stage2ModuleEntryRequest,
+} from "@/lib/personal-plan/refinement/module-scope"
 import { createStage2FixtureGateway } from "@/lib/personal-plan/refinement/fixture-gateway"
 import type {
   PersonalPlanRefinementAnswersV1,
@@ -30,12 +33,14 @@ export type Stage2PreviewScenario =
   /** Modul-scoped entries (Task 2.4): walk ONE module and finish it. */
   | "module-products"
   | "module-habits"
+  /** Modul deep link on a COMPLETE draft — the direct-accept cohort. */
+  | "module-direct-accept"
 
 /** The module a scenario enters with; `undefined` keeps the legacy linear flow. */
 export function moduleEntryForScenario(
   scenario: Stage2PreviewScenario,
 ): Stage2ModuleEntryRequest | undefined {
-  if (scenario === "module-products") return "products"
+  if (scenario === "module-products" || scenario === "module-direct-accept") return "products"
   if (scenario === "module-habits") return "habits"
   return undefined
 }
@@ -57,15 +62,23 @@ export function Stage2PreviewClient({
     () => createPreviewGateway(scenario, triggerContext),
     [scenario, triggerContext],
   )
+  const moduleEntry = moduleEntryForScenario(scenario)
+  const [secondaryExit, setSecondaryExit] = useState<"routine" | "stage1" | null>(null)
 
   return (
-    <div data-stage2-preview-scenario={scenario}>
+    <div
+      data-stage2-preview-scenario={scenario}
+      {...(secondaryExit ? { "data-stage2-secondary-exit": secondaryExit } : {})}
+    >
       <RefinementFlow
         gateway={gateway}
-        moduleEntry={moduleEntryForScenario(scenario)}
-        directEntry={moduleEntryForScenario(scenario) !== undefined}
+        moduleEntry={moduleEntry}
+        directEntry={moduleEntry !== undefined}
         onSecondaryExit={() => {
-          // Preview-safe no-op: the customer component must not invent an Idealplan href.
+          // The preview must not invent an Idealplan href, but it records the
+          // destination the production host would route to — the SAME shared
+          // rule, so the harness cannot pass on a stubbed no-op.
+          setSecondaryExit(stage2SecondaryExitDestination(moduleEntry))
         }}
         onHandoff={onHandoff}
         onModuleComplete={onModuleComplete}
@@ -91,8 +104,11 @@ export function createPreviewGateway(
           ? 12
           : scenario === "module-habits"
             ? 2
-            : 0,
-    initialStatus: scenario === "complete" ? "complete" : "in_progress",
+            : scenario === "module-direct-accept"
+              ? 9
+              : 0,
+    initialStatus:
+      scenario === "complete" || scenario === "module-direct-accept" ? "complete" : "in_progress",
     failNextSave: scenario === "save-error",
     failNextComplete: scenario === "complete-error",
   })
@@ -119,7 +135,8 @@ function triggerContextForScenario(scenario: Stage2PreviewScenario): Stage2Trigg
     scenario === "complete" ||
     scenario === "complete-error" ||
     scenario === "module-products" ||
-    scenario === "module-habits"
+    scenario === "module-habits" ||
+    scenario === "module-direct-accept"
   ) {
     return {
       relevantCategories: ["shampoo", "mask", "heat_protectant"],
@@ -152,7 +169,7 @@ function initialAnswersForScenario(
       },
     }
   }
-  if (scenario === "complete") {
+  if (scenario === "complete" || scenario === "module-direct-accept") {
     return completeAnswers()
   }
   if (scenario === "module-habits") {
@@ -176,7 +193,7 @@ function completedQuestionsForScenario(scenario: Stage2PreviewScenario): Stage2Q
       "heat:ordinary_blow_dry",
     ]
   }
-  if (scenario === "complete") {
+  if (scenario === "complete" || scenario === "module-direct-accept") {
     return [
       "current_product_categories",
       "wet_wash_frequency",

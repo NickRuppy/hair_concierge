@@ -9,14 +9,23 @@ import {
   resolvePlanStartPageState,
   type PlanStartPageDeps,
 } from "../src/app/plan-start/page"
-import { RefinementFlow } from "../src/components/personal-plan-refinement/refinement-flow"
+import {
+  applyStage2ModuleCompletion,
+  RefinementFlow,
+  type Stage2ModuleCompletionPayload,
+  type Stage2RefinementTelemetryEvent,
+} from "../src/components/personal-plan-refinement/refinement-flow"
+import { planStartRefinementExitDestination } from "../src/components/personal-plan-start/plan-start-flow"
 import {
   firstOpenStage2Module,
+  hostSessionFor,
   parseStage2RefineEntry,
   resolveStage2EntryModule,
   resolveStage2FlowEntryView,
+  resolveStage2ModuleScope,
   scopeStage2PathToModule,
   scopeStage2SessionToModule,
+  stage2SecondaryExitDestination,
 } from "../src/lib/personal-plan/refinement/module-scope"
 import { createStage2FixtureGateway } from "../src/lib/personal-plan/refinement/fixture-gateway"
 import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
@@ -176,7 +185,7 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
   assert.deepEqual(
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(fresh, "products"),
-      moduleScoped: true,
+      moduleScope: "explicit",
       directEntry: true,
     }),
     {
@@ -201,7 +210,7 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
   assert.deepEqual(
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(midModule, "habits"),
-      moduleScoped: true,
+      moduleScope: "explicit",
       directEntry: true,
     }),
     {
@@ -219,7 +228,7 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
   assert.deepEqual(
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(productsDoneSession(), "products"),
-      moduleScoped: true,
+      moduleScope: "explicit",
       directEntry: true,
     }),
     {
@@ -235,7 +244,7 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
   assert.deepEqual(
     resolveStage2FlowEntryView({
       session: fullyAnsweredSession("in_progress"),
-      moduleScoped: false,
+      moduleScope: "none",
       directEntry: true,
     }),
     {
@@ -249,7 +258,7 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
   assert.deepEqual(
     resolveStage2FlowEntryView({
       session: fullyAnsweredSession("complete"),
-      moduleScoped: false,
+      moduleScope: "none",
       directEntry: true,
     }),
     {
@@ -263,7 +272,7 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
   assert.deepEqual(
     resolveStage2FlowEntryView({
       session: untouchedSession(),
-      moduleScoped: false,
+      moduleScope: "none",
       directEntry: false,
     }).mode,
     "invitation",
@@ -418,4 +427,254 @@ test("plan-start turns a module deep link into a module-scoped Stage-2 entry", a
     personalPlanId: "plan-1",
     initialRefinementSession: refinement,
   })
+})
+
+/**
+ * The direct-accept cohort: every canonical question is answered (by the
+ * assumption resolver, not by the user), so the draft is `complete`.
+ */
+function directAcceptSession(): Stage2RefinementSession {
+  return fullyAnsweredSession("complete")
+}
+
+test("an explicit module deep link opens the module even on a complete direct-accept draft", () => {
+  const session = directAcceptSession()
+
+  // The banner / Profil deep link must NOT dead-end on the bridge.
+  assert.equal(resolveStage2EntryModule(session, "products"), "products")
+  assert.equal(resolveStage2ModuleScope("products", "products"), "explicit")
+  assert.deepEqual(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(session, "products"),
+      moduleScope: "explicit",
+      directEntry: true,
+    }),
+    {
+      mode: "question",
+      activeQuestionId: "current_product_categories",
+      status: "idle",
+      liveMessage: "",
+      bridge: false,
+    },
+  )
+  assert.deepEqual(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(session, "habits"),
+      moduleScope: "explicit",
+      directEntry: true,
+    }).activeQuestionId,
+    "towel_handling",
+  )
+
+  // `?refine=1` keeps the legacy bridge for the nudge cohort: nothing is open,
+  // so no module is resolved and the entry stays unscoped.
+  assert.equal(resolveStage2EntryModule(session, "first_open"), null)
+  assert.equal(resolveStage2ModuleScope("first_open", null), "none")
+  assert.deepEqual(
+    resolveStage2FlowEntryView({ session, moduleScope: "none", directEntry: true }),
+    { mode: "bridge", activeQuestionId: null, status: "idle", liveMessage: "", bridge: true },
+  )
+})
+
+test("a module deep link renders the module's first question for a completed draft", () => {
+  const gateway = {
+    load: async () => {
+      throw new Error("not used")
+    },
+    saveAnswer: async () => {
+      throw new Error("not used")
+    },
+    complete: async () => {
+      throw new Error("not used")
+    },
+  } as unknown as React.ComponentProps<typeof RefinementFlow>["gateway"]
+
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={gateway}
+      initialSession={directAcceptSession()}
+      moduleEntry="habits"
+      directEntry
+    />,
+  )
+  assert.match(html, /Wie du dein Haar behandelst/)
+  assert.doesNotMatch(html, /Jetzt gleichen wir deine Produkte ab\./)
+
+  // The same completed draft without a module deep link still bridges.
+  const legacyHtml = renderToStaticMarkup(
+    <RefinementFlow gateway={gateway} initialSession={directAcceptSession()} directEntry />,
+  )
+  assert.match(legacyHtml, /Jetzt gleichen wir deine Produkte ab\./)
+})
+
+test("a module-scoped session never leaves the flow", () => {
+  const unscoped = productsDoneSession()
+  const view = scopeStage2SessionToModule(unscoped, "habits")
+
+  assert.equal(hostSessionFor(unscoped, view), unscoped)
+  assert.equal(hostSessionFor(null, view), view)
+  assert.equal(view.path.orderedQuestionIds.includes("current_product_categories"), false)
+  assert.equal(unscoped.path.orderedQuestionIds.includes("current_product_categories"), true)
+})
+
+test("leaving an explicit module entry returns to the Routine, not the Idealplan", () => {
+  assert.equal(stage2SecondaryExitDestination("products"), "routine")
+  assert.equal(stage2SecondaryExitDestination("habits"), "routine")
+  assert.equal(stage2SecondaryExitDestination("first_open"), "stage1")
+  assert.equal(stage2SecondaryExitDestination(undefined), "stage1")
+
+  assert.equal(
+    planStartRefinementExitDestination({ stage: "stage2", refineModule: "habits" }),
+    "routine",
+  )
+  assert.equal(
+    planStartRefinementExitDestination({ stage: "stage2", refineModule: "first_open" }),
+    "stage1",
+  )
+  assert.equal(planStartRefinementExitDestination({ stage: "stage2" }), "stage1")
+  assert.equal(planStartRefinementExitDestination({ stage: "stage1" }), "stage1")
+})
+
+type RecordedEffects = {
+  events: Stage2RefinementTelemetryEvent[]
+  completed: Stage2RefinementSession[]
+  bridged: Stage2RefinementSession[]
+  handedBack: Stage2ModuleCompletionPayload[]
+}
+
+function recordingEffects() {
+  const recorded: RecordedEffects = { events: [], completed: [], bridged: [], handedBack: [] }
+  return {
+    recorded,
+    effects: {
+      emit: (event: Stage2RefinementTelemetryEvent) => recorded.events.push(event),
+      showCompletedSession: (session: Stage2RefinementSession) => recorded.completed.push(session),
+      showStage3Bridge: (session: Stage2RefinementSession) => recorded.bridged.push(session),
+      handBackToHost: (payload: Stage2ModuleCompletionPayload) => {
+        recorded.handedBack.push(payload)
+      },
+    },
+  }
+}
+
+const habitsAnswers = {
+  towel: { material: "no_towel" as const },
+  dryingRoutes: [],
+  additionalHeatTools: [],
+  nightProtection: [],
+}
+const habitsQuestionIds = [
+  "towel_handling",
+  "drying_routes",
+  "additional_heat_tools",
+  "night_protection",
+] as const
+
+test("module completion routes its three outcomes through a fake gateway", async () => {
+  // 1. products first: bridge into Stage 3, draft stays open.
+  const productsGateway = createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: plainTriggerContext,
+    initialAnswers: { currentProductCategories: [], wetWashFrequency: "weekly_2x" },
+    initialCompletedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+    initialRevision: 2,
+  })
+  const productsSession = await productsGateway.load()
+  const products = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session: scopeStage2SessionToModule(productsSession, "products"),
+      hostSession: productsSession,
+      moduleCompletion: await productsGateway.completeModule({
+        module: "products",
+        expectedRevision: 2,
+      }),
+    },
+    products.effects,
+  )
+  assert.equal(products.recorded.bridged.length, 1)
+  assert.equal(products.recorded.completed.length, 0)
+  assert.equal(products.recorded.handedBack.length, 0)
+  assert.deepEqual(
+    products.recorded.events.map((event) => event.name),
+    ["personal_plan_stage2_module_completed", "personal_plan_stage2_bridge_viewed"],
+  )
+
+  // 2. habits FIRST: nothing to hand off, so the host routes the user away.
+  const habitsGateway = createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: plainTriggerContext,
+    initialAnswers: habitsAnswers,
+    initialCompletedQuestionIds: [...habitsQuestionIds],
+    initialRevision: 4,
+  })
+  const habitsSession = await habitsGateway.load()
+  const habitsCompletion = await habitsGateway.completeModule({
+    module: "habits",
+    expectedRevision: 4,
+  })
+  assert.equal(habitsCompletion.status, "in_progress")
+  assert.equal(habitsCompletion.stage3Handoff, false)
+  const habits = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session: scopeStage2SessionToModule(habitsSession, "habits"),
+      hostSession: habitsSession,
+      moduleCompletion: habitsCompletion,
+    },
+    habits.effects,
+  )
+  assert.equal(habits.recorded.handedBack.length, 1)
+  assert.equal(habits.recorded.bridged.length, 0)
+  assert.equal(habits.recorded.completed.length, 0)
+  assert.deepEqual(
+    habits.recorded.events.map((event) => event.name),
+    ["personal_plan_stage2_module_completed"],
+  )
+  // The host payload must carry the FULL path, never the module-scoped one.
+  assert.deepEqual(
+    habits.recorded.handedBack[0].session.path.orderedQuestionIds,
+    habitsSession.path.orderedQuestionIds,
+  )
+  assert.equal(
+    habits.recorded.handedBack[0].session.path.orderedQuestionIds.includes(
+      "current_product_categories",
+    ),
+    true,
+  )
+
+  // 3. the closing module: the draft is complete, exactly like the linear flow.
+  const closingGateway = createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: plainTriggerContext,
+    initialAnswers: {
+      ...habitsAnswers,
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+    },
+    initialCompletedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      ...habitsQuestionIds,
+    ],
+    initialRevision: 6,
+  })
+  const closingSession = await closingGateway.load()
+  const closingCompletion = await closingGateway.completeModule({
+    module: "habits",
+    expectedRevision: 6,
+  })
+  assert.equal(closingCompletion.status, "complete")
+  const closing = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session: scopeStage2SessionToModule(closingSession, "habits"),
+      hostSession: closingSession,
+      moduleCompletion: closingCompletion,
+    },
+    closing.effects,
+  )
+  assert.equal(closing.recorded.completed.length, 1)
+  assert.equal(closing.recorded.bridged.length, 0)
+  assert.equal(closing.recorded.handedBack.length, 0)
 })

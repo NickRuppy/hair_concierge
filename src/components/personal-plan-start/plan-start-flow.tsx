@@ -9,7 +9,10 @@ import {
   RefinementFlow,
   type Stage2HandoffPayload,
 } from "@/components/personal-plan-refinement/refinement-flow"
-import type { Stage2ModuleEntryRequest } from "@/lib/personal-plan/refinement/module-scope"
+import {
+  stage2SecondaryExitDestination,
+  type Stage2ModuleEntryRequest,
+} from "@/lib/personal-plan/refinement/module-scope"
 import {
   PLAN_FORK_STALE_NOTICE,
   PersonalPlanStageEntrance,
@@ -104,6 +107,20 @@ export type PlanStartInitialJourney =
  */
 export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJourney): boolean {
   return !(initialJourney.stage === "stage2" && initialJourney.returningToRefinement === true)
+}
+
+/**
+ * Where leaving the Feinschliff goes. An explicit module deep link was opened
+ * from the Routine banner or the Profil tab, so "zurück" belongs on `/routine`
+ * — sending those arrivals to the Idealplan would drop them into a stage they
+ * never came from. `?refine=1` and every legacy entry keep today's Stage-1 exit.
+ */
+export function planStartRefinementExitDestination(
+  initialJourney: PlanStartInitialJourney,
+): "routine" | "stage1" {
+  return initialJourney.stage === "stage2"
+    ? stage2SecondaryExitDestination(initialJourney.refineModule)
+    : "stage1"
 }
 
 export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
@@ -556,8 +573,10 @@ export function PlanStartCustomerJourney({
   }, [])
   const handleHandoff = useCallback(
     async ({ handoff, session }: Stage2HandoffPayload) => {
-      // Stage-2 -> Stage-3 always arrives from a completion, so this is the
-      // module-driven re-entry path the stale rebuild exists for.
+      // Every Stage-2 -> Stage-3 handoff takes this path, module-driven or not.
+      // Asking for the stale rebuild here is harmless for a linear completion
+      // (its version is current, so there is nothing stale to rebuild) and is
+      // load-bearing after a later module completion staled this draft.
       const bootstrap = await loadPlanStartStage2HandoffBootstrap({
         handoff,
         loadStage3Bootstrap: (refinedVersionId) =>
@@ -821,6 +840,10 @@ export function PlanStartCustomerJourney({
         initialSession={initialStage2Session}
         moduleEntry={initialJourney.stage === "stage2" ? initialJourney.refineModule : undefined}
         onSecondaryExit={() => {
+          if (planStartRefinementExitDestination(initialJourney) === "routine") {
+            openRoutineHref("/routine")
+            return
+          }
           stage2SeedRef.current = undefined
           void enterStage1()
         }}

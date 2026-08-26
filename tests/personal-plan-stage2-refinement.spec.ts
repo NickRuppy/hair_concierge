@@ -409,11 +409,13 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(page.getByText("Wie du dein Haar behandelst")).toBeVisible()
     await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
     // The module's first question is its boundary: back exits the flow instead
-    // of walking into the other module.
+    // of walking into the other module, and an explicit module entry exits to
+    // the Routine it was opened from (shared rule, not a harness stub).
     await page.getByRole("button", { name: "Zurück" }).click()
-    await expect(
-      page.getByRole("heading", { name: "Wie trocknest du dein Haar direkt nach der Wäsche an?" }),
-    ).toBeVisible()
+    await expect(page.locator("[data-stage2-secondary-exit]")).toHaveAttribute(
+      "data-stage2-secondary-exit",
+      "routine",
+    )
     await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
 
     await chooseAndContinue(page, "Kein Handtuch oder Tuch")
@@ -438,6 +440,20 @@ test.describe("Stage 2 refinement Labs preview", () => {
       /-products-r\d+$/,
     )
     await expect(page.getByRole("button", { name: /Produkte erfassen/ })).toBeVisible()
+  })
+
+  test("a module deep link opens the module on a completed direct-accept draft", async ({
+    page,
+  }) => {
+    // The direct-accept cohort has a COMPLETE draft (all answers assumed). The
+    // banner / Profil deep link must open the module, not dead-end on the bridge.
+    await openLab(page, "module-direct-accept")
+    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
+    await expect(page.getByText("Jetzt gleichen wir deine Produkte ab.")).toHaveCount(0)
+
+    // The same completed draft without a module deep link still bridges.
+    await openLab(page, "complete")
+    await expect(page.getByText("Jetzt gleichen wir deine Produkte ab.")).toBeVisible()
   })
 
   test("unknown preview scenarios return 404", async ({ page }) => {
