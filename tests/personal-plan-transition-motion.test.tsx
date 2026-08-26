@@ -44,7 +44,7 @@ const days: ApplicationDayView[] = [
   },
 ]
 
-test("Anwendung has no journey header — Bottom-Nav carries orientation and Back (Task 2.7)", () => {
+test("Anwendung has no journey header — Bottom-Nav carries orientation, the day view keeps a quiet in-page Back (Task 2.7 + fix round 1 I-2)", () => {
   const overview = renderToStaticMarkup(<ApplicationPage view={{ state: "ready", days }} />)
   assert.match(overview, /data-personal-plan-view-transition="depth"/)
   assert.match(overview, /data-application-navigation="day"/)
@@ -58,6 +58,8 @@ test("Anwendung has no journey header — Bottom-Nav carries orientation and Bac
   assert.doesNotMatch(detail, /data-personal-plan-journey-header/)
   assert.doesNotMatch(detail, /role="progressbar"/)
   assert.doesNotMatch(detail, /data-application-navigation="overview"/)
+  // I-2: a quiet in-page Back replaces the retired header's "Alle Tage" link.
+  assert.match(detail, /<a class="[^"]*" href="\/anwendung">← Anwendung<\/a>/)
 })
 
 test("non-ready Anwendung surfaces never claim a successful view transition", () => {

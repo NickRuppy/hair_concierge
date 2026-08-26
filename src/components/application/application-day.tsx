@@ -1,14 +1,29 @@
+import Link from "next/link"
+
 import type { ApplicationDayView } from "./application-types"
 import { ProductApplicationBlock } from "./product-application-block"
 import { ProductlessStep } from "./productless-step"
 import { UnresolvedProductBlock } from "./unresolved-product-block"
 
-export function ApplicationDay({ day }: { day: ApplicationDayView }) {
+export function ApplicationDay({
+  day,
+  overviewHref,
+}: {
+  day: ApplicationDayView
+  /** Fix round 1 (I-2): the quiet in-page Back the day view lost when the journey header retired. */
+  overviewHref: string
+}) {
   return (
     <article
       aria-labelledby="application-day-title"
       className="mx-auto w-full max-w-3xl px-4 py-5 sm:px-6"
     >
+      <Link
+        href={overviewHref}
+        className="mb-4 inline-flex items-center gap-1 text-sm text-[var(--text-caption)] hover:underline"
+      >
+        ← Anwendung
+      </Link>
       <header className="border-b border-border pb-4">
         <h1
           id="application-day-title"

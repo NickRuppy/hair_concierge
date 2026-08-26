@@ -622,6 +622,10 @@ test("keeps required Basis gaps explicit and renders a named recovery state with
   const recoveryHtml = renderToStaticMarkup(<RoutinePage view={missingPayloadView} />)
   assert.match(recoveryHtml, /Routine noch nicht verfügbar/)
   assert.match(recoveryHtml, /Produkte prüfen/)
+  // Fix round 1 (minor): the no-payload/authority-repair recovery branch has
+  // no journey header either (Task 2.7 covered only the main render before).
+  assert.doesNotMatch(recoveryHtml, /data-personal-plan-journey-header/)
+  assert.doesNotMatch(recoveryHtml, /role="progressbar"/)
 })
 
 test("states non-executable conditions plainly and keeps editing global", () => {

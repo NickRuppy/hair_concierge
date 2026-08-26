@@ -5,17 +5,18 @@ test.skip(
   "The deterministic Routine editor lab is explicitly gated.",
 )
 
-test("dirty Routine Back opens an immediately visible discard sheet at 320px", async ({ page }) => {
+test("dirty Routine Abbrechen opens an immediately visible discard sheet at 320px", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 320, height: 700 })
   await page.goto("/labs/personal-plan-routine-editor")
 
-  const journeyHeader = page.locator('[data-personal-plan-journey-header="true"]')
-  await expect
-    .poll(() => journeyHeader.evaluate((header) => getComputedStyle(header).top))
-    .toBe("56px")
+  // Fix round 1 (I-1): the journey header retired from the Routine editor
+  // entirely — Abbrechen is now an in-editor control, not a header Back.
+  await expect(page.locator('[data-personal-plan-journey-header="true"]')).toHaveCount(0)
 
   await page.getByLabel("Kategorie einplanen").uncheck()
-  await page.getByRole("button", { name: "Zur Routine" }).click()
+  await page.getByRole("button", { name: "Abbrechen" }).click()
 
   const dialog = page.getByRole("dialog")
   await expect(dialog).toBeVisible()
@@ -35,5 +36,5 @@ test("dirty Routine Back opens an immediately visible discard sheet at 320px", a
 
   await dialog.getByRole("button", { name: "Weiter bearbeiten" }).click()
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole("button", { name: "Zur Routine" })).toBeFocused()
+  await expect(page.getByRole("button", { name: "Abbrechen" })).toBeFocused()
 })

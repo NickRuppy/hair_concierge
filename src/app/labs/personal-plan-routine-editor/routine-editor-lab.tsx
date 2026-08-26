@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type CSSProperties } from "react"
+import { useState } from "react"
 
 import { RoutineEditor } from "@/components/routine/personal-plan/routine-editor"
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
@@ -56,10 +56,7 @@ export function RoutineEditorLab() {
   if (cancelled) return <p className="p-6">Routineübersicht</p>
 
   return (
-    <div
-      data-personal-plan-shell="true"
-      style={{ "--personal-plan-shell-header-offset": "3.5rem" } as CSSProperties}
-    >
+    <div data-personal-plan-shell="true">
       <div className="sticky top-0 z-40 h-14 border-b border-border bg-background" aria-hidden />
       <RoutineEditor
         routine={routine}

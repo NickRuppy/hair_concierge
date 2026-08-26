@@ -136,7 +136,7 @@ export function ApplicationPage({
       <PersonalPlanStageEntrance destination="/anwendung">
         <PersonalPlanViewTransition viewKey={viewKey} direction={direction} variant="depth">
           {selectedDay ? (
-            <ApplicationDay day={selectedDay} />
+            <ApplicationDay day={selectedDay} overviewHref={navigationBasePath} />
           ) : (
             <ApplicationOverview
               days={days}
