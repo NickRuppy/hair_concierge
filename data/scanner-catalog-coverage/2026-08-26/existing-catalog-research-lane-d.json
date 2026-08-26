@@ -1,0 +1,1590 @@
+{
+  "generated_at": "2026-08-26T15:43:07.113Z",
+  "schema_version": "scanner-existing-catalog-research-lane-v1",
+  "lane": "D",
+  "categories": [
+    "mask",
+    "oil"
+  ],
+  "source": {
+    "existing_catalog_coverage_ledger_content_fingerprint": "0e09116759e01e33ad20627664648c25e59e114ef5f8a79149e6a71580364fbf",
+    "readiness_baseline_content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9",
+    "note": "Research lane only. Each GTIN still requires fresh exact-product evidence, GS1 checksum validation, global ownership checks, and guarded application approval."
+  },
+  "reconciliation": {
+    "assigned_products": 39,
+    "by_category": {
+      "mask": 20,
+      "oil": 19
+    }
+  },
+  "rows": [
+    {
+      "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Balea Aqua Hyaluron 3 in 1",
+        "product_line": "Aqua"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Balea Natural Beauty 3in1 Locken",
+        "product_line": "Natural Beauty"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Bali Curls",
+        "clean_name": "Bali Curls SOS Protein Treatment",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Fructis",
+        "clean_name": "Fructis Hair Food Aloe Vera",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Fructis",
+        "clean_name": "Fructis Hair Food Papaya",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "17c50884-3c17-479a-848a-10447464e086",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Garnier",
+        "clean_name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+        "product_line": "Wahre Schätze"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Gliss",
+        "clean_name": "Gliss Aqua Revive",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Gliss",
+        "clean_name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Guhl",
+        "clean_name": "Guhl 30 sec. Feuchtigkeit",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Guhl",
+        "clean_name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "Hask Argan Oil Repairing Deep Conditioner",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Isana",
+        "clean_name": "Isana 3in1 Milchprotein & Mandel",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Jean&Len",
+        "clean_name": "Jean&Len Tiefenreparatur Haarkur",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Pomélo+Co",
+        "clean_name": "Pomélo+Co Shine Therapy",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Sante",
+        "clean_name": "Sante Intense Hydration",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Schaebens",
+        "clean_name": "Schaebens Argan-Öl Haarmaske",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Syoss",
+        "clean_name": "Syoss Haarkur Lamination Intense Glaze",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Syoss",
+        "clean_name": "Syoss Intense Curls Haarmaske",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Syoss",
+        "clean_name": "Syoss Intense Keratin",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "category_key": "mask",
+      "identity": {
+        "canonical_brand": "Wahre Schätze",
+        "clean_name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "intensive_conditioning_mask",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "intensive_conditioning_mask",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Dr. Scheller",
+        "clean_name": "Dr. Scheller Reines Arganöl",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Garnier",
+        "clean_name": "Garnier Fructis Wunderöl",
+        "product_line": "Fructis"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Garnier",
+        "clean_name": "Garnier Wahre Schätze Curl Revival Öl",
+        "product_line": "Wahre Schätze"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "HASK Argan Oil Repairing Shine Oil",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Innersense",
+        "clean_name": "Innersense Harmonic Treatment Oil",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "L’Oréal",
+        "clean_name": "L’Oréal Elvital Öl Magique Jojoba",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "L’Oréal",
+        "clean_name": "L’Oréal Öl Magique Midnight Serum",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Maria Nila",
+        "clean_name": "Maria Nila True Soft Argan Oil",
+        "product_line": "True Soft"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "NANOIL",
+        "clean_name": "NANOIL Avocadoöl",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "NUTREEOIL",
+        "clean_name": "NUTREEOIL Cacay Öl",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Nuxe",
+        "clean_name": "Nuxe Huile Prodigieuse Öl",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_wash_fibre_treatment",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "OGX Argan weightless Öl",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "OGX Bond Protein Repair",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "OGX Miracle Coconut Oil",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "OLAPLEX",
+        "clean_name": "Olaplex No.7 Bonding Oil",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+        "product_line": "Pro-V Miracles"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Shiseido Fino",
+        "clean_name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Urban Alchemy",
+        "clean_name": "Urban Alchemy Smooth Supreme Öl Serum",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "leave_on_fibre_conditioning",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "category_key": "oil",
+      "identity": {
+        "canonical_brand": "Weleda",
+        "clean_name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "dry_finish",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "dry_finish",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    }
+  ],
+  "content_fingerprint": "6a26a94a72d649d3b60afc42078554ac61993e706bc30f82719e81b620391f30"
+}

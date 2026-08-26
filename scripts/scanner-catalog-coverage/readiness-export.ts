@@ -50,8 +50,17 @@ export type ReadinessCandidate = {
   }>
 }
 
+export type ReadinessProductAudit = {
+  product_id: string
+  category: PersonalPlanCategory
+  has_barcode: boolean
+  status: "scan_result_ready" | "ready_for_ean_research" | "blocked"
+  blockers: Blocker[]
+  verdicts: ReadinessCandidate["verdicts"]
+}
+
 export type ReadinessBaseline = {
-  schema_version: 1
+  schema_version: 2
   exported_at: string
   source: {
     project_ref: string
@@ -67,7 +76,25 @@ export type ReadinessBaseline = {
       { candidates: number; ready_for_ean_research: number; blocked: number }
     >
   }
+  full_catalog_reconciliation: {
+    active_supported: number
+    barcode_linked: number
+    scan_result_ready: number
+    ready_for_ean_research: number
+    blocked: number
+    by_category: Record<
+      string,
+      {
+        products: number
+        barcode_linked: number
+        scan_result_ready: number
+        ready_for_ean_research: number
+        blocked: number
+      }
+    >
+  }
   candidates: ReadinessCandidate[]
+  products: ReadinessProductAudit[]
   content_fingerprint: string
 }
 
@@ -92,15 +119,15 @@ export function fingerprint(
     .digest("hex")
 }
 
-/** A conservative pure seam: no unknown/error verdict may enter the EAN queue. */
-export function classifyCandidate(
-  input: Omit<ReadinessCandidate, "status" | "blockers"> & {
+/** A conservative pure seam: identity alone never bypasses the verdict-readiness oracle. */
+export function classifyProductReadiness(
+  input: Omit<ReadinessProductAudit, "status" | "blockers"> & {
     has_disposition: boolean
     image_url_present: boolean
     product_facts_present: boolean
     required_protocols_complete: boolean
   },
-): ReadinessCandidate {
+): ReadinessProductAudit {
   const blockers: Blocker[] = []
   if (input.has_disposition) blockers.push("has_disposition")
   if (!input.image_url_present) blockers.push("missing_presentation_image")
@@ -111,13 +138,55 @@ export function classifyCandidate(
   return {
     product_id: input.product_id,
     category: input.category,
-    has_barcode: false,
-    status: blockers.length === 0 ? "ready_for_ean_research" : "blocked",
+    has_barcode: input.has_barcode,
+    status:
+      blockers.length > 0
+        ? "blocked"
+        : input.has_barcode
+          ? "scan_result_ready"
+          : "ready_for_ean_research",
     blockers,
     verdicts: [...input.verdicts].sort((a, b) =>
       `${a.profile}\u0000${a.role}`.localeCompare(`${b.profile}\u0000${b.role}`),
     ),
   }
+}
+
+/** Compatibility projection for the existing unlinked-product ledger. */
+export function classifyCandidate(
+  input: Omit<ReadinessCandidate, "status" | "blockers"> & {
+    has_disposition: boolean
+    image_url_present: boolean
+    product_facts_present: boolean
+    required_protocols_complete: boolean
+  },
+): ReadinessCandidate {
+  const result = classifyProductReadiness(input)
+  return {
+    ...result,
+    has_barcode: false,
+    status: result.status === "blocked" ? "blocked" : "ready_for_ean_research",
+  }
+}
+
+export function selectActiveSupportedProducts(products: Row[], identifiers: Row[]) {
+  const barcodeProductIds = new Set(
+    identifiers
+      .filter(
+        (row) =>
+          BARCODE_TYPES.has(text(row.identifier_type) ?? "") &&
+          canonicalizeGtin(text(row.identifier_value) ?? "") !== null,
+      )
+      .map((row) => String(row.product_id)),
+  )
+  return products
+    .filter(
+      (product) =>
+        product.is_active === true &&
+        text(product.lifecycle_status) === "active" &&
+        SUPPORTED_CATEGORIES.has(text(product.category_key) as PersonalPlanCategory),
+    )
+    .map((row) => ({ row, has_barcode: barcodeProductIds.has(String(row.id)) }))
 }
 
 function primaryRoleFor(category: PersonalPlanCategory): PlanProductRole {
@@ -375,31 +444,16 @@ export async function buildReadinessBaseline(input: {
   exportedAt: string
   projectRef: string
 }): Promise<ReadinessBaseline> {
-  const barcodeProductIds = new Set(
-    input.identifiers
-      .filter(
-        (row) =>
-          BARCODE_TYPES.has(text(row.identifier_type) ?? "") &&
-          canonicalizeGtin(text(row.identifier_value) ?? "") !== null,
-      )
-      .map((row) => String(row.product_id)),
-  )
   const dispositionProductIds = new Set(input.dispositions.map((row) => String(row.product_id)))
-  const sourceCandidates = input.products.filter(
-    (product) =>
-      product.is_active === true &&
-      text(product.lifecycle_status) === "active" &&
-      SUPPORTED_CATEGORIES.has(text(product.category_key) as PersonalPlanCategory) &&
-      !barcodeProductIds.has(String(product.id)),
-  )
-  const candidates = await mapWithConcurrency(sourceCandidates, 8, async (row) => {
+  const sourceProducts = selectActiveSupportedProducts(input.products, input.identifiers)
+  const products = await mapWithConcurrency(sourceProducts, 8, async ({ row, has_barcode }) => {
     const category = text(row.category_key) as PersonalPlanCategory
     const productId = String(row.id)
     const evaluated = await verdictsFor(input.client, category, productId)
-    return classifyCandidate({
+    return classifyProductReadiness({
       product_id: productId,
       category,
-      has_barcode: false,
+      has_barcode,
       has_disposition: dispositionProductIds.has(productId),
       image_url_present: text(row.image_url) !== null,
       product_facts_present: evaluated.factsPresent,
@@ -407,6 +461,18 @@ export async function buildReadinessBaseline(input: {
       verdicts: evaluated.verdicts,
     })
   })
+  products.sort((a, b) =>
+    `${a.category}\u0000${a.product_id}`.localeCompare(`${b.category}\u0000${b.product_id}`),
+  )
+  const candidates = products
+    .filter((item): item is ReadinessProductAudit & { has_barcode: false } => !item.has_barcode)
+    .map(
+      (item): ReadinessCandidate => ({
+        ...item,
+        has_barcode: false,
+        status: item.status === "blocked" ? "blocked" : "ready_for_ean_research",
+      }),
+    )
   candidates.sort((a, b) =>
     `${a.category}\u0000${a.product_id}`.localeCompare(`${b.category}\u0000${b.product_id}`),
   )
@@ -421,8 +487,22 @@ export async function buildReadinessBaseline(input: {
     bucket[item.status]++
     by_category[item.category] = bucket
   }
+  const full_by_category: ReadinessBaseline["full_catalog_reconciliation"]["by_category"] = {}
+  for (const item of products) {
+    const bucket = full_by_category[item.category] ?? {
+      products: 0,
+      barcode_linked: 0,
+      scan_result_ready: 0,
+      ready_for_ean_research: 0,
+      blocked: 0,
+    }
+    bucket.products++
+    if (item.has_barcode) bucket.barcode_linked++
+    bucket[item.status]++
+    full_by_category[item.category] = bucket
+  }
   const content = {
-    schema_version: 1 as const,
+    schema_version: 2 as const,
     source: {
       project_ref: input.projectRef,
       read_only: true as const,
@@ -437,7 +517,19 @@ export async function buildReadinessBaseline(input: {
         Object.entries(by_category).sort(([a], [b]) => a.localeCompare(b)),
       ),
     },
+    full_catalog_reconciliation: {
+      active_supported: products.length,
+      barcode_linked: products.filter((item) => item.has_barcode).length,
+      scan_result_ready: products.filter((item) => item.status === "scan_result_ready").length,
+      ready_for_ean_research: products.filter((item) => item.status === "ready_for_ean_research")
+        .length,
+      blocked: products.filter((item) => item.status === "blocked").length,
+      by_category: Object.fromEntries(
+        Object.entries(full_by_category).sort(([a], [b]) => a.localeCompare(b)),
+      ),
+    },
     candidates,
+    products,
   }
   return { exported_at: input.exportedAt, ...content, content_fingerprint: fingerprint(content) }
 }
@@ -518,7 +610,7 @@ async function main() {
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, `${JSON.stringify(baseline, null, 2)}\n`)
   process.stdout.write(
-    `${JSON.stringify({ path: OUTPUT_PATH, ...baseline.reconciliation, content_fingerprint: baseline.content_fingerprint })}\n`,
+    `${JSON.stringify({ path: OUTPUT_PATH, unlinked: baseline.reconciliation, full_catalog: baseline.full_catalog_reconciliation, content_fingerprint: baseline.content_fingerprint })}\n`,
   )
 }
 if ((process.argv[1] ?? "").endsWith("readiness-export.ts"))

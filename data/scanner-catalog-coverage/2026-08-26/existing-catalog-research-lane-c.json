@@ -1,0 +1,1556 @@
+{
+  "generated_at": "2026-08-26T15:43:07.113Z",
+  "schema_version": "scanner-existing-catalog-research-lane-v1",
+  "lane": "C",
+  "categories": [
+    "leave_in",
+    "bondbuilder"
+  ],
+  "source": {
+    "existing_catalog_coverage_ledger_content_fingerprint": "0e09116759e01e33ad20627664648c25e59e114ef5f8a79149e6a71580364fbf",
+    "readiness_baseline_content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9",
+    "note": "Research lane only. Each GTIN still requires fresh exact-product evidence, GS1 checksum validation, global ownership checks, and guarded application approval."
+  },
+  "reconciliation": {
+    "assigned_products": 38,
+    "by_category": {
+      "bondbuilder": 3,
+      "leave_in": 35
+    }
+  },
+  "rows": [
+    {
+      "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "category_key": "bondbuilder",
+      "identity": {
+        "canonical_brand": "Epres",
+        "clean_name": "Epres Bond Repair Treatment",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "category_key": "bondbuilder",
+      "identity": {
+        "canonical_brand": "K18",
+        "clean_name": "K18 Leave-In Molecular Repair Hair Mask",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "category_key": "bondbuilder",
+      "identity": {
+        "canonical_brand": "OLAPLEX",
+        "clean_name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "specialized_bond_treatment",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Alcina",
+        "clean_name": "Alcina Hyaluron 2.0",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Alverde",
+        "clean_name": "alverde Leave-In Sprühkur Express 7in1",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Authentic Beauty Concept",
+        "clean_name": "Authentic Beauty Concept Hydrate Spray",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Balea Aqua Hyaluron 3in1",
+        "product_line": "Aqua"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Cantu",
+        "clean_name": "Cantu Leave-In Repair Cream",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Color WOW",
+        "clean_name": "Color WOW Money Mist",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Curlsmith",
+        "clean_name": "Curlsmith Hydrate & Plump Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Curlsmith",
+        "clean_name": "Curlsmith Multitasking Conditioner 3 in 1",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Curlsmith",
+        "clean_name": "Curlsmith Weightless Air Dry Cream",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "EVO",
+        "clean_name": "EVO Day of Grace Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "EVO",
+        "clean_name": "EVO Happy Campers",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "EVO",
+        "clean_name": "EVO Head Mistress",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Garnier",
+        "clean_name": "Garnier Hair Food Aloe Vera",
+        "product_line": "Hair Food"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Garnier",
+        "clean_name": "Garnier Hair Food Macadamia",
+        "product_line": "Hair Food"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Gliss",
+        "clean_name": "Gliss Ultimate Repair Sprüh-Conditioner",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "HASK Keratin 5-in-1 Spray",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "It's a 10",
+        "clean_name": "It’s a 10 Miracle Leave-In Lite",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "It's a 10",
+        "clean_name": "It’s a 10 Miracle Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Kevin Murphy",
+        "clean_name": "Kevin Murphy Young Again",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "L'Oréal Paris",
+        "clean_name": "Midnight Serum",
+        "product_line": "Elvital Öl Magique"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Living Proof",
+        "clean_name": "Living Proof Restore Repair Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Maria Nila",
+        "clean_name": "Maria Nila Coils & Curls Oil in Cream",
+        "product_line": "Coils & Curls"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "695414e1-3435-4304-943b-76677408980c",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Maria Nila",
+        "clean_name": "Maria Nila Structure Repair Leave-In",
+        "product_line": "Structure Repair"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Moroccanoil",
+        "clean_name": "Moroccanoil All In One Leave In Conditioner",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "OLAPLEX",
+        "clean_name": "Olaplex No.5 Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "OLAPLEX",
+        "clean_name": "Olaplex No.6 Bond Smoother",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "OUAI",
+        "clean_name": "OUAI Leave In Conditioner",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+        "product_line": "Pro-V Miracles"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Paul Mitchell",
+        "clean_name": "Paul Mitchell Full Circle Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken Acidic Color Gloss Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken All Soft Mega Curls Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken Extreme Anti-Snap",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken One United",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Urban Alchemy",
+        "clean_name": "Urban Alchemy Repair & Revive Leave-In Spray",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "category_key": "leave_in",
+      "identity": {
+        "canonical_brand": "Wella Professionals",
+        "clean_name": "Wella Ultimate Repair Protective Leave-In",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "coarse",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "post_wash_leave_in",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "pre_heat_application",
+            "verdict": "supportive"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    }
+  ],
+  "content_fingerprint": "c86624cf514c495119e3ab3d5e12625e20a3a85594eff2e9ee757f435e28a9dc"
+}

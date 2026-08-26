@@ -1,6 +1,6 @@
 {
-  "exported_at": "2026-08-26T13:19:57.926Z",
-  "schema_version": 1,
+  "exported_at": "2026-08-26T15:35:53.150Z",
+  "schema_version": 2,
   "source": {
     "project_ref": "pqdkhefxsxkyeqelqegq",
     "read_only": true,
@@ -50,6 +50,85 @@
         "candidates": 48,
         "ready_for_ean_research": 39,
         "blocked": 9
+      }
+    }
+  },
+  "full_catalog_reconciliation": {
+    "active_supported": 259,
+    "barcode_linked": 38,
+    "scan_result_ready": 26,
+    "ready_for_ean_research": 192,
+    "blocked": 41,
+    "by_category": {
+      "bondbuilder": {
+        "products": 3,
+        "barcode_linked": 0,
+        "scan_result_ready": 0,
+        "ready_for_ean_research": 3,
+        "blocked": 0
+      },
+      "conditioner": {
+        "products": 49,
+        "barcode_linked": 6,
+        "scan_result_ready": 1,
+        "ready_for_ean_research": 41,
+        "blocked": 7
+      },
+      "deep_cleansing_shampoo": {
+        "products": 5,
+        "barcode_linked": 0,
+        "scan_result_ready": 0,
+        "ready_for_ean_research": 5,
+        "blocked": 0
+      },
+      "dry_shampoo": {
+        "products": 10,
+        "barcode_linked": 0,
+        "scan_result_ready": 0,
+        "ready_for_ean_research": 10,
+        "blocked": 0
+      },
+      "heat_protectant": {
+        "products": 7,
+        "barcode_linked": 7,
+        "scan_result_ready": 7,
+        "ready_for_ean_research": 0,
+        "blocked": 0
+      },
+      "leave_in": {
+        "products": 46,
+        "barcode_linked": 3,
+        "scan_result_ready": 0,
+        "ready_for_ean_research": 41,
+        "blocked": 5
+      },
+      "mask": {
+        "products": 36,
+        "barcode_linked": 6,
+        "scan_result_ready": 6,
+        "ready_for_ean_research": 29,
+        "blocked": 1
+      },
+      "oil": {
+        "products": 41,
+        "barcode_linked": 2,
+        "scan_result_ready": 1,
+        "ready_for_ean_research": 24,
+        "blocked": 16
+      },
+      "scalp_care": {
+        "products": 8,
+        "barcode_linked": 8,
+        "scan_result_ready": 8,
+        "ready_for_ean_research": 0,
+        "blocked": 0
+      },
+      "shampoo": {
+        "products": 54,
+        "barcode_linked": 6,
+        "scan_result_ready": 3,
+        "ready_for_ean_research": 39,
+        "blocked": 12
       }
     }
   },
@@ -6116,5 +6195,7046 @@
       ]
     }
   ],
-  "content_fingerprint": "ea9580f34c131fb618a94f9434299fed7633c8bbb3242884de46c15bcb763de3"
+  "products": [
+    {
+      "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "category": "bondbuilder",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "category": "bondbuilder",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "category": "bondbuilder",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "specialized_bond_treatment",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "2a159694-6799-4be7-a0aa-572757c94801",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "35ae622e-1458-42bf-a44d-1b23ecfd5516",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "3901b2cf-6888-4363-9d5b-a695c0b3170b",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "category": "conditioner",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+      "category": "conditioner",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "category": "conditioner",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "63239c38-5633-4062-9e8d-d528ee71502a",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+      "category": "conditioner",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "category": "conditioner",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "82f9dcba-0422-4932-a879-c2bec0113e55",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "931892fb-cc29-4e50-b402-6aae0a494389",
+      "category": "conditioner",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "95e47992-b45b-4847-ba87-b8c3e608fc63",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "970aff48-a7a7-46e8-bad5-4f0600631329",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "98d08c22-97d2-4e06-872f-9f9447530452",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "e1ad37be-9330-49b4-8add-872a30324122",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "category": "conditioner",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "conditioner_rinse_out",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "category": "deep_cleansing_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "07895098-a301-4137-b5c6-9061589b1800",
+      "category": "deep_cleansing_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "category": "deep_cleansing_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "category": "deep_cleansing_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "mineral_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "coarse",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "mineral_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "mineral_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "category": "deep_cleansing_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "residue_reset",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "category": "dry_shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "root_refresh_bridge",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "1b8f56b9-b186-4bed-a65c-f582ac0e9453",
+      "category": "heat_protectant",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "71302fae-decd-4b10-80ea-148d5998e2fa",
+      "category": "heat_protectant",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "category": "heat_protectant",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+      "category": "heat_protectant",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+      "category": "heat_protectant",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "f66f2f93-a1f2-43fb-8647-48d49cdae7d3",
+      "category": "heat_protectant",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "f8c47bf8-a075-4568-a9ab-aa336b7ae50a",
+      "category": "heat_protectant",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_protection",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "category": "leave_in",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+      "category": "leave_in",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "695414e1-3435-4304-943b-76677408980c",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "9f94c225-61ec-455d-b303-f39e885e222a",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+      "category": "leave_in",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "e6896862-523b-42b3-967d-41cbd16acf64",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_heat_application",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "category": "leave_in",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "post_wash_leave_in",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "077a94ae-fede-4773-9435-17022c2b89c0",
+      "category": "mask",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "category": "mask",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "17c50884-3c17-479a-848a-10447464e086",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "22d41784-5fc6-40bb-a4dc-92841322f933",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+      "category": "mask",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "b281d528-b312-4e44-98be-3e01f7e56644",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+      "category": "mask",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+      "category": "mask",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "d33543b0-6011-45f1-9bb2-125289ac849a",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "e482e42a-bdac-4f5e-bd3b-489e702c0c4b",
+      "category": "mask",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "category": "mask",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "intensive_conditioning_mask",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "intensive_conditioning_mask",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "010cf825-4892-4f78-bf20-26ad72122c60",
+      "category": "oil",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "category": "oil",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "coarse",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "fe974387-b487-470e-9799-69bb4249070b",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "coarse",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "dry_finish",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "dry_finish",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "leave_on_fibre_conditioning",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "category": "oil",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "pre_wash_fibre_treatment",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "scalp_exfoliant",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "scalp_exfoliant",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "scalp_exfoliant",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "3f3542c0-e82b-4306-a9e0-85df313a78cf",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "density_claim_tonic",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "density_claim_tonic",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "density_claim_tonic",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "density_claim_tonic",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "density_claim_tonic",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "density_claim_tonic",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "945ecca3-c4f0-4426-9af5-a5a8482b3b27",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "scalp_flake_oil_adjunct",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "scalp_flake_oil_adjunct",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "scalp_flake_oil_adjunct",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "c9b231ee-77b5-45b7-8127-7a85d3ae7dd0",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "scalp_comfort",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+      "category": "scalp_care",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "scalp_exfoliant",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "fine",
+          "role": "scalp_exfoliant",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "scalp_exfoliant",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "0d341836-96b3-4364-9319-a7f0884b3da9",
+      "category": "shampoo",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "category": "shampoo",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "41b99629-5a1c-402f-a486-d41780e89e66",
+      "category": "shampoo",
+      "has_barcode": true,
+      "status": "scan_result_ready",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "category": "shampoo",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        }
+      ]
+    },
+    {
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "category": "shampoo",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "ideal"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "ideal"
+        }
+      ]
+    },
+    {
+      "product_id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    },
+    {
+      "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "category": "shampoo",
+      "has_barcode": true,
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "product_id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "category": "shampoo",
+      "has_barcode": false,
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "verdicts": [
+        {
+          "profile": "coarse",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        },
+        {
+          "profile": "fine",
+          "role": "shampoo_everyday",
+          "verdict": "supportive"
+        },
+        {
+          "profile": "normal",
+          "role": "shampoo_everyday",
+          "verdict": "mismatch"
+        }
+      ]
+    }
+  ],
+  "content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9"
 }

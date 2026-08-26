@@ -3,7 +3,9 @@ import test from "node:test"
 
 import {
   classifyCandidate,
+  classifyProductReadiness,
   fingerprint,
+  selectActiveSupportedProducts,
 } from "../scripts/scanner-catalog-coverage/readiness-export"
 
 test("readiness classification is deterministic and only admits complete non-unknown candidates", () => {
@@ -61,9 +63,70 @@ test("a secondary applicable role with an unknown verdict blocks the product", (
   assert.deepEqual(result.blockers, ["verdict_unknown"])
 })
 
+test("linked products remain inside the strict full-catalog readiness audit", () => {
+  const selected = selectActiveSupportedProducts(
+    [
+      {
+        id: "linked",
+        category_key: "shampoo",
+        is_active: true,
+        lifecycle_status: "active",
+      },
+      {
+        id: "unlinked",
+        category_key: "conditioner",
+        is_active: true,
+        lifecycle_status: "active",
+      },
+      {
+        id: "inactive",
+        category_key: "mask",
+        is_active: false,
+        lifecycle_status: "inactive",
+      },
+    ],
+    [
+      { product_id: "linked", identifier_type: "ean", identifier_value: "4066447238952" },
+      { product_id: "unlinked", identifier_type: "ean", identifier_value: "not-a-gtin" },
+    ],
+  )
+  assert.deepEqual(
+    selected.map(({ row, has_barcode }) => ({ id: row.id, has_barcode })),
+    [
+      { id: "linked", has_barcode: true },
+      { id: "unlinked", has_barcode: false },
+    ],
+  )
+
+  const linkedReady = classifyProductReadiness({
+    product_id: "linked",
+    category: "shampoo",
+    has_barcode: true,
+    has_disposition: false,
+    image_url_present: true,
+    product_facts_present: true,
+    required_protocols_complete: true,
+    verdicts: [{ profile: "normal", role: "shampoo_everyday", verdict: "ideal" }],
+  })
+  assert.equal(linkedReady.status, "scan_result_ready")
+
+  const linkedBlocked = classifyProductReadiness({
+    product_id: "linked-blocked",
+    category: "shampoo",
+    has_barcode: true,
+    has_disposition: false,
+    image_url_present: true,
+    product_facts_present: true,
+    required_protocols_complete: false,
+    verdicts: [{ profile: "normal", role: "shampoo_everyday", verdict: "ideal" }],
+  })
+  assert.equal(linkedBlocked.status, "blocked")
+  assert.deepEqual(linkedBlocked.blockers, ["missing_required_protocol"])
+})
+
 test("fingerprint excludes export time and sorts object keys", () => {
   const one = fingerprint({
-    schema_version: 1,
+    schema_version: 2,
     source: {
       project_ref: "x",
       read_only: true,
@@ -75,10 +138,28 @@ test("fingerprint excludes export time and sorts object keys", () => {
       blocked: 0,
       by_category: { shampoo: { candidates: 0, ready_for_ean_research: 0, blocked: 0 } },
     },
+    full_catalog_reconciliation: {
+      active_supported: 0,
+      barcode_linked: 0,
+      scan_result_ready: 0,
+      ready_for_ean_research: 0,
+      blocked: 0,
+      by_category: {},
+    },
     candidates: [],
+    products: [],
   })
   const two = fingerprint({
     candidates: [],
+    products: [],
+    full_catalog_reconciliation: {
+      by_category: {},
+      blocked: 0,
+      ready_for_ean_research: 0,
+      scan_result_ready: 0,
+      barcode_linked: 0,
+      active_supported: 0,
+    },
     reconciliation: {
       by_category: { shampoo: { blocked: 0, ready_for_ean_research: 0, candidates: 0 } },
       blocked: 0,
@@ -90,7 +171,7 @@ test("fingerprint excludes export time and sorts object keys", () => {
       read_only: true,
       project_ref: "x",
     },
-    schema_version: 1,
+    schema_version: 2,
   })
   assert.equal(one, two)
 })

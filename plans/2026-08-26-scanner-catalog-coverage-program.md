@@ -1,6 +1,6 @@
 # Scanner Catalog Coverage Program — Phases 1–4
 
-**Status:** Evidence review and operator journey confirmed; Tasks 1–2 locally implemented, with the exact pilot frozen for Nick's fingerprint approval (no production apply)
+**Status:** Complete-existing-catalog-first amendment reviewed; full 259-product readiness audit and safe E1/E2 correction implemented locally; complete ledger and remaining-ready research are in progress (no production apply)
 **Branch:** `codex/scanner-catalog-coverage-plan`
 **Worktree:** `.worktrees/scanner-catalog-coverage-plan`
 **Baseline snapshot:** production read taken 2026-08-26
@@ -10,7 +10,7 @@
 
 Increase the chance that a valid barcode scanned in a German drugstore resolves on the first attempt to the **correct exact product package** and a usable personalized verdict. Product count is an input; the governing outcome is correct first-scan resolution.
 
-The program uses a popularity-weighted launch cohort, then deliberately broadens the sample set, then learns from real scan misses, and finally becomes a continuous catalog operation. “80/20 coverage” is treated as a demand-coverage hypothesis to validate, not as a claim that 80% of catalog rows have been captured.
+The program first makes the active supported catalog searchable, then adds genuinely missing popular products, deliberately broadens the sample set, learns from real scan misses, and finally becomes a continuous catalog operation. The approximately 140-identity “80/20” checkpoint remains an early activation recommendation, but it no longer ends the existing-catalog lane or allows new-product work to displace it.
 
 Source contracts:
 
@@ -38,12 +38,12 @@ The baseline must be regenerated immediately before every cohort is frozen. Coun
 
 Use four successive phases with explicit exit gates and one early activation decision:
 
-1. **Phase 1 — activation cohort:** first reach a fast existing-catalog milestone of approximately 140 scan-result-ready identities, then continue to a popularity-weighted German drugstore cohort of 194 identities and approximately 220–240 verified package EANs.
-2. **Phase 2 — broader samples:** expand to approximately 315 scan-result-ready identities and 420–500 package EANs, deliberately adding retailer, price-tier, format, formulation, and packaging diversity for the research/classification machine.
+1. **Phase 1 — complete current catalog, then add new products:** release the already researched safe existing-product waves; research every remaining scanner-ready active catalog product; repair the held authority rows; reach 259/259 active supported identities with at least one verified GTIN or an explicit unresolved hold; only then add the 54 genuinely missing popular German-drugstore products.
+2. **Phase 2 — broader samples:** expand beyond the 313-identity Phase 1 end state, deliberately adding retailer, price-tier, format, formulation, and package-variant diversity for the research/classification machine.
 3. **Phase 3 — real-miss learning:** after separately authorized activation, turn distinct-user scan misses, pending submissions, quarantines, model uncertainty, and reviewer disagreement into ranked intake batches until measured first-scan performance clears the reliability gate.
 4. **Phase 4 — continuous coverage:** operate retailer refresh, package/reformulation detection, miss SLAs, and model benchmark maintenance as a steady-state catalog function.
 
-Recommended activation timing: prepare the activation recommendation after the approximately 140-identity existing-catalog milestone once measurement, privacy, ownership, and real-path verification gates pass. Do not wait for all 54 new products or Phase 2 to collect the first demand signal. Phase 1 research continues to the 194-identity cohort after activation. The recommendation is not authorization to activate.
+Recommended activation timing: prepare the activation recommendation after the approximately 140-identity existing-catalog checkpoint once measurement, privacy, ownership, and real-path verification gates pass. Do not wait for all 259 existing identities to collect the first demand signal, but do not start the 54-new-product production lane until current-catalog identity coverage is complete or every residual hold has an explicit owner and decision. The recommendation is not authorization to activate.
 
 The barcode is an identity key, not an ingredient predictor. The path is:
 
@@ -55,6 +55,7 @@ Every stage may fail closed into research or quarantine. A plausible but incorre
 
 - **Barcode-linked:** an active product has at least one barcode-shaped identifier. This is the current baseline measure, not a sufficient completion state.
 - **Scan-result-ready:** the exact active, non-quarantined package owns the canonical GTIN globally; the product has the category facts needed by `loadScanProductFacts`; and the resolve route renders the expected verdict in a fixture/field check.
+- **Existing-catalog identity complete:** every active supported catalog product is scan-result-ready with at least one verified canonical GTIN. Additional size, market, or packaging GTINs are tracked as package breadth and do not block the first identity-complete pass.
 - **Catalog intake ready:** the product can be stored and linked to its submitter under the product-intake contract.
 - **Global recommendation ready:** the product may be promoted into Personal Plan recommendations. This is a separate review state and is **not** required merely to identify and evaluate a scanned product.
 
@@ -66,9 +67,9 @@ North-star service metric after activation telemetry includes client acknowledge
 
 `client-confirmed first-scan result rate = distinct user × canonical GTIN windows whose exact-product verdict is acknowledged by the client on the first valid attempt / all eligible distinct user × canonical GTIN windows with a valid barcode attempt`
 
-A window is one user and one canonical GTIN in seven days, so repeated retrying by one tester does not dominate demand. Raw attempt hit rate remains an operational diagnostic, not the north star.
+A window is one user and one canonical GTIN in a fixed seven-day period, so repeated retrying by one tester does not dominate demand. Raw attempt hit rate remains an operational diagnostic, not the north star. Before raw rows age out, the retention job materializes non-user-level counts for each completed seven-day period; formal historical assessments use those fixed-period aggregates rather than claiming an unrecoverable rolling “latest 200” view.
 
-The Task 1 server terminal event proves only that the response payload was built. It supplies a reliable **server-completed resolve rate** and failure-stage metric; it must not be described as browser rendering. Before Phase 3 makes an end-to-end first-scan claim, add a consent-compatible client acknowledgement keyed to the opaque attempt ID without exposing the barcode in client analytics.
+The Task 1 server terminal event proves only that a usable exact-product verdict payload was built. An exact-product lookup whose verdict remains `unknown` is not a successful resolve. Server telemetry supplies a reliable **server-completed usable-verdict rate** and failure-stage metric; it must not be described as browser rendering. Task 8 owns a consent-compatible client acknowledgement keyed to the opaque attempt ID, including the resolve response contract that returns that ID without exposing the barcode in client analytics, before Phase 3 makes an end-to-end first-scan claim.
 
 Correctness is a separate precision guard because telemetry alone cannot prove that the physical bottle matched the returned product. The cohort has 100% evidence review before apply; after activation, physical/user-evidence audits estimate exact-match precision. The program reports the completion rate and audited precision side by side and never labels an unaudited lookup rate “correctness.”
 
@@ -91,7 +92,7 @@ Guardrails:
 - A materially different formula or variant becomes a separate product identity even when the marketing family is similar.
 - Retailer presence or a bestseller badge is prioritization evidence, not proof of market share or product facts.
 - Raw barcode/user-level logs receive an approved retention rule before public activation.
-- Selected retention for review: keep raw `user_id` and raw barcode events for 30 days; before deletion, retain a non-user-level daily aggregate by canonical GTIN and outcome for 12 months. A versioned migration creates the aggregate and a named `pg_cron` job, and verifies job history plus deletion/aggregation fixtures. The implementation must verify that no export or secondary report silently extends those periods; platform backup retention is documented separately because row-level cron deletion cannot rewrite historical backups.
+- Selected retention for review: keep raw `user_id` and raw barcode events for 30 days; before deletion, retain non-user-level daily operational aggregates and fixed seven-day distinct-window aggregates by category/outcome for 12 months. A versioned migration creates the aggregates and a named `pg_cron` job, and verifies job history plus deletion/aggregation fixtures. The implementation must verify that no export or secondary report silently extends those periods; platform backup retention is documented separately because row-level cron deletion cannot rewrite historical backups.
 
 ## 3. Scope and non-goals
 
@@ -118,52 +119,54 @@ Guardrails:
 
 ## 4. Phase targets
 
-### Phase 1 — activation cohort, then full launch cohort
+### Phase 1 — complete the current catalog before new-product expansion
 
-Phase 1 has two explicit milestones:
+Phase 1 has four ordered milestones:
 
-- **Phase 1A — fast existing-catalog milestone:** select 102 of the 207 spec-complete/no-barcode candidates, prove their full scanner readiness, and move from 38 to approximately 140 scan-result-ready identities. This produces the earliest activation recommendation.
-- **Phase 1B — full launch cohort:** add 54 genuinely missing, popular exact products and reach 194 scan-result-ready identities.
+- **Phase 1A0 — reviewed existing waves:** E1 remains 20 products / 22 GTINs. E2 is corrected to hold the authority-blocked Balea Med Anti-Schuppen row, leaving 22 products / 24 GTINs. After both batches, linked active identities would move from 38 to 80 and valid canonical GTIN rows from 39 to 85 (raw barcode-shaped rows from 40 to 86), but strict scan-result-ready identities move from 26 to 68 because 12 already-linked products still need authority repair.
+- **Phase 1A1 — remaining ready catalog:** freeze and research the other 150 strict-ready existing products in independent evidence lanes and production manifests of at most 20 products. The first 72 accepted products reach approximately 140 scan-result-ready identities; the full lane reaches 218/259.
+- **Phase 1A2 — authority repair:** keep all 41 blocked products—29 unlinked and 12 already linked—out of identifier-only manifests. Repair their exact missing facts, protocols, disposition, presentation, or verdict fixtures through separately fingerprinted authority work; research GTINs only for the 29 currently unlinked repairs; then reach 259/259.
+- **Phase 1B — genuinely new products:** only after Phase 1A2 closes or every residual hold has an explicit owner/decision, intake the 54 genuinely missing popular products and reach 313 scan-result-ready identities.
 
-The numbers below are modeled targets, not a claim about market share. A fresh readiness audit may replace a nominal backfill candidate with another product in the same category when required facts/protocols are incomplete, but it may not lower the category milestone without an explicit plan revision.
+The numbers below are exact against the 2026-08-26 baseline. They measure one verified GTIN per product identity; package-size/market breadth is a separate follow-on measure.
 
-| Category | Active baseline | Barcode-linked baseline | Phase 1A target | Existing-product backfills | New products | Phase 1B target | Why this weight |
-|---|---:|---:|---:|---:|---:|---:|---|
-| Shampoo | 54 | 6 | 38 | 32 | 7 | 45 | Highest routine frequency and broadest drugstore shelf |
-| Conditioner | 49 | 6 | 24 | 18 | 8 | 32 | High paired demand with shampoo |
-| Mask | 36 | 6 | 18 | 12 | 6 | 24 | Popular treatment category with meaningful formula diversity |
-| Leave-in | 46 | 3 | 16 | 13 | 8 | 24 | High fit sensitivity and many formats |
-| Oil | 41 | 2 | 12 | 10 | 6 | 18 | Main-spec-complete candidate pool is 25; selection stays inside it |
-| Dry shampoo | 10 | 0 | 9 | 9 | 7 | 16 | Small current catalog but strong drugstore relevance |
-| Heat protectant | 7 | 7 | 7 | 0 | 5 | 12 | Existing active cohort is already linked; all growth is new research |
-| Deep-cleansing shampoo | 5 | 0 | 5 | 5 | 3 | 8 | Lower frequency but important distinct need |
-| Scalp care | 8 | 8 | 8 | 0 | 2 | 10 | Existing active cohort is already linked; preserve conservative scope |
-| Bondbuilder | 3 | 0 | 3 | 3 | 2 | 5 | Smaller category with high consumer salience |
-| **Total** | **259** | **38** | **140** | **102** | **54** | **194** | |
+| Category | Active baseline | Scan-ready baseline | Safe E1/E2 | Ready research remaining | Authority repair | Existing target | New products | Phase 1B target |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Shampoo | 54 | 3 | 10 | 29 | 12 | 54 | 7 | 61 |
+| Conditioner | 49 | 1 | 9 | 32 | 7 | 49 | 8 | 57 |
+| Mask | 36 | 6 | 9 | 20 | 1 | 36 | 6 | 42 |
+| Leave-in | 46 | 0 | 6 | 35 | 5 | 46 | 8 | 54 |
+| Oil | 41 | 1 | 5 | 19 | 16 | 41 | 6 | 47 |
+| Dry shampoo | 10 | 0 | 2 | 8 | 0 | 10 | 7 | 17 |
+| Heat protectant | 7 | 7 | 0 | 0 | 0 | 7 | 5 | 12 |
+| Deep-cleansing shampoo | 5 | 0 | 1 | 4 | 0 | 5 | 3 | 8 |
+| Scalp care | 8 | 8 | 0 | 0 | 0 | 8 | 2 | 10 |
+| Bondbuilder | 3 | 0 | 0 | 3 | 0 | 3 | 2 | 5 |
+| **Total** | **259** | **26** | **42** | **150** | **41** | **259** | **54** | **313** |
 
-Phase 1A package expectation: **at least 142 verified EAN rows** (today's 40 plus at least one for each accepted backfill), likely 150–170 when supported German/EU package variants exist. Phase 1B package target: **220–240 verified EANs**. Product identity and package EAN are counted separately because size, market, and packaging variants may have different GTINs.
+Existing-catalog minimum package expectation: **at least 260 valid canonical GTIN rows** (today's 39 valid rows plus at least one for each of the 221 initially unlinked products). The one invalid PZN hold remains outside this count. Phase 1B adds at least 54 more exact package GTINs. Preserve every additional supported German/EU package code, but never delay identity-complete coverage merely to exhaust all package variants.
 
 ### Phase 2 — broader sample set
 
-Expand the end state to approximately 315 scan-result-ready identities. The numeric allocation is a capacity envelope; the frozen Phase 2 ledger may reallocate at most 12 of the 121 added identities between categories when current assortment evidence supports the move, while keeping the total and every Phase 1 floor intact.
+Expand the end state from 313 to approximately 434 scan-result-ready identities. The numeric allocation is a capacity envelope; the frozen Phase 2 ledger may reallocate at most 12 of the 121 added identities between categories when current assortment evidence supports the move, while keeping the total and every Phase 1 floor intact.
 
-Phase 2 is **not** an activation gate. It is a deliberate model/catalog breadth investment that starts only after Phase 1A has produced a throughput receipt and the scanner has either been activated separately or has a documented activation hold. Before committing the full 121 identities, review a 20-backfill/5-new-product pilot and publish measured research/review time plus a batch forecast. The planned operating units are 20–25 identifier-first candidates per batch and 8–12 full new-product samples per batch; calendar dates come from the pilot rather than invented throughput.
+Phase 2 is **not** an activation gate. It is a deliberate model/catalog breadth investment that starts only after the complete-existing-catalog and 54-new-product Phase 1 receipts. Before committing the full 121 identities, publish measured research/review time and a batch forecast from the completed Phase 1 work. The planned operating units are at most 20 identifier-first candidates per batch and 8–12 full new-product samples per batch; calendar dates come from measured throughput rather than invented capacity.
 
 | Category | Phase 1 target | Phase 2 end-state target | Added identities |
 |---|---:|---:|---:|
-| Shampoo | 45 | 70 | 25 |
-| Conditioner | 32 | 50 | 18 |
-| Mask | 24 | 40 | 16 |
-| Leave-in | 24 | 40 | 16 |
-| Oil | 18 | 30 | 12 |
-| Dry shampoo | 16 | 25 | 9 |
+| Shampoo | 61 | 86 | 25 |
+| Conditioner | 57 | 75 | 18 |
+| Mask | 42 | 58 | 16 |
+| Leave-in | 54 | 70 | 16 |
+| Oil | 47 | 59 | 12 |
+| Dry shampoo | 17 | 26 | 9 |
 | Heat protectant | 12 | 20 | 8 |
 | Deep-cleansing shampoo | 8 | 15 | 7 |
 | Scalp care | 10 | 15 | 5 |
 | Bondbuilder | 5 | 10 | 5 |
-| **Total** | **194** | **315** | **121** |
+| **Total** | **313** | **434** | **121** |
 
-Phase 2 package target: **420–500 verified EANs**. The additional samples come from four lanes:
+Phase 2 package breadth is forecast only after the complete-existing-catalog throughput receipt; do not invent a fixed package count before measuring package variants per accepted identity. The additional samples come from four lanes:
 
 1. Current high-visibility products not selected in Phase 1.
 2. Shelf/package samples with front, back, barcode, and readable INCI evidence.
@@ -183,9 +186,9 @@ After separately authorized activation, stop treating catalog size as the decisi
 5. model uncertainty or reviewer disagreement;
 6. total attempts only as a final tiebreaker.
 
-The first formal Phase 3 assessment occurs after both six weeks and 200 valid distinct user × GTIN windows. Until that volume exists, reports are directional and may not claim that an SLO has passed. Continue batches until all exit conditions hold:
+The first formal Phase 3 assessment occurs after both six complete seven-day periods and 200 valid distinct user × GTIN windows across those periods. Until that volume exists, reports are directional and may not claim that an SLO has passed. Continue batches until all exit conditions hold:
 
-- at least 90% client-confirmed first-scan result rate overall on the latest 200-window assessment set, with audited exact-match precision reported separately and no known false match;
+- at least 90% client-confirmed first-scan result rate overall across the latest six complete seven-day aggregate periods, with at least 200 qualified windows, audited exact-match precision reported separately, and no known false match;
 - no supported category below 80% when it has at least 20 independent windows; categories below 20 windows are explicitly marked unqualified, never passed;
 - no unresolved GTIN affecting three or more distinct users remains untriaged for more than seven days;
 - no known false match remains active;
@@ -235,13 +238,13 @@ This is a backend/catalog operations program. It does not propose a new end-user
 Actor: catalog operator/reviewer. Entry condition: a fresh production baseline export, current German-market source access, the existing research machine, and no production mutation authorization.
 
 1. The operator regenerates the baseline and sees each category’s active products, barcode-linked products, scan-result readiness, known package EANs, dispositions, and current target delta.
-2. The operator creates the ranked Phase 1 candidate ledger. Existing products and genuinely missing products are separate lanes; exact product, package, and source evidence remain visible.
-3. A reviewer freezes one small batch by exact row IDs and content fingerprint. Research gathers official/retailer identity, EAN, product image, INCI/evidence, current price/purchase URL, and category facts; the research/classification machine proposes structured properties.
-4. Preflight validates GTIN checksum/canonical form, global ownership, exact product identity, category schema, required verdict facts, source presence, image state, and retry idempotency. A conflict blocks the row or batch with the existing owner and evidence shown.
-5. Nick reviews the exact manifest. No apply occurs without explicit approval of that fingerprint.
-6. The guarded executor applies only the approved batch through the catalog-authority-compatible identity/publication boundary. Verification re-reads the live rows, runs the catalog-authority audit, and scans the approved EAN fixtures through the real resolve path against representative profiles.
-7. Failures return to the specific lane: identity ambiguity, barcode collision, missing evidence, model/property disagreement, image/commercial blocker, quarantine, or route/render failure. Previously accepted rows are not silently rewritten.
-8. When the Phase 1 gate passes, Phase 2 repeats the same journey with broader sample diversity. After activation, Phase 3 replaces retailer estimates with the ranked distinct-user miss queue. Phase 4 keeps the same review/apply boundary on a recurring cadence.
+2. The operator separates the current catalog into already linked rows, safe researched waves, remaining strict-ready rows, and authority-blocked rows. New products stay parked until those existing-catalog lanes close.
+3. The reviewer corrects and releases E1/E2 by exact row IDs and fingerprints. The authority-blocked Balea Med row moves to the repair lane rather than entering an identifier-only batch.
+4. The 150 remaining strict-ready products are frozen into four disjoint research lanes. Researchers gather exact German/EU package identity, EAN, size/market context, and primary source evidence without editing shared production manifests.
+5. A single integrator deduplicates canonical GTINs and emits at-most-20-product manifests. Preflight validates checksum/canonical form, global ownership including inactive products, open-submission overlap, exact product identity/lifecycle, category readiness, source presence, reviewed head, and retry idempotency.
+6. Nick reviews each exact manifest fingerprint. The guarded executor applies only the approved batch; verification re-reads the live rows, runs the catalog-authority audit, and scans the approved EAN fixtures through the real resolve path against representative profiles.
+7. The 41 blocked products follow separately fingerprinted authority repairs and are re-audited; only the 29 unlinked repairs then need GTIN research. Failures return to the specific lane; previously accepted rows are not silently rewritten.
+8. Once all 259 active supported products are scan-result-ready or every residual hold has an explicit owner/decision, the 54-new-product lane begins. Phase 2 then broadens diversity, Phase 3 replaces retailer estimates with the ranked distinct-user miss queue, and Phase 4 keeps the same review/apply boundary on a recurring cadence.
 
 Recovery states:
 
@@ -257,8 +260,8 @@ Recovery states:
 
 Completion state: every accepted row has a correct exact identity, unique canonical GTIN ownership, reviewed evidence and category facts, a successful real-path resolve test, and a durable verification receipt.
 
-**Evidence review:** confirmed by Nick on 2026-08-26 (“good plan” and instruction to start implementation).
-**Operator-journey sign-off:** confirmed by the same implementation instruction.
+**Evidence review:** confirmed by Nick on 2026-08-26 and amended after the complete-existing-catalog walkthrough.
+**Operator-journey sign-off:** confirmed when Nick responded “Well go do it then” to the ordered existing-catalog-first walkthrough. The later Balea Med readiness finding changes one row from the safe release to the authority-repair lane without changing the confirmed journey.
 
 ## 7. Ordered tasks
 
@@ -267,82 +270,89 @@ Completion state: every accepted row has a correct exact identity, unique canoni
 **Consumes:** current resolve-event schema, resolve route, GTIN canonicalization, all barcode writers, retention decision.
 **Produces:** two-stage attempt/terminal telemetry contract; approved retention rule; canonical barcode-ownership preflight/enforcement; shared collision fixtures.
 
-- Insert an attempt row before expensive resolution, then update the same `attempt_id` with `lookup_outcome`, `terminal_outcome`, `failure_stage`, and `completed_at`. A null terminal outcome is an observable incomplete/abort state; `resolved` is written only after the response payload is built.
+- Insert an attempt row before expensive resolution, then update the same `attempt_id` with `lookup_outcome`, `terminal_outcome`, `failure_stage`, and `completed_at`. A null terminal outcome is an observable incomplete/abort state; terminal success is written only after an exact product and non-`unknown` usable verdict payload is built.
 - Use expand → backfill → contract migration sequencing: add the new fields/enums, dual-write/read them, classify all six historical rows as legacy terminal-unknown, then retire the ambiguous legacy `outcome` contract only after verification.
 - Track `profile_ineligible` separately and exclude it from the catalog completion denominator.
-- Keep the raw operational outcomes while adding the distinct user × canonical GTIN seven-day view.
-- Implement the decided one-GTIN/one-product principle across all `ean|gtin|barcode` writers with a canonical 14-digit generated/expression key, a partial unique index for valid GTINs, writer compatibility checks, and a rollout kill switch. Include inactive product rows if Nick confirms this plan's recommendation.
+- Keep the raw operational outcomes while adding fixed seven-day distinct user × canonical GTIN aggregates before 30-day raw deletion.
+- Implement the decided one-GTIN/one-product principle across all `ean|gtin|barcode` writers with a canonical 14-digit generated/expression key, a partial unique index for valid GTINs, and writer compatibility checks. Include inactive product rows. Canonical ownership and lookup are additive database/runtime contracts; rollback requires an explicit follow-up migration or redeploy, while the existing environment switch controls only the offline bulk-normalization executor and must not be described as a runtime scanner kill switch.
 - Update the approve/link RPC ownership query, conflict target/exception mapping, Heat/Scalp preflights, repository writer, normalization script, and every supported SQL executor before enabling the unique index. Checksum validation belongs at intake/preflight; canonical storage equivalence does not by itself prove a valid check digit.
-- Encode the selected 30-day raw-event and 12-month non-user-level aggregate retention; document who can read raw/user-level data and verify that backups, exports, and secondary reports follow the same boundary.
+- Encode the selected 30-day raw-event and 12-month non-user-level daily plus fixed-seven-day aggregate retention; document who can read raw/user-level data and verify that backups, exports, and secondary reports follow the same boundary.
 - Add regression tests for incomplete attempts, early-return profile ineligibility, lookup-hit/render-failure, stored GTIN-8/12/13/14 equivalence, same-product multi-EAN, inactive-owner/cross-product collisions, retry behavior, kill-switch behavior, and retention execution. Scanner/manual input remains EAN-8/EAN-13; stored 12/14-digit variants are verified through the identifier lookup seam unless a separate input-contract change is approved.
 
-**Complete when:** measurement distinguishes lookup from server-built payload success and incomplete attempts; all write paths pass the same collision oracle; the exact live preflight is clean or has an adjudicated hold list; retention is active and documented. Client-render acknowledgement remains an explicit Phase 3 measurement dependency.
+**Complete when:** measurement distinguishes lookup from server-built usable-verdict success and incomplete attempts; all write paths pass the same collision oracle; the exact live preflight is clean or has an adjudicated hold list; retention is active and documented. Client-render acknowledgement remains an explicit Task 8 measurement dependency.
 
-**Local implementation receipt (2026-08-26):** two-stage fail-open telemetry, the 30-day raw/12-month aggregate retention migration, shared checksum validation, canonical GTIN-14 ownership, approve/link writer guards, bulk-normalization kill switch, legacy executor retirement, and fail-closed canonical scanner lookup are implemented. The production preflight is clean apart from the adjudicated PZN hold above, and every required live function plus `pg_cron` is present. The migrations execute in an in-process Postgres harness; local Supabase Docker verification was unavailable because the Docker daemon was not running. Task 1 is not operationally complete until the reviewed migrations are separately authorized, applied, and verified in production.
+**Local implementation receipt (2026-08-26):** two-stage fail-open telemetry, 30-day raw/12-month daily aggregate retention, shared checksum validation, canonical GTIN-14 ownership, approve/link writer guards, the offline bulk-normalization switch, legacy executor retirement, and fail-closed canonical scanner lookup are implemented. The production preflight is clean apart from the adjudicated PZN hold above, and every required live function plus `pg_cron` is present. The migrations execute in an in-process Postgres harness; local Supabase Docker verification was unavailable because the Docker daemon was not running. Task 1 is not operationally complete: before release it must distinguish `unknown` verdict payloads from usable success and add the fixed-seven-day non-user-level aggregate required by the amended metric; client acknowledgement remains Task 8. The corrected migrations then require separate authorization, production application, and verification.
 
-### Task 2 — Build and review the exact Phase 1 cohort ledger
+### Task 2 — Freeze the complete existing-catalog ledger
 
-**Consumes:** fresh live baseline; current dm/Rossmann/Müller and brand/specialist assortments; existing products and identifiers; valid scan misses as weak secondary evidence.
-**Produces:** versioned ranked candidate ledger for the 140-identity Phase 1A milestone and 194-identity Phase 1B cohort, plus a frozen 20-backfill/5-new-product pilot with product/package identity, category, readiness checks, source evidence, priority rationale, expected EANs, and research status.
+**Consumes:** fresh live baseline; strict readiness audit; current identifiers; safe E1/E2 evidence; inactive ownership and open-submission reconciliation.
+**Produces:** one versioned ledger that partitions all 259 active supported products into 26 already scan-ready, 42 safe researched, 150 remaining strict-ready, and 41 authority-blocked rows; four disjoint research-lane assignments; one hold ledger. Linked identity is retained as a separate 38-product baseline attribute, not a readiness partition.
 
-- Research current high-visibility products by retailer/category; use observable rankings, shelf presence, retailer breadth, and brand breadth without converting them into unsupported market-share claims.
-- Reconcile every candidate against active, inactive, user-submitted, aliased, and quarantined catalog identities before classifying it as new.
-- Run the current `scripts/catalog-authority/audit.ts` oracle and scanner fact/protocol readiness checks before labeling an existing row “identifier-first.” Oil selection is restricted to the 25 active core-spec-complete/no-barcode candidates unless a separately reviewed fact repair is added.
-- Preserve the category targets in §4; changes require an explicit plan revision and reason.
-- Split the cohort into reviewable waves of at most 25 exact identities, maintaining category breadth in every wave.
-- Freeze only the 20-backfill/5-new-product pilot initially. Tasks 3 and 4 execute it first; use its measured throughput to publish the remaining batch forecast before Nick freezes the remaining waves.
+- Re-run the baseline/readiness exporters over all 259 products and fail if the four readiness partitions overlap or do not total 259.
+- Remove Balea Med Anti-Schuppen from E2 and place it in the authority hold ledger with `missing_required_protocol`.
+- Freeze the 150 strict-ready products into four disjoint researcher-owned artifacts: shampoo/deep-cleansing/dry-shampoo; conditioner; leave-in/bondbuilder; mask/oil.
+- Keep the 54-new-product ledger parked and unchanged until Task 5 closes.
+- Record one-GTIN identity coverage and additional package-variant breadth separately.
 
-**Complete when:** the totals and deltas reconcile to the fresh baseline, every ranked row has a stable exact identity and at least one evidence route, duplicates are removed, and Nick has approved the exact pilot fingerprint before pilot research begins.
+**Complete when:** deterministic tests reproduce every product ID and category count, E1/E2 contain strict-ready rows only, and the 259-row partition has no gap or duplicate.
 
-**Local implementation receipt (2026-08-26):** the reproducible live baseline (`cc84636c1986bf2fe6a7fa5811ec063e2607ad2655f308220ebf16be93f27332`) contains 259 active supported products, 38 barcode-linked identities, and 221 active products without a barcode. The strict runtime-readiness audit (`ea9580f34c131fb618a94f9434299fed7633c8bbb3242884de46c15bcb763de3`) assesses all applicable scanner roles and hair thicknesses, leaving 192 existing products ready for EAN research and 29 blocked. The exact Phase 1A ledger freezes 102 existing-product rows at the category targets (`b311cfbd18e7df99371dcf2293e8c4bdf86619b8fe9334f0c1b93d6084b64a66`). The exact Phase 1B ledger freezes 54 reconciled confirmed-new identities at the category targets (`d29aecd8ba28bb5f8e47391f6fd41a72e3a65c133e75bb758bceea92120aa9fe`). The initial pilot manifest contains 20 existing products with 22 researched GTINs plus five new products with five researched GTINs, for 25 products and 27 unique canonical GTINs (`685b1f73a2a2524716412822d752522d133f915271876bea03d7b65c051a46d5`). All artifacts remain research-only. Task 2 is not operationally complete until Nick explicitly approves that exact pilot fingerprint; Tasks 3 and 4, Product Intake package creation, and every database write remain gated.
+**Local implementation receipt (2026-08-26):** the schema-v2 read-only audit evaluated all 259 active supported products and froze the exact readiness split at 26 already scan-result-ready, 192 unlinked strict-ready, and 41 authority-blocked (29 unlinked, 12 already linked). The corrected safe waves account for 20 E1 plus 22 E2 products; the deterministic remaining-ready lanes account for 150 unique products (A 41, B 32, C 38, D 39). The complete ledger fingerprint is `0e09116759e01e33ad20627664648c25e59e114ef5f8a79149e6a71580364fbf`. No database write occurred.
 
-### Task 3 — Backfill identifiers for the 102 existing Phase 1 products
+### Task 3 — Research and backfill all 192 strict-ready existing products
 
-**Consumes:** approved existing-product lane; Task 1 collision oracle; exact live product IDs.
-**Produces:** reviewed readiness-audited identifier manifests, any separately approved fact-repair manifests, and live verification receipts.
+**Consumes:** Task 2 safe researched lane plus the four remaining-ready research assignments; Task 1 collision oracle; exact live product IDs.
+**Produces:** corrected E1/E2 manifests, source-backed research artifacts for the remaining 150 products, at-most-20-product production manifests, and live verification receipts.
 
-- Research official or reputable German/EU package EAN evidence for each exact product.
-- If the authority/readiness audit finds missing facts or protocols, either replace the candidate within the same category or create a separately reviewed `catalogAuthorityRepairManifest`; do not smuggle fact repair into an identifier-only apply.
-- Preserve multiple package EANs when supported; never infer a missing number from a similar size, market, or product-line variant.
-- Generate, preflight, approve, apply, and verify small fingerprinted batches through the catalog-authority-compatible narrow identity operation.
-- Run every accepted EAN through lookup and verdict rendering; identity-only success is insufficient.
-- After the pilot, combine Task 3 and Task 4 throughput into one forecast and pause for Nick to approve the remaining Phase 1 waves.
+- Research official manufacturer or reputable German/EU retailer package EAN evidence for every exact product.
+- Preserve raw GTIN, canonical GTIN-14, exact size/market context, source URL, and source date; retain multiple codes only when evidence ties them to the same exact formulation.
+- Generalize the executor into a reviewed batch-family contract without weakening exact raw-manifest fingerprint pins, max-20 size, clean reviewed head, migration state, GS1 checksum, global inactive-owner/open-submission preflight, transactionality, replay, or read-back.
+- Do not mechanically reuse the stale 2026-08-21 dm artifact; its unselected codes are research leads only.
+- Run every accepted EAN through lookup and verdict rendering; identity-only insertion is insufficient.
 
-**Complete when:** all 102 target deltas are scan-result-ready or have been replaced by approved same-category cohort rows with documented blockers, no accepted EAN collides globally, and the live catalog-authority audit remains clean relative to the approved baseline.
+**Complete when:** all 192 originally strict-ready products are scan-result-ready, no accepted EAN collides globally, and production/live receipts account for every accepted or held row.
 
-### Task 4 — Research and intake the 54 new Phase 1 products
+### Task 4 — Repair the 41 authority-blocked existing products
 
-**Consumes:** approved new-product lane; product-intake research contract; current classification model interface.
-**Produces:** exact research packages, reviewed structured properties, non-promoted catalog rows, identifiers, and scan-verification receipts.
+**Consumes:** Task 2 hold ledger; catalog-authority repair contract; exact readiness blockers and expected-old fingerprints.
+**Produces:** separately reviewed authority-repair manifests, refreshed readiness evidence, GTIN research artifacts, identifier manifests, and verification receipts.
+
+- Group repairs by exact blocker: missing facts, protocol, disposition, presentation, or real verdict fixture.
+- Never combine authority changes with an identifier-only batch or treat a researched GTIN as proof of scan readiness.
+- Apply only separately approved, compare-and-set repairs; rerun the full readiness oracle before moving a row into GTIN research.
+- For the 12 already-linked blocked rows, retain the verified owner and repair only authority/readiness; GTIN research is required only for the 29 unlinked blocked rows.
+- Return unresolved identities to the hold ledger with an owner and next evidence requirement rather than lowering the 259 target silently.
+
+**Complete when:** every held row is scan-result-ready with at least one verified GTIN, or the full-catalog receipt names its exact unresolved blocker, owner, and user-visible fallback.
+
+### Task 5 — Close existing-catalog coverage and activation gates
+
+**Consumes:** Tasks 1–4 outputs.
+**Produces:** the approximately 140-identity activation recommendation, the 259-identity complete-existing-catalog receipt, and an explicit go/hold decision for the new-product lane.
+
+- At the early checkpoint, recompute at least 140 scan-result-ready identities and the corresponding verified package rows; activation remains separately authorized.
+- At the complete-existing checkpoint, prove 259/259 active supported identities or name every explicit hold without counting it as success.
+- Run automated schema, collision, resolver, authority, and production read-back checks; field-scan representative packages across all ten categories.
+- Audit a stratified sample of at least 30 accepted identities for exact front/back/barcode/formula agreement.
+- Confirm retention, permissions, zero known false matches, and zero unresolved ownership collisions.
+
+**Complete when:** the receipt proves the gate or names the exact hold. This plan stops before feature activation; activation remains a separate explicit decision.
+
+### Task 6 — Research and intake the 54 genuinely new Phase 1 products
+
+**Consumes:** Task 5 go decision; parked new-product ledger; product-intake research contract; current classification model interface.
+**Produces:** exact research packages, reviewed structured properties, non-promoted catalog rows, identifiers, scan-verification receipts, and a 313-identity Phase 1 receipt.
 
 - Capture identity, package/barcode, product image, current INCI/evidence, commercial fields, category facts, and exact application protocols required for scanner evaluation.
 - Run the research/classification machine, but require human review of identity and every property that affects a verdict.
 - Keep each accepted evidence package as a labeled sample for later model evaluation, with source date and formula/package identity.
-- Report catalog-intake, scan-result, and global-recommendation readiness independently.
-- Research/review may proceed while the catalog-authority program is in flight, but production publication waits for or uses `publish_catalog_product_v1`; do not add another direct multi-table writer.
-- After the pilot, combine Task 4 and Task 3 throughput into one forecast and pause for Nick to approve the remaining Phase 1 waves.
+- Report catalog-intake, scan-result, and global-recommendation readiness independently; do not add another direct multi-table writer.
 
 **Complete when:** 54 exact new products satisfy scan-result readiness, remain non-promoted unless separately authorized, and their EANs resolve through representative profile fixtures.
 
-### Task 5 — Close the Phase 1 activation gate
-
-**Consumes:** Task 1 plus Phase 1A outputs for the first gate; Tasks 1–4 for the full gate.
-**Produces:** Phase 1A activation recommendation and Phase 1B full-cohort receipt.
-
-- At Phase 1A, recompute live counts: 140 scan-result-ready identities and at least 142 verified EAN rows, with the Phase 1A category milestones met.
-- Run automated schema, collision, resolver, and intake tests plus production read-back/fingerprint verification.
-- Field-scan at least two accepted physical/package examples per category where samples are available; use exact manual EAN fixtures for the remainder.
-- Audit a stratified sample of at least 30 accepted identities for exact front/back/barcode/formula agreement and run the catalog-authority oracle.
-- Confirm retention, permissions, zero known false matches, and zero unresolved cohort collisions.
-- Produce an activate/hold recommendation after Phase 1A. Activation still requires separate authorization; Phase 1B continues either way.
-- At Phase 1B, recompute 194 scan-result-ready identities and 220–240 verified EANs with all category floors met, then issue the full-cohort receipt.
-
-**Complete when:** the receipt proves every gate or names the exact hold. This plan stops before feature activation; activation remains a separate explicit decision.
-
-### Task 6 — Execute Phase 2 broader sampling
+### Task 7 — Execute Phase 2 broader sampling
 
 **Consumes:** Phase 1 receipt; Phase 2 allocation; model error/uncertainty report; additional shelf and package samples.
-**Produces:** approximately 315 scan-result-ready identities, 420–500 EANs, and a broader category-labeled gold sample.
+**Produces:** approximately 434 scan-result-ready identities and a broader category-labeled gold sample with a measured package-breadth forecast.
 
 - Freeze and execute batches with the same guarded workflow as Phase 1.
 - Track coverage across retailer, price tier, format, brand family, formulation/property pattern, and package market—not only raw identity count.
@@ -350,18 +360,19 @@ Completion state: every accepted row has a correct exact identity, unique canoni
 
 **Complete when:** the Phase 2 end-state target and diversity matrix are met, all added identifiers pass the global ownership gate, and model results are reported against the expanded gold sample.
 
-### Task 7 — Run Phase 3 from real scanner demand
+### Task 8 — Run Phase 3 from real scanner demand
 
 **Consumes:** final-outcome telemetry; distinct-user miss ranking; pending submissions; quarantine queue; model uncertainty/disagreement.
 **Produces:** recurring ≤25-identity batches, response-time receipts, and the Phase 3 reliability decision.
 
+- Before collecting the north-star metric, return the opaque `attempt_id` in the resolve response and add consent-compatible client acknowledgement of a rendered usable verdict; keep server-built and client-confirmed outcomes separate.
 - Review weekly or every 25 valid distinct windows, with the first formal assessment after six weeks and 200 windows.
 - Deduplicate retries, research exact products, and route engineering failures separately from catalog misses.
 - Continue guarded batches until every Phase 3 exit condition in §4 is proven.
 
 **Complete when:** the latest qualified assessment clears the overall/category gates, high-demand misses meet the SLA, and the evidence supports entering steady state.
 
-### Task 8 — Establish Phase 4 steady-state operations
+### Task 9 — Establish Phase 4 steady-state operations
 
 **Consumes:** Phase 3 evidence-qualified receipt or the explicit 12-week low-volume provisional entry; retailer refresh inputs; classification-model releases; lifecycle and quarantine data.
 **Produces:** recurring coverage report, ranked intake queue, refreshed gold sample, drift alerts, and return-to-Phase-3 trigger.
@@ -423,12 +434,13 @@ Completion state: every accepted row has a correct exact identity, unique canoni
 ## 9. Review and handoff
 
 - Planning work remains on `codex/scanner-catalog-coverage-plan`; no production data or feature activation is authorized by this plan.
-- Self-review and one read-only Claude counterpart review are complete. Locally verified findings were incorporated: corrected 259-active baseline, repaired category allocation, fact-readiness constraints, attempt/terminal telemetry, writer inventory, authority-cutover ordering, low-traffic gates, input-contract distinction, retention mechanism, and pilot-based capacity forecast. The reviewer's proposal to delete Phases 2–4 was rejected because Nick explicitly requested the four-phase program; activation was instead moved earlier so later phases can use real demand.
-- Nick confirmed the evidence and operator journey on 2026-08-26 and instructed implementation to start. This confirms the selected decisions: Phase 1A activation recommendation at approximately 140 identities, Phase 1B continuation to 194, inactive products reserving their GTIN, and 30-day raw/12-month aggregate retention.
+- The original self-review and Claude counterpart review are complete. The complete-existing-catalog-first amendment received a separate read-only Claude high-effort review. Its blocking findings were reconciled by correcting E2 to 22 products/24 GTINs, expanding strict readiness across all 259 products, replacing the invalid rolling-200 retention claim with fixed seven-day aggregates, assigning client acknowledgement to Task 8, distinguishing usable verdict success from lookup success, stating the real rollback boundary, and enforcing expand-before-runtime release order.
+- Nick confirmed the amended operator journey after the ordered walkthrough. This confirms the approximately 140-identity early activation recommendation, continued existing-catalog work to 259/259 before the 54-new-product lane, inactive products reserving their GTIN, and 30-day raw/12-month aggregate retention.
 - Task 1 passed ready-check and whole-tree correctness/structural review. Claude reported no hard defects; its actionable test gaps and minor redundant-index finding were resolved and reverified locally.
 - Task 1 implementation is isolated in this task worktree; product-data cohorts remain separate because measurement/uniqueness code and product-data application have different review and release risks.
+- Release sequencing is expand-before-runtime: isolate and review the additive database migrations, explicitly authorize and apply them before any application deployment that reads `canonical_gtin14`, verify the live schema, then merge/deploy the compatible application code. Only after that runtime is verified may separately approved E1 and E2 data fingerprints be applied. A generic `supabase db push` is prohibited because local and remote migration histories diverge.
 - Every production cohort requires an exact manifest, fingerprint, preflight, explicit final approval, guarded executor, and live verification receipt.
 - Phase gates authorize planning progression only. Commit, push, PR, merge, migrations, production writes, and scanner activation each remain separate actions under the repository workflow.
 - Principal residual uncertainty: current retailer visibility is only a proxy for demand. Phase 3 is the first point at which Chaarlie can validate real first-scan coverage with its own users.
 
-**Stop point:** finish local Task 1 readiness and whole-branch review. Do not commit, push, open a PR, apply migrations, begin cohort research, write production data, or activate the scanner without the relevant separate authorization.
+**Current implementation stop point:** commit the corrected safe E1/E2 artifacts, the deterministic complete-existing-catalog ledger, the generalized guarded batch-family executor, and source-backed research artifacts for the remaining strict-ready products. Tasks 6–9 are retained as explicit Phase 1B/2/3/4 follow-on plans and are not implementation scope for this commit. Do not push, open a PR, merge, apply migrations, write production data, or activate the scanner without the relevant separate authorization.
