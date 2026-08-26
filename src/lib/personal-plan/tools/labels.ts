@@ -166,10 +166,10 @@ export function toolImageSrc(form: ToolReportedForm): string {
  * capture card falls back to line art any more. The SVG fallback in
  * `toolImageSrc` stays as a safety net for a form added before its photo.
  *
- * Two forms deliberately share a photo with a neighbour rather than carry a
- * near-duplicate of their own: the Lockenstab/Lockenzange pair, and the
- * beheizter Multi-Styler, which is visually the same device class as the Air
- * Multi-Styler. Shared photos never appear side by side on one page.
+ * Every form carries its own photo since 2026-08-26 — the former
+ * Lockenstab/Lockenzange and Multi-Styler shares were replaced after the
+ * one-page-per-family merge put the lookalikes side by side (Nick approved
+ * the two distinctness packshots).
  */
 const TOOL_FORM_PHOTOS: Record<ToolReportedForm, string> = {
   hair_dryer: "blow_dryer",
@@ -177,12 +177,12 @@ const TOOL_FORM_PHOTOS: Record<ToolReportedForm, string> = {
   air_multi_styler: "hot_air_styler",
   flat_iron: "straightener",
   curling_iron: "curling_or_wave_iron",
-  curling_wand: "curling_or_wave_iron",
+  curling_wand: "curling_wand",
   wave_iron: "wave_iron",
   automatic_curler: "automatic_curler",
   heated_rollers: "thermal_rollers",
   heated_brush: "heated_brush",
-  heated_multi_styler: "hot_air_styler",
+  heated_multi_styler: "heated_multi_styler",
   heatless_curling_band: "heatless_curling_band",
   setting_roller: "setting_roller",
   foam_roller: "foam_roller",
