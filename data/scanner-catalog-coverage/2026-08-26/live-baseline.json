@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-08-26T13:07:10.806Z",
+  "exported_at": "2026-08-26T16:43:12.801Z",
   "schema_version": 1,
   "source": {
     "project_ref": "pqdkhefxsxkyeqelqegq",
@@ -75,7 +75,7 @@
     }
   },
   "open_submission_identity_candidates": {
-    "open_submission_count": 21,
+    "open_submission_count": 24,
     "resolved_identity_candidates": [
       {
         "submission_id": "08991f6b-cf73-4d9b-9ebe-18f746602b6f",
@@ -84,7 +84,10 @@
         "canonical_brand": "Balea",
         "product_line": "Natural Beauty",
         "clean_name": "3in1 Haarmaske Locken",
-        "canonical_gtin14": null
+        "canonical_gtin14": "04066447704709",
+        "canonical_gtin14s": [
+          "04066447704709"
+        ]
       },
       {
         "submission_id": "225bc516-4476-4bde-91cc-de5f7ee5872b",
@@ -93,7 +96,10 @@
         "canonical_brand": null,
         "product_line": null,
         "clean_name": "Festes Shampoo Rosmarin-Öl & Meersalz",
-        "canonical_gtin14": null
+        "canonical_gtin14": "04066447898767",
+        "canonical_gtin14s": [
+          "04066447898767"
+        ]
       },
       {
         "submission_id": "85350d71-cece-43f6-aae2-c315cbb3b8fd",
@@ -102,7 +108,10 @@
         "canonical_brand": null,
         "product_line": null,
         "clean_name": "Haar Honig Reparierendes Haarserum",
-        "canonical_gtin14": null
+        "canonical_gtin14": "03600542567329",
+        "canonical_gtin14s": [
+          "03600542567329"
+        ]
       },
       {
         "submission_id": "8a1006cf-957c-4fb5-8a47-84818687496d",
@@ -111,7 +120,10 @@
         "canonical_brand": "Jean&Len",
         "product_line": "Clear My Head",
         "clean_name": "Anti-Schuppen Shampoo Thymian/Minze",
-        "canonical_gtin14": null
+        "canonical_gtin14": "04262401739699",
+        "canonical_gtin14s": [
+          "04262401739699"
+        ]
       },
       {
         "submission_id": "b59bf251-0056-496b-bedd-d38f40966376",
@@ -120,7 +132,10 @@
         "canonical_brand": null,
         "product_line": "Colorglow",
         "clean_name": "Granatapfel Rose Conditioner",
-        "canonical_gtin14": null
+        "canonical_gtin14": "04262401738883",
+        "canonical_gtin14s": [
+          "04262401738883"
+        ]
       },
       {
         "submission_id": "c110e3ae-ddb8-48ab-a628-dee1278334fc",
@@ -129,7 +144,10 @@
         "canonical_brand": null,
         "product_line": "Colorglow",
         "clean_name": "Shampoo Granatapfel/Rose, 300 ml",
-        "canonical_gtin14": null
+        "canonical_gtin14": "04262401738920",
+        "canonical_gtin14s": [
+          "04262401738920"
+        ]
       },
       {
         "submission_id": "caa3d0f5-2e16-462f-a91e-27a7c01c265f",
@@ -138,7 +156,8 @@
         "canonical_brand": null,
         "product_line": "HAIR",
         "clean_name": "Hydro Mask",
-        "canonical_gtin14": null
+        "canonical_gtin14": null,
+        "canonical_gtin14s": []
       },
       {
         "submission_id": "fb8dc8e5-4a5f-4d03-852f-016e0d273197",
@@ -147,7 +166,10 @@
         "canonical_brand": "L'Oréal Paris",
         "product_line": "Excellence Creme",
         "clean_name": "Haarkur Pflege-Balsam",
-        "canonical_gtin14": null
+        "canonical_gtin14": "03600523764297",
+        "canonical_gtin14s": [
+          "03600523764297"
+        ]
       }
     ]
   },
@@ -18759,5 +18781,5 @@
       ]
     }
   ],
-  "content_fingerprint": "cc84636c1986bf2fe6a7fa5811ec063e2607ad2655f308220ebf16be93f27332"
+  "content_fingerprint": "e19b78d13cfe949744eaf9eceb85e0351f23953a0cddde75e46633e0075ed1f7"
 }

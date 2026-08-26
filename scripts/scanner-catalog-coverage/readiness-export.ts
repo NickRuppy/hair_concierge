@@ -7,10 +7,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 import { canonicalizeGtin } from "../../src/lib/product-identity/normalize"
 import { loadScanProductFacts } from "../../src/lib/personal-plan/products/authority/catalog-facts"
-import { buildScanVerdict } from "../../src/lib/scan/resolve-verdict"
 import type { PersonalPlanCategory } from "../../src/lib/personal-plan/products/contracts"
-import type { Stage3CategoryProductFacts } from "../../src/lib/personal-plan/products/authority/contracts"
-import type { PlanCategoryDecision, PlanProductRole } from "../../src/lib/personal-plan/types"
+import { evaluateScanCatalogReadiness } from "../../src/lib/scan/catalog-readiness"
 
 const OUTPUT_PATH = "data/scanner-catalog-coverage/2026-08-26/readiness-baseline.json"
 const PAGE_SIZE = 500
@@ -189,253 +187,6 @@ export function selectActiveSupportedProducts(products: Row[], identifiers: Row[
     .map((row) => ({ row, has_barcode: barcodeProductIds.has(String(row.id)) }))
 }
 
-function primaryRoleFor(category: PersonalPlanCategory): PlanProductRole {
-  return (
-    {
-      shampoo: "shampoo_everyday",
-      conditioner: "conditioner_rinse_out",
-      mask: "intensive_conditioning_mask",
-      leave_in: "post_wash_leave_in",
-      oil: "dry_finish",
-      dry_shampoo: "root_refresh_bridge",
-      heat_protectant: "pre_heat_protection",
-      deep_cleansing_shampoo: "residue_reset",
-      scalp_care: "scalp_comfort",
-      bondbuilder: "specialized_bond_treatment",
-    } as const
-  )[category]
-}
-
-const KNOWN_ROLES = new Set<PlanProductRole>([
-  "shampoo_everyday",
-  "shampoo_dandruff",
-  "conditioner_rinse_out",
-  "post_wash_leave_in",
-  "pre_heat_application",
-  "pre_heat_protection",
-  "pre_wash_fibre_treatment",
-  "leave_on_fibre_conditioning",
-  "dry_finish",
-  "intensive_conditioning_mask",
-  "scalp_comfort",
-  "scalp_flake_oil_adjunct",
-  "density_claim_tonic",
-  "scalp_exfoliant",
-  "root_refresh_bridge",
-  "residue_reset",
-  "mineral_reset",
-  "specialized_bond_treatment",
-])
-
-/** Runtime roles derive from the loaded authority facts, never a single category default. */
-export function requiredRolesForFacts(facts: Stage3CategoryProductFacts): PlanProductRole[] {
-  const declared = (values: ReadonlyArray<string | null> | null | undefined) =>
-    (values ?? []).filter(
-      (role): role is PlanProductRole =>
-        typeof role === "string" && KNOWN_ROLES.has(role as PlanProductRole),
-    )
-  switch (facts.category) {
-    case "shampoo":
-      return facts.spec.shampooBucket === "schuppen"
-        ? ["shampoo_everyday", "shampoo_dandruff"]
-        : ["shampoo_everyday"]
-    case "conditioner":
-      return ["conditioner_rinse_out"]
-    case "mask":
-      return ["intensive_conditioning_mask"]
-    case "dry_shampoo":
-      return ["root_refresh_bridge"]
-    case "heat_protectant":
-      return ["pre_heat_protection"]
-    case "bondbuilder":
-      return ["specialized_bond_treatment"]
-    case "deep_cleansing_shampoo":
-      return facts.spec.supportedResetRoles ?? ["residue_reset"]
-    case "scalp_care":
-      return declared([facts.spec.primaryRole])[0]
-        ? [declared([facts.spec.primaryRole])[0]!]
-        : ["scalp_comfort"]
-    case "leave_in": {
-      const roles = new Set<PlanProductRole>(["post_wash_leave_in", ...declared(facts.spec.roles)])
-      if (facts.spec.providesHeatProtection === true) roles.add("pre_heat_application")
-      return [...roles].filter(
-        (role) => role === "post_wash_leave_in" || role === "pre_heat_application",
-      )
-    }
-    case "oil": {
-      const roles = (
-        Object.entries(facts.spec.roleSupport) as Array<[PlanProductRole, boolean | null]>
-      )
-        .filter(([role, supported]) => supported === true && role !== "pre_heat_protection")
-        .map(([role]) => role)
-      return roles.length > 0 ? roles : ["dry_finish"]
-    }
-  }
-}
-
-function targetFor(
-  category: PersonalPlanCategory,
-  role: PlanProductRole,
-): PlanCategoryDecision["target"] {
-  switch (category) {
-    case "shampoo":
-      return {
-        category,
-        roles: [role as "shampoo_everyday" | "shampoo_dandruff"],
-        scalpRoute: "balanced",
-        everydayConstraint: "standard",
-        requiresTargetedDandruffCapability: role === "shampoo_dandruff",
-      }
-    case "conditioner":
-      return {
-        category,
-        roles: [role as "conditioner_rinse_out"],
-        weight: "medium",
-        careDirection: "balanced",
-        repairSupportLevel: "medium",
-        functionalNeeds: [],
-      }
-    case "mask":
-      return {
-        category,
-        roles: [role as "intensive_conditioning_mask"],
-        needStrength: "standard",
-        weight: "medium",
-        careDirection: "balanced",
-        repairSupportLevel: "medium",
-        functionalNeeds: [],
-      }
-    case "leave_in":
-      return {
-        category,
-        roles: [role as "post_wash_leave_in" | "pre_heat_application"],
-        weight: "medium",
-        careDirection: "balanced",
-        repairSupportLevel: "medium",
-        functions: [],
-        conditionerReplacementEligible: false,
-      }
-    case "oil":
-      return {
-        category,
-        roles: [role as "pre_wash_fibre_treatment" | "leave_on_fibre_conditioning" | "dry_finish"],
-        roleTargets: [
-          {
-            role: role as "pre_wash_fibre_treatment" | "leave_on_fibre_conditioning" | "dry_finish",
-            tier: "optional",
-            weight: "medium",
-            functionalBenefits: [],
-          },
-        ],
-      }
-    case "dry_shampoo":
-      return { category, roles: [role as "root_refresh_bridge"], cadenceAdjustment: "keep" }
-    case "heat_protectant":
-      return {
-        category,
-        roles: [role as "pre_heat_protection"],
-        qualifyingRoutes: ["direct_contact_heat"],
-        carrierPolicy: "integrated_or_separate_verified_binary_capability",
-      }
-    case "deep_cleansing_shampoo":
-      return { category, roles: [role as "residue_reset"] }
-    case "scalp_care":
-      return {
-        category,
-        roles: [role as "scalp_comfort"],
-        roleTargets: [{ role: role as "scalp_comfort", coverage: "primary" }],
-      }
-    case "bondbuilder":
-      return {
-        category,
-        roles: [role as "specialized_bond_treatment"],
-        requiredFunction: "support_stressed_hair_resilience",
-        mechanismTarget: "mechanism_neutral",
-      }
-  }
-}
-
-function decisionFor(category: PersonalPlanCategory, role: PlanProductRole): PlanCategoryDecision {
-  return {
-    category,
-    resolution: "resolved",
-    needTier: "basis",
-    roles: [role],
-    target: targetFor(category, role),
-    frequency: null,
-    reasons: [],
-    executionState: "available",
-    executionPauseReason: null,
-    deferredFacts: [],
-  } as PlanCategoryDecision
-}
-
-async function verdictsFor(
-  client: SupabaseClient,
-  category: PersonalPlanCategory,
-  productId: string,
-) {
-  const verdicts: ReadinessCandidate["verdicts"] = []
-  let factsPresent = true
-  let protocolsComplete = true
-  let roles: PlanProductRole[] = [primaryRoleFor(category)]
-  try {
-    const primary = await loadScanProductFacts(client, category, productId, {
-      hairThickness: "normal",
-      role: roles[0]!,
-      shampooTarget: category === "shampoo" ? (targetFor(category, roles[0]!) as never) : null,
-      conditionerTarget:
-        category === "conditioner" ? (targetFor(category, roles[0]!) as never) : null,
-    })
-    if (!primary) factsPresent = false
-    else roles = requiredRolesForFacts(primary)
-  } catch {
-    factsPresent = false
-  }
-  for (const role of roles)
-    for (const profile of ["fine", "normal", "coarse"] as const) {
-      try {
-        const facts = await loadScanProductFacts(client, category, productId, {
-          hairThickness: profile,
-          role,
-          shampooTarget: category === "shampoo" ? (targetFor(category, role) as never) : null,
-          conditionerTarget:
-            category === "conditioner" ? (targetFor(category, role) as never) : null,
-        })
-        if (!facts) {
-          factsPresent = false
-          verdicts.push({ profile, role, verdict: "error" })
-          continue
-        }
-        if (
-          facts.protocols.some(
-            (protocol) => protocol.role === role && protocol.status !== "verified_complete",
-          )
-        )
-          protocolsComplete = false
-        const result = buildScanVerdict({
-          category,
-          decision: decisionFor(category, role),
-          productFacts: facts,
-          recommendationCandidates: [facts],
-          coverage: [],
-          hairThickness: profile,
-          heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
-          refinedVersionId: "scanner-readiness-v1",
-          refinedInputHash: "scanner-readiness-v1",
-        })
-        verdicts.push({
-          profile,
-          role,
-          verdict: result.kind === "in_catalog" ? result.verdict : "unknown",
-        })
-      } catch {
-        verdicts.push({ profile, role, verdict: "error" })
-      }
-    }
-  return { factsPresent, protocolsComplete, verdicts }
-}
-
 export async function buildReadinessBaseline(input: {
   client: SupabaseClient
   products: Row[]
@@ -449,7 +200,12 @@ export async function buildReadinessBaseline(input: {
   const products = await mapWithConcurrency(sourceProducts, 8, async ({ row, has_barcode }) => {
     const category = text(row.category_key) as PersonalPlanCategory
     const productId = String(row.id)
-    const evaluated = await verdictsFor(input.client, category, productId)
+    const evaluated = await evaluateScanCatalogReadiness({
+      category,
+      productId,
+      loadFacts: (targetCategory, targetProductId, selectionContext) =>
+        loadScanProductFacts(input.client, targetCategory, targetProductId, selectionContext),
+    })
     return classifyProductReadiness({
       product_id: productId,
       category,

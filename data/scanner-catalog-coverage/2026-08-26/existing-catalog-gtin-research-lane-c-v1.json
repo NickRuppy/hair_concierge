@@ -1,0 +1,991 @@
+{
+  "schema_version": "scanner-existing-catalog-gtin-research-v1",
+  "research_id": "scanner-existing-catalog-gtin-research-lane-c-2026-08-26",
+  "generated_at": "2026-08-26T16:45:00Z",
+  "lane": "C",
+  "assignment_content_fingerprint": "060d9765e32f4b57eb6953c6cf1b3e363b88425e669ea38a342fc8776f74a25f",
+  "source_policy": {
+    "checked_at": "2026-08-26",
+    "standard": "Direct product pages only; search snippets were not used as sole evidence. GTINs were accepted only where the source matched the assigned brand/product/size. Carton, case, unrelated size, stale redirect, neighboring-variant, marketplace-only, and ambiguous page-wide codes were rejected.",
+    "market_priority": "Official manufacturer page first, then reputable German/EU retailer PDPs or exact product-database pages when retailer PDPs hid identifiers."
+  },
+  "reconciliation": {
+    "assigned_products": 38,
+    "verified_products": 35,
+    "blocked_products": 3,
+    "verified_gtins": 38,
+    "by_category": {
+      "bondbuilder": {
+        "assigned_products": 3,
+        "verified_products": 3,
+        "blocked_products": 0,
+        "verified_gtins": 4
+      },
+      "leave_in": {
+        "assigned_products": 35,
+        "verified_products": 32,
+        "blocked_products": 3,
+        "verified_gtins": 34
+      }
+    }
+  },
+  "products": [
+    {
+      "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "expected_identity": {
+        "canonical_brand": "K18",
+        "clean_name": "K18 Leave-In Molecular Repair Hair Mask",
+        "category_key": "bondbuilder"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "858511001128",
+          "canonical_gtin14": "00858511001128",
+          "size": "50 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.haarshop.com/k18-leave-in-molecular-repair-hair-mask-50-ml",
+          "source_urls": [
+            "https://www.haarshop.com/k18-leave-in-molecular-repair-hair-mask-50-ml"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Haarshop exact PDP names K18 Leave-In Molecular Repair Hair Mask 50 ml and lists EAN 858511001128."
+        }
+      ]
+    },
+    {
+      "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "expected_identity": {
+        "canonical_brand": "OLAPLEX",
+        "clean_name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+        "category_key": "bondbuilder"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "810177860266",
+          "canonical_gtin14": "00810177860266",
+          "size": "250 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/olaplex-no-3plus-complete-repair-treatme-250ml-12139566.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/olaplex-no-3plus-complete-repair-treatme-250ml-12139566.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Olaplex No.3PLUS Complete Repair Treatment 250 ml and lists EAN 810177860266."
+        },
+        {
+          "raw_gtin": "810177860273",
+          "canonical_gtin14": "00810177860273",
+          "size": "100 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.flaconi.de/haare/olaplex/no-3plus/olaplex-no-3plus-complete-repair-treatment-haarkur.html",
+          "source_urls": [
+            "https://www.flaconi.de/haare/olaplex/no-3plus/olaplex-no-3plus-complete-repair-treatment-haarkur.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Flaconi exact PDP names OLAPLEX No.3PLUS Complete Repair Treatment 100 ml and lists EAN 810177860273."
+        }
+      ]
+    },
+    {
+      "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "expected_identity": {
+        "canonical_brand": "Epres",
+        "clean_name": "Epres Bond Repair Treatment",
+        "category_key": "bondbuilder"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "0850040615500",
+          "canonical_gtin14": "00850040615500",
+          "size": "starter kit: spray bottle + 2 x 15 ml concentrate",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.salontopper.nl/product/epres-bond-repair-treatment-starter-kit-33605",
+          "source_urls": [
+            "https://www.salontopper.nl/product/epres-bond-repair-treatment-starter-kit-33605"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "SalonTopper exact PDP names epres Bond Repair Treatment Starter Kit with spray bottle and 2 x 15 ml concentrate and lists EAN 0850040615500."
+        }
+      ]
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "expected_identity": {
+        "canonical_brand": "Garnier",
+        "clean_name": "Garnier Hair Food Aloe Vera",
+        "category_key": "leave_in"
+      },
+      "status": "blocked",
+      "blocker": "duplicate_physical_product_requires_catalog_authority_resolution: GTIN 3600542511049 / canonical 03600542511049 maps to Lane C leave_in product 0307c903-84f9-46b4-8f1f-a51c2b1f38ff and Lane D mask product 52264c47-f339-49db-9fb2-207d1ad3b470 for the same Garnier/Fructis Hair Food Aloe Vera 3-in-1 physical package; no ownership chosen in research artifact.",
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [],
+      "evidence_attempted": [
+        "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html"
+      ]
+    },
+    {
+      "product_id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "expected_identity": {
+        "canonical_brand": "Living Proof",
+        "clean_name": "Living Proof Restore Repair Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "858544005575",
+          "canonical_gtin14": "00858544005575",
+          "size": "118 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.flaconi.de/haare/living-proof/restore/living-proof-restore-repair-leave-in-leave-in-treatment.html",
+          "source_urls": [
+            "https://www.flaconi.de/haare/living-proof/restore/living-proof-restore-repair-leave-in-leave-in-treatment.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Flaconi exact PDP names Living Proof Restore Repair Leave-In 118 ml and lists EAN 858544005575."
+        }
+      ]
+    },
+    {
+      "product_id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "expected_identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken All Soft Mega Curls Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "3474637135638",
+          "canonical_gtin14": "03474637135638",
+          "size": "150 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.haarshop.nl/redken-all-soft-mega-curls-hydramelt-leavein-150ml",
+          "source_urls": [
+            "https://www.haarshop.nl/redken-all-soft-mega-curls-hydramelt-leavein-150ml"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Haarshop exact PDP names Redken All Soft Mega Curls Hydramelt Leave-In 150 ml and lists EAN 3474637135638."
+        }
+      ]
+    },
+    {
+      "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "expected_identity": {
+        "canonical_brand": "EVO",
+        "clean_name": "EVO Head Mistress",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "9349769020791",
+          "canonical_gtin14": "09349769020791",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.bellaffair.com/evo-head-mistress-cuticle-sealer",
+          "source_urls": [
+            "https://www.bellaffair.com/evo-head-mistress-cuticle-sealer"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "BellAffair exact PDP names EVO Head Mistress Cuticle Sealer 150 ml and lists EAN 9349769020791."
+        }
+      ]
+    },
+    {
+      "product_id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "expected_identity": {
+        "canonical_brand": "Color WOW",
+        "clean_name": "Color WOW Money Mist",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "5060150185731",
+          "canonical_gtin14": "05060150185731",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/color-wow-money-mist-150-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/color-wow-money-mist-150-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names COLOR WOW Money Mist 150 ml and lists EAN 5060150185731."
+        }
+      ]
+    },
+    {
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "expected_identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken Extreme Anti-Snap",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "884486453402",
+          "canonical_gtin14": "00884486453402",
+          "size": "240 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.haarshop.nl/redken-extreme-anti-snap-240-ml-nieuw",
+          "source_urls": [
+            "https://www.haarshop.nl/redken-extreme-anti-snap-240-ml-nieuw"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Haarshop exact PDP names Redken Extreme Anti Snap 240 ml, Leave-In Conditioner, and lists EAN 884486453402."
+        }
+      ]
+    },
+    {
+      "product_id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "expected_identity": {
+        "canonical_brand": "Curlsmith",
+        "clean_name": "Curlsmith Multitasking Conditioner 3 in 1",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "0850005417781",
+          "canonical_gtin14": "00850005417781",
+          "size": "59 ml",
+          "market_scope": "EU/UK",
+          "source_url": "https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-ts-59ml-63b55992adf50e4de65933a5",
+          "source_urls": [
+            "https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-ts-59ml-63b55992adf50e4de65933a5"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "SuperSales exact PDP names Curlsmith Multitasking Conditioner travel size 59 ml and lists EAN 0850005417781."
+        },
+        {
+          "raw_gtin": "0850005417804",
+          "canonical_gtin14": "00850005417804",
+          "size": "946 ml",
+          "market_scope": "EU/UK",
+          "source_url": "https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-xl-946ml-63b558a8adf50e4de659173f",
+          "source_urls": [
+            "https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-xl-946ml-63b558a8adf50e4de659173f"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "SuperSales exact PDP names Curlsmith Multitasking Conditioner XL 946 ml and lists EAN 0850005417804."
+        }
+      ]
+    },
+    {
+      "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+      "expected_identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken One United",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "3474637102555",
+          "canonical_gtin14": "03474637102555",
+          "size": "150 ml",
+          "market_scope": "EU/PT",
+          "source_url": "https://www.lojaglamourosa.com/il/en/redken-one-united-multi-benefit-treatment-spray-150ml-3474637102555",
+          "source_urls": [
+            "https://www.lojaglamourosa.com/il/en/redken-one-united-multi-benefit-treatment-spray-150ml-3474637102555"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Loja Glamourosa exact PDP names REDKEN One United Multi-Benefit Treatment Spray 150 ml and embeds GTIN 3474637102555 in the PDP title/URL/content."
+        }
+      ]
+    },
+    {
+      "product_id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "expected_identity": {
+        "canonical_brand": "EVO",
+        "clean_name": "EVO Happy Campers",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "9349769009550",
+          "canonical_gtin14": "09349769009550",
+          "size": "200 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.haarpro.nl/evo-happy-campers-wearable-treatment-200ml",
+          "source_urls": [
+            "https://www.haarpro.nl/evo-happy-campers-wearable-treatment-200ml"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Haarpro exact PDP names EVO Happy Campers Wearable Treatment 200 ml and lists EAN 9349769009550."
+        }
+      ]
+    },
+    {
+      "product_id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+      "expected_identity": {
+        "canonical_brand": "Authentic Beauty Concept",
+        "clean_name": "Authentic Beauty Concept Hydrate Spray",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "42392606",
+          "canonical_gtin14": "00000042392606",
+          "size": "250 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/authentic-beauty-concept-hydrate-spray-conditioner-250-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/authentic-beauty-concept-hydrate-spray-conditioner-250-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Authentic Beauty Concept Hydrate Spray Conditioner 250 ml and lists GTIN-8/EAN 42392606."
+        }
+      ]
+    },
+    {
+      "product_id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+      "expected_identity": {
+        "canonical_brand": "Urban Alchemy",
+        "clean_name": "Urban Alchemy Repair & Revive Leave-In Spray",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "4063528079923",
+          "canonical_gtin14": "04063528079923",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml",
+          "source_urls": [
+            "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Urban Alchemy official exact PDP names Repair & Revive Leave-in Spray 150 ml and exposes product GTIN 4063528079923."
+        }
+      ]
+    },
+    {
+      "product_id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+      "expected_identity": {
+        "canonical_brand": "OLAPLEX",
+        "clean_name": "Olaplex No.5 Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "850056933285",
+          "canonical_gtin14": "00850056933285",
+          "size": "100 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://olaplex.de/products/original-olaplex-n-5leave-in-conditioner",
+          "source_urls": [
+            "https://olaplex.de/products/original-olaplex-n-5leave-in-conditioner"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Official OLAPLEX Germany exact PDP names No.5 Leave-In Conditioner and exposes GTIN 850056933285."
+        }
+      ]
+    },
+    {
+      "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "expected_identity": {
+        "canonical_brand": "OLAPLEX",
+        "clean_name": "Olaplex No.6 Bond Smoother",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "850018802796",
+          "canonical_gtin14": "00850018802796",
+          "size": "100 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.bellaffair.com/olaplex-no-6-bond-smoother",
+          "source_urls": [
+            "https://www.bellaffair.com/olaplex-no-6-bond-smoother"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "BellAffair exact PDP names OLAPLEX No.6 Bond Smoother and lists EAN 850018802796; official OLAPLEX Germany page also exposes the same GTIN."
+        }
+      ]
+    },
+    {
+      "product_id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "expected_identity": {
+        "canonical_brand": "Maria Nila",
+        "clean_name": "Maria Nila Coils & Curls Oil in Cream",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "7391681403741",
+          "canonical_gtin14": "07391681403741",
+          "size": "100 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.johnbeerens.com/products/maria-nila-coils-curls-oil-in-cream-100ml",
+          "source_urls": [
+            "https://www.johnbeerens.com/products/maria-nila-coils-curls-oil-in-cream-100ml"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "John Beerens exact PDP names Maria Nila Coils & Curls Oil in Cream 100 ml and lists barcode/EAN 7391681403741."
+        }
+      ]
+    },
+    {
+      "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+      "expected_identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "HASK Keratin 5-in-1 Spray",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "0071164302248",
+          "canonical_gtin14": "00071164302248",
+          "size": "175 ml",
+          "market_scope": "US/UK product-database evidence; exact German PDP checked but hides EAN",
+          "source_url": "https://www.upcitemdb.com/upc/71164302248",
+          "source_urls": [
+            "https://www.upcitemdb.com/upc/71164302248"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "UPCitemdb exact product-database page names Hask Keratin 5-in-1 Leave-In Spray 6.0 fl oz and lists EAN-13 0 071164 302248; Hagel-Shop exact German PDP for Hask Keratin Protein Smoothing 5in1 Leave In Conditioner 175 ml was checked but did not expose an EAN."
+        }
+      ]
+    },
+    {
+      "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "expected_identity": {
+        "canonical_brand": "Gliss",
+        "clean_name": "Gliss Ultimate Repair Sprüh-Conditioner",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "4015100813494",
+          "canonical_gtin14": "04015100813494",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Rossmann exact PDP names Gliss Ultimate Repair Express-Repair-Spülung/Sprühspülung and embeds product GTIN 4015100813494 in the direct product URL."
+        }
+      ]
+    },
+    {
+      "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "expected_identity": {
+        "canonical_brand": "Curlsmith",
+        "clean_name": "Curlsmith Hydrate & Plump Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "0850035298718",
+          "canonical_gtin14": "00850035298718",
+          "size": "237 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.supersales.nl/p/curlsmith-hydrate-plump-leave-in-conditioner-237ml-66602342ff24cf328702a18e",
+          "source_urls": [
+            "https://www.supersales.nl/p/curlsmith-hydrate-plump-leave-in-conditioner-237ml-66602342ff24cf328702a18e"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "SuperSales exact PDP names Curlsmith Hydrate & Plump Leave-In Conditioner 237 ml and lists EAN code 0850035298718."
+        }
+      ]
+    },
+    {
+      "product_id": "695414e1-3435-4304-943b-76677408980c",
+      "expected_identity": {
+        "canonical_brand": "Maria Nila",
+        "clean_name": "Maria Nila Structure Repair Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "7391681036079",
+          "canonical_gtin14": "07391681036079",
+          "size": "200 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html",
+          "source_urls": [
+            "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Flaconi exact PDP names Maria Nila Structure Repair Leave-In Treatment 200 ml and lists EAN 7391681036079."
+        }
+      ]
+    },
+    {
+      "product_id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "expected_identity": {
+        "canonical_brand": "It's a 10",
+        "clean_name": "It’s a 10 Miracle Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "898571000211",
+          "canonical_gtin14": "00898571000211",
+          "size": "295.7 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-product-295-7-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-product-295-7-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names It's a 10 Miracle Leave-In Product 295.7 ml and lists EAN 898571000211."
+        }
+      ]
+    },
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "expected_identity": {
+        "canonical_brand": "Kevin Murphy",
+        "clean_name": "Kevin Murphy Young Again",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "9339341020356",
+          "canonical_gtin14": "09339341020356",
+          "size": "100 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Kevin Murphy Young Again Leave In Treatment 100 ml and lists EAN 9339341020356."
+        }
+      ]
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "expected_identity": {
+        "canonical_brand": "L'Oréal Paris",
+        "clean_name": "Midnight Serum",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "3600524135805",
+          "canonical_gtin14": "03600524135805",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum",
+          "source_urls": [
+            "https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "dm exact PDP names L'ORÉAL PARiS ELVITAL Öl Magique Midnight Serum 100 ml and lists GTIN 3600524135805."
+        }
+      ]
+    },
+    {
+      "product_id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "expected_identity": {
+        "canonical_brand": "Moroccanoil",
+        "clean_name": "Moroccanoil All In One Leave In Conditioner",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "7290113142947",
+          "canonical_gtin14": "07290113142947",
+          "size": "160 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/moroccanoil-all-in-one-le-ave-in-conditioner-160-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/moroccanoil-all-in-one-le-ave-in-conditioner-160-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Moroccanoil All In One Leave-In Conditioner 160 ml and lists EAN 7290113142947."
+        },
+        {
+          "raw_gtin": "7290113142954",
+          "canonical_gtin14": "07290113142954",
+          "size": "50 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.haarshop.nl/moroccanoil-all-in-one-leave-in-conditioner-50ml",
+          "source_urls": [
+            "https://www.haarshop.nl/moroccanoil-all-in-one-leave-in-conditioner-50ml"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Haarshop exact PDP names Moroccanoil All in One Leave-in Conditioner 50 ml and lists EAN 7290113142954."
+        }
+      ]
+    },
+    {
+      "product_id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "expected_identity": {
+        "canonical_brand": "It's a 10",
+        "clean_name": "It’s a 10 Miracle Leave-In Lite",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "898571000433",
+          "canonical_gtin14": "00898571000433",
+          "size": "120 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-conditioner-lite-120-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-conditioner-lite-120-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names It's a 10 Miracle Leave-In Conditioner Lite 120 ml and lists EAN 898571000433."
+        }
+      ]
+    },
+    {
+      "product_id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "expected_identity": {
+        "canonical_brand": "Curlsmith",
+        "clean_name": "Curlsmith Weightless Air Dry Cream",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "850048197626",
+          "canonical_gtin14": "00850048197626",
+          "size": "237 ml",
+          "market_scope": "EU/AT",
+          "source_url": "https://www.beautyplaza.com/de-at/p/curlsmith-stylers-weightless-air-dry-cream/161451/",
+          "source_urls": [
+            "https://www.beautyplaza.com/de-at/p/curlsmith-stylers-weightless-air-dry-cream/161451/"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Beauty Plaza exact PDP names Curlsmith Weightless Air Dry Cream 237 ml and lists EAN-code 850048197626."
+        }
+      ]
+    },
+    {
+      "product_id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "expected_identity": {
+        "canonical_brand": "Paul Mitchell",
+        "clean_name": "Paul Mitchell Full Circle Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "009531139159",
+          "canonical_gtin14": "00009531139159",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/paul-mitchell-full-circle-leave-in-cream-150-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/paul-mitchell-full-circle-leave-in-cream-150-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Paul Mitchell Full Circle Leave-In Cream 150 ml and lists EAN 009531139159."
+        }
+      ]
+    },
+    {
+      "product_id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "expected_identity": {
+        "canonical_brand": "Wella Professionals",
+        "clean_name": "Wella Ultimate Repair Protective Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "4064666580098",
+          "canonical_gtin14": "04064666580098",
+          "size": "140 ml",
+          "market_scope": "EU/ES",
+          "source_url": "https://www.peluqueriashop.com/wella-professional/wella-ultimate-repair-protective-leave-in-140ml.html",
+          "source_urls": [
+            "https://www.peluqueriashop.com/wella-professional/wella-ultimate-repair-protective-leave-in-140ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "PeluqueriaShop exact PDP names Wella Ultimate Repair Protective Leave-In 140 ml and lists reference/GTIN 4064666580098; German pharmacy pages also expose the same GTIN for the same product family but with conflicting volume labels, so this row keeps the 140 ml source."
+        }
+      ]
+    },
+    {
+      "product_id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "expected_identity": {
+        "canonical_brand": "OUAI",
+        "clean_name": "OUAI Leave In Conditioner",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "815402023119",
+          "canonical_gtin14": "00815402023119",
+          "size": "140 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.amazon.de/Ouai-leave-conditioner-140-ml/dp/B07B895KND",
+          "source_urls": [
+            "https://www.amazon.de/Ouai-leave-conditioner-140-ml/dp/B07B895KND"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Amazon Germany exact PDP names OUAI Leave In Conditioner 140 ml and lists GTIN 00815402023119 / UPC 815402023119."
+        }
+      ]
+    },
+    {
+      "product_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "expected_identity": {
+        "canonical_brand": "Alcina",
+        "clean_name": "Alcina Hyaluron 2.0",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "4008666199522",
+          "canonical_gtin14": "04008666199522",
+          "size": "125 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/alcina-hyaluron-2-0-spray-125-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/alcina-hyaluron-2-0-spray-125-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Alcina Hyaluron 2.0 Spray 125 ml and lists EAN 4008666199522."
+        }
+      ]
+    },
+    {
+      "product_id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "expected_identity": {
+        "canonical_brand": "Redken",
+        "clean_name": "Redken Acidic Color Gloss Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "3474637174170",
+          "canonical_gtin14": "03474637174170",
+          "size": "190 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.bellaffair.com/redken-acidic-color-gloss-leave-in-spray",
+          "source_urls": [
+            "https://www.bellaffair.com/redken-acidic-color-gloss-leave-in-spray"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "BellAffair exact PDP names Redken Acidic Color Gloss Leave-In Spray 190 ml and lists EAN 3474637174170."
+        }
+      ]
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "expected_identity": {
+        "canonical_brand": "Garnier",
+        "clean_name": "Garnier Hair Food Macadamia",
+        "category_key": "leave_in"
+      },
+      "status": "blocked",
+      "blocker": "duplicate_physical_product_requires_catalog_authority_resolution: GTIN 3600542511612 / canonical 03600542511612 maps to Lane C leave_in product a72d630d-547a-465f-9846-3006b38af0a2 and Lane B conditioner product 4c3e1a63-4696-406a-be67-f2aacc678b0c for the same Garnier Hair Food Macadamia 3-in-1 physical package; no ownership chosen in research artifact.",
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [],
+      "evidence_attempted": [
+        "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html"
+      ]
+    },
+    {
+      "product_id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "expected_identity": {
+        "canonical_brand": "EVO",
+        "clean_name": "EVO Day of Grace Leave-In",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "9349769009598",
+          "canonical_gtin14": "09349769009598",
+          "size": "200 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/evo-day-of-grace-pre-style-primer-200-ml-5826168.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/evo-day-of-grace-pre-style-primer-200-ml-5826168.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names evo Day of Grace Pre Style Primer 200 ml and lists EAN 9349769009598."
+        }
+      ]
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "expected_identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Balea Aqua Hyaluron 3in1",
+        "category_key": "leave_in"
+      },
+      "status": "blocked",
+      "blocker": "duplicate_physical_product_requires_catalog_authority_resolution: GTIN 4066447668315 / canonical 04066447668315 maps to Lane C leave_in product c6e80f39-20ba-401e-b041-6ee7c89a5996 and Lane D mask product 55727898-2a5e-4f01-ace1-bd91521d98ab for the same Balea Aqua Hyaluron 3-in-1 physical package; no ownership chosen in research artifact.",
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [],
+      "evidence_attempted": [
+        "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html"
+      ]
+    },
+    {
+      "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "expected_identity": {
+        "canonical_brand": "Cantu",
+        "clean_name": "Cantu Leave-In Repair Cream",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "810006943405",
+          "canonical_gtin14": "00810006943405",
+          "size": "453 g",
+          "market_scope": "DE/EU",
+          "source_url": "https://ehgoo.de/produkt/cantu-cantu-cantu-leave-in-repair-cream-depla-453g-tg-810006943405/",
+          "source_urls": [
+            "https://ehgoo.de/produkt/cantu-cantu-cantu-leave-in-repair-cream-depla-453g-tg-810006943405/"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "ehgoo exact PDP names Cantu Leave-in Repair Cream 453 g and lists product-unit EAN 810006943405; carton EAN on the same page was rejected as non-saleable case code."
+        }
+      ]
+    },
+    {
+      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "expected_identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "8700216178402",
+          "canonical_gtin14": "08700216178402",
+          "size": "145 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Rossmann exact PDP names Pantene Pro-V Miracles schwereloses 7in1 Haaröl Spray and embeds product GTIN 8700216178402 in the direct product URL; Office Partner exact German PDP confirms 145 ml and the same manufacturer number."
+        }
+      ]
+    },
+    {
+      "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "expected_identity": {
+        "canonical_brand": "Alverde",
+        "clean_name": "alverde Leave-In Sprühkur Express 7in1",
+        "category_key": "leave_in"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:45:00Z",
+      "packages": [
+        {
+          "raw_gtin": "4066447919387",
+          "canonical_gtin14": "04066447919387",
+          "size": "75 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express",
+          "source_urls": [
+            "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Current dm exact PDP names alverde NATURKOSMETIK Leave-In Sprühkur 7in1 Express 75 ml and lists GTIN 4066447919387; the older dm slug containing 4067796199635 redirects to this current package and was rejected as stale."
+        }
+      ]
+    }
+  ],
+  "content_fingerprint": "cb236d55e879a5381ca11b6c7793777d6dcade46b1119b2106521c7365a50785"
+}

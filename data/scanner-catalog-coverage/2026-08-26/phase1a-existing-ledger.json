@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-26T13:24:20.268Z",
+  "generated_at": "2026-08-26T16:43:13.295Z",
   "schema_version": "scanner-phase1a-existing-ledger-v1",
   "source": {
-    "live_baseline_content_fingerprint": "cc84636c1986bf2fe6a7fa5811ec063e2607ad2655f308220ebf16be93f27332",
-    "readiness_baseline_content_fingerprint": "ea9580f34c131fb618a94f9434299fed7633c8bbb3242884de46c15bcb763de3",
+    "live_baseline_content_fingerprint": "e19b78d13cfe949744eaf9eceb85e0351f23953a0cddde75e46633e0075ed1f7",
+    "readiness_baseline_content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9",
     "pilot_research_id": "scanner-phase1-existing-pilot-2026-08-26",
     "research_only": true,
     "note": "Selection is constrained to the stricter live readiness oracle. Every row remains research-only and is not scanner-ready until GTIN ownership and final intake publication checks pass."
@@ -8857,5 +8857,5 @@
       "pilot_gtin_evidence": null
     }
   ],
-  "content_fingerprint": "b311cfbd18e7df99371dcf2293e8c4bdf86619b8fe9334f0c1b93d6084b64a66"
+  "content_fingerprint": "70dc119eaeb9eb2bad73b5be55055617cccb2017328f73420251827c9cddf534"
 }

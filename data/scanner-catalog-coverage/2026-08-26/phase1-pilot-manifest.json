@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-26T13:44:49.460Z",
+  "generated_at": "2026-08-26T16:43:13.755Z",
   "schema_version": "scanner-phase1-pilot-manifest-v1",
   "source": {
-    "phase1a_content_fingerprint": "b311cfbd18e7df99371dcf2293e8c4bdf86619b8fe9334f0c1b93d6084b64a66",
+    "phase1a_content_fingerprint": "70dc119eaeb9eb2bad73b5be55055617cccb2017328f73420251827c9cddf534",
     "phase1b_content_fingerprint": "d29aecd8ba28bb5f8e47391f6fd41a72e3a65c133e75bb758bceea92120aa9fe",
     "research_only": true,
     "note": "This is an exact research-only pilot manifest. No product is catalog-intake-ready or scan-result-ready until full Product Intake evidence, classification, human review, an approved publish batch, and post-publish verification complete."
@@ -537,5 +537,5 @@
       ]
     }
   ],
-  "content_fingerprint": "685b1f73a2a2524716412822d752522d133f915271876bea03d7b65c051a46d5"
+  "content_fingerprint": "92e009c0c8b2c86bea51feed1e81bd7b6adf95ad06a017a1fa8008432f477f12"
 }

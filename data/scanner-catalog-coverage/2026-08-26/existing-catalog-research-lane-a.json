@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26T15:43:07.113Z",
+  "generated_at": "2026-08-26T16:43:14.212Z",
   "schema_version": "scanner-existing-catalog-research-lane-v1",
   "lane": "A",
   "categories": [
@@ -8,7 +8,7 @@
     "dry_shampoo"
   ],
   "source": {
-    "existing_catalog_coverage_ledger_content_fingerprint": "0e09116759e01e33ad20627664648c25e59e114ef5f8a79149e6a71580364fbf",
+    "existing_catalog_coverage_ledger_content_fingerprint": "fe23a3fcdde059bc55060bbe5a429d57bd230c0503a7cb1fe9ad68a046e9b7f8",
     "readiness_baseline_content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9",
     "note": "Research lane only. Each GTIN still requires fresh exact-product evidence, GS1 checksum validation, global ownership checks, and guarded application approval."
   },
@@ -1431,5 +1431,5 @@
       "gtin_status": "research_pending"
     }
   ],
-  "content_fingerprint": "c6420fcc31d68ff19c5a6aa79ad0cb1efd526a4d4b9d27cf433bc699e599f0f0"
+  "content_fingerprint": "c17a2dcd9ef8f8a2ffb7bd02bfb837829fa356d377e7fd0bf92aa627e046312b"
 }

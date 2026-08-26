@@ -1,0 +1,1057 @@
+{
+  "schema_version": "scanner-existing-catalog-gtin-research-v1",
+  "research_id": "scanner-existing-catalog-gtin-research-lane-a-2026-08-26",
+  "generated_at": "2026-08-26T15:58:57.297Z",
+  "lane": "A",
+  "assignment_content_fingerprint": "c17a2dcd9ef8f8a2ffb7bd02bfb837829fa356d377e7fd0bf92aa627e046312b",
+  "source_policy": {
+    "required_standard": "Use reopened current official manufacturer pages, reputable German/EU retailer pages, or reputable EU product database pages that explicitly support exact package identity and GTIN.",
+    "no_snippet_only_evidence": true,
+    "no_neighboring_variant_substitution": true,
+    "no_renamed_or_reformulated_silent_substitution": true,
+    "checksum_policy": "Every package raw_gtin is validated with GS1-style check digit logic and stored as canonical GTIN-14.",
+    "blocked_policy": "If exact evidence is unavailable, ambiguous, or would create an active catalog collision, preserve the row as blocked with attempted evidence and do not guess."
+  },
+  "reconciliation": {
+    "assigned_products": 41,
+    "verified_products": 38,
+    "blocked_products": 3,
+    "verified_gtins": 38,
+    "by_category": {
+      "deep_cleansing_shampoo": {
+        "assigned_products": 4,
+        "verified_products": 4,
+        "blocked_products": 0,
+        "verified_gtins": 4
+      },
+      "dry_shampoo": {
+        "assigned_products": 8,
+        "verified_products": 8,
+        "blocked_products": 0,
+        "verified_gtins": 8
+      },
+      "shampoo": {
+        "assigned_products": 29,
+        "verified_products": 26,
+        "blocked_products": 3,
+        "verified_gtins": 26
+      }
+    }
+  },
+  "products": [
+    {
+      "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "expected_identity": {
+        "canonical_brand": "Gliss",
+        "clean_name": "Tiefenreinigungs-Shampoo",
+        "category_key": "deep_cleansing_shampoo",
+        "product_line": "Scalp Balance"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4015100893007",
+          "canonical_gtin14": "04015100893007",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+          "source_urls": [
+            "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Schwarzkopf Gliss Shampoo Scalp Balance Tiefenreinigung, 250 ml and GTIN 4015100893007."
+        }
+      ]
+    },
+    {
+      "product_id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "expected_identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Shampoo Tiefenreinigung",
+        "category_key": "deep_cleansing_shampoo",
+        "product_line": "Professional"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4070765001020",
+          "canonical_gtin14": "04070765001020",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+          "source_urls": [
+            "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml and GTIN 4070765001020."
+        }
+      ]
+    },
+    {
+      "product_id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "expected_identity": {
+        "canonical_brand": "Swiss-O-Par",
+        "clean_name": "Tiefenreinigung Shampoo",
+        "category_key": "deep_cleansing_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4104260073500",
+          "canonical_gtin14": "04104260073500",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+          "source_urls": [
+            "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+            "https://www.rossmann.de/de/pflege-und-duft-swiss-o-par-shampoo-tiefenreinigung/p/4104260073500"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Swiss-o-Par Shampoo Tiefenreinigung, 250 ml and GTIN 4104260073500."
+        }
+      ]
+    },
+    {
+      "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "expected_identity": {
+        "canonical_brand": "Isana",
+        "clean_name": "Professional Shampoo Tiefenreinigung",
+        "category_key": "deep_cleansing_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4068134135490",
+          "canonical_gtin14": "04068134135490",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current Rossmann PDP path and page identify ISANA PROFESSIONAL Shampoo Tiefenreinigung with EAN/GTIN 4068134135490."
+        }
+      ]
+    },
+    {
+      "product_id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "expected_identity": {
+        "canonical_brand": "got2b",
+        "clean_name": "Trockenshampoo Extra Volumen",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4015100800227",
+          "canonical_gtin14": "04015100800227",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1660235/got2b-trockenshampoo-extra-volumen",
+          "source_urls": [
+            "https://www.dm.de/p/d/1660235/got2b-trockenshampoo-extra-volumen"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names got2b Trockenshampoo Extra Volumen, 200 ml and GTIN 4015100800227."
+        }
+      ]
+    },
+    {
+      "product_id": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+      "expected_identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Sensible Kopfhaut",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "5010724003824",
+          "canonical_gtin14": "05010724003824",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/2476792/batiste-trockenshampoo-sensible-kopfhaut",
+          "source_urls": [
+            "https://www.dm.de/p/d/2476792/batiste-trockenshampoo-sensible-kopfhaut"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Batiste Trockenshampoo Sensible Kopfhaut, 200 ml and GTIN 5010724003824; newer related Batiste sensitive leichter Duft package was not substituted."
+        }
+      ]
+    },
+    {
+      "product_id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "expected_identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo dunkel",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "5010724527443",
+          "canonical_gtin14": "05010724527443",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1551790/batiste-trockenshampoo-dunkel",
+          "source_urls": [
+            "https://www.dm.de/p/d/1551790/batiste-trockenshampoo-dunkel"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Batiste Trockenshampoo Dunkel, 200 ml and GTIN 5010724527443."
+        }
+      ]
+    },
+    {
+      "product_id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "expected_identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Original",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "5010724527481",
+          "canonical_gtin14": "05010724527481",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original",
+          "source_urls": [
+            "https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Batiste Trockenshampoo Original, 200 ml and GTIN 5010724527481."
+        }
+      ]
+    },
+    {
+      "product_id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "expected_identity": {
+        "canonical_brand": "Isana",
+        "clean_name": "Trockenshampoo Jedes Haar",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4305615554532",
+          "canonical_gtin14": "04305615554532",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar/p/4305615554532",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar/p/4305615554532"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current Rossmann PDP path and page identify ISANA Trockenshampoo Jedes Haar with EAN/GTIN 4305615554532."
+        }
+      ]
+    },
+    {
+      "product_id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "expected_identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Bruenett",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "5010724527474",
+          "canonical_gtin14": "05010724527474",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1551789/batiste-trockenshampoo-bruenett",
+          "source_urls": [
+            "https://www.dm.de/p/d/1551789/batiste-trockenshampoo-bruenett"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Batiste Trockenshampoo Brünett, 200 ml and GTIN 5010724527474."
+        }
+      ]
+    },
+    {
+      "product_id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "expected_identity": {
+        "canonical_brand": "got2b",
+        "clean_name": "Trockenshampoo Liquid to Dry",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4015100815788",
+          "canonical_gtin14": "04015100815788",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1681323/got2b-trockenshampoo-liquid-to-dry",
+          "source_urls": [
+            "https://www.dm.de/p/d/1681323/got2b-trockenshampoo-liquid-to-dry"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names got2b Trockenshampoo Liquid to Dry, 200 ml and GTIN 4015100815788."
+        }
+      ]
+    },
+    {
+      "product_id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "expected_identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Blond",
+        "category_key": "dry_shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "5010724527467",
+          "canonical_gtin14": "05010724527467",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1551788/batiste-trockenshampoo-blond",
+          "source_urls": [
+            "https://www.dm.de/p/d/1551788/batiste-trockenshampoo-blond"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Batiste Trockenshampoo Blond, 200 ml and GTIN 5010724527467."
+        }
+      ]
+    },
+    {
+      "product_id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "expected_identity": {
+        "canonical_brand": "Wahre Schätze",
+        "clean_name": "Wahre Schätze Sanfte Hafermilch",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "3600542461658",
+          "canonical_gtin14": "03600542461658",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch",
+          "source_urls": [
+            "https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Garnier Wahre Schätze Shampoo Sanfte Hafermilch, 300 ml and GTIN 3600542461658."
+        }
+      ]
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "expected_identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Balea Tiefenreinigung",
+        "category_key": "shampoo"
+      },
+      "status": "blocked",
+      "blocker": "active_catalog_duplicate_exact_package_collision_with_deep_cleansing_row",
+      "blocker_note": "The current exact Balea Professional Shampoo Tiefenreinigung package is verified as GTIN 4070765001020 for deep_cleansing_shampoo row 375ee7a0-3262-4b99-8e48-4f327c6e09aa. This shampoo row appears to duplicate the same physical package under a broader category; assigning the same GTIN to both active product_ids would create an identifier collision, so this row is blocked pending catalog reconciliation.",
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "evidence_attempted": [
+        "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung"
+      ],
+      "packages": []
+    },
+    {
+      "product_id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "expected_identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "Hask Shampoo Argan Oil",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "071164343166",
+          "canonical_gtin14": "00071164343166",
+          "size": "355 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil",
+          "source_urls": [
+            "https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names HASK Shampoo Argan Oil, 355 ml and GTIN 071164343166."
+        }
+      ]
+    },
+    {
+      "product_id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "expected_identity": {
+        "canonical_brand": "Salthouse",
+        "clean_name": "Salthouse Anti Juckreiz",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4008890006405",
+          "canonical_gtin14": "04008890006405",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1585727/salthouse-shampoo-totes-meer-therapie-anti-juckreiz",
+          "source_urls": [
+            "https://www.dm.de/p/d/1585727/salthouse-shampoo-totes-meer-therapie-anti-juckreiz"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Salthouse Shampoo Totes Meer Therapie Anti-Juckreiz, 250 ml and GTIN 4008890006405."
+        }
+      ]
+    },
+    {
+      "product_id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "expected_identity": {
+        "canonical_brand": "Dejan Garz",
+        "clean_name": "Dejan Garz Shampoo",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4270004570106",
+          "canonical_gtin14": "04270004570106",
+          "size": "300 ml",
+          "market_scope": "EU/CZ",
+          "source_url": "https://www.newflagpro.cz/dejan-garz-shampoo-the-foundation-p7374/",
+          "source_urls": [
+            "https://www.newflagpro.cz/dejan-garz-shampoo-the-foundation-p7374/",
+            "https://www.dejangarz.com/products/shampoo"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "EU distributor PDP explicitly names Dejan Garz Shampoo The Foundation, 300 ml and EAN 4270004570106; official Dejan Garz shampoo page confirms the current product identity but does not publish the GTIN."
+        }
+      ]
+    },
+    {
+      "product_id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "expected_identity": {
+        "canonical_brand": "Lavera",
+        "clean_name": "Lavera Basis Sensitiv",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4021457666768",
+          "canonical_gtin14": "04021457666768",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care",
+          "source_urls": [
+            "https://www.dm.de/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names lavera Naturkosmetik Shampoo Basis Sensitive Hydrate & Care, 250 ml and GTIN 4021457666768; mapped to existing Lavera Basis Sensitiv catalog row."
+        }
+      ]
+    },
+    {
+      "product_id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "expected_identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "Biotin & Collagen Shampoo",
+        "category_key": "shampoo",
+        "product_line": "Thick & Full +"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "3574661800202",
+          "canonical_gtin14": "03574661800202",
+          "size": "385 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1443641/ogx-shampoo-thick-und-full-biotin-und-collagen",
+          "source_urls": [
+            "https://www.dm.de/p/d/1443641/ogx-shampoo-thick-und-full-biotin-und-collagen"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names OGX Shampoo Thick & Full + Biotin & Collagen, 385 ml and GTIN 3574661800202."
+        }
+      ]
+    },
+    {
+      "product_id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "expected_identity": {
+        "canonical_brand": "Syoss",
+        "clean_name": "Syoss Intense Curls",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4015100860504",
+          "canonical_gtin14": "04015100860504",
+          "size": "440 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3047029/syoss-shampoo-intense-curls",
+          "source_urls": [
+            "https://www.dm.de/p/d/3047029/syoss-shampoo-intense-curls"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names SYOSS Shampoo Intense Curls, 440 ml and GTIN 4015100860504."
+        }
+      ]
+    },
+    {
+      "product_id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "expected_identity": {
+        "canonical_brand": "Swiss-O-Par",
+        "clean_name": "Swiss-O-Par Teebaumöl",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4104260076501",
+          "canonical_gtin14": "04104260076501",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel",
+          "source_urls": [
+            "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Swiss-o-Par Shampoo Teebaumöl, 250 ml and GTIN 4104260076501."
+        }
+      ]
+    },
+    {
+      "product_id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "expected_identity": {
+        "canonical_brand": "Sebamed",
+        "clean_name": "Sebamed Urea 5%",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4103040048448",
+          "canonical_gtin14": "04103040048448",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1277186/sebamed-shampoo-anti-juckreiz-akut",
+          "source_urls": [
+            "https://www.dm.de/p/d/1277186/sebamed-shampoo-anti-juckreiz-akut"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names sebamed Shampoo Anti-Juckreiz Akut, 200 ml and GTIN 4103040048448; mapped to the existing Sebamed Urea 5% row."
+        }
+      ]
+    },
+    {
+      "product_id": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "expected_identity": {
+        "canonical_brand": "Sante",
+        "clean_name": "Sante Glossy Shine",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4055297220262",
+          "canonical_gtin14": "04055297220262",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1334046/sante-naturally-shampoo-glossy-shine",
+          "source_urls": [
+            "https://www.dm.de/p/d/1334046/sante-naturally-shampoo-glossy-shine"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names SANTE NATURKOSMETIK Shampoo Glossy Shine, 250 ml and GTIN 4055297220262."
+        }
+      ]
+    },
+    {
+      "product_id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "expected_identity": {
+        "canonical_brand": "Sante",
+        "clean_name": "Sante Sensitive Care",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4055297221467",
+          "canonical_gtin14": "04055297221467",
+          "size": "250 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.violey.com/en/sante-sensitive-care-shampoo-probiotica_p_50464.html",
+          "source_urls": [
+            "https://www.violey.com/en/sante-sensitive-care-shampoo-probiotica_p_50464.html",
+            "https://www.sante.de/sensitive-care-shampoo-probiotika-3-fach-protein-komplex/40620"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "EU retailer Violey explicitly names Sante Sensitive Care Shampoo Probiotica, 250 ml and EAN 4055297221467; official Sante page confirms the current Sensitive Care Shampoo Probiotika identity without publishing a GTIN."
+        }
+      ]
+    },
+    {
+      "product_id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "expected_identity": {
+        "canonical_brand": "Monday Haircare",
+        "clean_name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4897097266343",
+          "canonical_gtin14": "04897097266343",
+          "size": "350 ml",
+          "market_scope": "EU/IT",
+          "source_url": "https://www.kelkoo.it/gtin/04897097266343",
+          "source_urls": [
+            "https://www.kelkoo.it/gtin/04897097266343"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "EU product database page names MONDAY Haircare Shampoo Volume Kraft & Fülle, 350 ml and GTIN 4897097266343; no German dm/Rossmann PDP with GTIN was found for this exact row."
+        }
+      ]
+    },
+    {
+      "product_id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "expected_identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Pro-V Volumen Pur",
+        "category_key": "shampoo",
+        "product_line": "Pro-V"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "8700216558471",
+          "canonical_gtin14": "08700216558471",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1561742/pantene-pro-v-shampoo-volumen-pur",
+          "source_urls": [
+            "https://www.dm.de/p/d/1561742/pantene-pro-v-shampoo-volumen-pur"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Pantene Pro-V Shampoo Volumen Pur, 300 ml and GTIN 8700216558471."
+        }
+      ]
+    },
+    {
+      "product_id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "expected_identity": {
+        "canonical_brand": "Wahre Schätze",
+        "clean_name": "Wahre Schätze Aktivkohle",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "3600542512466",
+          "canonical_gtin14": "03600542512466",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut",
+          "source_urls": [
+            "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Garnier Wahre Schätze Shampoo Aktivkohle Fettige Kopfhaut, 300 ml and GTIN 3600542512466."
+        }
+      ]
+    },
+    {
+      "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "expected_identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Grow Abundance",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "8006530060042",
+          "canonical_gtin14": "08006530060042",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+          "source_urls": [
+            "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Pantene Pro-V Shampoo Grow Abundant Anti-Haarverlust, 300 ml and GTIN 8006530060042."
+        }
+      ]
+    },
+    {
+      "product_id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "expected_identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "Rosemary Mint Shampoo",
+        "category_key": "shampoo",
+        "product_line": "Refreshing Scalp +"
+      },
+      "status": "blocked",
+      "blocker": "exact_current_german_eu_gtin_not_found_without_variant_substitution",
+      "blocker_note": "Searches surfaced unrelated current rosemary or OGX products, including Weleda rosemary and OGX ProGrowth/Peptide-type packages, but not an exact German/EU PDP for OGX Refreshing Scalp + Rosemary Mint Shampoo with explicit GTIN. No neighboring variant was substituted.",
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "evidence_attempted": [
+        "https://www.dm.de/search?query=OGX%20Refreshing%20Scalp%20Rosemary%20Mint%20Shampoo",
+        "https://www.dm.de/search?query=OGX%20Rosemary%20Mint%20Shampoo"
+      ],
+      "packages": []
+    },
+    {
+      "product_id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "expected_identity": {
+        "canonical_brand": "Sebamed",
+        "clean_name": "Sebamed Anti Schuppen Plus",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4103040051677",
+          "canonical_gtin14": "04103040051677",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+          "source_urls": [
+            "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+            "https://www.rossmann.de/de/pflege-und-duft-sebamed-anti-schuppen-shampoo-plus/p/4103040051677"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names sebamed Shampoo Anti-Schuppen Plus, 200 ml and GTIN 4103040051677."
+        }
+      ]
+    },
+    {
+      "product_id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "expected_identity": {
+        "canonical_brand": "Guhl",
+        "clean_name": "Guhl Kraft & Fülle",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4072600703502",
+          "canonical_gtin14": "04072600703502",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+          "source_urls": [
+            "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Guhl Shampoo Kraft & Fülle, 250 ml and GTIN 4072600703502."
+        }
+      ]
+    },
+    {
+      "product_id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "expected_identity": {
+        "canonical_brand": "Hair Biology",
+        "clean_name": "Hair Biology Revitalize & Soothe",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "8006540153963",
+          "canonical_gtin14": "08006540153963",
+          "size": "250 ml",
+          "market_scope": "DE/AT",
+          "source_url": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+          "source_urls": [
+            "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+            "https://www.dm.at/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Hair Biology Shampoo Revitalize & Soothe, 250 ml and GTIN 8006540153963."
+        }
+      ]
+    },
+    {
+      "product_id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "expected_identity": {
+        "canonical_brand": "Cantu",
+        "clean_name": "Cantu Shampoo Locken Pflege",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "810006945461",
+          "canonical_gtin14": "00810006945461",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse",
+          "source_urls": [
+            "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Cantu Shampoo Cream Cleanse, 400 ml and GTIN 810006945461; mapped to the existing catalog row Cantu Shampoo Locken Pflege because the row has broad clean-name wording and this is the exact current Cantu curl-care shampoo package found."
+        }
+      ]
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "expected_identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "Keratin Oil Shampoo",
+        "category_key": "shampoo",
+        "product_line": "Strength & Length +"
+      },
+      "status": "blocked",
+      "blocker": "exact_current_german_eu_gtin_not_found_without_variant_substitution",
+      "blocker_note": "Searches surfaced current OGX Bond Protein Repair or Argan Oil of Morocco packages, but not an exact German/EU PDP for OGX Strength & Length + Keratin Oil Shampoo with explicit GTIN. No neighboring OGX variant was substituted.",
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "evidence_attempted": [
+        "https://www.dm.de/search?query=OGX%20Strength%20Length%20Keratin%20Oil%20Shampoo",
+        "https://www.dm.de/search?query=OGX%20Keratin%20Oil%20Shampoo"
+      ],
+      "packages": []
+    },
+    {
+      "product_id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "expected_identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "Hask Curl Care Shampoo",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "071164304112",
+          "canonical_gtin14": "00071164304112",
+          "size": "355 ml",
+          "market_scope": "EU/ES",
+          "source_url": "https://perfumeseden.com/higiene-personal/higiene-cabello/hask-curl-care-rizos-perfectos-shampoo-355-ml/",
+          "source_urls": [
+            "https://perfumeseden.com/higiene-personal/higiene-cabello/hask-curl-care-rizos-perfectos-shampoo-355-ml/"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "EU retailer Perfumes Eden names HASK Curl Care/Rizos Perfectos Shampoo, 355 ml and EAN 071164304112; current dm similar HASK curls + coconut oil package was rejected as a different package/GTIN."
+        }
+      ]
+    },
+    {
+      "product_id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "expected_identity": {
+        "canonical_brand": "Guhl",
+        "clean_name": "Guhl Frische und Leichtigkeit",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4072600282274",
+          "canonical_gtin14": "04072600282274",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett",
+          "source_urls": [
+            "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Guhl Shampoo Frische & Leichtigkeit Anti-Fett, 250 ml and GTIN 4072600282274."
+        }
+      ]
+    },
+    {
+      "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "expected_identity": {
+        "canonical_brand": "Head & Shoulders",
+        "clean_name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "8700216496032",
+          "canonical_gtin14": "08700216496032",
+          "size": "250 ml",
+          "market_scope": "DE/AT",
+          "source_url": "https://www.dm.at/p/d/2482704/head-und-shoulders-shampoo-derma-x-pro-sensitive-pflege",
+          "source_urls": [
+            "https://www.dm.at/p/d/2482704/head-und-shoulders-shampoo-derma-x-pro-sensitive-pflege",
+            "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm.at PDP explicitly names head & shoulders Shampoo Derma X Pro Sensitive Pflege, 250 ml and GTIN 8700216496032; Rossmann DE path corroborates the package EAN."
+        }
+      ]
+    },
+    {
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "expected_identity": {
+        "canonical_brand": "Langhaarmädchen",
+        "clean_name": "Langhaarmädchen Lovely Long",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4067796002621",
+          "canonical_gtin14": "04067796002621",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+          "source_urls": [
+            "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Langhaarmädchen Shampoo Lovely Long, 300 ml and GTIN 4067796002621."
+        }
+      ]
+    },
+    {
+      "product_id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "expected_identity": {
+        "canonical_brand": "Sebamed",
+        "clean_name": "Sebamed Every-Day Shampoo",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4103040051752",
+          "canonical_gtin14": "04103040051752",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1005244/sebamed-shampoo-every-day",
+          "source_urls": [
+            "https://www.dm.de/p/d/1005244/sebamed-shampoo-every-day",
+            "https://www.rossmann.de/de/pflege-und-duft-sebamed-everyday-shampoo/p/4103040051752"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names sebamed Shampoo Every-Day, 200 ml and GTIN 4103040051752."
+        }
+      ]
+    },
+    {
+      "product_id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "expected_identity": {
+        "canonical_brand": "Nivea",
+        "clean_name": "Nivea Shampoo&Conditioner 2in1",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "4006000193991",
+          "canonical_gtin14": "04006000193991",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1",
+          "source_urls": [
+            "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names NIVEA Shampoo & Conditioner Express 2in1, 250 ml and GTIN 4006000193991."
+        }
+      ]
+    },
+    {
+      "product_id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "expected_identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Hydra Glow Shampoo",
+        "category_key": "shampoo"
+      },
+      "status": "verified",
+      "blocker": null,
+      "evidence_checked_at": "2026-08-26T16:30:00.000Z",
+      "packages": [
+        {
+          "raw_gtin": "8700216170345",
+          "canonical_gtin14": "08700216170345",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow",
+          "source_urls": [
+            "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Pantene Pro-V Shampoo Miracles Hydra Glow, 300 ml and GTIN 8700216170345."
+        }
+      ]
+    }
+  ],
+  "content_fingerprint": "58419f9d26e5ace09bcaab7e5a5aeb7f4962eeffe98b254818dd47d4dd0e8df2"
+}

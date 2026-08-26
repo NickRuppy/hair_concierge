@@ -65,6 +65,11 @@ const input = {
       researched_payload: {
         final: {
           product: { canonical_brand: "Balea", product_line: "Plex", clean_name: "Shampoo" },
+          identifiers: [
+            { type: "retailer_sku", value: "4006381333930", source: "retailer" },
+            { type: "ean", value: "4006381333931", source: "manufacturer" },
+            { type: "barcode", value: "4066447238952", source: "retailer" },
+          ],
         },
       },
     },
@@ -105,7 +110,8 @@ test("baseline sanitizes facts and open submissions without user data", () => {
       canonical_brand: "Balea",
       product_line: "Plex",
       clean_name: "Shampoo",
-      canonical_gtin14: null,
+      canonical_gtin14: "04006381333931",
+      canonical_gtin14s: ["04006381333931", "04066447238952"],
     },
   ])
   assert.deepEqual(baseline.products[0]?.category_primary_facts, {

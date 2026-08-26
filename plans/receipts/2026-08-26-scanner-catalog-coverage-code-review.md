@@ -1,6 +1,6 @@
 # Scanner catalog coverage code-review receipt
 
-Date: 2026-08-26  
+Date: 2026-08-26
 Reviewed content fingerprint: `9659ee5e8e514244cb31ce0c08c1b86b1f3d95613efd858935a3101d63d5b2a6` across 51 task paths, excluding this receipt and the ready-check receipt.
 
 ## Verdict

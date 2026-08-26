@@ -1,6 +1,6 @@
 # Scanner Catalog Coverage Program — Phases 1–4
 
-**Status:** Complete-existing-catalog-first amendment reviewed; full 259-product readiness audit and safe E1/E2 correction implemented locally; complete ledger and remaining-ready research are in progress (no production apply)
+**Status:** Complete-existing-catalog-first amendment reviewed; safe E1/E2 correction, full 259-product audit, complete ledger, and first-pass research of all 150 remaining strict-ready products implemented locally (no production apply)
 **Branch:** `codex/scanner-catalog-coverage-plan`
 **Worktree:** `.worktrees/scanner-catalog-coverage-plan`
 **Baseline snapshot:** production read taken 2026-08-26
@@ -130,19 +130,19 @@ Phase 1 has four ordered milestones:
 
 The numbers below are exact against the 2026-08-26 baseline. They measure one verified GTIN per product identity; package-size/market breadth is a separate follow-on measure.
 
-| Category | Active baseline | Scan-ready baseline | Safe E1/E2 | Ready research remaining | Authority repair | Existing target | New products | Phase 1B target |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Shampoo | 54 | 3 | 10 | 29 | 12 | 54 | 7 | 61 |
-| Conditioner | 49 | 1 | 9 | 32 | 7 | 49 | 8 | 57 |
-| Mask | 36 | 6 | 9 | 20 | 1 | 36 | 6 | 42 |
-| Leave-in | 46 | 0 | 6 | 35 | 5 | 46 | 8 | 54 |
-| Oil | 41 | 1 | 5 | 19 | 16 | 41 | 6 | 47 |
-| Dry shampoo | 10 | 0 | 2 | 8 | 0 | 10 | 7 | 17 |
-| Heat protectant | 7 | 7 | 0 | 0 | 0 | 7 | 5 | 12 |
-| Deep-cleansing shampoo | 5 | 0 | 1 | 4 | 0 | 5 | 3 | 8 |
-| Scalp care | 8 | 8 | 0 | 0 | 0 | 8 | 2 | 10 |
-| Bondbuilder | 3 | 0 | 0 | 3 | 0 | 3 | 2 | 5 |
-| **Total** | **259** | **26** | **42** | **150** | **41** | **259** | **54** | **313** |
+| Category               | Active baseline | Scan-ready baseline | Safe E1/E2 | Ready research remaining | Authority repair | Existing target | New products | Phase 1B target |
+| ---------------------- | --------------: | ------------------: | ---------: | -----------------------: | ---------------: | --------------: | -----------: | --------------: |
+| Shampoo                |              54 |                   3 |         10 |                       29 |               12 |              54 |            7 |              61 |
+| Conditioner            |              49 |                   1 |          9 |                       32 |                7 |              49 |            8 |              57 |
+| Mask                   |              36 |                   6 |          9 |                       20 |                1 |              36 |            6 |              42 |
+| Leave-in               |              46 |                   0 |          6 |                       35 |                5 |              46 |            8 |              54 |
+| Oil                    |              41 |                   1 |          5 |                       19 |               16 |              41 |            6 |              47 |
+| Dry shampoo            |              10 |                   0 |          2 |                        8 |                0 |              10 |            7 |              17 |
+| Heat protectant        |               7 |                   7 |          0 |                        0 |                0 |               7 |            5 |              12 |
+| Deep-cleansing shampoo |               5 |                   0 |          1 |                        4 |                0 |               5 |            3 |               8 |
+| Scalp care             |               8 |                   8 |          0 |                        0 |                0 |               8 |            2 |              10 |
+| Bondbuilder            |               3 |                   0 |          0 |                        3 |                0 |               3 |            2 |               5 |
+| **Total**              |         **259** |              **26** |     **42** |                  **150** |           **41** |         **259** |       **54** |         **313** |
 
 Existing-catalog minimum package expectation: **at least 260 valid canonical GTIN rows** (today's 39 valid rows plus at least one for each of the 221 initially unlinked products). The one invalid PZN hold remains outside this count. Phase 1B adds at least 54 more exact package GTINs. Preserve every additional supported German/EU package code, but never delay identity-complete coverage merely to exhaust all package variants.
 
@@ -152,19 +152,19 @@ Expand the end state from 313 to approximately 434 scan-result-ready identities.
 
 Phase 2 is **not** an activation gate. It is a deliberate model/catalog breadth investment that starts only after the complete-existing-catalog and 54-new-product Phase 1 receipts. Before committing the full 121 identities, publish measured research/review time and a batch forecast from the completed Phase 1 work. The planned operating units are at most 20 identifier-first candidates per batch and 8–12 full new-product samples per batch; calendar dates come from measured throughput rather than invented capacity.
 
-| Category | Phase 1 target | Phase 2 end-state target | Added identities |
-|---|---:|---:|---:|
-| Shampoo | 61 | 86 | 25 |
-| Conditioner | 57 | 75 | 18 |
-| Mask | 42 | 58 | 16 |
-| Leave-in | 54 | 70 | 16 |
-| Oil | 47 | 59 | 12 |
-| Dry shampoo | 17 | 26 | 9 |
-| Heat protectant | 12 | 20 | 8 |
-| Deep-cleansing shampoo | 8 | 15 | 7 |
-| Scalp care | 10 | 15 | 5 |
-| Bondbuilder | 5 | 10 | 5 |
-| **Total** | **313** | **434** | **121** |
+| Category               | Phase 1 target | Phase 2 end-state target | Added identities |
+| ---------------------- | -------------: | -----------------------: | ---------------: |
+| Shampoo                |             61 |                       86 |               25 |
+| Conditioner            |             57 |                       75 |               18 |
+| Mask                   |             42 |                       58 |               16 |
+| Leave-in               |             54 |                       70 |               16 |
+| Oil                    |             47 |                       59 |               12 |
+| Dry shampoo            |             17 |                       26 |                9 |
+| Heat protectant        |             12 |                       20 |                8 |
+| Deep-cleansing shampoo |              8 |                       15 |                7 |
+| Scalp care             |             10 |                       15 |                5 |
+| Bondbuilder            |              5 |                       10 |                5 |
+| **Total**              |        **313** |                  **434** |          **121** |
 
 Phase 2 package breadth is forecast only after the complete-existing-catalog throughput receipt; do not invent a fixed package count before measuring package variants per accepted identity. The additional samples come from four lanes:
 
@@ -296,7 +296,7 @@ Completion state: every accepted row has a correct exact identity, unique canoni
 
 **Complete when:** deterministic tests reproduce every product ID and category count, E1/E2 contain strict-ready rows only, and the 259-row partition has no gap or duplicate.
 
-**Local implementation receipt (2026-08-26):** the schema-v2 read-only audit evaluated all 259 active supported products and froze the exact readiness split at 26 already scan-result-ready, 192 unlinked strict-ready, and 41 authority-blocked (29 unlinked, 12 already linked). The corrected safe waves account for 20 E1 plus 22 E2 products; the deterministic remaining-ready lanes account for 150 unique products (A 41, B 32, C 38, D 39). The complete ledger fingerprint is `0e09116759e01e33ad20627664648c25e59e114ef5f8a79149e6a71580364fbf`. No database write occurred.
+**Local implementation receipt (2026-08-26):** the schema-v2 read-only audit evaluated all 259 active supported products through the shared scanner-readiness oracle and froze the exact readiness split at 26 already scan-result-ready, 192 unlinked strict-ready, and 41 authority-blocked (29 unlinked, 12 already linked). The corrected safe waves account for 20 E1 plus 22 E2 products; the deterministic remaining-ready lanes account for 150 unique products (A 41, B 32, C 38, D 39). The complete ledger fingerprint is `fe23a3fcdde059bc55060bbe5a429d57bd230c0503a7cb1fe9ad68a046e9b7f8`. The full live and readiness snapshots, derived ledgers, source-backed research lanes, and candidate manifests are retained in this PR under an exact 2026-08-26 allowlist because they are the reproducibility inputs for reviewed fingerprints and later guarded apply receipts; future scanner exports remain ignored unless separately reviewed and allowlisted. No database write occurred.
 
 ### Task 3 — Research and backfill all 192 strict-ready existing products
 
@@ -310,6 +310,8 @@ Completion state: every accepted row has a correct exact identity, unique canoni
 - Run every accepted EAN through lookup and verdict rendering; identity-only insertion is insufficient.
 
 **Complete when:** all 192 originally strict-ready products are scan-result-ready, no accepted EAN collides globally, and production/live receipts account for every accepted or held row.
+
+**Local research receipt (2026-08-26):** all 150 remaining-ready assignments were researched and reconciled against the active supported-product baseline, E1/E2, and every barcode-shaped GTIN on unresolved open submissions. The strict integration gate accepted 97 exact products with 100 checksum-valid GTINs that are collision-free within that explicitly bounded offline ownership scope, and retained 53 explicit evidence/identity holds. Five research-only candidate files split the accepted products into E3–E7 at 20/20/20/20/17; they are not runtime-approved or production manifests. Promotion requires a fresh live preflight across active and inactive catalog owners plus open submissions, followed by exact production manifests and guarded execution. The summary fingerprint is `355163b2d7cca865b805f0d233e60fd5fa69d17c76f221bb3f211b8d9d9b1f9c`. The gate rejected an OGX shampoo/conditioner ownership conflict, held three duplicated 3-in-1 physical packages represented by multiple category product IDs, and moved Balea Natural Beauty 3in1 Locken to an identity-adjudication hold because the same GTIN is present in an unresolved submission. No database write occurred.
 
 ### Task 4 — Repair the 41 authority-blocked existing products
 
@@ -443,4 +445,4 @@ Completion state: every accepted row has a correct exact identity, unique canoni
 - Phase gates authorize planning progression only. Commit, push, PR, merge, migrations, production writes, and scanner activation each remain separate actions under the repository workflow.
 - Principal residual uncertainty: current retailer visibility is only a proxy for demand. Phase 3 is the first point at which Chaarlie can validate real first-scan coverage with its own users.
 
-**Current implementation stop point:** commit the corrected safe E1/E2 artifacts, the deterministic complete-existing-catalog ledger, the generalized guarded batch-family executor, and source-backed research artifacts for the remaining strict-ready products. Tasks 6–9 are retained as explicit Phase 1B/2/3/4 follow-on plans and are not implementation scope for this commit. Do not push, open a PR, merge, apply migrations, write production data, or activate the scanner without the relevant separate authorization.
+**Current implementation stop point:** commit the corrected safe E1/E2 artifacts, their exact guarded executor, the deterministic complete-existing-catalog ledger, and source-backed research artifacts for the remaining strict-ready products. Generalizing the executor happens only when E3+ candidates are promoted into reviewed production manifests. Tasks 6–9 are retained as explicit Phase 1B/2/3/4 follow-on plans and are not implementation scope for this commit. Do not push, open a PR, merge, apply migrations, write production data, or activate the scanner without the relevant separate authorization.

@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-26T15:43:07.113Z",
+  "generated_at": "2026-08-26T16:43:14.212Z",
   "schema_version": "scanner-existing-catalog-coverage-ledger-v1",
   "source": {
-    "live_baseline_content_fingerprint": "cc84636c1986bf2fe6a7fa5811ec063e2607ad2655f308220ebf16be93f27332",
+    "live_baseline_content_fingerprint": "e19b78d13cfe949744eaf9eceb85e0351f23953a0cddde75e46633e0075ed1f7",
     "readiness_baseline_content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9",
     "e1_manifest_content_fingerprint": "cb2db0e8ab2709ae66a7d3d2925e43f07ccc1f4dd6efae449a50fc074f134654",
     "e2_manifest_content_fingerprint": "a3d92d395ee284ebdba8ee81942ee1efc047b2a25070354e2ef162dc0acd6954",
@@ -9940,5 +9940,5 @@
       "gtin_status": "research_pending"
     }
   ],
-  "content_fingerprint": "0e09116759e01e33ad20627664648c25e59e114ef5f8a79149e6a71580364fbf"
+  "content_fingerprint": "fe23a3fcdde059bc55060bbe5a429d57bd230c0503a7cb1fe9ad68a046e9b7f8"
 }

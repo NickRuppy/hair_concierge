@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26T15:43:07.113Z",
+  "generated_at": "2026-08-26T16:43:14.212Z",
   "schema_version": "scanner-existing-catalog-research-lane-v1",
   "lane": "D",
   "categories": [
@@ -7,7 +7,7 @@
     "oil"
   ],
   "source": {
-    "existing_catalog_coverage_ledger_content_fingerprint": "0e09116759e01e33ad20627664648c25e59e114ef5f8a79149e6a71580364fbf",
+    "existing_catalog_coverage_ledger_content_fingerprint": "fe23a3fcdde059bc55060bbe5a429d57bd230c0503a7cb1fe9ad68a046e9b7f8",
     "readiness_baseline_content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9",
     "note": "Research lane only. Each GTIN still requires fresh exact-product evidence, GS1 checksum validation, global ownership checks, and guarded application approval."
   },
@@ -1586,5 +1586,5 @@
       "gtin_status": "research_pending"
     }
   ],
-  "content_fingerprint": "6a26a94a72d649d3b60afc42078554ac61993e706bc30f82719e81b620391f30"
+  "content_fingerprint": "bf01fa2b0c5c8a7fcc90345e9a591f832f54deb4dd8d33dfc26f20b7b7874b75"
 }

@@ -1,8 +1,8 @@
 # Scanner catalog coverage ready-check receipt
 
-Date: 2026-08-26  
-Branch: `codex/scanner-catalog-coverage-plan`  
-Base: `origin/main@455c115b`  
+Date: 2026-08-26
+Branch: `codex/scanner-catalog-coverage-plan`
+Base: `origin/main@455c115b`
 Reviewed content fingerprint: `9659ee5e8e514244cb31ce0c08c1b86b1f3d95613efd858935a3101d63d5b2a6` across 51 task paths, excluding this receipt and the code-review receipt.
 
 ## Outcome

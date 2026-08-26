@@ -92,6 +92,7 @@ export type LiveBaseline = {
       product_line: string | null
       clean_name: string | null
       canonical_gtin14: string | null
+      canonical_gtin14s: string[]
     }>
   }
   products: BaselineProduct[]
@@ -163,13 +164,12 @@ function isJson(value: unknown): value is Json {
   if (Array.isArray(value)) return value.every(isJson)
   return Boolean(value && typeof value === "object" && Object.values(value as Row).every(isJson))
 }
-function payloadIdentity(
-  value: unknown,
-): {
+function payloadIdentity(value: unknown): {
   canonical_brand: string | null
   product_line: string | null
   clean_name: string | null
   canonical_gtin14: string | null
+  canonical_gtin14s: string[]
 } | null {
   if (!value || typeof value !== "object") return null
   const final = (value as Row).final
@@ -183,11 +183,23 @@ function payloadIdentity(
   const identifiers = Array.isArray((final as Row).identifiers)
     ? ((final as Row).identifiers as Row[])
     : []
-  const canonical_gtin14 =
-    identifiers
-      .map((item) => canonicalizeGtin(string(item.identifier_value) ?? ""))
-      .find((item) => item !== null) ?? null
-  return { canonical_brand, product_line: string(row.product_line), clean_name, canonical_gtin14 }
+  const canonical_gtin14s = [
+    ...new Set(
+      identifiers
+        .filter((item) =>
+          BARCODE_TYPES.has(string(item.type) ?? string(item.identifier_type) ?? ""),
+        )
+        .map((item) => canonicalizeGtin(string(item.value) ?? string(item.identifier_value) ?? ""))
+        .filter((item): item is string => item !== null),
+    ),
+  ].sort()
+  return {
+    canonical_brand,
+    product_line: string(row.product_line),
+    clean_name,
+    canonical_gtin14: canonical_gtin14s[0] ?? null,
+    canonical_gtin14s,
+  }
 }
 
 export function buildBaseline(input: {

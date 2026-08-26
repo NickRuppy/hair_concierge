@@ -4,10 +4,10 @@ This is a **research-ready, production-pending** cohort: it adds scanner identif
 
 ## Cohort
 
-| Wave | Existing products | GTINs | Purpose | Batch fingerprint |
-| --- | ---: | ---: | --- | --- |
-| E1 | 20 | 22 | Current Phase 1 pilot, copied exactly from existing-pilot-research.json. | `2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04` |
-| E2 | 22 | 24 | Safe difference from the five researched cohorts after the held product IDs and authority-blocked Balea Med Anti Schuppen are removed. | `b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a` |
+| Wave | Existing products | GTINs | Purpose                                                                                                                                | Batch fingerprint                                                  |
+| ---- | ----------------: | ----: | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| E1   |                20 |    22 | Current Phase 1 pilot, copied exactly from existing-pilot-research.json.                                                               | `2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04` |
+| E2   |                22 |    24 | Safe difference from the five researched cohorts after the held product IDs and authority-blocked Balea Med Anti Schuppen are removed. | `b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a` |
 
 Total: **42 existing products / 46 canonical GTIN-14 values**. Execution approval remains pinned independently to each wave's exact raw-manifest fingerprint.
 
@@ -28,4 +28,4 @@ Before any production apply, reopen every source URL, rerun global ownership acr
 
 Fingerprint contract: item fingerprints hash stable key-sorted JSON of the full item without its own fingerprint. Wave approval fingerprints are SHA-256 values of the exact raw UTF-8 E1/E2 manifest files that the guarded executor loads.
 
-Source lineage: live baseline `cc84636c1986bf2fe6a7fa5811ec063e2607ad2655f308220ebf16be93f27332`; pilot research `scanner-phase1-existing-pilot-2026-08-26`; document commits e47bd926, 3b3dfc6d, e040867b, 3eba1830, and 555ac633.
+Source lineage: refreshed live baseline `e19b78d13cfe949744eaf9eceb85e0351f23953a0cddde75e46633e0075ed1f7`; pilot research `scanner-phase1-existing-pilot-2026-08-26`; document commits e47bd926, 3b3dfc6d, e040867b, 3eba1830, and 555ac633.
