@@ -102,14 +102,14 @@ test("accepts the two approved cohort shapes and canonicalizes all GTINs", () =>
     items: unknown[]
     canonical_gtins: string[]
   }
-  const second = parseScannerIdentifierBackfillManifest(manifest("E2", 23, 26)) as {
+  const second = parseScannerIdentifierBackfillManifest(manifest("E2", 22, 24)) as {
     items: unknown[]
     canonical_gtins: string[]
   }
   assert.equal(first.items.length, 20)
   assert.equal(first.canonical_gtins.length, 22)
-  assert.equal(second.items.length, 23)
-  assert.equal(second.canonical_gtins.length, 26)
+  assert.equal(second.items.length, 22)
+  assert.equal(second.canonical_gtins.length, 24)
 })
 
 test("loads the reviewed E1/E2 files with their exact pinned raw fingerprints", () => {
@@ -157,7 +157,7 @@ test("rejects drift-prone manifests without exact lifecycle, source URL, and con
 test("apply arguments are fail-closed and pin both exact raw manifest fingerprints", () => {
   assert.deepEqual(SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS, {
     E1: "2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04",
-    E2: "289f684d92aeea79166efe739ebc2d8a081b1509725261ce6a9fdbb36fe8829f",
+    E2: "b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a",
   })
   assert.throws(() => parseScannerIdentifierBackfillArgs(["--apply"]), /confirm-project/i)
   assert.throws(

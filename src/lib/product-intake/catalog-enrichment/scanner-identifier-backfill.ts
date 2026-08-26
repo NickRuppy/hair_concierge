@@ -19,7 +19,7 @@ export const SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS = [
 export type ScannerIdentifierBackfillBatch = "E1" | "E2"
 export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
   E1: "2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04",
-  E2: "289f684d92aeea79166efe739ebc2d8a081b1509725261ce6a9fdbb36fe8829f",
+  E2: "b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a",
 } as const satisfies Record<ScannerIdentifierBackfillBatch, string | null>
 
 export type ScannerIdentifierType = "ean" | "gtin" | "barcode"
@@ -114,7 +114,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const SAFE_KEY = /^[a-z0-9][a-z0-9-]*$/
 const EXPECTED_SHAPES = {
   E1: { products: 20, gtins: 22 },
-  E2: { products: 23, gtins: 26 },
+  E2: { products: 22, gtins: 24 },
 } as const
 
 function record(value: unknown, label: string): Record<string, unknown> {

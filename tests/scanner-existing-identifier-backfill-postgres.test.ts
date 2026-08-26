@@ -18,8 +18,8 @@ function gtin(body: string): string {
 }
 
 function makeManifest(batch: "E1" | "E2") {
-  const productCount = batch === "E1" ? 20 : 23
-  const gtinCount = batch === "E1" ? 22 : 26
+  const productCount = batch === "E1" ? 20 : 22
+  const gtinCount = batch === "E1" ? 22 : 24
   const batchDigit = batch === "E1" ? "1" : "2"
   const items = Array.from({ length: productCount }, (_, index) => {
     const productId = `${batchDigit}${String(index + 1).padStart(7, "0")}-1111-4111-8111-${String(index + 1).padStart(12, "0")}`
@@ -133,7 +133,7 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       makeManifest("E1").fingerprint,
     )
     .replace(
-      "289f684d92aeea79166efe739ebc2d8a081b1509725261ce6a9fdbb36fe8829f",
+      "b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a",
       makeManifest("E2").fingerprint,
     )
   await pg.exec(executor)
@@ -153,7 +153,7 @@ test("migration is service-role-only, fail-closed, and pins both exact raw finge
     "utf8",
   )
   assert.match(sql, /2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04/)
-  assert.match(sql, /289f684d92aeea79166efe739ebc2d8a081b1509725261ce6a9fdbb36fe8829f/)
+  assert.match(sql, /b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a/)
   assert.match(sql, /SECURITY DEFINER\s+SET search_path = ''/i)
   assert.match(sql, /p_execution_enabled IS DISTINCT FROM true/)
   assert.match(sql, /jsonb_array_length\(v_batch->'items'\) > 25/)

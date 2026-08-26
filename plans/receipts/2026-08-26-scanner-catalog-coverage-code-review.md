@@ -19,6 +19,6 @@ Approved for local commit. No unresolved correctness, security, data-integrity, 
 - The four migrations are intentionally unapplied, so the guarded preflight must remain blocked until deployment.
 - Applying the canonical generated column rewrites the small current identifier table; deployment should still observe migration duration.
 - The manifests encode evidence current as of 2026-08-26. Every source and ownership check must be refreshed at the exact reviewed head immediately before apply.
-- The 48 GTINs cover existing products only. Genuinely new products still require the full Product Intake research, image, INCI, property, protocol, review, and publish path.
+- The corrected 46 GTINs cover existing products only. Genuinely new products still require the full Product Intake research, image, INCI, property, protocol, review, and publish path.
 
 Transient reviewer output was kept outside the repository and is not part of the commit.

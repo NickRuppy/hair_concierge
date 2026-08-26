@@ -104,9 +104,9 @@ BEGIN
     v_expected_gtins := 22;
     v_approved_fingerprint := '2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04';
   ELSE
-    v_expected_products := 23;
-    v_expected_gtins := 26;
-    v_approved_fingerprint := '289f684d92aeea79166efe739ebc2d8a081b1509725261ce6a9fdbb36fe8829f';
+    v_expected_products := 22;
+    v_expected_gtins := 24;
+    v_approved_fingerprint := 'b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a';
   END IF;
   IF v_approved_fingerprint !~ '^[a-f0-9]{64}$'
      OR v_batch_fingerprint IS DISTINCT FROM v_approved_fingerprint THEN

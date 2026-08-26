@@ -559,45 +559,6 @@
       "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
     },
     {
-      "content_fingerprint": "a427ded5dba6d3505e5eec76469e90e2df41551c92407f92da3e8c34ba362737",
-      "expected_product": {
-        "brand": "Balea",
-        "category_key": "shampoo",
-        "is_active": true,
-        "lifecycle_status": "active",
-        "name": "Balea Med Anti Schuppen"
-      },
-      "identifiers": [
-        {
-          "canonical_gtin14": "04066447785425",
-          "market_scope": "AT/EU",
-          "raw_gtin": "4066447785425",
-          "size": "250 ml",
-          "source_url": "https://www.dm.at/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
-          "source_urls": [
-            "https://www.dm.at/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
-            "https://www.dm.pl/p/d/2968885/balea-med-szampon-do-w-osow-przeciw-upiezowy"
-          ],
-          "type": "ean",
-          "value": "4066447785425"
-        },
-        {
-          "canonical_gtin14": "04066447972528",
-          "market_scope": "DE",
-          "raw_gtin": "4066447972528",
-          "size": "250 ml",
-          "source_url": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
-          "source_urls": [
-            "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive"
-          ],
-          "type": "ean",
-          "value": "4066447972528"
-        }
-      ],
-      "item_key": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
-      "product_id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace"
-    },
-    {
       "content_fingerprint": "fffc5ea01954fca5e7eddfe7cd24ae226e3575b6429506360337594b438bf634",
       "expected_product": {
         "brand": "Balea",
