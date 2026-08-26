@@ -217,6 +217,58 @@ test("marks a v3 planned purchase without an owned source as Noch kaufen", async
   )
 })
 
+test("carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one", async () => {
+  const snapshot = v3Snapshot()
+  snapshot.uncoveredRoles = [
+    {
+      category: "shampoo",
+      role: "shampoo_dandruff",
+      reason: "unassigned",
+      linkedDecisionKey: "decision-refinement-required",
+      deferralReason: "refinement_required",
+    },
+    {
+      category: "oil",
+      role: "pre_wash_fibre_treatment",
+      reason: "inactive",
+      linkedDecisionKey: "decision-no-product",
+      deferralReason: "no_product",
+    },
+    {
+      category: "mask",
+      role: "intensive_conditioning_mask",
+      reason: "inactive",
+      linkedDecisionKey: "decision-preview-unavailable",
+      deferralReason: "preview_unavailable",
+    },
+    // A plain planned-purchase gap: no server deferral reason at all.
+    {
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      reason: "planned_purchase_not_acquired",
+      linkedDecisionKey: "decision-replace",
+    },
+  ]
+  const query = {
+    select: () => query,
+    eq: () => query,
+    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),
+  }
+
+  const presentation = await loadOwnerPortfolioPresentation(
+    { from: () => query },
+    ids.user,
+    ids.plan,
+    ids.portfolio,
+  )
+
+  assert.deepEqual(presentation?.deferredRoleReasons, {
+    "decision-refinement-required": "refinement_required",
+    "decision-no-product": "no_product",
+    "decision-preview-unavailable": "preview_unavailable",
+  })
+})
+
 test("presents one retained owned product when the same product filled multiple replaced roles", async () => {
   const snapshot = v3Snapshot()
   snapshot.retainedOwnedProducts!.push({

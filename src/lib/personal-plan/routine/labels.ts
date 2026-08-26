@@ -3,6 +3,8 @@
 // (src/components/routine/personal-plan/routine-item-card.tsx) and by server-only API routes
 // that need the same label vocabulary without pulling in Button/Card/lucide-react.
 
+import type { Stage3DecisionDeferralReason } from "../products/contracts"
+
 const purposeLabels: Record<string, string> = {
   shampoo_everyday: "Regelmäßige Reinigung",
   shampoo_dandruff: "Schuppenpflege",
@@ -80,4 +82,34 @@ export function routineCategoryLabel(value: string) {
 /** `null` when the role has no dedicated sentence — callers own the fallback. */
 export function routineRolePurposeDescription(value: string): string | null {
   return purposeDescriptions[value] ?? null
+}
+
+export type RoutineDeferralCopy = {
+  text: string
+  /** Module-1 entry (Feinschliff `products`), only for `refinement_required`. */
+  href: string | null
+}
+
+/**
+ * Exact reason-specific copy for a deferred-role placeholder step (Task 2.2).
+ * Only `refinement_required` links back into Modul 1 — the other two reasons
+ * are facts about the catalog/engine, not something a refinement pass fixes.
+ */
+const deferralCopy: Record<Stage3DecisionDeferralReason, RoutineDeferralCopy> = {
+  refinement_required: {
+    text: "Empfehlung folgt — 2 Min. im Feinschliff.",
+    href: "/plan-start?refine=products",
+  },
+  no_product: {
+    text: "Für diese Kategorie haben wir noch kein passendes Produkt.",
+    href: null,
+  },
+  preview_unavailable: {
+    text: "Empfehlung wird geprüft.",
+    href: null,
+  },
+}
+
+export function routineDeferralCopyFor(reason: Stage3DecisionDeferralReason): RoutineDeferralCopy {
+  return deferralCopy[reason]
 }

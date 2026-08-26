@@ -683,6 +683,170 @@ test("states non-executable conditions plainly and keeps editing global", () => 
   )
 })
 
+function deferredItem(overrides: Record<string, unknown> = {}) {
+  return item({
+    state: {
+      systemAssessment: "basis",
+      inclusion: "excluded",
+      availability: "none",
+      fitDecision: "standard",
+    },
+    product: { kind: "none", displayName: null },
+    executable: false,
+    ...overrides,
+  })
+}
+
+test("renders a quiet, reason-specific placeholder step per deferral reason (Task 2.2)", () => {
+  const routine = payload([
+    deferredItem({
+      itemKey: "deferred-refinement",
+      category: "shampoo",
+      role: "shampoo_dandruff",
+      purposeKey: "shampoo_dandruff",
+      sourceDecisionKeys: ["decision-refinement"],
+    }),
+    deferredItem({
+      itemKey: "deferred-no-product",
+      category: "oil",
+      role: "pre_wash_fibre_treatment",
+      purposeKey: "pre_wash_fibre_treatment",
+      sourceDecisionKeys: ["decision-no-product"],
+    }),
+    deferredItem({
+      itemKey: "deferred-preview",
+      category: "mask",
+      role: "intensive_conditioning_mask",
+      purposeKey: "intensive_conditioning_mask",
+      sourceDecisionKeys: ["decision-preview"],
+    }),
+  ])
+  const presentation: PortfolioPresentation = {
+    schemaVersion: 1,
+    plannedPurchaseDecisionKeys: [],
+    retainedOwnedProducts: [],
+    deferredRoleReasons: {
+      "decision-refinement": "refinement_required",
+      "decision-no-product": "no_product",
+      "decision-preview": "preview_unavailable",
+    },
+  }
+
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,
+  )
+
+  assert.match(html, /Empfehlung folgt — 2 Min\. im Feinschliff\./)
+  assert.match(html, /Für diese Kategorie haben wir noch kein passendes Produkt\./)
+  assert.match(html, /Empfehlung wird geprüft\./)
+  assert.equal((html.match(/href="\/plan-start\?refine=products"/g) ?? []).length, 1)
+  assert.match(html, /aria-label="Kategorie: Shampoo"/)
+  assert.match(html, /aria-label="Kategorie: Öl"/)
+  assert.match(html, /aria-label="Kategorie: Maske"/)
+  // Quiet: no alarm styling, no claim the plan is unusable, no stale generic label.
+  assert.doesNotMatch(html, /Für diesen Basis-Baustein fehlt noch ein Produkt/)
+  assert.doesNotMatch(html, /Basis-Lücke/)
+  assert.doesNotMatch(html, /Empfohlen, aber nicht eingeplant/)
+})
+
+test("an excluded item with no matching server deferral reason keeps the generic excluded copy", () => {
+  const routine = payload([
+    deferredItem({ itemKey: "excluded-no-reason", sourceDecisionKeys: ["decision-unmatched"] }),
+  ])
+  const presentation: PortfolioPresentation = {
+    schemaVersion: 1,
+    plannedPurchaseDecisionKeys: [],
+    retainedOwnedProducts: [],
+    // Present, but keyed for an unrelated decision — must not false-positive match.
+    deferredRoleReasons: { "decision-other": "no_product" },
+  }
+
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,
+  )
+
+  assert.match(html, /Empfohlen, aber nicht eingeplant/)
+  assert.doesNotMatch(html, /Empfehlung folgt/)
+  assert.doesNotMatch(html, /kein passendes Produkt/)
+  assert.doesNotMatch(html, /Empfehlung wird geprüft/)
+})
+
+test("a role a later recompute resolved is no longer excluded, so its placeholder disappears with no extra clearing logic", () => {
+  const routine = payload([
+    item({
+      itemKey: "resolved",
+      sourceDecisionKeys: ["decision-refinement"],
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "owned",
+        fitDecision: "standard",
+      },
+      product: { kind: "owned", displayName: "Jetzt empfohlenes Shampoo" },
+    }),
+  ])
+  // A stale portfolio-presentation read can still carry the old deferral
+  // entry for this decision key (e.g. a race with the recompute); the Routine
+  // item itself is the source of truth for whether the role is still deferred.
+  const presentation: PortfolioPresentation = {
+    schemaVersion: 1,
+    plannedPurchaseDecisionKeys: [],
+    retainedOwnedProducts: [],
+    deferredRoleReasons: { "decision-refinement": "refinement_required" },
+  }
+
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,
+  )
+
+  assert.doesNotMatch(html, /Empfehlung folgt/)
+  assert.match(html, /Jetzt empfohlenes Shampoo/)
+  assert.match(html, />Aktiv</)
+})
+
+test("the all-deferred shape (zero-recommendation accept) renders only placeholders without dead-ending the Anwendung CTA", () => {
+  const routine = payload([
+    deferredItem({
+      itemKey: "deferred-shampoo",
+      category: "shampoo",
+      role: "shampoo_everyday",
+      sourceDecisionKeys: ["decision-shampoo"],
+    }),
+    deferredItem({
+      itemKey: "deferred-conditioner",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      sourceDecisionKeys: ["decision-conditioner"],
+    }),
+  ])
+  const activeView: PersonalPlanRoutineView = {
+    status: "active",
+    personalPlanId: "plan-1",
+    planRevision: 1,
+    sourceRevision: 1,
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+  }
+  const presentation: PortfolioPresentation = {
+    schemaVersion: 1,
+    plannedPurchaseDecisionKeys: [],
+    retainedOwnedProducts: [],
+    deferredRoleReasons: {
+      "decision-shampoo": "refinement_required",
+      "decision-conditioner": "refinement_required",
+    },
+  }
+
+  const html = renderToStaticMarkup(
+    <RoutinePage view={activeView} portfolioPresentation={presentation} stage5Reachable />,
+  )
+
+  assert.match(html, /Deine Routine/)
+  assert.equal((html.match(/<a[^>]*href="\/plan-start\?refine=products"[^>]*>/g) ?? []).length, 2)
+  assert.doesNotMatch(html, /Mindestens ein Basis-Baustein fehlt noch/)
+  assert.match(html, /href="\/anwendung"/)
+})
+
 test("translates structured Personal Plan cadence without exposing internal keys", () => {
   const routine = payload([
     item({

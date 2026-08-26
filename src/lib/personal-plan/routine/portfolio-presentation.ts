@@ -1,5 +1,6 @@
 import {
   parseProposedProductPortfolio,
+  type Stage3DecisionDeferralReason,
   type Stage3RetainedInventoryProduct,
   type Stage3RetainedOwnedProduct,
 } from "../products/contracts"
@@ -18,6 +19,22 @@ export type PortfolioPresentation = {
   retainedOwnedProducts: Stage3RetainedOwnedProduct[]
   /** Informational only; never used to construct Routine assignments. */
   retainedInventoryProducts?: Stage3RetainedInventoryProduct[]
+  /**
+   * Server-derived deferral reason for a server `leave_uncovered` decision
+   * (Stage-3, `STAGE3_DECISION_DEFERRAL_REASONS`), keyed by the decision's
+   * `linkedDecisionKey` — the same key a compiled Routine item carries in its
+   * own `sourceDecisionKeys`. The Routine compiler never reads
+   * `uncoveredRoles` (a deferred role compiles to a plain excluded item with
+   * no reason attached), so the Routine surface reads this map alongside the
+   * compiled payload instead of threading the reason through the immutable
+   * Routine schema. Absent for a decision key with no server-derived reason
+   * (a user-excluded category, an ordinary planned-but-not-acquired gap,
+   * etc.) — those keep the existing generic excluded-item copy. Optional so
+   * every existing `PortfolioPresentation` literal (tests, other readers)
+   * keeps compiling; readers must treat a missing map the same as an empty
+   * one.
+   */
+  deferredRoleReasons?: Record<string, Stage3DecisionDeferralReason>
 }
 
 export async function loadOwnerPortfolioPresentation(
@@ -51,6 +68,13 @@ export async function loadOwnerPortfolioPresentation(
       retainedOwnedProductsByDecision.map((product) => [product.userProductId, product]),
     ).values(),
   ]
+  const deferredRoleReasons = Object.fromEntries(
+    portfolio.uncoveredRoles.flatMap((uncoveredRole) =>
+      uncoveredRole.deferralReason
+        ? [[uncoveredRole.linkedDecisionKey, uncoveredRole.deferralReason] as const]
+        : [],
+    ),
+  )
   return {
     schemaVersion: portfolio.schemaVersion,
     plannedPurchaseDecisionKeys:
@@ -60,6 +84,7 @@ export async function loadOwnerPortfolioPresentation(
           )
         : [],
     retainedOwnedProducts,
+    deferredRoleReasons,
     retainedInventoryProducts:
       portfolio.schemaVersion === 4 ? portfolio.retainedInventoryProducts : [],
   }
