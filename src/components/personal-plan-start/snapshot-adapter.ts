@@ -221,10 +221,9 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
   const hasOptionalPage = visibleOptionalCards.length > 0
   return {
     sourceInputHash: snapshot.inputHash,
-    // The fork screen has to name the Stage-2 defaults direct acceptance would
-    // apply before the user accepts, and it must not load Stage 2 to do it.
-    // This is the very context the persisted Stage-2 draft derives from the
-    // same initial snapshot, so both paths describe one truth.
+    // The Stage-2 defaults a direct acceptance would apply, available without
+    // loading Stage 2. This is the very context the persisted Stage-2 draft
+    // derives from the same initial snapshot, so both paths describe one truth.
     stage2TriggerContext: deriveStage2TriggerContext(snapshot),
     basis: screenFor("basis", visibleBasisCards, hasOptionalPage),
     optional: hasOptionalPage ? screenFor("optional", visibleOptionalCards, hasOptionalPage) : null,

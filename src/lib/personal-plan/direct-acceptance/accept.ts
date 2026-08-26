@@ -286,8 +286,8 @@ function isDirectAcceptanceDraft(
  * produced by exactly the path interactive Stage 2 uses.
  *
  * Two server-side guards keep this from destroying real work. Neither relies on
- * the UI hiding the fork screen: a stale screen, back-navigation or a retry can
- * always POST this route.
+ * the UI withholding the accept CTA: a stale screen, back-navigation or a retry
+ * can always POST this route.
  */
 async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
   personalPlanId: string

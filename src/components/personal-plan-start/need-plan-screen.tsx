@@ -45,6 +45,7 @@ export function planStartProductDisclaimer(cards: PlanStartCardViewModel[]): str
 
 /** What the last Idealplan page's CTA does. */
 export type NeedPlanScreenNextIntent = "accept" | "refine"
+export type NeedPlanScreenNextStatus = "idle" | "preparing" | "loading" | "error"
 
 export const PLAN_START_ACCEPT_LABEL = "Zu deiner Routine"
 export const PLAN_START_ACCEPT_PENDING_LABEL = "Wird eingerichtet …"
@@ -59,7 +60,12 @@ type NeedPlanScreenProps = {
   onNext?: () => void
   showJourneyHeader?: boolean
   nextIntent?: NeedPlanScreenNextIntent
-  nextStatus?: "idle" | "loading" | "error"
+  /**
+   * `preparing` blocks the CTA while its prerequisites load without claiming
+   * anything is happening yet — the label stays the idle one. `loading` is the
+   * action itself running, and re-labels.
+   */
+  nextStatus?: NeedPlanScreenNextStatus
   /** Non-blocking status line under the CTA, e.g. while a fallback route opens. */
   nextNotice?: string | null
 }
@@ -83,6 +89,7 @@ export function NeedPlanScreen({
   }, [transitionLayer])
 
   const accepts = nextIntent === "accept"
+  const busy = nextStatus === "loading" || nextStatus === "preparing"
   const nextLabel =
     nextStatus === "loading"
       ? accepts
@@ -105,8 +112,8 @@ export function NeedPlanScreen({
             type="button"
             onClick={onNext}
             variant="funnelCta"
-            disabled={nextStatus === "loading"}
-            aria-busy={nextStatus === "loading"}
+            disabled={busy}
+            aria-busy={busy}
             className="h-auto min-h-14 min-w-0 w-full whitespace-normal px-5 py-3 text-center leading-tight"
           >
             {nextLabel}

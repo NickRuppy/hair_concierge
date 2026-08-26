@@ -7,6 +7,7 @@ import {
   PLAN_ACCEPT_ERROR,
   PLAN_ACCEPT_REFINE_HREF,
   PLAN_ACCEPT_UNAVAILABLE_NOTICE,
+  acceptIdealPlanReadiness,
   acceptStatusAfterStale,
   deriveAcceptIdealPlanSeenRoles,
   interpretAcceptIdealPlanResponse,
@@ -17,10 +18,13 @@ import {
 import {
   PLAN_START_ACCEPT_LABEL,
   PLAN_START_ACCEPT_PENDING_LABEL,
+  PLAN_START_REFINE_ERROR,
   PLAN_START_REFINE_LABEL,
+  PLAN_START_REFINE_PENDING_LABEL,
 } from "../src/components/personal-plan-start/need-plan-screen"
 import {
   PlanStartFlow,
+  planStartCtaState,
   requestAcceptIdealPlan,
 } from "../src/components/personal-plan-start/plan-start-flow"
 import {
@@ -173,11 +177,28 @@ test("the accept response maps every documented outcome to its own recovery", ()
     kind: "plan_already_accepted",
     href: "/routine",
   })
+  // A pinned product that stopped being plannable is a seen-state problem:
+  // fresh previews may resolve it, so it earns the same retry as a stale set.
+  assert.deepEqual(interpretAcceptIdealPlanResponse(409, { error: "recommendation_unavailable" }), {
+    kind: "recommendation_unavailable",
+  })
+  // Re-posting the identical payload can never clear these — only the
+  // refinement can, and it ends in an accepted plan too.
+  for (const error of ["acceptance_not_ready", "conflict", "stage_not_ready"]) {
+    assert.deepEqual(
+      interpretAcceptIdealPlanResponse(409, { error }),
+      { kind: "refinement_required" },
+      `expected ${error} to route into the refinement`,
+    )
+  }
+  // Genuinely transient or terminal-for-the-whole-feature: an inline retry is
+  // the honest offer, and the refinement would not help either.
   for (const [status, body] of [
     [404, { error: "personal_plan_not_available" }],
+    [404, { error: "stage_not_available" }],
     [429, { error: "rate_limited" }],
     [503, { error: "temporarily_unavailable" }],
-    [409, { error: "recommendation_unavailable" }],
+    [409, { error: "some_unknown_conflict" }],
     [200, { status: "accepted" }],
   ] as const) {
     assert.deepEqual(interpretAcceptIdealPlanResponse(status, body), { kind: "error" })
@@ -256,11 +277,69 @@ test("a second consecutive stale seen state opens the refinement instead of loop
   assert.equal(PLAN_ACCEPT_REFINE_HREF, "/plan-start?refine=1")
 })
 
-test("a stale retry whose preview re-fetch fails surfaces the error instead of accepting blind", async () => {
+test("a stale retry whose preview re-fetch fails opens the refinement, never accepts blind", async () => {
   const run = scriptedFlow([{ kind: "seen_state_stale" }], { refreshed: null })
 
-  assert.deepEqual(await run.effect, { kind: "error" })
+  assert.deepEqual(await run.effect, {
+    kind: "open_refinement_route",
+    href: PLAN_ACCEPT_REFINE_HREF,
+  })
+  // Never a second POST with the seen state we know is stale.
   assert.equal(run.acceptCalls.length, 1)
+})
+
+test("a newly unplannable recommendation gets the stale treatment, then the refinement", async () => {
+  const refreshed = [{ decisionKey: "d2", productId: "p2", factFingerprint: "f2" }]
+  const recovered = scriptedFlow(
+    [{ kind: "recommendation_unavailable" }, { kind: "accepted", href: "/routine" }],
+    { refreshed },
+  )
+  assert.deepEqual(await recovered.effect, { kind: "open_routine", href: "/routine" })
+  assert.deepEqual(recovered.acceptCalls, [[seenRole], refreshed])
+  assert.equal(recovered.refreshes(), 1)
+
+  const exhausted = scriptedFlow([
+    { kind: "recommendation_unavailable" },
+    { kind: "recommendation_unavailable" },
+  ])
+  assert.deepEqual(await exhausted.effect, {
+    kind: "open_refinement_route",
+    href: PLAN_ACCEPT_REFINE_HREF,
+  })
+  assert.equal(exhausted.acceptCalls.length, 2)
+
+  // The two attempts are one budget: a stale set that turns unplannable stops
+  // just as fast, instead of alternating forever.
+  const mixed = scriptedFlow([{ kind: "seen_state_stale" }, { kind: "recommendation_unavailable" }])
+  assert.deepEqual(await mixed.effect, {
+    kind: "open_refinement_route",
+    href: PLAN_ACCEPT_REFINE_HREF,
+  })
+  assert.equal(mixed.acceptCalls.length, 2)
+})
+
+test("an unacceptable plan state routes into the refinement without a doomed retry", async () => {
+  const run = scriptedFlow([{ kind: "refinement_required" }])
+
+  assert.deepEqual(await run.effect, {
+    kind: "open_refinement_route",
+    href: PLAN_ACCEPT_REFINE_HREF,
+  })
+  assert.equal(run.acceptCalls.length, 1)
+  assert.equal(run.refreshes(), 0)
+})
+
+/**
+ * The seen state IS the accept payload. Previews we asked for and did not get
+ * must never read as "the user saw nothing" — that would defer roles they were
+ * shown. Previews that were never requestable are a different thing: nothing
+ * was rendered, so an empty seen state is the truth.
+ */
+test("preview readiness separates 'never requested' from 'requested and failed'", () => {
+  assert.equal(acceptIdealPlanReadiness("not_requested"), "accept")
+  assert.equal(acceptIdealPlanReadiness("ready"), "accept")
+  assert.equal(acceptIdealPlanReadiness("loading"), "wait")
+  assert.equal(acceptIdealPlanReadiness("unavailable"), "refine")
 })
 
 /**
@@ -348,29 +427,117 @@ function renderPlanStart(props: Partial<React.ComponentProps<typeof PlanStartFlo
 }
 
 test("the Idealplan CTA leads to the routine once acceptance is the only path", () => {
-  const html = renderPlanStart({ acceptAvailable: true })
+  const html = renderPlanStart({ nextIntent: "accept" })
 
   assert.match(html, new RegExp(PLAN_START_ACCEPT_LABEL))
   assert.doesNotMatch(html, new RegExp(PLAN_START_REFINE_LABEL))
   assert.equal(PLAN_START_ACCEPT_LABEL, "Zu deiner Routine")
 })
 
-test("the accepting CTA reports its own pending, error and refinement-fallback states", () => {
-  const pending = renderPlanStart({ acceptAvailable: true, nextStatus: "loading" })
+test("the accepting CTA reports its own preparing, pending and error states", () => {
+  // Previews still loading: blocked, but nothing is being "set up" yet, so the
+  // label must not claim it is.
+  const preparing = renderPlanStart({ nextIntent: "accept", nextStatus: "preparing" })
+  assert.match(preparing, new RegExp(PLAN_START_ACCEPT_LABEL))
+  assert.doesNotMatch(preparing, new RegExp(PLAN_START_ACCEPT_PENDING_LABEL))
+  assert.match(preparing, /aria-busy="true"/)
+  assert.match(preparing, /disabled=""/)
+
+  const pending = renderPlanStart({ nextIntent: "accept", nextStatus: "loading" })
   assert.match(pending, new RegExp(PLAN_START_ACCEPT_PENDING_LABEL))
   assert.match(pending, /aria-busy="true"/)
 
-  const failed = renderPlanStart({ acceptAvailable: true, nextStatus: "error" })
+  const failed = renderPlanStart({ nextIntent: "accept", nextStatus: "error" })
   assert.match(failed, new RegExp(PLAN_ACCEPT_ERROR))
   assert.match(failed, /role="alert"/)
+  assert.doesNotMatch(failed, /disabled=""/)
+})
 
-  const unavailable = renderPlanStart({
-    acceptAvailable: true,
+/**
+ * M3: the refinement detour must not read as "Wird eingerichtet …" — nothing is
+ * being set up, the user is being taken to the Feinschliff.
+ */
+test("the refinement detour names the Feinschliff instead of claiming a setup", () => {
+  const detour = renderPlanStart({
+    nextIntent: "refine",
     nextStatus: "loading",
     nextNotice: PLAN_ACCEPT_UNAVAILABLE_NOTICE,
   })
-  assert.match(unavailable, new RegExp(PLAN_ACCEPT_UNAVAILABLE_NOTICE))
-  assert.match(unavailable, /role="status"/)
+
+  assert.match(detour, new RegExp(PLAN_START_REFINE_PENDING_LABEL))
+  assert.doesNotMatch(detour, new RegExp(PLAN_START_ACCEPT_PENDING_LABEL))
+  assert.match(detour, new RegExp(PLAN_ACCEPT_UNAVAILABLE_NOTICE))
+  assert.match(detour, /role="status"/)
+})
+
+/**
+ * I2: a `refinement_in_progress` accept hands off to `enterStage2()`. Its
+ * loading and failure states have to reach the same CTA, or the button snaps
+ * back to idle and the user is told nothing.
+ */
+test("a Stage-2 handoff after acceptance keeps its pending and error states on the CTA", () => {
+  const base = {
+    acceptAvailable: true,
+    acceptStatus: "idle",
+    stage2LoadState: "idle",
+    previewLoadState: "ready",
+  } as const
+
+  // `refinement_in_progress` resets acceptStatus and hands off to enterStage2 —
+  // the CTA must follow that load instead of snapping back to idle.
+  assert.deepEqual(planStartCtaState({ ...base, stage2LoadState: "loading" }), {
+    intent: "refine",
+    status: "loading",
+  })
+  assert.deepEqual(planStartCtaState({ ...base, stage2LoadState: "error" }), {
+    intent: "refine",
+    status: "error",
+  })
+
+  const handingOff = renderPlanStart({ nextIntent: "refine", nextStatus: "loading" })
+  assert.match(handingOff, new RegExp(PLAN_START_REFINE_PENDING_LABEL))
+
+  const handoffFailed = renderPlanStart({ nextIntent: "refine", nextStatus: "error" })
+  assert.match(handoffFailed, new RegExp(PLAN_START_REFINE_ERROR))
+  assert.doesNotMatch(handoffFailed, new RegExp(PLAN_ACCEPT_ERROR))
+})
+
+test("the CTA state machine covers every accept and preview combination", () => {
+  const base = {
+    acceptAvailable: true,
+    acceptStatus: "idle",
+    stage2LoadState: "idle",
+    previewLoadState: "ready",
+  } as const
+
+  assert.deepEqual(planStartCtaState(base), { intent: "accept", status: "idle" })
+  // Previews in flight block the CTA without relabelling it (M3).
+  assert.deepEqual(planStartCtaState({ ...base, previewLoadState: "loading" }), {
+    intent: "accept",
+    status: "preparing",
+  })
+  // Nothing was ever requestable — an empty seen state is honest, so accept.
+  assert.deepEqual(planStartCtaState({ ...base, previewLoadState: "not_requested" }), {
+    intent: "accept",
+    status: "idle",
+  })
+  assert.deepEqual(planStartCtaState({ ...base, acceptStatus: "pending" }), {
+    intent: "accept",
+    status: "loading",
+  })
+  assert.deepEqual(planStartCtaState({ ...base, acceptStatus: "error" }), {
+    intent: "accept",
+    status: "error",
+  })
+  // The refinement detour never claims a routine is being set up (M3).
+  assert.deepEqual(planStartCtaState({ ...base, acceptStatus: "unavailable" }), {
+    intent: "refine",
+    status: "loading",
+  })
+  assert.deepEqual(planStartCtaState({ ...base, acceptAvailable: false }), {
+    intent: "refine",
+    status: "idle",
+  })
 })
 
 test("without direct acceptance the CTA keeps naming the Feinschliff it opens", () => {

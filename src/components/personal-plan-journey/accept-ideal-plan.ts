@@ -67,10 +67,26 @@ export type AcceptIdealPlanOutcome =
   | { kind: "accepted"; href: string }
   /** The server plans other products than the user saw; re-fetch and retry. */
   | { kind: "seen_state_stale" }
+  /**
+   * A pinned product is no longer plannable. Same shape of problem as a stale
+   * seen state — fresh previews may resolve it — so it gets the same treatment.
+   */
+  | { kind: "recommendation_unavailable" }
   /** A real Stage 2 is already under way — continue it instead of accepting. */
   | { kind: "refinement_in_progress" }
   | { kind: "plan_already_accepted"; href: "/routine" }
+  /**
+   * The plan cannot be accepted as it stands (`acceptance_not_ready`,
+   * `conflict`, `stage_not_ready`). Re-posting the same payload can never
+   * change that, so the refinement — which also ends in an accepted plan — is
+   * the way out.
+   */
+  | { kind: "refinement_required" }
+  /** Genuinely transient (rate limit, 5xx, network): retrying is meaningful. */
   | { kind: "error" }
+
+/** 409 bodies whose only cure is completing the refinement. */
+const REFINEMENT_REQUIRED_ERRORS = new Set(["acceptance_not_ready", "conflict", "stage_not_ready"])
 
 export function interpretAcceptIdealPlanResponse(
   status: number,
@@ -86,13 +102,39 @@ export function interpretAcceptIdealPlanResponse(
     return payload?.status === "accepted" && href ? { kind: "accepted", href } : { kind: "error" }
   }
   if (status === 409) {
-    if (payload?.error === "seen_state_stale") return { kind: "seen_state_stale" }
-    if (payload?.error === "refinement_in_progress") return { kind: "refinement_in_progress" }
-    if (payload?.error === "plan_already_accepted") {
+    const error = payload?.error
+    if (error === "seen_state_stale") return { kind: "seen_state_stale" }
+    if (error === "recommendation_unavailable") return { kind: "recommendation_unavailable" }
+    if (error === "refinement_in_progress") return { kind: "refinement_in_progress" }
+    if (error === "plan_already_accepted") {
       return { kind: "plan_already_accepted", href: "/routine" }
+    }
+    if (typeof error === "string" && REFINEMENT_REQUIRED_ERRORS.has(error)) {
+      return { kind: "refinement_required" }
     }
   }
   return { kind: "error" }
+}
+
+/**
+ * Whether the Stage-1 previews are in a state that may be accepted.
+ *
+ * The distinction that matters: previews that were REQUESTED and failed are not
+ * the same as previews that were never requestable. In the first case the user
+ * may well have been shown recommendations we simply cannot name any more, so
+ * accepting would silently defer roles behind their back — route them into the
+ * refinement instead. In the second case nothing was ever rendered, so an empty
+ * seen state is the truth, and a plan whose previews genuinely contain no
+ * recommendation accepts all-deferred exactly as designed.
+ */
+export type Stage1PreviewLoadState = "not_requested" | "loading" | "ready" | "unavailable"
+
+export function acceptIdealPlanReadiness(
+  state: Stage1PreviewLoadState,
+): "accept" | "wait" | "refine" {
+  if (state === "loading") return "wait"
+  if (state === "unavailable") return "refine"
+  return "accept"
 }
 
 /** What the Idealplan CTA does once the accept attempt has resolved. */
@@ -104,11 +146,17 @@ export type AcceptIdealPlanFlowEffect =
   | { kind: "open_refinement_route"; href: typeof PLAN_ACCEPT_REFINE_HREF }
   | { kind: "error" }
 
+const openRefinement = {
+  kind: "open_refinement_route",
+  href: PLAN_ACCEPT_REFINE_HREF,
+} as const
+
 /**
  * The whole Stage-1 accept path in one place: accept what the user saw, absorb
- * a single stale race by re-fetching and retrying silently, and hand every
- * other outcome its own recovery. The fork screen is gone, so this must never
- * end in a state the user cannot leave.
+ * a single stale (or newly unavailable) recommendation by re-fetching and
+ * retrying silently, and hand every other outcome its own recovery. The fork
+ * screen is gone, so this must never end in a state the user cannot leave —
+ * only genuinely transient failures stay on the inline retry.
  */
 export async function runAcceptIdealPlanFlow(dependencies: {
   seenRoles: readonly AcceptIdealPlanSeenRole[]
@@ -117,23 +165,28 @@ export async function runAcceptIdealPlanFlow(dependencies: {
   refreshSeenRoles: () => Promise<AcceptIdealPlanSeenRole[] | null>
 }): Promise<AcceptIdealPlanFlowEffect> {
   let seenRoles = dependencies.seenRoles
-  let consecutiveStale = 0
+  let consecutiveSeenStateConflicts = 0
   for (;;) {
     const outcome = await dependencies.accept(seenRoles)
     if (outcome.kind === "accepted" || outcome.kind === "plan_already_accepted") {
       return { kind: "open_routine", href: outcome.href }
     }
     if (outcome.kind === "refinement_in_progress") return { kind: "continue_refinement" }
-    if (outcome.kind !== "seen_state_stale") return { kind: "error" }
+    // Nothing about a re-post can resolve these, so do not offer a retry that
+    // cannot work — the refinement ends in an accepted plan too.
+    if (outcome.kind === "refinement_required") return openRefinement
+    if (outcome.kind !== "seen_state_stale" && outcome.kind !== "recommendation_unavailable") {
+      return { kind: "error" }
+    }
 
-    consecutiveStale += 1
-    if (acceptStatusAfterStale(consecutiveStale) === "unavailable") {
-      return { kind: "open_refinement_route", href: PLAN_ACCEPT_REFINE_HREF }
+    consecutiveSeenStateConflicts += 1
+    if (acceptStatusAfterStale(consecutiveSeenStateConflicts) === "unavailable") {
+      return openRefinement
     }
     const refreshed = await dependencies.refreshSeenRoles()
     // Retrying with a seen state we could not refresh would silently defer
-    // roles the user just saw. Let them retry instead.
-    if (!refreshed) return { kind: "error" }
+    // roles the user just saw, and re-posting the stale one loops forever.
+    if (!refreshed) return openRefinement
     seenRoles = refreshed
   }
 }

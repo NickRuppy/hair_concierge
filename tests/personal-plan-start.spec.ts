@@ -347,6 +347,13 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 320, height: 700 })
+    await page.route("**/api/personal-plan/stage-1/previews?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(previewResponse),
+      }),
+    )
     let acceptRequests = 0
     await page.route("**/api/personal-plan/accept-ideal-plan", (route) => {
       acceptRequests += 1
@@ -424,6 +431,96 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     expect(previewRequests).toBe(previewsBeforeAccept + 1)
     await expect(page.getByRole("heading", { name: "Feinschliff" })).toBeVisible()
     expect(new URL(page.url()).search).toBe("?refine=1")
+  })
+
+  /**
+   * I1. The previews ARE the accept payload. A preview request that fails must
+   * never degrade into `{"seenRoles": []}` — that would defer every role the
+   * user was just shown.
+   */
+  test("previews that fail to load open the Feinschliff instead of accepting an empty seen state", async ({
+    page,
+  }) => {
+    let previewRequests = 0
+    await page.route("**/api/personal-plan/stage-1/previews?*", (route) => {
+      previewRequests += 1
+      return route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "temporarily_unavailable" }),
+      })
+    })
+    const acceptBodies: unknown[] = []
+    await page.route("**/api/personal-plan/accept-ideal-plan", (route) => {
+      acceptBodies.push(JSON.parse(route.request().postData() ?? "{}"))
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ status: "accepted", next: { stage: 4, href: "/routine" } }),
+      })
+    })
+    await page.route(
+      (url) => url.pathname === "/plan-start",
+      (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "text/html",
+          body: "<html lang='de'><body><h1>Feinschliff</h1></body></html>",
+        }),
+    )
+
+    await page.goto(labPath)
+    await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+    // One silent re-fetch before the previews are declared unloadable.
+    await expect.poll(() => previewRequests).toBe(2)
+
+    await page.getByRole("button", { name: "Zu deiner Routine" }).click()
+
+    await expect(page.getByRole("heading", { name: "Feinschliff" })).toBeVisible()
+    expect(new URL(page.url()).search).toBe("?refine=1")
+    expect(acceptBodies).toEqual([])
+  })
+
+  /**
+   * C1. `acceptance_not_ready` cannot be cleared by re-posting the same payload.
+   * Offering a retry there is a dead end; the refinement is the escape hatch.
+   */
+  test("a plan state that cannot be accepted routes into the Feinschliff without a doomed retry", async ({
+    page,
+  }) => {
+    await page.route("**/api/personal-plan/stage-1/previews?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(previewResponse),
+      }),
+    )
+    let acceptRequests = 0
+    await page.route("**/api/personal-plan/accept-ideal-plan", (route) => {
+      acceptRequests += 1
+      return route.fulfill({
+        status: 409,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "acceptance_not_ready" }),
+      })
+    })
+    await page.route(
+      (url) => url.pathname === "/plan-start",
+      (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "text/html",
+          body: "<html lang='de'><body><h1>Feinschliff</h1></body></html>",
+        }),
+    )
+
+    await page.goto(labPath)
+    await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
+    await page.getByRole("button", { name: "Zu deiner Routine" }).click()
+
+    await expect(page.getByRole("heading", { name: "Feinschliff" })).toBeVisible()
+    expect(new URL(page.url()).search).toBe("?refine=1")
+    expect(acceptRequests).toBe(1)
   })
 
   test("contains the reviewed surface at desktop without horizontal overflow", async ({ page }) => {

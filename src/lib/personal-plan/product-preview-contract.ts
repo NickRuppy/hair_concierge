@@ -89,8 +89,8 @@ export type Stage1ProductExamplePreview = Stage1ProductExampleRecommendation
  * entry of the category's primary (first-allowed) role, preferring a real
  * recommendation over a fallback so a secondary-role product still leads the
  * card. Every other entry of that category is therefore something the user
- * never saw on a card — which the fork screen has to disclose before a direct
- * acceptance buys it.
+ * never saw on a card, even though the accept payload still pins it — the
+ * per-role seen state is deliberately wider than what Stage 1 renders.
  */
 export function stage1LeadRolePreviewByCategory(
   previews: readonly Stage1ProductExampleRolePreview[],
