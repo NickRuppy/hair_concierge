@@ -91,8 +91,10 @@ REVOKE ALL ON FUNCTION public.product_identifier_prepare_final_payload_identifie
 GRANT EXECUTE ON FUNCTION public.product_identifier_prepare_final_payload_identifiers(jsonb, uuid)
   TO service_role;
 
-ALTER FUNCTION public.product_intake_approve_reviewed_product(uuid, jsonb, jsonb, text, timestamptz, text)
-  RENAME TO product_intake_approve_reviewed_product_before_canonical_gtin;
+-- Replace the August 20 scan wrapper in place. Delegating directly to its
+-- pre-scan implementation is deliberate: the scanned identifier must be added
+-- before canonical validation, and the obsolete raw/active-only scan wrapper
+-- must not run a second time afterward.
 
 CREATE OR REPLACE FUNCTION public.product_intake_approve_reviewed_product(
   p_submission_id uuid,
@@ -167,15 +169,14 @@ BEGIN
 END;
 $function$;
 
-REVOKE ALL ON FUNCTION public.product_intake_approve_reviewed_product_before_canonical_gtin(uuid, jsonb, jsonb, text, timestamptz, text)
+REVOKE ALL ON FUNCTION public.product_intake_approve_reviewed_product_before_scanned_identifier(uuid, jsonb, jsonb, text, timestamptz, text)
   FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.product_intake_approve_reviewed_product(uuid, jsonb, jsonb, text, timestamptz, text)
   FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.product_intake_approve_reviewed_product(uuid, jsonb, jsonb, text, timestamptz, text)
   TO service_role;
 
-ALTER FUNCTION public.product_intake_link_existing_product(uuid, uuid, text, timestamptz, text)
-  RENAME TO product_intake_link_existing_product_before_canonical_gtin;
+-- Replace the matching link-existing wrapper in place for the same reason.
 
 CREATE OR REPLACE FUNCTION public.product_intake_link_existing_product(
   p_submission_id uuid,
@@ -241,7 +242,7 @@ BEGIN
 END;
 $function$;
 
-REVOKE ALL ON FUNCTION public.product_intake_link_existing_product_before_canonical_gtin(uuid, uuid, text, timestamptz, text)
+REVOKE ALL ON FUNCTION public.product_intake_link_existing_product_before_scanned_identifier(uuid, uuid, text, timestamptz, text)
   FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.product_intake_link_existing_product(uuid, uuid, text, timestamptz, text)
   FROM PUBLIC, anon, authenticated;

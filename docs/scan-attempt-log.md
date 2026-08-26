@@ -94,8 +94,8 @@ Produktionsfreigabe zwingend:
 
 1. Unmittelbar vor dem Apply den Live-Preflight für Kollisionen, ungültige
    GTIN-Zeilen und die erwarteten sechs v1-Telemetriezeilen wiederholen.
-2. Die Migrationen `20260826093828`, `20260826093832`, `20260826093836` und
-   `20260826093839` in genau dieser Reihenfolge anwenden und verifizieren.
+2. Die Migrationen `20260826093828`, `20260826142000`, `20260826142100` und
+   `20260826142200` in genau dieser Reihenfolge anwenden und verifizieren.
 3. Erst nachdem `canonical_gtin14`, die v2-Telemetriefelder, Writer-Guards,
    Retention-Job und der globale partielle Unique Index live nachgewiesen sind,
    darf die dazugehörige Anwendungsversion deployt werden.

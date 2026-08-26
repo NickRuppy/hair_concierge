@@ -1,0 +1,563 @@
+{
+  "batch": "E1",
+  "batch_id": "scanner-existing-identifiers-e1-v1",
+  "items": [
+    {
+      "content_fingerprint": "b469248dd47700239794fc6c6cb71dfb3d877d5c69492051048f38b598e4914c",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Natural Beauty Hibiskus"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04066447238952",
+          "market_scope": "DE",
+          "raw_gtin": "4066447238952",
+          "size": "350 ml",
+          "source_url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch",
+          "source_urls": [
+            "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch"
+          ],
+          "type": "ean",
+          "value": "4066447238952"
+        }
+      ],
+      "item_key": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "product_id": "007a0b35-2372-4836-9aa5-fd089cd588d4"
+    },
+    {
+      "content_fingerprint": "fc4b08495f938073dc6fbb12361e8a887f9e213c6adeb412bf35a4b8e1821b08",
+      "expected_product": {
+        "brand": "Guhl",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Guhl Kopfhaut Sensitive"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "00000040726526",
+          "market_scope": "DE",
+          "raw_gtin": "40726526",
+          "size": "50 ml",
+          "source_url": "https://www.haar-shop.ch/de/60037823-1-kopfhaut-sensitiv-shampoo.html#334=16503",
+          "source_urls": [
+            "https://www.haar-shop.ch/de/60037823-1-kopfhaut-sensitiv-shampoo.html#334=16503"
+          ],
+          "type": "ean",
+          "value": "40726526"
+        },
+        {
+          "canonical_gtin14": "04072600283172",
+          "market_scope": "DE",
+          "raw_gtin": "4072600283172",
+          "size": "250 ml",
+          "source_url": "https://www.guhl.com/produkt/kopfhaut-sensitiv/",
+          "source_urls": [
+            "https://www.guhl.com/produkt/kopfhaut-sensitiv/",
+            "https://www.dm.de/p/d/1446989/guhl-shampoo-kopfhaut-sensitiv"
+          ],
+          "type": "ean",
+          "value": "4072600283172"
+        }
+      ],
+      "item_key": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "product_id": "02afbd03-1c7d-467c-8a07-a8b226d6f535"
+    },
+    {
+      "content_fingerprint": "bd432ad4aa6accf3691ba06a6bbbfddf841b25569bc4f6f657f2d509dd653a8c",
+      "expected_product": {
+        "brand": "Salthouse",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Salthouse Anti Fett"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04008890006467",
+          "market_scope": "DE",
+          "raw_gtin": "4008890006467",
+          "size": "250 ml",
+          "source_url": "https://salthouse.com/de/produkte/anti-fett-shampoo/",
+          "source_urls": [
+            "https://salthouse.com/de/produkte/anti-fett-shampoo/",
+            "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-therapie-anti-fett-shampoo/p/4008890006467"
+          ],
+          "type": "ean",
+          "value": "4008890006467"
+        }
+      ],
+      "item_key": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "product_id": "03b847e5-01b9-40e5-950a-98efc73abb3a"
+    },
+    {
+      "content_fingerprint": "eb1eb982830fddd19691d0b1c74ef4840e00e877c3777a0fd885ff06ab8bd887",
+      "expected_product": {
+        "brand": "Jean&Len",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Jean&Len Repair Keratin & Mandel"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04262401733253",
+          "market_scope": "DE",
+          "raw_gtin": "4262401733253",
+          "size": "100 ml",
+          "source_url": "https://www.jeanlen.de/keratin-haaroel",
+          "source_urls": [
+            "https://www.jeanlen.de/keratin-haaroel",
+            "https://www.dm.de/p/d/1455746/jean-und-len-haaroel-repair-keratin-und-mandel"
+          ],
+          "type": "ean",
+          "value": "4262401733253"
+        }
+      ],
+      "item_key": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "product_id": "05e68c32-f096-457f-8b88-5cd3c0934873"
+    },
+    {
+      "content_fingerprint": "2741e1e8f7bcddec5d47e5ab5905edcad6f5864f5c090876d62fcb1290b505b6",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "deep_cleansing_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Deep Cleansing Shampoo"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528103192",
+          "market_scope": "DE",
+          "raw_gtin": "4063528103192",
+          "size": "330 ml",
+          "source_url": "https://neqi-hair.com/products/neqi-x-the-beautiful-people-deep-cleansing-shampoo",
+          "source_urls": [
+            "https://neqi-hair.com/products/neqi-x-the-beautiful-people-deep-cleansing-shampoo",
+            "https://www.rossmann.de/de/pflege-und-duft-neqi-deep-cleansing-shampoo/p/4063528103192"
+          ],
+          "type": "ean",
+          "value": "4063528103192"
+        }
+      ],
+      "item_key": "07895098-a301-4137-b5c6-9061589b1800",
+      "product_id": "07895098-a301-4137-b5c6-9061589b1800"
+    },
+    {
+      "content_fingerprint": "40f22dd27c6ebc68884c9e6d9971dbcee085f3338fc79e9998dc28edfd112b54",
+      "expected_product": {
+        "brand": "Isana",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Isana Feuchtigkeits Leave-In (Hyaluron)"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04305615946733",
+          "market_scope": "DE",
+          "raw_gtin": "4305615946733",
+          "size": "100 ml",
+          "source_url": "https://www.rossmann.de/de/alle-marken/isana/professional/c/online-marke_4455386/",
+          "source_urls": [
+            "https://www.rossmann.de/de/alle-marken/isana/professional/c/online-marke_4455386/",
+            "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-panthenol-feuchtigkeitsspendend-silikonfrei-trockenes-haar/p/4305615946733"
+          ],
+          "type": "ean",
+          "value": "4305615946733"
+        }
+      ],
+      "item_key": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53"
+    },
+    {
+      "content_fingerprint": "7393c6e758660e29243782ca506aaa3ca7f397b42fb53b6960699f43536239ce",
+      "expected_product": {
+        "brand": "Langhaarmädchen",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Langhaarmädchen Beautiful Curls Shampoo"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04067796150735",
+          "market_scope": "DE",
+          "raw_gtin": "4067796150735",
+          "size": "300 ml",
+          "source_url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+          "source_urls": [
+            "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls"
+          ],
+          "type": "ean",
+          "value": "4067796150735"
+        }
+      ],
+      "item_key": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+    },
+    {
+      "content_fingerprint": "83b12b53c2ca05daee97b9fb9d76b273c2c3a459216ab511f25d5782c98e0a97",
+      "expected_product": {
+        "brand": "Guhl",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Guhl Hyaluron+"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04072600720219",
+          "market_scope": "DE",
+          "raw_gtin": "4072600720219",
+          "size": "250 ml",
+          "source_url": "https://www.guhl.com/produkt/hyaluron-pflege/hyaluron-pflege-shampoo/",
+          "source_urls": [
+            "https://www.guhl.com/produkt/hyaluron-pflege/hyaluron-pflege-shampoo/",
+            "https://www.dm.de/p/d/1688644/guhl-shampoo-hyaluron-pflege"
+          ],
+          "type": "ean",
+          "value": "4072600720219"
+        }
+      ],
+      "item_key": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "product_id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+    },
+    {
+      "content_fingerprint": "66ae7a50da1d86530ba620791de3c9ac3a22cbe27c55f4a2b77e6e6ce07eff50",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Opulent Oil"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078520",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078520",
+          "size": "75 ml",
+          "source_url": "https://neqi-hair.com/products/opulent-oil-hair-serum",
+          "source_urls": [
+            "https://neqi-hair.com/products/opulent-oil-hair-serum",
+            "https://www.dm.de/p/d/1455216/neqi-haarserum-opulent-oil"
+          ],
+          "type": "ean",
+          "value": "4063528078520"
+        }
+      ],
+      "item_key": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "product_id": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+    },
+    {
+      "content_fingerprint": "5bcd2771cc8ded3644a7c477942363a8814668e505078edd06afe64f837fe45d",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "dry_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Trockenshampoo Schaum Kopfhaut Sensitive"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04067796069556",
+          "market_scope": "DE",
+          "raw_gtin": "4067796069556",
+          "size": "150 ml",
+          "source_url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+          "source_urls": [
+            "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive"
+          ],
+          "type": "ean",
+          "value": "4067796069556"
+        }
+      ],
+      "item_key": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "product_id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a"
+    },
+    {
+      "content_fingerprint": "b99e9dff8db4f03e67c3783065082456c3e8375ba07cf445f4682c078b145827",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Bonding Leave-In"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "08700216637374",
+          "market_scope": "DE",
+          "raw_gtin": "8700216637374",
+          "size": "90 ml",
+          "source_url": "https://www.dm.de/p/d/3057700/pantene-pro-v-miracles-molecular-bond-repair-wunder-haarcreme-leave-in",
+          "source_urls": [
+            "https://www.dm.de/p/d/3057700/pantene-pro-v-miracles-molecular-bond-repair-wunder-haarcreme-leave-in",
+            "https://www.mueller.de/b/pantene-pro-v/pantene-pro-v-bond-repair/"
+          ],
+          "type": "ean",
+          "value": "8700216637374"
+        }
+      ],
+      "item_key": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+      "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247"
+    },
+    {
+      "content_fingerprint": "d8a723276f825b5204592f182c014d4cd200a66370b747a07218df8a58a83ebf",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "dry_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Trockenshampoo Kopfhaut Sensitive"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04066447438789",
+          "market_scope": "DE",
+          "raw_gtin": "4066447438789",
+          "size": "200 ml",
+          "source_url": "https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive",
+          "source_urls": [
+            "https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive"
+          ],
+          "type": "ean",
+          "value": "4066447438789"
+        },
+        {
+          "canonical_gtin14": "04067796171334",
+          "market_scope": "DE",
+          "raw_gtin": "4067796171334",
+          "size": "100 ml",
+          "source_url": "https://www.dm.de/p/d/3059888/balea-trockenshampoo-kopfhaut-sensitive-reisegroesse",
+          "source_urls": [
+            "https://www.dm.de/p/d/3059888/balea-trockenshampoo-kopfhaut-sensitive-reisegroesse"
+          ],
+          "type": "ean",
+          "value": "4067796171334"
+        }
+      ],
+      "item_key": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "product_id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c"
+    },
+    {
+      "content_fingerprint": "6b725d11874e91ee64e525abcde85c0b6b0f8a285340cf8c405a1c85b56978f4",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Med Ultra Sensitive Conditioner"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04066447966022",
+          "market_scope": "DE",
+          "raw_gtin": "4066447966022",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+          "source_urls": [
+            "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive"
+          ],
+          "type": "ean",
+          "value": "4066447966022"
+        }
+      ],
+      "item_key": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7"
+    },
+    {
+      "content_fingerprint": "be9c4af518455981c908c9e254f14269e863a0d7724ca620c6509ffaf00bbaeb",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Pro-V Miracles Bond Repair Conditioner"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "08700216151535",
+          "market_scope": "DE",
+          "raw_gtin": "8700216151535",
+          "size": "160 ml",
+          "source_url": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+          "source_urls": [
+            "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+            "https://www.mueller.de/b/pantene-pro-v/pantene-pro-v-bond-repair/"
+          ],
+          "type": "ean",
+          "value": "8700216151535"
+        }
+      ],
+      "item_key": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "product_id": "71d9bccb-74c7-499c-b5de-13ceef57ecde"
+    },
+    {
+      "content_fingerprint": "0756557f4c8d666a455fcded62774bd85ebe1339cc34e85efc0569fe2e3865ac",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Bond Repair"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "08700216173476",
+          "market_scope": "DE",
+          "raw_gtin": "8700216173476",
+          "size": "300 ml",
+          "source_url": "https://www.dm.de/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske",
+          "source_urls": [
+            "https://www.dm.de/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske",
+            "https://www.mueller.de/b/pantene-pro-v/pantene-pro-v-bond-repair/"
+          ],
+          "type": "ean",
+          "value": "8700216173476"
+        }
+      ],
+      "item_key": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+      "product_id": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8"
+    },
+    {
+      "content_fingerprint": "2b7270a9bebaf418ae231e081ce020830c15056ca48f96638c55016ddb2c3543",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Moisture Mystery Conditioner"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078315",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078315",
+          "size": "250 ml",
+          "source_url": "https://neqi-hair.com/products/moisture-mystery-conditioner",
+          "source_urls": [
+            "https://neqi-hair.com/products/moisture-mystery-conditioner",
+            "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-conditioner/p/4063528078315"
+          ],
+          "type": "ean",
+          "value": "4063528078315"
+        }
+      ],
+      "item_key": "95e47992-b45b-4847-ba87-b8c3e608fc63",
+      "product_id": "95e47992-b45b-4847-ba87-b8c3e608fc63"
+    },
+    {
+      "content_fingerprint": "d1bad946e80c49e43c7374ad379786429f3da217faffb7219f9ed58169d39f61",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Hydra Glow"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "08700216173261",
+          "market_scope": "DE",
+          "raw_gtin": "8700216173261",
+          "size": "300 ml",
+          "source_url": "https://www.dm.de/p/d/1343858/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration",
+          "source_urls": [
+            "https://www.dm.de/p/d/1343858/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration"
+          ],
+          "type": "ean",
+          "value": "8700216173261"
+        }
+      ],
+      "item_key": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+      "product_id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8"
+    },
+    {
+      "content_fingerprint": "7732a22adb21ddf49448e3f89b182563608083fee97652c058f575ad7f272fa9",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Leave-In Moisturizing Mist"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528103222",
+          "market_scope": "DE",
+          "raw_gtin": "4063528103222",
+          "size": "180 ml",
+          "source_url": "https://neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist",
+          "source_urls": [
+            "https://neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist",
+            "https://www.rossmann.de/de/pflege-und-duft-neqi-leave-in-mist/p/4063528103222"
+          ],
+          "type": "ean",
+          "value": "4063528103222"
+        }
+      ],
+      "item_key": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+      "product_id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd"
+    },
+    {
+      "content_fingerprint": "58318edcf4df4be51ac1cbe668bf1965897c4fb018dbeb40b1c4bce21d00927f",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Aqua Hyaluron"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04070765001648",
+          "market_scope": "DE",
+          "raw_gtin": "4070765001648",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+          "source_urls": [
+            "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron"
+          ],
+          "type": "ean",
+          "value": "4070765001648"
+        }
+      ],
+      "item_key": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "product_id": "ead1333b-6839-464d-b272-673d39bb95a4"
+    },
+    {
+      "content_fingerprint": "8d63eea35cde084e6d5e0f4e053d065d30f05a0604aff63343043a02f40fbb48",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Kopfhaut Sensitive Shampoo"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04070765001044",
+          "market_scope": "DE",
+          "raw_gtin": "4070765001044",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+          "source_urls": [
+            "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive"
+          ],
+          "type": "ean",
+          "value": "4070765001044"
+        }
+      ],
+      "item_key": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "product_id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d"
+    }
+  ],
+  "schema_version": "scanner-existing-identifier-backfill-v1"
+}

@@ -6,15 +6,15 @@ import { PGlite } from "@electric-sql/pglite"
 
 const migrationsDir = join(process.cwd(), "supabase", "migrations")
 const expandSql = readFileSync(
-  join(migrationsDir, "20260826093832_product_identifier_canonical_gtin_expand.sql"),
+  join(migrationsDir, "20260826142000_product_identifier_canonical_gtin_expand.sql"),
   "utf8",
 )
 const writersSql = readFileSync(
-  join(migrationsDir, "20260826093836_product_identifier_canonical_gtin_writers.sql"),
+  join(migrationsDir, "20260826142100_product_identifier_canonical_gtin_writers.sql"),
   "utf8",
 )
 const invariantSql = readFileSync(
-  join(migrationsDir, "20260826093839_product_identifier_canonical_gtin_invariant.sql"),
+  join(migrationsDir, "20260826142200_product_identifier_canonical_gtin_invariant.sql"),
   "utf8",
 )
 
@@ -39,8 +39,9 @@ test("GTIN expand migration adds checksum canonicalization and keeps invalid leg
 
 test("GTIN writer migration preflights inactive canonical owners before approval or link-existing transitions", () => {
   const sql = compact(writersSql)
-  assert.match(sql, /rename to product_intake_approve_reviewed_product_before_canonical_gtin/)
-  assert.match(sql, /rename to product_intake_link_existing_product_before_canonical_gtin/)
+  assert.doesNotMatch(sql, /before_canonical_gtin/)
+  assert.match(sql, /product_intake_approve_reviewed_product_before_scanned_identifier/)
+  assert.match(sql, /product_intake_link_existing_product_before_scanned_identifier/)
   assert.match(sql, /product_identifier_assert_canonical_owner_available/)
   assert.match(sql, /p_allowed_product_id/)
   assert.match(sql, /existing\.canonical_gtin14 = v_canonical_gtin14/)
