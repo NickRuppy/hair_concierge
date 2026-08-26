@@ -38,6 +38,11 @@ test("production smoke has a separate read-only harness", () => {
   assert.doesNotMatch(source, /status\s*<\s*500/)
   assert.match(source, /expectedStatuses/)
   assert.match(source, /redirects:\s*0/)
+  assert.match(
+    source,
+    /path:\s*["']\/pricing["'],\s*expectedStatuses:\s*\[307\],\s*expectedLocation:\s*["']\/quiz["']/,
+  )
+  assert.match(source, /result\.headers\.Location\s*===\s*expectedLocation/)
 })
 
 test("production routes contain no preview load-test authorization seam", () => {
