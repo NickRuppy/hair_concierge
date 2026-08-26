@@ -28,13 +28,18 @@
 -- on every read and write. The repository functions in
 -- src/lib/personal-plan/lifecycle/repository.ts split READS from WRITES on
 -- this:
---   - READS degrade every error to "no marks" (banner visible, nav dot
---     shown), so a pre-migration deploy of the reading code is safe: the
---     page renders as if nothing had ever been dismissed/visited.
+--   - READS degrade every error to an empty result, but each kind's caller
+--     decides what that means: module_banner_dismissed reads it as "no
+--     dismissals" (banner visible — safe, worst case it nags once more).
+--     nav_surface_visited additionally reports `available: false` on error
+--     so its caller (PR 2 Task 2.9) can render ZERO dots instead of one on
+--     every tab — the safe default for "the feature is silently off"
+--     pre-migration is no dots, not all of them.
 --   - WRITES throw on error instead of being swallowed, so a pre-migration
 --     dismiss/visit call FAILS LOUD. Callers (PR 2 Tasks 2.3/2.9) must
---     tolerate that write failure — e.g. an optimistic client-side dismiss
---     that doesn't persist yet — until this migration has landed.
+--     tolerate that write failure — e.g. an optimistic client-side dismiss,
+--     or a deferred `after()` nav-visit write, that doesn't persist yet —
+--     until this migration has landed.
 -- Net effect: applying this migration before or after the code deploy is
 -- safe either way; the only pre-migration gap is that dismissals/visits
 -- don't persist (and their write calls error) until it lands.

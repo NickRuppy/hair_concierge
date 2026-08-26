@@ -8,7 +8,26 @@ import {
   RoutineAttentionIndicator,
   useRoutineAttention,
 } from "@/components/routine/personal-plan/routine-attention-indicator"
+import type { PersonalPlanNavSurface } from "@/lib/personal-plan/lifecycle/repository"
 import type { PersonalPlanNavigationItem } from "@/lib/personal-plan/navigation-access"
+
+const EMPTY_UNVISITED_NAV_SURFACES: ReadonlySet<PersonalPlanNavSurface> = new Set()
+
+/**
+ * Decorative "never visited this tab" dot (Task 2.9, decision 14) — no
+ * tooltip, no copy, no live-region announcement, unlike
+ * `RoutineAttentionIndicator`'s pending-proposal dot: this one is purely
+ * visual so `aria-hidden` is correct here, not a shortcut.
+ */
+function NavUnvisitedDot() {
+  return (
+    <span
+      aria-hidden="true"
+      data-nav-unvisited-dot="true"
+      className="absolute -right-0.5 -top-0.5 block h-1.5 w-1.5 rounded-full bg-primary ring-2 ring-background"
+    />
+  )
+}
 
 const ICONS = {
   chat: MessageCircle,
@@ -22,10 +41,12 @@ export function PersonalPlanNavigationView({
   items,
   pathname,
   hasPendingRoutineProposal = false,
+  unvisitedNavSurfaces = EMPTY_UNVISITED_NAV_SURFACES,
 }: {
   items: readonly PersonalPlanNavigationItem[]
   pathname: string
   hasPendingRoutineProposal?: boolean
+  unvisitedNavSurfaces?: ReadonlySet<PersonalPlanNavSurface>
 }) {
   return (
     <>
@@ -58,6 +79,8 @@ export function PersonalPlanNavigationView({
                   {item.label}
                   {item.key === "routine" ? (
                     <RoutineAttentionIndicator hasPendingProposal={hasPendingRoutineProposal} />
+                  ) : unvisitedNavSurfaces.has(item.key) ? (
+                    <NavUnvisitedDot />
                   ) : null}
                 </Link>
               )
@@ -89,6 +112,8 @@ export function PersonalPlanNavigationView({
                 <Icon className="h-5 w-5" aria-hidden="true" />
                 {item.key === "routine" ? (
                   <RoutineAttentionIndicator hasPendingProposal={hasPendingRoutineProposal} />
+                ) : unvisitedNavSurfaces.has(item.key) ? (
+                  <NavUnvisitedDot />
                 ) : null}
               </span>
               <span>{item.label}</span>
@@ -103,9 +128,11 @@ export function PersonalPlanNavigationView({
 export function PersonalPlanNavigation({
   items,
   initialHasPendingRoutineProposal,
+  unvisitedNavSurfaces = EMPTY_UNVISITED_NAV_SURFACES,
 }: {
   items: readonly PersonalPlanNavigationItem[]
   initialHasPendingRoutineProposal: boolean
+  unvisitedNavSurfaces?: ReadonlySet<PersonalPlanNavSurface>
 }) {
   const pathname = usePathname() ?? ""
   const hasPendingRoutineProposal = useRoutineAttention(
@@ -117,6 +144,7 @@ export function PersonalPlanNavigation({
       items={items}
       pathname={pathname}
       hasPendingRoutineProposal={hasPendingRoutineProposal}
+      unvisitedNavSurfaces={unvisitedNavSurfaces}
     />
   )
 }

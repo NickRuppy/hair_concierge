@@ -10,6 +10,7 @@ import {
   type PersonalPlanLifecycleClient,
   recordModuleBannerDismissal,
   recordNavSurfaceVisited,
+  shouldShowNavUnvisitedDot,
 } from "../src/lib/personal-plan/lifecycle/repository"
 
 type StoredRow = { user_id: string; kind: string; subject: string; marked_at: string }
@@ -203,8 +204,38 @@ test("recording a nav surface visit and reading it back reports that surface vis
   await recordNavSurfaceVisited(client, { userId: USER, surface: "profile", visitedAt: NOW })
   const state = await loadVisitedNavSurfaces(client, USER)
 
+  assert.equal(state.available, true)
   assert.equal(isNavSurfaceVisited(state, "profile"), true)
   assert.equal(isNavSurfaceVisited(state, "application"), false)
+})
+
+test("a user with no visits reads as available with nothing visited (every non-routine tab dots)", async () => {
+  const { client } = createInMemoryLifecycleClient()
+  const state = await loadVisitedNavSurfaces(client, USER)
+
+  assert.equal(state.available, true)
+  assert.deepEqual([...state.visitedSurfaces], [])
+  assert.equal(shouldShowNavUnvisitedDot(state, "chat"), true)
+  assert.equal(shouldShowNavUnvisitedDot(state, "profile"), true)
+})
+
+test("routine is never dotted, visited or not", async () => {
+  const { client } = createInMemoryLifecycleClient()
+  const neverVisited = await loadVisitedNavSurfaces(client, USER)
+  assert.equal(shouldShowNavUnvisitedDot(neverVisited, "routine"), false)
+
+  await recordNavSurfaceVisited(client, { userId: USER, surface: "routine", visitedAt: NOW })
+  const visited = await loadVisitedNavSurfaces(client, USER)
+  assert.equal(shouldShowNavUnvisitedDot(visited, "routine"), false)
+})
+
+test("a visited surface no longer shows the unvisited dot", async () => {
+  const { client } = createInMemoryLifecycleClient()
+  await recordNavSurfaceVisited(client, { userId: USER, surface: "chat", visitedAt: NOW })
+  const state = await loadVisitedNavSurfaces(client, USER)
+
+  assert.equal(shouldShowNavUnvisitedDot(state, "chat"), false)
+  assert.equal(shouldShowNavUnvisitedDot(state, "profile"), true)
 })
 
 test("visiting the same nav surface twice is idempotent: exactly one stored row", async () => {
@@ -237,10 +268,22 @@ test("nav-visited state is independent per module-banner state: the two kinds ne
   assert.deepEqual([...visited.visitedSurfaces], ["profile"])
 })
 
-test("nav-visited read degrades to 'nothing visited' (nav dot shown) when the table is absent", async () => {
+test("nav-visited read degrades to unavailable — no dots anywhere, NOT a dot on every tab — when the table is absent", async () => {
   const client = createFailingReadClient("42P01")
   const state = await loadVisitedNavSurfaces(client, USER)
-  assert.equal(isNavSurfaceVisited(state, "routine"), false)
+
+  assert.equal(state.available, false)
+  assert.equal(isNavSurfaceVisited(state, "chat"), false)
+  // The naive reading of an empty visited-set ("nothing visited" => dot
+  // everywhere) is exactly what this feature must NOT do pre-migration.
+  assert.equal(shouldShowNavUnvisitedDot(state, "chat"), false)
+  assert.equal(shouldShowNavUnvisitedDot(state, "profile"), false)
+})
+
+test("nav-visited read degrades to unavailable when the client throws synchronously", async () => {
+  const state = await loadVisitedNavSurfaces(createThrowingClient(), USER)
+  assert.equal(state.available, false)
+  assert.equal(shouldShowNavUnvisitedDot(state, "chat"), false)
 })
 
 test("recording a nav surface visit surfaces a write error to the caller", async () => {

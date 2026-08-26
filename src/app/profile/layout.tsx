@@ -3,6 +3,7 @@ import { ProfileRoutineAccessProvider } from "@/components/profile/profile-routi
 import {
   hasRoutineTabAccess,
   loadAuthenticatedAppNavigationAccess,
+  schedulePersonalPlanNavSurfaceVisit,
 } from "@/lib/personal-plan/navigation-access"
 import { AppRouteProviders } from "@/providers/route-providers"
 import { PRIVATE_PAGE_METADATA } from "@/lib/seo/site-identity"
@@ -11,6 +12,7 @@ export const metadata = PRIVATE_PAGE_METADATA
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
   const navigation = await loadAuthenticatedAppNavigationAccess()
+  await schedulePersonalPlanNavSurfaceVisit(navigation, "profile")
   return (
     <AppRouteProviders>
       <AuthenticatedAppShell navigation={navigation}>

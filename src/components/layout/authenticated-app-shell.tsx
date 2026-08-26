@@ -34,6 +34,7 @@ export function AuthenticatedAppShell({
               key={navigation.hasPendingRoutineProposal ? "pending" : "clear"}
               items={navigation.items}
               initialHasPendingRoutineProposal={navigation.hasPendingRoutineProposal}
+              unvisitedNavSurfaces={navigation.unvisitedNavSurfaces}
             />
           ))
         : (legacyHeader ?? <Header />)}

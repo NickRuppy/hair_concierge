@@ -16,22 +16,42 @@ import { STAGE2_MODULES, type Stage2Module } from "@/lib/personal-plan/refinemen
  * Both follow the graceful-degradation pattern in
  * src/lib/personal-plan/routine/repository.ts:72-108 — any read error
  * (including `42P01 undefined_table` from a pre-migration deploy) degrades
- * to "no marks" (banner visible, nav dot shown) instead of failing the page.
- * Writes are NOT swallowed: the caller (an API route) needs to know a
- * dismissal/visit failed to persist so it can respond accordingly.
+ * every kind's read to an empty result instead of failing the page. What
+ * that empty result MEANS differs per kind, and is the caller's call:
+ *   - module_banner_dismissed: empty reads as "no dismissals" — banner
+ *     visible. Showing the banner on a read failure is the safe default
+ *     (worst case it nags once more), so `loadModuleBannerDismissals`
+ *     needs no extra signal.
+ *   - nav_surface_visited: empty must NOT be read as "nothing visited yet"
+ *     by the nav-dot caller (PR 2 Task 2.9), because that would light up
+ *     EVERY tab the moment the table goes missing — the opposite of
+ *     "quietly do nothing" for a pre-migration deploy. `loadVisitedNavSurfaces`
+ *     therefore also reports `available: false` on any read error so the
+ *     caller can render zero dots instead of all of them; see that
+ *     function's doc comment.
+ * Writes are NOT swallowed: the caller (an API route, or a deferred
+ * `after()` write in a nav-target layout) needs to know a dismissal/visit
+ * failed to persist so it can respond accordingly.
  */
 
 export const PERSONAL_PLAN_UI_LIFECYCLE_MARKS_TABLE = "personal_plan_ui_lifecycle_marks"
 
-/** Mirrors `PersonalPlanNavigationItem["key"]` in navigation-access.ts. */
-export type PersonalPlanNavSurface = "chat" | "routine" | "scan" | "application" | "profile"
-export const PERSONAL_PLAN_NAV_SURFACES: readonly PersonalPlanNavSurface[] = [
+/**
+ * Single source of truth for the nav-dot subject set; mirrors
+ * `PERSONAL_PLAN_NAVIGATION_ITEM_KEYS` in navigation-access.ts, which is
+ * the actual tab-key union. The two are declared independently (this file
+ * has no reason to import the nav module), so
+ * tests/personal-plan-nav-surface-union-sync.test.ts asserts they stay in
+ * sync at test time.
+ */
+export const PERSONAL_PLAN_NAV_SURFACES = [
   "chat",
   "routine",
   "scan",
   "application",
   "profile",
-]
+] as const
+export type PersonalPlanNavSurface = (typeof PERSONAL_PLAN_NAV_SURFACES)[number]
 
 type LifecycleMarkKind = "module_banner_dismissed" | "nav_surface_visited"
 
@@ -48,8 +68,22 @@ export type PersonalPlanLifecycleClient = { from: (table: string) => LifecycleTa
 export type ModuleBannerDismissalState = { dismissedModules: ReadonlySet<Stage2Module> }
 const NO_MODULE_DISMISSALS: ModuleBannerDismissalState = { dismissedModules: new Set() }
 
-export type NavSurfaceVisitedState = { visitedSurfaces: ReadonlySet<PersonalPlanNavSurface> }
-const NO_NAV_VISITS: NavSurfaceVisitedState = { visitedSurfaces: new Set() }
+export type NavSurfaceVisitedState = {
+  visitedSurfaces: ReadonlySet<PersonalPlanNavSurface>
+  /**
+   * False when the read degraded (pre-migration `42P01`, or any other
+   * failure) rather than genuinely returning zero rows. Callers deciding
+   * whether to render an unvisited-tab dot MUST check this first: an empty
+   * `visitedSurfaces` set alone is ambiguous between "brand-new user, every
+   * tab genuinely unvisited" and "table unavailable" — only `available`
+   * tells them apart. See the module doc comment above.
+   */
+  available: boolean
+}
+const NAV_VISITS_UNAVAILABLE: NavSurfaceVisitedState = {
+  visitedSurfaces: new Set(),
+  available: false,
+}
 
 function warnUnavailable(kind: LifecycleMarkKind, error: unknown): void {
   console.warn("personal_plan_ui_lifecycle_marks_unavailable", {
@@ -150,7 +184,13 @@ export async function recordNavSurfaceVisited(
   })
 }
 
-/** Failure-tolerant read: any error degrades to "nothing visited" (dot shown). */
+/**
+ * Failure-tolerant read: any error degrades to `available: false` with an
+ * empty `visitedSurfaces` set — i.e. "the feature is silently off", NOT
+ * "nothing visited yet" (which would render a dot on every tab). Callers
+ * MUST gate on `available` before treating an unlisted surface as
+ * unvisited; see `NavSurfaceVisitedState`'s doc comment.
+ */
 export async function loadVisitedNavSurfaces(
   client: PersonalPlanLifecycleClient,
   userId: string,
@@ -159,7 +199,7 @@ export async function loadVisitedNavSurfaces(
     const { data, error } = await selectSubjects(client, userId, "nav_surface_visited")
     if (error) {
       warnUnavailable("nav_surface_visited", error)
-      return NO_NAV_VISITS
+      return NAV_VISITS_UNAVAILABLE
     }
     const knownSurfaces = PERSONAL_PLAN_NAV_SURFACES as readonly string[]
     const visitedSurfaces = new Set<PersonalPlanNavSurface>(
@@ -167,10 +207,10 @@ export async function loadVisitedNavSurfaces(
         knownSurfaces.includes(subject),
       ),
     )
-    return { visitedSurfaces }
+    return { visitedSurfaces, available: true }
   } catch (error) {
     warnUnavailable("nav_surface_visited", error)
-    return NO_NAV_VISITS
+    return NAV_VISITS_UNAVAILABLE
   }
 }
 
@@ -179,4 +219,26 @@ export function isNavSurfaceVisited(
   surface: PersonalPlanNavSurface,
 ): boolean {
   return state.visitedSurfaces.has(surface)
+}
+
+/**
+ * Whether the "never visited this tab" dot should render for `surface`
+ * (Task 2.9, decision 14). Single source of truth for the two rules that
+ * decide it, so no call site has to remember either on its own:
+ *   - `routine` is never dotted. It's the Personal Plan's landing surface,
+ *     so treating it as "visited from the start" and simply excluding it
+ *     is simpler than seeding a visit row on plan acceptance — and it
+ *     avoids colliding with `RoutineAttentionIndicator`, which owns that
+ *     tab's attention semantics (pending-proposal review, not discovery).
+ *   - Every other surface dots only when the read succeeded
+ *     (`state.available`) and the surface isn't in the visited set.
+ *     `state.available === false` (pre-migration or any read failure)
+ *     always renders no dot — see `NavSurfaceVisitedState`'s doc comment.
+ */
+export function shouldShowNavUnvisitedDot(
+  state: NavSurfaceVisitedState,
+  surface: PersonalPlanNavSurface,
+): boolean {
+  if (surface === "routine") return false
+  return state.available && !isNavSurfaceVisited(state, surface)
 }
