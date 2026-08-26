@@ -79,13 +79,33 @@ test("stage 3 shell reuses onboarding language without internal numbering", () =
     </Stage3Shell>,
   )
 
-  assert.match(captureHtml, /role="progressbar"/)
+  assert.doesNotMatch(captureHtml, /role="progressbar"/)
+  assert.doesNotMatch(captureHtml, /Personal-Plan-Stufen/)
   assert.match(captureHtml, /aria-live="polite"/)
   assert.match(captureHtml, /Gespeichert/)
   assert.match(captureHtml, /<h1[^>]*>Welche Produkte nutzt du\?<\/h1>/)
   assert.match(captureHtml, /Jetzt finden wir die Produkte, die du wirklich benutzt\./)
   assert.match(captureHtml, /font-header/)
   assert.doesNotMatch(captureHtml, />(?:Pass|Teil\s+\d|Stage|Stufe)</i)
+})
+
+test("stage 3 shell retires the 5-stage journey bar but keeps Back and the wordmark (Task 2.7)", () => {
+  const captureHtml = renderToStaticMarkup(
+    <Stage3Shell
+      title="Produkte"
+      currentStepLabel="Produkte finden"
+      completedSteps={2}
+      totalSteps={8}
+      saveState={{ status: "saved", label: "Gespeichert" }}
+      onBack={() => {}}
+    >
+      <h1 className="font-header">Welche Produkte nutzt du?</h1>
+    </Stage3Shell>,
+  )
+
+  assert.doesNotMatch(captureHtml, /role="progressbar"/)
+  assert.match(captureHtml, /aria-label="Zurück"/)
+  assert.match(captureHtml, />chaarlie</)
 })
 
 test("stage 3 shell renders the supplied save state instead of a hard-coded saved label", () => {

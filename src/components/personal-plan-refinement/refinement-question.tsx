@@ -174,7 +174,7 @@ export function RefinementQuestion({
     <div
       className={cn(
         "personal-plan-cookie-clearance bg-[var(--background)] text-[var(--text-body)]",
-        showJourneyHeader ? "min-h-dvh" : "min-h-[calc(100dvh-92px)]",
+        showJourneyHeader ? "min-h-dvh" : "min-h-[calc(100dvh-71px)]",
       )}
     >
       {showJourneyHeader ? (
@@ -182,9 +182,10 @@ export function RefinementQuestion({
           currentStage={2}
           saveStatus={journeySaveStatus(status)}
           onBack={canGoBack ? onBack : onSecondaryExit}
+          showStageProgress={false}
         />
       ) : null}
-      <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[720px] min-w-0 flex-col">
+      <main className="mx-auto flex min-h-[calc(100dvh-71px)] w-full max-w-[720px] min-w-0 flex-col">
         <section className="mx-auto w-full max-w-[600px] flex-1 px-5 pb-32 pt-6 md:pb-8 md:pt-9">
           {question.trigger ? (
             <p className="mb-3 inline-flex rounded-full bg-[var(--brand-plum-ice)] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.06em] text-[var(--brand-plum)]">

@@ -24,9 +24,10 @@ test("Anwendung reuses loaded guidance for day, Back, and Forward", async ({ pag
     }
   })
   await openLab(page)
-  const routineBack = page.getByRole("link", { name: "Zur Routine" })
-  await expect(routineBack).toHaveAttribute("href", "/labs/personal-plan-routine-editor")
-  expect(await routineBack.evaluate((link) => link.getBoundingClientRect().width)).toBe(48)
+  // Task 2.7: the journey header (and its "Zur Routine" / "Alle Tage" Back
+  // controls) retired from Anwendung — the Bottom-Nav and the browser's own
+  // Back/Forward carry that navigation now.
+  await expect(page.locator('[data-personal-plan-journey-header="true"]')).toHaveCount(0)
   await expect.poll(() => page.evaluate(() => window.history.scrollRestoration)).toBe("manual")
   await expect(page.locator("[data-personal-plan-application-root]")).toHaveAttribute(
     "data-application-router-pathname",
@@ -50,17 +51,15 @@ test("Anwendung reuses loaded guidance for day, Back, and Forward", async ({ pag
   await expect(page.getByRole("heading", { name: "Waschtag" })).toBeFocused()
   expect(applicationRscRequests).toEqual([])
 
-  const overviewBack = page.getByRole("link", { name: "Alle Tage" })
-  await expect(overviewBack).toHaveAttribute("href", labPath)
-  expect(await overviewBack.evaluate((link) => link.getBoundingClientRect().width)).toBe(48)
-
   await page.evaluate(() =>
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }),
   )
   const dayScrollY = await page.evaluate(() => window.scrollY)
   expect(dayScrollY).toBeGreaterThan(0)
 
-  await overviewBack.click()
+  // No in-page "Alle Tage" control anymore (Task 2.7) — the browser's own
+  // Back reaches the overview, restoring scroll and focus exactly the same.
+  await page.goBack()
   await expect(page).toHaveURL(labPath)
   await expect(page.locator("[data-personal-plan-application-root]")).toHaveAttribute(
     "data-application-router-pathname",

@@ -171,6 +171,15 @@ test("renders Basis before Optional and groups multiple roles into one Bedarfspl
   assert.match(html, /Status: Offen/)
 })
 
+test("Routine has no journey header — Bottom-Nav carries orientation (Task 2.7)", () => {
+  const routine = payload([item()])
+  const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)
+
+  assert.doesNotMatch(html, /data-personal-plan-journey-header/)
+  assert.doesNotMatch(html, /role="progressbar"/)
+  assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+})
+
 test("a basis slot with a planned ref but no chosen product blocks the Anwendung", () => {
   const routine = payload([
     item({

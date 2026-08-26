@@ -73,6 +73,29 @@ test("shared journey Back uses the approved 48px target for callback and link na
   assert.equal((linkHeader.match(/<a/g) ?? []).length, 1)
 })
 
+test("journey header's 5-stage bar can retire while Back and the wordmark stay (Task 2.7)", () => {
+  const fullHeader = renderToStaticMarkup(
+    React.createElement(PersonalPlanJourneyHeader, { currentStage: 2 }),
+  )
+  const compactHeader = renderToStaticMarkup(
+    React.createElement(PersonalPlanJourneyHeader, {
+      currentStage: 2,
+      onBack: () => {},
+      showStageProgress: false,
+    }),
+  )
+
+  assert.match(fullHeader, /role="progressbar"/)
+  assert.match(fullHeader, /Personal-Plan-Stufen/)
+
+  assert.doesNotMatch(compactHeader, /role="progressbar"/)
+  assert.doesNotMatch(compactHeader, /Personal-Plan-Stufen/)
+  assert.match(compactHeader, />chaarlie</)
+  assert.match(compactHeader, /aria-label="Zurück"/)
+  // The stage marker survives for CSS/analytics hooks even without the bar.
+  assert.match(compactHeader, /data-personal-plan-stage="2"/)
+})
+
 test("shared chapter transition renders the approved stage-specific copy and one primary action", () => {
   const chapter = renderToStaticMarkup(
     React.createElement(PersonalPlanChapterTransition, {

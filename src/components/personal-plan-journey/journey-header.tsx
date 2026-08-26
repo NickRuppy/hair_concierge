@@ -41,6 +41,7 @@ export function PersonalPlanJourneyHeader({
   sticky = true,
   centeredBrand = false,
   showWordmark = true,
+  showStageProgress = true,
 }: {
   currentStage: PersonalPlanJourneyStage
   saveStatus?: PersonalPlanSaveStatus
@@ -51,6 +52,12 @@ export function PersonalPlanJourneyHeader({
   centeredBrand?: boolean
   /** false auf Seiten, deren App-Shell die Wortmarke bereits zeigt (/routine, /anwendung). */
   showWordmark?: boolean
+  /**
+   * false für Flächen ohne 5-Stufen-Orientierung (Task 2.7): die Bottom-Nav
+   * trägt die Orientierung, dieser Header bleibt nur noch für Zurück +
+   * Speicherstatus stehen, die die jeweilige Fläche selbst braucht.
+   */
+  showStageProgress?: boolean
 } & JourneyHeaderBackProps) {
   const backControlClassName =
     "grid h-12 w-12 place-items-center rounded-xl border border-[rgba(var(--brand-plum-rgb),0.16)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)] shadow-[0_3px_10px_rgba(42,24,69,0.08)] transition hover:bg-[rgba(var(--brand-plum-rgb),0.13)] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.45)] focus-visible:ring-offset-2"
@@ -124,46 +131,48 @@ export function PersonalPlanJourneyHeader({
           </span>
         </div>
 
-        <div
-          aria-label="Personal-Plan-Stufen"
-          role="progressbar"
-          aria-valuemin={1}
-          aria-valuemax={5}
-          aria-valuenow={currentStage}
-        >
-          <ol className="mt-1 grid grid-cols-5 gap-1" aria-label="Stufen im Personal Plan">
-            {PERSONAL_PLAN_JOURNEY_STAGES.map(({ stage, headerLabel }) => {
-              const complete = stage < currentStage
-              const current = stage === currentStage
-              return (
-                <li key={stage} aria-current={current ? "step" : undefined} className="min-w-0">
-                  <span
-                    className={cn(
-                      "block h-1.5 rounded-full",
-                      complete
-                        ? "bg-[var(--brand-plum)]"
-                        : current
-                          ? "bg-[var(--brand-plum-dark)]"
-                          : "bg-[var(--border)]",
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "mt-1 block truncate text-center text-[10px] font-bold",
-                      current
-                        ? "text-[var(--brand-plum-darkest)]"
-                        : complete
-                          ? "text-[var(--brand-plum)]"
-                          : "text-[var(--text-caption)]",
-                    )}
-                  >
-                    {headerLabel}
-                  </span>
-                </li>
-              )
-            })}
-          </ol>
-        </div>
+        {showStageProgress ? (
+          <div
+            aria-label="Personal-Plan-Stufen"
+            role="progressbar"
+            aria-valuemin={1}
+            aria-valuemax={5}
+            aria-valuenow={currentStage}
+          >
+            <ol className="mt-1 grid grid-cols-5 gap-1" aria-label="Stufen im Personal Plan">
+              {PERSONAL_PLAN_JOURNEY_STAGES.map(({ stage, headerLabel }) => {
+                const complete = stage < currentStage
+                const current = stage === currentStage
+                return (
+                  <li key={stage} aria-current={current ? "step" : undefined} className="min-w-0">
+                    <span
+                      className={cn(
+                        "block h-1.5 rounded-full",
+                        complete
+                          ? "bg-[var(--brand-plum)]"
+                          : current
+                            ? "bg-[var(--brand-plum-dark)]"
+                            : "bg-[var(--border)]",
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "mt-1 block truncate text-center text-[10px] font-bold",
+                        current
+                          ? "text-[var(--brand-plum-darkest)]"
+                          : complete
+                            ? "text-[var(--brand-plum)]"
+                            : "text-[var(--text-caption)]",
+                      )}
+                    >
+                      {headerLabel}
+                    </span>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+        ) : null}
       </div>
     </header>
   )

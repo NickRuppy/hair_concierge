@@ -703,6 +703,7 @@ export function RefinementFlow({
           currentStage={2}
           saveStatus={journeySaveStatus(status)}
           onBack={canGoBack ? handleBack : onSecondaryExit}
+          showStageProgress={false}
         />
         <div className={stageEntrance ? "personal-plan-stage-target-enter" : undefined}>
           <PersonalPlanViewTransition
@@ -854,8 +855,12 @@ function LoadingShell({
 }) {
   return (
     <div className="min-h-dvh bg-[var(--background)]">
-      <PersonalPlanJourneyHeader currentStage={2} saveStatus={journeySaveStatus(status)} />
-      <main className="grid min-h-[calc(100dvh-92px)] place-items-center px-5 text-center">
+      <PersonalPlanJourneyHeader
+        currentStage={2}
+        saveStatus={journeySaveStatus(status)}
+        showStageProgress={false}
+      />
+      <main className="grid min-h-[calc(100dvh-71px)] place-items-center px-5 text-center">
         <div>
           <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
             Feinschliff
@@ -910,8 +915,9 @@ function ResumeShell({
         saveStatus="saved"
         onBack={onSecondaryExit}
         backLabel="Zum Idealplan"
+        showStageProgress={false}
       />
-      <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
+      <main className="mx-auto flex min-h-[calc(100dvh-71px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
           Wir laden deinen Feinschliff.
         </p>

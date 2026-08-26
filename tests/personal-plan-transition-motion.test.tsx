@@ -44,18 +44,19 @@ const days: ApplicationDayView[] = [
   },
 ]
 
-test("Anwendung keeps day links in content and journey Back in the stable header", () => {
+test("Anwendung has no journey header — Bottom-Nav carries orientation and Back (Task 2.7)", () => {
   const overview = renderToStaticMarkup(<ApplicationPage view={{ state: "ready", days }} />)
   assert.match(overview, /data-personal-plan-view-transition="depth"/)
   assert.match(overview, /data-application-navigation="day"/)
   assert.match(overview, /href="\/anwendung\/wash_day"/)
+  assert.doesNotMatch(overview, /data-personal-plan-journey-header/)
 
   const detail = renderToStaticMarkup(
     <ApplicationPage view={{ state: "ready", days, selectedDayType: "wash_day" }} />,
   )
   assert.match(detail, /data-personal-plan-view-transition="depth"/)
-  assert.match(detail, /aria-label="Alle Tage"/)
-  assert.match(detail, /href="\/anwendung"/)
+  assert.doesNotMatch(detail, /data-personal-plan-journey-header/)
+  assert.doesNotMatch(detail, /role="progressbar"/)
   assert.doesNotMatch(detail, /data-application-navigation="overview"/)
 })
 
@@ -114,9 +115,11 @@ test("Feinschliff keeps its Journey header outside the ordered-question depth su
 
   assert.equal(html.match(/data-personal-plan-stage="2"/g)?.length, 1)
   assert.equal(html.match(/personal-plan-cookie-clearance/g)?.length, 1)
-  assert.match(html, /min-h-\[calc\(100dvh-92px\)\]/)
+  assert.match(html, /min-h-\[calc\(100dvh-71px\)\]/)
   assert.match(html, /data-personal-plan-view-transition="depth"/)
   assert.match(html, /data-personal-plan-transition-focus/)
+  // Task 2.7: Stage 2 keeps minimal chrome (Back + wordmark), no 5-stage bar.
+  assert.doesNotMatch(html, /role="progressbar"/)
 })
 
 test("stage navigation intent is destination-bound, single-use, and time-bounded", () => {

@@ -248,6 +248,7 @@ export function RoutineEditor({
         onBack={onCancel ? handleCancel : undefined}
         backLabel="Zur Routine"
         showWordmark={false}
+        showStageProgress={false}
       />
       <section
         aria-label="Routine bearbeiten"

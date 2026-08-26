@@ -5,10 +5,7 @@ import type {
   RoutinePayloadV1,
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
-import {
-  PersonalPlanJourneyHeader,
-  PersonalPlanStageEntrance,
-} from "@/components/personal-plan-journey"
+import { PersonalPlanStageEntrance } from "@/components/personal-plan-journey"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { routineCategoryLabel } from "./routine-item-card"
@@ -78,7 +75,6 @@ export function RoutinePage({
     const needsRepair = view.status === "authority_repair_required" && view.repair
     return (
       <div className="min-h-dvh bg-[var(--background)]">
-        <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" showWordmark={false} />
         <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] px-3 py-8 sm:max-w-[560px] sm:px-5 sm:py-12">
           <section
             aria-live="polite"
@@ -143,7 +139,6 @@ export function RoutinePage({
 
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
-      <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" showWordmark={false} />
       <PersonalPlanStageEntrance destination="/routine">
         <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] space-y-5 px-3 py-4 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:max-w-[560px] sm:px-5 sm:py-5 lg:pb-12">
           <header className="border-b border-[rgba(107,80,160,0.14)] pb-4">

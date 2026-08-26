@@ -124,8 +124,44 @@ test("renders the current qualitative section and never a numeric question total
   )
 
   assert.match(html, /Wie du dein Haar behandelst/)
-  assert.match(html, /Personal-Plan-Stufen/)
   assert.doesNotMatch(html, /Frage\s+\d+\s+von\s+\d+/i)
+})
+
+test("Stage 2 question chrome keeps Back and the wordmark but retires the 5-stage bar (Task 2.7)", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+    answers: {
+      currentProductCategories: ["shampoo"],
+      wetWashFrequency: "weekly_2x",
+      scalpIrritationDetail: "mild_sensitive_or_itchy",
+      dryShampooBridgePreference: "decline",
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "scalp_irritation_detail",
+      "dry_shampoo_bridge_preference",
+    ],
+  })
+  const html = renderToStaticMarkup(
+    <RefinementQuestion
+      session={session}
+      questionId="towel_handling"
+      localAnswer={undefined}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+    />,
+  )
+
+  assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+  assert.doesNotMatch(html, /role="progressbar"/)
+  assert.match(html, />chaarlie</)
+  assert.match(html, /aria-label="Zurück"/)
 })
 
 test("renders exactly ten contextual current-product categories with no preselection", () => {

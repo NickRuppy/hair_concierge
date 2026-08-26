@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  PersonalPlanJourneyHeader,
   PersonalPlanStageEntrance,
   PersonalPlanViewTransition,
   type PersonalPlanTransitionDirection,
@@ -81,13 +80,11 @@ export function ApplicationPage({
   view,
   internalComputeMs,
   navigationBasePath = "/anwendung",
-  routineBackHref = "/routine",
   currentPathname,
 }: {
   view: ApplicationPageView
   internalComputeMs?: number
   navigationBasePath?: string
-  routineBackHref?: string
   currentPathname?: string
 }) {
   const days = useMemo(() => (view.state === "ready" ? sortDays(view.days) : []), [view])
@@ -127,20 +124,6 @@ export function ApplicationPage({
     [navigationBasePath],
   )
 
-  const openOverview = useCallback(
-    (event: MouseEvent<HTMLAnchorElement>) => {
-      if (!shouldHandleLocalNavigation(event)) return
-      event.preventDefault()
-      setDirection("reverse")
-      if (window.history.state?.[APPLICATION_HISTORY_MARKER]) {
-        window.history.back()
-        return
-      }
-      window.history.pushState({ [APPLICATION_HISTORY_MARKER]: "overview" }, "", navigationBasePath)
-    },
-    [navigationBasePath],
-  )
-
   let content
   if (view.state === "no_complete_day") {
     content = <NoCompleteDayView restDay={view.restDay} />
@@ -173,28 +156,6 @@ export function ApplicationPage({
       data-personal-plan-application-compute-ms={internalComputeMs}
       data-application-router-pathname={currentPathname}
     >
-      {view.state === "ready" ? (
-        selectedDayType ? (
-          <PersonalPlanJourneyHeader
-            currentStage={5}
-            saveStatus="saved"
-            backHref={navigationBasePath}
-            onBackLinkClick={openOverview}
-            backLabel="Alle Tage"
-            showWordmark={false}
-          />
-        ) : (
-          <PersonalPlanJourneyHeader
-            currentStage={5}
-            saveStatus="saved"
-            backHref={routineBackHref}
-            backLabel="Zur Routine"
-            showWordmark={false}
-          />
-        )
-      ) : (
-        <PersonalPlanJourneyHeader currentStage={5} saveStatus="saved" showWordmark={false} />
-      )}
       {content}
     </div>
   )

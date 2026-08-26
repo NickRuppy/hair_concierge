@@ -247,6 +247,9 @@ test("global editor renders the complete Routine and submits a local operation b
   assert.match(renderToStaticMarkup(tree.value), /Aktive Routine bleibt unverändert/)
   assert.match(renderToStaticMarkup(tree.value), /Deine Basis/)
   assert.match(renderToStaticMarkup(tree.value), /Optional/)
+  // Task 2.7: the Routine editor's chrome keeps Back, but the 5-stage journey
+  // bar retires (Bottom-Nav carries stage orientation elsewhere).
+  assert.doesNotMatch(renderToStaticMarkup(tree.value), /role="progressbar"/)
 
   const select = findAll(tree.value, (element) => element.type === "select")[0]
   assert.ok(select)
@@ -299,6 +302,9 @@ test("global editor blocks invalid controls and asks before discarding dirty edi
   assert.ok(header)
   assert.equal(header.props.backLabel, "Zur Routine")
   assert.equal(header.props.showWordmark, false)
+  // Task 2.7: the Routine editor keeps its dirty-check Back control, but the
+  // 5-stage journey bar retires here too.
+  assert.equal(header.props.showStageProgress, false)
   header.props.onBack()
   tree.value = tree.rerender()
 
