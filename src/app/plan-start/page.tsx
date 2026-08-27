@@ -24,6 +24,7 @@ import {
   loadModule1Stage3Resume,
   type Module1Stage3ResumeClient,
 } from "@/lib/personal-plan/refinement/module1-stage3-resume"
+import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refinement-status-loader"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import {
   isPersonalPlanAppV1Enabled,
@@ -61,6 +62,16 @@ export type PlanStartPageDeps = {
    * failure-tolerant: an unwired or failing dep keeps today's fall-through.
    */
   loadModule1Stage3Resume?: (userId: string) => Promise<{ refinedVersionId: string } | null>
+  /**
+   * The coarse "X von 4" the Routine banner shows, for the module flow's own
+   * slim meter (field test 26.08.2026). Read from the SAME `refinement-status`
+   * contract as the banner so the two surfaces cannot disagree — the client
+   * session carries no answer provenance and could not reproduce it. Only read
+   * for an explicit module deep link, and failure-tolerant: no value, no meter.
+   */
+  loadRefinementProgress?: (
+    userId: string,
+  ) => Promise<{ completedSteps: number; totalSteps: number } | null>
 }
 
 export type PlanStartSearchParams = {
@@ -172,11 +183,16 @@ export async function resolvePlanStartPageState(
     // An explicit refine request outranks every later-stage resume: it exists
     // precisely to stop the completed draft from being handed off again.
     if (options.refine) {
+      const moduleProgress =
+        options.refineModule && options.refineModule !== "first_open"
+          ? await deps.loadRefinementProgress?.(userId).catch(() => null)
+          : null
       return production(
         {
           stage: "stage2",
           returningToRefinement: true,
           ...(options.refineModule ? { refineModule: options.refineModule } : {}),
+          ...(moduleProgress ? { moduleProgress } : {}),
           ...directAcceptance,
         },
         initialRefinementSession
@@ -281,6 +297,13 @@ export default async function PlanStartPage({
           createAdminClient() as unknown as Module1Stage3ResumeClient,
           userId,
         ),
+      loadRefinementProgress: async (userId) => {
+        const status = await loadRefinementStatusForUser(
+          createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
+          userId,
+        )
+        return status.status === "ok" ? status.data.progress : null
+      },
       loadStage1Plan: async (userId) => {
         const result = await createStage1PersistenceService(
           createStage1SupabaseDependencies(createAdminClient() as never),

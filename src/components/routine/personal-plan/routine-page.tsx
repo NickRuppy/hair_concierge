@@ -22,12 +22,10 @@ type RoutineItem = RoutinePayloadV1["items"][number]
 
 export type RoutinePageProps = {
   view: PersonalPlanRoutineView
-  stage5Reachable?: boolean
   onEdit?: () => void
   onReviewProposal?: () => void
   onItemDetail?: (item: RoutineItem) => void
   portfolioPresentation?: PortfolioPresentation | null
-  onOpenApplication?: () => void
   refinementBanner?: RoutineRefinementBannerViewModel | null
   onDismissRefinementBanner?: () => void
   onRefineFromBanner?: () => void
@@ -57,12 +55,10 @@ function isBlockingBasisGap(item: RoutineItem) {
 
 export function RoutinePage({
   view,
-  stage5Reachable = false,
   onEdit,
   onReviewProposal,
   onItemDetail,
   portfolioPresentation = null,
-  onOpenApplication,
   refinementBanner = null,
   onDismissRefinementBanner,
   onRefineFromBanner,
@@ -118,7 +114,11 @@ export function RoutinePage({
     (item) => item.state.inclusion === "included",
   ).length
   const hasBlockingBasisGap = basisItems.some(isBlockingBasisGap)
-  const canOpenApplication = Boolean(view.activeVersion && stage5Reachable && !hasBlockingBasisGap)
+  // Position: always directly above the routine blocks. The mockup's quieter
+  // below-the-blocks slot for `habits` did not survive the field test
+  // (26.08.2026) — on a real routine the second ask scrolled out of view and
+  // was never seen. Only the copy still switches on `module`; the position no
+  // longer does.
   const banner =
     refinementBanner && onDismissRefinementBanner && onRefineFromBanner ? (
       <RoutineRefinementBanner
@@ -129,13 +129,6 @@ export function RoutinePage({
         onRefine={onRefineFromBanner}
       />
     ) : null
-  // Position (mockup v3, decided 25.08.2026): above the routine blocks while
-  // `products` is the open module (the first, more prominent ask), below
-  // them once `products` is done and `habits` is open (a quieter second
-  // ask). Both the position and the copy switch on the same `module` value
-  // the refinement-status API already returned — nothing here re-derives it.
-  const bannerAboveBlocks = banner && refinementBanner?.module === "products" ? banner : null
-  const bannerBelowBlocks = banner && refinementBanner?.module === "habits" ? banner : null
 
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
@@ -151,13 +144,31 @@ export function RoutinePage({
                       ? "Vorschlag"
                       : "✓ Routine aktiv"}
                 </p>
-                <h1 className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
-                  {successorProposal
-                    ? "Deine Routine bleibt aktiv."
-                    : initialProposal
-                      ? "Deine Routine wird vorbereitet."
-                      : "Deine Routine"}
-                </h1>
+                {/*
+                  Field test 26.08.2026: the coral "Anwendung ansehen" hero
+                  button is gone — the Bottom-Nav's Anwendung tab owns that
+                  destination. Editing keeps a quiet affordance in the heading
+                  row, in the repo's established idiom (Haarprofil "Angaben
+                  ändern"), so the Routine itself stays the only hero.
+                */}
+                <div className="mt-1 flex items-baseline justify-between gap-3">
+                  <h1 className="font-header text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
+                    {successorProposal
+                      ? "Deine Routine bleibt aktiv."
+                      : initialProposal
+                        ? "Deine Routine wird vorbereitet."
+                        : "Deine Routine"}
+                  </h1>
+                  {onEdit ? (
+                    <button
+                      type="button"
+                      onClick={onEdit}
+                      className="flex-none text-xs font-semibold text-[var(--brand-plum)] underline underline-offset-2 transition-colors hover:text-[var(--brand-plum-dark)]"
+                    >
+                      Anpassen
+                    </button>
+                  ) : null}
+                </div>
                 <p className="mt-1 text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
                   {initialProposal
                     ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
@@ -177,47 +188,22 @@ export function RoutinePage({
                   </p>
                 ) : null}
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {canOpenApplication ? (
-                  <Link
-                    href="/anwendung"
-                    prefetch={true}
-                    onClick={(event) => {
-                      if (!onOpenApplication) return
-                      if (
-                        event.button !== 0 ||
-                        event.metaKey ||
-                        event.ctrlKey ||
-                        event.shiftKey ||
-                        event.altKey
-                      ) {
-                        return
-                      }
-                      event.preventDefault()
-                      onOpenApplication()
-                    }}
-                    className={`${buttonVariants({ variant: "funnelCta", size: "sm" })} min-w-[12rem] flex-1`}
-                  >
-                    Anwendung ansehen
-                  </Link>
-                ) : null}
-                {onEdit ? (
-                  <Button className="flex-1" variant="outline" size="sm" onClick={onEdit}>
-                    Anpassen
-                  </Button>
-                ) : null}
-                {successorProposal && onReviewProposal ? (
-                  <Button className="flex-1" variant="outline" size="sm" onClick={onReviewProposal}>
-                    Änderungen prüfen
-                  </Button>
-                ) : null}
-              </div>
+              {successorProposal && onReviewProposal ? (
+                <Button
+                  className="mt-4 w-full"
+                  variant="outline"
+                  size="sm"
+                  onClick={onReviewProposal}
+                >
+                  Änderungen prüfen
+                </Button>
+              ) : null}
             </div>
           </header>
           {showPlanUpdatedToast && onDismissPlanUpdatedToast ? (
             <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />
           ) : null}
-          {bannerAboveBlocks}
+          {banner}
           <RoutineSection
             title="Deine Basis"
             items={basisItems}
@@ -245,7 +231,6 @@ export function RoutinePage({
               productPresentation={view.productPresentation}
             />
           ) : null}
-          {bannerBelowBlocks}
           {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
           (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
             <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">

@@ -266,6 +266,7 @@ export function Stage3ProductsFlow({
   onBackToRefinement,
   onProductKindsCorrection,
   onOpenRoutine,
+  directRoutineHandoff = false,
   stageEntrance = false,
   pendingRecoveryStorage: providedPendingRecoveryStorage,
 }: {
@@ -281,6 +282,15 @@ export function Stage3ProductsFlow({
   onBackToRefinement?: () => void
   onProductKindsCorrection?: (categories: PersonalPlanCategory[]) => Promise<void>
   onOpenRoutine?: (handoff: Stage3RoutineHandoff) => void
+  /**
+   * Post-accept loop (field test 26.08.2026): the user came here from a
+   * Feinschliff module and already has the full app nav, so finishing Stage 3
+   * moves straight to the Routine — the "Deine Produktauswahl steht." chapter
+   * is creation-funnel ceremony and must not appear. The Routine's own
+   * "✓ Plan aktualisiert" toast carries the feedback. A failed handoff still
+   * surfaces through the normal `systemIssue` screen, which renders above.
+   */
+  directRoutineHandoff?: boolean
   stageEntrance?: boolean
   pendingRecoveryStorage?: PendingStage3RecoveryStorage
 } = {}) {
@@ -1336,6 +1346,17 @@ export function Stage3ProductsFlow({
   }
 
   if (completion) {
+    // Post-accept: no chapter, just the honest wait while the Routine opens.
+    if (directRoutineHandoff) {
+      return shell(
+        <Stage3SystemState
+          state="loading"
+          title="Deine Routine wird geöffnet."
+          message="Wir übernehmen deine Produktauswahl."
+        />,
+        "Bereit für deine Routine",
+      )
+    }
     return (
       <PersonalPlanChapterTransition currentStage={4} onAction={() => openRoutine(completion)} />
     )
@@ -3138,7 +3159,7 @@ export function Stage3ProductsFlow({
       analytics.track("personal_plan_stage3_review_completed", {
         count: deriveStage3DecisionSubjects(response.draft).length,
       })
-      if (options.openOnSuccess) openRoutine(response)
+      if (options.openOnSuccess || directRoutineHandoff) openRoutine(response)
     } catch (error) {
       if (error instanceof Stage3FinalizationTimeoutError) {
         // Same ordering as the decision batch: claim the recovery before the guards are released.

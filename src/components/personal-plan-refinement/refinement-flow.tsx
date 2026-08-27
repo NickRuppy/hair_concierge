@@ -19,6 +19,7 @@ import {
 import {
   deriveStage2EntryMode,
   hostSessionFor,
+  isStage2Module,
   resolveStage2EntryModule,
   resolveStage2FlowEntryView,
   resolveStage2ModuleScope,
@@ -99,6 +100,50 @@ export type Stage2ModuleCompletionPayload = {
 
 type RefinementMode = "loading" | "invitation" | "resume" | "question" | "bridge"
 
+/**
+ * The coarse "X von 4" the Routine banner shows, carried into the module flow
+ * so the two surfaces cannot disagree (field test 26.08.2026). It is a SERVER
+ * value (`refinement-status`, provenance-based) handed down by the host, never
+ * re-derived here: the client session carries no answer provenance, so a
+ * client-side count would read the direct-accept cohort's assumed answers as
+ * finished modules. Static for the life of the module — the meter only moves
+ * when a module is finished, and that navigates away.
+ */
+export type Stage2ModuleProgress = {
+  completedSteps: number
+  totalSteps: number
+}
+
+/**
+ * Whether the Stage-3 bridge hands off on its own instead of waiting for a tap.
+ *
+ * `autoHandoff` is the creation funnel's rule (the host turns it off for an
+ * explicit `?refine=…` re-entry so a completed draft cannot bounce the user
+ * straight back into Stage 3). An EXPLICIT module entry overrides it: there the
+ * bridge can only ever be armed by a module the user just finished in this
+ * session, and finishing a module in the post-accept loop is a surface hop, not
+ * a chapter to confirm (field test 26.08.2026).
+ */
+export function stage2BridgeAutoContinues(input: {
+  autoHandoff: boolean
+  explicitModuleEntry: boolean
+}): boolean {
+  return input.autoHandoff || input.explicitModuleEntry
+}
+
+/**
+ * What a bridge renders. `"pending"` is the quiet "your products are being
+ * prepared" shell an explicit module entry gets while its handoff runs;
+ * `"chapter"` is the funnel's chapter screen — still the surface for a FAILED
+ * handoff in every entry, because it carries the error copy and the retry.
+ */
+export function stage2BridgePresentation(input: {
+  explicitModuleEntry: boolean
+  handoffStatus: "idle" | "loading" | "error" | "complete"
+}): "pending" | "chapter" {
+  return input.explicitModuleEntry && input.handoffStatus !== "error" ? "pending" : "chapter"
+}
+
 export function deriveRefinementEntryMode(
   session: Stage2RefinementSession,
   directEntry: boolean,
@@ -129,6 +174,7 @@ export function RefinementFlow({
   directEntry = false,
   stageEntrance = false,
   moduleEntry,
+  moduleProgress,
 }: {
   gateway: Stage2RefinementGateway
   initialSession?: Stage2RefinementSession
@@ -145,7 +191,15 @@ export function RefinementFlow({
    * session and falls back to the legacy linear flow when nothing is open.
    */
   moduleEntry?: Stage2ModuleEntryRequest
+  /** The banner's own "X von 4", shown as slim chrome above module questions. */
+  moduleProgress?: Stage2ModuleProgress | null
 }) {
+  /**
+   * A REAL module deep link (Routine banner, Profil row) — the post-accept
+   * loop. Purely prop-derived, so it is stable from the first render: an
+   * explicit request always resolves to exactly the module it names.
+   */
+  const explicitModuleEntry = isStage2Module(moduleEntry)
   const initialModule = useMemo(
     () => (initialSession ? resolveStage2EntryModule(initialSession, moduleEntry ?? null) : null),
     [initialSession, moduleEntry],
@@ -310,7 +364,13 @@ export function RefinementFlow({
     const previousQuestionId =
       currentIndex > 0 ? session.path.orderedQuestionIds[currentIndex - 1] : null
     if (!previousQuestionId) {
-      if (shouldReturnToStage1FromQuestion({ session, activeQuestionId, directEntry })) {
+      // Back off the first question of an EXPLICIT module leaves the module
+      // (→ /routine). It must never reveal the funnel's invitation/resume
+      // chapter, which the post-accept loop has no place for (26.08.2026).
+      if (
+        explicitModuleEntry ||
+        shouldReturnToStage1FromQuestion({ session, activeQuestionId, directEntry })
+      ) {
         onSecondaryExit?.()
         return
       }
@@ -319,7 +379,15 @@ export function RefinementFlow({
     }
     setActiveFromSession(session, previousQuestionId)
     setMode("question")
-  }, [activeQuestionId, directEntry, onSecondaryExit, session, setActiveFromSession, status])
+  }, [
+    activeQuestionId,
+    directEntry,
+    explicitModuleEntry,
+    onSecondaryExit,
+    session,
+    setActiveFromSession,
+    status,
+  ])
 
   const handleBridgeBack = useCallback(() => {
     if (!session) return
@@ -346,11 +414,19 @@ export function RefinementFlow({
   }, [bridge, emit, handoffStatus, onHandoff, session])
 
   useEffect(() => {
-    if (!autoHandoff || mode !== "bridge" || !bridge || !onHandoff || handoffStatus !== "idle")
-      return
+    if (mode !== "bridge" || !bridge || !onHandoff || handoffStatus !== "idle") return
+    if (!stage2BridgeAutoContinues({ autoHandoff, explicitModuleEntry })) return
     const timer = window.setTimeout(() => void handleBridgeContinue(), 0)
     return () => window.clearTimeout(timer)
-  }, [autoHandoff, bridge, handleBridgeContinue, handoffStatus, mode, onHandoff])
+  }, [
+    autoHandoff,
+    bridge,
+    explicitModuleEntry,
+    handleBridgeContinue,
+    handoffStatus,
+    mode,
+    onHandoff,
+  ])
 
   const showCompletedStage2Session = useCallback(
     (nextSession: Stage2RefinementSession, handoff: Stage2CompleteResult) => {
@@ -670,6 +746,15 @@ export function RefinementFlow({
   const content = useMemo(() => {
     if (mode === "loading") return <LoadingShell status={status} liveMessage={liveMessage} />
     if (mode === "bridge" && bridge) {
+      if (stage2BridgePresentation({ explicitModuleEntry, handoffStatus }) === "pending") {
+        return (
+          <LoadingShell
+            status={status}
+            liveMessage={liveMessage}
+            title="Deine Produkte werden vorbereitet."
+          />
+        )
+      }
       return (
         <RefinementBridge
           refinedVersionId={bridge.refinedVersionId}
@@ -707,6 +792,10 @@ export function RefinementFlow({
           saveStatus={journeySaveStatus(status)}
           onBack={canGoBack ? handleBack : onSecondaryExit}
           showStageProgress={false}
+          // The banner's own coarse meter, in the slot the retired 5-stage bar
+          // used to occupy — module questions otherwise give no sense of where
+          // this sits in the plan (field test 26.08.2026).
+          moduleProgress={moduleProgress ?? undefined}
         />
         <div className={stageEntrance ? "personal-plan-stage-target-enter" : undefined}>
           <PersonalPlanViewTransition
@@ -737,6 +826,7 @@ export function RefinementFlow({
     activeQuestionId,
     begin,
     bridge,
+    explicitModuleEntry,
     handleBack,
     handleBridgeBack,
     handleBridgeContinue,
@@ -745,6 +835,7 @@ export function RefinementFlow({
     liveMessage,
     localAnswer,
     mode,
+    moduleProgress,
     handoffStatus,
     onHandoff,
     onSecondaryExit,
@@ -852,9 +943,11 @@ function chooseNextQuestion(
 function LoadingShell({
   status,
   liveMessage,
+  title = "Wir laden deinen Stand.",
 }: {
   status: RefinementQuestionStatus
   liveMessage: string
+  title?: string
 }) {
   return (
     <div className="min-h-dvh bg-[var(--background)]">
@@ -869,7 +962,7 @@ function LoadingShell({
             Feinschliff
           </p>
           <h1 className="mt-2 font-serif text-3xl font-medium text-[var(--brand-plum-darkest,#2a1845)]">
-            Wir laden deinen Stand.
+            {title}
           </h1>
           {status === "save_failed" ? (
             <p role="alert" className="mt-3 text-sm text-[#a3434b]">

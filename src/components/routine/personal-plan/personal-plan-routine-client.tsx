@@ -3,7 +3,6 @@
 import * as React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
-import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey"
 import {
   BottomSheet,
   BottomSheetContent,
@@ -41,7 +40,7 @@ import { RoutineProposalSheet, type RoutineProposalSheetDeltaEntry } from "./rou
 import type { RoutineRefinementBannerViewModel } from "./routine-refinement-banner"
 
 type RoutineViewResponse = PersonalPlanRoutineView | { status: "no_personal_plan" }
-type Mode = "overview" | "editor" | "application_transition"
+type Mode = "overview" | "editor"
 
 function readError(response: Response, fallback: string) {
   return response
@@ -196,13 +195,11 @@ export function routineProposalDeltaEntries(
 export function PersonalPlanRoutineClient({
   initialView,
   enabled,
-  stage5Reachable,
   portfolioPresentation = null,
   initialRefinementBanner = null,
 }: {
   initialView: PersonalPlanRoutineView
   enabled: boolean
-  stage5Reachable: boolean
   portfolioPresentation?: PortfolioPresentation | null
   initialRefinementBanner?: RoutineRefinementBannerViewModel | null
 }) {
@@ -240,13 +237,6 @@ export function PersonalPlanRoutineClient({
   )
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
-  const openApplication = React.useCallback(() => {
-    setMode("application_transition")
-  }, [])
-  const enterApplication = React.useCallback(() => {
-    markPersonalPlanStageNavigation("/anwendung")
-    router.push("/anwendung")
-  }, [router])
   // Optimistic, session-local hide so the banner disappears immediately on
   // dismiss without waiting for a reload; the server write (which re-arms
   // the banner for whichever module becomes the next open one) happens
@@ -532,17 +522,6 @@ export function PersonalPlanRoutineClient({
     }
   }, [])
 
-  if (mode === "application_transition") {
-    return (
-      <PersonalPlanChapterTransition
-        currentStage={5}
-        onAction={enterApplication}
-        onBack={() => setMode("overview")}
-        backLabel="Zur Routine"
-      />
-    )
-  }
-
   if (mode === "editor" && seed) {
     return (
       <RoutineEditor
@@ -564,14 +543,7 @@ export function PersonalPlanRoutineClient({
   }
 
   if (!seed && view.status === "authority_repair_required") {
-    return (
-      <RoutinePage
-        view={view}
-        stage5Reachable={stage5Reachable}
-        portfolioPresentation={portfolioPresentation}
-        onOpenApplication={openApplication}
-      />
-    )
+    return <RoutinePage view={view} portfolioPresentation={portfolioPresentation} />
   }
 
   if (!seed) {
@@ -603,14 +575,12 @@ export function PersonalPlanRoutineClient({
       ) : null}
       <RoutinePage
         view={view}
-        stage5Reachable={stage5Reachable}
         onEdit={canEdit ? openEditor : undefined}
         onReviewProposal={
           !isInitial && pending && enabled ? () => setProposalOpen(true) : undefined
         }
         onItemDetail={(item) => void openDetail(item)}
         portfolioPresentation={portfolioPresentation}
-        onOpenApplication={openApplication}
         refinementBanner={refinementBanner}
         onDismissRefinementBanner={dismissRefinementBanner}
         onRefineFromBanner={refineFromBanner}

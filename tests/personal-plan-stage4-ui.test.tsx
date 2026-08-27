@@ -242,7 +242,7 @@ test("a planned item with a chosen catalog product is a full routine member", ()
   assert.doesNotMatch(html, /Status: Offen/)
 })
 
-test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 frontier is reachable", () => {
+test("uses proposal copy initially and never offers an Anwendung hero button", () => {
   const active = payload([item({ product: { kind: "owned", displayName: "Aktives Shampoo" } })])
   const candidate = payload([
     item({
@@ -265,24 +265,22 @@ test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 
     renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
     /Routine bestätigen/,
   )
-  const html = renderToStaticMarkup(
-    <RoutinePage view={activeWithPending} stage5Reachable={false} />,
-  )
+  const html = renderToStaticMarkup(<RoutinePage view={activeWithPending} />)
   assert.match(html, /Deine Routine/)
   assert.doesNotMatch(html, /Deine Routine steht/)
   assert.match(html, /Aktives Shampoo/)
   assert.doesNotMatch(html, /Neues Shampoo/)
-  assert.doesNotMatch(html, /Anwendungsplan ansehen/)
-  const stage5Html = renderToStaticMarkup(<RoutinePage view={activeWithPending} stage5Reachable />)
-  assert.match(stage5Html, /href="\/anwendung"/)
-  assert.match(stage5Html, /Anwendung ansehen/)
+  // Field test 26.08.2026: the Anwendung hero button is gone for good — the
+  // Bottom-Nav's Anwendung tab is the only route to that surface now.
+  assert.doesNotMatch(html, /Anwendung ansehen/)
+  assert.doesNotMatch(html, /href="\/anwendung"/)
   assert.doesNotMatch(
     renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
     /Anwendung ansehen/,
   )
 })
 
-test("the eligible Anwendung action opens the local chapter before route navigation", () => {
+test("the edit affordance is a quiet link in the heading row, not a hero button", () => {
   const routine = payload([item()])
   const view: PersonalPlanRoutineView = {
     status: "active",
@@ -292,48 +290,28 @@ test("the eligible Anwendung action opens the local chapter before route navigat
     activeVersion: { id: routine.versionId, payload: routine },
     pendingProposal: null,
   }
-  let opened = 0
-  const tree = RoutinePage({
-    view,
-    stage5Reachable: true,
-    onOpenApplication: () => {
-      opened += 1
-    },
-  })
-  const applicationLink = findElement(tree, (element) => element.props.href === "/anwendung")
-  assert.ok(applicationLink)
-  let prevented = false
-  const onClick = applicationLink.props.onClick as
-    | ((event: {
-        button: number
-        metaKey: boolean
-        ctrlKey: boolean
-        shiftKey: boolean
-        altKey: boolean
-        preventDefault: () => void
-      }) => void)
-    | undefined
-  onClick?.({
-    button: 0,
-    metaKey: false,
-    ctrlKey: false,
-    shiftKey: false,
-    altKey: false,
-    preventDefault: () => (prevented = true),
-  })
+  const html = renderToStaticMarkup(<RoutinePage view={view} onEdit={() => undefined} />)
 
-  assert.equal(prevented, true)
-  assert.equal(opened, 1)
+  assert.match(html, />Anpassen</)
+  // The repo's quiet-affordance idiom (Haarprofil "Angaben ändern"): a plum
+  // underlined text control, never a filled/outline button.
+  assert.match(html, /<button[^>]*underline[^>]*>Anpassen</)
+  assert.doesNotMatch(html, /funnelCta/)
+  // It sits in the heading row, directly after the H1 — not in a CTA dock.
+  assert.ok(html.indexOf("Deine Routine") < html.indexOf("Anpassen"))
+  assert.ok(html.indexOf("Anpassen") < html.indexOf("Deine Basis"))
 
-  onClick?.({
-    button: 0,
-    metaKey: true,
-    ctrlKey: false,
-    shiftKey: false,
-    altKey: false,
-    preventDefault: () => assert.fail("modified clicks must preserve native link navigation"),
-  })
-  assert.equal(opened, 1)
+  let edited = 0
+  const tree = RoutinePage({ view, onEdit: () => (edited += 1) })
+  const editButton = findElement(
+    tree,
+    (element) => element.type === "button" && element.props.children === "Anpassen",
+  )
+  assert.ok(editButton, "expected the Anpassen affordance to render")
+  ;(editButton.props.onClick as () => void)()
+  assert.equal(edited, 1)
+
+  assert.doesNotMatch(renderToStaticMarkup(<RoutinePage view={view} />), />Anpassen</)
 })
 
 test("uses presentation-only catalog image and name facts outside the Routine payload", () => {
@@ -437,12 +415,7 @@ test("renders active routine as product-led result with separated later addition
   }
 
   const html = renderToStaticMarkup(
-    <RoutinePage
-      view={view}
-      stage5Reachable
-      onEdit={() => undefined}
-      onItemDetail={() => undefined}
-    />,
+    <RoutinePage view={view} onEdit={() => undefined} onItemDetail={() => undefined} />,
   )
 
   assert.match(html, /Routine aktiv/)
@@ -465,7 +438,7 @@ test("renders active routine as product-led result with separated later addition
   assert.match(html, /Maske optional/)
   assert.doesNotMatch(html, /Kein Bestandteil deiner aktiven Routine/)
   assert.ok(html.indexOf("Bali Curls Moisturising Conditioner") < html.indexOf("Später ergänzen"))
-  assert.match(html, /Anwendung ansehen/)
+  assert.doesNotMatch(html, /Anwendung ansehen/)
   assert.match(html, />Anpassen</)
   assert.doesNotMatch(html, /Routine bestätigen/)
   assert.doesNotMatch(html, /Kein Produkt ausgewählt/)
@@ -605,7 +578,7 @@ test("keeps required Basis gaps explicit and renders a named recovery state with
     activeVersion: { id: routine.versionId, payload: routine },
     pendingProposal: null,
   }
-  const gapHtml = renderToStaticMarkup(<RoutinePage view={gapView} stage5Reachable />)
+  const gapHtml = renderToStaticMarkup(<RoutinePage view={gapView} />)
 
   assert.match(gapHtml, /Basis-Lücke/)
   assert.match(gapHtml, /Für diesen Basis-Baustein fehlt noch ein Produkt/)
@@ -817,7 +790,7 @@ test("a role a later recompute resolved is no longer excluded, so its placeholde
   assert.match(html, />Aktiv</)
 })
 
-test("the all-deferred shape (zero-recommendation accept) renders only placeholders without dead-ending the Anwendung CTA", () => {
+test("the all-deferred shape (zero-recommendation accept) renders only placeholders", () => {
   const routine = payload([
     deferredItem({
       itemKey: "deferred-shampoo",
@@ -851,7 +824,7 @@ test("the all-deferred shape (zero-recommendation accept) renders only placehold
   }
 
   const html = renderToStaticMarkup(
-    <RoutinePage view={activeView} portfolioPresentation={presentation} stage5Reachable />,
+    <RoutinePage view={activeView} portfolioPresentation={presentation} />,
   )
 
   assert.match(html, /Deine Routine/)
@@ -861,7 +834,9 @@ test("the all-deferred shape (zero-recommendation accept) renders only placehold
   assert.doesNotMatch(html, /Deine Routine ist bereit/)
   assert.equal((html.match(/<a[^>]*href="\/plan-start\?refine=products"[^>]*>/g) ?? []).length, 2)
   assert.doesNotMatch(html, /Mindestens ein Basis-Baustein fehlt noch/)
-  assert.match(html, /href="\/anwendung"/)
+  // No Anwendung CTA to dead-end any more (26.08.2026): the page never offers
+  // one, the Bottom-Nav tab does.
+  assert.doesNotMatch(html, /href="\/anwendung"/)
 })
 
 test("translates structured Personal Plan cadence without exposing internal keys", () => {
@@ -1056,7 +1031,7 @@ test("fresh state (products open, 2 von 4): banner renders above the routine blo
   assert.equal(refined, 1)
 })
 
-test("post-module-1 state (habits open, 3 von 4): banner renders below the routine blocks with quieter copy", () => {
+test("post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too", () => {
   const routine = payload([item()])
   const view = activeViewFor(routine)
   const html = renderToStaticMarkup(
@@ -1071,7 +1046,9 @@ test("post-module-1 state (habits open, 3 von 4): banner renders below the routi
   assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
   assert.match(html, />3 von 4</)
   assert.match(html, /Weiter · 3 Min\./)
-  assert.ok(html.indexOf("Deine Basis") < html.indexOf("Noch ein Schritt"))
+  // Field test 26.08.2026: below the blocks the second ask scrolled out of
+  // view and was never seen, so both modules share the products slot.
+  assert.ok(html.indexOf("Noch ein Schritt") < html.indexOf("Deine Basis"))
 })
 
 test("dismissed state: refinementBanner absent renders no banner", () => {

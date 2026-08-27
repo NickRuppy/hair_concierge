@@ -4924,6 +4924,72 @@ test("multiple individual reviews progress to one intentional Routine chapter ha
   assert.ok(events.includes("personal_plan_stage3_routine_opened"))
 })
 
+test("a post-accept Stage 3 lands on the Routine directly, with no chapter screen", async () => {
+  // Field test 26.08.2026: the user reached Stage 3 from a Feinschliff module
+  // with the full app nav on screen. "Deine Produktauswahl steht." is creation
+  // funnel ceremony there — the Routine's own toast carries the feedback.
+  const events: string[] = []
+  const analytics = {
+    track(eventName: string) {
+      events.push(eventName)
+    },
+  } as Stage3AnalyticsPort
+  const handoffs: Stage3RoutineHandoff[] = []
+  const gateway = createAuthorityTestGateway()
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-direct-routine-handoff",
+    refinedVersionId: "refined-direct-routine-handoff",
+    orderedCategories: [
+      {
+        category: "oil",
+        requiredRoles: ["leave_on_fibre_conditioning", "dry_finish"],
+        needSummary: "Pflege und Finish für deine Längen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      gateway,
+      searchDebounceMs: 0,
+      directRoutineHandoff: true,
+      onOpenRoutine: (handoff) => handoffs.push(handoff),
+      analytics,
+    }),
+  )
+
+  await captureCatalogProduct(harness, "Öl", "oil")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+
+  for (let index = 0; index < 2; index += 1) {
+    tree = await renderSettled(harness)
+    const review = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+      tree,
+      ProductFitComparison,
+    )
+    assert.ok(review)
+    review.props.onAction("keep_owned")
+    tree = await renderSettled(harness)
+  }
+  await waitForReviewedChoicesToSubmit(harness)
+  await new Promise((resolve) => setImmediate(resolve))
+  const completedTree = await renderSettled(harness)
+
+  // No tap needed, and no chapter rendered at any point after completion.
+  assert.equal(handoffs.length, 1)
+  assert.ok(events.includes("personal_plan_stage3_routine_opened"))
+  assert.equal(findByType(completedTree, PersonalPlanChapterTransition), null)
+  assert.equal(systemStateTitle(completedTree), "Deine Routine wird geöffnet.")
+})
+
 test("assigning an Oil use to another product moves the exclusive checkbox", () => {
   const assignments = updateStage3RoleAssignments(
     { "oil-1": ["dry_finish", "pre_wash_fibre_treatment"], "oil-2": [] },

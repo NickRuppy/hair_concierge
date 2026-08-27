@@ -68,7 +68,10 @@ test("Routine resolver preserves legacy only for people without a Personal Plan"
   if (personalPlan.kind === "personal_plan") {
     assert.equal(personalPlan.enabled, false)
     assert.equal(personalPlan.view.activeVersion?.id, "routine-1")
-    assert.equal(personalPlan.stage5Reachable, false)
+    // Field test 26.08.2026: the Routine page no longer resolves Stage-5
+    // reachability at all — the "Anwendung ansehen" hero button is gone and the
+    // Bottom-Nav owns that destination behind its own `allowed.stage5` gate.
+    assert.equal("stage5Reachable" in personalPlan, false)
   }
 
   const stage5Plan = await resolveRoutinePage({
@@ -83,7 +86,6 @@ test("Routine resolver preserves legacy only for people without a Personal Plan"
     readView: async () => activeView,
   })
   assert.equal(stage5Plan.kind, "personal_plan")
-  if (stage5Plan.kind === "personal_plan") assert.equal(stage5Plan.stage5Reachable, true)
 })
 
 test("Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure", async () => {

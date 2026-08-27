@@ -641,6 +641,8 @@ test("Labs previews are development guarded and keep fixture-gateway behind Labs
   await visit(srcRoot)
 
   assert.deepEqual(importers.sort(), [
+    // Dev-only Feinschliff-Einstieg demo harness (`/labs/feinschliff-journey`).
+    "app/labs/feinschliff-journey/journey-client.tsx",
     "app/labs/personal-plan-stage-1-2/journey-client.tsx",
     "app/labs/personal-plan-stage-2/preview-client.tsx",
     "app/labs/personal-plan/stage-3/lab-client.tsx",

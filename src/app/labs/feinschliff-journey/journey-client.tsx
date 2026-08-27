@@ -227,6 +227,7 @@ export function FeinschliffJourneyClient({
         <Stage2PreviewClient
           scenario="module-products"
           autoHandoff
+          moduleProgress={{ completedSteps: 2, totalSteps: 4 }}
           onHandoff={() => setStep({ name: "stage3" })}
           onModuleComplete={() => setStep({ name: "stage3" })}
         />
@@ -256,6 +257,7 @@ export function FeinschliffJourneyClient({
           gateway={stage3Gateway}
           searchDebounceMs={0}
           stageEntrance
+          directRoutineHandoff
           onBackToRefinement={() => openRoutine("after-products", true)}
           onOpenRoutine={() => openRoutine("after-products", true)}
         />
@@ -269,6 +271,7 @@ export function FeinschliffJourneyClient({
         <Stage2PreviewClient
           scenario="module-habits"
           autoHandoff
+          moduleProgress={{ completedSteps: 3, totalSteps: 4 }}
           onHandoff={() => openRoutine("after-habits", true)}
           onModuleComplete={() => openRoutine("after-habits", true)}
         />

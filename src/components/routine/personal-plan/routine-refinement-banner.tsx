@@ -13,10 +13,9 @@ export type RoutineRefinementBannerProps = RoutineRefinementBannerViewModel & {
 
 /**
  * Copy and CTA duration per module (mockup v3, signed off 25.08.2026):
- * `products` is the first, more prominent ask; `habits` is the quieter
- * second ask once `products` is done. The banner never re-derives progress
- * or module state itself — both come straight from the refinement-status API
- * (Task 1.7) via the caller.
+ * `products` is the first ask; `habits` is the second one once `products` is
+ * done. The banner never re-derives progress or module state itself — both
+ * come straight from the refinement-status API (Task 1.7) via the caller.
  */
 const MODULE_BANNER_COPY: Record<Stage2Module, { title: string; ctaMinutes: number }> = {
   products: { title: "Mach deinen Plan genauer.", ctaMinutes: 2 },
@@ -25,10 +24,10 @@ const MODULE_BANNER_COPY: Record<Stage2Module, { title: string; ctaMinutes: numb
 
 /**
  * The Routine-page refinement banner (Task 2.3). Replaces the old 24h
- * "Dein Plan basiert noch auf Annahmen." nudge entirely. Position (above the
- * routine blocks while `products` is the open module, below them once
- * `habits` is) is decided by the caller (`RoutinePage`) from the same
- * `module` value this component renders from — see routine-page.tsx.
+ * "Dein Plan basiert noch auf Annahmen." nudge entirely. It always renders
+ * directly above the routine blocks — the mockup's quieter below-the-blocks
+ * slot for `habits` lost the field test on 26.08.2026 (it scrolled out of
+ * view and was never seen). Only the copy still differs per module.
  */
 export function RoutineRefinementBanner({
   module,

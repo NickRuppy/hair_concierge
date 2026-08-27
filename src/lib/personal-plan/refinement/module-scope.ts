@@ -203,7 +203,13 @@ export function resolveStage2FlowEntryView(input: {
     }
   }
   return {
-    mode: deriveStage2EntryMode(session, directEntry),
+    // An EXPLICIT module entry is a post-accept surface hop, not a funnel
+    // chapter: the user tapped a Routine banner or a Profil row and already
+    // has the full app nav. Field test 26.08.2026 — the invitation and resume
+    // shells read as funnel ceremony there, so an explicit module always opens
+    // its first open question directly. `first_open` and the legacy linear
+    // entry keep the creation funnel's chapter screens.
+    mode: moduleScope === "explicit" ? "question" : deriveStage2EntryMode(session, directEntry),
     activeQuestionId: firstUnresolvedQuestionId,
     status: "idle",
     liveMessage: "",

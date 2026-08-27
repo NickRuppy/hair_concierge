@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   RefinementFlow,
   type Stage2HandoffPayload,
+  type Stage2ModuleProgress,
 } from "@/components/personal-plan-refinement/refinement-flow"
 import {
   stage2SecondaryExitDestination,
@@ -101,6 +102,13 @@ export type PlanStartInitialJourney =
        * plain `?refine=1` re-entry). The flow then walks only that module.
        */
       refineModule?: Stage2ModuleEntryRequest
+      /**
+       * The coarse "X von 4" the Routine banner just showed, read server-side
+       * from the same `refinement-status` contract so the module questions
+       * cannot contradict the banner the user tapped (26.08.2026). Optional:
+       * an unavailable read simply means no meter.
+       */
+      moduleProgress?: Stage2ModuleProgress
     }
   | { stage: "stage3"; refinedVersionId: string; repairRoutineVersionId?: string }
 
@@ -138,8 +146,21 @@ export function planStartRefinementExitDestination(
  * Stage-2 module itself through to the Stage-3 completion the `products`
  * module hands off into.
  */
-function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
+export function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
   return planStartRefinementExitDestination(initialJourney) === "routine"
+}
+
+/**
+ * Whether the post-accept loop's chapter screens must stay suppressed for this
+ * journey (field test 26.08.2026). An explicit module deep link means the user
+ * arrived from the Routine banner or a Profil row with the full app nav on
+ * screen — Stage-2 → Stage-3 and Stage-3 → Routine are surface hops there, not
+ * funnel chapters. The first-time linear creation funnel keeps every chapter.
+ */
+export function planStartSuppressesChapterCeremony(
+  initialJourney: PlanStartInitialJourney,
+): boolean {
+  return isExplicitModuleRefinementEntry(initialJourney)
 }
 
 /**
@@ -946,6 +967,9 @@ export function PlanStartCustomerJourney({
           stage2SeedRef.current = undefined
           void enterStage1()
         }}
+        moduleProgress={
+          initialJourney.stage === "stage2" ? (initialJourney.moduleProgress ?? null) : null
+        }
         onHandoff={handleHandoff}
         onModuleComplete={() => {
           // Modul 2 without a Stage-3 handoff (habits first): the user belongs
@@ -985,6 +1009,7 @@ export function PlanStartCustomerJourney({
         intakeClient={intakeClient}
         analytics={stage3BaselineAnalytics}
         stageEntrance={stage3EnteredLocally}
+        directRoutineHandoff={planStartSuppressesChapterCeremony(initialJourney)}
         onOpenRoutine={openRoutine}
         onProductKindsCorrection={handleProductKindsCorrection}
         onBackToRefinement={() => {

@@ -12,12 +12,15 @@ import {
 import {
   applyStage2ModuleCompletion,
   RefinementFlow,
+  stage2BridgeAutoContinues,
+  stage2BridgePresentation,
   type Stage2ModuleCompletionPayload,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
 import {
   moduleCompletionRoutineHref,
   planStartRefinementExitDestination,
+  planStartSuppressesChapterCeremony,
   stage3CompletionRoutineHref,
 } from "../src/components/personal-plan-start/plan-start-flow"
 import {
@@ -218,12 +221,23 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
       directEntry: true,
     }),
     {
-      mode: "resume",
+      // Field test 26.08.2026: an explicit module entry never shows the resume
+      // chapter — it opens the first open question of that module directly.
+      mode: "question",
       activeQuestionId: "drying_routes",
       status: "idle",
       liveMessage: "",
       bridge: false,
     },
+  )
+  // `?refine=1` (first_open) is still the funnel's own re-entry and keeps it.
+  assert.equal(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(midModule, "habits"),
+      moduleScope: "first_open",
+      directEntry: true,
+    }).mode,
+    "resume",
   )
 
   // Handoff consumption: re-entering an ALREADY finished module (a reload after
@@ -718,4 +732,217 @@ test("module completion routes its three outcomes through a fake gateway", async
   assert.equal(closing.recorded.completed.length, 1)
   assert.equal(closing.recorded.bridged.length, 0)
   assert.equal(closing.recorded.handedBack.length, 0)
+})
+
+/* ------------------------------------------------------------------------ *
+ * Founder field test, 26.08.2026 — the post-accept loop is a set of surface
+ * hops, not a funnel. Two rules follow: module questions carry the banner's
+ * own coarse meter, and no chapter screen may appear between the surfaces.
+ * ------------------------------------------------------------------------ */
+
+const inertGateway = {
+  load: async () => {
+    throw new Error("not used")
+  },
+  saveAnswer: async () => {
+    throw new Error("not used")
+  },
+  complete: async () => {
+    throw new Error("not used")
+  },
+} as unknown as React.ComponentProps<typeof RefinementFlow>["gateway"]
+
+test("module questions carry the banner's coarse meter, verbatim from the server value", () => {
+  const productsHtml = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={inertGateway}
+      initialSession={untouchedSession()}
+      moduleEntry="products"
+      moduleProgress={{ completedSteps: 2, totalSteps: 4 }}
+      directEntry
+    />,
+  )
+  assert.match(productsHtml, />2 von 4</)
+  assert.match(productsHtml, /aria-valuenow="2"/)
+  assert.match(productsHtml, /aria-valuemax="4"/)
+  // The retired 5-stage bar must not come back with it (Task 2.7).
+  assert.doesNotMatch(productsHtml, /Personal-Plan-Stufen/)
+
+  const habitsHtml = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={inertGateway}
+      initialSession={productsDoneSession()}
+      moduleEntry="habits"
+      moduleProgress={{ completedSteps: 3, totalSteps: 4 }}
+      directEntry
+    />,
+  )
+  assert.match(habitsHtml, />3 von 4</)
+  assert.match(habitsHtml, /aria-valuenow="3"/)
+
+  // No server value (unavailable read, or the legacy linear funnel): no meter,
+  // never an invented one.
+  const withoutProgress = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={inertGateway}
+      initialSession={untouchedSession()}
+      moduleEntry="products"
+      directEntry
+    />,
+  )
+  assert.doesNotMatch(withoutProgress, /von 4/)
+  assert.doesNotMatch(withoutProgress, /role="progressbar"/)
+})
+
+test("an explicit module entry opens its first open question, never the resume chapter", () => {
+  const midModule = createStage2RefinementSession({
+    pathVersion: "stage2-module-test",
+    triggerContext: plainTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      towel: { material: "no_towel" },
+    },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency", "towel_handling"],
+  })
+
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={inertGateway}
+      initialSession={midModule}
+      moduleEntry="habits"
+      directEntry
+    />,
+  )
+  assert.doesNotMatch(html, /Du machst bei der ersten offenen Frage weiter\./)
+  assert.doesNotMatch(html, /Bei der offenen Frage fortfahren/)
+  assert.doesNotMatch(html, /Jetzt geben wir deinem Plan den Feinschliff\./)
+  assert.match(html, /Wie du dein Haar behandelst/)
+})
+
+test("the bridge ceremony is suppressed for an explicit module entry but kept for failures", () => {
+  // Auto-continue: the funnel's `autoHandoff` rule, overridden by an explicit
+  // module entry (which the host turns `autoHandoff` off for).
+  assert.equal(
+    stage2BridgeAutoContinues({ autoHandoff: false, explicitModuleEntry: true }),
+    true,
+    "a finished module must hand off without a chapter tap",
+  )
+  assert.equal(stage2BridgeAutoContinues({ autoHandoff: false, explicitModuleEntry: false }), false)
+  assert.equal(stage2BridgeAutoContinues({ autoHandoff: true, explicitModuleEntry: false }), true)
+
+  for (const handoffStatus of ["idle", "loading", "complete"] as const) {
+    assert.equal(
+      stage2BridgePresentation({ explicitModuleEntry: true, handoffStatus }),
+      "pending",
+      `expected the quiet pending surface while ${handoffStatus}`,
+    )
+    assert.equal(
+      stage2BridgePresentation({ explicitModuleEntry: false, handoffStatus }),
+      "chapter",
+      "the creation funnel keeps its chapter",
+    )
+  }
+  // A failed handoff keeps a real surface in BOTH entries — it is the only
+  // screen carrying the error copy and the retry action.
+  assert.equal(
+    stage2BridgePresentation({ explicitModuleEntry: true, handoffStatus: "error" }),
+    "chapter",
+  )
+})
+
+test("chapter ceremony is suppressed exactly for explicit module journeys", () => {
+  assert.equal(
+    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "products" }),
+    true,
+  )
+  assert.equal(
+    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "habits" }),
+    true,
+  )
+  // The creation funnel and the plain `?refine=1` nudge keep every chapter.
+  assert.equal(
+    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
+    false,
+  )
+  assert.equal(planStartSuppressesChapterCeremony({ stage: "stage2" }), false)
+  assert.equal(planStartSuppressesChapterCeremony({ stage: "stage1" }), false)
+  assert.equal(
+    planStartSuppressesChapterCeremony({ stage: "stage3", refinedVersionId: "refined-1" }),
+    false,
+  )
+})
+
+test("plan-start carries the banner's progress into an explicit module entry only", async () => {
+  const refinement = productsDoneSession()
+  let progressReads = 0
+  const deps: PlanStartPageDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage2",
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false },
+    }),
+    loadExistingRefinementSession: async () => refinement,
+    loadRefinementProgress: async () => {
+      progressReads += 1
+      return { completedSteps: 3, totalSteps: 4 }
+    },
+  }
+
+  const scoped = await resolvePlanStartPageState(deps, { refine: true, refineModule: "habits" })
+  assert.deepEqual(scoped, {
+    state: "production",
+    initialJourney: {
+      stage: "stage2",
+      returningToRefinement: true,
+      refineModule: "habits",
+      moduleProgress: { completedSteps: 3, totalSteps: 4 },
+    },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinement,
+  })
+  assert.equal(progressReads, 1)
+
+  // `?refine=1` shows no meter, so it must not pay for the read either.
+  const legacy = await resolvePlanStartPageState(deps, {
+    refine: true,
+    refineModule: "first_open",
+  })
+  assert.deepEqual(legacy, {
+    state: "production",
+    initialJourney: {
+      stage: "stage2",
+      returningToRefinement: true,
+      refineModule: "first_open",
+    },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinement,
+  })
+  assert.equal(progressReads, 1)
+
+  // A failing progress read must never cost the user the module entry.
+  const failing = await resolvePlanStartPageState(
+    {
+      ...deps,
+      loadRefinementProgress: async () => {
+        throw new Error("refinement status unavailable")
+      },
+    },
+    { refine: true, refineModule: "products" },
+  )
+  assert.deepEqual(failing, {
+    state: "production",
+    initialJourney: {
+      stage: "stage2",
+      returningToRefinement: true,
+      refineModule: "products",
+    },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinement,
+  })
 })

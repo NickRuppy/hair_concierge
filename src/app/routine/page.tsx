@@ -95,7 +95,6 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
       enabled,
       portfolioPresentation,
       refinementBanner,
-      stage5Reachable: canAccessPersonalPlanJourneyStage(journey, "stage5"),
     }
   } catch {
     // The legacy Routine is not a safe substitute once a Personal Plan exists.
@@ -179,7 +178,6 @@ export default async function RoutinePage() {
     <PersonalPlanRoutineClient
       initialView={resolved.view}
       enabled={resolved.enabled}
-      stage5Reachable={resolved.stage5Reachable}
       portfolioPresentation={resolved.portfolioPresentation}
       initialRefinementBanner={resolved.refinementBanner}
     />

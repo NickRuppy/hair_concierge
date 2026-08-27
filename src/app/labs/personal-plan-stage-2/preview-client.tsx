@@ -6,6 +6,7 @@ import {
   RefinementFlow,
   type Stage2HandoffPayload,
   type Stage2ModuleCompletionPayload,
+  type Stage2ModuleProgress,
 } from "@/components/personal-plan-refinement/refinement-flow"
 import type {
   Stage2RefinementGateway,
@@ -51,12 +52,15 @@ export function Stage2PreviewClient({
   onHandoff,
   onModuleComplete,
   autoHandoff,
+  moduleProgress,
 }: {
   scenario: Stage2PreviewScenario
   triggerContext?: Stage2TriggerContext
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
   onModuleComplete?: (payload: Stage2ModuleCompletionPayload) => void | Promise<void>
   autoHandoff?: boolean
+  /** The coarse "X von 4" a host would carry over from the Routine banner. */
+  moduleProgress?: Stage2ModuleProgress | null
 }) {
   const gateway = useMemo(
     () => createPreviewGateway(scenario, triggerContext),
@@ -73,6 +77,7 @@ export function Stage2PreviewClient({
       <RefinementFlow
         gateway={gateway}
         moduleEntry={moduleEntry}
+        moduleProgress={moduleProgress}
         directEntry={moduleEntry !== undefined}
         onSecondaryExit={() => {
           // The preview must not invent an Idealplan href, but it records the
