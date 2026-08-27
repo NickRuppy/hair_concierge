@@ -11,7 +11,7 @@ import {
   type PasswordResetMessage,
 } from "@/lib/auth/password-reset"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
-import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
+import { normalizeModeratorReturnPath } from "@/lib/auth/moderator-return"
 
 const UPDATE_TIMEOUT_MS = 15_000
 const UPDATE_TIMEOUT_ERROR: PasswordResetMessage = {
@@ -34,7 +34,7 @@ export default function UpdatePasswordPage() {
   const returnTo = useMemo(() => {
     if (typeof window === "undefined") return null
     const next = new URLSearchParams(window.location.search).get("next")
-    return isModeratorReturnPath(next) ? next : null
+    return normalizeModeratorReturnPath(next)
   }, [])
 
   useEffect(() => {

@@ -7,19 +7,13 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
  * callbacks from treating an arbitrary `next` as moderator context.
  */
 export function isModeratorReturnPath(value: string | null | undefined): value is string {
-  if (!value) return false
+  return normalizeModeratorReturnPath(value) !== null
+}
 
-  try {
-    const url = new URL(value, "https://moderator-return.invalid")
-    return (
-      url.origin === "https://moderator-return.invalid" &&
-      url.pathname === "/test/haarplan/konto" &&
-      UUID.test(url.searchParams.get("campaign") ?? "") &&
-      [...url.searchParams.keys()].every((key) => key === "campaign")
-    )
-  } catch {
-    return false
-  }
+/** Rebuild the destination from its identifier; never navigate to raw query input. */
+export function normalizeModeratorReturnPath(value: string | null | undefined): string | null {
+  const match = value?.match(/^\/test\/haarplan\/konto\?campaign=([0-9A-Fa-f-]{36})$/)
+  return match ? moderatorReturnPath(match[1]) : null
 }
 
 export function moderatorReturnPath(campaignId: string): string | null {

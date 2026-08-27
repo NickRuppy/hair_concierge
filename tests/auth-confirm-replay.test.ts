@@ -1,10 +1,31 @@
 import assert from "node:assert/strict"
+import {
+  isModeratorReturnPath,
+  normalizeModeratorReturnPath,
+} from "../src/lib/auth/moderator-return"
 import test from "node:test"
 import {
   createAuthConfirmGetHandler,
   type AuthConfirmRouteDeps,
 } from "../src/app/auth/confirm/route"
 import { buildPasswordRecoveryRedirect } from "../src/components/auth/auth-form"
+
+test("moderator return paths reject absolute, protocol-relative and ambiguous URLs", () => {
+  const path = "/test/haarplan/konto?campaign=10000000-0000-4000-8000-000000000001"
+  assert.equal(isModeratorReturnPath(path), true)
+  assert.equal(normalizeModeratorReturnPath(path), path)
+  for (const value of [
+    `https://moderator-return.invalid${path}`,
+    `//moderator-return.invalid${path}`,
+    path.slice(1),
+    `${path}#anything`,
+    `${path}&campaign=20000000-0000-4000-8000-000000000002`,
+    "javascript:alert(1)",
+  ]) {
+    assert.equal(isModeratorReturnPath(value), false, value)
+    assert.equal(normalizeModeratorReturnPath(value), null, value)
+  }
+})
 
 type StubOptions = {
   exchangeError?: unknown
