@@ -1410,7 +1410,7 @@ test("omits the Optional page and progress step when no optional categories exis
     <PlanStartFlow
       state="ready"
       plan={{ basis: { ...readyPlan.basis, progress: 100 }, optional: null }}
-      onContinueToRefinement={() => {}}
+      onContinue={() => {}}
     />,
   )
 
@@ -1430,12 +1430,7 @@ test("omits the Optional page and progress step when no optional categories exis
 
 test("Optional Idealplan uses the shared header Back and a forward-only safe-area dock", () => {
   const html = renderToStaticMarkup(
-    <PlanStartFlow
-      state="ready"
-      plan={readyPlan}
-      initialStep="optional"
-      onContinueToRefinement={() => {}}
-    />,
+    <PlanStartFlow state="ready" plan={readyPlan} initialStep="optional" onContinue={() => {}} />,
   )
 
   assert.match(html, /data-plan-start-screen="optional"/)
@@ -1764,7 +1759,7 @@ test("adapts Basis-only snapshots without an empty Optional page", () => {
   assert.equal(plan.optional, null)
   assert.equal(plan.basis.progress, 100)
   const html = renderToStaticMarkup(
-    <PlanStartFlow state="ready" plan={plan} onContinueToRefinement={() => {}} />,
+    <PlanStartFlow state="ready" plan={plan} onContinue={() => {}} />,
   )
   assert.match(html, /Auf meine Produkte abstimmen/)
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
@@ -1803,8 +1798,8 @@ test("the final Stage 1 CTA enters the first Stage 2 question without an invitat
     "utf8",
   )
   assert.doesNotMatch(componentSource, /setStep\("transition"\)/)
-  assert.match(componentSource, /props\.onContinueToRefinement\?\.\("optional"\)/)
-  assert.match(componentSource, /props\.onContinueToRefinement\?\.\("basis"\)/)
+  assert.match(componentSource, /props\.onContinue\?\.\("optional"\)/)
+  assert.match(componentSource, /props\.onContinue\?\.\("basis"\)/)
   assert.match(componentSource, /directEntry/)
 })
 

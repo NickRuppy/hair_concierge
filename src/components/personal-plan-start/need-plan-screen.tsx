@@ -5,6 +5,7 @@ import { createPortal } from "react-dom"
 import { ChevronRight } from "lucide-react"
 
 import {
+  PLAN_ACCEPT_ERROR,
   PersonalPlanJourneyHeader,
   usePersonalPlanTransitionLayer,
 } from "@/components/personal-plan-journey"
@@ -27,8 +28,7 @@ export type NeedPlanScreenViewModel = {
 
 export const PLAN_START_CATALOG_DISCLAIMER =
   "Für jede Kategorie haben wir das passendste Produkt aus unserem Katalog gewählt."
-export const PLAN_START_PENDING_DISCLAIMER =
-  "Deine Produktempfehlungen folgen nach dem Feinschliff."
+export const PLAN_START_PENDING_DISCLAIMER = "Passende Produkte wählen wir im Feinschliff."
 
 /**
  * The catalog sentence is only honest while at least one category can still
@@ -42,12 +42,31 @@ export function planStartProductDisclaimer(cards: PlanStartCardViewModel[]): str
   return everyCategoryPending ? PLAN_START_PENDING_DISCLAIMER : PLAN_START_CATALOG_DISCLAIMER
 }
 
+/** What the last Idealplan page's CTA does. */
+export type NeedPlanScreenNextIntent = "accept" | "refine"
+export type NeedPlanScreenNextStatus = "idle" | "preparing" | "loading" | "error"
+
+export const PLAN_START_ACCEPT_LABEL = "Zu deiner Routine"
+export const PLAN_START_ACCEPT_PENDING_LABEL = "Routine wird eingerichtet …"
+export const PLAN_START_REFINE_LABEL = "Auf meine Produkte abstimmen"
+export const PLAN_START_REFINE_PENDING_LABEL = "Feinschliff wird geöffnet …"
+export const PLAN_START_REFINE_ERROR =
+  "Feinschliff konnte nicht geöffnet werden. Versuche es noch einmal."
+
 type NeedPlanScreenProps = {
   screen: NeedPlanScreenViewModel
   hasOptionalPage: boolean
   onNext?: () => void
   showJourneyHeader?: boolean
-  nextStatus?: "idle" | "loading" | "error"
+  nextIntent?: NeedPlanScreenNextIntent
+  /**
+   * `preparing` blocks the CTA while its prerequisites load without claiming
+   * anything is happening yet — the label stays the idle one. `loading` is the
+   * action itself running, and re-labels.
+   */
+  nextStatus?: NeedPlanScreenNextStatus
+  /** Non-blocking status line under the CTA, e.g. while a fallback route opens. */
+  nextNotice?: string | null
 }
 
 export function NeedPlanScreen({
@@ -55,7 +74,9 @@ export function NeedPlanScreen({
   hasOptionalPage,
   onNext,
   showJourneyHeader = true,
+  nextIntent = "refine",
   nextStatus = "idle",
+  nextNotice,
 }: NeedPlanScreenProps) {
   const transitionLayer = usePersonalPlanTransitionLayer()
   const [actionPortalTarget, setActionPortalTarget] = useState<HTMLElement | null>(null)
@@ -66,12 +87,18 @@ export function NeedPlanScreen({
     return () => window.cancelAnimationFrame(frame)
   }, [transitionLayer])
 
+  const accepts = nextIntent === "accept"
+  const busy = nextStatus === "loading" || nextStatus === "preparing"
   const nextLabel =
     nextStatus === "loading"
-      ? "Feinschliff wird geöffnet …"
+      ? accepts
+        ? PLAN_START_ACCEPT_PENDING_LABEL
+        : PLAN_START_REFINE_PENDING_LABEL
       : screen.kind === "basis" && hasOptionalPage
         ? "Optionale Empfehlungen"
-        : "Auf meine Produkte abstimmen"
+        : accepts
+          ? PLAN_START_ACCEPT_LABEL
+          : PLAN_START_REFINE_LABEL
 
   const actionNav =
     transitionLayer === "outgoing" || !onNext ? null : (
@@ -84,8 +111,8 @@ export function NeedPlanScreen({
             type="button"
             onClick={onNext}
             variant="funnelCta"
-            disabled={nextStatus === "loading"}
-            aria-busy={nextStatus === "loading"}
+            disabled={busy}
+            aria-busy={busy}
             className="h-auto min-h-14 min-w-0 w-full whitespace-normal px-5 py-3 text-center leading-tight"
           >
             {nextLabel}
@@ -97,7 +124,15 @@ export function NeedPlanScreen({
             className="mx-auto mt-2 max-w-[430px] text-center text-xs font-medium text-[var(--status-danger-text)] sm:max-w-[560px]"
             role="alert"
           >
-            Feinschliff konnte nicht geöffnet werden. Versuche es noch einmal.
+            {accepts ? PLAN_ACCEPT_ERROR : PLAN_START_REFINE_ERROR}
+          </p>
+        ) : null}
+        {nextNotice ? (
+          <p
+            className="mx-auto mt-2 max-w-[430px] text-center text-xs font-medium text-[#6e6863] sm:max-w-[560px]"
+            role="status"
+          >
+            {nextNotice}
           </p>
         ) : null}
       </nav>

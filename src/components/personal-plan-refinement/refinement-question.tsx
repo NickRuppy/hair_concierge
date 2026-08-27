@@ -55,6 +55,12 @@ export type RefinementQuestionStatus =
   | "save_failed"
   | "completion_failed"
   | "revision_conflict"
+  /**
+   * The saved answer is safe, but the server's Feinschliff state no longer
+   * matches this client's (M-7). Retrying the handoff cannot fix it; the only
+   * honest action is reloading the current state.
+   */
+  | "stale_refinement"
 
 type RefinementQuestionProps = {
   session: Stage2RefinementSession
@@ -168,7 +174,7 @@ export function RefinementQuestion({
     <div
       className={cn(
         "personal-plan-cookie-clearance bg-[var(--background)] text-[var(--text-body)]",
-        showJourneyHeader ? "min-h-dvh" : "min-h-[calc(100dvh-92px)]",
+        showJourneyHeader ? "min-h-dvh" : "min-h-[calc(100dvh-71px)]",
       )}
     >
       {showJourneyHeader ? (
@@ -176,9 +182,10 @@ export function RefinementQuestion({
           currentStage={2}
           saveStatus={journeySaveStatus(status)}
           onBack={canGoBack ? onBack : onSecondaryExit}
+          showStageProgress={false}
         />
       ) : null}
-      <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[720px] min-w-0 flex-col">
+      <main className="mx-auto flex min-h-[calc(100dvh-71px)] w-full max-w-[720px] min-w-0 flex-col">
         <section className="mx-auto w-full max-w-[600px] flex-1 px-5 pb-32 pt-6 md:pb-8 md:pt-9">
           {question.trigger ? (
             <p className="mb-3 inline-flex rounded-full bg-[var(--brand-plum-ice)] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.06em] text-[var(--brand-plum)]">
@@ -212,7 +219,8 @@ export function RefinementQuestion({
           {question.note}
           {status === "save_failed" ||
           status === "completion_failed" ||
-          status === "revision_conflict" ? (
+          status === "revision_conflict" ||
+          status === "stale_refinement" ? (
             <div
               role="alert"
               className="mt-5 rounded-2xl border border-[rgba(163,67,75,0.25)] bg-[#fff1f2] p-4 text-sm leading-6 text-[#765b5e]"
@@ -220,16 +228,20 @@ export function RefinementQuestion({
               <p className="font-bold text-[#a3434b]">
                 {status === "revision_conflict"
                   ? "Wir haben neuere gespeicherte Antworten gefunden."
-                  : status === "completion_failed"
-                    ? "Deine Antwort ist gespeichert. Die Übergabe hat gerade nicht geklappt."
-                    : "Speichern hat gerade nicht geklappt."}
+                  : status === "stale_refinement"
+                    ? "Dein Feinschliff-Stand hat sich geändert."
+                    : status === "completion_failed"
+                      ? "Deine Antwort ist gespeichert. Die Übergabe hat gerade nicht geklappt."
+                      : "Speichern hat gerade nicht geklappt."}
               </p>
               <p className="mt-1">
                 {status === "revision_conflict"
                   ? "Der Stand wurde neu geladen. Du machst ohne Überschreiben bei der nächsten offenen Frage weiter."
-                  : status === "completion_failed"
-                    ? "Du musst diese Antwort nicht noch einmal speichern. Versuche nur die Übergabe erneut."
-                    : "Deine Auswahl bleibt auf dieser Seite sichtbar. Versuche das Speichern noch einmal."}
+                  : status === "stale_refinement"
+                    ? "Deine Antwort ist gespeichert. Lade neu, dann machst du auf dem aktuellen Stand weiter."
+                    : status === "completion_failed"
+                      ? "Du musst diese Antwort nicht noch einmal speichern. Versuche nur die Übergabe erneut."
+                      : "Deine Auswahl bleibt auf dieser Seite sichtbar. Versuche das Speichern noch einmal."}
               </p>
             </div>
           ) : null}
@@ -237,11 +249,19 @@ export function RefinementQuestion({
             {liveMessage ?? saveStatusText(status)}
           </div>
           <ActionDock
-            disabled={!complete || status === "saving"}
-            isRetry={status === "save_failed" || status === "completion_failed"}
+            disabled={(!complete && status !== "stale_refinement") || status === "saving"}
+            isRetry={
+              status === "save_failed" ||
+              status === "completion_failed" ||
+              status === "stale_refinement"
+            }
             onSubmit={onSubmit}
             retryLabel={
-              status === "completion_failed" ? "Übergabe erneut versuchen" : "Erneut versuchen"
+              status === "stale_refinement"
+                ? "Feinschliff neu laden"
+                : status === "completion_failed"
+                  ? "Übergabe erneut versuchen"
+                  : "Erneut versuchen"
             }
             saving={status === "saving"}
           />
@@ -570,6 +590,7 @@ function saveStatusText(status: RefinementQuestionStatus): string {
   if (status === "saving") return "speichert"
   if (status === "save_failed") return "nicht gespeichert"
   if (status === "completion_failed") return "Übergabe offen"
+  if (status === "stale_refinement") return "Stand veraltet"
   if (status === "revision_conflict") return "neu geladen"
   if (status === "saved") return "gespeichert"
   return ""
@@ -578,7 +599,8 @@ function saveStatusText(status: RefinementQuestionStatus): string {
 export function journeySaveStatus(status: RefinementQuestionStatus) {
   if (status === "saving") return "saving" as const
   if (status === "saved") return "saved" as const
-  if (status === "save_failed" || status === "completion_failed") return "error" as const
+  if (status === "save_failed" || status === "completion_failed" || status === "stale_refinement")
+    return "error" as const
   return "idle" as const
 }
 

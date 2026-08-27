@@ -12,7 +12,9 @@ import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { HairProfileSection } from "@/components/profile/hair-profile-section"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
+import { useProfileRoutineAccess } from "@/components/profile/profile-routine-access"
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
 import {
   filterRetainedPersonalPlanProductRows,
@@ -53,6 +55,12 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
+import {
+  buildHairProfileSection,
+  hasRefinementDeferredRoles,
+  parseHairProfileStatus,
+} from "@/lib/personal-plan/refinement/hair-profile-section"
+import type { RefinementStatusResponse } from "@/lib/personal-plan/refinement/refinement-status"
 import type { PersonalPlanRefinementAnswersV1 } from "@/lib/personal-plan/refinement/types"
 
 type MemoryApiResponse = {
@@ -514,6 +522,11 @@ export default function ProfilePage() {
   const { toast } = useToast()
   const supabase = useMemo(() => createClient(), [])
   const userId = user?.id ?? null
+  // Task 2.5: the Haarprofil section presents „Dein Idealplan" as done and links
+  // it at the plan view (`/routine`). Both are premature for a buyer who has not
+  // reached Stage 4 — the Routine tab is hidden for them and `/routine` renders
+  // its unavailable state. Same signal, so the two can never disagree.
+  const hasRoutineAccess = useProfileRoutineAccess()
 
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
   const [profileLoading, setProfileLoading] = useState(true)
@@ -522,6 +535,7 @@ export default function ProfilePage() {
   const [portfolioPresentation, setPortfolioPresentation] = useState<PortfolioPresentation | null>(
     null,
   )
+  const [refinementStatus, setRefinementStatus] = useState<RefinementStatusResponse | null>(null)
   const [refinementAnswers, setRefinementAnswers] =
     useState<PersonalPlanRefinementAnswersV1 | null>(null)
   const [refinementLoading, setRefinementLoading] = useState(true)
@@ -615,6 +629,39 @@ export default function ProfilePage() {
       active = false
     }
   }, [userId])
+
+  useEffect(() => {
+    let active = true
+
+    /**
+     * „Dein Haarprofil" (Task 2.5). The module status, the coarse „X von 4" and
+     * the handoff marker all come from the server contract (Task 1.7) — nothing
+     * here re-derives them. Every failure mode (no plan → 404, temporarily
+     * unavailable → 503, network) collapses to `null`, i.e. the section stays
+     * absent rather than rendering a broken card.
+     */
+    async function loadRefinementStatus() {
+      if (!userId || !hasRoutineAccess) {
+        if (active) setRefinementStatus(null)
+        return
+      }
+      try {
+        const response = await fetch("/api/personal-plan/refinement-status", {
+          cache: "no-store",
+        })
+        if (!response.ok) throw new Error("refinement status request failed")
+        const body = parseHairProfileStatus(await response.json())
+        if (active) setRefinementStatus(body)
+      } catch {
+        if (active) setRefinementStatus(null)
+      }
+    }
+
+    loadRefinementStatus()
+    return () => {
+      active = false
+    }
+  }, [userId, hasRoutineAccess])
 
   useEffect(() => {
     let active = true
@@ -1157,6 +1204,15 @@ export default function ProfilePage() {
             Mein Profil
           </h1>
         </div>
+
+        {hasRoutineAccess && refinementStatus ? (
+          <HairProfileSection
+            view={buildHairProfileSection({
+              status: refinementStatus,
+              deferredRolesPendingRefinement: hasRefinementDeferredRoles(portfolioPresentation),
+            })}
+          />
+        ) : null}
 
         <div className="space-y-6">
           <Card

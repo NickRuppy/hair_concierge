@@ -64,7 +64,6 @@ export default function PersonalPlanApplicationLabPage() {
     <RouteAwareApplicationPage
       view={{ state: "ready", days }}
       navigationBasePath="/labs/personal-plan-application"
-      routineBackHref="/labs/personal-plan-routine-editor"
     />
   )
 }

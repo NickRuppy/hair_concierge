@@ -5,15 +5,16 @@ import type {
   RoutinePayloadV1,
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
-import {
-  PersonalPlanJourneyHeader,
-  PersonalPlanStageEntrance,
-} from "@/components/personal-plan-journey"
+import { PersonalPlanStageEntrance } from "@/components/personal-plan-journey"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { routineCategoryLabel } from "./routine-item-card"
 
-import { RoutineRefinementNudge } from "./routine-refinement-nudge"
+import { RoutinePlanUpdatedToast } from "./routine-plan-updated-toast"
+import {
+  RoutineRefinementBanner,
+  type RoutineRefinementBannerViewModel,
+} from "./routine-refinement-banner"
 import { RoutineSection } from "./routine-section"
 import { hasChosenPlannedProduct } from "./routine-status"
 
@@ -21,15 +22,16 @@ type RoutineItem = RoutinePayloadV1["items"][number]
 
 export type RoutinePageProps = {
   view: PersonalPlanRoutineView
-  stage5Reachable?: boolean
   onEdit?: () => void
   onReviewProposal?: () => void
   onItemDetail?: (item: RoutineItem) => void
   portfolioPresentation?: PortfolioPresentation | null
-  onOpenApplication?: () => void
-  nudgeVisible?: boolean
-  onDismissNudge?: () => void
-  onRefineNudge?: () => void
+  refinementBanner?: RoutineRefinementBannerViewModel | null
+  onDismissRefinementBanner?: () => void
+  onRefineFromBanner?: () => void
+  /** The "✓ Plan aktualisiert" toast (Task 2.6) — its signal, and consuming it once, are the caller's job. */
+  showPlanUpdatedToast?: boolean
+  onDismissPlanUpdatedToast?: () => void
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -53,15 +55,15 @@ function isBlockingBasisGap(item: RoutineItem) {
 
 export function RoutinePage({
   view,
-  stage5Reachable = false,
   onEdit,
   onReviewProposal,
   onItemDetail,
   portfolioPresentation = null,
-  onOpenApplication,
-  nudgeVisible = false,
-  onDismissNudge,
-  onRefineNudge,
+  refinementBanner = null,
+  onDismissRefinementBanner,
+  onRefineFromBanner,
+  showPlanUpdatedToast = false,
+  onDismissPlanUpdatedToast,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -69,7 +71,6 @@ export function RoutinePage({
     const needsRepair = view.status === "authority_repair_required" && view.repair
     return (
       <div className="min-h-dvh bg-[var(--background)]">
-        <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" showWordmark={false} />
         <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] px-3 py-8 sm:max-w-[560px] sm:px-5 sm:py-12">
           <section
             aria-live="polite"
@@ -113,11 +114,24 @@ export function RoutinePage({
     (item) => item.state.inclusion === "included",
   ).length
   const hasBlockingBasisGap = basisItems.some(isBlockingBasisGap)
-  const canOpenApplication = Boolean(view.activeVersion && stage5Reachable && !hasBlockingBasisGap)
+  // Position: always directly above the routine blocks. The mockup's quieter
+  // below-the-blocks slot for `habits` did not survive the field test
+  // (26.08.2026) — on a real routine the second ask scrolled out of view and
+  // was never seen. Only the copy still switches on `module`; the position no
+  // longer does.
+  const banner =
+    refinementBanner && onDismissRefinementBanner && onRefineFromBanner ? (
+      <RoutineRefinementBanner
+        module={refinementBanner.module}
+        completedSteps={refinementBanner.completedSteps}
+        totalSteps={refinementBanner.totalSteps}
+        onDismiss={onDismissRefinementBanner}
+        onRefine={onRefineFromBanner}
+      />
+    ) : null
 
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
-      <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" showWordmark={false} />
       <PersonalPlanStageEntrance destination="/routine">
         <main className="personal-plan-cookie-clearance mx-auto w-full max-w-[430px] space-y-5 px-3 py-4 pb-[calc(env(safe-area-inset-bottom)+7rem)] sm:max-w-[560px] sm:px-5 sm:py-5 lg:pb-12">
           <header className="border-b border-[rgba(107,80,160,0.14)] pb-4">
@@ -130,20 +144,38 @@ export function RoutinePage({
                       ? "Vorschlag"
                       : "✓ Routine aktiv"}
                 </p>
-                <h1 className="font-header mt-1 text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
-                  {successorProposal
-                    ? "Deine Routine bleibt aktiv."
-                    : initialProposal
-                      ? "Deine Routine wird vorbereitet."
-                      : "Deine Routine"}
-                </h1>
+                {/*
+                  Field test 26.08.2026: the coral "Anwendung ansehen" hero
+                  button is gone — the Bottom-Nav's Anwendung tab owns that
+                  destination. Editing keeps a quiet affordance in the heading
+                  row, in the repo's established idiom (Haarprofil "Angaben
+                  ändern"), so the Routine itself stays the only hero.
+                */}
+                <div className="mt-1 flex items-baseline justify-between gap-3">
+                  <h1 className="font-header text-[23px] leading-[1.14] text-[#291a43] sm:text-[28px]">
+                    {successorProposal
+                      ? "Deine Routine bleibt aktiv."
+                      : initialProposal
+                        ? "Deine Routine wird vorbereitet."
+                        : "Deine Routine"}
+                  </h1>
+                  {onEdit ? (
+                    <button
+                      type="button"
+                      onClick={onEdit}
+                      className="flex-none text-xs font-semibold text-[var(--brand-plum)] underline underline-offset-2 transition-colors hover:text-[var(--brand-plum-dark)]"
+                    >
+                      Anpassen
+                    </button>
+                  ) : null}
+                </div>
                 <p className="mt-1 text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
                   {initialProposal
                     ? "Der ältere Vorschlag wird nicht automatisch bestätigt."
                     : successorProposal
                       ? "Du kannst die neuen Änderungen in einer Übersicht prüfen. Bis dahin bleibt deine aktuelle Routine bestehen."
                       : includedProductCount === 0
-                        ? "Deine Routine ist bereit."
+                        ? "Noch ohne konkrete Produkte."
                         : `Deine Routine mit ${includedProductCount} ${includedProductCount === 1 ? "Produkt" : "Produkten"}.`}
                 </p>
                 {hasBlockingBasisGap ? (
@@ -156,46 +188,22 @@ export function RoutinePage({
                   </p>
                 ) : null}
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {canOpenApplication ? (
-                  <Link
-                    href="/anwendung"
-                    prefetch={true}
-                    onClick={(event) => {
-                      if (!onOpenApplication) return
-                      if (
-                        event.button !== 0 ||
-                        event.metaKey ||
-                        event.ctrlKey ||
-                        event.shiftKey ||
-                        event.altKey
-                      ) {
-                        return
-                      }
-                      event.preventDefault()
-                      onOpenApplication()
-                    }}
-                    className={`${buttonVariants({ variant: "funnelCta", size: "sm" })} min-w-[12rem] flex-1`}
-                  >
-                    Anwendung ansehen
-                  </Link>
-                ) : null}
-                {onEdit ? (
-                  <Button className="flex-1" variant="outline" size="sm" onClick={onEdit}>
-                    Anpassen
-                  </Button>
-                ) : null}
-                {successorProposal && onReviewProposal ? (
-                  <Button className="flex-1" variant="outline" size="sm" onClick={onReviewProposal}>
-                    Änderungen prüfen
-                  </Button>
-                ) : null}
-              </div>
+              {successorProposal && onReviewProposal ? (
+                <Button
+                  className="mt-4 w-full"
+                  variant="outline"
+                  size="sm"
+                  onClick={onReviewProposal}
+                >
+                  Änderungen prüfen
+                </Button>
+              ) : null}
             </div>
           </header>
-          {nudgeVisible && onDismissNudge && onRefineNudge ? (
-            <RoutineRefinementNudge onDismiss={onDismissNudge} onRefine={onRefineNudge} />
+          {showPlanUpdatedToast && onDismissPlanUpdatedToast ? (
+            <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />
           ) : null}
+          {banner}
           <RoutineSection
             title="Deine Basis"
             items={basisItems}

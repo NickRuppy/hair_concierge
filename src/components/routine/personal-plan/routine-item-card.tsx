@@ -1,5 +1,8 @@
+import Link from "next/link"
+
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 import type { RoutineProductPresentation } from "@/lib/personal-plan/routine/contracts"
+import type { Stage3DecisionDeferralReason } from "@/lib/personal-plan/products/contracts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronRight } from "lucide-react"
@@ -7,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
 import {
   routineCategoryLabel,
+  routineDeferralCopyFor,
   routinePurposeLabel,
   routineRolePurposeDescription,
 } from "@/lib/personal-plan/routine/labels"
@@ -95,6 +99,29 @@ const routineCategoryCardStyles: Record<string, { shellClassName: string; dotCla
 const neutralRoutineCategoryCardStyle = {
   shellClassName: "border-[rgba(31,26,20,0.07)] bg-white",
   dotClassName: "bg-[#6B50A0]",
+}
+
+/**
+ * Task 2.2: the read hop. A deferred role compiles to a plain excluded
+ * Routine item with no reason attached (the compiler never reads
+ * `uncoveredRoles`) — the reason only exists on the parallel portfolio
+ * presentation read, keyed by the same decision key the item's own
+ * `sourceDecisionKeys` carries. Returns `null` for every other excluded item
+ * (a user-excluded category, a plain planned-but-not-acquired gap, etc.),
+ * which keeps the existing generic excluded-item copy.
+ */
+function deferredReasonFor(
+  item: RoutineItem,
+  presentation: PortfolioPresentation | null,
+): Stage3DecisionDeferralReason | null {
+  if (item.state.inclusion !== "excluded") return null
+  const reasons = presentation?.deferredRoleReasons
+  if (!reasons) return null
+  for (const decisionKey of item.sourceDecisionKeys) {
+    const reason = reasons[decisionKey]
+    if (reason) return reason
+  }
+  return null
 }
 
 function exactProductId(item: RoutineItem): string | null {
@@ -323,7 +350,66 @@ export function RoutineCategoryCard({
     return "text-[var(--brand-plum)]"
   }
 
+  function placeholderRowFor(item: RoutineItem, reason: Stage3DecisionDeferralReason) {
+    const placeholder = routineDeferralCopyFor(reason)
+    const purpose = routinePurposeLabel(item.purposeKey)
+    const heading = multipleItems ? purpose : variant === "later" ? `${label} optional` : label
+    const accessibleName = `Kategorie: ${label}; Zweck: ${purpose}; ${placeholder.text}`
+    const rowClassName = cn(
+      "grid w-full items-center gap-2.5 bg-transparent text-left text-inherit",
+      multipleItems
+        ? "min-h-[82px] grid-cols-[46px_minmax(0,1fr)] px-2.5 py-2"
+        : "min-h-[104px] grid-cols-[58px_minmax(0,1fr)] p-2.5",
+    )
+    return (
+      <div key={item.itemKey} className={rowClassName} aria-label={accessibleName} role="group">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "grid shrink-0 place-items-center overflow-hidden bg-[#f3efe8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]",
+            multipleItems ? "h-[60px] w-[46px] rounded-[11px]" : "h-[76px] w-[58px] rounded-[14px]",
+          )}
+        >
+          <span className="text-sm font-semibold text-[var(--brand-plum)]">
+            {label.slice(0, 1)}
+          </span>
+        </span>
+        <span className="min-w-0">
+          <span
+            className={cn(
+              "min-w-0 font-extrabold text-[#6B50A0]",
+              multipleItems
+                ? "block text-[11px] leading-tight tracking-[0.03em]"
+                : "flex items-center gap-1.5 text-[11px] uppercase leading-tight tracking-[0.09em]",
+            )}
+          >
+            {!multipleItems ? (
+              <span
+                aria-hidden="true"
+                className={cn("h-1.5 w-1.5 shrink-0 rounded-full", categoryStyle.dotClassName)}
+              />
+            ) : null}
+            <span className="truncate">{heading}</span>
+          </span>
+          {placeholder.href ? (
+            <Link
+              href={placeholder.href}
+              className="mt-1 block text-[12.5px] font-semibold leading-[1.28] text-[var(--brand-plum)] underline-offset-2 hover:underline"
+            >
+              {placeholder.text}
+            </Link>
+          ) : (
+            <p className="mt-1 text-[12.5px] leading-[1.28] text-[#5f5954]">{placeholder.text}</p>
+          )}
+        </span>
+      </div>
+    )
+  }
+
   function rowFor(item: RoutineItem) {
+    const deferredReason = deferredReasonFor(item, presentation)
+    if (deferredReason) return placeholderRowFor(item, deferredReason)
+
     const purpose = routinePurposeLabel(item.purposeKey)
     const product = productName(item, productPresentation)
     const cadence = routineCadenceLabel(item)

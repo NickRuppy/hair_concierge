@@ -3,7 +3,6 @@ import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { PersonalPlanJourneyHeader } from "../src/components/personal-plan-journey"
 import {
   RoutineDiscardConfirmBody,
   RoutineEditor,
@@ -247,6 +246,9 @@ test("global editor renders the complete Routine and submits a local operation b
   assert.match(renderToStaticMarkup(tree.value), /Aktive Routine bleibt unverändert/)
   assert.match(renderToStaticMarkup(tree.value), /Deine Basis/)
   assert.match(renderToStaticMarkup(tree.value), /Optional/)
+  // Task 2.7: the Routine editor's chrome keeps Back, but the 5-stage journey
+  // bar retires (Bottom-Nav carries stage orientation elsewhere).
+  assert.doesNotMatch(renderToStaticMarkup(tree.value), /role="progressbar"/)
 
   const select = findAll(tree.value, (element) => element.type === "select")[0]
   assert.ok(select)
@@ -295,11 +297,17 @@ test("global editor blocks invalid controls and asks before discarding dirty edi
   assert.ok(checkbox)
   checkbox.props.onChange({ target: { checked: false } })
   tree.value = tree.rerender()
-  const header = findAll(tree.value, (element) => element.type === PersonalPlanJourneyHeader)[0]
-  assert.ok(header)
-  assert.equal(header.props.backLabel, "Zur Routine")
-  assert.equal(header.props.showWordmark, false)
-  header.props.onBack()
+  // Fix round 1 (I-1): the journey header retired entirely from the Routine
+  // editor too — Abbrechen is now an in-editor control next to Save, and it
+  // still gates a dirty exit behind the discard-confirmation sheet.
+  assert.doesNotMatch(renderToStaticMarkup(tree.value), /data-personal-plan-journey-header/)
+  const cancelButton = findAll(
+    tree.value,
+    (element) =>
+      textContent(element) === "Abbrechen" && typeof element.props.onClick === "function",
+  )[0]
+  assert.ok(cancelButton)
+  cancelButton.props.onClick()
   tree.value = tree.rerender()
 
   assert.equal(canceled, 0)

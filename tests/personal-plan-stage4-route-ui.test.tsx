@@ -68,7 +68,10 @@ test("Routine resolver preserves legacy only for people without a Personal Plan"
   if (personalPlan.kind === "personal_plan") {
     assert.equal(personalPlan.enabled, false)
     assert.equal(personalPlan.view.activeVersion?.id, "routine-1")
-    assert.equal(personalPlan.stage5Reachable, false)
+    // Field test 26.08.2026: the Routine page no longer resolves Stage-5
+    // reachability at all — the "Anwendung ansehen" hero button is gone and the
+    // Bottom-Nav owns that destination behind its own `allowed.stage5` gate.
+    assert.equal("stage5Reachable" in personalPlan, false)
   }
 
   const stage5Plan = await resolveRoutinePage({
@@ -83,7 +86,6 @@ test("Routine resolver preserves legacy only for people without a Personal Plan"
     readView: async () => activeView,
   })
   assert.equal(stage5Plan.kind, "personal_plan")
-  if (stage5Plan.kind === "personal_plan") assert.equal(stage5Plan.stage5Reachable, true)
 })
 
 test("Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure", async () => {
@@ -124,6 +126,52 @@ test("Routine resolver loads v3 presentation from an initial proposal candidate"
   })
   assert.equal(result.kind, "personal_plan")
   assert.equal(loadedPortfolioVersionId, "portfolio-1")
+})
+
+test("Routine resolver threads the refinement banner view model through from readRefinementBanner", async () => {
+  const result = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
+    stage4Enabled: () => true,
+    readView: async () => activeView,
+    readRefinementBanner: async (userId) => {
+      assert.equal(userId, "user-1")
+      return { module: "products", completedSteps: 2, totalSteps: 4 }
+    },
+  })
+  assert.equal(result.kind, "personal_plan")
+  if (result.kind === "personal_plan") {
+    assert.deepEqual(result.refinementBanner, {
+      module: "products",
+      completedSteps: 2,
+      totalSteps: 4,
+    })
+  }
+})
+
+test("Routine resolver degrades to no banner when readRefinementBanner is absent or fails", async () => {
+  const withoutDep = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
+    stage4Enabled: () => true,
+    readView: async () => activeView,
+  })
+  assert.equal(withoutDep.kind, "personal_plan")
+  if (withoutDep.kind === "personal_plan") assert.equal(withoutDep.refinementBanner, null)
+
+  const withFailingDep = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
+    stage4Enabled: () => true,
+    readView: async () => activeView,
+    readRefinementBanner: async () => {
+      throw new Error("temporarily_unavailable")
+    },
+  })
+  assert.equal(withFailingDep.kind, "personal_plan")
+  if (withFailingDep.kind === "personal_plan") {
+    assert.equal(withFailingDep.refinementBanner, null)
+  }
 })
 
 test("Routine unavailable recovery offers an explicit reload action", () => {

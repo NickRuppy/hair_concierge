@@ -2,7 +2,6 @@
 
 import * as React from "react"
 
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import {
   BottomSheet,
   BottomSheetContent,
@@ -242,13 +241,6 @@ export function RoutineEditor({
 
   return (
     <div className="min-h-dvh bg-[var(--background)]">
-      <PersonalPlanJourneyHeader
-        currentStage={4}
-        saveStatus={isSubmitting ? "saving" : dirty ? "local" : "saved"}
-        onBack={onCancel ? handleCancel : undefined}
-        backLabel="Zur Routine"
-        showWordmark={false}
-      />
       <section
         aria-label="Routine bearbeiten"
         className="mx-auto w-full max-w-3xl space-y-6 px-4 py-6"
@@ -423,6 +415,17 @@ export function RoutineEditor({
         })}
 
         <footer className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:justify-end">
+          {onCancel ? (
+            <Button
+              className="sm:w-auto"
+              type="button"
+              variant="outline"
+              disabled={isSubmitting}
+              onClick={handleCancel}
+            >
+              Abbrechen
+            </Button>
+          ) : null}
           <Button
             className="sm:w-auto"
             type="button"

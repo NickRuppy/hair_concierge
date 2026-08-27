@@ -51,7 +51,11 @@ export type DirectAcceptanceAssumption = {
   label: string
 }
 
-/** German assumption lines rendered by the fork screen before the user accepts. */
+/**
+ * German assumption lines for the Stage-2 defaults a direct acceptance applies.
+ * No surface renders them since the fork screen was removed — the Routine
+ * banner and the Profil tab carry assumption-awareness now.
+ */
 export function directAcceptanceAssumptions(
   triggerContext: Stage2TriggerContext,
 ): DirectAcceptanceAssumption[] {

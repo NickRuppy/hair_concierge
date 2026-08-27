@@ -8,16 +8,25 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   RefinementFlow,
   type Stage2HandoffPayload,
+  type Stage2ModuleProgress,
 } from "@/components/personal-plan-refinement/refinement-flow"
 import {
-  PLAN_FORK_STALE_NOTICE,
+  stage2SecondaryExitDestination,
+  type Stage2ModuleEntryRequest,
+} from "@/lib/personal-plan/refinement/module-scope"
+import {
+  PLAN_ACCEPT_REFINE_HREF,
+  PLAN_ACCEPT_UNAVAILABLE_NOTICE,
   PersonalPlanStageEntrance,
   PersonalPlanViewTransition,
-  PlanForkScreen,
-  acceptStatusAfterStale,
-  derivePlanForkPreviewState,
+  acceptIdealPlanReadiness,
+  deriveAcceptIdealPlanSeenRoles,
   interpretAcceptIdealPlanResponse,
+  resolveStage1PreviewLoadState,
+  runAcceptIdealPlanFlow,
+  type AcceptIdealPlanSeenRole,
   type PersonalPlanTransitionDirection,
+  type Stage1PreviewLoadState,
 } from "@/components/personal-plan-journey"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
 import type { Stage3RoutineHandoff } from "@/components/personal-plan-products/stage3-products-flow"
@@ -44,19 +53,21 @@ import {
 } from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
-import { directAcceptanceAssumptions } from "@/lib/personal-plan/direct-acceptance/defaults"
 import {
   isStage1ProductExamplePreviewResponse,
   stage1ProductExamplePreviewRequestUrl,
   type Stage1ProductExamplePreviewResponse,
 } from "@/lib/personal-plan/product-preview-contract"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
+import { withRoutinePlanUpdatedSignal } from "@/lib/personal-plan/routine/plan-updated-signal"
 
 import { isNeedCardGroup } from "./need-card"
 import {
   NeedPlanScreen,
   PlanStartHeader,
   Progress,
+  type NeedPlanScreenNextIntent,
+  type NeedPlanScreenNextStatus,
   type NeedPlanScreenViewModel,
 } from "./need-plan-screen"
 import {
@@ -69,7 +80,7 @@ export type PlanStartReadyViewModel = {
   optional: NeedPlanScreenViewModel | null
   personalPlanId?: string
   sourceInputHash?: string
-  /** Drives the fork screen's assumption list without touching the Stage-2 gateway. */
+  /** The Stage-1 assumptions behind the plan, without touching the Stage-2 gateway. */
   stage2TriggerContext?: Stage2TriggerContext
 }
 
@@ -86,6 +97,18 @@ export type PlanStartInitialJourney =
        * completed draft does not bounce the user straight back to Stage 3.
        */
       returningToRefinement?: boolean
+      /**
+       * Module deep link (`?refine=products|habits`, or `first_open` for the
+       * plain `?refine=1` re-entry). The flow then walks only that module.
+       */
+      refineModule?: Stage2ModuleEntryRequest
+      /**
+       * The coarse "X von 4" the Routine banner just showed, read server-side
+       * from the same `refinement-status` contract so the module questions
+       * cannot contradict the banner the user tapped (26.08.2026). Optional:
+       * an unavailable read simply means no meter.
+       */
+      moduleProgress?: Stage2ModuleProgress
     }
   | { stage: "stage3"; refinedVersionId: string; repairRoutineVersionId?: string }
 
@@ -98,6 +121,74 @@ export type PlanStartInitialJourney =
  */
 export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJourney): boolean {
   return !(initialJourney.stage === "stage2" && initialJourney.returningToRefinement === true)
+}
+
+/**
+ * Where leaving the Feinschliff goes. An explicit module deep link was opened
+ * from the Routine banner or the Profil tab, so "zurück" belongs on `/routine`
+ * — sending those arrivals to the Idealplan would drop them into a stage they
+ * never came from. `?refine=1` and every legacy entry keep today's Stage-1 exit.
+ */
+export function planStartRefinementExitDestination(
+  initialJourney: PlanStartInitialJourney,
+): "routine" | "stage1" {
+  return initialJourney.stage === "stage2"
+    ? stage2SecondaryExitDestination(initialJourney.refineModule)
+    : "stage1"
+}
+
+/**
+ * Whether this Feinschliff run was launched by an EXPLICIT module deep link
+ * (the Routine banner or the Profil row) — the same test
+ * `planStartRefinementExitDestination` already uses to route a mid-flow exit
+ * back to `/routine`. `initialJourney` never changes for the life of the
+ * journey (only the local `stage` does), so this stays valid from the
+ * Stage-2 module itself through to the Stage-3 completion the `products`
+ * module hands off into.
+ */
+export function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
+  return planStartRefinementExitDestination(initialJourney) === "routine"
+}
+
+/**
+ * Whether the post-accept loop's chapter screens must stay suppressed for this
+ * journey (field test 26.08.2026). An explicit module deep link means the user
+ * arrived from the Routine banner or a Profil row with the full app nav on
+ * screen — Stage-2 → Stage-3 and Stage-3 → Routine are surface hops there, not
+ * funnel chapters. The first-time linear creation funnel keeps every chapter.
+ */
+export function planStartSuppressesChapterCeremony(
+  initialJourney: PlanStartInitialJourney,
+): boolean {
+  return isExplicitModuleRefinementEntry(initialJourney)
+}
+
+/**
+ * The Routine href for a habits-first module completion (Task 2.4: "habits
+ * zuerst"). Only an explicit module entry is a refinement-driven recompute
+ * the user should be told about (Task 2.6) — `?refine=1` and the legacy
+ * linear entry never reach this branch in the first place (see
+ * `applyStage2ModuleCompletion`), but the check stays here rather than
+ * relying on that invariant silently holding.
+ */
+export function moduleCompletionRoutineHref(initialJourney: PlanStartInitialJourney): string {
+  return isExplicitModuleRefinementEntry(initialJourney)
+    ? withRoutinePlanUpdatedSignal("/routine")
+    : "/routine"
+}
+
+/**
+ * The Routine href for a Stage-3 completion (Task 2.4: Modul 1 "products" →
+ * Stage 3 → Routine). Stage 3 is also reached from a direct Idealplan accept
+ * and from an ordinary resumed Stage-3 session — neither of those is a
+ * refinement-driven recompute, so the toast (Task 2.6) only rides along when
+ * this journey started as an explicit module deep link.
+ */
+export function stage3CompletionRoutineHref(
+  initialJourney: PlanStartInitialJourney,
+  href: string,
+): string {
+  return isExplicitModuleRefinementEntry(initialJourney) ? withRoutinePlanUpdatedSignal(href) : href
 }
 
 export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
@@ -375,6 +466,13 @@ export async function loadPlanStartStage3Bootstrap(input: {
   personalPlanId: string
   refinedVersionId: string
   repairRoutineVersionId?: string
+  /**
+   * Module-driven Stage-3 (re-)entry: a later module completion stales the
+   * draft this version produced, so the load must rebuild on the plan's
+   * CURRENT refined version instead of dead-ending. A repair load keeps
+   * failing closed — it must plan against exactly the version it names.
+   */
+  rebuildOnStaleRefinedVersion?: boolean
 }): Promise<Stage3Bootstrap> {
   const loaded = await input.gateway.loadOrCreate({
     draftId: "client-derived",
@@ -383,6 +481,9 @@ export async function loadPlanStartStage3Bootstrap(input: {
     refinedVersionId: input.refinedVersionId,
     ...(input.repairRoutineVersionId
       ? { repairRoutineVersionId: input.repairRoutineVersionId }
+      : {}),
+    ...(input.rebuildOnStaleRefinedVersion && !input.repairRoutineVersionId
+      ? { rebuildOnStaleRefinedVersion: true }
       : {}),
     requirements: [],
   })
@@ -427,6 +528,36 @@ export async function requestAcceptIdealPlan(
   }
 }
 
+export type PlanStartAcceptStatus = "idle" | "pending" | "error" | "unavailable"
+
+/**
+ * What the Idealplan CTA says and whether it is blocked. The CTA speaks for
+ * whatever it is actually doing: once acceptance has handed off to the
+ * Feinschliff — because it is not offered, because the server sent us there, or
+ * because a Stage-2 load is running or has failed — it names the Feinschliff
+ * instead of claiming a routine is being set up. `preparing` blocks it while
+ * the previews that make up the accept payload are still in flight.
+ */
+export function planStartCtaState(input: {
+  acceptAvailable: boolean
+  acceptStatus: PlanStartAcceptStatus
+  stage2LoadState: "idle" | "loading" | "error"
+  previewLoadState: Stage1PreviewLoadState
+}): { intent: NeedPlanScreenNextIntent; status: NeedPlanScreenNextStatus } {
+  // A Stage-2 handoff (the `refinement_in_progress` outcome) owns the CTA while
+  // it runs, so its loading and failure states stay visible.
+  if (!input.acceptAvailable || input.stage2LoadState !== "idle") {
+    return { intent: "refine", status: input.stage2LoadState }
+  }
+  if (input.acceptStatus === "unavailable") return { intent: "refine", status: "loading" }
+  if (input.acceptStatus === "pending") return { intent: "accept", status: "loading" }
+  if (input.acceptStatus === "error") return { intent: "accept", status: "error" }
+  return {
+    intent: "accept",
+    status: acceptIdealPlanReadiness(input.previewLoadState) === "wait" ? "preparing" : "idle",
+  }
+}
+
 export function performPersonalPlanRoutineHandoff(
   handoff: Stage3RoutineHandoff,
   dependencies: {
@@ -453,18 +584,34 @@ export function PlanStartCustomerJourney({
   reloadServerFrontier?: () => void
   replaceRoute?: (href: string) => void
 }) {
-  const [stage, setStage] = useState<"stage1" | "fork" | "stage2" | "stage3">(
-    () => initialJourney.stage,
-  )
-  const [acceptStatus, setAcceptStatus] = useState<"idle" | "pending" | "error" | "unavailable">(
-    "idle",
-  )
-  const [forkNotice, setForkNotice] = useState<string | null>(null)
-  /** Consecutive `seen_state_stale` responses; resets on any other outcome. */
-  const staleAcceptCountRef = useRef(0)
+  const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
+  const [acceptStatus, setAcceptStatus] = useState<PlanStartAcceptStatus>("idle")
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
+  /**
+   * The Stage-1 preview request this render would make, or `null` when previews
+   * are not requestable at all. One fact with three consumers — the effect that
+   * fetches them, the initial load state, and the accept guard — so the CTA can
+   * never be live on a render whose previews are still on their way.
+   */
+  const previewRequest = useMemo(
+    () =>
+      stage === "stage1" && plan?.personalPlanId && plan.sourceInputHash
+        ? { personalPlanId: plan.personalPlanId, sourceInputHash: plan.sourceInputHash }
+        : null,
+    [plan?.personalPlanId, plan?.sourceInputHash, stage],
+  )
+  const [previewLoadState, setPreviewLoadState] = useState<Stage1PreviewLoadState>(() =>
+    resolveStage1PreviewLoadState("not_requested", previewRequest !== null),
+  )
+  // Defense in depth for the same window on every later render: a plan that
+  // arrives from `enterStage1()` makes previews requestable one render before
+  // the effect can mark them loading.
+  const resolvedPreviewLoadState = resolveStage1PreviewLoadState(
+    previewLoadState,
+    previewRequest !== null,
+  )
   const [stage1LoadState, setStage1LoadState] = useState<"idle" | "loading" | "error">("idle")
   const [stage2LoadState, setStage2LoadState] = useState<"idle" | "loading" | "error">("idle")
   const [stage2EnteredLocally, setStage2EnteredLocally] = useState(false)
@@ -493,37 +640,52 @@ export function PlanStartCustomerJourney({
   )
 
   useEffect(() => {
-    if (stage !== "stage1" || !plan?.personalPlanId || !plan.sourceInputHash) return
+    if (!previewRequest) return
+    const { personalPlanId, sourceInputHash } = previewRequest
     let cancelled = false
-    void requestStage1ProductExamplePreviews({
-      personalPlanId: plan.personalPlanId,
-      sourceInputHash: plan.sourceInputHash,
-    }).then(
-      (response) => {
-        if (
-          !cancelled &&
-          response.personalPlanId === plan.personalPlanId &&
-          response.sourceInputHash === plan.sourceInputHash
-        ) {
-          setProductExamplePreviews(response)
+    setPreviewLoadState("loading")
+    // The previews are no longer presentation-only: they ARE the seen state the
+    // accept contract pins. A payload we asked for and did not get must not
+    // read as "the user saw nothing", so failure is retried once and then
+    // recorded — the CTA routes into the refinement rather than accepting blind.
+    void (async () => {
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          const response = await requestStage1ProductExamplePreviews({
+            personalPlanId,
+            sourceInputHash,
+          })
+          if (cancelled) return
+          if (
+            response.personalPlanId === personalPlanId &&
+            response.sourceInputHash === sourceInputHash
+          ) {
+            setProductExamplePreviews(response)
+            setPreviewLoadState("ready")
+            return
+          }
+        } catch {
+          if (cancelled) return
         }
-      },
-      () => {
-        // Product previews are presentation-only. The signed plan and journey stay available.
-      },
-    )
+      }
+      if (!cancelled) setPreviewLoadState("unavailable")
+    })()
     return () => {
       cancelled = true
     }
-  }, [plan?.personalPlanId, plan?.sourceInputHash, stage])
+  }, [previewRequest])
   const loadStage3Bootstrap = useCallback(
-    async (refinedVersionId: string): Promise<Stage3Bootstrap> => {
+    async (
+      refinedVersionId: string,
+      options: { rebuildOnStaleRefinedVersion?: boolean } = {},
+    ): Promise<Stage3Bootstrap> => {
       return loadPlanStartStage3Bootstrap({
         gateway: stage3Gateway,
         personalPlanId,
         refinedVersionId,
         repairRoutineVersionId:
           initialJourney.stage === "stage3" ? initialJourney.repairRoutineVersionId : undefined,
+        rebuildOnStaleRefinedVersion: options.rebuildOnStaleRefinedVersion,
       })
     },
     [initialJourney, personalPlanId, stage3Gateway],
@@ -536,9 +698,14 @@ export function PlanStartCustomerJourney({
   }, [])
   const handleHandoff = useCallback(
     async ({ handoff, session }: Stage2HandoffPayload) => {
+      // Every Stage-2 -> Stage-3 handoff takes this path, module-driven or not.
+      // Asking for the stale rebuild here is harmless for a linear completion
+      // (its version is current, so there is nothing stale to rebuild) and is
+      // load-bearing after a later module completion staled this draft.
       const bootstrap = await loadPlanStartStage2HandoffBootstrap({
         handoff,
-        loadStage3Bootstrap,
+        loadStage3Bootstrap: (refinedVersionId) =>
+          loadStage3Bootstrap(refinedVersionId, { rebuildOnStaleRefinedVersion: true }),
         reloadServerFrontier,
       })
       if (!bootstrap) return
@@ -670,10 +837,16 @@ export function PlanStartCustomerJourney({
     }
   }, [stage2Gateway, stage2LoadState])
 
-  const forkPreviewState = useMemo(
-    () => derivePlanForkPreviewState(productExamplePreviews),
+  const seenRoles = useMemo(
+    () => deriveAcceptIdealPlanSeenRoles(productExamplePreviews),
     [productExamplePreviews],
   )
+  /**
+   * A Stage-3 resume already has a refined plan, and a build without the accept
+   * route's flag set cannot accept at all. Both keep the old refinement entry.
+   */
+  const acceptAvailable =
+    initialJourney.stage !== "stage3" && initialJourney.directAcceptanceAvailable === true
 
   const openRoutineHref = useCallback(
     (href: string) => {
@@ -683,112 +856,101 @@ export function PlanStartCustomerJourney({
     [replaceRoute],
   )
 
+  /**
+   * The universal escape hatch. Completing the refinement also produces an
+   * accepted plan, so anything acceptance cannot resolve goes here rather than
+   * onto a retry that can only fail the same way.
+   */
+  const openRefinementRoute = useCallback(() => {
+    setAcceptStatus("unavailable")
+    replaceRoute(PLAN_ACCEPT_REFINE_HREF)
+  }, [replaceRoute])
+
+  /**
+   * The Idealplan CTA. There is no fork screen to fall back to any more, so
+   * every outcome has to land somewhere the user can act: the routine, the
+   * running refinement, the refinement re-entry, or a retryable inline error.
+   */
   const acceptIdealPlanDirectly = useCallback(async () => {
-    if (
-      !forkPreviewState ||
-      forkPreviewState.fallbackNotice ||
-      forkPreviewState.refinementRequiredNotice ||
-      acceptStatus === "pending"
-    ) {
+    if (acceptStatus === "pending") return
+    const readiness = acceptIdealPlanReadiness(resolvedPreviewLoadState)
+    // The CTA is disabled while previews load, so this only guards a race.
+    if (readiness === "wait") return
+    if (readiness === "refine") {
+      openRefinementRoute()
       return
     }
     setAcceptStatus("pending")
-    setForkNotice(null)
-    const outcome = await requestAcceptIdealPlan(forkPreviewState.seenRoles)
-    if (outcome.kind === "accepted" || outcome.kind === "plan_already_accepted") {
-      openRoutineHref(outcome.href)
+    const effect = await runAcceptIdealPlanFlow({
+      seenRoles,
+      accept: requestAcceptIdealPlan,
+      refreshSeenRoles: async (): Promise<AcceptIdealPlanSeenRole[] | null> => {
+        if (!plan?.personalPlanId || !plan.sourceInputHash) return null
+        try {
+          const refreshed = await requestStage1ProductExamplePreviews({
+            personalPlanId: plan.personalPlanId,
+            sourceInputHash: plan.sourceInputHash,
+          })
+          setProductExamplePreviews(refreshed)
+          return deriveAcceptIdealPlanSeenRoles(refreshed)
+        } catch {
+          return null
+        }
+      },
+    })
+    if (effect.kind === "open_routine") {
+      openRoutineHref(effect.href)
       return
     }
-    if (outcome.kind === "refinement_in_progress") {
+    if (effect.kind === "continue_refinement") {
       setAcceptStatus("idle")
       void enterStage2()
       return
     }
-    if (outcome.kind === "seen_state_stale") {
-      // The server would plan other products than the user just saw. Re-render
-      // the fork from fresh previews instead of accepting something unseen.
-      //
-      // A second consecutive stale response means re-fetching did not converge:
-      // the mismatch is structural (the server plans a role the preview payload
-      // does not contain at all), so retrying can only loop while telling the
-      // user their recommendations were "updated". Stop, and send them down the
-      // path that does work.
-      staleAcceptCountRef.current += 1
-      const nextStatus = acceptStatusAfterStale(staleAcceptCountRef.current)
-      setAcceptStatus(nextStatus)
-      if (nextStatus === "unavailable") {
-        setForkNotice(null)
-        return
-      }
-      setForkNotice(PLAN_FORK_STALE_NOTICE)
-      if (!plan?.personalPlanId || !plan.sourceInputHash) {
-        setProductExamplePreviews(null)
-        return
-      }
-      try {
-        const refreshed = await requestStage1ProductExamplePreviews({
-          personalPlanId: plan.personalPlanId,
-          sourceInputHash: plan.sourceInputHash,
-        })
-        setProductExamplePreviews(refreshed)
-      } catch {
-        setProductExamplePreviews(null)
-      }
+    if (effect.kind === "open_refinement_route") {
+      // The refinement produces an accepted plan too, so this is a detour, not
+      // a failure. The CTA relabels to the Feinschliff while the route resolves.
+      openRefinementRoute()
       return
     }
-    staleAcceptCountRef.current = 0
     setAcceptStatus("error")
   }, [
     acceptStatus,
     enterStage2,
-    forkPreviewState,
+    openRefinementRoute,
     openRoutineHref,
     plan?.personalPlanId,
     plan?.sourceInputHash,
+    resolvedPreviewLoadState,
+    seenRoles,
   ])
+
+  const { intent: ctaIntent, status: ctaStatus } = planStartCtaState({
+    acceptAvailable,
+    acceptStatus,
+    stage2LoadState,
+    previewLoadState: resolvedPreviewLoadState,
+  })
 
   const openRoutine = useCallback(
     (handoff: Stage3RoutineHandoff) => {
-      performPersonalPlanRoutineHandoff(handoff, {
-        markNavigation: markPersonalPlanStageNavigation,
-        replaceRoute,
-      })
+      performPersonalPlanRoutineHandoff(
+        {
+          ...handoff,
+          next: {
+            ...handoff.next,
+            href: stage3CompletionRoutineHref(initialJourney, handoff.next.href),
+          },
+        },
+        {
+          markNavigation: markPersonalPlanStageNavigation,
+          replaceRoute,
+        },
+      )
     },
-    [replaceRoute],
+    [initialJourney, replaceRoute],
   )
 
-  if (stage === "fork") {
-    return (
-      <PlanForkScreen
-        assumptions={directAcceptanceAssumptions(
-          plan?.stage2TriggerContext ?? {
-            relevantCategories: [],
-            hasReportedIrritatedScalp: false,
-            dryShampooBridgeEligibility: "unknown",
-          },
-        )}
-        previewState={forkPreviewState}
-        directAcceptanceAvailable={
-          initialJourney.stage !== "stage3" &&
-          initialJourney.directAcceptanceAvailable === true &&
-          Boolean(plan?.stage2TriggerContext)
-        }
-        refineStatus={stage2LoadState}
-        acceptStatus={acceptStatus}
-        noticeMessage={forkNotice}
-        onRefine={() => void enterStage2()}
-        onAccept={() => void acceptIdealPlanDirectly()}
-        onBack={() => {
-          // Leaving to Stage 1 and returning is a real remount of the fork, so
-          // the retired accept path gets a clean slate.
-          staleAcceptCountRef.current = 0
-          setAcceptStatus("idle")
-          setForkNotice(null)
-          setStage("stage1")
-        }}
-      />
-    )
-  }
   if (stage === "stage2") {
     // The ref deliberately retains the latest persisted seed across stage switches.
     const initialStage2Session = stage2SeedRef.current
@@ -796,11 +958,24 @@ export function PlanStartCustomerJourney({
       <RefinementFlow
         gateway={stage2Gateway}
         initialSession={initialStage2Session}
+        moduleEntry={initialJourney.stage === "stage2" ? initialJourney.refineModule : undefined}
         onSecondaryExit={() => {
+          if (planStartRefinementExitDestination(initialJourney) === "routine") {
+            openRoutineHref("/routine")
+            return
+          }
           stage2SeedRef.current = undefined
           void enterStage1()
         }}
+        moduleProgress={
+          initialJourney.stage === "stage2" ? (initialJourney.moduleProgress ?? null) : null
+        }
         onHandoff={handleHandoff}
+        onModuleComplete={() => {
+          // Modul 2 without a Stage-3 handoff (habits first): the user belongs
+          // back on their Routine, with the "Plan aktualisiert" toast (Task 2.6).
+          openRoutineHref(moduleCompletionRoutineHref(initialJourney))
+        }}
         autoHandoff={!returningToRefinement}
         directEntry
         stageEntrance={stage2EnteredLocally}
@@ -834,6 +1009,7 @@ export function PlanStartCustomerJourney({
         intakeClient={intakeClient}
         analytics={stage3BaselineAnalytics}
         stageEntrance={stage3EnteredLocally}
+        directRoutineHandoff={planStartSuppressesChapterCeremony(initialJourney)}
         onOpenRoutine={openRoutine}
         onProductKindsCorrection={handleProductKindsCorrection}
         onBackToRefinement={() => {
@@ -856,12 +1032,20 @@ export function PlanStartCustomerJourney({
       refinementAvailable={
         initialJourney.stage === "stage3" || initialJourney.refinementAvailable !== false
       }
+      nextIntent={ctaIntent}
+      nextStatus={ctaStatus}
+      nextNotice={acceptStatus === "unavailable" ? PLAN_ACCEPT_UNAVAILABLE_NOTICE : null}
       initialStep={stage1ReturnStepRef.current}
-      onContinueToRefinement={(sourceStep) => {
-        // The fork is the Stage-2 entry point and must render before any
-        // Stage-2 gateway load, so its own error state can never block it.
+      onContinue={(sourceStep) => {
         stage1ReturnStepRef.current = sourceStep
-        setStage("fork")
+        // The Idealplan is accepted from here; the refinement entry only
+        // survives for journeys that cannot accept (a Stage-3 resume that
+        // walked back to Stage 1, or a build without the accept flag set).
+        if (acceptAvailable) {
+          void acceptIdealPlanDirectly()
+          return
+        }
+        void enterStage2()
       }}
     />
   )
@@ -886,8 +1070,13 @@ export type FlowStep = "basis" | "optional"
 export function PlanStartFlow(
   props: PlanStartFlowProps & {
     initialStep?: FlowStep
-    onContinueToRefinement?: (sourceStep: FlowStep) => void
+    /** Leaves the Idealplan from its last page — accept, or open the Feinschliff. */
+    onContinue?: (sourceStep: FlowStep) => void
     refinementAvailable?: boolean
+    /** What the last page's CTA does, and therefore what it is called. */
+    nextIntent?: NeedPlanScreenNextIntent
+    nextStatus?: NeedPlanScreenNextStatus
+    nextNotice?: string | null
   },
 ) {
   const [step, setStep] = useState<FlowStep>(() =>
@@ -897,7 +1086,9 @@ export function PlanStartFlow(
   )
   const [direction, setDirection] = useState<PersonalPlanTransitionDirection>("forward")
   const hasOptionalPage = props.state === "ready" && Boolean(props.plan.optional)
-  const canRefine = props.refinementAvailable !== false
+  // A Stage-1-only build has nowhere to go from the Idealplan — no accept route
+  // and no Feinschliff — so it renders no continuation CTA at all.
+  const canContinue = props.refinementAvailable !== false
   const optionalImageUrls =
     props.state === "ready" && step === "basis" && props.plan.optional
       ? [
@@ -911,16 +1102,18 @@ export function PlanStartFlow(
 
   const content = useMemo(() => {
     if (props.state !== "ready") return null
+    const nextIntent = props.nextIntent ?? "refine"
     if (step === "optional" && props.plan.optional) {
       return (
         <NeedPlanScreen
           screen={props.plan.optional}
           hasOptionalPage
           showJourneyHeader={false}
+          nextIntent={nextIntent}
+          nextStatus={props.nextStatus}
+          nextNotice={props.nextNotice}
           onNext={
-            canRefine && props.onContinueToRefinement
-              ? () => props.onContinueToRefinement?.("optional")
-              : undefined
+            canContinue && props.onContinue ? () => props.onContinue?.("optional") : undefined
           }
         />
       )
@@ -930,19 +1123,21 @@ export function PlanStartFlow(
         screen={props.plan.basis}
         hasOptionalPage={hasOptionalPage}
         showJourneyHeader={false}
+        nextIntent={nextIntent}
+        {...(hasOptionalPage ? {} : { nextStatus: props.nextStatus, nextNotice: props.nextNotice })}
         onNext={
           hasOptionalPage
             ? () => {
                 setDirection("forward")
                 setStep("optional")
               }
-            : canRefine && props.onContinueToRefinement
-              ? () => props.onContinueToRefinement?.("basis")
+            : canContinue && props.onContinue
+              ? () => props.onContinue?.("basis")
               : undefined
         }
       />
     )
-  }, [canRefine, hasOptionalPage, props, step])
+  }, [canContinue, hasOptionalPage, props, step])
 
   if (props.state === "unavailable") {
     return <PlanStartUnavailable profileHref={props.profileHref} supportHref={props.supportHref} />

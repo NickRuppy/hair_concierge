@@ -16,6 +16,8 @@ export default async function PersonalPlanStartLabPage({
   if (process.env.NODE_ENV !== "development") notFound()
 
   const { scenario } = await searchParams
+  // Deliberately without direct acceptance: this scenario exists to exercise
+  // the Stage 2 → Stage 3 composition the refinement entry still reaches.
   if (scenario === "production-composition")
     return <PlanStartProductionGate initialJourney={{ stage: "stage1" }} />
 
@@ -34,7 +36,7 @@ export default async function PersonalPlanStartLabPage({
   return (
     <PlanStartCustomerJourney
       initialPlan={{ ...plan, personalPlanId: "20000000-0000-4000-8000-000000000001" }}
-      initialJourney={{ stage: "stage1" }}
+      initialJourney={{ stage: "stage1", directAcceptanceAvailable: true }}
       personalPlanId="20000000-0000-4000-8000-000000000001"
     />
   )

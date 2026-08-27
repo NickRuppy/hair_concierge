@@ -124,8 +124,44 @@ test("renders the current qualitative section and never a numeric question total
   )
 
   assert.match(html, /Wie du dein Haar behandelst/)
-  assert.match(html, /Personal-Plan-Stufen/)
   assert.doesNotMatch(html, /Frage\s+\d+\s+von\s+\d+/i)
+})
+
+test("Stage 2 question chrome keeps Back and the wordmark but retires the 5-stage bar (Task 2.7)", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+    answers: {
+      currentProductCategories: ["shampoo"],
+      wetWashFrequency: "weekly_2x",
+      scalpIrritationDetail: "mild_sensitive_or_itchy",
+      dryShampooBridgePreference: "decline",
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "scalp_irritation_detail",
+      "dry_shampoo_bridge_preference",
+    ],
+  })
+  const html = renderToStaticMarkup(
+    <RefinementQuestion
+      session={session}
+      questionId="towel_handling"
+      localAnswer={undefined}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+    />,
+  )
+
+  assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+  assert.doesNotMatch(html, /role="progressbar"/)
+  assert.match(html, />chaarlie</)
+  assert.match(html, /aria-label="Zurück"/)
 })
 
 test("renders exactly ten contextual current-product categories with no preselection", () => {
@@ -538,6 +574,7 @@ test("telemetry events are code-owned and expose only coarse safe properties", (
     "personal_plan_stage2_save_failed",
     "personal_plan_stage2_resumed",
     "personal_plan_stage2_completed",
+    "personal_plan_stage2_module_completed",
     "personal_plan_stage2_bridge_viewed",
     "personal_plan_stage2_handoff_failed",
   ])
@@ -557,9 +594,15 @@ test("telemetry events are code-owned and expose only coarse safe properties", (
 
   assert.deepEqual(Object.keys(viewed).sort(), ["family", "name", "section"])
   assert.deepEqual(Object.keys(failed).sort(), ["errorCode", "name"])
+  const moduleCompleted: Stage2RefinementTelemetryEvent = {
+    name: "personal_plan_stage2_module_completed",
+    module: "products",
+  }
+
   assert.deepEqual(Object.keys(handoffFailed), ["name"])
+  assert.deepEqual(Object.keys(moduleCompleted).sort(), ["module", "name"])
   assert.doesNotMatch(
-    JSON.stringify([viewed, failed, handoffFailed]),
+    JSON.stringify([viewed, failed, handoffFailed, moduleCompleted]),
     /questionId|answer|category|irritation|frequency|root/i,
   )
 })
@@ -580,6 +623,7 @@ test("Labs previews are development guarded and keep fixture-gateway behind Labs
   )
   assert.match(previewSource, /fixture-gateway/)
   assert.match(previewSource, /ready|conditional|save-error|conflict|resume/)
+  assert.match(previewSource, /module-products/)
 
   const srcRoot = path.resolve(new URL("../src", import.meta.url).pathname)
   const importers: string[] = []
@@ -597,6 +641,8 @@ test("Labs previews are development guarded and keep fixture-gateway behind Labs
   await visit(srcRoot)
 
   assert.deepEqual(importers.sort(), [
+    // Dev-only Feinschliff-Einstieg demo harness (`/labs/feinschliff-journey`).
+    "app/labs/feinschliff-journey/journey-client.tsx",
     "app/labs/personal-plan-stage-1-2/journey-client.tsx",
     "app/labs/personal-plan-stage-2/preview-client.tsx",
     "app/labs/personal-plan/stage-3/lab-client.tsx",

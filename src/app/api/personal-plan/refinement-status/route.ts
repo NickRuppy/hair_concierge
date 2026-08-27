@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server"
 
-import { loadModuleBannerDismissals } from "@/lib/personal-plan/lifecycle/repository"
-import { loadRefinementStatusSource } from "@/lib/personal-plan/persistence/refinement-status-read"
-import { buildRefinementStatusResponse } from "@/lib/personal-plan/refinement/refinement-status"
+import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refinement-status-loader"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -47,30 +45,11 @@ export function createRefinementStatusRouteHandlers(deps: RefinementStatusRouteD
     async GET() {
       const userId = await deps.getUserId()
       if (!userId) return response({ error: "unauthorized" }, 401)
-      try {
-        const client = deps.client()
-        const source = await loadRefinementStatusSource(client, userId)
-        if (source.status === "no_personal_plan") {
-          return response({ error: "no_personal_plan" }, 404)
-        }
-
-        const bannerDismissals = await loadModuleBannerDismissals(client, userId)
-
-        return response(
-          buildRefinementStatusResponse({
-            moduleStatusInput: {
-              triggerContext: source.triggerContext,
-              answers: source.answers,
-              completedQuestionIds: source.completedQuestionIds,
-              answerProvenance: source.answerProvenance,
-            },
-            moduleProjections: source.moduleProjections,
-            bannerDismissals,
-          }),
-        )
-      } catch {
+      const result = await loadRefinementStatusForUser(deps.client(), userId)
+      if (result.status === "no_personal_plan") return response({ error: "no_personal_plan" }, 404)
+      if (result.status === "unavailable")
         return response({ error: "temporarily_unavailable" }, 503)
-      }
+      return response(result.data)
     },
   }
 }

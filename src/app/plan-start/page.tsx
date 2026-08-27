@@ -16,6 +16,15 @@ import { loadExistingStage2RefinementSession } from "@/lib/personal-plan/persist
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
 import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
+import {
+  parseStage2RefineEntry,
+  type Stage2ModuleEntryRequest,
+} from "@/lib/personal-plan/refinement/module-scope"
+import {
+  loadModule1Stage3Resume,
+  type Module1Stage3ResumeClient,
+} from "@/lib/personal-plan/refinement/module1-stage3-resume"
+import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refinement-status-loader"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import {
   isPersonalPlanAppV1Enabled,
@@ -35,9 +44,9 @@ export type PlanStartPageDeps = {
   enabled: () => boolean
   stage2Enabled: () => boolean
   /**
-   * Direct acceptance drives Stage 2 → 3 → 4 headlessly, so the fork may only
-   * offer it when the accept route's own flag set is satisfied. Fail closed:
-   * an unwired caller gets the refine-only fork.
+   * Direct acceptance drives Stage 2 → 3 → 4 headlessly, so the Idealplan CTA
+   * may only accept when the accept route's own flag set is satisfied. Fail
+   * closed: an unwired caller keeps the refinement entry.
    */
   stage3Enabled?: () => boolean
   stage4Enabled?: () => boolean
@@ -45,11 +54,33 @@ export type PlanStartPageDeps = {
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   loadExistingRefinementSession: (userId: string) => Promise<Stage2RefinementSession | null>
   loadStage1Plan?: (userId: string) => Promise<PlanStartReadyViewModel | null>
+  /**
+   * Task 2.5: the persisted Modul-1 → Stage-3 handoff (Task 1.4) plus its still
+   * open Stage-3 draft. Completing the `products` module leaves the refinement
+   * draft `in_progress`, so without this read a reload after the handoff resumes
+   * Stage 2 instead of the Stage 3 the user was in. Optional and
+   * failure-tolerant: an unwired or failing dep keeps today's fall-through.
+   */
+  loadModule1Stage3Resume?: (userId: string) => Promise<{ refinedVersionId: string } | null>
+  /**
+   * The coarse "X von 4" the Routine banner shows, for the module flow's own
+   * slim meter (field test 26.08.2026). Read from the SAME `refinement-status`
+   * contract as the banner so the two surfaces cannot disagree — the client
+   * session carries no answer provenance and could not reproduce it. Only read
+   * for an explicit module deep link, and failure-tolerant: no value, no meter.
+   */
+  loadRefinementProgress?: (
+    userId: string,
+  ) => Promise<{ completedSteps: number; totalSteps: number } | null>
 }
 
 export type PlanStartSearchParams = {
   repairRoutineVersionId?: string | string[]
-  /** `1` = explicit re-entry into Stage 2 (the Routine refinement nudge). */
+  /**
+   * `1` = explicit re-entry into Stage 2 (the Routine refinement nudge),
+   * resolved to the first open module. `products` / `habits` are the module
+   * deep links the Routine banner and the Profil rows use.
+   */
   refine?: string | string[]
 }
 
@@ -60,7 +91,15 @@ export type PlanStartSearchParams = {
  * Stage 3 — the user would never see the Feinschliff again.
  */
 export function parseRefineParam(value: string | string[] | undefined): boolean {
-  return (Array.isArray(value) ? value[0] : value) === "1"
+  return parseStage2RefineEntry(value).refine
+}
+
+/** The module a refine deep link asks for; `1` defers the choice to the session. */
+export function parseRefineModuleParam(
+  value: string | string[] | undefined,
+): Stage2ModuleEntryRequest | undefined {
+  const entry = parseStage2RefineEntry(value)
+  return entry.refine ? entry.module : undefined
 }
 
 export type PlanStartPageState =
@@ -76,7 +115,11 @@ export type PlanStartPageState =
 
 export async function resolvePlanStartPageState(
   deps: PlanStartPageDeps,
-  options: { repairRoutineVersionId?: string; refine?: boolean } = {},
+  options: {
+    repairRoutineVersionId?: string
+    refine?: boolean
+    refineModule?: Stage2ModuleEntryRequest
+  } = {},
 ): Promise<PlanStartPageState> {
   if (!deps.enabled()) return { state: "unavailable" }
   const userId = await deps.getUserId()
@@ -114,7 +157,7 @@ export async function resolvePlanStartPageState(
     // it drives headlessly. Deliberately NOT keyed on `access.allowed.stage2`:
     // access is read before `loadStage1Plan` creates the Stage-1 snapshot, so a
     // first-visit buyer is still pre-Stage-2 here and would lose the accept
-    // button on their own fork screen. This flag only gates the fork's UI —
+    // path on their own Idealplan. This flag only gates the CTA's intent —
     // `POST /api/personal-plan/accept-ideal-plan` re-validates real access,
     // Stage 2 progress and seen state server-side before accepting anything.
     const directAcceptance =
@@ -140,8 +183,18 @@ export async function resolvePlanStartPageState(
     // An explicit refine request outranks every later-stage resume: it exists
     // precisely to stop the completed draft from being handed off again.
     if (options.refine) {
+      const moduleProgress =
+        options.refineModule && options.refineModule !== "first_open"
+          ? await deps.loadRefinementProgress?.(userId).catch(() => null)
+          : null
       return production(
-        { stage: "stage2", returningToRefinement: true, ...directAcceptance },
+        {
+          stage: "stage2",
+          returningToRefinement: true,
+          ...(options.refineModule ? { refineModule: options.refineModule } : {}),
+          ...(moduleProgress ? { moduleProgress } : {}),
+          ...directAcceptance,
+        },
         initialRefinementSession
           ? { personalPlanId: access.personalPlanId, initialRefinementSession }
           : undefined,
@@ -179,6 +232,23 @@ export async function resolvePlanStartPageState(
           ? { personalPlanId: access.personalPlanId, initialRefinementSession }
           : undefined,
       )
+    }
+    // Resume of the Modul-1 handoff (Task 2.5). Ranked below the explicit refine
+    // entry and the repair path on purpose: both are deliberate requests, this
+    // one only rescues an undirected reload. The `products` module hands off into
+    // Stage 3 while the draft stays `in_progress`, so this is the only branch
+    // that can catch it.
+    if (refinement.status === "in_progress" && access.allowed.stage3) {
+      // An absent dep short-circuits the whole optional chain to `undefined`.
+      const resumed = await deps.loadModule1Stage3Resume?.(userId).catch(() => null)
+      if (resumed) {
+        return production(
+          { stage: "stage3", refinedVersionId: resumed.refinedVersionId },
+          initialRefinementSession
+            ? { personalPlanId: access.personalPlanId, initialRefinementSession }
+            : undefined,
+        )
+      }
     }
     return production(
       { stage: "stage2", ...directAcceptance },
@@ -222,6 +292,18 @@ export default async function PlanStartPage({
           userId,
           persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
         }),
+      loadModule1Stage3Resume: async (userId) =>
+        loadModule1Stage3Resume(
+          createAdminClient() as unknown as Module1Stage3ResumeClient,
+          userId,
+        ),
+      loadRefinementProgress: async (userId) => {
+        const status = await loadRefinementStatusForUser(
+          createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
+          userId,
+        )
+        return status.status === "ok" ? status.data.progress : null
+      },
       loadStage1Plan: async (userId) => {
         const result = await createStage1PersistenceService(
           createStage1SupabaseDependencies(createAdminClient() as never),
@@ -234,6 +316,7 @@ export default async function PlanStartPage({
     {
       repairRoutineVersionId: parseUuidParam(params.repairRoutineVersionId),
       refine: parseRefineParam(params.refine),
+      refineModule: parseRefineModuleParam(params.refine),
     },
   )
   if (state.state === "paid_pending") redirect("/plan-bereit")

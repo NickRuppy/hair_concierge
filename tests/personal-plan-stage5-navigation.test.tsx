@@ -6,9 +6,15 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { AuthenticatedAppShell } from "../src/components/layout/authenticated-app-shell"
 import { PersonalPlanNavigationView } from "../src/components/layout/personal-plan-navigation"
+import type {
+  NavSurfaceVisitedState,
+  PersonalPlanLifecycleClient,
+} from "../src/lib/personal-plan/lifecycle/repository"
 import {
   resolveAuthenticatedAppNavigationAccess,
+  schedulePersonalPlanNavSurfaceVisit,
   toAuthenticatedAppNavigationAccess,
+  type SchedulePersonalPlanNavSurfaceVisitDeps,
 } from "../src/lib/personal-plan/navigation-access"
 import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
 
@@ -33,6 +39,7 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "profile", href: "/profile", label: "Profil" },
     ],
+    unvisitedNavSurfaces: new Set(),
   })
   assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(true, false)), {
     kind: "personal_plan",
@@ -42,6 +49,7 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
       { key: "routine", href: "/routine", label: "Routine" },
       { key: "profile", href: "/profile", label: "Profil" },
     ],
+    unvisitedNavSurfaces: new Set(),
   })
   assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true)), {
     kind: "personal_plan",
@@ -52,6 +60,7 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
       { key: "application", href: "/anwendung", label: "Anwendung" },
       { key: "profile", href: "/profile", label: "Profil" },
     ],
+    unvisitedNavSurfaces: new Set(),
   })
 })
 
@@ -64,6 +73,186 @@ test("Personal Plan navigation carries the already-authoritative routine-attenti
 
   assert.equal(navigation.kind, "personal_plan")
   assert.equal(navigation.hasPendingRoutineProposal, true)
+})
+
+// --- Nav-visited dots (Task 2.9, decision 14) --------------------------------
+
+test("an unvisited tab dots, a visited one doesn't, and routine never dots even when unvisited", () => {
+  const navVisitedState: NavSurfaceVisitedState = {
+    available: true,
+    visitedSurfaces: new Set(["profile"]),
+  }
+  const navigation = toAuthenticatedAppNavigationAccess(
+    personalPlanAccess(true, true),
+    navVisitedState,
+  )
+
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+  assert.deepEqual([...navigation.unvisitedNavSurfaces].sort(), ["application", "chat"].sort())
+  assert.equal(navigation.unvisitedNavSurfaces.has("profile"), false)
+  assert.equal(navigation.unvisitedNavSurfaces.has("routine"), false)
+})
+
+test("an unavailable nav-visited read (pre-migration) renders zero dots, never all of them", () => {
+  const unavailable: NavSurfaceVisitedState = { available: false, visitedSurfaces: new Set() }
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), unavailable)
+
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+  assert.deepEqual([...navigation.unvisitedNavSurfaces], [])
+})
+
+test("omitting the nav-visited state entirely also renders zero dots (safe default)", () => {
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true))
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+  assert.deepEqual([...navigation.unvisitedNavSurfaces], [])
+})
+
+test("resolveAuthenticatedAppNavigationAccess wires the nav-visited read through for a Personal Plan destination", async () => {
+  let loadNavVisitedStateCalls = 0
+  const navigation = await resolveAuthenticatedAppNavigationAccess({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => personalPlanAccess(true, false),
+    loadNavVisitedState: async (userId) => {
+      loadNavVisitedStateCalls += 1
+      assert.equal(userId, "user-1")
+      return { available: true, visitedSurfaces: new Set() }
+    },
+  })
+
+  assert.equal(loadNavVisitedStateCalls, 1)
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+  assert.deepEqual([...navigation.unvisitedNavSurfaces].sort(), ["chat", "profile"].sort())
+})
+
+test("resolveAuthenticatedAppNavigationAccess skips the nav-visited read entirely for legacy destinations", async () => {
+  let loadNavVisitedStateCalls = 0
+  const navigation = await resolveAuthenticatedAppNavigationAccess({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
+    loadNavVisitedState: async () => {
+      loadNavVisitedStateCalls += 1
+      return { available: true, visitedSurfaces: new Set() }
+    },
+  })
+
+  assert.deepEqual(navigation, { kind: "legacy" })
+  assert.equal(loadNavVisitedStateCalls, 0)
+})
+
+test("the rendered nav shows a dot only on an unvisited, non-routine tab", () => {
+  // chat and routine are visited; application and profile are not.
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
+    available: true,
+    visitedSurfaces: new Set(["chat", "routine"]),
+  })
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+  assert.deepEqual([...navigation.unvisitedNavSurfaces].sort(), ["application", "profile"].sort())
+
+  // pathname pinned to "/chat" — an already-visited surface, not one of the
+  // two unvisited ones under test — so this test's dot assertions are
+  // unaffected by the active-tab suppression covered separately below.
+  const html = renderToStaticMarkup(
+    createElement(PersonalPlanNavigationView, {
+      items: navigation.items,
+      pathname: "/chat",
+      unvisitedNavSurfaces: navigation.unvisitedNavSurfaces,
+    }),
+  )
+  // One dot per unvisited surface, doubled for the header + mobile tab bar renders
+  // (the header also has an unrelated "/chat" logo link with no dot).
+  assert.equal((html.match(/data-nav-unvisited-dot="true"/g) ?? []).length, 4)
+
+  const headerNav = html.match(
+    /<nav aria-label="Personal-Plan-Navigation"[^>]*>[\s\S]*?<\/nav>/,
+  )?.[0]
+  const mobileNav = html.match(
+    /<nav aria-label="Personal-Plan-Navigation \(mobil\)"[^>]*>[\s\S]*?<\/nav>/,
+  )?.[0]
+  assert.ok(headerNav && mobileNav, "expected both the header and mobile nav markup")
+
+  const linkFor = (nav: string, href: string) =>
+    nav.match(new RegExp(`<a[^>]*href="${href}"[^>]*>[\\s\\S]*?</a>`))?.[0]
+
+  for (const nav of [headerNav!, mobileNav!]) {
+    for (const href of ["/chat", "/routine"]) {
+      const link = linkFor(nav, href)
+      assert.ok(link, `expected a nav link for ${href}`)
+      assert.doesNotMatch(link!, /data-nav-unvisited-dot/)
+    }
+    for (const href of ["/anwendung", "/profile"]) {
+      const link = linkFor(nav, href)
+      assert.ok(link, `expected a nav link for ${href}`)
+      assert.match(link!, /data-nav-unvisited-dot="true"/)
+    }
+  }
+})
+
+test("fix round 1: the active tab never dots even when it's still in unvisitedNavSurfaces (the deferred after() write hasn't landed yet)", () => {
+  // Simulates the very first visit to /anwendung: the server read that
+  // produced `unvisitedNavSurfaces` ran BEFORE this render's visit-marking
+  // write (deferred via after()), so "application" is still unvisited on
+  // the render that's currently showing it.
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
+    available: true,
+    visitedSurfaces: new Set(),
+  })
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+  assert.ok(
+    navigation.unvisitedNavSurfaces.has("application"),
+    "test setup: application must be unvisited",
+  )
+
+  const html = renderToStaticMarkup(
+    createElement(PersonalPlanNavigationView, {
+      items: navigation.items,
+      pathname: "/anwendung",
+      unvisitedNavSurfaces: navigation.unvisitedNavSurfaces,
+    }),
+  )
+
+  const headerNav = html.match(
+    /<nav aria-label="Personal-Plan-Navigation"[^>]*>[\s\S]*?<\/nav>/,
+  )?.[0]
+  const mobileNav = html.match(
+    /<nav aria-label="Personal-Plan-Navigation \(mobil\)"[^>]*>[\s\S]*?<\/nav>/,
+  )?.[0]
+  assert.ok(headerNav && mobileNav, "expected both the header and mobile nav markup")
+
+  const linkFor = (nav: string, href: string) =>
+    nav.match(new RegExp(`<a[^>]*href="${href}"[^>]*>[\\s\\S]*?</a>`))?.[0]
+
+  for (const nav of [headerNav!, mobileNav!]) {
+    // The active tab (application/"/anwendung") never dots, active-tab
+    // suppression aside from persisted visited state.
+    const activeLink = linkFor(nav, "/anwendung")
+    assert.ok(activeLink, "expected a nav link for /anwendung")
+    assert.doesNotMatch(activeLink!, /data-nav-unvisited-dot/)
+
+    // Every OTHER unvisited, non-active, non-routine surface still dots —
+    // the suppression is scoped to the active tab only.
+    for (const href of ["/chat", "/profile"]) {
+      const link = linkFor(nav, href)
+      assert.ok(link, `expected a nav link for ${href}`)
+      assert.match(link!, /data-nav-unvisited-dot="true"/)
+    }
+  }
+})
+
+test("with no unvisited surfaces, no dot renders at all", () => {
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true))
+  assert.equal(navigation.kind, "personal_plan")
+  if (navigation.kind !== "personal_plan") return
+
+  const html = renderToStaticMarkup(
+    createElement(PersonalPlanNavigationView, { items: navigation.items, pathname: "/chat" }),
+  )
+  assert.doesNotMatch(html, /data-nav-unvisited-dot/)
 })
 
 test("legacy, paid-pending, and navigation read failures keep exactly one legacy Header", async () => {
@@ -190,4 +379,114 @@ test("regular Chat consumes Personal Plan clearance in the viewport once and kee
   )
   assert.match(inputSource, /env\(safe-area-inset-bottom\)/)
   assert.doesNotMatch(inputSource, /personal-plan-shell-bottom-padding/)
+})
+
+// --- schedulePersonalPlanNavSurfaceVisit (Task 2.9 visit-marking) -----------
+
+function fakeLifecycleClient(onUpsert: (row: Record<string, unknown>) => { error: unknown }) {
+  return {
+    from() {
+      const query = {
+        upsert: async (row: Record<string, unknown>) => onUpsert(row),
+      }
+      return query as unknown as ReturnType<PersonalPlanLifecycleClient["from"]>
+    },
+  } as PersonalPlanLifecycleClient
+}
+
+test("visiting an already-visited surface never schedules a write", async () => {
+  let scheduled = 0
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
+    available: true,
+    visitedSurfaces: new Set(["chat"]),
+  })
+
+  const deps: SchedulePersonalPlanNavSurfaceVisitDeps = {
+    loadUserId: async () => "user-1",
+    scheduleAfter: (() => {
+      scheduled += 1
+    }) as SchedulePersonalPlanNavSurfaceVisitDeps["scheduleAfter"],
+  }
+  await schedulePersonalPlanNavSurfaceVisit(navigation, "chat", deps)
+
+  assert.equal(scheduled, 0)
+})
+
+test("visiting a legacy (non-Personal-Plan) destination never schedules a write", async () => {
+  let scheduled = 0
+  await schedulePersonalPlanNavSurfaceVisit({ kind: "legacy" }, "chat", {
+    scheduleAfter: () => {
+      scheduled += 1
+    },
+  })
+  assert.equal(scheduled, 0)
+})
+
+test("visiting an unvisited surface schedules exactly one deferred write that records the visit", async () => {
+  const upserts: Record<string, unknown>[] = []
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
+    available: true,
+    visitedSurfaces: new Set(),
+  })
+
+  let scheduledTask: (() => unknown) | null = null
+  await schedulePersonalPlanNavSurfaceVisit(navigation, "profile", {
+    loadUserId: async () => "user-1",
+    client: () =>
+      fakeLifecycleClient((row) => {
+        upserts.push(row)
+        return { error: null }
+      }),
+    now: () => "2026-08-26T00:00:00.000Z",
+    scheduleAfter: (task) => {
+      scheduledTask = task as () => unknown
+    },
+  })
+
+  assert.equal(typeof scheduledTask, "function")
+  assert.equal(upserts.length, 0, "the write must not happen before the deferred task runs")
+  await scheduledTask!()
+  assert.deepEqual(upserts, [
+    {
+      user_id: "user-1",
+      kind: "nav_surface_visited",
+      subject: "profile",
+      marked_at: "2026-08-26T00:00:00.000Z",
+    },
+  ])
+})
+
+test("a pre-migration write failure inside the deferred task is swallowed, not thrown", async () => {
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
+    available: true,
+    visitedSurfaces: new Set(),
+  })
+
+  let scheduledTask: (() => Promise<unknown>) | null = null
+  await schedulePersonalPlanNavSurfaceVisit(navigation, "profile", {
+    loadUserId: async () => "user-1",
+    client: () => fakeLifecycleClient(() => ({ error: { code: "42P01" } })),
+    scheduleAfter: (task) => {
+      scheduledTask = task as () => Promise<unknown>
+    },
+  })
+
+  await assert.doesNotReject(() => scheduledTask!())
+})
+
+test("no user id resolves to a no-op: nothing is scheduled", async () => {
+  let scheduled = 0
+  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
+    available: true,
+    visitedSurfaces: new Set(),
+  })
+
+  await schedulePersonalPlanNavSurfaceVisit(navigation, "profile", {
+    loadUserId: async () => null,
+    scheduleAfter: () => {
+      scheduled += 1
+    },
+  })
+
+  assert.equal(scheduled, 0)
 })
