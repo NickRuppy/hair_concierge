@@ -142,7 +142,7 @@ test("Stage 2 re-edit creates an in-progress successor without rewriting complet
       currentProductCategories: [],
       wetWashFrequency: "weekly_1x",
       towel: { material: "no_towel" },
-      dryingRoutes: [],
+      dryingRoutes: ["air_dry" as const],
       additionalHeatTools: [],
       nightProtection: [],
     },
@@ -196,7 +196,7 @@ test("Stage 2 completion recomputes the refined Need snapshot from the immutable
     currentProductCategories: [],
     wetWashFrequency: "weekly_1x" as const,
     towel: { material: "no_towel" as const },
-    dryingRoutes: [],
+    dryingRoutes: ["air_dry" as const],
     additionalHeatTools: [],
     nightProtection: [],
   }

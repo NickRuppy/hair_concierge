@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
+import { useRouter } from "next/navigation"
 
 import {
   RefinementFlow,
@@ -37,6 +38,7 @@ export function Stage2PreviewClient({
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
   autoHandoff?: boolean
 }) {
+  const router = useRouter()
   const gateway = useMemo(
     () => createPreviewGateway(scenario, triggerContext),
     [scenario, triggerContext],
@@ -49,7 +51,12 @@ export function Stage2PreviewClient({
         onSecondaryExit={() => {
           // Preview-safe no-op: the customer component must not invent an Idealplan href.
         }}
-        onHandoff={onHandoff}
+        onHandoff={
+          onHandoff ??
+          // Labs-only: the harness has no Stage 3 behind it, so the handoff CTA
+          // jumps to the Stage-3 preview instead of rendering a dead button.
+          (() => router.push("/labs/personal-plan-tools?section=stage3"))
+        }
         autoHandoff={autoHandoff}
       />
     </div>
@@ -93,12 +100,17 @@ function triggerContextForScenario(scenario: Stage2PreviewScenario): Stage2Trigg
       relevantCategories: ["shampoo", "mask", "heat_protectant"],
       hasReportedIrritatedScalp: false,
       dryShampooBridgeEligibility: "ineligible",
+      // Labs-only: without this the fail-closed rollout gate removes the whole
+      // Tools trip from the interactive preview, so the capture pages were
+      // unreachable for reviewers.
+      toolsEnabled: true,
     }
   }
   return {
     relevantCategories: ["shampoo", "mask", "heat_protectant", "oil", "dry_shampoo"],
     hasReportedIrritatedScalp: true,
     dryShampooBridgeEligibility: "eligible",
+    toolsEnabled: true,
   }
 }
 
@@ -148,6 +160,9 @@ function completedQuestionsForScenario(scenario: Stage2PreviewScenario): Stage2Q
       "drying_routes",
       "additional_heat_tools",
       "night_protection",
+      // The labs trigger context enables the Tools trip, so a "complete"
+      // fixture must have completed its overview too.
+      "tools_overview",
     ]
   }
   return []
@@ -158,8 +173,9 @@ function completeAnswers(): PersonalPlanRefinementAnswersV1 {
     currentProductCategories: ["shampoo"],
     wetWashFrequency: "weekly_2x",
     towel: { material: "no_towel" },
-    dryingRoutes: [],
+    dryingRoutes: ["air_dry"],
     additionalHeatTools: [],
     nightProtection: [],
+    toolFamiliesWithSomething: [],
   }
 }

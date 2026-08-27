@@ -1,6 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
+import { ignoresStoredStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
+import {
+  STAGE2_QUESTION_PATH_VERSION,
+  type PersonalPlanRefinementAnswersV1,
+  type Stage2HeatEventSource,
+  type Stage2QuestionId,
+} from "@/lib/personal-plan/refinement/types"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type {
   Stage2PersistedDraft,
@@ -8,11 +15,120 @@ import type {
   Stage2RefinementResumeReader,
 } from "./stage2-refinement-service"
 
+/**
+ * Read-time compatibility decoders, not migrations. The stored row is never
+ * rewritten; each rule below only changes what the application reads out of it.
+ * This is the `D8` decoder half of the path version in
+ * `refinement/types.ts` (`STAGE2_QUESTION_PATH_VERSION`).
+ *
+ * Path version 1 -> 2:
+ *
+ * - `toolSections` -> `toolFamiliesWithSomething`. Refinement answers were
+ *   briefly persisted under the old key (same `ToolFamily[]` shape; only the key
+ *   changed). Without this, an old draft resumes at a blank Tools overview and a
+ *   subsequent overview submission materializes an explicit `[]` for every
+ *   family the user had actually reported -- silently destroying their prior
+ *   selections (see C7). The old value wins only when the new key is absent, so
+ *   a row already written under the current key is untouched.
+ * - `heatEvents["heat:diffuser_airflow_shaping"].protectionConsistency` is
+ *   dropped (`R1`). The diffuser source no longer raises the heat-protection
+ *   question, its tier is `not_needed`, and nothing may derive from the value a
+ *   row stored under the old contract. Dropping it on read is what keeps that
+ *   row valid -- and therefore complete -- under today's contract (fixture 125).
+ */
+/**
+ * Path version 2 -> 3 (`D8`, Nick ruling 2026-08-26 — one page per heated and
+ * heatless family).
+ *
+ * `heated_styling` and `heatless_styling` each collapsed from two capture pages
+ * into one, and the page keys are persisted question ids. The merged page means
+ * something strictly stronger than either old page did: "this user has been
+ * shown, and answered for, the whole family". So a completion stored by a
+ * PRE-merge row (schema_version < 3) decodes as completing the merged page only
+ * when BOTH old page ids were completed — a half-paged draft honestly re-opens
+ * the (now single) question rather than inheriting a claim about forms the user
+ * never saw. A row stored under the merged contract (schema_version >= 3)
+ * writes exactly the merged id and keeps it as-is; applying the legacy rule to
+ * it would drop every fresh completion on reload. Orphaned `:2` ids are dropped
+ * in both cases, because no such question exists any more.
+ *
+ * This is read-time only: a row that was already *complete* keeps its status
+ * through `createStage2RefinementSession`, which trusts the stored status and
+ * handoff instead of re-deriving completeness.
+ */
+const MERGED_TOOL_FORM_PAGES: ReadonlyArray<{ merged: string; sources: readonly string[] }> = [
+  {
+    merged: "tools:heated_styling:1",
+    sources: ["tools:heated_styling:1", "tools:heated_styling:2"],
+  },
+  {
+    merged: "tools:heatless_styling:1",
+    sources: ["tools:heatless_styling:1", "tools:heatless_styling:2"],
+  },
+]
+
+export function decodeStage2CompletedQuestionIds(
+  raw: unknown,
+  storedSchemaVersion: number,
+): Stage2QuestionId[] {
+  if (!Array.isArray(raw)) return []
+  const stored = raw.filter((id): id is string => typeof id === "string")
+  // `tools:<family>:1` is ambiguous on its own: under the two-page contract it
+  // was a half-draft (page 2 unanswered), under the merged contract it IS the
+  // whole family. Only the row's stored schema_version can tell them apart —
+  // a v3 row writes exactly the merged id, and collapsing it with the legacy
+  // rule dropped every fresh completion on reload (question_not_current loop).
+  const legacyPaged = storedSchemaVersion < 3
+  const survives = (id: string) => {
+    const page = MERGED_TOOL_FORM_PAGES.find((candidate) => candidate.sources.includes(id))
+    if (!page) return true
+    if (!legacyPaged) return id === page.merged
+    // The merged id keeps its slot only when the whole family was answered;
+    // every other source id is an orphan of a question that no longer exists.
+    return id === page.merged && page.sources.every((source) => stored.includes(source))
+  }
+  return stored.filter(survives) as Stage2QuestionId[]
+}
+
+export function decodeStage2RefinementAnswers(raw: unknown): PersonalPlanRefinementAnswersV1 {
+  if (!raw || typeof raw !== "object") return {} as PersonalPlanRefinementAnswersV1
+  const answers = { ...(raw as Record<string, unknown>) }
+  if (answers.toolFamiliesWithSomething === undefined && "toolSections" in answers) {
+    answers.toolFamiliesWithSomething = answers.toolSections
+  }
+  delete answers.toolSections
+  return decodeLegacyHeatProtection(answers as PersonalPlanRefinementAnswersV1)
+}
+
+function decodeLegacyHeatProtection(
+  answers: PersonalPlanRefinementAnswersV1,
+): PersonalPlanRefinementAnswersV1 {
+  const heatEvents = answers.heatEvents
+  if (!heatEvents) return answers
+  const decoded = Object.fromEntries(
+    Object.entries(heatEvents).map(([id, event]) => {
+      const source = id.slice("heat:".length) as Stage2HeatEventSource
+      if (!id.startsWith("heat:") || !ignoresStoredStage2HeatProtection(source)) return [id, event]
+      const decodedEvent = { ...event }
+      delete decodedEvent.protectionConsistency
+      return [id, decodedEvent]
+    }),
+  )
+  return { ...answers, heatEvents: decoded }
+}
+
 type AdminClient = SupabaseClient
 
 /** Server-only persistence adapter. It is intentionally supplied only to route composition. */
 export function createSupabaseStage2RefinementPersistence(
   client: AdminClient,
+  options: {
+    /**
+     * Server-owned Hair Tools rollout for this owner. Omitted means off, so the
+     * released Feinschliff question path is unchanged.
+     */
+    toolsEnabled?: (userId: string) => Promise<boolean>
+  } = {},
 ): Stage2RefinementPersistence & Stage2RefinementResumeReader {
   async function loadSource(userId: string) {
     const { data: plan, error: planError } = await client
@@ -41,9 +157,10 @@ export function createSupabaseStage2RefinementPersistence(
     return {
       plan,
       initial,
-      triggerContext: deriveStage2TriggerContext(
-        initial.output_snapshot as InitialNeedPlanSnapshot,
-      ),
+      triggerContext: {
+        ...deriveStage2TriggerContext(initial.output_snapshot as InitialNeedPlanSnapshot),
+        toolsEnabled: (await options.toolsEnabled?.(userId)) === true,
+      },
     }
   }
 
@@ -94,7 +211,11 @@ export function createSupabaseStage2RefinementPersistence(
           user_id: userId,
           personal_plan_id: plan.id,
           base_initial_need_version_id: initial.id,
-          schema_version: 1,
+          // `D8`: a new draft is written under the contract in force now. The
+          // derived `pathVersion` follows the stored column, so an existing v1
+          // row keeps reading as `stage2-v1` and completing under its own
+          // completion-time contract.
+          schema_version: STAGE2_QUESTION_PATH_VERSION,
           answers: {},
           completed_question_ids: [],
         })
@@ -215,9 +336,11 @@ function mapDraft(
     baseInputSnapshot: initial.input_snapshot as Stage2PersistedDraft["baseInputSnapshot"],
     pathVersion: `stage2-v${String(row.schema_version)}`,
     triggerContext,
-    answers: (row.answers ?? {}) as Stage2PersistedDraft["answers"],
-    completedQuestionIds: (row.completed_question_ids ??
-      []) as Stage2PersistedDraft["completedQuestionIds"],
+    answers: decodeStage2RefinementAnswers(row.answers),
+    completedQuestionIds: decodeStage2CompletedQuestionIds(
+      row.completed_question_ids,
+      Number(row.schema_version),
+    ),
     revision: Number(row.revision),
     status: row.status as Stage2PersistedDraft["status"],
     refinedVersionId:

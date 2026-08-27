@@ -1,10 +1,10 @@
 import {
-  routinePayloadV1Schema,
   routineProposalDeltaV1Schema,
   type PersonalPlanRoutineView,
-  type RoutinePayloadV1,
+  type RoutinePayload,
   type RoutineProductPresentation,
 } from "./contracts"
+import { parseStoredRoutinePayload } from "./decode-stored"
 import {
   loadActiveRoutineCatalogProductPresentation,
   loadOwnerRefinedNeedSnapshot,
@@ -15,7 +15,7 @@ import {
   type PersonalPlanRoutineReadClient,
 } from "./repository"
 
-function exactCatalogProductIds(payloads: readonly (RoutinePayloadV1 | null)[]): string[] {
+function exactCatalogProductIds(payloads: readonly (RoutinePayload | null)[]): string[] {
   const ids = new Set<string>()
   for (const payload of payloads) {
     for (const item of payload?.items ?? []) {
@@ -27,7 +27,7 @@ function exactCatalogProductIds(payloads: readonly (RoutinePayloadV1 | null)[]):
   return [...ids]
 }
 
-function uniqueCategoryOrder(payload: RoutinePayloadV1): string[] | null {
+function uniqueCategoryOrder(payload: RoutinePayload): string[] | null {
   const categories = payload.intent.categories.map((category) => category.category)
   return new Set(categories).size === categories.length ? categories : null
 }
@@ -43,7 +43,7 @@ async function hasMatchingSourceCategoryOrder(input: {
   client: PersonalPlanRoutineReadClient
   userId: string
   planId: string
-  payloads: readonly RoutinePayloadV1[]
+  payloads: readonly RoutinePayload[]
 }): Promise<boolean> {
   const byRefinedVersionId = new Map(
     input.payloads.map((payload) => [payload.source.refinedVersionId, payload]),
@@ -71,7 +71,7 @@ async function hasMatchingSourceCategoryOrder(input: {
 
 async function loadProductPresentation(input: {
   client: PersonalPlanRoutineReadClient
-  payloads: readonly (RoutinePayloadV1 | null)[]
+  payloads: readonly (RoutinePayload | null)[]
 }): Promise<RoutineProductPresentation> {
   const productIds = exactCatalogProductIds(input.payloads)
   if (productIds.length === 0) return { catalogProducts: [] }
@@ -122,7 +122,7 @@ export async function loadPersonalPlanRoutineView(input: {
       : null,
   ])
   const activeVersion = active
-    ? { id: active.id, payload: routinePayloadV1Schema.parse(active.payload) }
+    ? { id: active.id, payload: parseStoredRoutinePayload(active.payload) }
     : null
   const viewBase = async () => ({
     personalPlanId: plan.id,
@@ -145,7 +145,7 @@ export async function loadPersonalPlanRoutineView(input: {
     productPresentation: { catalogProducts: [] },
     nudge,
   })
-  const repairRequiredView = (routineVersion: { id: string; payload: RoutinePayloadV1 }) => ({
+  const repairRequiredView = (routineVersion: { id: string; payload: RoutinePayload }) => ({
     personalPlanId: plan.id,
     planRevision: plan.revision,
     sourceRevision: plan.source_revision,
@@ -185,7 +185,7 @@ export async function loadPersonalPlanRoutineView(input: {
         proposal.candidate_routine_version_id,
       )
       if (candidate) {
-        const candidatePayload = routinePayloadV1Schema.parse(candidate.payload)
+        const candidatePayload = parseStoredRoutinePayload(candidate.payload)
         if (
           await hasMatchingSourceCategoryOrder({
             client: input.client,
@@ -242,7 +242,7 @@ export async function loadPersonalPlanRoutineView(input: {
       status: activeVersion ? "active" : "personal_plan_incomplete",
       pendingProposal: null,
     }
-  const candidatePayload = routinePayloadV1Schema.parse(candidate.payload)
+  const candidatePayload = parseStoredRoutinePayload(candidate.payload)
   if (
     !(await hasMatchingSourceCategoryOrder({
       client: input.client,
@@ -280,7 +280,7 @@ export async function loadPersonalPlanActiveRoutineVersion(input: {
   userId: string
   planId: string
   activeRoutineVersionId: string
-}): Promise<{ id: string; payload: ReturnType<typeof routinePayloadV1Schema.parse> } | null> {
+}): Promise<{ id: string; payload: RoutinePayload } | null> {
   const active = await loadOwnerRoutineVersion(
     input.client,
     input.userId,
@@ -288,7 +288,7 @@ export async function loadPersonalPlanActiveRoutineVersion(input: {
     input.activeRoutineVersionId,
   )
   if (!active) return null
-  const payload = routinePayloadV1Schema.parse(active.payload)
+  const payload = parseStoredRoutinePayload(active.payload)
   const matchesImmutableSource = await hasMatchingSourceCategoryOrder({
     client: input.client,
     userId: input.userId,

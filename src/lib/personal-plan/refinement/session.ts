@@ -1,12 +1,21 @@
 import type {
   HeatEventAnswer,
   PersonalPlanRefinementAnswersV1,
+  Stage2HeatEventSource,
   Stage2PathState,
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "./types"
+import { isStage2ToolQuestionId, STAGE2_TOOL_OVERVIEW_QUESTION_ID } from "./types"
 import { resolveStage2RefinementContract } from "./question-path"
+import { requiresStage2HeatProtection } from "./heat-events"
 import { Stage2RefinementError } from "./gateway"
+import {
+  TOOL_FORM_PAGES,
+  toolFamiliesForSections,
+  type ToolOverviewSectionKey,
+} from "@/lib/personal-plan/tools/labels"
+import { sortToolReportedForms, TOOL_FAMILIES } from "@/lib/personal-plan/tools/contracts"
 
 export type Stage2RefinementHandoff = {
   refinedVersionId: string
@@ -44,12 +53,20 @@ export function createStage2RefinementSession(
     completedQuestionIds: [...(input.completedQuestionIds ?? [])],
   })
   const status = input.status ?? "in_progress"
-  if (status === "complete" && !contract.isComplete) {
-    throw new Stage2RefinementError(
-      "incomplete_refinement",
-      "A complete refinement session must have a complete canonical path",
-    )
-  }
+  // INVARIANT: `status: "complete"` is only ever passed here to reconstruct an
+  // already-persisted completion (a DB row, a fixture snapshot, or a test
+  // fixture) -- the actual completion decision is made once, elsewhere
+  // (`stage2-refinement-service.ts` `complete()` / `Stage2FixtureGateway.complete()`),
+  // by checking `resolveStage2RefinementContract(...).isComplete` against the
+  // contract in force AT THAT MOMENT, before `status` is ever set to
+  // "complete". We deliberately do NOT re-derive completeness here against
+  // today's contract: a later rollout toggle (or any other question-path
+  // growth) can add newly required questions after a draft was validly
+  // completed, and re-validating on every load would make a legitimately
+  // finished draft throw `incomplete_refinement` the instant the path grows
+  // underneath it -- collapsing an already-finished user journey to
+  // "unavailable" (see C6). The stored `status` + `completedHandoff` are the
+  // source of truth for "this draft is done"; we trust them instead.
   if (status === "complete" && !input.completedHandoff) {
     throw new Stage2RefinementError(
       "incomplete_refinement",
@@ -133,10 +150,50 @@ function replaceQuestionAnswer(
   answer: unknown,
 ): PersonalPlanRefinementAnswersV1 {
   const next = structuredClone(answers)
+  if (questionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
+    // The UI answers in presentation sections; only family facts are persisted.
+    const sections = (structuredClone(answer) ?? []) as ToolOverviewSectionKey[]
+    const families = toolFamiliesForSections(sections)
+    next.toolFamiliesWithSomething = TOOL_FAMILIES.filter((family) => families.includes(family))
+    // Submitting the overview is a real answer about every family: the ones the
+    // user did not tick are explicitly empty, not unknown.
+    const forms = { ...next.toolForms }
+    for (const family of TOOL_FAMILIES) {
+      if (families.includes(family)) continue
+      forms[family] = []
+    }
+    next.toolForms = forms
+    return next
+  }
+  if (isStage2ToolQuestionId(questionId)) {
+    const page = TOOL_FORM_PAGES.find((candidate) => `tools:${candidate.pageKey}` === questionId)
+    if (page) {
+      // The pages of one family share one array, and a page hands back its own
+      // options plus everything it did not offer. Canonicalizing here is what
+      // lets a page carry forms out of family order (the ratified Bürsten page
+      // does) and lets an already-answered earlier page be edited afterwards.
+      next.toolForms = {
+        ...next.toolForms,
+        [page.family]: sortToolReportedForms(
+          page.family,
+          (structuredClone(answer) ?? []) as string[],
+        ),
+      }
+    }
+    return next
+  }
   if (questionId.startsWith("heat:")) {
+    const source = questionId.slice("heat:".length) as Stage2HeatEventSource
+    const submitted = (structuredClone(answer) ?? {}) as HeatEventAnswer
+    // `R1`: the diffuser source no longer asks for heat protection, so a value
+    // carried along from a legacy answer is dropped on write instead of being
+    // re-persisted under a contract that forbids it.
+    const { protectionConsistency, ...rest } = submitted
     next.heatEvents = {
       ...next.heatEvents,
-      [questionId]: structuredClone(answer) as HeatEventAnswer,
+      [questionId]: requiresStage2HeatProtection(source)
+        ? { ...rest, protectionConsistency }
+        : rest,
     }
     return next
   }

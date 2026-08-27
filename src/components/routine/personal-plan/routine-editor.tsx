@@ -10,7 +10,7 @@ import {
   BottomSheetTitle,
 } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
-import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutinePayload } from "@/lib/personal-plan/routine/contracts"
 import type {
   RoutineEditOperation,
   RoutineProductRef,
@@ -18,7 +18,7 @@ import type {
 import { cn } from "@/lib/utils"
 import { PRODUCT_FREQUENCY_LABELS } from "@/lib/vocabulary/frequencies"
 
-type RoutineItem = RoutinePayloadV1["items"][number]
+type RoutineItem = RoutinePayload["items"][number]
 
 export type RoutineProductOption = {
   label: string
@@ -27,7 +27,7 @@ export type RoutineProductOption = {
 }
 
 export type RoutineEditorProps = {
-  routine: RoutinePayloadV1
+  routine: RoutinePayload
   productOptions: Record<string, RoutineProductOption[]>
   supportedCadences: string[]
   supportedRolesByCategory: Record<string, string[]>
@@ -100,11 +100,11 @@ function productOptionValue(ref: RoutineProductRef) {
   return "none"
 }
 
-function itemMap(routine: RoutinePayloadV1) {
+function itemMap(routine: RoutinePayload) {
   return new Map(routine.items.map((item) => [item.itemKey, item]))
 }
 
-function sectionItems(routine: RoutinePayloadV1, key: "basis" | "optional") {
+function sectionItems(routine: RoutinePayload, key: "basis" | "optional") {
   const items = itemMap(routine)
   const listed =
     routine.sections

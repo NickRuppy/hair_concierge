@@ -13,6 +13,7 @@ import {
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createProductionStage3ProductsGateway } from "@/lib/personal-plan/products/production-persistence-gateway"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import {
@@ -146,7 +147,17 @@ export const POST = createAcceptIdealPlanRouteHandler({
           stage3Enabled: isPersonalPlanStage3Enabled(),
           stage4Enabled: isPersonalPlanStage4Enabled(),
         },
-        refinementPersistence: createSupabaseStage2RefinementPersistence(admin),
+        // Direct acceptance still produces the parallel Tool domain, so the
+        // accepted plan carries Tool routes at `unknown` and behaviour-only
+        // guidance. `careProvenance: "assumed"` in accept.ts keeps the disclosed
+        // planning defaults from ever becoming ownership.
+        refinementPersistence: createSupabaseStage2RefinementPersistence(admin, {
+          toolsEnabled: (userId) =>
+            isPersonalPlanToolsEnabledForUser(
+              userId,
+              admin as unknown as Parameters<typeof isPersonalPlanToolsEnabledForUser>[1],
+            ),
+        }),
         planState: {
           async loadActiveRoutineVersionId({ personalPlanId }) {
             const { data, error } = await admin

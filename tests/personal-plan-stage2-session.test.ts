@@ -16,7 +16,7 @@ const completeAnswers = {
   currentProductCategories: [],
   wetWashFrequency: "weekly_1x" as const,
   towel: { material: "no_towel" as const },
-  dryingRoutes: [],
+  dryingRoutes: ["air_dry" as const],
   additionalHeatTools: [],
   nightProtection: [],
 }

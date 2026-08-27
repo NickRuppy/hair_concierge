@@ -275,6 +275,9 @@ async function completeSyntheticRefinement(
   const handoff = await createPersistedStage2RefinementGateway({
     userId: deps.userId,
     persistence: deps.refinementPersistence,
+    // These answers are our disclosed planning defaults, not the user's report.
+    // They may shape the plan; they must never become Tool ownership.
+    careProvenance: "assumed",
   }).complete({ expectedRevision: saved.revision })
 
   return { personalPlanId: draft.personalPlanId, refinedVersionId: handoff.refinedVersionId }

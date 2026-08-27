@@ -8,6 +8,7 @@ import {
   REFINEMENT_CATEGORY_OPTIONS,
   REFINEMENT_TELEMETRY_EVENTS,
   RefinementQuestion,
+  isLocalAnswerComplete,
 } from "../src/components/personal-plan-refinement/refinement-question"
 import { RefinementBridge } from "../src/components/personal-plan-refinement/refinement-bridge"
 import {
@@ -469,7 +470,7 @@ test("loaded complete sessions require completedHandoff instead of a completion 
       currentProductCategories: [],
       wetWashFrequency: "weekly_1x",
       towel: { material: "no_towel" },
-      dryingRoutes: [],
+      dryingRoutes: ["air_dry"],
       additionalHeatTools: [],
       nightProtection: [],
     },
@@ -500,6 +501,90 @@ test("loaded complete sessions require completedHandoff instead of a completion 
   assert.throws(() => getCompletedHandoffForLoadedSession(inconsistent), /completed handoff/)
 })
 
+test('D2: the drying question is a forced pick with no „Nichts davon"', () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+    },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency", "towel_handling"],
+  })
+  const render = (localAnswer: unknown) =>
+    renderToStaticMarkup(
+      <RefinementQuestion
+        session={session}
+        questionId="drying_routes"
+        localAnswer={localAnswer}
+        onLocalAnswerChange={() => {}}
+        status="idle"
+        canGoBack
+        onBack={() => {}}
+        onSubmit={() => {}}
+        onSecondaryExit={() => {}}
+        showJourneyHeader={false}
+        focusOnQuestionChange={false}
+      />,
+    )
+
+  const unanswered = render(undefined)
+  assert.equal(DRYING_ROUTE_OPTIONS.length, 3)
+  assert.doesNotMatch(unanswered, /data-refinement-none-option/)
+  assert.doesNotMatch(unanswered, /Keiner dieser Wege trifft gerade zu/)
+  // „Weiter" stays disabled until at least one route is picked — that IS the
+  // ratified affordance; the lead copy is unchanged.
+  assert.match(unanswered, /Mehrere Wege dürfen parallel vorkommen\./)
+  assert.equal(isLocalAnswerComplete("drying_routes", []), false)
+  assert.equal(isLocalAnswerComplete("drying_routes", ["air_dry"]), true)
+  assert.match(render([]), /disabled=""/)
+  assert.doesNotMatch(render(["air_dry"]), /disabled=""/)
+})
+
+test("R1: the diffuser heat event asks only for frequency", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      additionalHeatTools: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+    ],
+  })
+  const html = renderToStaticMarkup(
+    <RefinementQuestion
+      session={session}
+      questionId="heat:diffuser_airflow_shaping"
+      localAnswer={undefined}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+      showJourneyHeader={false}
+      focusOnQuestionChange={false}
+    />,
+  )
+  assert.match(html, /Wie oft nutzt du Diffusor oder formenden Luftstrom\?/)
+  assert.doesNotMatch(html, /Hitzeschutz/)
+  assert.equal(
+    isLocalAnswerComplete("heat:diffuser_airflow_shaping", { frequency: "weekly_1x" }),
+    true,
+    "frequency alone completes the diffuser event",
+  )
+})
+
 test("bridge back targets the final canonical question", () => {
   const session = createStage2RefinementSession({
     pathVersion: "stage2-ui-test",
@@ -512,7 +597,7 @@ test("bridge back targets the final canonical question", () => {
       currentProductCategories: [],
       wetWashFrequency: "weekly_1x",
       towel: { material: "no_towel" },
-      dryingRoutes: [],
+      dryingRoutes: ["air_dry"],
       additionalHeatTools: [],
       nightProtection: [],
     },

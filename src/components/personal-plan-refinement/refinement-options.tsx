@@ -3,7 +3,11 @@
 import type { ReactNode } from "react"
 
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
-import { ADDITIONAL_HEAT_TOOL_IMAGES, type ToolImage } from "@/components/quiz/tool-visuals"
+import {
+  ADDITIONAL_HEAT_TOOL_IMAGES,
+  TOWEL_MATERIAL_IMAGES,
+  type ToolImage,
+} from "@/components/quiz/tool-visuals"
 import type { IconName } from "@/components/ui/icon"
 import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type {
@@ -201,6 +205,9 @@ export const TOWEL_MATERIAL_OPTIONS = (
     value === "no_towel"
       ? "Kein Handtuch oder Tuch"
       : TOWEL_MATERIAL_LABELS[value as keyof typeof TOWEL_MATERIAL_LABELS],
+  // Photo Bildkarten for the four materials (Nick, 2026-08-26); „Kein
+  // Handtuch" stays icon-only and the grid falls back to the icon treatment.
+  image: value === "no_towel" ? undefined : TOWEL_MATERIAL_IMAGES[value],
   icon:
     value === "frottee"
       ? "towel-frottee"
@@ -365,7 +372,12 @@ export function RefinementOptions<T extends string>({
             animationDelay={index * 18}
             visual={
               isGrid && option.image
-                ? { kind: "image", src: option.image.src, alt: option.image.alt }
+                ? {
+                    kind: "image",
+                    src: option.image.src,
+                    alt: option.image.alt,
+                    packshot: option.image.packshot,
+                  }
                 : undefined
             }
             visualLayout={isGrid && option.image ? "grid" : undefined}

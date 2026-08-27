@@ -4,6 +4,7 @@ import {
   planProductRoleSchema,
   productFrequencySchema,
 } from "../products/contracts"
+import { toolAssetSchema, toolGuidanceSchema, toolOccurrenceSchema } from "../tools/contracts"
 
 const id = z.string().uuid()
 const boundedText = z.string().min(1).max(256)
@@ -162,6 +163,32 @@ export const routinePayloadV1Schema = z
   })
   .strict()
 
+/**
+ * Strict Routine V2: exactly V1 plus the parallel Hair Tools authority.
+ *
+ * V1 stays untouched and strict. Readers accept the discriminated union below,
+ * so a stored V1 payload keeps loading unchanged while a Tools-enabled owner
+ * gets one durable, versioned source for Routine and Anwendung alike.
+ *
+ * The embedded Tool rows follow the Tool plan's own `schemaVersion` (3 since
+ * `D7`: graph anchors plus `A09` session keys). V2 is not re-versioned for
+ * that: the Tools rollout is unshipped and default-off, so a V2 payload only
+ * exists in pre-release dev rows and is recomputed rather than migrated.
+ */
+export const routinePayloadV2Schema = routinePayloadV1Schema
+  .extend({
+    schemaVersion: z.literal(2),
+    toolAssets: z.array(toolAssetSchema).max(32),
+    toolOccurrences: z.array(toolOccurrenceSchema).max(64),
+    toolGuidance: z.array(toolGuidanceSchema).max(32),
+  })
+  .strict()
+
+export const routinePayloadSchema = z.discriminatedUnion("schemaVersion", [
+  routinePayloadV1Schema,
+  routinePayloadV2Schema,
+])
+
 export const routineProposalDeltaV1Schema = z
   .object({
     schemaVersion: z.literal(1),
@@ -172,6 +199,28 @@ export const routineProposalDeltaV1Schema = z
   .strict()
 
 export type RoutinePayloadV1 = z.infer<typeof routinePayloadV1Schema>
+export type RoutinePayloadV2 = z.infer<typeof routinePayloadV2Schema>
+/** Every Routine reader accepts this union; only writers pick a version. */
+export type RoutinePayload = z.infer<typeof routinePayloadSchema>
+
+export function isRoutinePayloadV2(payload: RoutinePayload): payload is RoutinePayloadV2 {
+  return payload.schemaVersion === 2
+}
+
+/** Tool rows of a payload, or an empty list for a strict V1 Routine. */
+export function routineToolAssets(payload: RoutinePayload): RoutinePayloadV2["toolAssets"] {
+  return isRoutinePayloadV2(payload) ? payload.toolAssets : []
+}
+
+export function routineToolOccurrences(
+  payload: RoutinePayload,
+): RoutinePayloadV2["toolOccurrences"] {
+  return isRoutinePayloadV2(payload) ? payload.toolOccurrences : []
+}
+
+export function routineToolGuidance(payload: RoutinePayload): RoutinePayloadV2["toolGuidance"] {
+  return isRoutinePayloadV2(payload) ? payload.toolGuidance : []
+}
 export type RoutineProposalDeltaV1 = z.infer<typeof routineProposalDeltaV1Schema>
 
 export type RoutineCatalogProductPresentation = {
@@ -239,13 +288,13 @@ export type PersonalPlanRoutineView = {
   personalPlanId: string
   planRevision: number
   sourceRevision: number
-  activeVersion: { id: string; payload: RoutinePayloadV1 } | null
+  activeVersion: { id: string; payload: RoutinePayload } | null
   pendingProposal: {
     id: string
     candidateVersionId: string
     sourceRevision: number
     delta: RoutineProposalDeltaV1
-    candidate: RoutinePayloadV1
+    candidate: RoutinePayload
   } | null
   repair?: {
     routineVersionId: string

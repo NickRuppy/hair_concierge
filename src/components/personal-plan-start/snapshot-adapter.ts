@@ -27,6 +27,13 @@ import {
   roleFrequencyLabel,
 } from "@/lib/personal-plan/decision-presentation"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
+import { buildToolPlan } from "@/lib/personal-plan/tools/assets"
+import { EMPTY_TOOL_CARE_FACTS } from "@/lib/personal-plan/tools/facts"
+import { buildStage1ToolBlocks } from "@/lib/personal-plan/tools/presentation"
+import {
+  computeToolRoutes,
+  toolProfileFactsFromPlanProfile,
+} from "@/lib/personal-plan/tools/routes"
 
 import {
   isNeedCardGroup,
@@ -37,6 +44,7 @@ import {
   type PlanStartCardViewModel,
 } from "./plan-start-cards"
 import type { NeedPlanScreenViewModel } from "./need-plan-screen"
+import type { ToolBlockViewModel } from "@/lib/personal-plan/tools/presentation"
 import type { PlanStartReadyViewModel } from "./plan-start-flow"
 
 const ROLE_PILLS: Partial<Record<PlanProductRole, string>> = {
@@ -151,6 +159,7 @@ function screenFor(
   kind: "basis" | "optional",
   cards: PlanStartCardViewModel[],
   hasOptionalPage: boolean,
+  toolBlock: ToolBlockViewModel | null = null,
 ): NeedPlanScreenViewModel {
   const countLabel = countLabelFor(kind, entryCount(cards))
 
@@ -166,6 +175,10 @@ function screenFor(
     countLabel,
     progress: kind === "basis" && hasOptionalPage ? 50 : 100,
     cards,
+    // Tool-only properties are absent while the rollout is off, so the off view
+    // model is shape-identical to the released one rather than merely looking
+    // the same.
+    ...(toolBlock ? { toolBlock } : {}),
   }
 }
 
@@ -193,8 +206,16 @@ function asInitialNeedPlanSnapshot(value: unknown): InitialNeedPlanSnapshot | nu
   return value as InitialNeedPlanSnapshot
 }
 
+/**
+ * Hair Tools is a parallel plan domain behind its own server-owned rollout. The
+ * flag defaults to `false` so an unwired caller renders the exact current
+ * ten-category Idealplan.
+ */
+export type PlanStartAdapterOptions = { toolsEnabled?: boolean }
+
 export function adaptInitialNeedSnapshotToPlanStartViewModel(
   value: unknown,
+  options: PlanStartAdapterOptions = {},
 ): PlanStartReadyViewModel | null {
   const snapshot = asInitialNeedPlanSnapshot(value)
   if (!snapshot) return null
@@ -219,6 +240,10 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
   const visibleBasisCards = pausedOnlyOptional ? [...basisCards, ...optionalCards] : basisCards
   const visibleOptionalCards = pausedOnlyOptional ? [] : optionalCards
   const hasOptionalPage = visibleOptionalCards.length > 0
+  const toolBlocks = stage1ToolBlocks(snapshot, {
+    toolsEnabled: options.toolsEnabled === true,
+    hasOptionalPage,
+  })
   return {
     sourceInputHash: snapshot.inputHash,
     // The fork screen has to name the Stage-2 defaults direct acceptance would
@@ -226,9 +251,56 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
     // This is the very context the persisted Stage-2 draft derives from the
     // same initial snapshot, so both paths describe one truth.
     stage2TriggerContext: deriveStage2TriggerContext(snapshot),
-    basis: screenFor("basis", visibleBasisCards, hasOptionalPage),
-    optional: hasOptionalPage ? screenFor("optional", visibleOptionalCards, hasOptionalPage) : null,
+    ...(options.toolsEnabled === true
+      ? {
+          toolsEnabled: true as const,
+          toolContext: {
+            profile: toolProfileFactsFromPlanProfile(snapshot.profile),
+            scalpApplicationJob: hasSectionedScalpApplication(snapshot),
+          },
+        }
+      : {}),
+    basis: screenFor("basis", visibleBasisCards, hasOptionalPage, toolBlocks.basis),
+    optional: hasOptionalPage
+      ? screenFor("optional", visibleOptionalCards, hasOptionalPage, toolBlocks.optional)
+      : null,
   }
+}
+
+/**
+ * Stage 1 reads only what the initial quiz can prove. Drying, heat, towel and
+ * Night-Protection answers belong to Feinschliff, so their routes stay absent
+ * here rather than being guessed.
+ */
+function stage1ToolBlocks(
+  snapshot: InitialNeedPlanSnapshot,
+  options: { toolsEnabled: boolean; hasOptionalPage: boolean },
+): { basis: ToolBlockViewModel | null; optional: ToolBlockViewModel | null } {
+  if (!options.toolsEnabled) return { basis: null, optional: null }
+  try {
+    const routes = computeToolRoutes({
+      profile: toolProfileFactsFromPlanProfile(snapshot.profile),
+      care: EMPTY_TOOL_CARE_FACTS,
+      inventory: {},
+      scalpApplicationJob: hasSectionedScalpApplication(snapshot),
+    })
+    return buildStage1ToolBlocks(buildToolPlan({ routes }), {
+      hasOptionalPage: options.hasOptionalPage,
+    })
+  } catch {
+    // A Tool projection failure must never take down the released Idealplan.
+    return { basis: null, optional: null }
+  }
+}
+
+/** Only a real applied scalp role creates a controlled-placement job. */
+function hasSectionedScalpApplication(snapshot: InitialNeedPlanSnapshot): boolean {
+  const scalpCare = snapshot.decisions.find((decision) => decision.category === "scalp_care")
+  if (!scalpCare || scalpCare.needTier === "not_needed" || scalpCare.needTier === null) return false
+  return scalpCare.roles.some(
+    (role) =>
+      role === "scalp_comfort" || role === "scalp_exfoliant" || role === "density_claim_tonic",
+  )
 }
 
 function withRecommendation(

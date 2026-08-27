@@ -1,4 +1,6 @@
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
+import type { ToolFamily, ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
+import type { ToolFormPageKey } from "@/lib/personal-plan/tools/labels"
 import type {
   NightProtection,
   TowelMaterial,
@@ -85,7 +87,45 @@ export type PersonalPlanRefinementAnswersV1 = {
   additionalHeatTools?: AdditionalHeatTool[]
   heatEvents?: Record<string, HeatEventAnswer>
   nightProtection?: NightProtection[]
+  /**
+   * Families the user indicated they own something in, captured by the overview.
+   *
+   * Family-keyed on purpose: the four Feinschliff sections are presentation
+   * headers and must never be persisted. Absent means the overview was never
+   * submitted (unknown); present means it was, and every family outside this
+   * list has been materialized as an explicit `[]` in `toolForms`.
+   */
+  toolFamiliesWithSomething?: ToolFamily[]
+  /**
+   * Broad reported forms per persisted Tool family. An absent key is `unknown`
+   * (skipped or migrated); `[]` is the user's explicit `Nichts davon`.
+   *
+   * Values are `ToolReportedForm`: a family may carry an answer-only token
+   * („Nur Finger", `D9b`) beside its real forms. Route logic strips those.
+   */
+  toolForms?: Partial<Record<ToolFamily, ToolReportedForm[]>>
 }
+
+/**
+ * The `D8` path version of the persisted refinement contract (standing rule,
+ * ruled 2026-08-24).
+ *
+ * Any change to a persisted answer key, or to the meaning of a question's
+ * completion predicate, bumps this and ships a decoder. Completed rows validate
+ * against their completion-time contract, never against today's — the load-time
+ * half of that is `createStage2RefinementSession`, which trusts the stored
+ * `status` + handoff instead of re-deriving completeness.
+ *
+ * Enforcement: `tests/personal-plan-stage2-answer-schema-snapshot.test.ts`
+ * pins the answer keys and the required-question semantics against this number.
+ *
+ * | Version | Change | Decoder |
+ * | --- | --- | --- |
+ * | 1 | the shipped Feinschliff contract | `toolSections` → `toolFamiliesWithSomething` (WS5/C7) |
+ * | 2 | `drying_routes` no longer completes on `[]` (`D2`); `toolForms.brushes_combs` may carry `fingers` (`D9b`); `heatEvents["heat:diffuser_airflow_shaping"].protectionConsistency` is forbidden (`R1`) | legacy `[]` drying answers stay readable but stop completing the question; an absent `fingers` token is simply absent; the diffuser source's stored `protectionConsistency` is dropped on read |
+ * | 3 | `heated_styling` and `heatless_styling` capture on ONE page each, so `tools:heated_styling:2` and `tools:heatless_styling:2` no longer exist and `tools:<family>:1` now means the whole family (Nick ruling 2026-08-26) | `decodeStage2CompletedQuestionIds` (version-aware): for a row stored under version < 3 the merged page counts as completed only when BOTH old page ids were completed; a row stored under version >= 3 wrote exactly the merged id and keeps it as-is. Orphaned `:2` ids are dropped either way. Answers are untouched — `toolForms` was always family-keyed, never page-keyed |
+ */
+export const STAGE2_QUESTION_PATH_VERSION = 3
 
 export type Stage2StaticQuestionId =
   | "current_product_categories"
@@ -99,13 +139,30 @@ export type Stage2StaticQuestionId =
   | "additional_heat_tools"
   | "night_protection"
 export type Stage2HeatEventQuestionId = `heat:${Stage2HeatEventSource}`
-export type Stage2QuestionId = Stage2StaticQuestionId | Stage2HeatEventQuestionId
+export type Stage2ToolOverviewQuestionId = "tools_overview"
+export type Stage2ToolFormQuestionId = `tools:${ToolFormPageKey}`
+export type Stage2ToolQuestionId = Stage2ToolOverviewQuestionId | Stage2ToolFormQuestionId
+export type Stage2QuestionId =
+  | Stage2StaticQuestionId
+  | Stage2HeatEventQuestionId
+  | Stage2ToolQuestionId
+
+export const STAGE2_TOOL_OVERVIEW_QUESTION_ID: Stage2ToolOverviewQuestionId = "tools_overview"
+
+export function isStage2ToolQuestionId(id: Stage2QuestionId): id is Stage2ToolQuestionId {
+  return id === STAGE2_TOOL_OVERVIEW_QUESTION_ID || id.startsWith("tools:")
+}
 export type Stage2AnswerKey = keyof PersonalPlanRefinementAnswersV1
 
 export type Stage2TriggerContext = {
   relevantCategories: Stage2ProductCategory[]
   hasReportedIrritatedScalp: boolean
   dryShampooBridgeEligibility: "unknown" | "eligible" | "ineligible"
+  /**
+   * Server-owned Hair Tools rollout. Absent/false keeps the exact current
+   * Feinschliff path; the browser never sets it.
+   */
+  toolsEnabled?: boolean
 }
 
 export type Stage2PathState = {

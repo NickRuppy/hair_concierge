@@ -1,7 +1,7 @@
-import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { RoutinePayload } from "@/lib/personal-plan/routine/contracts"
 import { cn } from "@/lib/utils"
 
-type RoutineItem = RoutinePayloadV1["items"][number]
+type RoutineItem = RoutinePayload["items"][number]
 
 export type RoutineStatus = {
   label: string

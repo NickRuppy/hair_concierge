@@ -7,6 +7,7 @@ export function RefinementBridge({
   nextHref,
   onBack,
   onContinue,
+  onRevisit,
   isContinuing = false,
   continueError,
 }: {
@@ -14,6 +15,13 @@ export function RefinementBridge({
   nextHref: "/plan-start"
   onBack?: () => void
   onContinue?: () => void
+  /**
+   * Re-opens the completed Feinschliff at its first question with every answer
+   * prefilled (Nick sign-off 2026-08-26). Only offered on an explicit
+   * re-entry (`/plan-start?refine=1`) — the fresh-completion bridge keeps its
+   * single forward action.
+   */
+  onRevisit?: () => void
   isContinuing?: boolean
   continueError?: string
 }) {
@@ -27,6 +35,13 @@ export function RefinementBridge({
         onBack={onBack}
         backLabel="Zur letzten Frage"
         errorMessage={continueError}
+        secondaryActionLabel={onRevisit ? "Feinschliff überarbeiten" : undefined}
+        onSecondaryAction={onRevisit}
+        secondaryHint={
+          onRevisit
+            ? "Deine Antworten bleiben erhalten — du kannst einzelne Angaben ändern."
+            : undefined
+        }
       />
     </div>
   )

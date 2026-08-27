@@ -11,17 +11,36 @@ import { Button } from "@/components/ui/button"
 import { InfoTip } from "@/components/ui/info-tip"
 import { requiresStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
-import type {
-  HeatEventAnswer,
-  PersonalPlanRefinementAnswersV1,
-  ProductFrequency,
-  Stage2HeatEventSource,
-  Stage2ProductCategory,
-  Stage2QuestionId,
-  TowelMaterial,
-  TowelTechnique,
-  WetWashFrequency,
+import {
+  isStage2ToolQuestionId,
+  STAGE2_TOOL_OVERVIEW_QUESTION_ID,
+  type HeatEventAnswer,
+  type PersonalPlanRefinementAnswersV1,
+  type ProductFrequency,
+  type Stage2HeatEventSource,
+  type Stage2ProductCategory,
+  type Stage2QuestionId,
+  type TowelMaterial,
+  type TowelTechnique,
+  type WetWashFrequency,
 } from "@/lib/personal-plan/refinement/types"
+import type { ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
+import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import {
+  TOOL_NOTHING_LABEL,
+  TOOL_OVERVIEW_LEAD,
+  TOOL_OVERVIEW_OPTIONS,
+  TOOL_OVERVIEW_TITLE,
+  TOOL_SECTION_LABEL,
+  toolFormPagePresentation,
+  toolFormPreselection,
+  toolOverviewPreselection,
+} from "@/lib/personal-plan/tools/stage2"
+import {
+  toolSectionsForFamilies,
+  type ToolOverviewSectionKey,
+} from "@/lib/personal-plan/tools/labels"
+import { ToolVisualMultiSelect } from "./tool-inventory"
 import { cn } from "@/lib/utils"
 
 import {
@@ -84,6 +103,23 @@ export function getAnswerForQuestion(
   questionId: Stage2QuestionId,
 ): unknown {
   if (questionId.startsWith("heat:")) return answers.heatEvents?.[questionId]
+  if (questionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
+    // Persisted as families; the overview renders presentation sections.
+    // Unanswered falls back to what the care answers already imply (`D3a`
+    // condition 1) — a starting value the user can untick, never an answer of
+    // its own until they submit the page.
+    return answers.toolFamiliesWithSomething
+      ? toolSectionsForFamilies(answers.toolFamiliesWithSomething)
+      : toolOverviewPreselection(projectToolCareFacts(answers))
+  }
+  if (isStage2ToolQuestionId(questionId)) {
+    const page = toolFormPagePresentation(questionId.slice("tools:".length))
+    if (!page) return undefined
+    return (
+      answers.toolForms?.[page.family] ??
+      toolFormPreselection(projectToolCareFacts(answers), page.family)
+    )
+  }
   switch (questionId) {
     case "current_product_categories":
       return answers.currentProductCategories
@@ -115,7 +151,13 @@ export function isLocalAnswerComplete(questionId: Stage2QuestionId, answer: unkn
     if (!heatAnswer?.frequency) return false
     return requiresStage2HeatProtection(source) ? Boolean(heatAnswer.protectionConsistency) : true
   }
-  if (Array.isArray(answer)) return questionId === "oil_purposes" ? answer.length > 0 : true
+  // `D2`: the drying question lost „Nichts davon" and now requires at least one
+  // way the hair actually dries.
+  if (Array.isArray(answer)) {
+    return questionId === "oil_purposes" || questionId === "drying_routes"
+      ? answer.length > 0
+      : true
+  }
   if (questionId === "towel_handling") {
     const towel = answer as { material?: TowelMaterial; technique?: TowelTechnique } | undefined
     if (!towel?.material) return false
@@ -262,6 +304,46 @@ function renderQuestionBody({
   body: ReactNode
   note?: ReactNode
 } {
+  if (questionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
+    return {
+      sectionLabel: "Was du heute benutzt",
+      trigger: TOOL_SECTION_LABEL,
+      title: TOOL_OVERVIEW_TITLE,
+      lead: TOOL_OVERVIEW_LEAD,
+      body: (
+        <ToolVisualMultiSelect
+          key={questionId}
+          ariaLabel={TOOL_OVERVIEW_TITLE}
+          options={TOOL_OVERVIEW_OPTIONS}
+          selected={(answer as ToolOverviewSectionKey[] | undefined) ?? null}
+          onChange={(next) => onLocalAnswerChange(next)}
+          nothingLabel={TOOL_NOTHING_LABEL}
+          answered={session.answers.toolFamiliesWithSomething !== undefined}
+        />
+      ),
+    }
+  }
+  if (isStage2ToolQuestionId(questionId)) {
+    const page = toolFormPagePresentation(questionId.slice("tools:".length))
+    if (!page) throw new Error(`Unknown Stage 2 refinement question: ${questionId}`)
+    return {
+      sectionLabel: "Was du heute benutzt",
+      trigger: page.sectionLabel,
+      title: page.title,
+      lead: page.lead,
+      body: (
+        <ToolVisualMultiSelect
+          key={questionId}
+          ariaLabel={page.title}
+          options={page.options}
+          selected={(answer as ToolReportedForm[] | undefined) ?? null}
+          onChange={(next) => onLocalAnswerChange(next)}
+          nothingLabel={TOOL_NOTHING_LABEL}
+          answered={session.answers.toolForms?.[page.family] !== undefined}
+        />
+      ),
+    }
+  }
   if (questionId.startsWith("heat:")) {
     const source = questionId.slice("heat:".length) as Stage2HeatEventSource
     const heatAnswer = (answer ?? {}) as HeatEventAnswer
@@ -477,6 +559,7 @@ function renderQuestionBody({
               </h3>
               <RefinementOptions
                 options={TOWEL_MATERIAL_OPTIONS}
+                layout="grid"
                 value={towel.material}
                 onChange={(material) =>
                   onLocalAnswerChange(
@@ -505,14 +588,15 @@ function renderQuestionBody({
       return {
         sectionLabel: "Wie du dein Haar behandelst",
         title: "Wie trocknet dein Haar meistens weiter?",
+        // `D2`: „Nichts davon" is gone and at least one route is required. The
+        // ratified mockup keeps this lead and communicates the forced pick
+        // through the disabled „Weiter" — no new sentence was signed off.
         lead: "Mehrere Wege dürfen parallel vorkommen.",
         body: (
           <RefinementOptions
             options={DRYING_ROUTE_OPTIONS}
             value={answer as string[] | undefined}
             multi
-            allowNone
-            noneDescription="Keiner dieser Wege trifft gerade zu."
             onChange={onLocalAnswerChange}
           />
         ),
@@ -667,6 +751,8 @@ function ActionDock({
 }
 
 export function getQuestionFamily(questionId: Stage2QuestionId) {
+  // The visual Tool trip reports as one bounded family; page keys stay internal.
+  if (isStage2ToolQuestionId(questionId)) return "tool_inventory"
   if (questionId === "current_product_categories") return "product_categories"
   if (questionId === "wet_wash_frequency") return "wash_rhythm"
   if (questionId === "oil_purposes") return "oil_role"
@@ -682,6 +768,7 @@ export function getQuestionFamily(questionId: Stage2QuestionId) {
 }
 
 export function getQuestionSection(questionId: Stage2QuestionId) {
+  if (isStage2ToolQuestionId(questionId)) return "current_products"
   return questionId === "towel_handling" ||
     questionId === "drying_routes" ||
     questionId === "additional_heat_tools" ||

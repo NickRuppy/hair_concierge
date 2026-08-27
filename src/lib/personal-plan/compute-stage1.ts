@@ -15,6 +15,9 @@ import {
 } from "./input"
 import { buildPlanNeedAssessment } from "./needs"
 import { composeStage1Portfolio } from "./portfolio"
+import { buildToolPlan } from "./tools/assets"
+import type { ToolCareFacts, ToolInventory } from "./tools/facts"
+import { computeToolRoutes, toolProfileFactsFromPlanProfile } from "./tools/routes"
 import {
   STAGE1_CATEGORY_ORDER,
   type InitialNeedPlanSnapshot,
@@ -30,6 +33,11 @@ type ComputeNeedPlanInput = {
   computationVersion: string
   createdAt: string
   routine?: PlanRoutineContext
+  /**
+   * Present only while the Hair Tools rollout is on for this owner. Absent
+   * leaves the snapshot exactly as it is in production today.
+   */
+  tools?: { care: ToolCareFacts; inventory: ToolInventory }
 }
 
 export type ComputeNeedPlanResult =
@@ -93,6 +101,16 @@ export function computeNeedPlan(input: ComputeNeedPlanInput): ComputeNeedPlanRes
     computeDeepCleansingDecision(profile, assessments),
   ]
   const { decisions, coverage } = composeStage1Portfolio(profile, localDecisions)
+  const toolPlan = input.tools
+    ? buildToolPlan({
+        routes: computeToolRoutes({
+          profile: toolProfileFactsFromPlanProfile(profile),
+          care: input.tools.care,
+          inventory: input.tools.inventory,
+          scalpApplicationJob: hasSectionedScalpApplication(decisions),
+        }),
+      })
+    : null
 
   return {
     status: "ready",
@@ -112,6 +130,17 @@ export function computeNeedPlan(input: ComputeNeedPlanInput): ComputeNeedPlanRes
       productPreviews: [],
       renderedOrder: renderedOrder(decisions),
       deferredFacts: collectDeferredFacts(decisions),
+      ...(toolPlan ? { toolPlan } : {}),
     },
   }
+}
+
+/** Only a real applied scalp role creates a controlled-placement Tool job. */
+function hasSectionedScalpApplication(decisions: readonly PlanCategoryDecision[]): boolean {
+  const scalpCare = decisions.find((decision) => decision.category === "scalp_care")
+  if (!scalpCare || scalpCare.needTier === "not_needed" || scalpCare.needTier === null) return false
+  return scalpCare.roles.some(
+    (role) =>
+      role === "scalp_comfort" || role === "scalp_exfoliant" || role === "density_claim_tonic",
+  )
 }

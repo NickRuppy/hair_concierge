@@ -11,6 +11,7 @@ import type {
   PlanReasonFact,
   PlanRepairSupportLevel,
 } from "../types"
+import { resolveVolumeDirection, volumeDirectionInputFor } from "../volume-direction"
 
 const WEIGHT_ORDER: readonly PlanCareWeight[] = ["light", "medium", "rich"] as const
 
@@ -120,12 +121,9 @@ function targetWeight(profile: PlanProfile): {
   }
 
   if (has(profile.goals, "volume_balance")) {
-    const controlRoute =
-      profile.hair.texture === "curly" ||
-      profile.hair.texture === "coily" ||
-      profile.hair.thickness === "coarse" ||
-      (profile.hair.texture === "wavy" &&
-        (has(profile.goals, "shape_definition") || has(profile.concerns, "lost_shape")))
+    // Shared with the Hair Tools styling routes: one profile must never mean
+    // "more volume" here and "less volume" there.
+    const controlRoute = resolveVolumeDirection(volumeDirectionInputFor(profile)) === "control"
 
     weight = shiftWeight(weight, controlRoute ? 1 : -1)
     ruleIds.push(controlRoute ? "conditioner.weight.control" : "conditioner.weight.volume_up")

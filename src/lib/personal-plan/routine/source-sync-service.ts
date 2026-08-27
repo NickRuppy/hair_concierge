@@ -16,7 +16,7 @@ import {
 import { semanticHash } from "./canonicalize"
 import { resolveRoutineItemCadence } from "./cadence"
 import type { RoutineCadenceAuthorityReader } from "./cadence-authority"
-import { routinePayloadV1Schema } from "./contracts"
+import { parseStoredRoutinePayload } from "./decode-stored"
 import {
   reconcileRoutineUserProductSource,
   type RoutineSourceUserProduct,
@@ -54,7 +54,7 @@ export function parseRoutineSourceBaseSnapshots(input: {
 }): RoutineSourceBase | null {
   try {
     return {
-      routine: routinePayloadV1Schema.parse(input.routine) as RoutineCompiledPayload,
+      routine: parseStoredRoutinePayload(input.routine) as RoutineCompiledPayload,
       portfolio: parseProposedProductPortfolio(input.portfolio, { includeV4: true }),
       sourceProductDraftId: String(input.sourceProductDraftId),
       sourceProductDraftRevision: Number(input.sourceProductDraftRevision),

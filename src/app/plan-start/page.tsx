@@ -7,6 +7,7 @@ import type {
   PlanStartReadyViewModel,
 } from "@/components/personal-plan-start/plan-start-flow"
 import { adaptInitialNeedSnapshotToPlanStartViewModel } from "@/components/personal-plan-start/snapshot-adapter"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
@@ -220,14 +221,29 @@ export default async function PlanStartPage({
       loadExistingRefinementSession: async (userId) =>
         loadExistingStage2RefinementSession({
           userId,
-          persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
+          persistence: createSupabaseStage2RefinementPersistence(createAdminClient(), {
+            toolsEnabled: (userId) =>
+              isPersonalPlanToolsEnabledForUser(
+                userId,
+                createAdminClient() as unknown as Parameters<
+                  typeof isPersonalPlanToolsEnabledForUser
+                >[1],
+              ),
+          }),
         }),
       loadStage1Plan: async (userId) => {
         const result = await createStage1PersistenceService(
           createStage1SupabaseDependencies(createAdminClient() as never),
         ).loadOrCreate({ userId })
         if (result.status !== "completed") return null
-        const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot)
+        const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot, {
+          toolsEnabled: await isPersonalPlanToolsEnabledForUser(
+            userId,
+            createAdminClient() as unknown as Parameters<
+              typeof isPersonalPlanToolsEnabledForUser
+            >[1],
+          ),
+        })
         return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
       },
     },

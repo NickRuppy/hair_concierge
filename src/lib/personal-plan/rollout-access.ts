@@ -4,7 +4,11 @@ import {
   isMissingPersonalPlanFieldTestRelation,
   isMissingRegularQuizFieldTestRelation,
 } from "@/lib/personal-plan-field-test/errors"
-import { resolvePersonalPlanAppV1InternalEmails } from "./release"
+import {
+  canAccessPersonalPlanTools,
+  resolvePersonalPlanAppV1InternalEmails,
+  resolvePersonalPlanToolsRollout,
+} from "./release"
 
 export type PersonalPlanInternalUserClient = {
   from: (table: "profiles") => {
@@ -85,12 +89,7 @@ export async function isActivePersonalPlanFieldTestOwner(
     now,
   )
   if (personalPlanOwner) return true
-  return hasActiveFieldTestOwnerInTable(
-    userId,
-    client,
-    "regular_quiz_test_enrollments",
-    now,
-  )
+  return hasActiveFieldTestOwnerInTable(userId, client, "regular_quiz_test_enrollments", now)
 }
 
 async function hasActiveFieldTestOwnerInTable(
@@ -111,8 +110,7 @@ async function hasActiveFieldTestOwnerInTable(
     if (
       (table === "personal_plan_test_enrollments" &&
         isMissingPersonalPlanFieldTestRelation(error)) ||
-      (table === "regular_quiz_test_enrollments" &&
-        isMissingRegularQuizFieldTestRelation(error))
+      (table === "regular_quiz_test_enrollments" && isMissingRegularQuizFieldTestRelation(error))
     ) {
       return false
     }
@@ -170,4 +168,27 @@ export async function isPersonalPlanAppV1AllowedForUser(
   void _userId
   void _client
   return true
+}
+
+/**
+ * Server-owned gate for the parallel Hair Tools domain. Fails closed: an
+ * unreadable identity, an invalid environment value or a missing rollout all
+ * resolve to "off". Browser answers never reach this decision.
+ */
+export async function isPersonalPlanToolsEnabledForUser(
+  userId: string,
+  client?: PersonalPlanInternalUserClient,
+): Promise<boolean> {
+  const rollout = resolvePersonalPlanToolsRollout()
+  if (rollout === "off") return false
+  if (rollout === "all") return true
+  if (!client) return false
+  try {
+    return canAccessPersonalPlanTools({
+      rollout,
+      isInternal: await isPersonalPlanInternalUser(userId, client),
+    })
+  } catch {
+    return false
+  }
 }

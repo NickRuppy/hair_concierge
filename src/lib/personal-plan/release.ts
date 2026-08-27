@@ -5,6 +5,7 @@ type PersonalPlanAppReleaseEnvironment = {
   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
   PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2?: string
   PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED?: string
+  PERSONAL_PLAN_TOOLS_ROLLOUT?: string
 }
 
 export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
@@ -98,4 +99,29 @@ export function getPersonalPlanNewBuyerCohortCutoff(
   const canonical = parsed.toISOString()
   const comparableCanonical = value.includes(".") ? canonical : canonical.replace(".000Z", "Z")
   return comparableCanonical === value ? parsed : null
+}
+
+/**
+ * Server-owned, fail-closed rollout boundary for the parallel Hair Tools domain.
+ * Browser answers and query parameters never grant access: the only inputs are
+ * this environment value and the existing internal/admin identity.
+ */
+export const PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES = ["off", "internal", "all"] as const
+export type PersonalPlanToolsRollout = (typeof PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES)[number]
+
+export function resolvePersonalPlanToolsRollout(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): PersonalPlanToolsRollout {
+  const value = environment.PERSONAL_PLAN_TOOLS_ROLLOUT?.trim()
+  return PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES.includes(value as PersonalPlanToolsRollout)
+    ? (value as PersonalPlanToolsRollout)
+    : "off"
+}
+
+export function canAccessPersonalPlanTools(input: {
+  rollout: PersonalPlanToolsRollout
+  isInternal: boolean
+}): boolean {
+  if (input.rollout === "off") return false
+  return input.rollout === "all" || input.isInternal
 }

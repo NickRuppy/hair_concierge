@@ -148,19 +148,42 @@ export function QuizOptionCard({
             )}
           >
             {visual.kind === "image" ? (
-              <Image
-                alt={visual.alt}
-                className={cn(
-                  "transition duration-300 group-hover:scale-[1.02]",
-                  isThumbnail ? "object-cover object-center" : "object-cover object-[center_38%]",
-                )}
-                fill
-                priority={visual.priority}
-                sizes={
-                  isThumbnail ? "120px" : "(max-width: 640px) 45vw, (max-width: 768px) 280px, 320px"
-                }
-                src={visual.src}
-              />
+              visual.packshot ? (
+                // Tool Bildkarten are 1.9:1 letterbox-blur compositions (see
+                // plans/tool-bildkarten.md): the packshot sits on a hard-blurred
+                // copy of itself. A centered square window crops back to exactly
+                // the original packshot — rendering the full 1.9 canvas exposes
+                // the blur panels as ghost shapes on these wide cards. Same
+                // treatment as the capture cards in `ToolVisualMultiSelect`.
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="relative h-full max-w-full overflow-hidden aspect-square [mask-image:linear-gradient(to_right,transparent,black_14%,black_86%,transparent)]">
+                    <Image
+                      alt={visual.alt}
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                      height={320}
+                      priority={visual.priority}
+                      src={visual.src}
+                      width={320}
+                    />
+                  </span>
+                </span>
+              ) : (
+                <Image
+                  alt={visual.alt}
+                  className={cn(
+                    "transition duration-300 group-hover:scale-[1.02]",
+                    isThumbnail ? "object-cover object-center" : "object-cover object-[center_38%]",
+                  )}
+                  fill
+                  priority={visual.priority}
+                  sizes={
+                    isThumbnail
+                      ? "120px"
+                      : "(max-width: 640px) 45vw, (max-width: 768px) 280px, 320px"
+                  }
+                  src={visual.src}
+                />
+              )
             ) : (
               <HairPortraitVisual visual={visual} />
             )}

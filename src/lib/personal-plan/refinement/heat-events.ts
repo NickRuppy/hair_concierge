@@ -49,8 +49,28 @@ export function getStage2HeatEventDefinition(
   return STAGE2_HEAT_EVENT_DEFINITIONS[source]
 }
 
+/**
+ * Sources whose heat-protection question was asked under an earlier contract and
+ * is no longer asked (`R1`, ruled 2026-08-24; path version 2).
+ *
+ * `diffuser_or_airflow_shaping` is read as diffuser drying (`D2a`), and `A11`
+ * puts diffuser drying at tier `not_needed` — so asking „wie konsequent nutzt du
+ * Hitzeschutz?" for it contradicted the tier it feeds. Per `D8` the change is
+ * decoded rather than migrated: a stored value is ignored on read, and a row
+ * completed while the question was still asked stays complete.
+ */
+const STAGE2_LEGACY_HEAT_PROTECTION_SOURCES = new Set<Stage2HeatEventSource>([
+  "diffuser_airflow_shaping",
+])
+
 export function requiresStage2HeatProtection(source: Stage2HeatEventSource): boolean {
+  if (STAGE2_LEGACY_HEAT_PROTECTION_SOURCES.has(source)) return false
   return getStage2HeatEventDefinition(source).route !== "ordinary_airflow"
+}
+
+/** Whether a stored `protectionConsistency` for this source is legacy noise (`R1`). */
+export function ignoresStoredStage2HeatProtection(source: Stage2HeatEventSource): boolean {
+  return STAGE2_LEGACY_HEAT_PROTECTION_SOURCES.has(source)
 }
 
 export type ProjectedStage2HeatEvent = {
@@ -77,9 +97,21 @@ export function projectStage2HeatEvents(
     ) {
       throw new Error(`Incomplete heat event: ${id}`)
     }
-    if (!requiresStage2HeatProtection(source) && answer.protectionConsistency !== undefined) {
+    if (
+      !requiresStage2HeatProtection(source) &&
+      answer.protectionConsistency !== undefined &&
+      !ignoresStoredStage2HeatProtection(source)
+    ) {
       throw new Error(`Ordinary airflow cannot have heat protection consistency: ${id}`)
     }
-    return { id, source, ...getStage2HeatEventDefinition(source), ...answer }
+    // `R1`: a value stored for a legacy source is dropped here, never read on.
+    const { protectionConsistency, ...event } = answer
+    return {
+      id,
+      source,
+      ...getStage2HeatEventDefinition(source),
+      ...event,
+      ...(requiresStage2HeatProtection(source) ? { protectionConsistency } : {}),
+    }
   })
 }

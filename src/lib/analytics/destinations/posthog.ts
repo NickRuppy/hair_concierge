@@ -471,6 +471,26 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       const data = payload as AppEventMap["scan_buy_clicked"]
       return { verdict: data.verdict }
     }
+    case "personal_plan_tools_checkpoint_viewed": {
+      const data = payload as AppEventMap["personal_plan_tools_checkpoint_viewed"]
+      return {
+        route_count: data.routeCount,
+        owned_count: data.ownedCount,
+        gap_count: data.gapCount,
+        unknown_count: data.unknownCount,
+      }
+    }
+    case "personal_plan_tools_inventory_entered": {
+      const data = payload as AppEventMap["personal_plan_tools_inventory_entered"]
+      return { section_count: data.sectionCount }
+    }
+    case "personal_plan_tools_inventory_completed": {
+      const data = payload as AppEventMap["personal_plan_tools_inventory_completed"]
+      return {
+        reported_family_count: data.reportedFamilyCount,
+        explicit_none_family_count: data.explicitNoneFamilyCount,
+      }
+    }
     case "subscription_started":
       return payload
     case "waitlist_signup_completed": {

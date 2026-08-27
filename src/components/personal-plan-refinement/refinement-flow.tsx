@@ -19,7 +19,16 @@ import {
   saveStage2SessionAnswer,
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
-import type { Stage2QuestionId, Stage2StaticQuestionId } from "@/lib/personal-plan/refinement/types"
+import {
+  isStage2ToolQuestionId,
+  type Stage2QuestionId,
+  type Stage2StaticQuestionId,
+  type Stage2ToolQuestionId,
+} from "@/lib/personal-plan/refinement/types"
+import { toolQuestionLabel } from "@/lib/personal-plan/tools/stage2"
+import { toolAnalytics } from "@/lib/personal-plan/tools/analytics"
+import { TOOL_OVERVIEW_SECTIONS } from "@/lib/personal-plan/tools/labels"
+import { STAGE2_TOOL_OVERVIEW_QUESTION_ID } from "@/lib/personal-plan/refinement/types"
 
 import { RefinementBridge } from "./refinement-bridge"
 import {
@@ -44,6 +53,7 @@ export type Stage2RefinementTelemetryFamily =
   | "heat_behavior"
   | "detangling_behavior"
   | "night_behavior"
+  | "tool_inventory"
 export type Stage2RefinementTelemetrySection = "current_products" | "hair_handling"
 
 export type Stage2RefinementTelemetryEvent =
@@ -174,6 +184,11 @@ export function RefinementFlow({
           section: getQuestionSection(nextQuestionId),
           family: getQuestionFamily(nextQuestionId),
         })
+        if (nextQuestionId === STAGE2_TOOL_OVERVIEW_QUESTION_ID) {
+          toolAnalytics.track("personal_plan_tools_inventory_entered", {
+            sectionCount: TOOL_OVERVIEW_SECTION_COUNT,
+          })
+        }
       }
     },
     [emit],
@@ -258,18 +273,49 @@ export function RefinementFlow({
         onSecondaryExit?.()
         return
       }
+      // A revisit of a still-complete session backs out to the bridge it came
+      // from; once an edit has re-opened the draft the session is in_progress
+      // again and the normal resume applies.
+      if (session.status === "complete" && bridge) {
+        setMode("bridge")
+        return
+      }
       setMode(session.completedQuestionIds.length > 0 ? "resume" : "invitation")
       return
     }
     setActiveFromSession(session, previousQuestionId)
     setMode("question")
-  }, [activeQuestionId, directEntry, onSecondaryExit, session, setActiveFromSession, status])
+  }, [
+    activeQuestionId,
+    bridge,
+    directEntry,
+    onSecondaryExit,
+    session,
+    setActiveFromSession,
+    status,
+  ])
 
   const handleBridgeBack = useCallback(() => {
     if (!session) return
     const finalQuestionId = getBridgeBackQuestionId(session)
     if (!finalQuestionId) return
     setActiveFromSession(session, finalQuestionId)
+    setHandoffStatus("idle")
+    setMode("question")
+  }, [session, setActiveFromSession])
+
+  /**
+   * „Feinschliff überarbeiten" (Nick sign-off 2026-08-26): walk the completed
+   * questionnaire again from its first question, every answer prefilled. The
+   * existing submit path does the rest — editing a completed question advances
+   * in order, the first save transparently re-opens the draft server-side, and
+   * the final page re-runs the completion.
+   */
+  const handleBridgeRevisit = useCallback(() => {
+    if (!session) return
+    const firstQuestionId = session.path.orderedQuestionIds[0]
+    if (!firstQuestionId) return
+    setActiveFromSession(session, firstQuestionId)
     setHandoffStatus("idle")
     setMode("question")
   }, [session, setActiveFromSession])
@@ -380,6 +426,9 @@ export function RefinementFlow({
           name: "personal_plan_stage2_answer_saved",
           family: getQuestionFamily(submittedQuestionId),
         })
+        if (isStage2ToolQuestionId(submittedQuestionId)) {
+          toolAnalytics.track("personal_plan_tools_inventory_completed", toolCounts(result.session))
+        }
         showCompletedStage2Session(result.session, result.handoff)
         return
       }
@@ -400,6 +449,9 @@ export function RefinementFlow({
         editedCompletedQuestion,
       )
       if (!nextQuestionId) {
+        if (isStage2ToolQuestionId(submittedQuestionId)) {
+          toolAnalytics.track("personal_plan_tools_inventory_completed", toolCounts(nextSession))
+        }
         setSession(nextSession)
         await completeStage2Session(nextSession)
         return
@@ -514,6 +566,13 @@ export function RefinementFlow({
           refinedVersionId={bridge.refinedVersionId}
           nextHref={bridge.nextHref}
           onBack={getBridgeBackQuestionId(session) ? handleBridgeBack : undefined}
+          // Only an explicit re-entry (autoHandoff off) offers the revisit; a
+          // just-finished Feinschliff keeps its single forward action.
+          onRevisit={
+            !autoHandoff && session?.path.orderedQuestionIds.length
+              ? handleBridgeRevisit
+              : undefined
+          }
           onContinue={onHandoff ? handleBridgeContinue : undefined}
           isContinuing={handoffStatus === "loading"}
           continueError={
@@ -538,7 +597,12 @@ export function RefinementFlow({
         />
       )
     }
-    const canGoBack = session.path.orderedQuestionIds.indexOf(activeQuestionId) > 0
+    // A revisit of a still-complete session can back out of question 1 to the
+    // bridge it came from (handleBack owns that branch); otherwise question 1
+    // exits to Stage 1.
+    const canGoBack =
+      session.path.orderedQuestionIds.indexOf(activeQuestionId) > 0 ||
+      (session.status === "complete" && Boolean(bridge))
     return (
       <div className="min-h-dvh bg-[var(--background)] text-[var(--text-body)]">
         <PersonalPlanJourneyHeader
@@ -612,6 +676,17 @@ export function getCompletedHandoffForLoadedSession(
     )
   }
   return session.completedHandoff
+}
+
+const TOOL_OVERVIEW_SECTION_COUNT = TOOL_OVERVIEW_SECTIONS.length
+
+/** Bounded counts only: how many families the user reported versus explicitly cleared. */
+function toolCounts(session: Stage2RefinementSession) {
+  const forms = Object.values(session.answers.toolForms ?? {})
+  return {
+    reportedFamilyCount: forms.filter((entry) => (entry?.length ?? 0) > 0).length,
+    explicitNoneFamilyCount: forms.filter((entry) => entry?.length === 0).length,
+  }
 }
 
 function chooseNextQuestion(
@@ -771,6 +846,7 @@ function initialRefinementView(
 
 function labelForQuestion(questionId: Stage2QuestionId): string {
   if (questionId.startsWith("heat:")) return "Häufigkeit und Hitzeschutz"
+  if (isStage2ToolQuestionId(questionId)) return toolQuestionLabel(questionId)
   const labels = {
     current_product_categories: "Aktuelle Produktarten",
     wet_wash_frequency: "Nasswasch-Rhythmus",
@@ -782,6 +858,9 @@ function labelForQuestion(questionId: Stage2QuestionId): string {
     drying_routes: "Trocknungswege",
     additional_heat_tools: "Zusätzliche Hitze-Tools",
     night_protection: "Nachtschutz",
-  } as const satisfies Record<Exclude<Stage2QuestionId, `heat:${string}`>, string>
+  } as const satisfies Record<
+    Exclude<Stage2QuestionId, `heat:${string}` | Stage2ToolQuestionId>,
+    string
+  >
   return labels[questionId as Stage2StaticQuestionId]
 }

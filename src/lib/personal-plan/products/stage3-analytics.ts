@@ -18,6 +18,7 @@ export type Stage3AnalyticsEventName =
   | "personal_plan_stage3_save_outcome"
   | "personal_plan_stage3_recovery_outcome"
   | "personal_plan_stage3_handoff"
+  | "personal_plan_tools_checkpoint_viewed"
 
 export type Stage3AnalyticsPort = {
   track<E extends Stage3AnalyticsEventName>(eventName: E, payload: AppEventMap[E]): void
@@ -36,6 +37,7 @@ type Stage3BaselineAnalyticsEventName =
   | "personal_plan_stage3_review_action"
   | "personal_plan_stage3_thumbnail_fallback"
   | "personal_plan_stage3_thumbnail_total_failure"
+  | "personal_plan_tools_checkpoint_viewed"
 
 const stage3BaselineEvents = new Set<Stage3BaselineAnalyticsEventName>([
   "personal_plan_stage3_journey_started",
@@ -46,6 +48,7 @@ const stage3BaselineEvents = new Set<Stage3BaselineAnalyticsEventName>([
   "personal_plan_stage3_review_action",
   "personal_plan_stage3_thumbnail_fallback",
   "personal_plan_stage3_thumbnail_total_failure",
+  "personal_plan_tools_checkpoint_viewed",
 ])
 
 type ConsentAwareStage3BaselineAnalyticsDeps = {

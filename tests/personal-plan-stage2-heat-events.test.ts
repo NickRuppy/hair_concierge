@@ -5,6 +5,7 @@ import {
   createStage2HeatEventId,
   getStage2HeatEventDefinition,
   getSelectedStage2HeatEventSources,
+  ignoresStoredStage2HeatProtection,
   projectStage2HeatEvents,
   requiresStage2HeatProtection,
 } from "../src/lib/personal-plan/refinement/heat-events"
@@ -32,6 +33,11 @@ test("all sources have the approved event mapping and source-order projection", 
   })
   assert.equal(requiresStage2HeatProtection("ordinary_blow_dry"), false)
   assert.equal(requiresStage2HeatProtection("straightener"), true)
+  // `R1` (2026-08-24): the diffuser source is diffuser drying (`D2a`) at tier
+  // `not_needed` (`A11`), so it no longer raises the heat-protection question.
+  assert.equal(requiresStage2HeatProtection("diffuser_airflow_shaping"), false)
+  assert.equal(ignoresStoredStage2HeatProtection("diffuser_airflow_shaping"), true)
+  assert.equal(ignoresStoredStage2HeatProtection("straightener"), false)
 
   const events = projectStage2HeatEvents({
     dryingRoutes: ["ordinary_blow_dry", "diffuser_or_airflow_shaping"],
@@ -128,11 +134,30 @@ test("all protection consistency values are valid for a qualifying event", () =>
   }
 })
 
+test("R1: the diffuser source projects without protection and ignores a legacy stored value", () => {
+  // Under path version 1 this event REQUIRED `protectionConsistency`; under
+  // version 2 it must not carry one, and a row written before the change stays
+  // valid with its stored value simply dropped (fixture 125).
+  const [withoutValue] = projectStage2HeatEvents({
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_1x" } },
+  })
+  assert.equal(withoutValue.protectionConsistency, undefined)
+
+  const [legacy] = projectStage2HeatEvents({
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: {
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_1x", protectionConsistency: "no" },
+    },
+  })
+  assert.equal(legacy.protectionConsistency, undefined, "the stored value is ignored, not read")
+})
+
 test("projection rejects missing protection and protection on ordinary airflow", () => {
   assert.throws(() =>
     projectStage2HeatEvents({
-      dryingRoutes: ["diffuser_or_airflow_shaping"],
-      heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_1x" } },
+      additionalHeatTools: ["dryer_brush"],
+      heatEvents: { "heat:dryer_brush": { frequency: "weekly_1x" } },
     }),
   )
   assert.throws(() =>

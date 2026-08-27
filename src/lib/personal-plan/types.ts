@@ -4,6 +4,7 @@ import type {
   PersonalPlanQuizSubmissionEnvelope,
 } from "@/lib/personal-plan-quiz/types"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+import type { PlanToolPlan } from "./tools/contracts"
 
 export const STAGE1_CATEGORY_ORDER = [
   "shampoo",
@@ -542,6 +543,13 @@ export type InitialNeedPlanSnapshot = {
   productPreviews: InitialProductPreview[]
   renderedOrder: Stage1Category[]
   deferredFacts: PlanMissingFactId[]
+  /**
+   * The parallel Hair Tools domain. Present only while the Tools rollout is on
+   * for this owner, so a Tools-off snapshot is byte-identical to today's.
+   * Tools is deliberately NOT a member of `decisions`/`renderedOrder`: those
+   * belong to the ten closed care-product categories.
+   */
+  toolPlan?: PlanToolPlan
 }
 
 export function canonicalizeInitialSnapshotPayload(snapshot: InitialNeedPlanSnapshot) {

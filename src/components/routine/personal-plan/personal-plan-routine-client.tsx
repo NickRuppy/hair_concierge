@@ -15,7 +15,7 @@ import { routineAnalytics } from "@/lib/personal-plan/routine/analytics"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import type {
   PersonalPlanRoutineView,
-  RoutinePayloadV1,
+  RoutinePayload,
   RoutineProposalDeltaV1,
 } from "@/lib/personal-plan/routine/contracts"
 import type {
@@ -104,12 +104,12 @@ export function initialRoutineProposalSheetOpen(view: PersonalPlanRoutineView): 
   return false
 }
 
-function editorSeed(view: PersonalPlanRoutineView): RoutinePayloadV1 | null {
+function editorSeed(view: PersonalPlanRoutineView): RoutinePayload | null {
   return view.activeVersion?.payload ?? view.pendingProposal?.candidate ?? null
 }
 
 function frozenProductOptions(
-  payload: RoutinePayloadV1 | null,
+  payload: RoutinePayload | null,
 ): Record<string, RoutineProductOption[]> {
   if (!payload) return {}
   const choicesByCategory = new Map<string, RoutineProductOption[]>()
@@ -138,15 +138,15 @@ function frozenProductOptions(
   )
 }
 
-function productDisplayName(item: RoutinePayloadV1["items"][number] | undefined) {
+function productDisplayName(item: RoutinePayload["items"][number] | undefined) {
   const displayName = item?.product.displayName
   return typeof displayName === "string" && displayName.length > 0 ? displayName : null
 }
 
 export function routineProposalDeltaEntries(
   entries: RoutineProposalDeltaV1["direct"],
-  active: RoutinePayloadV1 | null,
-  candidate: RoutinePayloadV1,
+  active: RoutinePayload | null,
+  candidate: RoutinePayload,
 ): RoutineProposalSheetDeltaEntry[] {
   const activeItems = new Map(active?.items.map((item) => [item.itemKey, item]) ?? [])
   const candidateItems = new Map(candidate.items.map((item) => [item.itemKey, item]))
@@ -488,7 +488,7 @@ export function PersonalPlanRoutineClient({
     [busy, kickRoutineSync, pending, reload, router, view.planRevision],
   )
 
-  const openDetail = React.useCallback(async (item: RoutinePayloadV1["items"][number]) => {
+  const openDetail = React.useCallback(async (item: RoutinePayload["items"][number]) => {
     setError(null)
     try {
       const response = await fetch(
