@@ -119,6 +119,18 @@ export function QuizLeadCapture() {
       if (!res.ok) {
         if (res.status === 422) {
           const detail: unknown = await res.json().catch(() => null)
+          if (
+            detail &&
+            typeof detail === "object" &&
+            "code" in detail &&
+            detail.code === "invited_email_mismatch"
+          ) {
+            setServerSuggestion(null)
+            setError("Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.")
+            requestBack()
+            window.scrollTo(0, 0)
+            return
+          }
           const rejection = parseEmailDeliverabilityRejection(detail)
           const suggestion = rejection?.suggestion ?? null
           if (rejection) {

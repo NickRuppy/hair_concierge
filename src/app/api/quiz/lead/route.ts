@@ -111,7 +111,10 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
         }
         if (email !== moderator.email) {
           return NextResponse.json(
-            { error: "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos." },
+            {
+              code: "invited_email_mismatch",
+              error: "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
+            },
             { status: 422 },
           )
         }

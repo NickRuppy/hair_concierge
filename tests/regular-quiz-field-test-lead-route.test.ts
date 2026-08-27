@@ -306,6 +306,7 @@ test("organic moderator rejects a quiz email that differs from the invited accou
   )
   assert.equal(response.status, 422)
   assert.deepEqual(await response.json(), {
+    code: "invited_email_mismatch",
     error: "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
   })
 })

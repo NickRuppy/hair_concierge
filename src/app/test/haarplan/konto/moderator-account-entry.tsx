@@ -35,7 +35,10 @@ export function ModeratorAccountEntry({ campaignId }: { campaignId: string }) {
           return
         }
         if (startResult?.kind === "quiz") {
-          const freshBoundary = prepareModeratorOrganicFreshStart(startResult.funnelSessionId)
+          const freshBoundary = prepareModeratorOrganicFreshStart(
+            startResult.funnelSessionId,
+            startResult.freshStart,
+          )
           if (freshBoundary === "failed") {
             setState("unavailable")
             return

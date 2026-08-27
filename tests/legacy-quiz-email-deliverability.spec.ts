@@ -49,6 +49,29 @@ async function openEmailCapture(page: Page) {
 }
 
 test.describe("@ci legacy quiz email deliverability recovery", () => {
+  test("shows invited-account correction and keeps the email editable", async ({ page }) => {
+    await page.route("**/api/quiz/lead", async (route) => {
+      await route.fulfill({
+        contentType: "application/json",
+        status: 422,
+        body: JSON.stringify({
+          code: "invited_email_mismatch",
+          error: "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
+        }),
+      })
+    })
+    await openEmailCapture(page)
+    const email = page.getByPlaceholder("name@beispiel.de")
+    await email.fill("different@gmail.com")
+    await page.getByRole("button", { name: "Weiter" }).click()
+    await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
+    await expect(page.locator("#legacy-quiz-email-error")).toHaveText(
+      "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
+    )
+    await expect(email).toBeFocused()
+    await email.fill("invited@gmail.com")
+    await expect(page.locator("#legacy-quiz-email-error")).toHaveCount(0)
+  })
   test("keeps saving bounded and returns a rejected address to editable recovery", async ({
     page,
   }) => {

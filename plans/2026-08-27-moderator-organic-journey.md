@@ -121,3 +121,11 @@ One Claude Opus high-effort read-only whole-branch review completed (normal corr
 - Review's missing production preflight/build are covered by the root's live read-only checks and successful build above. Hosted full-flow remains unverified. The reviewer reported one initial failure without a retained failure trace, then four passing reruns. Root's final focused and SQL runs pass; no flaky-test cause is claimed.
 
 Reviewer report archived outside the repository at `/tmp/moderator-organic-code-review-20260827.md`. The final SQL/test, deployment comment and evidence/doc delta were reviewed by root and affected SQL checks rerun; no second counterpart pass was needed. Verification and review receipts use the same final manifest fingerprint and remain outside the repository to avoid a self-referential hash.
+
+### Publication follow-up — 2026-08-27
+
+Release authorized for live testing. Rebased on `0a5cbdce` without overlapping changes; migration applied and catalog/RPC permissions verified before application rollout. Supabase records local migration `20260827150340` under remote version `20260827153250` (name includes the local ID); no broad migration push. The five real members remain untouched.
+
+Final GitHub review identified two recovery defects, both confirmed and corrected: preserve the server's `freshStart: false` decision when reopening a quiz in another tab, and distinguish an invited-email mismatch from mail-domain deliverability errors. The latter was reproduced in an actual browser before the fix; all three email-recovery browser tests now pass. Focused Node verification passes 31 tests. The unrelated PayPal cancellation test now uses an expired timestamp safely inside its existing 24-hour grace window, removing a reproduced millisecond-boundary race without changing payment code.
+
+Hosted verification uses one isolated synthetic account/campaign, never a real moderator. Login-token verification does not establish SMTP/inbox delivery. Final deployment, hosted journey, cleanup and release fingerprints are recorded in the external release receipt.

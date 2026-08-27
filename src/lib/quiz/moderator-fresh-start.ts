@@ -16,7 +16,7 @@ function browserStorage(): { local: BrowserStorage; session: BrowserStorage } | 
 }
 
 export type ModeratorOrganicStartResponse =
-  | { kind: "quiz"; funnelSessionId: string }
+  | { kind: "quiz"; funnelSessionId: string; freshStart: boolean }
   | { kind: "active" }
 
 export function parseModeratorOrganicStartResponse(
@@ -31,7 +31,7 @@ export function parseModeratorOrganicStartResponse(
     UUID.test(body.funnelSessionId) &&
     typeof body.freshStart === "boolean"
   ) {
-    return { kind: "quiz", funnelSessionId: body.funnelSessionId }
+    return { kind: "quiz", funnelSessionId: body.funnelSessionId, freshStart: body.freshStart }
   }
   return null
 }
@@ -39,14 +39,19 @@ export function parseModeratorOrganicStartResponse(
 /**
  * Establishes the one fresh-start boundary for an authenticated moderator.
  *
- * Returning false deliberately leaves the caller on its retry screen: without
+ * A failed result deliberately leaves the caller on its retry screen: without
  * both storage operations we cannot prove that /quiz will not restore another
  * person's old browser draft.
  */
 export function prepareModeratorOrganicFreshStart(
   funnelSessionId: string,
+  freshStart: boolean,
   storage = browserStorage(),
 ): "fresh" | "resume" | "failed" {
+  // The signed server intent is authoritative. A resumed session may be
+  // opened in a new tab, where sessionStorage is empty but local quiz answers
+  // still belong to that funnel.
+  if (!freshStart) return "resume"
   if (!storage) return "failed"
   try {
     if (storage.session.getItem(INITIALIZED_SESSION_KEY) === funnelSessionId) return "resume"
