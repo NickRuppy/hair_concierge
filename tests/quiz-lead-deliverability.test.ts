@@ -28,6 +28,9 @@ test("legacy lead rejects a definitively undeliverable address before persistenc
   let recorded = false
   let adminClientCreated = false
   const handler = createQuizLeadPostHandler({
+    cookies: (async () => ({ get: () => undefined })) as typeof import("next/headers").cookies,
+    resolveFunnelCookieContext: async () => null,
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async (email) => {
       checkedEmail = email

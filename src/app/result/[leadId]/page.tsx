@@ -82,6 +82,7 @@ interface LeadResultRow {
   name: string
   quiz_kind: "legacy" | "personal_plan"
   quiz_answers: unknown
+  moderator_campaign_id: string | null
 }
 
 type RegularQuizFieldTestAuthorization = {
@@ -95,7 +96,7 @@ async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
   const supabase = createAdminClient()
   const { data, error } = await supabase
     .from("leads")
-    .select("id, user_id, name, quiz_kind, quiz_answers")
+    .select("id, user_id, name, quiz_kind, quiz_answers, moderator_campaign_id")
     .eq("id", leadId)
     .maybeSingle()
 
@@ -220,6 +221,7 @@ async function hasTrustedPersonalPlanResultReturn(input: {
 async function resolveRegularQuizFieldTestOfferState(input: {
   hasAccess: boolean
   lead: LeadResultRow
+  moderatorTest: boolean
   funnelContext:
     | (FunnelCookieContext & {
         testKind?: string | null
@@ -230,7 +232,7 @@ async function resolveRegularQuizFieldTestOfferState(input: {
   authorization: RegularQuizFieldTestAuthorization | null
   unavailable: boolean
 }> {
-  if (input.lead.quiz_kind !== "legacy" || input.hasAccess) {
+  if (input.lead.quiz_kind !== "legacy" || input.hasAccess || input.moderatorTest) {
     return { authorization: null, unavailable: false }
   }
 
@@ -281,10 +283,13 @@ export default async function ResultPage({ params, searchParams }: Props) {
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
+  const resultCampaign = lead?.moderator_campaign_id
+    ? await loadModeratorResultCampaign(leadId)
+    : null
   const resultFunnel =
-    lead?.quiz_kind === "personal_plan" ? await loadPersonalPlanResultFunnel(leadId) : null
-  const resultCampaign =
-    lead?.quiz_kind === "personal_plan" ? await loadModeratorResultCampaign(leadId) : null
+    lead?.quiz_kind === "personal_plan" || resultCampaign?.kind === "moderator"
+      ? await loadPersonalPlanResultFunnel(leadId)
+      : null
   if (resultCampaign?.kind === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
   if (resultFunnel?.kind === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
   const persistedFunnel = resultFunnel?.context ?? null
@@ -369,6 +374,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const regularFieldTestState = await resolveRegularQuizFieldTestOfferState({
     hasAccess,
     lead,
+    moderatorTest,
     funnelContext,
   })
   const personalPlanSession = funnelContext
@@ -430,9 +436,18 @@ export default async function ResultPage({ params, searchParams }: Props) {
       fieldTestUnavailable={fieldTestUnavailable}
       isInternalTest={personalPlanSession?.isInternalTest ?? false}
       regularFieldTest={
-        regularFieldTestState.authorization
-          ? { accessDurationHours: regularFieldTestState.authorization.accessDurationHours }
-          : null
+        moderatorTest
+          ? {
+              accessDurationHours: 2160,
+              activationApiPath: "/api/personal-plan/field-test/moderator/activate-organic",
+              identityMode: "email_bound",
+            }
+          : regularFieldTestState.authorization
+            ? {
+                accessDurationHours: regularFieldTestState.authorization.accessDurationHours,
+                identityMode: "guest",
+              }
+            : null
       }
       regularFieldTestUnavailable={regularFieldTestState.unavailable}
       returnTo={returnTo}

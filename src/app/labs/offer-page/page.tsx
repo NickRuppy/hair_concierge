@@ -224,19 +224,25 @@ export default async function OfferPageLab({
   return (
     <OrganicPlanOfferVariant
       entryContext="quiz_completion"
-      leadId={null}
+      leadId={params.scenario === "moderator" ? "11111111-1111-4111-8111-111111111111" : null}
       name="Lea"
       narrative={narrative}
       offerVariant="organic-plan-v1"
       quizAnswers={REVIEW_ANSWERS}
       pricingSlot={<StaticPricingPreview />}
       regularFieldTest={
-        params.scenario === "field-test"
+        params.scenario === "moderator"
           ? {
-              accessDurationHours: 168,
-              activationApiPath: "/api/quiz/field-test/activate",
+              accessDurationHours: 2160,
+              activationApiPath: "/api/personal-plan/field-test/moderator/activate-organic",
+              identityMode: "email_bound",
             }
-          : null
+          : params.scenario === "field-test"
+            ? {
+                accessDurationHours: 168,
+                activationApiPath: "/api/quiz/field-test/activate",
+              }
+            : null
       }
     />
   )

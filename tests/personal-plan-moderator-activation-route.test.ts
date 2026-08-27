@@ -219,3 +219,34 @@ test("moderator activation distinguishes an absent session from an Auth outage",
   })
   assert.equal((await handler(request())).status, 401)
 })
+
+test("organic moderator activation uses the owned legacy result and never the Meta package", async () => {
+  const overrides = baseOverrides()
+  let activated = 0
+  const handler = createPersonalPlanModeratorActivationHandler({
+    ...overrides,
+    packageKey: "default_organic",
+    resolveFunnelCookieContext: async () => ({
+      ...(await overrides.resolveFunnelCookieContext()),
+      packageKey: "default_organic",
+    }),
+    activate: async (input) => {
+      activated++
+      assert.equal(input.userId, userId)
+      assert.equal(input.leadId, leadId)
+      return { enrollmentId: "enrollment", expiresAt: "2026-11-25T09:00:00.000Z", reused: false }
+    },
+  })
+  const response = await handler(request())
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { destination: `/plan-bereit?lead=${leadId}` })
+  assert.equal(activated, 1)
+  const wrongPackage = createPersonalPlanModeratorActivationHandler({
+    ...overrides,
+    packageKey: "default_organic",
+    activate: async () => {
+      throw Error("must not activate Meta on organic endpoint")
+    },
+  })
+  assert.equal((await wrongPackage(request())).status, 403)
+})

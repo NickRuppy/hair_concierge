@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { notFound } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
 import { loadQuizDraft } from "@/lib/quiz/draft"
+import { consumeModeratorOrganicFreshStart } from "@/lib/quiz/moderator-fresh-start"
 import { getQuestionByStep } from "@/lib/quiz/questions"
 import { QuizQuestion } from "@/components/quiz/quiz-question"
 import { QuizScalpQuestion } from "@/components/quiz/quiz-scalp-question"
@@ -51,7 +52,8 @@ export default function QuizPage() {
         return
       }
 
-      const draft = loadQuizDraft()
+      const freshModeratorStart = consumeModeratorOrganicFreshStart()
+      const draft = freshModeratorStart ? null : loadQuizDraft()
       if (draft) {
         const restoredPosition = getLegacyQuizScreenPosition(draft.step, "name")
         // The store transition below adds the final entry. Seed the earlier

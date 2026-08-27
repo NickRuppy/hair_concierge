@@ -151,7 +151,7 @@ function createResultArtifactRouteDeps(
   }
 }
 
-function createSupabaseResultArtifactStore(supabase: SupabaseClient): ResultArtifactStore {
+export function createSupabaseResultArtifactStore(supabase: SupabaseClient): ResultArtifactStore {
   return {
     async claimLead(leadId) {
       const now = new Date().toISOString()
@@ -166,6 +166,7 @@ function createSupabaseResultArtifactStore(supabase: SupabaseClient): ResultArti
         .eq("id", leadId)
         .is("artifact_email_status", null)
         .eq("quiz_kind", "legacy")
+        .is("moderator_campaign_id", null)
         .select("id, quiz_kind, name, email, quiz_answers, artifact_email_status")
         .maybeSingle()
 

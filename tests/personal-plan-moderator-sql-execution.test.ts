@@ -11,6 +11,8 @@ const customerioOutboxMigrationPath =
   "supabase/migrations/20260801100000_customerio_profile_sync_outbox.sql"
 const fieldTestMigrationPath =
   "supabase/migrations/20260810120016_personal_plan_field_test_access.sql"
+const organicModeratorMigrationPath =
+  "supabase/migrations/20260827150340_personal_plan_moderator_organic_access.sql"
 
 const ids = {
   campaign: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
@@ -24,6 +26,7 @@ const ids = {
   guestFunnel: "66666666-6666-4666-8666-666666666666",
   guestLead: "77777777-7777-4777-8777-777777777777",
   guestUser: "88888888-8888-4888-8888-888888888888",
+  organicFunnel: "99999999-9999-4999-8999-999999999999",
 }
 
 test("moderator campaign creation is atomic and rolls back duplicate roster inserts", async (t) => {
@@ -209,6 +212,230 @@ test("moderator save and activation are replay-safe with stable expiry", async (
   assert.equal(grants.rows[0].count, "1")
 })
 
+test("organic moderator save owns a legacy lead before any Customer.io outbox can dispatch", async (t) => {
+  const pg = await migratedDatabase(t)
+  await seedModeratorFixtures(pg)
+  await seedOrganicModeratorSession(pg)
+
+  const save = await saveOrganicModeratorLead(pg, {
+    name: "Nick",
+    marketingConsent: true,
+    answers: { answers: ["organic"] },
+  })
+  assert.equal(save.reused, false)
+  assert.ok(save.lead_id)
+
+  const lead = await pg.query<{
+    name: string
+    email: string
+    marketing_consent: boolean
+    quiz_answers: { answers: string[] }
+    quiz_kind: string
+    status: string
+    user_id: string
+    moderator_campaign_id: string
+  }>(
+    `
+      SELECT name, email, marketing_consent, quiz_answers, quiz_kind, status, user_id, moderator_campaign_id
+        FROM public.leads
+       WHERE id = $1
+    `,
+    [save.lead_id],
+  )
+  assert.deepEqual(lead.rows[0], {
+    name: "Nick",
+    email: "moderator@example.test",
+    marketing_consent: true,
+    quiz_answers: { answers: ["organic"] },
+    quiz_kind: "legacy",
+    status: "linked",
+    user_id: ids.user,
+    moderator_campaign_id: ids.campaign,
+  })
+
+  const session = await pg.query<{ lead_id: string; package_key: string; user_id: string }>(
+    "SELECT lead_id, package_key, user_id FROM public.funnel_sessions WHERE id = $1",
+    [ids.organicFunnel],
+  )
+  assert.deepEqual(session.rows[0], {
+    lead_id: save.lead_id,
+    package_key: "default_organic",
+    user_id: ids.user,
+  })
+
+  const outbox = await pg.query<{
+    completion_event_eligible: boolean
+    send_completion_event: boolean
+    status: string
+  }>(
+    "SELECT completion_event_eligible, send_completion_event, status FROM public.customerio_profile_sync_outbox WHERE lead_id = $1",
+    [save.lead_id],
+  )
+  // The Personal Plan outbox accepts only artifact-backed personal_plan leads.
+  // A legacy moderator lead must not enqueue a job that can only fail/retry.
+  assert.equal(outbox.rows.length, 0)
+
+  const replay = await saveOrganicModeratorLead(pg, {
+    name: "Nick Replay",
+    marketingConsent: false,
+    answers: { answers: ["organic", "updated"] },
+  })
+  assert.equal(replay.reused, true)
+  assert.equal(replay.lead_id, save.lead_id)
+
+  const updatedLead = await pg.query<{ name: string; marketing_consent: boolean }>(
+    "SELECT name, marketing_consent FROM public.leads WHERE id = $1",
+    [save.lead_id],
+  )
+  assert.deepEqual(updatedLead.rows[0], { name: "Nick Replay", marketing_consent: false })
+
+  await assert.rejects(
+    pg.query(
+      `
+        SELECT * FROM public.save_personal_plan_moderator_organic_lead(
+          $1, $2, 'someone-else@example.test', $3, '', false, '{}'::jsonb
+        )
+      `,
+      [ids.campaign, ids.user, ids.organicFunnel],
+    ),
+    /moderator member is unavailable/,
+  )
+})
+
+test("organic moderator activation writes a legacy enrollment and routing source without an artifact", async (t) => {
+  const pg = await migratedDatabase(t)
+  await seedModeratorFixtures(pg)
+  await seedOrganicModeratorSession(pg)
+  const saved = await saveOrganicModeratorLead(pg)
+
+  const first = await activateOrganicModerator(pg, "organic-activation-1", saved.lead_id)
+  assert.equal(first.reused, false)
+  assert.ok(first.enrollment_id)
+  assert.ok(first.manual_access_grant_id)
+  assert.equal(first.prepared_artifact_id, null)
+  assert.equal(
+    new Date(first.expires_at).getTime() - new Date(first.activated_at).getTime(),
+    2160 * 60 * 60 * 1000,
+  )
+
+  const enrollment = await pg.query<{
+    quiz_source_kind: string
+    prepared_artifact_id: string | null
+    lead_id: string
+    user_id: string
+  }>(
+    `
+      SELECT quiz_source_kind, prepared_artifact_id, lead_id, user_id
+        FROM public.personal_plan_test_enrollments
+       WHERE id = $1
+    `,
+    [first.enrollment_id],
+  )
+  assert.deepEqual(enrollment.rows[0], {
+    quiz_source_kind: "legacy",
+    prepared_artifact_id: null,
+    lead_id: saved.lead_id,
+    user_id: ids.user,
+  })
+
+  const replay = await activateOrganicModerator(pg, "organic-activation-replay", saved.lead_id)
+  assert.equal(replay.reused, true)
+  assert.equal(replay.enrollment_id, first.enrollment_id)
+  assert.equal(replay.manual_access_grant_id, first.manual_access_grant_id)
+  assert.equal(replay.prepared_artifact_id, null)
+  assert.equal(
+    new Date(replay.activated_at).toISOString(),
+    new Date(first.activated_at).toISOString(),
+  )
+  assert.equal(new Date(replay.expires_at).toISOString(), new Date(first.expires_at).toISOString())
+
+  const lateSave = await saveOrganicModeratorLead(pg, {
+    name: "Late Mutation",
+    marketingConsent: true,
+    answers: { answers: ["should-not-rewrite"] },
+  })
+  assert.equal(lateSave.reused, true)
+  assert.equal(lateSave.lead_id, saved.lead_id)
+
+  const lateLead = await pg.query<{ name: string; quiz_answers: { answers: string[] } }>(
+    "SELECT name, quiz_answers FROM public.leads WHERE id = $1",
+    [saved.lead_id],
+  )
+  assert.deepEqual(lateLead.rows[0], {
+    name: "Organic Moderator",
+    quiz_answers: { answers: ["organic"] },
+  })
+
+  const event = await pg.query<{ package_key: string; properties: Record<string, unknown> }>(
+    "SELECT package_key, properties FROM public.funnel_events WHERE event_id = 'organic-activation-1'",
+  )
+  assert.equal(event.rows[0].package_key, "default_organic")
+  assert.equal(event.rows[0].properties.campaign_id, ids.campaign)
+  assert.equal(event.rows[0].properties.identity_mode, "email_bound")
+  assert.equal(event.rows[0].properties.quiz_source_kind, "legacy")
+
+  await pg.query("SELECT set_config('request.jwt.claim.sub', $1, false)", [ids.user])
+  const routing = await pg.query<{ source: Record<string, unknown> }>(
+    "SELECT public.personal_plan_get_own_routing_source() AS source",
+  )
+  assert.equal(routing.rows[0].source.source_kind, "field_test")
+  assert.equal(routing.rows[0].source.quiz_source_kind, "legacy")
+  assert.equal(routing.rows[0].source.lead_id, saved.lead_id)
+
+  const grants = await pg.query<{ count: string }>(
+    "SELECT count(*)::text AS count FROM public.manual_access_grants WHERE user_id = $1 AND reason = 'tester'",
+    [ids.user],
+  )
+  assert.equal(grants.rows[0].count, "1")
+})
+
+test("personal-plan test enrollment source shape rejects mixed artifact contracts", async (t) => {
+  const pg = await migratedDatabase(t)
+  await seedModeratorFixtures(pg)
+  await seedOrganicModeratorSession(pg)
+  const saved = await saveOrganicModeratorLead(pg)
+  const grant = await pg.query<{ id: string }>(
+    "INSERT INTO public.manual_access_grants (user_id, reason, expires_at) VALUES ($1, 'tester', pg_catalog.now() + interval '90 days') RETURNING id",
+    [ids.user],
+  )
+
+  await assert.rejects(
+    pg.query(
+      `
+        INSERT INTO public.personal_plan_test_enrollments
+          (campaign_id, funnel_session_id, lead_id, user_id, manual_access_grant_id, prepared_artifact_id, expires_at)
+        VALUES ($1, $2, $3, $4, $5, NULL, pg_catalog.now() + interval '90 days')
+      `,
+      [ids.campaign, ids.organicFunnel, saved.lead_id, ids.user, grant.rows[0].id],
+    ),
+    /personal_plan_test_enrollments_source_artifact_shape/,
+  )
+
+  await assert.rejects(
+    pg.query(
+      `
+        INSERT INTO public.personal_plan_test_enrollments
+          (campaign_id, funnel_session_id, lead_id, user_id, manual_access_grant_id, prepared_artifact_id, quiz_source_kind, expires_at)
+        VALUES ($1, $2, $3, $4, $5, $6, 'legacy', pg_catalog.now() + interval '90 days')
+      `,
+      [ids.campaign, ids.organicFunnel, saved.lead_id, ids.user, grant.rows[0].id, ids.artifact],
+    ),
+    /personal_plan_test_enrollments_source_artifact_shape/,
+  )
+
+  await assert.rejects(
+    pg.query(
+      `
+        INSERT INTO public.personal_plan_test_enrollments
+          (campaign_id, funnel_session_id, lead_id, user_id, manual_access_grant_id, prepared_artifact_id, quiz_source_kind, expires_at)
+        VALUES ($1, $2, $3, $4, $5, NULL, 'legacy', pg_catalog.now() + interval '90 days')
+      `,
+      [ids.campaign, ids.funnel, saved.lead_id, ids.user, grant.rows[0].id],
+    ),
+    /legacy moderator enrollment session is invalid/,
+  )
+})
+
 test("guest RPCs reject moderator campaigns while guest wrapper remains non-recursive", async (t) => {
   const pg = await migratedDatabase(t)
   await seedModeratorFixtures(pg)
@@ -280,6 +507,7 @@ async function migratedDatabase(t: { after: (fn: () => Promise<void>) => void })
   )
   const migration = await readFile(migrationPath, "utf8")
   await pg.exec(migration)
+  await pg.exec(await readFile(organicModeratorMigrationPath, "utf8"))
   return pg
 }
 
@@ -307,6 +535,51 @@ async function activateModerator(pg: PGlite, eventId: string, leadId: string) {
       )
     `,
     [ids.campaign, ids.funnel, leadId, ids.user, eventId],
+  )
+  return result.rows[0]
+}
+
+async function saveOrganicModeratorLead(
+  pg: PGlite,
+  input: {
+    name?: string
+    marketingConsent?: boolean
+    answers?: Record<string, unknown>
+  } = {},
+) {
+  const result = await pg.query<{ lead_id: string; reused: boolean }>(
+    `
+      SELECT * FROM public.save_personal_plan_moderator_organic_lead(
+        $1, $2, 'MODERATOR@EXAMPLE.TEST', $3, $4, $5, $6::jsonb
+      )
+    `,
+    [
+      ids.campaign,
+      ids.user,
+      ids.organicFunnel,
+      input.name ?? "Organic Moderator",
+      input.marketingConsent ?? false,
+      JSON.stringify(input.answers ?? { answers: ["organic"] }),
+    ],
+  )
+  return result.rows[0]
+}
+
+async function activateOrganicModerator(pg: PGlite, eventId: string, leadId: string) {
+  const result = await pg.query<{
+    enrollment_id: string
+    manual_access_grant_id: string
+    prepared_artifact_id: string | null
+    activated_at: Date | string
+    expires_at: Date | string
+    reused: boolean
+  }>(
+    `
+      SELECT * FROM public.activate_personal_plan_moderator_organic_test(
+        $1, $2, $3, $4, 'moderator@example.test', $5
+      )
+    `,
+    [ids.campaign, ids.organicFunnel, leadId, ids.user, eventId],
   )
   return result.rows[0]
 }
@@ -354,6 +627,18 @@ async function seedModeratorFixtures(pg: PGlite) {
         ($1, repeat('c', 64), repeat('b', 64), '{"answers":["fresh"]}'::jsonb, '{}'::jsonb, '{}'::jsonb, '[]'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'prepared', $2, '2026-09-01T00:00:00Z')
     `,
     [ids.artifact, ids.user],
+  )
+}
+
+async function seedOrganicModeratorSession(pg: PGlite) {
+  await pg.query(
+    `
+      INSERT INTO public.funnel_sessions
+        (id, visitor_id, package_key, channel, user_id, test_kind, field_test_campaign_id)
+      VALUES
+        ($1, public.test_gen_random_uuid(), 'default_organic', 'test', $2, 'field_test', $3)
+    `,
+    [ids.organicFunnel, ids.user, ids.campaign],
   )
 }
 
@@ -419,6 +704,14 @@ AS $$
   SELECT ('00000000-0000-4000-8000-' || lpad(nextval('public.test_uuid_sequence')::text, 12, '0'))::uuid;
 $$;
 
+CREATE OR REPLACE FUNCTION auth.uid()
+RETURNS uuid
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT NULLIF(current_setting('request.jwt.claim.sub', true), '')::uuid;
+$$;
+
 CREATE TABLE auth.users (
   id uuid PRIMARY KEY,
   email text NOT NULL,
@@ -468,6 +761,9 @@ CREATE TABLE public.funnel_sessions (
   channel text NOT NULL,
   lead_id uuid REFERENCES public.leads(id) ON DELETE SET NULL,
   user_id uuid REFERENCES public.profiles(id) ON DELETE SET NULL,
+  purchase_completed_at timestamptz,
+  purchase_provider text,
+  purchase_reference text,
   test_kind text,
   field_test_campaign_id uuid REFERENCES public.personal_plan_test_campaigns(id) ON DELETE RESTRICT,
   created_at timestamptz NOT NULL DEFAULT pg_catalog.now()
@@ -534,6 +830,61 @@ CREATE TABLE public.funnel_events (
   lead_id uuid REFERENCES public.leads(id) ON DELETE SET NULL,
   properties jsonb NOT NULL DEFAULT '{}'::jsonb,
   created_at timestamptz NOT NULL DEFAULT pg_catalog.now()
+);
+
+CREATE TABLE public.personal_plan_one_time_checkout_consents (
+  id uuid PRIMARY KEY DEFAULT public.test_gen_random_uuid(),
+  lead_id uuid NOT NULL REFERENCES public.leads(id) ON DELETE CASCADE,
+  user_id uuid NOT NULL,
+  confirmation_status text,
+  generation_started_at timestamptz,
+  generation_completed_at timestamptz,
+  generated_content_sha256 text,
+  delivery_provider text,
+  delivery_reference text,
+  delivered_at timestamptz
+);
+
+CREATE TABLE public.billing_one_time_purchases (
+  id uuid PRIMARY KEY DEFAULT public.test_gen_random_uuid(),
+  consent_id uuid NOT NULL REFERENCES public.personal_plan_one_time_checkout_consents(id) ON DELETE CASCADE,
+  user_id uuid NOT NULL,
+  product_kind text,
+  status text,
+  paid_at timestamptz
+);
+
+CREATE TABLE public.billing_subscriptions (
+  id uuid PRIMARY KEY DEFAULT public.test_gen_random_uuid(),
+  user_id uuid NOT NULL,
+  provider text,
+  provider_subscription_id text,
+  metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
+  entitlement_status text,
+  current_period_end timestamptz
+);
+
+CREATE TABLE public.regular_quiz_test_enrollments (
+  id uuid PRIMARY KEY DEFAULT public.test_gen_random_uuid(),
+  campaign_id uuid NOT NULL REFERENCES public.personal_plan_test_campaigns(id) ON DELETE RESTRICT,
+  funnel_session_id uuid NOT NULL REFERENCES public.funnel_sessions(id) ON DELETE RESTRICT,
+  lead_id uuid NOT NULL REFERENCES public.leads(id) ON DELETE RESTRICT,
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE RESTRICT,
+  manual_access_grant_id uuid NOT NULL REFERENCES public.manual_access_grants(id) ON DELETE RESTRICT,
+  status text NOT NULL DEFAULT 'active',
+  activated_at timestamptz NOT NULL DEFAULT pg_catalog.now(),
+  expires_at timestamptz NOT NULL,
+  revoked_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT pg_catalog.now()
+);
+
+CREATE TABLE public.personal_plans (
+  id uuid PRIMARY KEY DEFAULT public.test_gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  current_initial_need_version_id uuid,
+  current_refined_need_version_id uuid,
+  pending_routine_proposal_id uuid,
+  active_routine_version_id uuid
 );
 `
 

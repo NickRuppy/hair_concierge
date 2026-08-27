@@ -25,6 +25,7 @@ import type { QuizAnswers } from "@/lib/quiz/types"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
+import type { FunnelOfferFieldTest } from "@/funnels/types"
 
 export function ResultPageClient({
   showQuizRestart = false,
@@ -64,9 +65,7 @@ export function ResultPageClient({
   moderatorTest?: boolean
   fieldTestUnavailable?: boolean
   isInternalTest?: boolean
-  regularFieldTest?: {
-    accessDurationHours: number
-  } | null
+  regularFieldTest?: FunnelOfferFieldTest | null
   regularFieldTestUnavailable?: boolean
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
@@ -166,9 +165,7 @@ function LegacyResultPageClient({
   pricingCatalog: SubscriptionPricingCatalog
   pricingCatalogWasProvided: boolean
   quizAnswers: QuizAnswers
-  regularFieldTest?: {
-    accessDurationHours: number
-  } | null
+  regularFieldTest?: FunnelOfferFieldTest | null
   returnTo?: string | null
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)

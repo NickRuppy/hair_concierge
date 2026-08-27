@@ -26,15 +26,23 @@ function formatAccessDuration(hours: number) {
 export function RegularQuizFieldTestActivationCard({
   accessDurationHours,
   activationApiPath = "/api/quiz/field-test/activate",
+  identityMode = "guest",
   leadId,
 }: {
   accessDurationHours: number
-  activationApiPath?: string
+  activationApiPath?:
+    | "/api/quiz/field-test/activate"
+    | "/api/personal-plan/field-test/moderator/activate-organic"
+  identityMode?: "guest" | "email_bound"
   leadId: string | null
 }) {
   const [state, setState] = useState<ActivationState>({ status: "idle" })
   const durationLabel = formatAccessDuration(accessDurationHours)
   const canActivate = Boolean(leadId)
+  const isEmailBoundModerator = identityMode === "email_bound"
+  const activationDestination = isEmailBoundModerator
+    ? "moderator_organic_test_activation"
+    : "regular_field_test_activation"
 
   async function activate() {
     if (!leadId || state.status === "loading") return
@@ -84,13 +92,14 @@ export function RegularQuizFieldTestActivationCard({
         Keine Zahlungsdaten · kein Abo · {durationLabel} Testzugang
       </p>
       <p className="mt-2 text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.68)]">
-        Du aktivierst einen temporären Testgast. Deine Quiz-Auswertung wird direkt mit deinem
-        Personal Plan verbunden.
+        {isEmailBoundModerator
+          ? "Dein Plan bleibt in deinem Konto gespeichert. Der Zugang beginnt erst mit der Aktivierung."
+          : "Du aktivierst einen temporären Testgast. Deine Quiz-Auswertung wird direkt mit deinem Personal Plan verbunden."}
       </p>
       <button
         className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-emerald-700 px-6 py-3 text-center text-sm font-extrabold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
         data-offer-cta="field_test_activation"
-        data-offer-destination="regular_field_test_activation"
+        data-offer-destination={activationDestination}
         data-offer-source-section="pricing"
         disabled={!canActivate || state.status === "loading" || state.status === "success"}
         onClick={activate}

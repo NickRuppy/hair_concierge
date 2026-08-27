@@ -14,6 +14,18 @@ export type FunnelLandingVariantProps = {
 
 export type FunnelLandingVariantComponent = ComponentType<FunnelLandingVariantProps>
 
+export type FunnelOfferFieldTest =
+  | {
+      accessDurationHours: number
+      activationApiPath?: "/api/quiz/field-test/activate"
+      identityMode?: "guest"
+    }
+  | {
+      accessDurationHours: number
+      activationApiPath: "/api/personal-plan/field-test/moderator/activate-organic"
+      identityMode: "email_bound"
+    }
+
 export type FunnelOfferVariantProps = {
   name: string
   narrative: QuizResultNarrative
@@ -25,10 +37,7 @@ export type FunnelOfferVariantProps = {
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
-  regularFieldTest?: {
-    accessDurationHours: number
-    activationApiPath?: string
-  } | null
+  regularFieldTest?: FunnelOfferFieldTest | null
 }
 
 export type FunnelOfferVariantComponent = ComponentType<FunnelOfferVariantProps>

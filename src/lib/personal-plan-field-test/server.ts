@@ -348,6 +348,45 @@ export async function hasPersonalPlanFieldTestOfferIntent(
   }
 }
 
+/** Only the moderator endpoint may authorize the organic source of an email-bound plan. */
+export async function resolveOrganicModeratorOfferAuthorization(
+  input: Parameters<typeof resolvePersonalPlanFieldTestOfferAuthorization>[0],
+  dependencies: CampaignDependencies & {
+    loadOfferSession?: (leadId: string, sessionId?: string | null) => Promise<OfferSession | null>
+  } = {},
+): Promise<PersonalPlanFieldTestOfferAuthorization | null> {
+  if (input.allowEmailBound !== true) return null
+  const campaign = await resolvePersonalPlanFieldTestCampaignCookie(
+    input.campaignCookieValue,
+    dependencies,
+  )
+  if (campaign.kind !== "eligible" || campaign.campaign.identityMode !== "email_bound") return null
+  try {
+    const session = await (dependencies.loadOfferSession ?? loadRegularQuizOfferSession)(
+      input.leadId,
+      input.funnelSessionId,
+    )
+    if (
+      !session ||
+      !input.funnelSessionId ||
+      session.id !== input.funnelSessionId ||
+      session.leadId !== input.leadId ||
+      session.packageKey !== "default_organic" ||
+      session.testKind !== "field_test" ||
+      session.campaignId !== campaign.campaign.id
+    )
+      return null
+    return {
+      campaignId: campaign.campaign.id,
+      funnelSessionId: session.id,
+      leadId: input.leadId,
+      accessDurationHours: campaign.campaign.accessDurationHours,
+    }
+  } catch {
+    return null
+  }
+}
+
 export async function hasRegularQuizFieldTestOfferIntent(
   input: { leadId: string; funnelSessionId?: string | null },
   dependencies: {

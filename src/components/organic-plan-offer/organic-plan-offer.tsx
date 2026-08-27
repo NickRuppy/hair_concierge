@@ -224,6 +224,7 @@ export function OrganicPlanOffer({
   const assessment = assessPersonalPlanHair(diagnosticInput)
   const diagnosticRows = buildPersonalPlanAssessmentRows(assessment, diagnosticInput)
   const isRegularFieldTest = Boolean(regularFieldTest)
+  const isEmailBoundModerator = regularFieldTest?.identityMode === "email_bound"
   const visibleFaqItems = isRegularFieldTest
     ? faqItems.filter(([question]) => question !== "Was passiert direkt nach dem Kauf?")
     : faqItems
@@ -247,7 +248,9 @@ export function OrganicPlanOffer({
     >
       <main className="min-h-screen bg-[#fcfaf7] text-[var(--brand-plum-darkest)]">
         <div className="sticky top-0 z-30 border-b border-[rgba(var(--brand-plum-rgb),0.10)] bg-[#fcfaf7]/95 backdrop-blur">
-          {isRegularFieldTest ? <RegularQuizFieldTestBanner surface="offer" /> : null}
+          {isRegularFieldTest && !isEmailBoundModerator ? (
+            <RegularQuizFieldTestBanner surface="offer" />
+          ) : null}
           <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-3">
             <Link href="/" className="font-serif text-2xl font-semibold tracking-tight">
               chaarlie
@@ -256,7 +259,11 @@ export function OrganicPlanOffer({
               className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white"
               data-offer-cta="sticky_header"
               data-offer-destination={
-                isRegularFieldTest ? "regular_field_test_activation" : "pricing"
+                isEmailBoundModerator
+                  ? "moderator_organic_test_activation"
+                  : isRegularFieldTest
+                    ? "regular_field_test_activation"
+                    : "pricing"
               }
               data-offer-source-section="hero"
               href={isRegularFieldTest ? activationHref : "#pricing"}
@@ -365,9 +372,11 @@ export function OrganicPlanOffer({
               {isRegularFieldTest ? "Kostenlos aktivieren" : "Plan freischalten"}
             </p>
             <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
-              {isRegularFieldTest
-                ? "Starte deinen siebentägigen Chaarlie Testzugang."
-                : "Starte mit deinem persönlichen Plan."}
+              {isEmailBoundModerator
+                ? "Starte deinen 90-Tage-Testzugang ab Aktivierung."
+                : isRegularFieldTest
+                  ? "Starte deinen siebentägigen Chaarlie Testzugang."
+                  : "Starte mit deinem persönlichen Plan."}
             </h2>
           </div>
           <div className="mt-7">
@@ -375,6 +384,7 @@ export function OrganicPlanOffer({
               <RegularQuizFieldTestActivationCard
                 accessDurationHours={regularFieldTest.accessDurationHours}
                 activationApiPath={regularFieldTest.activationApiPath}
+                identityMode={regularFieldTest.identityMode}
                 leadId={leadId}
               />
             ) : (
@@ -574,7 +584,11 @@ export function OrganicPlanOffer({
               className="mt-5 inline-flex rounded-full bg-white px-7 py-3 font-bold text-[var(--brand-plum-darkest)]"
               data-offer-cta="final"
               data-offer-destination={
-                isRegularFieldTest ? "regular_field_test_activation" : "pricing"
+                isEmailBoundModerator
+                  ? "moderator_organic_test_activation"
+                  : isRegularFieldTest
+                    ? "regular_field_test_activation"
+                    : "pricing"
               }
               data-offer-source-section="final_cta"
               href={isRegularFieldTest ? activationHref : "#pricing"}

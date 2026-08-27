@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  createSupabaseResultArtifactStore,
   handleQuizResultArtifactRequest,
   type ResultArtifactStore,
 } from "../src/app/api/quiz/result-artifact/route"
@@ -65,6 +66,37 @@ function createDeps(store: ResultArtifactStore, sends: CustomerIoTransactionalEm
     },
   }
 }
+
+test("the production claim excludes moderator-owned legacy leads", async () => {
+  const filters: Array<[string, string, unknown]> = []
+  const moderatorLeadStore = createSupabaseResultArtifactStore({
+    from(table: string) {
+      assert.equal(table, "leads")
+      const builder = {
+        update: () => builder,
+        eq: (column: string, value: unknown) => {
+          filters.push(["eq", column, value])
+          return builder
+        },
+        is: (column: string, value: unknown) => {
+          filters.push(["is", column, value])
+          return builder
+        },
+        select: () => builder,
+        maybeSingle: async () => ({ data: null, error: null }),
+      }
+      return builder
+    },
+  } as never)
+
+  assert.equal(await moderatorLeadStore.claimLead(leadId), null)
+  assert.deepEqual(filters, [
+    ["eq", "id", leadId],
+    ["is", "artifact_email_status", null],
+    ["eq", "quiz_kind", "legacy"],
+    ["is", "moderator_campaign_id", null],
+  ])
+})
 
 test("claims, sends, and marks the result artifact email sent", async () => {
   const sends: CustomerIoTransactionalEmailPayload[] = []

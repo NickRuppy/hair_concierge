@@ -38,6 +38,7 @@ const activeEnrollment = {
   lead_id: "22222222-2222-4222-8222-222222222222",
   manual_access_grant_id: "33333333-3333-4333-8333-333333333333",
   status: "active",
+  quiz_source_kind: "personal_plan",
   activated_at: "2026-08-10T11:00:00.000Z",
   expires_at: "2026-08-17T11:00:00.000Z",
   revoked_at: null,

@@ -221,10 +221,15 @@ test("PayPal cancellation calls PayPal and keeps future paid-through access acti
 })
 
 test("expired paid-through PayPal cancellation downgrades to Free", async () => {
+  // Expired, but safely inside the 24-hour cancellation-selection grace window.
   const { supabase, profiles } = createSupabaseStub({
     user: { id: "user-1" },
     billing: [
-      { user_id: "user-1", provider_subscription_id: "I-expired", current_period_end: pastIso() },
+      {
+        user_id: "user-1",
+        provider_subscription_id: "I-expired",
+        current_period_end: new Date(Date.now() - 60_000).toISOString(),
+      },
     ],
     profiles: { "user-1": { id: "user-1", subscription_status: "active" } },
   })

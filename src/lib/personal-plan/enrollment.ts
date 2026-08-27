@@ -58,6 +58,7 @@ type FieldTestEnrollmentRow = {
   activated_at?: unknown
   expires_at?: unknown
   revoked_at?: unknown
+  quiz_source_kind?: unknown
   manual_access_grants?: unknown
 }
 
@@ -100,6 +101,15 @@ function futureTimestamp(value: unknown, now: Date): string | null {
   if (typeof value !== "string") return null
   const timestamp = new Date(value)
   return !Number.isNaN(timestamp.getTime()) && timestamp.getTime() > now.getTime() ? value : null
+}
+
+function resolvePersonalPlanFieldTestQuizSourceKind(
+  row: FieldTestEnrollmentRow | null,
+): "personal_plan" | "legacy" | null {
+  if (row?.quiz_source_kind === "personal_plan" || row?.quiz_source_kind === "legacy") {
+    return row.quiz_source_kind
+  }
+  return null
 }
 
 function resolveActiveFieldTestEnrollment(
@@ -234,10 +244,12 @@ export async function findPersonalPlanEnrollmentForUser(
   }
 
   const enrollmentClient = supabase as unknown as EnrollmentSupabaseClient
+  // Deploy the source-discriminator migration before this reader. A missing
+  // column is a schema error, not proof that the user has no test access.
   const { data: fieldTestData, error: fieldTestError } = await enrollmentClient
     .from("personal_plan_test_enrollments")
     .select(
-      "id,user_id,lead_id,manual_access_grant_id,status,activated_at,expires_at,revoked_at,manual_access_grants!inner(id,user_id,reason,expires_at,revoked_at)",
+      "id,user_id,lead_id,manual_access_grant_id,status,activated_at,expires_at,revoked_at,quiz_source_kind,manual_access_grants!inner(id,user_id,reason,expires_at,revoked_at)",
     )
     .eq("user_id", userId)
     .eq("status", "active")
@@ -246,13 +258,18 @@ export async function findPersonalPlanEnrollmentForUser(
     if (isMissingPersonalPlanFieldTestRelation(fieldTestError)) return emptyEnrollment(oneTimeState)
     throw fieldTestError
   }
-  const personalPlanFieldTest = resolveActiveFieldTestEnrollment(
-    (fieldTestData as FieldTestEnrollmentRow | null) ?? null,
-    userId,
-    now,
-    "personal_plan",
-  )
-  if (personalPlanFieldTest) return personalPlanFieldTest
+  const personalPlanFieldTestRow = (fieldTestData as FieldTestEnrollmentRow | null) ?? null
+  const personalPlanFieldTestQuizSourceKind =
+    resolvePersonalPlanFieldTestQuizSourceKind(personalPlanFieldTestRow)
+  if (personalPlanFieldTestQuizSourceKind) {
+    const personalPlanFieldTest = resolveActiveFieldTestEnrollment(
+      personalPlanFieldTestRow,
+      userId,
+      now,
+      personalPlanFieldTestQuizSourceKind,
+    )
+    if (personalPlanFieldTest) return personalPlanFieldTest
+  }
 
   const { data: regularFieldTestData, error: regularFieldTestError } = await enrollmentClient
     .from("regular_quiz_test_enrollments")
