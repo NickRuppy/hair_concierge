@@ -140,6 +140,8 @@ test("reduced motion keeps the same history and focus contract without animation
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await openLab(page)
+  // As in the main history test, wait for the client transition owner before clicking.
+  await expect.poll(() => page.evaluate(() => window.history.scrollRestoration)).toBe("manual")
   await page.getByRole("link", { name: /Waschtag:/ }).click()
 
   await expect(page).toHaveURL(`${labPath}/wash_day`)

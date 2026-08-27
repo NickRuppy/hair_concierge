@@ -15,3 +15,7 @@ Route active moderator page and start responses to `/anwendung`. Existing authen
 Existing account-page, start-route, response-parser, and frontier tests cover the seam. The first three fail against the previous implementation. Run focused tests, typecheck, lint, and required CI. Verify a fresh hosted login through the actual invitation after deployment, then remove only the disposable production fixture. The five real moderator accounts remain untouched.
 
 This is a bounded correction to the approved journey, not a new design decision. Publication, merge, deployment, and the isolated fixture verification remain within the explicitly authorized live release.
+
+## CI follow-up
+
+The unchanged reduced-motion application transition test failed in both CI attempts, while ten local repeats passed. Unlike the suite's main history test, it clicked immediately after loading the server-rendered lab without waiting for the client transition owner. Add the same existing `scrollRestoration === manual` readiness wait before the reduced-motion click. Keep all URL, focus, and no-animation assertions unchanged; do not increase timeouts or add retries. This is a test synchronization correction, not a product animation change. Run the full 29-case development journey suite and repeat the transition suite before refreshing the exact-tree receipt.
