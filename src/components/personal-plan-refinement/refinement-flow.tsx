@@ -37,7 +37,7 @@ import type {
   Stage2StaticQuestionId,
 } from "@/lib/personal-plan/refinement/types"
 
-import { RefinementBridge } from "./refinement-bridge"
+import { RefinementBridge, stage2BridgeMarkerProps } from "./refinement-bridge"
 import {
   RefinementQuestion,
   getAnswerForQuestion,
@@ -747,12 +747,17 @@ export function RefinementFlow({
     if (mode === "loading") return <LoadingShell status={status} liveMessage={liveMessage} />
     if (mode === "bridge" && bridge) {
       if (stage2BridgePresentation({ explicitModuleEntry, handoffStatus }) === "pending") {
+        // The pending shell is the SAME armed bridge, only quieter — so it
+        // carries the same handoff contract. Dropping the marker here would
+        // make a finished module indistinguishable from a stuck one.
         return (
-          <LoadingShell
-            status={status}
-            liveMessage={liveMessage}
-            title="Deine Produkte werden vorbereitet."
-          />
+          <div {...stage2BridgeMarkerProps(bridge)}>
+            <LoadingShell
+              status={status}
+              liveMessage={liveMessage}
+              title="Deine Produkte werden vorbereitet."
+            />
+          </div>
         )
       }
       return (

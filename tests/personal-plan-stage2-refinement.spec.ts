@@ -439,7 +439,14 @@ test.describe("Stage 2 refinement Labs preview", () => {
       "data-refined-version-id",
       /-products-r\d+$/,
     )
-    await expect(page.getByRole("button", { name: /Produkte erfassen/ })).toBeVisible()
+    // An explicit module entry is the post-accept loop, not the creation
+    // funnel: the armed bridge shows the quiet pending shell and NEVER the
+    // Stage-3 chapter screen with its "Produkte erfassen" CTA (field test
+    // 26.08.2026). The marker above proves the handoff is armed either way.
+    await expect(
+      page.getByRole("heading", { name: "Deine Produkte werden vorbereitet." }),
+    ).toBeVisible()
+    await expect(page.getByRole("button", { name: /Produkte erfassen/ })).toHaveCount(0)
   })
 
   test("a module deep link opens the module on a completed direct-accept draft", async ({
