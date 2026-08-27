@@ -1,10 +1,7 @@
 "use client"
 
 import { FormEvent, useEffect, useRef, useState } from "react"
-import {
-  PersonalPlanChapterTransition,
-  PersonalPlanJourneyHeader,
-} from "@/components/personal-plan-journey"
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { HairLength } from "@/lib/vocabulary/hair-length"
@@ -22,6 +19,7 @@ import {
   takePersonalPlanReadyPollRequest,
   type PersonalPlanReadinessPhase,
 } from "./transition"
+import { PlanBereitArrival } from "./plan-ready-arrival"
 import type {
   PlanBereitInitialAction,
   PlanBereitInitialReadiness,
@@ -213,8 +211,7 @@ export function PersonalPlanReadyClient({
 
   if (canContinue) {
     return (
-      <PersonalPlanChapterTransition
-        currentStage={1}
+      <PlanBereitArrival
         actionHref={nextHref}
         onAction={() => markPersonalPlanStageNavigation("/plan-start")}
       />
