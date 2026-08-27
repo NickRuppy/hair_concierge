@@ -10,6 +10,7 @@ import {
   hasCurrentAppAccess,
   hasCurrentBillingAccess,
   hasCurrentManualAccess,
+  hasCurrentPaidAppAccess,
   upsertBillingSubscription,
 } from "../src/lib/billing/subscriptions"
 import type { SupabaseBillingClient } from "../src/lib/billing/types"
@@ -103,6 +104,8 @@ function sqlLikePatternToRegExp(pattern: string) {
 function createSupabaseStub(seed?: {
   billing?: Partial<BillingSubscriptionRow>[]
   manualGrants?: Array<Record<string, unknown>>
+  oneTimePurchases?: Array<Record<string, unknown>>
+  oneTimeAccessState?: "none" | "paid_pending" | "active" | "revoked"
   tableErrors?: Record<string, { code?: string; message: string }>
   profiles?: Record<string, Record<string, unknown>>
   authUsers?: Record<string, { id: string; email: string; app_metadata?: Record<string, unknown> }>
@@ -129,6 +132,7 @@ function createSupabaseStub(seed?: {
     updated_at: row.updated_at ?? new Date().toISOString(),
   }))
   const manualGrants = seed?.manualGrants ?? []
+  const oneTimePurchases = seed?.oneTimePurchases ?? []
   const profiles = seed?.profiles ?? {}
   const authUsers = seed?.authUsers ?? {}
   const paypalIntents = seed?.paypalIntents ?? []
@@ -151,6 +155,7 @@ function createSupabaseStub(seed?: {
     function rows() {
       if (table === "billing_subscriptions") return billing
       if (table === "manual_access_grants") return manualGrants
+      if (table === "billing_one_time_purchases") return oneTimePurchases
       if (table === "profiles") return Object.values(profiles)
       if (table === "paypal_checkout_intents") return paypalIntents
       return []
@@ -354,11 +359,19 @@ function createSupabaseStub(seed?: {
     calls,
     billing,
     manualGrants,
+    oneTimePurchases,
     profiles,
     authUsers,
     paypalIntents,
     supabase: {
       from: makeQuery,
+      rpc: async (fn: string, args: Record<string, unknown>) => {
+        calls.push({ fn, args, op: "rpc" })
+        if (fn === "get_personal_plan_one_time_access_state") {
+          return { data: seed?.oneTimeAccessState ?? "none", error: null }
+        }
+        return { data: null, error: { code: "PGRST202", message: `function ${fn} does not exist` } }
+      },
       auth: {
         admin: {
           createUser: async (payload: {
@@ -753,6 +766,61 @@ test("hasCurrentAppAccess accepts paid, legacy, and manual access sources", asyn
       email: "Friend@Example.com",
     }),
     true,
+  )
+})
+
+test("hasCurrentPaidAppAccess admits provider subscriptions and one-time purchases but ignores manual grants", async () => {
+  const paidSubscription = createSupabaseStub({
+    billing: [{ user_id: "paid-subscription-user", entitlement_status: "active" }],
+    profiles: {
+      "paid-subscription-user": { id: "paid-subscription-user", subscription_status: null },
+    },
+  })
+  assert.equal(
+    await hasCurrentPaidAppAccess(paidSubscription.supabase, {
+      userId: "paid-subscription-user",
+    }),
+    true,
+  )
+
+  const oneTimePurchase = createSupabaseStub({
+    oneTimeAccessState: "active",
+    oneTimePurchases: [
+      {
+        id: "purchase-1",
+        user_id: "one-time-user",
+        product_kind: "personal_plan_once",
+        status: "paid",
+        paid_at: "2026-08-01T10:00:00.000Z",
+        created_at: "2026-08-01T10:00:00.000Z",
+      },
+    ],
+    profiles: { "one-time-user": { id: "one-time-user", subscription_status: null } },
+  })
+  assert.equal(
+    await hasCurrentPaidAppAccess(oneTimePurchase.supabase, { userId: "one-time-user" }),
+    true,
+  )
+
+  const manualGrantOnly = createSupabaseStub({
+    profiles: { "manual-user": { id: "manual-user", subscription_status: null } },
+    manualGrants: [
+      {
+        id: "grant-1",
+        user_id: "manual-user",
+        email: null,
+        expires_at: null,
+        revoked_at: null,
+      },
+    ],
+  })
+  assert.equal(
+    await hasCurrentPaidAppAccess(manualGrantOnly.supabase, { userId: "manual-user" }),
+    false,
+  )
+  assert.equal(
+    manualGrantOnly.calls.some((call) => call.table === "manual_access_grants"),
+    false,
   )
 })
 
@@ -2042,6 +2110,13 @@ test("checkout.session.completed keeps profile writes and upserts a Stripe billi
         subscription_status: null,
       },
     },
+    authUsers: {
+      "user-1": {
+        id: "user-1",
+        email: "stripe@example.com",
+        app_metadata: {},
+      },
+    },
   })
   const stripe = {
     subscriptions: {
@@ -2070,10 +2145,7 @@ test("checkout.session.completed keeps profile writes and upserts a Stripe billi
       subscription: "sub_stripe_1",
     } as any,
     {
-      supabase: {
-        ...supabase,
-        auth: { admin: {} },
-      } as any,
+      supabase: supabase as any,
       stripe: stripe as any,
       premiumTierId: "tier-premium",
     },

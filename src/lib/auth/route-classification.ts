@@ -57,6 +57,10 @@ const PUBLIC_API_EXACT_ROUTES = [
   // The field-test handler performs its own signed campaign, funnel, lead,
   // session, and rate-limit checks before it creates or reuses a guest.
   "/api/personal-plan/field-test/activate",
+  // These email-bound moderator handlers authenticate their own session and
+  // must remain reachable before the moderator receives an entitlement.
+  "/api/personal-plan/field-test/moderator/start",
+  "/api/personal-plan/field-test/moderator/activate",
   "/api/quiz/field-test/activate",
   "/api/waitlist",
   "/api/waitlist/survey",

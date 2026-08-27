@@ -8,7 +8,7 @@ import {
   type PersonalPlanRoutineAccess,
 } from "@/lib/auth/intake-state"
 import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
-import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
+import { hasCurrentAppAccess, hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
@@ -17,6 +17,7 @@ import {
   type PersonalPlanRoutingFrontier,
 } from "@/lib/personal-plan/frontier-routing"
 import { loadPersonalPlanRoutingFrontierForUser } from "@/lib/personal-plan/frontier-routing-loader"
+import { resolveModeratorAccess } from "@/lib/personal-plan-field-test/moderator"
 import {
   classifyRoute,
   pathMatchesRoutePrefix,
@@ -51,6 +52,8 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/one-time-activation-status",
   "/api/personal-plan/field-test/activate",
+  "/api/personal-plan/field-test/moderator/start",
+  "/api/personal-plan/field-test/moderator/activate",
   "/api/quiz/field-test/activate",
 ]
 const ROUTES_WITHOUT_AUTH_LOOKUP = [
@@ -104,13 +107,40 @@ export function getFieldTestEndedRoute(user: { app_metadata?: Record<string, unk
 export function hasActivePersonalPlanRoutineEntitlement({
   hasCurrentAppAccess,
   fieldTestGuest,
+  moderatorAccess = "none",
   oneTimeAccessState,
 }: {
   hasCurrentAppAccess: boolean
   fieldTestGuest: boolean
+  moderatorAccess?: ModeratorAccessState
   oneTimeAccessState: OneTimeAccessState | null
 }) {
-  return oneTimeAccessState === "active" || (fieldTestGuest && hasCurrentAppAccess)
+  return (
+    oneTimeAccessState === "active" ||
+    (fieldTestGuest && hasCurrentAppAccess) ||
+    moderatorAccess === "active"
+  )
+}
+
+export type ModeratorAccessState = "active" | "ended" | "none" | "unavailable"
+
+function normalizeModeratorAccessState(value: unknown): ModeratorAccessState {
+  if (value === "active" || value === "ended" || value === "none" || value === "unavailable") {
+    return value
+  }
+  if (value && typeof value === "object") {
+    const discriminator =
+      (value as Record<string, unknown>).kind ?? (value as Record<string, unknown>).status
+    if (
+      discriminator === "active" ||
+      discriminator === "ended" ||
+      discriminator === "none" ||
+      discriminator === "unavailable"
+    ) {
+      return discriminator
+    }
+  }
+  return "unavailable"
 }
 
 export function buildAuthenticatedIntakeRedirectUrl(
@@ -147,7 +177,12 @@ export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: 
 export type UpdateSessionDependencies = {
   createServerClient: typeof createServerClient
   hasCurrentAppAccess: typeof hasCurrentAppAccess
+  hasCurrentPaidAppAccess?: typeof hasCurrentPaidAppAccess
   resolveOneTimeAccessState: typeof resolveOneTimeAccessState
+  resolveModeratorAccess?: (input: {
+    client: Pick<SupabaseClient, "from">
+    userId: string
+  }) => Promise<unknown>
   getRouteEnvironment: () => RouteEnvironment
   loadPersonalPlanRoutingFrontier?: (
     client: Pick<SupabaseClient, "from">,
@@ -173,7 +208,12 @@ function getDefaultRouteEnvironment(): RouteEnvironment {
 const defaultUpdateSessionDependencies: UpdateSessionDependencies = {
   createServerClient,
   hasCurrentAppAccess,
+  hasCurrentPaidAppAccess,
   resolveOneTimeAccessState,
+  // Moderator membership is deliberately service-only. Never pass the browser
+  // session client here or RLS would convert ordinary protected requests into
+  // false access outages.
+  resolveModeratorAccess: ({ userId }) => resolveModeratorAccess({ userId }),
   getRouteEnvironment: getDefaultRouteEnvironment,
   loadPersonalPlanRoutingFrontier: loadPersonalPlanRoutingFrontierForUser as never,
 }
@@ -301,17 +341,51 @@ export function createUpdateSession(
     const fieldTestGuest = isPersonalPlanFieldTestGuest(user)
     let oneTimeAccessState: OneTimeAccessState | null = null
     let hasActivePersonalPlanEntitlement = false
+    let moderatorAccess: ModeratorAccessState = "none"
 
     if (needsSub) {
       let active: boolean
       try {
-        ;[active, oneTimeAccessState] = await Promise.all([
+        ;[active, oneTimeAccessState, moderatorAccess] = await Promise.all([
           dependencies.hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }),
           dependencies.resolveOneTimeAccessState(supabase, user.id),
+          !fieldTestGuest && dependencies.resolveModeratorAccess
+            ? dependencies
+                .resolveModeratorAccess({ client: supabase, userId: user.id })
+                .then(normalizeModeratorAccessState)
+            : Promise.resolve<ModeratorAccessState>("none"),
         ])
+        let hasIndependentPaidEntitlement = oneTimeAccessState === "active"
+        if (moderatorAccess === "ended" || moderatorAccess === "unavailable") {
+          hasIndependentPaidEntitlement = dependencies.hasCurrentPaidAppAccess
+            ? await dependencies.hasCurrentPaidAppAccess(supabase, { userId: user.id })
+            : false
+          // `active` includes a manual tester grant. Once its matching
+          // moderator record has ended or cannot be read, only independently
+          // verified paid access may keep the protected route open.
+          active = hasIndependentPaidEntitlement
+        }
+        if (moderatorAccess === "unavailable" && !hasIndependentPaidEntitlement) {
+          if (pathMatchesRoutePrefix(pathname, "/api")) {
+            return NextResponse.json({ error: "moderator_access_unavailable" }, { status: 503 })
+          }
+          const unavailable = new NextResponse(
+            "Dein Zugang wird gerade geprüft. Bitte versuche es gleich noch einmal.",
+            {
+              status: 503,
+              headers: {
+                "Cache-Control": "private, no-store",
+                "Content-Type": "text/plain; charset=utf-8",
+              },
+            },
+          )
+          supabaseResponse.cookies.getAll().forEach((cookie) => unavailable.cookies.set(cookie))
+          return unavailable
+        }
         hasActivePersonalPlanEntitlement = hasActivePersonalPlanRoutineEntitlement({
           hasCurrentAppAccess: active,
           fieldTestGuest,
+          moderatorAccess,
           oneTimeAccessState,
         })
       } catch (error) {
@@ -356,7 +430,21 @@ export function createUpdateSession(
         }
       }
 
-      if (!active) {
+      // A current app entitlement still reaches the ordinary onboarding/intake
+      // flow even when it is not yet a Personal Plan routine entitlement.
+      // Email-bound moderators and one-time owners also need to pass this
+      // outer subscription gate; their later journey readers validate the
+      // exact Personal Plan source.
+      if (!active && oneTimeAccessState !== "active" && moderatorAccess !== "active") {
+        if (moderatorAccess === "ended") {
+          if (pathMatchesRoutePrefix(pathname, "/api")) {
+            return NextResponse.json({ error: "field_test_ended" }, { status: 403 })
+          }
+          const url = request.nextUrl.clone()
+          url.pathname = "/test/haarplan/beendet"
+          url.search = ""
+          return redirectWithSupabaseCookies(url, supabaseResponse)
+        }
         if (fieldTestGuest) {
           if (pathMatchesRoutePrefix(pathname, "/api")) {
             return NextResponse.json({ error: "field_test_ended" }, { status: 403 })
@@ -395,11 +483,27 @@ export function createUpdateSession(
       ])
 
       const intakeState = resolveIntakeState(profile, hairProfile)
+      const moderatorLegacyEntry =
+        moderatorAccess === "active" &&
+        intakeState !== "ready" &&
+        pathMatchesRoutePrefix(pathname, "/chat")
       try {
         const frontier = await (
           dependencies.loadPersonalPlanRoutingFrontier ?? loadPersonalPlanRoutingFrontierForUser
         )(supabase as never, user.id)
-        const frontierRedirect = getPersonalPlanFrontierRedirect(pathname, frontier)
+        // A reset moderator has no legacy onboarding completion. Password login
+        // defaults to /chat; keep early-plan returns in the saved Personal Plan.
+        // Once a routine exists, retain ordinary chat access.
+        const moderatorEntryRedirect =
+          moderatorLegacyEntry &&
+          (frontier.kind !== "personal_plan" ||
+            ["stage1", "stage2", "stage3"].includes(frontier.frontier))
+            ? frontier.kind === "legacy"
+              ? "/plan-bereit"
+              : frontier.nextHref
+            : null
+        const frontierRedirect =
+          moderatorEntryRedirect ?? getPersonalPlanFrontierRedirect(pathname, frontier)
         if (frontierRedirect) {
           const url = buildAuthenticatedIntakeRedirectUrl(
             request.nextUrl,
@@ -411,6 +515,7 @@ export function createUpdateSession(
       } catch (error) {
         console.warn("[personal-plan] routing frontier unavailable", error)
         if (
+          moderatorLegacyEntry ||
           getPersonalPlanFrontierRedirect(pathname, {
             kind: "recovery",
             nextHref: "/plan-bereit",

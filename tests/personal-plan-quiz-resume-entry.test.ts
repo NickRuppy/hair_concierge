@@ -25,7 +25,7 @@ test("personal-plan resume entry resolves or exchanges before landing rendering 
   assert.ok(renderIndex > exchangeIndex)
   assert.ok(trackingIndex > renderIndex)
   assert.match(landing, /redirect\("\/lp\/haarplan"\)/)
-  assert.match(landing, /resumeToken && !resumeEnabled/)
+  assert.match(landing, /resumeToken && \(!resumeEnabled \|\| moderatorQuiz\)/)
   assert.doesNotMatch(landing, /initialReturnDecision\.kind !== "unavailable"/)
   assert.match(
     landing,
@@ -41,7 +41,7 @@ test("completed result return has fixed precedence over explicit and stored draf
   const resultResolveIndex = landing.indexOf("resultReturn = await")
   const resultDecisionIndex = landing.indexOf("const initialReturnDecision =")
   const resultRedirectIndex = landing.indexOf("?entry=quiz_return")
-  const resumeFallbackIndex = landing.indexOf("resumeToken && !resumeEnabled")
+  const resumeFallbackIndex = landing.indexOf("resumeToken && (!resumeEnabled || moderatorQuiz)")
   const draftResolveIndex = landing.indexOf("const landingState = await")
 
   assert.ok(resultResolveIndex >= 0)

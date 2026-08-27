@@ -83,6 +83,12 @@ function stubDeps() {
             profiles[id] = { id, email, subscription_status: null }
             return { data: { user: users[email] }, error: null }
           },
+          async getUserById(userId: string) {
+            return {
+              data: { user: Object.values(users).find((user) => user.id === userId) ?? null },
+              error: null,
+            }
+          },
         },
       },
       from(table: string) {

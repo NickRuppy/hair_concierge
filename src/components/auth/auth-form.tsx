@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { linkLeadAction } from "@/app/auth/actions"
+import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
 
 interface AuthFormProps {
   defaultEmail?: string
@@ -61,9 +62,15 @@ function buildNextDestination(next: string, leadId: string | null): string {
   return `${nextUrl.pathname}${nextUrl.search}`
 }
 
-export function buildPasswordRecoveryRedirect(origin: string): string {
+export function buildPasswordRecoveryRedirect(origin: string, returnTo?: string): string {
   const confirmUrl = new URL("/auth/confirm", origin)
-  confirmUrl.searchParams.set("next", "/auth/update-password")
+  // `type=recovery` is authoritative at confirmation time. Carry a validated
+  // moderator return directly so the confirm route can both suppress legacy
+  // lead linking and wrap it in the password-update return destination.
+  confirmUrl.searchParams.set(
+    "next",
+    isModeratorReturnPath(returnTo) ? returnTo : "/auth/update-password",
+  )
   return confirmUrl.toString()
 }
 
@@ -180,7 +187,10 @@ export function AuthForm({
     setLoginErrorIsCredentials(false)
 
     const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
-      redirectTo: buildPasswordRecoveryRedirect(window.location.origin),
+      redirectTo: buildPasswordRecoveryRedirect(
+        window.location.origin,
+        buildNextDestination(next, leadId ?? null),
+      ),
     })
 
     if (error) {

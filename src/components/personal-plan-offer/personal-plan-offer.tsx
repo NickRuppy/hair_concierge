@@ -605,6 +605,7 @@ export function PersonalPlanOffer({
   checkoutPresentationFixture,
   entryContext,
   fieldTest = false,
+  moderatorTest = false,
   focusTarget = null,
   isInternalTest = false,
   leadId,
@@ -617,6 +618,7 @@ export function PersonalPlanOffer({
   checkoutPresentationFixture?: { expressElements: boolean; overlay: boolean }
   entryContext: OfferEntryContext
   fieldTest?: boolean
+  moderatorTest?: boolean
   focusTarget?: PersonalPlanOfferFocusTarget | null
   isInternalTest?: boolean
   leadId: string
@@ -665,11 +667,16 @@ export function PersonalPlanOffer({
     setFieldTestActivating(true)
     setFieldTestError(false)
     try {
-      const response = await fetch("/api/personal-plan/field-test/activate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leadId }),
-      })
+      const response = await fetch(
+        moderatorTest
+          ? "/api/personal-plan/field-test/moderator/activate"
+          : "/api/personal-plan/field-test/activate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ leadId }),
+        },
+      )
       const payload: unknown = await response.json().catch(() => null)
       const destination =
         payload && typeof payload === "object" && !Array.isArray(payload)
@@ -686,7 +693,7 @@ export function PersonalPlanOffer({
       setFieldTestError(true)
       setFieldTestActivating(false)
     }
-  }, [fieldTestActivating, leadId])
+  }, [fieldTestActivating, leadId, moderatorTest])
   const stickyDestination = fieldTest
     ? "field_test_activation"
     : pricingReached
@@ -842,6 +849,7 @@ export function PersonalPlanOffer({
           <div className="mt-7">
             {fieldTest ? (
               <FieldTestActivationCard
+                moderatorTest={moderatorTest}
                 activating={fieldTestActivating}
                 error={fieldTestError}
                 onActivate={activateFieldTest}
@@ -1054,7 +1062,17 @@ export function PersonalPlanOffer({
           </h2>
           <div className="mt-6 space-y-3">
             {(fieldTest
-              ? personalPlanFieldTestFaqItems
+              ? moderatorTest
+                ? personalPlanFieldTestFaqItems.map((item) =>
+                    item.id === "field-test-access"
+                      ? {
+                          ...item,
+                          answer:
+                            "Dein kostenloser Moderatorzugang gilt 90 Tage ab Aktivierung. Dein Plan ist in deinem Konto gespeichert und über deine E-Mail-Adresse auch auf anderen Geräten erreichbar. Es werden keine Zahlungsdaten benötigt und es entsteht kein Abo.",
+                        }
+                      : item,
+                  )
+                : personalPlanFieldTestFaqItems
               : [
                   ...personalPlanSharedFaqItems,
                   ...(isOneTimeOffer ? [] : personalPlanMembershipFaqItems),
@@ -1095,6 +1113,7 @@ export function PersonalPlanOffer({
 }
 
 function FieldTestActivationCard({
+  moderatorTest = false,
   activating,
   error,
   onActivate,
@@ -1102,6 +1121,7 @@ function FieldTestActivationCard({
   activating: boolean
   error: boolean
   onActivate: () => void
+  moderatorTest?: boolean
 }) {
   return (
     <section
@@ -1110,8 +1130,16 @@ function FieldTestActivationCard({
     >
       <p className="font-serif text-4xl leading-none text-[var(--brand-plum-darkest)]">0 €</p>
       <p className="mt-3 text-base font-semibold text-[var(--brand-plum-darkest)]">
-        Keine Zahlungsdaten · kein Abo · zeitlich begrenzter Testzugang
+        {moderatorTest
+          ? "Keine Zahlungsdaten · kein Abo · 90 Tage ab Aktivierung"
+          : "Keine Zahlungsdaten · kein Abo · zeitlich begrenzter Testzugang"}
       </p>
+      {moderatorTest ? (
+        <p className="mt-3 text-sm text-[var(--text-sub)]">
+          Dein Plan wird in deinem Konto gespeichert. Du kannst dich später mit derselben
+          E-Mail-Adresse wieder anmelden.
+        </p>
+      ) : null}
       <button
         className="mt-6 w-full rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
         data-offer-cta="field_test_activation"
@@ -1123,7 +1151,9 @@ function FieldTestActivationCard({
       </button>
       {error ? (
         <p className="mt-4 text-sm font-semibold text-destructive" role="alert">
-          Testzugang erneut aktivieren oder zur Auswertung zurückkehren.
+          {moderatorTest
+            ? "Deine Antworten und deine Auswertung bleiben gespeichert. Bitte versuche die Aktivierung erneut. Es wurde keine Zahlung ausgelöst."
+            : "Testzugang erneut aktivieren oder zur Auswertung zurückkehren."}
         </p>
       ) : null}
     </section>

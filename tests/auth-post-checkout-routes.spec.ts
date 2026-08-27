@@ -343,7 +343,9 @@ test("password-reset emails stamp the explicit PKCE recovery destination", () =>
   expect(`${redirect.pathname}${redirect.search}`).toBe(
     "/auth/confirm?next=%2Fauth%2Fupdate-password",
   )
-  expect(source).toContain("redirectTo: buildPasswordRecoveryRedirect(window.location.origin)")
+  expect(source).toMatch(
+    /redirectTo:\s*buildPasswordRecoveryRedirect\(\s*window\.location\.origin,\s*buildNextDestination\(next, leadId \?\? null\),\s*\),/,
+  )
 })
 
 test("rejects missing request body before rate limiting or Stripe work", async () => {

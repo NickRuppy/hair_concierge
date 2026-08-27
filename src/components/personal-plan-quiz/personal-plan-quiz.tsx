@@ -1,5 +1,8 @@
 "use client"
 
+import { useModeratorQuiz } from "./moderator-quiz-context"
+import { scopeQuizDraftStorage, type QuizDraftStorage } from "@/lib/personal-plan-quiz/draft-scope"
+
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { createPortal } from "react-dom"
@@ -311,17 +314,17 @@ const LOADING_COMMITMENTS = [
   },
 ] as const
 
-function getBrowserDraftStorage(): Storage | null {
+function getBrowserDraftStorage(scope?: string): QuizDraftStorage | null {
   try {
-    return window.localStorage
+    return scopeQuizDraftStorage(window.localStorage, scope)
   } catch {
     return null
   }
 }
 
-function getBrowserSessionStorage(): Storage | null {
+function getBrowserSessionStorage(scope?: string): QuizDraftStorage | null {
   try {
-    return window.sessionStorage
+    return scopeQuizDraftStorage(window.sessionStorage, scope)
   } catch {
     return null
   }
@@ -350,7 +353,7 @@ function getSettledSectionIndicesForRestoredJourney(
 }
 
 function loadPreparedPlanClaim(
-  storage: Storage,
+  storage: QuizDraftStorage,
   answers: PersonalPlanQuizAnswers,
 ): PreparedPlanClaim | null {
   try {
@@ -381,7 +384,7 @@ function loadPreparedPlanClaim(
   }
 }
 
-function savePreparedPlanClaim(storage: Storage, claim: PreparedPlanClaim): void {
+function savePreparedPlanClaim(storage: QuizDraftStorage, claim: PreparedPlanClaim): void {
   try {
     storage.setItem(PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY, JSON.stringify(claim))
   } catch {
@@ -1766,7 +1769,8 @@ function EmailCapture({
   preparedPlan: PreparedPlanClaim
   fieldTest: boolean
 }) {
-  const [email, setEmail] = useState("")
+  const moderator = useModeratorQuiz()
+  const [email, setEmail] = useState(moderator?.email ?? "")
   const [step, setStep] = useState<"email" | "consent">("email")
   const [error, setError] = useState("")
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
@@ -1797,7 +1801,7 @@ function EmailCapture({
     setServerSuggestion(null)
     setChecking(false)
   }
-  const localSuggestions = getEmailSuggestions(email)
+  const localSuggestions = moderator ? [] : getEmailSuggestions(email)
   // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
   // fehlgeschlagenen Zustellpruefung, nicht aus einer Heuristik im Formular.
   const suggestions =
@@ -2022,7 +2026,9 @@ function EmailCapture({
             Wohin dürfen wir deine persönliche Auswertung senden?
           </h1>
           <p className="mt-3 text-center leading-7 text-[var(--text-sub)]">
-            So kannst du dein Ergebnis jetzt ansehen und später wieder öffnen.
+            {moderator
+              ? "Deine Auswertung wird mit deinem angemeldeten Konto verbunden. Du kannst später mit derselben E-Mail-Adresse zurückkehren."
+              : "So kannst du dein Ergebnis jetzt ansehen und später wieder öffnen."}
           </p>
           <div className="mt-8">
             <label
@@ -2040,6 +2046,7 @@ function EmailCapture({
                 suggestions.length ? "rounded-b-none rounded-t-2xl" : "rounded-2xl",
               )}
               id="personal-plan-email"
+              readOnly={Boolean(moderator)}
               enterKeyHint="go"
               onChange={(event) => applyEmailValue(event.target.value)}
               placeholder="du@beispiel.de"
@@ -2153,6 +2160,8 @@ export function PersonalPlanQuiz({
   fieldTest?: boolean
   entry?: FreshPersonalPlanQuizEntry
 }) {
+  const moderator = useModeratorQuiz()
+  const draftScope = moderator?.scope
   const router = useRouter()
   const initialServerDraft =
     resume.enabled && resume.snapshot
@@ -2219,7 +2228,7 @@ export function PersonalPlanQuiz({
   const resumeBootstrapRef = useRef(resume)
   const serverDraftSessionRef = useRef<PersonalPlanQuizServerDraftSession | null>(null)
 
-  function getServerDraftSession() {
+  const getServerDraftSession = useCallback(() => {
     serverDraftSessionRef.current =
       serverDraftSessionRef.current ??
       createPersonalPlanQuizServerDraftSession({
@@ -2229,16 +2238,16 @@ export function PersonalPlanQuiz({
             latestDraftRef.current,
             metadata,
           )
-          const storage = getBrowserDraftStorage()
+          const storage = getBrowserDraftStorage(draftScope)
           if (storage) savePersonalPlanQuizDraft(latestDraftRef.current, storage)
         },
       })
     return serverDraftSessionRef.current
-  }
+  }, [draftScope])
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      const storage = getBrowserDraftStorage()
+      const storage = getBrowserDraftStorage(draftScope)
       const localDraft = storage ? loadPersonalPlanQuizDraft(storage) : null
       const serverSnapshot = resumeBootstrapRef.current.enabled
         ? resumeBootstrapRef.current.snapshot
@@ -2257,7 +2266,7 @@ export function PersonalPlanQuiz({
         )
         settledSectionIndicesRef.current = new Set(restoredSections)
         setSettledSectionIndices(restoredSections)
-        const sessionStorage = getBrowserSessionStorage()
+        const sessionStorage = getBrowserSessionStorage(draftScope)
         const claim = sessionStorage ? loadPreparedPlanClaim(sessionStorage, draft.answers) : null
         if (claim) {
           setPreparedPlan({ status: "ready", claim, error: null })
@@ -2275,7 +2284,7 @@ export function PersonalPlanQuiz({
     })
 
     return () => window.cancelAnimationFrame(frame)
-  }, [])
+  }, [draftScope])
 
   // Keep the latest in-app back handler reachable from the popstate listener.
   const goBackRef = useRef<() => void>(() => {})
@@ -2291,12 +2300,12 @@ export function PersonalPlanQuiz({
     const metadata = serverDraftSession.getMetadata()
     const draft = withPersonalPlanQuizServerMetadata({ screen, history, answers }, metadata)
     latestDraftRef.current = draft
-    const storage = getBrowserDraftStorage()
+    const storage = getBrowserDraftStorage(draftScope)
     if (storage) savePersonalPlanQuizDraft(draft, storage)
     if (hasPersonalPlanQuizDurableAnswer(answers)) {
       serverDraftSession.queueSave(draft)
     }
-  }, [answers, draftReady, history, screen])
+  }, [answers, draftReady, history, screen, draftScope, getServerDraftSession])
 
   useEffect(() => {
     if (!draftReady) return
@@ -2311,18 +2320,18 @@ export function PersonalPlanQuiz({
     }
     window.addEventListener("pagehide", onPageHide)
     return () => window.removeEventListener("pagehide", onPageHide)
-  }, [answers, draftReady, history, screen])
+  }, [answers, draftReady, history, screen, getServerDraftSession])
 
   const answersKey = useMemo(() => getAnswersKey(answers), [answers])
   useEffect(() => {
     latestAnswersKeyRef.current = answersKey
     setPreparedPlan((current) => {
       if (current.status !== "ready" || current.claim.answersKey === answersKey) return current
-      const storage = getBrowserSessionStorage()
+      const storage = getBrowserSessionStorage(draftScope)
       if (storage) clearPersonalPlanPreparedPlanClaim(storage)
       return { status: "idle", claim: null, error: null }
     })
-  }, [answersKey])
+  }, [answersKey, draftScope])
 
   const preparePersonalPlan = useCallback(
     (force = false) => {
@@ -2378,7 +2387,7 @@ export function PersonalPlanQuiz({
             }
             if (latestAnswersKeyRef.current !== requestKey) return
             const claim = { artifactId, claimToken, answersKey: requestKey, expiresAt }
-            const storage = getBrowserSessionStorage()
+            const storage = getBrowserSessionStorage(draftScope)
             if (storage) savePreparedPlanClaim(storage, claim)
             setPreparedPlan({ status: "ready", claim, error: null })
             return
@@ -2402,7 +2411,7 @@ export function PersonalPlanQuiz({
       preparationRequestRef.current = { answersKey: requestKey, promise }
       return promise
     },
-    [answers, preparedPlan],
+    [answers, preparedPlan, draftScope],
   )
 
   useEffect(() => {
@@ -2918,16 +2927,16 @@ export function PersonalPlanQuiz({
           preparedPlan={preparedPlan.claim}
           fieldTest={fieldTest}
           onPreparedPlanRejected={() => {
-            const sessionStorage = getBrowserSessionStorage()
+            const sessionStorage = getBrowserSessionStorage(draftScope)
             if (sessionStorage) clearPersonalPlanPreparedPlanClaim(sessionStorage)
             setPreparedPlan({ status: "idle", claim: null, error: null })
           }}
           onSaved={(leadId) => {
             stripPersonalPlanQuizResumeTokenFromCurrentUrl()
             void getServerDraftSession().revoke()
-            const storage = getBrowserDraftStorage()
+            const storage = getBrowserDraftStorage(draftScope)
             if (storage) clearPersonalPlanQuizDraft(storage)
-            const sessionStorage = getBrowserSessionStorage()
+            const sessionStorage = getBrowserSessionStorage(draftScope)
             if (sessionStorage) clearPersonalPlanPreparedPlanClaim(sessionStorage)
             router.push(`/result/${leadId}/reveal`)
           }}

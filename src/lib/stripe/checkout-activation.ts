@@ -1,7 +1,11 @@
 import { createHash } from "node:crypto"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
-import { upsertBillingSubscription } from "@/lib/billing/subscriptions"
+import {
+  findBillingSubscriptionByProviderId,
+  upsertBillingSubscription,
+} from "@/lib/billing/subscriptions"
+import { assertStripeCreatedAfterModeratorResetCutoff } from "@/lib/billing/moderator-reset-cutoff"
 import {
   activateVerifiedOneTimePayment,
   OneTimeActivationError,
@@ -47,6 +51,8 @@ export type CheckoutActivationErrorCode =
   | "checkout_preparation_unclaimed"
   | "checkout_subscription_inactive"
   | "checkout_subscription_expired"
+  | "checkout_ownership_conflict"
+  | "checkout_moderator_reset_cutoff"
   | "checkout_user_race_unresolved"
   | "checkout_one_time_invalid"
   | "checkout_one_time_payment_intent_missing"
@@ -217,7 +223,7 @@ export async function ensureCheckoutAccount(
   assertCurrentCheckoutSubscription(sub, deps.now?.() ?? new Date())
 
   const existingProfile = await measureCheckoutStep("profiles.findExisting", () =>
-    findExistingProfile(deps, valid.email, valid.customerId),
+    findExistingProfile(deps, valid.email, valid.customerId, sub.id),
   )
 
   let userId: string
@@ -225,16 +231,22 @@ export async function ensureCheckoutAccount(
 
   if (existingProfile) {
     userId = existingProfile.id
-    canSetInitialPassword = await canSetPasswordForCheckoutSession(deps, userId, valid.id)
+    const authUser = await readExistingCheckoutAuthUser(deps, userId)
+    assertCheckoutAfterModeratorResetCutoff(authUser.app_metadata, session, sub)
+    canSetInitialPassword = canSetPasswordForAuthUser(authUser, valid.id)
   } else {
     const created = await measureCheckoutStep("auth.createCheckoutUser", () =>
-      createCheckoutUser(deps, valid.email, valid.id, valid.customerId),
+      createCheckoutUser(deps, valid.email, valid.id, valid.customerId, sub.id),
     )
+    userId = created.userId
     if (created.created) {
-      userId = created.userId
       canSetInitialPassword = true
     } else {
-      userId = created.userId
+      const authUser = await readExistingCheckoutAuthUser(deps, userId)
+      assertCheckoutAfterModeratorResetCutoff(authUser.app_metadata, session, sub)
+      // A duplicate-create recovery never receives a password capability, even when
+      // the recovered account still has an old matching activation marker.
+      canSetInitialPassword = false
     }
   }
 
@@ -936,18 +948,46 @@ async function findExistingProfile(
   deps: CheckoutActivationDeps,
   email: string,
   customerId: string | null,
+  subscriptionId?: string,
 ): Promise<ProfileRow | null> {
-  const [byEmail, byCustomer] = await Promise.all([
+  const [byEmail, byCustomer, existingSubscription] = await Promise.all([
     findProfileBy(deps, "email", email),
     customerId ? findProfileBy(deps, "stripe_customer_id", customerId) : Promise.resolve(null),
+    subscriptionId
+      ? findBillingSubscriptionByProviderId(deps.supabase, "stripe", subscriptionId)
+      : Promise.resolve(null),
   ])
-  if (byEmail) return byEmail
-  return byCustomer
+  const candidates = [byEmail, byCustomer].filter((profile): profile is ProfileRow => !!profile)
+  const candidateIds = new Set(candidates.map((profile) => profile.id))
+  if (candidateIds.size > 1) {
+    throw checkoutOwnershipConflict(
+      "checkout email and Stripe customer resolve to different profiles",
+    )
+  }
+  if (!existingSubscription) return candidates[0] ?? null
+  if (!existingSubscription.user_id) {
+    throw checkoutOwnershipConflict("existing Stripe subscription has no immutable user owner")
+  }
+  const ownerProfile = await findProfileBy(deps, "id", existingSubscription.user_id)
+  if (!ownerProfile) {
+    throw checkoutOwnershipConflict("existing Stripe subscription owner profile is missing")
+  }
+  if (candidateIds.size > 0 && !candidateIds.has(ownerProfile.id)) {
+    throw checkoutOwnershipConflict(
+      "checkout identity conflicts with existing Stripe subscription owner",
+    )
+  }
+  if (ownerProfile.stripe_customer_id && ownerProfile.stripe_customer_id !== customerId) {
+    throw checkoutOwnershipConflict(
+      "checkout customer conflicts with existing Stripe subscription owner",
+    )
+  }
+  return ownerProfile
 }
 
 async function findProfileBy(
   deps: CheckoutActivationDeps,
-  column: "email" | "stripe_customer_id",
+  column: "id" | "email" | "stripe_customer_id",
   value: string,
 ): Promise<ProfileRow | null> {
   const { data, error } = await deps.supabase
@@ -995,6 +1035,7 @@ async function createCheckoutUser(
   email: string,
   sessionId: string,
   customerId: string | null,
+  subscriptionId?: string,
 ): Promise<{ userId: string; created: boolean }> {
   const { data, error } = await deps.supabase.auth.admin.createUser({
     email,
@@ -1007,7 +1048,7 @@ async function createCheckoutUser(
   if (!error && data.user) return { userId: data.user.id, created: true }
 
   if (isDuplicateUserError(error)) {
-    const existingProfile = await findExistingProfile(deps, email, customerId)
+    const existingProfile = await findExistingProfile(deps, email, customerId, subscriptionId)
     if (existingProfile) return { userId: existingProfile.id, created: false }
 
     const existingAuthUserId = await findAuthUserIdByEmail(deps, email)
@@ -1083,10 +1124,46 @@ async function canSetPasswordForCheckoutSession(
   const user = await getAuthUserById(deps, userId)
   if (!user) return false
 
+  return canSetPasswordForAuthUser(user, sessionId)
+}
+
+function canSetPasswordForAuthUser(user: { app_metadata?: unknown }, sessionId: string): boolean {
   const appMetadata = isRecord(user.app_metadata) ? user.app_metadata : {}
   if (Object.prototype.hasOwnProperty.call(appMetadata, "password_initialized_at")) return false
 
   return appMetadata.checkout_activation_session_hash === checkoutSessionHash(sessionId)
+}
+
+async function readExistingCheckoutAuthUser(
+  deps: CheckoutActivationDeps,
+  userId: string,
+): Promise<{ app_metadata?: unknown }> {
+  const user = await getAuthUserById(deps, userId)
+  if (!user) throw checkoutOwnershipConflict("existing checkout owner Auth record is unavailable")
+  return user
+}
+
+function assertCheckoutAfterModeratorResetCutoff(
+  metadata: unknown,
+  session: Stripe.Checkout.Session,
+  subscription: RetrievedSub,
+): void {
+  try {
+    assertStripeCreatedAfterModeratorResetCutoff({
+      metadata,
+      checkoutSessionCreated: session.created,
+      subscriptionCreated: subscription.created,
+    })
+  } catch (error) {
+    throw new CheckoutActivationError(
+      "checkout_moderator_reset_cutoff",
+      error instanceof Error ? error.message : "moderator reset cutoff rejected checkout",
+    )
+  }
+}
+
+function checkoutOwnershipConflict(message: string): CheckoutActivationError {
+  return new CheckoutActivationError("checkout_ownership_conflict", message)
 }
 
 async function getAuthUserById(

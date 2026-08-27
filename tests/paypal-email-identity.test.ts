@@ -8,6 +8,7 @@ import {
   ensurePayPalCheckoutAccount,
   ensurePayPalCheckoutAccountForToken,
   paypalCheckoutActivationHash,
+  PayPalCheckoutActivationError,
 } from "../src/lib/paypal/checkout-activation"
 import { handlePayPalWebhookEvent } from "../src/lib/paypal/webhook-handlers"
 import { toBillingSubscriptionInputFromPayPal } from "../src/lib/paypal/subscription-shapes"
@@ -528,6 +529,130 @@ test("PayPal activation falls back to subscriber email when checkout account ema
   assert.equal(Object.values(profiles)[0].email, "paypal-buyer@example.com")
 })
 
+test("PayPal activation preserves an existing provider subscription owner when payer email differs", async () => {
+  const { supabase, profiles, billing, authUsers } = createSupabaseStub({
+    billing: [
+      {
+        user_id: "owner-a",
+        provider: "paypal",
+        provider_subscription_id: "I-active",
+        provider_subscriber_email: "old-payer@example.com",
+        entitlement_status: "active",
+      },
+    ],
+    profiles: {
+      "owner-a": {
+        id: "owner-a",
+        email: "owner-a@example.com",
+      },
+      "payer-b": {
+        id: "payer-b",
+        email: "payer-b@example.com",
+      },
+    },
+    authUsers: {
+      "owner-a": {
+        id: "owner-a",
+        email: "owner-a@example.com",
+      },
+      "payer-b": {
+        id: "payer-b",
+        email: "payer-b@example.com",
+      },
+    },
+  })
+  const linked: unknown[][] = []
+
+  const result = await ensurePayPalCheckoutAccount(paypalSubscription("payer-b@example.com"), {
+    supabase: supabase as any,
+    premiumTierId: "tier-premium",
+    interval: "month",
+    linkQuizToProfile: async (...args) => {
+      linked.push(args)
+    },
+  })
+
+  assert.equal(result.status, "active")
+  if (result.status !== "active") throw new Error("expected active result")
+  assert.equal(result.userId, "owner-a")
+  assert.equal(result.email, "owner-a@example.com")
+  assert.equal(result.providerSubscriberEmail, "payer-b@example.com")
+  assert.equal(result.canSetInitialPassword, false)
+  assert.equal(billing.length, 1)
+  assert.equal(billing[0].user_id, "owner-a")
+  assert.equal(billing[0].provider_subscriber_email, "payer-b@example.com")
+  assert.equal(profiles["owner-a"].subscription_status, "active")
+  assert.equal(profiles["payer-b"].subscription_status, undefined)
+  assert.deepEqual(Object.keys(authUsers).sort(), ["owner-a", "payer-b"])
+  assert.deepEqual(linked, [["owner-a", "owner-a@example.com", undefined]])
+})
+
+test("PayPal activation rejects an explicit checkout account email that conflicts with the existing subscription owner", async () => {
+  const { supabase, profiles, billing, authUsers } = createSupabaseStub({
+    billing: [
+      {
+        user_id: "owner-a",
+        provider: "paypal",
+        provider_subscription_id: "I-active",
+        provider_subscriber_email: "old-payer@example.com",
+        entitlement_status: "active",
+      },
+    ],
+    profiles: {
+      "owner-a": {
+        id: "owner-a",
+        email: "owner-a@example.com",
+      },
+      "payer-b": {
+        id: "payer-b",
+        email: "payer-b@example.com",
+      },
+    },
+    authUsers: {
+      "owner-a": {
+        id: "owner-a",
+        email: "owner-a@example.com",
+        app_metadata: {
+          checkout_activation_session_hash: paypalCheckoutActivationHash("owner-token"),
+        },
+      },
+      "payer-b": {
+        id: "payer-b",
+        email: "payer-b@example.com",
+        app_metadata: {
+          checkout_activation_session_hash: paypalCheckoutActivationHash("checkout-token"),
+        },
+      },
+    },
+  })
+  const linked: unknown[][] = []
+  const profilesBefore = structuredClone(profiles)
+  const billingBefore = structuredClone(billing)
+  const authUsersBefore = structuredClone(authUsers)
+
+  await assert.rejects(
+    ensurePayPalCheckoutAccount(paypalSubscription("payer-b@example.com"), {
+      supabase: supabase as any,
+      premiumTierId: "tier-premium",
+      activationKey: "checkout-token",
+      accountEmail: "payer-b@example.com",
+      interval: "month",
+      leadId: "lead-b",
+      linkQuizToProfile: async (...args) => {
+        linked.push(args)
+      },
+    }),
+    (error) =>
+      error instanceof PayPalCheckoutActivationError &&
+      error.code === "paypal_existing_subscription_owner_mismatch",
+  )
+
+  assert.deepEqual(profiles, profilesBefore)
+  assert.deepEqual(billing, billingBefore)
+  assert.deepEqual(authUsers, authUsersBefore)
+  assert.deepEqual(linked, [])
+})
+
 test("ensurePayPalCheckoutAccountForToken keeps checkout intent email as Chaarlie account email", async () => {
   const { supabase, paypalIntents } = createSupabaseStub({
     paypalIntents: [
@@ -608,6 +733,93 @@ test("webhook-first PayPal activation uses bound checkout intent email and keeps
   assert.equal(paypalIntents[0].provider_subscription_id, "I-active")
   assert.equal(paypalIntents[0].status, "activated")
   assert.deepEqual(linked, [[Object.values(authUsers)[0].id, "lead@example.com", "lead-123"]])
+})
+
+test("webhook PayPal activation rejects a bound intent email that conflicts with the existing subscription owner", async () => {
+  const { supabase, profiles, billing, authUsers, paypalIntents } = createSupabaseStub({
+    billing: [
+      {
+        user_id: "owner-a",
+        provider: "paypal",
+        provider_subscription_id: "I-active",
+        provider_subscriber_email: "old-payer@example.com",
+        entitlement_status: "active",
+      },
+    ],
+    profiles: {
+      "owner-a": {
+        id: "owner-a",
+        email: "owner-a@example.com",
+      },
+      "payer-b": {
+        id: "payer-b",
+        email: "payer-b@example.com",
+      },
+    },
+    authUsers: {
+      "owner-a": {
+        id: "owner-a",
+        email: "owner-a@example.com",
+      },
+      "payer-b": {
+        id: "payer-b",
+        email: "payer-b@example.com",
+      },
+    },
+    paypalIntents: [
+      {
+        id: "intent-1",
+        token: "checkout-token",
+        interval: "month",
+        source: "pricing_page",
+        status: "approved",
+        provider_subscription_id: "I-active",
+        lead_id: "lead-b",
+        email: "payer-b@example.com",
+        user_id: null,
+        expires_at: futureIso(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        metadata: {},
+      },
+    ],
+  })
+  const linked: unknown[][] = []
+  const profilesBefore = structuredClone(profiles)
+  const billingBefore = structuredClone(billing)
+  const authUsersBefore = structuredClone(authUsers)
+
+  await assert.rejects(
+    handlePayPalWebhookEvent(
+      {
+        id: "WH-owner-conflict",
+        event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+        resource: { id: "I-active" },
+      },
+      {
+        supabase: supabase as any,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => ({
+          ...paypalSubscription("payer-b@example.com", "I-active"),
+          custom_id: "checkout-token",
+        }),
+        linkQuizToProfile: async (...args) => {
+          linked.push(args)
+        },
+      },
+    ),
+    (error) =>
+      error instanceof PayPalCheckoutActivationError &&
+      error.code === "paypal_existing_subscription_owner_mismatch",
+  )
+
+  assert.deepEqual(profiles, profilesBefore)
+  assert.deepEqual(billing, billingBefore)
+  assert.deepEqual(authUsers, authUsersBefore)
+  assert.equal(paypalIntents[0].status, "approved")
+  assert.equal(paypalIntents[0].provider_subscription_id, "I-active")
+  assert.deepEqual(linked, [])
 })
 
 test("webhook-first PayPal activation cancels duplicate fallback subscriber email access", async () => {

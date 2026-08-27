@@ -52,8 +52,19 @@ export function createPersonalPlanFieldTestEntryHandler(
   return async function GET(request: NextRequest, context: { params: Promise<{ token: string }> }) {
     const { token } = await context.params
     const campaign = await dependencies.resolveCampaignToken(token)
+    if (campaign.kind !== "eligible") return FieldTestUnavailablePage()
+
+    // An email-bound campaign uses the bearer link only to identify the
+    // campaign. Account proof happens after normal Chaarlie authentication;
+    // do not issue guest/funnel credentials from this GET route.
+    if (campaign.campaign.identityMode === "email_bound") {
+      const accountUrl = new URL("/test/haarplan/konto", request.url)
+      accountUrl.searchParams.set("campaign", campaign.campaign.id)
+      return NextResponse.redirect(accountUrl, { headers: NO_STORE_HEADERS })
+    }
+
     const cookieSecret = dependencies.cookieSecret()
-    if (campaign.kind !== "eligible" || !cookieSecret) return FieldTestUnavailablePage()
+    if (!cookieSecret) return FieldTestUnavailablePage()
 
     const now = dependencies.now()
     const campaignCookie = createPersonalPlanFieldTestCampaignCookie(

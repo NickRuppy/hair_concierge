@@ -35,7 +35,7 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
 
   assert.match(
     landing,
-    /<PersonalPlanQuizEntry fieldTest=\{personalPlanFieldTest\} resume=\{personalPlanQuizResume\} \/>/,
+    /<PersonalPlanQuizEntry\s+key=\{moderatorQuiz\?\.scope\}\s+fieldTest=\{personalPlanFieldTest\}\s+resume=\{personalPlanQuizResume\}\s*\/>/,
   )
   assert.match(quiz, /fetch\("\/api\/quiz\/personal-plan-prepare"/)
   assert.match(quiz, /artifactId/)

@@ -1,9 +1,19 @@
 import { PersonalPlanQuizEntry } from "@/components/personal-plan-quiz/personal-plan-quiz-entry"
+import { ModeratorQuizProvider } from "@/components/personal-plan-quiz/moderator-quiz-context"
 import type { FunnelLandingVariantProps } from "@/funnels/types"
 
 export default function FunnelPersonalPlanQuizLandingVariant({
   personalPlanFieldTest = false,
   personalPlanQuizResume,
+  moderatorQuiz = null,
 }: FunnelLandingVariantProps) {
-  return <PersonalPlanQuizEntry fieldTest={personalPlanFieldTest} resume={personalPlanQuizResume} />
+  return (
+    <ModeratorQuizProvider value={moderatorQuiz}>
+      <PersonalPlanQuizEntry
+        key={moderatorQuiz?.scope}
+        fieldTest={personalPlanFieldTest}
+        resume={personalPlanQuizResume}
+      />
+    </ModeratorQuizProvider>
+  )
 }

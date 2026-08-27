@@ -41,4 +41,13 @@ test("field-test guest identity is server-owned and cannot be inferred from emai
   assert.equal(isPersonalPlanFieldTestGuest({ app_metadata: { access_kind: "customer" } }), false)
   assert.equal(isPersonalPlanFieldTestGuest({}), false)
   assert.equal(classifyRoute("/test/haarplan/beendet", production), "public")
+  assert.equal(classifyRoute("/api/personal-plan/field-test/moderator/start", production), "public")
+  assert.equal(
+    classifyRoute("/api/personal-plan/field-test/moderator/activate", production),
+    "public",
+  )
+  assert.equal(
+    classifyRoute("/api/personal-plan/field-test/moderator/unexpected", production),
+    "protected",
+  )
 })

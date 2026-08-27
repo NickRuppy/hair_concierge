@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Moderatorzugang, Storyboard</title>
+    <style>
+      @font-face { font-family: "Playfair Display"; src: url("../../../public/fonts/PlayfairDisplay-Regular.ttf") format("truetype"); font-display: swap; }
+      @font-face { font-family: "Plus Jakarta Sans"; src: url("../../../public/fonts/PlusJakartaSans-Regular.ttf") format("truetype"); font-display: swap; }
+      :root { --plum: #6b50a0; --plum-dark: #2a1845; --rose: #f7f5f9; --ink: #30293b; --muted: #746e7c; --line: #e5e1e9; --green: #14734a; --green-pale: #ecf9f1; --amber: #8a5b11; --amber-pale: #fff8e7; --red: #a3303c; --red-pale: #fff0f1; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: linear-gradient(#fbfafe, #f6f4f8); color: var(--ink); font-family: "Plus Jakarta Sans", system-ui, sans-serif; }
+      a { color: inherit; }
+      .page { max-width: 1420px; margin: 0 auto; padding: 28px 20px 64px; }
+      .proposal { border: 1px solid #e7cbda; background: #fff8fb; border-radius: 14px; padding: 14px 16px; color: #6f254e; font-size: 13px; line-height: 1.55; }
+      header { display: flex; justify-content: space-between; gap: 24px; align-items: flex-end; margin: 28px 0 18px; }
+      h1, h2, h3, .wordmark { font-family: "Playfair Display", Georgia, serif; color: var(--plum-dark); }
+      h1 { margin: 0; font-size: clamp(32px, 5vw, 52px); font-weight: 400; letter-spacing: -.04em; }
+      .lede { max-width: 690px; margin: 8px 0 0; color: var(--muted); line-height: 1.65; }
+      nav { display: flex; flex-wrap: wrap; gap: 8px; }
+      nav a { border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; background: white; text-decoration: none; font-size: 12px; }
+      .grounding { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); gap: 20px; margin: 24px 0 40px; border: 1px solid var(--line); border-radius: 20px; background: white; padding: 20px; }
+      .grounding h2 { margin: 0 0 8px; font-size: 27px; font-weight: 400; }
+      .grounding p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+      .screenshot { min-height: 180px; display: grid; place-items: center; overflow: hidden; border: 1px dashed #cfc3ca; border-radius: 12px; background: #faf8f9; color: var(--muted); font-size: 13px; text-align: center; }
+      .screenshot img { display: block; max-width: 100%; max-height: 270px; object-fit: contain; }
+      .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+      .section-title h2 { margin: 0; font-size: 32px; font-weight: 400; }
+      .section-title p { margin: 0; color: var(--muted); font-size: 13px; }
+      .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 20px; }
+      figure { margin: 0; min-width: 0; }
+      .phone { width: min(100%, 390px); min-height: 675px; margin: 0 auto; overflow: hidden; border: 1px solid #e1dde7; border-radius: 30px; background: linear-gradient(#fdfcff, #f7f5f9); box-shadow: 0 22px 48px -35px rgba(42, 24, 69, .55); }
+      .screen { padding: 22px 20px 24px; }
+      .phonebar { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; }
+      .wordmark { margin: 42px 0 6px; text-align: center; font-size: 38px; letter-spacing: -.055em; }
+      .welcome { margin: 0 0 24px; text-align: center; color: var(--muted); font-size: 15px; }
+      .card { padding: 24px; border: 1px solid var(--line); border-radius: 13px; background: white; box-shadow: 0 8px 20px -17px rgba(50,17,40,.42); }
+      .card h3 { margin: 0 0 10px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 18px; font-weight: 700; }
+      .copy { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+      .label { display: block; margin: 18px 0 7px; color: #564b53; font-size: 12px; font-weight: 700; }
+      .input { width: 100%; height: 44px; border: 1px solid #d9d0d5; border-radius: 7px; padding: 12px; background: #fff; color: #514751; font-size: 13px; }
+      .btn { display: block; width: 100%; margin-top: 12px; padding: 13px 14px; border: 0; border-radius: 8px; background: var(--plum); color: #fff; text-align: center; font-family: inherit; font-size: 13px; font-weight: 700; text-decoration: none; }
+      .btn.outline { border: 1px solid #d7ccd3; background: white; color: var(--ink); }
+      .divider { display: flex; align-items: center; gap: 10px; margin: 18px 0; color: var(--muted); font-size: 11px; }
+      .divider::before, .divider::after { content: ""; height: 1px; flex: 1; background: var(--line); }
+      .link { display: block; margin-top: 16px; color: var(--plum); text-align: center; font-size: 12px; text-decoration: underline; }
+      .foot { margin: 22px 0 0; color: var(--muted); font-size: 10px; text-align: center; }
+      .quiz-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 38px; }
+      .quiz-head .wordmark { margin: 0; font-size: 25px; }
+      .badge { display: inline-block; border-radius: 999px; padding: 6px 9px; background: var(--green-pale); color: var(--green); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+      .eyebrow { margin: 0 0 10px; color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+      .hero-title { margin: 0; font-size: 37px; font-weight: 400; line-height: 1.02; letter-spacing: -.04em; }
+      .progress { height: 6px; margin: 28px 0 12px; overflow: hidden; border-radius: 99px; background: #e9e1e5; }.progress span { display: block; width: 11%; height: 100%; border-radius: inherit; background: var(--plum); }
+      .offer { margin-top: 22px; border: 1px solid #cce9d9; border-radius: 22px; background: white; padding: 20px; box-shadow: 0 18px 48px -36px rgba(20,83,45,.65); }
+      .offer-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }.price { margin: 8px 0 0; font-family: "Playfair Display", Georgia, serif; color: var(--plum-dark); font-size: 48px; line-height: .9; }.reserved { border-radius: 999px; padding: 6px 9px; background: var(--green-pale); color: var(--green); font-size: 10px; font-weight: 800; }
+      .offer strong { display: block; margin-top: 20px; color: var(--plum-dark); font-size: 14px; line-height: 1.5; }.offer .btn { margin-top: 18px; border-radius: 999px; background: var(--green); }.status { margin-top: 16px; border-radius: 13px; padding: 13px; font-size: 12px; line-height: 1.55; }.status.pending { background: #f2eff1; color: #5f525a; }.status.error { background: var(--amber-pale); color: var(--amber); }.status.error b { display: block; margin-bottom: 3px; }
+      .plan-hero { padding: 19px; border-radius: 18px; background: var(--plum); color: white; }.plan-hero .eyebrow { color: #e7dff5; }.plan-hero h3 { margin: 0; color: white; font-family: "Playfair Display", Georgia, serif; font-size: 31px; font-weight: 400; letter-spacing: -.035em; }.plan-hero p { margin: 8px 0 0; color: #f2eff9; font-size: 12px; line-height: 1.55; }.next { margin-top: 18px; border: 1px solid var(--line); border-radius: 15px; padding: 16px; background: white; }.next b { display: block; font-size: 13px; }.next p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .mini-nav { display: flex; justify-content: space-around; margin: 34px -20px -24px; padding: 15px 10px; border-top: 1px solid var(--line); background: rgba(255,255,255,.92); color: var(--muted); font-size: 10px; }.mini-nav b { color: var(--plum); }
+      .notice { margin-top: 16px; border-left: 3px solid var(--green); padding: 0 0 0 12px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+      .split { display: grid; gap: 12px; margin-top: 20px; }.small-panel { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: white; }.small-panel h4 { margin: 0 0 6px; color: var(--plum-dark); font-size: 13px; }.small-panel p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }.small-panel.expired { border-color: #ead8bf; background: #fffdf8; }.small-panel.wrong { border-color: #efcdd2; background: #fff9fa; }.small-panel a { display: inline-block; margin-top: 9px; color: var(--plum); font-size: 11px; font-weight: 700; }
+      figcaption { max-width: 390px; margin: 14px auto 0; color: #5f555d; font-size: 13px; line-height: 1.55; }.num { display: inline-grid; width: 21px; height: 21px; margin-right: 5px; place-items: center; border-radius: 50%; background: var(--plum); color: white; font-size: 11px; font-weight: 700; }
+      .planning-note { margin-top: 38px; padding: 18px 20px; border: 1px solid #edd8bd; border-radius: 16px; background: #fffbf4; color: #6f542b; font-size: 13px; line-height: 1.6; }
+      @media (max-width: 1050px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 680px) { .page { padding: 18px 14px 40px; } header, .grounding { grid-template-columns: 1fr; display: grid; } header { align-items: start; } .grid { grid-template-columns: 1fr; } .section-title { display: block; }.section-title p { margin-top: 7px; } }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="proposal"><strong>Planungsartefakt – kein funktionierender Account- oder Zahlungsablauf.</strong> Dieser Entwurf zeigt einen vorgeschlagenen, an bestehende Konten gebundenen Moderatorzugang. Die Beispieladresse <strong>lena@example.com</strong> und alle Zustände sind illustrativ.</div>
+      <header>
+        <div><h1>Moderatorzugang zum Personal Plan</h1><p class="lede">Storyboard für die Entscheidung: erst anmelden, dann den neuen Quiz starten, 90 Tage kostenlos aktivieren und später über das normale Konto zum selben Plan zurückkehren.</p></div>
+        <nav aria-label="Storyboard-Navigation"><a href="#screen-1">1 Anmeldung</a><a href="#screen-2">2 Quiz</a><a href="#screen-3">3 Aktivierung</a><a href="#screen-4">4 Plan</a><a href="#screen-5">5 Rückkehr</a><a href="#screen-6">6 Hilfe</a></nav>
+      </header>
+
+      <section class="grounding" aria-labelledby="grounding-title">
+        <div><h2 id="grounding-title">Ausgangssituation: heutige Anmeldung</h2><p>Die vorgeschlagene erste Ansicht bleibt bei der bestehenden, zentrierten Anmeldung: Wortmarke, weiße Karte, Passwort, Login-Link und Passwort-Wiederherstellung. Der Entwurf ergänzt nur die klare Erklärung, dass die Einladung an das bereits vorhandene Konto gebunden ist.</p></div>
+        <div class="screenshot"><img src="current-auth.jpg" alt="Referenz: aktuelle Chaarlie-Anmeldung" onerror="this.style.display='none';this.parentElement.append('Referenzbild current-auth.jpg wird hier im Plan abgelegt.')" /></div>
+      </section>
+
+      <div class="section-title"><h2>Vorgeschlagene Reise</h2><p>Sechs mobile Ansichten · statisch · keine echten Aktionen</p></div>
+      <section class="grid" aria-label="Sechs Screens des vorgeschlagenen Moderatorzugangs">
+        <figure id="screen-1"><div class="phone"><div class="screen"><div class="phonebar"><span>9:41</span><span>●●●</span></div><div class="wordmark">chaarlie</div><p class="welcome">Willkommen zurück</p><div class="card"><h3>Mit deinem Konto anmelden</h3><p class="copy">Melde dich an, um deinen Moderatorzugang zum Personal Plan zu nutzen. Die Einladung wird erst nach der Anmeldung geprüft.</p><label class="label">E-Mail-Adresse</label><div class="input">lena@example.com</div><label class="label">Passwort</label><div class="input">••••••••••</div><span class="btn">Anmelden</span><div class="divider">oder</div><span class="btn outline">Login-Link per E-Mail senden</span><a class="link" href="#screen-6">Passwort vergessen oder noch keines festgelegt?</a></div><p class="foot">Impressum · Datenschutz · AGB · Kontakt</p></div></div><figcaption><span class="num">1</span>Die Einladung zeigt vor der Anmeldung keine zugehörige Adresse. Die Beispieladresse ist nur eine mögliche, von Lena selbst eingegebene E-Mail. Passwort, Login-Link und Wiederherstellung bleiben vertraut.</figcaption></figure>
+
+        <figure id="screen-2"><div class="phone"><div class="screen"><div class="phonebar"><span>9:41</span><span>●●●</span></div><div class="quiz-head"><div class="wordmark">chaarlie</div><span class="badge">Moderatorzugang</span></div><p class="eyebrow">Dein neuer Start</p><h3 class="hero-title">Willkommen.</h3><p class="copy" style="margin-top:14px">Starte deinen neuen Haar-Check für den Personal Plan. Deine Antworten werden für deinen Plan verwendet.</p><div class="card" style="margin-top:32px"><h3>Bereit für deinen Haar-Check?</h3><p class="copy">Der Check startet nach der Anmeldung frisch in diesem Browser.</p><span class="btn" style="margin-top:18px">Haar-Check starten</span></div><p class="notice">Dein Konto startet ohne alte Antworten, Pläne, Produkte, Chats oder Tracker-Einträge. Das Team hat den vollständigen App-Reset vor dieser Einladung geprüft. Deine Anmeldung bleibt bestehen.</p></div></div><figcaption><span class="num">2</span>Vollständiger App-Neustart im selben E-Mail-Konto. Alte App-Daten und Eigenschaften werden nicht übernommen. Der Reset erfolgt separat vor der Einladung, niemals durch diesen Button; neue Quiz-Entwürfe bleiben zunächst in diesem Browser.</figcaption></figure>
+
+        <figure id="screen-3"><div class="phone"><div class="screen"><div class="phonebar"><span>9:41</span><span>●●●</span></div><div class="quiz-head"><div class="wordmark">chaarlie</div><span class="badge">Ergebnis</span></div><p class="eyebrow">Dein Moderatorzugang</p><h3 class="hero-title">Dein Personal Plan ist bereit.</h3><div class="offer"><div class="offer-top"><div><p class="eyebrow">Produkttest</p><p class="price">0 €</p></div><span class="reserved">reserviert</span></div><strong>Keine Zahlungsdaten · kein Abo · 90 Tage ab Aktivierung</strong><p class="copy" style="margin-top:10px">Deine Quiz-Antworten und deine Auswertung werden direkt mit deinem Konto und Personal Plan verbunden.</p><span class="btn">Kostenlos mit meinem Plan fortfahren</span></div><div class="status pending"><strong>Wenn die Aktivierung kurz dauert:</strong><br />Dein Zugang wird vorbereitet. Deine Antworten bleiben gespeichert.</div><div class="status error"><b>Das hat gerade nicht geklappt.</b>Deine Quiz-Antworten und deine Auswertung sind gespeichert. Versuche die Aktivierung noch einmal. Es wurde keine Zahlung ausgelöst.</div></div></div><figcaption><span class="num">3</span>Die Aktivierung ist kostenlos und konto-gebunden. Die Warte- und Fehlertexte sichern zu, dass Antworten erhalten bleiben und erneut aktiviert werden kann.</figcaption></figure>
+
+        <figure id="screen-4"><div class="phone"><div class="screen"><div class="phonebar"><span>9:41</span><span>●●●</span></div><div class="quiz-head"><div class="wordmark">chaarlie</div><span class="badge">90 Tage aktiv</span></div><p class="eyebrow">Dein Personal Plan</p><div class="plan-hero"><p class="eyebrow">Dein Plan ist bereit</p><h3>Weiter mit deinem Bedarf.</h3><p>Dein Personal Plan wurde mit deinen Antworten vorbereitet und ist jetzt deinem Konto zugeordnet.</p></div><div class="next"><b>Zum bestehenden Personal Plan</b><p>Du wirst in den aktuellen Plan-Einstieg geführt, beginnend mit deinem Bedarf.</p><span class="btn" style="margin-top:13px">Bedarfsplan ansehen</span></div><div class="notice"><strong>In deinem Konto gespeichert.</strong><br />Nach der Aktivierung kannst du dich später normal anmelden und an deinem aktuellen Planstand weitermachen.</div></div></div><figcaption><span class="num">4</span>Schematische Übergabe an den vorhandenen Personal-Plan-Einstieg mit Bedarf; keine neue Routine-Ansicht oder Navigation wird hier vorgeschlagen.</figcaption></figure>
+
+        <figure id="screen-5"><div class="phone"><div class="screen"><div class="phonebar"><span>9:41</span><span>●●●</span></div><div class="wordmark">chaarlie</div><p class="welcome">Willkommen zurück</p><div class="card"><h3>Dein Personal Plan</h3><p class="copy">Dein kostenloser Moderatorzugang ist aktiv. Diese Ansicht steht für das bestehende Ziel, zu deinem aktuellen Planstand zurückzukehren.</p><div class="plan-hero" style="margin-top:20px"><p class="eyebrow">Schematische Rückkehr</p><h3>Dein aktueller Planstand</h3><p>Der vorhandene Personal-Plan-Einstieg bestimmt die nächste Ansicht.</p></div><span class="btn" style="margin-top:18px">Zu meinem aktuellen Plan</span></div><p class="notice">Eine spätere Anmeldung – auch auf einem anderen Gerät – führt zum selben gespeicherten Plan. Sie setzt nichts zurück, startet keinen zweiten Plan und verlängert den Zeitraum nicht.</p></div></div><figcaption><span class="num">5</span>Diese Ansicht ist keine Dashboard-Neugestaltung, sondern zeigt nur den Rückkehrvertrag: normale Anmeldung führt zurück zum aktuellen bestehenden Planstand.</figcaption></figure>
+
+        <figure id="screen-6"><div class="phone"><div class="screen"><div class="phonebar"><span>9:41</span><span>●●●</span></div><div class="wordmark">chaarlie</div><p class="welcome">Hilfe mit deinem Moderatorzugang</p><div class="split"><div class="small-panel expired"><h4>Dein kostenloser Zugang ist beendet</h4><p>Die 90 Tage deines Moderatorzugangs sind vorbei. Dein Personal Plan und deine Daten bleiben in deinem Konto erhalten. Es wurde keine Zahlung ausgelöst.</p><a href="#screen-1">Team kontaktieren</a></div><div class="small-panel wrong"><h4>Diese Einladung ist für dieses Konto nicht verfügbar</h4><p>Wechsle zu dem Konto, das für den Moderatorzugang vorgesehen ist. Aus Sicherheitsgründen zeigen wir keine Empfängeradresse an.</p><a href="#screen-1">Konto wechseln</a></div><div class="small-panel"><h4>Login-Link abgelaufen?</h4><p>Fordere auf der Anmeldung einfach einen neuen Link an. Deine Aktivierungsberechtigung bleibt davon unberührt.</p><a href="#screen-1">Neuen Link anfordern</a></div></div><p class="foot">Bei Fragen: Team kontaktieren</p></div></div><figcaption><span class="num">6</span>Nach Ablauf wird nichts automatisch berechnet; Daten bleiben erhalten und das Team ist der klare nächste Weg. Eine falsche Anmeldung verrät keine Empfängeradresse.</figcaption></figure>
+      </section>
+      <aside class="planning-note"><strong>Gewählter Umfang: vollständiger App-Reset.</strong> Vor der Einladung sind die betroffenen Konten während eines einmaligen Wartungsfensters vorübergehend nicht verfügbar. Alte Quiz-Antworten, Profileigenschaften, Pläne, Produkte, Routinen, Chats, Erinnerungen und Tracker-Verläufe werden vollständig entfernt. Nur die Anmeldeidentität und getrennte Abrechnungs-/Prüfnachweise bleiben erhalten. Vorschlag: 90 Tage ab kostenloser Aktivierung, danach keine automatische Zahlung. Der reale Produktions-Reset benötigt eine separate Freigabe der exakten Konten; dieses Storyboard führt keine Löschung aus.</aside>
+    </main>
+  </body>
+</html>

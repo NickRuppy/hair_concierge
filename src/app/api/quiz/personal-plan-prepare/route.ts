@@ -1,3 +1,7 @@
+import { cookies } from "next/headers"
+import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
+import { resolveFunnelCookieContext } from "@/lib/funnel/server"
+import { resolveModeratorJourney } from "@/lib/personal-plan-field-test/moderator-journey"
 import { NextResponse } from "next/server"
 
 import { isPersonalPlanQuizV1Enabled } from "@/lib/funnel/flags"
@@ -41,6 +45,18 @@ export async function POST(request: Request) {
   }
 
   try {
+    const cookieStore = await cookies()
+    const moderator = await resolveModeratorJourney({
+      cookies: cookieStore,
+      funnelContext: await resolveFunnelCookieContext(
+        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+      ),
+    })
+    if (moderator.kind === "unavailable")
+      return NextResponse.json(
+        { error: "Dein Zugang kann gerade nicht geprüft werden. Bitte versuche es erneut." },
+        { status: 503 },
+      )
     const quizAnswers = canonicalizePersonalPlanAnswers(parsed.data.answers)
     const answerHash = hashPersonalPlanAnswers(quizAnswers)
     const prepared = buildPersonalPlanPreparedArtifact(quizAnswers)
@@ -56,6 +72,7 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from("personal_plan_prepared_artifacts")
       .insert({
+        ...(moderator.kind === "authorized" ? { user_id: moderator.userId } : {}),
         answer_hash: answerHash,
         canonical_profile: prepared.canonicalProfile,
         claim_token_hash: claimTokenHash,

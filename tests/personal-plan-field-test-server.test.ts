@@ -254,3 +254,58 @@ test("lead binding uses only server-resolved campaign and funnel context", async
     },
   ])
 })
+
+test("unknown campaign identity modes never fall back to guest", async () => {
+  const resolved = await resolvePersonalPlanFieldTestCampaignToken("opaque-token", {
+    now,
+    loadCampaignByTokenHash: async () => ({ ...campaign, identityMode: "unknown" as never }),
+  })
+  assert.equal(resolved.kind, "unavailable")
+})
+
+test("spent email-bound token can still reach account resolution without granting a new seat", async () => {
+  const resolved = await resolvePersonalPlanFieldTestCampaignToken("opaque-token", {
+    now,
+    loadCampaignByTokenHash: async () => ({
+      ...campaign,
+      identityMode: "email_bound",
+      accessDurationHours: 2160,
+      expiresAt: now - 1,
+      successfulActivations: 100,
+    }),
+  })
+  assert.equal(resolved.kind, "eligible")
+  if (resolved.kind === "eligible") assert.equal(resolved.campaign.identityMode, "email_bound")
+})
+
+test("guest offer authorization cannot consume an email-bound campaign", async () => {
+  const cookie = createPersonalPlanFieldTestCampaignCookie(
+    {
+      campaignId,
+      accessDurationHours: 2160,
+      issuedAt: now,
+      expiresAt: campaign.expiresAt,
+    },
+    signingSecret!,
+  )
+  const resolved = await resolvePersonalPlanFieldTestOfferAuthorization(
+    { campaignCookieValue: cookie, funnelSessionId: sessionId, leadId },
+    {
+      now,
+      cookieSecret,
+      loadCampaignById: async () => ({
+        ...campaign,
+        identityMode: "email_bound",
+        accessDurationHours: 2160,
+      }),
+      loadOfferSession: async () => ({
+        id: sessionId,
+        leadId,
+        packageKey: "meta_personal_plan_v1",
+        testKind: "field_test",
+        campaignId,
+      }),
+    },
+  )
+  assert.equal(resolved, null)
+})

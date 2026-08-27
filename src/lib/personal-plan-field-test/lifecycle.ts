@@ -11,6 +11,7 @@ export type PersonalPlanFieldTestCampaignLifecycle = {
   successfulActivations: number
   accessDurationHours: number
   flowKind?: "personal_plan" | "regular_quiz"
+  identityMode?: "guest" | "email_bound"
 }
 
 export type PersonalPlanFieldTestCampaignEvaluation =
@@ -22,7 +23,7 @@ export function evaluatePersonalPlanFieldTestCampaign(
   now = Date.now(),
 ): PersonalPlanFieldTestCampaignEvaluation {
   if (
-    !isCampaignShapeValid(campaign) ||
+    !isPersonalPlanFieldTestCampaignShapeValid(campaign) ||
     campaign.status !== "active" ||
     now < campaign.startsAt ||
     now >= campaign.expiresAt ||
@@ -41,8 +42,16 @@ export function evaluatePersonalPlanFieldTestCampaign(
   }
 }
 
-function isCampaignShapeValid(campaign: PersonalPlanFieldTestCampaignLifecycle) {
+export function isPersonalPlanFieldTestCampaignShapeValid(
+  campaign: PersonalPlanFieldTestCampaignLifecycle,
+) {
   return (
+    (campaign.identityMode === undefined ||
+      campaign.identityMode === "guest" ||
+      (campaign.identityMode === "email_bound" &&
+        (campaign.flowKind ?? "personal_plan") === "personal_plan" &&
+        campaign.accessDurationHours === 2160)) &&
+    (campaign.status === "active" || campaign.status === "revoked") &&
     typeof campaign.id === "string" &&
     campaign.id.length > 0 &&
     Number.isFinite(campaign.startsAt) &&

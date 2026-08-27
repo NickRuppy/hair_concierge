@@ -9,6 +9,8 @@ import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/ty
 import OrganicPlanOfferVariant from "@/funnels/offers/organic-plan-v1"
 import { WelcomeClient } from "@/app/welcome/welcome-client"
 import { isOfferPageLabEnabled } from "@/lib/labs/offer-page-access"
+import { ModeratorAccountEntry } from "@/app/test/haarplan/konto/moderator-account-entry"
+import FunnelPersonalPlanQuizLandingVariant from "@/funnels/landing/personal-plan-quiz"
 import { buildPersonalPlanPreparedArtifact } from "@/lib/personal-plan-quiz/prepared-plan"
 import { canonicalizePersonalPlanAnswers } from "@/lib/personal-plan-quiz/persistence"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
@@ -135,6 +137,29 @@ export default async function OfferPageLab({
   const variant = params.variant ?? "organic-plan"
   const narrative = buildQuizResultNarrative(REVIEW_ANSWERS)
 
+  // These interactive fixtures must never send quiz data to the normal
+  // production-backed local environment or a connected preview database.
+  if (
+    (variant === "moderator-account" ||
+      variant === "moderator-quiz" ||
+      params.scenario === "moderator") &&
+    (process.env.NODE_ENV !== "development" ||
+      !/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""))
+  )
+    notFound()
+
+  if (variant === "moderator-account") {
+    return <ModeratorAccountEntry campaignId="33333333-3333-4333-8333-333333333333" />
+  }
+  if (variant === "moderator-quiz") {
+    return (
+      <FunnelPersonalPlanQuizLandingVariant
+        personalPlanFieldTest
+        moderatorQuiz={{ scope: "local-moderator-review", email: "moderator@example.com" }}
+      />
+    )
+  }
+
   if (variant === "payment-overlay") {
     return <OfferPaymentOverlayLab />
   }
@@ -171,7 +196,8 @@ export default async function OfferPageLab({
           overlay: params.overlay !== "off",
         }}
         entryContext="saved_result"
-        fieldTest={params.scenario === "field-test"}
+        fieldTest={params.scenario === "field-test" || params.scenario === "moderator"}
+        moderatorTest={params.scenario === "moderator"}
         isInternalTest
         leadId="11111111-1111-4111-8111-111111111111"
         model={
