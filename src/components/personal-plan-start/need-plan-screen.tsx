@@ -29,7 +29,7 @@ export type NeedPlanScreenViewModel = {
 export const PLAN_START_CATALOG_DISCLAIMER =
   "Für jede Kategorie haben wir das passendste Produkt aus unserem Katalog gewählt."
 export const PLAN_START_PENDING_DISCLAIMER =
-  "Passende Produkte wählen wir, sobald du deine Produkte ergänzt."
+  "Passende Produkte wählen wir, sobald du deine eigenen ergänzt."
 
 /**
  * The catalog sentence is only honest while at least one category can still
@@ -52,7 +52,7 @@ export const PLAN_START_ACCEPT_PENDING_LABEL = "Routine wird eingerichtet …"
 export const PLAN_START_REFINE_LABEL = "Auf meine Produkte abstimmen"
 export const PLAN_START_REFINE_PENDING_LABEL = "Deine Produkte werden geöffnet …"
 export const PLAN_START_REFINE_ERROR =
-  "Feinschliff konnte nicht geöffnet werden. Versuche es noch einmal."
+  "Deine Produkte konnten nicht geöffnet werden. Versuche es noch einmal."
 
 type NeedPlanScreenProps = {
   screen: NeedPlanScreenViewModel

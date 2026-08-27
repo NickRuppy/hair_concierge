@@ -561,9 +561,9 @@ test("personal plan result reads only the attached public artifact model", () =>
  * route the buyer into `/onboarding` — a retired flow — and framed the
  * refinement as a gate ("Im nächsten Schritt ergänzt du …; danach öffnet sich
  * dein Routinebereich"). The plan is live the moment it is paid for, so the
- * buyer goes straight to their Routine and the Feinschliff becomes optional.
+ * buyer goes straight there and the Feinschliff becomes optional.
  */
-test("a paid personal-plan result hands the buyer their Routine, never the retired onboarding", () => {
+test("a paid personal-plan result hands the buyer their plan, never the retired onboarding", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient
       entryContext="quiz_completion"
@@ -578,16 +578,46 @@ test("a paid personal-plan result hands the buyer their Routine, never the retir
   )
 
   assert.match(html, /Lea, dein Plan ist bereit\./)
-  assert.match(html, /Dein Routinebereich ist offen\./)
+  assert.match(html, /Dein Plan ist freigeschaltet\./)
   assert.match(html, /Den Feinschliff kannst du jederzeit später ergänzen\./)
   assert.match(html, /href="\/routine"/)
-  assert.match(html, /Zu meiner Routine/)
+  assert.match(html, /Zu deinem Plan/)
 
   // The retired destination and its sequential-journey framing are gone.
   assert.doesNotMatch(html, /\/onboarding/)
   assert.doesNotMatch(html, /Meinen Plan verfeinern/)
   assert.doesNotMatch(html, /Im nächsten Schritt/)
   assert.doesNotMatch(html, /Danach öffnet sich dein Routinebereich/)
+})
+
+/**
+ * F4 (ruled 27.08.2026). `/routine` is right for every cohort because the
+ * middleware's frontier redirect lands each of them where they actually are —
+ * but a fresh buyer with no Stage-4 routine yet is NOT sent to a
+ * "Routinebereich". The copy must therefore never name that destination, or it
+ * contradicts the screen the user lands on.
+ */
+test("the paid screen's copy is frontier-agnostic and carries no duplicated eyebrow", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea Sommer"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  // No frontier-specific destination claim anywhere on the screen.
+  assert.doesNotMatch(html, /Routinebereich/)
+  assert.doesNotMatch(html, /Zu meiner Routine/)
+
+  // F15: the removed eyebrow stays removed — it repeated the headline verbatim.
+  assert.doesNotMatch(html, /Dein Haarplan ist bereit/)
+  assert.equal((html.match(/ist bereit/g) ?? []).length, 1)
 })
 
 test("the paid continuation no longer needs a lead id to build its destination", () => {

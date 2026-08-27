@@ -1202,8 +1202,6 @@ export function PlanStartFlow(
 export function PlanStartLoading() {
   return (
     <StateShell
-      stageLabel="Dein Plan"
-      overline="Dein persönlicher Plan"
       title="Dein Plan entsteht"
       lead="Wir bereiten die Empfehlungen aus deiner Haaranalyse vor."
       icon={<Loader2 className="h-7 w-7 animate-spin" aria-hidden="true" />}
@@ -1219,8 +1217,6 @@ export function PlanStartLoading() {
 export function PlanStartRetryableError({ onRetry }: { onRetry?: () => void }) {
   return (
     <StateShell
-      stageLabel="Dein Plan"
-      overline="Dein persönlicher Plan"
       title="Dein Plan lädt gerade nicht"
       lead="Deine Antworten sind gespeichert. Du musst nichts noch einmal ausfüllen."
       icon={<RotateCcw className="h-7 w-7" aria-hidden="true" />}
@@ -1257,8 +1253,6 @@ export function PlanStartUnavailable({
 }) {
   return (
     <StateShell
-      stageLabel="Dein Plan"
-      overline="Dein persönlicher Plan"
       title="Dieser Planbereich ist gerade nicht verfügbar"
       lead="Deine bisherigen Angaben bleiben gespeichert."
       icon={<Info className="h-7 w-7" aria-hidden="true" />}
@@ -1286,17 +1280,23 @@ export function PlanStartUnavailable({
   )
 }
 
+/**
+ * Every Stage-1 state screen shares one identity: the same header stage label
+ * as the real plan pages (`PlanStartHeader stageLabel="Plan"`) and the same
+ * overline. They are defaults rather than three repeated literals so the label
+ * cannot drift out of sync with the pages it stands in for again.
+ */
 function StateShell({
-  stageLabel,
-  overline,
+  stageLabel = "Plan",
+  overline = "Dein persönlicher Plan",
   title,
   lead,
   icon,
   dataState,
   children,
 }: {
-  stageLabel: string
-  overline: string
+  stageLabel?: string
+  overline?: string
   title: string
   lead: string
   icon: React.ReactNode

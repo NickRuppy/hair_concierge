@@ -1196,9 +1196,16 @@ export function PersonalPlanOfferRecovery({
 
 /**
  * The paid result surface. The plan is live the moment it is paid for, so this
- * screen hands the buyer their Routine — not the retired `/onboarding`
- * ceremony. The Feinschliff is an optional later addition, never a gate
- * (founder ruling 27.08.2026).
+ * screen hands the buyer their plan — not the retired `/onboarding` ceremony.
+ * The Feinschliff is an optional later addition, never a gate (founder ruling
+ * 27.08.2026).
+ *
+ * The copy is deliberately FRONTIER-AGNOSTIC. `/routine` is the right href for
+ * every cohort because the middleware's frontier redirect lands each of them on
+ * the surface they have actually reached — but a fresh buyer whose Stage-4
+ * routine does not exist yet is NOT sent to a "Routinebereich", so naming that
+ * destination in the copy would contradict what they see. „Dein Plan" is true
+ * on every frontier (ruled 27.08.2026).
  */
 export function PersonalPlanPaidContinuation({ name }: { name: string }) {
   const displayName = name.trim().split(/\s+/)[0]
@@ -1209,13 +1216,13 @@ export function PersonalPlanPaidContinuation({ name }: { name: string }) {
           {displayName ? `${displayName}, ` : ""}dein Plan ist bereit.
         </h1>
         <p className="mt-4 text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
-          Dein Routinebereich ist offen. Den Feinschliff kannst du jederzeit später ergänzen.
+          Dein Plan ist freigeschaltet. Den Feinschliff kannst du jederzeit später ergänzen.
         </p>
         <Link
           className="mt-6 inline-flex rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white"
           href="/routine"
         >
-          Zu meiner Routine
+          Zu deinem Plan
         </Link>
       </section>
     </main>

@@ -164,7 +164,7 @@ export function routineCadenceLabel(item: RoutineItem): string {
 function routinePurposeDescription(item: RoutineItem) {
   return (
     routineRolePurposeDescription(item.purposeKey) ??
-    `${routineCategoryLabel(item.category)} passend zu deinem Plan.`
+    `${routineCategoryLabel(item.category)} passend zu deiner Haaranalyse.`
   )
 }
 

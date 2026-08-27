@@ -260,7 +260,7 @@ export function RefinementQuestion({
               status === "stale_refinement"
                 ? "Feinschliff neu laden"
                 : status === "completion_failed"
-                  ? "Erneut abschließen"
+                  ? "Abschließen erneut versuchen"
                   : "Erneut versuchen"
             }
             saving={status === "saving"}

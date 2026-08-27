@@ -411,7 +411,7 @@ test("a network failure during acceptance stays an inline error, never a silent 
 
 const readyPlanScreen = {
   kind: "basis" as const,
-  overline: "Dein Idealplan",
+  overline: "Dein persönlicher Plan",
   title: "Deine Basis",
   lead: "Das braucht dein Haar.",
   sectionTitle: "Basis",

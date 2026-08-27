@@ -3262,7 +3262,7 @@ export function Stage3ProductsFlow({
       kind: code === "revision_conflict" ? "conflict" : "error",
       title:
         code === "completion_failed_after_save" || code === "bootstrap_failed_after_completion"
-          ? "Produktarten gespeichert. Abschließen fehlgeschlagen."
+          ? "Produktarten gespeichert. Abschluss fehlgeschlagen."
           : code === "revision_conflict"
             ? "Dein Feinschliff wurde zwischenzeitlich aktualisiert."
             : "Produktarten konnten nicht aktualisiert werden.",

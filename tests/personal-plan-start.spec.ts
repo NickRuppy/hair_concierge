@@ -161,7 +161,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(detailSheet).toHaveCount(0)
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await page.waitForTimeout(100)
-    const actionNav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
+    const actionNav = page.getByRole("navigation", { name: "Plan-Seiten" })
     await expect(actionNav).toHaveCount(1)
     expect(
       await actionNav.evaluate((element) => ({
@@ -234,7 +234,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       await page.goto(labPath)
       await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
 
-      const nav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
+      const nav = page.getByRole("navigation", { name: "Plan-Seiten" })
       const action = nav.getByRole("button", { name: "Zu deiner Routine" })
       const geometry = await action.evaluate((button) => {
         const bounds = button.getBoundingClientRect()
@@ -280,7 +280,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(labPath)
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     const paddingBottom = await page
-      .getByRole("navigation", { name: "Idealplan-Seiten" })
+      .getByRole("navigation", { name: "Plan-Seiten" })
       .evaluate((nav) => parseFloat(getComputedStyle(nav).paddingBottom))
     expect(paddingBottom).toBe(44)
     await session.send(
@@ -322,7 +322,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect.poll(() => acceptRequests).toBe(1)
     await expect(
       page.getByRole("alert").filter({
-        hasText: "Dein Plan konnte nicht übernommen werden. Versuche es noch einmal.",
+        hasText: "Das hat nicht geklappt. Versuche es noch einmal.",
       }),
     ).toBeVisible()
     // The Idealplan stays on screen behind the error, so the user can retry
@@ -378,7 +378,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect.poll(() => acceptRequests).toBe(2)
     expect(previewRequests).toBe(previewsBeforeAccept + 1)
     await expect(page.getByRole("heading", { name: "Feinschliff" })).toBeVisible()
-    expect(new URL(page.url()).search).toBe("?refine=1")
+    expect(new URL(page.url()).search).toBe("?refine=products")
   })
 
   /**
@@ -425,7 +425,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.getByRole("button", { name: "Zu deiner Routine" }).click()
 
     await expect(page.getByRole("heading", { name: "Feinschliff" })).toBeVisible()
-    expect(new URL(page.url()).search).toBe("?refine=1")
+    expect(new URL(page.url()).search).toBe("?refine=products")
     expect(acceptBodies).toEqual([])
   })
 
@@ -467,7 +467,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.getByRole("button", { name: "Zu deiner Routine" }).click()
 
     await expect(page.getByRole("heading", { name: "Feinschliff" })).toBeVisible()
-    expect(new URL(page.url()).search).toBe("?refine=1")
+    expect(new URL(page.url()).search).toBe("?refine=products")
     expect(acceptRequests).toBe(1)
   })
 
