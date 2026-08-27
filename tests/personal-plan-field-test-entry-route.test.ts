@@ -167,7 +167,7 @@ test("authenticated active moderator invite return opens the saved plan instead 
 
   await assertRedirectsTo(
     () => page({ searchParams: Promise.resolve({ campaign: campaignId }) }),
-    "/plan-start",
+    "/anwendung",
   )
   assert.deepEqual(calls, [{ campaignId, user: authUser }])
 })

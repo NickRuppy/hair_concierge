@@ -242,5 +242,5 @@ test("rollout-off preserves return routing for an already active moderator", asy
 
   const response = await handler(request())
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { destination: "/plan-start" })
+  assert.deepEqual(await response.json(), { destination: "/anwendung" })
 })

@@ -24,7 +24,9 @@ export function parseModeratorOrganicStartResponse(
 ): ModeratorOrganicStartResponse | null {
   if (!value || typeof value !== "object") return null
   const body = value as Record<string, unknown>
-  if (body.destination === "/plan-start") return { kind: "active" }
+  if (body.destination === "/anwendung" || body.destination === "/plan-start") {
+    return { kind: "active" }
+  }
   if (
     body.destination === "/quiz" &&
     typeof body.funnelSessionId === "string" &&
