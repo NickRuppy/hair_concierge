@@ -54,6 +54,7 @@ const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/personal-plan/field-test/activate",
   "/api/personal-plan/field-test/moderator/start",
   "/api/personal-plan/field-test/moderator/activate",
+  "/api/personal-plan/field-test/moderator/activate-organic",
   "/api/quiz/field-test/activate",
 ]
 const ROUTES_WITHOUT_AUTH_LOOKUP = [

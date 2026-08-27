@@ -100,6 +100,23 @@ test("activation reaches its signed route checks before any auth or subscription
   assert.equal(response.headers.get("location"), null)
 })
 
+test("organic moderator activation reaches its account checks before the subscription gate", async () => {
+  const pathname = "/api/personal-plan/field-test/moderator/activate-organic"
+  assert.equal(
+    classifyRoute(pathname, { nodeEnv: "production", localDevLoginEnabled: false }),
+    "public",
+  )
+  const response = await updateSession(
+    new NextRequest(`https://chaarlie.de${pathname}`, { method: "POST" }),
+  )
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+  assert.equal(
+    classifyRoute(`${pathname}/other`, { nodeEnv: "production", localDevLoginEnabled: false }),
+    "protected",
+  )
+})
+
 class CapturedRedirect extends Error {
   constructor(readonly destination: string) {
     super(`redirect:${destination}`)
