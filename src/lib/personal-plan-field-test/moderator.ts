@@ -225,7 +225,7 @@ export async function resolveModeratorIntent(
   if (
     intent.userId !== user.id ||
     intent.funnelSessionId !== funnelContext.sessionId ||
-    funnelContext.packageKey !== "meta_personal_plan_v1" ||
+    !["meta_personal_plan_v1", "default_organic"].includes(funnelContext.packageKey) ||
     (options.leadId && intent.leadId && intent.leadId !== options.leadId)
   ) {
     return { kind: "forbidden", reason: "intent_mismatch" }

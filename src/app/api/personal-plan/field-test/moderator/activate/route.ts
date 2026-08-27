@@ -42,6 +42,7 @@ type ModeratorSessionClient = {
 }
 
 type ModeratorActivationDependencies = {
+  packageKey: "meta_personal_plan_v1" | "default_organic"
   checkRateLimit: typeof checkRateLimit
   resolveFunnelCookieContext: typeof resolveFunnelCookieContext
   resolveModeratorIntent: typeof resolveModeratorIntent
@@ -51,6 +52,7 @@ type ModeratorActivationDependencies = {
 }
 
 const DEFAULT_DEPENDENCIES: ModeratorActivationDependencies = {
+  packageKey: "meta_personal_plan_v1",
   checkRateLimit,
   resolveFunnelCookieContext,
   resolveModeratorIntent,
@@ -98,7 +100,7 @@ export function createPersonalPlanModeratorActivationHandler(
     const funnelContext = await dependencies
       .resolveFunnelCookieContext(request.cookies.get(FUNNEL_SESSION_COOKIE)?.value)
       .catch(() => null)
-    if (!funnelContext || funnelContext.packageKey !== "meta_personal_plan_v1") {
+    if (!funnelContext || funnelContext.packageKey !== dependencies.packageKey) {
       return jsonError("Testzugang ist nicht verfügbar", 403)
     }
 

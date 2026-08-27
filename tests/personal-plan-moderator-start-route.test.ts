@@ -30,7 +30,7 @@ function readyMember() {
   }
 }
 
-test("authenticated exact roster member gets a signed moderator intent and clean landing destination", async () => {
+test("authenticated exact roster member gets a signed moderator intent and organic quiz destination", async () => {
   const calls: string[] = []
   const handler = createModeratorFieldTestStartHandler({
     getUser: async () => user,
@@ -69,7 +69,11 @@ test("authenticated exact roster member gets a signed moderator intent and clean
 
   const response = await handler(request())
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { destination: "/lp/haarplan" })
+  assert.deepEqual(await response.json(), {
+    destination: "/quiz",
+    funnelSessionId: "30000000-0000-4000-8000-000000000003",
+    freshStart: true,
+  })
   assert.deepEqual(calls, ["funnel", "intent", "funnel-cookie"])
   assert.match(
     response.headers.get("set-cookie") ?? "",
@@ -80,7 +84,58 @@ test("authenticated exact roster member gets a signed moderator intent and clean
   assert.match(response.headers.get("cache-control") ?? "", /no-store/)
 })
 
-test("moderator start persists a schema-complete canonical Meta Personal Plan funnel row", async () => {
+test("a valid ready organic intent reuses its session without creating or clearing a new start", async () => {
+  let created = 0
+  const handler = createModeratorFieldTestStartHandler({
+    getUser: async () => user,
+    resolveMember: async () => readyMember(),
+    resolveFunnelContext: async () => ({
+      visitorId: "40000000-0000-4000-8000-000000000004",
+      sessionId: "30000000-0000-4000-8000-000000000003",
+      packageKey: "default_organic",
+      issuedAt: now,
+    }),
+    resolveIntent: async () => ({
+      ...readyMember(),
+      intent: {
+        campaignId,
+        userId: user.id,
+        funnelSessionId: "30000000-0000-4000-8000-000000000003",
+        issuedAt: now,
+        expiresAt: now + 24 * 60 * 60 * 1000,
+      },
+    }),
+    createFunnelSession: async () => {
+      created += 1
+      return null
+    },
+    funnelSecret: () => "funnel-secret",
+    campaignCookieSecret: () => "campaign-cookie-secret",
+    moderatorIntentSecretConfigured: () => true,
+    enabled: () => true,
+  })
+  const reused = new Request("https://chaarlie.de/api/personal-plan/field-test/moderator/start", {
+    method: "POST",
+    headers: {
+      origin: "https://chaarlie.de",
+      "content-type": "application/json",
+      cookie:
+        "chaarlie_personal_plan_moderator_intent=signed; chaarlie_funnel_session=signed-funnel",
+    },
+    body: JSON.stringify({ campaignId }),
+  })
+
+  const response = await handler(reused)
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), {
+    destination: "/quiz",
+    funnelSessionId: "30000000-0000-4000-8000-000000000003",
+    freshStart: false,
+  })
+  assert.equal(created, 0)
+})
+
+test("moderator start persists a schema-complete canonical organic funnel row", async () => {
   let persisted: Record<string, unknown> | null = null
   const id = await createModeratorFunnelSession(
     {
@@ -108,11 +163,11 @@ test("moderator start persists a schema-complete canonical Meta Personal Plan fu
     id,
     visitor_id: "40000000-0000-4000-8000-000000000004",
     user_id: user.id,
-    package_key: "meta_personal_plan_v1",
-    channel: "meta",
-    landing_variant: "personal-plan-quiz",
-    offer_variant: "personal-plan-v1",
-    quiz_variant: "personal-plan-quiz-v1",
+    package_key: "default_organic",
+    channel: "organic",
+    landing_variant: "organic-refresh",
+    offer_variant: "organic-plan-v1",
+    quiz_variant: "legacy-quiz-v1",
     first_seen_at: new Date(now).toISOString(),
     test_kind: "field_test",
     field_test_campaign_id: campaignId,

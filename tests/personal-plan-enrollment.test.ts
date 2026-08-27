@@ -279,6 +279,77 @@ test("a post-cutoff owned legacy lead is eligible only behind the independent cu
   assert.equal(disabled.accessState, "none")
 })
 
+test("a legacy moderator enrollment uses its persisted source discriminator", async () => {
+  const admin = client({
+    billing_one_time_purchases: [],
+    billing_subscriptions: [{ ...subscription, metadata: { pricing_catalog: "standard" } }],
+    personal_plan_test_enrollments: [
+      {
+        id: "field-test-enrollment-1",
+        user_id: "user-1",
+        lead_id: "44444444-4444-4444-8444-444444444444",
+        manual_access_grant_id: "grant-1",
+        status: "active",
+        activated_at: "2026-08-10T00:00:00.000Z",
+        expires_at: "2026-11-08T00:00:00.000Z",
+        revoked_at: null,
+        quiz_source_kind: "legacy",
+        manual_access_grants: {
+          id: "grant-1",
+          user_id: "user-1",
+          reason: "tester",
+          expires_at: "2026-11-08T00:00:00.000Z",
+          revoked_at: null,
+        },
+      },
+    ],
+  })
+
+  const enrollment = await findPersonalPlanEnrollmentForUser(
+    admin as never,
+    "user-1",
+    new Date("2026-08-10"),
+  )
+
+  assert.equal(enrollment.accessState, "active")
+  assert.equal(enrollment.sourceKind, "field_test")
+  assert.equal(enrollment.quizSourceKind, "legacy")
+  assert.equal(enrollment.artifactLeadId, "44444444-4444-4444-8444-444444444444")
+})
+
+test("an unknown moderator enrollment source discriminator fails closed", async () => {
+  const admin = client({
+    billing_one_time_purchases: [],
+    billing_subscriptions: [{ ...subscription, metadata: { pricing_catalog: "standard" } }],
+    personal_plan_test_enrollments: [
+      {
+        id: "field-test-enrollment-1",
+        user_id: "user-1",
+        lead_id: "44444444-4444-4444-8444-444444444444",
+        manual_access_grant_id: "grant-1",
+        status: "active",
+        activated_at: "2026-08-10T00:00:00.000Z",
+        expires_at: "2026-11-08T00:00:00.000Z",
+        revoked_at: null,
+        quiz_source_kind: "unexpected",
+        manual_access_grants: {
+          id: "grant-1",
+          user_id: "user-1",
+          reason: "tester",
+          expires_at: "2026-11-08T00:00:00.000Z",
+          revoked_at: null,
+        },
+      },
+    ],
+  })
+
+  assert.equal(
+    (await findPersonalPlanEnrollmentForUser(admin as never, "user-1", new Date("2026-08-10")))
+      .accessState,
+    "none",
+  )
+})
+
 test("field-test enrollment reads still fail closed on unrelated database errors", async () => {
   const admin = client(
     {

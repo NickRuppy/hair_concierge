@@ -15,10 +15,12 @@ import {
 } from "@/lib/personal-plan-field-test/campaign-cookie"
 import {
   createModeratorIntent,
+  resolveModeratorIntent,
   resolveModeratorMember,
 } from "@/lib/personal-plan-field-test/moderator"
 import { MODERATOR_INTENT_COOKIE } from "@/lib/personal-plan-field-test/moderator-contract"
 import { personalPlanFieldTestCookieSecret } from "@/lib/personal-plan-field-test/server"
+import { resolveFunnelCookieContext } from "@/lib/funnel/server"
 import { PERSONAL_PLAN_QUIZ_DRAFT_COOKIE } from "@/lib/personal-plan-quiz/server-draft"
 import { PERSONAL_PLAN_RESULT_RETURN_COOKIE } from "@/lib/personal-plan-quiz/result-return"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -38,6 +40,8 @@ type StartDependencies = {
     now: number
   }) => Promise<string | null>
   createIntent: typeof createModeratorIntent
+  resolveIntent: typeof resolveModeratorIntent
+  resolveFunnelContext: typeof resolveFunnelCookieContext
   encodeFunnelContext: typeof encodeFunnelContext
   funnelSecret: () => string | undefined
   campaignCookieSecret: () => string | null
@@ -60,6 +64,8 @@ const DEFAULT_DEPENDENCIES: StartDependencies = {
   resolveMember: resolveModeratorMember,
   createFunnelSession: createModeratorFunnelSession,
   createIntent: createModeratorIntent,
+  resolveIntent: resolveModeratorIntent,
+  resolveFunnelContext: resolveFunnelCookieContext,
   encodeFunnelContext,
   funnelSecret: () => process.env.FUNNEL_COOKIE_SIGNING_SECRET,
   campaignCookieSecret: personalPlanFieldTestCookieSecret,
@@ -106,6 +112,20 @@ export function createModeratorFieldTestStartHandler(overrides: Partial<StartDep
     if (!funnelSecret || !campaignCookieSecret || !dependencies.moderatorIntentSecretConfigured())
       return jsonError("Testzugang ist gerade nicht verfügbar", 503)
 
+    const existing = await resolveExistingOrganicStart({
+      request,
+      user,
+      campaignId: member.campaign.id,
+      resolveIntent: dependencies.resolveIntent,
+      resolveFunnelContext: dependencies.resolveFunnelContext,
+    })
+    if (existing) {
+      return NextResponse.json(
+        { destination: "/quiz", funnelSessionId: existing, freshStart: false },
+        { headers: NO_STORE_HEADERS },
+      )
+    }
+
     const visitorId = dependencies.randomUUID()
     let funnelSessionId: string | null
     try {
@@ -140,7 +160,7 @@ export function createModeratorFieldTestStartHandler(overrides: Partial<StartDep
       {
         visitorId,
         sessionId: funnelSessionId,
-        packageKey: "meta_personal_plan_v1",
+        packageKey: "default_organic",
         issuedAt: now,
       },
       funnelSecret,
@@ -149,7 +169,7 @@ export function createModeratorFieldTestStartHandler(overrides: Partial<StartDep
       return jsonError("Testzugang ist gerade nicht verfügbar", 503)
 
     const response = NextResponse.json(
-      { destination: "/lp/haarplan" },
+      { destination: "/quiz", funnelSessionId, freshStart: true },
       { headers: NO_STORE_HEADERS },
     )
     response.cookies.set(MODERATOR_INTENT_COOKIE, intent, {
@@ -172,6 +192,41 @@ export function createModeratorFieldTestStartHandler(overrides: Partial<StartDep
   }
 }
 
+async function resolveExistingOrganicStart(input: {
+  request: Request
+  user: ModeratorUser
+  campaignId: string
+  resolveIntent: typeof resolveModeratorIntent
+  resolveFunnelContext: typeof resolveFunnelCookieContext
+}): Promise<string | null> {
+  const intent = readCookie(input.request, MODERATOR_INTENT_COOKIE)
+  const funnelCookie = readCookie(input.request, FUNNEL_SESSION_COOKIE)
+  if (!intent || !funnelCookie) return null
+
+  try {
+    const funnelContext = await input.resolveFunnelContext(funnelCookie)
+    if (!funnelContext || funnelContext.packageKey !== "default_organic") return null
+    const resolved = await input.resolveIntent(intent, input.user, funnelContext)
+    return resolved.kind === "ready" &&
+      resolved.intent.campaignId === input.campaignId &&
+      resolved.intent.funnelSessionId === funnelContext.sessionId
+      ? funnelContext.sessionId
+      : null
+  } catch {
+    return null
+  }
+}
+
+function readCookie(request: Request, name: string): string | null {
+  const header = request.headers.get("cookie")
+  if (!header) return null
+  for (const part of header.split(";")) {
+    const [key, ...value] = part.trim().split("=")
+    if (key === name) return value.join("=") || null
+  }
+  return null
+}
+
 export const POST = createModeratorFieldTestStartHandler()
 
 type FunnelSessionInsertClient = {
@@ -190,7 +245,7 @@ export async function createModeratorFunnelSession(
   client: FunnelSessionInsertClient = createAdminClient() as unknown as FunnelSessionInsertClient,
   createId: () => string = randomUUID,
 ): Promise<string | null> {
-  const funnelPackage = getFunnelPackageByKey("meta_personal_plan_v1")
+  const funnelPackage = getFunnelPackageByKey("default_organic")
   if (!funnelPackage) return null
   const id = createId()
   const { error } = await client.from("funnel_sessions").insert({

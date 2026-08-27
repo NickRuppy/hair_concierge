@@ -1,16 +1,24 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { createClient } from "@/lib/supabase/client"
 import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-test/personal-plan-field-test-ended"
+import {
+  parseModeratorOrganicStartResponse,
+  prepareModeratorOrganicFreshStart,
+} from "@/lib/quiz/moderator-fresh-start"
+import { useQuizStore } from "@/lib/quiz/store"
 
 type EntryState = "idle" | "starting" | "wrong_account" | "unavailable" | "ended"
 
 export function ModeratorAccountEntry({ campaignId }: { campaignId: string }) {
   const [state, setState] = useState<EntryState>("idle")
+  const startedRef = useRef(false)
 
   async function start() {
+    if (startedRef.current) return
+    startedRef.current = true
     setState("starting")
     try {
       const response = await fetch("/api/personal-plan/field-test/moderator/start", {
@@ -20,14 +28,20 @@ export function ModeratorAccountEntry({ campaignId }: { campaignId: string }) {
         body: JSON.stringify({ campaignId }),
       })
       const body: unknown = await response.json().catch(() => null)
-      if (response.ok && body && typeof body === "object" && "destination" in body) {
-        const destination = (body as { destination?: unknown }).destination
-        if (
-          typeof destination === "string" &&
-          destination.startsWith("/") &&
-          !destination.startsWith("//")
-        ) {
-          window.location.assign(destination)
+      if (response.ok) {
+        const startResult = parseModeratorOrganicStartResponse(body)
+        if (startResult?.kind === "active") {
+          window.location.assign("/plan-start")
+          return
+        }
+        if (startResult?.kind === "quiz") {
+          const freshBoundary = prepareModeratorOrganicFreshStart(startResult.funnelSessionId)
+          if (freshBoundary === "failed") {
+            setState("unavailable")
+            return
+          }
+          if (freshBoundary === "fresh") useQuizStore.getState().reset()
+          window.location.assign("/quiz")
           return
         }
       }
@@ -40,8 +54,16 @@ export function ModeratorAccountEntry({ campaignId }: { campaignId: string }) {
       )
     } catch {
       setState("unavailable")
+    } finally {
+      startedRef.current = false
     }
   }
+
+  useEffect(() => {
+    void start()
+    // The campaign can only change through a fresh authenticated return route.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaignId])
 
   async function switchAccount() {
     try {
@@ -83,28 +105,22 @@ export function ModeratorAccountEntry({ campaignId }: { campaignId: string }) {
             </p>
             <button
               className="mt-6 inline-flex rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white"
-              onClick={() => setState("idle")}
+              onClick={() => {
+                startedRef.current = false
+                void start()
+              }}
             >
               Erneut versuchen
             </button>
           </>
         ) : (
           <>
-            <p className="text-sm font-semibold text-[var(--brand-plum)]">
-              Dein persönlicher Produkttest
-            </p>
-            <h1 className="mt-3 font-header text-3xl">Starte mit einem frischen Haar-Check.</h1>
+            <p className="text-sm font-semibold text-[var(--brand-plum)]">Dein Haar-Check</p>
+            <h1 className="mt-3 font-header text-3xl">Dein Haar-Check wird geöffnet …</h1>
             <p className="mt-4 leading-7 text-[var(--text-sub)]">
-              Dein neuer persönlicher Plan bleibt in diesem Konto gespeichert. Der Testzugang
-              beginnt erst nach deinem Ergebnis und endet 90 Tage später. Es entstehen keine Kosten.
+              Dein persönlicher Plan bleibt in diesem Konto gespeichert. Das dauert nur einen
+              Moment.
             </p>
-            <button
-              className="mt-6 inline-flex rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white disabled:opacity-60"
-              disabled={state === "starting"}
-              onClick={start}
-            >
-              {state === "starting" ? "Wird vorbereitet…" : "Quiz starten"}
-            </button>
           </>
         )}
       </section>

@@ -314,3 +314,116 @@ test("an expired invitation for a ready member is ended rather than the wrong ac
     { kind: "ended", campaignId, reason: "expired" },
   )
 })
+
+test("moderator intent accepts the organic quiz for the same roster account but rejects other packages", async () => {
+  const value = createModeratorIntent(
+    { campaignId, userId, funnelSessionId: sessionId, issuedAt: now, expiresAt: now + 60_000 },
+    secret,
+  )
+  for (const [packageKey, expected] of [
+    ["default_organic", "ready"],
+    ["untrusted_package", "forbidden"],
+  ]) {
+    const result = await resolveModeratorIntent(
+      value,
+      { id: userId, email: "mod@example.com", email_confirmed_at: "2026-08-27" },
+      { sessionId, packageKey },
+      {
+        client: client({
+          personal_plan_test_members: readyMember,
+          personal_plan_test_campaigns: campaign,
+        }),
+        now,
+        secret,
+      },
+    )
+    assert.equal(result.kind, expected)
+  }
+})
+
+test("organic RPC adapters send confirmed ownership and accept artifact-free activation", async () => {
+  const { saveModeratorOrganicLead, activateModeratorOrganicEnrollment } =
+    await import("../src/lib/personal-plan-field-test/moderator-organic")
+  const seen: Array<[string, Record<string, unknown>]> = []
+  const rpc = async (name: string, args: Record<string, unknown>) => {
+    seen.push([name, args])
+    return {
+      data: name.startsWith("save_")
+        ? [{ lead_id: "lead", reused: true }]
+        : [
+            {
+              enrollment_id: "enrollment",
+              expires_at: "2026-11-25T12:00:00Z",
+              prepared_artifact_id: null,
+            },
+          ],
+      error: null,
+    }
+  }
+  assert.deepEqual(
+    await saveModeratorOrganicLead(
+      {
+        campaignId: "campaign",
+        userId: "owner",
+        confirmedEmail: " Invited@Example.com ",
+        funnelSessionId: "session",
+        name: "Lea",
+        marketingConsent: false,
+        quizAnswers: {} as never,
+      },
+      rpc,
+    ),
+    { leadId: "lead", reused: true },
+  )
+  assert.deepEqual(seen[0], [
+    "save_personal_plan_moderator_organic_lead",
+    {
+      p_campaign_id: "campaign",
+      p_user_id: "owner",
+      p_confirmed_email: "invited@example.com",
+      p_funnel_session_id: "session",
+      p_name: "Lea",
+      p_marketing_consent: false,
+      p_quiz_answers: {},
+    },
+  ])
+  assert.deepEqual(
+    await activateModeratorOrganicEnrollment(
+      {
+        campaignId: "campaign",
+        userId: "owner",
+        confirmedEmail: " Invited@Example.com ",
+        funnelSessionId: "session",
+        leadId: "lead",
+        eventId: "event",
+      },
+      rpc,
+    ),
+    { enrollmentId: "enrollment", expiresAt: "2026-11-25T12:00:00Z", reused: false },
+  )
+  assert.deepEqual(seen[1], [
+    "activate_personal_plan_moderator_organic_test",
+    {
+      p_campaign_id: "campaign",
+      p_user_id: "owner",
+      p_confirmed_email: "invited@example.com",
+      p_funnel_session_id: "session",
+      p_lead_id: "lead",
+      p_activation_event_id: "event",
+    },
+  ])
+  await assert.rejects(
+    activateModeratorOrganicEnrollment(
+      {
+        campaignId: "campaign",
+        userId: "owner",
+        confirmedEmail: "invited@example.com",
+        funnelSessionId: "session",
+        leadId: "lead",
+        eventId: "event",
+      },
+      async () => ({ data: null, error: Error("unavailable") }),
+    ),
+    /activation failed/,
+  )
+})

@@ -78,6 +78,7 @@ test("regular quiz field-test organic offer replaces all commercial conversion s
       regularFieldTest={{
         accessDurationHours: 168,
         activationApiPath: "/api/quiz/field-test/activate",
+        identityMode: "guest",
       }}
     />,
   )
@@ -89,6 +90,35 @@ test("regular quiz field-test organic offer replaces all commercial conversion s
   assert.match(html, /data-regular-quiz-field-test-activation-card/)
   assert.doesNotMatch(html, /Monatlich|€14,99|Stripe|PayPal|Checkout/i)
   assert.doesNotMatch(html, /Geld-zurück-Garantie|direkt nach dem Kauf|Plan sichern/)
+})
+
+test("email-bound moderator organic offer remains free and uses its dedicated activation route", () => {
+  const narrative = buildQuizResultNarrative(quizAnswers)
+  const html = renderToStaticMarkup(
+    <OrganicPlanOfferVariant
+      entryContext="quiz_completion"
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      narrative={narrative}
+      offerVariant="organic-plan-v1"
+      quizAnswers={quizAnswers}
+      pricingSlot={<div>Monatlich · €14,99</div>}
+      regularFieldTest={{
+        accessDurationHours: 2160,
+        activationApiPath: "/api/personal-plan/field-test/moderator/activate-organic",
+        identityMode: "email_bound",
+      }}
+    />,
+  )
+
+  assert.match(html, /Starte deinen 90-Tage-Testzugang ab Aktivierung\./)
+  assert.match(html, /Dein Plan bleibt in deinem Konto gespeichert\./)
+  assert.match(html, /Keine Zahlungsdaten · kein Abo · 90 Tage Testzugang/)
+  assert.match(html, /data-offer-destination="moderator_organic_test_activation"/)
+  assert.doesNotMatch(
+    html,
+    /temporären Testgast|siebentägigen|Monatlich|€14,99|Stripe|PayPal|Checkout/i,
+  )
 })
 
 test("legacy result client fails closed when regular field-test intent lost authorization", () => {

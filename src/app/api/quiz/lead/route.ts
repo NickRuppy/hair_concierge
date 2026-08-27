@@ -28,6 +28,8 @@ import {
 } from "@/lib/analytics/meta-capi"
 import { META_QUIZ_EVENT_SOURCE_URL } from "@/lib/analytics/page-url"
 import { checkEmailDeliverability } from "@/lib/email-deliverability"
+import { resolveModeratorJourney } from "@/lib/personal-plan-field-test/moderator-journey"
+import { saveModeratorOrganicLead } from "@/lib/personal-plan-field-test/moderator-organic"
 import { recordEmailDeliverabilityOutcome } from "@/lib/email-deliverability-observability"
 import {
   EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
@@ -42,6 +44,8 @@ function normalizeEmail(email: string): string {
 }
 
 interface QuizLeadPostDependencies {
+  resolveModeratorJourney: typeof resolveModeratorJourney
+  saveModeratorOrganicLead: typeof saveModeratorOrganicLead
   checkRateLimit: typeof checkRateLimit
   checkEmailDeliverability: typeof checkEmailDeliverability
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
@@ -59,6 +63,8 @@ interface QuizLeadPostDependencies {
 
 export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDependencies> = {}) {
   const dependencies: QuizLeadPostDependencies = {
+    resolveModeratorJourney,
+    saveModeratorOrganicLead,
     checkRateLimit,
     checkEmailDeliverability,
     recordEmailDeliverabilityOutcome,
@@ -88,6 +94,40 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
       const parsed = leadSchema.parse(body)
       const email = normalizeEmail(parsed.email)
+      const cookieStore = await dependencies.cookies()
+      const funnelContext = await dependencies.resolveFunnelCookieContext(
+        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+      )
+      const moderator = await dependencies.resolveModeratorJourney({
+        cookies: cookieStore,
+        funnelContext,
+      })
+      if (moderator.kind === "unavailable") return fieldTestUnavailableResponse()
+      if (moderator.kind === "authorized") {
+        if (funnelContext?.packageKey !== "default_organic") return fieldTestUnavailableResponse()
+        const origin = request.headers.get("origin")
+        if (origin && origin !== new URL(request.url).origin) {
+          return NextResponse.json({ error: "Ungültige Anfrage" }, { status: 403 })
+        }
+        if (email !== moderator.email) {
+          return NextResponse.json(
+            { error: "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos." },
+            { status: 422 },
+          )
+        }
+        const saved = await dependencies
+          .saveModeratorOrganicLead({
+            campaignId: moderator.campaignId,
+            userId: moderator.userId,
+            confirmedEmail: moderator.email,
+            funnelSessionId: moderator.funnelSessionId,
+            name: parsed.name,
+            marketingConsent: parsed.marketingConsent,
+            quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers),
+          })
+          .catch(() => null)
+        return saved ? leadResponse(saved.leadId, false, true) : fieldTestUnavailableResponse()
+      }
       const deliverability = await dependencies.checkEmailDeliverability(email)
       dependencies.recordEmailDeliverabilityOutcome("legacy", deliverability)
       if (!deliverability.ok) {
@@ -102,7 +142,6 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       const quizAnswers = canonicalizeQuizAnswers(parsed.quizAnswers)
       const metaUserRequestData = metaRequestData(request)
 
-      const cookieStore = await dependencies.cookies()
       // A field-test cookie is a non-commercial intent marker. If the global
       // switch is turned off after a tester entered, fail closed instead of
       // allowing their submission to fall through into the paid funnel.
@@ -114,9 +153,6 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       }
 
       const supabase = dependencies.createAdminClient()
-      const funnelContext = await dependencies.resolveFunnelCookieContext(
-        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
-      )
       const funnelTouch = funnelContext
         ? await dependencies.resolvePendingFunnelTouchValue(
             cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
@@ -127,7 +163,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
 
       const { data: recentLeads, error: recentLeadsError } = await supabase
         .from("leads")
-        .select("id, quiz_answers, marketing_consent, status")
+        .select("id, quiz_answers, marketing_consent, status, moderator_campaign_id")
         .eq("quiz_kind", "legacy")
         .eq("email", deliverableEmail)
         .gte("created_at", recentThreshold)
@@ -140,10 +176,13 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       }
 
       const existingLead = findReusableLead(
-        (recentLeads as Array<{
-          id: string
-          quiz_answers: Record<string, unknown> | null
-        }> | null) ?? null,
+        (
+          (recentLeads as Array<{
+            id: string
+            quiz_answers: Record<string, unknown> | null
+            moderator_campaign_id?: string | null
+          }> | null) ?? []
+        ).filter((lead) => !lead.moderator_campaign_id),
         quizAnswers,
       )
 

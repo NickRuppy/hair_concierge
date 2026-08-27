@@ -11,6 +11,7 @@ import {
   resolvePersonalPlanFieldTestCampaignCookie,
   resolvePersonalPlanFieldTestCampaignToken,
   resolvePersonalPlanFieldTestOfferAuthorization,
+  resolveOrganicModeratorOfferAuthorization,
 } from "../src/lib/personal-plan-field-test"
 
 const campaignId = "10000000-0000-4000-8000-000000000001"
@@ -308,4 +309,72 @@ test("guest offer authorization cannot consume an email-bound campaign", async (
     },
   )
   assert.equal(resolved, null)
+})
+
+test("organic moderator offer authorization requires the exact email-bound organic campaign, session, and lead", async () => {
+  const cookie = createPersonalPlanFieldTestCampaignCookie(
+    {
+      campaignId,
+      accessDurationHours: 2160,
+      issuedAt: now,
+      expiresAt: campaign.expiresAt,
+    },
+    signingSecret!,
+  )
+  assert.ok(cookie)
+  const emailBoundCampaign = {
+    ...campaign,
+    identityMode: "email_bound" as const,
+    accessDurationHours: 2160,
+  }
+  const session = {
+    id: sessionId,
+    leadId,
+    packageKey: "default_organic",
+    testKind: "field_test",
+    campaignId,
+  }
+  const dependencies = {
+    now,
+    cookieSecret,
+    loadCampaignById: async () => emailBoundCampaign,
+    loadOfferSession: async () => session,
+  }
+
+  assert.deepEqual(
+    await resolveOrganicModeratorOfferAuthorization(
+      { campaignCookieValue: cookie, funnelSessionId: sessionId, leadId, allowEmailBound: true },
+      dependencies,
+    ),
+    { campaignId, funnelSessionId: sessionId, leadId, accessDurationHours: 2160 },
+  )
+
+  for (const input of [
+    { campaignCookieValue: cookie, funnelSessionId: sessionId, leadId },
+    {
+      campaignCookieValue: cookie,
+      funnelSessionId: "wrong-session",
+      leadId,
+      allowEmailBound: true,
+    },
+    {
+      campaignCookieValue: cookie,
+      funnelSessionId: sessionId,
+      leadId: "wrong-lead",
+      allowEmailBound: true,
+    },
+  ]) {
+    assert.equal(await resolveOrganicModeratorOfferAuthorization(input, dependencies), null)
+  }
+
+  assert.equal(
+    await resolveOrganicModeratorOfferAuthorization(
+      { campaignCookieValue: cookie, funnelSessionId: sessionId, leadId, allowEmailBound: true },
+      {
+        ...dependencies,
+        loadCampaignById: async () => ({ ...campaign, identityMode: "guest" as const }),
+      },
+    ),
+    null,
+  )
 })
