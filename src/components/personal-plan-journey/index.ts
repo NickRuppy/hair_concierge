@@ -3,7 +3,11 @@ export {
   type PersonalPlanJourneyStage,
   type PersonalPlanSaveStatus,
 } from "./journey-header"
-export { PERSONAL_PLAN_JOURNEY_STAGES } from "./journey-content"
+export {
+  PERSONAL_PLAN_CHAPTERS,
+  PERSONAL_PLAN_JOURNEY_STAGES,
+  type PersonalPlanChapterStage,
+} from "./journey-content"
 export { PersonalPlanJourneyOverview } from "./journey-overview"
 export { PersonalPlanChapterTransition } from "./chapter-transition"
 export {

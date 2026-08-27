@@ -1,11 +1,11 @@
 "use client"
 
 import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey/chapter-transition"
-import type { PersonalPlanJourneyStage } from "@/components/personal-plan-journey/journey-content"
+import type { PersonalPlanChapterStage } from "@/components/personal-plan-journey/journey-content"
 
 function noop() {}
 
-export function PersonalPlanChaptersLabClient({ stage }: { stage: PersonalPlanJourneyStage }) {
+export function PersonalPlanChaptersLabClient({ stage }: { stage: PersonalPlanChapterStage }) {
   return (
     <PersonalPlanChapterTransition
       currentStage={stage}

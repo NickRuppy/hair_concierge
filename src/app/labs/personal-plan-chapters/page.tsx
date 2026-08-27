@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation"
 
-import type { PersonalPlanJourneyStage } from "@/components/personal-plan-journey/journey-content"
+import type { PersonalPlanChapterStage } from "@/components/personal-plan-journey/journey-content"
 
 import { PersonalPlanChaptersLabClient } from "./lab-client"
 
-const STAGES = new Set([1, 2, 3, 4, 5])
+// Stage 5 has no chapter screen any more (field test 26.08.2026).
+const STAGES = new Set([1, 2, 3, 4])
 
 export default async function PersonalPlanChaptersLabPage({
   searchParams,
@@ -17,5 +18,5 @@ export default async function PersonalPlanChaptersLabPage({
   const stage = Number(stageParam ?? "1")
   if (!STAGES.has(stage)) notFound()
 
-  return <PersonalPlanChaptersLabClient stage={stage as PersonalPlanJourneyStage} />
+  return <PersonalPlanChaptersLabClient stage={stage as PersonalPlanChapterStage} />
 }

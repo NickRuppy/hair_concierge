@@ -40,8 +40,16 @@ export const PERSONAL_PLAN_JOURNEY_STAGES = [
   },
 ] as const satisfies readonly PersonalPlanJourneyStageContent[]
 
+/**
+ * The stages that still have a chapter screen. Stage 5 lost its chapter with
+ * the Routine's "Anwendung ansehen" hero button (field test 26.08.2026): the
+ * Bottom-Nav's Anwendung tab is the only route to that surface now, and a tab
+ * does not get announced by a full-screen chapter.
+ */
+export type PersonalPlanChapterStage = 1 | 2 | 3 | 4
+
 export type PersonalPlanChapterContent = {
-  stage: PersonalPlanJourneyStage
+  stage: PersonalPlanChapterStage
   title: string
   description: string
   actionLabel: string
@@ -71,11 +79,5 @@ export const PERSONAL_PLAN_CHAPTERS = [
     title: "Deine Produktauswahl steht.",
     description: "Jetzt ordnen wir alles zu deiner persönlichen Routine.",
     actionLabel: "Routine ansehen",
-  },
-  {
-    stage: 5,
-    title: "Deine Routine steht.",
-    description: "Jetzt zeigen wir dir, wie du alles richtig anwendest.",
-    actionLabel: "Anwendung ansehen",
   },
 ] as const satisfies readonly PersonalPlanChapterContent[]

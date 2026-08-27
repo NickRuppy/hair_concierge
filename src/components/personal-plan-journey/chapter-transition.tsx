@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-import { PERSONAL_PLAN_CHAPTERS, type PersonalPlanJourneyStage } from "./journey-content"
+import { PERSONAL_PLAN_CHAPTERS, type PersonalPlanChapterStage } from "./journey-content"
 import { PersonalPlanJourneyHeader } from "./journey-header"
 import { PersonalPlanJourneyOverview } from "./journey-overview"
 
@@ -20,7 +20,7 @@ export function PersonalPlanChapterTransition({
   backLabel,
   errorMessage,
 }: {
-  currentStage: PersonalPlanJourneyStage
+  currentStage: PersonalPlanChapterStage
   actionHref?: string
   onAction?: () => void
   actionPending?: boolean

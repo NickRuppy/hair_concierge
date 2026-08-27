@@ -4,6 +4,7 @@ import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import {
+  PERSONAL_PLAN_CHAPTERS,
   PERSONAL_PLAN_JOURNEY_STAGES,
   PersonalPlanChapterTransition,
   PersonalPlanJourneyHeader,
@@ -99,19 +100,34 @@ test("journey header's 5-stage bar can retire while Back and the wordmark stay (
 test("shared chapter transition renders the approved stage-specific copy and one primary action", () => {
   const chapter = renderToStaticMarkup(
     React.createElement(PersonalPlanChapterTransition, {
-      currentStage: 5,
+      currentStage: 4,
       onAction: () => {},
     }),
   )
 
-  assert.match(chapter, /Deine Routine steht\./)
-  assert.match(chapter, /Jetzt zeigen wir dir, wie du alles richtig anwendest\./)
-  assert.match(chapter, /Anwendung ansehen/)
+  assert.match(chapter, /Deine Produktauswahl steht\./)
+  assert.match(chapter, /Jetzt ordnen wir alles zu deiner persönlichen Routine\./)
+  assert.match(chapter, /Routine ansehen/)
   assert.equal((chapter.match(/<button/g) ?? []).length, 1)
-  assert.match(chapter, /data-personal-plan-chapter="5"/)
+  assert.match(chapter, /data-personal-plan-chapter="4"/)
   // Variante D (2026-08-17): the page scrolls naturally under a sticky header
   // instead of squeezing all five cards into one locked viewport.
   assert.match(chapter, /min-h-dvh/)
   assert.doesNotMatch(chapter, /overflow-hidden/)
   assert.doesNotMatch(chapter, /max-height:519px/)
+})
+
+test("stage 5 has no chapter screen any more", () => {
+  // Field test 26.08.2026: the Routine's "Anwendung ansehen" hero button is
+  // gone and the Bottom-Nav tab owns that destination, so nothing announces
+  // Anwendung with a full-screen chapter. The journey OVERVIEW keeps its
+  // five stages — only the chapter is retired.
+  assert.equal(PERSONAL_PLAN_CHAPTERS.length, 4)
+  assert.deepEqual(
+    PERSONAL_PLAN_CHAPTERS.map((entry) => entry.stage),
+    [1, 2, 3, 4],
+  )
+  assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Deine Routine steht/)
+  assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Anwendung ansehen/)
+  assert.equal(PERSONAL_PLAN_JOURNEY_STAGES.length, 5)
 })
