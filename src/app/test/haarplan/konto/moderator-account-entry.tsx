@@ -31,7 +31,7 @@ export function ModeratorAccountEntry({ campaignId }: { campaignId: string }) {
       if (response.ok) {
         const startResult = parseModeratorOrganicStartResponse(body)
         if (startResult?.kind === "active") {
-          window.location.assign("/plan-start")
+          window.location.assign("/anwendung")
           return
         }
         if (startResult?.kind === "quiz") {

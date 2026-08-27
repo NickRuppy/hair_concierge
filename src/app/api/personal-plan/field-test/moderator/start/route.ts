@@ -101,7 +101,7 @@ export function createModeratorFieldTestStartHandler(overrides: Partial<StartDep
       return jsonError("Dieses Konto kann diese Einladung nicht nutzen", 403)
     if (member.kind === "ended") return jsonError("Dieser Produkttest ist beendet", 410)
     if (member.kind === "active")
-      return NextResponse.json({ destination: "/plan-start" }, { headers: NO_STORE_HEADERS })
+      return NextResponse.json({ destination: "/anwendung" }, { headers: NO_STORE_HEADERS })
     if (member.kind !== "ready") return jsonError("Testzugang ist gerade nicht verfügbar", 503)
     if (!dependencies.enabled())
       return jsonError("Dieser Produkttest ist gerade nicht verfügbar", 404)

@@ -76,7 +76,11 @@ test("a failed first boundary can be safely initialized from the reused server s
   assert.equal(local.getItem(QUIZ_DRAFT_STORAGE_KEY), null)
 })
 
-test("response parsing allows an active return without a quiz session id", () => {
+test("response parsing allows progress-routed and older active returns without quiz state", () => {
+  assert.deepEqual(parseModeratorOrganicStartResponse({ destination: "/anwendung" }), {
+    kind: "active",
+  })
+  assert.equal(parseModeratorOrganicStartResponse({ destination: "https://example.com" }), null)
   assert.deepEqual(parseModeratorOrganicStartResponse({ destination: "/plan-start" }), {
     kind: "active",
   })

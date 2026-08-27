@@ -49,7 +49,8 @@ export function createModeratorAccountPage(
     }
     const member = await dependencies.resolveMember({ campaignId, user: moderatorUser })
 
-    if (member.kind === "active") return dependencies.redirect("/plan-start")
+    // Application routing resumes the persisted frontier, including an accepted routine.
+    if (member.kind === "active") return dependencies.redirect("/anwendung")
     if (member.kind === "ended") return dependencies.redirect("/test/haarplan/beendet")
 
     return <ModeratorAccountEntry campaignId={campaignId} />

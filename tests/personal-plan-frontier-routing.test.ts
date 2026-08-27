@@ -223,3 +223,21 @@ test("the narrow owner source routes from durable plan pointers and fails closed
     { kind: "legacy" },
   )
 })
+
+test("moderator application entry routes recovery and unfinished setup safely", () => {
+  const cases = [
+    { sourceReady: false, plan: null, destination: "/plan-bereit" },
+    { sourceReady: true, plan: null, destination: "/plan-start" },
+  ]
+  for (const item of cases) {
+    const frontier = resolvePersonalPlanRoutingFrontier({
+      eligible: true,
+      sourceReady: item.sourceReady,
+      plan: item.plan,
+    })
+    assert.equal(
+      getPersonalPlanFrontierRedirect("/anwendung", frontier) ?? "/anwendung",
+      item.destination,
+    )
+  }
+})
