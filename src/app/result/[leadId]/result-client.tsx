@@ -17,7 +17,7 @@ import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-tes
 import { RegularQuizFieldTestUnavailable } from "@/components/regular-quiz-field-test/unavailable"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { renderOfferVariant } from "@/funnels/offers/registry"
-import { getQuizResultCta } from "@/lib/quiz/result-cta"
+import { QUIZ_RESULT_CTA } from "@/lib/quiz/result-cta"
 import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
 import { buildQuizResultOnboardingPath } from "@/lib/quiz/result-navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
@@ -79,7 +79,7 @@ export function ResultPageClient({
 
   if (quizKind === "personal_plan") {
     if (hasAccess) {
-      return <PersonalPlanPaidContinuation leadId={leadId} name={name} />
+      return <PersonalPlanPaidContinuation name={name} />
     }
 
     if (fieldTestUnavailable) {
@@ -172,7 +172,7 @@ function LegacyResultPageClient({
   returnTo?: string | null
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)
-  const cta = getQuizResultCta({ canGoStraightToRoutine: hasAccess })
+  const cta = QUIZ_RESULT_CTA
 
   useEffect(() => {
     if (!focusTarget) return

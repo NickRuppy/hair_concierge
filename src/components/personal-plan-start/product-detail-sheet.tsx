@@ -8,7 +8,7 @@ import type { NeedCardViewModel } from "./plan-start-cards"
 
 /** Shown once a concrete product leads the card: the refinement can still improve it. */
 export const PRODUCT_REFINEMENT_HINT =
-  "Nach dem Feinschliff prüfen wir, ob es eine noch bessere Wahl für dich gibt."
+  "Wenn du deine Produkte ergänzt, prüfen wir, ob es eine bessere Wahl für dich gibt."
 
 export function ProductDetailSheet({
   card,

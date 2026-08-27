@@ -576,7 +576,7 @@ export function RefinementFlow({
     }
     if (status === "completion_failed" && session.path.firstUnresolvedQuestionId === null) {
       setStatus("saving")
-      setLiveMessage("Übergabe wird erneut versucht.")
+      setLiveMessage("Wir versuchen das Abschließen erneut.")
       if (moduleRef.current) {
         await completeStage2Module(session, moduleRef.current)
         return
@@ -930,7 +930,7 @@ export async function applyStage2ModuleCompletion(
 export function completionFailureMessage(code: Stage2RefinementErrorCode): string {
   return code === "incomplete_refinement"
     ? "Dein Feinschliff-Stand hat sich geändert."
-    : "Antwort gespeichert. Die Übergabe hat nicht geklappt."
+    : "Antwort gespeichert. Das Abschließen hat nicht geklappt."
 }
 
 function chooseNextQuestion(
@@ -995,7 +995,7 @@ function InvitationShell({
       currentStage={2}
       onAction={onBegin}
       onBack={onSecondaryExit}
-      backLabel="Zum Idealplan"
+      backLabel="Zum Plan"
     />
   )
 }
@@ -1015,7 +1015,7 @@ function ResumeShell({
         currentStage={2}
         saveStatus="saved"
         onBack={onSecondaryExit}
-        backLabel="Zum Idealplan"
+        backLabel="Zum Plan"
         showStageProgress={false}
       />
       <main className="mx-auto flex min-h-[calc(100dvh-71px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">

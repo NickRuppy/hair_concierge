@@ -95,11 +95,11 @@ const faqItems = [
   ],
   [
     "Kann ich meine bisherigen Produkte weiterverwenden?",
-    "Ja. Im anschließenden Onboarding gibst du an, was du bereits nutzt. Passende Produkte können in deinen Plan übernommen werden.",
+    "Ja. Du kannst deine vorhandenen Produkte jederzeit im Feinschliff ergänzen.",
   ],
   [
     "Was passiert direkt nach dem Kauf?",
-    "Du ergänzt noch deine vorhandenen Produkte und Gewohnheiten. Danach wird dein vollständiger Plan im Routinebereich geöffnet.",
+    "Dein Plan wird direkt geöffnet. Wenn du magst, kannst du ihn danach mit deinen eigenen Produkten und Gewohnheiten genauer machen.",
   ],
 ] as const
 

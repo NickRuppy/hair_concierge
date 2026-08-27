@@ -207,7 +207,7 @@ export function RoutinePage({
           <RoutineSection
             title="Deine Basis"
             items={basisItems}
-            emptyLabel="Deine Basis wird aus deinem Idealplan aufgebaut."
+            emptyLabel="Deine Basis wird aus deinem Plan aufgebaut."
             onItemDetail={onItemDetail}
             presentation={portfolioPresentation}
             productPresentation={view.productPresentation}

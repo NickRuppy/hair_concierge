@@ -17,6 +17,7 @@ import {
   type Stage2ModuleCompletionPayload,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
+import { PLAN_ACCEPT_REFINE_HREF } from "../src/components/personal-plan-journey/accept-ideal-plan"
 import {
   moduleCompletionRoutineHref,
   planStartRefinementExitDestination,
@@ -269,7 +270,7 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
       mode: "question",
       activeQuestionId: "night_protection",
       status: "completion_failed",
-      liveMessage: "Deine Antworten sind gespeichert. Die Übergabe ist noch offen.",
+      liveMessage: "Deine Antworten sind gespeichert. Das Abschließen ist noch offen.",
       bridge: false,
     },
   )
@@ -445,6 +446,110 @@ test("plan-start turns a module deep link into a module-scoped Stage-2 entry", a
     personalPlanId: "plan-1",
     initialRefinementSession: refinement,
   })
+})
+
+/**
+ * A10 (founder ruling 27.08.2026). The universal escape hatch used to be
+ * `/plan-start?refine=1`, which resolves to `first_open` — a NON-explicit entry
+ * that resurrects the retired ceremony: the invitation/resume chapter shells and
+ * the chapter screens the module entry had already retired. Pointing it at the
+ * `products` module makes it an explicit module deep link, so a buyer whose
+ * accept could not resolve lands directly in their product questions.
+ */
+test("the accept escape hatch opens the products module with no chapter screen and no 5-stage bar", async () => {
+  const refineParam = new URL(PLAN_ACCEPT_REFINE_HREF, "https://chaarlie.de").searchParams.get(
+    "refine",
+  )
+  assert.equal(refineParam, "products")
+  assert.equal(parseRefineParam(refineParam ?? undefined), true)
+  assert.equal(parseRefineModuleParam(refineParam ?? undefined), "products")
+
+  const refinement = untouchedSession()
+  const state = await resolvePlanStartPageState(
+    {
+      enabled: () => true,
+      stage2Enabled: () => true,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: "plan-1",
+        frontier: "stage2",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false },
+      }),
+      loadExistingRefinementSession: async () => refinement,
+    },
+    {
+      refine: parseRefineParam(refineParam ?? undefined),
+      refineModule: parseRefineModuleParam(refineParam ?? undefined),
+    },
+  )
+  assert.equal(state.state, "production")
+  const initialJourney = state.state === "production" ? state.initialJourney : null
+  assert.ok(initialJourney)
+  assert.equal(planStartSuppressesChapterCeremony(initialJourney), true)
+  assert.equal(planStartRefinementExitDestination(initialJourney), "routine")
+
+  const gateway = {
+    load: async () => {
+      throw new Error("not used")
+    },
+    saveAnswer: async () => {
+      throw new Error("not used")
+    },
+    complete: async () => {
+      throw new Error("not used")
+    },
+  } as unknown as React.ComponentProps<typeof RefinementFlow>["gateway"]
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={gateway}
+      initialSession={refinement}
+      moduleEntry={initialJourney.stage === "stage2" ? initialJourney.refineModule : undefined}
+      directEntry
+    />,
+  )
+
+  // The products module's first question, straight away.
+  assert.match(html, /Was du heute benutzt/)
+  // No chapter ceremony: neither the Stage-2 invitation nor the resume shell.
+  assert.doesNotMatch(html, /Jetzt geben wir deinem Plan den Feinschliff\./)
+  assert.doesNotMatch(html, /Feinschliff starten/)
+  assert.doesNotMatch(html, /Wir laden deinen Feinschliff\./)
+  assert.doesNotMatch(html, /Zum Plan/)
+  // No 5-stage bar — that row narrates a sequence this arrival is not in.
+  assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+  assert.doesNotMatch(html, /Stufen im Personal Plan/)
+})
+
+test("the retired `?refine=1` escape hatch would have resurrected the ceremony", () => {
+  // The negative half of A10: proof the constant change is what removes the
+  // ceremony, not an incidental property of the module flow.
+  assert.equal(parseRefineModuleParam("1"), "first_open")
+  assert.equal(
+    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
+    false,
+  )
+  // The cohort the escape hatch exists for is the direct-accept cohort: a
+  // COMPLETE draft. `first_open` dead-ends it on the bridge chapter; only an
+  // explicit module opens the questions.
+  const completeDraft = fullyAnsweredSession("complete")
+  assert.equal(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(completeDraft, "products"),
+      moduleScope: "first_open",
+      directEntry: true,
+    }).mode,
+    "bridge",
+  )
+  assert.equal(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(completeDraft, "products"),
+      moduleScope: "explicit",
+      directEntry: true,
+    }).mode,
+    "question",
+  )
 })
 
 /**

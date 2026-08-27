@@ -110,7 +110,21 @@ export type PlanStartInitialJourney =
        */
       moduleProgress?: Stage2ModuleProgress
     }
-  | { stage: "stage3"; refinedVersionId: string; repairRoutineVersionId?: string }
+  | {
+      stage: "stage3"
+      refinedVersionId: string
+      repairRoutineVersionId?: string
+      /**
+       * Set when this Stage-3 entry belongs to an explicit module run — today
+       * only the Modul-1 (`products`) handoff resume. It carries the SAME fact
+       * the Stage-2 field carries: the user came from the Routine banner or a
+       * Profil row, so the retired chapter ceremony must stay suppressed for
+       * the rest of the journey (founder ruling 27.08.2026). Without it, an
+       * undirected reload of `/plan-start` after the handoff resurrects the
+       * chapter-4 screen the module entry had already retired.
+       */
+      refineModule?: Stage2ModuleEntryRequest
+    }
 
 /**
  * Whether Stage 2's bridge may hand off into Stage 3 on its own. An explicit
@@ -128,13 +142,16 @@ export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJou
  * from the Routine banner or the Profil tab, so "zurück" belongs on `/routine`
  * — sending those arrivals to the Idealplan would drop them into a stage they
  * never came from. `?refine=1` and every legacy entry keep today's Stage-1 exit.
+ *
+ * A Stage-3 entry carries the same marker when it resumes a module handoff, so
+ * the module's exit and its ceremony suppression survive an undirected reload.
  */
 export function planStartRefinementExitDestination(
   initialJourney: PlanStartInitialJourney,
 ): "routine" | "stage1" {
-  return initialJourney.stage === "stage2"
-    ? stage2SecondaryExitDestination(initialJourney.refineModule)
-    : "stage1"
+  return initialJourney.stage === "stage1"
+    ? "stage1"
+    : stage2SecondaryExitDestination(initialJourney.refineModule)
 }
 
 /**
@@ -1161,7 +1178,7 @@ export function PlanStartFlow(
       ))}
       <div className="min-h-dvh bg-[var(--background)]">
         <PlanStartHeader
-          stageLabel="Idealplan"
+          stageLabel="Plan"
           onBack={
             step === "optional"
               ? () => {
@@ -1187,13 +1204,13 @@ export function PlanStartLoading() {
     <StateShell
       stageLabel="Dein Plan"
       overline="Dein persönlicher Plan"
-      title="Dein Idealplan entsteht"
+      title="Dein Plan entsteht"
       lead="Wir bereiten die Empfehlungen aus deiner Haaranalyse vor."
       icon={<Loader2 className="h-7 w-7 animate-spin" aria-hidden="true" />}
       dataState="loading"
     >
       <div className="mx-auto mt-4 w-full max-w-[270px]">
-        <Progress value={50} label="Idealplan wird vorbereitet" />
+        <Progress value={50} label="Plan wird vorbereitet" />
       </div>
     </StateShell>
   )
@@ -1210,7 +1227,7 @@ export function PlanStartRetryableError({ onRetry }: { onRetry?: () => void }) {
       dataState="retryable_error"
     >
       <p className="mx-auto mt-4 max-w-[270px] text-center text-sm leading-relaxed text-[#625d58]">
-        Wir konnten deinen Idealplan nicht abrufen. Versuche es gleich noch einmal.
+        Wir konnten deinen Plan nicht abrufen. Versuche es gleich noch einmal.
       </p>
       <div className="mx-auto mt-5 flex w-full max-w-[280px] flex-col gap-1.5">
         <button

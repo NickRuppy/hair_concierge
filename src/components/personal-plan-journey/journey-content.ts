@@ -10,8 +10,8 @@ export type PersonalPlanJourneyStageContent = {
 export const PERSONAL_PLAN_JOURNEY_STAGES = [
   {
     stage: 1,
-    headerLabel: "Idealplan",
-    title: "Dein Idealplan",
+    headerLabel: "Plan",
+    title: "Dein Plan",
     description: "Aus deinem Quiz erstellt.",
   },
   {
@@ -58,9 +58,9 @@ export type PersonalPlanChapterContent = {
 export const PERSONAL_PLAN_CHAPTERS = [
   {
     stage: 1,
-    title: "Wir haben deinen Idealplan erstellt.",
+    title: "Wir haben deinen Plan erstellt.",
     description: "Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem.",
-    actionLabel: "Idealplan ansehen",
+    actionLabel: "Plan ansehen",
   },
   {
     stage: 2,
@@ -71,7 +71,7 @@ export const PERSONAL_PLAN_CHAPTERS = [
   {
     stage: 3,
     title: "Jetzt gleichen wir deine Produkte ab.",
-    description: "So wird aus dem Idealplan deine konkrete Produktauswahl.",
+    description: "So wird aus deinem Plan deine konkrete Produktauswahl.",
     actionLabel: "Produkte erfassen",
   },
   {

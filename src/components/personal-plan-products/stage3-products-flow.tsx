@@ -1183,12 +1183,12 @@ export function Stage3ProductsFlow({
       return shell(
         <Stage3SystemState
           state="conflict"
-          title="Dein Idealplan wurde aktualisiert."
+          title="Dein Plan wurde aktualisiert."
           message="Lade den aktuellen Stand, bevor du die Produktprüfung fortsetzt."
           actionLabel="Aktuellen Stand laden"
           onAction={() => window.location.reload()}
         />,
-        "Idealplan",
+        "Plan",
       )
     }
     return shell(
@@ -1198,7 +1198,7 @@ export function Stage3ProductsFlow({
         onAccept={() => void chooseNeedRevision("accept", authority)}
         onReject={() => void chooseNeedRevision("reject", authority)}
       />,
-      "Idealplan",
+      "Plan",
       onBackToRefinement,
     )
   }
@@ -3262,13 +3262,13 @@ export function Stage3ProductsFlow({
       kind: code === "revision_conflict" ? "conflict" : "error",
       title:
         code === "completion_failed_after_save" || code === "bootstrap_failed_after_completion"
-          ? "Produktarten gespeichert. Übergabe fehlgeschlagen."
+          ? "Produktarten gespeichert. Abschließen fehlgeschlagen."
           : code === "revision_conflict"
             ? "Dein Feinschliff wurde zwischenzeitlich aktualisiert."
             : "Produktarten konnten nicht aktualisiert werden.",
       message:
         code === "completion_failed_after_save"
-          ? "Du musst die Produktarten nicht noch einmal speichern. Versuche nur die Übergabe erneut."
+          ? "Du musst die Produktarten nicht noch einmal speichern. Versuche nur das Abschließen erneut."
           : code === "bootstrap_failed_after_completion"
             ? "Du musst die Produktarten nicht noch einmal speichern. Lade nur den Produkt-Schritt erneut."
             : code === "revision_conflict"
@@ -3287,7 +3287,7 @@ export function Stage3ProductsFlow({
       ) {
         setSystemIssue({
           kind: "conflict",
-          title: "Dein Idealplan wurde aktualisiert.",
+          title: "Dein Plan wurde aktualisiert.",
           message: "Lade den aktuellen Stand, bevor du die Produktprüfung fortsetzt.",
           actionLabel: "Aktuellen Stand laden",
           retry: () => window.location.reload(),
@@ -3333,7 +3333,7 @@ export function Stage3NeedRevisionCheckpoint({
   return (
     <section className="min-w-0 pb-32" aria-labelledby="stage3-need-revision-title">
       <header className="mb-6">
-        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">Dein Idealplan</p>
+        <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">Dein Plan</p>
         <h1
           id="stage3-need-revision-title"
           className="font-header text-3xl leading-tight text-foreground"
@@ -3368,14 +3368,14 @@ export function Stage3NeedRevisionCheckpoint({
         <div className="mt-4 rounded-xl border border-border bg-background p-4">
           <p className="text-sm font-semibold text-foreground">Warum jetzt?</p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Deine erfassten Produkte liefern ein neues Signal für den finalen Idealplan. Erst nach
-            deiner Entscheidung prüfen wir konkrete Produkte.
+            Deine erfassten Produkte sind ein neues Signal für deinen Plan. Konkrete Produkte prüfen
+            wir erst nach deiner Entscheidung.
           </p>
         </div>
       </article>
 
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Wenn du ablehnst, bleibt dein bisheriger Idealplan erhalten.
+        Wenn du ablehnst, bleibt dein bisheriger Plan erhalten.
       </p>
 
       <Stage3StickyAction className="grid gap-2">
@@ -3395,7 +3395,7 @@ export function Stage3NeedRevisionCheckpoint({
           disabled={disabled}
           onClick={onReject}
         >
-          Idealplan beibehalten
+          Plan beibehalten
         </Button>
       </Stage3StickyAction>
     </section>
@@ -3430,7 +3430,7 @@ export function Stage3InventoryDispositionReview({
         </h1>
         <p className="mt-3 text-base leading-relaxed text-muted-foreground">
           {disposition.reason === "category_not_in_final_plan"
-            ? "Diese Produktart ist aktuell nicht in deinem Idealplan vorgesehen. Du findest das Produkt weiterhin unter „Meine Produkte“."
+            ? "Diese Produktart ist aktuell nicht in deinem Plan vorgesehen. Du findest das Produkt weiterhin unter „Meine Produkte“."
             : "Dieses Produkt übernimmt aktuell keine Aufgabe in deiner Routine. Du findest es weiterhin unter „Meine Produkte“."}
         </p>
       </header>
@@ -3536,7 +3536,7 @@ function materialDeltaSummary(delta: Stage3NeedMaterialDelta) {
     return `${categoryLabel} wird als neuer Punkt ergänzt.`
   }
   if (delta.kind === "category_removed") {
-    return `${categoryLabel} fällt aus dem finalen Idealplan heraus.`
+    return `${categoryLabel} fällt aus deinem Plan heraus.`
   }
   if (delta.kind === "category_order_changed") {
     return `${categoryLabel} verschiebt sich in der Reihenfolge.`

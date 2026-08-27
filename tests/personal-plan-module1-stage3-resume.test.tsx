@@ -1,8 +1,14 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import {
+  planStartRefinementExitDestination,
+  planStartSuppressesChapterCeremony,
+  stage3CompletionRoutineHref,
+} from "../src/components/personal-plan-start/plan-start-flow"
 import { resolvePlanStartPageState, type PlanStartPageDeps } from "../src/app/plan-start/page"
 import { loadModule1Stage3Resume } from "../src/lib/personal-plan/refinement/module1-stage3-resume"
+import { withRoutinePlanUpdatedSignal } from "../src/lib/personal-plan/routine/plan-updated-signal"
 import type { Stage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 
 /**
@@ -310,11 +316,42 @@ test("reload after the Modul-1 handoff resumes Stage 3, not Stage 2", async () =
     ),
     {
       state: "production",
-      initialJourney: { stage: "stage3", refinedVersionId: ids.refined },
+      // `refineModule: "products"` is what this state IS — the resumed leg of an
+      // explicit products-module run. It keeps the retired chapter ceremony
+      // suppressed across an undirected reload (founder ruling 27.08.2026).
+      initialJourney: {
+        stage: "stage3",
+        refinedVersionId: ids.refined,
+        refineModule: "products",
+      },
       personalPlanId: ids.plan,
       initialRefinementSession: inProgressSession(),
     },
   )
+})
+
+test("the resumed Stage-3 leg keeps the module exit and suppresses the ceremony", async () => {
+  const state = await resolvePlanStartPageState(
+    depsWithResume(async () => ({ refinedVersionId: ids.refined })),
+  )
+  assert.equal(state.state, "production")
+  const initialJourney = state.state === "production" ? state.initialJourney : null
+  assert.ok(initialJourney)
+  // The undirected reload must behave exactly like the module entry it resumes:
+  // exit to /routine, no chapter screens, and the "Plan aktualisiert" signal.
+  assert.equal(planStartRefinementExitDestination(initialJourney), "routine")
+  assert.equal(planStartSuppressesChapterCeremony(initialJourney), true)
+  assert.equal(
+    stage3CompletionRoutineHref(initialJourney, "/routine"),
+    withRoutinePlanUpdatedSignal("/routine"),
+  )
+})
+
+test("a Stage-3 entry with no module marker still gets the full creation funnel", () => {
+  const linear = { stage: "stage3", refinedVersionId: ids.refined } as const
+  assert.equal(planStartSuppressesChapterCeremony(linear), false)
+  assert.equal(planStartRefinementExitDestination(linear), "stage1")
+  assert.equal(stage3CompletionRoutineHref(linear, "/routine"), "/routine")
 })
 
 test("without a handoff resume the in-progress draft still resolves to Stage 2", async () => {

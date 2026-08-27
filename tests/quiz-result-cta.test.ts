@@ -1,23 +1,21 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFileSync } from "node:fs"
 
-import { getQuizResultCta } from "../src/lib/quiz/result-cta"
+import { QUIZ_RESULT_CTA } from "../src/lib/quiz/result-cta"
 
-test("logged-out users see that the next step saves the profile before unlocking the plan", () => {
-  const cta = getQuizResultCta({ canGoStraightToRoutine: false })
-
-  assert.equal(cta.lead, "Als Nächstes: Profil speichern & Plan freischalten")
-  assert.equal(cta.label, "PLAN FREISCHALTEN")
-  assert.equal(
-    cta.subline,
-    "Noch 3 kurze Schritte, dann legen wir Produkte, Reihenfolge und Anwendung für dich fest.",
-  )
+test("the result CTA sends the reader into routine setup", () => {
+  assert.equal(QUIZ_RESULT_CTA.lead, "Als Nächstes: dein persönlicher Plan")
+  assert.equal(QUIZ_RESULT_CTA.label, "MEINE ROUTINE STARTEN")
+  assert.equal(QUIZ_RESULT_CTA.subline, "Mit passenden Produkten, Reihenfolge und Anwendung.")
 })
 
-test("signed-in users can go straight into routine setup", () => {
-  const cta = getQuizResultCta({ canGoStraightToRoutine: true })
+test("the retired three-step unlock CTA is gone, not merely unreachable", () => {
+  const source = readFileSync(new URL("../src/lib/quiz/result-cta.ts", import.meta.url), "utf8")
 
-  assert.equal(cta.lead, "Als Nächstes: dein persönlicher Plan")
-  assert.equal(cta.label, "MEINE ROUTINE STARTEN")
-  assert.equal(cta.subline, "Mit passenden Produkten, Reihenfolge und Anwendung.")
+  assert.doesNotMatch(source, /PLAN FREISCHALTEN/)
+  assert.doesNotMatch(source, /Noch 3 kurze Schritte/)
+  assert.doesNotMatch(source, /Profil speichern/)
+  // No branch is left to pick between: there is exactly one CTA.
+  assert.doesNotMatch(source, /canGoStraightToRoutine/)
 })

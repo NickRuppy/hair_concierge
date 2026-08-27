@@ -140,7 +140,7 @@ export function buildHairProfileSection(input: {
       },
       {
         key: "ideal_plan",
-        label: "Dein Idealplan",
+        label: "Dein Plan",
         status: "done",
         step: 2,
         href: PLAN_VIEW_HREF,

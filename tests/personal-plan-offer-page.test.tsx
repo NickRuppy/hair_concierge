@@ -555,3 +555,51 @@ test("personal plan result reads only the attached public artifact model", () =>
   assert.match(pageSource, /\.select\("public_offer_model"\)/)
   assert.match(pageSource, /\.eq\("status", "attached"\)/)
 })
+
+/**
+ * A1 (founder ruling 27.08.2026), BEHAVIORAL. The paid result surface used to
+ * route the buyer into `/onboarding` — a retired flow — and framed the
+ * refinement as a gate ("Im nächsten Schritt ergänzt du …; danach öffnet sich
+ * dein Routinebereich"). The plan is live the moment it is paid for, so the
+ * buyer goes straight to their Routine and the Feinschliff becomes optional.
+ */
+test("a paid personal-plan result hands the buyer their Routine, never the retired onboarding", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea Sommer"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  assert.match(html, /Lea, dein Plan ist bereit\./)
+  assert.match(html, /Dein Routinebereich ist offen\./)
+  assert.match(html, /Den Feinschliff kannst du jederzeit später ergänzen\./)
+  assert.match(html, /href="\/routine"/)
+  assert.match(html, /Zu meiner Routine/)
+
+  // The retired destination and its sequential-journey framing are gone.
+  assert.doesNotMatch(html, /\/onboarding/)
+  assert.doesNotMatch(html, /Meinen Plan verfeinern/)
+  assert.doesNotMatch(html, /Im nächsten Schritt/)
+  assert.doesNotMatch(html, /Danach öffnet sich dein Routinebereich/)
+})
+
+test("the paid continuation no longer needs a lead id to build its destination", () => {
+  const offerSource = readFileSync(
+    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
+    "utf8",
+  )
+  const clientSource = readFileSync(
+    new URL("../src/app/result/[leadId]/result-client.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(offerSource, /export function PersonalPlanPaidContinuation\(\{ name \}/)
+  assert.match(clientSource, /<PersonalPlanPaidContinuation name=\{name\} \/>/)
+})

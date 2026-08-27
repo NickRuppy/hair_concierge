@@ -231,7 +231,7 @@ export function RefinementQuestion({
                   : status === "stale_refinement"
                     ? "Dein Feinschliff-Stand hat sich geändert."
                     : status === "completion_failed"
-                      ? "Deine Antwort ist gespeichert. Die Übergabe hat gerade nicht geklappt."
+                      ? "Deine Antwort ist gespeichert. Das Abschließen hat gerade nicht geklappt."
                       : "Speichern hat gerade nicht geklappt."}
               </p>
               <p className="mt-1">
@@ -240,7 +240,7 @@ export function RefinementQuestion({
                   : status === "stale_refinement"
                     ? "Deine Antwort ist gespeichert. Lade neu, dann machst du auf dem aktuellen Stand weiter."
                     : status === "completion_failed"
-                      ? "Du musst diese Antwort nicht noch einmal speichern. Versuche nur die Übergabe erneut."
+                      ? "Du musst diese Antwort nicht noch einmal speichern. Versuche nur das Abschließen erneut."
                       : "Deine Auswahl bleibt auf dieser Seite sichtbar. Versuche das Speichern noch einmal."}
               </p>
             </div>
@@ -260,7 +260,7 @@ export function RefinementQuestion({
               status === "stale_refinement"
                 ? "Feinschliff neu laden"
                 : status === "completion_failed"
-                  ? "Übergabe erneut versuchen"
+                  ? "Erneut abschließen"
                   : "Erneut versuchen"
             }
             saving={status === "saving"}
@@ -458,7 +458,7 @@ function renderQuestionBody({
       return {
         sectionLabel,
         title: "Möchtest du Trockenshampoo zwischen Nasswäschen nutzen?",
-        lead: "Ein konkretes Produkt wählen wir erst im nächsten Schritt aus.",
+        lead: "Ein konkretes Produkt wählen wir getrennt aus.",
         body: (
           <RefinementOptions
             options={DRY_SHAMPOO_BRIDGE_OPTIONS}
@@ -589,7 +589,7 @@ function renderQuestionBody({
 function saveStatusText(status: RefinementQuestionStatus): string {
   if (status === "saving") return "speichert"
   if (status === "save_failed") return "nicht gespeichert"
-  if (status === "completion_failed") return "Übergabe offen"
+  if (status === "completion_failed") return "Abschluss offen"
   if (status === "stale_refinement") return "Stand veraltet"
   if (status === "revision_conflict") return "neu geladen"
   if (status === "saved") return "gespeichert"

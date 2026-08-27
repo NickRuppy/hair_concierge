@@ -238,12 +238,22 @@ export async function resolvePlanStartPageState(
     // one only rescues an undirected reload. The `products` module hands off into
     // Stage 3 while the draft stays `in_progress`, so this is the only branch
     // that can catch it.
+    //
+    // It carries `refineModule: "products"` because that is what this state IS:
+    // the resumed leg of an explicit `products` module run. Without the marker
+    // the undirected reload would come back as a plain Stage-3 journey and
+    // resurrect the chapter-4 ceremony the module entry had already retired
+    // (founder ruling 27.08.2026).
     if (refinement.status === "in_progress" && access.allowed.stage3) {
       // An absent dep short-circuits the whole optional chain to `undefined`.
       const resumed = await deps.loadModule1Stage3Resume?.(userId).catch(() => null)
       if (resumed) {
         return production(
-          { stage: "stage3", refinedVersionId: resumed.refinedVersionId },
+          {
+            stage: "stage3",
+            refinedVersionId: resumed.refinedVersionId,
+            refineModule: "products",
+          },
           initialRefinementSession
             ? { personalPlanId: access.personalPlanId, initialRefinementSession }
             : undefined,
