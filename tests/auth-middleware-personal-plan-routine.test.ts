@@ -26,6 +26,7 @@ type RoutinePlanResult =
 
 function createMiddleware({
   currentAccess = true,
+  paidAccess = false,
   frontierResult = { data: { eligible: false, source_ready: false, plan: null }, error: null },
   planResult = {
     data: { pending_routine_proposal_id: "proposal-1", active_routine_version_id: null },
@@ -34,11 +35,13 @@ function createMiddleware({
   throwsOnPlanLookup = false,
   useDefaultFrontier = false,
   userAppMetadata = { access_kind: "field_test" },
+  moderatorAccess = "none",
   hairProfile = completeQuizProfile as Record<string, unknown> | null,
   observedTables,
   frontierCalls,
 }: {
   currentAccess?: boolean
+  paidAccess?: boolean
   frontierResult?: {
     data: {
       eligible: boolean
@@ -56,6 +59,7 @@ function createMiddleware({
   throwsOnPlanLookup?: boolean
   useDefaultFrontier?: boolean
   userAppMetadata?: Record<string, unknown>
+  moderatorAccess?: "active" | "ended" | "none" | "unavailable"
   hairProfile?: Record<string, unknown> | null
   observedTables?: string[]
   frontierCalls?: { count: number }
@@ -137,8 +141,12 @@ function createMiddleware({
       fakeSupabase) as unknown as UpdateSessionDependencies["createServerClient"],
     hasCurrentAppAccess: (async () =>
       currentAccess) as UpdateSessionDependencies["hasCurrentAppAccess"],
+    hasCurrentPaidAppAccess: (async () =>
+      paidAccess) as UpdateSessionDependencies["hasCurrentPaidAppAccess"],
     resolveOneTimeAccessState: (async () =>
       "none") as UpdateSessionDependencies["resolveOneTimeAccessState"],
+    resolveModeratorAccess: (async () =>
+      moderatorAccess) as UpdateSessionDependencies["resolveModeratorAccess"],
     getRouteEnvironment: () => ({ nodeEnv: "test", localDevLoginEnabled: false }),
     ...(useDefaultFrontier
       ? {}
@@ -310,6 +318,80 @@ test("field-test access fails closed when the app-access check is false", async 
   assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
 })
 
+test("email-bound moderator access reaches gated app routes without a synthetic guest marker", async () => {
+  const response = await createMiddleware({
+    currentAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "active",
+  })(new NextRequest("https://chaarlie.de/tracker"))
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+})
+
+test("an ended moderator account receives the field-test end state unless paid access is valid", async () => {
+  const response = await createMiddleware({
+    currentAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "ended",
+  })(new NextRequest("https://chaarlie.de/routine"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
+})
+
+test("an ended moderator cannot retain access through its still-active tester grant", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "ended",
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
+})
+
+test("an unavailable moderator lookup with only its tester grant returns unavailable", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "unavailable",
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 503)
+})
+
+test("an ended moderator with independently verified paid access remains admitted", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: true,
+    userAppMetadata: {},
+    moderatorAccess: "ended",
+  })(new NextRequest("https://chaarlie.de/tracker"))
+
+  assert.equal(response.status, 200)
+})
+
+test("a moderator access lookup outage is unavailable rather than an expiry or paywall", async () => {
+  const page = await createMiddleware({
+    currentAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "unavailable",
+  })(new NextRequest("https://chaarlie.de/routine"))
+  assert.equal(page.status, 503)
+  assert.match(await page.text(), /Zugang wird gerade geprüft/)
+
+  const api = await createMiddleware({
+    currentAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "unavailable",
+  })(new NextRequest("https://chaarlie.de/api/routine"))
+  assert.equal(api.status, 503)
+  assert.deepEqual(await api.json(), { error: "moderator_access_unavailable" })
+})
+
 test("a personal-plan lookup error preserves legacy onboarding protection", async () => {
   const response = await createMiddleware({
     planResult: { data: null, error: { message: "database unavailable" } },
@@ -349,6 +431,44 @@ test("a Stage 1 frontier no longer bounces chat into the Personal Plan flow", as
   })(new NextRequest("https://chaarlie.de/chat"))
 
   assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+})
+
+test("an activated moderator returns to the saved plan instead of legacy onboarding", async () => {
+  const response = await createMiddleware({
+    userAppMetadata: {},
+    moderatorAccess: "active",
+    frontierResult: {
+      data: { eligible: true, source_ready: true, plan: null },
+      error: null,
+    },
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/plan-start")
+})
+
+test("an activated moderator return stays in recovery while its plan is not ready", async () => {
+  const response = await createMiddleware({
+    userAppMetadata: {},
+    moderatorAccess: "active",
+    frontierResult: {
+      data: { eligible: true, source_ready: false, plan: null },
+      error: null,
+    },
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/plan-bereit")
+})
+
+test("an activated moderator return cannot fall through to legacy onboarding on a routing outage", async () => {
+  const response = await createMiddleware({
+    userAppMetadata: {},
+    moderatorAccess: "active",
+    frontierResult: { data: null, error: { message: "routing source unavailable" } },
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 503)
   assert.equal(response.headers.get("location"), null)
 })
 
@@ -446,6 +566,17 @@ test("chat stays reachable across the Personal Plan frontier", async () => {
   assert.equal(pendingRoutine.status, 200)
   assert.equal(pendingRoutine.headers.get("location"), null)
 
+  for (const frontierResult of [stage4Frontier, stage5Frontier]) {
+    const moderatorChat = await createMiddleware({
+      userAppMetadata: {},
+      moderatorAccess: "active",
+      frontierResult,
+      planResult: activeRoutinePlan,
+    })(new NextRequest("https://chaarlie.de/chat"))
+    assert.equal(moderatorChat.status, 200)
+    assert.equal(moderatorChat.headers.get("location"), null)
+  }
+
   const recoveryFrontier = await createMiddleware({
     frontierResult: { data: { eligible: true, source_ready: false, plan: null }, error: null },
     planResult: activeRoutinePlan,
@@ -495,4 +626,11 @@ test("explicit legacy onboarding edits are not intercepted by the Personal Plan 
 
   assert.equal(response.status, 200)
   assert.equal(response.headers.get("location"), null)
+})
+
+test("synthetic guest access does not depend on the unrelated moderator membership lookup", async () => {
+  const response = await createMiddleware({ currentAccess: true, moderatorAccess: "unavailable" })(
+    new NextRequest("https://chaarlie.de/tracker"),
+  )
+  assert.equal(response.status, 200)
 })

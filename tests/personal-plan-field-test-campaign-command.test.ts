@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import path from "node:path"
 
 import {
   canApplyFieldTestCampaign,
@@ -13,6 +14,9 @@ test("campaign command defaults to a non-writing create preview", () => {
     apply: false,
     name: "Personal Plan Feldtest 2026-08",
     flow: "personal-plan",
+    identityMode: "guest",
+    accessDurationHours: 168,
+    rosterFile: undefined,
   })
 })
 
@@ -22,6 +26,9 @@ test("campaign command supports an explicit regular-quiz flow while preserving P
     apply: false,
     name: "Regulärer Quiz Feldtest 2026-08",
     flow: "regular-quiz",
+    identityMode: "guest",
+    accessDurationHours: 168,
+    rosterFile: undefined,
   })
   assert.deepEqual(
     parseFieldTestCampaignCommand(["inspect", "--campaign=campaign-id", "--flow=regular-quiz"]),
@@ -32,6 +39,49 @@ test("campaign command supports an explicit regular-quiz flow while preserving P
     },
   )
   assert.throws(() => parseFieldTestCampaignCommand(["create", "--flow=unknown"]), /--flow/)
+})
+
+test("email-bound Personal Plan campaigns require a roster and use the 90-day duration", () => {
+  assert.deepEqual(
+    parseFieldTestCampaignCommand([
+      "create",
+      "--identity-mode=email-bound",
+      "--roster-file=/restricted/moderators.json",
+    ]),
+    {
+      action: "create",
+      apply: false,
+      name: "Personal Plan Feldtest 2026-08",
+      flow: "personal-plan",
+      identityMode: "email_bound",
+      accessDurationHours: 2160,
+      rosterFile: "/restricted/moderators.json",
+    },
+  )
+  assert.throws(
+    () => parseFieldTestCampaignCommand(["create", "--identity-mode=email-bound"]),
+    /requires --roster-file/,
+  )
+  assert.throws(
+    () =>
+      parseFieldTestCampaignCommand([
+        "create",
+        "--flow=regular-quiz",
+        "--identity-mode=email-bound",
+        "--roster-file=/restricted/moderators.json",
+      ]),
+    /only available for --flow=personal-plan/,
+  )
+  assert.throws(
+    () =>
+      parseFieldTestCampaignCommand([
+        "create",
+        "--identity-mode=email-bound",
+        "--roster-file=/restricted/moderators.json",
+        "--access-duration-hours=168",
+      ]),
+    /require --access-duration-hours=2160/,
+  )
 })
 
 test("campaign writes require explicit apply, write gate, project confirmation, and matching URL", () => {
@@ -102,6 +152,50 @@ test("regular-quiz creation writes its flow kind and emits only the regular quiz
   })
   assert.equal(inserted[0].flow_kind, "regular_quiz")
   assert.match((logs[0] as { link: string }).link, /^https:\/\/chaarlie\.de\/test\/quiz\//)
+})
+
+test("email-bound creation atomically creates a pending exact-account roster through the dedicated RPC", async () => {
+  const rpcCalls: Array<{ name: string; args: Record<string, unknown> }> = []
+  const logs: unknown[] = []
+  const admin = {
+    rpc: async (name: string, args: Record<string, unknown>) => {
+      rpcCalls.push({ name, args })
+      return {
+        data: [
+          {
+            campaign_id: "20000000-0000-4000-8000-000000000001",
+            max_activations: 1,
+            access_duration_hours: 2160,
+            member_count: 1,
+          },
+        ],
+        error: null,
+      }
+    },
+  }
+
+  await runFieldTestCampaignCommand({
+    args: [
+      "create",
+      "--identity-mode=email-bound",
+      `--roster-file=${path.join(process.cwd(), "tests/fixtures/moderator-email-bound-roster.json")}`,
+      "--apply",
+      "--confirm-project=pqdkhefxsxkyeqelqegq",
+    ],
+    environment: {
+      ALLOW_PERSONAL_PLAN_FIELD_TEST_PRODUCTION_WRITE: "1",
+      NEXT_PUBLIC_SUPABASE_URL: "https://pqdkhefxsxkyeqelqegq.supabase.co",
+    },
+    admin: admin as never,
+    log: (value) => logs.push(value),
+  })
+
+  assert.equal(rpcCalls.length, 1)
+  assert.equal(rpcCalls[0].name, "create_personal_plan_moderator_test_campaign")
+  assert.deepEqual(rpcCalls[0].args.p_roster, [
+    { user_id: "10000000-0000-4000-8000-000000000001", email: "moderator@example.test" },
+  ])
+  assert.equal((logs[0] as { access_duration_hours: number }).access_duration_hours, 2160)
 })
 
 test("regular-quiz revocation refuses a campaign from the Personal Plan flow", async () => {

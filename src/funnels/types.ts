@@ -9,6 +9,7 @@ import type { PersonalPlanQuizResumeBootstrap } from "@/lib/personal-plan-quiz/t
 export type FunnelLandingVariantProps = {
   personalPlanQuizResume?: PersonalPlanQuizResumeBootstrap
   personalPlanFieldTest?: boolean
+  moderatorQuiz?: { scope: string; email: string } | null
 }
 
 export type FunnelLandingVariantComponent = ComponentType<FunnelLandingVariantProps>

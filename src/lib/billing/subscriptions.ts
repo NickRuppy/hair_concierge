@@ -234,6 +234,30 @@ export async function hasCurrentAppAccess(
   return profile ? hasCurrentLegacyProfileAccess(profile, now) : false
 }
 
+/**
+ * Provider, one-time, and legacy-profile access only. This deliberately
+ * excludes every manual grant so a revoked field-test grant cannot be
+ * mistaken for an independent paid entitlement.
+ */
+export async function hasCurrentPaidAppAccess(
+  supabase: SupabaseBillingClient,
+  lookup: { userId: string },
+  now: Date = new Date(),
+): Promise<boolean> {
+  const current = await findCurrentBillingSubscriptionForUser(supabase, lookup.userId, now)
+  if (current) return true
+  const purchase = await findCurrentOneTimePurchaseForUser(supabase, lookup.userId)
+  if (purchase) return true
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("subscription_status, current_period_end")
+    .eq("id", lookup.userId)
+    .maybeSingle()
+  if (error) throw error
+  const profile = data as LegacyProfileSubscription | null
+  return profile ? hasCurrentLegacyProfileAccess(profile, now) : false
+}
+
 export async function findCurrentManualAccessGrant(
   supabase: SupabaseBillingClient,
   lookup: { userId?: string | null; email?: string | null },

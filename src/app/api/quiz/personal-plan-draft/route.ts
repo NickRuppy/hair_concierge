@@ -1,3 +1,4 @@
+import { resolveModeratorJourney } from "@/lib/personal-plan-field-test/moderator-journey"
 import { NextResponse, type NextRequest } from "next/server"
 
 import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
@@ -60,6 +61,14 @@ export async function POST(request: NextRequest) {
       { error: "invalid_request" },
       { status: 400, headers: noStoreHeaders() },
     )
+
+  const moderator = await resolveModeratorJourney({
+    cookies: request.cookies,
+    funnelContext: await resolveFunnelCookieContext(
+      request.cookies.get(FUNNEL_SESSION_COOKIE)?.value,
+    ),
+  })
+  if (moderator.kind !== "ordinary") return disabled()
 
   const existingCookieValue = request.cookies.get(PERSONAL_PLAN_QUIZ_DRAFT_COOKIE)?.value
   const existingCookie = decodePersonalPlanQuizDraftCookie(existingCookieValue)
@@ -194,6 +203,14 @@ export async function DELETE(request: NextRequest) {
       { error: "invalid_request" },
       { status: 400, headers: noStoreHeaders() },
     )
+  const moderator = await resolveModeratorJourney({
+    cookies: request.cookies,
+    funnelContext: await resolveFunnelCookieContext(
+      request.cookies.get(FUNNEL_SESSION_COOKIE)?.value,
+    ),
+  })
+  if (moderator.kind !== "ordinary") return disabled()
+
   const response = NextResponse.json({ ok: true }, { headers: noStoreHeaders() })
   const cookie = decodePersonalPlanQuizDraftCookie(
     request.cookies.get(PERSONAL_PLAN_QUIZ_DRAFT_COOKIE)?.value,

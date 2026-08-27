@@ -1,9 +1,31 @@
 import assert from "node:assert/strict"
+import {
+  isModeratorReturnPath,
+  normalizeModeratorReturnPath,
+} from "../src/lib/auth/moderator-return"
 import test from "node:test"
 import {
   createAuthConfirmGetHandler,
   type AuthConfirmRouteDeps,
 } from "../src/app/auth/confirm/route"
+import { buildPasswordRecoveryRedirect } from "../src/components/auth/auth-form"
+
+test("moderator return paths reject absolute, protocol-relative and ambiguous URLs", () => {
+  const path = "/test/haarplan/konto?campaign=10000000-0000-4000-8000-000000000001"
+  assert.equal(isModeratorReturnPath(path), true)
+  assert.equal(normalizeModeratorReturnPath(path), path)
+  for (const value of [
+    `https://moderator-return.invalid${path}`,
+    `//moderator-return.invalid${path}`,
+    path.slice(1),
+    `${path}#anything`,
+    `${path}&campaign=20000000-0000-4000-8000-000000000002`,
+    "javascript:alert(1)",
+  ]) {
+    assert.equal(isModeratorReturnPath(value), false, value)
+    assert.equal(normalizeModeratorReturnPath(value), null, value)
+  }
+})
 
 type StubOptions = {
   exchangeError?: unknown
@@ -104,6 +126,73 @@ test("fresh OTP recovery still opens password setup after linking", async () => 
     ["getUser"],
     ["linkQuiz", "user-1", "lea@example.com", "lead-1"],
   ])
+})
+
+test("moderator confirmation preserves the non-secret campaign return and never relinks legacy quiz data", async () => {
+  const { calls, handler } = stubHandler()
+  const moderatorNext = "/test/haarplan/konto?campaign=10000000-0000-4000-8000-000000000001"
+  const url = new URL("https://chaarlie.de/auth/confirm?code=fresh-code&lead=legacy-lead")
+  url.searchParams.set("next", moderatorNext)
+
+  const response = await handler(new Request(url))
+
+  assert.equal(location(response), `https://chaarlie.de${moderatorNext}`)
+  assert.deepEqual(calls, [["exchange", "fresh-code"], ["getUser"]])
+})
+
+test("moderator password recovery returns to the invitation without relinking legacy quiz data", async () => {
+  const { calls, handler } = stubHandler()
+  const moderatorNext = "/test/haarplan/konto?campaign=10000000-0000-4000-8000-000000000001"
+  const url = new URL("https://chaarlie.de/auth/confirm?token_hash=fresh-token&type=recovery")
+  url.searchParams.set("next", moderatorNext)
+
+  const response = await handler(new Request(url))
+
+  assert.equal(
+    location(response),
+    `https://chaarlie.de/auth/update-password?next=${encodeURIComponent(moderatorNext)}`,
+  )
+  assert.deepEqual(calls, [
+    ["verifyOtp", { token_hash: "fresh-token", type: "recovery" }],
+    ["getUser"],
+  ])
+})
+
+test("the password recovery redirect marks a PKCE moderator return as recovery and suppresses legacy linking", async () => {
+  const { calls, handler } = stubHandler()
+  const moderatorNext = "/test/haarplan/konto?campaign=10000000-0000-4000-8000-000000000001"
+  const recoveryRedirect = new URL(
+    buildPasswordRecoveryRedirect("https://chaarlie.de", moderatorNext),
+  )
+  recoveryRedirect.searchParams.set("code", "fresh-code")
+  recoveryRedirect.searchParams.set("lead", "legacy-lead")
+
+  const response = await handler(new Request(recoveryRedirect))
+
+  assert.equal(recoveryRedirect.searchParams.get("type"), "recovery")
+  assert.equal(
+    location(response),
+    `https://chaarlie.de/auth/update-password?next=${encodeURIComponent(moderatorNext)}`,
+  )
+  assert.deepEqual(calls, [["exchange", "fresh-code"], ["getUser"]])
+})
+
+test("a failed PKCE moderator password-recovery code stays on recovery without replaying legacy linking", async () => {
+  const { calls, handler } = stubHandler({ exchangeError: new Error("otp_expired") })
+  const moderatorNext = "/test/haarplan/konto?campaign=10000000-0000-4000-8000-000000000001"
+  const recoveryRedirect = new URL(
+    buildPasswordRecoveryRedirect("https://chaarlie.de", moderatorNext),
+  )
+  recoveryRedirect.searchParams.set("code", "consumed-code")
+  recoveryRedirect.searchParams.set("lead", "legacy-lead")
+
+  const response = await handler(new Request(recoveryRedirect))
+
+  assert.equal(
+    location(response),
+    `https://chaarlie.de/auth?error=link_expired&force=login&next=${encodeURIComponent(`/auth/update-password?next=${encodeURIComponent(moderatorNext)}`)}`,
+  )
+  assert.deepEqual(calls, [["exchange", "consumed-code"], ["getUser"]])
 })
 
 test("consumed confirmation with a session keeps an unrelated destination on auth recovery without replaying side effects", async () => {

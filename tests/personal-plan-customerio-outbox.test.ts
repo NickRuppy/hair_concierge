@@ -154,6 +154,24 @@ test("field-test profile sync never emits the commercial completion event", asyn
   assert.deepEqual(deps.delivered, [false])
 })
 
+test("moderator lead remains non-commercial after its funnel moves to a newer result", async () => {
+  const deps = dependencies({ row: row({ send_completion_event: false }) })
+  const lead = await deps.value.loadLead()
+  const outcome = await dispatchCustomerIoProfileSyncForLead({} as never, "lead-123", {
+    dependencies: {
+      ...deps.value,
+      loadLead: async () => ({
+        ...lead,
+        moderator_campaign_id: "11111111-1111-4111-8111-111111111111",
+      }),
+      loadFunnel: async () => null,
+    } as never,
+  })
+  assert.equal(outcome, "delivered")
+  assert.equal(deps.deliveries[0].testKind, "field_test")
+  assert.equal(deps.deliveries[0].sendCompletionEvent, false)
+})
+
 test("profile updates do not resend an already delivered completion event", async () => {
   const deps = dependencies({
     row: row({ completion_event_delivered_at: "2026-08-01T10:01:00.000Z" }),

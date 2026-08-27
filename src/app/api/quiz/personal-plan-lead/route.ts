@@ -34,6 +34,8 @@ import {
   resolvePersonalPlanFieldTestCampaignCookie,
 } from "@/lib/personal-plan-field-test"
 
+import { resolveModeratorJourney } from "@/lib/personal-plan-field-test/moderator-journey"
+
 interface PersonalPlanLeadPostDependencies {
   checkRateLimit: typeof checkRateLimit
   checkEmailDeliverability: typeof checkEmailDeliverability
@@ -47,6 +49,7 @@ interface PersonalPlanLeadPostDependencies {
   resolvePendingFunnelTouchValue: typeof resolvePendingFunnelTouchValue
   bindPersonalPlanFieldTestLead: typeof bindPersonalPlanFieldTestLead
   resolvePersonalPlanFieldTestCampaignCookie: typeof resolvePersonalPlanFieldTestCampaignCookie
+  resolveModeratorJourney: typeof resolveModeratorJourney
   scheduleAfter: typeof after
 }
 
@@ -66,6 +69,7 @@ export function createPersonalPlanLeadPostHandler(
     resolvePendingFunnelTouchValue,
     bindPersonalPlanFieldTestLead,
     resolvePersonalPlanFieldTestCampaignCookie,
+    resolveModeratorJourney,
     scheduleAfter: after,
     ...overrides,
   }
@@ -136,10 +140,38 @@ export function createPersonalPlanLeadPostHandler(
       const fieldTestCampaign = funnelContext
         ? await dependencies.resolvePersonalPlanFieldTestCampaignCookie(fieldTestCookieValue)
         : { kind: "unavailable" as const, code: "field_test_unavailable" as const }
+      const moderator = await dependencies.resolveModeratorJourney({
+        cookies: cookieStore,
+        funnelContext,
+      })
+      if (moderator.kind === "unavailable") {
+        return NextResponse.json(
+          { error: "Dein Zugang kann gerade nicht geprüft werden. Bitte versuche es erneut." },
+          { status: 503 },
+        )
+      }
+      if (
+        moderator.kind === "authorized" &&
+        moderator.email !== deliverableEmail.trim().toLowerCase()
+      ) {
+        return NextResponse.json(
+          { error: "Bitte verwende dein eingeladenes Konto." },
+          { status: 403 },
+        )
+      }
       const { data: savedLeads, error: saveError } = await supabase.rpc(
-        "save_personal_plan_lead_with_artifact",
+        moderator.kind === "authorized"
+          ? "save_personal_plan_moderator_lead_with_artifact"
+          : "save_personal_plan_lead_with_artifact",
         {
-          p_email: deliverableEmail,
+          ...(moderator.kind === "authorized"
+            ? {
+                p_campaign_id: moderator.campaignId,
+                p_user_id: moderator.userId,
+                p_confirmed_email: moderator.email,
+                p_funnel_session_id: moderator.funnelSessionId,
+              }
+            : { p_email: deliverableEmail }),
           p_marketing_consent: parsed.marketingConsent,
           p_quiz_answers: quizAnswers,
           p_artifact_id: parsed.preparedPlan.artifactId,
@@ -154,21 +186,22 @@ export function createPersonalPlanLeadPostHandler(
       }
 
       const createdAt = new Date().toISOString()
-      dependencies.scheduleAfter(async () => {
-        try {
-          const outcome = await dispatchCustomerIoProfileSyncForLead(supabase, leadId)
-          if (outcome === "failed") {
-            console.warn("[customerio:profile-sync] deferred delivery queued for retry", {
+      if (moderator.kind !== "authorized")
+        dependencies.scheduleAfter(async () => {
+          try {
+            const outcome = await dispatchCustomerIoProfileSyncForLead(supabase, leadId)
+            if (outcome === "failed") {
+              console.warn("[customerio:profile-sync] deferred delivery queued for retry", {
+                leadId,
+              })
+            }
+          } catch (error) {
+            console.warn("[customerio:profile-sync] deferred dispatch failed", {
               leadId,
+              error: error instanceof Error ? error.message : String(error),
             })
           }
-        } catch (error) {
-          console.warn("[customerio:profile-sync] deferred dispatch failed", {
-            leadId,
-            error: error instanceof Error ? error.message : String(error),
-          })
-        }
-      })
+        })
       if (fieldTestCampaign.kind !== "eligible") {
         dependencies.enqueueMetaLead({
           browserEventId,
@@ -196,19 +229,21 @@ export function createPersonalPlanLeadPostHandler(
             })
         : false
       const fieldTestAttached =
-        attributionAttached && funnelContext && fieldTestCampaign.kind === "eligible"
-          ? await dependencies.bindPersonalPlanFieldTestLead({
-              campaignCookieValue: fieldTestCookieValue,
-              funnelContext,
-              leadId,
-            })
-          : false
+        moderator.kind === "authorized"
+          ? true
+          : attributionAttached && funnelContext && fieldTestCampaign.kind === "eligible"
+            ? await dependencies.bindPersonalPlanFieldTestLead({
+                campaignCookieValue: fieldTestCookieValue,
+                funnelContext,
+                leadId,
+              })
+            : false
       const response = NextResponse.json(
         fieldTestCampaign.kind === "eligible"
           ? { leadId, attributionAttached, fieldTestAttached }
           : { leadId, attributionAttached },
       )
-      if (isPersonalPlanResultReturnEnabled()) {
+      if (isPersonalPlanResultReturnEnabled() && moderator.kind !== "authorized") {
         try {
           const issued = await dependencies.issueResultReturn({
             leadId,

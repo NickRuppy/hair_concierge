@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { NextResponse } from "next/server"
+import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -16,8 +17,10 @@ export async function GET(request: Request) {
 
     if (!error) {
       // Link quiz lead data to the authenticated user's hair profile
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user && !isModeratorReturnPath(next)) {
         try {
           await linkQuizToProfile(user.id, user.email, leadId)
         } catch (e) {

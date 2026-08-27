@@ -7,6 +7,7 @@ import { classifyRoute } from "../src/lib/auth/route-classification"
 import { updateSession } from "../src/lib/supabase/middleware"
 
 const now = Date.UTC(2026, 7, 10, 10, 0, 0)
+const campaignId = "10000000-0000-4000-8000-000000000001"
 
 test("valid bearer token is exchanged for signed HttpOnly cookies and a clean quiz URL", async () => {
   const handler = createPersonalPlanFieldTestEntryHandler({
@@ -58,6 +59,33 @@ test("unavailable token fails before issuing any campaign or funnel cookie", asy
   assert.match(await response.text(), /gerade nicht verfügbar/)
 })
 
+test("email-bound token only routes to account authentication without issuing guest credentials", async () => {
+  const handler = createPersonalPlanFieldTestEntryHandler({
+    resolveCampaignToken: async () => ({
+      kind: "eligible",
+      campaign: {
+        id: "10000000-0000-4000-8000-000000000001",
+        identityMode: "email_bound" as const,
+        accessDurationHours: 2160,
+        startsAt: now - 1,
+        expiresAt: now + 30 * 24 * 60 * 60 * 1000,
+      },
+    }),
+  })
+
+  const response = await handler(new NextRequest("https://chaarlie.de/test/haarplan/raw-secret"), {
+    params: Promise.resolve({ token: "raw-secret" }),
+  })
+
+  assert.equal(
+    response.headers.get("location"),
+    "https://chaarlie.de/test/haarplan/konto?campaign=10000000-0000-4000-8000-000000000001",
+  )
+  assert.doesNotMatch(response.headers.get("location") ?? "", /raw-secret/)
+  assert.equal(response.headers.get("set-cookie"), null)
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/)
+})
+
 test("activation reaches its signed route checks before any auth or subscription gate", async () => {
   const pathname = "/api/personal-plan/field-test/activate"
   assert.equal(
@@ -70,4 +98,120 @@ test("activation reaches its signed route checks before any auth or subscription
   )
   assert.equal(response.status, 200)
   assert.equal(response.headers.get("location"), null)
+})
+
+class CapturedRedirect extends Error {
+  constructor(readonly destination: string) {
+    super(`redirect:${destination}`)
+  }
+}
+
+function captureRedirect(destination: string): never {
+  throw new CapturedRedirect(destination)
+}
+
+async function assertRedirectsTo(action: () => Promise<unknown>, destination: string) {
+  try {
+    await action()
+    assert.fail(`expected redirect to ${destination}`)
+  } catch (error) {
+    assert.ok(error instanceof CapturedRedirect)
+    assert.equal(error.destination, destination)
+  }
+}
+
+test("authenticated active moderator invite return opens the saved plan instead of a fresh quiz prompt", async () => {
+  const { createModeratorAccountPage } =
+    await import("../src/app/test/haarplan/konto/moderator-account-page")
+  const calls: unknown[] = []
+  const authUser = {
+    id: "20000000-0000-4000-8000-000000000002",
+    email: "member@example.com",
+    email_confirmed_at: "2026-08-27T10:00:00Z",
+  }
+  const page = createModeratorAccountPage({
+    redirect: captureRedirect,
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: authUser } }),
+        },
+      }) as never,
+    resolveMember: async (input) => {
+      calls.push(input)
+      return {
+        kind: "active" as const,
+        campaignId,
+        expiresAt: new Date(now + 2160 * 60 * 60 * 1000).toISOString(),
+        member: { id: "30000000-0000-4000-8000-000000000003", userId: authUser.id },
+      }
+    },
+  })
+
+  await assertRedirectsTo(
+    () => page({ searchParams: Promise.resolve({ campaign: campaignId }) }),
+    "/plan-start",
+  )
+  assert.deepEqual(calls, [{ campaignId, user: authUser }])
+})
+
+test("authenticated ready moderator invite still renders the fresh quiz start UI", async () => {
+  const { createModeratorAccountPage } =
+    await import("../src/app/test/haarplan/konto/moderator-account-page")
+  const authUser = {
+    id: "20000000-0000-4000-8000-000000000002",
+    email: "member@example.com",
+    email_confirmed_at: "2026-08-27T10:00:00Z",
+  }
+  const page = createModeratorAccountPage({
+    redirect: captureRedirect,
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: authUser } }),
+        },
+      }) as never,
+    resolveMember: async () => ({
+      kind: "ready" as const,
+      campaign: {
+        id: campaignId,
+        expiresAt: now + 24 * 60 * 60 * 1000,
+        accessDurationHours: 2160,
+      },
+      member: { id: "30000000-0000-4000-8000-000000000003", userId: authUser.id },
+    }),
+  })
+
+  const element = (await page({ searchParams: Promise.resolve({ campaign: campaignId }) })) as {
+    props?: { campaignId?: string }
+  }
+  assert.equal(element.props?.campaignId, campaignId)
+})
+
+test("authenticated ended moderator invite returns the existing ended state", async () => {
+  const { createModeratorAccountPage } =
+    await import("../src/app/test/haarplan/konto/moderator-account-page")
+  const page = createModeratorAccountPage({
+    redirect: captureRedirect,
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({
+            data: {
+              user: {
+                id: "20000000-0000-4000-8000-000000000002",
+                email: "member@example.com",
+                email_confirmed_at: "2026-08-27T10:00:00Z",
+              },
+            },
+          }),
+        },
+      }) as never,
+    resolveMember: async () => ({ kind: "ended" as const, campaignId, reason: "expired" }),
+  })
+
+  await assertRedirectsTo(
+    () => page({ searchParams: Promise.resolve({ campaign: campaignId }) }),
+    "/test/haarplan/beendet",
+  )
 })

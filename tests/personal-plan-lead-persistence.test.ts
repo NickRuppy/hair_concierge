@@ -281,6 +281,7 @@ test("lead route executes a definitive deliverability rejection before persisten
   let checkedEmail: string | undefined
   let recorded = false
   const handler = createPersonalPlanLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async (email) => {
       checkedEmail = email
@@ -320,6 +321,7 @@ test("lead route lets an accepted address reach persistence", async (context) =>
   const errorLog = context.mock.method(console, "error", () => {})
   let rpcCall: unknown[] | undefined
   const handler = createPersonalPlanLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async () => ({
       ok: true,
@@ -365,6 +367,7 @@ test("lead completion issues only an HttpOnly result capability and remains succ
 
   const createHandler = (issued: boolean | "throw") =>
     createPersonalPlanLeadPostHandler({
+      resolveModeratorJourney: async () => ({ kind: "ordinary" }),
       checkRateLimit: async () => ({ allowed: true }),
       checkEmailDeliverability: async () => ({
         ok: true,
@@ -445,6 +448,7 @@ test("lead completion does not issue a result capability while the feature is di
   delete process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
   let issuanceCalls = 0
   const handler = createPersonalPlanLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async () => ({
       ok: true,
@@ -491,6 +495,7 @@ test("field-test lead binds trusted campaign context and suppresses Meta convers
   let metaCalls = 0
   let bindCalls = 0
   const handler = createPersonalPlanLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async () => ({
       ok: true,
@@ -647,5 +652,97 @@ test("personal-plan Customer.io sync identifies the approved structured profile 
     globalThis.fetch = originalFetch
     if (originalKey === undefined) delete process.env.CUSTOMERIO_SERVER_WRITE_KEY
     else process.env.CUSTOMERIO_SERVER_WRITE_KEY = originalKey
+  }
+})
+
+test("moderator completion atomically binds the account and suppresses marketing and bearer-return side effects", async () => {
+  const previousQuiz = process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+  const previousReturn = process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
+  process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = "true"
+  process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED = "true"
+  const campaignId = "30000000-0000-4000-8000-000000000003"
+  const userId = "10000000-0000-4000-8000-000000000001"
+  const funnelSessionId = "20000000-0000-4000-8000-000000000002"
+  const calls: Array<[string, Record<string, unknown>]> = []
+  let sideEffects = 0
+  const handler = (mode: "authorized" | "unavailable", email = "plan@example.com") =>
+    createPersonalPlanLeadPostHandler({
+      checkRateLimit: async () => ({ allowed: true }),
+      checkEmailDeliverability: async () => ({
+        ok: true,
+        normalized: "plan@example.com",
+        outcome: "mx",
+      }),
+      recordEmailDeliverabilityOutcome: () => {},
+      cookies: (async () => ({
+        get: () => ({ value: "signed" }),
+      })) as unknown as typeof import("next/headers").cookies,
+      createAdminClient: (() => ({
+        rpc: async (name: string, args: Record<string, unknown>) => {
+          calls.push([name, args])
+          return { data: [{ lead_id: "10000000-0000-4000-8000-000000000093" }], error: null }
+        },
+      })) as unknown as typeof import("../src/lib/supabase/admin").createAdminClient,
+      resolveFunnelCookieContext: async () => ({
+        visitorId: userId,
+        sessionId: funnelSessionId,
+        packageKey: "meta_personal_plan_v1",
+        issuedAt: Date.now(),
+      }),
+      resolvePendingFunnelTouchValue: async () => null,
+      resolvePersonalPlanFieldTestCampaignCookie: async () => ({
+        kind: "eligible",
+        campaign: {
+          id: campaignId,
+          identityMode: "email_bound",
+          accessDurationHours: 2160,
+          startsAt: Date.now() - 1,
+          expiresAt: Date.now() + 100000,
+        },
+      }),
+      resolveModeratorJourney: async () =>
+        mode === "authorized"
+          ? { kind: "authorized", campaignId, userId, funnelSessionId, email }
+          : { kind: "unavailable" },
+      scheduleAfter: (() => {
+        sideEffects++
+      }) as typeof import("next/server").after,
+      enqueueMetaLead: () => {
+        sideEffects++
+        return true
+      },
+      bindPersonalPlanFieldTestLead: async () => {
+        sideEffects++
+        return true
+      },
+      issueResultReturn: async () => {
+        sideEffects++
+        return { issued: true }
+      },
+      recordFunnelEvent: async () => true,
+    })
+  const req = () =>
+    new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(request),
+    })
+  try {
+    assert.equal((await handler("authorized")(req())).status, 200)
+    assert.equal(calls.length, 1)
+    assert.equal(calls[0][0], "save_personal_plan_moderator_lead_with_artifact")
+    assert.equal(calls[0][1].p_user_id, userId)
+    assert.equal(calls[0][1].p_confirmed_email, "plan@example.com")
+    assert.equal(calls[0][1].p_campaign_id, campaignId)
+    assert.equal(calls[0][1].p_funnel_session_id, funnelSessionId)
+    assert.equal(sideEffects, 0)
+    assert.equal((await handler("authorized", "other@example.com")(req())).status, 403)
+    assert.equal((await handler("unavailable")(req())).status, 503)
+    assert.equal(calls.length, 1)
+  } finally {
+    if (previousQuiz === undefined) delete process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+    else process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = previousQuiz
+    if (previousReturn === undefined) delete process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
+    else process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED = previousReturn
   }
 })

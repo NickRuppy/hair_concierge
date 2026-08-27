@@ -25,13 +25,19 @@ import { createFunnelEventId, recordBrowserFunnelMilestone } from "@/lib/funnel/
 import { loadPersonalPlanQuizDraft } from "@/lib/personal-plan-quiz/draft"
 import type { PersonalPlanQuizResumeBootstrap } from "@/lib/personal-plan-quiz/types"
 
+import { useModeratorQuiz } from "./moderator-quiz-context"
+import {
+  scopeQuizDraftStorage,
+  clearUnscopedQuizDraftStorage,
+} from "@/lib/personal-plan-quiz/draft-scope"
+
 const DISABLED_RESUME: PersonalPlanQuizResumeBootstrap = { enabled: false, snapshot: null }
 const WAITING_STATUS_DELAY_MS = 800
 const DOCUMENT_RECOVERY_DELAY_MS = 1_000
 
-function getLocalDraft() {
+function getLocalDraft(scope?: string) {
   try {
-    return loadPersonalPlanQuizDraft(window.localStorage)
+    return loadPersonalPlanQuizDraft(scopeQuizDraftStorage(window.localStorage, scope))
   } catch {
     return null
   }
@@ -44,6 +50,8 @@ export function PersonalPlanQuizEntry({
   fieldTest?: boolean
   resume?: PersonalPlanQuizResumeBootstrap
 }) {
+  const moderator = useModeratorQuiz()
+  const draftScope = moderator?.scope
   const serverResume = Boolean(resume.enabled && resume.snapshot)
   const [showQuiz, setShowQuiz] = useState(serverResume)
   const [clientReady, setClientReady] = useState(false)
@@ -80,7 +88,18 @@ export function PersonalPlanQuizEntry({
     let disposed = false
     const draftFrame = window.requestAnimationFrame(() => {
       if (disposed) return
-      const progressiveRecovery = consumeProgressiveEntryRecovery(window.sessionStorage)
+      if (draftScope) {
+        try {
+          clearUnscopedQuizDraftStorage(window.localStorage)
+          clearUnscopedQuizDraftStorage(window.sessionStorage)
+          consumeProgressiveEntryRecovery(window.sessionStorage)
+        } catch {
+          /* Scoped storage remains the only restore source. */
+        }
+      }
+      const progressiveRecovery = consumeProgressiveEntryRecovery(
+        scopeQuizDraftStorage(window.sessionStorage, draftScope),
+      )
       if (serverResume) {
         setClientReady(true)
         return
@@ -94,11 +113,11 @@ export function PersonalPlanQuizEntry({
         setSelectedAt(progressiveRecovery.selectedAt)
         setDocumentRecoveryAttempt(progressiveRecovery.attempt)
         setShowQuiz(true)
-      } else if (progressiveRecovery?.kind === "local_draft" && getLocalDraft()) {
+      } else if (progressiveRecovery?.kind === "local_draft" && getLocalDraft(draftScope)) {
         setDocumentRecoveryAttempt(progressiveRecovery.attempt)
         setRestoringLocalDraft(true)
         setShowQuiz(true)
-      } else if (getLocalDraft()) {
+      } else if (getLocalDraft(draftScope)) {
         setRestoringLocalDraft(true)
         setShowQuiz(true)
       } else {
@@ -116,7 +135,7 @@ export function PersonalPlanQuizEntry({
       window.cancelAnimationFrame(draftFrame)
       cancelPostPaint()
     }
-  }, [claimFreshTextureView, serverResume])
+  }, [claimFreshTextureView, serverResume, draftScope])
 
   useEffect(() => {
     const retry = () => {
@@ -147,7 +166,7 @@ export function PersonalPlanQuizEntry({
     const timer = window.setTimeout(() => {
       if (!navigator.onLine || document.hidden) return
       persistProgressiveEntryRecovery(
-        window.sessionStorage,
+        scopeQuizDraftStorage(window.sessionStorage, draftScope),
         selected
           ? {
               attempt: 1,
@@ -163,6 +182,7 @@ export function PersonalPlanQuizEntry({
     return () => window.clearTimeout(timer)
   }, [
     documentRecoveryAttempt,
+    draftScope,
     failureCount,
     recoverySignal,
     restoringLocalDraft,
@@ -180,7 +200,7 @@ export function PersonalPlanQuizEntry({
   }, [failureCount, restoringLocalDraft, selected, selectedAt])
 
   function selectTexture(texture: PersonalPlanTexture) {
-    if (getLocalDraft()) {
+    if (getLocalDraft(draftScope)) {
       setRestoringLocalDraft(true)
       setShowQuiz(true)
       retryPersonalPlanContinuationNow()

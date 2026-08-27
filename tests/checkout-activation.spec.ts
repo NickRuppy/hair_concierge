@@ -5,6 +5,7 @@ import {
   ensureCheckoutAccount,
   verifyCheckoutSessionForActivation,
 } from "../src/lib/stripe/checkout-activation"
+import { MODERATOR_RESET_CUTOFF_KEY } from "../src/lib/billing/moderator-reset-cutoff"
 
 function checkoutSession(overrides: Record<string, unknown> = {}) {
   return {
@@ -212,7 +213,7 @@ function stubDeps() {
     premiumTierId: "tier-premium",
   }
 
-  return { calls, users, profiles, duplicateEmails, deps }
+  return { calls, users, profiles, billing, duplicateEmails, deps }
 }
 
 test("ensureCheckoutAccount creates a fresh paid user with hashed checkout activation metadata", async () => {
@@ -384,6 +385,180 @@ test("ensureCheckoutAccount reuses an existing Stripe customer and does not crea
   expect(profiles["user-by-customer"].stripe_subscription_id).toBe("sub_customer")
 })
 
+test("ensureCheckoutAccount rejects conflicting email and Stripe customer profiles before writes", async () => {
+  const { deps, calls, profiles } = stubDeps()
+  profiles["user-email"] = { id: "user-email", email: "email@example.com" }
+  profiles["user-customer"] = {
+    id: "user-customer",
+    email: "customer@example.com",
+    stripe_customer_id: "cus_conflict",
+  }
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({
+        customer: "cus_conflict",
+        customer_details: { email: "email@example.com" },
+      }),
+      deps,
+    ),
+  ).rejects.toMatchObject({ code: "checkout_ownership_conflict" })
+  expect(calls.some(([operation]) => /^(createUser|upsert-|update-)/.test(operation))).toBe(false)
+})
+
+test("ensureCheckoutAccount pins an existing Stripe subscription to its billing owner", async () => {
+  const { deps, calls, profiles, billing } = stubDeps()
+  profiles["user-owner"] = {
+    id: "user-owner",
+    email: "owner@example.com",
+    stripe_customer_id: "cus_owner",
+  }
+  profiles["user-email"] = { id: "user-email", email: "email@example.com" }
+  billing.push({
+    id: "billing-owner",
+    provider: "stripe",
+    provider_subscription_id: "sub_test_123",
+    user_id: "user-owner",
+  })
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({ customer: "cus_owner", customer_details: { email: "email@example.com" } }),
+      deps,
+    ),
+  ).rejects.toMatchObject({ code: "checkout_ownership_conflict" })
+  expect(calls.some(([operation]) => /^(createUser|upsert-|update-)/.test(operation))).toBe(false)
+})
+
+test("ensureCheckoutAccount rejects marked owner callbacks at or before the reset cutoff", async () => {
+  const { deps, calls, profiles, users } = stubDeps()
+  users["marked@example.com"] = {
+    id: "user-marked",
+    email: "marked@example.com",
+    app_metadata: { [MODERATOR_RESET_CUTOFF_KEY]: "2026-08-27T12:00:00.000Z" },
+  }
+  profiles["user-marked"] = {
+    id: "user-marked",
+    email: "marked@example.com",
+    stripe_customer_id: "cus_marked",
+  }
+  deps.stripe.subscriptions.retrieve = async (id: string) =>
+    ({
+      id,
+      created: 1787832000,
+      status: "active",
+      items: {
+        data: [
+          {
+            price: { recurring: { interval: "month", interval_count: 1 } },
+            current_period_end: 1_800_000_000,
+          },
+        ],
+      },
+    }) as any
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({
+        customer: "cus_marked",
+        customer_details: { email: "marked@example.com" },
+        created: 1787832000,
+      }),
+      deps,
+    ),
+  ).rejects.toMatchObject({ code: "checkout_moderator_reset_cutoff" })
+  expect(calls.some(([operation]) => /^(upsert-|update-)/.test(operation))).toBe(false)
+})
+
+test("ensureCheckoutAccount permits a marked owner only for fresh session and subscription timestamps", async () => {
+  const { deps, profiles, users } = stubDeps()
+  users["fresh@example.com"] = {
+    id: "user-fresh",
+    email: "fresh@example.com",
+    app_metadata: { [MODERATOR_RESET_CUTOFF_KEY]: "2026-08-27T12:00:00.000Z" },
+  }
+  profiles["user-fresh"] = {
+    id: "user-fresh",
+    email: "fresh@example.com",
+    stripe_customer_id: "cus_fresh",
+  }
+  deps.stripe.subscriptions.retrieve = async (id: string) =>
+    ({
+      id,
+      created: 1787832001,
+      status: "active",
+      items: {
+        data: [
+          {
+            price: { recurring: { interval: "month", interval_count: 1 } },
+            current_period_end: 1_800_000_000,
+          },
+        ],
+      },
+    }) as any
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({
+        customer: "cus_fresh",
+        customer_details: { email: "fresh@example.com" },
+        created: 1787832001,
+      }),
+      deps,
+    ),
+  ).resolves.toMatchObject({ userId: "user-fresh" })
+  expect(profiles["user-fresh"].subscription_status).toBe("active")
+})
+
+test("ensureCheckoutAccount fails closed for marked owners with missing Stripe creation timestamps", async () => {
+  const { deps, calls, profiles, users } = stubDeps()
+  users["missing-time@example.com"] = {
+    id: "user-missing-time",
+    email: "missing-time@example.com",
+    app_metadata: { [MODERATOR_RESET_CUTOFF_KEY]: "2026-08-27T12:00:00.000Z" },
+  }
+  profiles["user-missing-time"] = {
+    id: "user-missing-time",
+    email: "missing-time@example.com",
+    stripe_customer_id: "cus_missing_time",
+  }
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({
+        customer: "cus_missing_time",
+        customer_details: { email: "missing-time@example.com" },
+        created: 1787832001,
+      }),
+      deps,
+    ),
+  ).rejects.toMatchObject({ code: "checkout_moderator_reset_cutoff" })
+  expect(calls.some(([operation]) => /^(upsert-|update-)/.test(operation))).toBe(false)
+})
+
+test("ensureCheckoutAccount fails closed when current Auth metadata cannot be read", async () => {
+  const { deps, calls, profiles, users } = stubDeps()
+  users["auth-error@example.com"] = {
+    id: "user-auth-error",
+    email: "auth-error@example.com",
+    app_metadata: {},
+  }
+  profiles["user-auth-error"] = { id: "user-auth-error", email: "auth-error@example.com" }
+  deps.supabase.auth.admin.getUserById = async () =>
+    ({
+      data: { user: null },
+      error: { message: "temporary auth failure" },
+    }) as any
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({ customer_details: { email: "auth-error@example.com" } }),
+      deps,
+    ),
+  ).rejects.toThrow(/getUserById failed/)
+  expect(calls.some(([operation]) => /^(upsert-|update-)/.test(operation))).toBe(false)
+})
+
 test("ensureCheckoutAccount is idempotent on repeated fulfillment", async () => {
   const { deps, calls, profiles } = stubDeps()
   const session = checkoutSession()
@@ -398,8 +573,13 @@ test("ensureCheckoutAccount is idempotent on repeated fulfillment", async () => 
 })
 
 test("ensureCheckoutAccount treats duplicate createUser races as an existing account", async () => {
-  const { deps, duplicateEmails, profiles } = stubDeps()
+  const { deps, duplicateEmails, profiles, users } = stubDeps()
   duplicateEmails.add("race@example.com")
+  users["race@example.com"] = {
+    id: "user-race",
+    email: "race@example.com",
+    app_metadata: {},
+  }
 
   const result = await ensureCheckoutAccount(
     checkoutSession({

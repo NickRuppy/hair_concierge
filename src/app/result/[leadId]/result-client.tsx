@@ -39,6 +39,7 @@ export function ResultPageClient({
   focusTarget = null,
   hasAccess,
   fieldTest = false,
+  moderatorTest = false,
   fieldTestUnavailable = false,
   isInternalTest = false,
   regularFieldTest = null,
@@ -60,6 +61,7 @@ export function ResultPageClient({
   focusTarget?: GuidedStoryFocusTarget
   hasAccess: boolean
   fieldTest?: boolean
+  moderatorTest?: boolean
   fieldTestUnavailable?: boolean
   isInternalTest?: boolean
   regularFieldTest?: {
@@ -99,6 +101,7 @@ export function ResultPageClient({
         showQuizRestart={showQuizRestart}
         entryContext={resolvedEntryContext}
         fieldTest={fieldTest}
+        moderatorTest={moderatorTest}
         focusTarget={personalPlanFocusTarget}
         isInternalTest={isInternalTest}
         leadId={leadId}

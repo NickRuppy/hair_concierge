@@ -15,6 +15,7 @@ import {
 } from "./errors"
 import {
   evaluatePersonalPlanFieldTestCampaign,
+  isPersonalPlanFieldTestCampaignShapeValid,
   type PersonalPlanFieldTestCampaignLifecycle,
 } from "./lifecycle"
 import { hashPersonalPlanFieldTestToken } from "./token"
@@ -27,6 +28,7 @@ type CampaignRow = {
   max_activations: number
   access_duration_hours: number
   flow_kind?: "personal_plan" | "regular_quiz"
+  identity_mode?: "guest" | "email_bound"
 }
 
 type CampaignLifecycle = PersonalPlanFieldTestCampaignLifecycle
@@ -38,6 +40,7 @@ export type EligiblePersonalPlanFieldTestCampaign = {
     accessDurationHours: number
     startsAt: number
     expiresAt: number
+    identityMode?: "guest" | "email_bound"
   }
 }
 
@@ -104,6 +107,7 @@ function eligibleCampaign(
   return {
     kind: "eligible",
     campaign: {
+      ...(campaign.identityMode === "email_bound" ? { identityMode: "email_bound" as const } : {}),
       id: campaign.id,
       accessDurationHours: campaign.accessDurationHours,
       startsAt: campaign.startsAt,
@@ -121,6 +125,23 @@ export async function resolvePersonalPlanFieldTestCampaignToken(
     const campaign = await (dependencies.loadCampaignByTokenHash ?? loadCampaignByTokenHash)(
       hashPersonalPlanFieldTestToken(token),
     )
+    // Token possession only routes an existing member back to account verification.
+    // Natural campaign expiry/capacity must not strand an already activated account.
+    if (
+      campaign?.identityMode === "email_bound" &&
+      isPersonalPlanFieldTestCampaignShapeValid(campaign)
+    ) {
+      return {
+        kind: "eligible",
+        campaign: {
+          id: campaign.id,
+          identityMode: "email_bound",
+          accessDurationHours: campaign.accessDurationHours,
+          startsAt: campaign.startsAt,
+          expiresAt: campaign.expiresAt,
+        },
+      }
+    }
     return campaign && (campaign.flowKind ?? "personal_plan") === "personal_plan"
       ? eligibleCampaign(campaign, dependencies.now ?? Date.now())
       : personalPlanFieldTestUnavailable()
@@ -218,6 +239,8 @@ export async function resolvePersonalPlanFieldTestOfferAuthorization(
     campaignCookieValue: string | null | undefined
     funnelSessionId?: string | null
     leadId: string
+    /** Internal server caller must first verify exact moderator intent and account. */
+    allowEmailBound?: boolean
   },
   dependencies: CampaignDependencies & {
     loadOfferSession?: (leadId: string, sessionId?: string | null) => Promise<OfferSession | null>
@@ -228,6 +251,8 @@ export async function resolvePersonalPlanFieldTestOfferAuthorization(
     dependencies,
   )
   if (campaign.kind !== "eligible") return null
+  if (campaign.campaign.identityMode === "email_bound" && input.allowEmailBound !== true)
+    return null
   try {
     const session = await (dependencies.loadOfferSession ?? loadOfferSession)(
       input.leadId,
@@ -447,24 +472,39 @@ export async function isRegularQuizFieldTestGuestRetry(
   }
 }
 
-async function loadCampaignByTokenHash(tokenHash: string) {
-  const { data, error } = await createAdminClient()
+const CAMPAIGN_COLUMNS =
+  "id, status, starts_at, expires_at, max_activations, access_duration_hours, flow_kind"
+
+async function loadCampaignRow(column: "id" | "token_hash", value: string) {
+  const admin = createAdminClient()
+  let result = await admin
     .from("personal_plan_test_campaigns")
-    .select("id, status, starts_at, expires_at, max_activations, access_duration_hours, flow_kind")
-    .eq("token_hash", tokenHash)
+    .select(`${CAMPAIGN_COLUMNS}, identity_mode`)
+    .eq(column, value)
     .maybeSingle()
-  if (error || !data) return null
-  return loadCampaignLifecycle(data as CampaignRow)
+  // Expand-only migration: historical guests remain readable before deployment.
+  // Unknown identity values and all other query failures still fail closed.
+  if (
+    result.error &&
+    ["42703", "PGRST204"].includes(result.error.code) &&
+    result.error.message.includes("identity_mode")
+  ) {
+    result = await admin
+      .from("personal_plan_test_campaigns")
+      .select(CAMPAIGN_COLUMNS)
+      .eq(column, value)
+      .maybeSingle()
+  }
+  if (result.error || !result.data) return null
+  return loadCampaignLifecycle(result.data as unknown as CampaignRow)
+}
+
+async function loadCampaignByTokenHash(tokenHash: string) {
+  return loadCampaignRow("token_hash", tokenHash)
 }
 
 async function loadCampaignById(campaignId: string) {
-  const { data, error } = await createAdminClient()
-    .from("personal_plan_test_campaigns")
-    .select("id, status, starts_at, expires_at, max_activations, access_duration_hours, flow_kind")
-    .eq("id", campaignId)
-    .maybeSingle()
-  if (error || !data) return null
-  return loadCampaignLifecycle(data as CampaignRow)
+  return loadCampaignRow("id", campaignId)
 }
 
 async function loadCampaignLifecycle(row: CampaignRow): Promise<CampaignLifecycle | null> {
@@ -489,6 +529,7 @@ async function loadCampaignLifecycle(row: CampaignRow): Promise<CampaignLifecycl
     successfulActivations: count ?? 0,
     accessDurationHours: row.access_duration_hours,
     flowKind: row.flow_kind,
+    identityMode: row.identity_mode,
   }
 }
 

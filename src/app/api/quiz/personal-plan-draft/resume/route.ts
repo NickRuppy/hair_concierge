@@ -1,3 +1,5 @@
+import { resolveFunnelCookieContext } from "@/lib/funnel/server"
+import { resolveModeratorJourney } from "@/lib/personal-plan-field-test/moderator-journey"
 import { NextResponse, type NextRequest } from "next/server"
 
 import {
@@ -52,6 +54,13 @@ function requestIp(request: Request) {
 
 export async function GET(request: NextRequest) {
   if (!isPersonalPlanQuizCrossBrowserResumeEnabled()) return cleanRedirect(request)
+  const moderator = await resolveModeratorJourney({
+    cookies: request.cookies,
+    funnelContext: await resolveFunnelCookieContext(
+      request.cookies.get(FUNNEL_SESSION_COOKIE)?.value,
+    ),
+  })
+  if (moderator.kind !== "ordinary") return cleanRedirect(request)
   const secret = process.env.FUNNEL_COOKIE_SIGNING_SECRET
   if (!secret || !isPersonalPlanQuizDraftCookieSecretConfigured()) return cleanRedirect(request)
   const resumeToken = request.nextUrl.searchParams.get(PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY)

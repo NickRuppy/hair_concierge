@@ -24,7 +24,11 @@ import {
   PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE,
   resolvePersonalPlanFieldTestCampaignCookie,
 } from "@/lib/personal-plan-field-test"
+import { resolveModeratorJourney } from "@/lib/personal-plan-field-test/moderator-journey"
+import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
+import { resolveFunnelCookieContext } from "@/lib/funnel/server"
 import { createClient } from "@/lib/supabase/server"
+import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-test/personal-plan-field-test-ended"
 
 export const dynamic = "force-dynamic"
 
@@ -56,19 +60,29 @@ export default async function CampaignLandingPage({
   const resumeEnabled = isPersonalPlanQuizCrossBrowserResumeEnabled()
   let personalPlanQuizResume
   let personalPlanFieldTest = false
+  let moderatorQuiz: { scope: string; email: string } | null = null
 
   if (funnelPackage.key === "meta_personal_plan_v1") {
     const cookieStore = await cookies()
     const fieldTest = await resolvePersonalPlanFieldTestCampaignCookie(
       cookieStore.get(PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE)?.value,
     )
+    const moderator = await resolveModeratorJourney({
+      cookies: cookieStore,
+      funnelContext: await resolveFunnelCookieContext(
+        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+      ),
+    })
+    if (moderator.kind === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
+    if (moderator.kind === "authorized")
+      moderatorQuiz = { scope: moderator.funnelSessionId, email: moderator.email }
     personalPlanFieldTest = fieldTest.kind === "eligible"
     if (personalPlanFieldTest) {
       const supabase = await createClient()
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      if (user) {
+      if (user && !moderatorQuiz) {
         return <PersonalPlanFieldTestExistingSessionNotice />
       }
     }
@@ -90,11 +104,11 @@ export default async function CampaignLandingPage({
       redirect(`/result/${encodeURIComponent(initialReturnDecision.leadId)}?entry=quiz_return`)
     }
 
-    if (resumeToken && !resumeEnabled) {
+    if (resumeToken && (!resumeEnabled || moderatorQuiz)) {
       redirect("/lp/haarplan")
     }
 
-    if (resumeEnabled) {
+    if (resumeEnabled && !moderatorQuiz) {
       const landingState = await resolvePersonalPlanQuizDraftLandingState({
         cookieValue: cookieStore.get(PERSONAL_PLAN_QUIZ_DRAFT_COOKIE)?.value,
         resumeToken,
@@ -113,6 +127,7 @@ export default async function CampaignLandingPage({
   const landingVariant = renderLandingVariant(funnelPackage.landingVariant, {
     personalPlanFieldTest,
     personalPlanQuizResume,
+    moderatorQuiz,
   })
   if (!landingVariant) notFound()
 

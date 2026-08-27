@@ -56,7 +56,7 @@ test("landing route owns tracking outside contributor variants", () => {
   assert.match(landingRouteSource, /<LandingTracking \/>/)
   assert.match(
     landingRouteSource,
-    /renderLandingVariant\(funnelPackage\.landingVariant,\s*\{\s*personalPlanFieldTest,\s*personalPlanQuizResume,\s*\}\)/,
+    /renderLandingVariant\(funnelPackage\.landingVariant,\s*\{\s*personalPlanFieldTest,\s*personalPlanQuizResume,\s*moderatorQuiz,\s*\}\)/,
   )
   assert.doesNotMatch(defaultLandingSource, /LandingTracking/)
 })

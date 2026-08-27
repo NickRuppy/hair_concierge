@@ -28,6 +28,32 @@ Preview the same defaults for the regular quiz funnel:
 npm run personal-plan:field-test-campaign -- create --flow=regular-quiz
 ```
 
+### Email-linked moderator campaign
+
+The June moderator reset uses a distinct Personal Plan campaign mode. It is not a guest link: every member is bound to an existing, confirmed Chaarlie account and can return on another device after signing in.
+
+Prepare a restricted JSON file outside the repository with at most five exact members. Do not commit it or copy it into tickets. Its shape is:
+
+```json
+[{ "user_id": "00000000-0000-4000-8000-000000000000", "email": "person@example.com" }]
+```
+
+Preview an email-bound campaign with its fixed 90-day access duration:
+
+```sh
+npm run personal-plan:field-test-campaign -- create --identity-mode=email-bound --roster-file=/restricted/moderator-roster.json
+```
+
+This mode is only available for the Personal Plan, has an exact capacity equal to the supplied roster, and requires 2,160 hours. It creates every roster member as `pending`; the link must not be distributed and no member can enter until an independently approved complete-reset receipt has marked that exact member ready.
+
+After the separate production reset and rollout approval, the same explicit write gate creates the campaign and its pending roster:
+
+```sh
+ALLOW_PERSONAL_PLAN_FIELD_TEST_PRODUCTION_WRITE=1 npm run personal-plan:field-test-campaign -- create --identity-mode=email-bound --roster-file=/restricted/moderator-roster.json --apply --confirm-project=pqdkhefxsxkyeqelqegq
+```
+
+The campaign token starts the account-bound flow but never proves account ownership. The server checks the signed-in account’s exact UUID and confirmed normalized email against the ready roster. A changed email, pending reset, expired/revoked membership, or unavailable access lookup must stop safely; it must not fall through to paid checkout or a guest session.
+
 After Nick separately authorizes production activation, create it with:
 
 ```sh
@@ -74,7 +100,7 @@ ALLOW_PERSONAL_PLAN_FIELD_TEST_PRODUCTION_WRITE=1 npm run personal-plan:field-te
 6. In Personal Plan, test Bedarf, refinement, exact products, Routine, and Anwendung. In the regular quiz, test the normal onboarding and app journey in the same browser.
 7. For the next participant, use a fresh browser session. A prior participant's guest session is intentionally not reused.
 
-There is no email allowlist wait, password handoff, payment, or cross-device recovery in this version. If the browser session is lost, start a new test journey with the campaign link.
+Guest campaigns have no email allowlist, password handoff, payment, or cross-device recovery; if the browser session is lost, start a new guest journey with the campaign link. Email-bound moderator campaigns instead use the account-bound flow above and return through the same signed-in email identity.
 
 ## Recovery and stop conditions
 
@@ -83,5 +109,6 @@ There is no email allowlist wait, password handoff, payment, or cross-device rec
 - A failed activation can be retried only for the exact campaign, funnel session, lead, and synthetic guest.
 - Revocation ends existing field-test access as well as future entry.
 - If the free card appears together with Stripe, PayPal, Apple Pay, a subscription selector, or purchase/refund claims, stop the test and revoke the campaign.
+- An email-bound moderator whose 90-day access has ended or been revoked reaches the Personal Plan test-ended state (or receives a `403` from a gated API), unless a separately valid paid entitlement exists. A database access-check outage returns an unavailable response; it must never be presented as expiry or a subscription paywall.
 
 Status of this implementation handoff: **NO_ACTIVATION**. No production campaign has been created and no production data has been changed.

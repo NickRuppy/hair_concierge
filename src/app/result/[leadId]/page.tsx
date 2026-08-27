@@ -1,3 +1,11 @@
+import {
+  resolveModeratorJourney,
+  loadFunnelIdentityMode,
+  loadPersonalPlanResultFunnel,
+  loadModeratorResultCampaign,
+} from "@/lib/personal-plan-field-test/moderator-journey"
+import { resolveModeratorAccess } from "@/lib/personal-plan-field-test/moderator"
+import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-test/personal-plan-field-test-ended"
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import { notFound, redirect } from "next/navigation"
@@ -70,6 +78,7 @@ interface Props {
 
 interface LeadResultRow {
   id: string
+  user_id: string | null
   name: string
   quiz_kind: "legacy" | "personal_plan"
   quiz_answers: unknown
@@ -86,7 +95,7 @@ async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
   const supabase = createAdminClient()
   const { data, error } = await supabase
     .from("leads")
-    .select("id, name, quiz_kind, quiz_answers")
+    .select("id, user_id, name, quiz_kind, quiz_answers")
     .eq("id", leadId)
     .maybeSingle()
 
@@ -272,6 +281,38 @@ export default async function ResultPage({ params, searchParams }: Props) {
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
+  const resultFunnel =
+    lead?.quiz_kind === "personal_plan" ? await loadPersonalPlanResultFunnel(leadId) : null
+  const resultCampaign =
+    lead?.quiz_kind === "personal_plan" ? await loadModeratorResultCampaign(leadId) : null
+  if (resultCampaign?.kind === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
+  if (resultFunnel?.kind === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
+  const persistedFunnel = resultFunnel?.context ?? null
+  const persistedMode =
+    resultCampaign?.kind === "moderator"
+      ? "email_bound"
+      : persistedFunnel
+        ? await loadFunnelIdentityMode(persistedFunnel.sessionId)
+        : null
+  let moderatorTest = false
+  if (persistedMode === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
+  if (persistedMode === "email_bound") {
+    if (!authenticatedAccess.userId)
+      redirect(`/auth?next=${encodeURIComponent(`/result/${leadId}`)}`)
+    if (lead?.user_id !== authenticatedAccess.userId)
+      return <PersonalPlanFieldTestEnded unavailable />
+    const access = await resolveModeratorAccess({ userId: authenticatedAccess.userId })
+    if (access.kind === "active") redirect("/plan-start")
+    if (access.kind === "ended") return <PersonalPlanFieldTestEnded />
+    if (access.kind === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
+    const moderator = await resolveModeratorJourney({
+      cookies: await cookies(),
+      funnelContext: persistedFunnel,
+      leadId,
+    })
+    if (moderator.kind !== "authorized") return <PersonalPlanFieldTestEnded unavailable />
+    moderatorTest = true
+  }
   const trustedPersonalPlanResultReturn = await hasTrustedPersonalPlanResultReturn({ entry, lead })
   const entryContext: OfferEntryContext = focusRoutine
     ? "routine_return"
@@ -304,12 +345,15 @@ export default async function ResultPage({ params, searchParams }: Props) {
 
   const hasAccess = authenticatedAccess.hasAccess
 
-  const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
+  const funnelContext = hasAccess
+    ? null
+    : (persistedFunnel ?? (await resolveFunnelContextForLead(leadId)))
   const fieldTestCookie = (await cookies()).get(PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE)?.value
   const fieldTestAuthorization =
     lead.quiz_kind === "personal_plan"
       ? await resolvePersonalPlanFieldTestOfferAuthorization({
           campaignCookieValue: fieldTestCookie,
+          allowEmailBound: moderatorTest,
           funnelSessionId: funnelContext?.sessionId,
           leadId,
         })
@@ -382,6 +426,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       focusTarget={focusTarget}
       hasAccess={hasAccess}
       fieldTest={Boolean(fieldTestAuthorization)}
+      moderatorTest={moderatorTest}
       fieldTestUnavailable={fieldTestUnavailable}
       isInternalTest={personalPlanSession?.isInternalTest ?? false}
       regularFieldTest={

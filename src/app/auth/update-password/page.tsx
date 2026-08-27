@@ -11,6 +11,7 @@ import {
   type PasswordResetMessage,
 } from "@/lib/auth/password-reset"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
+import { normalizeModeratorReturnPath } from "@/lib/auth/moderator-return"
 
 const UPDATE_TIMEOUT_MS = 15_000
 const UPDATE_TIMEOUT_ERROR: PasswordResetMessage = {
@@ -30,6 +31,11 @@ export default function UpdatePasswordPage() {
   const [canUpdatePassword, setCanUpdatePassword] = useState(false)
   const [recoveryAccessToken, setRecoveryAccessToken] = useState<string | null>(null)
   const [recoveryEmail, setRecoveryEmail] = useState<string | null>(null)
+  const returnTo = useMemo(() => {
+    if (typeof window === "undefined") return null
+    const next = new URLSearchParams(window.location.search).get("next")
+    return normalizeModeratorReturnPath(next)
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -126,14 +132,22 @@ export default function UpdatePasswordPage() {
             console.error("Password recovery sign-in failed:", signInError)
             setSuccess(true)
             setLoading(false)
-            setTimeout(() => window.location.assign("/auth?reason=password_updated"), 1200)
+            setTimeout(
+              () =>
+                window.location.assign(
+                  returnTo
+                    ? `/auth?reason=password_updated&next=${encodeURIComponent(returnTo)}`
+                    : "/auth?reason=password_updated",
+                ),
+              1200,
+            )
             return
           }
         }
 
         setSuccess(true)
         setLoading(false)
-        setTimeout(() => window.location.assign("/chat"), 1200)
+        setTimeout(() => window.location.assign(returnTo ?? "/chat"), 1200)
       }
     } catch (err) {
       console.error("Update password failed:", err)

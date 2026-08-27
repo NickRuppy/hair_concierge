@@ -4,6 +4,7 @@ import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journe
 import type { PersonalPlanJourneyAccess } from "@/lib/personal-plan/journey-access"
 import { NextResponse } from "next/server"
 import type { EmailOtpType } from "@supabase/supabase-js"
+import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
 
 type AuthConfirmUser = { id: string; email?: string }
 
@@ -141,7 +142,9 @@ function buildExpiredLinkDestination(origin: string, next: string, isRecovery: b
   destination.searchParams.set("error", "link_expired")
   if (isRecovery) {
     destination.searchParams.set("force", "login")
-    destination.searchParams.set("next", "/auth/update-password")
+    const recoveryNext = new URL("/auth/update-password", origin)
+    if (isModeratorReturnPath(next)) recoveryNext.searchParams.set("next", next)
+    destination.searchParams.set("next", `${recoveryNext.pathname}${recoveryNext.search}`)
   } else {
     destination.searchParams.set("next", next)
   }
@@ -179,7 +182,7 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
   } = await deps.getUser()
 
   if (verified) {
-    if (user) {
+    if (user && !isModeratorReturnPath(next)) {
       try {
         await deps.linkQuizToProfile(user.id, user.email, leadId)
       } catch (e) {
@@ -188,7 +191,9 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     }
 
     if (isRecovery) {
-      return deps.redirect(`${origin}/auth/update-password`)
+      const recoveryUrl = new URL("/auth/update-password", origin)
+      if (isModeratorReturnPath(next)) recoveryUrl.searchParams.set("next", next)
+      return deps.redirect(recoveryUrl.toString())
     }
 
     return deps.redirect(`${origin}${next}`)

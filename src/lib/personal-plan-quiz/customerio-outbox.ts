@@ -39,6 +39,7 @@ type PersonalPlanLeadRow = {
   quiz_answers: unknown
   quiz_kind: string | null
   created_at: string
+  moderator_campaign_id?: string | null
 }
 
 type FunnelAttributionRow = {
@@ -100,10 +101,11 @@ export async function dispatchCustomerIoProfileSyncForLead(
     const lead = await deps.loadLead(supabase, leadId)
     const quizAnswers = parseStoredEnvelope(lead)
     const funnel = await deps.loadFunnel(supabase, leadId)
+    // A repeat submission moves the funnel away from its previous lead. The
+    // durable owner marker must keep that earlier result non-commercial too.
+    const fieldTest = funnel?.test_kind === "field_test" || Boolean(lead.moderator_campaign_id)
     const shouldSendCompletionEvent =
-      claimed.send_completion_event &&
-      claimed.completion_event_delivered_at === null &&
-      funnel?.test_kind !== "field_test"
+      claimed.send_completion_event && claimed.completion_event_delivered_at === null && !fieldTest
     const result = await deps.deliver({
       createdAt: lead.created_at,
       email: lead.email!,
@@ -113,7 +115,7 @@ export async function dispatchCustomerIoProfileSyncForLead(
       quizAnswers,
       funnelSessionId: funnel?.id,
       funnelPackageKey: funnel?.package_key,
-      testKind: funnel?.test_kind === "field_test" ? "field_test" : null,
+      testKind: fieldTest ? "field_test" : null,
       profileSyncRevision: claimed.profile_revision,
       sendCompletionEvent: shouldSendCompletionEvent,
     })
@@ -298,7 +300,7 @@ async function claimRow(supabase: SupabaseClient, row: CustomerIoProfileSyncOutb
 async function loadLead(supabase: SupabaseClient, leadId: string) {
   const { data, error } = await supabase
     .from("leads")
-    .select("id,email,marketing_consent,quiz_answers,quiz_kind,created_at")
+    .select("id,email,marketing_consent,quiz_answers,quiz_kind,created_at,moderator_campaign_id")
     .eq("id", leadId)
     .maybeSingle()
   if (error) throw error

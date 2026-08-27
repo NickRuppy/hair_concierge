@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { BillingInterval } from "@/lib/billing/types"
 import { mirrorBillingSubscriptionToProfile } from "@/lib/billing/entitlements"
 import {
+  findBillingSubscriptionByProviderId,
   findCurrentBillingSubscriptionForUser,
   upsertBillingSubscription,
 } from "@/lib/billing/subscriptions"
@@ -39,6 +40,8 @@ export type PayPalCheckoutActivationErrorCode =
   | "paypal_subscription_period_missing"
   | "paypal_subscription_interval_unknown"
   | "paypal_user_race_unresolved"
+  | "paypal_existing_subscription_owner_missing"
+  | "paypal_existing_subscription_owner_mismatch"
   | "paypal_checkout_intent_missing"
   | "paypal_checkout_intent_expired"
   | "paypal_existing_access"
@@ -179,30 +182,54 @@ export async function ensurePayPalCheckoutAccount(
   }
 
   const valid = assertActivePayPalSubscription(subscription, deps.accountEmail)
-  const accountEmail = deps.accountEmail?.trim().toLowerCase() || valid.email.toLowerCase()
-  const interval = deps.interval ?? intervalFromPlanId(valid.planId)
+  const existingBilling = await findBillingSubscriptionByProviderId(
+    deps.supabase,
+    "paypal",
+    valid.id,
+  )
+  const explicitAccountEmail = normalizeEmail(deps.accountEmail)
+  let accountEmail: string
+  let interval: BillingInterval
   const activationKey = deps.activationKey ?? valid.id
-  const existingProfile = await findProfileByEmail(deps, accountEmail)
 
   let userId: string
   let canSetInitialPassword = false
 
-  if (existingProfile) {
-    userId = existingProfile.id
-    await assertNoDifferentCurrentSubscription(deps, userId, valid.id)
-    canSetInitialPassword = await canSetInitialPasswordForPayPalCheckout(
-      deps.supabase,
-      userId,
-      activationKey,
-    )
+  if (existingBilling) {
+    userId = existingBilling.user_id
+    interval = deps.interval ?? existingBilling.interval ?? intervalFromPlanId(valid.planId)
+    accountEmail = await resolveExistingPayPalSubscriptionOwnerEmail(deps, userId)
+    if (explicitAccountEmail && explicitAccountEmail !== accountEmail) {
+      throw new PayPalCheckoutActivationError(
+        "paypal_existing_subscription_owner_mismatch",
+        "PayPal checkout account email does not match the existing subscription owner",
+      )
+    }
   } else {
-    const created = await createPayPalCheckoutUser(deps, accountEmail, activationKey)
-    if (!created.created) await assertNoDifferentCurrentSubscription(deps, created.userId, valid.id)
-    if (created.created) {
-      userId = created.userId
-      canSetInitialPassword = true
+    if (!valid.email) {
+      throw new PayPalCheckoutActivationError(
+        "paypal_subscription_email_missing",
+        "PayPal checkout activation has no Chaarlie or subscriber email",
+      )
+    }
+    accountEmail = valid.email
+    interval = deps.interval ?? intervalFromPlanId(valid.planId)
+    const existingProfile = await findProfileByEmail(deps, accountEmail)
+
+    if (existingProfile) {
+      userId = existingProfile.id
+      await assertNoDifferentCurrentSubscription(deps, userId, valid.id)
+      canSetInitialPassword = await canSetInitialPasswordForPayPalCheckout(
+        deps.supabase,
+        userId,
+        activationKey,
+      )
     } else {
+      const created = await createPayPalCheckoutUser(deps, accountEmail, activationKey)
+      if (!created.created)
+        await assertNoDifferentCurrentSubscription(deps, created.userId, valid.id)
       userId = created.userId
+      canSetInitialPassword = created.created
     }
   }
 
@@ -270,7 +297,7 @@ function assertActivePayPalSubscription(
   accountEmail?: string | null,
 ): {
   id: string
-  email: string
+  email: string | null
   planId: string
   periodEnd: string
 } {
@@ -282,14 +309,7 @@ function assertActivePayPalSubscription(
   }
 
   const email =
-    accountEmail?.trim().toLowerCase() ||
-    subscription.subscriber?.email_address?.trim().toLowerCase()
-  if (!email) {
-    throw new PayPalCheckoutActivationError(
-      "paypal_subscription_email_missing",
-      "PayPal checkout activation has no Chaarlie or subscriber email",
-    )
-  }
+    normalizeEmail(accountEmail) ?? normalizeEmail(subscription.subscriber?.email_address)
 
   const periodEnd = subscription.billing_info?.next_billing_time
   if (!periodEnd) {
@@ -305,6 +325,10 @@ function assertActivePayPalSubscription(
     planId: subscription.plan_id ?? "",
     periodEnd,
   }
+}
+
+function normalizeEmail(email: string | null | undefined): string | null {
+  return email?.trim().toLowerCase() || null
 }
 
 function intervalFromPlanId(planId: string): BillingInterval {
@@ -327,6 +351,37 @@ async function findProfileByEmail(
     .maybeSingle()
   if (error) throw new Error(`profile lookup failed: ${error.message}`)
   return data as ProfileRow | null
+}
+
+async function findProfileById(
+  deps: PayPalCheckoutActivationDeps,
+  userId: string,
+): Promise<ProfileRow | null> {
+  const { data, error } = await deps.supabase
+    .from("profiles")
+    .select("id, email")
+    .eq("id", userId)
+    .maybeSingle()
+  if (error) throw new Error(`profile lookup failed: ${error.message}`)
+  return data as ProfileRow | null
+}
+
+async function resolveExistingPayPalSubscriptionOwnerEmail(
+  deps: PayPalCheckoutActivationDeps,
+  userId: string,
+): Promise<string> {
+  const profile = await findProfileById(deps, userId)
+  const profileEmail = normalizeEmail(profile?.email)
+  if (profileEmail) return profileEmail
+
+  const authUser = await getAuthUserById(deps.supabase, userId)
+  const authEmail = normalizeEmail(authUser?.email)
+  if (authEmail) return authEmail
+
+  throw new PayPalCheckoutActivationError(
+    "paypal_existing_subscription_owner_missing",
+    "PayPal subscription owner identity is unavailable",
+  )
 }
 
 async function upsertSubscriptionProfile(
@@ -395,10 +450,10 @@ export async function canSetInitialPasswordForPayPalCheckout(
 async function getAuthUserById(
   supabase: SupabaseClient,
   userId: string,
-): Promise<{ app_metadata?: unknown } | null> {
+): Promise<{ email?: string | null; app_metadata?: unknown } | null> {
   const admin = supabase.auth.admin as unknown as {
     getUserById?: (userId: string) => Promise<{
-      data?: { user?: { app_metadata?: unknown } | null }
+      data?: { user?: { email?: string | null; app_metadata?: unknown } | null }
       error?: { message?: string } | null
     }>
   }

@@ -114,3 +114,53 @@ test("result routing preserves persisted field-test intent after authorization l
   )
   assert.match(resultPageSource, /offerTracking =\s*hasAccess \|\| fieldTestUnavailable/)
 })
+
+test("moderator offer promises account return and ninety days without guest-browser limits", () => {
+  const html = renderToStaticMarkup(
+    <PersonalPlanOffer
+      entryContext="quiz_completion"
+      fieldTest
+      moderatorTest
+      leadId="11111111-1111-4111-8111-111111111111"
+      model={{
+        planTitle: "Dein Haarplan",
+        planFitStatement: "Passt zu dir.",
+        diagnosticRows: [
+          {
+            id: "one",
+            title: "Bedarf",
+            todayLabel: "Heute",
+            potentialLabel: "Ziel",
+            todaySegments: 1,
+            potentialSegments: 2,
+            summary: "Text",
+          },
+          {
+            id: "two",
+            title: "Bedarf",
+            todayLabel: "Heute",
+            potentialLabel: "Ziel",
+            todaySegments: 1,
+            potentialSegments: 2,
+            summary: "Text",
+          },
+          {
+            id: "three",
+            title: "Bedarf",
+            todayLabel: "Heute",
+            potentialLabel: "Ziel",
+            todaySegments: 1,
+            potentialSegments: 2,
+            summary: "Text",
+          },
+        ],
+      }}
+    />,
+  )
+  assert.match(html, /90 Tage ab Aktivierung/)
+  assert.match(html, /Konto gespeichert/)
+  assert.doesNotMatch(
+    html,
+    /sieben Tage in diesem Browser|data-offer-checkout|Stripe|PayPal|Rückerstattung/,
+  )
+})

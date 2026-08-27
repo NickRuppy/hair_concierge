@@ -64,6 +64,18 @@ test("Personal Plan routine entitlement accepts only active field-test access", 
   )
 })
 
+test("Personal Plan routine entitlement accepts an active email-bound moderator without guest metadata", () => {
+  assert.equal(
+    hasActivePersonalPlanRoutineEntitlement({
+      hasCurrentAppAccess: false,
+      fieldTestGuest: false,
+      moderatorAccess: "active",
+      oneTimeAccessState: "none",
+    }),
+    true,
+  )
+})
+
 test("ordinary app access does not become Personal Plan routine entitlement", () => {
   assert.equal(
     hasActivePersonalPlanRoutineEntitlement({
