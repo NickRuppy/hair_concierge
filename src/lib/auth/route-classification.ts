@@ -61,6 +61,7 @@ const PUBLIC_API_EXACT_ROUTES = [
   // must remain reachable before the moderator receives an entitlement.
   "/api/personal-plan/field-test/moderator/start",
   "/api/personal-plan/field-test/moderator/activate",
+  "/api/personal-plan/field-test/moderator/activate-organic",
   "/api/quiz/field-test/activate",
   "/api/waitlist",
   "/api/waitlist/survey",
