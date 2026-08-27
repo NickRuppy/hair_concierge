@@ -1551,6 +1551,28 @@ test("renders loading and retry states without questions or legacy destinations"
   assert.doesNotMatch(`${loading}${retry}`, /Quiz starten|href="\/chat"|href="\/routine"/)
 })
 
+test("Idealplan surfaces retire the 5-stage bar: it narrates a sequence that ends right after them (founder field test 27.08.2026)", () => {
+  const basis = renderToStaticMarkup(<PlanStartFlow state="ready" plan={readyPlan} />)
+  const optional = renderToStaticMarkup(
+    <PlanStartFlow state="ready" plan={readyPlan} initialStep="optional" onContinue={() => {}} />,
+  )
+  const loading = renderToStaticMarkup(<PlanStartLoading />)
+  const retry = renderToStaticMarkup(<PlanStartRetryableError />)
+  const unavailable = renderToStaticMarkup(<PlanStartUnavailable />)
+
+  for (const html of [basis, optional, loading, retry, unavailable]) {
+    // Scoped to the journey header's 5-stage bar specifically: the Basis/
+    // Optional page's own "Idealplan-Fortschritt" progressbar (Progress, 50/100)
+    // is a different, still-legitimate indicator and must survive untouched.
+    assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+    assert.doesNotMatch(html, /aria-label="Stufen im Personal Plan"/)
+  }
+
+  // The wordmark and Back control survive — only the stage-progress row goes.
+  assert.match(basis, />chaarlie</)
+  assert.match(optional, /aria-label="Zur Basis"/)
+})
+
 test("the customer path has no redundant Stage 1 transition before the Stage 2 invitation", () => {
   const source = readFileSync("src/components/personal-plan-start/plan-start-flow.tsx", "utf8")
   const barrel = readFileSync("src/components/personal-plan-start/index.tsx", "utf8")

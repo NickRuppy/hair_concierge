@@ -201,7 +201,18 @@ export function PlanStartHeader({
 }) {
   return (
     <div aria-label={stageLabel}>
-      <PersonalPlanJourneyHeader currentStage={1} onBack={onBack} backLabel={backLabel} />
+      {/*
+       * The Idealplan CTA ("Zu deiner Routine") exits straight into post-accept
+       * surfaces, skipping the 5-stage bar's own Feinschliff/Produkte promise —
+       * the sequential flow it narrates ends right here (founder field test
+       * 27.08.2026). Back and the wordmark stay; only the stage row goes.
+       */}
+      <PersonalPlanJourneyHeader
+        currentStage={1}
+        onBack={onBack}
+        backLabel={backLabel}
+        showStageProgress={false}
+      />
     </div>
   )
 }
