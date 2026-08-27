@@ -64,13 +64,14 @@ function buildNextDestination(next: string, leadId: string | null): string {
 
 export function buildPasswordRecoveryRedirect(origin: string, returnTo?: string): string {
   const confirmUrl = new URL("/auth/confirm", origin)
-  // `type=recovery` is authoritative at confirmation time. Carry a validated
-  // moderator return directly so the confirm route can both suppress legacy
-  // lead linking and wrap it in the password-update return destination.
+  // Explicitly retain recovery context when PKCE adds only a `code`. Carry the
+  // validated moderator return so confirmation can suppress legacy lead linking
+  // and wrap it in the password-update destination.
   confirmUrl.searchParams.set(
     "next",
     isModeratorReturnPath(returnTo) ? returnTo : "/auth/update-password",
   )
+  confirmUrl.searchParams.set("type", "recovery")
   return confirmUrl.toString()
 }
 

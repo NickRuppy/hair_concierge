@@ -341,7 +341,7 @@ test("password-reset emails stamp the explicit PKCE recovery destination", () =>
   const source = readFileSync("src/components/auth/auth-form.tsx", "utf8")
 
   expect(`${redirect.pathname}${redirect.search}`).toBe(
-    "/auth/confirm?next=%2Fauth%2Fupdate-password",
+    "/auth/confirm?next=%2Fauth%2Fupdate-password&type=recovery",
   )
   expect(source).toMatch(
     /redirectTo:\s*buildPasswordRecoveryRedirect\(\s*window\.location\.origin,\s*buildNextDestination\(next, leadId \?\? null\),\s*\),/,
