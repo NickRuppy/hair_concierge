@@ -85,6 +85,12 @@ const loadQuerySchema = z
     personalPlanId: identifier,
     refinedVersionId: identifier,
     repairRoutineVersionId: identifier.optional(),
+    /**
+     * Opt-in to the Stage-2 re-entry rebuild (see `loadOrCreate` below). No
+     * client sends this today, so a plain GET keeps the pre-module behaviour:
+     * a stale refined source is a hard error, never a silent rebuild.
+     */
+    rebuildStale: z.literal("1").optional(),
   })
   .strict()
 const clientMutationSchema = z
@@ -337,6 +343,21 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
           requirements: [],
           personalPlanId: parsed.data.personalPlanId,
           refinedVersionId: parsed.data.refinedVersionId,
+          // Stage-3 re-entry: a Stage-2 (module) completion may have advanced
+          // the refined head and staled this draft while the user was away.
+          //
+          // Strictly opt-in via `rebuildStale=1`. Today's Stage-2 completion
+          // already stales Stage-3 drafts on the normal happy path, and the
+          // current client answers a rebuilt draft with a version mismatch —
+          // so rebuilding on every GET would change live behaviour. Without the
+          // flag the stale error propagates exactly as it did before the module
+          // work; the module-driven re-entry client sends it explicitly.
+          //
+          // The repair load is excluded even with the flag — its requirements
+          // were derived for the version the caller named, so it must not
+          // silently follow the head.
+          rebuildOnStaleRefinedVersion:
+            parsed.data.rebuildStale === "1" && !parsed.data.repairRoutineVersionId,
         })
         if (repairRequirements) loaded.requirements = repairRequirements
         const usesReviewBundles =

@@ -24,7 +24,10 @@ import type {
 } from "../../../src/lib/personal-plan/products/contracts"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
+  STAGE3_DECISION_DEFERRAL_REASONS,
   stage3InventoryDispositionKey,
+  validateStage3Draft,
+  type Stage3DecisionDeferralReason,
 } from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import { isValidPersistedCategoryDecision } from "../../../src/lib/personal-plan/products/authority/category-decision-schema"
@@ -2458,6 +2461,81 @@ test("pending authority decisions distinguish keep_pending from leave_uncovered"
   assert.equal(skipped.choiceState, "unassigned")
 })
 
+/**
+ * A server-derived deferral records WHY the role was left uncovered, on the
+ * decision itself — the draft is the only place that reason has to survive, so
+ * no schema migration is involved. Direct acceptance is the writer
+ * (`direct-acceptance/accept.ts`); the reason is never taken from a client.
+ */
+test("a server-derived deferral persists its reason on the uncovered decision", async () => {
+  const pending = pendingAuthorityDraft()
+
+  async function resolve(deferralReason: Stage3DecisionDeferralReason) {
+    const gateway = createProductionStage3ProductsGateway({
+      userId: "owner-a",
+      persistence: persistence(pending),
+    })
+    const result = await gateway.resolveDecision({
+      draftId: pending.draftId,
+      expectedRevision: pending.revision,
+      intent: {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+        action: "leave_uncovered",
+        deferralReason,
+      },
+    })
+    assert.equal(result.status, "saved")
+    if (result.status !== "saved") throw new Error("expected a saved deferral")
+    return result.draft.decisions[0]!
+  }
+
+  const refinement = await resolve("refinement_required")
+  assert.equal(refinement.choiceState, "unassigned")
+  assert.equal(refinement.resolutionAction, "leave_uncovered")
+  assert.equal(refinement.deferralReason, "refinement_required")
+  assert.deepEqual(validateStage3Draft({ ...pending, decisions: [refinement] }), [])
+
+  // Every reason of the union has to survive the same write path.
+  for (const reason of STAGE3_DECISION_DEFERRAL_REASONS) {
+    assert.equal((await resolve(reason)).deferralReason, reason)
+  }
+})
+
+test("a deferral reason on any other action is rejected before persistence", async () => {
+  const pending = pendingAuthorityDraft()
+  let saves = 0
+  const base = persistence(pending)
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...base,
+      save: async (input) => {
+        saves += 1
+        return base.save(input)
+      },
+    },
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.resolveDecision({
+        draftId: pending.draftId,
+        expectedRevision: pending.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+          action: "keep_pending",
+          deferralReason: "no_product",
+        },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3AuthorityMutationError &&
+      error.code === "stage3_authority_action_invalid",
+  )
+  assert.equal(saves, 0)
+})
+
 test("forged subjects, actions, candidates and stale sources fail closed before persistence", async () => {
   const draft = authorityDraft()
   let saves = 0
@@ -3354,3 +3432,143 @@ function tamperSnapshotDecision(
     },
   }
 }
+
+/* ── Stage-3 re-entry after a Stage-2 module completion staled the draft ── */
+
+/**
+ * Task 1.6 (a): `complete_module` stales the active Stage-3 draft of the
+ * previous refined version. Re-entering Stage 3 with the now-stale version must
+ * rebuild on the current one instead of dead-ending — the staled draft's
+ * selections are gone by design.
+ */
+function emptyDraftOn(refinedVersionId: string): Stage3ProductDraft {
+  const seed = readyDraft()
+  return {
+    ...createStage3Draft({
+      draftId: "draft-b",
+      userId: "owner-a",
+      personalPlanId: "plan-a",
+      refinedVersionId,
+      requirements,
+      now: "2026-08-25T00:00:00.000Z",
+    }),
+    authoritySnapshot: { ...seed.authoritySnapshot!, refinedNeedVersionId: refinedVersionId },
+  }
+}
+
+function stalingPersistence(options: {
+  currentRefinedVersionId: string
+  loads: string[]
+}): Stage3ProductionPersistence {
+  const staled = readyDraft()
+  return {
+    ...persistence(staled),
+    loadOrCreate: async (input) => {
+      options.loads.push(input.refinedVersionId)
+      if (input.refinedVersionId !== options.currentRefinedVersionId) {
+        throw new Stage3AuthoritySnapshotError("stale_refined_source")
+      }
+      return { draft: emptyDraftOn(input.refinedVersionId), requirements }
+    },
+    loadCurrentRefinedVersionId: async () => options.currentRefinedVersionId,
+  }
+}
+
+test("a Stage-3 load rebuilds on the current refined version after a module completion staled its draft", async () => {
+  const loads: string[] = []
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: stalingPersistence({ currentRefinedVersionId: "refined-b", loads }),
+  })
+
+  const loaded = await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    requirements: [],
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    rebuildOnStaleRefinedVersion: true,
+  })
+
+  assert.deepEqual(loads, ["refined-a", "refined-b"])
+  assert.equal(loaded.draft.refinedVersionId, "refined-b")
+  assert.equal(loaded.status, "active")
+  // The staled draft's user selections are lost by design.
+  assert.deepEqual(loaded.draft.products, [])
+  assert.deepEqual(loaded.draft.decisions, [])
+  assert.deepEqual(loaded.draft.completedCaptureCategories, [])
+})
+
+test("a Stage-3 load without the re-entry opt-in still fails closed on a stale refined version", async () => {
+  const loads: string[] = []
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: stalingPersistence({ currentRefinedVersionId: "refined-b", loads }),
+  })
+
+  await assert.rejects(
+    gateway.loadOrCreate({
+      draftId: "server-derived",
+      userId: "owner-a",
+      requirements: [],
+      personalPlanId: "plan-a",
+      refinedVersionId: "refined-a",
+    }),
+    (error: unknown) =>
+      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
+  )
+  assert.deepEqual(loads, ["refined-a"])
+})
+
+test("the Stage-3 re-entry rebuild is attempted exactly once", async () => {
+  const loads: string[] = []
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...stalingPersistence({ currentRefinedVersionId: "refined-b", loads }),
+      // The head moved again between the failed load and the head read.
+      loadCurrentRefinedVersionId: async () => "refined-c",
+    },
+  })
+
+  await assert.rejects(
+    gateway.loadOrCreate({
+      draftId: "server-derived",
+      userId: "owner-a",
+      requirements: [],
+      personalPlanId: "plan-a",
+      refinedVersionId: "refined-a",
+      rebuildOnStaleRefinedVersion: true,
+    }),
+    (error: unknown) =>
+      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
+  )
+  assert.deepEqual(loads, ["refined-a", "refined-c"])
+})
+
+test("a Stage-3 re-entry never rebuilds on the version it was already asked for", async () => {
+  const loads: string[] = []
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...stalingPersistence({ currentRefinedVersionId: "refined-b", loads }),
+      // The head agrees with the caller, so the stale error came from elsewhere
+      // and retrying the identical load would only loop.
+      loadCurrentRefinedVersionId: async () => "refined-a",
+    },
+  })
+
+  await assert.rejects(
+    gateway.loadOrCreate({
+      draftId: "server-derived",
+      userId: "owner-a",
+      requirements: [],
+      personalPlanId: "plan-a",
+      refinedVersionId: "refined-a",
+      rebuildOnStaleRefinedVersion: true,
+    }),
+    (error: unknown) =>
+      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
+  )
+  assert.deepEqual(loads, ["refined-a"])
+})

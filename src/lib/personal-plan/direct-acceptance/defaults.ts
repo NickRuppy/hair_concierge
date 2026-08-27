@@ -1,47 +1,35 @@
-import { PRODUCT_FREQUENCY_LABELS, type ProductFrequency } from "@/lib/vocabulary/frequencies"
+import { PRODUCT_FREQUENCY_LABELS } from "@/lib/vocabulary/frequencies"
 
-import { getOrderedQuestionIds } from "../refinement/question-path"
+import {
+  STAGE2_ASSUMED_DRY_SHAMPOO_BRIDGE_PREFERENCE,
+  STAGE2_ASSUMED_SCALP_IRRITATION_DETAIL,
+  STAGE2_ASSUMED_TOWEL_MATERIAL,
+  STAGE2_ASSUMED_TOWEL_TECHNIQUE,
+  STAGE2_ASSUMED_WET_WASH_FREQUENCY,
+  resolveAssumedAnswers,
+} from "../refinement/assumed-defaults"
 import type {
-  DryShampooBridgePreference,
   PersonalPlanRefinementAnswersV1,
-  ScalpIrritationDetail,
   Stage2QuestionId,
   Stage2TriggerContext,
-  TowelMaterial,
-  TowelTechnique,
-  WetWashFrequency,
 } from "../refinement/types"
 
 /**
- * The single source of truth for accepting a Stage-1 Idealplan without running
- * Stage 2 interactively. Every default is deliberately conservative: it must
- * never invent a need the Idealplan did not already show, and every assumption
- * it makes has to be renderable to the user before they accept.
+ * Accepting a Stage-1 Idealplan without running Stage 2 interactively. The
+ * values themselves live in the typed default resolver
+ * (`refinement/assumed-defaults.ts`), which owns the full rule table with
+ * rationales; direct acceptance is the no-answers special case of it. Every
+ * default is deliberately conservative: it must never invent a need the
+ * Idealplan did not already show, and every assumption it makes has to be
+ * renderable to the user before they accept.
  */
 
-/** Most common wash rhythm; conservative between daily and weekly cleansing. */
-export const DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY: ProductFrequency & WetWashFrequency = "weekly_2x"
-
-/** Gentle handling, so no mechanical-exposure signal is assumed. */
-export const DIRECT_ACCEPTANCE_TOWEL_MATERIAL: TowelMaterial = "mikrofaser"
-export const DIRECT_ACCEPTANCE_TOWEL_TECHNIQUE: TowelTechnique = "gentle_press"
-
-/**
- * Only asked when Stage 1 already recorded an irritated scalp, where Stage 1
- * defers Scalp Care instead of rendering it. "normal" is the only value that
- * does not turn that deferral into an extra role, so the accepted routine stays
- * the plan the user actually saw.
- *
- * The alternative, "mild_sensitive_or_itchy", was surfaced to Nick: it would be
- * more faithful to the reported symptom but adds a `scalp_comfort` role the
- * Idealplan never showed. Plan identity won — the journey promises "accept the
- * plan you see", and the assumption label discloses the assumption so the user
- * can correct it in a real Stage 2.
- */
-export const DIRECT_ACCEPTANCE_SCALP_IRRITATION_DETAIL: ScalpIrritationDetail = "normal"
-
-/** Declining the bridge keeps Dry Shampoo out of an Idealplan that never showed it. */
-export const DIRECT_ACCEPTANCE_DRY_SHAMPOO_BRIDGE_PREFERENCE: DryShampooBridgePreference = "decline"
+export const DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY = STAGE2_ASSUMED_WET_WASH_FREQUENCY
+export const DIRECT_ACCEPTANCE_TOWEL_MATERIAL = STAGE2_ASSUMED_TOWEL_MATERIAL
+export const DIRECT_ACCEPTANCE_TOWEL_TECHNIQUE = STAGE2_ASSUMED_TOWEL_TECHNIQUE
+export const DIRECT_ACCEPTANCE_SCALP_IRRITATION_DETAIL = STAGE2_ASSUMED_SCALP_IRRITATION_DETAIL
+export const DIRECT_ACCEPTANCE_DRY_SHAMPOO_BRIDGE_PREFERENCE =
+  STAGE2_ASSUMED_DRY_SHAMPOO_BRIDGE_PREFERENCE
 
 export type DirectAcceptanceStage2Defaults = {
   answers: PersonalPlanRefinementAnswersV1
@@ -51,28 +39,10 @@ export type DirectAcceptanceStage2Defaults = {
 export function buildDirectAcceptanceStage2Defaults(
   triggerContext: Stage2TriggerContext,
 ): DirectAcceptanceStage2Defaults {
-  const answers: PersonalPlanRefinementAnswersV1 = {
-    currentProductCategories: [],
-    wetWashFrequency: DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY,
-    ...(triggerContext.hasReportedIrritatedScalp
-      ? { scalpIrritationDetail: DIRECT_ACCEPTANCE_SCALP_IRRITATION_DETAIL }
-      : {}),
-    ...(triggerContext.dryShampooBridgeEligibility === "eligible"
-      ? { dryShampooBridgePreference: DIRECT_ACCEPTANCE_DRY_SHAMPOO_BRIDGE_PREFERENCE }
-      : {}),
-    towel: {
-      material: DIRECT_ACCEPTANCE_TOWEL_MATERIAL,
-      technique: DIRECT_ACCEPTANCE_TOWEL_TECHNIQUE,
-    },
-    dryingRoutes: ["air_dry"],
-    additionalHeatTools: [],
-    heatEvents: {},
-    nightProtection: [],
-  }
-
-  // Deriving the completed set from the canonical path keeps the defaults
-  // complete by construction when the Stage-2 question path changes.
-  return { answers, completedQuestionIds: getOrderedQuestionIds(triggerContext, answers) }
+  // No user answers at all, so the resolver assumes the whole canonical path —
+  // which keeps the defaults complete by construction when the path changes.
+  const resolution = resolveAssumedAnswers({ triggerContext, answers: {} })
+  return { answers: resolution.answers, completedQuestionIds: resolution.orderedQuestionIds }
 }
 
 export type DirectAcceptanceAssumption = {

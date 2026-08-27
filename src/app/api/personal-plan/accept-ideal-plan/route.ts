@@ -46,6 +46,9 @@ const rate: RateLimitConfig = {
 
 const bodySchema = z
   .object({
+    // Explicitly empty is a legitimate payload: an Idealplan whose roles the
+    // client could not show as buyable recommendations accepts with every role
+    // deferred. A MISSING or malformed `seenRoles` is still `invalid_request`.
     seenRoles: z
       .array(
         z
@@ -56,7 +59,6 @@ const bodySchema = z
           })
           .strict(),
       )
-      .min(1)
       .max(40),
   })
   .strict()
@@ -170,16 +172,6 @@ export const POST = createAcceptIdealPlanRouteHandler({
             client: admin as unknown as RoutineProposalRpcClient,
           }),
         }),
-        provenance: {
-          async recordDirectAccept({ personalPlanId }) {
-            const { error } = await admin
-              .from("personal_plans")
-              .update({ unrefined_direct_accept: true, nudge_dismissed_until: null })
-              .eq("id", personalPlanId)
-              .eq("user_id", userId)
-            if (error) throw new Error("direct_accept_provenance_write_failed")
-          },
-        },
       },
       input,
     )

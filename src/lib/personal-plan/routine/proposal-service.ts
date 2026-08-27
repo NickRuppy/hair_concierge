@@ -1,4 +1,8 @@
+import type { SupabaseClient } from "@supabase/supabase-js"
+
+import { createSupabaseStage2RefinementPersistence } from "../persistence/stage2-refinement-supabase"
 import { CATEGORY_ROLE_POLICIES } from "../products/authorities"
+import { stage2AssumptionsActive } from "../refinement/module-status"
 import {
   applyRoutineEdits,
   diffRoutinePayloads,
@@ -112,6 +116,12 @@ export function createRoutineProposalService(input: {
   repository: Repository
   rpc: RoutineTransitionRpc
   resolveCadences?: RoutineSuccessorCadenceResolver
+  /**
+   * Derived truth for "the plan still runs on assumptions" — see
+   * `refinement/module-status.ts`. Omitted or failing means "unknown", which
+   * conservatively keeps the recorded assumption state.
+   */
+  assumptionsActive?: (userId: string) => Promise<boolean>
 }) {
   const resolveCadences = input.resolveCadences ?? (async (routine) => routine)
   async function baseFor(userId: string) {
@@ -272,16 +282,23 @@ export function createRoutineProposalService(input: {
           return { status: "initial_proposal_not_rejectable" }
         const revision = numberField(outcome, "revision")
         if (inputRequest.action === "accept" && outcome.outcome === "accepted") {
-          // Best-effort: the proposal accept above has already committed. A
-          // confirmed proposal is by definition a refinement result, so any
-          // accepted proposal supersedes the unrefined-direct-accept state.
-          // A failed clear here only means the refinement nudge may reappear
-          // despite refinement being done — it must not roll back the accept.
+          // Accepting a proposal is NOT itself evidence that the plan stopped
+          // running on assumptions: with a modular Stage 2 the user can accept
+          // a recompute while `habits` is still assumed. The stored
+          // `unrefined_direct_accept` flag is therefore only kept in sync with
+          // the derived module truth (`refinement/module-status.ts`), never
+          // cleared as a side effect of the accept itself.
+          //
+          // Best-effort by design: the accept above has already committed, so
+          // neither an unreadable module status nor a failing clear may roll it
+          // back — both only mean the refinement nudge may linger one more read.
           try {
-            await input.rpc("personal_plan_clear_unrefined_direct_accept", {
-              p_user_id: inputRequest.userId,
-              p_personal_plan_id: plan.id,
-            })
+            if (input.assumptionsActive && !(await input.assumptionsActive(inputRequest.userId))) {
+              await input.rpc("personal_plan_clear_unrefined_direct_accept", {
+                p_user_id: inputRequest.userId,
+                p_personal_plan_id: plan.id,
+              })
+            }
           } catch {
             // See comment above: non-fatal.
           }
@@ -304,6 +321,14 @@ export function createSupabaseRoutineProposalService(input: {
     input.client as unknown as RoutineCadenceAuthorityReadClient,
   )
   return createRoutineProposalService({
+    // Read on the (rare) accept path only, never on the Routine page's hot
+    // read: a missing draft means no refinement exists, so nothing is assumed.
+    assumptionsActive: async (userId) => {
+      const draft = await createSupabaseStage2RefinementPersistence(
+        input.client as unknown as SupabaseClient,
+      ).loadExisting(userId)
+      return draft ? stage2AssumptionsActive(draft) : false
+    },
     repository: {
       loadPlan: (userId) => loadOwnerRoutinePlan(input.client, userId),
       loadVersion: (userId, planId, versionId) =>

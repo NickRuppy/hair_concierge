@@ -367,6 +367,60 @@ export function createProductionStage3ProductsGateway(
     return cached
   }
 
+  /**
+   * Stage-3 re-entry after a Stage-2 (module) completion advanced the plan's
+   * refined-need head and staled this version's product draft.
+   *
+   * Without the opt-in a stale version is a hard stop, which is right for a
+   * caller that must plan against exactly the version it named. With it, the
+   * stale request is discarded and the draft is rebuilt on the CURRENT version.
+   *
+   * The opt-in is never inferred: the Stage-3 route only sets it for a caller
+   * that asked for it explicitly (`?rebuildStale=1`). Today's full Stage-2
+   * completion already stales Stage-3 drafts on the happy path, so rebuilding
+   * by default would hand the current client a draft on a version it did not
+   * ask for and change live behaviour.
+   *
+   * The staled draft's captures, role assignments and decisions are NOT
+   * migrated — they were made against a need version that no longer describes
+   * the user (plan decision: accepted for test users, Task 1.6a). Exactly one
+   * rebuild is attempted, and only for a genuinely different version, so a
+   * stale error from any other cause can never loop.
+   */
+  async function loadOrCreateOnCurrentRefinedVersion(input: {
+    personalPlanId: string
+    refinedVersionId: string
+    rebuildOnStaleRefinedVersion?: boolean
+  }) {
+    try {
+      return await options.persistence.loadOrCreate({
+        userId: options.userId,
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: input.refinedVersionId,
+      })
+    } catch (error) {
+      if (
+        !input.rebuildOnStaleRefinedVersion ||
+        !(error instanceof Stage3AuthoritySnapshotError) ||
+        error.code !== "stale_refined_source"
+      ) {
+        throw error
+      }
+      const currentRefinedVersionId = await options.persistence.loadCurrentRefinedVersionId({
+        userId: options.userId,
+        personalPlanId: input.personalPlanId,
+      })
+      if (!currentRefinedVersionId || currentRefinedVersionId === input.refinedVersionId) {
+        throw error
+      }
+      return await options.persistence.loadOrCreate({
+        userId: options.userId,
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: currentRefinedVersionId,
+      })
+    }
+  }
+
   async function assertCurrentRefinedSource(draft: Stage3ProductDraft) {
     const currentRefinedVersionId = await options.persistence.loadCurrentRefinedVersionId({
       userId: options.userId,
@@ -662,13 +716,7 @@ export function createProductionStage3ProductsGateway(
       return { status: "saved", draft: persisted.draft }
     },
     async loadOrCreate(input): Promise<Stage3DraftResponse> {
-      const loaded = await repairLoadedDraft(
-        await options.persistence.loadOrCreate({
-          userId: options.userId,
-          personalPlanId: input.personalPlanId,
-          refinedVersionId: input.refinedVersionId,
-        }),
-      )
+      const loaded = await repairLoadedDraft(await loadOrCreateOnCurrentRefinedVersion(input))
       cached = loaded
       return {
         status: loaded.draft.status,
@@ -957,6 +1005,7 @@ export function createProductionStage3ProductsGateway(
         expectedSourceRevision,
         portfolio: { schemaVersion: portfolio.schemaVersion, snapshot: portfolio as never },
         candidate,
+        markUnrefinedDirectAccept: input.markUnrefinedDirectAccept,
       })
       if (staged.status === "stale_source") {
         cached = null
@@ -1118,6 +1167,9 @@ export function createProductionStage3ProductsGateway(
       ) {
         throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
       }
+      if (intent.deferralReason && intent.action !== "leave_uncovered") {
+        throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
+      }
       const selectedCandidate = validateSelectedCandidate(intent, review)
       return buildAuthorityDecision(
         subjects[index]!,
@@ -1273,6 +1325,11 @@ function buildAuthorityDecision(
     recommendation,
     limitationAcknowledged: intent.action === "acknowledge_override",
     resolutionAction: intent.action,
+    // Persisted with the decision itself, so the reason survives every later
+    // read of the draft and of the portfolio projected from it.
+    ...(intent.action === "leave_uncovered" && intent.deferralReason
+      ? { deferralReason: intent.deferralReason }
+      : {}),
     authorityEvidence: {
       schemaVersion: 1,
       subjectKey: subject.decisionKey,

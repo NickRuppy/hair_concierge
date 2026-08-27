@@ -3,9 +3,11 @@ import {
   type Stage2CompleteResult,
   type Stage2RefinementErrorCode,
   type Stage2RefinementGateway,
+  type Stage2SaveAndCompleteModuleResult,
   type Stage2SaveAndCompleteResult,
   type Stage2SaveAnswerInput,
 } from "./gateway"
+import type { Stage2Module } from "./types"
 import type { Stage2RefinementSession } from "./session"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
@@ -37,6 +39,17 @@ export function createHttpStage2RefinementGateway({
         "/api/personal-plan/stage-2",
         jsonRequest("PATCH", { ...input, completeAfterSave: true }),
         "stage2_final_save_complete",
+      )
+    },
+    async saveAnswerAndCompleteModule({
+      module: stage2Module,
+      ...input
+    }: Stage2SaveAnswerInput & { module: Stage2Module }) {
+      return request<Stage2SaveAndCompleteModuleResult>(
+        fetcher,
+        "/api/personal-plan/stage-2",
+        jsonRequest("PATCH", { ...input, completeModuleAfterSave: stage2Module }),
+        "stage2_module_save_complete",
       )
     },
     async complete(input: { expectedRevision: number }) {

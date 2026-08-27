@@ -111,6 +111,12 @@ export type RoutineProposalStageRequest = {
     snapshot: JsonValue
   }
   candidate: RoutineCandidate
+  /**
+   * Direct acceptance only: writes the `unrefined_direct_accept` provenance
+   * inside the completion transaction, so a failed write fails the whole
+   * accept instead of silently suppressing the refinement nudge.
+   */
+  markUnrefinedDirectAccept?: boolean
 }
 
 export type RoutineProposalStageResult =
@@ -149,6 +155,7 @@ export const routineProposalStageRequestSchema: z.ZodType<RoutineProposalStageRe
     snapshot: boundedJsonSchema,
   }),
   candidate: routineCandidateSchema,
+  markUnrefinedDirectAccept: z.boolean().optional(),
 })
 
 export const routineProposalStageResultSchema: z.ZodType<RoutineProposalStageResult> =
@@ -193,7 +200,7 @@ export type RoutineProposalRpcClient = {
   rpc(
     functionName:
       | "personal_plan_complete_product_draft_and_stage_routine"
-      | "personal_plan_complete_draft_activate_initial_v1",
+      | "personal_plan_complete_draft_activate_v2",
     args: Record<string, unknown>,
   ): Promise<{ data: unknown; error: unknown | null }>
 }
@@ -211,24 +218,22 @@ export function createRoutineProposalStagerRpcAdapter(input: {
       if (!request.success) return { status: "temporarily_unavailable" }
 
       try {
-        const response = await input.client.rpc(
-          "personal_plan_complete_draft_activate_initial_v1",
-          {
-            p_user_id: request.data.userId,
-            p_personal_plan_id: request.data.personalPlanId,
-            p_product_draft_id: request.data.productDraftId,
-            p_expected_draft_revision: request.data.expectedRevision,
-            p_expected_source_revision: request.data.expectedSourceRevision,
-            p_portfolio_schema_version: request.data.portfolio.schemaVersion,
-            p_portfolio_snapshot: request.data.portfolio.snapshot,
-            p_routine_schema_version: request.data.candidate.schemaVersion,
-            p_routine_compiler_version: request.data.candidate.compilerVersion,
-            p_routine_authority_versions: request.data.candidate.authorityVersions,
-            p_routine_source_fingerprint: request.data.candidate.sourceFingerprint,
-            p_routine_payload: request.data.candidate.payload,
-            p_proposal_delta: request.data.candidate.proposalDelta,
-          },
-        )
+        const response = await input.client.rpc("personal_plan_complete_draft_activate_v2", {
+          p_user_id: request.data.userId,
+          p_personal_plan_id: request.data.personalPlanId,
+          p_product_draft_id: request.data.productDraftId,
+          p_expected_draft_revision: request.data.expectedRevision,
+          p_expected_source_revision: request.data.expectedSourceRevision,
+          p_portfolio_schema_version: request.data.portfolio.schemaVersion,
+          p_portfolio_snapshot: request.data.portfolio.snapshot,
+          p_routine_schema_version: request.data.candidate.schemaVersion,
+          p_routine_compiler_version: request.data.candidate.compilerVersion,
+          p_routine_authority_versions: request.data.candidate.authorityVersions,
+          p_routine_source_fingerprint: request.data.candidate.sourceFingerprint,
+          p_routine_payload: request.data.candidate.payload,
+          p_proposal_delta: request.data.candidate.proposalDelta,
+          p_mark_unrefined_direct_accept: request.data.markUnrefinedDirectAccept === true,
+        })
         if (response.error) return { status: "temporarily_unavailable" }
         const parsed = parseRoutineProposalStageResult(response.data)
         return parsed.ok ? parsed.value : { status: "temporarily_unavailable" }

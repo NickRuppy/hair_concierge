@@ -311,6 +311,56 @@ test("portfolio rejects stale or incomplete drafts", () => {
   )
 })
 
+/**
+ * The read surface for a server-derived deferral: whatever renders the plan
+ * reads the portfolio, not the Stage-3 draft, so the reason has to survive the
+ * projection AND the strict snapshot parser that freezes it.
+ */
+test("a deferred uncovered role carries its server-derived reason into the portfolio", () => {
+  const draft = completedDraft()
+  const deferred: Stage3ProductDraft = {
+    ...draft,
+    decisions: draft.decisions.map((decision) =>
+      decision.decisionKey === "decision:heat_protectant:pre_heat_protection:gap"
+        ? {
+            ...decision,
+            resolutionAction: "leave_uncovered" as const,
+            deferralReason: "refinement_required" as const,
+          }
+        : decision,
+    ),
+  }
+
+  const portfolio = createProposedProductPortfolio(deferred, requirements, {
+    portfolioVersionId: "portfolio-deferred",
+    createdAt: now,
+  })
+
+  assert.deepEqual(
+    portfolio.uncoveredRoles.find(
+      (role) => role.linkedDecisionKey === "decision:heat_protectant:pre_heat_protection:gap",
+    ),
+    {
+      category: "heat_protectant",
+      role: "pre_heat_protection",
+      reason: "no_product_owned",
+      linkedDecisionKey: "decision:heat_protectant:pre_heat_protection:gap",
+      deferralReason: "refinement_required",
+    },
+  )
+  // Roles nobody deferred stay exactly as they were.
+  assert.equal(
+    portfolio.uncoveredRoles.find(
+      (role) => role.linkedDecisionKey === "decision:oil:pre_wash_fibre_treatment:oil-1",
+    )?.deferralReason,
+    undefined,
+  )
+  const parsed = parseProposedProductPortfolio(JSON.parse(JSON.stringify(portfolio)), {
+    includeV4: true,
+  })
+  assert.deepEqual(parsed.uncoveredRoles, portfolio.uncoveredRoles)
+})
+
 test("pending products enter the portfolio only when the user keeps the pending review", () => {
   const base = completedDraft()
   const pendingProduct = {
@@ -665,8 +715,14 @@ test("portfolio v4 retains inventory-only catalog and pending products outside R
   const parsed = parseProposedProductPortfolio(portfolio, { includeV4: true })
 
   assert.equal(parsed.schemaVersion, 4)
-  assert.equal(parsed.ownedProducts.some((product) => product.category === "dry_shampoo"), false)
-  assert.equal(parsed.ownedProducts.some((product) => product.category === "leave_in"), false)
+  assert.equal(
+    parsed.ownedProducts.some((product) => product.category === "dry_shampoo"),
+    false,
+  )
+  assert.equal(
+    parsed.ownedProducts.some((product) => product.category === "leave_in"),
+    false,
+  )
   assert.deepEqual(parsed.retainedInventoryProducts, [
     {
       kind: "catalog_product",

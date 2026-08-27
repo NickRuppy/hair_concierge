@@ -12,8 +12,11 @@ import type {
   Stage2AnswerKey,
   Stage2HeatEventSource,
   Stage2HeatEventQuestionId,
+  Stage2Module,
+  Stage2ModulePathState,
   Stage2PathState,
   Stage2QuestionId,
+  Stage2StaticQuestionId,
   Stage2TriggerContext,
   TowelMaterial,
   TowelTechnique,
@@ -26,6 +29,7 @@ import {
   HEAT_PROTECTION_CONSISTENCIES,
   OIL_PURPOSES,
   SCALP_IRRITATION_DETAILS,
+  STAGE2_MODULES,
   STAGE2_PRODUCT_CATEGORIES,
 } from "./types"
 import {
@@ -144,6 +148,68 @@ export function getOrderedQuestionIds(
   return ids
 }
 
+/**
+ * Total mapping from every canonical Stage 2 question id to its module. Source of truth for the
+ * split: section A ("Was du heute benutzt") = products, section B ("Wie du dein Haar behandelst")
+ * = habits. Derived heat-event questions (`heat:<source>`) belong to habits. Fixed two-value
+ * model — no abstraction for hypothetical further modules.
+ */
+const STAGE2_QUESTION_MODULE_BY_ID: Record<Stage2StaticQuestionId, Stage2Module> = {
+  current_product_categories: "products",
+  wet_wash_frequency: "products",
+  scalp_irritation_detail: "products",
+  dry_shampoo_bridge_preference: "products",
+  dry_shampoo_visible_hair_color: "products",
+  oil_purposes: "products",
+  towel_handling: "habits",
+  drying_routes: "habits",
+  additional_heat_tools: "habits",
+  night_protection: "habits",
+}
+
+export function getStage2QuestionModule(questionId: Stage2QuestionId): Stage2Module {
+  if (questionId.startsWith("heat:")) return "habits"
+  const questionModule = STAGE2_QUESTION_MODULE_BY_ID[questionId as Stage2StaticQuestionId]
+  if (!questionModule) throw new Error(`Unmapped Stage 2 refinement question id: ${questionId}`)
+  return questionModule
+}
+
+/**
+ * Given the current dynamic ordered path and completed question ids, groups them per module:
+ * its question ids (in path order), which are completed vs open, and a module status (`open`
+ * when it has at least one unanswered question on the current path, `complete` once all its
+ * current-path questions are answered). Pure/deterministic — no I/O.
+ */
+export function getStage2ModulePathStates(
+  orderedQuestionIds: readonly Stage2QuestionId[],
+  completedQuestionIds: readonly Stage2QuestionId[],
+): Record<Stage2Module, Stage2ModulePathState> {
+  const completed = new Set(completedQuestionIds)
+  const emptyModuleState = (): Stage2ModulePathState => ({
+    questionIds: [],
+    completedQuestionIds: [],
+    openQuestionIds: [],
+    status: "complete",
+  })
+  const states: Record<Stage2Module, Stage2ModulePathState> = {
+    products: emptyModuleState(),
+    habits: emptyModuleState(),
+  }
+
+  for (const questionId of orderedQuestionIds) {
+    const state = states[getStage2QuestionModule(questionId)]
+    state.questionIds.push(questionId)
+    ;(completed.has(questionId) ? state.completedQuestionIds : state.openQuestionIds).push(
+      questionId,
+    )
+  }
+  for (const stage2Module of STAGE2_MODULES) {
+    states[stage2Module].status =
+      states[stage2Module].openQuestionIds.length > 0 ? "open" : "complete"
+  }
+  return states
+}
+
 export function resolveStage2Path(input: PathInput): Stage2PathState {
   return resolveStage2RefinementContract(input).path
 }
@@ -153,7 +219,8 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
   const pruned = pruneStage2Answers(input)
   const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, pruned.answers)
   const completedQuestionIds = orderedQuestionIds.filter(
-    (id) => pruned.completedQuestionIds.includes(id) && isQuestionAnswerValid(id, pruned.answers),
+    (id) =>
+      pruned.completedQuestionIds.includes(id) && isStage2QuestionAnswerValid(id, pruned.answers),
   )
   const firstUnresolvedQuestionId =
     orderedQuestionIds.find((id) => !completedQuestionIds.includes(id)) ?? null
@@ -165,7 +232,7 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
     prunedAnswerKeys: pruned.prunedAnswerKeys,
   }
   const validationErrors = orderedQuestionIds.flatMap((questionId) =>
-    isQuestionAnswerValid(questionId, pruned.answers)
+    isStage2QuestionAnswerValid(questionId, pruned.answers)
       ? []
       : [`${questionId} is invalid or incomplete`],
   )
@@ -210,7 +277,12 @@ function isOrderedKnownArray<T extends string>(
   )
 }
 
-function isQuestionAnswerValid(
+/**
+ * Whether the stored answer for one canonical question is structurally usable.
+ * The single validity oracle for the path model — also the resolver's test for
+ * "this question is still open" (see `assumed-defaults.ts`).
+ */
+export function isStage2QuestionAnswerValid(
   questionId: Stage2QuestionId,
   answers: PersonalPlanRefinementAnswersV1,
 ): boolean {

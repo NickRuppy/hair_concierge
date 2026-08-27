@@ -10,12 +10,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { InfoTip } from "@/components/ui/info-tip"
 import { requiresStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
+import { getStage2QuestionModule } from "@/lib/personal-plan/refinement/question-path"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import type {
   HeatEventAnswer,
   PersonalPlanRefinementAnswersV1,
   ProductFrequency,
   Stage2HeatEventSource,
+  Stage2Module,
   Stage2ProductCategory,
   Stage2QuestionId,
   TowelMaterial,
@@ -68,6 +70,12 @@ type RefinementQuestionProps = {
   showJourneyHeader?: boolean
   focusOnQuestionChange?: boolean
 }
+
+/** German section labels, keyed by module. Source of truth for the split lives in the path model. */
+const STAGE2_MODULE_SECTION_LABELS = {
+  products: "Was du heute benutzt",
+  habits: "Wie du dein Haar behandelst",
+} as const satisfies Record<Stage2Module, string>
 
 const HEAT_SOURCE_TITLES = {
   ordinary_blow_dry: "gewöhnliches Föhnen",
@@ -256,17 +264,19 @@ function renderQuestionBody({
 }): {
   title: string
   lead?: string
-  sectionLabel: "Was du heute benutzt" | "Wie du dein Haar behandelst"
+  sectionLabel: (typeof STAGE2_MODULE_SECTION_LABELS)[Stage2Module]
   trigger?: string
   info?: { title: string; body: string }
   body: ReactNode
   note?: ReactNode
 } {
+  const sectionLabel = STAGE2_MODULE_SECTION_LABELS[getStage2QuestionModule(questionId)]
+
   if (questionId.startsWith("heat:")) {
     const source = questionId.slice("heat:".length) as Stage2HeatEventSource
     const heatAnswer = (answer ?? {}) as HeatEventAnswer
     return {
-      sectionLabel: "Wie du dein Haar behandelst",
+      sectionLabel,
       title: `Wie oft nutzt du ${HEAT_SOURCE_TITLES[source]}?`,
       lead: requiresStage2HeatProtection(source)
         ? "Gib deinen üblichen Rhythmus an und ob du dabei Hitzeschutz verwendest."
@@ -336,7 +346,7 @@ function renderQuestionBody({
           nextGroupSelection,
         })
       return {
-        sectionLabel: "Was du heute benutzt",
+        sectionLabel,
         title: "Welche Produkte nutzt du?",
         lead: "Alle unterstützten Kategorien: zuerst für deinen Plan, danach alle weiteren.",
         body: (
@@ -393,7 +403,7 @@ function renderQuestionBody({
     }
     case "wet_wash_frequency":
       return {
-        sectionLabel: "Was du heute benutzt",
+        sectionLabel,
         title: "Wie oft wäschst du deine Haare nass?",
         lead: "Es geht um deinen allgemeinen Rhythmus, nicht um ein konkretes Shampoo.",
         body: (
@@ -405,7 +415,7 @@ function renderQuestionBody({
       }
     case "scalp_irritation_detail":
       return {
-        sectionLabel: "Was du heute benutzt",
+        sectionLabel,
         title: "Wie fühlt sich deine Kopfhaut aktuell an?",
         lead: "Wähle, was heute am besten passt.",
         body: (
@@ -426,7 +436,7 @@ function renderQuestionBody({
       }
     case "dry_shampoo_bridge_preference":
       return {
-        sectionLabel: "Was du heute benutzt",
+        sectionLabel,
         title: "Möchtest du Trockenshampoo zwischen Nasswäschen nutzen?",
         lead: "Ein konkretes Produkt wählen wir erst im nächsten Schritt aus.",
         body: (
@@ -439,7 +449,7 @@ function renderQuestionBody({
       }
     case "dry_shampoo_visible_hair_color":
       return {
-        sectionLabel: "Was du heute benutzt",
+        sectionLabel,
         title: "Welche sichtbare Ansatzfarbe hast du?",
         lead: "Es geht um sichtbaren Ansatz und mögliche Rückstände, nicht um chemische Haarfarbe.",
         body: (
@@ -452,7 +462,7 @@ function renderQuestionBody({
       }
     case "oil_purposes":
       return {
-        sectionLabel: "Was du heute benutzt",
+        sectionLabel,
         title: "Wofür nutzt du Öl?",
         lead: "Mehrfachauswahl. Ein Öl kann später mehrere Aufgaben übernehmen.",
         body: (
@@ -467,7 +477,7 @@ function renderQuestionBody({
     case "towel_handling": {
       const towel = (answer ?? {}) as { material?: TowelMaterial; technique?: TowelTechnique }
       return {
-        sectionLabel: "Wie du dein Haar behandelst",
+        sectionLabel,
         title: "Wie trocknest du dein Haar direkt nach der Wäsche an?",
         body: (
           <div className="grid gap-6">
@@ -503,7 +513,7 @@ function renderQuestionBody({
     }
     case "drying_routes":
       return {
-        sectionLabel: "Wie du dein Haar behandelst",
+        sectionLabel,
         title: "Wie trocknet dein Haar meistens weiter?",
         lead: "Mehrere Wege dürfen parallel vorkommen.",
         body: (
@@ -519,7 +529,7 @@ function renderQuestionBody({
       }
     case "additional_heat_tools":
       return {
-        sectionLabel: "Wie du dein Haar behandelst",
+        sectionLabel,
         trigger: "Zusätzliche Tools",
         title: "Welche weiteren Hitze-Tools nutzt du?",
         lead: "Wähle nur zusätzliche Geräte neben Föhn oder Diffusor.",
@@ -537,7 +547,7 @@ function renderQuestionBody({
       }
     case "night_protection":
       return {
-        sectionLabel: "Wie du dein Haar behandelst",
+        sectionLabel,
         trigger: "Nachtschutz",
         title: "Was schützt dein Haar nachts meistens?",
         lead: "Wähle alles aus, was meistens zu deiner Nacht gehört.",
@@ -681,12 +691,7 @@ export function getQuestionFamily(questionId: Stage2QuestionId) {
   return "conditional_context"
 }
 
+/** Telemetry section, derived from the path model's module mapping (single source of truth). */
 export function getQuestionSection(questionId: Stage2QuestionId) {
-  return questionId === "towel_handling" ||
-    questionId === "drying_routes" ||
-    questionId === "additional_heat_tools" ||
-    questionId === "night_protection" ||
-    questionId.startsWith("heat:")
-    ? "hair_handling"
-    : "current_products"
+  return getStage2QuestionModule(questionId) === "habits" ? "hair_handling" : "current_products"
 }

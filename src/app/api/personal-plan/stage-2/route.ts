@@ -16,6 +16,7 @@ import {
   type Stage2RefinementGateway,
   type Stage2SaveAnswerInput,
 } from "@/lib/personal-plan/refinement/gateway"
+import { STAGE2_MODULES } from "@/lib/personal-plan/refinement/types"
 
 export type Stage2RouteDeps = {
   getUserId: () => Promise<string | null>
@@ -30,8 +31,13 @@ const saveRequestSchema = z
     answer: z.unknown(),
     expectedRevision: z.number().int().nonnegative(),
     completeAfterSave: z.literal(true).optional(),
+    /** Module completion after the save; the module-scoped sibling of `completeAfterSave`. */
+    completeModuleAfterSave: z.enum(STAGE2_MODULES).optional(),
   })
   .strict()
+  .refine((value) => !(value.completeAfterSave && value.completeModuleAfterSave), {
+    message: "completeAfterSave and completeModuleAfterSave are mutually exclusive",
+  })
 
 function response(body: unknown, status = 200, headers?: HeadersInit) {
   return NextResponse.json(body, {
@@ -117,18 +123,38 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
       run("save", async (gateway) => {
         const parsed = saveRequestSchema.safeParse(await request.json().catch(() => null))
         if (!parsed.success) throw new Stage2InvalidRequestError()
-        const { completeAfterSave, ...saveInput } = parsed.data
+        const { completeAfterSave, completeModuleAfterSave, ...saveInput } = parsed.data
         let phaseStarted = performance.now()
         const savedSession = await gateway.saveAnswer(saveInput as Stage2SaveAnswerInput)
         reportPersonalPlanTransitionTiming({
           layer: "server",
-          operation: completeAfterSave ? "stage2_final_answer_save" : "stage2_answer_save",
+          operation: completeModuleAfterSave
+            ? "stage2_module_answer_save"
+            : completeAfterSave
+              ? "stage2_final_answer_save"
+              : "stage2_answer_save",
           outcome: "success",
           durationMs: performance.now() - phaseStarted,
         })
-        if (!completeAfterSave) return savedSession
+        if (!completeAfterSave && !completeModuleAfterSave) return savedSession
         try {
           phaseStarted = performance.now()
+          if (completeModuleAfterSave) {
+            if (!gateway.completeModule) {
+              throw new Stage2RefinementError("temporarily_unavailable")
+            }
+            const moduleCompletion = await gateway.completeModule({
+              module: completeModuleAfterSave,
+              expectedRevision: savedSession.revision,
+            })
+            reportPersonalPlanTransitionTiming({
+              layer: "server",
+              operation: "stage2_module_completion",
+              outcome: "success",
+              durationMs: performance.now() - phaseStarted,
+            })
+            return { session: savedSession, moduleCompletion }
+          }
           const handoff = await gateway.complete({ expectedRevision: savedSession.revision })
           reportPersonalPlanTransitionTiming({
             layer: "server",
@@ -151,10 +177,13 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
           console.info("personal_plan_stage2_api", {
             event: "completion_after_save_failed",
             code,
+            ...(completeModuleAfterSave ? { module: completeModuleAfterSave } : {}),
           })
           reportPersonalPlanTransitionTiming({
             layer: "server",
-            operation: "stage2_final_completion",
+            operation: completeModuleAfterSave
+              ? "stage2_module_completion"
+              : "stage2_final_completion",
             outcome: code,
             durationMs: performance.now() - phaseStarted,
           })

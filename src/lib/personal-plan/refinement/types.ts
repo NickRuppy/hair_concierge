@@ -115,3 +115,44 @@ export type Stage2PathState = {
   firstUnresolvedQuestionId: Stage2QuestionId | null
   prunedAnswerKeys: Stage2AnswerKey[]
 }
+
+/** Fixed two-value split of the refinement path. No abstraction for hypothetical further modules. */
+export const STAGE2_MODULES = ["products", "habits"] as const
+export type Stage2Module = (typeof STAGE2_MODULES)[number]
+export type Stage2ModuleStatus = "open" | "complete"
+export type Stage2ModulePathState = {
+  questionIds: Stage2QuestionId[]
+  completedQuestionIds: Stage2QuestionId[]
+  openQuestionIds: Stage2QuestionId[]
+  status: Stage2ModuleStatus
+}
+
+/**
+ * Projection lineage of ONE module completion: which refined Need version was
+ * projected from which draft revision. Persisted on the draft
+ * (`module_projections`), so it is both the replay key of
+ * `personal_plan_complete_stage2_module` and the audit trail of "which version
+ * came from which module state".
+ *
+ * `stage3Handoff` is the persisted Modul-1 handoff marker: it is true exactly
+ * for the `products` module, whose completion hands the user off into Stage 3.
+ * It exists because the draft stays `in_progress` after a module completion,
+ * while today's Stage-3 entry only survives a reload for a `complete` draft.
+ */
+export type Stage2ModuleProjection = {
+  needVersionId: string
+  projectedAtRevision: number
+  stage3Handoff: boolean
+}
+export type Stage2ModuleProjections = Partial<Record<Stage2Module, Stage2ModuleProjection>>
+
+/**
+ * Per-answer provenance: was a completed question id answered directly by the
+ * user, or written by direct acceptance's synthetic Stage-2 defaults? Keyed
+ * by canonical question id; an id with no entry is legacy data written before
+ * this map existed (see `userAnsweredQuestionIds` in `answer-provenance.ts`
+ * for how that is defaulted).
+ */
+export const STAGE2_ANSWER_PROVENANCE_VALUES = ["user", "assumed"] as const
+export type Stage2AnswerProvenanceValue = (typeof STAGE2_ANSWER_PROVENANCE_VALUES)[number]
+export type Stage2AnswerProvenance = Partial<Record<Stage2QuestionId, Stage2AnswerProvenanceValue>>

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { createAcceptIdealPlanRouteHandler } from "../src/app/api/personal-plan/accept-ideal-plan/route"
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "../src/app/labs/personal-plan-stage-1-2/fixture"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
 import {
@@ -8,6 +9,7 @@ import {
   buildDirectAcceptanceIntents,
   DirectAcceptanceError,
   type AcceptIdealPlanDeps,
+  type AcceptIdealPlanInput,
   type DirectAcceptanceSeenRole,
   type DirectAcceptanceStage3Gateway,
 } from "../src/lib/personal-plan/direct-acceptance/accept"
@@ -26,10 +28,16 @@ import type {
 } from "../src/lib/personal-plan/persistence/stage2-refinement-service"
 import type {
   PersonalPlanRefinementAnswersV1,
+  Stage2AnswerProvenance,
+  Stage2ModuleProjections,
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "../src/lib/personal-plan/refinement/types"
-import type { Stage3AuthorityEvaluation } from "../src/lib/personal-plan/products/authority/contracts"
+import { stage1PreviewedRoleDecisionKeys } from "../src/lib/personal-plan/product-previews"
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthoritySemanticIntent,
+} from "../src/lib/personal-plan/products/authority/contracts"
 import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
 import { PRODUCT_FREQUENCY_LABELS } from "../src/lib/vocabulary/frequencies"
 
@@ -285,6 +293,9 @@ const MULTI_ROLE_EVALUATIONS: Stage3AuthorityEvaluation[] = [
   knownEvaluation("oil", "dry_finish", "p-oil-finish"),
 ]
 
+/** A cohort whose Idealplan previewed nothing — spelled out, never defaulted. */
+const NO_PREVIEWED_ROLES: ReadonlySet<string> = new Set()
+
 function seenRolesFor(evaluations: Stage3AuthorityEvaluation[]): DirectAcceptanceSeenRole[] {
   return evaluations.map((evaluation) => {
     if (evaluation.status !== "known" || !evaluation.recommendation) {
@@ -302,6 +313,7 @@ test("every role gets its own planned-purchase intent, not one per category", ()
   const intents = buildDirectAcceptanceIntents(
     MULTI_ROLE_EVALUATIONS,
     seenRolesFor(MULTI_ROLE_EVALUATIONS),
+    NO_PREVIEWED_ROLES,
   )
 
   assert.equal(intents.length, MULTI_ROLE_EVALUATIONS.length)
@@ -324,7 +336,7 @@ test("a changed recommendation fact fingerprint rejects the accept request", () 
   seen[2] = { ...seen[2]!, factFingerprint: "fingerprint-stale" }
 
   assert.throws(
-    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen),
+    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen, NO_PREVIEWED_ROLES),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
 })
@@ -334,32 +346,182 @@ test("a changed recommended product rejects the accept request", () => {
   seen[0] = { ...seen[0]!, productId: "p-shampoo-other" }
 
   assert.throws(
-    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen),
+    () => buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, seen, NO_PREVIEWED_ROLES),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
 })
 
-test("a missing or extra seen role rejects the accept request", () => {
+test("a seen role the server does not evaluate rejects the accept request", () => {
   assert.throws(
     () =>
       buildDirectAcceptanceIntents(
         MULTI_ROLE_EVALUATIONS,
-        seenRolesFor(MULTI_ROLE_EVALUATIONS).slice(1),
+        [
+          ...seenRolesFor(MULTI_ROLE_EVALUATIONS),
+          {
+            decisionKey: "decision:mask:intensive_conditioning_mask:gap",
+            productId: "p-mask",
+            factFingerprint: "fingerprint-p-mask",
+          },
+        ],
+        NO_PREVIEWED_ROLES,
       ),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
+})
+
+test("a duplicated seen role rejects the accept request", () => {
+  const seen = seenRolesFor(MULTI_ROLE_EVALUATIONS)
   assert.throws(
     () =>
-      buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [
-        ...seenRolesFor(MULTI_ROLE_EVALUATIONS),
-        {
-          decisionKey: "decision:mask:intensive_conditioning_mask:gap",
-          productId: "p-mask",
-          factFingerprint: "fingerprint-p-mask",
-        },
-      ]),
+      buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [...seen, seen[0]!], NO_PREVIEWED_ROLES),
     (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
   )
+})
+
+/* ── Deferred roles: the server decides for what the client never saw ── */
+
+/**
+ * A role the client never previewed is not a stale seen state — it is a gap.
+ * The server leaves it uncovered explicitly instead of failing the request, and
+ * every role the client DID see keeps its exact pinning in the same pass.
+ */
+test("an unseen role becomes a deferred decision while seen roles stay pinned", () => {
+  const unseen = knownEvaluation("scalp_care", "scalp_flake_oil_adjunct", "p-scalp")
+  const evaluations = [...MULTI_ROLE_EVALUATIONS, unseen]
+
+  const intents = buildDirectAcceptanceIntents(
+    evaluations,
+    seenRolesFor(MULTI_ROLE_EVALUATIONS),
+    NO_PREVIEWED_ROLES,
+  )
+
+  assert.equal(intents.length, evaluations.length)
+  const deferred = intents.filter((intent) => intent.action === "leave_uncovered")
+  assert.deepEqual(deferred, [
+    {
+      type: "resolve_decision",
+      subjectKey: unseen.subjectKey,
+      action: "leave_uncovered",
+      // Never previewed → the Idealplan never asked the person about it.
+      deferralReason: "refinement_required",
+    },
+  ])
+  assert.deepEqual(
+    intents.filter((intent) => intent.action === "plan_recommendation").map((i) => i.subjectKey),
+    MULTI_ROLE_EVALUATIONS.map((evaluation) => evaluation.subjectKey),
+  )
+})
+
+test("a previewed role the engine cannot fill either defers with no_product", () => {
+  const fallbackRole: Stage3AuthorityEvaluation = {
+    status: "unknown",
+    category: "mask",
+    subjectKey: "decision:mask:intensive_conditioning_mask:gap",
+    missingFacts: ["no candidate"],
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  }
+
+  const intents = buildDirectAcceptanceIntents(
+    [...MULTI_ROLE_EVALUATIONS, fallbackRole],
+    seenRolesFor(MULTI_ROLE_EVALUATIONS),
+    new Set([fallbackRole.subjectKey]),
+  )
+
+  assert.deepEqual(intents.at(-1), {
+    type: "resolve_decision",
+    subjectKey: fallbackRole.subjectKey,
+    action: "leave_uncovered",
+    deferralReason: "no_product",
+  })
+})
+
+/**
+ * A previewed role the server CAN still plan is deferred all the same — the
+ * person never echoed it, so nothing may be bought for it. But the engine HAS a
+ * product here, so calling it a product gap would be a lie: the Idealplan just
+ * could not present it (missing packshot, fingerprint churn, verdict gating).
+ */
+test("a previewed role the engine can fill defers as preview_unavailable", () => {
+  const previewed = knownEvaluation("mask", "intensive_conditioning_mask", "p-mask")
+
+  const intents = buildDirectAcceptanceIntents([previewed], [], new Set([previewed.subjectKey]))
+
+  assert.deepEqual(intents, [
+    {
+      type: "resolve_decision",
+      subjectKey: previewed.subjectKey,
+      action: "leave_uncovered",
+      deferralReason: "preview_unavailable",
+    },
+  ])
+})
+
+/**
+ * The reason turns on the EVALUATION, not only on previewability: same
+ * previewed key, no buyable recommendation behind it, different reason.
+ */
+test("the same previewed key without a buyable recommendation defers as no_product", () => {
+  const previewedKey = "decision:mask:intensive_conditioning_mask:gap"
+  const unbuyable: Stage3AuthorityEvaluation = {
+    status: "known",
+    category: "mask",
+    subjectKey: previewedKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+
+  const intents = buildDirectAcceptanceIntents([unbuyable], [], new Set([previewedKey]))
+
+  assert.equal(intents[0]?.deferralReason, "no_product")
+})
+
+/** One subject, one evaluation — a duplicate makes the seen-state join ambiguous. */
+test("a duplicated server evaluation rejects the accept request", () => {
+  assert.throws(
+    () =>
+      buildDirectAcceptanceIntents(
+        [...MULTI_ROLE_EVALUATIONS, MULTI_ROLE_EVALUATIONS[0]!],
+        seenRolesFor(MULTI_ROLE_EVALUATIONS),
+        NO_PREVIEWED_ROLES,
+      ),
+    (error: unknown) => error instanceof DirectAcceptanceError && error.code === "seen_state_stale",
+  )
+})
+
+test("an empty seen set defers every role instead of rejecting the request", () => {
+  const intents = buildDirectAcceptanceIntents(MULTI_ROLE_EVALUATIONS, [], NO_PREVIEWED_ROLES)
+
+  assert.equal(intents.length, MULTI_ROLE_EVALUATIONS.length)
+  for (const intent of intents) {
+    assert.equal(intent.action, "leave_uncovered")
+    assert.equal(intent.deferralReason, "refinement_required")
+  }
+})
+
+/**
+ * `leave_uncovered` is the authority's own action, not this flow's escape
+ * hatch: an evaluation that forbids it gets no forged decision, and completion
+ * reports the draft as not ready.
+ */
+test("an unseen role whose authority forbids leaving it uncovered gets no intent", () => {
+  const unsupported: Stage3AuthorityEvaluation = {
+    status: "unsupported",
+    category: "mask",
+    subjectKey: "decision:mask:intensive_conditioning_mask:gap",
+    reason: "category_unsupported",
+    allowedActions: [],
+    coverageRuleIds: [],
+  }
+
+  assert.deepEqual(buildDirectAcceptanceIntents([unsupported], [], NO_PREVIEWED_ROLES), [])
 })
 
 test("a role without a usable recommendation cannot be accepted directly", () => {
@@ -377,13 +539,17 @@ test("a role without a usable recommendation cannot be accepted directly", () =>
 
   assert.throws(
     () =>
-      buildDirectAcceptanceIntents(evaluations, [
-        {
-          decisionKey: "decision:mask:intensive_conditioning_mask:gap",
-          productId: "p-mask",
-          factFingerprint: "fingerprint-p-mask",
-        },
-      ]),
+      buildDirectAcceptanceIntents(
+        evaluations,
+        [
+          {
+            decisionKey: "decision:mask:intensive_conditioning_mask:gap",
+            productId: "p-mask",
+            factFingerprint: "fingerprint-p-mask",
+          },
+        ],
+        NO_PREVIEWED_ROLES,
+      ),
     (error: unknown) =>
       error instanceof DirectAcceptanceError && error.code === "recommendation_unavailable",
   )
@@ -420,6 +586,8 @@ function createRefinementDb() {
     status: "in_progress" | "complete" | "stale"
     answers: PersonalPlanRefinementAnswersV1
     completedQuestionIds: Stage2QuestionId[]
+    answerProvenance: Stage2AnswerProvenance
+    moduleProjections: Stage2ModuleProjections
     revision: number
     resultRefinedNeedVersionId: string | null
     updatedAt: number
@@ -429,7 +597,11 @@ function createRefinementDb() {
   const needVersions: Array<{ id: string; inputHash: string }> = []
   const productDrafts: Array<{ id: string; status: string; refinedNeedVersionId: string }> = []
   const sourceChanges: Array<{ sourceKind: string; sourceKey: string }> = []
-  const plan = { currentRefinedNeedVersionId: null as string | null }
+  const plan = {
+    currentRefinedNeedVersionId: null as string | null,
+    // Matches every draft's base_initial_need_version_id until Stage 1 recomputes.
+    currentInitialNeedVersionId: INITIAL_NEED_VERSION_ID as string | null,
+  }
   let clock = 0
   let sequence = 0
 
@@ -455,6 +627,8 @@ function createRefinementDb() {
       triggerContext,
       answers: structuredClone(row.answers),
       completedQuestionIds: [...row.completedQuestionIds],
+      answerProvenance: { ...row.answerProvenance },
+      moduleProjections: structuredClone(row.moduleProjections),
       revision: row.revision,
       status: row.status,
       refinedVersionId: row.resultRefinedNeedVersionId,
@@ -471,6 +645,8 @@ function createRefinementDb() {
       status: "in_progress",
       answers: {},
       completedQuestionIds: [],
+      answerProvenance: {},
+      moduleProjections: {},
       revision: 0,
       resultRefinedNeedVersionId: null,
       updatedAt: (clock += 1),
@@ -489,6 +665,7 @@ function createRefinementDb() {
         insertDraft({
           answers: structuredClone(draft.answers),
           completedQuestionIds: [...draft.completedQuestionIds],
+          answerProvenance: { ...draft.answerProvenance },
           revision: draft.revision,
         }),
       )
@@ -501,6 +678,7 @@ function createRefinementDb() {
       }
       row.answers = structuredClone(input.answers)
       row.completedQuestionIds = [...input.completedQuestionIds]
+      row.answerProvenance = { ...input.answerProvenance }
       row.revision += 1
       row.updatedAt = clock += 1
       return { outcome: "saved", revision: row.revision }
@@ -542,6 +720,66 @@ function createRefinementDb() {
       sourceChanges.push({ sourceKind: "refined_need", sourceKey: needVersion.id })
       return { outcome: "completed", refinedVersionId: needVersion.id }
     },
+    // Mirrors `personal_plan_complete_stage2_module`
+    // (20260825130000_personal_plan_complete_stage2_module.sql): lineage replay
+    // short-circuit, revision CAS, hash-collision reuse, head advance — the
+    // draft stays `in_progress` at its current revision. Direct acceptance
+    // never takes this path; it exists so the fake stays a full stand-in for
+    // the Stage-2 persistence contract.
+    async completeModule(input) {
+      const row = drafts.find((candidate) => candidate.id === input.draft.id)
+      if (!row) return { outcome: "stale_source" }
+      // Guard order mirrors the SQL: the moved-source check precedes the replay
+      // branch, and a replay fires only for a still-open draft with a recorded
+      // version id — never handing back a version the draft no longer owns.
+      if (plan.currentInitialNeedVersionId !== input.draft.baseInitialNeedVersionId) {
+        return { outcome: "stale_source" }
+      }
+      const projected = row.moduleProjections[input.module]
+      if (
+        projected &&
+        row.status === "in_progress" &&
+        projected.needVersionId !== undefined &&
+        projected.projectedAtRevision === input.expectedRevision
+      ) {
+        return {
+          outcome: "already_projected",
+          refinedVersionId: projected.needVersionId,
+          stage3Handoff: projected.stage3Handoff,
+        }
+      }
+      if (row.status !== "in_progress" || row.revision !== input.expectedRevision) {
+        return { outcome: "revision_conflict", revision: row.revision }
+      }
+      if (!/^[0-9a-f]{64}$/.test(input.inputHash)) throw new Error("invalid_refined_need")
+      let needVersion = needVersions.find((candidate) => candidate.inputHash === input.inputHash)
+      if (!needVersion) {
+        sequence += 1
+        needVersion = { id: `refined-${sequence}`, inputHash: input.inputHash }
+        needVersions.push(needVersion)
+      }
+      const stage3Handoff = input.module === "products"
+      row.moduleProjections = {
+        ...row.moduleProjections,
+        [input.module]: {
+          needVersionId: needVersion.id,
+          projectedAtRevision: row.revision,
+          stage3Handoff,
+        },
+      }
+      row.updatedAt = clock += 1
+      for (const productDraft of productDrafts) {
+        if (
+          productDraft.status === "active" &&
+          productDraft.refinedNeedVersionId !== needVersion.id
+        ) {
+          productDraft.status = "stale"
+        }
+      }
+      plan.currentRefinedNeedVersionId = needVersion.id
+      sourceChanges.push({ sourceKind: "refined_need", sourceKey: needVersion.id })
+      return { outcome: "completed", refinedVersionId: needVersion.id, stage3Handoff }
+    },
   }
 
   return { persistence, drafts, needVersions, productDrafts, sourceChanges, plan, insertDraft }
@@ -580,8 +818,13 @@ function fakeStage3Draft(overrides: Partial<Stage3ProductDraft> = {}): Stage3Pro
 type Stage3Call =
   | { kind: "loadOrCreate"; personalPlanId: string; refinedVersionId: string }
   | { kind: "evaluateDecisions" }
-  | { kind: "resolveDecisions"; expectedRevision: number; subjectKeys: string[] }
-  | { kind: "complete"; expectedRevision: number }
+  | {
+      kind: "resolveDecisions"
+      expectedRevision: number
+      subjectKeys: string[]
+      intents: Stage3AuthoritySemanticIntent[]
+    }
+  | { kind: "complete"; expectedRevision: number; markUnrefinedDirectAccept?: boolean }
 
 /**
  * Stateful Stage-3 fake: `complete` flips the draft to completed and activates a
@@ -592,6 +835,8 @@ function createFakeStage3Gateway(options: {
   calls: Stage3Call[]
   planState: { activeRoutineVersionId: string | null }
   evaluations?: Stage3AuthorityEvaluation[]
+  /** Mirrors an RPC-side provenance failure: the whole completion rolls back. */
+  failProvenanceWrite?: boolean
 }): DirectAcceptanceStage3Gateway {
   let draft = fakeStage3Draft()
   return {
@@ -612,12 +857,21 @@ function createFakeStage3Gateway(options: {
         kind: "resolveDecisions",
         expectedRevision: input.expectedRevision,
         subjectKeys: input.intents.map((intent) => intent.subjectKey),
+        intents: structuredClone(input.intents),
       })
       draft = { ...draft, revision: input.expectedRevision + 1 }
       return { status: "saved", draft }
     },
     async complete(input) {
-      options.calls.push({ kind: "complete", expectedRevision: input.expectedRevision })
+      options.calls.push({
+        kind: "complete",
+        expectedRevision: input.expectedRevision,
+        markUnrefinedDirectAccept: input.markUnrefinedDirectAccept,
+      })
+      if (input.markUnrefinedDirectAccept && options.failProvenanceWrite) {
+        // One transaction: the provenance write failing rolls back activation.
+        throw new Error("stage3_completion_unavailable")
+      }
       draft = { ...draft, status: "completed" }
       options.planState.activeRoutineVersionId = "routine-1"
       return {
@@ -638,7 +892,6 @@ type Harness = {
   deps: AcceptIdealPlanDeps
   db: RefinementDb
   stage3Calls: Stage3Call[]
-  provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }>
   planState: { activeRoutineVersionId: string | null }
 }
 
@@ -648,17 +901,16 @@ function createHarness(
     db?: RefinementDb
     activeRoutineVersionId?: string | null
     evaluations?: Stage3AuthorityEvaluation[]
+    failProvenanceWrite?: boolean
   } = {},
 ): Harness {
   const db = overrides.db ?? createRefinementDb()
   const stage3Calls: Stage3Call[] = []
-  const provenanceCalls: Array<{ personalPlanId: string; refinedVersionId: string }> = []
   const planState = { activeRoutineVersionId: overrides.activeRoutineVersionId ?? null }
 
   return {
     db,
     stage3Calls,
-    provenanceCalls,
     planState,
     deps: {
       userId: USER_ID,
@@ -673,15 +925,8 @@ function createHarness(
         calls: stage3Calls,
         planState,
         evaluations: overrides.evaluations,
+        failProvenanceWrite: overrides.failProvenanceWrite,
       }),
-      provenance: {
-        async recordDirectAccept(input) {
-          provenanceCalls.push({
-            personalPlanId: input.personalPlanId,
-            refinedVersionId: input.refinedVersionId,
-          })
-        },
-      },
     },
   }
 }
@@ -722,53 +967,28 @@ test("the accept chain drives Stage 2 completion, per-role planning and activati
   assert.ok(completeCall && completeCall.kind === "complete")
   assert.equal(completeCall.expectedRevision, resolveCall.expectedRevision + 1)
 
-  assert.deepEqual(harness.provenanceCalls, [
-    { personalPlanId: PERSONAL_PLAN_ID, refinedVersionId: harness.db.needVersions[0]!.id },
-  ])
+  // Provenance is part of the completion transaction, not a follow-up write.
+  assert.equal(completeCall.markUnrefinedDirectAccept, true)
 })
 
 /**
- * Activation has already committed by the time provenance is written, so the
- * Routine is live. Failing the request here would tell the user acceptance
- * failed while it in fact succeeded — and the retry converges to `conflict`,
- * not to a second accept. The write stays best-effort and logged.
+ * The provenance write now lives INSIDE the completion transaction, so its
+ * failure rolls the activation back with it. Nothing is half-persisted: no
+ * active Routine, no completed product draft, and the caller sees the failure
+ * instead of a silently unmarked plan.
  */
-test("a failed provenance write still returns accepted and only logs a warning", async () => {
-  const harness = createHarness()
-  const attempts: Array<{ personalPlanId: string; refinedVersionId: string }> = []
-  harness.deps.provenance = {
-    async recordDirectAccept(input) {
-      attempts.push({
-        personalPlanId: input.personalPlanId,
-        refinedVersionId: input.refinedVersionId,
-      })
-      throw Object.assign(new Error("direct_accept_provenance_write_failed"), { code: "42703" })
-    },
-  }
-  const warnings: unknown[][] = []
-  const originalWarn = console.warn
-  console.warn = (...args: unknown[]) => {
-    warnings.push(args)
-  }
+test("a failed provenance write fails the whole accept and activates nothing", async () => {
+  const harness = createHarness({ failProvenanceWrite: true })
 
-  try {
-    const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
-    assert.equal(result.status, "accepted")
-    assert.equal(result.next.href, "/routine")
-  } finally {
-    console.warn = originalWarn
-  }
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) => error instanceof Error && error.message === "stage3_completion_unavailable",
+  )
 
-  // The write is still ATTEMPTED — only its failure is tolerated.
-  assert.deepEqual(attempts, [
-    { personalPlanId: PERSONAL_PLAN_ID, refinedVersionId: harness.db.needVersions[0]!.id },
-  ])
-  assert.equal(warnings.length, 1)
-  assert.equal(warnings[0]![0], "personal_plan_direct_accept_provenance_write_failed")
-  assert.deepEqual(warnings[0]![1], {
-    code: "42703",
-    message: "direct_accept_provenance_write_failed",
-  })
+  assert.equal(harness.planState.activeRoutineVersionId, null)
+  const completeCall = harness.stage3Calls.find((call) => call.kind === "complete")
+  assert.ok(completeCall && completeCall.kind === "complete")
+  assert.equal(completeCall.markUnrefinedDirectAccept, true)
 })
 
 test("a disabled Stage 2, 3 or 4 flag refuses the accept chain without any write", async () => {
@@ -786,7 +1006,6 @@ test("a disabled Stage 2, 3 or 4 flag refuses the accept chain without any write
     )
     assert.deepEqual(harness.db.drafts, [])
     assert.deepEqual(harness.stage3Calls, [])
-    assert.deepEqual(harness.provenanceCalls, [])
   }
 })
 
@@ -803,7 +1022,119 @@ test("a stale seen state aborts before any Stage 3 decision is written", async (
     harness.stage3Calls.map((call) => call.kind),
     ["loadOrCreate", "evaluateDecisions"],
   )
-  assert.deepEqual(harness.provenanceCalls, [])
+})
+
+/* ── Deferred roles through the whole accept chain ── */
+
+/** The initial Idealplan of the lab cohort, i.e. what its cards could show. */
+function labPreviewedRoleKeys(): ReadonlySet<string> {
+  const initial = computeNeedPlan({
+    rawEnvelope: STAGE1_STAGE2_LAB_ENVELOPE,
+    artifactId: ARTIFACT_ID,
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-16T09:00:00.000Z",
+  })
+  if (initial.status !== "ready") throw new Error("unreachable")
+  return stage1PreviewedRoleDecisionKeys(initial.snapshot)
+}
+
+/**
+ * The scalp-care cohort that Stage 1 defers: the synthetic defaults answer the
+ * deferred irritation question, which materializes a Scalp Care role the client
+ * could never have previewed. It used to make the whole accept a 409; now the
+ * server defers exactly that role and the plan is accepted.
+ */
+test("a blocked category the client never saw is accepted as a deferred decision", async () => {
+  const blocked = knownEvaluation("scalp_care", "scalp_flake_oil_adjunct", "p-scalp")
+  assert.equal(
+    labPreviewedRoleKeys().has(blocked.subjectKey),
+    false,
+    "the fixture must model a role the Idealplan never previewed",
+  )
+  const harness = createHarness({ evaluations: [...MULTI_ROLE_EVALUATIONS, blocked] })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  assert.equal(result.status, "accepted")
+  const resolveCall = harness.stage3Calls.find((call) => call.kind === "resolveDecisions")
+  assert.ok(resolveCall && resolveCall.kind === "resolveDecisions")
+  assert.deepEqual(
+    resolveCall.intents.filter((intent) => intent.action === "leave_uncovered"),
+    [
+      {
+        type: "resolve_decision",
+        subjectKey: blocked.subjectKey,
+        action: "leave_uncovered",
+        deferralReason: "refinement_required",
+      },
+    ],
+  )
+  assert.equal(
+    resolveCall.intents.filter((intent) => intent.action === "plan_recommendation").length,
+    MULTI_ROLE_EVALUATIONS.length,
+  )
+})
+
+/**
+ * The role WAS on a card, but as a "wird nach der Verfeinerung konkret"
+ * fallback, so the client echoes nothing for it. The deferral reason must say
+ * that no product was available, not that a refinement answer is missing.
+ */
+test("a role the Idealplan previewed without a buyable product defers as no_product", async () => {
+  const previewedKey = [...labPreviewedRoleKeys()][0]
+  assert.ok(previewedKey, "the lab cohort must preview at least one role")
+  const [, category, role] = previewedKey.split(":")
+  const fallbackRole: Stage3AuthorityEvaluation = {
+    status: "unknown",
+    category: category as Stage3AuthorityEvaluation["category"],
+    subjectKey: previewedKey,
+    missingFacts: ["no candidate"],
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  }
+  assert.ok(role)
+  const harness = createHarness({ evaluations: [fallbackRole] })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: [] })
+
+  assert.equal(result.status, "accepted")
+  const resolveCall = harness.stage3Calls.find((call) => call.kind === "resolveDecisions")
+  assert.ok(resolveCall && resolveCall.kind === "resolveDecisions")
+  assert.deepEqual(resolveCall.intents, [
+    {
+      type: "resolve_decision",
+      subjectKey: previewedKey,
+      action: "leave_uncovered",
+      deferralReason: "no_product",
+    },
+  ])
+})
+
+/** Nothing buyable at all: acceptance still succeeds, with every role deferred. */
+test("an Idealplan without a single buyable role is accepted with everything deferred", async () => {
+  const evaluations: Stage3AuthorityEvaluation[] = MULTI_ROLE_EVALUATIONS.map((evaluation) => ({
+    status: "unknown",
+    category: evaluation.category,
+    subjectKey: evaluation.subjectKey,
+    missingFacts: ["no candidate"],
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  }))
+  const harness = createHarness({ evaluations })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: [] })
+
+  assert.equal(result.status, "accepted")
+  assert.equal(result.next.href, "/routine")
+  const resolveCall = harness.stage3Calls.find((call) => call.kind === "resolveDecisions")
+  assert.ok(resolveCall && resolveCall.kind === "resolveDecisions")
+  assert.deepEqual(
+    resolveCall.intents.map((intent) => intent.action),
+    evaluations.map(() => "leave_uncovered"),
+  )
 })
 
 /* ── Guards against destroying real work ── */
@@ -827,7 +1158,6 @@ test("a partially answered real Stage 2 refuses the accept and writes nothing", 
   assert.deepEqual(db.drafts, before, "the real answers must survive untouched")
   assert.deepEqual(db.needVersions, [])
   assert.deepEqual(harness.stage3Calls, [])
-  assert.deepEqual(harness.provenanceCalls, [])
 })
 
 test("an interrupted synthetic save resumes instead of being treated as real work", async () => {
@@ -858,7 +1188,6 @@ test("an active Routine this flow did not create refuses the accept", async () =
   )
   assert.deepEqual(harness.db.needVersions, [])
   assert.deepEqual(harness.stage3Calls, [])
-  assert.deepEqual(harness.provenanceCalls, [])
 })
 
 test("a double accept stays idempotent and returns the same receipt", async () => {
@@ -884,7 +1213,51 @@ test("a double accept stays idempotent and returns the same receipt", async () =
       "complete",
     ],
   )
-  assert.equal(harness.provenanceCalls.length, 2)
+  assert.equal(
+    harness.stage3Calls.filter(
+      (call) => call.kind === "complete" && call.markUnrefinedDirectAccept === true,
+    ).length,
+    2,
+  )
+})
+
+/* ── Provenance: synthetic defaults are never mistaken for real answers ── */
+
+test("direct acceptance marks every synthetic default answer's provenance assumed", async () => {
+  const harness = createHarness()
+
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  const row = harness.db.drafts[0]!
+  const defaults = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  assert.deepEqual(
+    Object.keys(row.answerProvenance).sort(),
+    [...defaults.completedQuestionIds].sort(),
+  )
+  for (const value of Object.values(row.answerProvenance)) {
+    assert.equal(value, "assumed")
+  }
+})
+
+test("a real Stage 2 answer replacing a synthetic default flips its provenance to user", async () => {
+  const harness = createHarness()
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  const gateway = createPersistedStage2RefinementGateway({
+    userId: USER_ID,
+    persistence: harness.db.persistence,
+  })
+  const completedSession = await gateway.load()
+  await gateway.saveAnswer({
+    questionId: "wet_wash_frequency",
+    answer: "daily_1x",
+    expectedRevision: completedSession.revision,
+  })
+
+  const reopenedRow = harness.db.drafts.find((row) => row.status === "in_progress")!
+  assert.equal(reopenedRow.answerProvenance.wet_wash_frequency, "user")
+  // Every other carried-over default answer is still assumed.
+  assert.equal(reopenedRow.answerProvenance.current_product_categories, "assumed")
 })
 
 /* ── Post-accept refinement: the two SQL constraint paths ── */
@@ -990,6 +1363,71 @@ test("a leftover synthetic in_progress draft does not block a real Stage 2", asy
   })
   assert.deepEqual(saved.answers.currentProductCategories, ["shampoo"])
   assert.equal(db.drafts.length, 1, "no second in_progress draft is created")
+})
+
+/* ── Request contract ── */
+
+function acceptRoute(
+  received: Array<AcceptIdealPlanInput>,
+): (request: Request) => Promise<Response> {
+  return createAcceptIdealPlanRouteHandler({
+    enabled: () => true,
+    getUserId: async () => USER_ID,
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      frontier: "stage2",
+      allowed: { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false },
+      nextHref: "/plan-start",
+      personalPlanId: PERSONAL_PLAN_ID,
+    }),
+    checkRateLimit: (async () => ({ allowed: true })) as never,
+    accept: async (_userId, input) => {
+      received.push(input)
+      return {
+        status: "accepted",
+        personalPlanId: PERSONAL_PLAN_ID,
+        refinedVersionId: REFINED_NEED_VERSION_ID,
+        productDraftId: DRAFT_ID,
+        productPortfolioVersionId: "portfolio-1",
+        next: { stage: 4, href: "/routine" },
+      }
+    },
+  })
+}
+
+function acceptRequest(body: unknown): Request {
+  return new Request("https://example.com/api/personal-plan/accept-ideal-plan", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  })
+}
+
+/**
+ * An Idealplan whose roles the client cannot echo is an accept with an
+ * explicitly EMPTY seen set — not a malformed request. Everything that is
+ * genuinely malformed still is.
+ */
+test("the accept route takes an explicitly empty seen set and still rejects malformed payloads", async () => {
+  const received: AcceptIdealPlanInput[] = []
+  const route = acceptRoute(received)
+
+  const accepted = await route(acceptRequest({ seenRoles: [] }))
+  assert.equal(accepted.status, 200)
+  assert.deepEqual(received, [{ seenRoles: [] }])
+
+  for (const malformed of [
+    {},
+    { seenRoles: null },
+    { seenRoles: {} },
+    { seenRoles: [{ decisionKey: "decision:mask:intensive_conditioning_mask:gap" }] },
+    { seenRoles: [], extra: true },
+  ]) {
+    const response = await route(acceptRequest(malformed))
+    assert.equal(response.status, 400, `payload must be rejected: ${JSON.stringify(malformed)}`)
+    assert.deepEqual(await response.json(), { error: "invalid_request" })
+  }
+  assert.equal(received.length, 1, "no malformed payload may reach the accept chain")
 })
 
 test("a lost completion response replays as already_completed, not a constraint error", async () => {

@@ -1,13 +1,18 @@
+import { computeNeedPlan } from "../compute-stage1"
 import type {
   Stage2PersistedDraft,
   Stage2RefinementPersistence,
 } from "../persistence/stage2-refinement-service"
+import { PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION } from "../persistence/stage1-service"
+import { stage1PreviewedRoleDecisionKeys } from "../product-previews"
 import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "../products/authority/contracts"
+import type { Stage3DecisionDeferralReason } from "../products/contracts"
 import type { Stage3AuthorityProductionGateway } from "../products/production-persistence-gateway"
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
+import { buildAssumedAnswerProvenance } from "../refinement/answer-provenance"
 import { semanticHash } from "../routine/canonicalize"
 
 import {
@@ -73,14 +78,6 @@ export type DirectAcceptanceStage3Gateway = Pick<
   "loadOrCreate" | "evaluateDecisions" | "resolveDecisions" | "complete"
 >
 
-export type DirectAcceptanceProvenanceWriter = {
-  recordDirectAccept(input: {
-    userId: string
-    personalPlanId: string
-    refinedVersionId: string
-  }): Promise<void>
-}
-
 export type DirectAcceptancePlanStateReader = {
   loadActiveRoutineVersionId(input: {
     userId: string
@@ -94,24 +91,61 @@ export type AcceptIdealPlanDeps = {
   refinementPersistence: Stage2RefinementPersistence
   planState: DirectAcceptancePlanStateReader
   stage3Gateway: DirectAcceptanceStage3Gateway
-  provenance: DirectAcceptanceProvenanceWriter
 }
 
 /**
- * Turns the server's own authority evaluations into one planned-purchase intent
- * per role, after proving the client saw exactly the products the server would
- * plan right now.
+ * Turns the server's own authority evaluations into one intent per role.
+ *
+ * Two kinds of role, one pass:
+ *
+ *   - a role the client SAW is pinned exactly as before — same decision key,
+ *     same product, same fact fingerprint, or `seen_state_stale`. Nothing is
+ *     bought that the person did not look at.
+ *   - a role the client did NOT see is never planned. The server derives an
+ *     explicit `leave_uncovered` decision for it and records WHY it deferred
+ *     (see `Stage3DecisionDeferralReason`), so acceptance succeeds with an
+ *     honest gap instead of failing the whole request.
+ *
+ * A seen role the server does not evaluate at all stays `seen_state_stale`:
+ * that is the preview payload contradicting the server, not a gap.
  */
 export function buildDirectAcceptanceIntents(
   evaluations: readonly Stage3AuthorityEvaluation[],
   seenRoles: readonly DirectAcceptanceSeenRole[],
+  /**
+   * Decision keys the Idealplan previewed — see `deferralReasonFor`. Required:
+   * a defaulted empty set would silently downgrade every deferral reason.
+   */
+  previewedRoleKeys: ReadonlySet<string>,
 ): Stage3AuthoritySemanticIntent[] {
   const seenByKey = new Map(seenRoles.map((role) => [role.decisionKey, role]))
-  if (seenByKey.size !== seenRoles.length || seenByKey.size !== evaluations.length) {
+  const evaluatedKeys = new Set(evaluations.map((evaluation) => evaluation.subjectKey))
+  if (
+    seenByKey.size !== seenRoles.length ||
+    // One subject, one evaluation is a server invariant; a duplicate would make
+    // the seen-state join ambiguous and produce two intents for one subject.
+    evaluatedKeys.size !== evaluations.length ||
+    seenRoles.some((role) => !evaluatedKeys.has(role.decisionKey))
+  ) {
     throw new DirectAcceptanceError("seen_state_stale")
   }
 
-  return evaluations.map((evaluation) => {
+  return evaluations.flatMap((evaluation): Stage3AuthoritySemanticIntent[] => {
+    const seen = seenByKey.get(evaluation.subjectKey)
+    if (!seen) {
+      // An authority that does not even allow leaving the role uncovered has no
+      // decision this flow may author. Completion then reports it as
+      // `acceptance_not_ready` rather than this code forging a forbidden action.
+      if (!evaluation.allowedActions.includes("leave_uncovered" as never)) return []
+      return [
+        {
+          type: "resolve_decision" as const,
+          subjectKey: evaluation.subjectKey,
+          action: "leave_uncovered" as const,
+          deferralReason: deferralReasonFor(evaluation, previewedRoleKeys),
+        },
+      ]
+    }
     if (
       evaluation.status !== "known" ||
       !evaluation.recommendation ||
@@ -120,20 +154,52 @@ export function buildDirectAcceptanceIntents(
     ) {
       throw new DirectAcceptanceError("recommendation_unavailable")
     }
-    const seen = seenByKey.get(evaluation.subjectKey)
     if (
-      !seen ||
       seen.productId !== evaluation.recommendation.productId ||
       seen.factFingerprint !== evaluation.recommendationFactFingerprint
     ) {
       throw new DirectAcceptanceError("seen_state_stale")
     }
-    return {
-      type: "resolve_decision",
-      subjectKey: evaluation.subjectKey,
-      action: "plan_recommendation",
-    }
+    return [
+      {
+        type: "resolve_decision" as const,
+        subjectKey: evaluation.subjectKey,
+        action: "plan_recommendation" as const,
+      },
+    ]
   })
+}
+
+/**
+ * Server truth only — two independent facts, three reasons:
+ *
+ *   - the role was NOT previewable at all → it exists only because the
+ *     synthetic refinement defaults answered a deferred Stage-1 fact, so its
+ *     product choice belongs to the refinement: `refinement_required`.
+ *   - it was previewable and the engine has no buyable recommendation either →
+ *     a real product gap: `no_product`.
+ *   - it was previewable and the engine DOES have a buyable recommendation, but
+ *     the person never echoed it → the Idealplan could not present it (missing
+ *     packshot, fingerprint churn, verdict gating): `preview_unavailable`.
+ *     Deferring it is still right — nothing unseen may be bought — but claiming
+ *     a product gap would be false.
+ */
+function deferralReasonFor(
+  evaluation: Stage3AuthorityEvaluation,
+  previewedRoleKeys: ReadonlySet<string>,
+): Stage3DecisionDeferralReason {
+  if (!previewedRoleKeys.has(evaluation.subjectKey)) return "refinement_required"
+  return hasBuyableRecommendation(evaluation) ? "preview_unavailable" : "no_product"
+}
+
+/** Exactly the shape `plan_recommendation` requires of a seen role. */
+function hasBuyableRecommendation(evaluation: Stage3AuthorityEvaluation): boolean {
+  return (
+    evaluation.status === "known" &&
+    Boolean(evaluation.recommendation) &&
+    Boolean(evaluation.recommendationFactFingerprint) &&
+    evaluation.allowedActions.includes("plan_recommendation")
+  )
 }
 
 export async function acceptIdealPlan(
@@ -144,7 +210,8 @@ export async function acceptIdealPlan(
     throw new DirectAcceptanceError("stage_not_available")
   }
 
-  const { personalPlanId, refinedVersionId } = await completeSyntheticRefinement(deps)
+  const { personalPlanId, refinedVersionId, previewedRoleKeys } =
+    await completeSyntheticRefinement(deps)
   const loaded = await deps.stage3Gateway.loadOrCreate({
     draftId: "server-derived",
     userId: deps.userId,
@@ -158,6 +225,7 @@ export async function acceptIdealPlan(
     const intents = buildDirectAcceptanceIntents(
       await deps.stage3Gateway.evaluateDecisions({ draftId: draft.draftId }),
       input.seenRoles,
+      previewedRoleKeys,
     )
     if (intents.length > 0) {
       const resolved = await deps.stage3Gateway.resolveDecisions({
@@ -170,30 +238,16 @@ export async function acceptIdealPlan(
     }
   }
 
+  // The provenance write is part of THIS transaction (see
+  // `personal_plan_complete_draft_activate_v2`): if it fails, the activation
+  // rolls back with it, so the plan can never end up live-but-unmarked.
   const completed = await deps.stage3Gateway.complete({
     draftId: draft.draftId,
     expectedRevision: draft.revision,
+    markUnrefinedDirectAccept: true,
   })
   if (completed.status === "conflict") throw new DirectAcceptanceError("conflict")
   if (completed.status === "not_ready") throw new DirectAcceptanceError("acceptance_not_ready")
-
-  // Best-effort: activation above has already committed, so the Routine is
-  // live. A failed provenance write only means the refinement nudge may not
-  // appear — it must never tell the user acceptance failed (and a retry would
-  // converge to `conflict`, not to a second accept). Mirrors the same tradeoff
-  // in routine/proposal-service.ts.
-  try {
-    await deps.provenance.recordDirectAccept({
-      userId: deps.userId,
-      personalPlanId,
-      refinedVersionId,
-    })
-  } catch (error) {
-    console.warn("personal_plan_direct_accept_provenance_write_failed", {
-      code: (error as { code?: unknown } | null)?.code ?? null,
-      message: error instanceof Error ? error.message : String(error),
-    })
-  }
 
   return {
     status: "accepted",
@@ -235,9 +289,11 @@ function isDirectAcceptanceDraft(
  * the UI hiding the fork screen: a stale screen, back-navigation or a retry can
  * always POST this route.
  */
-async function completeSyntheticRefinement(
-  deps: AcceptIdealPlanDeps,
-): Promise<{ personalPlanId: string; refinedVersionId: string }> {
+async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
+  personalPlanId: string
+  refinedVersionId: string
+  previewedRoleKeys: ReadonlySet<string>
+}> {
   const draft = await deps.refinementPersistence.loadOrCreate(deps.userId)
   const defaults = buildDirectAcceptanceStage2Defaults(draft.triggerContext)
   // `save` replaces the whole answer object, so a partially answered real
@@ -259,8 +315,15 @@ async function completeSyntheticRefinement(
     throw new DirectAcceptanceError("plan_already_accepted")
   }
 
+  // Only computed once the guards above have let this accept through.
+  const previewedRoleKeys = stage1PreviewedRoleKeysForDraft(draft)
+
   if (draft.status === "complete" && draft.refinedVersionId) {
-    return { personalPlanId: draft.personalPlanId, refinedVersionId: draft.refinedVersionId }
+    return {
+      personalPlanId: draft.personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+      previewedRoleKeys,
+    }
   }
 
   const saved = await deps.refinementPersistence.save({
@@ -269,6 +332,9 @@ async function completeSyntheticRefinement(
     expectedRevision: draft.revision,
     answers: defaults.answers,
     completedQuestionIds: defaults.completedQuestionIds,
+    // Every synthetic default this write produces is an assumption, never a
+    // real answer — see refinement/answer-provenance.ts.
+    answerProvenance: buildAssumedAnswerProvenance(defaults.completedQuestionIds),
   })
   if (saved.outcome !== "saved") throw new DirectAcceptanceError("conflict")
 
@@ -277,5 +343,32 @@ async function completeSyntheticRefinement(
     persistence: deps.refinementPersistence,
   }).complete({ expectedRevision: saved.revision })
 
-  return { personalPlanId: draft.personalPlanId, refinedVersionId: handoff.refinedVersionId }
+  return {
+    personalPlanId: draft.personalPlanId,
+    refinedVersionId: handoff.refinedVersionId,
+    previewedRoleKeys,
+  }
+}
+
+/**
+ * Recomputes the plan's own Idealplan projection from the immutable Stage-1
+ * input the refinement draft carries, and asks the preview module which roles
+ * it would show. Pure and read-only — no persistence and no catalog access,
+ * because only the role SET is needed, never the products behind it.
+ *
+ * An input the Stage-1 computation can no longer parse yields the empty set,
+ * which makes every unresolved role `refinement_required`: the conservative
+ * side, since it never claims a product gap the plan cannot prove.
+ */
+function stage1PreviewedRoleKeysForDraft(draft: Stage2PersistedDraft): ReadonlySet<string> {
+  const computed = computeNeedPlan({
+    rawEnvelope: draft.baseInputSnapshot,
+    artifactId: draft.preparedArtifactSourceId,
+    projection: "initial_quiz",
+    computationVersion: PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION,
+    createdAt: new Date().toISOString(),
+  })
+  return computed.status === "ready"
+    ? stage1PreviewedRoleDecisionKeys(computed.snapshot)
+    : new Set<string>()
 }

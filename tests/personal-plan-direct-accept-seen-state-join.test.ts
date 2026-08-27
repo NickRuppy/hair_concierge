@@ -12,6 +12,7 @@ import { buildStage3EntryContext } from "../src/lib/personal-plan/products/stage
 import type { PlanHairThickness } from "../src/lib/personal-plan/types"
 import {
   computeStage1ProductExamplePreviews,
+  stage1PreviewedRoleDecisionKeys,
   type Stage1ProductExamplePreviewCandidateLoader,
 } from "../src/lib/personal-plan/product-previews"
 import {
@@ -31,10 +32,17 @@ import type { PersonalPlanQuizSubmissionEnvelope } from "../src/lib/personal-pla
  *   server evaluations — the Stage-3 draft subjects, derived from the REFINED
  *   need version the synthetic Stage-2 defaults produce.
  *
- * `buildDirectAcceptanceIntents` throws `seen_state_stale` the moment the two
- * sets differ in size or content, so any divergence is a hard 409 for the whole
- * cohort. Every other test in the suite fabricates one of the two sides; this
- * one computes both from a single quiz envelope and joins them.
+ * The two directions are no longer symmetric. A role the CLIENT claims and the
+ * server does not evaluate is still `seen_state_stale` — the payload
+ * contradicts the server. A role the SERVER evaluates and the client never
+ * echoed is no longer a 409: the accept defers it explicitly, with a persisted
+ * reason (`direct-acceptance/accept.ts`). This suite still pins the role sets,
+ * because the join decides whether a cohort gets its plan as previewed or gets
+ * silent gaps in it — and because the payload must keep declaring a known
+ * divergence up front rather than letting it surface only as a deferral.
+ *
+ * Every other test in the suite fabricates one of the two sides; this one
+ * computes both from a single quiz envelope and joins them.
  */
 
 const ARTIFACT_ID = "11111111-1111-4111-8111-111111111111"
@@ -90,12 +98,21 @@ function categoryOf(decisionKey: string): string {
  *   - they diverge, and the payload refuses direct acceptance up front, naming
  *     every divergent category in `blockedCategories`.
  *
- * Any NEW divergence must fail this test rather than reach users as a 409:
+ * Any NEW divergence must fail this test rather than reach users unannounced:
  * a diverging cohort that the payload still marks `available: true` is exactly
- * the bug this net exists to catch.
+ * the bug this net exists to catch. Since Task 1.5 such a cohort no longer
+ * meets a 409 — it silently loses the divergent roles to a deferral, which is
+ * the more expensive failure to notice.
  */
 async function assertSeenStateJoin(envelope: PersonalPlanQuizSubmissionEnvelope) {
   const { roleKeys: seen, directAcceptance } = await previewPayload(envelope)
+  // The accept flow tells its two deferral reasons apart by asking which roles
+  // the Idealplan previewed at all. That predicate must stay the payload's own.
+  assert.deepEqual(
+    [...stage1PreviewedRoleDecisionKeys(initialSnapshot(envelope))].sort(),
+    seen,
+    "the previewed-role predicate must match the payload it is derived from",
+  )
   const evaluated = acceptChainRoleKeys(envelope)
   const serverOnly = evaluated.filter((key) => !seen.includes(key))
   const clientOnly = seen.filter((key) => !evaluated.includes(key))
@@ -190,6 +207,8 @@ test("the calm-scalp cohort joins cleanly and may accept directly", async () => 
  *
  * Per controller ruling the cohort is excluded from direct acceptance for this
  * release, declared server-side in the payload rather than discovered as a 409.
+ * The accept chain no longer 409s on that role either — it defers it with
+ * `refinement_required` — but the payload must keep saying so up front.
  */
 test("the irritated + oily scalp cohort is refused direct acceptance up front", async () => {
   await assertSeenStateJoin(STAGE1_STAGE2_LAB_ENVELOPE)
@@ -239,10 +258,10 @@ const IRRITATED_HAIR_LOSS_ENVELOPE: PersonalPlanQuizSubmissionEnvelope = {
  *
  * Every cohort above loads an EMPTY catalog, so every preview is a fallback and
  * the assertions can only compare decision KEYS. But `seenRoles` echoes three
- * values per role — `decisionKey`, `productId` and `factFingerprint` — and
- * `buildDirectAcceptanceIntents` rejects a value mismatch exactly as hard as a
- * missing key. A key-set-only net therefore proves key-set stability, nothing
- * about the products.
+ * values per role — `decisionKey`, `productId` and `factFingerprint` — and a
+ * value mismatch on a role the client DID echo is still a hard
+ * `seen_state_stale` (only an unechoed role became a deferral). A key-set-only
+ * net therefore proves key-set stability, nothing about the products.
  *
  * This cohort supplies a real (fake) catalog carrying the production Bondbuilder
  * situation — three equally ideal candidates, one of them the tie default — and

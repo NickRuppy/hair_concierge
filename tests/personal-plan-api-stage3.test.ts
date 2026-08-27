@@ -698,9 +698,113 @@ test("Stage 3 GET can create a server-owned Routine authority repair draft befor
       requirements: [],
       personalPlanId: draft.personalPlanId,
       refinedVersionId: draft.refinedVersionId,
+      // A repair load must plan against exactly the version it named.
+      rebuildOnStaleRefinedVersion: false,
     },
   ])
   assert.deepEqual(body.requirements, repairRequirements)
+})
+
+test("Stage 3 GET never opts into the re-entry rebuild without the explicit request flag", async () => {
+  const loadCalls: Array<{ rebuildOnStaleRefinedVersion?: boolean }> = []
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async (input) => {
+          loadCalls.push(input)
+          return { status: "active", draft, requirements }
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(
+    loadCalls.map((call) => call.rebuildOnStaleRefinedVersion),
+    [false],
+  )
+})
+
+test("Stage 3 GET opts a plain load into the re-entry rebuild only with rebuildStale=1", async () => {
+  const loadCalls: Array<{ rebuildOnStaleRefinedVersion?: boolean }> = []
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async (input) => {
+          loadCalls.push(input)
+          return { status: "active", draft, requirements }
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}&rebuildStale=1`,
+    ),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(
+    loadCalls.map((call) => call.rebuildOnStaleRefinedVersion),
+    [true],
+  )
+})
+
+test("Stage 3 GET without the rebuild flag propagates a stale refined source unchanged", async () => {
+  let loadCalls = 0
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => {
+          loadCalls += 1
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+
+  assert.equal(response!.status, 409)
+  assert.deepEqual(await response!.json(), { error: "stale_refined_source" })
+  assert.equal(loadCalls, 1)
+})
+
+test("Stage 3 GET keeps the repair load out of the rebuild even with rebuildStale=1", async () => {
+  const loadCalls: Array<{ rebuildOnStaleRefinedVersion?: boolean }> = []
+  const repairRoutineVersionId = "11111111-1111-4111-8111-111111111111"
+  const response = await createStage3RouteHandlers(
+    deps({
+      repairServiceFor: () => ({
+        createOrLoad: async () => ({ requirements }),
+      }),
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async (input) => {
+          loadCalls.push(input)
+          return { status: "active", draft, requirements }
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}&repairRoutineVersionId=${repairRoutineVersionId}&rebuildStale=1`,
+    ),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(
+    loadCalls.map((call) => call.rebuildOnStaleRefinedVersion),
+    [false],
+  )
 })
 
 test("Stage 3 GET returns stale source when Routine repair source is not owner-current", async () => {
@@ -976,6 +1080,44 @@ test("Stage 3 PATCH accepts semantic decision intent without accepting a client 
       action: "keep_owned",
     },
   })
+})
+
+/**
+ * A deferral reason is server truth (direct acceptance derives it from the
+ * plan's own preview state). No client may author one, so the request schema
+ * must reject the field outright rather than forward it.
+ */
+test("Stage 3 PATCH rejects a client-authored deferral reason", async () => {
+  let received: unknown = null
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          resolveDecision: async (input: unknown) => {
+            received = input
+            return { status: "saved", draft }
+          },
+        }) as never,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+          action: "leave_uncovered",
+          deferralReason: "no_product",
+        },
+      }),
+    }),
+  )
+
+  assert.equal(response!.status, 400)
+  assert.equal(received, null)
 })
 
 test("Stage 3 PATCH transports selected replacement intents and exposes an invalid replacement as a conflict", async () => {

@@ -27,7 +27,7 @@ const request = {
   },
 }
 
-test("routine-proposal adapter always calls the initial-aware delegating RPC", async () => {
+test("routine-proposal adapter always calls the activation-aware delegating RPC", async () => {
   const calls: Array<{ fn: string; args: Record<string, unknown> }> = []
   const client: RoutineProposalRpcClient = {
     async rpc(fn, args) {
@@ -56,7 +56,7 @@ test("routine-proposal adapter always calls the initial-aware delegating RPC", a
   })
   assert.deepEqual(calls, [
     {
-      fn: "personal_plan_complete_draft_activate_initial_v1",
+      fn: "personal_plan_complete_draft_activate_v2",
       args: {
         p_user_id: "user-1",
         p_personal_plan_id: "plan-1",
@@ -71,6 +71,7 @@ test("routine-proposal adapter always calls the initial-aware delegating RPC", a
         p_routine_source_fingerprint: "source-fingerprint",
         p_routine_payload: { steps: [] },
         p_proposal_delta: { kind: "initial" },
+        p_mark_unrefined_direct_accept: false,
       },
     },
   ])
@@ -94,7 +95,7 @@ test("routine-proposal adapter carries the compiler's fresh source CAS token", a
   assert.equal(calls[0]?.p_expected_source_revision, 7)
 })
 
-test("initial-aware delegating RPC permits no proposal pointer for first activation", async () => {
+test("activation-aware delegating RPC permits no proposal pointer for first activation", async () => {
   const calls: Array<{ fn: string; args: Record<string, unknown> }> = []
   const result = await createRoutineProposalStagerRpcAdapter({
     client: {
@@ -121,7 +122,7 @@ test("initial-aware delegating RPC permits no proposal pointer for first activat
     routineProposalId: null,
     revision: 5,
   })
-  assert.equal(calls[0]?.fn, "personal_plan_complete_draft_activate_initial_v1")
+  assert.equal(calls[0]?.fn, "personal_plan_complete_draft_activate_v2")
   assert.equal(calls[0]?.args.p_expected_source_revision, 7)
 })
 
@@ -164,4 +165,28 @@ test("routine-proposal adapter rejects invalid bounded payloads before its sole 
     { status: "temporarily_unavailable" },
   )
   assert.equal(calls, 0)
+})
+
+test("routine-proposal adapter forwards the atomic direct-accept provenance flag", async () => {
+  const calls: Array<Record<string, unknown>> = []
+  const result = await createRoutineProposalStagerRpcAdapter({
+    client: {
+      async rpc(_fn, args) {
+        calls.push(args)
+        return {
+          data: {
+            status: "completed",
+            portfolioVersionId: "portfolio-1",
+            routineVersionId: "routine-1",
+            routineProposalId: null,
+            revision: 5,
+          },
+          error: null,
+        }
+      },
+    },
+  }).stage({ ...request, markUnrefinedDirectAccept: true })
+
+  assert.equal(result.status, "completed")
+  assert.equal(calls[0]?.p_mark_unrefined_direct_accept, true)
 })
