@@ -46,7 +46,7 @@ test("server-first pending envelope renders approved static copy and no-JS recov
   assert.doesNotMatch(html, /Bedarfsplan ansehen/)
 })
 
-test("server-first ready envelope renders the approved five-stage Idealplan journey", () => {
+test("server-first ready envelope renders the signed-off arrival screen (Variante B)", () => {
   const html = renderToStaticMarkup(
     React.createElement(PersonalPlanReadyClient, {
       leadId: null,
@@ -62,19 +62,29 @@ test("server-first ready envelope renders the approved five-stage Idealplan jour
     }),
   )
 
-  assert.match(html, /Wir haben deinen Idealplan erstellt\./)
-  assert.match(
-    html,
-    /Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem\./,
-  )
-  assert.match(html, /Dein Idealplan/)
-  assert.match(html, /Persönlicher Feinschliff/)
-  assert.match(html, /Dein Produkt-Check/)
+  assert.match(html, /Dein Idealplan ist fertig\./)
+  assert.match(html, /Und das wartet dahinter:/)
   assert.match(html, /Deine Routine/)
-  assert.match(html, /Anwendung/)
-  assert.match(html, /Für schönes, gesundes Haar\./)
+  assert.match(html, /Schritt für Schritt\./)
+  assert.match(html, /Deine Anwendung/)
+  assert.match(html, /So setzt du(?:&#x27;|')s um\./)
+  assert.match(html, /Dein Chat/)
+  assert.match(html, /Fragen\? Immer offen\./)
   assert.match(html, /Idealplan ansehen/)
   assert.match(html, /href="\/plan-start"/)
+  assert.match(html, />chaarlie</)
+
+  // The creation funnel ends here: wordmark-only header, no 5-stage bar and no
+  // chapter list narrating the retired sequential journey (Feinschliff cutover
+  // #467/#471, founder sign-off 27.08.2026).
+  assert.doesNotMatch(html, /role="progressbar"/)
+  assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+  assert.doesNotMatch(html, /Wir haben deinen Idealplan erstellt\./)
+  assert.doesNotMatch(html, /wirklich zu deinem/)
+  assert.doesNotMatch(html, /Persönlicher Feinschliff/)
+  assert.doesNotMatch(html, /Dein Produkt-Check/)
+  assert.doesNotMatch(html, /Für schönes, gesundes Haar\./)
+  assert.doesNotMatch(html, /Dein Weg zum persönlichen Haarplan/)
   assert.doesNotMatch(html, /Deine Angaben sind gespeichert/)
   assert.doesNotMatch(html, /Dein Haarplan ist bereit\./)
   assert.doesNotMatch(html, /Haaranalyse verbunden/)

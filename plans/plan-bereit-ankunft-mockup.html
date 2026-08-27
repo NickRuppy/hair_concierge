@@ -1,0 +1,91 @@
+<title>Plan-bereit Ankunft</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+  :root { --canvas:#EFEAE4; --canvas-ink:#2E2230; --canvas-sub:#6E5F6E; --canvas-line:#DCD2CC; --accent:#D4616A; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --canvas:#241E26; --canvas-ink:#F0E7EE; --canvas-sub:#B5A5B5; --canvas-line:#453A4B; --accent:#F08A75; } }
+  :root[data-theme="dark"] { --canvas:#241E26; --canvas-ink:#F0E7EE; --canvas-sub:#B5A5B5; --canvas-line:#453A4B; --accent:#F08A75; }
+  body { background:var(--canvas); color:var(--canvas-ink); font-family:"Plus Jakarta Sans",Arial,sans-serif; margin:0; padding:0 20px; line-height:1.55; }
+  main { max-width:900px; margin:0 auto; padding:48px 0 96px; }
+  h1 { font-family:"Playfair Display",Georgia,serif; font-size:2.1rem; font-weight:600; margin:6px 0 8px; }
+  .eyebrow { font-size:.72rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--accent); margin:0; }
+  .lede { color:var(--canvas-sub); max-width:62ch; margin:0; }
+  .row { display:flex; flex-wrap:wrap; gap:34px; margin-top:34px; align-items:flex-start; }
+  .variant { flex:1 1 320px; max-width:385px; }
+  .variant-label { font-weight:800; font-size:.98rem; margin:0 0 10px; }
+  .notes { font-size:.85rem; color:var(--canvas-sub); margin:12px 0 0; padding-left:18px; }
+  .notes li { margin-bottom:5px; }
+  .notes li::marker { color:var(--accent); }
+  .phone { width:100%; max-width:385px; background:#fbf9f7; color:#2a1845; border:1px solid #d8d0c8; border-radius:26px; box-shadow:0 24px 60px -30px rgba(42,24,69,.35); overflow:hidden; font-size:15px; display:flex; flex-direction:column; }
+  .app-header { background:#f6f3f0; border-bottom:1px solid #ece6df; padding:13px 16px; text-align:center; }
+  .wordmark { font-family:"Playfair Display",Georgia,serif; font-size:21px; font-weight:500; color:#2a1845; }
+  .screen { padding:44px 22px 20px; flex:1; min-height:470px; display:flex; flex-direction:column; }
+  .h-display { font-family:"Playfair Display",Georgia,serif; font-weight:500; color:#2a1845; text-align:center; font-size:29px; line-height:1.16; margin:0 0 10px; text-wrap:balance; }
+  .h-sub { text-align:center; color:#6a6560; font-size:14.5px; line-height:1.5; margin:0 auto; max-width:26ch; }
+  .check { width:52px; height:52px; border-radius:999px; background:#e7efe3; color:#5d8a6c; font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; }
+  .spacer { flex:1; }
+  .cta { display:block; width:100%; box-sizing:border-box; text-align:center; background:#d4616a; color:#fff; font-weight:800; font-size:16px; border:none; border-radius:999px; padding:15px 18px; }
+  .whisper { margin:26px auto 0; max-width:270px; }
+  .whisper .wrow { display:flex; align-items:baseline; gap:10px; padding:9px 0; border-bottom:1px solid #f0ebe4; }
+  .whisper .wrow:last-child { border-bottom:none; }
+  .whisper .n { font-family:"Playfair Display",Georgia,serif; font-size:16.5px; color:#2a1845; white-space:nowrap; }
+  .whisper .d { font-size:12.5px; color:#8a837c; }
+  .decisions { padding-left:20px; margin-top:10px; }
+  .decisions li { margin-bottom:8px; max-width:66ch; }
+  .decisions li::marker { color:var(--accent); font-weight:800; }
+  h2 { font-family:"Playfair Display",Georgia,serif; font-size:1.3rem; font-weight:600; margin:50px 0 4px; }
+</style>
+<main>
+  <p class="eyebrow">Chaarlie · Mockup · 27.08.2026</p>
+  <h1>Plan-bereit Ankunft</h1>
+  <p class="lede">Der erste Screen nach der Zahlung. Heute: 5-Kapitel-Liste, die den alten sequenziellen Journey erzählt. Beide Varianten: kein Stufen-Header mehr (der Funnel ist hier vorbei), eine Aufgabe, ein CTA.</p>
+
+  <div class="row">
+    <div class="variant">
+      <p class="variant-label">Variante A — Nur Bestätigung</p>
+      <div class="phone">
+        <div class="app-header"><div class="wordmark">chaarlie</div></div>
+        <div class="screen">
+          <div class="spacer"></div>
+          <div class="check">✓</div>
+          <div class="h-display">Dein Idealplan ist fertig.</div>
+          <p class="h-sub">Aus deinen 10 Antworten erstellt.</p>
+          <div class="spacer"></div>
+          <button class="cta">Idealplan ansehen</button>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Maximal ruhig: der Plan selbst ist die Bühne, nicht die Ankündigung.</li>
+        <li>Feinschliff wird hier nicht erwähnt — das Banner übernimmt das im richtigen Moment.</li>
+      </ul>
+    </div>
+
+    <div class="variant">
+      <p class="variant-label">Variante B — Mit Produkt-Flüstern</p>
+      <div class="phone">
+        <div class="app-header"><div class="wordmark">chaarlie</div></div>
+        <div class="screen">
+          <div class="spacer"></div>
+          <div class="check">✓</div>
+          <div class="h-display">Dein Idealplan ist fertig.</div>
+          <p class="h-sub">Und das wartet dahinter:</p>
+          <div class="whisper">
+            <div class="wrow"><span class="n">Deine Routine</span><span class="d">Schritt für Schritt.</span></div>
+            <div class="wrow"><span class="n">Deine Anwendung</span><span class="d">So setzt du's um.</span></div>
+            <div class="wrow"><span class="n">Dein Chat</span><span class="d">Fragen? Immer offen.</span></div>
+          </div>
+          <div class="spacer"></div>
+          <button class="cta">Idealplan ansehen</button>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Beschreibt das PRODUKT (was du jetzt besitzt), nicht eine Schritt-Sequenz — keine Nummern, kein „Feinschliff"-Versprechen.</li>
+        <li>Die drei Zeilen spiegeln die Nav-Tabs, die gleich sichtbar werden.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Dazugehörige Entscheidung</h2>
+  <ol class="decisions">
+    <li><strong>Stufen-Header auch auf den Idealplan-Seiten?</strong> Der 5-Label-Balken (… Feinschliff · Produkte …) erzählt dieselbe alte Sequenz auch über den zwei Plan-Seiten danach. Konsequent wäre: ab hier nur noch Wordmark (wie in beiden Varianten). Separate kleine Änderung — sag ja/nein.</li>
+  </ol>
+</main>

@@ -76,8 +76,8 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
     new URL("../src/app/plan-bereit/readiness.ts", import.meta.url),
     "utf8",
   )
-  const journeyContent = readFileSync(
-    new URL("../src/components/personal-plan-journey/journey-content.ts", import.meta.url),
+  const arrival = readFileSync(
+    new URL("../src/app/plan-bereit/plan-ready-arrival.tsx", import.meta.url),
     "utf8",
   )
 
@@ -90,17 +90,20 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(client, /takePersonalPlanReadyPollRequest/)
   assert.match(client, /\/plan-bereit\/status\?lead=/)
   assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
-  assert.match(
-    client,
-    /<PersonalPlanChapterTransition[\s\S]*currentStage=\{1\}[\s\S]*actionHref=\{nextHref\}/,
-  )
+  assert.match(client, /<PlanBereitArrival[\s\S]*actionHref=\{nextHref\}/)
+  assert.match(client, /markPersonalPlanStageNavigation\("\/plan-start"\)/)
+  assert.doesNotMatch(client, /PersonalPlanChapterTransition/)
   assert.match(client, /missingHairLength\.question/)
   assert.match(readiness, /Wie lang sind deine Haare aktuell/)
   assert.match(client, /method: "PATCH"/)
   assert.doesNotMatch(client, /storyComplete && readiness === "ready"/)
   assert.doesNotMatch(client, /data-personal-plan-ready-preview/)
-  assert.match(journeyContent, /Wir haben deinen Idealplan erstellt\./)
-  assert.match(journeyContent, /wirklich zu deinem/)
+  // The arrival screen ends the creation funnel: wordmark-only header, one
+  // coral CTA, no chapter list promising Feinschliff/Produkt-Check as steps.
+  assert.match(arrival, /Dein Idealplan ist fertig\./)
+  assert.match(arrival, /Und das wartet dahinter:/)
+  assert.match(arrival, /showStageProgress=\{false\}/)
+  assert.doesNotMatch(arrival, /PersonalPlanJourneyOverview/)
   assert.match(client, /Wir bereiten deinen Haarplan vor\./)
   assert.match(client, /Haarplan wird geprüft/)
   assert.match(client, /<noscript>/)
