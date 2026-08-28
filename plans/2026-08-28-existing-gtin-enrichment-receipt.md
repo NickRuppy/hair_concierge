@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: E1-E3 applied and verified in production; E4-E7 continuation in progress.
+Status: E1-E7 applied and verified in production; E8-E9 continuation in progress.
 
 ## Contract
 
@@ -100,3 +100,22 @@ The subsequent all-282 physical-identity audit held two additional selected rows
 The full live readiness audit at 08:28:22Z still has 259 active products, 96 barcode-linked, 84 scan-result-ready, 134 unlinked strict-ready and 41 authority-blocked (29 unlinked). The earlier 53 source/identity holds remain a research backlog, not new products. A fresh inventory at 08:29:40Z resumed those 53 in parallel; their evidence alone will not authorize a new batch without physical-identity, live ownership and exact-fingerprint checks. Barcode-missing readiness blockers overlap: 29 missing protocols, 21 unknown verdicts, 18 dispositions. No classification repairs are implied by identifier enrichment.
 
 Final E4-E7 verification: main ran 55 focused tests and `npm run ci:verify` successfully (five existing lint warnings); after the two-row narrowing, all 23 affected tests and TypeScript passed. At 08:38:36Z, fresh 73-product / 75-GTIN preflight found zero existing owners, unresolved-submission overlaps, dispositions or identity drift. Claude's final read-only delta review found no hard defects and independently passed 23 tests, all pin/shape/immutability and dedup checks. It did not verify the out-of-repository deployment wrapper or full build; main verified both, including byte-for-byte equality of executed SQL and migration-history SQL. Optional typing/last-branch suggestions are deferred; this pass does not broaden the executor design.
+
+E4-E7 applied 08:43:05Z–08:43:38Z against clean reviewed head `e4b1dbd1abbe645621a79474d15b34f541dc83fb` (no hook delta). All four CLI preflights, applies and readbacks passed. Migration-history SHA matches the exact SQL above. At 08:44:24Z: cumulative 135 GTINs / 131 existing products added; 169 active barcode-linked, 174 valid GTIN rows, 242 total identifier rows. All 282 product records retain their before-hash. Current-root-main lookup at 08:44:47Z resolved all 163 distinct raw/canonical/EAN-13 spelling checks for the 75 added codes, zero failures.
+
+## E8-E9 resumed existing-catalog research
+
+All 53 older source/identity holds received a fresh source pass: 26 now have direct package/barcode evidence; 27 remain held. Durable evidence: `existing-catalog-gtin-research-refresh-2026-08-28.json`, SHA `4c3851c8fc9566b77ad869113f89da41b72e6e7113e8a3b0bda1f6bf2a72c1bc`. Each ID is accounted for once. This is still the existing product catalog, including masks and oils, not the parked new-product expansion.
+
+| Batch | Products | GTINs | Exact raw SHA-256 |
+| --- | ---: | ---: | --- |
+| E8 v1 | 20 | 20 | `d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602` |
+| E9 v1 | 6 | 6 | `69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6` |
+
+All 26 were strict-ready in the 08:29:40Z live inventory. At 08:41:23Z: zero existing GTIN owners or unresolved-submission overlaps. The full-catalog physical-identity comparison flags only distinct formats or variants (Sante/Syoss mask vs conditioner; Pomélo 100-ml mask vs 200-ml conditioner; HASK 18-ml oil vs shampoo/conditioner/sachet; Papaya vs Aloe Hair Food). The active OGX Argan conditioner has an explicitly discontinued legacy duplicate without the proposed GTIN; do not attach anything to that old row. No new physical-owner choice is required for these 26.
+
+Source quality corrections: official NUTREEOIL product JSON identifies Cacay 30 ml as `4260541540014`, so the comparison-only `4260541540007` is excluded. Urban Alchemy uses Hagel plus official structured barcode corroboration; Papaya and Jojoba use explicit dm fields. Jojoba is a distinct product from the held Midnight Serum. New manifests round-trip every serialized item fingerprint and retain current exact brand/name/category snapshots without changing product data.
+
+Use the same executor with new migration `20260828085000`, immutable E1-E7 pins, E8 20/20 and E9 6/6. SQL SHA `8dd3d29b8cfbbfa019f6203b8a18bfa4421c3b9a8dcb8ae52a4cf84246ad885a`; transactional bundle SHA `5cb412bd37cafe0784c7edbc045bb1f846ab0f993c920c08ade3020564a8ee75`. Wrapper pins the live E4-E7 executor MD5 `bb46c77377818ba99c5dd5af04f8ecef` and all four applied receipts. No extra table, column, registry, product or classification change. Tests, counterpart delta review and exact clean-head preflight precede application.
+
+E8-E9 verification: all 26 pass fresh live readiness at 08:48:09Z (fingerprint `ab55d0d4f0a5d935fa63120887d884d15352c94eb00ab30a18685e46a3589af8`). Main passed all 25 affected tests, full TypeScript, targeted ESLint and diff checks; independently verified all item hashes, raw pins, source accounting and exact equality of source/executed/history SQL. At 08:52:26Z the live executor MD5 and service-role-only permissions are unchanged, the new migration is absent and all 282 products retain the original hash. Claude Opus 4.8 / high read-only delta review found no hard defects; independently passed 25 tests and checked pin/shape/gating, prior immutability and zero held-ID/GTIN leakage. It did not verify the external deployment wrapper; main did. Transient review output stays outside the repository. No outstanding review finding blocks the authorized exact-cohort apply.

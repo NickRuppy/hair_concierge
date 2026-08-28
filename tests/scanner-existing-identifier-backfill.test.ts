@@ -102,7 +102,7 @@ test("uses the linked primary checkout for Supabase migration checks from a task
   )
 })
 
-test("accepts the two approved cohort shapes and canonicalizes all GTINs", () => {
+test("accepts approved cohort shapes and canonicalizes all GTINs", () => {
   const first = parseScannerIdentifierBackfillManifest(manifest("E1", 20, 21)) as {
     items: unknown[]
     canonical_gtins: string[]
@@ -117,7 +117,7 @@ test("accepts the two approved cohort shapes and canonicalizes all GTINs", () =>
   assert.equal(second.canonical_gtins.length, 22)
 })
 
-test("loads the reviewed E1-E7 files with their exact pinned raw fingerprints", () => {
+test("loads the reviewed E1-E9 files with their exact pinned raw fingerprints", () => {
   for (const [batch, filename] of [
     ["E1", "phase1-existing-identifier-backfill-e1-v2.json"],
     ["E2", "phase1-existing-identifier-backfill-e2-v2.json"],
@@ -126,6 +126,8 @@ test("loads the reviewed E1-E7 files with their exact pinned raw fingerprints", 
     ["E5", "phase1-existing-identifier-backfill-e5-v1.json"],
     ["E6", "phase1-existing-identifier-backfill-e6-v1.json"],
     ["E7", "phase1-existing-identifier-backfill-e7-v1.json"],
+    ["E8", "phase1-existing-identifier-backfill-e8-v1.json"],
+    ["E9", "phase1-existing-identifier-backfill-e9-v1.json"],
   ] as const) {
     const raw = readFileSync(`data/scanner-catalog-coverage/2026-08-26/${filename}`, "utf8")
     const parsed = parseScannerIdentifierBackfillManifest(raw)
@@ -134,13 +136,15 @@ test("loads the reviewed E1-E7 files with their exact pinned raw fingerprints", 
   }
 })
 
-test("accepts only exact E3-E7 shapes", () => {
+test("accepts only exact E3-E9 shapes", () => {
   for (const [batch, products, gtins] of [
     ["E3", 17, 17],
     ["E4", 20, 21],
     ["E5", 19, 20],
     ["E6", 19, 19],
     ["E7", 15, 15],
+    ["E8", 20, 20],
+    ["E9", 6, 6],
   ] as const) {
     const raw = readFileSync(
       `data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-${batch.toLowerCase()}-v1.json`,
@@ -203,6 +207,8 @@ test("apply arguments are fail-closed and pin all exact raw manifest fingerprint
     E5: "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
     E6: "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
     E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
+    E8: "d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602",
+    E9: "69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6",
   })
   assert.throws(() => parseScannerIdentifierBackfillArgs(["--apply"]), /confirm-project/i)
   assert.throws(
@@ -258,11 +264,53 @@ function readAdapter(
 }
 
 test("cohorts require only their applied executor migrations before reading live state", async () => {
-  for (const [batch, missing] of [
-    ["e1-v2", null],
-    ["e3-v1", "20260828081500"],
-    ["e4-v1", "20260828083000"],
+  for (const [batch, missing, required] of [
+    ["e1-v2", null, ["20260826142000", "20260826142100", "20260826142200", "20260826143000"]],
+    [
+      "e3-v1",
+      "20260828081500",
+      ["20260826142000", "20260826142100", "20260826142200", "20260826143000", "20260828081500"],
+    ],
+    [
+      "e4-v1",
+      "20260828083000",
+      [
+        "20260826142000",
+        "20260826142100",
+        "20260826142200",
+        "20260826143000",
+        "20260828081500",
+        "20260828083000",
+      ],
+    ],
+    [
+      "e8-v1",
+      "20260828085000",
+      [
+        "20260826142000",
+        "20260826142100",
+        "20260826142200",
+        "20260826143000",
+        "20260828081500",
+        "20260828083000",
+        "20260828085000",
+      ],
+    ],
+    [
+      "e9-v1",
+      "20260828085000",
+      [
+        "20260826142000",
+        "20260826142100",
+        "20260826142200",
+        "20260826143000",
+        "20260828081500",
+        "20260828083000",
+        "20260828085000",
+      ],
+    ],
   ] as const) {
+    const observed: string[] = []
     const manifest = parseScannerIdentifierBackfillManifest(
       readFileSync(
         `data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-${batch}.json`,
@@ -274,6 +322,7 @@ test("cohorts require only their applied executor migrations before reading live
       args: { apply: false, reviewed_head: "b".repeat(40) },
       read: readAdapter(manifest, {
         async migrationState(version) {
+          observed.push(version)
           return version === missing ? "absent" : "applied"
         },
       }),
@@ -289,6 +338,7 @@ test("cohorts require only their applied executor migrations before reading live
       missing ? [`required migration ${missing} is not applied`] : [],
     )
     assert.equal(result.ok, missing === null)
+    assert.deepEqual(observed, required)
   }
 })
 
