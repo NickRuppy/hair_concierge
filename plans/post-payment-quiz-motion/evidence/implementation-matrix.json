@@ -1,0 +1,206 @@
+[
+  {
+    "engine": "chromium",
+    "width": 375,
+    "reduced": false,
+    "forward": {
+      "frames": 47,
+      "activeFrames": 24,
+      "maxWidth": 375
+    },
+    "back": {
+      "frames": 47,
+      "activeFrames": 25,
+      "maxWidth": 375
+    },
+    "arrivalSamples": 27,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "chromium",
+    "width": 375,
+    "reduced": true,
+    "forward": {
+      "frames": 47,
+      "activeFrames": 0,
+      "maxWidth": 375
+    },
+    "back": {
+      "frames": 47,
+      "activeFrames": 0,
+      "maxWidth": 375
+    },
+    "arrivalSamples": 28,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "chromium",
+    "width": 390,
+    "reduced": false,
+    "forward": {
+      "frames": 47,
+      "activeFrames": 24,
+      "maxWidth": 390
+    },
+    "back": {
+      "frames": 47,
+      "activeFrames": 25,
+      "maxWidth": 390
+    },
+    "arrivalSamples": 27,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "chromium",
+    "width": 390,
+    "reduced": true,
+    "forward": {
+      "frames": 47,
+      "activeFrames": 0,
+      "maxWidth": 390
+    },
+    "back": {
+      "frames": 46,
+      "activeFrames": 0,
+      "maxWidth": 390
+    },
+    "arrivalSamples": 27,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "chromium",
+    "width": 1280,
+    "reduced": false,
+    "forward": {
+      "frames": 48,
+      "activeFrames": 24,
+      "maxWidth": 1280
+    },
+    "back": {
+      "frames": 47,
+      "activeFrames": 25,
+      "maxWidth": 1280
+    },
+    "arrivalSamples": 28,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "chromium",
+    "width": 1280,
+    "reduced": true,
+    "forward": {
+      "frames": 47,
+      "activeFrames": 0,
+      "maxWidth": 1280
+    },
+    "back": {
+      "frames": 45,
+      "activeFrames": 0,
+      "maxWidth": 1280
+    },
+    "arrivalSamples": 27,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "webkit",
+    "width": 375,
+    "reduced": false,
+    "forward": {
+      "frames": 26,
+      "activeFrames": 12,
+      "maxWidth": 369
+    },
+    "back": {
+      "frames": 24,
+      "activeFrames": 12,
+      "maxWidth": 369
+    },
+    "arrivalSamples": 16,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "webkit",
+    "width": 375,
+    "reduced": true,
+    "forward": {
+      "frames": 26,
+      "activeFrames": 0,
+      "maxWidth": 369
+    },
+    "back": {
+      "frames": 25,
+      "activeFrames": 0,
+      "maxWidth": 369
+    },
+    "arrivalSamples": 15,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "webkit",
+    "width": 390,
+    "reduced": false,
+    "forward": {
+      "frames": 26,
+      "activeFrames": 12,
+      "maxWidth": 384
+    },
+    "back": {
+      "frames": 24,
+      "activeFrames": 12,
+      "maxWidth": 384
+    },
+    "arrivalSamples": 15,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "webkit",
+    "width": 390,
+    "reduced": true,
+    "forward": {
+      "frames": 26,
+      "activeFrames": 0,
+      "maxWidth": 384
+    },
+    "back": {
+      "frames": 24,
+      "activeFrames": 0,
+      "maxWidth": 384
+    },
+    "arrivalSamples": 15,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "webkit",
+    "width": 1280,
+    "reduced": false,
+    "forward": {
+      "frames": 26,
+      "activeFrames": 12,
+      "maxWidth": 1274
+    },
+    "back": {
+      "frames": 26,
+      "activeFrames": 12,
+      "maxWidth": 1274
+    },
+    "arrivalSamples": 15,
+    "reloadReplayed": false
+  },
+  {
+    "engine": "webkit",
+    "width": 1280,
+    "reduced": true,
+    "forward": {
+      "frames": 26,
+      "activeFrames": 0,
+      "maxWidth": 1274
+    },
+    "back": {
+      "frames": 24,
+      "activeFrames": 0,
+      "maxWidth": 1274
+    },
+    "arrivalSamples": 17,
+    "reloadReplayed": false
+  }
+]

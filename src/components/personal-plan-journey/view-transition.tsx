@@ -14,7 +14,7 @@ import {
 } from "react"
 
 export type PersonalPlanTransitionDirection = "forward" | "reverse"
-export type PersonalPlanTransitionVariant = "depth"
+export type PersonalPlanTransitionVariant = "quiz"
 
 type RetainedView = {
   key: string
@@ -77,7 +77,7 @@ class OutgoingScrollSnapshot extends Component<{
 }
 
 const TRANSITION_DURATION_MS: Record<PersonalPlanTransitionVariant, number> = {
-  depth: 360,
+  quiz: 200,
 }
 
 const PersonalPlanTransitionLayerContext = createContext<"current" | "outgoing">("current")

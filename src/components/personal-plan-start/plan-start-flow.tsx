@@ -1240,7 +1240,7 @@ export function PlanStartFlow(
           backLabel={step === "optional" ? "Zur Basis" : undefined}
         />
         <PersonalPlanStageEntrance destination="/plan-start">
-          <PersonalPlanViewTransition viewKey={step} direction={direction} variant="depth">
+          <PersonalPlanViewTransition viewKey={step} direction={direction} variant="quiz">
             {content}
           </PersonalPlanViewTransition>
         </PersonalPlanStageEntrance>

@@ -42,6 +42,46 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
     })
   })
 
+  test("Feinschliff keeps its header and one mobile action stationary while its question uses the quiz fade", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" })
+    await page.goto(labPath)
+    await page.getByRole("button", { name: /Feinschliff starten/ }).click()
+    await page.clock.install({ time: new Date("2026-08-28T12:00:00Z") })
+    await page.clock.pauseAt(new Date("2026-08-28T12:00:01Z"))
+
+    const header = page.locator('[data-personal-plan-journey-header="true"]')
+    const headerBefore = await header.boundingBox()
+    expect(headerBefore).not.toBeNull()
+    await page.addStyleTag({
+      content: ".personal-plan-view-transition-layer { animation-play-state: paused !important; }",
+    })
+
+    await currentQuestion(page)
+      .getByRole("button", { name: "Shampoo", exact: true })
+      .evaluate((button) => (button as HTMLButtonElement).click())
+    await visibleContinueButton(page).evaluate((button) => (button as HTMLButtonElement).click())
+    const incoming = page.locator(
+      '.personal-plan-view-transition-incoming[data-transition-direction="forward"]',
+    )
+    const outgoing = page.locator(
+      '.personal-plan-view-transition-outgoing[data-transition-direction="forward"]',
+    )
+    await expect(incoming).toHaveCount(1)
+    await expect(outgoing).toHaveCount(1)
+    await expect(incoming).toHaveCSS("animation-name", "personalPlanScreenEnterForward")
+    await expect(incoming).toHaveCSS("animation-duration", "0.2s")
+    await expect(outgoing).toHaveCSS("animation-name", "personalPlanScreenExitForward")
+    await expect(outgoing).toHaveCSS("animation-duration", "0.16s")
+    await expect(visibleContinueButton(page)).toHaveCount(1)
+
+    const headerDuring = await header.boundingBox()
+    expect(headerDuring).not.toBeNull()
+    expect(headerDuring!.x).toBe(headerBefore!.x)
+    expect(headerDuring!.y).toBe(headerBefore!.y)
+  })
+
   test("hands the completed refinement to product capture and restarts after an edit", async ({
     page,
   }) => {

@@ -144,10 +144,13 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     // entry count and article count can legitimately diverge. Every entry —
     // standalone or a group member — still carries its own
     // `data-plan-start-card` hook and its own preview state.
-    const basisCards = page.locator("[data-plan-start-card-list] [data-plan-start-card]")
+    const currentPlanView = page.locator(
+      ".personal-plan-view-transition-layer:not(.personal-plan-view-transition-outgoing)",
+    )
+    const basisCards = currentPlanView.locator("[data-plan-start-card-list] [data-plan-start-card]")
     await expect(basisCards).not.toHaveCount(0)
     await expect(
-      page.locator(
+      currentPlanView.locator(
         '[data-plan-start-card-list] [data-plan-start-card][data-plan-start-card-preview="example"]',
       ),
     ).toHaveCount(await basisCards.count())
@@ -172,9 +175,11 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     ).toEqual({ parent: "BODY", bottom: 844, viewportBottom: 844 })
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
     // Same entry-based counting as the Basis assertion above.
-    const optionalCards = page.locator("[data-plan-start-card-list] [data-plan-start-card]")
+    const optionalCards = currentPlanView.locator(
+      "[data-plan-start-card-list] [data-plan-start-card]",
+    )
     await expect(
-      page.locator(
+      currentPlanView.locator(
         '[data-plan-start-card-list] [data-plan-start-card][data-plan-start-card-preview="example"]',
       ),
     ).toHaveCount(await optionalCards.count())

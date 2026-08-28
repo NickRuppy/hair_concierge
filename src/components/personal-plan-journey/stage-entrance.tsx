@@ -36,7 +36,7 @@ export function PersonalPlanStageEntrance({
     const timer = window.setTimeout(() => {
       root.classList.remove("personal-plan-stage-target-enter")
       delete root.dataset.personalPlanStageEntrance
-    }, 220)
+    }, 200)
     return () => {
       window.clearTimeout(timer)
       root.classList.remove("personal-plan-stage-target-enter")
@@ -44,5 +44,9 @@ export function PersonalPlanStageEntrance({
     }
   }, [destination])
 
-  return <div ref={rootRef}>{children}</div>
+  return (
+    <div className="overflow-x-clip">
+      <div ref={rootRef}>{children}</div>
+    </div>
+  )
 }

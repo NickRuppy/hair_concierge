@@ -28,7 +28,7 @@ export function ProgrammaticTransitionLab() {
         <PersonalPlanViewTransition
           viewKey={viewKey}
           direction={viewKey === "detail" ? "forward" : "reverse"}
-          variant="depth"
+          variant="quiz"
         >
           {viewKey === "overview" ? (
             <section className="min-h-[2400px] p-6">
