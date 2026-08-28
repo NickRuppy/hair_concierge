@@ -6,11 +6,76 @@ import {
   type ScannerBackfillBatchLedgerRow,
   type ScannerBackfillIdentifierRow,
   type ScannerBackfillItemLedgerRow,
+  type ScannerBackfillOpenSubmissionIdentifierRow,
   type ScannerBackfillProductRow,
 } from "@/lib/product-intake/catalog-enrichment/scanner-identifier-backfill"
+import { canonicalizeGtin } from "@/lib/product-identity/normalize"
 import { createSupabaseClientFromEnv } from "../cli"
 
 const execFileAsync = promisify(execFile)
+const CLOSED_SUBMISSION_STATUSES = new Set([
+  "approved",
+  "matched_existing",
+  "rejected",
+  "cancelled_by_user",
+])
+
+type SubmissionIdentifierSourceRow = {
+  id: string
+  status: string
+  scanned_identifier_type: string | null
+  scanned_identifier_value: string | null
+  researched_payload: unknown
+}
+
+function canonicalGtin(value: unknown): string | null {
+  return typeof value === "string" ? canonicalizeGtin(value) : null
+}
+
+function isCanonicalGtinType(value: unknown): boolean {
+  return (
+    typeof value === "string" && ["ean", "gtin", "barcode"].includes(value.trim().toLowerCase())
+  )
+}
+
+export function scannerIdentifierBackfillOpenSubmissionIdentifiers(
+  row: SubmissionIdentifierSourceRow,
+): ScannerBackfillOpenSubmissionIdentifierRow | null {
+  if (CLOSED_SUBMISSION_STATUSES.has(row.status)) return null
+  const canonicalGtins = new Set<string>()
+  if (isCanonicalGtinType(row.scanned_identifier_type)) {
+    const scanned = canonicalGtin(row.scanned_identifier_value)
+    if (scanned) canonicalGtins.add(scanned)
+  }
+  const payload = row.researched_payload
+  const final =
+    payload && typeof payload === "object" && !Array.isArray(payload)
+      ? (payload as { final?: unknown }).final
+      : null
+  const identifiers =
+    final && typeof final === "object" && !Array.isArray(final)
+      ? (final as { identifiers?: unknown }).identifiers
+      : null
+  if (Array.isArray(identifiers)) {
+    for (const identifier of identifiers) {
+      if (!identifier || typeof identifier !== "object" || Array.isArray(identifier)) continue
+      const value = identifier as {
+        type?: unknown
+        value?: unknown
+        identifier_type?: unknown
+        identifier_value?: unknown
+      }
+      if (!isCanonicalGtinType(value.type ?? value.identifier_type)) continue
+      const canonical = canonicalGtin(value.value ?? value.identifier_value)
+      if (canonical) canonicalGtins.add(canonical)
+    }
+  }
+  return {
+    submission_id: row.id,
+    status: row.status,
+    canonical_gtin14s: [...canonicalGtins].sort(),
+  }
+}
 
 export function scannerIdentifierBackfillProjectIdFromUrl(value: string): string {
   try {
@@ -88,6 +153,25 @@ export function scannerIdentifierBackfillAdapters() {
           .in("canonical_gtin14", [...canonicalGtins])
         if (error) throw new Error(`scanner identifier read failed: ${error.message}`)
         return (data ?? []) as ScannerBackfillIdentifierRow[]
+      },
+      async listOpenSubmissionIdentifiers() {
+        const submissions: ScannerBackfillOpenSubmissionIdentifierRow[] = []
+        const pageSize = 1000
+        for (let offset = 0; ; offset += pageSize) {
+          const { data, error } = await client
+            .from("product_submissions")
+            .select("id,status,scanned_identifier_type,scanned_identifier_value,researched_payload")
+            .not("status", "in", "(approved,matched_existing,rejected,cancelled_by_user)")
+            .order("id", { ascending: true })
+            .range(offset, offset + pageSize - 1)
+          if (error) throw new Error(`scanner submission read failed: ${error.message}`)
+          const page = (data ?? []) as SubmissionIdentifierSourceRow[]
+          for (const row of page) {
+            const submission = scannerIdentifierBackfillOpenSubmissionIdentifiers(row)
+            if (submission) submissions.push(submission)
+          }
+          if (page.length < pageSize) return submissions
+        }
       },
       async listBatchLedger(batchId: string) {
         const { data, error } = await client

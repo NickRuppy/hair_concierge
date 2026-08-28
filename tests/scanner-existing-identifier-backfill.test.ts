@@ -17,6 +17,7 @@ import {
 import { catalogEnrichmentFingerprint } from "@/lib/product-intake/catalog-enrichment"
 import {
   parseScannerIdentifierBackfillLinkedMigrationState,
+  scannerIdentifierBackfillOpenSubmissionIdentifiers,
   scannerIdentifierBackfillSupabaseWorkdir,
 } from "../scripts/product-intake/catalog-enrichment/scanner-identifier-backfill-client"
 
@@ -59,7 +60,7 @@ function manifest(batch: "E1" | "E2", count: number, gtinCount: number) {
 }
 
 test("computes the batch fingerprint over the exact raw UTF-8 bytes", () => {
-  const raw = manifest("E1", 20, 22)
+  const raw = manifest("E1", 20, 21)
   assert.equal(
     scannerIdentifierBackfillFingerprint(raw),
     createHash("sha256").update(raw, "utf8").digest("hex"),
@@ -98,24 +99,24 @@ test("uses the linked primary checkout for Supabase migration checks from a task
 })
 
 test("accepts the two approved cohort shapes and canonicalizes all GTINs", () => {
-  const first = parseScannerIdentifierBackfillManifest(manifest("E1", 20, 22)) as {
+  const first = parseScannerIdentifierBackfillManifest(manifest("E1", 20, 21)) as {
     items: unknown[]
     canonical_gtins: string[]
   }
-  const second = parseScannerIdentifierBackfillManifest(manifest("E2", 22, 24)) as {
+  const second = parseScannerIdentifierBackfillManifest(manifest("E2", 21, 22)) as {
     items: unknown[]
     canonical_gtins: string[]
   }
   assert.equal(first.items.length, 20)
-  assert.equal(first.canonical_gtins.length, 22)
-  assert.equal(second.items.length, 22)
-  assert.equal(second.canonical_gtins.length, 24)
+  assert.equal(first.canonical_gtins.length, 21)
+  assert.equal(second.items.length, 21)
+  assert.equal(second.canonical_gtins.length, 22)
 })
 
 test("loads the reviewed E1/E2 files with their exact pinned raw fingerprints", () => {
   for (const [batch, filename] of [
-    ["E1", "phase1-existing-identifier-backfill-e1-v1.json"],
-    ["E2", "phase1-existing-identifier-backfill-e2-v1.json"],
+    ["E1", "phase1-existing-identifier-backfill-e1-v2.json"],
+    ["E2", "phase1-existing-identifier-backfill-e2-v2.json"],
   ] as const) {
     const raw = readFileSync(`data/scanner-catalog-coverage/2026-08-26/${filename}`, "utf8")
     const parsed = parseScannerIdentifierBackfillManifest(raw)
@@ -126,7 +127,7 @@ test("loads the reviewed E1/E2 files with their exact pinned raw fingerprints", 
 
 test("rejects a transaction over 25 products and an invalid checksum", () => {
   assert.throws(() => parseScannerIdentifierBackfillManifest(manifest("E2", 26, 26)), /at most 25/i)
-  const parsed = JSON.parse(manifest("E1", 20, 22))
+  const parsed = JSON.parse(manifest("E1", 20, 21))
   parsed.items[0].identifiers[0].value = "4006381333930"
   assert.throws(
     () => parseScannerIdentifierBackfillManifest(JSON.stringify(parsed)),
@@ -148,7 +149,7 @@ test("rejects drift-prone manifests without exact lifecycle, source URL, and con
       (value.items[0].identifiers[0].source_url = "http://example.test/nope"),
     (value: MutableManifest) => (value.items[0].content_fingerprint = "0".repeat(64)),
   ]) {
-    const parsed = JSON.parse(manifest("E1", 20, 22)) as MutableManifest
+    const parsed = JSON.parse(manifest("E1", 20, 21)) as MutableManifest
     mutate(parsed)
     assert.throws(() => parseScannerIdentifierBackfillManifest(JSON.stringify(parsed)))
   }
@@ -156,8 +157,8 @@ test("rejects drift-prone manifests without exact lifecycle, source URL, and con
 
 test("apply arguments are fail-closed and pin both exact raw manifest fingerprints", () => {
   assert.deepEqual(SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS, {
-    E1: "2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04",
-    E2: "b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a",
+    E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+    E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
   })
   assert.throws(() => parseScannerIdentifierBackfillArgs(["--apply"]), /confirm-project/i)
   assert.throws(
@@ -179,7 +180,7 @@ test("apply arguments are fail-closed and pin both exact raw manifest fingerprin
 function reviewedE1() {
   return parseScannerIdentifierBackfillManifest(
     readFileSync(
-      "data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e1-v1.json",
+      "data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e1-v2.json",
       "utf8",
     ),
   )
@@ -194,6 +195,9 @@ function readAdapter(
       return manifest.items.map((item) => ({ id: item.product_id, ...item.expected_product }))
     },
     async listIdentifiers() {
+      return []
+    },
+    async listOpenSubmissionIdentifiers() {
       return []
     },
     async listBatchLedger() {
@@ -251,6 +255,124 @@ test("preflight requires exact clean branch/head, live identity, migrations, and
   assert.match(collision.blockers.join("; "), /project|clean|branch|HEAD|owner collision/i)
 })
 
+test("sanitizes open-submission identifiers and excludes closed statuses", () => {
+  const first = gtin("400638133393")
+  const second = gtin("761303462684")
+  const retailerSku = gtin("590123412345")
+  assert.deepEqual(
+    scannerIdentifierBackfillOpenSubmissionIdentifiers({
+      id: "open-submission",
+      status: "research_complete",
+      scanned_identifier_type: " EAN ",
+      scanned_identifier_value: first,
+      researched_payload: {
+        final: {
+          identifiers: [
+            { type: "barcode", value: second },
+            { identifier_type: "ean", identifier_value: first },
+            { type: "retailer_sku", value: retailerSku },
+            { type: "ean", value: "4006381333930" },
+          ],
+        },
+      },
+    }),
+    {
+      submission_id: "open-submission",
+      status: "research_complete",
+      canonical_gtin14s: [`0${first}`, `0${second}`].sort(),
+    },
+  )
+  for (const status of ["approved", "matched_existing", "rejected", "cancelled_by_user"]) {
+    assert.equal(
+      scannerIdentifierBackfillOpenSubmissionIdentifiers({
+        id: "closed-submission",
+        status,
+        scanned_identifier_type: "ean",
+        scanned_identifier_value: first,
+        researched_payload: {},
+      }),
+      null,
+    )
+  }
+  assert.deepEqual(
+    scannerIdentifierBackfillOpenSubmissionIdentifiers({
+      id: "retailer-sku-only",
+      status: "queued",
+      scanned_identifier_type: "retailer_sku",
+      scanned_identifier_value: retailerSku,
+      researched_payload: {},
+    }),
+    {
+      submission_id: "retailer-sku-only",
+      status: "queued",
+      canonical_gtin14s: [],
+    },
+  )
+})
+
+test("preflight blocks a second researched identifier held by an unresolved submission", async () => {
+  const manifest = reviewedE1()
+  const secondIdentifier = manifest.items.find((item) => item.identifiers.length > 1)!
+    .identifiers[1]
+  const result = await preflightScannerIdentifierBackfill({
+    manifest,
+    args: parseScannerIdentifierBackfillArgs([
+      "--manifest=unused.json",
+      `--reviewed-head=${"b".repeat(40)}`,
+    ]),
+    read: readAdapter(manifest, {
+      async listOpenSubmissionIdentifiers() {
+        return [
+          {
+            submission_id: "open-submission-researched-second-identifier",
+            status: "research_complete",
+            canonical_gtin14s: [secondIdentifier.canonical_gtin14],
+          },
+        ]
+      },
+    }),
+    gitState: async () => ({
+      head: "b".repeat(40),
+      branch: SCANNER_IDENTIFIER_BACKFILL_BRANCH,
+      clean: true,
+    }),
+    projectId: SCANNER_IDENTIFIER_BACKFILL_PROJECT_ID,
+  })
+  assert.equal(result.ok, false)
+  assert.match(result.blockers.join("; "), /open submission.*second-identifier/i)
+})
+
+test("preflight blocks an unresearched scanned identifier held by an unresolved submission", async () => {
+  const manifest = reviewedE1()
+  const scannedIdentifier = manifest.items[1].identifiers[0]
+  const result = await preflightScannerIdentifierBackfill({
+    manifest,
+    args: parseScannerIdentifierBackfillArgs([
+      "--manifest=unused.json",
+      `--reviewed-head=${"b".repeat(40)}`,
+    ]),
+    read: readAdapter(manifest, {
+      async listOpenSubmissionIdentifiers() {
+        return [
+          {
+            submission_id: "open-submission-unresearched-scan",
+            status: "queued",
+            canonical_gtin14s: [scannedIdentifier.canonical_gtin14],
+          },
+        ]
+      },
+    }),
+    gitState: async () => ({
+      head: "b".repeat(40),
+      branch: SCANNER_IDENTIFIER_BACKFILL_BRANCH,
+      clean: true,
+    }),
+    projectId: SCANNER_IDENTIFIER_BACKFILL_PROJECT_ID,
+  })
+  assert.equal(result.ok, false)
+  assert.match(result.blockers.join("; "), /open submission.*unresearched-scan/i)
+})
+
 test("preflight reports absent migrations without querying not-yet-created schema", async () => {
   const manifest = reviewedE1()
   let schemaReads = 0
@@ -271,6 +393,10 @@ test("preflight reports absent migrations without querying not-yet-created schem
       async listIdentifiers() {
         schemaReads += 1
         throw new Error("canonical_gtin14 should not be queried")
+      },
+      async listOpenSubmissionIdentifiers() {
+        schemaReads += 1
+        throw new Error("product submissions should not be queried")
       },
       async listBatchLedger() {
         schemaReads += 1

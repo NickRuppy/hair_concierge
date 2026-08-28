@@ -47,6 +47,7 @@ CREATE OR REPLACE FUNCTION public.apply_scanner_existing_identifier_backfill_v1(
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
+SET lock_timeout = '5s'
 AS $function$
 DECLARE
   v_batch jsonb;
@@ -101,12 +102,12 @@ BEGIN
   v_batch_id := v_batch->>'batch_id';
   IF v_batch_name = 'E1' THEN
     v_expected_products := 20;
-    v_expected_gtins := 22;
-    v_approved_fingerprint := '2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04';
+    v_expected_gtins := 21;
+    v_approved_fingerprint := '0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522';
   ELSE
-    v_expected_products := 22;
-    v_expected_gtins := 24;
-    v_approved_fingerprint := 'b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a';
+    v_expected_products := 21;
+    v_expected_gtins := 22;
+    v_approved_fingerprint := 'aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147';
   END IF;
   IF v_approved_fingerprint !~ '^[a-f0-9]{64}$'
      OR v_batch_fingerprint IS DISTINCT FROM v_approved_fingerprint THEN
@@ -183,6 +184,38 @@ BEGIN
          pg_catalog.jsonb_array_elements(item.value->'identifiers') identifier(value)
     ORDER BY canonical_gtin14
   ) locked_gtins;
+
+  -- Hold submission writes only for this short identifier transaction so a new
+  -- unresolved scan cannot appear between overlap validation and insertion.
+  -- This check also protects direct RPC callers that bypass the CLI preflight.
+  LOCK TABLE public.product_submissions IN SHARE MODE;
+  IF EXISTS (
+    SELECT 1
+    FROM public.product_submissions submission
+    CROSS JOIN LATERAL (
+      SELECT submission.scanned_identifier_type AS identifier_type,
+             submission.scanned_identifier_value AS identifier_value
+      UNION ALL
+      SELECT coalesce(candidate->>'type', candidate->>'identifier_type'),
+             coalesce(candidate->>'value', candidate->>'identifier_value')
+      FROM pg_catalog.jsonb_array_elements(
+        CASE WHEN pg_catalog.jsonb_typeof(submission.researched_payload #> '{final,identifiers}') = 'array'
+          THEN submission.researched_payload #> '{final,identifiers}'
+          ELSE '[]'::jsonb
+        END
+      ) candidate
+    ) submitted
+    WHERE submission.status NOT IN ('approved', 'matched_existing', 'rejected', 'cancelled_by_user')
+      AND public.product_identifier_canonical_gtin14(
+        submitted.identifier_type, submitted.identifier_value
+      ) IN (
+        SELECT public.product_identifier_canonical_gtin14(identifier.value->>'type', identifier.value->>'value')
+        FROM pg_catalog.jsonb_array_elements(v_batch->'items') item(value),
+             pg_catalog.jsonb_array_elements(item.value->'identifiers') identifier(value)
+      )
+  ) THEN
+    RAISE EXCEPTION 'scanner identifier backfill open submission GTIN overlap requires review';
+  END IF;
 
   SELECT applied.* INTO v_existing_batch
   FROM public.scanner_identifier_backfill_batches applied

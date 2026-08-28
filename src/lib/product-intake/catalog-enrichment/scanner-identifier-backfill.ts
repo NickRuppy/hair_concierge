@@ -18,8 +18,8 @@ export const SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS = [
 
 export type ScannerIdentifierBackfillBatch = "E1" | "E2"
 export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
-  E1: "2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04",
-  E2: "b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a",
+  E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+  E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
 } as const satisfies Record<ScannerIdentifierBackfillBatch, string | null>
 
 export type ScannerIdentifierType = "ean" | "gtin" | "barcode"
@@ -90,9 +90,15 @@ export type ScannerBackfillItemLedgerRow = {
   product_id: string
   identifier_count: number
 }
+export type ScannerBackfillOpenSubmissionIdentifierRow = {
+  submission_id: string
+  status: string
+  canonical_gtin14s: string[]
+}
 export type ScannerIdentifierBackfillReadAdapter = {
   listProducts(productIds: readonly string[]): Promise<ScannerBackfillProductRow[]>
   listIdentifiers(canonicalGtins: readonly string[]): Promise<ScannerBackfillIdentifierRow[]>
+  listOpenSubmissionIdentifiers(): Promise<ScannerBackfillOpenSubmissionIdentifierRow[]>
   listBatchLedger(batchId: string): Promise<ScannerBackfillBatchLedgerRow[]>
   listItemLedger(batchId: string): Promise<ScannerBackfillItemLedgerRow[]>
   migrationState(version: string): Promise<"absent" | "applied">
@@ -113,8 +119,8 @@ const SHA1 = /^[a-f0-9]{40}$/
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const SAFE_KEY = /^[a-z0-9][a-z0-9-]*$/
 const EXPECTED_SHAPES = {
-  E1: { products: 20, gtins: 22 },
-  E2: { products: 22, gtins: 24 },
+  E1: { products: 20, gtins: 21 },
+  E2: { products: 21, gtins: 22 },
 } as const
 
 function record(value: unknown, label: string): Record<string, unknown> {
@@ -346,6 +352,16 @@ export async function preflightScannerIdentifierBackfill(input: {
   // canonical_gtin14 and both ledger tables are introduced by these migrations.
   // Report the release blockers without issuing queries against absent schema.
   if (missingMigration) return { ok: false, blockers, replay: false }
+  const manifestGtins = new Set(manifest.canonical_gtins)
+  const openSubmissions = await read.listOpenSubmissionIdentifiers()
+  for (const submission of openSubmissions) {
+    for (const canonicalGtin of submission.canonical_gtin14s) {
+      if (manifestGtins.has(canonicalGtin))
+        blockers.push(
+          `open submission ${submission.submission_id} (${submission.status}) holds canonical GTIN ${canonicalGtin}`,
+        )
+    }
+  }
   const products = await read.listProducts(manifest.items.map((item) => item.product_id))
   const productsById = new Map(products.map((product) => [product.id, product]))
   for (const item of manifest.items) {

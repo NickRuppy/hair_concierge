@@ -114,6 +114,8 @@ DECLARE
   v_scanned_value text;
   v_normalized_value text;
   v_final_payload jsonb := p_final_payload;
+  v_approval_result jsonb;
+  v_approved_product_id uuid;
 BEGIN
   SELECT submission.scanned_identifier_type, submission.scanned_identifier_value
   INTO v_scanned_type, v_scanned_value
@@ -158,7 +160,7 @@ BEGIN
     NULL
   );
 
-  RETURN public.product_intake_approve_reviewed_product_before_scanned_identifier(
+  v_approval_result := public.product_intake_approve_reviewed_product_before_scanned_identifier(
     p_submission_id,
     v_final_payload,
     p_spec_operations,
@@ -166,6 +168,17 @@ BEGIN
     p_reviewed_at,
     p_review_notes
   );
+
+  v_approved_product_id := (v_approval_result ->> 'product_id')::uuid;
+
+  UPDATE public.products
+  SET
+    net_content_value = NULLIF(v_final_payload #>> '{product,net_content_value}', '')::numeric,
+    net_content_unit = NULLIF(v_final_payload #>> '{product,net_content_unit}', ''),
+    updated_at = pg_catalog.now()
+  WHERE id = v_approved_product_id;
+
+  RETURN v_approval_result;
 END;
 $function$;
 

@@ -18,8 +18,8 @@ function gtin(body: string): string {
 }
 
 function makeManifest(batch: "E1" | "E2") {
-  const productCount = batch === "E1" ? 20 : 22
-  const gtinCount = batch === "E1" ? 22 : 24
+  const productCount = batch === "E1" ? 20 : 21
+  const gtinCount = batch === "E1" ? 21 : 22
   const batchDigit = batch === "E1" ? "1" : "2"
   const items = Array.from({ length: productCount }, (_, index) => {
     const productId = `${batchDigit}${String(index + 1).padStart(7, "0")}-1111-4111-8111-${String(index + 1).padStart(12, "0")}`
@@ -94,6 +94,13 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       created_at timestamptz NOT NULL DEFAULT now(),
       updated_at timestamptz NOT NULL DEFAULT now()
     );
+    CREATE TABLE public.product_submissions (
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      status text NOT NULL,
+      scanned_identifier_type text,
+      scanned_identifier_value text,
+      researched_payload jsonb
+    );
   `)
   const expand = await readFile(
     "supabase/migrations/20260826142000_product_identifier_canonical_gtin_expand.sql",
@@ -129,11 +136,11 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
   executor = executor
     .replace("CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;", "")
     .replace(
-      "2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04",
+      "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
       makeManifest("E1").fingerprint,
     )
     .replace(
-      "b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a",
+      "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
       makeManifest("E2").fingerprint,
     )
   await pg.exec(executor)
@@ -152,8 +159,8 @@ test("migration is service-role-only, fail-closed, and pins both exact raw finge
     "supabase/migrations/20260826143000_scanner_existing_identifier_backfill_executor.sql",
     "utf8",
   )
-  assert.match(sql, /2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04/)
-  assert.match(sql, /b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a/)
+  assert.match(sql, /0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522/)
+  assert.match(sql, /aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147/)
   assert.match(sql, /SECURITY DEFINER\s+SET search_path = ''/i)
   assert.match(sql, /p_execution_enabled IS DISTINCT FROM true/)
   assert.match(sql, /jsonb_array_length\(v_batch->'items'\) > 25/)
@@ -173,7 +180,7 @@ test("E1 applies atomically and an exact replay inserts no duplicate canonical G
   assert.equal(first.rows.length, 20)
   assert.equal(
     first.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
-    22,
+    21,
   )
   const replay = await apply(pg, e1)
   assert.equal(
@@ -193,7 +200,7 @@ test("E1 applies atomically and an exact replay inserts no duplicate canonical G
       (SELECT array_agg(DISTINCT source ORDER BY source) FROM public.product_identifiers) AS sources
   `)
   assert.deepEqual(counts.rows[0], {
-    identifiers: 22,
+    identifiers: 21,
     batches: 1,
     items: 20,
     sources: ["scanner-catalog-coverage-2026-08-26"],
@@ -259,4 +266,50 @@ test("E2 rejects a canonical owner on an inactive product and rolls the full wav
       (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
   `)
   assert.deepEqual(counts.rows[0], { identifiers: 1, batches: 0, items: 0 })
+})
+
+test("executor refuses an unresolved submission's second researched barcode atomically", async (t) => {
+  const e1 = makeManifest("E1")
+  const pg = await database([e1])
+  t.after(async () => pg.close())
+  await pg.query(
+    `INSERT INTO public.product_submissions (status, researched_payload) VALUES ('needs_more_info', $1)`,
+    [
+      JSON.stringify({
+        final: {
+          identifiers: [
+            { type: "ean", value: "4006381333931" },
+            { identifier_type: "barcode", identifier_value: e1.items[0].identifiers[1].value },
+          ],
+        },
+      }),
+    ],
+  )
+  await assert.rejects(() => apply(pg, e1), /open submission.*overlap/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("executor checks unresearched scanned barcodes and permits closed submissions", async (t) => {
+  const e2 = makeManifest("E2")
+  const pg = await database([e2])
+  t.after(async () => pg.close())
+  await pg.query(
+    `INSERT INTO public.product_submissions
+      (status, scanned_identifier_type, scanned_identifier_value)
+      VALUES ('pending_review', 'ean', $1)`,
+    [e2.items[0].identifiers[0].value],
+  )
+  await assert.rejects(() => apply(pg, e2), /open submission.*overlap/i)
+  await pg.exec(`UPDATE public.product_submissions SET status = 'cancelled_by_user'`)
+  const result = await apply(pg, e2)
+  assert.equal(
+    result.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
+    22,
+  )
 })

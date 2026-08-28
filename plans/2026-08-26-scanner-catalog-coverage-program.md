@@ -1,5 +1,7 @@
 # Scanner Catalog Coverage Program — Phases 1–4
 
+**2026-08-28 data-first amendment:** Nick authorized the verified existing-product enrichment. The [current release receipt](2026-08-28-existing-gtin-enrichment-receipt.md) supersedes the old E1/E2 counts and stop-before-apply/runtime-first wording below for the identity-only slice. Historical research snapshots remain unchanged; only refreshed v2 manifests are executable. Telemetry, new products, push/merge/deploy and activation remain excluded.
+
 **Status:** Complete-existing-catalog-first amendment reviewed; safe E1/E2 correction, full 259-product audit, complete ledger, and first-pass research of all 150 remaining strict-ready products implemented locally (no production apply)
 **Branch:** `codex/scanner-catalog-coverage-plan`
 **Worktree:** `.worktrees/scanner-catalog-coverage-plan`

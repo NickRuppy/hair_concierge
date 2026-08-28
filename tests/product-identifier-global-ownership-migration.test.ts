@@ -84,7 +84,10 @@ test("GTIN migrations execute and enforce canonical ownership in Postgres", asyn
     CREATE TABLE public.products (
       id uuid PRIMARY KEY,
       is_active boolean NOT NULL DEFAULT true,
-      lifecycle_status text NOT NULL DEFAULT 'active'
+      lifecycle_status text NOT NULL DEFAULT 'active',
+      net_content_value numeric,
+      net_content_unit text,
+      updated_at timestamptz NOT NULL DEFAULT now()
     );
     CREATE TABLE public.product_submissions (
       id uuid PRIMARY KEY,
@@ -111,7 +114,13 @@ test("GTIN migrations execute and enforce canonical ownership in Postgres", asyn
 
     CREATE FUNCTION public.product_intake_approve_reviewed_product_before_scanned_identifier(
       uuid, jsonb, jsonb, text, timestamptz, text
-    ) RETURNS jsonb LANGUAGE sql AS $$ SELECT '{"base":"approve"}'::jsonb $$;
+    ) RETURNS jsonb LANGUAGE sql AS $$
+      SELECT jsonb_build_object(
+        'base', 'approve',
+        'product_id', '22222222-2222-4222-8222-222222222222',
+        'identifiers', COALESCE($2 -> 'identifiers', '[]'::jsonb)
+      )
+    $$;
     CREATE FUNCTION public.product_intake_approve_reviewed_product(
       uuid, jsonb, jsonb, text, timestamptz, text
     ) RETURNS jsonb LANGUAGE sql AS $$ SELECT '{"wrapper":"approve"}'::jsonb $$;
@@ -143,6 +152,50 @@ test("GTIN migrations execute and enforce canonical ownership in Postgres", asyn
   assert.equal(invalid.rows[0]?.canonical_gtin14, null)
 
   await pg.exec(writersSql)
+  const deduplicated = await pg.query<{ result: { identifiers: Array<{ value: string }> } }>(
+    `SELECT public.product_intake_approve_reviewed_product(
+      $1,
+      '{"product":{},"identifiers":[{"type":"ean","value":"4006381333931"},{"type":"gtin","value":"04006381333931"}]}'::jsonb,
+      '[]'::jsonb, 'reviewer'
+    ) AS result`,
+    ["44444444-4444-4444-8444-444444444444"],
+  )
+  assert.deepEqual(deduplicated.rows[0]?.result.identifiers, [
+    { type: "ean", value: "4006381333931" },
+  ])
+  const approved = await pg.query<{ result: { product_id: string } }>(
+    `SELECT public.product_intake_approve_reviewed_product(
+      $1, '{"product":{"net_content_value":"250","net_content_unit":"ml"}}'::jsonb,
+      '[]'::jsonb, 'reviewer'
+    ) AS result`,
+    ["33333333-3333-4333-8333-333333333333"],
+  )
+  assert.equal(approved.rows[0]?.result.product_id, "22222222-2222-4222-8222-222222222222")
+  assert.deepEqual(
+    (
+      await pg.query<{ net_content_value: string | null; net_content_unit: string | null }>(
+        "SELECT net_content_value::text, net_content_unit FROM public.products WHERE id = '22222222-2222-4222-8222-222222222222'",
+      )
+    ).rows[0],
+    { net_content_value: "250", net_content_unit: "ml" },
+  )
+  await pg.exec(
+    "UPDATE public.products SET net_content_value = 999, net_content_unit = 'g' WHERE id = '22222222-2222-4222-8222-222222222222'",
+  )
+  await pg.query(
+    `SELECT public.product_intake_approve_reviewed_product(
+      $1, '{"product":{}}'::jsonb, '[]'::jsonb, 'reviewer'
+    )`,
+    ["33333333-3333-4333-8333-333333333333"],
+  )
+  assert.deepEqual(
+    (
+      await pg.query<{ net_content_value: string | null; net_content_unit: string | null }>(
+        "SELECT net_content_value::text, net_content_unit FROM public.products WHERE id = '22222222-2222-4222-8222-222222222222'",
+      )
+    ).rows[0],
+    { net_content_value: null, net_content_unit: null },
+  )
   await pg.exec(`
     INSERT INTO public.product_submissions (
       id, scanned_identifier_type, scanned_identifier_value

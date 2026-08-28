@@ -9,7 +9,7 @@ This is a **research-ready, production-pending** cohort: it adds scanner identif
 | E1   |                20 |    22 | Current Phase 1 pilot, copied exactly from existing-pilot-research.json.                                                               | `2f4ad01a094e3e9ae46a0f8e3dcdd492fa4f8656cc19092749b4b3619258ba04` |
 | E2   |                22 |    24 | Safe difference from the five researched cohorts after the held product IDs and authority-blocked Balea Med Anti Schuppen are removed. | `b59cc597c1aec6a37e58ec1d88ec5dbdb2e1ef4f4d92206ac33cd3765cec746a` |
 
-Total: **42 existing products / 46 canonical GTIN-14 values**. Execution approval remains pinned independently to each wave's exact raw-manifest fingerprint.
+Historical total: **42 existing products / 46 canonical GTIN-14 values**. These v1 snapshots are superseded for execution by the August 28 v2 manifests (41 products / 43 GTINs); see `plans/2026-08-28-existing-gtin-enrichment-receipt.md`. The executor rejects these old fingerprints.
 
 ## Origin of the waves
 
