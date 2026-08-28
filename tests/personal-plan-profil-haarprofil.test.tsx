@@ -212,7 +212,7 @@ function journeyAccess(stage4: boolean): PersonalPlanJourneyAccess {
 
 test("the section's gate is exactly the signal that shows the Routine tab", () => {
   // Routine cohort: the tab exists, so `/routine` is a real plan view and
-  // „Dein Plan ✓" is a truthful row.
+  // „Dein Plan ✓“ is a truthful row.
   assert.equal(hasRoutineTabAccess(toAuthenticatedAppNavigationAccess(journeyAccess(true))), true)
   // Mid-journey buyer: no Routine tab, `/routine` renders its hidden
   // unavailable state — the section must stay absent, like the no-plan state.

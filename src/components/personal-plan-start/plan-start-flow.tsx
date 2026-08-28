@@ -154,10 +154,23 @@ export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJou
  *
  * Both are explicit module runs, so both get module SCOPE (scoped questions, no
  * chapter ceremony). Only the first has the post-accept ORIGIN that justifies
- * exiting to `/routine` and claiming „Plan aktualisiert". Conflating the two
+ * exiting to `/routine` and claiming „Plan aktualisiert“. Conflating the two
  * sends the unaccepted cohort at a `/routine` the frontier redirect bounces
  * back to a bare `/plan-start` — dropping their module scope onto the resume
- * shell — and tells a first-time buyer their plan was "updated".
+ * shell — and tells a first-time buyer their plan was „aktualisiert“.
+ *
+ * `planAccepted` is derived server-side from `activeRoutineVersionId`, i.e. an
+ * ACTIVATED routine — never from `allowed.stage4`, which a pending proposal
+ * alone also satisfies.
+ *
+ * KNOWN LIMITATION (not solved here). The `/routine` exit is keyed on
+ * acceptance, not on the frontier's current shape. A rare cohort — an active
+ * routine whose `currentRefinedNeedVersionId` has since been nulled — is
+ * genuinely accepted, so it takes the `/routine` exit, but its frontier may have
+ * fallen back below Stage 4 and the redirect can still bounce it. That is a
+ * narrower bounce than the one this split removes (it needs an activated
+ * routine AND a nulled refined-need version), and fixing it properly means
+ * routing on the live frontier rather than on a boolean. Tracked as follow-up.
  */
 
 /**

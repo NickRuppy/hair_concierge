@@ -295,6 +295,10 @@ test("a server-validated Routine repair request re-enters Stage 3 from a later f
       frontier: "stage5",
       nextHref: "/anwendung",
       allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
+      // A stage5 frontier means the Routine is ACTIVATED — the fact
+      // `planAccepted` is derived from (not the Stage-4 allowance, which a
+      // pending proposal alone also satisfies).
+      activeRoutineVersionId: "55555555-5555-4555-8555-555555555555",
     }),
     loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
   }
@@ -827,6 +831,10 @@ test("refine=1 outranks a repair request and only accepts the exact param value"
       frontier: "stage5",
       nextHref: "/anwendung",
       allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
+      // A stage5 frontier means the Routine is ACTIVATED — the fact
+      // `planAccepted` is derived from (not the Stage-4 allowance, which a
+      // pending proposal alone also satisfies).
+      activeRoutineVersionId: "55555555-5555-4555-8555-555555555555",
     }),
     loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
   }

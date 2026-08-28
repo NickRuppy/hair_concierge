@@ -591,10 +591,14 @@ test("a paid personal-plan result hands the buyer their plan, never the retired 
 })
 
 /**
- * F4 (ruled 27.08.2026). `/routine` is right for every cohort because the
- * middleware's frontier redirect lands each of them where they actually are —
- * but a fresh buyer with no Stage-4 routine yet is NOT sent to a
- * "Routinebereich". The copy must therefore never name that destination, or it
+ * F4 (ruled 27.08.2026). This surface is Personal-Plan-only, and for those
+ * buyers the middleware's frontier redirect forwards `/routine` on to the stage
+ * they actually reached. (Legacy cohorts are NOT redirected —
+ * `getPersonalPlanFrontierRedirect` returns `null` for `kind === "legacy"` —
+ * which is exactly why the legacy result actions keep their own destinations.)
+ *
+ * A fresh buyer with no Stage-4 routine yet is still not sent to a
+ * "Routinebereich", so the copy must never name that destination or it
  * contradicts the screen the user lands on.
  */
 test("the paid screen's copy is frontier-agnostic and carries no duplicated eyebrow", () => {

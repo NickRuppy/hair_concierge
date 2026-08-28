@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { QUIZ_RESULT_CTA } from "@/lib/quiz/result-cta"
@@ -72,10 +72,25 @@ function LegacyQuizResultLoading({ name }: { name: string }) {
   )
 }
 
+function getSafeReturnToPath(value: string | null): string | null {
+  if (!value) return null
+
+  const trimmed = value.trim()
+
+  if (!trimmed.startsWith("/")) return null
+  if (trimmed.startsWith("//")) return null
+  if (trimmed.includes("\\")) return null
+  if (/\s/.test(trimmed)) return null
+  if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmed)) return null
+
+  return trimmed
+}
+
 export function QuizResults() {
   // Legacy-only compatibility for an explicitly restored step 11. The normal
   // completion flow stays on step 10 and navigates directly to /result/[leadId].
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user, profile, loading } = useAuth()
   const { lead, answers, leadId, goNext } = useQuizStore()
   const [serverAccessCheck, setServerAccessCheck] = useState<{
@@ -86,6 +101,8 @@ export function QuizResults() {
   const resultArtifactEmailLeadRef = useRef<string | null>(null)
   const resultRedirectRef = useRef<string | null>(null)
   const narrative = buildQuizResultNarrative(answers)
+  const returnTo = searchParams.get("returnTo")
+  const isRetakeMode = searchParams.get("mode") === "retake"
   const profileHasAccess = isSubscriptionActive(profile)
   const serverAccessKey =
     user && leadId && !loading && !profileHasAccess ? `${user.id}:${leadId}` : null
@@ -198,12 +215,14 @@ export function QuizResults() {
     captureQuizCompleted()
 
     if (user && leadId) {
-      // The step-11 compatibility surface, only reachable once
-      // `canGoStraightToRoutine` holds — i.e. a PAID cohort. It used to push
-      // the retired onboarding route; `/routine` is the frontier-agnostic
-      // destination, since the middleware's frontier redirect lands each paid
-      // cohort on the surface they have actually reached (ruling 27.08.2026).
-      router.push("/routine")
+      const nextUrl = new URL("/onboarding", window.location.origin)
+      nextUrl.searchParams.set("lead", leadId)
+
+      if (isRetakeMode) {
+        nextUrl.searchParams.set("returnTo", getSafeReturnToPath(returnTo) ?? "/profile")
+      }
+
+      router.push(`${nextUrl.pathname}${nextUrl.search}`)
       return
     }
 

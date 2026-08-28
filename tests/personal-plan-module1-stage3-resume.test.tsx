@@ -25,6 +25,7 @@ const ids = {
   plan: "22222222-2222-4222-8222-222222222222",
   initialNeed: "33333333-3333-4333-8333-333333333333",
   refined: "44444444-4444-4444-8444-444444444444",
+  activeRoutine: "55555555-5555-4555-8555-555555555555",
 }
 
 type Row = Record<string, unknown>
@@ -302,6 +303,10 @@ function depsWithResume(
       frontier: "stage4",
       nextHref: "/routine",
       allowed,
+      // ACTIVATED, not merely Stage-4-allowed: `planAccepted` is derived from
+      // this field, so a fixture that claims an accepted Routine has to carry
+      // it or it silently models the pending-proposal cohort instead.
+      activeRoutineVersionId: ids.activeRoutine,
     }),
     loadExistingRefinementSession: async () => inProgressSession(),
     loadModule1Stage3Resume: resume,
@@ -325,7 +330,7 @@ test("reload after the Modul-1 handoff resumes Stage 3, not Stage 2", async () =
         refineModule: "products",
         // ORIGIN: this cohort came from the Routine banner, so its plan is
         // already activated — that is what earns the /routine exit and the
-        // „Plan aktualisiert" signal below.
+        // „Plan aktualisiert“ signal below.
         planAccepted: true,
       },
       personalPlanId: ids.plan,
@@ -349,6 +354,43 @@ test("the resumed Stage-3 leg keeps the module exit and suppresses the ceremony"
     stage3CompletionRoutineHref(initialJourney, "/routine"),
     withRoutinePlanUpdatedSignal("/routine"),
   )
+})
+
+/**
+ * Codex re-review finding 5. `allowed.stage4` is
+ * `hasAcceptedRoutine || hasCurrentProposal`, so keying the origin on it would
+ * call a user with only a PENDING proposal "accepted" — and hand them the
+ * „Plan aktualisiert“ toast for a routine they have never activated.
+ */
+test("a pending proposal alone is not acceptance — no origin, no „aktualisiert“ claim", async () => {
+  const state = await resolvePlanStartPageState(
+    depsWithResume(async () => ({ refinedVersionId: ids.refined }), {
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: ids.plan,
+        frontier: "stage4",
+        nextHref: "/routine",
+        // Stage 4 is allowed by the pending proposal, but nothing is activated.
+        allowed,
+        hasPendingRoutineProposal: true,
+        activeRoutineVersionId: null,
+      }),
+    }),
+  )
+  assert.equal(state.state, "production")
+  const initialJourney = state.state === "production" ? state.initialJourney : null
+  assert.ok(initialJourney)
+
+  assert.deepEqual(initialJourney, {
+    stage: "stage3",
+    refinedVersionId: ids.refined,
+    refineModule: "products",
+  })
+  // Module SCOPE is unaffected — this is still a directed module run.
+  assert.equal(planStartSuppressesChapterCeremony(initialJourney), true)
+  // ORIGIN is absent, so no toast and no /routine exit.
+  assert.equal(stage3CompletionRoutineHref(initialJourney, "/routine"), "/routine")
+  assert.equal(planStartRefinementExitDestination(initialJourney), "stage1")
 })
 
 test("a Stage-3 entry with no module marker still gets the full creation funnel", () => {

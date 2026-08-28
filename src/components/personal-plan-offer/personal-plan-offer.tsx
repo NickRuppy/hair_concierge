@@ -1200,12 +1200,18 @@ export function PersonalPlanOfferRecovery({
  * The Feinschliff is an optional later addition, never a gate (founder ruling
  * 27.08.2026).
  *
- * The copy is deliberately FRONTIER-AGNOSTIC. `/routine` is the right href for
- * every cohort because the middleware's frontier redirect lands each of them on
- * the surface they have actually reached — but a fresh buyer whose Stage-4
- * routine does not exist yet is NOT sent to a "Routinebereich", so naming that
- * destination in the copy would contradict what they see. „Dein Plan" is true
- * on every frontier (ruled 27.08.2026).
+ * The copy is deliberately FRONTIER-AGNOSTIC. This surface is reached only for
+ * `quizKind === "personal_plan"`, i.e. a buyer who resolves to a Personal-Plan
+ * routing frontier — and for those the middleware's frontier redirect forwards
+ * `/routine` on to the stage they have actually reached. (It does NOT do this
+ * in general: `getPersonalPlanFrontierRedirect` returns `null` for
+ * `frontier.kind === "legacy"`, so legacy cohorts are not redirected at all.
+ * That is why the legacy result actions keep their own destinations.)
+ *
+ * A fresh buyer whose Stage-4 routine does not exist yet is still NOT sent to a
+ * "Routinebereich", so naming that destination in the copy would contradict
+ * what they see. „Dein Plan“ is true on every Personal-Plan frontier
+ * (ruled 27.08.2026).
  */
 export function PersonalPlanPaidContinuation({ name }: { name: string }) {
   const displayName = name.trim().split(/\s+/)[0]

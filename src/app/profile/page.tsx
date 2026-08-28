@@ -522,7 +522,7 @@ export default function ProfilePage() {
   const { toast } = useToast()
   const supabase = useMemo(() => createClient(), [])
   const userId = user?.id ?? null
-  // Task 2.5: the Haarprofil section presents „Dein Plan" as done and links
+  // Task 2.5: the Haarprofil section presents „Dein Plan“ as done and links
   // it at the plan view (`/routine`). Both are premature for a buyer who has not
   // reached Stage 4 — the Routine tab is hidden for them and `/routine` renders
   // its unavailable state. Same signal, so the two can never disagree.
