@@ -802,28 +802,30 @@ export function RefinementFlow({
           // this sits in the plan (field test 26.08.2026).
           moduleProgress={moduleProgress ?? undefined}
         />
-        <div className={stageEntrance ? "personal-plan-stage-target-enter" : undefined}>
-          <PersonalPlanViewTransition
-            viewKey={activeQuestionId}
-            direction={questionDirection}
-            variant="depth"
-            focusOnInitialMount
-          >
-            <RefinementQuestion
-              session={session}
-              questionId={activeQuestionId}
-              localAnswer={localAnswer}
-              onLocalAnswerChange={handleLocalAnswer}
-              status={status}
-              liveMessage={liveMessage}
-              canGoBack={canGoBack}
-              onBack={handleBack}
-              onSubmit={handleSubmit}
-              onSecondaryExit={onSecondaryExit ?? (() => {})}
-              showJourneyHeader={false}
-              focusOnQuestionChange={false}
-            />
-          </PersonalPlanViewTransition>
+        <div className="overflow-x-clip">
+          <div className={stageEntrance ? "personal-plan-stage-target-enter" : undefined}>
+            <PersonalPlanViewTransition
+              viewKey={activeQuestionId}
+              direction={questionDirection}
+              variant="quiz"
+              focusOnInitialMount
+            >
+              <RefinementQuestion
+                session={session}
+                questionId={activeQuestionId}
+                localAnswer={localAnswer}
+                onLocalAnswerChange={handleLocalAnswer}
+                status={status}
+                liveMessage={liveMessage}
+                canGoBack={canGoBack}
+                onBack={handleBack}
+                onSubmit={handleSubmit}
+                onSecondaryExit={onSecondaryExit ?? (() => {})}
+                showJourneyHeader={false}
+                focusOnQuestionChange={false}
+              />
+            </PersonalPlanViewTransition>
+          </div>
         </div>
       </div>
     )

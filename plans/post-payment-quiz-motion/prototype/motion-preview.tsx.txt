@@ -1,0 +1,167 @@
+"use client"
+
+// Planning evidence only; imported by a temporary development-only Labs route.
+// Uses the existing in-memory Stage 2 fixture, never production persistence.
+import { useRef, useState } from "react"
+import { Stage2PreviewClient } from "../../src/app/labs/personal-plan-stage-2/preview-client"
+
+const proposalCss = `
+.personal-plan-view-transition { position: relative; }
+.personal-plan-view-transition-outgoing { position: absolute; inset: 0 0 auto; width: 100%; }
+[data-personal-plan-view-transition="depth"] .personal-plan-view-transition-incoming[data-transition-direction="forward"] { animation: personalPlanScreenEnterForward 200ms ease-out both; }
+[data-personal-plan-view-transition="depth"] .personal-plan-view-transition-outgoing[data-transition-direction="forward"] { animation: personalPlanScreenExitForward 160ms ease-out both; }
+[data-personal-plan-view-transition="depth"] .personal-plan-view-transition-incoming[data-transition-direction="reverse"] { animation: personalPlanScreenEnterBack 200ms ease-out both; }
+[data-personal-plan-view-transition="depth"] .personal-plan-view-transition-outgoing[data-transition-direction="reverse"] { animation: personalPlanScreenExitBack 160ms ease-out both; }
+.personal-plan-view-transition-outgoing * { animation: none !important; }
+.personal-plan-stage-target-enter { animation: personalPlanScreenEnterForward 200ms ease-out; }
+`
+
+export function MotionPreviewPanel({
+  proposed = true,
+  reduced = false,
+}: {
+  proposed?: boolean
+  reduced?: boolean
+}) {
+  const rootRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDetailsElement>(null)
+  const [quizMotion, setQuizMotion] = useState(proposed)
+  const [reducedMotion, setReducedMotion] = useState(reduced)
+  const [version, setVersion] = useState(0)
+  const [message, setMessage] = useState("Nur Vorschau · keine Kundendaten")
+
+  function play() {
+    const root = rootRef.current
+    const heading = root?.querySelector("h2")?.textContent
+    if (menuRef.current) menuRef.current.open = false
+    if (heading === "Welche Produkte nutzt du?") {
+      const shampoo = [...(root?.querySelectorAll("button") ?? [])].find((button) => {
+        const labelId = button.getAttribute("aria-labelledby")
+        return labelId && document.getElementById(labelId)?.textContent === "Shampoo"
+      })
+      if (shampoo?.getAttribute("aria-pressed") !== "true") shampoo?.click()
+      window.setTimeout(
+        () =>
+          [...document.querySelectorAll("button")]
+            .find((button) => button.textContent?.trim() === "Weiter")
+            ?.click(),
+        80,
+      )
+      setMessage("Vorwärts zur Waschhäufigkeit")
+    } else if (heading === "Wie oft wäschst du deine Haare nass?") {
+      root?.querySelector<HTMLButtonElement>('button[aria-label="Zurück"]')?.click()
+      setMessage("Zurück zu den Produkten")
+    } else {
+      setMessage("Zum Vergleichen bitte neu starten.")
+    }
+  }
+
+  function playStageEntry() {
+    const boundary = rootRef.current
+    const target = rootRef.current?.querySelector<HTMLElement>(
+      ".personal-plan-view-transition",
+    )?.parentElement
+    if (!target) return
+    if (menuRef.current) menuRef.current.open = false
+    target.classList.remove("personal-plan-stage-target-enter")
+    void target.offsetWidth
+    // A moving element cannot contain its own translation: use a stationary boundary.
+    const previousOverflow = boundary?.style.overflowX ?? ""
+    if (quizMotion && boundary) boundary.style.overflowX = "clip"
+    target.classList.add("personal-plan-stage-target-enter")
+    window.setTimeout(() => {
+      target.classList.remove("personal-plan-stage-target-enter")
+      if (boundary) boundary.style.overflowX = previousOverflow
+    }, 220)
+    setMessage(quizMotion ? "Etappen-Einstieg: 8 px / 200 ms" : "Etappen-Einstieg: 24 px / 220 ms")
+  }
+
+  return (
+    <>
+      {quizMotion ? <style>{proposalCss}</style> : null}
+      {reducedMotion ? (
+        <style>{`.personal-plan-view-transition-layer, .personal-plan-view-transition-layer *, .personal-plan-stage-target-enter { animation: none !important; transform: none !important; }`}</style>
+      ) : null}
+      <style>{`
+      .motion-tools { position:fixed; top:14px; right:10px; z-index:100; font-family:var(--font-plus-jakarta-sans),sans-serif; color:#2a1845; font-size:12px; }
+      .motion-tools summary { cursor:pointer; list-style:none; border:1px solid #cbbddb; padding:8px 10px; border-radius:12px; background:#f5f0fb; font-weight:700; }
+      .motion-tools summary::-webkit-details-marker { display:none; }
+      .motion-tools .panel { position:absolute; top:45px; right:0; width:290px; background:white; border:1px solid #ded4e9; padding:16px; border-radius:16px; box-shadow:0 12px 40px #2a184526; }
+      .motion-tools p { line-height:1.5; margin:0 0 12px; }
+      .motion-tools button { width:100%; padding:10px; margin:4px 0; border:1px solid #d3c7e3; border-radius:10px; background:#fdfbf9; font-weight:700; text-align:left; }
+      .motion-tools button[aria-pressed=true] { background:#eee5f9; border-color:#75529f; }
+      .motion-tools .note { margin:12px 0 0; color:#716878; font-size:11px; }
+    `}</style>
+      <details className="motion-tools" ref={menuRef}>
+        <summary aria-label="Bewegungsvergleich öffnen">
+          {quizMotion ? "Quiz-Stil" : "Aktuell"} ▾
+        </summary>
+        <div className="panel">
+          <p>
+            <strong>Bewegungsvergleich</strong>
+            <br />
+            Echte Feinschliff-Ansicht, nur lokale Beispieldaten.
+          </p>
+          <button
+            type="button"
+            aria-pressed={quizMotion}
+            onClick={() => {
+              setQuizMotion(true)
+              if (menuRef.current) menuRef.current.open = false
+            }}
+          >
+            Vorschlag: Quiz-Fade · 200 ms
+          </button>
+          <button
+            type="button"
+            aria-pressed={!quizMotion}
+            onClick={() => {
+              setQuizMotion(false)
+              if (menuRef.current) menuRef.current.open = false
+            }}
+          >
+            Bisher: Seitenschub · 360 ms
+          </button>
+          <button type="button" onClick={play}>
+            Übergang vor/zurück abspielen
+          </button>
+          <button type="button" onClick={playStageEntry}>
+            Etappen-Einstieg abspielen
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setVersion((v) => v + 1)
+              if (menuRef.current) menuRef.current.open = false
+              setMessage("Zurück auf Anfang")
+            }}
+          >
+            Neu starten
+          </button>
+          <button
+            type="button"
+            aria-pressed={reducedMotion}
+            onClick={() => setReducedMotion((v) => !v)}
+          >
+            Weniger Bewegung simulieren
+          </button>
+          <p className="note" role="status">
+            {message}
+          </p>
+          <p className="note">
+            Vorschlag: 8 px + Fade, 200 ms rein / 160 ms raus. Der Fokus-/Aufräum-Timer bleibt nur
+            im Prototyp noch bei 360 ms. Kein Nachweis für Produktionsspeicherung oder vollständige
+            Barrierefreiheit.
+          </p>
+        </div>
+      </details>
+      <div ref={rootRef} data-motion-review={quizMotion ? "quiz" : "current"}>
+        <Stage2PreviewClient key={version} scenario="module-products" />
+      </div>
+    </>
+  )
+}
+
+export function MotionPreview() {
+  return <MotionPreviewPanel />
+}

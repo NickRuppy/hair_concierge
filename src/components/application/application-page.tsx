@@ -134,7 +134,7 @@ export function ApplicationPage({
     const viewKey = selectedDay ? `day:${selectedDay.dayType}` : "overview"
     content = (
       <PersonalPlanStageEntrance destination="/anwendung">
-        <PersonalPlanViewTransition viewKey={viewKey} direction={direction} variant="depth">
+        <PersonalPlanViewTransition viewKey={viewKey} direction={direction} variant="quiz">
           {selectedDay ? (
             <ApplicationDay day={selectedDay} overviewHref={navigationBasePath} />
           ) : (

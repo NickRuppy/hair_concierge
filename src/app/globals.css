@@ -923,6 +923,7 @@
 
 .personal-plan-view-transition {
   display: grid;
+  position: relative;
   overflow-x: clip;
 }
 
@@ -933,8 +934,16 @@
 
 .personal-plan-view-transition-outgoing {
   pointer-events: none;
-  position: relative;
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  max-height: 100%;
+  overflow: clip;
   z-index: 1;
+}
+
+.personal-plan-view-transition-outgoing * {
+  animation: none !important;
 }
 
 .personal-plan-view-transition-incoming {
@@ -942,79 +951,28 @@
   z-index: 2;
 }
 
-[data-personal-plan-view-transition="depth"]
+[data-personal-plan-view-transition="quiz"]
   .personal-plan-view-transition-incoming[data-transition-direction="forward"] {
-  animation: personalPlanDepthIncomingForward 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+  animation: personalPlanScreenEnterForward 200ms ease-out both;
 }
 
-[data-personal-plan-view-transition="depth"]
+[data-personal-plan-view-transition="quiz"]
   .personal-plan-view-transition-outgoing[data-transition-direction="forward"] {
-  animation: personalPlanDepthOutgoingForward 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+  animation: personalPlanScreenExitForward 160ms ease-out both;
 }
 
-[data-personal-plan-view-transition="depth"]
+[data-personal-plan-view-transition="quiz"]
   .personal-plan-view-transition-incoming[data-transition-direction="reverse"] {
-  animation: personalPlanDepthIncomingReverse 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+  animation: personalPlanScreenEnterBack 200ms ease-out both;
 }
 
-[data-personal-plan-view-transition="depth"]
+[data-personal-plan-view-transition="quiz"]
   .personal-plan-view-transition-outgoing[data-transition-direction="reverse"] {
-  animation: personalPlanDepthOutgoingReverse 360ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
-}
-
-@keyframes personalPlanDepthIncomingForward {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes personalPlanDepthOutgoingForward {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0.72;
-    transform: translateX(-24%);
-  }
-}
-
-@keyframes personalPlanDepthIncomingReverse {
-  from {
-    transform: translateX(-24%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes personalPlanDepthOutgoingReverse {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0.72;
-    transform: translateX(100%);
-  }
-}
-
-@keyframes personalPlanStageIncoming {
-  from {
-    opacity: 0;
-    transform: translateX(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  animation: personalPlanScreenExitBack 160ms ease-out both;
 }
 
 .personal-plan-stage-target-enter {
-  animation: personalPlanStageIncoming 220ms ease-out;
+  animation: personalPlanScreenEnterForward 200ms ease-out;
 }
 
 @keyframes personalPlanStageTargetFade {
@@ -1027,7 +985,7 @@
 }
 
 .personal-plan-stage-target-fade {
-  animation: personalPlanStageTargetFade 220ms ease-out;
+  animation: personalPlanStageTargetFade 200ms ease-out;
 }
 
 .personal-plan-multi-count {

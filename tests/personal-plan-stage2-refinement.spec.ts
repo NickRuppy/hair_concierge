@@ -282,13 +282,20 @@ test.describe("Stage 2 refinement Labs preview", () => {
       await page.setViewportSize({ width, height: 812 })
       await begin(page)
       const dock = page.locator("[data-stage2-mobile-dock=portal]")
-      if (width === 375) {
+      const usesMobileDock = await page.evaluate(
+        () => window.matchMedia("(max-width: 767px)").matches,
+      )
+      if (usesMobileDock) {
         await expect(dock).toHaveCount(1)
         expect(await dock.evaluate((element) => element.parentElement === document.body)).toBe(true)
         expect(
           await dock.evaluate((element) => {
             const rect = element.getBoundingClientRect()
-            return rect.bottom >= window.innerHeight - 2 && rect.top < window.innerHeight
+            const viewport = window.visualViewport
+            const viewportBottom = viewport
+              ? viewport.offsetTop + viewport.height
+              : window.innerHeight
+            return Math.abs(rect.bottom - viewportBottom) <= 2 && rect.top < viewportBottom
           }),
         ).toBe(true)
         const lastChoice = page.getByRole("button", { name: /Keine weiteren; ersetzt die Auswahl/ })

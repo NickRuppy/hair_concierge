@@ -1,0 +1,19 @@
+import { notFound } from "next/navigation"
+import {
+  MotionPreview,
+  MotionPreviewPanel,
+} from "../../../../plans/post-payment-quiz-motion/motion-preview"
+
+export default async function PostPaymentMotionPreviewPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ panel?: string; motion?: string; reduced?: string }>
+}) {
+  if (process.env.NODE_ENV !== "development") notFound()
+  const params = await searchParams
+  return params.panel === "1" ? (
+    <MotionPreviewPanel proposed={params.motion === "quiz"} reduced={params.reduced === "1"} />
+  ) : (
+    <MotionPreview />
+  )
+}
