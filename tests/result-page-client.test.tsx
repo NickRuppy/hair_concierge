@@ -15,7 +15,18 @@ const quizAnswers: QuizAnswers = {
   goals: ["shine"],
 }
 
-test("result page client sends manually granted users to onboarding instead of the paid offer", () => {
+/**
+ * BLOCKER 1 (Codex whole-branch review). This is the LEGACY paid branch, and it
+ * kept routing entitled users into `/onboarding` after round 1 fixed only the
+ * `quizKind="personal_plan"` branch.
+ *
+ * It is reachable, not dead: an eligible legacy source becomes a Personal-Plan
+ * frontier via the legacy-quiz cutover (`frontier-routing-loader.ts:55`), while
+ * the frontier redirect deliberately EXEMPTS `/onboarding` paths
+ * (`frontier-routing.ts:40`) — so nothing bounced the cutover cohort back out
+ * of the retired flow.
+ */
+test("result page client sends manually granted users to their plan, not the retired onboarding", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient
       leadId="11111111-1111-4111-8111-111111111111"
@@ -27,11 +38,12 @@ test("result page client sends manually granted users to onboarding instead of t
   )
 
   assert.match(html, /SO KOMMEN WIR DEINEM HAARZIEL NÄHER/i)
-  assert.match(html, /href="\/onboarding\?lead=11111111-1111-4111-8111-111111111111"/)
+  assert.match(html, /href="\/routine"/)
+  assert.doesNotMatch(html, /\/onboarding/)
   assert.doesNotMatch(html, /Angebot:/i)
 })
 
-test("result page client preserves a validated retake destination for entitled users", () => {
+test("the legacy paid action is frontier-agnostic — a retake returnTo cannot resurrect onboarding", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient
       leadId="11111111-1111-4111-8111-111111111111"
@@ -43,10 +55,21 @@ test("result page client preserves a validated retake destination for entitled u
     />,
   )
 
-  assert.match(
-    html,
-    /href="\/onboarding\?lead=11111111-1111-4111-8111-111111111111&amp;returnTo=%2Fprofile%3Fsection%3Droutine"/,
+  // `/routine` is correct for every paid cohort: the middleware's frontier
+  // redirect lands each of them on the surface they have actually reached.
+  assert.match(html, /href="\/routine"/)
+  assert.doesNotMatch(html, /\/onboarding/)
+  assert.doesNotMatch(html, /returnTo=/)
+})
+
+test("the step-11 compatibility surface pushes the plan, not the retired onboarding", () => {
+  const source = readFileSync(
+    new URL("../src/components/quiz/quiz-results.tsx", import.meta.url),
+    "utf8",
   )
+
+  assert.doesNotMatch(source, /\/onboarding/)
+  assert.match(source, /router\.push\("\/routine"\)/)
 })
 
 test("result page client passes persisted quiz answers into the organic offer", () => {

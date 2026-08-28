@@ -140,6 +140,19 @@ export async function resolvePlanStartPageState(
       // preload fails; access/auth failures still resolve through the outer gate.
       initialPlan = undefined
     }
+    /**
+     * ORIGIN, not scope. `allowed.stage4` is exactly "this plan has an active
+     * Routine or a pending proposal", i.e. it has been activated at least once
+     * — already resolved above, so this costs nothing extra.
+     *
+     * Every journey carries it because the module cohorts share one URL:
+     * `?refine=products` is both the Routine banner's deep link (accepted) and
+     * the failed-accept escape hatch (unaccepted). Without this fact the flow
+     * cannot tell them apart, and the unaccepted cohort inherits a `/routine`
+     * exit the frontier redirect bounces plus a „Plan aktualisiert" toast for
+     * what is actually their first plan.
+     */
+    const planAccepted = access.kind === "personal_plan" && access.allowed.stage4
     const production = (
       initialJourney: PlanStartInitialJourney,
       bootstrap?: Pick<
@@ -148,7 +161,10 @@ export async function resolvePlanStartPageState(
       >,
     ): PlanStartPageState => ({
       state: "production",
-      initialJourney,
+      initialJourney:
+        initialJourney.stage === "stage1" || !planAccepted
+          ? initialJourney
+          : { ...initialJourney, planAccepted: true },
       ...(initialPlan ? { initialPlan } : {}),
       ...bootstrap,
     })

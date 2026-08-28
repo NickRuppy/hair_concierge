@@ -46,19 +46,3 @@ export function buildQuizResultPath({
 
   return `${resultPath}&mode=retake&returnTo=${encodeURIComponent(retakeReturnTo)}`
 }
-
-export function buildQuizResultOnboardingPath({
-  leadId,
-  returnTo,
-}: {
-  leadId: string
-  returnTo?: string | null
-}): string {
-  const onboardingPath = `/onboarding?lead=${encodeURIComponent(leadId)}`
-
-  if (!returnTo || !isSafeLocalReturnTo(returnTo)) {
-    return onboardingPath
-  }
-
-  return `${onboardingPath}&returnTo=${encodeURIComponent(returnTo)}`
-}

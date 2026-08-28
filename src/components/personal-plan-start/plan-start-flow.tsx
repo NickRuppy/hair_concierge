@@ -109,6 +109,8 @@ export type PlanStartInitialJourney =
        * an unavailable read simply means no meter.
        */
       moduleProgress?: Stage2ModuleProgress
+      /** See the shared note on ORIGIN vs SCOPE below. */
+      planAccepted?: boolean
     }
   | {
       stage: "stage3"
@@ -124,6 +126,8 @@ export type PlanStartInitialJourney =
        * chapter-4 screen the module entry had already retired.
        */
       refineModule?: Stage2ModuleEntryRequest
+      /** See the shared note on ORIGIN vs SCOPE below. */
+      planAccepted?: boolean
     }
 
 /**
@@ -138,41 +142,72 @@ export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJou
 }
 
 /**
- * Where leaving the Feinschliff goes. An explicit module deep link was opened
- * from the Routine banner or the Profil tab, so "zurück" belongs on `/routine`
- * — sending those arrivals to the Idealplan would drop them into a stage they
- * never came from. `?refine=1` and every legacy entry keep today's Stage-1 exit.
+ * ORIGIN vs SCOPE — the distinction the rest of this block turns on.
  *
- * A Stage-3 entry carries the same marker when it resumes a module handoff, so
- * the module's exit and its ceremony suppression survive an undirected reload.
+ * `?refine=products` is reached from two very different places:
+ *
+ *  - the Routine banner / a Profil row — the plan is ACCEPTED, the user has the
+ *    full app nav, and this is a surface hop that edits an existing plan;
+ *  - the failed-accept escape hatch (`PLAN_ACCEPT_REFINE_HREF`) — the plan was
+ *    never activated, there is no Routine to return to, and completing the
+ *    module produces the user's FIRST routine.
+ *
+ * Both are explicit module runs, so both get module SCOPE (scoped questions, no
+ * chapter ceremony). Only the first has the post-accept ORIGIN that justifies
+ * exiting to `/routine` and claiming „Plan aktualisiert". Conflating the two
+ * sends the unaccepted cohort at a `/routine` the frontier redirect bounces
+ * back to a bare `/plan-start` — dropping their module scope onto the resume
+ * shell — and tells a first-time buyer their plan was "updated".
+ */
+
+/**
+ * SCOPE. The module this journey walks, wherever it started. Read for any
+ * non-Stage-1 journey on purpose: `initialJourney` is frozen for the life of
+ * the journey while the LOCAL stage moves, so a Stage-3 entry that switches
+ * back to Stage 2 (the Modul-1 reload pressing Back) must still be recognised
+ * as the module run it is.
+ */
+export function planStartModuleEntry(
+  initialJourney: PlanStartInitialJourney,
+): Stage2ModuleEntryRequest | undefined {
+  return initialJourney.stage === "stage1" ? undefined : initialJourney.refineModule
+}
+
+/**
+ * SCOPE. Whether this Feinschliff run was launched by an EXPLICIT module deep
+ * link (the Routine banner, a Profil row, or the failed-accept escape hatch).
+ */
+export function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
+  return stage2SecondaryExitDestination(planStartModuleEntry(initialJourney)) === "routine"
+}
+
+/** ORIGIN. Whether this journey's plan has already been activated. */
+function isAcceptedPlanJourney(initialJourney: PlanStartInitialJourney): boolean {
+  return initialJourney.stage !== "stage1" && initialJourney.planAccepted === true
+}
+
+/** An explicit module run on an ALREADY ACCEPTED plan — scope AND origin. */
+function isPostAcceptModuleEntry(initialJourney: PlanStartInitialJourney): boolean {
+  return isExplicitModuleRefinementEntry(initialJourney) && isAcceptedPlanJourney(initialJourney)
+}
+
+/**
+ * Where leaving the Feinschliff goes. `/routine` only for the post-accept
+ * cohort, which really came from there. The escape-hatch cohort has no routine
+ * yet, so it stays inside the flow and returns to the plan it was trying to
+ * accept — the surface it actually came from.
  */
 export function planStartRefinementExitDestination(
   initialJourney: PlanStartInitialJourney,
 ): "routine" | "stage1" {
-  return initialJourney.stage === "stage1"
-    ? "stage1"
-    : stage2SecondaryExitDestination(initialJourney.refineModule)
-}
-
-/**
- * Whether this Feinschliff run was launched by an EXPLICIT module deep link
- * (the Routine banner or the Profil row) — the same test
- * `planStartRefinementExitDestination` already uses to route a mid-flow exit
- * back to `/routine`. `initialJourney` never changes for the life of the
- * journey (only the local `stage` does), so this stays valid from the
- * Stage-2 module itself through to the Stage-3 completion the `products`
- * module hands off into.
- */
-export function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
-  return planStartRefinementExitDestination(initialJourney) === "routine"
+  return isPostAcceptModuleEntry(initialJourney) ? "routine" : "stage1"
 }
 
 /**
  * Whether the post-accept loop's chapter screens must stay suppressed for this
- * journey (field test 26.08.2026). An explicit module deep link means the user
- * arrived from the Routine banner or a Profil row with the full app nav on
- * screen — Stage-2 → Stage-3 and Stage-3 → Routine are surface hops there, not
- * funnel chapters. The first-time linear creation funnel keeps every chapter.
+ * journey (field test 26.08.2026). Keyed on SCOPE alone: an explicit module
+ * deep link is a directed request in both cohorts, and the escape-hatch arrival
+ * must not regain the retired ceremony just because its plan is not live yet.
  */
 export function planStartSuppressesChapterCeremony(
   initialJourney: PlanStartInitialJourney,
@@ -182,30 +217,28 @@ export function planStartSuppressesChapterCeremony(
 
 /**
  * The Routine href for a habits-first module completion (Task 2.4: "habits
- * zuerst"). Only an explicit module entry is a refinement-driven recompute
- * the user should be told about (Task 2.6) — `?refine=1` and the legacy
- * linear entry never reach this branch in the first place (see
- * `applyStage2ModuleCompletion`), but the check stays here rather than
- * relying on that invariant silently holding.
+ * zuerst"). Only a post-accept module entry is a refinement-driven RECOMPUTE
+ * the user should be told about (Task 2.6). An escape-hatch completion is an
+ * initial activation: nothing was updated, so the arrival speaks for itself.
  */
 export function moduleCompletionRoutineHref(initialJourney: PlanStartInitialJourney): string {
-  return isExplicitModuleRefinementEntry(initialJourney)
+  return isPostAcceptModuleEntry(initialJourney)
     ? withRoutinePlanUpdatedSignal("/routine")
     : "/routine"
 }
 
 /**
  * The Routine href for a Stage-3 completion (Task 2.4: Modul 1 "products" →
- * Stage 3 → Routine). Stage 3 is also reached from a direct Idealplan accept
- * and from an ordinary resumed Stage-3 session — neither of those is a
- * refinement-driven recompute, so the toast (Task 2.6) only rides along when
- * this journey started as an explicit module deep link.
+ * Stage 3 → Routine). Stage 3 is also reached from a direct Idealplan accept,
+ * from an ordinary resumed Stage-3 session, and from the failed-accept escape
+ * hatch — none of those is a refinement-driven recompute, so the toast
+ * (Task 2.6) only rides along for a post-accept module entry.
  */
 export function stage3CompletionRoutineHref(
   initialJourney: PlanStartInitialJourney,
   href: string,
 ): string {
-  return isExplicitModuleRefinementEntry(initialJourney) ? withRoutinePlanUpdatedSignal(href) : href
+  return isPostAcceptModuleEntry(initialJourney) ? withRoutinePlanUpdatedSignal(href) : href
 }
 
 export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
@@ -975,7 +1008,11 @@ export function PlanStartCustomerJourney({
       <RefinementFlow
         gateway={stage2Gateway}
         initialSession={initialStage2Session}
-        moduleEntry={initialJourney.stage === "stage2" ? initialJourney.refineModule : undefined}
+        // Read from the journey regardless of the stage it STARTED at: a
+        // reloaded Modul-1 Stage-3 journey switches the local stage back to
+        // Stage 2 when Back is pressed, and it must keep walking its module
+        // instead of falling into the full linear Feinschliff (resume shell).
+        moduleEntry={planStartModuleEntry(initialJourney)}
         onSecondaryExit={() => {
           if (planStartRefinementExitDestination(initialJourney) === "routine") {
             openRoutineHref("/routine")

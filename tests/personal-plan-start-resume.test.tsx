@@ -306,6 +306,7 @@ test("a server-validated Routine repair request re-enters Stage 3 from a later f
       stage: "stage3",
       refinedVersionId: "refined-1",
       repairRoutineVersionId,
+      planAccepted: true,
     },
     personalPlanId: "plan-1",
     initialRefinementSession: refinementSession("complete", "refined-1"),
@@ -836,7 +837,9 @@ test("refine=1 outranks a repair request and only accepts the exact param value"
   })
   assert.deepEqual(state, {
     state: "production",
-    initialJourney: { stage: "stage2", returningToRefinement: true },
+    // Stage-4 access in this fixture means the plan is activated, so the
+    // journey carries the post-accept origin (Codex review blocker 2).
+    initialJourney: { stage: "stage2", returningToRefinement: true, planAccepted: true },
     personalPlanId: "plan-1",
     initialRefinementSession: refinementSession("complete", "refined-1"),
   })

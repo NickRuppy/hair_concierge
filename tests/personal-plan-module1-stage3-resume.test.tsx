@@ -323,6 +323,10 @@ test("reload after the Modul-1 handoff resumes Stage 3, not Stage 2", async () =
         stage: "stage3",
         refinedVersionId: ids.refined,
         refineModule: "products",
+        // ORIGIN: this cohort came from the Routine banner, so its plan is
+        // already activated — that is what earns the /routine exit and the
+        // „Plan aktualisiert" signal below.
+        planAccepted: true,
       },
       personalPlanId: ids.plan,
       initialRefinementSession: inProgressSession(),
@@ -357,12 +361,18 @@ test("a Stage-3 entry with no module marker still gets the full creation funnel"
 test("without a handoff resume the in-progress draft still resolves to Stage 2", async () => {
   const state = await resolvePlanStartPageState(depsWithResume(async () => null))
   assert.equal(state.state, "production")
-  assert.deepEqual(state.state === "production" ? state.initialJourney : null, { stage: "stage2" })
+  assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
+    stage: "stage2",
+    planAccepted: true,
+  })
 })
 
 test("an unwired resume dep leaves the Stage 2 fall-through untouched", async () => {
   const state = await resolvePlanStartPageState(depsWithResume(undefined))
-  assert.deepEqual(state.state === "production" ? state.initialJourney : null, { stage: "stage2" })
+  assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
+    stage: "stage2",
+    planAccepted: true,
+  })
 })
 
 test("an explicit refine deep link still outranks the Stage-3 resume", async () => {
@@ -374,6 +384,7 @@ test("an explicit refine deep link still outranks the Stage-3 resume", async () 
     stage: "stage2",
     returningToRefinement: true,
     refineModule: "habits",
+    planAccepted: true,
   })
 })
 
@@ -389,7 +400,11 @@ test("Stage 3 access is still required for the resume", async () => {
       }),
     }),
   )
-  assert.deepEqual(state.state === "production" ? state.initialJourney : null, { stage: "stage2" })
+  // No Stage-4 access means no activated plan, so the journey carries no
+  // `planAccepted` — the origin signal tracks real acceptance, not the URL.
+  assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
+    stage: "stage2",
+  })
 })
 
 test("a failing resume read degrades to Stage 2 instead of taking the page down", async () => {
@@ -398,5 +413,8 @@ test("a failing resume read degrades to Stage 2 instead of taking the page down"
       throw new Error("resume read failed")
     }),
   )
-  assert.deepEqual(state.state === "production" ? state.initialJourney : null, { stage: "stage2" })
+  assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
+    stage: "stage2",
+    planAccepted: true,
+  })
 })

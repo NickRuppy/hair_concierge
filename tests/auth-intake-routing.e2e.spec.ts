@@ -211,20 +211,22 @@ test.describe.serial("Authenticated intake routing", () => {
     await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toBeVisible()
     await page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i }).click()
 
-    await page.waitForURL((url) => url.pathname === "/onboarding", {
+    // Codex review blocker 1: the entitled result action no longer opens the
+    // retired `/onboarding` flow. It lands on `/routine`, and the middleware's
+    // frontier redirect takes this cohort on to the surface they have reached.
+    //
+    // NOTE: the retake/`returnTo=/profile` threading this used to assert died
+    // with that route — it only ever existed to hand `/onboarding` a return
+    // destination. The lead-linking assertions below still describe the old
+    // onboarding completion and need a human pass against the real flow; this
+    // spec is not CI-wired (it needs a live Supabase service-role key), so it
+    // could not be executed here.
+    await page.waitForURL((url) => url.pathname !== `/result/${latestLeadBeforeReveal!.id}`, {
       timeout: 30_000,
       waitUntil: "domcontentloaded",
     })
 
-    const onboardingUrl = new URL(page.url())
-    expect(onboardingUrl.pathname).toBe("/onboarding")
-    expect(onboardingUrl.searchParams.get("lead")).toBeTruthy()
-    expect(onboardingUrl.searchParams.get("returnTo")).toBe("/profile")
-
-    await expect(page.getByRole("button", { name: /LOS GEHT/i })).toBeVisible({
-      timeout: 15_000,
-    })
-    await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toHaveCount(0)
+    expect(new URL(page.url()).pathname).not.toBe("/onboarding")
 
     await expect
       .poll(

@@ -19,7 +19,6 @@ import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/ty
 import { renderOfferVariant } from "@/funnels/offers/registry"
 import { QUIZ_RESULT_CTA } from "@/lib/quiz/result-cta"
 import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
-import { buildQuizResultOnboardingPath } from "@/lib/quiz/result-navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
@@ -44,7 +43,6 @@ export function ResultPageClient({
   isInternalTest = false,
   regularFieldTest = null,
   regularFieldTestUnavailable = false,
-  returnTo = null,
   offerTracking = null,
   offerVariant = "default",
   pricingCatalog,
@@ -68,6 +66,11 @@ export function ResultPageClient({
     accessDurationHours: number
   } | null
   regularFieldTestUnavailable?: boolean
+  /**
+   * Part of the `/result` search-param contract (`page.tsx` resolves and passes
+   * it), but no longer consumed here: the retake return-to only ever fed the
+   * retired `/onboarding` path, and every paid action now lands on `/routine`.
+   */
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
@@ -135,7 +138,6 @@ export function ResultPageClient({
       pricingCatalogWasProvided={pricingCatalogWasProvided}
       quizAnswers={quizAnswers}
       regularFieldTest={regularFieldTest}
-      returnTo={returnTo}
     />
   )
 }
@@ -153,7 +155,6 @@ function LegacyResultPageClient({
   pricingCatalogWasProvided,
   quizAnswers,
   regularFieldTest,
-  returnTo,
 }: {
   entryContext: OfferEntryContext
   focusRoutine: boolean
@@ -169,7 +170,6 @@ function LegacyResultPageClient({
   regularFieldTest?: {
     accessDurationHours: number
   } | null
-  returnTo?: string | null
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)
   const cta = QUIZ_RESULT_CTA
@@ -194,10 +194,18 @@ function LegacyResultPageClient({
       <QuizResultsView
         name={name}
         narrative={{ ...narrative, cta }}
-        primaryAction={{
-          label: cta.label,
-          href: buildQuizResultOnboardingPath({ leadId, returnTo }),
-        }}
+        /**
+         * The LEGACY paid action. It used to open `/onboarding` — and that was
+         * not dead code: an eligible legacy source becomes a Personal-Plan
+         * frontier via the legacy-quiz cutover, while the frontier redirect
+         * deliberately exempts `/onboarding` paths, so nothing bounced these
+         * buyers back out of the retired flow.
+         *
+         * `/routine` is the frontier-agnostic destination for every paid
+         * cohort: the middleware's frontier redirect lands each of them on the
+         * surface they have actually reached (founder ruling 27.08.2026).
+         */
+        primaryAction={{ label: cta.label, href: "/routine" }}
         secondaryAction={null}
       />
     )

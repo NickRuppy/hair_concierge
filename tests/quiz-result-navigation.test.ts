@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
-  buildQuizResultOnboardingPath,
   buildQuizResultPath,
   getQuizResultSearchParamValue,
   resolveQuizResultRetakeReturnTo,
@@ -76,28 +75,16 @@ test("non-retake result paths discard return destinations", () => {
   assert.equal(resolveQuizResultRetakeReturnTo("ordinary", "/profile"), null)
 })
 
-test("entitled onboarding paths only append validated retake destinations", () => {
-  assert.equal(
-    buildQuizResultOnboardingPath({
-      leadId: "lead/with spaces",
-      returnTo: null,
-    }),
-    "/onboarding?lead=lead%2Fwith%20spaces",
+test("no builder for the retired onboarding path survives", () => {
+  // Every paid action now lands on `/routine` (Codex review blocker 1), so the
+  // builder that produced `/onboarding?lead=…&returnTo=…` has no caller left.
+  // Keeping it around is an invitation to reintroduce the retired flow.
+  const source = readFileSync(
+    new URL("../src/lib/quiz/result-navigation.ts", import.meta.url),
+    "utf8",
   )
-  assert.equal(
-    buildQuizResultOnboardingPath({
-      leadId: "lead-1",
-      returnTo: "/profile?section=routine",
-    }),
-    "/onboarding?lead=lead-1&returnTo=%2Fprofile%3Fsection%3Droutine",
-  )
-  assert.equal(
-    buildQuizResultOnboardingPath({
-      leadId: "lead-1",
-      returnTo: "//evil.example",
-    }),
-    "/onboarding?lead=lead-1",
-  )
+  assert.doesNotMatch(source, /buildQuizResultOnboardingPath/)
+  assert.doesNotMatch(source, /onboarding/)
 })
 
 test("result page resolves retake context before passing it to the client", () => {
