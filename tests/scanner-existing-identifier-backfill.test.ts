@@ -113,16 +113,38 @@ test("accepts the two approved cohort shapes and canonicalizes all GTINs", () =>
   assert.equal(second.canonical_gtins.length, 22)
 })
 
-test("loads the reviewed E1/E2 files with their exact pinned raw fingerprints", () => {
+test("loads the reviewed E1/E2/E3 files with their exact pinned raw fingerprints", () => {
   for (const [batch, filename] of [
     ["E1", "phase1-existing-identifier-backfill-e1-v2.json"],
     ["E2", "phase1-existing-identifier-backfill-e2-v2.json"],
+    ["E3", "phase1-existing-identifier-backfill-e3-v1.json"],
   ] as const) {
     const raw = readFileSync(`data/scanner-catalog-coverage/2026-08-26/${filename}`, "utf8")
     const parsed = parseScannerIdentifierBackfillManifest(raw)
     assert.equal(parsed.batch, batch)
     assert.equal(parsed.batch_fingerprint, SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS[batch])
   }
+})
+
+test("accepts only the exact E3 shape and pinned fingerprint", () => {
+  const raw = readFileSync(
+    "data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e3-v1.json",
+    "utf8",
+  )
+  const parsed = parseScannerIdentifierBackfillManifest(raw)
+  assert.equal(parsed.batch, "E3")
+  assert.equal(parsed.items.length, 17)
+  assert.equal(parsed.canonical_gtins.length, 17)
+  assert.equal(
+    parsed.batch_fingerprint,
+    "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+  )
+  const wrongShape = JSON.parse(raw)
+  wrongShape.items.pop()
+  assert.throws(
+    () => parseScannerIdentifierBackfillManifest(JSON.stringify(wrongShape)),
+    /E3 must contain exactly 17 products/i,
+  )
 })
 
 test("rejects a transaction over 25 products and an invalid checksum", () => {
@@ -155,10 +177,11 @@ test("rejects drift-prone manifests without exact lifecycle, source URL, and con
   }
 })
 
-test("apply arguments are fail-closed and pin both exact raw manifest fingerprints", () => {
+test("apply arguments are fail-closed and pin all exact raw manifest fingerprints", () => {
   assert.deepEqual(SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS, {
     E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
     E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+    E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
   })
   assert.throws(() => parseScannerIdentifierBackfillArgs(["--apply"]), /confirm-project/i)
   assert.throws(
@@ -212,6 +235,37 @@ function readAdapter(
     ...overrides,
   }
 }
+
+test("only E3 requires its additional migration before reading the live cohort", async () => {
+  for (const batch of ["e1-v2", "e3-v1"]) {
+    const manifest = parseScannerIdentifierBackfillManifest(
+      readFileSync(
+        `data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-${batch}.json`,
+        "utf8",
+      ),
+    )
+    const result = await preflightScannerIdentifierBackfill({
+      manifest,
+      args: { apply: false, reviewed_head: "b".repeat(40) },
+      read: readAdapter(manifest, {
+        async migrationState(version) {
+          return version === "20260828081500" ? "absent" : "applied"
+        },
+      }),
+      gitState: async () => ({
+        head: "b".repeat(40),
+        branch: SCANNER_IDENTIFIER_BACKFILL_BRANCH,
+        clean: true,
+      }),
+      projectId: SCANNER_IDENTIFIER_BACKFILL_PROJECT_ID,
+    })
+    assert.deepEqual(
+      result.blockers,
+      batch.startsWith("e3") ? ["required migration 20260828081500 is not applied"] : [],
+    )
+    assert.equal(result.ok, batch.startsWith("e1"))
+  }
+})
 
 test("preflight requires exact clean branch/head, live identity, migrations, and global ownership", async () => {
   const manifest = reviewedE1()

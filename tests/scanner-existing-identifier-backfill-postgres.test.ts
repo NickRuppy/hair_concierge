@@ -17,10 +17,10 @@ function gtin(body: string): string {
   return `${body}${(10 - (weighted % 10)) % 10}`
 }
 
-function makeManifest(batch: "E1" | "E2") {
-  const productCount = batch === "E1" ? 20 : 21
-  const gtinCount = batch === "E1" ? 21 : 22
-  const batchDigit = batch === "E1" ? "1" : "2"
+function makeManifest(batch: "E1" | "E2" | "E3") {
+  const productCount = batch === "E1" ? 20 : batch === "E2" ? 21 : 17
+  const gtinCount = batch === "E1" ? 21 : batch === "E2" ? 22 : 17
+  const batchDigit = batch === "E1" ? "1" : batch === "E2" ? "2" : "3"
   const items = Array.from({ length: productCount }, (_, index) => {
     const productId = `${batchDigit}${String(index + 1).padStart(7, "0")}-1111-4111-8111-${String(index + 1).padStart(12, "0")}`
     const item = {
@@ -35,7 +35,7 @@ function makeManifest(batch: "E1" | "E2") {
       },
       identifiers: Array.from({ length: index < gtinCount - productCount ? 2 : 1 }, (_, slot) => {
         const value = gtin(
-          `${batch === "E1" ? 31 : 41}${String(index * 10 + slot).padStart(9, "0")}`,
+          `${batch === "E1" ? 31 : batch === "E2" ? 41 : 51}${String(index * 10 + slot).padStart(9, "0")}`,
         )
         return {
           type: "ean" as const,
@@ -144,6 +144,24 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       makeManifest("E2").fingerprint,
     )
   await pg.exec(executor)
+  let e3Executor = await readFile(
+    "supabase/migrations/20260828081500_scanner_existing_identifier_backfill_e3.sql",
+    "utf8",
+  )
+  e3Executor = e3Executor
+    .replace(
+      "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+      makeManifest("E1").fingerprint,
+    )
+    .replace(
+      "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+      makeManifest("E2").fingerprint,
+    )
+    .replace(
+      "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+      makeManifest("E3").fingerprint,
+    )
+  await pg.exec(e3Executor)
   return pg
 }
 
@@ -239,6 +257,43 @@ test("E1 applies atomically and an exact replay inserts no duplicate canonical G
     ["scanner-existing-identifiers-e1-v1", e1.items[0].item_key],
   )
   await assert.rejects(() => apply(pg, e1), /conflicting or partial replay/i)
+})
+
+test("E3 applies atomically, replays exactly, and rejects wrong fingerprints and shapes", async (t) => {
+  const e3 = makeManifest("E3")
+  const pg = await database([e3])
+  t.after(async () => pg.close())
+
+  await assert.rejects(
+    () =>
+      pg.query(
+        `SELECT * FROM public.apply_scanner_existing_identifier_backfill_v1($1, $2, $3, 'nick', true)`,
+        [e3.raw, "0".repeat(64), REVIEWED_HEAD],
+      ),
+    /raw UTF-8 fingerprint mismatch/i,
+  )
+  const wrongShape = JSON.parse(e3.raw)
+  wrongShape.items.pop()
+  const wrongShapeRaw = JSON.stringify(wrongShape)
+  await assert.rejects(
+    () =>
+      pg.query(
+        `SELECT * FROM public.apply_scanner_existing_identifier_backfill_v1($1, $2, $3, 'nick', true)`,
+        [wrongShapeRaw, createHash("sha256").update(wrongShapeRaw).digest("hex"), REVIEWED_HEAD],
+      ),
+    /manifest fingerprint is not approved/i,
+  )
+  const first = await apply(pg, e3)
+  assert.equal(first.rows.length, 17)
+  assert.equal(
+    first.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
+    17,
+  )
+  const replay = await apply(pg, e3)
+  assert.equal(
+    replay.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
+    0,
+  )
 })
 
 test("E2 rejects a canonical owner on an inactive product and rolls the full wave back", async (t) => {

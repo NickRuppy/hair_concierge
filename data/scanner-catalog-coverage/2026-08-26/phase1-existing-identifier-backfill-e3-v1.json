@@ -1,0 +1,501 @@
+{
+  "batch": "E3",
+  "batch_id": "scanner-existing-identifiers-e3-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "candidate_manifest": "phase1-existing-identifier-backfill-e3-candidates-v1.json",
+    "source_checked_at": "2026-08-28T07:50:23Z",
+    "production_identity_checked_at": "2026-08-28T08:05:20.970Z",
+    "source_refresh_receipt": "plans/2026-08-28-existing-gtin-enrichment-receipt.md"
+  },
+  "items": [
+    {
+      "item_key": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "product_id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "expected_product": {
+        "name": "SANTE Deep Repair Conditioner",
+        "brand": "Sante",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4055297220088",
+          "raw_gtin": "4055297220088",
+          "canonical_gtin14": "04055297220088",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.ecco-verde.it/sante/deep-repair-balsamo-riparativo-per-capelli",
+          "source_urls": [
+            "https://www.ecco-verde.it/sante/deep-repair-balsamo-riparativo-per-capelli",
+            "https://www.violey.com/en/sante-deep-repair-conditioner-squalan_p_40885.html"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "PDP identifies the Deep Repair conditioner as 150 ml and publishes EAN 4055297220088."
+        }
+      ],
+      "content_fingerprint": "164749c8f83d5d39e0592c903fc67139f2b4f0e2627d87bbfcce0dc59c67a1c1"
+    },
+    {
+      "item_key": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "expected_product": {
+        "name": "Tiefenreinigungs-Shampoo",
+        "brand": "Gliss",
+        "category_key": "deep_cleansing_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100893007",
+          "raw_gtin": "4015100893007",
+          "canonical_gtin14": "04015100893007",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+          "source_urls": [
+            "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm PDP for GLISS Scalp Balance Tiefenreinigung publishes GTIN 4015100893007 and 200 ml."
+        }
+      ],
+      "content_fingerprint": "3c1f47530672a315c287d34379faa332eb080632b2e27ea79f7c34f3d2cd3631"
+    },
+    {
+      "item_key": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "product_id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "expected_product": {
+        "name": "Living Proof Restore Repair Leave-In",
+        "brand": "Living Proof",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "858544005575",
+          "raw_gtin": "858544005575",
+          "canonical_gtin14": "00858544005575",
+          "size": "118 ml (4 fl oz)",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.jomashop.com/restore-repair-leave-in-conditioner-by-living-proof-for-unisex-4-oz-conditioner-858544005575.html",
+          "source_urls": [
+            "https://www.jomashop.com/restore-repair-leave-in-conditioner-by-living-proof-for-unisex-4-oz-conditioner-858544005575.html",
+            "https://www.flaconi.de/haare/living-proof/restore/living-proof-restore-repair-leave-in-leave-in-treatment.html"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Retailer PDP names Restore Repair Leave-In Conditioner, states 4 oz, and publishes UPC 858544005575."
+        }
+      ],
+      "content_fingerprint": "dbf53deb5c790a5b428b7bc20dd46c2ebf4a98ce7d36089df842c9d11815bae1"
+    },
+    {
+      "item_key": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "product_id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "expected_product": {
+        "name": "Redken All Soft Mega Curls Leave-In",
+        "brand": "Redken",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3474637135638",
+          "raw_gtin": "3474637135638",
+          "canonical_gtin14": "03474637135638",
+          "size": "150 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.carrefour.es/redken-all-soft-mega-curls-tratamiento-sin-aclarado-150-ml/3474637135638/p",
+          "source_urls": [
+            "https://www.carrefour.es/redken-all-soft-mega-curls-tratamiento-sin-aclarado-150-ml/3474637135638/p",
+            "https://www.haarshop.nl/redken-all-soft-mega-curls-hydramelt-leavein-150ml"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Retailer PDP associates All Soft Mega Curls leave-in treatment, 150 ml, with EAN 3474637135638."
+        }
+      ],
+      "content_fingerprint": "6bb2f3b536a8ac5892fac5cecfe364c4a6b424fe98a46be829ead25d0154a543"
+    },
+    {
+      "item_key": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "product_id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "expected_product": {
+        "name": "Wahre Schätze Sanfte Hafermilch",
+        "brand": "Wahre Schätze",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542461658",
+          "raw_gtin": "3600542461658",
+          "canonical_gtin14": "03600542461658",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch",
+          "source_urls": [
+            "https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm PDP publishes Sanfte Hafermilch Shampoo, 300 ml, and GTIN 3600542461658."
+        }
+      ],
+      "content_fingerprint": "dbb1aa0b4104fd6972fdb2bddfa68eb2c2ed8c0becda099ee40e26087b74e393"
+    },
+    {
+      "item_key": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "expected_product": {
+        "name": "EVO Head Mistress",
+        "brand": "EVO",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "9349769020791",
+          "raw_gtin": "9349769020791",
+          "canonical_gtin14": "09349769020791",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.bellaffair.com/evo-head-mistress-cuticle-sealer",
+          "source_urls": [
+            "https://www.bellaffair.com/evo-head-mistress-cuticle-sealer"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Retailer PDP associates Head Mistress cuticle sealer, 150 ml, with EAN 9349769020791."
+        }
+      ],
+      "content_fingerprint": "4b6f444ff8813e9fad9581ca317d7892f823b0c7c5dba4106812ae03d9b9c4dd"
+    },
+    {
+      "item_key": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "product_id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "expected_product": {
+        "name": "Color WOW Money Mist",
+        "brand": "Color WOW",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "5060150185731",
+          "raw_gtin": "5060150185731",
+          "canonical_gtin14": "05060150185731",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/color-wow-money-mist-150-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/color-wow-money-mist-150-ml.html"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Retailer PDP names Money Mist, gives 150 ml, and lists EAN 5060150185731."
+        }
+      ],
+      "content_fingerprint": "63bd21c7494a310f1ca4b2f02829807ea871de2194b8141a903c2e52f3080b78"
+    },
+    {
+      "item_key": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "product_id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "expected_product": {
+        "name": "Hask Shampoo Argan Oil",
+        "brand": "Hask",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "071164343166",
+          "raw_gtin": "071164343166",
+          "canonical_gtin14": "00071164343166",
+          "size": "355 ml (12 fl oz)",
+          "market_scope": "DE",
+          "source_url": "https://www.vitacost.com/products/hask-beauty-argan-oil-from-morocco-repairing-shampoo-12-fl-oz-355-ml-110478",
+          "source_urls": [
+            "https://www.vitacost.com/products/hask-beauty-argan-oil-from-morocco-repairing-shampoo-12-fl-oz-355-ml-110478",
+            "https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Retailer PDP identifies Argan Oil from Morocco Repairing Shampoo, 12 fl oz / 355 ml, and UPC 071164343166."
+        }
+      ],
+      "content_fingerprint": "9d2f201c9ec464e782a83a00ce6e029a365b6bf64111c069ecd06fe44a974c7e"
+    },
+    {
+      "item_key": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "product_id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "expected_product": {
+        "name": "Salthouse Anti Juckreiz",
+        "brand": "Salthouse",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4008890006405",
+          "raw_gtin": "4008890006405",
+          "canonical_gtin14": "04008890006405",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1585727/salthouse-shampoo-totes-meer-therapie-anti-juckreiz",
+          "source_urls": [
+            "https://www.dm.de/p/d/1585727/salthouse-shampoo-totes-meer-therapie-anti-juckreiz"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm PDP publishes Totes Meer Therapie Anti-Juckreiz Shampoo, 250 ml, and GTIN 4008890006405."
+        }
+      ],
+      "content_fingerprint": "ac02ab9f91c20d6f630d5b7b4060733aa5ffc71f069a9ec14944968e7ed70e0e"
+    },
+    {
+      "item_key": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "product_id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "expected_product": {
+        "name": "Dejan Garz Shampoo",
+        "brand": "Dejan Garz",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4270004570106",
+          "raw_gtin": "4270004570106",
+          "canonical_gtin14": "04270004570106",
+          "size": "300 ml",
+          "market_scope": "EU/CZ",
+          "source_url": "https://www.dm.de/p/d/3063729/dejan-garz-shampoo-the-foundation",
+          "source_urls": [
+            "https://www.dm.de/p/d/3063729/dejan-garz-shampoo-the-foundation",
+            "https://www.newflagpro.cz/dejan-garz-shampoo-the-foundation-p7374/",
+            "https://www.dejangarz.com/products/shampoo"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm PDP associates Shampoo The Foundation, 300 ml, with GTIN 4270004570106."
+        }
+      ],
+      "content_fingerprint": "0d4c1588994a9a98cd06afa0ee8473b568211e3c522354e2260d96ebc5b04431"
+    },
+    {
+      "item_key": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "expected_product": {
+        "name": "Nivea Power Repair Conditioner",
+        "brand": "Nivea",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4006000192598",
+          "raw_gtin": "4006000192598",
+          "canonical_gtin14": "04006000192598",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+          "source_urls": [
+            "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+            "https://www.shop-apotheke.com/beauty/11314055/nivea-reparatur-gezielte-pflegespuelung.htm",
+            "https://www.ohfeliz.de/nivea/power-repair-reparatur-spuelung"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm PDP names Power Repair Conditioner, 200 ml, and publishes GTIN 4006000192598."
+        }
+      ],
+      "content_fingerprint": "d024b91a967a52be3a69c708ccbc9f6c9d4b4baf149dbe110cf2c7681bd190c8"
+    },
+    {
+      "item_key": "2a159694-6799-4be7-a0aa-572757c94801",
+      "product_id": "2a159694-6799-4be7-a0aa-572757c94801",
+      "expected_product": {
+        "name": "Langhaarmädchen Lovely Long Conditioner",
+        "brand": "Langhaarmädchen",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4066447864717",
+          "raw_gtin": "4066447864717",
+          "canonical_gtin14": "04066447864717",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.at/p/d/1559585/langhaarmaedchen-conditioner-lovely-long",
+          "source_urls": [
+            "https://www.dm.at/p/d/1559585/langhaarmaedchen-conditioner-lovely-long",
+            "https://www.dm.de/p/d/1559585/langhaarmaedchen-conditioner-lovely-long"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm Austria PDP associates Lovely Long Conditioner, 250 ml, with EAN 4066447864717."
+        }
+      ],
+      "content_fingerprint": "90daa645d3299efea468dd457ef3a04c144ffc1a0aea19a4800d4866df2f84fa"
+    },
+    {
+      "item_key": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "product_id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "expected_product": {
+        "name": "Trockenshampoo Extra Volumen",
+        "brand": "got2b",
+        "category_key": "dry_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100800227",
+          "raw_gtin": "4015100800227",
+          "canonical_gtin14": "04015100800227",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.at/p/d/1685672/got2b-trockenwaesche",
+          "source_urls": [
+            "https://www.dm.at/p/d/1685672/got2b-trockenwaesche",
+            "https://www.dm.de/p/d/1660235/got2b-trockenshampoo-extra-volumen"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm Austria PDP associates got2b Trockenshampoo Extra Volumen, 200 ml, with EAN 4015100800227."
+        }
+      ],
+      "content_fingerprint": "44dc1b595b45b118ec339ef247241387109bf7c5c0ebb5c5a300c83b96550c29"
+    },
+    {
+      "item_key": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "product_id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "expected_product": {
+        "name": "Langhaarmädchen Beautiful Curls Conditioner",
+        "brand": "Langhaarmädchen",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4070765004663",
+          "raw_gtin": "4070765004663",
+          "canonical_gtin14": "04070765004663",
+          "size": "250 ml",
+          "market_scope": "DE/AT",
+          "source_url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+          "source_urls": [
+            "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+            "https://www.dm.at/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm PDP names Beautiful Curls Conditioner, 250 ml, and publishes GTIN 4070765004663."
+        }
+      ],
+      "content_fingerprint": "3520a082a596121c3c6dde14a90b34939cf6a8f276e2ff4ff6fd9add894cd4cf"
+    },
+    {
+      "item_key": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "product_id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "expected_product": {
+        "name": "Shampoo Tiefenreinigung",
+        "brand": "Balea",
+        "category_key": "deep_cleansing_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4070765001020",
+          "raw_gtin": "4070765001020",
+          "canonical_gtin14": "04070765001020",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+          "source_urls": [
+            "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm PDP associates Balea Professional Tiefenreinigung Shampoo, 250 ml, with GTIN 4070765001020."
+        }
+      ],
+      "content_fingerprint": "4e9463afa2664252c61883fd87f72744831c70740fa9792a4da6e923f23ab40a"
+    },
+    {
+      "item_key": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "product_id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "expected_product": {
+        "name": "Hask Curl Care Conditioner",
+        "brand": "Hask",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "071164304211",
+          "raw_gtin": "071164304211",
+          "canonical_gtin14": "00071164304211",
+          "size": "355 ml (12 fl oz)",
+          "market_scope": "AT/EU",
+          "source_url": "https://www.dm.at/p/d/1622385/hask-conditioner-curl-care",
+          "source_urls": [
+            "https://www.dm.at/p/d/1622385/hask-conditioner-curl-care"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "Exact dm Austria PDP associates Curl Care Conditioner, 355 ml, with EAN 071164304211."
+        }
+      ],
+      "content_fingerprint": "fd07d6f7062dae6a652aac8a9b2ef11e9f6290b26ce14a89333f6ec0440efd21"
+    },
+    {
+      "item_key": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "expected_product": {
+        "name": "K18 Leave-In Molecular Repair Hair Mask",
+        "brand": "K18",
+        "category_key": "bondbuilder",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "858511001128",
+          "raw_gtin": "858511001128",
+          "canonical_gtin14": "00858511001128",
+          "size": "50 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx",
+          "source_urls": [
+            "https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx",
+            "https://www.haarshop.com/k18-leave-in-molecular-repair-hair-mask-50-ml"
+          ],
+          "source_checked_at": "2026-08-28T07:50:23Z",
+          "exact_match_note": "German distributor PDP identifies Leave-In Molecular Repair Hair Mask 50 ml and publishes EAN 858511001128."
+        }
+      ],
+      "content_fingerprint": "128be5b13588df9bfa51235285f1628d718012890fbf5913c17e0dbfeed7d143"
+    }
+  ]
+}

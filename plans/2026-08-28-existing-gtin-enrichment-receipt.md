@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: approved data-only release; code/source review passed, production apply pending.
+Status: E1/E2 applied and verified in production; E3 continuation in progress.
 
 ## Contract
 
@@ -48,3 +48,26 @@ Claude Opus 4.8 / high, read-only terminal review: no hard correctness defects. 
 Reviewed deployment bundle SHA-256: `cb7c5b6791ca08007ecb8b642d78653cf19943d54f3a53f1ea08954f1a952f16`. Exact bundle, before-function snapshots and transient Claude report: `/tmp/scanner-gtin-apply-lQUl9QEr/`. Schema/data verification will check that all 282 product rows retain MD5 `47d1b182838693c2e3b160439f83734e` unless an unrelated concurrent catalog write is identified. Branch merge-base: `455c115bb04862ebb27d9b03a31a4b92c8af3c37`; current root main lookup compatibility was inspected separately, not inferred from this older worktree.
 
 Post-review delta: added the positive valid-EAN/GTIN-equivalent approval test requested by Claude. It proves successful canonical deduplication before the predecessor receives the payload. Main reran all 23 affected tests successfully; no production code or reviewed SQL bundle changed after counterpart review.
+
+## E1/E2 production result
+
+Applied the four exact migrations in one transaction; at 08:02:57Z, every recorded SQL SHA matches the committed source, the canonical unique index is ready/valid, and RPC execute is service-role-only. All product rows retained their before-hash. No telemetry migration was applied.
+
+Both live CLI preflights passed against clean reviewed head `147fd98aa3020123d8fc9d19c50dc8c436142227` (content fingerprint `8047ef7796738a1cf72e5bcd26bedc7134de9fe1fccb47b98fca7263f9d9d12d`; hook changes were formatting-only and the 23 tests were rerun).
+
+- E1 v2 applied 08:03:21Z: 20 products / 21 GTINs; guarded verify passed.
+- E2 v2 applied 08:03:37Z: 21 products / 22 GTINs; guarded verify passed.
+- At 08:04:17Z: 41 item receipts, 82 valid GTIN rows (previously 39), 150 identifiers of all types (previously 107), and 79 active barcode-linked products (previously 38). All 282 product rows still hash to `47d1b182838693c2e3b160439f83734e`.
+- At 08:04:19Z: current-root-main scanner lookup resolved all 43 raw codes and their 43 canonical spellings to the exact expected product IDs: 86/86, no failures. No browser-render claim.
+
+## E3 continuation
+
+Next frozen production manifest: `phase1-existing-identifier-backfill-e3-v1.json`, 17 existing products / 17 GTINs, raw SHA-256 `ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134`. All are within the 18-product cohort that passed live readiness at 07:59:24Z; the subsequent duplicate-identity check held one additional product. Sources were refreshed August 28. This is the next subset of the previously researched existing catalog, not new products.
+
+Corrected the Gliss candidate's source-only size from 250 to 200 ml using the exact dm name/GTIN panel; production net-content is null and remains untouched. Refreshed exact legacy name snapshots for Balea Tiefenreinigung and got2b Extra Volumen using their existing IDs and unchanged brands/categories. Stronger [K18 German distributor](https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx) and [Sante EU retailer](https://www.ecco-verde.it/sante/deep-repair-balsamo-riparativo-per-capelli) sources replace weaker barcode-only evidence.
+
+Three E3 products stay held: Redken Extreme Anti-Snap `2b7db7e3-2058-4178-8a03-7d05f4a1d447` / `884486453402` (240/250-ml source conflict); Curlsmith Multitasking Conditioner `2bafeb7e-6610-4efc-a8e8-a402071b2ed9` / `850005417781`, `850005417804` (published formula parity unresolved); Guhl Panthenol+2in1 `11d42d9d-b8d8-42ae-a432-9a3d0f9d3504` / `4072600703403` (same physical name also exists as mask `8ef172f7-8e95-4ac7-a6a9-235ad760155b`; choose the primary identity before assignment). No user decision is needed to keep these holds excluded. Across all selected E1/E2/E3 rows, the only other normalized same-brand/name duplicate is NEQI Moisture Mystery shampoo versus leave-in; source formats, sizes and codes establish distinct physical products.
+
+Extend the same executor through one follow-up migration, `20260828081500`, adding only E3's exact fingerprint and counts to its existing batch contract. Do not edit already-applied migrations. No extra table, column, registry, product creation or classification changes. Reuse all existing preflight, transaction, ownership, submission, head and replay guards; verify and review this bounded delta before applying E3.
+
+E3 verification: 65 focused tests, TypeScript, targeted ESLint and diff checks passed. Read-only Claude delta review found no hard defects; independently verified exact SQL delta, immutable E1/E2 pins, 17/17 manifest and migration gating. Its curation question was reconciled: included Redken All Soft Mega Curls and Balea Tiefenreinigung are different products from held Redken Anti-Snap and Balea 3-in-1 mask. Deployment bundle SHA `6b4742e127114d43c3eeedcdd4f3062eaa5d89362f81bdcbe9deb8345fdae7ef` checks the live executor definition and original applied receipts before running the exact new migration transaction.

@@ -15,11 +15,13 @@ export const SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS = [
   "20260826142200",
   "20260826143000",
 ] as const
+export const SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION = "20260828081500" as const
 
-export type ScannerIdentifierBackfillBatch = "E1" | "E2"
+export type ScannerIdentifierBackfillBatch = "E1" | "E2" | "E3"
 export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
   E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
   E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+  E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
 } as const satisfies Record<ScannerIdentifierBackfillBatch, string | null>
 
 export type ScannerIdentifierType = "ean" | "gtin" | "barcode"
@@ -121,6 +123,7 @@ const SAFE_KEY = /^[a-z0-9][a-z0-9-]*$/
 const EXPECTED_SHAPES = {
   E1: { products: 20, gtins: 21 },
   E2: { products: 21, gtins: 22 },
+  E3: { products: 17, gtins: 17 },
 } as const
 
 function record(value: unknown, label: string): Record<string, unknown> {
@@ -153,8 +156,8 @@ export function parseScannerIdentifierBackfillManifest(
   const root = record(decoded, "manifest")
   if (root.schema_version !== SCANNER_IDENTIFIER_BACKFILL_SCHEMA_VERSION)
     throw new Error("scanner identifier manifest schema_version is invalid")
-  if (root.batch !== "E1" && root.batch !== "E2")
-    throw new Error("scanner identifier manifest batch must be E1 or E2")
+  if (root.batch !== "E1" && root.batch !== "E2" && root.batch !== "E3")
+    throw new Error("scanner identifier manifest batch must be E1, E2, or E3")
   const batch = root.batch
   const batchId = requiredString(root.batch_id, "manifest.batch_id")
   if (!SAFE_KEY.test(batchId)) throw new Error("manifest.batch_id must be a safe key")
@@ -343,7 +346,11 @@ export async function preflightScannerIdentifierBackfill(input: {
   if (!args.reviewed_head || git.head !== args.reviewed_head)
     blockers.push("git HEAD must equal --reviewed-head")
   let missingMigration = false
-  for (const migration of SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS) {
+  const migrations =
+    manifest.batch === "E3"
+      ? [...SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS, SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION]
+      : SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS
+  for (const migration of migrations) {
     if ((await read.migrationState(migration)) !== "applied") {
       blockers.push(`required migration ${migration} is not applied`)
       missingMigration = true
