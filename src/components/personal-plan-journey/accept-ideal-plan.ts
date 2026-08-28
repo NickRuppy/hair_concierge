@@ -1,20 +1,23 @@
 import type { Stage1ProductExamplePreviewResponse } from "@/lib/personal-plan/product-preview-contract"
 
-export const PLAN_ACCEPT_ERROR =
-  "Dein Plan konnte nicht übernommen werden. Versuche es noch einmal."
+export const PLAN_ACCEPT_ERROR = "Das hat nicht geklappt. Versuche es noch einmal."
 /**
  * Shown once re-fetching has failed to converge, i.e. the mismatch is
  * structural rather than a race. It carries only the reason — the CTA next to
- * it already reads "Feinschliff wird geöffnet …", so the destination is not
- * repeated here (Task 2.8).
+ * it already names the destination, so that is not repeated here (Task 2.8).
  */
-export const PLAN_ACCEPT_UNAVAILABLE_NOTICE = "Direkt übernehmen klappt gerade nicht."
+export const PLAN_ACCEPT_UNAVAILABLE_NOTICE = "Das klappt gerade nicht."
 /**
- * Where a structurally stale seen state goes. Completing the refinement also
- * produces an accepted plan, so this is a detour, not a dead end. `refine=1`
- * suppresses the bridge auto-handoff exactly like every other explicit re-entry.
+ * Where a structurally stale seen state goes. Completing the products module
+ * also produces an accepted plan, so this is a detour, not a dead end.
+ *
+ * `?refine=products` is an EXPLICIT module deep link, not the old `?refine=1`
+ * re-entry: it suppresses the bridge auto-handoff exactly like `?refine=1` did,
+ * AND it suppresses the retired chapter ceremony (invitation/resume shells, the
+ * chapter screens) that `?refine=1` still resurrects. The escape hatch drops the
+ * user straight into their product questions (founder ruling 27.08.2026).
  */
-export const PLAN_ACCEPT_REFINE_HREF = "/plan-start?refine=1"
+export const PLAN_ACCEPT_REFINE_HREF = "/plan-start?refine=products"
 
 /**
  * One seen-state entry per recommendation role, exactly as

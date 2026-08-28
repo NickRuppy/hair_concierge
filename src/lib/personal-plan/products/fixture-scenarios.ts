@@ -21,7 +21,7 @@ export function createFixtureInventoryOnlyConditionerEntryContext(): Stage3Entry
       {
         category: "conditioner",
         requiredRoles: [],
-        needSummary: "Conditioner ist aktuell nicht Teil des Idealplans",
+        needSummary: "Conditioner ist aktuell nicht Teil deines Plans",
         authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
       },
     ],

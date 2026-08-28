@@ -220,7 +220,12 @@ export function PersonalPlanReadyClient({
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <PersonalPlanJourneyHeader currentStage={1} sticky />
+      {/*
+       * Same relic as the arrival screen (plan-ready-arrival.tsx): deliberately
+       * left with the old header when that surface shipped, same fix now —
+       * wordmark-only, no 5-stage bar (founder field test 27.08.2026).
+       */}
+      <PersonalPlanJourneyHeader currentStage={1} centeredBrand showStageProgress={false} />
       <main className="personal-plan-cookie-clearance px-5 py-8 sm:px-8">
         <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-lg flex-col">
           <section className="flex flex-1 flex-col items-center justify-center py-12 text-center">

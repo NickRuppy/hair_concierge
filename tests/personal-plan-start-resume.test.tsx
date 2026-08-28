@@ -295,6 +295,10 @@ test("a server-validated Routine repair request re-enters Stage 3 from a later f
       frontier: "stage5",
       nextHref: "/anwendung",
       allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
+      // A stage5 frontier means the Routine is ACTIVATED — the fact
+      // `planAccepted` is derived from (not the Stage-4 allowance, which a
+      // pending proposal alone also satisfies).
+      activeRoutineVersionId: "55555555-5555-4555-8555-555555555555",
     }),
     loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
   }
@@ -306,6 +310,7 @@ test("a server-validated Routine repair request re-enters Stage 3 from a later f
       stage: "stage3",
       refinedVersionId: "refined-1",
       repairRoutineVersionId,
+      planAccepted: true,
     },
     personalPlanId: "plan-1",
     initialRefinementSession: refinementSession("complete", "refined-1"),
@@ -444,7 +449,7 @@ test("the production gate bypasses Stage 1 for a valid server-selected Stage 2 r
 
   assert.match(html, /Wir laden deinen Feinschliff\./)
   assert.match(html, /Du machst bei der ersten offenen Frage weiter\./)
-  assert.doesNotMatch(html, /Dein Idealplan entsteht/)
+  assert.doesNotMatch(html, /Dein Plan entsteht/)
 })
 
 test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstrap authority", async () => {
@@ -826,6 +831,10 @@ test("refine=1 outranks a repair request and only accepts the exact param value"
       frontier: "stage5",
       nextHref: "/anwendung",
       allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
+      // A stage5 frontier means the Routine is ACTIVATED — the fact
+      // `planAccepted` is derived from (not the Stage-4 allowance, which a
+      // pending proposal alone also satisfies).
+      activeRoutineVersionId: "55555555-5555-4555-8555-555555555555",
     }),
     loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
   }
@@ -836,7 +845,9 @@ test("refine=1 outranks a repair request and only accepts the exact param value"
   })
   assert.deepEqual(state, {
     state: "production",
-    initialJourney: { stage: "stage2", returningToRefinement: true },
+    // Stage-4 access in this fixture means the plan is activated, so the
+    // journey carries the post-accept origin (Codex review blocker 2).
+    initialJourney: { stage: "stage2", returningToRefinement: true, planAccepted: true },
     personalPlanId: "plan-1",
     initialRefinementSession: refinementSession("complete", "refined-1"),
   })

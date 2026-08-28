@@ -120,7 +120,7 @@ const personalPlanSharedFaqItems = [
     id: "included-and-after-purchase",
     question: "Was bekomme ich – und was passiert nach dem Kauf?",
     answer:
-      "Du erhältst eine vollständige Routine mit passenden Produkten, der richtigen Reihenfolge sowie klarer Anwendung und Häufigkeit. Chat und Haartagebuch sind ergänzend enthalten. Nach dem Kauf ergänzt du noch deine vorhandenen Produkte und Gewohnheiten; anschließend öffnet sich dein Routinebereich.",
+      "Du erhältst eine vollständige Routine mit passenden Produkten, der richtigen Reihenfolge sowie klarer Anwendung und Häufigkeit. Chat und Haartagebuch sind ergänzend enthalten.",
   },
   {
     id: "new-or-expensive-products",
@@ -1194,26 +1194,41 @@ export function PersonalPlanOfferRecovery({
   )
 }
 
-export function PersonalPlanPaidContinuation({ leadId, name }: { leadId: string; name: string }) {
+/**
+ * The paid result surface. The plan is live the moment it is paid for, so this
+ * screen hands the buyer their plan — not the retired `/onboarding` ceremony.
+ * The Feinschliff is an optional later addition, never a gate (founder ruling
+ * 27.08.2026).
+ *
+ * The copy is deliberately FRONTIER-AGNOSTIC. This surface is reached only for
+ * `quizKind === "personal_plan"`, i.e. a buyer who resolves to a Personal-Plan
+ * routing frontier — and for those the middleware's frontier redirect forwards
+ * `/routine` on to the stage they have actually reached. (It does NOT do this
+ * in general: `getPersonalPlanFrontierRedirect` returns `null` for
+ * `frontier.kind === "legacy"`, so legacy cohorts are not redirected at all.
+ * That is why the legacy result actions keep their own destinations.)
+ *
+ * A fresh buyer whose Stage-4 routine does not exist yet is still NOT sent to a
+ * "Routinebereich", so naming that destination in the copy would contradict
+ * what they see. „Dein Plan“ is true on every Personal-Plan frontier
+ * (ruled 27.08.2026).
+ */
+export function PersonalPlanPaidContinuation({ name }: { name: string }) {
   const displayName = name.trim().split(/\s+/)[0]
   return (
     <main className="grid min-h-screen place-items-center bg-[#fcfaf7] px-4 text-[var(--brand-plum-darkest)]">
       <section className="max-w-xl rounded-[2rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-7 text-center shadow-[0_22px_54px_-40px_rgba(var(--brand-plum-rgb),0.55)]">
-        <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-          Dein Haarplan ist bereit
-        </p>
-        <h1 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-          {displayName ? `${displayName}, ` : ""}verfeinere deinen Plan mit deinen Produkten.
+        <h1 className="font-serif text-4xl leading-tight tracking-[-0.035em]">
+          {displayName ? `${displayName}, ` : ""}dein Plan ist bereit.
         </h1>
         <p className="mt-4 text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
-          Dein persönlicher Haarpflegeplan ist vorbereitet. Im nächsten Schritt ergänzt du noch,
-          welche Produkte du bereits nutzt. Danach öffnet sich dein Routinebereich.
+          Dein Plan ist freigeschaltet. Den Feinschliff kannst du jederzeit später ergänzen.
         </p>
         <Link
           className="mt-6 inline-flex rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white"
-          href={`/onboarding?lead=${leadId}&returnTo=%2Froutine`}
+          href="/routine"
         >
-          Meinen Plan verfeinern
+          Zu deinem Plan
         </Link>
       </section>
     </main>

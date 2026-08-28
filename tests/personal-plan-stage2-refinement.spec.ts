@@ -217,10 +217,10 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await begin(page, "complete-error")
     await finishNeutral(page)
     await expect(
-      page.getByRole("alert").filter({ hasText: /Übergabe hat gerade nicht geklappt/i }),
+      page.getByRole("alert").filter({ hasText: /Das Abschließen hat gerade nicht geklappt/i }),
     ).toBeVisible()
-    await expect(page.getByRole("button", { name: "Übergabe erneut versuchen" })).toBeVisible()
-    await page.getByRole("button", { name: "Übergabe erneut versuchen" }).click()
+    await expect(page.getByRole("button", { name: "Abschließen erneut versuchen" })).toBeVisible()
+    await page.getByRole("button", { name: "Abschließen erneut versuchen" }).click()
 
     const bridge = page.locator("[data-refined-version-id]")
     await expect(bridge).toBeVisible()

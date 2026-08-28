@@ -26,7 +26,7 @@ export type NeedCardProduct = {
 }
 
 /** Honest state for a category without a qualifying product recommendation. */
-export const NEED_CARD_FALLBACK_NOTE = "Produktempfehlung folgt nach dem Feinschliff"
+export const NEED_CARD_FALLBACK_NOTE = "Empfehlung folgt, wenn du deine Produkte ergänzt"
 
 export type NeedCardViewModel = {
   /**

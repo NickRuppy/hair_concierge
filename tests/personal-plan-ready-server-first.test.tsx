@@ -62,7 +62,7 @@ test("server-first ready envelope renders the signed-off arrival screen (Variant
     }),
   )
 
-  assert.match(html, /Dein Idealplan ist fertig\./)
+  assert.match(html, /Dein Plan ist fertig\./)
   assert.match(html, /Und das wartet dahinter:/)
   assert.match(html, /Deine Routine/)
   assert.match(html, /Schritt für Schritt\./)
@@ -70,7 +70,7 @@ test("server-first ready envelope renders the signed-off arrival screen (Variant
   assert.match(html, /So setzt du(?:&#x27;|')s um\./)
   assert.match(html, /Dein Chat/)
   assert.match(html, /Fragen\? Immer offen\./)
-  assert.match(html, /Idealplan ansehen/)
+  assert.match(html, /Plan ansehen/)
   assert.match(html, /href="\/plan-start"/)
   assert.match(html, />chaarlie</)
 
@@ -79,7 +79,7 @@ test("server-first ready envelope renders the signed-off arrival screen (Variant
   // #467/#471, founder sign-off 27.08.2026).
   assert.doesNotMatch(html, /role="progressbar"/)
   assert.doesNotMatch(html, /Personal-Plan-Stufen/)
-  assert.doesNotMatch(html, /Wir haben deinen Idealplan erstellt\./)
+  assert.doesNotMatch(html, /Wir haben deinen Plan erstellt\./)
   assert.doesNotMatch(html, /wirklich zu deinem/)
   assert.doesNotMatch(html, /Persönlicher Feinschliff/)
   assert.doesNotMatch(html, /Dein Produkt-Check/)
@@ -181,6 +181,68 @@ test("client honors none, link, and poll initial actions instead of always posti
   assert.doesNotMatch(clientSource, /motion-safe:animate-spin/)
   assert.doesNotMatch(clientSource, /data-personal-plan-ready-preview/)
   assert.doesNotMatch(clientSource, /Zahlung bleibt sicher erfasst/)
+})
+
+test("non-ready /plan-bereit states also retire the 5-stage bar (same relic as the arrival screen, founder field test 27.08.2026)", () => {
+  const waitingHtml = renderToStaticMarkup(
+    React.createElement(PersonalPlanReadyClient, {
+      leadId: "lead-legacy",
+      initialReadiness: {
+        status: "checking",
+        leadId: "lead-legacy",
+        quizSourceKind: "legacy",
+        sourceVersion: "2026-08-12T08:00:00.000Z",
+        missingFacts: [],
+        initialAction: "link",
+      },
+    }),
+  )
+  const missingFactHtml = renderToStaticMarkup(
+    React.createElement(PersonalPlanReadyClient, {
+      leadId: "lead-legacy",
+      initialReadiness: {
+        status: "missing_source_facts",
+        leadId: "lead-legacy",
+        quizSourceKind: "legacy",
+        sourceVersion: "2026-08-12T08:00:00.000Z",
+        initialAction: "none",
+        missingFacts: [
+          {
+            field: "hair_length",
+            question: "Wie lang sind deine Haare aktuell?",
+            helper: "Wähle die passende Länge.",
+            options: HAIR_LENGTH_OPTIONS,
+          },
+        ],
+      },
+    }),
+  )
+  const supportHtml = renderToStaticMarkup(
+    React.createElement(PersonalPlanReadyClient, {
+      leadId: "lead-legacy",
+      initialReadiness: {
+        status: "forbidden",
+        leadId: "lead-legacy",
+        quizSourceKind: "legacy",
+        sourceVersion: null,
+        missingFacts: [],
+        initialAction: "none",
+      },
+    }),
+  )
+  const retryHtml = renderToStaticMarkup(
+    React.createElement(PersonalPlanReadyClient, {
+      leadId: "lead-legacy",
+      initialStatus: "timeout",
+    }),
+  )
+
+  for (const html of [waitingHtml, missingFactHtml, supportHtml, retryHtml]) {
+    assert.doesNotMatch(html, /role="progressbar"/)
+    assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+    // Wordmark-only, centered — same fix as the arrival screen, no Back control.
+    assert.match(html, />chaarlie</)
+  }
 })
 
 test("page passes the server-first readiness envelope into the client", () => {

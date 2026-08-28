@@ -26,7 +26,7 @@ export type HairProfileSectionRow = {
   /**
    * Primary target of the whole row. A finished MODULE deliberately has none
    * (2.4 M4): re-entering a module the user already answered is an edit visit,
-   * not a chevron row that makes re-walking feel accidental. „Dein Idealplan"
+   * not a chevron row that makes re-walking feel accidental. „Dein Plan“
    * keeps its link because it points at the plan view, not into a re-walk.
    */
   href: string | null
@@ -140,7 +140,7 @@ export function buildHairProfileSection(input: {
       },
       {
         key: "ideal_plan",
-        label: "Dein Idealplan",
+        label: "Dein Plan",
         status: "done",
         step: 2,
         href: PLAN_VIEW_HREF,

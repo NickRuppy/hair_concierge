@@ -48,7 +48,7 @@ export function PlanBereitArrival({
           </span>
 
           <h1 className="mx-auto max-w-[17ch] text-balance text-center font-header text-[clamp(26px,7.5vw,29px)] leading-[1.16] text-[var(--brand-plum-darkest)]">
-            Dein Idealplan ist fertig.
+            Dein Plan ist fertig.
           </h1>
           <p className="mx-auto mt-2.5 max-w-[26ch] text-balance text-center text-[14.5px] leading-[1.5] text-[var(--text-sub)]">
             Und das wartet dahinter:
@@ -82,7 +82,7 @@ export function PlanBereitArrival({
             "min-h-[50px] [@media(min-height:731px)]:min-h-[58px]",
           )}
         >
-          Idealplan ansehen
+          Plan ansehen
         </Link>
       </main>
     </div>

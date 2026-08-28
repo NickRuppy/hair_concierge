@@ -1281,7 +1281,7 @@ test("a fallback card keeps the category need and says the product follows later
   )
 
   assert.match(html, /Sanft reinigend/)
-  assert.match(html, /Produktempfehlung folgt nach dem Feinschliff/)
+  assert.match(html, /Empfehlung folgt, wenn du deine Produkte ergänzt/)
   assert.match(html, /data-plan-start-card-image-slot="reserved"/)
   assert.doesNotMatch(html, /€/)
 })
@@ -1357,7 +1357,7 @@ test("the fallback sheet explains the need without commerce or CTA", () => {
   )
 
   assert.match(html, /Sanft reinigend/)
-  assert.match(html, /Produktempfehlung folgt nach dem Feinschliff/)
+  assert.match(html, /Empfehlung folgt, wenn du deine Produkte ergänzt/)
   for (const block of baseDetailBlocks) assert.ok(html.includes(block.title))
   assert.doesNotMatch(html, /Zum Produkt|€/)
 })
@@ -1425,7 +1425,7 @@ test("omits the Optional page and progress step when no optional categories exis
     />,
   )
   assert.doesNotMatch(withoutContinuation, /Jetzt auf meine Produkte abstimmen/)
-  assert.doesNotMatch(withoutContinuation, /aria-label="Idealplan-Seiten"/)
+  assert.doesNotMatch(withoutContinuation, /aria-label="Plan-Seiten"/)
 })
 
 test("Optional Idealplan uses the shared header Back and a forward-only safe-area dock", () => {
@@ -1545,10 +1545,32 @@ test("renders loading and retry states without questions or legacy destinations"
   const loading = renderToStaticMarkup(<PlanStartLoading />)
   const retry = renderToStaticMarkup(<PlanStartRetryableError />)
 
-  assert.match(loading, /Dein Idealplan entsteht/)
+  assert.match(loading, /Dein Plan entsteht/)
   assert.match(retry, /Dein Plan lädt gerade nicht/)
   assert.match(retry, /Erneut versuchen/)
   assert.doesNotMatch(`${loading}${retry}`, /Quiz starten|href="\/chat"|href="\/routine"/)
+})
+
+test("Idealplan surfaces retire the 5-stage bar: it narrates a sequence that ends right after them (founder field test 27.08.2026)", () => {
+  const basis = renderToStaticMarkup(<PlanStartFlow state="ready" plan={readyPlan} />)
+  const optional = renderToStaticMarkup(
+    <PlanStartFlow state="ready" plan={readyPlan} initialStep="optional" onContinue={() => {}} />,
+  )
+  const loading = renderToStaticMarkup(<PlanStartLoading />)
+  const retry = renderToStaticMarkup(<PlanStartRetryableError />)
+  const unavailable = renderToStaticMarkup(<PlanStartUnavailable />)
+
+  for (const html of [basis, optional, loading, retry, unavailable]) {
+    // Scoped to the journey header's 5-stage bar specifically: the Basis/
+    // Optional page's own "Plan-Fortschritt" progressbar (Progress, 50/100)
+    // is a different, still-legitimate indicator and must survive untouched.
+    assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+    assert.doesNotMatch(html, /aria-label="Stufen im Personal Plan"/)
+  }
+
+  // The wordmark and Back control survive — only the stage-progress row goes.
+  assert.match(basis, />chaarlie</)
+  assert.match(optional, /aria-label="Zur Basis"/)
 })
 
 test("the customer path has no redundant Stage 1 transition before the Stage 2 invitation", () => {

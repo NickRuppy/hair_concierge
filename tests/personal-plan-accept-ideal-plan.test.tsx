@@ -276,7 +276,10 @@ test("a second consecutive stale seen state opens the refinement instead of loop
   })
   assert.equal(run.acceptCalls.length, 2)
   assert.equal(run.refreshes(), 1)
-  assert.equal(PLAN_ACCEPT_REFINE_HREF, "/plan-start?refine=1")
+  // An EXPLICIT module deep link, not the old `?refine=1`: the escape hatch has
+  // to land in the product questions without resurrecting the retired chapter
+  // ceremony that `?refine=1` still triggers.
+  assert.equal(PLAN_ACCEPT_REFINE_HREF, "/plan-start?refine=products")
 })
 
 test("a stale retry whose preview re-fetch fails opens the refinement, never accepts blind", async () => {
@@ -408,7 +411,7 @@ test("a network failure during acceptance stays an inline error, never a silent 
 
 const readyPlanScreen = {
   kind: "basis" as const,
-  overline: "Dein Idealplan",
+  overline: "Dein persönlicher Plan",
   title: "Deine Basis",
   lead: "Das braucht dein Haar.",
   sectionTitle: "Basis",

@@ -555,3 +555,85 @@ test("personal plan result reads only the attached public artifact model", () =>
   assert.match(pageSource, /\.select\("public_offer_model"\)/)
   assert.match(pageSource, /\.eq\("status", "attached"\)/)
 })
+
+/**
+ * A1 (founder ruling 27.08.2026), BEHAVIORAL. The paid result surface used to
+ * route the buyer into `/onboarding` — a retired flow — and framed the
+ * refinement as a gate ("Im nächsten Schritt ergänzt du …; danach öffnet sich
+ * dein Routinebereich"). The plan is live the moment it is paid for, so the
+ * buyer goes straight there and the Feinschliff becomes optional.
+ */
+test("a paid personal-plan result hands the buyer their plan, never the retired onboarding", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea Sommer"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  assert.match(html, /Lea, dein Plan ist bereit\./)
+  assert.match(html, /Dein Plan ist freigeschaltet\./)
+  assert.match(html, /Den Feinschliff kannst du jederzeit später ergänzen\./)
+  assert.match(html, /href="\/routine"/)
+  assert.match(html, /Zu deinem Plan/)
+
+  // The retired destination and its sequential-journey framing are gone.
+  assert.doesNotMatch(html, /\/onboarding/)
+  assert.doesNotMatch(html, /Meinen Plan verfeinern/)
+  assert.doesNotMatch(html, /Im nächsten Schritt/)
+  assert.doesNotMatch(html, /Danach öffnet sich dein Routinebereich/)
+})
+
+/**
+ * F4 (ruled 27.08.2026). This surface is Personal-Plan-only, and for those
+ * buyers the middleware's frontier redirect forwards `/routine` on to the stage
+ * they actually reached. (Legacy cohorts are NOT redirected —
+ * `getPersonalPlanFrontierRedirect` returns `null` for `kind === "legacy"` —
+ * which is exactly why the legacy result actions keep their own destinations.)
+ *
+ * A fresh buyer with no Stage-4 routine yet is still not sent to a
+ * "Routinebereich", so the copy must never name that destination or it
+ * contradicts the screen the user lands on.
+ */
+test("the paid screen's copy is frontier-agnostic and carries no duplicated eyebrow", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea Sommer"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  // No frontier-specific destination claim anywhere on the screen.
+  assert.doesNotMatch(html, /Routinebereich/)
+  assert.doesNotMatch(html, /Zu meiner Routine/)
+
+  // F15: the removed eyebrow stays removed — it repeated the headline verbatim.
+  assert.doesNotMatch(html, /Dein Haarplan ist bereit/)
+  assert.equal((html.match(/ist bereit/g) ?? []).length, 1)
+})
+
+test("the paid continuation no longer needs a lead id to build its destination", () => {
+  const offerSource = readFileSync(
+    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
+    "utf8",
+  )
+  const clientSource = readFileSync(
+    new URL("../src/app/result/[leadId]/result-client.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(offerSource, /export function PersonalPlanPaidContinuation\(\{ name \}/)
+  assert.match(clientSource, /<PersonalPlanPaidContinuation name=\{name\} \/>/)
+})

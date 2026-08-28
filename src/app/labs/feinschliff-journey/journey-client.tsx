@@ -241,7 +241,7 @@ export function FeinschliffJourneyClient({
         <DemoShell onRestart={restart}>
           <UnavailableStep
             title="Produkt-Check nicht verfügbar"
-            detail="Der Fixture-Idealplan konnte keinen Stage-3-Einstieg erzeugen."
+            detail="Der Fixture-Plan konnte keinen Stage-3-Einstieg erzeugen."
             onContinue={() => openRoutine("after-products", true)}
           />
         </DemoShell>

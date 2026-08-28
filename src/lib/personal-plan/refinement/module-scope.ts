@@ -198,7 +198,7 @@ export function resolveStage2FlowEntryView(input: {
       mode: "question",
       activeQuestionId: session.path.orderedQuestionIds.at(-1) ?? null,
       status: "completion_failed",
-      liveMessage: "Deine Antworten sind gespeichert. Die Übergabe ist noch offen.",
+      liveMessage: "Deine Antworten sind gespeichert. Das Abschließen ist noch offen.",
       bridge: false,
     }
   }

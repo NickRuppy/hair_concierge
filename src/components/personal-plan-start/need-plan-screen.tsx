@@ -28,7 +28,8 @@ export type NeedPlanScreenViewModel = {
 
 export const PLAN_START_CATALOG_DISCLAIMER =
   "Für jede Kategorie haben wir das passendste Produkt aus unserem Katalog gewählt."
-export const PLAN_START_PENDING_DISCLAIMER = "Passende Produkte wählen wir im Feinschliff."
+export const PLAN_START_PENDING_DISCLAIMER =
+  "Passende Produkte wählen wir, sobald du deine eigenen ergänzt."
 
 /**
  * The catalog sentence is only honest while at least one category can still
@@ -49,9 +50,9 @@ export type NeedPlanScreenNextStatus = "idle" | "preparing" | "loading" | "error
 export const PLAN_START_ACCEPT_LABEL = "Zu deiner Routine"
 export const PLAN_START_ACCEPT_PENDING_LABEL = "Routine wird eingerichtet …"
 export const PLAN_START_REFINE_LABEL = "Auf meine Produkte abstimmen"
-export const PLAN_START_REFINE_PENDING_LABEL = "Feinschliff wird geöffnet …"
+export const PLAN_START_REFINE_PENDING_LABEL = "Deine Produkte werden geöffnet …"
 export const PLAN_START_REFINE_ERROR =
-  "Feinschliff konnte nicht geöffnet werden. Versuche es noch einmal."
+  "Deine Produkte konnten nicht geöffnet werden. Versuche es noch einmal."
 
 type NeedPlanScreenProps = {
   screen: NeedPlanScreenViewModel
@@ -103,7 +104,7 @@ export function NeedPlanScreen({
   const actionNav =
     transitionLayer === "outgoing" || !onNext ? null : (
       <nav
-        aria-label="Idealplan-Seiten"
+        aria-label="Plan-Seiten"
         className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] backdrop-blur"
       >
         <div className="mx-auto flex max-w-[430px] items-center sm:max-w-[560px]">
@@ -147,7 +148,7 @@ export function NeedPlanScreen({
       data-plan-start-screen={screen.kind}
       data-plan-start-has-optional={hasOptionalPage ? "true" : "false"}
     >
-      {showJourneyHeader ? <PlanStartHeader stageLabel="Idealplan" /> : null}
+      {showJourneyHeader ? <PlanStartHeader stageLabel="Plan" /> : null}
       <main className="mx-auto flex w-full max-w-[430px] flex-1 flex-col px-3 pb-[6.5rem] pt-3 sm:max-w-[560px] sm:px-5">
         <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#6e6863]">
           {screen.overline}
@@ -166,7 +167,7 @@ export function NeedPlanScreen({
           {planStartProductDisclaimer(screen.cards)}
         </p>
 
-        <Progress value={hasOptionalPage ? screen.progress : 100} label="Idealplan-Fortschritt" />
+        <Progress value={hasOptionalPage ? screen.progress : 100} label="Plan-Fortschritt" />
 
         <div className="mb-2 mt-1 flex items-baseline justify-between px-0.5">
           <strong className="text-[13px] text-[#291a43]">{screen.sectionTitle}</strong>
@@ -201,7 +202,18 @@ export function PlanStartHeader({
 }) {
   return (
     <div aria-label={stageLabel}>
-      <PersonalPlanJourneyHeader currentStage={1} onBack={onBack} backLabel={backLabel} />
+      {/*
+       * The Idealplan CTA ("Zu deiner Routine") exits straight into post-accept
+       * surfaces, skipping the 5-stage bar's own Feinschliff/Produkte promise —
+       * the sequential flow it narrates ends right here (founder field test
+       * 27.08.2026). Back and the wordmark stay; only the stage row goes.
+       */}
+      <PersonalPlanJourneyHeader
+        currentStage={1}
+        onBack={onBack}
+        backLabel={backLabel}
+        showStageProgress={false}
+      />
     </div>
   )
 }

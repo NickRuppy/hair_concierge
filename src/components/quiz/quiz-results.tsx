@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
-import { getQuizResultCta } from "@/lib/quiz/result-cta"
+import { QUIZ_RESULT_CTA } from "@/lib/quiz/result-cta"
 import { useQuizStore } from "@/lib/quiz/store"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { isSubscriptionActive } from "@/lib/stripe/gating"
@@ -122,7 +122,7 @@ export function QuizResults() {
     isCheckingSignedInSubscription,
     canGoStraightToRoutine,
   })
-  const cta = getQuizResultCta({ canGoStraightToRoutine })
+  const cta = QUIZ_RESULT_CTA
 
   const captureQuizCompleted = useCallback(() => {
     if (checkoutAnalyticsCapturedRef.current) return

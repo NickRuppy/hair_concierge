@@ -27,7 +27,7 @@ Heute: {{ row.today_label }}
 
 DEIN HAAR VERDIENT EINEN PLAN, DER WIRKLICH ZU DIR PASST.
 
-Schalte deinen persönlichen Plan frei, prüfe die Produkte, die du bereits verwendest, und starte mit der Routine, die dich Schritt für Schritt zu gesundem, schönem Haar bringt.
+Schalte deinen persönlichen Plan frei und starte direkt mit deiner Routine — verfeinern kannst du jederzeit.
 
 {{ trigger.cta_label }}
 {{ trigger.result_url }}

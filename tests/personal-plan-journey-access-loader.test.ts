@@ -748,7 +748,9 @@ test("an accepted Routine keeps Stage 4/5 reachable while a malformed successor 
             completedHandoff: { refinedVersionId: "refined-successor-2" },
           }) as never,
       }),
-      { state: "production", initialJourney: { stage: "stage2" } },
+      // `allowed.stage4` is asserted true above — this owner has an accepted
+      // Routine — so the journey carries the post-accept origin.
+      { state: "production", initialJourney: { stage: "stage2", planAccepted: true } },
     )
   }
 })

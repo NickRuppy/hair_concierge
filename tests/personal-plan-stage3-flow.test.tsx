@@ -1261,7 +1261,7 @@ test("material inventory authority opens a Bedarfsplan checkpoint before product
   assert.match(checkpointHtml, /Deine Produkte verändern einen Punkt/)
   assert.match(checkpointHtml, /Tiefenreinigung/)
   assert.match(checkpointHtml, /Ergänzung übernehmen/)
-  assert.match(checkpointHtml, /Idealplan beibehalten/)
+  assert.match(checkpointHtml, /Plan beibehalten/)
 
   checkpoint.props.onAccept()
   tree = await renderSettled(harness)
@@ -1393,12 +1393,12 @@ test("inventory-only products render acknowledgement-only and never enter fit co
   )
   assert.match(dispositionHtml, /Batiste Blush Trockenshampoo/)
   assert.match(dispositionHtml, /Nicht in deiner Routine/)
-  assert.match(dispositionHtml, /aktuell nicht in deinem Idealplan vorgesehen/)
+  assert.match(dispositionHtml, /aktuell nicht in deinem Plan vorgesehen/)
   assert.match(dispositionHtml, /Meine Produkte/)
   assert.match(dispositionHtml, />Weiter</)
   assert.doesNotMatch(
     dispositionHtml,
-    /Dieses Produkt bleibt erfasst|Von dir als regelmäßig verwendet|Nicht Teil deiner Routine|Verstanden, weiter|Wenn sich dein Idealplan später ändert/,
+    /Dieses Produkt bleibt erfasst|Von dir als regelmäßig verwendet|Nicht Teil deiner Routine|Verstanden, weiter|Wenn sich dein Plan später ändert/,
   )
   assert.doesNotMatch(dispositionHtml, /Alternative|Ersatz|übernehmen/)
 
@@ -2193,7 +2193,7 @@ test("a Conditioner outside the final plan skips role assignment and saves no ro
       {
         category: "conditioner",
         requiredRoles: [],
-        needSummary: "Conditioner ist aktuell nicht Teil des Idealplans",
+        needSummary: "Conditioner ist aktuell nicht Teil deines Plans",
         authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
       },
     ],

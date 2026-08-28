@@ -9,7 +9,7 @@ refer to that date on `main`.
 | What you want to click through | Fastest path |
 | --- | --- |
 | Authenticated app surfaces: `/chat`, `/profile`, `/routine`, `/scan`, `/tracker`, `/onboarding`, … | **Dev login** — one URL (§1) |
-| Personal Plan stage UIs in isolation (Idealplan, Feinschliff, Stage 3–5) | **`/labs` harnesses** — no auth at all (§2) |
+| Personal Plan stage UIs in isolation (Plan, Feinschliff, Stage 3–5) | **`/labs` harnesses** — no auth at all (§2) |
 | The real post-payment handoff: checkout → `/welcome` auth → `/plan-bereit` → `/plan-start` | **Local test-mode checkout** (§3 — read its blocker note first) |
 | Post-payment verification in production | Field-test link or synthetic entitlement — pointers only (§4) |
 
@@ -65,7 +65,7 @@ Dev-only pages (`NODE_ENV !== "development"` → 404; the `/labs` prefix is also
 development route in `src/lib/auth/route-classification.ts`). No login, no seeded data — each
 page fabricates its own scenario. Useful ones under `src/app/labs/`:
 
-- `/labs/personal-plan-start` — Stage 1 Idealplan view
+- `/labs/personal-plan-start` — Stage 1 Plan view
 - `/labs/personal-plan-stage-2?scenario=ready` — Feinschliff (scenario values are validated
   per page; read the page's `SCENARIOS` set)
 - `/labs/personal-plan-stage-1-2` — Stage 1→2 journey

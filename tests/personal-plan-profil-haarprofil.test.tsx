@@ -52,7 +52,7 @@ test("fresh auto-accept: 2 von 4 with both module rows open and deep-linked", ()
     view.rows.map((row) => [row.key, row.label, row.status, row.step]),
     [
       ["hair_analysis", "Haar-Analyse", "done", 1],
-      ["ideal_plan", "Dein Idealplan", "done", 2],
+      ["ideal_plan", "Dein Plan", "done", 2],
       ["products", "Deine Produkte", "open", 3],
       ["habits", "Deine Gewohnheiten", "open", 4],
     ],
@@ -176,7 +176,7 @@ test("the section renders the mockup's heading, count, rows and no minutes", () 
   assert.match(html, /Dein Haarprofil/)
   assert.match(html, /2 von 4/)
   assert.match(html, /Haar-Analyse/)
-  assert.match(html, /Dein Idealplan/)
+  assert.match(html, /Dein Plan/)
   assert.match(html, /Deine Produkte/)
   assert.match(html, /Deine Gewohnheiten/)
   // Decision 6: minutes live on the Routine banner button only.
@@ -212,7 +212,7 @@ function journeyAccess(stage4: boolean): PersonalPlanJourneyAccess {
 
 test("the section's gate is exactly the signal that shows the Routine tab", () => {
   // Routine cohort: the tab exists, so `/routine` is a real plan view and
-  // „Dein Idealplan ✓" is a truthful row.
+  // „Dein Plan ✓“ is a truthful row.
   assert.equal(hasRoutineTabAccess(toAuthenticatedAppNavigationAccess(journeyAccess(true))), true)
   // Mid-journey buyer: no Routine tab, `/routine` renders its hidden
   // unavailable state — the section must stay absent, like the no-plan state.

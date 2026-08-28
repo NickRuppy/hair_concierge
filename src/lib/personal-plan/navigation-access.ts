@@ -105,7 +105,7 @@ export function toAuthenticatedAppNavigationAccess(
  * verfügbar" page. Deliberately derived from the SAME item list the navigation
  * renders, so the two can never drift apart.
  *
- * The Profil tab's Haarprofil section links „Dein Idealplan" at the plan view
+ * The Profil tab's Haarprofil section links „Dein Plan“ at the plan view
  * (`/routine`) and presents it as done, so it stays absent for a mid-journey
  * buyer who has not reached Stage 4 yet (Task 2.5, review round 1).
  */

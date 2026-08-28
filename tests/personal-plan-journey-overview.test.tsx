@@ -19,7 +19,7 @@ test("journey overview and progress header share the approved five-stage vocabul
 
   assert.deepEqual(
     PERSONAL_PLAN_JOURNEY_STAGES.map(({ headerLabel }) => headerLabel),
-    ["Idealplan", "Feinschliff", "Produkte", "Routine", "Anwendung"],
+    ["Plan", "Feinschliff", "Produkte", "Routine", "Anwendung"],
   )
 
   for (const stage of PERSONAL_PLAN_JOURNEY_STAGES) {

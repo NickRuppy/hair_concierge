@@ -7,7 +7,9 @@
 - Template: `76`
 - Name: `personal_plan_result_artifact`
 - Layout: `1`
-- State after implementation: `draft`
+- **State: `active`, `has_sent_message: true`** (read back 2026-08-27). It launched
+  as `draft`; it has since been activated and has sent. This is what makes the
+  scripted sync inapplicable — see "Applying a copy change" below.
 - Source copy: inactive legacy message/template `8/41`
 - Active legacy message/template `7/40` remains unchanged
 - Link tracking: enabled
@@ -20,12 +22,26 @@ Canonical repository sources:
 - `docs/customerio/personal-plan-result-artifact-plain-text-template.txt`
 - `public/images/emails/personal-plan-before-after.jpg`
 
-Read-back fingerprints applied on 2026-07-30:
+Fingerprints of the canonical repository sources (what an `--apply` would push).
+Updated 2026-08-27 with the retired-ceremony copy correction:
 
 - HTML SHA-256:
-  `bbc86b79f84b6dfd06ba46a03c6f79304600ff8e04e65b21786c6b5c83c37066`
+  `2392be0d7fb53e9037886fbc4f5513ecaf55024fd5722ec84f06562bcff00ac3`
+- Plain text SHA-256:
+  `48462236e91d35c129978ea336eff9e0a8be59115e0a6728fb59d1a16de0b4a5`
+
+Fingerprints read back from live message/template `9/76` on 2026-08-27 — i.e. what
+subscribers currently receive, still the pre-correction copy:
+
+- HTML SHA-256:
+  `c14c4d5e97cd6fb1020a174e1df891660d03e5795fe61d5d26c28e317ae5c62c`
 - Plain text SHA-256:
   `4a8f9dd8756d36212ee8965779aa8c7fc6299bfa4c83da74f4b3b74947284785`
+
+The previous HTML pin (`bbc86b79…`, dated 2026-07-30) was stale: the template was
+changed and applied again in PR #295 without re-pinning. The live read-back above
+matched this repository's HTML byte-for-byte before the 2026-08-27 edit, so the
+repository was — and remains — the accurate source of truth.
 
 Subject:
 
@@ -78,30 +94,56 @@ enabled on message `9`.
 The payload deliberately excludes the locked plan, products, application order, cadence,
 diagnostic scores, raw quiz free text, consent values and claim tokens.
 
-## Preview and apply
+## Applying a copy change
 
-Preview:
+**The scripted sync no longer applies to this message, and must not be made to.**
 
-```bash
-npm run customerio:personal-plan-result-email -- \
-  --environment-id 219516 \
-  --message-id 9 \
-  --template-id 76
+`scripts/customerio-personal-plan-result-email.ts` was written for the launch, when
+message `9` was still an unsent draft. Its `assertPersonalPlanMessage` guard requires
+`state: "draft"` and `has_sent_message: false`. The message is now `active` and has
+sent, so **both** the `--apply` command and the read-only preview abort with:
+
+```text
+Personal-plan Customer.io message identity/settings check failed
 ```
 
-Apply to the inactive message:
+That is the guard working as designed — it exists to stop an automated write to a
+live, already-sending transactional message. Do not relax it, and do not "fix" the
+script, to push a copy change.
+
+Because the script is inapplicable, updating the live email is an explicit operator
+procedure:
+
+1. Read back and save the current template (`GET /v1/environments/219516/templates/76`)
+   as a rollback artifact.
+2. Update message `9` / template `76` from the two canonical files in this directory.
+3. Read back the applied template and confirm `body` / `body_plain` match the
+   canonical-source SHA-256s recorded above.
+4. Re-pin the "read back from live" fingerprints in this document to the values you
+   just confirmed, so the two fingerprint blocks agree again.
+
+Steps 3 and 4 are what the stale `bbc86b79…` pin proves are easy to skip: nothing in
+CI compares these pins to the files or to the live template, so an unre-pinned apply
+goes unnoticed indefinitely.
+
+### Historical: the launch-time flow
+
+For the record only — the commands below worked while message `9` was an unsent
+draft and will now abort on the guard:
 
 ```bash
+# preview
 npm run customerio:personal-plan-result-email -- \
-  --environment-id 219516 \
-  --message-id 9 \
-  --template-id 76 \
-  --apply
+  --environment-id 219516 --message-id 9 --template-id 76
+
+# apply (draft-only)
+npm run customerio:personal-plan-result-email -- \
+  --environment-id 219516 --message-id 9 --template-id 76 --apply
 ```
 
-The operator verifies EU authentication, the current template-update schema, exact inactive
-message/template pairing, layout/legal-footer content, unsent state, link tracking, full-template
-validation, backup and final read-back.
+At launch the operator verified EU authentication, the current template-update schema,
+exact inactive message/template pairing, layout/legal-footer content, unsent state,
+link tracking, full-template validation, backup and final read-back.
 
 ## Release order
 

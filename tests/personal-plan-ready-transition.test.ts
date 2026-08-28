@@ -100,7 +100,7 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.doesNotMatch(client, /data-personal-plan-ready-preview/)
   // The arrival screen ends the creation funnel: wordmark-only header, one
   // coral CTA, no chapter list promising Feinschliff/Produkt-Check as steps.
-  assert.match(arrival, /Dein Idealplan ist fertig\./)
+  assert.match(arrival, /Dein Plan ist fertig\./)
   assert.match(arrival, /Und das wartet dahinter:/)
   assert.match(arrival, /showStageProgress=\{false\}/)
   assert.doesNotMatch(arrival, /PersonalPlanJourneyOverview/)

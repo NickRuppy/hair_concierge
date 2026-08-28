@@ -154,7 +154,7 @@ test("keeps the Optional Idealplan action and Back target contained on mobile We
   await page.goto("/labs/personal-plan-start")
   await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
 
-  const nav = page.getByRole("navigation", { name: "Idealplan-Seiten" })
+  const nav = page.getByRole("navigation", { name: "Plan-Seiten" })
   const action = nav.getByRole("button", { name: "Zu deiner Routine" })
   const geometry = await action.evaluate((button) => {
     const bounds = button.getBoundingClientRect()

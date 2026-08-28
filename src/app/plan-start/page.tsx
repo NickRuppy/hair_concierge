@@ -140,6 +140,22 @@ export async function resolvePlanStartPageState(
       // preload fails; access/auth failures still resolve through the outer gate.
       initialPlan = undefined
     }
+    /**
+     * ORIGIN, not scope. Deliberately keyed on `activeRoutineVersionId` — an
+     * ACTIVATED routine — and NOT on `allowed.stage4`, which is
+     * `hasAcceptedRoutine || hasCurrentProposal`. A user who only has a pending
+     * proposal has never activated anything, so the `?planUpdated=1`
+     * „Plan aktualisiert“ toast would be a false claim for them. Both facts are
+     * already resolved above, so this costs nothing extra.
+     *
+     * Every journey carries it because the module cohorts share one URL:
+     * `?refine=products` is both the Routine banner's deep link (accepted) and
+     * the failed-accept escape hatch (unaccepted). Without this fact the flow
+     * cannot tell them apart, and the unaccepted cohort inherits a `/routine`
+     * exit the frontier redirect bounces plus a „Plan aktualisiert“ toast for
+     * what is actually their first plan.
+     */
+    const planAccepted = access.kind === "personal_plan" && Boolean(access.activeRoutineVersionId)
     const production = (
       initialJourney: PlanStartInitialJourney,
       bootstrap?: Pick<
@@ -148,7 +164,10 @@ export async function resolvePlanStartPageState(
       >,
     ): PlanStartPageState => ({
       state: "production",
-      initialJourney,
+      initialJourney:
+        initialJourney.stage === "stage1" || !planAccepted
+          ? initialJourney
+          : { ...initialJourney, planAccepted: true },
       ...(initialPlan ? { initialPlan } : {}),
       ...bootstrap,
     })
@@ -238,12 +257,22 @@ export async function resolvePlanStartPageState(
     // one only rescues an undirected reload. The `products` module hands off into
     // Stage 3 while the draft stays `in_progress`, so this is the only branch
     // that can catch it.
+    //
+    // It carries `refineModule: "products"` because that is what this state IS:
+    // the resumed leg of an explicit `products` module run. Without the marker
+    // the undirected reload would come back as a plain Stage-3 journey and
+    // resurrect the chapter-4 ceremony the module entry had already retired
+    // (founder ruling 27.08.2026).
     if (refinement.status === "in_progress" && access.allowed.stage3) {
       // An absent dep short-circuits the whole optional chain to `undefined`.
       const resumed = await deps.loadModule1Stage3Resume?.(userId).catch(() => null)
       if (resumed) {
         return production(
-          { stage: "stage3", refinedVersionId: resumed.refinedVersionId },
+          {
+            stage: "stage3",
+            refinedVersionId: resumed.refinedVersionId,
+            refineModule: "products",
+          },
           initialRefinementSession
             ? { personalPlanId: access.personalPlanId, initialRefinementSession }
             : undefined,
