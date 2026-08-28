@@ -294,6 +294,7 @@ test-screenshots*/
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e8-v1.json
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e9-v1.json
 !/data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-research-refresh-2026-08-28.json
+!/data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-final-audit-2026-08-28.json
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e3-candidates-v1.json
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e4-candidates-v1.json
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e5-candidates-v1.json

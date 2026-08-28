@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: E1-E7 applied and verified in production; E8-E9 continuation in progress.
+Status: E1-E9 applied and verified in production. Added 161 GTINs to 157 existing products; 195/259 active products are barcode-linked. Remaining 64 are explicitly held or readiness-blocked, not silently completed.
 
 ## Contract
 
@@ -119,3 +119,22 @@ Source quality corrections: official NUTREEOIL product JSON identifies Cacay 30 
 Use the same executor with new migration `20260828085000`, immutable E1-E7 pins, E8 20/20 and E9 6/6. SQL SHA `8dd3d29b8cfbbfa019f6203b8a18bfa4421c3b9a8dcb8ae52a4cf84246ad885a`; transactional bundle SHA `5cb412bd37cafe0784c7edbc045bb1f846ab0f993c920c08ade3020564a8ee75`. Wrapper pins the live E4-E7 executor MD5 `bb46c77377818ba99c5dd5af04f8ecef` and all four applied receipts. No extra table, column, registry, product or classification change. Tests, counterpart delta review and exact clean-head preflight precede application.
 
 E8-E9 verification: all 26 pass fresh live readiness at 08:48:09Z (fingerprint `ab55d0d4f0a5d935fa63120887d884d15352c94eb00ab30a18685e46a3589af8`). Main passed all 25 affected tests, full TypeScript, targeted ESLint and diff checks; independently verified all item hashes, raw pins, source accounting and exact equality of source/executed/history SQL. At 08:52:26Z the live executor MD5 and service-role-only permissions are unchanged, the new migration is absent and all 282 products retain the original hash. Claude Opus 4.8 / high read-only delta review found no hard defects; independently passed 25 tests and checked pin/shape/gating, prior immutability and zero held-ID/GTIN leakage. It did not verify the external deployment wrapper; main did. Transient review output stays outside the repository. No outstanding review finding blocks the authorized exact-cohort apply.
+
+E8 applied 08:56:25Z (20/20), E9 applied 08:56:52Z (6/6), against clean reviewed head `72cc8ee5e911ef64f56b78d3a9abb573ebddbf48`; pre/post-hook tree is identical (`4257bf8dc27d951b8150b23e30c748abe8beeaec`). Both live CLI preflights, applies and readbacks passed. Migration-history SQL hash matches `8dd3d29b8cfbbfa019f6203b8a18bfa4421c3b9a8dcb8ae52a4cf84246ad885a`; service-role-only execute permissions remain intact. Current-root-main lookup at 08:57:19Z passed all 53 distinct raw/canonical/EAN-13 spelling checks for this last cohort. Root main advanced independently during the task; these final checks ran from its then-current `870fc4fbbc95d03e2662b379782be8a7e5c0bc11`, not the task branch.
+
+## Final outcome and remaining scope
+
+At 08:57:12Z: all nine batches have their exact fingerprints, reviewed heads and 157 item receipts. 161 new GTINs bring the valid canonical total from 39 to 200; all identifier types total 268 (previously 107). All 282 product records retain the exact original hash `47d1b182838693c2e3b160439f83734e`. No names, brands, classifications, lifecycle states or product rows were changed.
+
+Fresh full-catalog readiness at 08:57:35Z: 259 active supported products, **195 barcode-linked** (previously 38), **183 scan-result-ready** under the existing oracle (previously 26). This is 75.3% barcode coverage of the active catalog, not 75.3% of market scans and not browser-render verification. The other 23 product records are outside the active supported cohort.
+
+The **64 active products without barcodes** split into:
+
+- **35 otherwise-ready products** held on source/package/formulation proof, open-submission overlap or physical-duplicate ownership. All have an explicit hold: 27 in the resumed source ledger plus eight earlier holds documented above. No unaccounted ready rows remain.
+- **29 readiness-blocked products**, needing category authority/protocol/disposition work in addition to identifier research. Among already-barcoded products, 12 also remain readiness-blocked; adding a barcode does not solve that separate issue.
+
+Durable exact-ID audit: `data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-final-audit-2026-08-28.json`; readiness-oracle fingerprint `73235a7ec16851c28046b6d4369d6605b6d0051b1f58e61e88704650689af1db`. It includes category counts and all 64 remaining IDs/reasons. The oracle's `ready_for_ean_research` means classification-ready, not identity-cleared for apply.
+
+The next product decision is canonical ownership for the same physical package represented in multiple categories: e.g. Guhl 2in1, Garnier Hair Food, Balea 3in1, Cantu leave-in, Midnight Serum and Pantene 7in1. Do not assign one code to both records or merge/reclassify records silently. Existing canonical brand IDs already settle spelling; no brand-name decision is outstanding. Source gaps stay researchable, but no unresolved candidate is represented as verified or written. New-product expansion remains parked until existing-catalog gaps are deliberately resolved.
+
+Changes and evidence are committed locally; nothing was pushed, opened as a PR, merged or application-deployed. The authorized database schema and identifier-data writes described above are complete. Counterpart review reports and SQL wrappers are intentionally retained only as transient `/tmp` diagnostics; durable decisions, manifests and verification remain with the task branch.

@@ -1,0 +1,755 @@
+{
+  "schema_version": 1,
+  "scope": "Read-only post-apply audit of active supported existing products; barcode recognition is separate from scan-result readiness and market coverage.",
+  "checked_at": "2026-08-28T08:57:35.108Z",
+  "full_catalog": {
+    "active_supported": 259,
+    "barcode_linked": 195,
+    "scan_result_ready": 183,
+    "ready_for_ean_research": 35,
+    "blocked": 41,
+    "by_category": {
+      "bondbuilder": {
+        "products": 3,
+        "barcode_linked": 3,
+        "scan_result_ready": 3,
+        "ready_for_ean_research": 0,
+        "blocked": 0
+      },
+      "conditioner": {
+        "products": 49,
+        "barcode_linked": 41,
+        "scan_result_ready": 36,
+        "ready_for_ean_research": 6,
+        "blocked": 7
+      },
+      "deep_cleansing_shampoo": {
+        "products": 5,
+        "barcode_linked": 5,
+        "scan_result_ready": 5,
+        "ready_for_ean_research": 0,
+        "blocked": 0
+      },
+      "dry_shampoo": {
+        "products": 10,
+        "barcode_linked": 10,
+        "scan_result_ready": 10,
+        "ready_for_ean_research": 0,
+        "blocked": 0
+      },
+      "heat_protectant": {
+        "products": 7,
+        "barcode_linked": 7,
+        "scan_result_ready": 7,
+        "ready_for_ean_research": 0,
+        "blocked": 0
+      },
+      "leave_in": {
+        "products": 46,
+        "barcode_linked": 36,
+        "scan_result_ready": 33,
+        "ready_for_ean_research": 8,
+        "blocked": 5
+      },
+      "mask": {
+        "products": 36,
+        "barcode_linked": 24,
+        "scan_result_ready": 24,
+        "ready_for_ean_research": 11,
+        "blocked": 1
+      },
+      "oil": {
+        "products": 41,
+        "barcode_linked": 18,
+        "scan_result_ready": 17,
+        "ready_for_ean_research": 8,
+        "blocked": 16
+      },
+      "scalp_care": {
+        "products": 8,
+        "barcode_linked": 8,
+        "scan_result_ready": 8,
+        "ready_for_ean_research": 0,
+        "blocked": 0
+      },
+      "shampoo": {
+        "products": 54,
+        "barcode_linked": 43,
+        "scan_result_ready": 40,
+        "ready_for_ean_research": 2,
+        "blocked": 12
+      }
+    }
+  },
+  "unlinked": {
+    "active_supported_without_barcode": 64,
+    "ready_for_ean_research": 35,
+    "blocked": 29,
+    "by_category": {
+      "conditioner": {
+        "candidates": 8,
+        "ready_for_ean_research": 6,
+        "blocked": 2
+      },
+      "leave_in": {
+        "candidates": 10,
+        "ready_for_ean_research": 8,
+        "blocked": 2
+      },
+      "mask": {
+        "candidates": 12,
+        "ready_for_ean_research": 11,
+        "blocked": 1
+      },
+      "oil": {
+        "candidates": 23,
+        "ready_for_ean_research": 8,
+        "blocked": 15
+      },
+      "shampoo": {
+        "candidates": 11,
+        "ready_for_ean_research": 2,
+        "blocked": 9
+      }
+    }
+  },
+  "fingerprint": "73235a7ec16851c28046b6d4369d6605b6d0051b1f58e61e88704650689af1db",
+  "unaccounted_ready": [],
+  "remaining": [
+    {
+      "product_id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "name": "Gliss Kur Aqua Revive Conditioner",
+      "category": "conditioner",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh exact-name search found conflicting 200 ml and 360 ml regional GTINs; no direct DE/EU exact current package barcode was confirmed."
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category": "conditioner",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "name": "OGX Bond Protein Repair Conditioner",
+      "category": "conditioner",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh search still separates rinse-out conditioner from similarly named leave-in variants; no exact barcode field for the assigned rinse-out conditioner."
+    },
+    {
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "category": "conditioner",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "category": "conditioner",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Cross-category duplicate owner: the same Hair Food Macadamia 3-in-1 400 ml physical package/GTIN 3600542511612 is represented by this conditioner and leave-in owner a72d630d-547a-465f-9846-3006b38af0a2. Hold all ambiguous owners."
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "name": "Cantu Leave-In Repair Cream",
+      "category": "conditioner",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "name": "Garnier Wahre Schätze Argan-Mandelcreme Spülung",
+      "category": "conditioner",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "name": "Guhl Bond+ Reparatur Spülung",
+      "category": "conditioner",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Official Guhl Bond+ page confirms the 200 ml conditioner identity but exposes no GTIN; only marketplace evidence surfaced 4072600701218."
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "name": "Garnier Hair Food Aloe Vera",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "duplicate_physical_product_requires_catalog_authority_resolution: fresh dm PDP identifies the 400 ml Garnier Fructis Haarmaske Aloe Vera Hair Food 3in1 and explicitly lists GTIN 3600542511049, but this exact 3-in-1 physical package is also represented by the catalog mask row; no owner is chosen in research."
+    },
+    {
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "name": "Redken Extreme Anti-Snap",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "name": "Curlsmith Multitasking Conditioner 3 in 1",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "name": "Midnight Serum",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "category": "leave_in",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Cross-category duplicate owner: the same Hair Food Macadamia 3-in-1 400 ml physical package/GTIN 3600542511612 is represented by this leave-in and conditioner owner 4c3e1a63-4696-406a-be67-f2aacc678b0c. Hold all ambiguous owners."
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Known physical duplicate: do not attach same 3-in-1 package to a second catalog row pending owner policy."
+    },
+    {
+      "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "name": "Cantu Leave-In Repair Cream",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+      "category": "leave_in",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+      "category": "leave_in",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh exact-name searches did not produce a qualifying retailer/manufacturer barcode field for the Aktivkohle hair mask."
+    },
+    {
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh searches confirm the exact 250 ml ISANA 3in1 Mandelmilch/Milchprotein/Mandel product and candidate 4305615627441, but found no current manufacturer, Rossmann, dm, Hagel, or reputable-retailer PDP that separately publishes the code rather than only placing it in a URL or secondary record."
+    },
+    {
+      "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "name": "Syoss Intense Curls Haarmaske",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Official Syoss page confirms the exact mask but publishes no GTIN; the Rossmann URL suffix alone is not barcode proof."
+    },
+    {
+      "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "name": "Fructis Hair Food Aloe Vera",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Known cross-category physical duplicate; no second attachment pending owner policy."
+    },
+    {
+      "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "duplicate_physical_product_requires_catalog_authority_resolution: fresh dm PDP identifies Balea Professional Haarmaske 3in1 Aqua Hyaluron and explicitly lists GTIN 4066447668315, but the same 3-in-1 physical package is also represented by the catalog leave-in row; no owner is chosen in research."
+    },
+    {
+      "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "The retained 4-in-1 mask page is reachable by URL but no fresh independent barcode field was found; do not infer GTIN 4015100813555 from its URL."
+    },
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "name": "Hask Argan Oil Repairing Deep Conditioner",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh attempt to reopen retained Hagel 50 ml sachet PDP returned an internal page error; no manufacturer/major-retailer page with a separate barcode field was verified. Do not derive a GTIN from a URL or title."
+    },
+    {
+      "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Known cross-category physical duplicate; do not add barcode to this second row."
+    },
+    {
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "name": "Syoss Haarkur Lamination Intense Glaze",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "No fresh reputable source exposed an exact barcode field for the assigned mask; do not infer it from the dm URL."
+    },
+    {
+      "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "name": "Balea 3 in 1 Intensivmaske",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Prior verified-cohort hold; see receipt"
+    },
+    {
+      "product_id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+      "category": "mask",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "category": "mask",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "3-in-1 package requires catalog-owner/usage adjudication because it spans mask and leave-in use; prior open-submission overlap remains unresolved. Hold despite exact package evidence."
+    },
+    {
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh Müller PDP refresh identified the product but exposes no EAN/GTIN field in returned page content; no independent authoritative barcode source was verified."
+    },
+    {
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "name": "benecos BIO Körperöl Macadamianussöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "name": "Primavera Calendulaöl Bio",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "name": "OGX Argan Oil",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "name": "L’Oréal Öl Magique Midnight Serum",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "duplicate_physical_product_requires_catalog_authority_resolution: fresh dm PDP identifies L'ORÉAL PARiS ELVITAL Haarserum Öl Magique Midnight Serum, 100 ml, with GTIN 3600524135805, but the same physical package is also represented by the catalog leave-in row; no owner is chosen in research."
+    },
+    {
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "name": "BioGourmet Distelöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "name": "nedura Schwarzkümmelöl ungefiltert",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "name": "KoRo MCT Öl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "name": "Dr. Scheller Jojobaöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "name": "Nuxe Huile Prodigieuse Öl",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Official NUXE DE page confirms the product family but presents 50/60/100/700 ml variants without a barcode field. A package-specific GTIN cannot be selected safely."
+    },
+    {
+      "product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "duplicate_physical_product_requires_catalog_authority_resolution: fresh Rossmann evidence identifies Pantene Pro-V Miracles schwereloses 7in1 Haaröl Spray, 145 ml, with GTIN 8700216178402, but the same physical package is also represented by the catalog leave-in row; no owner is chosen in research."
+    },
+    {
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh Amazon DE page attempt did not yield a structured EAN/GTIN field; no primary or major-retailer barcode corroboration found in the bounded pass."
+    },
+    {
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "name": "Maria Nila True Soft Argan Oil",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh Hagel 100 ml PDP refresh confirms the product/size but no separate EAN/GTIN field was returned; bounded search did not produce a stronger exact-package barcode source."
+    },
+    {
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "name": "dmBio natives Olivenöl extra",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "name": "benecos BIO Körperöl Aprikosenkernöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "name": "OGX Argan weightless Öl",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Retained dm PDP reopen returned an internal error; no separate exact-product/pack barcode field was verified in a replacement source."
+    },
+    {
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "name": "dmBio Kokosöl nativ",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "name": "OGX Bond Protein Repair",
+      "category": "oil",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Fresh Amazon DE page confirms the 50 ml product title but does not publish a structured EAN/GTIN field; marketplace URL/ASIN is not barcode evidence."
+    },
+    {
+      "product_id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "name": "benecos BIO Körperöl Mandelöl",
+      "category": "oil",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "name": "Balea Tiefenreinigung",
+      "category": "shampoo",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "Known active exact physical duplicate; retain the already-approved owner and do not attach a second identical GTIN."
+    },
+    {
+      "product_id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "name": "Salthouse Anti Schuppen",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "name": "Sebamed Anti Schuppen",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "name": "Pantene Anti Schuppen",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "name": "Head & Shoulders Anti Schuppen Sensitive",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "name": "Guhl Anti Schuppen",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "name": "Schauma Anti Schuppen",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "name": "Balea 2 in 1 Urea 5%",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "has_disposition",
+        "missing_required_protocol",
+        "verdict_unknown"
+      ],
+      "research_hold": null
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "name": "Keratin Oil Shampoo",
+      "category": "shampoo",
+      "status": "ready_for_ean_research",
+      "blockers": [],
+      "research_hold": "No exact current German/EU barcode field for the assigned OGX Keratin Oil Shampoo was found without substituting a different OGX variant."
+    },
+    {
+      "product_id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "name": "Balea Med Anti Schuppen",
+      "category": "shampoo",
+      "status": "blocked",
+      "blockers": [
+        "missing_required_protocol"
+      ],
+      "research_hold": null
+    }
+  ],
+  "production_readback": {
+    "checked_at": "2026-08-28T08:57:12.372053Z",
+    "product_rows": 282,
+    "product_rows_unchanged_md5": "47d1b182838693c2e3b160439f83734e",
+    "identifier_rows": 268,
+    "valid_canonical_gtin_rows": 200,
+    "new_gtins": 161,
+    "enriched_existing_products": 157,
+    "applied_batches": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6",
+      "E7",
+      "E8",
+      "E9"
+    ]
+  },
+  "current_main_lookup": {
+    "checked_at": "2026-08-28T08:57:19.419Z",
+    "last_cohort_distinct_spelling_checks": 53,
+    "failures": 0,
+    "claim": "Live lookup seam only; no authenticated browser-render proof."
+  }
+}
