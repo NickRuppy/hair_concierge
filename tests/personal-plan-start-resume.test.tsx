@@ -396,21 +396,18 @@ test("direct Stage 2 entry opens a new session immediately but preserves partial
   fresh.path.completedQuestionIds = []
   fresh.path.firstUnresolvedQuestionId = "current_product_categories"
 
-  assert.equal(deriveRefinementEntryMode(fresh, true), "question")
-  assert.equal(deriveRefinementEntryMode(fresh, false), "invitation")
-  assert.equal(deriveRefinementEntryMode(refinementSession("in_progress"), true), "resume")
+  // The invitation chapter is retired (relic removal 28.08.2026): a fresh
+  // entry always opens its first question directly.
+  assert.equal(deriveRefinementEntryMode(fresh), "question")
+  assert.equal(deriveRefinementEntryMode(refinementSession("in_progress")), "resume")
   assert.equal(
     shouldReturnToStage1FromQuestion({
       session: fresh,
       activeQuestionId: "current_product_categories",
-      directEntry: true,
     }),
     true,
   )
-  assert.equal(
-    deriveRefinementEntryMode(refinementSession("complete", "refined-1"), true),
-    "bridge",
-  )
+  assert.equal(deriveRefinementEntryMode(refinementSession("complete", "refined-1")), "bridge")
 })
 
 test("a server-seeded Stage 2 resumer renders the saved position on first paint", () => {

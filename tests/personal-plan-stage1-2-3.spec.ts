@@ -19,7 +19,8 @@ async function chooseNoneAndContinue(page: Page) {
 }
 
 async function completeRefinement(page: Page) {
-  await page.getByRole("button", { name: /Feinschliff starten/ }).click()
+  // No invitation chapter any more — the flow opens on its first question.
+  await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
   await chooseAndContinue(page, "Shampoo")
   await chooseAndContinue(page, "2×/Woche")
   await chooseAndContinue(page, "Leicht empfindlich oder juckend")

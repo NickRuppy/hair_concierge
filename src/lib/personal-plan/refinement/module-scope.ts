@@ -75,11 +75,6 @@ export function scopeStage2SessionToModule(
 /**
  * The first module with an open question on the current path, in canonical
  * order (`products`, then `habits`). Null once every question is answered.
- *
- * Client-side truth is path completion, not answer provenance: the session
- * contract carries no provenance, and a draft whose questions were all filled
- * by direct acceptance is exactly the case that must fall back to the legacy
- * linear entry rather than to a module.
  */
 export function firstOpenStage2Module(session: Stage2RefinementSession): Stage2Module | null {
   const states = getStage2ModulePathStates(
@@ -89,41 +84,47 @@ export function firstOpenStage2Module(session: Stage2RefinementSession): Stage2M
   return STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === "open") ?? null
 }
 
+/**
+ * `first_open` behaves like an explicit entry into the first open module (relic
+ * removal 28.08.2026). On an all-answered draft — the direct-accept cohort —
+ * nothing is open, so it falls back to the first module and gets the same edit
+ * visit a `?refine=products` deep link gets.
+ */
 export function resolveStage2EntryModule(
   session: Stage2RefinementSession,
   requested: Stage2ModuleEntryRequest | null,
 ): Stage2Module | null {
   if (!requested) return null
-  if (requested === "first_open") return firstOpenStage2Module(session)
+  if (requested === "first_open") return firstOpenStage2Module(session) ?? STAGE2_MODULES[0]
   return requested
 }
 
 /**
- * How the flow was entered — the distinction the direct-accept cohort depends on.
- *
- * `explicit` is a real module deep link (banner / Profil row). `first_open` is the
- * plain `?refine=1` re-entry, which resolves to a module only while one is open.
- * `none` is the legacy linear entry.
+ * How the flow was entered. `explicit` is any module entry request — a real
+ * module deep link (banner / Profil row / escape hatch) or the `?refine=1`
+ * re-entry resolved to its first open module. `none` is the legacy linear
+ * entry (a bare `/plan-start` on an existing draft).
  */
-export type Stage2ModuleScope = "none" | "explicit" | "first_open"
+export type Stage2ModuleScope = "none" | "explicit"
 
 export function resolveStage2ModuleScope(
   requested: Stage2ModuleEntryRequest | null | undefined,
   resolvedModule: Stage2Module | null,
 ): Stage2ModuleScope {
-  if (!resolvedModule || !requested) return "none"
-  return requested === "first_open" ? "first_open" : "explicit"
+  return resolvedModule && requested ? "explicit" : "none"
 }
 
 /**
- * Where "leave the Feinschliff" goes. An explicitly requested module was entered
- * from the Routine banner or the Profil tab, so its exit belongs back on
- * `/routine`; `first_open` and legacy entries keep today's Idealplan exit.
+ * Where "leave the Feinschliff" goes. Every module entry request was entered
+ * from the Routine banner, the Profil tab, or the `?refine=1` nudge, so its
+ * exit belongs back on `/routine`; the legacy linear entry keeps today's
+ * Idealplan exit. (The journey layer additionally gates `/routine` on the
+ * accepted ORIGIN — see `planStartRefinementExitDestination`.)
  */
 export function stage2SecondaryExitDestination(
   requested: Stage2ModuleEntryRequest | null | undefined,
 ): "routine" | "stage1" {
-  return requested && requested !== "first_open" ? "routine" : "stage1"
+  return requested ? "routine" : "stage1"
 }
 
 /**
@@ -140,7 +141,7 @@ export function hostSessionFor(
 }
 
 export type Stage2FlowEntryView = {
-  mode: "invitation" | "resume" | "question" | "bridge"
+  mode: "resume" | "question" | "bridge"
   activeQuestionId: Stage2QuestionId | null
   status: "idle" | "completion_failed"
   liveMessage: string
@@ -160,19 +161,17 @@ export type Stage2FlowEntryView = {
  * and the bridge stays disarmed until the user re-completes it.
  *
  * A COMPLETE draft is the direct-accept cohort: every question is answered, but
- * by the assumption resolver rather than by the user. An explicit module deep
- * link must therefore still open that module's first question — otherwise the
- * banner and the Profil rows are inert for exactly the people they exist for.
- * The first save reopens the draft server-side. `first_open` and the legacy
- * entry keep returning today's bridge, which is what the `?refine=1` nudge
- * cohort relies on.
+ * by the assumption resolver rather than by the user. A module entry must
+ * therefore still open that module's first question — otherwise the banner,
+ * the Profil rows, and the `?refine=1` nudge are inert for exactly the people
+ * they exist for. The first save reopens the draft server-side. Only the
+ * legacy linear entry keeps returning today's bridge.
  */
 export function resolveStage2FlowEntryView(input: {
   session: Stage2RefinementSession
   moduleScope: Stage2ModuleScope
-  directEntry: boolean
 }): Stage2FlowEntryView {
-  const { session, moduleScope, directEntry } = input
+  const { session, moduleScope } = input
   const moduleScoped = moduleScope !== "none"
   if (session.status === "complete" && moduleScope !== "explicit") {
     return {
@@ -203,13 +202,13 @@ export function resolveStage2FlowEntryView(input: {
     }
   }
   return {
-    // An EXPLICIT module entry is a post-accept surface hop, not a funnel
-    // chapter: the user tapped a Routine banner or a Profil row and already
-    // has the full app nav. Field test 26.08.2026 — the invitation and resume
-    // shells read as funnel ceremony there, so an explicit module always opens
-    // its first open question directly. `first_open` and the legacy linear
-    // entry keep the creation funnel's chapter screens.
-    mode: moduleScope === "explicit" ? "question" : deriveStage2EntryMode(session, directEntry),
+    // A module entry is a surface hop, not a funnel chapter: the user tapped a
+    // Routine banner, a Profil row, or the `?refine=1` nudge and already has
+    // the full app nav. Field test 26.08.2026 — the invitation and resume
+    // shells read as funnel ceremony there, so a module entry always opens its
+    // first open question directly. Only the legacy linear entry keeps the
+    // resume shell.
+    mode: moduleScope === "explicit" ? "question" : deriveStage2EntryMode(session),
     activeQuestionId: firstUnresolvedQuestionId,
     status: "idle",
     liveMessage: "",
@@ -218,15 +217,14 @@ export function resolveStage2FlowEntryView(input: {
 }
 
 /**
- * Invitation vs. resume vs. straight into the question — judged on the CURRENT
- * (possibly module-scoped) path, so a module the user has not started yet gets
- * its own fresh entry even when the other module is already answered.
+ * Resume vs. straight into the question for the LEGACY linear entry — judged on
+ * the current path. The invitation chapter is retired (relic removal
+ * 28.08.2026): a fresh entry opens its first question directly.
  */
 export function deriveStage2EntryMode(
   session: Stage2RefinementSession,
-  directEntry: boolean,
-): "invitation" | "resume" | "question" | "bridge" {
+): "resume" | "question" | "bridge" {
   if (session.status === "complete") return "bridge"
   if (session.path.completedQuestionIds.length > 0) return "resume"
-  return directEntry ? "question" : "invitation"
+  return "question"
 }

@@ -117,17 +117,20 @@ test("shared chapter transition renders the approved stage-specific copy and one
   assert.doesNotMatch(chapter, /max-height:519px/)
 })
 
-test("stage 5 has no chapter screen any more", () => {
-  // Field test 26.08.2026: the Routine's "Anwendung ansehen" hero button is
-  // gone and the Bottom-Nav tab owns that destination, so nothing announces
-  // Anwendung with a full-screen chapter. The journey OVERVIEW keeps its
-  // five stages — only the chapter is retired.
-  assert.equal(PERSONAL_PLAN_CHAPTERS.length, 4)
+test("only stages 3 and 4 still have chapter screens", () => {
+  // Field test 26.08.2026 retired stage 5's chapter (the Bottom-Nav tab owns
+  // Anwendung). Relic removal 28.08.2026 retired chapters 1 and 2: the
+  // /plan-bereit arrival screen replaced chapter 1, and every Stage-2 entry is
+  // a module entry (or the legacy linear question flow) with no invitation
+  // chapter. The journey OVERVIEW keeps its five stages — only chapters go.
+  assert.equal(PERSONAL_PLAN_CHAPTERS.length, 2)
   assert.deepEqual(
     PERSONAL_PLAN_CHAPTERS.map((entry) => entry.stage),
-    [1, 2, 3, 4],
+    [3, 4],
   )
   assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Deine Routine steht/)
   assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Anwendung ansehen/)
+  assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Wir haben deinen Plan erstellt/)
+  assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Feinschliff starten/)
   assert.equal(PERSONAL_PLAN_JOURNEY_STAGES.length, 5)
 })

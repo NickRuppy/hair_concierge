@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import {
-  PersonalPlanChapterTransition,
   PersonalPlanJourneyHeader,
   PersonalPlanViewTransition,
   type PersonalPlanTransitionDirection,
@@ -19,7 +18,6 @@ import {
 import {
   deriveStage2EntryMode,
   hostSessionFor,
-  isStage2Module,
   resolveStage2EntryModule,
   resolveStage2FlowEntryView,
   resolveStage2ModuleScope,
@@ -98,7 +96,7 @@ export type Stage2ModuleCompletionPayload = {
   session: Stage2RefinementSession
 }
 
-type RefinementMode = "loading" | "invitation" | "resume" | "question" | "bridge"
+type RefinementMode = "loading" | "resume" | "question" | "bridge"
 
 /**
  * The coarse "X von 4" the Routine banner shows, carried into the module flow
@@ -146,18 +144,19 @@ export function stage2BridgePresentation(input: {
 
 export function deriveRefinementEntryMode(
   session: Stage2RefinementSession,
-  directEntry: boolean,
-): Extract<RefinementMode, "invitation" | "resume" | "question" | "bridge"> {
-  return deriveStage2EntryMode(session, directEntry)
+): Extract<RefinementMode, "resume" | "question" | "bridge"> {
+  return deriveStage2EntryMode(session)
 }
 
+/**
+ * Back off the first question with nothing answered leaves the flow — there is
+ * no invitation chapter to fall back to any more (relic removal 28.08.2026).
+ */
 export function shouldReturnToStage1FromQuestion(input: {
   session: Stage2RefinementSession
   activeQuestionId: Stage2QuestionId
-  directEntry: boolean
 }): boolean {
   return (
-    input.directEntry &&
     input.session.path.completedQuestionIds.length === 0 &&
     input.session.path.orderedQuestionIds.indexOf(input.activeQuestionId) === 0
   )
@@ -171,7 +170,6 @@ export function RefinementFlow({
   onHandoff,
   onModuleComplete,
   autoHandoff = true,
-  directEntry = false,
   stageEntrance = false,
   moduleEntry,
   moduleProgress,
@@ -183,23 +181,22 @@ export function RefinementFlow({
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
   onModuleComplete?: (payload: Stage2ModuleCompletionPayload) => void | Promise<void>
   autoHandoff?: boolean
-  directEntry?: boolean
   stageEntrance?: boolean
   /**
    * Module-scoped entry. `products` / `habits` walk only that module;
    * `first_open` (the plain `?refine=1` re-entry) resolves against the loaded
-   * session and falls back to the legacy linear flow when nothing is open.
+   * session to its first open module (first module when nothing is open).
    */
   moduleEntry?: Stage2ModuleEntryRequest
   /** The banner's own "X von 4", shown as slim chrome above module questions. */
   moduleProgress?: Stage2ModuleProgress | null
 }) {
   /**
-   * A REAL module deep link (Routine banner, Profil row) — the post-accept
-   * loop. Purely prop-derived, so it is stable from the first render: an
-   * explicit request always resolves to exactly the module it names.
+   * Any module entry request (Routine banner, Profil row, escape hatch, or the
+   * `?refine=1` nudge) is an explicit module run. Purely prop-derived, so it
+   * is stable from the first render.
    */
-  const explicitModuleEntry = isStage2Module(moduleEntry)
+  const explicitModuleEntry = moduleEntry != null
   const initialModule = useMemo(
     () => (initialSession ? resolveStage2EntryModule(initialSession, moduleEntry ?? null) : null),
     [initialSession, moduleEntry],
@@ -223,10 +220,9 @@ export function RefinementFlow({
     () =>
       initialRefinementView(
         initialSession ? scopeStage2SessionToModule(initialSession, initialModule) : undefined,
-        directEntry,
         resolveStage2ModuleScope(moduleEntry, initialModule),
       ),
-    [directEntry, initialModule, initialSession, moduleEntry],
+    [initialModule, initialSession, moduleEntry],
   )
   const [session, setSession] = useState<Stage2RefinementSession | null>(
     initialView?.session ?? null,
@@ -311,7 +307,6 @@ export function RefinementFlow({
         const entry = resolveStage2FlowEntryView({
           session: loadedSession,
           moduleScope: moduleScopeRef.current,
-          directEntry,
         })
         if (entry.bridge) {
           const handoff = getCompletedHandoffForLoadedSession(loadedSession)
@@ -348,7 +343,7 @@ export function RefinementFlow({
     return () => {
       cancelled = true
     }
-  }, [directEntry, emit, gateway, initialSession, moduleEntry, setActiveFromSession, trackSession])
+  }, [emit, gateway, initialSession, moduleEntry, setActiveFromSession, trackSession])
 
   const begin = useCallback(() => {
     if (!session?.path.firstUnresolvedQuestionId) return
@@ -364,24 +359,20 @@ export function RefinementFlow({
     const previousQuestionId =
       currentIndex > 0 ? session.path.orderedQuestionIds[currentIndex - 1] : null
     if (!previousQuestionId) {
-      // Back off the first question of an EXPLICIT module leaves the module
-      // (→ /routine). It must never reveal the funnel's invitation/resume
-      // chapter, which the post-accept loop has no place for (26.08.2026).
-      if (
-        explicitModuleEntry ||
-        shouldReturnToStage1FromQuestion({ session, activeQuestionId, directEntry })
-      ) {
+      // Back off the first question of a module entry leaves the module
+      // (→ /routine). It must never reveal the funnel's resume chapter, which
+      // the post-accept loop has no place for (26.08.2026).
+      if (explicitModuleEntry || shouldReturnToStage1FromQuestion({ session, activeQuestionId })) {
         onSecondaryExit?.()
         return
       }
-      setMode(session.path.completedQuestionIds.length > 0 ? "resume" : "invitation")
+      setMode("resume")
       return
     }
     setActiveFromSession(session, previousQuestionId)
     setMode("question")
   }, [
     activeQuestionId,
-    directEntry,
     explicitModuleEntry,
     onSecondaryExit,
     session,
@@ -541,7 +532,6 @@ export function RefinementFlow({
       const entry = resolveStage2FlowEntryView({
         session: loaded,
         moduleScope: moduleScopeRef.current,
-        directEntry,
       })
       if (entry.bridge) {
         setSession(loaded)
@@ -563,7 +553,7 @@ export function RefinementFlow({
       setLiveMessage("Speichern hat nicht geklappt. Der neuere Stand konnte nicht geladen werden.")
       setMode("question")
     }
-  }, [directEntry, emit, gateway, setActiveFromSession, trackSession])
+  }, [emit, gateway, setActiveFromSession, trackSession])
 
   const handleSubmit = useCallback(async () => {
     if (!session || !activeQuestionId) return
@@ -777,9 +767,6 @@ export function RefinementFlow({
     }
     if (!session || !activeQuestionId)
       return <LoadingShell status={status} liveMessage={liveMessage} />
-    if (mode === "invitation") {
-      return <InvitationShell onBegin={begin} onSecondaryExit={onSecondaryExit} />
-    }
     if (mode === "resume") {
       return (
         <ResumeShell
@@ -983,23 +970,6 @@ function LoadingShell({
   )
 }
 
-function InvitationShell({
-  onBegin,
-  onSecondaryExit,
-}: {
-  onBegin: () => void
-  onSecondaryExit?: () => void
-}) {
-  return (
-    <PersonalPlanChapterTransition
-      currentStage={2}
-      onAction={onBegin}
-      onBack={onSecondaryExit}
-      backLabel="Zum Plan"
-    />
-  )
-}
-
 function ResumeShell({
   firstUnresolvedQuestionLabel,
   onBegin,
@@ -1048,18 +1018,17 @@ type InitialRefinementView = {
   activeQuestionId: Stage2QuestionId | null
   localAnswer: unknown
   status: RefinementQuestionStatus
-  mode: "invitation" | "resume" | "question" | "bridge"
+  mode: "resume" | "question" | "bridge"
   liveMessage: string
   bridge: Stage2CompleteResult | null
 }
 
 function initialRefinementView(
   session: Stage2RefinementSession | undefined,
-  directEntry: boolean,
   moduleScope: Stage2ModuleScope,
 ): InitialRefinementView | null {
   if (!session) return null
-  const entry = resolveStage2FlowEntryView({ session, moduleScope, directEntry })
+  const entry = resolveStage2FlowEntryView({ session, moduleScope })
   return {
     session,
     activeQuestionId: entry.activeQuestionId,

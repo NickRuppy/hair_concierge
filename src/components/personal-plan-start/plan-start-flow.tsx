@@ -187,8 +187,9 @@ export function planStartModuleEntry(
 }
 
 /**
- * SCOPE. Whether this Feinschliff run was launched by an EXPLICIT module deep
- * link (the Routine banner, a Profil row, or the failed-accept escape hatch).
+ * SCOPE. Whether this Feinschliff run was launched by a module entry request
+ * (the Routine banner, a Profil row, the failed-accept escape hatch, or the
+ * `?refine=1` nudge, which resolves to the first open module).
  */
 export function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
   return stage2SecondaryExitDestination(planStartModuleEntry(initialJourney)) === "routine"
@@ -1044,7 +1045,6 @@ export function PlanStartCustomerJourney({
           openRoutineHref(moduleCompletionRoutineHref(initialJourney))
         }}
         autoHandoff={!returningToRefinement}
-        directEntry
         stageEntrance={stage2EnteredLocally}
       />
     )

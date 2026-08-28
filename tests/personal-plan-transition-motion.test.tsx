@@ -112,7 +112,7 @@ test("Feinschliff keeps its Journey header outside the ordered-question depth su
     },
   })
   const html = renderToStaticMarkup(
-    <RefinementFlow gateway={{} as never} initialSession={session} directEntry />,
+    <RefinementFlow gateway={{} as never} initialSession={session} />,
   )
 
   assert.equal(html.match(/data-personal-plan-stage="2"/g)?.length, 1)
@@ -228,7 +228,6 @@ test("automatic Stage 3 bootstrap keeps the meaningful Feinschliff bridge visibl
       initialSession={session}
       onHandoff={() => new Promise(() => {})}
       autoHandoff
-      directEntry
     />,
   )
 

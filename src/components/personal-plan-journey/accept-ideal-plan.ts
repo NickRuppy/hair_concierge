@@ -11,11 +11,11 @@ export const PLAN_ACCEPT_UNAVAILABLE_NOTICE = "Das klappt gerade nicht."
  * Where a structurally stale seen state goes. Completing the products module
  * also produces an accepted plan, so this is a detour, not a dead end.
  *
- * `?refine=products` is an EXPLICIT module deep link, not the old `?refine=1`
- * re-entry: it suppresses the bridge auto-handoff exactly like `?refine=1` did,
- * AND it suppresses the retired chapter ceremony (invitation/resume shells, the
- * chapter screens) that `?refine=1` still resurrects. The escape hatch drops the
- * user straight into their product questions (founder ruling 27.08.2026).
+ * `?refine=products` is an EXPLICIT module deep link: it suppresses the bridge
+ * auto-handoff and the retired chapter ceremony, dropping the user straight
+ * into their product questions (founder ruling 27.08.2026). `?refine=1` now
+ * behaves the same way — resolved to the first open module — but the hatch
+ * names `products` because that is the module a failed accept is about.
  */
 export const PLAN_ACCEPT_REFINE_HREF = "/plan-start?refine=products"
 

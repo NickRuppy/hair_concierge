@@ -30,7 +30,9 @@ export function PersonalPlanChapterTransition({
   errorMessage?: string
 }) {
   const actionDockRef = useRef<HTMLElement>(null)
-  const chapter = PERSONAL_PLAN_CHAPTERS[currentStage - 1]
+  const chapter =
+    PERSONAL_PLAN_CHAPTERS.find((candidate) => candidate.stage === currentStage) ??
+    PERSONAL_PLAN_CHAPTERS[0]
   const actionLabel = actionPending
     ? (actionPendingLabel ?? `${chapter.actionLabel} …`)
     : chapter.actionLabel

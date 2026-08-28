@@ -44,9 +44,14 @@ export const PERSONAL_PLAN_JOURNEY_STAGES = [
  * The stages that still have a chapter screen. Stage 5 lost its chapter with
  * the Routine's "Anwendung ansehen" hero button (field test 26.08.2026): the
  * Bottom-Nav's Anwendung tab is the only route to that surface now, and a tab
- * does not get announced by a full-screen chapter.
+ * does not get announced by a full-screen chapter. Stages 1 and 2 lost theirs
+ * with the relic removal (28.08.2026): the `/plan-bereit` arrival screen
+ * replaced chapter 1, and every Stage-2 entry is a module entry (or the legacy
+ * linear question flow) with no invitation chapter. Chapters 3 and 4 remain
+ * the legacy linear journeys' bridge/completion surfaces and the bridge's
+ * handoff-error surface.
  */
-export type PersonalPlanChapterStage = 1 | 2 | 3 | 4
+export type PersonalPlanChapterStage = 3 | 4
 
 export type PersonalPlanChapterContent = {
   stage: PersonalPlanChapterStage
@@ -56,18 +61,6 @@ export type PersonalPlanChapterContent = {
 }
 
 export const PERSONAL_PLAN_CHAPTERS = [
-  {
-    stage: 1,
-    title: "Wir haben deinen Plan erstellt.",
-    description: "Jetzt machen wir ihn mit deinem Alltag und deinen Produkten wirklich zu deinem.",
-    actionLabel: "Plan ansehen",
-  },
-  {
-    stage: 2,
-    title: "Jetzt geben wir deinem Plan den Feinschliff.",
-    description: "Ein paar kurze Fragen passen ihn an deinen Alltag an.",
-    actionLabel: "Feinschliff starten",
-  },
   {
     stage: 3,
     title: "Jetzt gleichen wir deine Produkte ab.",

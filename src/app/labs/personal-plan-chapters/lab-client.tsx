@@ -6,11 +6,5 @@ import type { PersonalPlanChapterStage } from "@/components/personal-plan-journe
 function noop() {}
 
 export function PersonalPlanChaptersLabClient({ stage }: { stage: PersonalPlanChapterStage }) {
-  return (
-    <PersonalPlanChapterTransition
-      currentStage={stage}
-      onAction={noop}
-      onBack={stage > 1 ? noop : undefined}
-    />
-  )
+  return <PersonalPlanChapterTransition currentStage={stage} onAction={noop} onBack={noop} />
 }

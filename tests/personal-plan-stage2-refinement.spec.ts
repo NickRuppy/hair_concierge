@@ -7,8 +7,9 @@ async function openLab(page: Page, scenario: string) {
 }
 
 async function begin(page: Page, scenario = "ready") {
+  // The invitation chapter is retired (relic removal 28.08.2026): a fresh
+  // entry opens its first question directly, with the heading focused.
   await openLab(page, scenario)
-  await page.getByRole("button", { name: /Feinschliff starten/ }).click()
   await expect(page.getByRole("heading", { level: 2 })).toBeFocused()
 }
 
