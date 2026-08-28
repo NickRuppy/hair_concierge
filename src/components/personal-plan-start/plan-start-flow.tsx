@@ -131,11 +131,11 @@ export type PlanStartInitialJourney =
     }
 
 /**
- * Whether Stage 2's bridge may hand off into Stage 3 on its own. An explicit
- * refine request (`/plan-start?refine=1`, the Routine refinement nudge) must
- * not: after a direct accept the draft is already complete, so an auto-handoff
- * would bounce the user straight back to Stage 3 without ever showing the
- * Feinschliff.
+ * Whether Stage 2's bridge may hand off into Stage 3 on its own. Off for any
+ * `?refine=…` re-entry — though for a module entry this only matters for a
+ * bridge armed at ENTRY: a bridge armed by a module the user just finished in
+ * this session always auto-continues (`stage2BridgeAutoContinues`), because a
+ * finished module is a surface hop, not a chapter to confirm.
  */
 export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJourney): boolean {
   return !(initialJourney.stage === "stage2" && initialJourney.returningToRefinement === true)

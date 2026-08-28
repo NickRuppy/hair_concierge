@@ -288,7 +288,9 @@ export function RefinementFlow({
 
   useEffect(() => {
     if (initialSession) {
-      if (initialSession.status === "complete") {
+      // Keyed to the resolved VIEW, not the raw draft status: a first_open
+      // entry on a complete draft renders the module's question, not the bridge.
+      if (initialView?.mode === "bridge") {
         emit({ name: "personal_plan_stage2_bridge_viewed" })
       }
       return
@@ -343,7 +345,7 @@ export function RefinementFlow({
     return () => {
       cancelled = true
     }
-  }, [emit, gateway, initialSession, moduleEntry, setActiveFromSession, trackSession])
+  }, [emit, gateway, initialSession, initialView, moduleEntry, setActiveFromSession, trackSession])
 
   const begin = useCallback(() => {
     if (!session?.path.firstUnresolvedQuestionId) return

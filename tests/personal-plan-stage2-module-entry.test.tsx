@@ -446,12 +446,12 @@ test("plan-start turns a module deep link into a module-scoped Stage-2 entry", a
 })
 
 /**
- * A10 (founder ruling 27.08.2026). The universal escape hatch used to be
- * `/plan-start?refine=1`, which resolves to `first_open` — a NON-explicit entry
- * that resurrects the retired ceremony: the invitation/resume chapter shells and
- * the chapter screens the module entry had already retired. Pointing it at the
- * `products` module makes it an explicit module deep link, so a buyer whose
- * accept could not resolve lands directly in their product questions.
+ * A10 (founder ruling 27.08.2026). The failed-accept escape hatch is an
+ * explicit `products` deep link, so a buyer whose accept could not resolve
+ * lands directly in their product questions. (Since the relic removal
+ * 28.08.2026, `?refine=1` behaves the same way — resolved to the first open
+ * module — so the hatch's `products` target is about naming the right module,
+ * not about escaping retired ceremony.)
  */
 test("the accept escape hatch opens the products module with no chapter screen and no 5-stage bar", async () => {
   const refineParam = new URL(PLAN_ACCEPT_REFINE_HREF, "https://chaarlie.de").searchParams.get(
@@ -1239,4 +1239,137 @@ test("Back out of a reloaded Stage-3 module run renders the module's questions, 
     <RefinementFlow gateway={gateway} initialSession={session} />,
   )
   assert.match(unscoped, /Wir laden deinen Feinschliff\./)
+})
+
+/**
+ * Codex review 28.08.2026: the direct-accept `?refine=1` cohort, integrated —
+ * parse → page journey → complete-draft render → the products edit through the
+ * fused module completion the component submits — plus the revision-conflict
+ * reload keeping the first_open scope. The separate helper assertions above
+ * each pin one seam; this pins the composition.
+ */
+test("the ?refine=1 direct-accept journey opens products and completes the edit end to end", async () => {
+  const fullyAnsweredIds = [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "towel_handling",
+    "drying_routes",
+    "additional_heat_tools",
+    "night_protection",
+  ] as const
+  const fullyAnsweredAnswers = {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x" as const,
+    towel: { material: "no_towel" as const },
+    dryingRoutes: [],
+    additionalHeatTools: [],
+    nightProtection: [],
+  }
+
+  // Parse → page journey: an ACCEPTED plan whose draft is complete.
+  const journeyState = await resolvePlanStartPageState(
+    {
+      enabled: () => true,
+      stage2Enabled: () => true,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: "plan-1",
+        frontier: "stage4",
+        nextHref: "/routine",
+        activeRoutineVersionId: "routine-1",
+        allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+      }),
+      loadExistingRefinementSession: async () => fullyAnsweredSession("complete"),
+      loadRefinementProgress: async () => ({ completedSteps: 4, totalSteps: 4 }),
+    },
+    { refine: parseRefineParam("1"), refineModule: parseRefineModuleParam("1") },
+  )
+  assert.equal(journeyState.state, "production")
+  const journey = journeyState.state === "production" ? journeyState.initialJourney : null
+  assert.ok(journey)
+  assert.deepEqual(journey, {
+    stage: "stage2",
+    returningToRefinement: true,
+    refineModule: "first_open",
+    moduleProgress: { completedSteps: 4, totalSteps: 4 },
+    planAccepted: true,
+  })
+  assert.equal(planStartModuleEntry(journey), "first_open")
+  assert.equal(planStartSuppressesChapterCeremony(journey), true)
+  assert.equal(planStartRefinementExitDestination(journey), "routine")
+  assert.equal(moduleCompletionRoutineHref(journey), "/routine?planUpdated=1")
+
+  // The REAL fixture gateway's complete draft renders the products module's
+  // first question with the meter — never the bridge chapter or a shell.
+  const gateway = createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: plainTriggerContext,
+    initialAnswers: fullyAnsweredAnswers,
+    initialCompletedQuestionIds: [...fullyAnsweredIds],
+    initialRevision: 6,
+    initialStatus: "complete",
+  })
+  const loaded = await gateway.load()
+  assert.equal(loaded.status, "complete")
+  const seededHandoffVersion = loaded.completedHandoff?.refinedVersionId
+  assert.ok(seededHandoffVersion)
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={gateway}
+      initialSession={loaded}
+      moduleEntry={planStartModuleEntry(journey)}
+      moduleProgress={journey.stage === "stage2" ? (journey.moduleProgress ?? null) : null}
+    />,
+  )
+  assert.match(html, /Was du heute benutzt/)
+  assert.match(html, />4 von 4</)
+  assert.doesNotMatch(html, /Jetzt gleichen wir deine Produkte ab\./)
+  assert.doesNotMatch(html, /Wir laden deinen Feinschliff\./)
+  assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+
+  // The edit the component submits when the module page completes again: the
+  // fused save + module completion, at the loaded revision. The save reopens
+  // the complete draft, so the completion mints a FRESH handoff.
+  const fused = await gateway.saveAnswerAndCompleteModule({
+    module: "products",
+    questionId: "current_product_categories",
+    answer: ["shampoo"],
+    expectedRevision: loaded.revision,
+  })
+  assert.equal(fused.session.revision, loaded.revision + 1)
+  assert.equal(fused.moduleCompletion.module, "products")
+  assert.equal(fused.moduleCompletion.stage3Handoff, true)
+  // Every question is answered, so this is the closing-module path: the draft
+  // closes again, exactly like the linear completion.
+  assert.equal(fused.moduleCompletion.status, "complete")
+  assert.notEqual(fused.moduleCompletion.refinedVersionId, seededHandoffVersion)
+  // Despite `returningToRefinement` (autoHandoff off), a bridge armed by THIS
+  // session's module completion auto-continues into Stage 3.
+  assert.equal(stage2BridgeAutoContinues({ autoHandoff: false, explicitModuleEntry: true }), true)
+
+  // A concurrent write conflicts, and the reload keeps the first_open scope:
+  // the reloaded draft still resolves to a module entry in question mode.
+  const staleRevision = fused.session.revision
+  gateway.simulateExternalRevision()
+  await assert.rejects(
+    gateway.saveAnswer({
+      questionId: "current_product_categories",
+      answer: [],
+      expectedRevision: staleRevision,
+    }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError && error.code === "revision_conflict",
+  )
+  const reloaded = await gateway.load()
+  const reloadedModule = resolveStage2EntryModule(reloaded, "first_open")
+  assert.ok(reloadedModule)
+  assert.equal(resolveStage2ModuleScope("first_open", reloadedModule), "explicit")
+  assert.equal(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(reloaded, reloadedModule),
+      moduleScope: "explicit",
+    }).mode,
+    "question",
+  )
 })
