@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: E1/E2 applied and verified in production; E3 continuation in progress.
+Status: E1-E3 applied and verified in production; E4-E7 continuation in progress.
 
 ## Contract
 
@@ -10,7 +10,7 @@ Canonical brand authority resolves the spelling: product `07895098-a301-4137-b5c
 
 ## Frozen candidates
 
-Historical v1 manifests and August 26 ledgers remain unchanged. Only v2 files are executable:
+Historical research manifests and August 26 ledgers remain unchanged. Only E1/E2 v2 and the frozen production manifests below are executable:
 
 | Batch | Products | GTINs | Exact raw SHA-256 |
 | --- | ---: | ---: | --- |
@@ -71,3 +71,32 @@ Three E3 products stay held: Redken Extreme Anti-Snap `2b7db7e3-2058-4178-8a03-7
 Extend the same executor through one follow-up migration, `20260828081500`, adding only E3's exact fingerprint and counts to its existing batch contract. Do not edit already-applied migrations. No extra table, column, registry, product creation or classification changes. Reuse all existing preflight, transaction, ownership, submission, head and replay guards; verify and review this bounded delta before applying E3.
 
 E3 verification: 65 focused tests, TypeScript, targeted ESLint and diff checks passed. Read-only Claude delta review found no hard defects; independently verified exact SQL delta, immutable E1/E2 pins, 17/17 manifest and migration gating. Its curation question was reconciled: included Redken All Soft Mega Curls and Balea Tiefenreinigung are different products from held Redken Anti-Snap and Balea 3-in-1 mask. Deployment bundle SHA `6b4742e127114d43c3eeedcdd4f3062eaa5d89362f81bdcbe9deb8345fdae7ef` checks the live executor definition and original applied receipts before running the exact new migration transaction.
+
+E3 applied 08:20:40Z against clean reviewed head `a5083d2e85ea971b45b5139668a54353f57f1c5f`; no hook delta. Migration history SQL hash `53a1c0f3f7f588737f13cb7e60992af23d764aa0f2036e3b612fda0821ec7ad9` matches the source. Guarded preflight, apply and readback passed. At 08:21:16Z, current-root-main lookup resolved all 38 distinct raw/canonical/EAN-13 spelling checks to their exact owners. Cumulative result: 60 GTINs / 58 existing products added; 96 active barcode-linked, 99 valid GTIN rows, 167 total identifier rows. All 282 product records remain unchanged: `md5(jsonb_agg(to_jsonb(p) order by p.id)::text)` = `47d1b182838693c2e3b160439f83734e`.
+
+## E4-E7 continuation
+
+Source refresh covers all 77 previously researched remaining products. Final physical-identity reconciliation retains 73 products / 75 codes; four remain held. A fresh read-only readiness audit at 08:19:23Z passed all 77 candidates (zero blockers; fingerprint `bb1b11bd38f39dbb43192f8ea0c509641066f29ceeafeaba22ef0fc5376fe6b0`). Reuse the existing executor, extending its explicit batch allowlist and exact pins through migration `20260828083000`; no new table, column or service. E1-E3 pins and applied migration files remain immutable. Each cohort still runs and verifies separately.
+
+| Batch | Products | GTINs | Exact raw SHA-256 |
+| --- | ---: | ---: | --- |
+| E4 v1 | 20 | 21 | `6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436` |
+| E5 v1 | 19 | 20 | `8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136` |
+| E6 v1 | 19 | 19 | `92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903` |
+| E7 v1 | 15 | 15 | `c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e` |
+
+Fresh canonical brand joins resolve legacy strings through existing IDs: OLAPLEX (`1fbf8e21-0988-48c1-b6a0-493f575b44f0`), Garnier (`e4b57913-ff70-4e94-a83f-41445d0d7a2e`), It's a 10 (`fab97ff7-38b9-40bc-bb90-5a48bd3b8ed6`), Hask, Isana and Alverde. The executable compare-and-set retains the actual current product.brand, not the canonical label; no database rename or new identity row.
+
+Source judgments: OLAPLEX No.3PLUS 100/250 ml has matching published ingredient order; Moroccanoil 50/160 ml shares official INCI. Correct research-only Pantene Grow Abundant size to 290 ml and got2b Liquid to Dry to 150 ml; both production net-content fields are null. Nivea 2in1 is already one shampoo row with no duplicate physical owner. Epres already links to the manufacturer's CONSUMERKIT, so the verified starter-kit code matches that existing product. Herbal Essences Aloe is corroborated by an exact major-pharmacy 250-ml barcode field; its fresh market evidence is explicitly IL, not asserted as German shelf coverage. Each manifest retains the fresh source and historical corroboration; barcode-registry-only evidence was replaced with retailer/brand fields.
+
+Held E6: Garnier Wahre Schätze Argan-Mandelcreme Spülung `99de5b38-3e80-4360-889c-2505f46a7243` / `3600542462594`; no qualifying direct barcode field after alternate-source search. Held E7: Cantu Leave-In Repair Cream `e3c4b607-8f81-462c-8a2b-e45c8b3a2976` / `810006943405`; same physical name also exists as conditioner `7539ab79-f4f6-49d7-9269-08034ef4de96`. Do not choose either owner silently. The older Balea, Redken, Curlsmith and Guhl holds above remain excluded.
+
+Reviewed-deployment target: new migration SQL SHA `aa851262374777b093d0fa869df1d7b6152eb7e6ab0c4724092eba97034b0a06`; transactional bundle SHA `eb8889795339d9fae4e5bcc4988495e4ad416fe8ec3fdab963b785366e8eef26`. Wrapper pins the live E3 executor MD5 `0b3e9c77f0ada854d7dd355224a78d4c` and E3 receipt, records exactly the executed SQL, and refuses replay/drift. Final counterpart delta review and clean-head preflight precede production application.
+
+Fresh all-75 identity/ownership preflight at 08:26:36Z: 77 unique canonical GTINs, zero current owners or unresolved-submission overlaps, zero exact product-snapshot drift. During local verification, strict item fingerprints caught a generator mapping error (candidate raw_gtin versus executable value). The generator and all four still-unapplied manifests were corrected and refrozen; no guard was relaxed and no affected data had been written. All 75 serialized item fingerprints now round-trip exactly.
+
+The subsequent all-282 physical-identity audit held two additional selected rows before any E4-E7 apply: E5 Midnight Serum `6b01025d-9e72-4514-b42e-bbb6065fbe1c` shares the 100-ml package / `3600524135805` with oil `21a94166-3813-4c0f-8912-508fb8f704f1`; E7 Pantene 7in1 `f8f3b51d-8e64-487d-bad5-4a47c58862ed` shares the 145-ml package / `8700216178402` with oil `5827a3b9-a488-4c74-b13a-4d655f94f1c3`. E5/E7 were narrowed and refrozen to the pins above. No other confirmed physical duplicate was found in the remaining 73 selected products. The preliminary counterpart run was interrupted with no verdict when the new evidence arrived; review the final narrowed cohort instead. E3's already-applied Balea deep-cleansing owner follows the approved July 2 category plan and the August 26 legacy-shampoo duplicate hold; do not attach the code to the legacy shampoo as well.
+
+The full live readiness audit at 08:28:22Z still has 259 active products, 96 barcode-linked, 84 scan-result-ready, 134 unlinked strict-ready and 41 authority-blocked (29 unlinked). The earlier 53 source/identity holds remain a research backlog, not new products. A fresh inventory at 08:29:40Z resumed those 53 in parallel; their evidence alone will not authorize a new batch without physical-identity, live ownership and exact-fingerprint checks. Barcode-missing readiness blockers overlap: 29 missing protocols, 21 unknown verdicts, 18 dispositions. No classification repairs are implied by identifier enrichment.
+
+Final E4-E7 verification: main ran 55 focused tests and `npm run ci:verify` successfully (five existing lint warnings); after the two-row narrowing, all 23 affected tests and TypeScript passed. At 08:38:36Z, fresh 73-product / 75-GTIN preflight found zero existing owners, unresolved-submission overlaps, dispositions or identity drift. Claude's final read-only delta review found no hard defects and independently passed 23 tests, all pin/shape/immutability and dedup checks. It did not verify the out-of-repository deployment wrapper or full build; main verified both, including byte-for-byte equality of executed SQL and migration-history SQL. Optional typing/last-branch suggestions are deferred; this pass does not broaden the executor design.

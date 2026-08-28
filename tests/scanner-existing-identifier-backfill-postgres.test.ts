@@ -17,10 +17,17 @@ function gtin(body: string): string {
   return `${body}${(10 - (weighted % 10)) % 10}`
 }
 
-function makeManifest(batch: "E1" | "E2" | "E3") {
-  const productCount = batch === "E1" ? 20 : batch === "E2" ? 21 : 17
-  const gtinCount = batch === "E1" ? 21 : batch === "E2" ? 22 : 17
-  const batchDigit = batch === "E1" ? "1" : batch === "E2" ? "2" : "3"
+function makeManifest(batch: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7") {
+  const shape = {
+    E1: [20, 21, "1", 31],
+    E2: [21, 22, "2", 41],
+    E3: [17, 17, "3", 51],
+    E4: [20, 21, "4", 61],
+    E5: [19, 20, "5", 71],
+    E6: [19, 19, "6", 81],
+    E7: [15, 15, "7", 91],
+  } as const
+  const [productCount, gtinCount, batchDigit, prefix] = shape[batch]
   const items = Array.from({ length: productCount }, (_, index) => {
     const productId = `${batchDigit}${String(index + 1).padStart(7, "0")}-1111-4111-8111-${String(index + 1).padStart(12, "0")}`
     const item = {
@@ -34,9 +41,7 @@ function makeManifest(batch: "E1" | "E2" | "E3") {
         lifecycle_status: index !== 0 ? "active" : "inactive",
       },
       identifiers: Array.from({ length: index < gtinCount - productCount ? 2 : 1 }, (_, slot) => {
-        const value = gtin(
-          `${batch === "E1" ? 31 : batch === "E2" ? 41 : 51}${String(index * 10 + slot).padStart(9, "0")}`,
-        )
+        const value = gtin(`${prefix}${String(index * 10 + slot).padStart(9, "0")}`)
         return {
           type: "ean" as const,
           value,
@@ -162,6 +167,23 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       makeManifest("E3").fingerprint,
     )
   await pg.exec(e3Executor)
+  let e4e7Executor = await readFile(
+    "supabase/migrations/20260828083000_scanner_existing_identifier_backfill_e4_e7.sql",
+    "utf8",
+  )
+  for (const batch of ["E1", "E2", "E3", "E4", "E5", "E6", "E7"] as const) {
+    const pins = {
+      E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+      E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+      E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+      E4: "6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436",
+      E5: "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
+      E6: "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
+      E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
+    }
+    e4e7Executor = e4e7Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+  }
+  await pg.exec(e4e7Executor)
   return pg
 }
 
@@ -294,6 +316,33 @@ test("E3 applies atomically, replays exactly, and rejects wrong fingerprints and
     replay.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
     0,
   )
+})
+
+test("E4-E7 each apply and replay exactly while rejecting a wrong pin", async (t) => {
+  const manifests = (["E4", "E5", "E6", "E7"] as const).map((batch) => makeManifest(batch))
+  const pg = await database(manifests)
+  t.after(async () => pg.close())
+  for (const manifest of manifests) {
+    await assert.rejects(
+      () =>
+        pg.query(
+          `SELECT * FROM public.apply_scanner_existing_identifier_backfill_v1($1, $2, $3, 'nick', true)`,
+          [manifest.raw, "0".repeat(64), REVIEWED_HEAD],
+        ),
+      /raw UTF-8 fingerprint mismatch/i,
+    )
+    const first = await apply(pg, manifest)
+    assert.equal(first.rows.length, manifest.items.length)
+    assert.equal(
+      first.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
+      manifest.items.length + (manifest.items[0]?.identifiers.length === 2 ? 1 : 0),
+    )
+    const replay = await apply(pg, manifest)
+    assert.equal(
+      replay.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
+      0,
+    )
+  }
 })
 
 test("E2 rejects a canonical owner on an inactive product and rolls the full wave back", async (t) => {

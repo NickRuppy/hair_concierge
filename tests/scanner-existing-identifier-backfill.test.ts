@@ -43,11 +43,15 @@ function manifest(batch: "E1" | "E2", count: number, gtinCount: number) {
         is_active: index % 3 !== 0,
         lifecycle_status: index % 3 !== 0 ? "active" : "inactive",
       },
-      identifiers: Array.from({ length: identifierCount }, (_, identifierIndex) => ({
-        type: identifierIndex % 2 ? "barcode" : "ean",
-        value: gtin(String(10_000_000_000 + index * 10 + identifierIndex)),
-        source_url: `https://example.test/products/${index + 1}`,
-      })),
+      identifiers: Array.from({ length: identifierCount }, (_, identifierIndex) => {
+        const value = gtin(String(10_000_000_000 + index * 10 + identifierIndex))
+        return {
+          type: identifierIndex % 2 ? "barcode" : "ean",
+          value,
+          raw_gtin: value,
+          source_url: `https://example.test/products/${index + 1}`,
+        }
+      }),
     }
     return { ...item, content_fingerprint: catalogEnrichmentFingerprint(item) }
   })
@@ -113,11 +117,15 @@ test("accepts the two approved cohort shapes and canonicalizes all GTINs", () =>
   assert.equal(second.canonical_gtins.length, 22)
 })
 
-test("loads the reviewed E1/E2/E3 files with their exact pinned raw fingerprints", () => {
+test("loads the reviewed E1-E7 files with their exact pinned raw fingerprints", () => {
   for (const [batch, filename] of [
     ["E1", "phase1-existing-identifier-backfill-e1-v2.json"],
     ["E2", "phase1-existing-identifier-backfill-e2-v2.json"],
     ["E3", "phase1-existing-identifier-backfill-e3-v1.json"],
+    ["E4", "phase1-existing-identifier-backfill-e4-v1.json"],
+    ["E5", "phase1-existing-identifier-backfill-e5-v1.json"],
+    ["E6", "phase1-existing-identifier-backfill-e6-v1.json"],
+    ["E7", "phase1-existing-identifier-backfill-e7-v1.json"],
   ] as const) {
     const raw = readFileSync(`data/scanner-catalog-coverage/2026-08-26/${filename}`, "utf8")
     const parsed = parseScannerIdentifierBackfillManifest(raw)
@@ -126,25 +134,28 @@ test("loads the reviewed E1/E2/E3 files with their exact pinned raw fingerprints
   }
 })
 
-test("accepts only the exact E3 shape and pinned fingerprint", () => {
-  const raw = readFileSync(
-    "data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e3-v1.json",
-    "utf8",
-  )
-  const parsed = parseScannerIdentifierBackfillManifest(raw)
-  assert.equal(parsed.batch, "E3")
-  assert.equal(parsed.items.length, 17)
-  assert.equal(parsed.canonical_gtins.length, 17)
-  assert.equal(
-    parsed.batch_fingerprint,
-    "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
-  )
-  const wrongShape = JSON.parse(raw)
-  wrongShape.items.pop()
-  assert.throws(
-    () => parseScannerIdentifierBackfillManifest(JSON.stringify(wrongShape)),
-    /E3 must contain exactly 17 products/i,
-  )
+test("accepts only exact E3-E7 shapes", () => {
+  for (const [batch, products, gtins] of [
+    ["E3", 17, 17],
+    ["E4", 20, 21],
+    ["E5", 19, 20],
+    ["E6", 19, 19],
+    ["E7", 15, 15],
+  ] as const) {
+    const raw = readFileSync(
+      `data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-${batch.toLowerCase()}-v1.json`,
+      "utf8",
+    )
+    const parsed = parseScannerIdentifierBackfillManifest(raw)
+    assert.equal(parsed.items.length, products)
+    assert.equal(parsed.canonical_gtins.length, gtins)
+    const wrongShape = JSON.parse(raw)
+    wrongShape.items.pop()
+    assert.throws(
+      () => parseScannerIdentifierBackfillManifest(JSON.stringify(wrongShape)),
+      new RegExp(`${batch} must contain exactly ${products} products`, "i"),
+    )
+  }
 })
 
 test("rejects a transaction over 25 products and an invalid checksum", () => {
@@ -155,6 +166,12 @@ test("rejects a transaction over 25 products and an invalid checksum", () => {
     () => parseScannerIdentifierBackfillManifest(JSON.stringify(parsed)),
     /valid gs1|checksum/i,
   )
+})
+
+test("requires each frozen identifier's value", () => {
+  const parsed = JSON.parse(manifest("E1", 20, 21))
+  delete parsed.items[0].identifiers[0].value
+  assert.throws(() => parseScannerIdentifierBackfillManifest(JSON.stringify(parsed)), /value/)
 })
 
 test("rejects drift-prone manifests without exact lifecycle, source URL, and content hash", () => {
@@ -182,6 +199,10 @@ test("apply arguments are fail-closed and pin all exact raw manifest fingerprint
     E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
     E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
     E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+    E4: "6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436",
+    E5: "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
+    E6: "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
+    E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
   })
   assert.throws(() => parseScannerIdentifierBackfillArgs(["--apply"]), /confirm-project/i)
   assert.throws(
@@ -236,8 +257,12 @@ function readAdapter(
   }
 }
 
-test("only E3 requires its additional migration before reading the live cohort", async () => {
-  for (const batch of ["e1-v2", "e3-v1"]) {
+test("cohorts require only their applied executor migrations before reading live state", async () => {
+  for (const [batch, missing] of [
+    ["e1-v2", null],
+    ["e3-v1", "20260828081500"],
+    ["e4-v1", "20260828083000"],
+  ] as const) {
     const manifest = parseScannerIdentifierBackfillManifest(
       readFileSync(
         `data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-${batch}.json`,
@@ -249,7 +274,7 @@ test("only E3 requires its additional migration before reading the live cohort",
       args: { apply: false, reviewed_head: "b".repeat(40) },
       read: readAdapter(manifest, {
         async migrationState(version) {
-          return version === "20260828081500" ? "absent" : "applied"
+          return version === missing ? "absent" : "applied"
         },
       }),
       gitState: async () => ({
@@ -261,9 +286,9 @@ test("only E3 requires its additional migration before reading the live cohort",
     })
     assert.deepEqual(
       result.blockers,
-      batch.startsWith("e3") ? ["required migration 20260828081500 is not applied"] : [],
+      missing ? [`required migration ${missing} is not applied`] : [],
     )
-    assert.equal(result.ok, batch.startsWith("e1"))
+    assert.equal(result.ok, missing === null)
   }
 })
 

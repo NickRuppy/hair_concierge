@@ -16,12 +16,17 @@ export const SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS = [
   "20260826143000",
 ] as const
 export const SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION = "20260828081500" as const
+export const SCANNER_IDENTIFIER_BACKFILL_E4_E7_MIGRATION = "20260828083000" as const
 
-export type ScannerIdentifierBackfillBatch = "E1" | "E2" | "E3"
+export type ScannerIdentifierBackfillBatch = "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7"
 export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
   E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
   E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
   E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+  E4: "6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436",
+  E5: "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
+  E6: "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
+  E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
 } as const satisfies Record<ScannerIdentifierBackfillBatch, string | null>
 
 export type ScannerIdentifierType = "ean" | "gtin" | "barcode"
@@ -124,6 +129,10 @@ const EXPECTED_SHAPES = {
   E1: { products: 20, gtins: 21 },
   E2: { products: 21, gtins: 22 },
   E3: { products: 17, gtins: 17 },
+  E4: { products: 20, gtins: 21 },
+  E5: { products: 19, gtins: 20 },
+  E6: { products: 19, gtins: 19 },
+  E7: { products: 15, gtins: 15 },
 } as const
 
 function record(value: unknown, label: string): Record<string, unknown> {
@@ -156,9 +165,13 @@ export function parseScannerIdentifierBackfillManifest(
   const root = record(decoded, "manifest")
   if (root.schema_version !== SCANNER_IDENTIFIER_BACKFILL_SCHEMA_VERSION)
     throw new Error("scanner identifier manifest schema_version is invalid")
-  if (root.batch !== "E1" && root.batch !== "E2" && root.batch !== "E3")
-    throw new Error("scanner identifier manifest batch must be E1, E2, or E3")
-  const batch = root.batch
+  if (
+    !(["E1", "E2", "E3", "E4", "E5", "E6", "E7"] as const).includes(
+      root.batch as ScannerIdentifierBackfillBatch,
+    )
+  )
+    throw new Error("scanner identifier manifest batch must be E1 through E7")
+  const batch = root.batch as ScannerIdentifierBackfillBatch
   const batchId = requiredString(root.batch_id, "manifest.batch_id")
   if (!SAFE_KEY.test(batchId)) throw new Error("manifest.batch_id must be a safe key")
   if (!Array.isArray(root.items)) throw new Error("manifest.items must be an array")
@@ -347,9 +360,15 @@ export async function preflightScannerIdentifierBackfill(input: {
     blockers.push("git HEAD must equal --reviewed-head")
   let missingMigration = false
   const migrations =
-    manifest.batch === "E3"
-      ? [...SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS, SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION]
-      : SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS
+    manifest.batch === "E1" || manifest.batch === "E2"
+      ? SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS
+      : manifest.batch === "E3"
+        ? [...SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS, SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION]
+        : [
+            ...SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS,
+            SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION,
+            SCANNER_IDENTIFIER_BACKFILL_E4_E7_MIGRATION,
+          ]
   for (const migration of migrations) {
     if ((await read.migrationState(migration)) !== "applied") {
       blockers.push(`required migration ${migration} is not applied`)

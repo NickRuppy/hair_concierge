@@ -1,0 +1,558 @@
+{
+  "batch": "E6",
+  "batch_id": "scanner-existing-identifiers-e6-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "candidate_manifest": "phase1-existing-identifier-backfill-e6-candidates-v1.json",
+    "source_checked_at": "2026-08-28T08:21:35Z",
+    "production_identity_checked_at": "2026-08-28T08:27:35.178Z",
+    "source_refresh_receipt": "plans/2026-08-28-existing-gtin-enrichment-receipt.md"
+  },
+  "items": [
+    {
+      "item_key": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "product_id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "expected_product": {
+        "name": "Tiefenreinigung Shampoo",
+        "brand": "Swiss-O-Par",
+        "category_key": "deep_cleansing_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4104260073500",
+          "raw_gtin": "4104260073500",
+          "canonical_gtin14": "04104260073500",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+          "source_urls": [
+            "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+            "https://www.rossmann.de/de/pflege-und-duft-swiss-o-par-shampoo-tiefenreinigung/p/4104260073500"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "dm PDP names Swiss-o-Par Shampoo Tiefenreinigung, 250 ml, and explicitly publishes GTIN 4104260073500."
+        }
+      ],
+      "content_fingerprint": "52a30d65b44c7d7139bc7131ab515e38c06391de41b986fbad42b8326801949d"
+    },
+    {
+      "item_key": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+      "product_id": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+      "expected_product": {
+        "name": "Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung",
+        "brand": "Garnier Wahre Schätze",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542462839",
+          "raw_gtin": "3600542462839",
+          "canonical_gtin14": "03600542462839",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1670338/wahre-schaetze-conditioner-kokosmilch-und-macadamia",
+          "source_urls": [
+            "https://www.dm.de/p/d/1670338/wahre-schaetze-conditioner-kokosmilch-und-macadamia",
+            "https://www.mueller.de/p/garnier-wahre-schaetze-spuelung-kokosmilch-macadamia-2494513/"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "dm PDP names Wahre Schätze Conditioner Kokosmilch & Macadamia, 250 ml, and explicitly publishes GTIN 3600542462839."
+        }
+      ],
+      "content_fingerprint": "86f1e08df9da2ccd47ad54a6d19dd379f140406a80e76d8ca10180c0fc4eee99"
+    },
+    {
+      "item_key": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "product_id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "expected_product": {
+        "name": "Paul Mitchell Full Circle Leave-In",
+        "brand": "Paul Mitchell",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "009531139159",
+          "raw_gtin": "009531139159",
+          "canonical_gtin14": "00009531139159",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/paul-mitchell-full-circle-leave-in-cream-150-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/paul-mitchell-full-circle-leave-in-cream-150-ml.html"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Hagel PDP identifies Paul Mitchell Full Circle Leave-In Cream, 150 ml, and lists EAN 009531139159."
+        }
+      ],
+      "content_fingerprint": "5eeef39370f6355c44c8f8d559a85e5d497682fa9d9187d813207c00afc6e705"
+    },
+    {
+      "item_key": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "product_id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "expected_product": {
+        "name": "Wella Ultimate Repair Protective Leave-In",
+        "brand": "Wella Professionals",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4064666580098",
+          "raw_gtin": "4064666580098",
+          "canonical_gtin14": "04064666580098",
+          "size": "140 ml",
+          "market_scope": "EU/ES",
+          "source_url": "https://www.mazuelasonline.com/reparador-wella/10322-crema-wella-proteccion-sin-aclarado-ultimate-repair-140ml-2240190140005.html",
+          "source_urls": [
+            "https://www.mazuelasonline.com/reparador-wella/10322-crema-wella-proteccion-sin-aclarado-ultimate-repair-140ml-2240190140005.html",
+            "https://www.peluqueriashop.com/wella-professional/wella-ultimate-repair-protective-leave-in-140ml.html"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "EU retailer PDP identifies Wella Ultimate Repair Protective Leave-In, 140 ml, and explicitly labels 4064666580098 as EAN."
+        }
+      ],
+      "content_fingerprint": "5861b625605d3f56f5da16516113e4a53106ad9a4d1e239184fbee067697efcf"
+    },
+    {
+      "item_key": "970aff48-a7a7-46e8-bad5-4f0600631329",
+      "product_id": "970aff48-a7a7-46e8-bad5-4f0600631329",
+      "expected_product": {
+        "name": "Pomélo+Co Molecular Repair Conditioner",
+        "brand": "Pomélo+Co",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4260625262832",
+          "raw_gtin": "4260625262832",
+          "canonical_gtin14": "04260625262832",
+          "size": "200 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.dm.de/p/d/2971600/pomelo-co-conditioner-molecular-repair",
+          "source_urls": [
+            "https://www.dm.de/p/d/2971600/pomelo-co-conditioner-molecular-repair",
+            "https://incibeauty.com/en/produit/4260625262832"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Fresh dm result identifies Pomélo + Co. Conditioner Molecular Repair, 200 ml, and explicitly publishes GTIN 4260625262832."
+        }
+      ],
+      "content_fingerprint": "76e30e353c69a83069deb92fee8fdf6b8e8a649826e8cb66c0045c0287cd9f9e"
+    },
+    {
+      "item_key": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "product_id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "expected_product": {
+        "name": "OUAI Leave In Conditioner",
+        "brand": "OUAI",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "815402023119",
+          "raw_gtin": "815402023119",
+          "canonical_gtin14": "00815402023119",
+          "size": "140 ml (4.7 fl oz)",
+          "market_scope": "DE",
+          "source_url": "https://www.target.com/p/-/A-82518821",
+          "source_urls": [
+            "https://www.target.com/p/-/A-82518821",
+            "https://www.amazon.de/Ouai-leave-conditioner-140-ml/dp/B07B895KND"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Major retailer PDP identifies OUAI Leave In Conditioner, 4.7 fl oz, and explicitly labels UPC 815402023119."
+        }
+      ],
+      "content_fingerprint": "0571d43f544c41b4386c17b8f732a95a450c09b82adb510dc0ea2db7c3a91b6b"
+    },
+    {
+      "item_key": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "product_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "expected_product": {
+        "name": "Alcina Hyaluron 2.0",
+        "brand": "Alcina",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4008666199522",
+          "raw_gtin": "4008666199522",
+          "canonical_gtin14": "04008666199522",
+          "size": "125 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/alcina-hyaluron-2-0-spray-125-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/alcina-hyaluron-2-0-spray-125-ml.html"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Hagel PDP identifies Alcina Hyaluron 2.0 Spray 125 ml and lists EAN 4008666199522."
+        }
+      ],
+      "content_fingerprint": "52c0750978c6de3a8a6f129fc039afb1a682377e24c343b24f72598905d079e9"
+    },
+    {
+      "item_key": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "product_id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "expected_product": {
+        "name": "Guhl Kraft & Fülle",
+        "brand": "Guhl",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4072600703502",
+          "raw_gtin": "4072600703502",
+          "canonical_gtin14": "04072600703502",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+          "source_urls": [
+            "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "dm PDP identifies GUHL Shampoo Kraft & Fülle, 250 ml, and explicitly publishes GTIN 4072600703502."
+        }
+      ],
+      "content_fingerprint": "dce3a306026b6ad52d4ee827dfb9b0d5c39d8304082563c1cd96c9a9bb866f73"
+    },
+    {
+      "item_key": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "product_id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "expected_product": {
+        "name": "Hair Biology Revitalize & Soothe",
+        "brand": "Hair Biology",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "8006540153963",
+          "raw_gtin": "8006540153963",
+          "canonical_gtin14": "08006540153963",
+          "size": "250 ml",
+          "market_scope": "DE/AT",
+          "source_url": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+          "source_urls": [
+            "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+            "https://www.dm.at/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "dm PDP identifies hair biology Shampoo Revitalize & Soothe, 250 ml, and explicitly publishes GTIN 8006540153963."
+        }
+      ],
+      "content_fingerprint": "4a75c3faf053cb8022cb7f23f21fdfcc9caa6760c7803863cfcfa9b5c1c2bc36"
+    },
+    {
+      "item_key": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "product_id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "expected_product": {
+        "name": "Cantu Shampoo Locken Pflege",
+        "brand": "Cantu",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "810006945461",
+          "raw_gtin": "810006945461",
+          "canonical_gtin14": "00810006945461",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse",
+          "source_urls": [
+            "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "dm PDP identifies cantu Shampoo Cream Cleanse, 400 ml, and explicitly publishes GTIN 810006945461."
+        }
+      ],
+      "content_fingerprint": "3f31c091a3b62ae714f22d5c1cf99c8160aa99056c424ce3207c5e4695b249d3"
+    },
+    {
+      "item_key": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "product_id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "expected_product": {
+        "name": "Redken Acidic Color Gloss Leave-In",
+        "brand": "Redken",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3474637174170",
+          "raw_gtin": "3474637174170",
+          "canonical_gtin14": "03474637174170",
+          "size": "190 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.bellaffair.com/redken-acidic-color-gloss-leave-in-spray",
+          "source_urls": [
+            "https://www.bellaffair.com/redken-acidic-color-gloss-leave-in-spray"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "BellAffair PDP identifies Redken Acidic Color Gloss Leave-In Spray, 190 ml, and lists EAN 3474637174170."
+        }
+      ],
+      "content_fingerprint": "b3e587c5b81d171ec9beb622ef42925734309d3267f334f2341aa8718aa1d0b4"
+    },
+    {
+      "item_key": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "expected_product": {
+        "name": "Professional Shampoo Tiefenreinigung",
+        "brand": "ISANA",
+        "category_key": "deep_cleansing_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4068134135490",
+          "raw_gtin": "4068134135490",
+          "canonical_gtin14": "04068134135490",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.com.tr/isana-professional-sampuan-mentol-biberiye-250-ml-p-sr25080075",
+          "source_urls": [
+            "https://www.rossmann.com.tr/isana-professional-sampuan-mentol-biberiye-250-ml-p-sr25080075",
+            "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Rossmann PDP identifies ISANA Professional deep-cleansing shampoo, 250 ml, and explicitly labels 4068134135490 Barcode."
+        }
+      ],
+      "content_fingerprint": "5957c0f7f0ff78bf42a1e91fbdc4e0539542f6f978070ffe2231a667b343bb3b"
+    },
+    {
+      "item_key": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "product_id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "expected_product": {
+        "name": "EVO Day of Grace Leave-In",
+        "brand": "EVO",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "9349769009598",
+          "raw_gtin": "9349769009598",
+          "canonical_gtin14": "09349769009598",
+          "size": "200 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://beautyworks.com.au/evo-day-of-grace-pre-style-primer-200ml/",
+          "source_urls": [
+            "https://beautyworks.com.au/evo-day-of-grace-pre-style-primer-200ml/",
+            "https://www.hagel-shop.de/evo-day-of-grace-pre-style-primer-200-ml-5826168.html"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Authorized EVO stockist identifies Day Of Grace Pre-Style Primer, 200 ml, and explicitly lists UPC 9349769009598."
+        }
+      ],
+      "content_fingerprint": "941731408d896158603aa5bc645abc5079b2517cce65c7bddd3984fb0757eb2b"
+    },
+    {
+      "item_key": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "product_id": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "expected_product": {
+        "name": "Hask Argan Oil Repairing Conditioner",
+        "brand": "Hask",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "0071164343265",
+          "raw_gtin": "0071164343265",
+          "canonical_gtin14": "00071164343265",
+          "size": "355 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.deonlinedrogist.nl/drogist/hask-argan-oil-repairing-conditioner-355ml.htm",
+          "source_urls": [
+            "https://www.deonlinedrogist.nl/drogist/hask-argan-oil-repairing-conditioner-355ml.htm",
+            "https://www.hagel-shop.de/hask-argan-oil-repairing-conditioner-355-ml-5815313.html",
+            "https://www.etos.nl/producten/hask-argan-oil-repairing-conditioner-355-ml-120290196.html"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "EU retailer PDP identifies Hask Argan Oil Repairing Conditioner, 355 ml, and explicitly lists EAN 0071164343265."
+        }
+      ],
+      "content_fingerprint": "4358e2a89068ab3c2ab82fdc20d0a647354accb4e0f96ce057325b583f202d7f"
+    },
+    {
+      "item_key": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "product_id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "expected_product": {
+        "name": "Trockenshampoo Jedes Haar",
+        "brand": "ISANA",
+        "category_key": "dry_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4305615554532",
+          "raw_gtin": "4305615554532",
+          "canonical_gtin14": "04305615554532",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.com.tr/isana-kuru-sampuan-normal-ve-yagli-saclar-icin-200-ml-p-sr17080499",
+          "source_urls": [
+            "https://www.rossmann.com.tr/isana-kuru-sampuan-normal-ve-yagli-saclar-icin-200-ml-p-sr17080499",
+            "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar/p/4305615554532"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Rossmann PDP identifies ISANA dry shampoo for normal/oily hair, 200 ml, and explicitly labels 4305615554532 Barcode."
+        }
+      ],
+      "content_fingerprint": "6a6bba8503f4ab439e84882d5293b914c1498677e711f40ac2005c3e00d2f48c"
+    },
+    {
+      "item_key": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "product_id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "expected_product": {
+        "name": "Hask Curl Care Shampoo",
+        "brand": "Hask",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "071164304112",
+          "raw_gtin": "071164304112",
+          "canonical_gtin14": "00071164304112",
+          "size": "355 ml",
+          "market_scope": "EU/ES",
+          "source_url": "https://perfumeseden.com/higiene-personal/higiene-cabello/hask-curl-care-rizos-perfectos-shampoo-355-ml/",
+          "source_urls": [
+            "https://perfumeseden.com/higiene-personal/higiene-cabello/hask-curl-care-rizos-perfectos-shampoo-355-ml/"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Retailer PDP identifies Hask Curl Care Shampoo, 355 ml, and explicitly lists EAN 071164304112."
+        }
+      ],
+      "content_fingerprint": "26fdbf40fc8178f03aa9575cbb155a3d117b37bd930cec65fb459b3c4c768d33"
+    },
+    {
+      "item_key": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "product_id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "expected_product": {
+        "name": "Guhl Frische und Leichtigkeit",
+        "brand": "Guhl",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4072600282274",
+          "raw_gtin": "4072600282274",
+          "canonical_gtin14": "04072600282274",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett",
+          "source_urls": [
+            "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "dm PDP identifies GUHL Shampoo Frische & Leichtigkeit Anti Fett, 250 ml, and explicitly publishes GTIN 4072600282274."
+        }
+      ],
+      "content_fingerprint": "addd27870027e73d3d06a82b4c3413eef2f22a05a39151c696bd8a563f8c883f"
+    },
+    {
+      "item_key": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "product_id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "expected_product": {
+        "name": "Anti-Haarverlust Spülung",
+        "brand": "L'Oréal Paris",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600524189983",
+          "raw_gtin": "3600524189983",
+          "canonical_gtin14": "03600524189983",
+          "size": "150 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/2976313/l-oreal-paris-elvital-conditioner-fiber-booster-anti-haarverlust",
+          "source_urls": [
+            "https://www.dm.de/p/d/2976313/l-oreal-paris-elvital-conditioner-fiber-booster-anti-haarverlust",
+            "https://www.loreal-paris.de/haarpflege/elvital/fiber-booster"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "dm PDP identifies L'Oréal Paris Elvital Conditioner Fiber Booster Anti-Haarverlust, 150 ml, and explicitly publishes GTIN 3600524189983."
+        }
+      ],
+      "content_fingerprint": "fa5d2d7a1dcd09e79e2f9ccb9868303419d24d09d06c433751ebe04a4aedfc7b"
+    },
+    {
+      "item_key": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "product_id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "expected_product": {
+        "name": "Trockenshampoo Bruenett",
+        "brand": "Batiste",
+        "category_key": "dry_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "5010724527474",
+          "raw_gtin": "5010724527474",
+          "canonical_gtin14": "05010724527474",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://northmacedonia.sarantisgroup.com/media/ljdkek0e/barcode-2025_011025.pdf",
+          "source_urls": [
+            "https://northmacedonia.sarantisgroup.com/media/ljdkek0e/barcode-2025_011025.pdf",
+            "https://www.dm.de/p/d/1551789/batiste-trockenshampoo-bruenett"
+          ],
+          "source_checked_at": "2026-08-28T08:21:35Z",
+          "exact_match_note": "Sarantis Group distributor catalogue explicitly maps GTIN 5010724527474 to BATISTE MEDIUM (BRINETTE) 200ML."
+        }
+      ],
+      "content_fingerprint": "25b6b045f7c1868695d4d8b6f4bc60e850b831ee68907aa3cbc5ab968091baf7"
+    }
+  ]
+}
