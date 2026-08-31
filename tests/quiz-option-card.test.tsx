@@ -103,6 +103,67 @@ test("grid image cards use the compact mobile footer while keeping their descrip
   assert.match(html, /aria-describedby="[^"]+"/)
 })
 
+test("grid portrait cards fit the complete silhouette to the fixed media height", () => {
+  const html = renderToStaticMarkup(
+    <QuizOptionCard
+      label="Sehr lang"
+      description="Taille oder länger."
+      active={false}
+      onClick={() => {}}
+      visual={{
+        kind: "portrait",
+        alt: "Haarlängen-Illustration",
+        config: {
+          kind: "personalized",
+          density: "medium",
+          length: "very_long",
+          naturalRootPattern: "wavy",
+          treatedLengthPattern: "wavy",
+          treatmentState: "none",
+        },
+      }}
+      visualLayout="grid"
+    />,
+  )
+
+  assert.match(html, /data-hair-length-card="true"/)
+  assert.match(html, /data-hair-portrait-media="true"/)
+  assert.match(html, /data-hair-portrait-art="true"/)
+  assert.match(html, /class="relative block h-full w-full object-contain"/)
+  assert.match(html, /alt=""/)
+})
+
+test("grid portrait cards reserve breathing room around the complete portrait composition", () => {
+  const html = renderToStaticMarkup(
+    <QuizOptionCard
+      label="Sehr lang"
+      description="Taille oder länger."
+      active={false}
+      onClick={() => {}}
+      visual={{
+        kind: "portrait",
+        alt: "Haarlängen-Illustration",
+        config: {
+          kind: "personalized",
+          density: "medium",
+          length: "very_long",
+          naturalRootPattern: "wavy",
+          treatedLengthPattern: "wavy",
+          treatmentState: "none",
+        },
+      }}
+      visualLayout="grid"
+    />,
+  )
+
+  // The image and shared shoulder outline must shrink as one composition, so
+  // long portraits retain a visible margin before the label footer.
+  assert.match(
+    html,
+    /class="flex h-full w-full items-center justify-center scale-\[0\.9\]" data-hair-portrait-art="true"/,
+  )
+})
+
 test("thumbnail image cards keep their explanatory description visible on mobile", () => {
   const html = renderToStaticMarkup(
     <QuizOptionCard

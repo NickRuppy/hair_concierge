@@ -241,9 +241,16 @@ test("personal-plan concern notes are standalone, bounded, and do not restore a 
 
 test("personal-plan length portraits always use the canonical shared asset resolver", () => {
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+  const figure = read("src/components/quiz/hair-portrait-figure.tsx")
 
-  assert.match(quiz, /resolveHairPortraitAsset\(personalPlanPortraitConfig\(texture, length\)\)/)
-  assert.match(quiz, /src=\{asset\.src\}/)
+  assert.match(quiz, /HairLengthOptionCard/)
+  assert.match(quiz, /HairPortraitFigure/)
+  assert.match(
+    quiz,
+    /personalPlanPortraitConfig\(option\.portrait\.texture, option\.portrait\.length\)/,
+  )
+  assert.match(figure, /resolveHairPortraitAsset\(config\)/)
+  assert.match(figure, /src=\{asset\.src\}/)
   assert.doesNotMatch(quiz, /PERSONAL_PLAN_PORTRAIT_OVERRIDES/)
   assert.equal(
     existsSync("public/images/funnels/personal-plan-quiz/portrait-curly-very-long.webp"),

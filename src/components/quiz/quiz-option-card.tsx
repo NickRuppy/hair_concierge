@@ -7,12 +7,8 @@ import type {
   LegacyQuizOptionLayout,
   LegacyQuizOptionVisual,
 } from "@/components/quiz/legacy-quiz-visuals"
+import { HairLengthOptionCard } from "@/components/quiz/hair-length-option-card"
 import { Icon, type IconName } from "@/components/ui/icon"
-import {
-  PORTRAIT_BODY_VIEW_BOX,
-  PORTRAIT_SHARED_BODY_PATHS,
-  resolveHairPortraitAsset,
-} from "@/lib/quiz/hair-portrait-assets"
 import { cn } from "@/lib/utils"
 
 interface QuizOptionCardProps {
@@ -53,44 +49,6 @@ function SelectionCheck({ multi = false }: { multi?: boolean }) {
   )
 }
 
-function HairPortraitVisual({
-  visual,
-}: {
-  visual: Extract<LegacyQuizOptionVisual, { kind: "portrait" }>
-}) {
-  const asset = resolveHairPortraitAsset(visual.config)
-
-  return (
-    <span className="relative block aspect-square w-full p-2">
-      {!asset.ownBody ? (
-        <svg
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full overflow-visible"
-          preserveAspectRatio="xMidYMid meet"
-          viewBox={PORTRAIT_BODY_VIEW_BOX}
-        >
-          {PORTRAIT_SHARED_BODY_PATHS.map((path) => (
-            <path
-              className="fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]"
-              d={path}
-              key={path}
-            />
-          ))}
-        </svg>
-      ) : null}
-      <Image
-        alt={visual.alt}
-        className="relative block h-full w-full object-contain"
-        height={720}
-        priority={visual.priority}
-        src={asset.src}
-        unoptimized
-        width={720}
-      />
-    </span>
-  )
-}
-
 export function QuizOptionCard({
   ariaLabel,
   icon,
@@ -112,6 +70,24 @@ export function QuizOptionCard({
   if (visual && visualLayout !== "row") {
     const isThumbnail = visualLayout === "thumbnail" && visual.kind === "image"
     const isGrid = visualLayout === "grid"
+
+    if (isGrid && visual.kind === "portrait") {
+      return (
+        <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
+          <HairLengthOptionCard
+            ariaLabel={ariaLabel}
+            config={visual.config}
+            description={description}
+            disabled={disabled}
+            label={label}
+            onClick={onClick}
+            priority={visual.priority}
+            selected={active}
+            selectionVariant="regular"
+          />
+        </div>
+      )
+    }
 
     return (
       <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
@@ -161,9 +137,7 @@ export function QuizOptionCard({
                 }
                 src={visual.src}
               />
-            ) : (
-              <HairPortraitVisual visual={visual} />
-            )}
+            ) : null}
           </span>
           <span
             className={cn(

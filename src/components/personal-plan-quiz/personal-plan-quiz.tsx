@@ -65,6 +65,8 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { HairLengthOptionCard } from "@/components/quiz/hair-length-option-card"
+import { HairPortraitFigure } from "@/components/quiz/hair-portrait-figure"
 import { TreatmentPermedIcon, TreatmentStraightenedIcon } from "@/components/ui/icon"
 import { Input } from "@/components/ui/input"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
@@ -108,11 +110,6 @@ import {
   type PersonalPlanQuizServerDraftSession,
   type PersonalPlanQuizTransitionDirection,
 } from "@/lib/personal-plan-quiz"
-import {
-  PORTRAIT_BODY_VIEW_BOX,
-  PORTRAIT_SHARED_BODY_PATHS,
-  resolveHairPortraitAsset,
-} from "@/lib/quiz/hair-portrait-assets"
 import type { PortraitConfig } from "@/lib/quiz/portrait-config"
 import { cn } from "@/lib/utils"
 import { resolvePrimaryPersonalPlanConcern } from "@/lib/personal-plan-quiz/hair-assessment"
@@ -413,53 +410,6 @@ function personalPlanPortraitConfig(
   }
 }
 
-/**
- * Renders the canonical hair asset with the shared neck/shoulder outline behind it,
- * except for very-short portraits that already include their own body.
- */
-function HairPortraitFigure({
-  texture,
-  length,
-  className,
-  padded,
-}: {
-  texture: PersonalPlanQuizAnswers["texture"]
-  length: PersonalPlanQuizAnswers["hairLength"]
-  className?: string
-  padded?: boolean
-}) {
-  const asset = resolveHairPortraitAsset(personalPlanPortraitConfig(texture, length))
-
-  return (
-    <div className={cn("relative aspect-square w-full", padded && "p-2", className)}>
-      {!asset.ownBody ? (
-        <svg
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full overflow-visible"
-          preserveAspectRatio="xMidYMid meet"
-          viewBox={PORTRAIT_BODY_VIEW_BOX}
-        >
-          {PORTRAIT_SHARED_BODY_PATHS.map((path) => (
-            <path
-              className="fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]"
-              d={path}
-              key={path}
-            />
-          ))}
-        </svg>
-      ) : null}
-      <Image
-        alt=""
-        className="relative block h-full w-full object-contain"
-        height={720}
-        src={asset.src}
-        unoptimized
-        width={720}
-      />
-    </div>
-  )
-}
-
 /** Leading intensity indicator for icon-less scale/frequency answer rows. */
 function IntensityPips({ intensity, selected }: { intensity: OptionIntensity; selected: boolean }) {
   return (
@@ -508,7 +458,7 @@ function OptionCard({
 }) {
   const Icon = option.icon ? ICONS[option.icon] : null
   const showPips = !Icon && intensity != null
-  const hasMedia = Boolean(option.image ?? option.portrait)
+  const hasMedia = Boolean(option.image)
 
   // Thumbnail layout: a slim horizontal row with a square image on the left, so
   // three image cards + header fit one small viewport (used by the thickness step).
@@ -562,6 +512,19 @@ function OptionCard({
     )
   }
 
+  if (option.portrait) {
+    return (
+      <HairLengthOptionCard
+        config={personalPlanPortraitConfig(option.portrait.texture, option.portrait.length)}
+        description={option.description}
+        label={option.label}
+        onClick={onClick}
+        selected={selected}
+        selectionVariant="personal-plan"
+      />
+    )
+  }
+
   // Intensity cards keep uniform chrome: the graded pip dots alone encode the
   // scale, so an unselected card never carries a tint that reads as "chosen".
   return (
@@ -577,21 +540,7 @@ function OptionCard({
       onClick={onClick}
       type="button"
     >
-      {option.portrait ? (
-        <div
-          className={cn(
-            "w-full shrink-0 bg-[var(--brand-plum-ice)]",
-            visualLayout === "grid" && "h-36 sm:h-auto [@media(max-height:700px)]:h-28",
-          )}
-        >
-          <HairPortraitFigure
-            className={visualLayout === "grid" ? "h-full" : undefined}
-            length={option.portrait.length}
-            padded
-            texture={option.portrait.texture}
-          />
-        </div>
-      ) : option.image ? (
+      {option.image ? (
         <div
           className={cn(
             "relative w-full shrink-0 overflow-hidden bg-[var(--brand-plum-ice)]",
@@ -1174,7 +1123,9 @@ function MidpointProfileScreen({
           feels composed within the same visual system as every other screen. */}
       <div className="mt-4 w-full max-w-[12rem] rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-3 shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] [@media(max-height:700px)]:max-w-[9rem] [@media(max-height:700px)]:p-2">
         <div className="relative mx-auto w-full">
-          <HairPortraitFigure length={answers.hairLength} texture={answers.texture} />
+          <HairPortraitFigure
+            config={personalPlanPortraitConfig(answers.texture, answers.hairLength)}
+          />
           <span
             className={cn(
               "absolute bottom-1.5 right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-[#47744e] text-white shadow-lg transition-all duration-500",
