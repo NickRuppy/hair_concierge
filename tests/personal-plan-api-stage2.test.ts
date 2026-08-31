@@ -15,6 +15,7 @@ import {
 } from "../src/lib/personal-plan/refinement/gateway"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 import type { PersonalPlanStage2Access } from "../src/lib/personal-plan/journey-access-loader"
+import type { Stage3RecomputeResult } from "../src/lib/personal-plan/refinement-recompute/types"
 
 const stage2Access: PersonalPlanStage2Access = { allowed: true }
 
@@ -45,6 +46,27 @@ function deps(overrides: Partial<Stage2RouteDeps> = {}): Stage2RouteDeps {
     getUserId: async () => "owner-1",
     loadStage2Access: async () => stage2Access,
     gatewayFor: () => gateway(),
+    // Default: "no active routine" — the vast majority of Stage 2 tests never
+    // touch the habits-recompute lane, so this must be a harmless no-op.
+    runHabitsRecompute: async () => null,
+    ...overrides,
+  }
+}
+
+function moduleCompletionResult(
+  overrides: Partial<{
+    module: "products" | "habits"
+    refinedVersionId: string
+    status: "in_progress" | "complete"
+    stage3Handoff: boolean
+  }> = {},
+) {
+  return {
+    module: "habits" as const,
+    refinedVersionId: "refined-habits-1",
+    status: "in_progress" as const,
+    stage3Handoff: false,
+    nextHref: "/plan-start" as const,
     ...overrides,
   }
 }
@@ -424,6 +446,300 @@ test("Stage 2 final save reports a durable saved page when completion fails", as
   assert.deepEqual(await response.json(), {
     error: "completion_failed",
     savedSession: JSON.parse(JSON.stringify(savedSession)),
+  })
+})
+
+test("Stage 2 habits module completion (non-closing) runs the recompute lane and reports its outcome", async () => {
+  const savedSession = { ...session, revision: 4 }
+  const moduleCompletion = moduleCompletionResult({ status: "in_progress" })
+  const recomputeCalls: Array<{ userId: string; refinedVersionId: string }> = []
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => moduleCompletion,
+        }),
+      runHabitsRecompute: async (input) => {
+        recomputeCalls.push(input)
+        return { status: "applied", routineVersionId: "routine-2" } satisfies Stage3RecomputeResult
+      },
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 3,
+        completeModuleAfterSave: "habits",
+      }),
+    }),
+  )
+
+  assert.deepEqual(recomputeCalls, [{ userId: "owner-1", refinedVersionId: "refined-habits-1" }])
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    moduleCompletion: { ...moduleCompletion, recompute: { outcome: "applied" } },
+  })
+})
+
+test("Stage 2 habits module completion (closing, status complete) also runs the recompute lane", async () => {
+  const savedSession = { ...session, revision: 5 }
+  const moduleCompletion = moduleCompletionResult({ status: "complete" })
+  let calls = 0
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => moduleCompletion,
+        }),
+      runHabitsRecompute: async () => {
+        calls += 1
+        return { status: "unchanged" } satisfies Stage3RecomputeResult
+      },
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 4,
+        completeModuleAfterSave: "habits",
+      }),
+    }),
+  )
+
+  assert.equal(calls, 1)
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    moduleCompletion: { ...moduleCompletion, recompute: { outcome: "unchanged" } },
+  })
+})
+
+test("Stage 2 products module completion never runs the recompute lane", async () => {
+  const savedSession = { ...session, revision: 2 }
+  const moduleCompletion = moduleCompletionResult({
+    module: "products",
+    status: "in_progress",
+    stage3Handoff: true,
+  })
+  let calls = 0
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => moduleCompletion,
+        }),
+      runHabitsRecompute: async () => {
+        calls += 1
+        return null
+      },
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 1,
+        completeModuleAfterSave: "products",
+      }),
+    }),
+  )
+
+  assert.equal(calls, 0)
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    moduleCompletion,
+  })
+})
+
+test("Stage 2 legacy completeAfterSave never runs the recompute lane", async () => {
+  const savedSession = { ...session, revision: 1 }
+  let calls = 0
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          complete: async () => ({ refinedVersionId: "refined-legacy", nextHref: "/plan-start" }),
+        }),
+      runHabitsRecompute: async () => {
+        calls += 1
+        return null
+      },
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "night_protection",
+        answer: [],
+        expectedRevision: 0,
+        completeAfterSave: true,
+      }),
+    }),
+  )
+
+  assert.equal(calls, 0)
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    handoff: { refinedVersionId: "refined-legacy", nextHref: "/plan-start" },
+  })
+})
+
+test("Stage 2 habits module completion omits the recompute field entirely when there is no active routine", async () => {
+  const savedSession = { ...session, revision: 3 }
+  const moduleCompletion = moduleCompletionResult({ status: "in_progress" })
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => moduleCompletion,
+        }),
+      runHabitsRecompute: async () => null,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 2,
+        completeModuleAfterSave: "habits",
+      }),
+    }),
+  )
+
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    moduleCompletion,
+  })
+})
+
+test("Stage 2 habits module completion isolates a throwing recompute lane behind a 200 with outcome unavailable", async () => {
+  const savedSession = { ...session, revision: 6 }
+  const moduleCompletion = moduleCompletionResult({ status: "in_progress" })
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => moduleCompletion,
+        }),
+      runHabitsRecompute: async () => {
+        throw new Error("boom")
+      },
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 5,
+        completeModuleAfterSave: "habits",
+      }),
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    moduleCompletion: { ...moduleCompletion, recompute: { outcome: "unavailable" } },
+  })
+})
+
+test("Stage 2 habits module completion reports an unavailable orchestrator result without leaking its reason or retryability", async () => {
+  const savedSession = { ...session, revision: 7 }
+  const moduleCompletion = moduleCompletionResult({ status: "complete" })
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => moduleCompletion,
+        }),
+      runHabitsRecompute: async () =>
+        ({
+          status: "unavailable",
+          reason: "decision_blocked",
+          retryable: false,
+        }) satisfies Stage3RecomputeResult,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 6,
+        completeModuleAfterSave: "habits",
+      }),
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  const body = (await response.json()) as { moduleCompletion: Record<string, unknown> }
+  assert.deepEqual(body.moduleCompletion.recompute, { outcome: "unavailable" })
+})
+
+test("Stage 2 habits recompute lane reports transition timing and a structured log line", async () => {
+  const savedSession = { ...session, revision: 8 }
+  const moduleCompletion = moduleCompletionResult({ status: "in_progress" })
+  const originalInfo = console.info
+  const timingEvents: Array<[string, Record<string, unknown>]> = []
+  const infoEvents: Array<[string, Record<string, unknown>]> = []
+  console.info = ((event: string, details: Record<string, unknown>) => {
+    if (event === "personal_plan_transition_performance") timingEvents.push([event, details])
+    else if (event === "personal_plan_stage2_api") infoEvents.push([event, details])
+  }) as typeof console.info
+  try {
+    await createStage2RouteHandlers(
+      deps({
+        gatewayFor: () =>
+          gateway({
+            saveAnswer: async () => savedSession,
+            completeModule: async () => moduleCompletion,
+          }),
+        runHabitsRecompute: async () =>
+          ({
+            status: "unavailable",
+            reason: "resolve_conflict",
+            retryable: true,
+          }) satisfies Stage3RecomputeResult,
+      }),
+    ).PATCH(
+      new Request("http://test/api/personal-plan/stage-2", {
+        method: "PATCH",
+        body: JSON.stringify({
+          questionId: "wet_wash_frequency",
+          answer: "weekly_2x",
+          expectedRevision: 7,
+          completeModuleAfterSave: "habits",
+        }),
+      }),
+    )
+  } finally {
+    console.info = originalInfo
+  }
+
+  const timing = timingEvents.find(([, details]) => details.operation === "stage2_habits_recompute")
+  assert.ok(timing, "expected a stage2_habits_recompute transition timing event")
+  assert.equal(timing?.[1].outcome, "unavailable:resolve_conflict")
+
+  const log = infoEvents.find(([, details]) => details.event === "habits_recompute")
+  assert.ok(log, "expected a habits_recompute log line")
+  assert.deepEqual(log?.[1], {
+    event: "habits_recompute",
+    outcome: "unavailable",
+    reason: "resolve_conflict",
+    retryable: true,
   })
 })
 
