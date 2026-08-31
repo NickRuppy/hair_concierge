@@ -4,6 +4,7 @@ import type {
 } from "@/lib/personal-plan/products/authority/contracts"
 import type { Stage3ProductDraft } from "@/lib/personal-plan/products/contracts"
 import type {
+  Stage3AuthorityProductionGateway,
   Stage3DecisionReviewBundle,
   Stage3ProductionPersistence,
 } from "@/lib/personal-plan/products/production-persistence-gateway"
@@ -92,3 +93,82 @@ export type Stage3RecomputeIntentPlan = {
   intents: Stage3AuthoritySemanticIntent[]
   blocked: Stage3RecomputeBlockedSubject[]
 }
+
+/**
+ * Narrow gateway surface the T1.3 orchestrator drives: everything
+ * `Stage3AuthorityProductionGateway` exposes for headless draft acquisition,
+ * decision evaluation/resolution and completion. The production wiring (T1.4)
+ * supplies `createProductionStage3ProductsGateway(...)` as-is — it already
+ * satisfies this pick.
+ */
+export type Stage3RecomputeGateway = Pick<
+  Stage3AuthorityProductionGateway,
+  "loadOrCreate" | "evaluateDecisions" | "reviewDecisionBundles" | "resolveDecisions" | "complete"
+>
+
+/**
+ * What the active routine version currently on the plan looks like. The
+ * orchestrator reads this twice with the SAME method — once before any work
+ * (the owner-scoped starting state 4c's `unchanged`/`applied` distinction
+ * relies on) and once again after completion (the re-read that decides
+ * `applied`, never the completion receipt itself — see
+ * `production-persistence-gateway.ts:913` / `stage3-persistence-supabase.ts:406`).
+ */
+export type Stage3RecomputeActiveRoutineVersion = {
+  routineVersionId: string
+  /** The compiled Routine payload — the intent builder's final-choice source. */
+  payload: RoutinePayloadV1
+  source: {
+    refinedVersionId: string
+    /** Null on a legacy row that predates the source-draft columns. */
+    productDraftId: string | null
+    productDraftRevision: number | null
+  }
+}
+
+export type Stage3RecomputeRoutineStateReader = {
+  /** Owner-scoped; resolves to null when the plan has no routine at all yet. */
+  loadActiveRoutineVersion(input: {
+    userId: string
+    personalPlanId: string
+  }): Promise<Stage3RecomputeActiveRoutineVersion | null>
+}
+
+export type Stage3RecomputeDeps = {
+  gateway: Stage3RecomputeGateway
+  /** Raw persistence rehydration needs (`loadDraft`/`save`) — same port T1.1 takes. */
+  persistence: Stage3RehydrationPersistence
+  routineState: Stage3RecomputeRoutineStateReader
+}
+
+export type Stage3RecomputeInput = {
+  userId: string
+  personalPlanId: string
+  /** The refined need version a habits-module completion just made current. */
+  refinedVersionId: string
+}
+
+/**
+ * Typed reasons the recompute could not complete. Rehydration's own reasons
+ * (`Stage3RehydrationUnavailableReason`) pass through unchanged so a caller
+ * can trace an unavailable result back to exactly which layer produced it —
+ * see the T1.3 report's retryability table for which of these are safe to
+ * retry.
+ */
+export type Stage3RecomputeUnavailableReason =
+  | "no_active_routine"
+  | "legacy_source_draft"
+  | "superseded"
+  | Stage3RehydrationUnavailableReason
+  | "rehydration_conflict"
+  | "decision_blocked"
+  | "resolve_conflict"
+  | "completion_not_ready"
+  | "completion_conflict"
+  | "concurrent_activation"
+  | "unexpected_error"
+
+export type Stage3RecomputeResult =
+  | { status: "applied"; routineVersionId: string }
+  | { status: "unchanged" }
+  | { status: "unavailable"; reason: Stage3RecomputeUnavailableReason; retryable: boolean }
