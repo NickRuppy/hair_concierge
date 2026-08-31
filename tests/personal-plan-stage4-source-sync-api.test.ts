@@ -9,6 +9,7 @@ import {
   type RoutineRefinedNeedRecomputeLane,
   type RoutineSourceSyncRepository,
 } from "../src/lib/personal-plan/routine/source-sync-service"
+import { createProductionRoutineSourceSyncService } from "../src/lib/personal-plan/routine/production-sync-service"
 import type { ProposedProductPortfolio } from "../src/lib/personal-plan/products/contracts"
 import type { RoutineCompiledPayload } from "../src/lib/personal-plan/routine-candidate-compiler"
 
@@ -763,6 +764,172 @@ test("a module-driven recompute runs before, and reloads the base for, its sibli
   assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: null }])
 })
 
+test("an unavailable base keeps the lane's already-final outcomes", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [claim, refinedClaim]
+    },
+    async loadBase() {
+      return null
+    },
+  })
+  const lane = recomputeLane()
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  // The activation already committed, so the client must still learn about it
+  // even though the sibling product claim could not be reconciled.
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 1,
+    terminalized: 0,
+    deferred: 1,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: true,
+  })
+  assert.deepEqual(db.finished, [
+    { errorCode: "routine_source_base_unavailable" },
+    { errorCode: null },
+  ])
+})
+
+test("an unavailable base still reports a lane-terminalized claim, and stays a 503 without a heal", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [claim, refinedClaim]
+    },
+    async loadBase() {
+      return null
+    },
+  })
+  const lane = recomputeLane({
+    async recompute() {
+      return { status: "unavailable", reason: "decision_blocked", retryable: false }
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, { status: "temporarily_unavailable" })
+  assert.deepEqual(db.finished, [
+    { errorCode: "routine_source_base_unavailable" },
+    { errorCode: "terminal_refinement_recompute_blocked" },
+  ])
+  // Without this the parked row would be invisible to Stage-5 dashboards.
+  assert.deepEqual(reported, [
+    {
+      planId: "plan-a",
+      sourceKind: "refined_need",
+      observedRevision: 4,
+      terminalCode: "terminal_refinement_recompute_blocked",
+    },
+  ])
+})
+
+test("a recompute that ran without applying reloads the base but reports no client-visible change", async () => {
+  const base = acquisitionBase()
+  const loadedPlans: number[] = []
+  let planRevision = 2
+  const db = repository({
+    async loadPlan() {
+      loadedPlans.push(planRevision)
+      return {
+        id: "plan-a",
+        revision: planRevision,
+        sourceRevision: planRevision + 2,
+        activeRoutineVersionId: "routine-a",
+      }
+    },
+    async claim() {
+      return [claim, refinedClaim]
+    },
+    async loadBase() {
+      return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
+    },
+    async loadUserProduct(_, sourceKey) {
+      return {
+        id: sourceKey,
+        category: "shampoo",
+        catalogProductId: "product-a",
+        displayName: "Shampoo A",
+        identityStatus: "matched",
+        ownershipStatus: "owned",
+      }
+    },
+    async stage() {
+      return "staged"
+    },
+  })
+  const lane = recomputeLane({
+    async recompute() {
+      // The Stage-2 route's inline lane already activated this version; the
+      // worker's own run observes it as a no-op.
+      planRevision = 4
+      return { status: "unchanged" }
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  // `ran` drives the reload (state may have moved under us) — `applied` alone
+  // drives the client's reload signal.
+  assert.deepEqual(loadedPlans, [2, 4])
+  assert.equal(result.status === "processed" && result.recomputeApplied, false)
+})
+
+test("a lane-settled claim never inherits a sibling's batch transition error", async () => {
+  const base = acquisitionBase()
+  const db = repository({
+    async claim() {
+      return [claim, refinedClaim]
+    },
+    async loadBase() {
+      return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
+    },
+    async loadUserProduct(_, sourceKey) {
+      return {
+        id: sourceKey,
+        category: "shampoo",
+        catalogProductId: "product-a",
+        displayName: "Shampoo A",
+        identityStatus: "matched",
+        ownershipStatus: "owned",
+      }
+    },
+    async stage() {
+      return "revision_conflict"
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: recomputeLane(),
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, { status: "conflict", reason: "revision_conflict" })
+  // The staging conflict re-arms the product claim; the recompute the lane
+  // already committed must not be re-armed with it.
+  assert.deepEqual(db.finished, [{ errorCode: "revision_conflict" }, { errorCode: null }])
+})
+
 test("a lost finish lease heals on the next worker without a second activation", async () => {
   // Models the orchestrator's start-state capture: the recompute activates only
   // while the plan's active Routine is not already sourced from the target.
@@ -1345,5 +1512,122 @@ test("the sync route passes the healed-recompute signal through to the client", 
         recomputeApplied: true,
       },
     ],
+  )
+})
+
+/**
+ * The production construction both outbox callers use — the sync route and the
+ * acquisition service (`createSupabaseRoutineAcquisitionService`), which claims
+ * from the same outbox and would otherwise park a healable claim forever.
+ */
+test("the production sync service heals a module-driven refined claim instead of terminalizing it", async () => {
+  const planId = "11111111-1111-4111-8111-111111111111"
+  const activeVersionId = "22222222-2222-4222-8222-222222222222"
+  const refinedVersionId = "33333333-3333-4333-8333-333333333333"
+  const reads: string[] = []
+  const rpcs: Array<{ name: string; args: Record<string, unknown> }> = []
+
+  const rows: Record<string, unknown> = {
+    personal_plans: {
+      id: planId,
+      revision: 3,
+      source_revision: 6,
+      active_routine_version_id: activeVersionId,
+      pending_routine_proposal_id: null,
+      current_refined_need_version_id: refinedVersionId,
+    },
+    personal_plan_routine_versions: {
+      id: activeVersionId,
+      payload: {
+        ...routine,
+        planId,
+        versionId: activeVersionId,
+        source: { ...routine.source, refinedVersionId },
+        createdAt: "2026-08-31T00:00:00.000Z",
+      },
+      // Already sourced from the claim's target: the orchestrator's start-state
+      // capture short-circuits to `unchanged` with zero mutations.
+      source_refined_need_version_id: refinedVersionId,
+      source_product_draft_id: "draft-a",
+      source_product_draft_revision: 2,
+    },
+  }
+  const admin = {
+    from(table: string) {
+      reads.push(table)
+      const query = {
+        select: () => query,
+        eq: () => query,
+        maybeSingle: async () => ({ data: rows[table] ?? null, error: null }),
+        then: (
+          resolve: (value: { data: unknown; error: unknown }) => unknown,
+          reject: (reason: unknown) => unknown,
+        ) =>
+          Promise.resolve(
+            table === "personal_plan_refinement_drafts"
+              ? {
+                  data: [
+                    {
+                      module_projections: {
+                        habits: {
+                          needVersionId: refinedVersionId,
+                          projectedAtRevision: 3,
+                          stage3Handoff: false,
+                        },
+                      },
+                      result_refined_need_version_id: null,
+                    },
+                  ],
+                  error: null,
+                }
+              : { data: [], error: null },
+          ).then(resolve, reject),
+      }
+      return query
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      rpcs.push({ name, args })
+      if (name === "personal_plan_claim_owner_routine_source_changes") {
+        return {
+          data: [
+            {
+              outbox_id: "outbox-refined",
+              user_id: "owner-a",
+              personal_plan_id: planId,
+              source_kind: "refined_need",
+              source_key: refinedVersionId,
+              observed_revision: 6,
+              lease_token: "lease-refined",
+            },
+          ],
+          error: null,
+        }
+      }
+      if (name === "personal_plan_finish_routine_source_change") return { data: true, error: null }
+      throw new Error(`unexpected rpc ${name}`)
+    },
+  }
+
+  const result = await createProductionRoutineSourceSyncService(admin as never).sync({
+    userId: "owner-a",
+  })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 1,
+    terminalized: 0,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: false,
+  })
+  // The lane engaged: the module lineage was actually read...
+  assert.ok(reads.includes("personal_plan_refinement_drafts"))
+  // ...and the claim settled instead of parking on the old blanket terminal code.
+  assert.deepEqual(
+    rpcs
+      .filter((call) => call.name === "personal_plan_finish_routine_source_change")
+      .map((call) => call.args.p_error_code),
+    [null],
   )
 })

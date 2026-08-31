@@ -425,17 +425,23 @@ export function createRoutineSourceSyncService(input: {
 
       const base = await input.repository.loadBase(request.userId, plan)
       if (!base) {
-        await Promise.all(
-          claims.map((claim) =>
-            input.repository.finish({
-              claim,
-              errorCode: claimErrors.has(claim.outboxId)
-                ? (claimErrors.get(claim.outboxId) ?? null)
-                : "routine_source_base_unavailable",
-            }),
-          ),
-        )
-        return { status: "temporarily_unavailable" }
+        // The lane ran BEFORE the base load, so its outcomes are already final:
+        // settle through the same tail so lane-decided terminal codes are still
+        // reported and a committed activation still reaches the client.
+        for (const claim of remainingClaims) {
+          claimErrors.set(claim.outboxId, "routine_source_base_unavailable")
+        }
+        const settled = await settleClaims({
+          claims,
+          claimErrors,
+          outcome: null,
+          changed: false,
+          recomputeApplied: recompute.applied,
+        })
+        // An unavailable base is a batch-level infrastructure failure: keep
+        // today's 503 unless the lane already committed something the client
+        // has to see, in which case the healed result is the honest answer.
+        return recompute.applied ? settled : { status: "temporarily_unavailable" }
       }
 
       let routine = base.routine

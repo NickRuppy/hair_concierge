@@ -9,24 +9,11 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
-import {
-  createRoutineSourceSyncService,
-  createSupabaseRoutineSourceSyncRepository,
-} from "@/lib/personal-plan/routine/source-sync-service"
-import {
-  createSupabaseRoutineCadenceAuthorityReader,
-  type RoutineCadenceAuthorityReadClient,
-} from "@/lib/personal-plan/routine/cadence-authority"
-import {
-  classifyModuleDrivenRefinedVersion,
-  type RoutineRefinedNeedClassificationClient,
-} from "@/lib/personal-plan/refinement-recompute/module-driven-classification"
-import { recomputeRoutineAfterHabitsCompletion } from "@/lib/personal-plan/refinement-recompute/orchestrator"
-import { createProductionStage3RecomputeDeps } from "@/lib/personal-plan/refinement-recompute/production-deps"
+import type { createRoutineSourceSyncService } from "@/lib/personal-plan/routine/source-sync-service"
+import { createProductionRoutineSourceSyncService } from "@/lib/personal-plan/routine/production-sync-service"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
-import { capturePersonalPlanRoutineTerminalSource } from "@/lib/observability/personal-plan-application"
 
 type Service = ReturnType<typeof createRoutineSourceSyncService>
 export type PersonalPlanRoutineSyncRouteDeps = {
@@ -65,30 +52,7 @@ const handlers = createPersonalPlanRoutineSyncRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-  service: () => {
-    const admin = createAdminClient()
-    return createRoutineSourceSyncService({
-      repository: createSupabaseRoutineSourceSyncRepository(admin),
-      reportTerminalSource: capturePersonalPlanRoutineTerminalSource,
-      cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
-        admin as unknown as RoutineCadenceAuthorityReadClient,
-      ),
-      refinementRecompute: {
-        classify: (lineage) =>
-          classifyModuleDrivenRefinedVersion({
-            client: admin as unknown as RoutineRefinedNeedClassificationClient,
-            ...lineage,
-          }),
-        // Fresh deps per invocation: the Stage-3 gateway memoizes the draft it
-        // loaded, so a recompute must never inherit another one's snapshot.
-        recompute: (lineage) =>
-          recomputeRoutineAfterHabitsCompletion(
-            createProductionStage3RecomputeDeps({ userId: lineage.userId, admin }),
-            lineage,
-          ),
-      },
-    })
-  },
+  service: () => createProductionRoutineSourceSyncService(createAdminClient()),
 })
 export const POST = async () => {
   const startedAt = performance.now()

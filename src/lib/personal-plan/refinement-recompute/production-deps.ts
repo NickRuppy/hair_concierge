@@ -20,6 +20,13 @@ import {
 import { createProductionStage3ProductsGateway } from "@/lib/personal-plan/products/production-persistence-gateway"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 
+import type { RoutineRefinedNeedRecomputeLane } from "@/lib/personal-plan/routine/source-sync-service"
+
+import {
+  classifyModuleDrivenRefinedVersion,
+  type RoutineRefinedNeedClassificationClient,
+} from "./module-driven-classification"
+import { recomputeRoutineAfterHabitsCompletion } from "./orchestrator"
 import type { Stage3RecomputeActiveRoutineVersion, Stage3RecomputeDeps } from "./types"
 
 /**
@@ -87,5 +94,33 @@ export function createProductionStage3RecomputeDeps(input: {
         }
       },
     },
+  }
+}
+
+/**
+ * Production wiring of the sync worker's self-heal lane (T1.5).
+ *
+ * Every construction of `createRoutineSourceSyncService` that runs against a
+ * real admin client must pass this — the sync route AND the acquisition
+ * service, which claims from the same outbox. A worker without the lane
+ * terminalizes a healable module-driven `refined_need` claim at
+ * `available_at = infinity`, which no later visit can undo.
+ */
+export function createProductionRefinedNeedRecomputeLane(input: {
+  admin: SupabaseClient
+}): RoutineRefinedNeedRecomputeLane {
+  return {
+    classify: (lineage) =>
+      classifyModuleDrivenRefinedVersion({
+        client: input.admin as unknown as RoutineRefinedNeedClassificationClient,
+        ...lineage,
+      }),
+    // Fresh deps per invocation: the Stage-3 gateway memoizes the draft it
+    // loaded, so a recompute must never inherit another one's snapshot.
+    recompute: (lineage) =>
+      recomputeRoutineAfterHabitsCompletion(
+        createProductionStage3RecomputeDeps({ userId: lineage.userId, admin: input.admin }),
+        lineage,
+      ),
   }
 }
