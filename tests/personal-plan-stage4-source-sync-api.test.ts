@@ -6,6 +6,7 @@ import {
   createRoutineSourceSyncService,
   parseRoutineSourceBaseSnapshots,
   resolveSuccessorRoutineCadences,
+  type RoutineRefinedNeedRecomputeLane,
   type RoutineSourceSyncRepository,
 } from "../src/lib/personal-plan/routine/source-sync-service"
 import type { ProposedProductPortfolio } from "../src/lib/personal-plan/products/contracts"
@@ -241,6 +242,7 @@ test("owner sync records and acknowledges a semantic no-op", async () => {
     deferred: 0,
     unfinished: 0,
     proposalStaged: false,
+    recomputeApplied: false,
   })
   assert.equal(db.recorded.length, 1)
   assert.deepEqual(db.finished, [{ errorCode: null }])
@@ -286,7 +288,7 @@ test("a terminal invalid candidate is finished instead of retried forever", asyn
   ])
 })
 
-test("an active-plan refined need is terminalized without returning a 409 conflict", async () => {
+test("an active-plan refined need is terminalized when no recompute lane is wired", async () => {
   const reported: unknown[] = []
   const db = repository({
     async claim() {
@@ -314,6 +316,7 @@ test("an active-plan refined need is terminalized without returning a 409 confli
     deferred: 0,
     unfinished: 0,
     proposalStaged: false,
+    recomputeApplied: false,
   })
   assert.deepEqual(db.finished, [{ errorCode: "terminal_refinement_pending_stage3" }])
   assert.deepEqual(reported, [
@@ -324,6 +327,496 @@ test("an active-plan refined need is terminalized without returning a 409 confli
       terminalCode: "terminal_refinement_pending_stage3",
     },
   ])
+})
+
+const refinedClaim = {
+  ...claim,
+  outboxId: "outbox-refined",
+  sourceKind: "refined_need",
+  sourceKey: "refined-b",
+  leaseToken: "lease-refined",
+}
+
+type LaneCall = { userId: string; personalPlanId: string; refinedVersionId: string }
+
+function recomputeLane(
+  overrides: Partial<RoutineRefinedNeedRecomputeLane> = {},
+): RoutineRefinedNeedRecomputeLane & { classified: LaneCall[]; recomputed: LaneCall[] } {
+  const classified: LaneCall[] = []
+  const recomputed: LaneCall[] = []
+  return {
+    classified,
+    recomputed,
+    async classify(input) {
+      classified.push(input)
+      return "module_driven"
+    },
+    async recompute(input) {
+      recomputed.push(input)
+      return { status: "applied", routineVersionId: "routine-next" }
+    },
+    ...overrides,
+  }
+}
+
+test("a module-driven refined need runs the recompute and reports the healed result", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane()
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 1,
+    terminalized: 0,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: true,
+  })
+  assert.deepEqual(lane.classified, [
+    { userId: "owner-a", personalPlanId: "plan-a", refinedVersionId: "refined-b" },
+  ])
+  assert.deepEqual(lane.recomputed, [
+    { userId: "owner-a", personalPlanId: "plan-a", refinedVersionId: "refined-b" },
+  ])
+  assert.deepEqual(db.finished, [{ errorCode: null }])
+  assert.deepEqual(reported, [])
+})
+
+test("an unchanged recompute settles the claim without claiming a client-visible change", async () => {
+  const db = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane({
+    async recompute() {
+      return { status: "unchanged" }
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 1,
+    terminalized: 0,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: false,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: null }])
+})
+
+test("a superseded refined need is settled without running the recompute", async () => {
+  const db = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane({
+    async classify() {
+      return "stale_target"
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 1,
+    terminalized: 0,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: false,
+  })
+  assert.deepEqual(lane.recomputed, [])
+  assert.deepEqual(db.finished, [{ errorCode: null }])
+})
+
+test("a non-module-driven refined need keeps today's terminal behavior", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane({
+    async classify() {
+      return "not_module_driven"
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 0,
+    terminalized: 1,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: false,
+  })
+  assert.deepEqual(lane.recomputed, [])
+  assert.deepEqual(db.finished, [{ errorCode: "terminal_refinement_pending_stage3" }])
+  assert.deepEqual(reported, [
+    {
+      planId: "plan-a",
+      sourceKind: "refined_need",
+      observedRevision: 4,
+      terminalCode: "terminal_refinement_pending_stage3",
+    },
+  ])
+})
+
+test("a plan without an active Routine never reaches the classification read", async () => {
+  const db = repository({
+    async loadPlan() {
+      return { id: "plan-a", revision: 2, sourceRevision: 4, activeRoutineVersionId: null }
+    },
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane()
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.equal(result.status, "processed")
+  assert.deepEqual(lane.classified, [])
+  assert.deepEqual(lane.recomputed, [])
+  assert.deepEqual(db.finished, [{ errorCode: "terminal_refinement_pending_stage3" }])
+})
+
+test("a retryable recompute failure re-arms the claim on a non-terminal code", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane({
+    async recompute() {
+      return { status: "unavailable", reason: "resolve_conflict", retryable: true }
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, { status: "conflict", reason: "refinement_recompute_retry" })
+  assert.deepEqual(db.finished, [{ errorCode: "refinement_recompute_retry" }])
+  assert.deepEqual(reported, [])
+})
+
+test("a non-retryable recompute failure parks the claim on a terminal code", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane({
+    async recompute() {
+      return { status: "unavailable", reason: "pending_proposal_staged", retryable: false }
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 0,
+    terminalized: 1,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: false,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: "terminal_refinement_recompute_blocked" }])
+  assert.deepEqual(reported, [
+    {
+      planId: "plan-a",
+      sourceKind: "refined_need",
+      observedRevision: 4,
+      terminalCode: "terminal_refinement_recompute_blocked",
+    },
+  ])
+})
+
+test("a recompute failure never hides an applied sibling recompute behind a batch conflict", async () => {
+  const db = repository({
+    async claim() {
+      return [
+        refinedClaim,
+        { ...refinedClaim, outboxId: "outbox-refined-2", sourceKey: "refined-c" },
+      ]
+    },
+  })
+  const lane = recomputeLane({
+    async recompute(input) {
+      return input.refinedVersionId === "refined-b"
+        ? { status: "applied", routineVersionId: "routine-next" }
+        : { status: "unavailable", reason: "resolve_conflict", retryable: true }
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 1,
+    terminalized: 0,
+    deferred: 1,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: true,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: "refinement_recompute_retry" }])
+})
+
+test("a failing self-heal lane re-arms its own claim instead of stranding the batch", async () => {
+  const base = acquisitionBase()
+  for (const failing of ["classify", "recompute"] as const) {
+    const db = repository({
+      async claim() {
+        return [claim, refinedClaim]
+      },
+      async loadBase() {
+        return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
+      },
+      async loadUserProduct(_, sourceKey) {
+        return {
+          id: sourceKey,
+          category: "shampoo",
+          catalogProductId: "product-a",
+          displayName: "Shampoo A",
+          identityStatus: "matched",
+          ownershipStatus: "owned",
+        }
+      },
+      async stage() {
+        return "staged"
+      },
+    })
+    const lane = recomputeLane({
+      async classify() {
+        if (failing === "classify") throw new Error("classification read failed")
+        return "module_driven"
+      },
+      async recompute() {
+        throw new Error("recompute rejected")
+      },
+    })
+
+    const result = await createRoutineSourceSyncService({
+      repository: db,
+      refinementRecompute: lane,
+    }).sync({ userId: "owner-a" })
+
+    // The sibling product claim still stages its successor proposal.
+    assert.deepEqual(result, {
+      status: "processed",
+      processed: 1,
+      terminalized: 0,
+      deferred: 1,
+      unfinished: 0,
+      proposalStaged: true,
+      recomputeApplied: false,
+    })
+    assert.deepEqual(db.finished, [
+      { errorCode: null },
+      { errorCode: "refinement_recompute_retry" },
+    ])
+  }
+})
+
+test("a module-driven recompute runs before, and reloads the base for, its sibling product claims", async () => {
+  const base = acquisitionBase()
+  const calls: string[] = []
+  const staged: Array<{ plan: { revision: number; sourceRevision: number } }> = []
+  let planRevision = 2
+  const db = repository({
+    async loadPlan() {
+      calls.push(`loadPlan:${planRevision}`)
+      return {
+        id: "plan-a",
+        revision: planRevision,
+        sourceRevision: planRevision + 2,
+        activeRoutineVersionId: `routine-${planRevision}`,
+      }
+    },
+    async claim() {
+      calls.push("claim")
+      // The product claim is listed first: the exclusive pass must not depend
+      // on the refined claim happening to be claimed first.
+      return [claim, refinedClaim]
+    },
+    async loadBase(_, plan) {
+      calls.push(`loadBase:${plan.revision}`)
+      return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
+    },
+    async loadUserProduct(_, sourceKey) {
+      calls.push("loadUserProduct")
+      return {
+        id: sourceKey,
+        category: "shampoo",
+        catalogProductId: "product-a",
+        displayName: "Shampoo A",
+        identityStatus: "matched",
+        ownershipStatus: "owned",
+      }
+    },
+    async stage(input) {
+      calls.push(`stage:${input.plan.revision}`)
+      staged.push(input)
+      return "staged"
+    },
+  })
+  const lane = recomputeLane({
+    async classify(input) {
+      calls.push("classify")
+      return input.refinedVersionId === refinedClaim.sourceKey ? "module_driven" : "stale_target"
+    },
+    async recompute() {
+      calls.push("recompute")
+      // A successful activation advances the plan's CAS state.
+      planRevision = 5
+      return { status: "applied", routineVersionId: "routine-5" }
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(calls, [
+    "loadPlan:2",
+    "claim",
+    "classify",
+    "recompute",
+    "loadPlan:5",
+    "loadBase:5",
+    "loadUserProduct",
+    "stage:5",
+  ])
+  assert.deepEqual(staged[0]?.plan, {
+    id: "plan-a",
+    revision: 5,
+    sourceRevision: 7,
+    activeRoutineVersionId: "routine-5",
+  })
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 2,
+    terminalized: 0,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: true,
+    recomputeApplied: true,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: null }])
+})
+
+test("a lost finish lease heals on the next worker without a second activation", async () => {
+  // Models the orchestrator's start-state capture: the recompute activates only
+  // while the plan's active Routine is not already sourced from the target.
+  let activeRefinedVersion = "refined-a"
+  let activations = 0
+  const lane = () =>
+    recomputeLane({
+      async recompute(input) {
+        if (activeRefinedVersion === input.refinedVersionId) return { status: "unchanged" }
+        activeRefinedVersion = input.refinedVersionId
+        activations += 1
+        return { status: "applied", routineVersionId: "routine-next" }
+      },
+    })
+
+  const workerA = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+    // The lease was lost (or the finish response never landed): the outbox row
+    // stays claimable instead of settling.
+    async finish() {
+      return false
+    },
+  })
+  const resultA = await createRoutineSourceSyncService({
+    repository: workerA,
+    refinementRecompute: lane(),
+  }).sync({ userId: "owner-a" })
+  assert.deepEqual(resultA, { status: "temporarily_unavailable" })
+  assert.equal(activations, 1)
+
+  const workerB = repository({
+    async claim() {
+      // Reclaimed by a later visit under a fresh lease token.
+      return [{ ...refinedClaim, leaseToken: "lease-refined-2" }]
+    },
+  })
+  const resultB = await createRoutineSourceSyncService({
+    repository: workerB,
+    refinementRecompute: lane(),
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(resultB, {
+    status: "processed",
+    processed: 1,
+    terminalized: 0,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: false,
+  })
+  assert.deepEqual(workerB.finished, [{ errorCode: null }])
+  assert.equal(activations, 1)
 })
 
 test("an unknown active-plan source kind is terminalized without retrying", async () => {
@@ -344,6 +837,7 @@ test("an unknown active-plan source kind is terminalized without retrying", asyn
     deferred: 0,
     unfinished: 0,
     proposalStaged: false,
+    recomputeApplied: false,
   })
   assert.deepEqual(db.finished, [{ errorCode: "terminal_unsupported_routine_source" }])
 })
@@ -402,6 +896,7 @@ test("a deleted user-product source is terminal while pending review remains ret
     deferred: 0,
     unfinished: 0,
     proposalStaged: false,
+    recomputeApplied: false,
   })
   assert.deepEqual(db.finished, [{ errorCode: "terminal_user_product_not_found" }])
 })
@@ -447,6 +942,7 @@ for (const terminalCase of [
         deferred: 0,
         unfinished: 0,
         proposalStaged: false,
+        recomputeApplied: false,
       },
     )
     assert.deepEqual(db.finished, [{ errorCode: terminalCase.errorCode }])
@@ -521,6 +1017,7 @@ test("a deferred product review does not block an independent changed claim", as
     deferred: 1,
     unfinished: 0,
     proposalStaged: true,
+    recomputeApplied: false,
   })
   assert.equal(staged.length, 1)
   assert.ok(
@@ -577,6 +1074,7 @@ test("two changed claims stage one complete deterministic successor delta", asyn
       deferred: 0,
       unfinished: 0,
       proposalStaged: true,
+      recomputeApplied: false,
     },
   )
   assert.equal(staged.length, 1)
@@ -651,6 +1149,7 @@ test("successor cadence is re-resolved once after the complete acquisition batch
     deferred: 0,
     unfinished: 0,
     proposalStaged: true,
+    recomputeApplied: false,
   })
   assert.equal(resolutionCalls, 1)
   assert.equal(staged.length, 1)
@@ -797,11 +1296,54 @@ test("sync route authenticates before admin service construction and respects th
           processed: 0,
           deferred: 0,
           proposalStaged: false,
+          recomputeApplied: false,
         }),
       }) as never,
   }).POST()
   assert.deepEqual(
     [response.status, await response.json()],
     [404, { error: "personal_plan_not_available" }],
+  )
+})
+
+test("the sync route passes the healed-recompute signal through to the client", async () => {
+  const response = await createPersonalPlanRoutineSyncRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-a",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      frontier: "stage4",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+      nextHref: "/routine",
+      personalPlanId: "plan-a",
+    }),
+    service: () =>
+      ({
+        sync: async () => ({
+          status: "processed",
+          processed: 1,
+          terminalized: 0,
+          deferred: 0,
+          unfinished: 0,
+          proposalStaged: false,
+          recomputeApplied: true,
+        }),
+      }) as never,
+  }).POST()
+
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [
+      200,
+      {
+        status: "processed",
+        processed: 1,
+        terminalized: 0,
+        deferred: 0,
+        unfinished: 0,
+        proposalStaged: false,
+        recomputeApplied: true,
+      },
+    ],
   )
 })

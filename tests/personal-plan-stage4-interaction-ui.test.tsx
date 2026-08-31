@@ -19,6 +19,7 @@ import {
   refreshRouteAfterRoutineAcceptance,
   routineEntrySyncTiming,
   routineProposalDeltaEntries,
+  routineSyncReloadOutcome,
 } from "../src/components/routine/personal-plan/personal-plan-routine-client"
 import { RoutineProductDetail } from "../src/components/routine/personal-plan/routine-product-detail"
 import type {
@@ -399,6 +400,29 @@ test("Routine entry never blocks actions and defers reconciliation behind a pend
     routineEntrySyncTiming({ enabled: true, hasPendingProposal: true }),
     "after_proposal_resolution",
   )
+})
+
+test("the entry sync reloads for a healed module recompute, not only for a staged proposal", () => {
+  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: false, recomputeApplied: false }), {
+    reload: false,
+    outcome: "unchanged",
+  })
+  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: false, recomputeApplied: true }), {
+    reload: true,
+    outcome: "recompute_applied",
+  })
+  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: true, recomputeApplied: false }), {
+    reload: true,
+    outcome: "proposal_staged",
+  })
+  // A batch can both heal a recompute and stage a sibling successor proposal;
+  // the proposal is the outcome that still needs the user, so it labels the run.
+  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: true, recomputeApplied: true }), {
+    reload: true,
+    outcome: "proposal_staged",
+  })
+  // A response from a deploy that predates the field must not reload.
+  assert.deepEqual(routineSyncReloadOutcome({}), { reload: false, outcome: "unchanged" })
 })
 
 test("successor proposals are available from the overview but never auto-open on entry", () => {

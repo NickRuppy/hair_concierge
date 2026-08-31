@@ -17,6 +17,12 @@ import {
   createSupabaseRoutineCadenceAuthorityReader,
   type RoutineCadenceAuthorityReadClient,
 } from "@/lib/personal-plan/routine/cadence-authority"
+import {
+  classifyModuleDrivenRefinedVersion,
+  type RoutineRefinedNeedClassificationClient,
+} from "@/lib/personal-plan/refinement-recompute/module-driven-classification"
+import { recomputeRoutineAfterHabitsCompletion } from "@/lib/personal-plan/refinement-recompute/orchestrator"
+import { createProductionStage3RecomputeDeps } from "@/lib/personal-plan/refinement-recompute/production-deps"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
@@ -67,6 +73,20 @@ const handlers = createPersonalPlanRoutineSyncRouteHandlers({
       cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
         admin as unknown as RoutineCadenceAuthorityReadClient,
       ),
+      refinementRecompute: {
+        classify: (lineage) =>
+          classifyModuleDrivenRefinedVersion({
+            client: admin as unknown as RoutineRefinedNeedClassificationClient,
+            ...lineage,
+          }),
+        // Fresh deps per invocation: the Stage-3 gateway memoizes the draft it
+        // loaded, so a recompute must never inherit another one's snapshot.
+        recompute: (lineage) =>
+          recomputeRoutineAfterHabitsCompletion(
+            createProductionStage3RecomputeDeps({ userId: lineage.userId, admin }),
+            lineage,
+          ),
+      },
     })
   },
 })
