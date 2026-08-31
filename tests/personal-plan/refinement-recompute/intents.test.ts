@@ -70,7 +70,35 @@ function routineItem(input: {
   }
 }
 
-function routine(items: RoutineItem[]): RoutinePayloadV1 {
+/**
+ * Compiles the `intent.categories` the compiler would emit for these items: a
+ * category is `included` when any of its items is, and the exclusion source
+ * says who excluded it — `"stage3"` for a system deferral, `"user"` for the
+ * person's own Routine edit. The builder reads exactly these two fields, so a
+ * fixture that leaves them out cannot distinguish the two causes.
+ */
+function intentCategories(
+  items: RoutineItem[],
+  userExcluded: PersonalPlanCategory[],
+): RoutinePayloadV1["intent"]["categories"] {
+  const categories = [...new Set(items.map((item) => item.category))]
+  return categories.map((category) => {
+    const categoryItems = items.filter((item) => item.category === category)
+    const included = categoryItems.some((item) => item.state.inclusion === "included")
+    return {
+      category,
+      inclusion: included ? ("included" as const) : ("excluded" as const),
+      inclusionSource: userExcluded.includes(category) ? ("user" as const) : ("stage3" as const),
+      // The builder reads inclusion only; assignments stay empty on purpose.
+      assignments: [],
+    }
+  })
+}
+
+function routine(
+  items: RoutineItem[],
+  options: { userExcluded?: PersonalPlanCategory[] } = {},
+): RoutinePayloadV1 {
   return {
     schemaVersion: 1,
     planId: PLAN_ID,
@@ -83,7 +111,10 @@ function routine(items: RoutineItem[]): RoutinePayloadV1 {
       compilerVersion: "routine-compiler-v1",
       authorityVersions: {},
     },
-    intent: { schemaVersion: 1, categories: [] },
+    intent: {
+      schemaVersion: 1,
+      categories: intentCategories(items, options.userExcluded ?? []),
+    },
     sections: [
       { key: "basis", itemKeys: items.map((item) => item.itemKey) },
       { key: "optional", itemKeys: [] },
@@ -435,7 +466,9 @@ test("a select_replacement is emitted even when the action is not in allowedActi
   assert.equal(plan.intents[0]?.action, "select_replacement")
 })
 
-test("an unresolvable planned product falls back to the new buyable recommendation", () => {
+test("an unresolvable planned product never plans the new, unseen recommendation", () => {
+  // Founder ruling R5: the replacement recommendation is a product this person
+  // has never seen, so it is deferred rather than planned on their behalf.
   const evaluation = knownEvaluation({
     category: "shampoo",
     role: "shampoo_everyday",
@@ -463,7 +496,8 @@ test("an unresolvable planned product falls back to the new buyable recommendati
     {
       type: "resolve_decision",
       subjectKey: evaluation.subjectKey,
-      action: "plan_recommendation",
+      action: "leave_uncovered",
+      deferralReason: "unseen_recommendation",
     },
   ])
 })
@@ -501,6 +535,52 @@ test("a planned candidate without a fact fingerprint is not selected as a replac
     {
       type: "resolve_decision",
       subjectKey: evaluation.subjectKey,
+      action: "leave_uncovered",
+      deferralReason: "no_product",
+    },
+  ])
+})
+
+test("a replacement is never selected against a non-known evaluation", () => {
+  // `resolveDecisions` does not re-check the status for `select_replacement`,
+  // so the builder refuses rather than writing a decision against a verdict the
+  // authority never established.
+  const subjectKey = decisionKey("shampoo", "shampoo_everyday", null)
+  const evaluation: Stage3AuthorityEvaluation = {
+    status: "unknown",
+    category: "shampoo",
+    subjectKey,
+    missingFacts: ["catalog_product_facts"],
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  }
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [
+      reviewBundle(
+        evaluation,
+        [candidate("product-planned", "shampoo", "shampoo_everyday")],
+        "shampoo_everyday",
+      ),
+    ],
+    routine: routine([
+      routineItem({
+        category: "shampoo",
+        role: "shampoo_everyday",
+        product: {
+          kind: "planned",
+          plannedPurchaseId: "planned-1",
+          productId: "product-planned",
+          displayName: "Shampoo",
+        },
+      }),
+    ]),
+  })
+  assert.deepEqual(plan.intents, [
+    {
+      type: "resolve_decision",
+      subjectKey,
       action: "leave_uncovered",
       deferralReason: "no_product",
     },
@@ -550,6 +630,36 @@ test("a role the person deliberately left uncovered stays uncovered without a de
   const plan = buildStage3RecomputeIntents({
     evaluations: [evaluation],
     reviewBundles: [reviewBundle(evaluation, [], "intensive_conditioning_mask")],
+    routine: routine(
+      [
+        routineItem({
+          category: "mask",
+          role: "intensive_conditioning_mask",
+          inclusion: "excluded",
+          product: { kind: "none", displayName: null },
+        }),
+      ],
+      { userExcluded: ["mask"] },
+    ),
+  })
+  assert.deepEqual(plan.intents, [
+    { type: "resolve_decision", subjectKey: evaluation.subjectKey, action: "leave_uncovered" },
+  ])
+})
+
+test("a role Stage 3 previously deferred re-derives its deferral reason", () => {
+  // The compiler flattens a `leave_uncovered` decision onto an excluded item,
+  // losing the reason. `inclusionSource: "stage3"` is what still says the
+  // system, not the person, left the role empty.
+  const evaluation = knownEvaluation({
+    category: "mask",
+    role: "intensive_conditioning_mask",
+    allowedActions: ["plan_recommendation", "leave_uncovered"],
+    recommendationProductId: "product-recommended",
+  })
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [reviewBundle(evaluation, [], "intensive_conditioning_mask")],
     routine: routine([
       routineItem({
         category: "mask",
@@ -560,38 +670,222 @@ test("a role the person deliberately left uncovered stays uncovered without a de
     ]),
   })
   assert.deepEqual(plan.intents, [
-    { type: "resolve_decision", subjectKey: evaluation.subjectKey, action: "leave_uncovered" },
+    {
+      type: "resolve_decision",
+      subjectKey: evaluation.subjectKey,
+      action: "leave_uncovered",
+      deferralReason: "unseen_recommendation",
+    },
   ])
 })
 
-test("a category the person excluded keeps its product out of the plan", () => {
+test("a Stage-3 deferred role with no buyable recommendation re-derives no_product", () => {
+  const evaluation = knownEvaluation({
+    category: "mask",
+    role: "intensive_conditioning_mask",
+    allowedActions: ["leave_uncovered"],
+    recommendationProductId: null,
+  })
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [reviewBundle(evaluation, [], "intensive_conditioning_mask")],
+    routine: routine([
+      routineItem({
+        category: "mask",
+        role: "intensive_conditioning_mask",
+        inclusion: "excluded",
+        product: { kind: "none", displayName: null },
+      }),
+    ]),
+  })
+  assert.deepEqual(plan.intents, [
+    {
+      type: "resolve_decision",
+      subjectKey: evaluation.subjectKey,
+      action: "leave_uncovered",
+      deferralReason: "no_product",
+    },
+  ])
+})
+
+test("a role excluded inside a still-included category counts as a Stage-3 deferral", () => {
+  const deferred = knownEvaluation({
+    category: "shampoo",
+    role: "shampoo_dandruff",
+    allowedActions: ["leave_uncovered"],
+    recommendationProductId: null,
+  })
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [deferred],
+    reviewBundles: [reviewBundle(deferred, [], "shampoo_dandruff")],
+    routine: routine(
+      [
+        routineItem({
+          category: "shampoo",
+          role: "shampoo_everyday",
+          capturedProductId: "captured-1",
+          product: {
+            kind: "owned",
+            capturedProductId: "captured-1",
+            productId: "product-owned",
+            displayName: "Shampoo",
+          },
+        }),
+        routineItem({
+          category: "shampoo",
+          role: "shampoo_dandruff",
+          inclusion: "excluded",
+          product: { kind: "none", displayName: null },
+        }),
+      ],
+      // Even flagged as user-excluded, the category itself stays included, so
+      // the empty role can only come from Stage 3.
+      { userExcluded: ["shampoo"] },
+    ),
+  })
+  assert.equal(plan.intents[0]?.deferralReason, "no_product")
+})
+
+test("a user-excluded category with an owned product keeps it when leave_uncovered is forbidden", () => {
+  // The real shape for an `ideal` owned product: `["keep_owned"]` and nothing
+  // else (`authority/categories/mask.ts:316`, `categories/shampoo.ts:248`).
+  // Plan decision 12: losing the manual exclusion beats blocking the recompute.
+  const evaluation = knownEvaluation({
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    capturedProductId: "captured-9",
+    allowedActions: ["keep_owned"],
+  })
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [reviewBundle(evaluation, [], "conditioner_rinse_out")],
+    routine: routine(
+      [
+        routineItem({
+          category: "conditioner",
+          role: "conditioner_rinse_out",
+          capturedProductId: "captured-9",
+          inclusion: "excluded",
+          product: {
+            kind: "owned",
+            capturedProductId: "captured-9",
+            productId: "product-owned",
+            displayName: "Conditioner",
+          },
+        }),
+      ],
+      { userExcluded: ["conditioner"] },
+    ),
+  })
+  assert.deepEqual(plan, {
+    intents: [
+      { type: "resolve_decision", subjectKey: evaluation.subjectKey, action: "keep_owned" },
+    ],
+    blocked: [],
+  })
+})
+
+test("a user-excluded category with a mismatching owned product falls back to acknowledging it", () => {
+  const evaluation = knownEvaluation({
+    category: "mask",
+    role: "intensive_conditioning_mask",
+    capturedProductId: "captured-9",
+    allowedActions: ["acknowledge_override"],
+    verdict: "mismatch",
+  })
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [reviewBundle(evaluation, [], "intensive_conditioning_mask")],
+    routine: routine(
+      [
+        routineItem({
+          category: "mask",
+          role: "intensive_conditioning_mask",
+          capturedProductId: "captured-9",
+          inclusion: "excluded",
+          product: {
+            kind: "owned",
+            capturedProductId: "captured-9",
+            productId: "product-owned",
+            displayName: "Maske",
+          },
+        }),
+      ],
+      { userExcluded: ["mask"] },
+    ),
+  })
+  assert.deepEqual(plan.intents, [
+    {
+      type: "resolve_decision",
+      subjectKey: evaluation.subjectKey,
+      action: "acknowledge_override",
+    },
+  ])
+})
+
+test("a user-excluded category with a supportive owned product stays uncovered", () => {
+  // `supportive` is the verdict that does allow `leave_uncovered`
+  // (`categories/shampoo.ts:251`), so the person's exclusion survives.
   const evaluation = knownEvaluation({
     category: "conditioner",
     role: "conditioner_rinse_out",
     capturedProductId: "captured-9",
     allowedActions: ["keep_owned", "leave_uncovered"],
+    verdict: "supportive",
   })
   const plan = buildStage3RecomputeIntents({
     evaluations: [evaluation],
     reviewBundles: [reviewBundle(evaluation, [], "conditioner_rinse_out")],
-    routine: routine([
-      routineItem({
-        category: "conditioner",
-        role: "conditioner_rinse_out",
-        capturedProductId: "captured-9",
-        inclusion: "excluded",
-        product: {
-          kind: "owned",
+    routine: routine(
+      [
+        routineItem({
+          category: "conditioner",
+          role: "conditioner_rinse_out",
           capturedProductId: "captured-9",
-          productId: "product-owned",
-          displayName: "Conditioner",
-        },
-      }),
-    ]),
+          inclusion: "excluded",
+          product: {
+            kind: "owned",
+            capturedProductId: "captured-9",
+            productId: "product-owned",
+            displayName: "Conditioner",
+          },
+        }),
+      ],
+      { userExcluded: ["conditioner"] },
+    ),
   })
   assert.deepEqual(plan.intents, [
     { type: "resolve_decision", subjectKey: evaluation.subjectKey, action: "leave_uncovered" },
   ])
+})
+
+test("a user-excluded pending product is kept pending when leave_uncovered is forbidden", () => {
+  const subjectKey = decisionKey("mask", "intensive_conditioning_mask", "captured-3")
+  const evaluation: Stage3AuthorityEvaluation = {
+    status: "pending",
+    category: "mask",
+    subjectKey,
+    reason: "product_intake_pending",
+    allowedActions: ["keep_pending"],
+    coverageRuleIds: [],
+  }
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [reviewBundle(evaluation, [], "intensive_conditioning_mask")],
+    routine: routine(
+      [
+        routineItem({
+          category: "mask",
+          role: "intensive_conditioning_mask",
+          capturedProductId: "captured-3",
+          inclusion: "excluded",
+          product: { kind: "pending_review", submissionId: "submission-1", displayName: "Maske" },
+        }),
+      ],
+      { userExcluded: ["mask"] },
+    ),
+  })
+  assert.deepEqual(plan.intents, [{ type: "resolve_decision", subjectKey, action: "keep_pending" }])
 })
 
 test("a new role without a buyable recommendation is a product gap", () => {

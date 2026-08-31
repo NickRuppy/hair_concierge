@@ -16,38 +16,51 @@ import type {
 
 type RoutineItem = RoutinePayloadV1["items"][number]
 
-type PreferredAction = Exclude<Stage3AuthorityActionKind, "select_replacement">
-
 /**
  * What the active routine says about the evaluated subject — the person's final
  * choice, after their own Routine edits (`routine/editor.ts` keeps `items` in
  * sync with the edited intent).
+ *
+ * An uncovered subject keeps the product that still hangs off its item, because
+ * the fallback chain may have to fall back onto preserving it.
  */
 type RoutineSubjectState =
   | { kind: "owned"; acknowledgedOverride: boolean }
   | { kind: "pending" }
   | { kind: "planned"; productId: string | null }
-  | { kind: "uncovered" }
+  | { kind: "uncovered"; source: "user" | "system"; product: "owned" | "pending" | "none" }
   | { kind: "absent" }
 
 /**
- * Preservation order per preferred action. Every non-`select_replacement`
- * action must appear in the evaluation's `allowedActions`
- * (`production-persistence-gateway.ts`), so a preferred action the new
- * authority forbids walks to the next-best way of preserving the same choice
- * and ends at `leave_uncovered`.
+ * Preservation order. Every non-`select_replacement` action must appear in the
+ * evaluation's `allowedActions` (`production-persistence-gateway.ts:1164`), and
+ * the real category authorities routinely allow exactly ONE action — an `ideal`
+ * owned product allows only `keep_owned`, a `mismatch` one only
+ * `acknowledge_override` (`authority/categories/mask.ts:316`,
+ * `categories/shampoo.ts:248`). So every chain must keep walking rather than
+ * assume `leave_uncovered` is always available.
  *
  * `keep_owned` ⇄ `acknowledge_override` are each other's fallback: the same
  * owned product, before and after the new verdict decided whether keeping it is
  * an override.
  */
-const FALLBACK_CHAINS: Record<PreferredAction, readonly Stage3AuthorityActionKind[]> = {
-  keep_owned: ["keep_owned", "acknowledge_override", "leave_uncovered"],
-  acknowledge_override: ["acknowledge_override", "keep_owned", "leave_uncovered"],
-  keep_pending: ["keep_pending", "leave_uncovered"],
-  plan_recommendation: ["plan_recommendation", "leave_uncovered"],
-  leave_uncovered: ["leave_uncovered"],
-}
+const KEEP_OWNED_CHAIN = ["keep_owned", "acknowledge_override", "leave_uncovered"] as const
+const ACKNOWLEDGE_OVERRIDE_CHAIN = [
+  "acknowledge_override",
+  "keep_owned",
+  "leave_uncovered",
+] as const
+const KEEP_PENDING_CHAIN = ["keep_pending", "leave_uncovered"] as const
+const PLAN_RECOMMENDATION_CHAIN = ["plan_recommendation", "leave_uncovered"] as const
+const LEAVE_UNCOVERED_CHAIN = ["leave_uncovered"] as const
+/**
+ * Leaving the role uncovered is the person's choice, but a category authority
+ * that permits nothing else would otherwise block the whole recompute. Plan
+ * decision 12 (manual routine edits may be lost on recompute) makes preserving
+ * the underlying product the better loss than a failed pass.
+ */
+const UNCOVERED_OWNED_CHAIN = ["leave_uncovered", "keep_owned", "acknowledge_override"] as const
+const UNCOVERED_PENDING_CHAIN = ["leave_uncovered", "keep_pending"] as const
 
 function routineItemsBySubjectKey(routine: RoutinePayloadV1): Map<string, RoutineItem> {
   const items = new Map<string, RoutineItem>()
@@ -59,11 +72,43 @@ function routineItemsBySubjectKey(routine: RoutinePayloadV1): Map<string, Routin
   return items
 }
 
-function routineStateFor(item: RoutineItem | undefined): RoutineSubjectState {
+/**
+ * Who excluded the role.
+ *
+ * The compiler flattens both causes onto the same `inclusion: "excluded"` item:
+ * a Stage-3 `leave_uncovered` decision (with its deferral reason) and a
+ * person's own category exclusion. Only `intent.categories[].inclusionSource`
+ * separates them (`routine/contracts.ts:58`): `"user"` is the person's edit,
+ * `"stage3"` is the system's own deferral. An item excluded inside a category
+ * that is still included can only be a Stage-3 deferral.
+ *
+ * A category missing from the intent (never true for compiler output) is read
+ * as the person's own exclusion — the conservative side, since a system
+ * deferral re-derives a reason whose copy nudges back into the Produkte module.
+ */
+function exclusionSourceFor(routine: RoutinePayloadV1, item: RoutineItem): "user" | "system" {
+  const category = routine.intent.categories.find(
+    (candidate) => candidate.category === item.category,
+  )
+  if (!category) return "user"
+  if (category.inclusion === "included") return "system"
+  return category.inclusionSource === "user" ? "user" : "system"
+}
+
+function routineStateFor(
+  routine: RoutinePayloadV1,
+  item: RoutineItem | undefined,
+): RoutineSubjectState {
   if (!item) return { kind: "absent" }
-  // An excluded item is a role the person left out on purpose, whatever product
-  // still hangs off it.
-  if (item.state.inclusion === "excluded") return { kind: "uncovered" }
+  const product =
+    item.product.kind === "owned"
+      ? ("owned" as const)
+      : item.product.kind === "pending_review"
+        ? ("pending" as const)
+        : ("none" as const)
+  if (item.state.inclusion === "excluded") {
+    return { kind: "uncovered", source: exclusionSourceFor(routine, item), product }
+  }
   switch (item.product.kind) {
     case "owned":
       return {
@@ -75,7 +120,7 @@ function routineStateFor(item: RoutineItem | undefined): RoutineSubjectState {
     case "planned":
       return { kind: "planned", productId: item.product.productId }
     case "none":
-      return { kind: "uncovered" }
+      return { kind: "uncovered", source: exclusionSourceFor(routine, item), product }
   }
 }
 
@@ -87,6 +132,15 @@ function hasBuyableRecommendation(evaluation: Stage3AuthorityEvaluation): boolea
     Boolean(evaluation.recommendationFactFingerprint) &&
     evaluation.allowedActions.includes("plan_recommendation")
   )
+}
+
+/**
+ * The reason a role the person never chose a product for is left uncovered.
+ * A buyable recommendation exists but was never seen, so it may not be planned
+ * on their behalf (founder ruling R5) — it becomes a visible, linked gap.
+ */
+function deferralReasonFor(evaluation: Stage3AuthorityEvaluation): Stage3DecisionDeferralReason {
+  return hasBuyableRecommendation(evaluation) ? "unseen_recommendation" : "no_product"
 }
 
 function isPrimaryRecommendation(
@@ -104,14 +158,18 @@ function isPrimaryRecommendation(
  * The bundle is the only source of alternative candidates and their fact
  * fingerprints; `resolveDecisions` validates a `select_replacement` against
  * exactly this list. A candidate without a fingerprint cannot be selected.
+ *
+ * Only a `known` evaluation may be replaced: the gateway does not re-check the
+ * status for `select_replacement`, so refusing here is what keeps a decision
+ * from being written against a verdict the authority never established.
  */
 function replacementCandidateFor(
   bundles: Map<string, Stage3DecisionReviewBundle>,
-  subjectKey: string,
+  evaluation: Stage3AuthorityEvaluation,
   productId: string | null,
 ): Stage3SelectedComparisonCandidate | null {
-  if (productId === null) return null
-  const alternatives = bundles.get(subjectKey)?.fitComparison.alternatives ?? []
+  if (productId === null || evaluation.status !== "known") return null
+  const alternatives = bundles.get(evaluation.subjectKey)?.fitComparison.alternatives ?? []
   const candidate = alternatives.find((alternative) => alternative.productId === productId)
   return candidate && candidate.factFingerprint ? candidate : null
 }
@@ -126,8 +184,8 @@ function replacementCandidateFor(
  * Two rules the case map exists to protect:
  * - a product the person owns, planned or is waiting on is preserved as such
  *   wherever the new authority still permits it;
- * - a role the plan never had is never silently planned. It stays a visible gap
- *   with a deferral reason (founder ruling R5).
+ * - a product the person never saw is never planned for them. An unseen
+ *   recommendation stays a visible gap (founder ruling R5).
  *
  * Subjects the new authority permits no action on are returned as blocked
  * markers instead of intents, so the orchestrator can classify the whole
@@ -145,11 +203,11 @@ export function buildStage3RecomputeIntents(
 
   function resolve(
     evaluation: Stage3AuthorityEvaluation,
-    preferred: PreferredAction,
+    chain: readonly Stage3AuthorityActionKind[],
     deferralReason?: Stage3DecisionDeferralReason,
   ) {
     const allowed = new Set<string>(evaluation.allowedActions)
-    const action = FALLBACK_CHAINS[preferred].find((candidate) => allowed.has(candidate))
+    const action = chain.find((candidate) => allowed.has(candidate))
     if (!action) {
       blocked.push({ subjectKey: evaluation.subjectKey, blocked: "no_allowed_action" })
       return
@@ -171,25 +229,30 @@ export function buildStage3RecomputeIntents(
       continue
     }
 
-    const state = routineStateFor(items.get(evaluation.subjectKey))
+    const state = routineStateFor(input.routine, items.get(evaluation.subjectKey))
     switch (state.kind) {
       case "owned":
-        resolve(evaluation, state.acknowledgedOverride ? "acknowledge_override" : "keep_owned")
+        resolve(
+          evaluation,
+          state.acknowledgedOverride ? ACKNOWLEDGE_OVERRIDE_CHAIN : KEEP_OWNED_CHAIN,
+        )
         break
       case "pending":
-        resolve(evaluation, "keep_pending")
+        resolve(evaluation, KEEP_PENDING_CHAIN)
         break
       case "planned": {
+        // The planned product is still the one the plan recommends: the person
+        // saw and accepted exactly it, so re-planning it is not a silent buy.
         if (
           isPrimaryRecommendation(evaluation, state.productId) &&
-          evaluation.allowedActions.includes("plan_recommendation" as never)
+          hasBuyableRecommendation(evaluation)
         ) {
-          resolve(evaluation, "plan_recommendation")
+          resolve(evaluation, PLAN_RECOMMENDATION_CHAIN)
           break
         }
-        // Also the second chance for a still-primary product the new authority
-        // no longer lets us plan directly: as a candidate it keeps the purchase.
-        const candidate = replacementCandidateFor(bundles, evaluation.subjectKey, state.productId)
+        // Second chance for that same seen product: as a bundle candidate it
+        // survives even when the authority no longer lets us plan it directly.
+        const candidate = replacementCandidateFor(bundles, evaluation, state.productId)
         if (candidate) {
           // Exempt from the allowedActions check; validated against the bundle.
           intents.push({
@@ -202,23 +265,27 @@ export function buildStage3RecomputeIntents(
           break
         }
         // The planned product is gone from the catalog or lost its fingerprint.
-        // Planning the new primary is allowed — the person already accepted a
-        // planned purchase for this role — and a role that cannot be filled at
-        // all is a genuine product gap.
-        resolve(evaluation, "plan_recommendation", "no_product")
+        // Whatever the engine would put there now is a product the person has
+        // never seen, so the role becomes a visible gap instead (R5).
+        resolve(evaluation, LEAVE_UNCOVERED_CHAIN, deferralReasonFor(evaluation))
         break
       }
       case "uncovered":
-        // Uncovered by the person's own choice: no deferral reason, exactly as
-        // the existing plan reads today.
-        resolve(evaluation, "leave_uncovered")
-        break
-      case "absent":
         resolve(
           evaluation,
-          "leave_uncovered",
-          hasBuyableRecommendation(evaluation) ? "unseen_recommendation" : "no_product",
+          state.product === "owned"
+            ? UNCOVERED_OWNED_CHAIN
+            : state.product === "pending"
+              ? UNCOVERED_PENDING_CHAIN
+              : LEAVE_UNCOVERED_CHAIN,
+          // The person's own exclusion carries no reason, exactly as the plan
+          // reads today. A role Stage 3 itself deferred re-derives one: the old
+          // reason belongs to the old authority.
+          state.source === "user" ? undefined : deferralReasonFor(evaluation),
         )
+        break
+      case "absent":
+        resolve(evaluation, LEAVE_UNCOVERED_CHAIN, deferralReasonFor(evaluation))
         break
     }
   }
