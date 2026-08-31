@@ -690,11 +690,14 @@ test("Task 2.6: a habits-first module completion signals the toast only for an e
   // `?refine=1` is the Routine refinement nudge — on an accepted plan its
   // completion is a refinement-driven recompute like any other module entry.
   assert.equal(
-    moduleCompletionRoutineHref({
-      stage: "stage2",
-      refineModule: "first_open",
-      planAccepted: true,
-    }),
+    moduleCompletionRoutineHref(
+      {
+        stage: "stage2",
+        refineModule: "first_open",
+        planAccepted: true,
+      },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   // Without the accepted ORIGIN, and for the legacy linear entry: no signal.
@@ -1484,7 +1487,7 @@ test("the ?refine=1 direct-accept journey opens products and completes the edit 
   assert.equal(planStartModuleEntry(journey), "first_open")
   assert.equal(planStartSuppressesChapterCeremony(journey), true)
   assert.equal(planStartRefinementExitDestination(journey), "routine")
-  assert.equal(moduleCompletionRoutineHref(journey), "/routine?planUpdated=1")
+  assert.equal(moduleCompletionRoutineHref(journey, "applied"), "/routine?planUpdated=1")
 
   // The REAL fixture gateway's complete draft renders the products module's
   // first question with the meter — never the bridge chapter or a shell.
