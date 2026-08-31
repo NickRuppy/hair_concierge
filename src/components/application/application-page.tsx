@@ -1,7 +1,7 @@
 "use client"
 
 import type { MouseEvent } from "react"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -93,7 +93,27 @@ export function ApplicationPage({
     view.state === "ready" && currentPathname
       ? applicationDayFromPathname(currentPathname, days, navigationBasePath)
       : undefined
-  const selectedDayType = pathnameDayType === undefined ? initialDayType : pathnameDayType
+  // Next only mirrors history.pushState into usePathname once its root passive effect has
+  // patched the history API — one effect phase after this tree is already interactive. A day
+  // click landing in that window would otherwise change the URL without ever re-rendering, so
+  // openDay/popstate record the selection locally, tagged with the router pathname they saw;
+  // the override stays authoritative only while the router still reports that pathname.
+  const [localSelection, setLocalSelection] = useState<{
+    dayType: ApplicationDayTypeKey | null
+    routerPathname: string | undefined
+  } | null>(null)
+  const routerDayType = pathnameDayType === undefined ? initialDayType : pathnameDayType
+  const selectedDayType =
+    localSelection !== null && localSelection.routerPathname === currentPathname
+      ? localSelection.dayType
+      : routerDayType
+  // Read through a ref inside the handlers below: the popstate listener must stay registered
+  // from mount (re-registering moves it behind Next's listener, whose synchronous traverse
+  // commit would then remove it mid-dispatch and skip it entirely).
+  const currentPathnameRef = useRef(currentPathname)
+  useEffect(() => {
+    currentPathnameRef.current = currentPathname
+  })
   const [direction, setDirection] = useState<PersonalPlanTransitionDirection>(
     initialDayType ? "forward" : "reverse",
   )
@@ -108,6 +128,7 @@ export function ApplicationPage({
       )
       if (nextDayType === undefined) return
       setDirection(nextDayType ? "forward" : "reverse")
+      setLocalSelection({ dayType: nextDayType, routerPathname: currentPathnameRef.current })
     }
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
@@ -120,6 +141,7 @@ export function ApplicationPage({
       const href = `${navigationBasePath}/${dayType}`
       window.history.pushState({ [APPLICATION_HISTORY_MARKER]: dayType }, "", href)
       setDirection("forward")
+      setLocalSelection({ dayType, routerPathname: currentPathnameRef.current })
     },
     [navigationBasePath],
   )

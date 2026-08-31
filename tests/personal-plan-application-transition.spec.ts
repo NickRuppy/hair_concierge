@@ -286,6 +286,46 @@ test("direct day deep links and reloads remain server-addressable", async ({ pag
   await expect(page.getByRole("heading", { name: "Waschtag" })).toBeVisible()
 })
 
+test("day click at the first interactive instant renders the day view (pre history-patch)", async ({
+  page,
+}) => {
+  // Regression for a CI-only flake: Next installs its history.pushState patch (which feeds
+  // usePathname) in a passive effect on the root router, while the app becomes interactive one
+  // effect phase earlier — when PersonalPlanViewTransition's layout effect sets
+  // history.scrollRestoration = "manual". A click landing in that window used to change the URL
+  // via the unpatched pushState and strand the overview on screen forever. Clicking synchronously
+  // at the scrollRestoration flip deterministically exercises that window.
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      "chaarlie_cookie_consent_v1",
+      JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+    )
+    const descriptor = Object.getOwnPropertyDescriptor(History.prototype, "scrollRestoration")
+    if (!descriptor?.get || !descriptor.set) return
+    const originalSet = descriptor.set
+    let clicked = false
+    Object.defineProperty(History.prototype, "scrollRestoration", {
+      configurable: true,
+      get: descriptor.get,
+      set(value: ScrollRestoration) {
+        originalSet.call(this, value)
+        if (value === "manual" && !clicked) {
+          const link = document.querySelector<HTMLAnchorElement>('a[href$="/wash_day"]')
+          if (link) {
+            clicked = true
+            link.click()
+          }
+        }
+      },
+    })
+  })
+  await page.goto(labPath)
+
+  await expect(page).toHaveURL(`${labPath}/wash_day`)
+  await expect(page.getByRole("heading", { name: "Waschtag" })).toBeFocused()
+})
+
 test("reduced motion keeps the same history and focus contract without animation", async ({
   page,
 }) => {
