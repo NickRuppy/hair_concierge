@@ -93,7 +93,25 @@ export function ApplicationPage({
     view.state === "ready" && currentPathname
       ? applicationDayFromPathname(currentPathname, days, navigationBasePath)
       : undefined
-  const selectedDayType = pathnameDayType === undefined ? initialDayType : pathnameDayType
+  // Next only mirrors history.pushState into usePathname once its root passive effect has
+  // patched the history API — one effect phase after this tree is already interactive. A day
+  // click landing in that window would otherwise change the URL without ever re-rendering, so
+  // the local navigation handlers below record the selection here and it renders immediately.
+  // The override stays authoritative until the router pathname next changes (reset during
+  // render, not in an effect — an effect's initial invocation would revert an early click).
+  const [localSelection, setLocalSelection] = useState<{
+    dayType: ApplicationDayTypeKey | null
+  } | null>(null)
+  const [seenRouterPathname, setSeenRouterPathname] = useState(currentPathname)
+  if (seenRouterPathname !== currentPathname) {
+    setSeenRouterPathname(currentPathname)
+    if (localSelection !== null) setLocalSelection(null)
+  }
+  const routerDayType = pathnameDayType === undefined ? initialDayType : pathnameDayType
+  const selectedDayType =
+    localSelection !== null && seenRouterPathname === currentPathname
+      ? localSelection.dayType
+      : routerDayType
   const [direction, setDirection] = useState<PersonalPlanTransitionDirection>(
     initialDayType ? "forward" : "reverse",
   )
@@ -108,7 +126,11 @@ export function ApplicationPage({
       )
       if (nextDayType === undefined) return
       setDirection(nextDayType ? "forward" : "reverse")
+      setLocalSelection({ dayType: nextDayType })
     }
+    // Keep this listener registered from mount with stable deps: re-registering would move it
+    // behind Next's popstate listener, whose synchronous traverse commit then removes the
+    // pending listener mid-dispatch and skips it entirely.
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
   }, [days, navigationBasePath, view.state])
@@ -120,6 +142,18 @@ export function ApplicationPage({
       const href = `${navigationBasePath}/${dayType}`
       window.history.pushState({ [APPLICATION_HISTORY_MARKER]: dayType }, "", href)
       setDirection("forward")
+      setLocalSelection({ dayType })
+    },
+    [navigationBasePath],
+  )
+
+  const openOverview = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      if (!shouldHandleLocalNavigation(event)) return
+      event.preventDefault()
+      window.history.pushState({ [APPLICATION_HISTORY_MARKER]: null }, "", navigationBasePath)
+      setDirection("reverse")
+      setLocalSelection({ dayType: null })
     },
     [navigationBasePath],
   )
@@ -136,7 +170,11 @@ export function ApplicationPage({
       <PersonalPlanStageEntrance destination="/anwendung">
         <PersonalPlanViewTransition viewKey={viewKey} direction={direction} variant="quiz">
           {selectedDay ? (
-            <ApplicationDay day={selectedDay} overviewHref={navigationBasePath} />
+            <ApplicationDay
+              day={selectedDay}
+              overviewHref={navigationBasePath}
+              onOpenOverview={openOverview}
+            />
           ) : (
             <ApplicationOverview
               days={days}

@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react"
 import Link from "next/link"
 
 import type { ApplicationDayView } from "./application-types"
@@ -8,10 +9,12 @@ import { UnresolvedProductBlock } from "./unresolved-product-block"
 export function ApplicationDay({
   day,
   overviewHref,
+  onOpenOverview,
 }: {
   day: ApplicationDayView
   /** Fix round 1 (I-2): the quiet in-page Back the day view lost when the journey header retired. */
   overviewHref: string
+  onOpenOverview?: (event: MouseEvent<HTMLAnchorElement>) => void
 }) {
   return (
     <article
@@ -20,6 +23,7 @@ export function ApplicationDay({
     >
       <Link
         href={overviewHref}
+        onClick={onOpenOverview}
         className="mb-4 inline-flex items-center gap-1 text-sm text-[var(--text-caption)] hover:underline"
       >
         ← Anwendung
