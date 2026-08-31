@@ -273,3 +273,83 @@ test("production construction fails closed", () => {
     /production/i,
   )
 })
+
+/**
+ * Task 2.2. The fixture has no active-routine model, so it takes the
+ * simplest coherent Labs stance: emulate `"applied"` on every `habits`
+ * completion (the only module the production recompute lane ever runs for),
+ * and never attach `recompute` to a `products` completion — matching
+ * production's own byte-identical-for-products contract (T1.4 report).
+ */
+test("completeModule emulates an applied recompute outcome for habits, never for products", async () => {
+  const gateway = createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext,
+  })
+  const first = await gateway.saveAnswer({
+    questionId: "current_product_categories",
+    answer: [],
+    expectedRevision: 0,
+  })
+  const second = await gateway.saveAnswer({
+    questionId: "wet_wash_frequency",
+    answer: "weekly_2x",
+    expectedRevision: first.revision,
+  })
+
+  const productsCompletion = await gateway.completeModule({
+    module: "products",
+    expectedRevision: second.revision,
+  })
+  assert.equal(productsCompletion.status, "in_progress")
+  assert.equal("recompute" in productsCompletion, false)
+
+  let session = second
+  for (const [questionId, answer] of [
+    ["towel_handling", { material: "no_towel" }],
+    ["drying_routes", []],
+    ["additional_heat_tools", []],
+    ["night_protection", []],
+  ] as const) {
+    session = await gateway.saveAnswer({ questionId, answer, expectedRevision: session.revision })
+  }
+  const habitsCompletion = await gateway.completeModule({
+    module: "habits",
+    expectedRevision: session.revision,
+  })
+  // This is also the CLOSING module in this scenario (`status: "complete"`) —
+  // the recompute outcome is emulated on that path too, not only in_progress.
+  assert.equal(habitsCompletion.status, "complete")
+  assert.deepEqual(habitsCompletion.recompute, { outcome: "applied" })
+})
+
+test("completeModule emulates an applied recompute outcome for a NON-closing habits completion too", async () => {
+  // Habits-first order: seed a session where habits is fully answered and
+  // products is still untouched, mirroring the "habits zuerst" fixtures in
+  // tests/personal-plan-stage2-module-entry.test.tsx (sequential saveAnswer
+  // cannot produce this shape, since the canonical path answers products
+  // first — direct construction is the established way to reach it).
+  const gateway = createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext,
+    initialAnswers: {
+      towel: { material: "no_towel" as const },
+      dryingRoutes: [],
+      additionalHeatTools: [],
+      nightProtection: [],
+    },
+    initialCompletedQuestionIds: [
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+      "night_protection",
+    ],
+    initialRevision: 4,
+  })
+  const habitsCompletion = await gateway.completeModule({
+    module: "habits",
+    expectedRevision: 4,
+  })
+  assert.equal(habitsCompletion.status, "in_progress")
+  assert.deepEqual(habitsCompletion.recompute, { outcome: "applied" })
+})

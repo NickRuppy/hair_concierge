@@ -155,6 +155,42 @@ test("only refinement_required deferrals count as the cohort signal", () => {
   assert.equal(hasRefinementDeferredRoles({}), false)
 })
 
+/**
+ * Task 2.2 (founder-ruled). `unseen_recommendation` links into the products
+ * module exactly like `refinement_required` — extending the same cohort
+ * signal, not adding a second one.
+ */
+test("an unseen_recommendation deferral also counts as the cohort signal", () => {
+  assert.equal(
+    hasRefinementDeferredRoles({ deferredRoleReasons: { a: "unseen_recommendation" } }),
+    true,
+  )
+  assert.equal(
+    hasRefinementDeferredRoles({
+      deferredRoleReasons: { a: "no_product", b: "unseen_recommendation" },
+    }),
+    true,
+  )
+  // Still false when only the non-refinement-linked reasons are present.
+  assert.equal(
+    hasRefinementDeferredRoles({
+      deferredRoleReasons: { a: "no_product", b: "preview_unavailable" },
+    }),
+    false,
+  )
+})
+
+test("the products row shows the unlock hint from an unseen_recommendation-only deferral", () => {
+  const view = buildHairProfileSection({
+    status: statusResponse("open", "open"),
+    deferredRolesPendingRefinement: hasRefinementDeferredRoles({
+      deferredRoleReasons: { a: "unseen_recommendation" },
+    }),
+  })
+
+  assert.equal(rowByKey(view.rows, "products").note, "Schaltet offene Empfehlungen frei.")
+})
+
 test("a malformed status body leaves the section absent instead of throwing", () => {
   assert.equal(parseHairProfileStatus(null), null)
   assert.equal(parseHairProfileStatus("nope"), null)

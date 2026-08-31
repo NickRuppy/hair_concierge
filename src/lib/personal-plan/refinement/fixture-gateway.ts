@@ -109,6 +109,12 @@ export class Stage2FixtureGateway implements Stage2RefinementGateway {
    * fixture every completed answer IS a user answer. The closing module
    * delegates to `complete()`, mirroring the service, so Labs sees the same two
    * outcomes production does.
+   *
+   * `recompute` (T2.2): the fixture has no notion of an active routine to
+   * recompute against, so it takes the simplest coherent stance for Labs —
+   * emulate `"applied"` on every `habits` completion (the only module the
+   * production recompute lane ever runs for), and omit the field entirely for
+   * `products`, exactly like production omits it for that module.
    */
   async completeModule(input: Stage2CompleteModuleInput): Promise<Stage2ModuleCompletionResult> {
     this.assertRevision(input.expectedRevision)
@@ -123,9 +129,16 @@ export class Stage2FixtureGateway implements Stage2RefinementGateway {
       )
     }
     const stage3Handoff = input.module === "products"
+    const recompute = input.module === "habits" ? ({ outcome: "applied" } as const) : undefined
     if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
       const handoff = await this.complete({ expectedRevision: input.expectedRevision })
-      return { ...handoff, module: input.module, status: "complete", stage3Handoff }
+      return {
+        ...handoff,
+        module: input.module,
+        status: "complete",
+        stage3Handoff,
+        ...(recompute ? { recompute } : {}),
+      }
     }
     return {
       module: input.module,
@@ -137,6 +150,7 @@ export class Stage2FixtureGateway implements Stage2RefinementGateway {
         this.session.revision,
         input.module,
       ),
+      ...(recompute ? { recompute } : {}),
     }
   }
 

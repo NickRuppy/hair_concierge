@@ -122,6 +122,71 @@ test("the browser Stage 2 gateway preserves the durable final page on completion
   )
 })
 
+/**
+ * Task 2.2. `saveAnswerAndCompleteModule`'s result is passed through verbatim
+ * (see the comment on that method in http-gateway.ts) — these tests lock that
+ * `moduleCompletion.recompute` (T1.4's habits-recompute outcome) actually
+ * reaches the caller when present, and is `undefined` (never invented) when
+ * the server omits it.
+ */
+test("the browser Stage 2 gateway passes through a present recompute outcome from a module completion", async () => {
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async () =>
+      new Response(
+        JSON.stringify({
+          session: { schemaVersion: 1, status: "in_progress", revision: 5 },
+          moduleCompletion: {
+            module: "habits",
+            status: "in_progress",
+            stage3Handoff: false,
+            nextHref: "/plan-start",
+            refinedVersionId: "refined-5",
+            recompute: { outcome: "applied" },
+          },
+        }),
+        { status: 200 },
+      ),
+  })
+
+  const result = await gateway.saveAnswerAndCompleteModule?.({
+    module: "habits",
+    questionId: "night_protection",
+    answer: [],
+    expectedRevision: 4,
+  })
+
+  assert.deepEqual(result?.moduleCompletion.recompute, { outcome: "applied" })
+})
+
+test("the browser Stage 2 gateway leaves an absent recompute field undefined, never invents one", async () => {
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async () =>
+      new Response(
+        JSON.stringify({
+          session: { schemaVersion: 1, status: "in_progress", revision: 5 },
+          moduleCompletion: {
+            module: "products",
+            status: "in_progress",
+            stage3Handoff: true,
+            nextHref: "/plan-start",
+            refinedVersionId: "refined-5",
+          },
+        }),
+        { status: 200 },
+      ),
+  })
+
+  const result = await gateway.saveAnswerAndCompleteModule?.({
+    module: "products",
+    questionId: "wet_wash_frequency",
+    answer: "weekly_2x",
+    expectedRevision: 4,
+  })
+
+  assert.equal(result?.moduleCompletion.recompute, undefined)
+  assert.equal("recompute" in (result?.moduleCompletion ?? {}), false)
+})
+
 test("the browser intake client posts a stable UUID idempotency key with valid manual input", async () => {
   let request: RequestInit | undefined
   const client = createHttpStage3IntakeClient({

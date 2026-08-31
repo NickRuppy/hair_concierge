@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   RefinementFlow,
   type Stage2HandoffPayload,
+  type Stage2ModuleCompletionPayload,
   type Stage2ModuleProgress,
 } from "@/components/personal-plan-refinement/refinement-flow"
 import {
@@ -50,6 +51,7 @@ import {
   Stage2RefinementError,
   type Stage2RefinementGateway,
   type Stage2CompleteResult,
+  type Stage2ModuleRecomputeOutcome,
 } from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
@@ -287,12 +289,22 @@ export function planStartStage3BootstrapMode(
 
 /**
  * The Routine href for a habits-first module completion (Task 2.4: "habits
- * zuerst"). Only a post-accept module entry is a refinement-driven RECOMPUTE
- * the user should be told about (Task 2.6). An escape-hatch completion is an
- * initial activation: nothing was updated, so the arrival speaks for itself.
+ * zuerst"). The toast (Task 2.6) is claimed ONLY when BOTH hold (Task 2.2,
+ * the honesty fix):
+ *
+ *  - a post-accept module entry — an escape-hatch completion is an initial
+ *    activation: nothing was updated, so the arrival speaks for itself; and
+ *  - the server actually reports `recomputeOutcome === "applied"`
+ *    (`moduleCompletion.recompute?.outcome`, T1.4). `"unchanged"`,
+ *    `"unavailable"`, or an absent field (no active routine yet, or an older
+ *    server) all mean the routine was NOT touched — the signal must not ride
+ *    along on a post-accept origin alone.
  */
-export function moduleCompletionRoutineHref(initialJourney: PlanStartInitialJourney): string {
-  return isPostAcceptModuleEntry(initialJourney)
+export function moduleCompletionRoutineHref(
+  initialJourney: PlanStartInitialJourney,
+  recomputeOutcome?: Stage2ModuleRecomputeOutcome,
+): string {
+  return isPostAcceptModuleEntry(initialJourney) && recomputeOutcome === "applied"
     ? withRoutinePlanUpdatedSignal("/routine")
     : "/routine"
 }
@@ -1124,11 +1136,18 @@ export function PlanStartCustomerJourney({
           initialJourney.stage === "stage2" ? (initialJourney.moduleProgress ?? null) : null
         }
         onHandoff={handleHandoff}
-        onModuleComplete={() => {
+        onModuleComplete={(payload: Stage2ModuleCompletionPayload) => {
           // Modul 2 without a Stage-3 handoff (habits first), OR the closing
           // module on a post-accept run (Task 2.1): the user belongs back on
-          // their Routine, with the "Plan aktualisiert" toast (Task 2.6).
-          openRoutineHref(moduleCompletionRoutineHref(initialJourney))
+          // their Routine. The "Plan aktualisiert" toast (Task 2.6) rides
+          // along only when the server actually recomputed it (Task 2.2) —
+          // see `moduleCompletionRoutineHref`.
+          openRoutineHref(
+            moduleCompletionRoutineHref(
+              initialJourney,
+              payload.moduleCompletion.recompute?.outcome,
+            ),
+          )
         }}
         autoHandoff={!returningToRefinement}
         stageEntrance={stage2EnteredLocally}

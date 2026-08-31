@@ -671,12 +671,20 @@ test("Task 2.6: a habits-first module completion signals the toast only for an e
   // `planAccepted` is what makes this a re-computation rather than a first
   // activation — see "the „Plan aktualisiert“ toast is never claimed for an
   // initial activation" below for the escape-hatch half of this contract.
+  // Task 2.2: origin alone is no longer enough — the outcome must be
+  // "applied" too (see the dedicated Task 2.2 test below for the full matrix).
   assert.equal(
-    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "habits", planAccepted: true }),
+    moduleCompletionRoutineHref(
+      { stage: "stage2", refineModule: "habits", planAccepted: true },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   assert.equal(
-    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "products", planAccepted: true }),
+    moduleCompletionRoutineHref(
+      { stage: "stage2", refineModule: "products", planAccepted: true },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   // `?refine=1` is the Routine refinement nudge — on an accepted plan its
@@ -691,11 +699,43 @@ test("Task 2.6: a habits-first module completion signals the toast only for an e
   )
   // Without the accepted ORIGIN, and for the legacy linear entry: no signal.
   assert.equal(
-    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "first_open" }),
+    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "first_open" }, "applied"),
     "/routine",
   )
-  assert.equal(moduleCompletionRoutineHref({ stage: "stage2" }), "/routine")
-  assert.equal(moduleCompletionRoutineHref({ stage: "stage1" }), "/routine")
+  assert.equal(moduleCompletionRoutineHref({ stage: "stage2" }, "applied"), "/routine")
+  assert.equal(moduleCompletionRoutineHref({ stage: "stage1" }, "applied"), "/routine")
+})
+
+/**
+ * Task 2.2. `moduleCompletionRoutineHref`'s honesty fix: origin
+ * (`isPostAcceptModuleEntry`) is necessary but no longer sufficient — the
+ * server-reported recompute outcome (T1.4's `moduleCompletion.recompute?.outcome`)
+ * must ALSO be `"applied"`. `"unchanged"`, `"unavailable"`, and an absent
+ * field (no active routine yet, or an older server) all mean the routine was
+ * NOT touched, so the toast must not ride along even on a genuine post-accept
+ * module entry.
+ */
+test("Task 2.2: the toast is claimed only when the server actually recomputed the routine", () => {
+  const postAcceptHabits = {
+    stage: "stage2",
+    refineModule: "habits",
+    planAccepted: true,
+  } as const
+
+  // applied + post-accept origin -> the one case that toasts.
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits, "applied"), "/routine?planUpdated=1")
+  // unchanged / unavailable / absent field -> nothing was recomputed, no toast.
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits, "unchanged"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits, "unavailable"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits), "/routine")
+
+  // Non-post-accept journeys stay plain regardless of outcome — origin is
+  // still a necessary condition, this task only tightens it further.
+  const escapeHatchHabits = { stage: "stage2", refineModule: "habits" } as const
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits, "applied"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits, "unchanged"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits, "unavailable"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits), "/routine")
 })
 
 test("Task 2.6: a Stage-3 completion signals the toast only when it followed an explicit module entry", () => {
@@ -1282,13 +1322,17 @@ test("the ceremony stays suppressed for BOTH module cohorts, accepted or not", (
 })
 
 test("the „Plan aktualisiert“ toast is never claimed for an initial activation", () => {
-  // An accepted plan really is being updated — signal it.
+  // An accepted plan really is being updated — signal it (only once the
+  // server confirms it actually recomputed, Task 2.2 — see "applied" here).
   assert.equal(
-    moduleCompletionRoutineHref({
-      stage: "stage2",
-      refineModule: "habits",
-      planAccepted: true,
-    }),
+    moduleCompletionRoutineHref(
+      {
+        stage: "stage2",
+        refineModule: "habits",
+        planAccepted: true,
+      },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   assert.equal(
@@ -1301,7 +1345,10 @@ test("the „Plan aktualisiert“ toast is never claimed for an initial activati
 
   // The failed-accept cohort is arriving at their FIRST routine. Nothing was
   // updated; the arrival speaks for itself.
-  assert.equal(moduleCompletionRoutineHref({ stage: "stage2", refineModule: "habits" }), "/routine")
+  assert.equal(
+    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "habits" }, "applied"),
+    "/routine",
+  )
   assert.equal(
     stage3CompletionRoutineHref({ stage: "stage2", refineModule: "products" }, "/routine"),
     "/routine",

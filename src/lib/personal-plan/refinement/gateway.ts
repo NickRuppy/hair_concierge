@@ -38,6 +38,9 @@ export type Stage2SaveAndCompleteResult = {
 
 export type Stage2CompleteModuleInput = { module: Stage2Module; expectedRevision: number }
 
+/** The server-reported outcome of a habits-triggered routine recompute (T1.4). */
+export type Stage2ModuleRecomputeOutcome = "applied" | "unchanged" | "unavailable"
+
 /**
  * Result of finishing ONE refinement module. `status` is the draft state after
  * the write: `in_progress` while the other module is still open, `complete`
@@ -49,6 +52,16 @@ export type Stage2ModuleCompletionResult = Stage2RefinementHandoff & {
   module: Stage2Module
   status: "in_progress" | "complete"
   stage3Handoff: boolean
+  /**
+   * The server-reported outcome of the habits-triggered routine recompute
+   * (T1.4's `moduleCompletion.recompute`). Present only for a `habits`
+   * completion against an active routine; OMITTED (not `null`) for every
+   * `products` completion and for a `habits` completion with no active
+   * routine yet, or when talking to an older server. Absence must never be
+   * treated as an error — only `{ outcome: "applied" }` justifies telling the
+   * user their plan was updated (Task 2.2).
+   */
+  recompute?: { outcome: Stage2ModuleRecomputeOutcome }
 }
 
 export type Stage2SaveAndCompleteModuleResult = {
