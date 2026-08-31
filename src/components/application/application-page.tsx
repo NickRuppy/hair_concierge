@@ -1,7 +1,7 @@
 "use client"
 
 import type { MouseEvent } from "react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -96,24 +96,22 @@ export function ApplicationPage({
   // Next only mirrors history.pushState into usePathname once its root passive effect has
   // patched the history API — one effect phase after this tree is already interactive. A day
   // click landing in that window would otherwise change the URL without ever re-rendering, so
-  // openDay/popstate record the selection locally, tagged with the router pathname they saw;
-  // the override stays authoritative only while the router still reports that pathname.
+  // the local navigation handlers below record the selection here and it renders immediately.
+  // The override stays authoritative until the router pathname next changes (reset during
+  // render, not in an effect — an effect's initial invocation would revert an early click).
   const [localSelection, setLocalSelection] = useState<{
     dayType: ApplicationDayTypeKey | null
-    routerPathname: string | undefined
   } | null>(null)
+  const [seenRouterPathname, setSeenRouterPathname] = useState(currentPathname)
+  if (seenRouterPathname !== currentPathname) {
+    setSeenRouterPathname(currentPathname)
+    if (localSelection !== null) setLocalSelection(null)
+  }
   const routerDayType = pathnameDayType === undefined ? initialDayType : pathnameDayType
   const selectedDayType =
-    localSelection !== null && localSelection.routerPathname === currentPathname
+    localSelection !== null && seenRouterPathname === currentPathname
       ? localSelection.dayType
       : routerDayType
-  // Read through a ref inside the handlers below: the popstate listener must stay registered
-  // from mount (re-registering moves it behind Next's listener, whose synchronous traverse
-  // commit would then remove it mid-dispatch and skip it entirely).
-  const currentPathnameRef = useRef(currentPathname)
-  useEffect(() => {
-    currentPathnameRef.current = currentPathname
-  })
   const [direction, setDirection] = useState<PersonalPlanTransitionDirection>(
     initialDayType ? "forward" : "reverse",
   )
@@ -128,8 +126,11 @@ export function ApplicationPage({
       )
       if (nextDayType === undefined) return
       setDirection(nextDayType ? "forward" : "reverse")
-      setLocalSelection({ dayType: nextDayType, routerPathname: currentPathnameRef.current })
+      setLocalSelection({ dayType: nextDayType })
     }
+    // Keep this listener registered from mount with stable deps: re-registering would move it
+    // behind Next's popstate listener, whose synchronous traverse commit then removes the
+    // pending listener mid-dispatch and skips it entirely.
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
   }, [days, navigationBasePath, view.state])
@@ -141,7 +142,18 @@ export function ApplicationPage({
       const href = `${navigationBasePath}/${dayType}`
       window.history.pushState({ [APPLICATION_HISTORY_MARKER]: dayType }, "", href)
       setDirection("forward")
-      setLocalSelection({ dayType, routerPathname: currentPathnameRef.current })
+      setLocalSelection({ dayType })
+    },
+    [navigationBasePath],
+  )
+
+  const openOverview = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      if (!shouldHandleLocalNavigation(event)) return
+      event.preventDefault()
+      window.history.pushState({ [APPLICATION_HISTORY_MARKER]: null }, "", navigationBasePath)
+      setDirection("reverse")
+      setLocalSelection({ dayType: null })
     },
     [navigationBasePath],
   )
@@ -158,7 +170,11 @@ export function ApplicationPage({
       <PersonalPlanStageEntrance destination="/anwendung">
         <PersonalPlanViewTransition viewKey={viewKey} direction={direction} variant="quiz">
           {selectedDay ? (
-            <ApplicationDay day={selectedDay} overviewHref={navigationBasePath} />
+            <ApplicationDay
+              day={selectedDay}
+              overviewHref={navigationBasePath}
+              onOpenOverview={openOverview}
+            />
           ) : (
             <ApplicationOverview
               days={days}

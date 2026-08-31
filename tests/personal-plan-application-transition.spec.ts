@@ -324,6 +324,28 @@ test("day click at the first interactive instant renders the day view (pre histo
 
   await expect(page).toHaveURL(`${labPath}/wash_day`)
   await expect(page.getByRole("heading", { name: "Waschtag" })).toBeFocused()
+
+  // The in-page "← Anwendung" Back must also work from this pre-patch state.
+  await page.getByRole("link", { name: "← Anwendung" }).click()
+  await expect(page).toHaveURL(labPath)
+  await expect(page.getByRole("heading", { name: "Anwendung" })).toBeVisible()
+})
+
+test("the in-day Anwendung link returns to the overview after a day visit", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await openLab(page)
+  await expect.poll(() => page.evaluate(() => window.history.scrollRestoration)).toBe("manual")
+
+  await page.getByRole("link", { name: /Waschtag:/ }).click()
+  await expect(page.locator("[data-personal-plan-application-root]")).toHaveAttribute(
+    "data-application-router-pathname",
+    `${labPath}/wash_day`,
+  )
+
+  await page.getByRole("link", { name: "← Anwendung" }).click()
+  await expect(page).toHaveURL(labPath)
+  await expect(page.getByRole("heading", { name: "Anwendung" })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Waschtag" })).toHaveCount(0)
 })
 
 test("reduced motion keeps the same history and focus contract without animation", async ({
