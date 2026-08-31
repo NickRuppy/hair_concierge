@@ -78,6 +78,13 @@ export function Stage2PreviewClient({
         gateway={gateway}
         moduleEntry={moduleEntry}
         moduleProgress={moduleProgress}
+        // Every module-scoped scenario here (`module-products`, `module-habits`,
+        // `module-direct-accept`) models an explicit deep link into an EXISTING
+        // plan's module — the post-accept loop. Labs has no scenario for the
+        // unaccepted-cohort exception (a hand-built `?refine=habits` link on a
+        // draft that was never accepted; T2.1) — add one if that cohort ever
+        // needs a QA harness.
+        postAcceptModuleEntry={moduleEntry !== undefined}
         onSecondaryExit={() => {
           // The preview must not invent an Idealplan href, but it records the
           // destination the production host would route to — the SAME shared

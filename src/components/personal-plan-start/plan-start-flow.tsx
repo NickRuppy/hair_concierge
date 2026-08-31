@@ -212,6 +212,30 @@ export function isPostAcceptModuleEntry(initialJourney: PlanStartInitialJourney)
   return isExplicitModuleRefinementEntry(initialJourney) && isAcceptedPlanJourney(initialJourney)
 }
 
+export type Stage2ModuleCompletionRoutingProps = {
+  moduleEntry: Stage2ModuleEntryRequest | undefined
+  postAcceptModuleEntry: boolean
+}
+
+/**
+ * The exact `RefinementFlow` props that decide module-COMPLETION routing
+ * (Task 2.1) — WHICH module this run scopes to, and whether it is a
+ * post-accept module entry. Bundled into one call and spread at the JSX call
+ * site below (`{...stage2ModuleCompletionRoutingProps(initialJourney)}`)
+ * rather than listed as two separate prop lines, so the post-accept origin
+ * signal cannot be silently dropped by deleting one line without also
+ * breaking this function's own tests
+ * (`tests/personal-plan-stage2-module-entry.test.tsx`).
+ */
+export function stage2ModuleCompletionRoutingProps(
+  initialJourney: PlanStartInitialJourney,
+): Stage2ModuleCompletionRoutingProps {
+  return {
+    moduleEntry: planStartModuleEntry(initialJourney),
+    postAcceptModuleEntry: isPostAcceptModuleEntry(initialJourney),
+  }
+}
+
 /**
  * Where leaving the Feinschliff goes. `/routine` only for the post-accept
  * cohort, which really came from there. The escape-hatch cohort has no routine
@@ -1085,7 +1109,9 @@ export function PlanStartCustomerJourney({
         // reloaded Modul-1 Stage-3 journey switches the local stage back to
         // Stage 2 when Back is pressed, and it must keep walking its module
         // instead of falling into the full linear Feinschliff (resume shell).
-        moduleEntry={planStartModuleEntry(initialJourney)}
+        // `moduleEntry` and the post-accept origin signal (Task 2.1) travel
+        // together — see `stage2ModuleCompletionRoutingProps`.
+        {...stage2ModuleCompletionRoutingProps(initialJourney)}
         onSecondaryExit={() => {
           if (planStartRefinementExitDestination(initialJourney) === "routine") {
             openRoutineHref("/routine")
@@ -1104,7 +1130,6 @@ export function PlanStartCustomerJourney({
           // their Routine, with the "Plan aktualisiert" toast (Task 2.6).
           openRoutineHref(moduleCompletionRoutineHref(initialJourney))
         }}
-        postAcceptModuleEntry={isPostAcceptModuleEntry(initialJourney)}
         autoHandoff={!returningToRefinement}
         stageEntrance={stage2EnteredLocally}
       />

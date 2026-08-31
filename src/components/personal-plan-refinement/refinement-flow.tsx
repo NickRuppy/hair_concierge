@@ -962,6 +962,11 @@ export async function applyStage2ModuleCompletion(
     // user, so the bridge stays — today's behavior — so the journey can still
     // reach initial activation.
     if (postAcceptModuleEntry && !moduleCompletion.stage3Handoff) {
+      // The draft DID fully complete server-side — emit the canonical
+      // completion event even though the UI hands back to the host instead
+      // of showing the bridge, so completion telemetry stays truthful. No
+      // `bridge_viewed`: the bridge never shows on this path.
+      effects.emit({ name: "personal_plan_stage2_completed" })
       await effects.handBackToHost({ moduleCompletion, session: hostSession })
       return
     }

@@ -22,6 +22,7 @@ import {
   planStartModuleEntry,
   planStartRefinementExitDestination,
   planStartSuppressesChapterCeremony,
+  stage2ModuleCompletionRoutingProps,
   stage3CompletionRoutineHref,
 } from "../src/components/personal-plan-start/plan-start-flow"
 import {
@@ -761,6 +762,58 @@ const habitsQuestionIds = [
   "night_protection",
 ] as const
 
+// Fix-round IMPORTANT 1: `plan-start-flow.tsx`'s JSX spreads
+// `stage2ModuleCompletionRoutingProps(initialJourney)` onto `<RefinementFlow>`
+// instead of listing `moduleEntry`/`postAcceptModuleEntry` as separate prop
+// lines (see the call site) — precisely so this exported pure function IS the
+// wiring, not just a proxy for it. Deleting or breaking that spread at the
+// call site cannot leave this pinned without also either breaking these
+// assertions (if the fix is inside the function) or being visible as an
+// explicit, reviewable prop override in the JSX diff (if the divergence is
+// only at the call site) — there is no way to reintroduce the T2.1 bug by
+// silently deleting one line.
+test("stage2ModuleCompletionRoutingProps threads the post-accept origin signal the host hands to RefinementFlow", () => {
+  // stage1: no module scope, never post-accept.
+  assert.deepEqual(stage2ModuleCompletionRoutingProps({ stage: "stage1" }), {
+    moduleEntry: undefined,
+    postAcceptModuleEntry: false,
+  })
+  // stage2, no explicit module (plain resume/first_open): never post-accept,
+  // regardless of `planAccepted` — SCOPE gates origin, not acceptance alone.
+  assert.deepEqual(stage2ModuleCompletionRoutingProps({ stage: "stage2", planAccepted: true }), {
+    moduleEntry: undefined,
+    postAcceptModuleEntry: false,
+  })
+  // stage2, explicit module deep link, ALREADY ACCEPTED plan — the post-accept
+  // loop this task fixes (Routine banner / Profil row tap).
+  assert.deepEqual(
+    stage2ModuleCompletionRoutingProps({
+      stage: "stage2",
+      refineModule: "habits",
+      planAccepted: true,
+    }),
+    { moduleEntry: "habits", postAcceptModuleEntry: true },
+  )
+  // stage2, explicit module deep link, but the plan is NOT accepted yet — the
+  // failed-accept escape hatch / unaccepted-cohort exception: scope without
+  // origin.
+  assert.deepEqual(
+    stage2ModuleCompletionRoutingProps({ stage: "stage2", refineModule: "products" }),
+    { moduleEntry: "products", postAcceptModuleEntry: false },
+  )
+  // stage3, reloaded Modul-1 journey with an explicit module marker and an
+  // accepted plan (Back-out-of-Stage-3 case): still post-accept.
+  assert.deepEqual(
+    stage2ModuleCompletionRoutingProps({
+      stage: "stage3",
+      refinedVersionId: "refined-1",
+      refineModule: "products",
+      planAccepted: true,
+    }),
+    { moduleEntry: "products", postAcceptModuleEntry: true },
+  )
+})
+
 /**
  * Builds a fixture gateway whose products questions are already answered, so
  * `completeModule({ module: "habits", ... })` can close the draft (habits was
@@ -933,6 +986,13 @@ test("Modul 2 (habits) completing as the CLOSING module on a POST-ACCEPT run han
   assert.deepEqual(
     closing.recorded.handedBack[0].session.path.orderedQuestionIds,
     closingSession.path.orderedQuestionIds,
+  )
+  // The draft DID fully complete server-side — the canonical completion event
+  // still fires (future telemetry wiring should see it), but bridge_viewed
+  // must NOT: the bridge never shows on this path (fix-round MINOR 3).
+  assert.deepEqual(
+    closing.recorded.events.map((event) => event.name),
+    ["personal_plan_stage2_module_completed", "personal_plan_stage2_completed"],
   )
 })
 
