@@ -136,6 +136,7 @@
     "posthog:personal-plan-offer-v4:dashboards": "tsx scripts/posthog/update-personal-plan-offer-v4-dashboards.ts",
     "posthog:personal-plan-reveal-skip-insight": "tsx scripts/posthog/add-personal-plan-reveal-skip-insight.ts",
     "posthog:personal-plan-pricing-experiment-insight": "tsx scripts/posthog/ensure-personal-plan-pricing-experiment-insight.ts",
+    "posthog:organic-offer-media-experiment-dashboard": "tsx scripts/posthog/ensure-organic-offer-media-experiment-dashboard.ts",
     "posthog:historical-quiz-dashboard": "tsx scripts/posthog/ensure-historical-quiz-submissions-dashboard.ts",
     "customerio:quiz-result-email": "tsx scripts/customerio-quiz-result-email.ts",
     "customerio:personal-plan-result-email": "tsx scripts/customerio-personal-plan-result-email.ts",

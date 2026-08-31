@@ -126,6 +126,7 @@ export function ResultPageClient({
       focusRoutine={focusRoutine}
       focusTarget={focusTarget}
       hasAccess={hasAccess}
+      isInternalTest={isInternalTest}
       leadId={leadId}
       name={name}
       offerTracking={offerTracking}
@@ -144,6 +145,7 @@ function LegacyResultPageClient({
   focusRoutine,
   focusTarget,
   hasAccess,
+  isInternalTest,
   leadId,
   name,
   offerTracking,
@@ -158,6 +160,7 @@ function LegacyResultPageClient({
   focusRoutine: boolean
   focusTarget?: GuidedStoryFocusTarget
   hasAccess: boolean
+  isInternalTest: boolean
   leadId: string
   name: string
   offerTracking?: FunnelAnalyticsEnvelope | null
@@ -207,6 +210,7 @@ function LegacyResultPageClient({
     narrative,
     offerTracking,
     offerVariant,
+    isInternalTest,
     quizAnswers,
     focusRoutine,
     focusTarget,

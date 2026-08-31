@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import OrganicRefreshLandingVariant from "../src/funnels/landing/organic-refresh"
+import { OrganicPlanOffer } from "../src/components/organic-plan-offer/organic-plan-offer"
+import OrganicPlanBeforeAfterV1OfferVariant from "../src/funnels/offers/organic-plan-before-after-v1"
 import OrganicPlanV1OfferVariant from "../src/funnels/offers/organic-plan-v1"
 import type { FunnelOfferVariantProps } from "../src/funnels/types"
 import { buildQuizResultNarrative } from "../src/lib/quiz/result-narrative"
@@ -121,6 +123,38 @@ test("organic offer renders the approved calm hierarchy with exactly one supplie
     "faq",
     "final_cta",
   ])
+})
+
+test("before-after treatment replaces the hero video with the approved full transformation figure", () => {
+  const html = renderToStaticMarkup(<OrganicPlanBeforeAfterV1OfferVariant {...offerProps} />)
+
+  assert.match(html, /before-after-generic\.webp/)
+  assert.match(html, /Symbolische heutige Haarsituation/)
+  assert.match(html, /Symbolisches Haarziel/)
+  assert.match(html, /Symbolbild · Ergebnisse sind individuell/)
+  assert.doesNotMatch(html, /Schau dir zuerst das Video an:/)
+  assert.doesNotMatch(html, /<wistia-player/i)
+  assert.equal((html.match(/data-testid="organic-pricing-slot"/g) ?? []).length, 1)
+})
+
+test("organic hero media defaults to video independently of the tracking variant id", () => {
+  const html = renderToStaticMarkup(
+    <OrganicPlanOffer {...offerProps} offerVariant="organic-plan-before-after-v1" />,
+  )
+
+  assert.match(html, /Schau dir zuerst das Video an:/)
+  assert.match(html, /<wistia-player/i)
+  assert.doesNotMatch(html, /before-after-generic\.webp/)
+})
+
+test("organic offers forward durable internal-test state into browser tracking", () => {
+  const source = readFileSync(
+    new URL("../src/components/organic-plan-offer/organic-plan-offer.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /isInternalTest = false/)
+  assert.match(source, /isInternalTest=\{isInternalTest\}/)
 })
 
 test("organic offer excludes retired sales devices and photographic before-after assets", () => {
