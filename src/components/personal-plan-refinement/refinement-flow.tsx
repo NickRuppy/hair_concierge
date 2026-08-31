@@ -162,6 +162,7 @@ export function RefinementFlow({
   stageEntrance = false,
   moduleEntry,
   moduleProgress,
+  postAcceptModuleEntry = false,
 }: {
   gateway: Stage2RefinementGateway
   initialSession?: Stage2RefinementSession
@@ -179,6 +180,15 @@ export function RefinementFlow({
   moduleEntry?: Stage2ModuleEntryRequest
   /** The banner's own "X von 4", shown as slim chrome above module questions. */
   moduleProgress?: Stage2ModuleProgress | null
+  /**
+   * ORIGIN signal for module completion routing (Task 2.1): an explicit
+   * module entry on an ALREADY ACCEPTED plan. The host computes this via
+   * `isPostAcceptModuleEntry` (plan-start-flow.tsx) — the single source of
+   * truth for "this run came from the post-accept loop" — and hands it down
+   * rather than the flow re-deriving it, because the session it holds carries
+   * no acceptance state. See `applyStage2ModuleCompletion`.
+   */
+  postAcceptModuleEntry?: boolean
 }) {
   /**
    * Any module entry request (Routine banner, Profil row, escape hatch, or the
@@ -504,6 +514,7 @@ export function RefinementFlow({
           session: nextSession,
           hostSession: hostSessionFor(unscopedSessionRef.current, nextSession),
           moduleCompletion,
+          postAcceptModuleEntry,
         },
         {
           emit,
@@ -529,7 +540,7 @@ export function RefinementFlow({
           },
         },
       ),
-    [emit, onModuleComplete, showCompletedStage2Session],
+    [emit, onModuleComplete, postAcceptModuleEntry, showCompletedStage2Session],
   )
 
   const completeStage2Module = useCallback(
@@ -883,22 +894,40 @@ export function getCompletedHandoffForLoadedSession(
 
 export type Stage2ModuleCompletionEffects = {
   emit: (event: Stage2RefinementTelemetryEvent) => void
-  /** The closing module: the draft is complete, exactly like the linear flow. */
+  /**
+   * The closing module completed and the bridge shows: `products` (always —
+   * `stage3Handoff`), or `habits` WITHOUT a post-accept origin (the
+   * unaccepted-cohort exception). The draft is complete, exactly like the
+   * linear flow.
+   */
   showCompletedSession: (session: Stage2RefinementSession, handoff: Stage2CompleteResult) => void
-  /** Modul 1: the draft stays open, but the user is carried into Stage 3. */
+  /** Modul 1 (`products`), NON-closing: the draft stays open, but the user is carried into Stage 3. */
   showStage3Bridge: (session: Stage2RefinementSession, handoff: Stage2CompleteResult) => void
-  /** A module that hands off nowhere (habits before products) — the host routes. */
+  /**
+   * Nothing to hand off to Stage 3: `habits` before `products` (draft stays
+   * open), OR `habits` as the CLOSING module on a post-accept run (draft is
+   * complete, but the user already walked Stage 3 in this cohort) — the host
+   * routes (today: back to the Routine).
+   */
   handBackToHost: (payload: Stage2ModuleCompletionPayload) => void | Promise<void>
 }
 
 /**
- * The three outcomes of finishing ONE module, extracted from the component so
- * they are drivable against a fake gateway without a DOM.
+ * The outcomes of finishing ONE module, extracted from the component so they
+ * are drivable against a fake gateway without a DOM. Routed by WHICH module
+ * finished and by entry ORIGIN, not by draft status alone (Task 2.1 — see the
+ * founder ruling in the task brief for the bug this fixes):
  *
  * - `status: "complete"` — this was the CLOSING module, so the server ran the
- *   unchanged full completion. Byte-identical end state to today's linear flow.
- * - `stage3Handoff` — Modul 1 (`products`): bridge into Stage 3 while the draft
- *   stays `in_progress`.
+ *   unchanged full completion. `stage3Handoff` is only ever true for
+ *   `products`, so a closing `products` completion is unaffected by origin —
+ *   `showCompletedSession` fires exactly as in today's linear flow, closing or
+ *   not. Only a closing `habits` completion (`stage3Handoff: false`) is
+ *   origin-sensitive: a post-accept module entry hands back to the host
+ *   (→ Routine) instead of re-showing a bridge into a Stage 3 it already
+ *   walked; otherwise (the unaccepted-cohort exception) the bridge stays.
+ * - `stage3Handoff` — Modul 1 (`products`), NON-closing: bridge into Stage 3
+ *   while the draft stays `in_progress`.
  * - otherwise — `habits` before `products`: nothing to hand off, so the host
  *   decides where the user goes (today: back to the Routine).
  *
@@ -910,16 +939,32 @@ export async function applyStage2ModuleCompletion(
     session: Stage2RefinementSession
     hostSession: Stage2RefinementSession
     moduleCompletion: Stage2ModuleCompletionResult
+    postAcceptModuleEntry: boolean
   },
   effects: Stage2ModuleCompletionEffects,
 ): Promise<void> {
-  const { session, hostSession, moduleCompletion } = input
+  const { session, hostSession, moduleCompletion, postAcceptModuleEntry } = input
   const handoff: Stage2CompleteResult = {
     refinedVersionId: moduleCompletion.refinedVersionId,
     nextHref: moduleCompletion.nextHref,
   }
   effects.emit({ name: "personal_plan_stage2_module_completed", module: moduleCompletion.module })
   if (moduleCompletion.status === "complete") {
+    // `stage3Handoff` is only ever true for `products` — a closing `products`
+    // completion ALWAYS bridges into Stage 3, post-accept or not, exactly as
+    // today: this branch, and `showCompletedSession`, unchanged. Only the
+    // OTHER closing module (`habits`, `stage3Handoff: false`) is affected by
+    // origin (the T2.1 fix): a post-accept module entry already walked Stage 3
+    // in this cohort, so re-showing the bridge would force it back through a
+    // stage it already finished — send it to the host (→ Routine) instead.
+    // Without an accepted plan (the unaccepted-cohort exception, reachable
+    // only via a hand-built `?refine=habits` link) `/routine` would bounce the
+    // user, so the bridge stays — today's behavior — so the journey can still
+    // reach initial activation.
+    if (postAcceptModuleEntry && !moduleCompletion.stage3Handoff) {
+      await effects.handBackToHost({ moduleCompletion, session: hostSession })
+      return
+    }
     effects.showCompletedSession(session, handoff)
     return
   }

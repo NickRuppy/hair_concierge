@@ -200,8 +200,15 @@ function isAcceptedPlanJourney(initialJourney: PlanStartInitialJourney): boolean
   return initialJourney.stage !== "stage1" && initialJourney.planAccepted === true
 }
 
-/** An explicit module run on an ALREADY ACCEPTED plan — scope AND origin. */
-function isPostAcceptModuleEntry(initialJourney: PlanStartInitialJourney): boolean {
+/**
+ * An explicit module run on an ALREADY ACCEPTED plan — scope AND origin.
+ *
+ * Exported as the single source of truth for "post-accept module entry":
+ * `RefinementFlow` needs it too (Task 2.1), to route a CLOSING module's
+ * completion by origin rather than by draft status alone — see
+ * `applyStage2ModuleCompletion` in refinement-flow.tsx.
+ */
+export function isPostAcceptModuleEntry(initialJourney: PlanStartInitialJourney): boolean {
   return isExplicitModuleRefinementEntry(initialJourney) && isAcceptedPlanJourney(initialJourney)
 }
 
@@ -1092,10 +1099,12 @@ export function PlanStartCustomerJourney({
         }
         onHandoff={handleHandoff}
         onModuleComplete={() => {
-          // Modul 2 without a Stage-3 handoff (habits first): the user belongs
-          // back on their Routine, with the "Plan aktualisiert" toast (Task 2.6).
+          // Modul 2 without a Stage-3 handoff (habits first), OR the closing
+          // module on a post-accept run (Task 2.1): the user belongs back on
+          // their Routine, with the "Plan aktualisiert" toast (Task 2.6).
           openRoutineHref(moduleCompletionRoutineHref(initialJourney))
         }}
+        postAcceptModuleEntry={isPostAcceptModuleEntry(initialJourney)}
         autoHandoff={!returningToRefinement}
         stageEntrance={stage2EnteredLocally}
       />

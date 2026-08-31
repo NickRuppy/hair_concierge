@@ -761,8 +761,30 @@ const habitsQuestionIds = [
   "night_protection",
 ] as const
 
-test("module completion routes its three outcomes through a fake gateway", async () => {
-  // 1. products first: bridge into Stage 3, draft stays open.
+/**
+ * Builds a fixture gateway whose products questions are already answered, so
+ * `completeModule({ module: "habits", ... })` can close the draft (habits was
+ * NOT the first module). Shared by the closing-module cases below.
+ */
+function closingHabitsGateway() {
+  return createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: plainTriggerContext,
+    initialAnswers: {
+      ...habitsAnswers,
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+    },
+    initialCompletedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      ...habitsQuestionIds,
+    ],
+    initialRevision: 6,
+  })
+}
+
+test("Modul 1 (products) completing NON-closing always bridges into Stage 3", async () => {
   const productsGateway = createStage2FixtureGateway({
     runtimeEnvironment: "test",
     triggerContext: plainTriggerContext,
@@ -780,6 +802,7 @@ test("module completion routes its three outcomes through a fake gateway", async
         module: "products",
         expectedRevision: 2,
       }),
+      postAcceptModuleEntry: false,
     },
     products.effects,
   )
@@ -790,8 +813,51 @@ test("module completion routes its three outcomes through a fake gateway", async
     products.recorded.events.map((event) => event.name),
     ["personal_plan_stage2_module_completed", "personal_plan_stage2_bridge_viewed"],
   )
+})
 
-  // 2. habits FIRST: nothing to hand off, so the host routes the user away.
+test("Modul 1 (products) completing as the CLOSING module (habits-first order) is unaffected by origin — exactly today's completed-session path, never handed back", async () => {
+  for (const postAcceptModuleEntry of [false, true]) {
+    const gateway = createStage2FixtureGateway({
+      runtimeEnvironment: "test",
+      triggerContext: plainTriggerContext,
+      initialAnswers: {
+        ...habitsAnswers,
+        currentProductCategories: [],
+        wetWashFrequency: "weekly_2x",
+      },
+      initialCompletedQuestionIds: [
+        ...habitsQuestionIds,
+        "current_product_categories",
+        "wet_wash_frequency",
+      ],
+      initialRevision: 6,
+    })
+    const session = await gateway.load()
+    const completion = await gateway.completeModule({ module: "products", expectedRevision: 6 })
+    assert.equal(completion.status, "complete")
+    assert.equal(completion.stage3Handoff, true)
+    const recording = recordingEffects()
+    await applyStage2ModuleCompletion(
+      {
+        session: scopeStage2SessionToModule(session, "products"),
+        hostSession: session,
+        moduleCompletion: completion,
+        postAcceptModuleEntry,
+      },
+      recording.effects,
+    )
+    // `stage3Handoff` is exclusive to `products` — the ONLY module whose
+    // closing completion is unaffected by the T2.1 origin routing. It still
+    // marks the session complete (today's `showCompletedSession` path, not
+    // `showStage3Bridge`), so a later Back-out-of-Stage-3 sees a correctly
+    // completed draft rather than a falsely reopened one.
+    assert.equal(recording.recorded.completed.length, 1)
+    assert.equal(recording.recorded.bridged.length, 0)
+    assert.equal(recording.recorded.handedBack.length, 0)
+  }
+})
+
+test("Modul 2 (habits) completing NON-closing hands back to the host — origin-independent", async () => {
   const habitsGateway = createStage2FixtureGateway({
     runtimeEnvironment: "test",
     triggerContext: plainTriggerContext,
@@ -812,6 +878,7 @@ test("module completion routes its three outcomes through a fake gateway", async
       session: scopeStage2SessionToModule(habitsSession, "habits"),
       hostSession: habitsSession,
       moduleCompletion: habitsCompletion,
+      postAcceptModuleEntry: true,
     },
     habits.effects,
   )
@@ -833,23 +900,49 @@ test("module completion routes its three outcomes through a fake gateway", async
     ),
     true,
   )
+})
 
-  // 3. the closing module: the draft is complete, exactly like the linear flow.
-  const closingGateway = createStage2FixtureGateway({
-    runtimeEnvironment: "test",
-    triggerContext: plainTriggerContext,
-    initialAnswers: {
-      ...habitsAnswers,
-      currentProductCategories: [],
-      wetWashFrequency: "weekly_2x",
-    },
-    initialCompletedQuestionIds: [
-      "current_product_categories",
-      "wet_wash_frequency",
-      ...habitsQuestionIds,
-    ],
-    initialRevision: 6,
+// The bug report (T2.1): Verhalten is the CLOSING module in the canonical
+// order (Produkte → Stage 3 → Routine → Verhalten). Its completion must NOT
+// re-arm the Stage-3 bridge for a post-accept module entry — the user already
+// walked Stage 3 in this very cohort and must go back to the Routine instead.
+test("Modul 2 (habits) completing as the CLOSING module on a POST-ACCEPT run hands back to the host, not the bridge", async () => {
+  const closingGateway = closingHabitsGateway()
+  const closingSession = await closingGateway.load()
+  const closingCompletion = await closingGateway.completeModule({
+    module: "habits",
+    expectedRevision: 6,
   })
+  assert.equal(closingCompletion.status, "complete")
+  assert.equal(closingCompletion.stage3Handoff, false)
+  const closing = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session: scopeStage2SessionToModule(closingSession, "habits"),
+      hostSession: closingSession,
+      moduleCompletion: closingCompletion,
+      postAcceptModuleEntry: true,
+    },
+    closing.effects,
+  )
+  assert.equal(closing.recorded.handedBack.length, 1)
+  assert.equal(closing.recorded.bridged.length, 0)
+  assert.equal(closing.recorded.completed.length, 0)
+  // The host payload must carry the FULL (unscoped) path — same discipline as
+  // the non-closing habits hand-back above.
+  assert.deepEqual(
+    closing.recorded.handedBack[0].session.path.orderedQuestionIds,
+    closingSession.path.orderedQuestionIds,
+  )
+})
+
+// The unaccepted-cohort exception: reachable only via a hand-built
+// `?refine=habits` link on a draft that was never accepted (no product surface
+// links it). `/routine` would bounce that cohort, so the closing completion
+// keeps today's behavior — the bridge, since the full completion ran — so
+// their journey can still reach initial activation.
+test("Modul 2 (habits) completing as the CLOSING module WITHOUT an accepted plan keeps the bridge (unaccepted-cohort exception)", async () => {
+  const closingGateway = closingHabitsGateway()
   const closingSession = await closingGateway.load()
   const closingCompletion = await closingGateway.completeModule({
     module: "habits",
@@ -862,6 +955,7 @@ test("module completion routes its three outcomes through a fake gateway", async
       session: scopeStage2SessionToModule(closingSession, "habits"),
       hostSession: closingSession,
       moduleCompletion: closingCompletion,
+      postAcceptModuleEntry: false,
     },
     closing.effects,
   )
