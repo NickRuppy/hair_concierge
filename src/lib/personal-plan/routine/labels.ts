@@ -86,14 +86,16 @@ export function routineRolePurposeDescription(value: string): string | null {
 
 export type RoutineDeferralCopy = {
   text: string
-  /** Module-1 entry (Feinschliff `products`), only for `refinement_required`. */
+  /** Module-1 entry (Feinschliff `products`) — a first visit or an edit visit. */
   href: string | null
 }
 
 /**
  * Exact reason-specific copy for a deferred-role placeholder step (Task 2.2).
- * Only `refinement_required` links back into Modul 1 — the other two reasons
- * are facts about the catalog/engine, not something a refinement pass fixes.
+ * Only `refinement_required` (first visit) and `unseen_recommendation` (edit
+ * re-entry into the finished module) link into Modul 1 — `no_product` and
+ * `preview_unavailable` are facts about the catalog/engine, not something a
+ * refinement pass fixes.
  */
 const deferralCopy: Record<Stage3DecisionDeferralReason, RoutineDeferralCopy> = {
   refinement_required: {
@@ -107,6 +109,10 @@ const deferralCopy: Record<Stage3DecisionDeferralReason, RoutineDeferralCopy> = 
   preview_unavailable: {
     text: "Empfehlung wird geprüft.",
     href: null,
+  },
+  unseen_recommendation: {
+    text: "Neue Empfehlung für dich — sieh sie im Produkte-Schritt an.",
+    href: "/plan-start?refine=products",
   },
 }
 

@@ -1,5 +1,13 @@
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthoritySemanticIntent,
+} from "@/lib/personal-plan/products/authority/contracts"
 import type { Stage3ProductDraft } from "@/lib/personal-plan/products/contracts"
-import type { Stage3ProductionPersistence } from "@/lib/personal-plan/products/production-persistence-gateway"
+import type {
+  Stage3DecisionReviewBundle,
+  Stage3ProductionPersistence,
+} from "@/lib/personal-plan/products/production-persistence-gateway"
+import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 
 /**
  * Narrow persistence surface the recompute lane needs. Both members already
@@ -46,3 +54,41 @@ export type Stage3RehydrationResult =
   | { status: "rehydrated"; draft: Stage3ProductDraft }
   | { status: "conflict"; currentRevision: number }
   | { status: "unavailable"; reason: Stage3RehydrationUnavailableReason }
+
+export type Stage3RecomputeIntentInput = {
+  /**
+   * `evaluateDecisions` output for the REHYDRATED draft, in its own order —
+   * one entry per role subject (inventory dispositions are already excluded by
+   * `authorityDecisionSubjects`).
+   */
+  evaluations: readonly Stage3AuthorityEvaluation[]
+  /**
+   * `reviewDecisionBundles` output for the same draft: the only source of
+   * alternative candidates and their fact fingerprints, which
+   * `select_replacement` is validated against. A subject with no bundle simply
+   * has no selectable alternatives.
+   */
+  reviewBundles: readonly Stage3DecisionReviewBundle[]
+  /** The routine version currently active for the person. */
+  routine: RoutinePayloadV1
+}
+
+/**
+ * A subject the new authority permits no usable action on.
+ *
+ * - `unsupported` — the evaluation itself is `unsupported` and allows nothing.
+ *   The orchestrator classifies the whole recompute as non-retryable
+ *   unavailable.
+ * - `no_allowed_action` — the preferred action and its whole fallback chain,
+ *   `leave_uncovered` included, are absent from `allowedActions`.
+ */
+export type Stage3RecomputeBlockedSubject = {
+  subjectKey: string
+  blocked: "unsupported" | "no_allowed_action"
+}
+
+export type Stage3RecomputeIntentPlan = {
+  /** In evaluation order; safe to hand to `resolveDecisions` as a batch. */
+  intents: Stage3AuthoritySemanticIntent[]
+  blocked: Stage3RecomputeBlockedSubject[]
+}
