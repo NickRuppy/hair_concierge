@@ -88,7 +88,11 @@ export function RoutinePage({
                 : "Deine Routine kann noch nicht sicher angezeigt werden. Prüfe zuerst die Produktauswahl, damit wir keine leere Anwendung erzeugen."}
             </p>
             <Link
-              href={needsRepair ? view.repair!.href : "/plan-start"}
+              // T2.3: a bare "/plan-start" would dead-end an accepted+complete
+              // owner straight back here via the D3 guard's routine_redirect.
+              // The directed products-module entry outranks that guard (the
+              // explicit refine branch resolves first) and matches the copy.
+              href={needsRepair ? view.repair!.href : "/plan-start?refine=products"}
               className={`${buttonVariants({ variant: "funnelCta", size: null })} mt-5`}
             >
               Produkte prüfen

@@ -595,6 +595,11 @@ test("keeps required Basis gaps explicit and renders a named recovery state with
   const recoveryHtml = renderToStaticMarkup(<RoutinePage view={missingPayloadView} />)
   assert.match(recoveryHtml, /Routine noch nicht verfügbar/)
   assert.match(recoveryHtml, /Produkte prüfen/)
+  // T2.3: the non-repair fallback CTA must use the directed products-module
+  // entry, not bare "/plan-start" — the D3 guard would otherwise dead-end an
+  // accepted+complete owner straight back onto this same recovery view.
+  assert.match(recoveryHtml, /href="\/plan-start\?refine=products"/)
+  assert.doesNotMatch(recoveryHtml, /href="\/plan-start"/)
   // Fix round 1 (minor): the no-payload/authority-repair recovery branch has
   // no journey header either (Task 2.7 covered only the main render before).
   assert.doesNotMatch(recoveryHtml, /data-personal-plan-journey-header/)
