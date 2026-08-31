@@ -7,6 +7,7 @@ import {
 import { PersonalPlanOffer } from "@/components/personal-plan-offer/personal-plan-offer"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import OrganicPlanOfferVariant from "@/funnels/offers/organic-plan-v1"
+import OrganicPlanBeforeAfterOfferVariant from "@/funnels/offers/organic-plan-before-after-v1"
 import { WelcomeClient } from "@/app/welcome/welcome-client"
 import { isOfferPageLabEnabled } from "@/lib/labs/offer-page-access"
 import { ModeratorAccountEntry } from "@/app/test/haarplan/konto/moderator-account-entry"
@@ -219,15 +220,27 @@ export default async function OfferPageLab({
     )
   }
 
-  if (variant !== "organic-plan" && variant !== "organic-plan-v1") notFound()
+  if (
+    variant !== "organic-plan" &&
+    variant !== "organic-plan-v1" &&
+    variant !== "organic-plan-before-after-v1"
+  )
+    notFound()
+
+  const OrganicOfferVariant =
+    variant === "organic-plan-before-after-v1"
+      ? OrganicPlanBeforeAfterOfferVariant
+      : OrganicPlanOfferVariant
+  const organicOfferVariant =
+    variant === "organic-plan-before-after-v1" ? "organic-plan-before-after-v1" : "organic-plan-v1"
 
   return (
-    <OrganicPlanOfferVariant
+    <OrganicOfferVariant
       entryContext="quiz_completion"
       leadId={params.scenario === "moderator" ? "11111111-1111-4111-8111-111111111111" : null}
       name="Lea"
       narrative={narrative}
-      offerVariant="organic-plan-v1"
+      offerVariant={organicOfferVariant}
       quizAnswers={REVIEW_ANSWERS}
       pricingSlot={<StaticPricingPreview />}
       regularFieldTest={

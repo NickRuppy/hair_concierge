@@ -39,6 +39,15 @@ test("organic order matches every rendered tracked section", () => {
   }
 })
 
+test("organic media treatment keeps the control section order", () => {
+  for (const sectionId of ["hero", "pricing", "testimonials", "final_cta"] as const) {
+    assert.equal(
+      resolveOfferSectionIndex("organic-plan-before-after-v1", sectionId),
+      resolveOfferSectionIndex("organic-plan-v1", sectionId),
+    )
+  }
+})
+
 test("personal-plan keeps the v4 visual order with testimonials directly after pricing", () => {
   const personalPlanOrder = [
     "hero",

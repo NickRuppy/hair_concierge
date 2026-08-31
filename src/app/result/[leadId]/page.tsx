@@ -29,6 +29,7 @@ import {
   recordFunnelEvent,
   assignPersonalPlanOneTimeQa,
   resolveFunnelContextForLead,
+  resolveOrganicOfferMediaExperiment,
   resolvePersonalPlanPricingExperiment,
 } from "@/lib/funnel/server"
 import {
@@ -39,7 +40,6 @@ import {
 import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import type { OfferEntryContext } from "@/lib/analytics/events"
-import { resolveLegacyResultOfferVariant } from "@/lib/funnel/packages"
 import {
   isPersonalPlanResultReturnForLead,
   PERSONAL_PLAN_RESULT_RETURN_COOKIE,
@@ -387,6 +387,17 @@ export default async function ResultPage({ params, searchParams }: Props) {
         isInternalTest: funnelContext.isInternalTest ?? false,
       }
     : null
+  const organicOfferSession = funnelContext
+    ? {
+        sessionId: funnelContext.sessionId,
+        packageKey: funnelContext.packageKey,
+        offerVariant: funnelContext.offerVariant ?? null,
+        offerViewedAt: funnelContext.offerViewedAt ?? null,
+        checkoutStartedAt: funnelContext.checkoutStartedAt ?? null,
+        isInternalTest: funnelContext.isInternalTest ?? false,
+        testKind: funnelContext.testKind ?? null,
+      }
+    : null
   if (lead.quiz_kind === "personal_plan" && qaToken) {
     const assigned = await assignPersonalPlanOneTimeQa({
       leadId,
@@ -410,7 +421,13 @@ export default async function ResultPage({ params, searchParams }: Props) {
         : await resolvePersonalPlanPricingExperiment({ session: personalPlanSession })
       : hasAccess
         ? "organic-plan-v1"
-        : resolveLegacyResultOfferVariant(funnelContext)
+        : await resolveOrganicOfferMediaExperiment({
+            session: organicOfferSession,
+            excluded:
+              moderatorTest ||
+              Boolean(regularFieldTestState.authorization) ||
+              regularFieldTestState.unavailable,
+          })
   const offerTracking =
     hasAccess || fieldTestUnavailable || regularFieldTestState.unavailable
       ? null
