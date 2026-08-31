@@ -76,7 +76,13 @@ async function seedPlan(
 /** Drives a MODULE-DRIVEN refined version end to end via the real Stage-2 RPC. */
 async function moduleDrivenRefinedVersion(
   pg: Awaited<ReturnType<typeof migratedPersonalPlanDatabase>>,
-  input: { draftId: string; planId: string; baseInitialNeedVersionId: string; inputHash: string },
+  input: {
+    draftId: string
+    planId: string
+    baseInitialNeedVersionId: string
+    inputHash: string
+    module?: "products" | "habits"
+  },
 ) {
   await insertOpenRefinementDraft(pg, {
     draftId: input.draftId,
@@ -88,12 +94,67 @@ async function moduleDrivenRefinedVersion(
     userId: USER_ID,
     planId: input.planId,
     draftId: input.draftId,
-    module: "products",
+    module: input.module ?? "products",
     expectedRevision: 0,
     inputHash: input.inputHash,
   })
   assert.equal(result.outcome, "completed")
   return result.refinedNeedVersionId!
+}
+
+/**
+ * Drives the CLOSING-PATH lineage shape: a Modul-1 (`products`) Stage-2
+ * projection leaves `module_projections.products` on the draft, then the
+ * draft is CLOSED via the real terminal RPC
+ * (`personal_plan_complete_refinement_draft`). The closing completion's own
+ * refined version lands in `result_refined_need_version_id` — a DIFFERENT
+ * version than the one recorded inside `module_projections` — so condition 1
+ * of the activation gate is satisfied via `result_refined_need_version_id`,
+ * not via a `module_projections` value lookup. See
+ * supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql:93-100.
+ */
+async function closingCompletionRefinedVersion(
+  pg: Awaited<ReturnType<typeof migratedPersonalPlanDatabase>>,
+  input: {
+    draftId: string
+    planId: string
+    baseInitialNeedVersionId: string
+    moduleInputHash: string
+    closeInputHash: string
+  },
+) {
+  await insertOpenRefinementDraft(pg, {
+    draftId: input.draftId,
+    userId: USER_ID,
+    planId: input.planId,
+    baseInitialNeedVersionId: input.baseInitialNeedVersionId,
+  })
+  const moduleResult = await completeStage2Module(pg, {
+    userId: USER_ID,
+    planId: input.planId,
+    draftId: input.draftId,
+    module: "products",
+    expectedRevision: 0,
+    inputHash: input.moduleInputHash,
+  })
+  assert.equal(moduleResult.outcome, "completed")
+  // The module completion deliberately does NOT bump the draft revision
+  // (see 20260825130000:112 "revision stays put"), so the close still
+  // targets revision 0.
+  const closeResult = await completeRefinementDraft(pg, {
+    userId: USER_ID,
+    planId: input.planId,
+    draftId: input.draftId,
+    expectedRevision: 0,
+    inputHash: input.closeInputHash,
+  })
+  assert.equal(closeResult.outcome, "completed")
+  assert.notEqual(
+    closeResult.refinedNeedVersionId,
+    moduleResult.refinedNeedVersionId,
+    "the module projection and the closing completion must be DIFFERENT refined versions for this to prove the result_refined_need_version_id branch",
+  )
+  return closeResult.refinedNeedVersionId!
 }
 
 /** Drives a LINEAR (non-module) refined version via the full completion RPC. */
@@ -318,6 +379,166 @@ test("replaying a module-driven completion reports the activation, not a pending
     proposalRows.rows.map((row) => row.status),
     ["accepted"],
     "the replay must not create or touch a second proposal",
+  )
+})
+
+test("a habits-module-driven recompute activates the successor immediately too (habits-shaped lineage)", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  const initial = await seedPlan(pg, "seed-2b")
+
+  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined
+  // version, so the module-driven completion below has something to recompute.
+  const previousRefined = await linearRefinedVersion(pg, {
+    draftId: id(2, 2),
+    planId: initial.personalPlanId,
+    baseInitialNeedVersionId: initial.needVersionId,
+    inputHash: "b".repeat(64),
+  })
+  const previousDraft = await loadProductDraft(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    refinedNeedVersionId: previousRefined,
+  })
+  const beforePlan = await readPlan(pg, initial.personalPlanId)
+  const activated = await activateV2(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    productDraftId: previousDraft.id,
+    expectedDraftRevision: previousDraft.revision,
+    expectedSourceRevision: beforePlan.source_revision,
+    portfolio: portfolioSnapshot({
+      personalPlanId: initial.personalPlanId,
+      refinedVersionId: previousRefined,
+      sourceDraftRevision: previousDraft.revision,
+    }),
+  })
+  assert.equal(activated.status, "completed")
+
+  // habits-module completion writes its lineage entry under the `habits` key
+  // of module_projections instead of `products` — condition 1 of the gate
+  // reads ANY module_projections entry, not just the products one.
+  const moduleRefined = await moduleDrivenRefinedVersion(pg, {
+    draftId: id(3, 3),
+    planId: initial.personalPlanId,
+    baseInitialNeedVersionId: initial.needVersionId,
+    inputHash: "c".repeat(64),
+    module: "habits",
+  })
+  const moduleDraft = await loadProductDraft(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    refinedNeedVersionId: moduleRefined,
+  })
+  const midPlan = await readPlan(pg, initial.personalPlanId)
+
+  const result = await activateV2(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    productDraftId: moduleDraft.id,
+    expectedDraftRevision: moduleDraft.revision,
+    expectedSourceRevision: midPlan.source_revision,
+    portfolio: portfolioSnapshot({
+      personalPlanId: initial.personalPlanId,
+      refinedVersionId: moduleRefined,
+      sourceDraftRevision: moduleDraft.revision,
+    }),
+  })
+  assert.equal(result.status, "completed")
+  assert.equal(
+    result.routineProposalId,
+    null,
+    "confirmed within the same transaction, not just proposed — habits lineage gates identically to products",
+  )
+
+  const after = await readPlan(pg, initial.personalPlanId)
+  assert.equal(after.active_routine_version_id, result.routineVersionId)
+  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)
+  assert.equal(after.pending_routine_proposal_id, null)
+})
+
+test("the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  const initial = await seedPlan(pg, "seed-2c")
+
+  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined
+  // version, so the closing completion below has something to recompute.
+  const previousRefined = await linearRefinedVersion(pg, {
+    draftId: id(2, 2),
+    planId: initial.personalPlanId,
+    baseInitialNeedVersionId: initial.needVersionId,
+    inputHash: "b".repeat(64),
+  })
+  const previousDraft = await loadProductDraft(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    refinedNeedVersionId: previousRefined,
+  })
+  const beforePlan = await readPlan(pg, initial.personalPlanId)
+  const activated = await activateV2(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    productDraftId: previousDraft.id,
+    expectedDraftRevision: previousDraft.revision,
+    expectedSourceRevision: beforePlan.source_revision,
+    portfolio: portfolioSnapshot({
+      personalPlanId: initial.personalPlanId,
+      refinedVersionId: previousRefined,
+      sourceDraftRevision: previousDraft.revision,
+    }),
+  })
+  assert.equal(activated.status, "completed")
+
+  // Canonical order: Modul-1 (products) projects a refined version WITHOUT
+  // closing the draft, then the draft is CLOSED. The refined version the
+  // Stage-3 completion below actually targets is the CLOSING one
+  // (result_refined_need_version_id), which never appears as a
+  // module_projections VALUE — only `refinement.result_refined_need_version_id
+  // = v_refined_id` can satisfy condition 1 here.
+  const closingRefined = await closingCompletionRefinedVersion(pg, {
+    draftId: id(3, 3),
+    planId: initial.personalPlanId,
+    baseInitialNeedVersionId: initial.needVersionId,
+    moduleInputHash: "c".repeat(64),
+    closeInputHash: "d".repeat(64),
+  })
+  const closingDraft = await loadProductDraft(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    refinedNeedVersionId: closingRefined,
+  })
+  const midPlan = await readPlan(pg, initial.personalPlanId)
+
+  const result = await activateV2(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    productDraftId: closingDraft.id,
+    expectedDraftRevision: closingDraft.revision,
+    expectedSourceRevision: midPlan.source_revision,
+    portfolio: portfolioSnapshot({
+      personalPlanId: initial.personalPlanId,
+      refinedVersionId: closingRefined,
+      sourceDraftRevision: closingDraft.revision,
+    }),
+  })
+  assert.equal(result.status, "completed")
+  assert.equal(
+    result.routineProposalId,
+    null,
+    "staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id",
+  )
+
+  const after = await readPlan(pg, initial.personalPlanId)
+  assert.equal(after.active_routine_version_id, result.routineVersionId)
+  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)
+  assert.equal(after.pending_routine_proposal_id, null)
+
+  const proposalRows = await pg.query<{ status: string }>(
+    "SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1 ORDER BY created_at",
+    [initial.personalPlanId],
+  )
+  assert.deepEqual(
+    proposalRows.rows.map((row) => row.status),
+    ["accepted"],
   )
 })
 
