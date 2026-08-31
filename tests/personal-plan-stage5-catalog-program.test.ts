@@ -427,6 +427,61 @@ test("Stage 5 apply batch contains only verified exact protocols and has a stabl
   assert.equal(first.canonicalJson, second.canonicalJson)
 })
 
+test("an explicit everyday-shampoo protocol can supplement a dandruff-only derived role", async () => {
+  const sourceManifest = validateProtocolResearchManifest(
+    await json<unknown>(`${ROOT}/protocol-research/S5-03-targeted-dandruff-shampoo.json`),
+  )
+  const sourceProduct = sourceManifest.products[0]!
+  const derived = deriveStage5CuratedCohortProduct({
+    product_id: sourceProduct.product_id!,
+    category_key: "shampoo",
+    origin: "curated",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
+    brand: "Balea",
+    name: sourceProduct.product_name,
+    affiliate_link: sourceProduct.sources[0]!.url,
+    shampoo_specs: [{ shampoo_bucket: "schuppen" }],
+  })
+  assert.deepEqual(derived.required_roles, ["shampoo_dandruff"])
+
+  const manifest = validateProtocolResearchManifest({
+    ...sourceManifest,
+    batch_id: "S5-test-explicit-everyday-shampoo",
+    products: [
+      {
+        ...sourceProduct,
+        role: "shampoo_everyday",
+        sources: [
+          {
+            ...sourceProduct.sources[0]!,
+            text: "Exact source supports wet scalp and root application, gentle massage, label-directed frequency and contact time, and complete rinse-out use.",
+          },
+        ],
+      },
+    ],
+  })
+  const built = buildStage5ProtocolApplyBatch(manifest)
+
+  assert.equal(built.batch.protocols.length, 1)
+  assert.equal(built.batch.protocols[0]!.role, "shampoo_everyday")
+  const preflight = await preflightStage5ProtocolApplyBatch(built, {
+    listProducts: async () => [
+      {
+        id: sourceProduct.product_id!,
+        category_key: "shampoo",
+        origin: "curated",
+        is_active: true,
+        lifecycle_status: "active",
+      },
+    ],
+    listProtocols: async () => [],
+  })
+  assert.equal(preflight.ok, true)
+  assert.deepEqual(preflight.blockers, [])
+})
+
 test("Mask research closes the eligible cohort and applies label-specific Conditioner relationships", async () => {
   const manifest = validateProtocolResearchManifest(
     await json<unknown>(`${ROOT}/protocol-research/S5-02-mask-critical-protocols.json`),

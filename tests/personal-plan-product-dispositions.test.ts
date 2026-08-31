@@ -12,6 +12,8 @@ const migrationPath =
   "supabase/migrations/20260811205500_personal_plan_product_search_dispositions.sql"
 const rpcFixMigrationPath =
   "supabase/migrations/20260812100000_personal_plan_product_search_disposition_rpc_fix.sql"
+const reversalMigrationPath =
+  "supabase/migrations/20260831182124_personal_plan_product_search_disposition_reversal.sql"
 const manifestPath =
   "data/catalog-enrichment/personal-plan-stage5-v1/S5-21-product-search-dispositions.json"
 const cohortPath = "data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json"
@@ -75,6 +77,58 @@ test("product disposition RPC qualifies its table lookup against the product_id 
   assert.match(
     sql,
     /REVOKE ALL ON FUNCTION public\.apply_personal_plan_product_search_dispositions_v1\(text,text,text\)[\s\S]*FROM PUBLIC, anon, authenticated/i,
+  )
+  assert.match(sql, /GRANT EXECUTE ON FUNCTION[\s\S]*TO service_role/i)
+})
+
+test("oil disposition reversal is exact, receipted, replay-safe, and service-role-only", async () => {
+  const sql = await readFile(reversalMigrationPath, "utf8")
+
+  assert.match(
+    sql,
+    /CREATE TABLE public\.personal_plan_product_search_disposition_reversal_batches/i,
+  )
+  assert.match(sql, /CREATE TABLE public\.personal_plan_product_search_disposition_reversal_items/i)
+  assert.match(sql, /ENABLE ROW LEVEL SECURITY/gi)
+  assert.match(sql, /GRANT SELECT, INSERT[\s\S]*TO service_role/i)
+  assert.match(
+    sql,
+    /CREATE OR REPLACE FUNCTION public\.apply_personal_plan_product_search_disposition_reversal_v1/i,
+  )
+  assert.match(sql, /SECURITY DEFINER[\s\S]*SET search_path = ''/i)
+  assert.match(sql, /p_execution_enabled IS DISTINCT FROM true/i)
+  assert.match(sql, /approved_by_nick/i)
+  assert.match(sql, /dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6/i)
+  for (const productId of [
+    "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+    "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+    "517dca50-5d55-4038-ba1d-f9b745708327",
+    "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+    "a11855eb-64e5-438f-8880-1d3573efa9fa",
+    "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+    "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+  ]) {
+    assert.match(sql, new RegExp(productId, "i"))
+  }
+  assert.match(sql, /v_product\.origin <> 'curated'/i)
+  assert.match(sql, /v_product\.category_key IS DISTINCT FROM 'oil'/i)
+  assert.match(
+    sql,
+    /DELETE FROM public\.personal_plan_product_search_dispositions AS disposition[\s\S]*disposition\.product_id = v_product_id[\s\S]*disposition\.source_fingerprint = v_expected_source_fingerprint[\s\S]*RETURNING/i,
+  )
+  assert.match(sql, /personal_plan_product_search_disposition_reversal_items/i)
+  assert.match(sql, /prior_reason text NOT NULL/i)
+  assert.match(sql, /prior_sources jsonb NOT NULL/i)
+  assert.match(sql, /product disposition reversal publication gate would block/i)
+  assert.match(sql, /product_oil_eligibility/i)
+  assert.match(sql, /product_oil_specs/i)
+  assert.match(sql, /guidance_payload_v2/i)
+  assert.match(sql, /disposition\.reason = v_item#>>'\{expected_disposition,reason\}'/i)
+  assert.match(sql, /disposition\.sources = v_item#>'\{expected_disposition,sources\}'/i)
+  assert.match(sql, /product disposition reversal conflicts with prior receipt/i)
+  assert.match(
+    sql,
+    /REVOKE ALL ON FUNCTION public\.apply_personal_plan_product_search_disposition_reversal_v1\(text,text,text,text,boolean\)[\s\S]*FROM PUBLIC, anon, authenticated/i,
   )
   assert.match(sql, /GRANT EXECUTE ON FUNCTION[\s\S]*TO service_role/i)
 })

@@ -1,0 +1,96 @@
+{
+  "batch": "E10",
+  "batch_id": "scanner-existing-identifiers-e10-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "existing-catalog-gtin-research-update-2026-08-31.json",
+    "production_identity_checked_at": "2026-08-31T19:05:53.609Z",
+    "source_refresh_receipt": "existing-catalog-gtin-research-update-2026-08-31.json"
+  },
+  "items": [
+    {
+      "item_key": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "expected_product": { "name": "OGX Bond Protein Repair Conditioner", "brand": "OGX", "category_key": "conditioner", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "3574661818467", "raw_gtin": "3574661818467", "canonical_gtin14": "03574661818467", "size": "385 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.dm.de/p/d/3068101/ogx-conditioner-bond-protein-repair", "source_urls": ["https://www.dm.de/p/d/3068101/ogx-conditioner-bond-protein-repair"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 385 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "678267aa934ac41c726e3c39459f2f0064ca921f073dc3769b22bc4789239013"
+    },
+    {
+      "item_key": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "product_id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "expected_product": { "name": "Garnier Wahre Schätze Argan-Mandelcreme Spülung", "brand": "Garnier Wahre Schätze", "category_key": "conditioner", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "3600542462594", "raw_gtin": "3600542462594", "canonical_gtin14": "03600542462594", "size": "200 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/argan-mandelcreme/reichhaltige-creme-spuelung", "source_urls": ["https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/argan-mandelcreme/reichhaltige-creme-spuelung"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 200 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "83c23679ac0519f82b56195d7b788b0205ddfb2cbd192bd83e9129f1cdb3f9a2"
+    },
+    {
+      "item_key": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "expected_product": { "name": "Guhl Bond+ Reparatur Spülung", "brand": "Guhl", "category_key": "conditioner", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "4072600701218", "raw_gtin": "4072600701218", "canonical_gtin14": "04072600701218", "size": "200 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.guhl.com/produkt/bond-reparatur/", "source_urls": ["https://www.guhl.com/produkt/bond-reparatur/"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 200 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "c2c93db09f18e302597449e49e49d50c93c8169b692351c7ea3e2d9d4fc8337b"
+    },
+    {
+      "item_key": "17c50884-3c17-479a-848a-10447464e086",
+      "product_id": "17c50884-3c17-479a-848a-10447464e086",
+      "expected_product": { "name": "Garnier Wahre Schätze Haarmaske Aktivkohle", "brand": "Garnier Wahre Schätze", "category_key": "mask", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "3600542510271", "raw_gtin": "3600542510271", "canonical_gtin14": "03600542510271", "size": "340 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut", "source_urls": ["https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 340 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "bc2eebf0c4e81a5ebf4e63a8db58ab1bc8c07756055dc78a109c57cca6f3bd64"
+    },
+    {
+      "item_key": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "expected_product": { "name": "Isana 3in1 Milchprotein & Mandel", "brand": "Isana", "category_key": "mask", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "4305615627441", "raw_gtin": "4305615627441", "canonical_gtin14": "04305615627441", "size": "250 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441", "source_urls": ["https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 250 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "0243a74c9730c87b25f154db02d814bbdf79ad2c20d8fcc293df7275eea4a184"
+    },
+    {
+      "item_key": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "expected_product": { "name": "Syoss Intense Curls Haarmaske", "brand": "Syoss", "category_key": "mask", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "4015100866100", "raw_gtin": "4015100866100", "canonical_gtin14": "04015100866100", "size": "400 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.dm.de/p/d/3099668/syoss-haarmaske-intense-curls", "source_urls": ["https://www.dm.de/p/d/3099668/syoss-haarmaske-intense-curls"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 400 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "df79f3f56d90063ed9580608088e57d829b4af56cb7e7207771ab378a433b93c"
+    },
+    {
+      "item_key": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "expected_product": { "name": "Hask Argan Oil Repairing Deep Conditioner", "brand": "Hask", "category_key": "mask", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "071164333068", "raw_gtin": "071164333068", "canonical_gtin14": "00071164333068", "size": "50 ml sachet", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.beautyplaza.com/de-de/p/argan-oil-repairing-deep-conditioner/10734/", "source_urls": ["https://www.beautyplaza.com/de-de/p/argan-oil-repairing-deep-conditioner/10734/"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 50 ml sachet GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "72d45a79b9af3c4f607a0a56485d6f027b6fb3c24c791160432a298262a31af2"
+    },
+    {
+      "item_key": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "expected_product": { "name": "Syoss Haarkur Lamination Intense Glaze", "brand": "Syoss", "category_key": "mask", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "4015100867213", "raw_gtin": "4015100867213", "canonical_gtin14": "04015100867213", "size": "200 ml German package", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze", "source_urls": ["https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 200 ml German package GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "7205b4a24ae92f5e37ab6aaa8fc0f5b87fe981fed5191c9e36092594e67a8f3c"
+    },
+    {
+      "item_key": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "expected_product": { "name": "Weleda Hydra Shine Gloss Drops Alpen-Lein", "brand": "Weleda", "category_key": "oil", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "4001638590839", "raw_gtin": "4001638590839", "canonical_gtin14": "04001638590839", "size": "30 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.weleda.at/produkt/hydra-shine-gloss-drops-haar-oel-alpen-lein-g05483", "source_urls": ["https://www.weleda.at/produkt/hydra-shine-gloss-drops-haar-oel-alpen-lein-g05483", "https://www.bio123.de/produkt/weleda/weleda-hydrashine-gloss-drops-haar-ol-30-ml"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 30 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "d7eca1d990fe8e28942f23100c808996242a72c512d0124dc9b944f1bebb1357"
+    },
+    {
+      "item_key": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "expected_product": { "name": "Maria Nila True Soft Argan Oil", "brand": "Maria Nila", "category_key": "oil", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "7391681036376", "raw_gtin": "7391681036376", "canonical_gtin14": "07391681036376", "size": "100 ml", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://marianila.com/products/true-soft-argan-oil-100-ml", "source_urls": ["https://marianila.com/products/true-soft-argan-oil-100-ml", "https://www.alfastore.de/Maria-Nila-True-Soft-Argan-Oil-100ml"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 100 ml GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "3180cc28b198916e46722880ef40d0196282b232b541c260ef37434d223f9362"
+    },
+    {
+      "item_key": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "expected_product": { "name": "OGX Argan weightless Öl", "brand": "OGX", "category_key": "oil", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "3574661563350", "raw_gtin": "3574661563350", "canonical_gtin14": "03574661563350", "size": "118 ml EU", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://www.bol.com/nl/nl/p/ogx-renewing-moroccan-argan-oil-weightless-reviving-dry-oil/9300000005624991/", "source_urls": ["https://www.bol.com/nl/nl/p/ogx-renewing-moroccan-argan-oil-weightless-reviving-dry-oil/9300000005624991/"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 118 ml EU GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "12a9d939e894314a7f8ac509027f4dee1c2125071c9ac2da1fd6e34fdf745723"
+    },
+    {
+      "item_key": "c320750f-6a1e-420d-8594-409f04e05319",
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "expected_product": { "name": "OGX Bond Protein Repair", "brand": "OGX", "category_key": "oil", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "ean", "value": "3574661818481", "raw_gtin": "3574661818481", "canonical_gtin14": "03574661818481", "size": "50 ml EU", "market_scope": "Exact sourced package; no German shelf-availability claim", "source_url": "https://nordapotek.no/har-munn-og-tann/ogx-bond-protein-repair-3-in-1-oil-mist-50-ml/p/962797/", "source_urls": ["https://nordapotek.no/har-munn-og-tann/ogx-bond-protein-repair-3-in-1-oil-mist-50-ml/p/962797/"], "source_checked_at": "2026-08-31T19:05:53.609Z", "exact_match_note": "Research ledger marks this exact 50 ml EU GTIN as candidate_for_existing_product." }],
+      "content_fingerprint": "54efef150daf6f2783b1553d87c744012fee5b70646e8e44a3463afbf88f99dd"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import {
   type VerifiedPackage,
   validateLaneArtifact,
 } from "../scripts/scanner-catalog-coverage/build-existing-research-batches"
+import { canonicalizeGtin } from "@/lib/product-identity/normalize"
 
 const directory = "data/scanner-catalog-coverage/2026-08-26"
 const assignment = JSON.parse(
@@ -45,6 +46,20 @@ const e1 = JSON.parse(
 const e2 = JSON.parse(
   readFileSync(`${directory}/phase1-existing-identifier-backfill-e2-v1.json`, "utf8"),
 )
+const remainingResearch = JSON.parse(
+  readFileSync(`${directory}/existing-catalog-gtin-research-update-2026-08-31.json`, "utf8"),
+) as {
+  scope: string
+  existing_catalog_candidates: Array<{
+    product_id: string
+    variants: Array<{ gtin: string; disposition: string }>
+  }>
+  reopened_oil_candidates: Array<{
+    product_id: string
+    gtins: string[]
+    status: string
+  }>
+}
 
 function clone() {
   return JSON.parse(JSON.stringify(artifact))
@@ -151,4 +166,32 @@ test("research batches reject a GTIN claimed by an unresolved open submission", 
       }),
     /open_submission_overlap/,
   )
+})
+
+test("remaining catalog research keeps exact product identities and valid distinct GTIN candidates", () => {
+  assert.equal(remainingResearch.scope, "research_only_no_apply")
+  assert.equal(remainingResearch.existing_catalog_candidates.length, 15)
+  assert.equal(remainingResearch.reopened_oil_candidates.length, 7)
+
+  const productIds = [
+    ...remainingResearch.existing_catalog_candidates.map(({ product_id }) => product_id),
+    ...remainingResearch.reopened_oil_candidates.map(({ product_id }) => product_id),
+  ]
+  assert.ok(
+    productIds.every((productId) =>
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(productId),
+    ),
+  )
+  assert.equal(new Set(productIds).size, productIds.length)
+
+  const rawGtins = [
+    ...remainingResearch.existing_catalog_candidates.flatMap(({ variants }) =>
+      variants.map(({ gtin }) => gtin),
+    ),
+    ...remainingResearch.reopened_oil_candidates.flatMap(({ gtins }) => gtins),
+  ]
+  const canonicalGtins = rawGtins.map((gtin) => canonicalizeGtin(gtin))
+  assert.equal(rawGtins.length, 33)
+  assert.ok(canonicalGtins.every(Boolean))
+  assert.equal(new Set(canonicalGtins).size, 33)
 })

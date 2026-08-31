@@ -117,7 +117,7 @@ test("accepts approved cohort shapes and canonicalizes all GTINs", () => {
   assert.equal(second.canonical_gtins.length, 22)
 })
 
-test("loads the reviewed E1-E9 files with their exact pinned raw fingerprints", () => {
+test("loads the reviewed E1-E10 files with their exact pinned raw fingerprints", () => {
   for (const [batch, filename] of [
     ["E1", "phase1-existing-identifier-backfill-e1-v2.json"],
     ["E2", "phase1-existing-identifier-backfill-e2-v2.json"],
@@ -128,6 +128,7 @@ test("loads the reviewed E1-E9 files with their exact pinned raw fingerprints", 
     ["E7", "phase1-existing-identifier-backfill-e7-v1.json"],
     ["E8", "phase1-existing-identifier-backfill-e8-v1.json"],
     ["E9", "phase1-existing-identifier-backfill-e9-v1.json"],
+    ["E10", "phase1-existing-identifier-backfill-e10-v1.json"],
   ] as const) {
     const raw = readFileSync(`data/scanner-catalog-coverage/2026-08-26/${filename}`, "utf8")
     const parsed = parseScannerIdentifierBackfillManifest(raw)
@@ -136,7 +137,7 @@ test("loads the reviewed E1-E9 files with their exact pinned raw fingerprints", 
   }
 })
 
-test("accepts only exact E3-E9 shapes", () => {
+test("accepts only exact E3-E10 shapes", () => {
   for (const [batch, products, gtins] of [
     ["E3", 17, 17],
     ["E4", 20, 21],
@@ -145,6 +146,7 @@ test("accepts only exact E3-E9 shapes", () => {
     ["E7", 15, 15],
     ["E8", 20, 20],
     ["E9", 6, 6],
+    ["E10", 12, 12],
   ] as const) {
     const raw = readFileSync(
       `data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-${batch.toLowerCase()}-v1.json`,
@@ -209,6 +211,7 @@ test("apply arguments are fail-closed and pin all exact raw manifest fingerprint
     E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
     E8: "d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602",
     E9: "69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6",
+    E10: "e9b803b9d36f7cc41a6a0972958e0f045d5c91668c8b5766c60976a84384f0e3",
   })
   assert.throws(() => parseScannerIdentifierBackfillArgs(["--apply"]), /confirm-project/i)
   assert.throws(
@@ -307,6 +310,20 @@ test("cohorts require only their applied executor migrations before reading live
         "20260828081500",
         "20260828083000",
         "20260828085000",
+      ],
+    ],
+    [
+      "e10-v1",
+      "20260831190726",
+      [
+        "20260826142000",
+        "20260826142100",
+        "20260826142200",
+        "20260826143000",
+        "20260828081500",
+        "20260828083000",
+        "20260828085000",
+        "20260831190726",
       ],
     ],
   ] as const) {
@@ -546,6 +563,33 @@ test("preflight reports absent migrations without querying not-yet-created schem
   assert.equal(blocked.ok, false)
   assert.equal(blocked.blockers.filter((value) => /migration/.test(value)).length, 4)
   assert.equal(schemaReads, 0)
+})
+
+test("preflight never assigns E10 migration requirements to an unknown future batch", async () => {
+  const approved = reviewedE1()
+  const unknownBatchManifest = {
+    ...approved,
+    batch: "E11",
+  } as unknown as typeof approved
+
+  await assert.rejects(
+    () =>
+      preflightScannerIdentifierBackfill({
+        manifest: unknownBatchManifest,
+        args: parseScannerIdentifierBackfillArgs([
+          "--manifest=unused.json",
+          `--reviewed-head=${"b".repeat(40)}`,
+        ]),
+        read: readAdapter(approved),
+        gitState: async () => ({
+          head: "b".repeat(40),
+          branch: SCANNER_IDENTIFIER_BACKFILL_BRANCH,
+          clean: true,
+        }),
+        projectId: SCANNER_IDENTIFIER_BACKFILL_PROJECT_ID,
+      }),
+    /unknown scanner identifier backfill batch: E11/i,
+  )
 })
 
 test("apply remains dry-run by default and needs both kill-switch layers", async () => {
