@@ -19,14 +19,20 @@ export type Stage3RehydrationInput = {
    * The immutable Stage-3 draft the active routine version was compiled from
    * (`personal_plan_routine_versions.source_product_draft_id` /
    * `source_product_draft_revision`).
+   *
+   * `revision` is the value the routine version recorded, which is the draft
+   * revision *before* completion bumped it — see
+   * `EXPECTED_SOURCE_COMPLETION_REVISION_OFFSET`.
    */
   source: { draftId: string; revision: number }
 }
 
 export type Stage3RehydrationUnavailableReason =
+  | "source_is_target"
   | "source_draft_missing"
   | "source_draft_unparsable"
   | "source_draft_foreign_plan"
+  | "source_draft_not_completed"
   | "source_revision_mismatch"
   | "target_draft_missing"
   | "target_draft_unparsable"
