@@ -37,6 +37,7 @@ export type FunnelOfferVariantProps = {
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
+  isInternalTest?: boolean
   regularFieldTest?: FunnelOfferFieldTest | null
 }
 

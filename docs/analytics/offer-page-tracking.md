@@ -18,7 +18,7 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 | Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                                              | Existing PostHog, Customer.io, and Meta routes                                                  |
 | Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                                          | PostHog                                                                                         |
 | Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                                    | PostHog; Meta `InitiateCheckout` for the overlay only                                           |
-| Checkout lifecycle   | `offer_checkout_lifecycle`      | Privacy-safe diagnostic transition for one app-owned checkout attempt                           | PostHog only                                                                                    |
+| Checkout lifecycle   | `offer_checkout_lifecycle`      | Privacy-safe diagnostic transition for one app-owned checkout attempt                          | PostHog only                                                                                    |
 | Payment option reach | `offer_payment_option_viewed`   | One ready payment option was at least 50% visible for 750 ms in the open overlay               | PostHog only                                                                                    |
 | Payment choice       | `offer_payment_method_selected` | A provider was explicitly selected; Stripe records `apple_pay` or `payment_element` when known | PostHog                                                                                         |
 | Checkout failure     | `checkout_start_failed`         | Provider initialization failed or duplicate access blocked checkout                            | PostHog                                                                                         |
@@ -151,6 +151,61 @@ The primary experiment KPI is unique funnel sessions with a later `purchase_comp
 unique funnel sessions with `offer_viewed`, grouped by the durable session `offer_variant`.
 Lead-fallback journeys without a funnel session are excluded from that denominator and counted
 separately. Report raw counts, rates, and uncertainty; do not automatically declare a winner.
+
+## Organic offer-media experiment
+
+`organic_offer_media_v1` compares exactly two arms inside the canonical
+`default_organic` package: video control `organic-plan-v1` and before/after treatment
+`organic-plan-before-after-v1`. The public result URL, Meta event names, content names, campaign
+semantics, checkout, and purchase delivery are identical across arms. The durable
+`funnel_sessions.offer_variant` snapshot is the sole arm authority; browser event properties and
+purchase analytics resolve that same snapshot.
+
+The readout's eligible exposure is the first valid `offer_viewed` in the reporting range with a
+non-empty `funnel_session_id`, `funnel_package_key=default_organic`, one of those two arm IDs, and
+no marked internal traffic. Each session must contain exactly one arm among its scoped offer-view
+events. Sessions marked `is_internal_test=true` (including string/`1` representations) or
+`test_kind=field_test` are excluded. Field-test and moderator journeys stay on the video control
+and are not comparable paid-experiment traffic.
+
+The overview reports, per arm, unique eligible session counts for raw offer views, pricing reach
+(`pricing_viewed`), checkout opens (`offer_checkout_opened`), purchases, and purchase rate.
+`purchase_completed` joins through the same `funnel_session_id` and package after the first valid
+offer view; it does not need to repeat `offer_variant`. Checkout opens and starts are diagnostic
+stages, never purchase substitutes.
+
+The data-quality insight reports mixed-arm sessions and the absolute difference between valid
+control and treatment session counts as `sample_ratio_difference_percent`. Do not interpret the
+conversion insight while mixed-arm sessions are non-zero, attribution is incomplete, or the
+allocation check is unexpectedly far from 50/50. Report raw numerator and denominator alongside
+each rate. Until each arm has a pre-agreed, decision-useful purchase denominator, treat rate
+differences as directional only and show an interval or other uncertainty estimate; the dashboard
+does not choose a winner automatically. The default rolling range includes only purchases that
+occur inside that same range, so its newest exposures are right-censored. Any winner decision must
+use a predeclared, matured exposure cohort and conversion window rather than the rolling seven-day
+rate alone.
+
+The declaration is stored in
+`scripts/analytics/organic-offer-media-experiment-dashboard.ts`. The installer defaults to a
+no-network declaration dry run:
+
+```bash
+npm run posthog:organic-offer-media-experiment-dashboard
+```
+
+To validate a selected existing organic dashboard without writes, pass its ID and a read-capable
+personal key through the normal environment. Production installation is a separate authorization
+and additionally requires `--apply`, `--confirm-project=126788`, and the exact
+`--dashboard-id=<existing-organic-dashboard-id>`. The installer refuses duplicate exact-title
+insights and spec drift. When attaching an existing exact-title insight, it preserves that insight's
+other dashboard memberships. It creates or attaches only the two declared insights; it does not
+alter Meta, campaigns, offer routing, assignment, or payment state.
+
+Rollback means first disabling `ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED` for new unviewed sessions;
+already exposed sessions retain their stored arm. Dashboard removal or PostHog writes require a
+separate authorized, reversible operator action. Do not activate the experiment until the
+dashboard has been installed, its two insights have been visually verified, and the quality check
+is understood.
 
 ## Stable dimensions
 

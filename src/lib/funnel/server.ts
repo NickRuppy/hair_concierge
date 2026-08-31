@@ -11,16 +11,22 @@ import {
 } from "./cookie"
 import {
   isFunnelAttributionEnabled,
+  isOrganicOfferMediaExperimentEnabled,
   isPersonalPlanOneTimeQaEnabled,
   isPersonalPlanPricingExperimentEnabled,
 } from "./flags"
-import { getFunnelPackageByKey } from "./packages"
+import { getFunnelPackageByKey, resolveLegacyResultOfferVariant } from "./packages"
 import { captureOfferExperimentAssignmentFailure } from "@/lib/observability/offer-experiment"
 import {
   PERSONAL_PLAN_PRICING_EXPERIMENT,
   assignPersonalPlanPricingExperimentVariant,
   isPersonalPlanPricingExperimentVariant,
 } from "./personal-plan-pricing-experiment"
+import {
+  ORGANIC_OFFER_MEDIA_EXPERIMENT,
+  assignOrganicOfferMediaExperimentVariant,
+  isOrganicOfferMediaExperimentVariant,
+} from "./organic-offer-media-experiment"
 import { verifyPersonalPlanOneTimeQaToken } from "./personal-plan-pricing-qa-token"
 
 export const FUNNEL_MILESTONES = [
@@ -94,6 +100,7 @@ type OfferExperimentSession = {
   offerViewedAt: string | null
   checkoutStartedAt?: string | null
   isInternalTest?: boolean | null
+  testKind?: string | null
 }
 
 type OfferExperimentAssignmentClient = {
@@ -185,6 +192,123 @@ export async function resolvePersonalPlanPricingExperiment(input: {
       experimentId: PERSONAL_PLAN_PRICING_EXPERIMENT.id,
       revision: PERSONAL_PLAN_PRICING_EXPERIMENT.revision,
       intendedVariant,
+      fallbackVariant: fallback,
+      packageKey: session.packageKey,
+    })
+    return fallback
+  }
+}
+
+export async function resolveOrganicOfferMediaExperiment(input: {
+  session: OfferExperimentSession | null
+  enabled?: boolean
+  excluded?: boolean
+  client?: OfferExperimentAssignmentClient
+  captureFailure?: typeof captureOfferExperimentAssignmentFailure
+}): Promise<string> {
+  const fallback = ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant
+  const { session } = input
+  if (!session || input.excluded || session.testKind === "field_test") return fallback
+  if (session.packageKey !== ORGANIC_OFFER_MEDIA_EXPERIMENT.packageKey)
+    return resolveLegacyResultOfferVariant(session)
+
+  const stored = session.offerVariant
+  if (!isOrganicOfferMediaExperimentVariant(stored)) return resolveLegacyResultOfferVariant(session)
+  if (stored === fallback) {
+    if (
+      !(input.enabled ?? isOrganicOfferMediaExperimentEnabled()) ||
+      session.offerViewedAt ||
+      session.checkoutStartedAt
+    )
+      return fallback
+    return persistOrganicOfferMediaAssignment(session, input)
+  }
+  if (session.offerViewedAt || session.checkoutStartedAt || session.isInternalTest) return stored
+  if (input.enabled ?? isOrganicOfferMediaExperimentEnabled()) return stored
+  return resetOrganicOfferMediaTreatment(session, input)
+}
+
+async function persistOrganicOfferMediaAssignment(
+  session: OfferExperimentSession,
+  input: {
+    client?: OfferExperimentAssignmentClient
+    captureFailure?: typeof captureOfferExperimentAssignmentFailure
+  },
+): Promise<string> {
+  const fallback = ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant
+  const intendedVariant = assignOrganicOfferMediaExperimentVariant(session.sessionId)
+  if (intendedVariant === fallback) return fallback
+  const client = input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
+  const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
+  try {
+    const { data, error } = await client
+      .from("funnel_sessions")
+      .update({ offer_variant: intendedVariant })
+      .eq("id", session.sessionId)
+      .is("offer_viewed_at", null)
+      .eq("offer_variant", fallback)
+      .select("offer_variant")
+      .maybeSingle()
+    if (error) throw error
+    if (isOrganicOfferMediaExperimentVariant(data?.offer_variant)) return data.offer_variant
+
+    const readBack = await client
+      .from("funnel_sessions")
+      .select("offer_variant")
+      .eq("id", session.sessionId)
+      .maybeSingle()
+    if (readBack.error) throw readBack.error
+    return isOrganicOfferMediaExperimentVariant(readBack.data?.offer_variant)
+      ? readBack.data.offer_variant
+      : fallback
+  } catch (error) {
+    captureFailure(error, {
+      experimentId: ORGANIC_OFFER_MEDIA_EXPERIMENT.id,
+      revision: ORGANIC_OFFER_MEDIA_EXPERIMENT.revision,
+      intendedVariant,
+      fallbackVariant: fallback,
+      packageKey: session.packageKey,
+    })
+    return fallback
+  }
+}
+
+async function resetOrganicOfferMediaTreatment(
+  session: OfferExperimentSession,
+  input: {
+    client?: OfferExperimentAssignmentClient
+    captureFailure?: typeof captureOfferExperimentAssignmentFailure
+  },
+): Promise<string> {
+  const fallback = ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant
+  const client = input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
+  const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
+  try {
+    const { data, error } = await client
+      .from("funnel_sessions")
+      .update({ offer_variant: fallback })
+      .eq("id", session.sessionId)
+      .is("offer_viewed_at", null)
+      .eq("offer_variant", ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant)
+      .select("offer_variant")
+      .maybeSingle()
+    if (error) throw error
+    if (isOrganicOfferMediaExperimentVariant(data?.offer_variant)) return data.offer_variant
+
+    const readBack = await client
+      .from("funnel_sessions")
+      .select("offer_variant")
+      .eq("id", session.sessionId)
+      .maybeSingle()
+    if (readBack.error) throw readBack.error
+    return isOrganicOfferMediaExperimentVariant(readBack.data?.offer_variant)
+      ? readBack.data.offer_variant
+      : fallback
+  } catch (error) {
+    captureFailure(error, {
+      experimentId: ORGANIC_OFFER_MEDIA_EXPERIMENT.id,
+      revision: ORGANIC_OFFER_MEDIA_EXPERIMENT.revision,
+      intendedVariant: fallback,
       fallbackVariant: fallback,
       packageKey: session.packageKey,
     })

@@ -6,6 +6,7 @@ import { ArrowDown, ChevronDown } from "lucide-react"
 
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { WistiaVideo } from "@/components/organic-plan-offer/wistia-video"
+import { BeforeAfterFigure } from "@/components/offer-media/before-after-figure"
 import { RegularQuizFieldTestActivationCard } from "@/components/regular-quiz-field-test/activation-card"
 import { RegularQuizFieldTestBanner } from "@/components/regular-quiz-field-test/banner"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
@@ -211,20 +212,27 @@ function FaqItem({ answer, faqId, question }: { answer: string; faqId: string; q
   )
 }
 
+type OrganicPlanOfferProps = FunnelOfferVariantProps & {
+  heroMedia?: "video" | "before_after"
+}
+
 export function OrganicPlanOffer({
   entryContext,
+  heroMedia = "video",
+  isInternalTest = false,
   leadId,
   offerTracking,
   offerVariant,
   pricingSlot,
   quizAnswers,
   regularFieldTest = null,
-}: FunnelOfferVariantProps) {
+}: OrganicPlanOfferProps) {
   const diagnosticInput = adaptLegacyQuizAnswersForAssessment(quizAnswers)
   const assessment = assessPersonalPlanHair(diagnosticInput)
   const diagnosticRows = buildPersonalPlanAssessmentRows(assessment, diagnosticInput)
   const isRegularFieldTest = Boolean(regularFieldTest)
   const isEmailBoundModerator = regularFieldTest?.identityMode === "email_bound"
+  const usesBeforeAfterHero = heroMedia === "before_after"
   const visibleFaqItems = isRegularFieldTest
     ? faqItems.filter(([question]) => question !== "Was passiert direkt nach dem Kauf?")
     : faqItems
@@ -234,6 +242,7 @@ export function OrganicPlanOffer({
     <OfferTrackingProvider
       entryContext={entryContext}
       focusRoutine={false}
+      isInternalTest={isInternalTest}
       leadId={leadId}
       offerRevision={ORGANIC_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
@@ -286,10 +295,16 @@ export function OrganicPlanOffer({
           <p className="mx-auto mt-3 max-w-[36rem] text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)] sm:text-lg">
             {profileLine(quizAnswers)}
           </p>
-          <p className="mx-auto mt-5 max-w-[36rem] text-base font-bold leading-6 text-[var(--brand-plum-darkest)] sm:text-lg">
-            Schau dir zuerst das Video an:
-          </p>
-          <WistiaVideo />
+          {usesBeforeAfterHero ? (
+            <BeforeAfterFigure className="mx-auto mt-4 max-w-[720px] text-left sm:mt-5" />
+          ) : (
+            <>
+              <p className="mx-auto mt-5 max-w-[36rem] text-base font-bold leading-6 text-[var(--brand-plum-darkest)] sm:text-lg">
+                Schau dir zuerst das Video an:
+              </p>
+              <WistiaVideo />
+            </>
+          )}
         </section>
 
         <section

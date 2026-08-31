@@ -6,6 +6,10 @@ export function isPersonalPlanPricingExperimentEnabled() {
   return process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED === "true"
 }
 
+export function isOrganicOfferMediaExperimentEnabled() {
+  return process.env.ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED === "true"
+}
+
 export function isPersonalPlanLaunchPricingEnabled() {
   return process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED === "true"
 }

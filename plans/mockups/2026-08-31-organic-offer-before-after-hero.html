@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie Offer-Media-Test — Treatment-Hero</title>
+    <style>
+      :root {
+        --plum-darkest: #2a1845;
+        --plum: #6b50a0;
+        --plum-rgb: 107, 80, 160;
+        --surface: #fcfaf7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eeeaf2;
+        color: var(--plum-darkest);
+        font-family: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+      }
+
+      .review-board {
+        margin: 0 auto;
+        max-width: 1480px;
+        padding: 34px 28px 48px;
+      }
+
+      .review-heading {
+        margin: 0 auto 24px;
+        max-width: 1120px;
+      }
+
+      .review-heading p {
+        color: rgba(var(--plum-rgb), 0.72);
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 7px 0 0;
+      }
+
+      .review-heading h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 28px;
+        font-weight: 500;
+        letter-spacing: -0.025em;
+        margin: 0;
+      }
+
+      .previews {
+        align-items: start;
+        display: grid;
+        gap: 28px;
+        grid-template-columns: minmax(0, 1fr) 390px;
+        margin: 0 auto;
+        max-width: 1320px;
+      }
+
+      .preview-label {
+        align-items: center;
+        display: flex;
+        font-size: 12px;
+        font-weight: 800;
+        justify-content: space-between;
+        letter-spacing: 0.1em;
+        margin: 0 4px 9px;
+        text-transform: uppercase;
+      }
+
+      .preview-label span {
+        color: rgba(var(--plum-rgb), 0.62);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .viewport {
+        background: var(--surface);
+        border: 1px solid rgba(var(--plum-rgb), 0.14);
+        border-radius: 22px;
+        box-shadow: 0 28px 70px -46px rgba(42, 24, 69, 0.72);
+        overflow: hidden;
+      }
+
+      .desktop-viewport {
+        min-width: 760px;
+      }
+
+      .mobile-viewport {
+        width: 390px;
+      }
+
+      .site-header {
+        align-items: center;
+        background: rgba(252, 250, 247, 0.97);
+        border-bottom: 1px solid rgba(var(--plum-rgb), 0.1);
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        padding: 12px 16px;
+      }
+
+      .desktop-viewport .site-header {
+        padding-left: max(16px, calc((100% - 896px) / 2));
+        padding-right: max(16px, calc((100% - 896px) / 2));
+      }
+
+      .brand {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+      }
+
+      .sticky-cta {
+        background: var(--plum);
+        border-radius: 999px;
+        color: white;
+        font-size: 14px;
+        font-weight: 800;
+        padding: 9px 16px;
+      }
+
+      .hero {
+        margin: 0 auto;
+        max-width: 896px;
+        padding: 48px 16px 40px;
+        text-align: center;
+      }
+
+      .overline {
+        color: rgba(var(--plum-rgb), 0.6);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+
+      .hero-title {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 60px;
+        font-weight: 500;
+        letter-spacing: -0.045em;
+        line-height: 0.98;
+        margin: 12px auto 0;
+        max-width: 15ch;
+      }
+
+      .profile {
+        color: rgba(var(--plum-rgb), 0.72);
+        font-size: 18px;
+        line-height: 1.55;
+        margin: 12px auto 0;
+        max-width: 576px;
+      }
+
+      .before-after {
+        background: white;
+        border: 1px solid rgba(var(--plum-rgb), 0.1);
+        border-radius: 28px;
+        box-shadow: 0 24px 54px -42px rgba(42, 24, 69, 0.7);
+        margin: 20px auto 0;
+        max-width: 720px;
+        overflow: hidden;
+      }
+
+      .image-grid {
+        background: white;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr 1fr;
+        padding: 16px;
+        position: relative;
+      }
+
+      .image-half {
+        aspect-ratio: 2 / 3;
+        background-image: url("../../public/images/funnels/personal-plan-offer/before-after-generic.webp");
+        background-repeat: no-repeat;
+        background-size: 200% auto;
+        border-radius: 18px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .image-half.today {
+        background-position: left center;
+      }
+
+      .image-half.goal {
+        background-position: right center;
+      }
+
+      .image-label {
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 999px;
+        box-shadow: 0 2px 8px rgba(42, 24, 69, 0.1);
+        font-size: 12px;
+        font-weight: 800;
+        left: 12px;
+        padding: 7px 12px;
+        position: absolute;
+        top: 12px;
+      }
+
+      .goal .image-label {
+        color: #255f40;
+      }
+
+      .arrow {
+        align-items: center;
+        background: var(--plum);
+        border: 6px solid white;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        font-size: 24px;
+        height: 50px;
+        justify-content: center;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+      }
+
+      figcaption {
+        border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+        color: rgba(var(--plum-rgb), 0.58);
+        font-size: 12px;
+        padding: 10px 16px;
+        text-align: center;
+      }
+
+      .next-section {
+        background: rgba(255, 255, 255, 0.55);
+        border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+        padding: 28px 16px 34px;
+        text-align: center;
+      }
+
+      .next-section p {
+        color: rgba(var(--plum-rgb), 0.6);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+
+      .next-section h2 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 30px;
+        font-weight: 500;
+        letter-spacing: -0.035em;
+        margin: 6px 0 0;
+      }
+
+      .mobile-viewport .hero {
+        padding: 32px 16px 24px;
+      }
+
+      .mobile-viewport .hero-title {
+        font-size: 39px;
+      }
+
+      .mobile-viewport .profile {
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .mobile-viewport .before-after {
+        border-radius: 24px;
+        margin-top: 16px;
+      }
+
+      .mobile-viewport .image-grid {
+        gap: 8px;
+        padding: 8px;
+      }
+
+      .mobile-viewport .image-half {
+        aspect-ratio: 3 / 4;
+        border-radius: 16px;
+      }
+
+      .mobile-viewport .image-label {
+        font-size: 11px;
+        left: 8px;
+        padding: 6px 10px;
+        top: 8px;
+      }
+
+      .mobile-viewport .arrow {
+        border-width: 4px;
+        font-size: 19px;
+        height: 42px;
+        width: 42px;
+      }
+
+      .mobile-viewport .next-section {
+        padding-bottom: 30px;
+        padding-top: 24px;
+      }
+
+      .mobile-viewport .next-section h2 {
+        font-size: 30px;
+      }
+
+      .decision-note {
+        background: #fff;
+        border: 1px solid rgba(var(--plum-rgb), 0.14);
+        border-radius: 16px;
+        color: rgba(var(--plum-rgb), 0.75);
+        font-size: 13px;
+        line-height: 1.55;
+        margin: 26px auto 0;
+        max-width: 1120px;
+        padding: 16px 18px;
+      }
+
+      .decision-note strong {
+        color: var(--plum-darkest);
+      }
+
+      @media (max-width: 1120px) {
+        .previews {
+          grid-template-columns: 1fr;
+        }
+
+        .desktop-viewport {
+          min-width: 0;
+        }
+
+        .mobile-preview {
+          margin: 0 auto;
+          width: 390px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="review-board">
+      <header class="review-heading">
+        <h1>Offer-Media-Test · Treatment „Vorher/Nachher“</h1>
+        <p>
+          Planungsartefakt, keine Produktionsimplementierung. Die video-spezifische Anweisung
+          entfällt; alle übrigen Hero-Inhalte bleiben gleich.
+        </p>
+      </header>
+
+      <div class="previews">
+        <section>
+          <div class="preview-label">Desktop <span>Beispielbreite 930 px</span></div>
+          <div class="viewport desktop-viewport">
+            <header class="site-header">
+              <div class="brand">chaarlie</div>
+              <div class="sticky-cta">Angebot ansehen</div>
+            </header>
+            <section class="hero">
+              <p class="overline">Deine Analyse ist bereit</p>
+              <h1 class="hero-title">Dein Haarplan ist bereit.</h1>
+              <p class="profile">Welliges, mittelstarkes Haar mit mittlerer Dichte.</p>
+              <figure class="before-after">
+                <div class="image-grid">
+                  <div class="image-half today"><span class="image-label">Heute</span></div>
+                  <div class="image-half goal"><span class="image-label">Dein Ziel</span></div>
+                  <span class="arrow" aria-hidden="true">→</span>
+                </div>
+                <figcaption>Symbolbild · Ergebnisse sind individuell</figcaption>
+              </figure>
+            </section>
+            <section class="next-section">
+              <p>Deine Ausgangslage</p>
+              <h2>In deinem Haar steckt viel Potenzial.</h2>
+            </section>
+          </div>
+        </section>
+
+        <section class="mobile-preview">
+          <div class="preview-label">Mobile <span>390 px</span></div>
+          <div class="viewport mobile-viewport">
+            <header class="site-header">
+              <div class="brand">chaarlie</div>
+              <div class="sticky-cta">Angebot ansehen</div>
+            </header>
+            <section class="hero">
+              <p class="overline">Deine Analyse ist bereit</p>
+              <h1 class="hero-title">Dein Haarplan ist bereit.</h1>
+              <p class="profile">Welliges, mittelstarkes Haar mit mittlerer Dichte.</p>
+              <figure class="before-after">
+                <div class="image-grid">
+                  <div class="image-half today"><span class="image-label">Heute</span></div>
+                  <div class="image-half goal"><span class="image-label">Dein Ziel</span></div>
+                  <span class="arrow" aria-hidden="true">→</span>
+                </div>
+                <figcaption>Symbolbild · Ergebnisse sind individuell</figcaption>
+              </figure>
+            </section>
+            <section class="next-section">
+              <p>Deine Ausgangslage</p>
+              <h2>In deinem Haar steckt viel Potenzial.</h2>
+            </section>
+          </div>
+        </section>
+      </div>
+
+      <p class="decision-note">
+        <strong>Empfohlene Entscheidung:</strong> Kein neuer Zwischen-Claim über dem Bild. So bleibt
+        die Treatment-Änderung auf den Medienblock begrenzt und das bestehende Symbolbild-Disclaimer
+        trägt die notwendige Erwartungsbegrenzung.
+      </p>
+    </main>
+  </body>
+</html>

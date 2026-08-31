@@ -49,6 +49,7 @@ test("every package references registered landing, quiz, and offer variants", ()
 
 test("the two live flows register the organic and Personal Plan offers", () => {
   assert.ok("organic-plan-v1" in OFFER_VARIANTS)
+  assert.ok("organic-plan-before-after-v1" in OFFER_VARIANTS)
   assert.ok("personal-plan-v1" in OFFER_VARIANTS)
 })
 
@@ -75,11 +76,11 @@ test("result client injects one shared pricing slot into the selected offer", ()
 test("result route preserves trusted stored result context before recording an offer view", () => {
   assert.match(funnelServerSource, /package_key, offer_variant, offer_viewed_at, first_seen_at/)
   assert.match(funnelServerSource, /offerVariant: data\.offer_variant/)
-  assert.match(resultPageSource, /resolveLegacyResultOfferVariant/)
+  assert.match(resultPageSource, /resolveOrganicOfferMediaExperiment/)
   assert.match(resultPageSource, /trustedOfferVariant/)
   assert.match(resultPageSource, /await recordLeadOfferView\(leadId, funnelContext, offerVariant\)/)
   assert.ok(
-    resultPageSource.indexOf("resolveLegacyResultOfferVariant") <
+    resultPageSource.indexOf("resolveOrganicOfferMediaExperiment") <
       resultPageSource.indexOf("await recordLeadOfferView(leadId, funnelContext, offerVariant)"),
   )
 })
@@ -95,6 +96,7 @@ test("result route keeps fresh quiz completions distinct from saved-result visit
   assert.match(resultPageSource, /entryContext=\{entryContext\}/)
   assert.match(resultClientSource, /entryContext \?\? \(focusRoutine \? "routine_return"/)
   assert.match(resultClientSource, /entryContext=\{resolvedEntryContext\}/)
+  assert.match(resultClientSource, /isInternalTest=\{isInternalTest\}/)
 })
 
 test("quiz completion hands no-access results to the canonical result route", () => {
