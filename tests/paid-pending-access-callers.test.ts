@@ -67,11 +67,6 @@ test("plan-bereit status returns paid pending as a successful status, not subscr
   assert.match(readyStatusSource, /Cache-Control": "private, no-store"/)
   assert.match(readyStatusSource, /\{ status: "forbidden" \}/)
   assert.match(readyStatusSource, /status: 403/)
-
-  assert.ok(
-    readyStatusSource.indexOf('{ status: "paid_pending" }') <
-      readyStatusSource.indexOf('{ status: "forbidden" }'),
-  )
 })
 
 test("billing access API preserves hasAccess and exposes activation state additively", () => {

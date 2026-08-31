@@ -116,6 +116,20 @@ test("migration preparation rejects cross-origin and expired-access requests bef
   assert.deepEqual(calls, [])
 })
 
+test("paid-pending access returns its recovery status before migration discovery", async () => {
+  const { calls, deps } = fixture()
+  const response = await createPlanBereitStatusHandlers({
+    ...deps,
+    hasCurrentAppAccess: async () => false,
+    resolveOneTimeAccessState: async () => "paid_pending" as const,
+  }).GET(new Request("http://localhost/plan-bereit/status"))
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { status: "paid_pending" })
+  assert.equal(response.headers.get("Cache-Control"), "private, no-store")
+  assert.deepEqual(calls, [])
+})
+
 test("the app rollout cannot be bypassed by posting migration preparation directly", async () => {
   const { calls, deps } = fixture()
   const response = await createPlanBereitStatusHandlers({
