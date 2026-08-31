@@ -3,7 +3,6 @@
 import * as Sentry from "@sentry/nextjs"
 import { useEffect, useMemo, useRef, useState } from "react"
 
-import { PersonalPlanChapterTransition } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import {
   allowsMultipleProductsForRole,
@@ -28,6 +27,7 @@ import {
   type Stage3InventoryDispositionV1,
   type Stage3NeedMaterialDelta,
   type Stage3ProductDraft,
+  type Stage3LegacyPrefillProductHint,
 } from "@/lib/personal-plan/products/contracts"
 import {
   deriveOilReviewGroup,
@@ -266,7 +266,6 @@ export function Stage3ProductsFlow({
   onBackToRefinement,
   onProductKindsCorrection,
   onOpenRoutine,
-  directRoutineHandoff = false,
   stageEntrance = false,
   pendingRecoveryStorage: providedPendingRecoveryStorage,
 }: {
@@ -282,15 +281,6 @@ export function Stage3ProductsFlow({
   onBackToRefinement?: () => void
   onProductKindsCorrection?: (categories: PersonalPlanCategory[]) => Promise<void>
   onOpenRoutine?: (handoff: Stage3RoutineHandoff) => void
-  /**
-   * Post-accept loop (field test 26.08.2026): the user came here from a
-   * Feinschliff module and already has the full app nav, so finishing Stage 3
-   * moves straight to the Routine — the "Deine Produktauswahl steht." chapter
-   * is creation-funnel ceremony and must not appear. The Routine's own
-   * "✓ Plan aktualisiert" toast carries the feedback. A failed handoff still
-   * surfaces through the normal `systemIssue` screen, which renders above.
-   */
-  directRoutineHandoff?: boolean
   stageEntrance?: boolean
   pendingRecoveryStorage?: PendingStage3RecoveryStorage
 } = {}) {
@@ -374,7 +364,12 @@ export function Stage3ProductsFlow({
       requirements.findIndex((item) => item.category === initialDraft.categoryCursor),
     ),
   )
-  const [query, setQuery] = useState("")
+  const initialLegacyHint = legacyCaptureHint(initialDraft, initialDraft.categoryCursor)
+  const [query, setQuery] = useState(() => legacyHintQuery(initialLegacyHint))
+  const legacyHintScopes = useRef(new Set<string>())
+  const pendingLegacyFrequencyHint = useRef<Stage3LegacyPrefillProductHint | null>(
+    initialLegacyHint,
+  )
   const [searchStatus, setSearchStatus] = useState<
     "idle" | "loading" | "ready" | "empty" | "error"
   >("idle")
@@ -438,6 +433,7 @@ export function Stage3ProductsFlow({
   const saveMutationInFlight = useRef(false)
   const bootstrapDecisionPreparationStarted = useRef(false)
   const routineOpenedAnalyticsRecorded = useRef(false)
+  const routineHandoffOpened = useRef(false)
   const viewedReviewSubjects = useRef(new Set<string>())
 
   const allDecisionSubjects = useMemo(() => deriveStage3DecisionSubjects(draft), [draft])
@@ -589,6 +585,26 @@ export function Stage3ProductsFlow({
   const localCatalogCaptures = categoryCapture.localCatalogCaptures
 
   useEffect(() => {
+    if (phase !== "capture") return
+    const key = `${draft.draftId}:${currentCategory}`
+    if (legacyHintScopes.current.has(key)) return
+    const hint = legacyCaptureHint(draft, currentCategory)
+    if (!hint) return
+    let active = true
+    void Promise.resolve().then(() => {
+      if (!active) return
+      legacyHintScopes.current.add(key)
+      // A loaded hint must not replace an edit already made on this screen.
+      if (query && query !== legacyHintQuery(hint)) return
+      pendingLegacyFrequencyHint.current = hint
+      setQuery(legacyHintQuery(hint))
+    })
+    return () => {
+      active = false
+    }
+  }, [currentCategory, draft, phase, query])
+
+  useEffect(() => {
     if (initialReviewDraft && initialReviewDraft.expectedRevision !== initialDraft.revision) {
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
     }
@@ -726,6 +742,19 @@ export function Stage3ProductsFlow({
             assessmentReasonCodes: candidate.assessmentReasonCodes,
           }))
           setSearchResults(results)
+          const hint = pendingLegacyFrequencyHint.current
+          if (hint?.kind === "catalog_frequency_required" && legacyHintQuery(hint) === trimmed) {
+            const exact = results.find(
+              (candidate) =>
+                candidate.candidateId === hint.productId && candidate.assessmentStatus === "ready",
+            )
+            if (exact) {
+              // Identity is revalidated by current search; only the unknown frequency remains.
+              setPendingCandidate(exact)
+              setFrequency(null)
+              pendingLegacyFrequencyHint.current = null
+            }
+          }
           setSearchTotalCapped(response.result.totalCapped)
           setSearchStatus(results.length > 0 ? "ready" : "empty")
           setSearchMessage(results.length > 0 ? undefined : STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE)
@@ -836,6 +865,13 @@ export function Stage3ProductsFlow({
     pendingRecoveryMode,
     phase,
   ])
+
+  useEffect(() => {
+    if (!completion) return
+    openRoutine(completion)
+    // Completion is a terminal receipt. openRoutine validates the handoff and owns single-shot delivery.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [completion])
 
   useEffect(() => {
     if (
@@ -1042,7 +1078,12 @@ export function Stage3ProductsFlow({
             frequencyLabel:
               FREQUENCIES.find((option) => option.value === product.frequencyRange)?.label ??
               product.frequencyRange,
-            sourceLabel: product.source === "catalog_search" ? "Gefunden" : "Manuell hinzugefügt",
+            sourceLabel:
+              product.source === "existing_inventory"
+                ? "Aus deinen bisherigen Angaben"
+                : product.source === "catalog_search"
+                  ? "Gefunden"
+                  : "Manuell hinzugefügt",
             statusLabel:
               product.identity.kind === "pending_submission" ? "Analyse läuft" : undefined,
             imageUrl: product.identity.imageUrl ?? undefined,
@@ -1080,6 +1121,7 @@ export function Stage3ProductsFlow({
         }
         searchMessage={searchMessage}
         onQueryChange={(value) => {
+          pendingLegacyFrequencyHint.current = null
           setQuery(value)
           setPendingCandidate(null)
           setFrequency(null)
@@ -1346,19 +1388,13 @@ export function Stage3ProductsFlow({
   }
 
   if (completion) {
-    // Post-accept: no chapter, just the honest wait while the Routine opens.
-    if (directRoutineHandoff) {
-      return shell(
-        <Stage3SystemState
-          state="loading"
-          title="Deine Routine wird geöffnet."
-          message="Wir übernehmen deine Produktauswahl."
-        />,
-        "Bereit für deine Routine",
-      )
-    }
-    return (
-      <PersonalPlanChapterTransition currentStage={4} onAction={() => openRoutine(completion)} />
+    return shell(
+      <Stage3SystemState
+        state="loading"
+        title="Deine Routine wird geöffnet."
+        message="Wir übernehmen deine Produktauswahl."
+      />,
+      "Bereit für deine Routine",
     )
   }
 
@@ -1405,7 +1441,7 @@ export function Stage3ProductsFlow({
     }
 
     if (loadedDraft.pass === "ready_for_routine" || loadedDraft.status === "completed") {
-      await completeFlow(loadedDraft, { openOnSuccess: true })
+      await completeFlow(loadedDraft)
       return
     }
 
@@ -1772,6 +1808,8 @@ export function Stage3ProductsFlow({
       routineProposalId: ready.routineProposalId,
       next: ready.next,
     }
+    if (routineHandoffOpened.current) return
+    routineHandoffOpened.current = true
     if (!routineOpenedAnalyticsRecorded.current) {
       routineOpenedAnalyticsRecorded.current = true
       analytics.track("personal_plan_stage3_routine_opened", {})
@@ -2033,6 +2071,7 @@ export function Stage3ProductsFlow({
   }
 
   function resetCategoryInteractionState() {
+    pendingLegacyFrequencyHint.current = null
     setQuery("")
     setSearchResults([])
     setSearchTotalCapped(false)
@@ -3096,10 +3135,7 @@ export function Stage3ProductsFlow({
     else onBackToRefinement?.()
   }
 
-  async function completeFlow(
-    sourceDraft: Stage3ProductDraft,
-    options: { openOnSuccess?: boolean } = {},
-  ) {
+  async function completeFlow(sourceDraft: Stage3ProductDraft) {
     if (completion || completionInFlight.current) return
     completionInFlight.current = true
     try {
@@ -3159,7 +3195,7 @@ export function Stage3ProductsFlow({
       analytics.track("personal_plan_stage3_review_completed", {
         count: deriveStage3DecisionSubjects(response.draft).length,
       })
-      if (options.openOnSuccess || directRoutineHandoff) openRoutine(response)
+      openRoutine(response)
     } catch (error) {
       if (error instanceof Stage3FinalizationTimeoutError) {
         // Same ordering as the decision batch: claim the recovery before the guards are released.
@@ -3882,4 +3918,27 @@ function delay(ms: number) {
 
 function createStableIdempotencyKey(): string {
   return crypto.randomUUID()
+}
+
+function legacyCaptureHint(
+  draft: Stage3ProductDraft,
+  category: string | null,
+): Stage3LegacyPrefillProductHint | null {
+  if (!category || draft.completedCaptureCategories.includes(category as PersonalPlanCategory))
+    return null
+  return (
+    draft.legacyPrefillHints?.categories[category as PersonalPlanCategory]?.find(
+      (hint) =>
+        hint.kind === "search_name" ||
+        !draft.products.some(
+          (product) =>
+            product.identity.kind === "catalog_product" &&
+            product.identity.productId === hint.productId,
+        ),
+    ) ?? null
+  )
+}
+
+function legacyHintQuery(hint: Stage3LegacyPrefillProductHint | null): string {
+  return hint ? (hint.kind === "search_name" ? hint.productName : hint.displayName) : ""
 }

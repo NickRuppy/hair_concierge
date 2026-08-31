@@ -121,6 +121,108 @@ test("Stage 1 rejects a paid purchase before the rollout cutoff without mutating
   assert.equal(writes, 0)
 })
 
+test("Stage 1 admits verified normal paid pre-cutoff sources only while migration is enabled", async () => {
+  for (const sourceKind of ["one_time", "launch_subscription"] as const) {
+    for (const migrationEnabled of [false, true]) {
+      let writes = 0
+      const service = createStage1PersistenceService(
+        dependencies({
+          migrationEnabled: () => migrationEnabled,
+          findEntitlement: async () => ({
+            accessState: "active",
+            enrollmentSourceId: "purchase-1",
+            qualifiedAt: "2026-08-07T23:59:59.999Z",
+            artifactLeadId: "lead-1",
+            quizSourceKind: "personal_plan",
+            sourceKind,
+          }),
+          createOrReuseInitialNeed: async (request) => {
+            writes += 1
+            assert.equal(request.enrollmentPurchaseSourceId, "purchase-1")
+            return {
+              outcome: "completed",
+              personalPlanId: "plan-1",
+              needVersionId: "need-1",
+              outputSnapshot: request.outputSnapshot,
+            }
+          },
+        }),
+      )
+
+      const result = await service.loadOrCreate({ userId: "user-1" })
+
+      assert.equal(result.status, migrationEnabled ? "completed" : "personal_plan_not_available")
+      assert.equal(writes, migrationEnabled ? 1 : 0)
+    }
+  }
+})
+
+test("Stage 1 admits a bound paid migration outside the launch cutoff without weakening access", async () => {
+  for (const accessState of ["active", "revoked", "none"] as const) {
+    let writes = 0
+    const service = createStage1PersistenceService(
+      dependencies({
+        cohortCutoff: () => null,
+        findEntitlement: async () => ({
+          accessState,
+          enrollmentSourceId: "migration-1",
+          qualifiedAt: "2026-01-01T00:00:00Z",
+          artifactLeadId: "lead-1",
+          sourceKind: "migration" as never,
+        }),
+        createOrReuseInitialNeed: async (request) => {
+          writes += 1
+          assert.equal(request.enrollmentPurchaseSourceId, "migration-1")
+          return {
+            outcome: "completed",
+            personalPlanId: "plan-1",
+            needVersionId: "need-1",
+            outputSnapshot: request.outputSnapshot,
+          }
+        },
+      }),
+    )
+    assert.equal(
+      (await service.loadOrCreate({ userId: "user-1" })).status,
+      accessState === "active" ? "completed" : "personal_plan_not_available",
+    )
+    assert.equal(writes, accessState === "active" ? 1 : 0)
+  }
+})
+
+test("a returning migration resumes its persisted Plan without re-reading or recomputing the legacy quiz", async () => {
+  const persisted = {
+    status: "completed" as const,
+    personalPlanId: "plan",
+    needVersionId: "original",
+    outputSnapshot: { original: true },
+  }
+  const service = createStage1PersistenceService(
+    dependencies({
+      findEntitlement: async () => ({
+        accessState: "active",
+        enrollmentSourceId: "migration",
+        sourceKind: "migration",
+        qualifiedAt: "2026-01-01T00:00:00Z",
+        artifactLeadId: "old-lead",
+        quizSourceKind: "legacy",
+      }),
+      loadExistingMigrationPlan: async (owner, enrollment) => {
+        assert.equal(owner, "owner")
+        assert.equal(enrollment, "migration")
+        return persisted
+      },
+      loadLegacyLead: async () => {
+        throw new Error("must not re-read old quiz")
+      },
+      createOrReuseInitialNeed: async () => {
+        throw new Error("must not recompute")
+      },
+    }),
+  )
+  assert.deepEqual(await service.loadOrCreate({ userId: "owner" }), persisted)
+})
+
 test("Stage 1 maps unavailable storage and invalid compute sources to typed safe outcomes", async () => {
   const unavailable = createStage1PersistenceService(
     dependencies({

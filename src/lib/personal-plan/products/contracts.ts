@@ -282,6 +282,27 @@ export type Stage3CapturedProduct = {
   source: "catalog_search" | "intake_fallback" | "existing_inventory"
 }
 
+export type Stage3LegacyPrefillProductHint =
+  | {
+      kind: "catalog_frequency_required"
+      usageId: string
+      productId: string
+      displayName: string
+      category: PersonalPlanCategory
+    }
+  | {
+      kind: "search_name"
+      usageId: string
+      category: PersonalPlanCategory
+      productName: string
+    }
+
+export type Stage3LegacyPrefillHintsV1 = {
+  schemaVersion: 1
+  sourceFingerprint: string
+  categories: Partial<Record<PersonalPlanCategory, Stage3LegacyPrefillProductHint[]>>
+}
+
 export type Stage3RoleAssignment = {
   capturedProductId: string
   category: PersonalPlanCategory
@@ -372,6 +393,12 @@ export type Stage3ProductDraft = {
   inventoryDispositions?: Stage3InventoryDispositionV1[]
   /** Frozen legacy authority overlay. New capture transitions must not write this. */
   productLoadResolution?: Stage3ProductLoadResolutionV1
+  /**
+   * UI-only one-time migration hints for legacy inventory rows that were not safe
+   * to capture automatically. Exact imports remain normal `existing_inventory`
+   * products; this overlay must not create intake submissions by itself.
+   */
+  legacyPrefillHints?: Stage3LegacyPrefillHintsV1
 }
 
 /** Minimal canonical draft shape required to validate persisted Stage 3 authority. */
@@ -605,6 +632,63 @@ export const stage3CapturedProductSchema: z.ZodType<Stage3CapturedProduct> = z.o
   ownership: z.literal("owned"),
   source: z.enum(["catalog_search", "intake_fallback", "existing_inventory"]),
 })
+
+const stage3LegacyPrefillProductHintSchema: z.ZodType<Stage3LegacyPrefillProductHint> =
+  z.discriminatedUnion("kind", [
+    z
+      .object({
+        kind: z.literal("catalog_frequency_required"),
+        usageId: idSchema,
+        productId: idSchema,
+        displayName: z.string().min(1),
+        category: personalPlanCategorySchema,
+      })
+      .strict(),
+    z
+      .object({
+        kind: z.literal("search_name"),
+        usageId: idSchema,
+        category: personalPlanCategorySchema,
+        productName: z.string().min(1),
+      })
+      .strict(),
+  ])
+
+const legacyPrefillHintCategoriesSchema = z
+  .object({
+    shampoo: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    conditioner: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    leave_in: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    heat_protectant: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    oil: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    mask: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    scalp_care: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    dry_shampoo: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    bondbuilder: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+    deep_cleansing_shampoo: z.array(stage3LegacyPrefillProductHintSchema).optional(),
+  })
+  .strict()
+  .superRefine((categories, ctx) => {
+    for (const [category, hints] of Object.entries(categories)) {
+      for (const [index, hint] of (hints ?? []).entries()) {
+        if (hint.category !== category) {
+          ctx.addIssue({
+            code: "custom",
+            message: `legacy prefill hint category ${hint.category} does not match ${category}`,
+            path: [category, index, "category"],
+          })
+        }
+      }
+    }
+  }) as z.ZodType<Stage3LegacyPrefillHintsV1["categories"]>
+
+export const stage3LegacyPrefillHintsSchema: z.ZodType<Stage3LegacyPrefillHintsV1> = z
+  .object({
+    schemaVersion: z.literal(1),
+    sourceFingerprint: idSchema,
+    categories: legacyPrefillHintCategoriesSchema,
+  })
+  .strict()
 
 export const stage3RoleAssignmentSchema: z.ZodType<Stage3RoleAssignment> = z
   .object({
@@ -1127,6 +1211,7 @@ export const stage3ProductDraftSchema: z.ZodType<Stage3ProductDraft> = z.object(
   inventoryAuthority: stage3InventoryAuthoritySchema.optional(),
   inventoryDispositions: z.array(stage3InventoryDispositionSchema).optional(),
   productLoadResolution: stage3ProductLoadResolutionSchema.optional(),
+  legacyPrefillHints: stage3LegacyPrefillHintsSchema.optional(),
 })
 
 export function isExecutableChoice(

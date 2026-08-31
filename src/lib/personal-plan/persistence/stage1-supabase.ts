@@ -3,6 +3,7 @@ import {
   isPersonalPlanAppV1Enabled,
 } from "@/lib/personal-plan/release"
 import { findPersonalPlanEnrollmentForUser } from "@/lib/personal-plan/enrollment"
+import { isPersonalPlanLegacyMigrationEnabled } from "@/lib/personal-plan/migration-admission"
 
 import type {
   CreateInitialNeedRequest,
@@ -52,7 +53,44 @@ export function createStage1SupabaseDependencies(
 ): Stage1PersistenceDependencies {
   return {
     isEnabled: isPersonalPlanAppV1Enabled,
+    migrationEnabled: isPersonalPlanLegacyMigrationEnabled,
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
+    async loadExistingMigrationPlan(userId, enrollmentId) {
+      const reader = admin as unknown as { from(table: string): LegacyLeadQuery }
+      const { data, error } = await reader
+        .from("personal_plans")
+        .select("id,current_initial_need_version_id")
+        .eq("user_id", userId)
+        .eq("enrollment_purchase_source_id", enrollmentId)
+        .maybeSingle()
+      if (error) throw error
+      const plan = data as { id?: string; current_initial_need_version_id?: string } | null
+      if (!plan?.current_initial_need_version_id || !plan.id) return null
+      const { data: needData, error: needError } = await reader
+        .from("personal_plan_need_versions")
+        .select("id,output_snapshot")
+        .eq("id", plan.current_initial_need_version_id)
+        .eq("user_id", userId)
+        .eq("personal_plan_id", plan.id)
+        .eq("kind", "initial")
+        .maybeSingle()
+      if (needError) throw needError
+      const need = needData as { id?: string; output_snapshot?: unknown } | null
+      if (
+        !need?.id ||
+        !need.output_snapshot ||
+        typeof need.output_snapshot !== "object" ||
+        Array.isArray(need.output_snapshot)
+      ) {
+        throw new Error("migration_initial_need_unavailable")
+      }
+      return {
+        status: "completed",
+        personalPlanId: plan.id,
+        needVersionId: need.id,
+        outputSnapshot: need.output_snapshot as never,
+      }
+    },
     async findEntitlement(userId) {
       const enrollment = await findPersonalPlanEnrollmentForUser(admin as never, userId)
       return {

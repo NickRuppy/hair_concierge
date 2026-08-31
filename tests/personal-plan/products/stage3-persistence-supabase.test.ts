@@ -9,7 +9,10 @@ import {
 import { loadCatalogBatchSnapshot } from "../../../src/lib/personal-plan/products/authority/catalog-batching"
 import type { Stage3ProductDraft } from "../../../src/lib/personal-plan/products/contracts"
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
-import { createSupabaseStage3ProductionPersistence } from "../../../src/lib/personal-plan/products/stage3-persistence-supabase"
+import {
+  createSupabaseStage3ProductionPersistence,
+  openSupabaseStage3OptionalInventory,
+} from "../../../src/lib/personal-plan/products/stage3-persistence-supabase"
 import { createStage3Draft } from "../../../src/lib/personal-plan/products/state-machine"
 
 const shampooSearchContext = {
@@ -18,6 +21,816 @@ const shampooSearchContext = {
   shampooTargets: [{ thickness: "normal", shampooBucket: "normal", scalpRoute: "balanced" }],
   conditionerTarget: null,
 }
+
+const optionalInventoryRefinedSnapshot = {
+  inputHash: "a".repeat(64),
+  profile: {
+    source: { projection: "refined_post_plan" },
+    concerns: [],
+    scalp: { oiliness: "balanced", concerns: [] },
+    hair: { thickness: "normal" },
+    routine: {
+      currentProductLoad: {
+        state: "known",
+        value: { categories: ["shampoo", "conditioner"], oilPurposes: [] },
+      },
+      shampooFrequency: { state: "known", value: "weekly_2x" },
+    },
+  },
+  renderedOrder: ["shampoo", "conditioner"],
+  decisions: [
+    {
+      category: "shampoo",
+      resolution: "resolved",
+      needTier: "basis",
+      roles: ["shampoo_everyday"],
+      target: {
+        category: "shampoo",
+        roles: ["shampoo_everyday"],
+        scalpRoute: "balanced",
+        everydayConstraint: "standard",
+        requiresTargetedDandruffCapability: false,
+      },
+      frequency: null,
+      reasons: [],
+      executionState: "available",
+      executionPauseReason: null,
+      deferredFacts: [],
+    },
+    {
+      category: "conditioner",
+      resolution: "resolved",
+      needTier: "basis",
+      roles: ["conditioner_rinse_out"],
+      target: {
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+      frequency: null,
+      reasons: [],
+      executionState: "available",
+      executionPauseReason: null,
+      deferredFacts: [],
+    },
+  ],
+  coverage: [],
+}
+
+test("optional inventory entry imports only through the dedicated handoff RPC", async () => {
+  const calls: Array<{ table?: string; name?: string; args?: Record<string, unknown> }> = []
+  const client = {
+    from(table: string) {
+      calls.push({ table })
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        in: () => chain,
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => {
+          if (table === "personal_plans") {
+            return {
+              data: {
+                enrollment_purchase_source_id: "44444444-4444-4444-8444-444444444444",
+                active_routine_version_id: "55555555-5555-4555-8555-555555555555",
+                legacy_prefill_v1: { stage2: { outcome: "applied" } },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_migration_enrollments") {
+            return {
+              data: { id: "44444444-4444-4444-8444-444444444444" },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: "refined-1", output_snapshot: optionalInventoryRefinedSnapshot },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_refinement_drafts") {
+            return {
+              data: {
+                id: "handoff-1",
+                module_projections: {
+                  products: { needVersionId: "refined-1", stage3Handoff: true },
+                },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_product_drafts") {
+            return { data: null, error: null }
+          }
+          throw new Error(`unexpected maybeSingle for ${table}`)
+        },
+        then(resolve: (value: unknown) => unknown) {
+          if (table === "user_product_usage") {
+            return Promise.resolve({
+              data: [
+                {
+                  id: "usage-1",
+                  category: "shampoo",
+                  product_name: "Exact Shampoo",
+                  frequency_range: "weekly_2x",
+                  product_id: "11111111-1111-4111-8111-111111111111",
+                },
+                {
+                  id: "usage-2",
+                  category: "conditioner",
+                  product_name: "Retired Conditioner",
+                  frequency_range: "weekly_2x",
+                  product_id: "33333333-3333-4333-8333-333333333333",
+                },
+              ],
+              error: null,
+            }).then(resolve)
+          }
+          if (table === "personal_plan_product_search_dispositions") {
+            return Promise.resolve({
+              data: [{ product_id: "33333333-3333-4333-8333-333333333333" }],
+              error: null,
+            }).then(resolve)
+          }
+          if (table === "products") {
+            return Promise.resolve({
+              data: [
+                {
+                  id: "11111111-1111-4111-8111-111111111111",
+                  brand: "Exact",
+                  name: "Exact Shampoo",
+                  category_key: "shampoo",
+                  image_url: null,
+                  thumbnail_image_url: null,
+                  is_active: true,
+                  lifecycle_status: "active",
+                  origin: "curated",
+                  product_line: null,
+                },
+                {
+                  id: "33333333-3333-4333-8333-333333333333",
+                  brand: "Retired",
+                  name: "Retired Conditioner",
+                  category_key: "conditioner",
+                  image_url: null,
+                  thumbnail_image_url: null,
+                  is_active: true,
+                  lifecycle_status: "active",
+                  origin: "curated",
+                  product_line: null,
+                },
+              ],
+              error: null,
+            }).then(resolve)
+          }
+          return Promise.resolve({ data: [], error: null }).then(resolve)
+        },
+      }
+      return chain
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      assert.equal(name, "personal_plan_open_optional_inventory_v1")
+      const payload = args.p_payload as Record<string, unknown>
+      assert.deepEqual(args.p_exact_inventory, [
+        {
+          usageId: "usage-1",
+          productId: "11111111-1111-4111-8111-111111111111",
+          displayName: "Exact Shampoo",
+          category: "shampoo",
+          frequencyRange: "weekly_2x",
+        },
+      ])
+      assert.deepEqual(payload.legacyPrefillHints, {
+        schemaVersion: 1,
+        sourceFingerprint: args.p_source_fingerprint,
+        categories: {
+          conditioner: [
+            {
+              kind: "search_name",
+              usageId: "usage-2",
+              category: "conditioner",
+              productName: "Retired Conditioner",
+            },
+          ],
+        },
+      })
+      return {
+        data: {
+          outcome: "ready",
+          draft: {
+            id: "draft-optional",
+            user_id: "owner-1",
+            personal_plan_id: "plan-1",
+            refined_need_version_id: "refined-1",
+            status: "active",
+            revision: 0,
+            contract_version: 1,
+            category_authority_versions: args.p_category_authority_versions,
+            pass: "product_capture",
+            cursor: {
+              categoryCursor: "shampoo",
+              completedCaptureCategories: [],
+              completedDecisionKeys: [],
+            },
+            payload: {
+              ...payload,
+              products: [
+                {
+                  capturedProductId: "legacy-prefill:usage-1",
+                  userProductId: "22222222-2222-4222-8222-222222222222",
+                  identity: {
+                    kind: "catalog_product",
+                    productId: "11111111-1111-4111-8111-111111111111",
+                    displayName: "Exact Shampoo",
+                    category: "shampoo",
+                    imageUrl: null,
+                  },
+                  frequencyRange: "weekly_2x",
+                  ownership: "owned",
+                  source: "existing_inventory",
+                },
+              ],
+            },
+            created_at: "2026-08-28T00:00:00.000Z",
+            updated_at: "2026-08-28T00:00:00.000Z",
+          },
+        },
+        error: null,
+      }
+    },
+  }
+
+  const result = await openSupabaseStage3OptionalInventory(client as never, {
+    userId: "owner-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+  })
+
+  assert.equal(result.status, "active")
+  assert.equal(result.draft.products[0]?.source, "existing_inventory")
+  assert.equal(result.draft.products[0]?.userProductId, "22222222-2222-4222-8222-222222222222")
+  assert.equal(result.requirements[0]?.category, "shampoo")
+  assert.deepEqual(result.draft.legacyPrefillHints, {
+    schemaVersion: 1,
+    sourceFingerprint: result.draft.legacyPrefillHints?.sourceFingerprint,
+    categories: {
+      conditioner: [
+        {
+          kind: "search_name",
+          usageId: "usage-2",
+          category: "conditioner",
+          productName: "Retired Conditioner",
+        },
+      ],
+    },
+  })
+  assert.equal(
+    calls.some((call) => call.table === "hair_profiles"),
+    false,
+  )
+  assert.equal(
+    calls.some((call) => call.name === "personal_plan_create_or_load_product_draft"),
+    false,
+  )
+})
+
+test("optional inventory entry falls back to generic Stage 3 draft opening without a migration binding", async () => {
+  const calls: Array<{ table?: string; name?: string; args?: Record<string, unknown> }> = []
+  const client = {
+    from(table: string) {
+      calls.push({ table })
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () => {
+          if (table === "personal_plans") {
+            return {
+              data: {
+                enrollment_purchase_source_id: null,
+                active_routine_version_id: null,
+                legacy_prefill_v1: { stage2: { outcome: "applied" } },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: "refined-1", output_snapshot: optionalInventoryRefinedSnapshot },
+              error: null,
+            }
+          }
+          throw new Error(`unexpected maybeSingle for ${table}`)
+        },
+      }
+      return chain
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      assert.equal(name, "personal_plan_create_or_load_product_draft")
+      return {
+        data: {
+          id: "draft-generic",
+          user_id: "owner-1",
+          personal_plan_id: "plan-1",
+          refined_need_version_id: "refined-1",
+          status: "active",
+          revision: 0,
+          contract_version: 1,
+          category_authority_versions: args.p_category_authority_versions,
+          pass: "product_capture",
+          cursor: {
+            categoryCursor: "shampoo",
+            completedCaptureCategories: [],
+            completedDecisionKeys: [],
+          },
+          payload: args.p_payload,
+          created_at: "2026-08-28T00:00:00.000Z",
+          updated_at: "2026-08-28T00:00:00.000Z",
+        },
+        error: null,
+      }
+    },
+  }
+
+  const result = await openSupabaseStage3OptionalInventory(client as never, {
+    userId: "owner-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+  })
+
+  assert.equal(result.status, "active")
+  assert.equal(result.draft.draftId, "draft-generic")
+  assert.deepEqual(
+    calls.flatMap((call) => (call.table ? [call.table] : [])),
+    ["personal_plans", "personal_plan_need_versions"],
+  )
+  assert.equal(
+    calls.some((call) => call.table === "personal_plan_migration_enrollments"),
+    false,
+  )
+  assert.equal(
+    calls.some((call) => call.table === "user_product_usage"),
+    false,
+  )
+  assert.equal(
+    calls.some((call) => call.name === "personal_plan_open_optional_inventory_v1"),
+    false,
+  )
+})
+
+test("optional inventory entry does not read legacy inventory after the Stage 3 receipt was consumed", async () => {
+  const calls: Array<{ table?: string; name?: string; args?: Record<string, unknown> }> = []
+  const client = {
+    from(table: string) {
+      calls.push({ table })
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () => {
+          if (table === "personal_plans") {
+            return {
+              data: {
+                enrollment_purchase_source_id: "44444444-4444-4444-8444-444444444444",
+                active_routine_version_id: "55555555-5555-4555-8555-555555555555",
+                legacy_prefill_v1: { stage3Inventory: { outcome: "imported" } },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: "refined-2", output_snapshot: optionalInventoryRefinedSnapshot },
+              error: null,
+            }
+          }
+          if (table === "user_product_usage") {
+            throw new Error("legacy inventory must not be read after receipt consumption")
+          }
+          throw new Error(`unexpected maybeSingle for ${table}`)
+        },
+      }
+      return chain
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      assert.equal(name, "personal_plan_create_or_load_product_draft")
+      const payload = args.p_payload as Record<string, unknown>
+      assert.deepEqual(payload.products, [])
+      return {
+        data: {
+          id: "draft-new-refined",
+          user_id: "owner-1",
+          personal_plan_id: "plan-1",
+          refined_need_version_id: "refined-2",
+          status: "active",
+          revision: 0,
+          contract_version: 1,
+          category_authority_versions: args.p_category_authority_versions,
+          pass: "product_capture",
+          cursor: {
+            categoryCursor: "shampoo",
+            completedCaptureCategories: [],
+            completedDecisionKeys: [],
+          },
+          payload,
+          created_at: "2026-08-28T00:00:00.000Z",
+          updated_at: "2026-08-28T00:00:00.000Z",
+        },
+        error: null,
+      }
+    },
+  }
+
+  const result = await openSupabaseStage3OptionalInventory(client as never, {
+    userId: "owner-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-2",
+  })
+
+  assert.equal(result.draft.draftId, "draft-new-refined")
+  assert.equal(
+    calls.some((call) => call.table === "personal_plan_migration_enrollments"),
+    false,
+  )
+  assert.equal(
+    calls.some((call) => call.table === "user_product_usage"),
+    false,
+  )
+  assert.equal(
+    calls.some((call) => call.name === "personal_plan_open_optional_inventory_v1"),
+    false,
+  )
+})
+
+test("optional inventory entry consumes a skipped receipt without reading legacy rows when a Stage 3 draft exists", async () => {
+  const calls: Array<{ table?: string; name?: string; args?: Record<string, unknown> }> = []
+  const client = {
+    from(table: string) {
+      calls.push({ table })
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        in: () => chain,
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => {
+          if (table === "personal_plans") {
+            return {
+              data: {
+                enrollment_purchase_source_id: "44444444-4444-4444-8444-444444444444",
+                active_routine_version_id: "55555555-5555-4555-8555-555555555555",
+                legacy_prefill_v1: { stage2: { outcome: "applied" } },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_migration_enrollments") {
+            return {
+              data: { id: "44444444-4444-4444-8444-444444444444" },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: "refined-1", output_snapshot: optionalInventoryRefinedSnapshot },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_refinement_drafts") {
+            return {
+              data: {
+                id: "handoff-1",
+                module_projections: {
+                  products: { needVersionId: "refined-1", stage3Handoff: true },
+                },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_product_drafts") {
+            return { data: { id: "draft-existing" }, error: null }
+          }
+          if (table === "user_product_usage") {
+            throw new Error("legacy inventory must not be read when a Stage 3 draft already exists")
+          }
+          throw new Error(`unexpected maybeSingle for ${table}`)
+        },
+      }
+      return chain
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      assert.equal(name, "personal_plan_open_optional_inventory_v1")
+      assert.deepEqual(args.p_exact_inventory, [])
+      assert.equal(args.p_source_fingerprint, "legacy-prefill-v1:skipped-existing-stage3")
+      return {
+        data: {
+          outcome: "ready",
+          draft: {
+            id: "draft-existing",
+            user_id: "owner-1",
+            personal_plan_id: "plan-1",
+            refined_need_version_id: "refined-1",
+            status: "active",
+            revision: 2,
+            contract_version: 1,
+            category_authority_versions: args.p_category_authority_versions,
+            pass: "product_capture",
+            cursor: {
+              categoryCursor: "conditioner",
+              completedCaptureCategories: ["shampoo"],
+              completedDecisionKeys: [],
+            },
+            payload: {
+              ...(args.p_payload as Record<string, unknown>),
+              products: [],
+              categoryCursor: "conditioner",
+              completedCaptureCategories: ["shampoo"],
+            },
+            created_at: "2026-08-28T00:00:00.000Z",
+            updated_at: "2026-08-28T00:00:00.000Z",
+          },
+        },
+        error: null,
+      }
+    },
+  }
+
+  const result = await openSupabaseStage3OptionalInventory(client as never, {
+    userId: "owner-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+  })
+
+  assert.equal(result.draft.draftId, "draft-existing")
+  assert.deepEqual(result.draft.products, [])
+  assert.equal(
+    calls.some((call) => call.table === "user_product_usage"),
+    false,
+  )
+  assert.equal(
+    calls.some((call) => call.table === "products"),
+    false,
+  )
+})
+
+test("optional inventory entry finds the exact products handoff instead of trusting the newest refinement draft", async () => {
+  const calls: Array<{ table?: string; name?: string; args?: Record<string, unknown> }> = []
+  const handoffFilters: Array<[string, unknown]> = []
+  const client = {
+    from(table: string) {
+      calls.push({ table })
+      const chain = {
+        select: () => chain,
+        eq: (column: string, value: unknown) => {
+          if (table === "personal_plan_refinement_drafts") handoffFilters.push([column, value])
+          return chain
+        },
+        in: () => chain,
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => {
+          if (table === "personal_plans") {
+            return {
+              data: {
+                enrollment_purchase_source_id: "44444444-4444-4444-8444-444444444444",
+                legacy_prefill_v1: { stage2: { outcome: "applied" } },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_migration_enrollments") {
+            return { data: { id: "44444444-4444-4444-8444-444444444444" }, error: null }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: "refined-1", output_snapshot: optionalInventoryRefinedSnapshot },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_refinement_drafts") {
+            const hasExactNeed = handoffFilters.some(
+              ([column, value]) =>
+                column === "module_projections->products->>needVersionId" && value === "refined-1",
+            )
+            const hasStage3Handoff = handoffFilters.some(
+              ([column, value]) =>
+                column === "module_projections->products->>stage3Handoff" && value === "true",
+            )
+            return hasExactNeed && hasStage3Handoff
+              ? { data: { id: "older-valid-products-handoff" }, error: null }
+              : {
+                  data: {
+                    id: "newer-unrelated-habits-draft",
+                    module_projections: {
+                      products: { needVersionId: "other-refined", stage3Handoff: false },
+                    },
+                  },
+                  error: null,
+                }
+          }
+          if (table === "personal_plan_product_drafts") return { data: null, error: null }
+          throw new Error(`unexpected maybeSingle for ${table}`)
+        },
+        then(resolve: (value: unknown) => unknown) {
+          if (table === "user_product_usage")
+            return Promise.resolve({ data: [], error: null }).then(resolve)
+          if (table === "products") return Promise.resolve({ data: [], error: null }).then(resolve)
+          if (table === "personal_plan_product_search_dispositions") {
+            return Promise.resolve({ data: [], error: null }).then(resolve)
+          }
+          if (table === "user_products")
+            return Promise.resolve({ data: [], error: null }).then(resolve)
+          return Promise.resolve({ data: [], error: null }).then(resolve)
+        },
+      }
+      return chain
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      assert.equal(name, "personal_plan_open_optional_inventory_v1")
+      return {
+        data: {
+          outcome: "ready",
+          draft: {
+            id: "draft-optional",
+            user_id: "owner-1",
+            personal_plan_id: "plan-1",
+            refined_need_version_id: "refined-1",
+            status: "active",
+            revision: 0,
+            contract_version: 1,
+            category_authority_versions: args.p_category_authority_versions,
+            pass: "product_capture",
+            cursor: {
+              categoryCursor: "shampoo",
+              completedCaptureCategories: [],
+              completedDecisionKeys: [],
+            },
+            payload: args.p_payload,
+            created_at: "2026-08-28T00:00:00.000Z",
+            updated_at: "2026-08-28T00:00:00.000Z",
+          },
+        },
+        error: null,
+      }
+    },
+  }
+
+  const result = await openSupabaseStage3OptionalInventory(client as never, {
+    userId: "owner-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+  })
+
+  assert.equal(result.draft.draftId, "draft-optional")
+  assert.equal(
+    handoffFilters.some(
+      ([column, value]) =>
+        column === "module_projections->products->>needVersionId" && value === "refined-1",
+    ),
+    true,
+  )
+  assert.equal(
+    handoffFilters.some(
+      ([column, value]) =>
+        column === "module_projections->products->>stage3Handoff" && value === "true",
+    ),
+    true,
+  )
+})
+
+test("optional inventory entry fails closed when SQL rejects the paid migration source", async () => {
+  const rpcNames: string[] = []
+  const client = {
+    from(table: string) {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        in: () => chain,
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => {
+          if (table === "personal_plans") {
+            return {
+              data: {
+                enrollment_purchase_source_id: "44444444-4444-4444-8444-444444444444",
+                legacy_prefill_v1: { stage2: { outcome: "applied" } },
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_migration_enrollments") {
+            return { data: { id: "44444444-4444-4444-8444-444444444444" }, error: null }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: "refined-1", output_snapshot: optionalInventoryRefinedSnapshot },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_refinement_drafts")
+            return { data: { id: "handoff-1" }, error: null }
+          if (table === "personal_plan_product_drafts") return { data: null, error: null }
+          throw new Error(`unexpected maybeSingle for ${table}`)
+        },
+        then(resolve: (value: unknown) => unknown) {
+          return Promise.resolve({ data: [], error: null }).then(resolve)
+        },
+      }
+      return chain
+    },
+    async rpc(name: string) {
+      rpcNames.push(name)
+      assert.equal(name, "personal_plan_open_optional_inventory_v1")
+      return { data: { outcome: "invalid_source" }, error: null }
+    },
+  }
+
+  await assert.rejects(
+    () =>
+      openSupabaseStage3OptionalInventory(client as never, {
+        userId: "owner-1",
+        personalPlanId: "plan-1",
+        refinedVersionId: "refined-1",
+      }),
+    /stage3_optional_inventory_open_rejected/,
+  )
+  assert.deepEqual(rpcNames, ["personal_plan_open_optional_inventory_v1"])
+})
+
+test("draft hydration drops malformed legacy prefill hints without rejecting the draft", async () => {
+  const client = {
+    from(table: string) {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () => {
+          if (table === "personal_plans") {
+            return {
+              data: { enrollment_purchase_source_id: null, legacy_prefill_v1: null },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: "refined-1", output_snapshot: optionalInventoryRefinedSnapshot },
+              error: null,
+            }
+          }
+          throw new Error(`unexpected maybeSingle for ${table}`)
+        },
+      }
+      return chain
+    },
+    async rpc(name: string, args: Record<string, unknown>) {
+      assert.equal(name, "personal_plan_create_or_load_product_draft")
+      return {
+        data: {
+          id: "draft-generic",
+          user_id: "owner-1",
+          personal_plan_id: "plan-1",
+          refined_need_version_id: "refined-1",
+          status: "active",
+          revision: 0,
+          contract_version: 1,
+          category_authority_versions: args.p_category_authority_versions,
+          pass: "product_capture",
+          cursor: {
+            categoryCursor: "shampoo",
+            completedCaptureCategories: [],
+            completedDecisionKeys: [],
+          },
+          payload: {
+            ...(args.p_payload as Record<string, unknown>),
+            legacyPrefillHints: {
+              schemaVersion: 1,
+              sourceFingerprint: "legacy-prefill-v1:sha256:" + "f".repeat(64),
+              categories: {
+                shampoo: [{ kind: "search_name", usageId: "usage-1", category: "conditioner" }],
+              },
+            },
+          },
+          created_at: "2026-08-28T00:00:00.000Z",
+          updated_at: "2026-08-28T00:00:00.000Z",
+        },
+        error: null,
+      }
+    },
+  }
+
+  const result = await openSupabaseStage3OptionalInventory(client as never, {
+    userId: "owner-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+  })
+
+  assert.equal(result.draft.draftId, "draft-generic")
+  assert.equal(result.draft.legacyPrefillHints, undefined)
+})
 
 test("completed receipt selects the earliest routine when successors share its portfolio", async () => {
   const filtersByTable = new Map<string, Map<string, unknown>>()

@@ -116,6 +116,8 @@ const FIXTURE_CATALOG: FixtureCatalogRecord[] = [
 export type FixtureGatewayFailureOperation = "search" | "mutate" | "complete"
 
 export type FixtureStage3GatewayOptions = {
+  /** Local QA only: resume a controlled persisted-draft fixture. */
+  initialDraft?: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] }
   now?: () => string
   searchDelayMs?: number
   /** Optional Labs-only catalog for browser scenarios that need controlled search breadth. */
@@ -192,6 +194,10 @@ export function createFixtureStage3Gateway(
   const inventoryAuthorityV2Enabled = options.inventoryAuthorityV2Enabled ?? false
   const drafts = new Map<string, Stage3ProductDraft>()
   const requirementsByDraftId = new Map<string, Stage3CategoryRequirement[]>()
+  if (options.initialDraft) {
+    drafts.set(options.initialDraft.draft.draftId, structuredClone(options.initialDraft.draft))
+    requirementsByDraftId.set(options.initialDraft.draft.draftId, options.initialDraft.requirements)
+  }
   const completions = new Map<
     string,
     Extract<FixtureCompleteResponse, { status: "ready_for_routine" }>
@@ -902,14 +908,23 @@ function applyMutation(
           }
           continue
         }
-        const candidate = FIXTURE_CATALOG.find((entry) => entry.candidateId === input.candidateId)
+        const candidate = FIXTURE_CATALOG.find(
+          (entry) =>
+            entry.candidateId === input.candidateId || entry.productId === input.candidateId,
+        )
         if (!candidate || candidate.category !== mutation.category) {
           throw new Error(`unknown fixture candidate ${input.candidateId}`)
         }
-        const capturedProductId = `fixture-user-product:${candidate.productId}`
+        const existing = draft.products.find(
+          (product) =>
+            product.identity.kind === "catalog_product" &&
+            product.identity.productId === candidate.productId,
+        )
+        const capturedProductId =
+          existing?.capturedProductId ?? `fixture-user-product:${candidate.productId}`
         products.push({
           capturedProductId,
-          userProductId: capturedProductId,
+          userProductId: existing?.userProductId ?? capturedProductId,
           identity: {
             kind: "catalog_product",
             productId: candidate.productId,
@@ -918,7 +933,7 @@ function applyMutation(
           },
           frequencyRange: input.frequencyRange,
           ownership: "owned",
-          source: "catalog_search",
+          source: existing?.source ?? "catalog_search",
         })
         if (input.roles.length > 0) {
           assignments.push({

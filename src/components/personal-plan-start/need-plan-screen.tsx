@@ -208,12 +208,7 @@ export function PlanStartHeader({
        * the sequential flow it narrates ends right here (founder field test
        * 27.08.2026). Back and the wordmark stay; only the stage row goes.
        */}
-      <PersonalPlanJourneyHeader
-        currentStage={1}
-        onBack={onBack}
-        backLabel={backLabel}
-        showStageProgress={false}
-      />
+      <PersonalPlanJourneyHeader currentStage={1} onBack={onBack} backLabel={backLabel} />
     </div>
   )
 }

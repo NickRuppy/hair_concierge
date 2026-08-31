@@ -16,19 +16,22 @@ type RoutingClient = Pick<SupabaseClient, "rpc" | "from">
 type RoutingReleaseDependencies = {
   cohortCutoff: () => Date | null
   legacyQuizCutoverEnabled: () => boolean
+  migrationEnabled?: () => boolean
   appAllowedForUser: (userId: string, client: RoutingClient) => Promise<boolean>
 }
 
 const releaseDefaults: RoutingReleaseDependencies = {
   cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
   legacyQuizCutoverEnabled: isPersonalPlanLegacyQuizCutoverEnabled,
+  migrationEnabled: () => process.env.PERSONAL_PLAN_LEGACY_MIGRATION_ENABLED === "true",
   appAllowedForUser: (userId) => isPersonalPlanAppV1AllowedForUser(userId),
 }
 
 type RoutingSource = {
   qualifiedAt: string
-  quizSourceKind: "legacy" | "personal_plan"
-  sourceKind: "paid" | "field_test"
+  quizSourceKind: "legacy" | "personal_plan" | null
+  sourceKind: "paid" | "field_test" | "migration"
+  migrationStatus: "candidate" | "pending_source" | "ready" | null
   plan: {
     currentInitialNeedVersionId: string | null
     currentRefinedNeedVersionId: string | null
@@ -53,14 +56,18 @@ export async function loadPersonalPlanRoutingFrontierForUser(
   const qualifiedAt = new Date(source.qualifiedAt)
   const qualifiedAtIsValid = !Number.isNaN(qualifiedAt.getTime())
   const eligible =
-    qualifiedAtIsValid && source.sourceKind === "field_test"
-      ? true
-      : Boolean(
-          cutoff &&
-          qualifiedAtIsValid &&
-          qualifiedAt.getTime() >= cutoff.getTime() &&
-          (source.quizSourceKind === "personal_plan" || release.legacyQuizCutoverEnabled()),
-        )
+    source.sourceKind === "migration"
+      ? qualifiedAtIsValid &&
+        (source.migrationStatus !== "candidate" || release.migrationEnabled?.() === true)
+      : qualifiedAtIsValid && source.sourceKind === "field_test"
+        ? true
+        : qualifiedAtIsValid &&
+          (release.migrationEnabled?.() === true ||
+            Boolean(
+              cutoff &&
+              qualifiedAt.getTime() >= cutoff.getTime() &&
+              (source.quizSourceKind === "personal_plan" || release.legacyQuizCutoverEnabled()),
+            ))
 
   return resolvePersonalPlanRoutingFrontier({
     eligible,
@@ -74,9 +81,18 @@ export async function loadPersonalPlanRoutingFrontierForUser(
 function parseRoutingSource(value: unknown): RoutingSource | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null
   const row = value as Record<string, unknown>
+  const migrationStatus =
+    row.source_kind === "migration" &&
+    (row.migration_status === "candidate" ||
+      row.migration_status === "pending_source" ||
+      row.migration_status === "ready")
+      ? row.migration_status
+      : null
   if (
     typeof row.qualified_at !== "string" ||
-    (row.quiz_source_kind !== "legacy" && row.quiz_source_kind !== "personal_plan")
+    (row.quiz_source_kind !== "legacy" &&
+      row.quiz_source_kind !== "personal_plan" &&
+      !(migrationStatus && migrationStatus !== "ready" && row.quiz_source_kind === null))
   ) {
     return null
   }
@@ -85,13 +101,16 @@ function parseRoutingSource(value: unknown): RoutingSource | null {
       ? "paid"
       : row.source_kind === "field_test"
         ? "field_test"
-        : null
+        : row.source_kind === "migration" && migrationStatus
+          ? "migration"
+          : null
   if (!sourceKind) return null
   if (row.plan === null || row.plan === undefined) {
     return {
       qualifiedAt: row.qualified_at,
       quizSourceKind: row.quiz_source_kind,
       sourceKind,
+      migrationStatus,
       plan: null,
     }
   }
@@ -113,6 +132,7 @@ function parseRoutingSource(value: unknown): RoutingSource | null {
     qualifiedAt: row.qualified_at,
     quizSourceKind: row.quiz_source_kind,
     sourceKind,
+    migrationStatus,
     plan: {
       currentInitialNeedVersionId,
       currentRefinedNeedVersionId,

@@ -182,7 +182,6 @@ export function RefinementQuestion({
           currentStage={2}
           saveStatus={journeySaveStatus(status)}
           onBack={canGoBack ? onBack : onSecondaryExit}
-          showStageProgress={false}
         />
       ) : null}
       <main className="mx-auto flex min-h-[calc(100dvh-71px)] w-full max-w-[720px] min-w-0 flex-col">

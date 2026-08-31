@@ -276,9 +276,10 @@ test("a second consecutive stale seen state opens the refinement instead of loop
   })
   assert.equal(run.acceptCalls.length, 2)
   assert.equal(run.refreshes(), 1)
-  // An EXPLICIT module deep link, not the old `?refine=1`: the escape hatch has
-  // to land in the product questions without resurrecting the retired chapter
-  // ceremony that `?refine=1` still triggers.
+  // An explicit module deep link: the escape hatch lands in the product
+  // questions. (`?refine=1` now behaves the same, resolved to the first open
+  // module; the hatch names `products` because that is what a failed accept
+  // is about.)
   assert.equal(PLAN_ACCEPT_REFINE_HREF, "/plan-start?refine=products")
 })
 

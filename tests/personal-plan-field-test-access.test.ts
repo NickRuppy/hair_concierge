@@ -9,6 +9,7 @@ type Row = Record<string, unknown>
 
 function client(responses: Record<string, Row[]>) {
   return {
+    rpc: async () => ({ data: { status: "ineligible" }, error: null }),
     from(table: string) {
       const predicates: Array<[string, unknown]> = []
       const builder = {

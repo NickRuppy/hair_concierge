@@ -102,7 +102,6 @@ export function Stage3Shell({
         onBack={onBack}
         backDisabled={backDisabled}
         backLabel={backLabel}
-        showStageProgress={false}
       />
       <main
         className={`personal-plan-cookie-clearance mx-auto min-w-0 w-full max-w-[720px] px-5 pt-7 md:my-8 md:rounded-3xl md:border md:border-border md:bg-card md:px-10 md:pt-10 md:shadow-sm${contentEntrance ? " personal-plan-stage-target-fade" : ""}`}

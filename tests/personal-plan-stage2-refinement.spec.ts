@@ -7,8 +7,9 @@ async function openLab(page: Page, scenario: string) {
 }
 
 async function begin(page: Page, scenario = "ready") {
+  // The invitation chapter is retired (relic removal 28.08.2026): a fresh
+  // entry opens its first question directly, with the heading focused.
   await openLab(page, scenario)
-  await page.getByRole("button", { name: /Feinschliff starten/ }).click()
   await expect(page.getByRole("heading", { level: 2 })).toBeFocused()
 }
 
@@ -124,10 +125,12 @@ test.describe("Stage 2 refinement Labs preview", () => {
       "data-stage2-next-href",
       "/plan-start",
     )
+    await expect(
+      page.getByRole("heading", { name: "Deine Produkte werden vorbereitet." }),
+    ).toBeVisible()
     await expect(bridge.locator("a")).toHaveCount(0)
     await expect(bridge).not.toContainText(/Ergebnis|Veränderung|Karte|Delta/i)
-    await page.getByRole("button", { name: /Produkte erfassen/ }).click()
-    await expect(page).toHaveURL(/scenario=ready/)
+    await expect(page.getByRole("button", { name: /Produkte erfassen/ })).toHaveCount(0)
   })
 
   test("keeps every wet-wash label centered on its marker across mobile and desktop widths", async ({
@@ -253,9 +256,8 @@ test.describe("Stage 2 refinement Labs preview", () => {
 
   test("resume and completed fixtures preserve their canonical entry points", async ({ page }) => {
     await openLab(page, "resume")
-    await expect(page.getByText("Du machst bei der ersten offenen Frage weiter.")).toBeVisible()
+    await expect(page.getByText("Du machst bei der ersten offenen Frage weiter.")).toHaveCount(0)
     await expect(page.getByText("Aktuelle Produktarten")).toHaveCount(0)
-    await page.getByRole("button", { name: /offenen Frage fortfahren/ }).click()
     await expect(
       page.getByRole("heading", { name: "Was schützt dein Haar nachts meistens?" }),
     ).toBeVisible()
@@ -465,9 +467,14 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await expect(page.getByText("Jetzt gleichen wir deine Produkte ab.")).toHaveCount(0)
 
-    // The same completed draft without a module deep link still bridges.
+    // The same completed draft without a module deep link still bridges, but no
+    // longer via the old chapter-3 ceremony.
     await openLab(page, "complete")
-    await expect(page.getByText("Jetzt gleichen wir deine Produkte ab.")).toBeVisible()
+    await expect(
+      page.getByRole("heading", { name: "Deine Produkte werden vorbereitet." }),
+    ).toBeVisible()
+    await expect(page.getByText("Jetzt gleichen wir deine Produkte ab.")).toHaveCount(0)
+    await expect(page.getByRole("button", { name: /Produkte erfassen/ })).toHaveCount(0)
   })
 
   test("unknown preview scenarios return 404", async ({ page }) => {

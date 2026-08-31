@@ -241,3 +241,72 @@ test("moderator application entry routes recovery and unfinished setup safely", 
     )
   }
 })
+
+test("migration candidates require rollout while bound Plans resume without the launch cutoff", async () => {
+  const row = {
+    source_kind: "migration",
+    migration_status: "candidate",
+    qualified_at: "2026-01-01T00:00:00Z",
+    quiz_source_kind: null as string | null,
+    plan: null as Record<string, string | null> | null,
+  }
+  const client = { rpc: async () => ({ data: row, error: null }), from: () => null }
+  const release = {
+    cohortCutoff: () => null,
+    legacyQuizCutoverEnabled: () => false,
+    appAllowedForUser: async () => true,
+    migrationEnabled: () => false,
+  }
+  assert.deepEqual(
+    await loadPersonalPlanRoutingFrontierForUser(client as never, "owner", release),
+    { kind: "legacy" },
+  )
+  assert.deepEqual(
+    await loadPersonalPlanRoutingFrontierForUser(client as never, "owner", {
+      ...release,
+      migrationEnabled: () => true,
+    }),
+    { kind: "recovery", nextHref: "/plan-bereit" },
+  )
+  row.migration_status = "ready"
+  row.quiz_source_kind = "legacy"
+  row.plan = {
+    current_initial_need_version_id: "initial",
+    current_refined_need_version_id: "refined",
+    active_routine_version_id: "routine",
+    pending_routine_proposal_id: null,
+  }
+  assert.deepEqual(
+    await loadPersonalPlanRoutingFrontierForUser(client as never, "owner", release),
+    { kind: "personal_plan", frontier: "stage5", nextHref: "/anwendung" },
+  )
+  row.migration_status = "invented"
+  assert.deepEqual(
+    await loadPersonalPlanRoutingFrontierForUser(client as never, "owner", release),
+    { kind: "legacy" },
+  )
+})
+
+test("a valid historical paid source enters preparation when migration is enabled despite the old cutoff", async () => {
+  const client = {
+    rpc: async () => ({
+      data: {
+        source_kind: "paid",
+        qualified_at: "2026-01-01T00:00:00Z",
+        quiz_source_kind: "legacy",
+        plan: null,
+      },
+      error: null,
+    }),
+    from: () => null,
+  }
+  assert.deepEqual(
+    await loadPersonalPlanRoutingFrontierForUser(client as never, "owner", {
+      cohortCutoff: () => new Date("2026-08-01"),
+      legacyQuizCutoverEnabled: () => false,
+      migrationEnabled: () => true,
+      appAllowedForUser: async () => true,
+    }),
+    { kind: "recovery", nextHref: "/plan-bereit" },
+  )
+})

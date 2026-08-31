@@ -2,7 +2,49 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { createHttpStage2RefinementGateway } from "../src/lib/personal-plan/refinement/http-gateway"
-import { createHttpStage3IntakeClient } from "../src/lib/personal-plan/products/http-gateway"
+import {
+  createHttpStage3IntakeClient,
+  createHttpStage3ProductsGateway,
+} from "../src/lib/personal-plan/products/http-gateway"
+
+test("optional inventory entry is a POST separate from baseline draft loading", async () => {
+  const requests: Array<{ url: string; init?: RequestInit }> = []
+  const gateway = createHttpStage3ProductsGateway({
+    fetch: async (url, init) => {
+      requests.push({ url: String(url), init })
+      return new Response(JSON.stringify({ draft: { draftId: "imported", revision: 0 } }))
+    },
+  })
+  const input = { personalPlanId: "plan", refinedVersionId: "refined" }
+  await gateway.openOptionalInventory?.(input)
+  assert.equal(requests.length, 1)
+  assert.equal(requests[0].url, "/api/personal-plan/stage-3/optional-entry")
+  assert.equal(requests[0].init?.method, "POST")
+  assert.deepEqual(JSON.parse(String(requests[0].init?.body)), input)
+  await gateway.loadOrCreate({ ...input, draftId: "draft", userId: "owner", requirements: [] })
+  assert.equal(requests[1].init?.method, "GET")
+})
+
+test("optional Stage 2 entry uses a separate POST and returns the prepared successor revision", async () => {
+  const requests: Array<{ url: string; init?: RequestInit }> = []
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async (url, init) => {
+      requests.push({ url: String(url), init })
+      return new Response(
+        JSON.stringify({ sessionId: "successor", revision: 0, status: "in_progress" }),
+      )
+    },
+  })
+  const session = await gateway.openOptionalRefinement?.("products")
+  assert.equal(requests.length, 1)
+  assert.equal(requests[0].url, "/api/personal-plan/stage-2/optional-entry")
+  assert.equal(requests[0].init?.method, "POST")
+  assert.deepEqual(JSON.parse(String(requests[0].init?.body)), { module: "products" })
+  assert.equal(session?.revision, 0)
+  await gateway.load()
+  assert.equal(requests[1].url, "/api/personal-plan/stage-2")
+  assert.equal(requests[1].init?.method, "GET")
+})
 
 test("the browser Stage 2 gateway maps a failed load to a typed error and retries with a fresh request", async () => {
   let calls = 0

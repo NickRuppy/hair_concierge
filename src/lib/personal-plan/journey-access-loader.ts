@@ -24,6 +24,7 @@ import {
   type PersonalPlanJourneyAccessInput,
 } from "./journey-access"
 import { findPersonalPlanEnrollmentForUser } from "./enrollment"
+import { isPersonalPlanLegacyMigrationEnabled } from "./migration-admission"
 
 type AccessState = PersonalPlanJourneyAccessInput["accessState"]
 
@@ -37,9 +38,10 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
     qualifiedAt: string | null
     artifactLeadId: string | null
     quizSourceKind?: "personal_plan" | "legacy" | null
-    sourceKind?: "one_time" | "launch_subscription" | "field_test" | null
+    sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null
   }>
   cohortCutoff: () => Date | null
+  migrationEnabled?: () => boolean
   appEnabled: () => boolean
   appRollout: () => PersonalPlanAppV1Rollout
   stage2Enabled: () => boolean
@@ -119,14 +121,23 @@ function phaseElapsed(reporter: JourneyAccessPhaseReporter | undefined, startedA
 function isQualifiedOwnerCohort(
   qualifiedAt: string | null,
   cutoff: Date | null,
-  sourceKind?: "one_time" | "launch_subscription" | "field_test" | null,
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null,
+  migrationEnabled = false,
 ): boolean {
   if (!qualifiedAt) return false
   const parsed = new Date(qualifiedAt)
   if (Number.isNaN(parsed.getTime())) return false
-  return sourceKind === "field_test"
+  return sourceKind === "field_test" || sourceKind === "migration"
     ? true
-    : Boolean(cutoff && parsed.getTime() >= cutoff.getTime())
+    : isMigrationPaidSource(sourceKind) && migrationEnabled
+      ? true
+      : Boolean(cutoff && parsed.getTime() >= cutoff.getTime())
+}
+
+function isMigrationPaidSource(
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null,
+): boolean {
+  return sourceKind === "one_time" || sourceKind === "launch_subscription"
 }
 
 function sameJson(left: unknown, right: unknown): boolean {
@@ -207,6 +218,7 @@ async function loadJourneyAuthorizationPrefixWithDeps(
     entitlement.qualifiedAt,
     deps.cohortCutoff(),
     entitlement.sourceKind,
+    deps.migrationEnabled?.() ?? false,
   )
   const entitlementEligible =
     entitlement.accessState === "active" && isNewBuyerCohort && Boolean(entitlement.artifactLeadId)
@@ -447,6 +459,7 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
       }
     },
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
+    migrationEnabled: isPersonalPlanLegacyMigrationEnabled,
     appEnabled: isPersonalPlanAppV1Enabled,
     appRollout: resolvePersonalPlanAppV1Rollout,
     stage2Enabled: isPersonalPlanStage2Enabled,

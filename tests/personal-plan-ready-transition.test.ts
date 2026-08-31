@@ -102,7 +102,7 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   // coral CTA, no chapter list promising Feinschliff/Produkt-Check as steps.
   assert.match(arrival, /Dein Plan ist fertig\./)
   assert.match(arrival, /Und das wartet dahinter:/)
-  assert.match(arrival, /showStageProgress=\{false\}/)
+  assert.doesNotMatch(arrival, /showStageProgress/)
   assert.doesNotMatch(arrival, /PersonalPlanJourneyOverview/)
   assert.match(client, /Wir bereiten deinen Haarplan vor\./)
   assert.match(client, /Haarplan wird geprüft/)
@@ -113,7 +113,8 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.doesNotMatch(client, /personalPlanStoryIndexAt/)
   assert.doesNotMatch(client, /setInterval/)
   assert.doesNotMatch(client, /Zuerst siehst du, was dein Haar laut deinem Quiz braucht/)
-  assert.match(route, /loadPlanBereitInitialReadiness\(admin, readinessInput\)/)
+  assert.match(route, /loadReadiness: loadPlanBereitInitialReadiness/)
+  assert.match(route, /deps\.loadReadiness\(admin, readinessInput\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)
   assert.match(readiness, /canLinkDirectQuizLead/)
   assert.match(readiness, /\.upsert\(output, \{ onConflict: "user_id" \}\)/)

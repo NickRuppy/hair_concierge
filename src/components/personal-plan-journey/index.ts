@@ -4,13 +4,6 @@ export {
   type PersonalPlanSaveStatus,
 } from "./journey-header"
 export {
-  PERSONAL_PLAN_CHAPTERS,
-  PERSONAL_PLAN_JOURNEY_STAGES,
-  type PersonalPlanChapterStage,
-} from "./journey-content"
-export { PersonalPlanJourneyOverview } from "./journey-overview"
-export { PersonalPlanChapterTransition } from "./chapter-transition"
-export {
   PLAN_ACCEPT_ERROR,
   PLAN_ACCEPT_REFINE_HREF,
   PLAN_ACCEPT_UNAVAILABLE_NOTICE,

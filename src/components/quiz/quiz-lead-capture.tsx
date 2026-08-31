@@ -19,6 +19,11 @@ import {
   suggestEmailCorrection,
 } from "@/lib/email-deliverability-shared"
 import { useQuizBrowserBack } from "./quiz-browser-history"
+import {
+  isMigrationQuizRecoverySearch,
+  resolveLeadCaptureRecoveryNextHref,
+  resolveLeadCaptureServerNextHref,
+} from "@/lib/quiz/migration-prefill-init"
 
 function isValidEmail(email: string) {
   return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
@@ -113,12 +118,23 @@ export function QuizLeadCapture() {
           marketingConsent: accepted,
           quizAnswers: canonicalizeQuizAnswers(answers),
           funnelEventId,
+          migrationRecovery: isMigrationQuizRecoverySearch(window.location.search),
         }),
       })
 
+      const data = await res.json().catch(() => null)
+      const recoveryNextHref = resolveLeadCaptureRecoveryNextHref(
+        { ok: res.ok, status: res.status },
+        data,
+      )
+      if (recoveryNextHref) {
+        window.location.assign(recoveryNextHref)
+        return
+      }
+
       if (!res.ok) {
         if (res.status === 422) {
-          const detail: unknown = await res.json().catch(() => null)
+          const detail: unknown = data
           if (
             detail &&
             typeof detail === "object" &&
@@ -148,13 +164,17 @@ export function QuizLeadCapture() {
         throw new Error("Speichern fehlgeschlagen")
       }
 
-      const data = await res.json()
       setLeadId(data.leadId)
       trackAppEvent("quiz_lead_captured", {
         leadId: data.leadId,
         marketingConsent: accepted,
         funnelEventId,
       })
+      const serverNextHref = resolveLeadCaptureServerNextHref(data)
+      if (serverNextHref) {
+        window.location.assign(serverNextHref)
+        return
+      }
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")

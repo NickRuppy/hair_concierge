@@ -16,6 +16,12 @@ export function createHttpStage3ProductsGateway({
   fetch: fetcher = fetch,
 }: { fetch?: FetchLike } = {}): Stage3ProductsGateway {
   return {
+    openOptionalInventory: async (input) =>
+      request<Stage3DraftResponse>(
+        fetcher,
+        "/api/personal-plan/stage-3/optional-entry",
+        jsonRequest("POST", input),
+      ),
     loadOrCreate: async ({
       personalPlanId,
       refinedVersionId,

@@ -6,11 +6,16 @@ import {
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { findPersonalPlanEnrollmentForUser } from "@/lib/personal-plan/enrollment"
+import { resolvePersonalPlanMigrationAdmission } from "@/lib/personal-plan/migration-admission"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
 import { PersonalPlanReadyClient } from "./personal-plan-ready-client"
-import { loadPlanBereitInitialReadiness, type PlanBereitInitialReadiness } from "./readiness"
+import {
+  loadPlanBereitInitialReadiness,
+  needsFreshMigrationQuiz,
+  type PlanBereitInitialReadiness,
+} from "./readiness"
 
 export const dynamic = "force-dynamic"
 
@@ -117,6 +122,28 @@ export default async function PersonalPlanReadyPage({
       )
     : { enrollment: null, unavailable: false as const }
   const sourceLookupUnavailable = enrollmentResult.unavailable
+  if (active && !sourceLookupUnavailable && !enrollmentResult.enrollment?.artifactLeadId) {
+    // Read-only first render: source binding and projection start in the existing POST.
+    const migration = await resolvePersonalPlanMigrationAdmission({
+      client: admin,
+      userId: user.id,
+    }).catch(() => null)
+    if (!migration || migration.status !== "ineligible") {
+      return (
+        <PersonalPlanReadyClient
+          leadId={requestedLeadId}
+          initialReadiness={{
+            status: migration ? "checking" : "transient_error",
+            leadId: requestedLeadId,
+            quizSourceKind: null,
+            sourceVersion: null,
+            missingFacts: [],
+            initialAction: migration ? "link" : "none",
+          }}
+        />
+      )
+    }
+  }
   if (!active && oneTimeAccessState === "paid_pending") {
     const entitlement = await findOneTimePurchaseEntitlementForUser(admin, user.id)
     canonicalLeadId = entitlement?.consent?.lead_id ?? null
@@ -198,7 +225,12 @@ export default async function PersonalPlanReadyPage({
       return (
         <PersonalPlanReadyClient
           leadId={canonicalLeadId}
-          initialReadiness={initialReadiness}
+          initialReadiness={
+            enrollmentResult.enrollment?.sourceKind === "migration" &&
+            needsFreshMigrationQuiz(initialReadiness)
+              ? { ...initialReadiness, status: "checking", initialAction: "link" }
+              : initialReadiness
+          }
           nextHref="/plan-start"
         />
       )

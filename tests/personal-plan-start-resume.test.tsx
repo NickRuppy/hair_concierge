@@ -12,6 +12,7 @@ import {
   completeStage2ProductKindCorrection,
   loadPlanStartStage2HandoffBootstrap,
   loadPlanStartStage3Bootstrap,
+  planStartStage3BootstrapMode,
   PlanStartProductionGate,
   recoverPlanStartStage3Load,
   refinementAutoHandoffEnabled,
@@ -389,31 +390,28 @@ test("a transient server Stage 1 preload failure preserves the browser retry pat
   })
 })
 
-test("direct Stage 2 entry opens a new session immediately but preserves partial resume", () => {
+test("direct Stage 2 entry opens fresh and partial sessions on normal Stage 2 questions", () => {
   const fresh = refinementSession("in_progress")
   fresh.answers = {}
   fresh.completedQuestionIds = []
   fresh.path.completedQuestionIds = []
   fresh.path.firstUnresolvedQuestionId = "current_product_categories"
 
-  assert.equal(deriveRefinementEntryMode(fresh, true), "question")
-  assert.equal(deriveRefinementEntryMode(fresh, false), "invitation")
-  assert.equal(deriveRefinementEntryMode(refinementSession("in_progress"), true), "resume")
+  // The invitation chapter is retired (relic removal 28.08.2026): a fresh
+  // entry always opens its first question directly.
+  assert.equal(deriveRefinementEntryMode(fresh), "question")
+  assert.equal(deriveRefinementEntryMode(refinementSession("in_progress")), "question")
   assert.equal(
     shouldReturnToStage1FromQuestion({
       session: fresh,
       activeQuestionId: "current_product_categories",
-      directEntry: true,
     }),
     true,
   )
-  assert.equal(
-    deriveRefinementEntryMode(refinementSession("complete", "refined-1"), true),
-    "bridge",
-  )
+  assert.equal(deriveRefinementEntryMode(refinementSession("complete", "refined-1")), "bridge")
 })
 
-test("a server-seeded Stage 2 resumer renders the saved position on first paint", () => {
+test("a server-seeded Stage 2 partial resume renders the saved question on first paint", () => {
   let clientLoads = 0
   const initialSession = refinementSession("in_progress")
   const props = {
@@ -432,12 +430,12 @@ test("a server-seeded Stage 2 resumer renders the saved position on first paint"
 
   const html = renderToStaticMarkup(<RefinementFlow {...props} />)
 
-  assert.match(html, /Du machst bei der ersten offenen Frage weiter\./)
-  assert.match(html, /Nasswasch-Rhythmus/)
+  assert.doesNotMatch(html, /Du machst bei der ersten offenen Frage weiter\./)
+  assert.match(html, /Wie oft wäschst du deine Haare nass\?/)
   assert.equal(clientLoads, 0)
 })
 
-test("the production gate bypasses Stage 1 for a valid server-selected Stage 2 resume", () => {
+test("the production gate bypasses Stage 1 for a valid server-selected Stage 2 partial resume", () => {
   const initialSession = refinementSession("in_progress")
   const html = renderToStaticMarkup(
     <PlanStartProductionGate
@@ -447,9 +445,187 @@ test("the production gate bypasses Stage 1 for a valid server-selected Stage 2 r
     />,
   )
 
-  assert.match(html, /Wir laden deinen Feinschliff\./)
-  assert.match(html, /Du machst bei der ersten offenen Frage weiter\./)
+  assert.match(html, /Wie oft wäschst du deine Haare nass\?/)
+  assert.doesNotMatch(html, /Du machst bei der ersten offenen Frage weiter\./)
   assert.doesNotMatch(html, /Dein Plan entsteht/)
+})
+
+test("an explicit module entry does not seed the old baseline Stage 2 resume shell", () => {
+  const initialSession = refinementSession("in_progress")
+  const html = renderToStaticMarkup(
+    <PlanStartProductionGate
+      initialJourney={{
+        stage: "stage2",
+        returningToRefinement: true,
+        refineModule: "products",
+        planAccepted: true,
+      }}
+      personalPlanId="plan-1"
+      initialRefinementSession={initialSession}
+      initialPlan={{ basis: {} as never, optional: null, personalPlanId: "plan-1" }}
+    />,
+  )
+
+  assert.match(html, /Wir laden deinen Stand\./)
+  assert.doesNotMatch(html, /Du machst bei der ersten offenen Frage weiter\./)
+  assert.doesNotMatch(html, /Dein Plan entsteht/)
+})
+
+function stage3DraftResponse(
+  draftId: string,
+  refinedVersionId: string,
+): Stage3DraftResponse & { authorityEvaluations: [] } {
+  const authorityVersions = {
+    shampoo: "shampoo-v1",
+    conditioner: "conditioner-v1",
+    leave_in: "leave-in-v1",
+    heat_protectant: "heat-protectant-v1",
+    oil: "oil-v1",
+    mask: "mask-v1",
+    scalp_care: "scalp-care-v1",
+    dry_shampoo: "dry-shampoo-v1",
+    bondbuilder: "bondbuilder-v1",
+    deep_cleansing_shampoo: "deep-cleansing-v1",
+  }
+  return {
+    status: "active",
+    requirements: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: "shampoo-v1",
+      },
+    ],
+    draft: {
+      schemaVersion: 1,
+      status: "active",
+      authorityVersions,
+      draftId,
+      userId: "owner-1",
+      personalPlanId: "plan-1",
+      refinedVersionId,
+      staleRefinedVersionId: null,
+      revision: 3,
+      pass: "product_capture",
+      orderedCategories: ["shampoo"],
+      categoryCursor: "shampoo",
+      products: [],
+      roleAssignments: [],
+      uncoveredRoles: [],
+      decisions: [],
+      completedCaptureCategories: [],
+      completedDecisionKeys: [],
+      createdAt: "2026-08-09T10:00:00.000Z",
+      updatedAt: "2026-08-09T10:05:00.000Z",
+      authoritySnapshot: {
+        schemaVersion: 1,
+        refinedNeedVersionId: refinedVersionId,
+        refinedInputHash: "hash-1",
+        categoryDecisions: [],
+        coverage: [],
+        orderedCategories: ["shampoo"],
+        authorityVersions,
+      },
+    },
+    authorityEvaluations: [],
+  }
+}
+
+test("Stage 3 bootstrap selects optional inventory only for a verified products handoff", async () => {
+  const calls: string[] = []
+  const optionalDraft = stage3DraftResponse("optional-draft", "refined-products")
+  const gateway: Pick<Stage3ProductsGateway, "loadOrCreate" | "openOptionalInventory"> = {
+    openOptionalInventory: async (input) => {
+      calls.push(`optional:${input.personalPlanId}:${input.refinedVersionId}`)
+      return optionalDraft
+    },
+    loadOrCreate: async () => {
+      calls.push("baseline")
+      throw new Error("verified products handoff must not use baseline load")
+    },
+  }
+
+  const bootstrap = await loadPlanStartStage3Bootstrap({
+    gateway,
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-products",
+    optionalInventory: true,
+  })
+
+  assert.deepEqual(calls, ["optional:plan-1:refined-products"])
+  assert.equal(bootstrap.draft.draftId, "optional-draft")
+})
+
+test("baseline and direct-accept Stage 3 bootstrap keep loadOrCreate", async () => {
+  const calls: string[] = []
+  const baselineDraft = stage3DraftResponse("baseline-draft", "refined-baseline")
+  const gateway: Pick<Stage3ProductsGateway, "loadOrCreate" | "openOptionalInventory"> = {
+    openOptionalInventory: async () => {
+      calls.push("optional")
+      throw new Error("baseline/direct accept must not import optional inventory")
+    },
+    loadOrCreate: async (input) => {
+      calls.push(`baseline:${input.personalPlanId}:${input.refinedVersionId}`)
+      return baselineDraft
+    },
+  }
+
+  const bootstrap = await loadPlanStartStage3Bootstrap({
+    gateway,
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-baseline",
+  })
+
+  assert.deepEqual(calls, ["baseline:plan-1:refined-baseline"])
+  assert.equal(bootstrap.draft.draftId, "baseline-draft")
+})
+
+test("host Stage 3 mode trusts only the verified products handoff marker", () => {
+  assert.equal(
+    planStartStage3BootstrapMode({ stage: "stage3", refinedVersionId: "refined" }, "initial"),
+    "baseline",
+  )
+  assert.equal(
+    planStartStage3BootstrapMode(
+      { stage: "stage3", refinedVersionId: "refined", refineModule: "products" },
+      "initial",
+    ),
+    "optional_inventory",
+  )
+  assert.equal(
+    planStartStage3BootstrapMode(
+      {
+        stage: "stage3",
+        refinedVersionId: "refined",
+        repairRoutineVersionId: "repair",
+        refineModule: "products",
+      },
+      "initial",
+    ),
+    "baseline",
+  )
+  assert.equal(
+    planStartStage3BootstrapMode(
+      { stage: "stage2", returningToRefinement: true, refineModule: "products" },
+      "stage2_handoff",
+    ),
+    "optional_inventory",
+  )
+  assert.equal(
+    planStartStage3BootstrapMode(
+      { stage: "stage2", returningToRefinement: true, refineModule: "first_open" },
+      "stage2_handoff",
+    ),
+    "optional_inventory",
+  )
+  assert.equal(
+    planStartStage3BootstrapMode(
+      { stage: "stage2", returningToRefinement: true, refineModule: "habits" },
+      "stage2_handoff",
+    ),
+    "baseline",
+  )
 })
 
 test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstrap authority", async () => {

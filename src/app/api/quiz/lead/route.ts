@@ -1,8 +1,10 @@
 import { after, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { createClient as createSessionClient } from "@/lib/supabase/server"
 import { checkRateLimit, QUIZ_LEAD_RATE_LIMIT } from "@/lib/rate-limit"
 import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
+import type { QuizAnswers } from "@/lib/quiz/types"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
 import { syncQuizLeadToCustomerIo } from "@/lib/customerio/quiz-sync"
 import {
@@ -35,6 +37,16 @@ import {
   EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
   type EmailDeliverabilityRejectionResponse,
 } from "@/lib/email-deliverability-shared"
+import {
+  MIGRATION_QUIZ_COOKIE,
+  clearMigrationQuizContextCookieOptions,
+  decodeMigrationQuizContextCookie,
+} from "@/lib/personal-plan/migration-quiz-context"
+import {
+  MIGRATION_QUIZ_COMPLETION_HREF,
+  saveMigrationQuizLead,
+} from "@/lib/personal-plan/migration-quiz"
+import { isPersonalPlanLegacyMigrationEnabled } from "@/lib/personal-plan/migration-admission"
 
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
@@ -50,9 +62,14 @@ interface QuizLeadPostDependencies {
   checkEmailDeliverability: typeof checkEmailDeliverability
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
   createAdminClient: typeof createAdminClient
+  createSessionClient: typeof createSessionClient
   cookies: typeof cookies
   bindRegularQuizFieldTestLead: typeof bindRegularQuizFieldTestLead
   isRegularQuizFieldTestEnabled: typeof isRegularQuizFieldTestEnabled
+  migrationQuizCookieSecret: () => string | null
+  migrationQuizEnabled: () => boolean
+  now: () => number
+  saveMigrationQuizLead: typeof saveMigrationQuizLead
   resolveFunnelCookieContext: typeof resolveFunnelCookieContext
   resolvePendingFunnelTouchValue: typeof resolvePendingFunnelTouchValue
   recordFunnelEvent: typeof recordFunnelEvent
@@ -69,9 +86,14 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     checkEmailDeliverability,
     recordEmailDeliverabilityOutcome,
     createAdminClient,
+    createSessionClient,
     cookies,
     bindRegularQuizFieldTestLead,
     isRegularQuizFieldTestEnabled,
+    migrationQuizCookieSecret: () => process.env.FUNNEL_COOKIE_SIGNING_SECRET ?? null,
+    migrationQuizEnabled: () => isPersonalPlanLegacyMigrationEnabled(),
+    now: () => Date.now(),
+    saveMigrationQuizLead,
     resolveFunnelCookieContext,
     resolvePendingFunnelTouchValue,
     recordFunnelEvent,
@@ -94,7 +116,24 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
       const parsed = leadSchema.parse(body)
       const email = normalizeEmail(parsed.email)
+      const migrationRecovery = isMigrationRecoverySubmission(body)
       const cookieStore = await dependencies.cookies()
+      const migrationCookieValue = cookieStore.get(MIGRATION_QUIZ_COOKIE)?.value
+      if (migrationRecovery) {
+        const origin = request.headers.get("origin")
+        if (origin && origin !== new URL(request.url).origin) {
+          return NextResponse.json({ error: "Ungültige Anfrage" }, { status: 403 })
+        }
+        if (!migrationCookieValue) {
+          return migrationUnavailableResponse({ clearCookie: false })
+        }
+        return saveMigrationQuizLeadFromContext({
+          cookieValue: migrationCookieValue,
+          dependencies,
+          email,
+          parsed,
+        })
+      }
       const funnelContext = await dependencies.resolveFunnelCookieContext(
         cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
       )
@@ -393,6 +432,100 @@ export function enqueueMetaLead(
   })
 
   return true
+}
+
+type ParsedQuizLead = {
+  name: string
+  email: string
+  marketingConsent: boolean
+  quizAnswers: QuizAnswers
+}
+
+async function saveMigrationQuizLeadFromContext({
+  cookieValue,
+  dependencies,
+  email,
+  parsed,
+}: {
+  cookieValue: string
+  dependencies: QuizLeadPostDependencies
+  email: string
+  parsed: ParsedQuizLead
+}) {
+  const session = await dependencies.createSessionClient()
+  const {
+    data: { user },
+  } = await session.auth.getUser()
+  if (!user?.id) {
+    return migrationUnavailableResponse({ clearCookie: true })
+  }
+
+  const context = decodeMigrationQuizContextCookie(
+    cookieValue,
+    dependencies.migrationQuizCookieSecret(),
+    {
+      userId: user.id,
+      now: dependencies.now(),
+    },
+  )
+  if (!context) return migrationUnavailableResponse({ clearCookie: true })
+  if (!dependencies.migrationQuizEnabled())
+    return migrationUnavailableResponse({ clearCookie: true })
+
+  try {
+    const result = await dependencies.saveMigrationQuizLead({
+      client: dependencies.createAdminClient(),
+      userId: user.id,
+      enrollmentId: context.enrollmentId,
+      name: parsed.name,
+      email,
+      marketingConsent: parsed.marketingConsent,
+      quizAnswers: canonicalizeQuizAnswersForRpc(parsed.quizAnswers),
+    })
+
+    if (result.status === "saved") {
+      const response = NextResponse.json({
+        leadId: result.leadId,
+        nextHref: MIGRATION_QUIZ_COMPLETION_HREF,
+      })
+      response.cookies.set(MIGRATION_QUIZ_COOKIE, "", clearMigrationQuizContextCookieOptions)
+      return response
+    }
+    if (result.status === "invalid_context") {
+      return migrationUnavailableResponse({ clearCookie: true })
+    }
+    return NextResponse.json({ error: "Migration nicht verfügbar" }, { status: 503 })
+  } catch (error) {
+    console.error("Migration quiz lead save error:", error)
+    return NextResponse.json({ error: "Migration nicht verfügbar" }, { status: 503 })
+  }
+}
+
+function migrationUnavailableResponse({ clearCookie }: { clearCookie: boolean }) {
+  const response = NextResponse.json(
+    {
+      error: "Migration nicht verfügbar",
+      nextHref: MIGRATION_QUIZ_COMPLETION_HREF,
+    },
+    { status: 403 },
+  )
+  if (clearCookie) {
+    response.cookies.set(MIGRATION_QUIZ_COOKIE, "", clearMigrationQuizContextCookieOptions)
+  }
+  return response
+}
+
+function canonicalizeQuizAnswersForRpc(answers: QuizAnswers): Record<string, unknown> {
+  return JSON.parse(JSON.stringify(canonicalizeQuizAnswers(answers))) as Record<string, unknown>
+}
+
+function isMigrationRecoverySubmission(body: unknown): boolean {
+  return (
+    Boolean(body) &&
+    typeof body === "object" &&
+    !Array.isArray(body) &&
+    (body as Record<string, unknown>).migrationRecovery === true
+  )
 }
 
 export async function bindRegularFieldTestLead({

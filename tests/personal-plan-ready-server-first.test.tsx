@@ -247,6 +247,9 @@ test("non-ready /plan-bereit states also retire the 5-stage bar (same relic as t
 
 test("page passes the server-first readiness envelope into the client", () => {
   assert.match(pageSource, /loadPlanBereitInitialReadiness/)
-  assert.match(pageSource, /initialReadiness=\{initialReadiness\}/)
+  assert.match(
+    pageSource,
+    /initialReadiness=\{[\s\S]*needsFreshMigrationQuiz\(initialReadiness\)[\s\S]*: initialReadiness/,
+  )
   assert.match(pageSource, /initialAction: "poll"/)
 })

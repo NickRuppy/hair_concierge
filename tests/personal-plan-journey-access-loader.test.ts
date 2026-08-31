@@ -155,6 +155,7 @@ async function projectJourneyDraft(
   draft: Stage3ProductDraft,
 ): Promise<Awaited<ReturnType<PersonalPlanJourneyAccessLoaderDeps["loadCurrentProductDraft"]>>> {
   const admin = {
+    rpc: async () => ({ data: { status: "ineligible" }, error: null }),
     from(table: string) {
       assert.equal(table, "personal_plan_product_drafts")
       const builder = {
@@ -235,6 +236,62 @@ function deps(
     ...overrides,
   }
 }
+
+test("a currently paid bound migration keeps Stage 2 access independently of the old cutoff", async () => {
+  for (const accessState of ["active", "revoked"] as const) {
+    const access = await loadPersonalPlanStage2AccessWithDeps(
+      deps({
+        cohortCutoff: () => null,
+        loadEntitlement: async () => ({
+          accessState,
+          qualifiedAt: "2026-01-01T00:00:00Z",
+          artifactLeadId: "lead-1",
+          sourceKind: "migration" as never,
+        }),
+      }),
+      "owner-1",
+    )
+    assert.deepEqual(access, { allowed: accessState === "active" })
+  }
+})
+
+test("verified normal paid pre-cutoff sources enter the journey only while migration is enabled", async () => {
+  for (const sourceKind of ["one_time", "launch_subscription"] as const) {
+    const disabled = await loadPersonalPlanStage2AccessWithDeps(
+      deps({
+        migrationEnabled: () => false,
+        cohortCutoff: () => new Date("2026-08-08T00:00:00Z"),
+        loadEntitlement: async () => ({
+          accessState: "active",
+          qualifiedAt: "2026-08-07T23:59:59.999Z",
+          artifactLeadId: "lead-1",
+          sourceKind,
+          quizSourceKind: "personal_plan",
+        }),
+      }),
+      "owner-1",
+    )
+    assert.deepEqual(disabled, { allowed: false })
+
+    const enabledDeps = deps({
+      migrationEnabled: () => true,
+      cohortCutoff: () => new Date("2026-08-08T00:00:00Z"),
+      loadEntitlement: async () => ({
+        accessState: "active",
+        qualifiedAt: "2026-08-07T23:59:59.999Z",
+        artifactLeadId: "lead-1",
+        sourceKind,
+        quizSourceKind: "personal_plan",
+      }),
+    })
+    assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(enabledDeps, "owner-1"), {
+      allowed: true,
+    })
+
+    const access = await loadPersonalPlanJourneyAccessWithDeps(enabledDeps, "owner-1")
+    assert.equal(access.kind, "personal_plan")
+  }
+})
 
 test("Stage 2 access keeps the app rollout gate and stops before later-stage authority reads", async () => {
   let entitlementReads = 0
@@ -970,6 +1027,7 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
     profiles: { is_admin: true },
   }
   const admin = {
+    rpc: async () => ({ data: { status: "ineligible" }, error: null }),
     from(table: string) {
       const query = { table, predicates: [] as Array<[string, unknown]> }
       queries.push(query)

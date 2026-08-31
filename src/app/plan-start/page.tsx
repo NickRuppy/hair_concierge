@@ -67,7 +67,7 @@ export type PlanStartPageDeps = {
    * slim meter (field test 26.08.2026). Read from the SAME `refinement-status`
    * contract as the banner so the two surfaces cannot disagree — the client
    * session carries no answer provenance and could not reproduce it. Only read
-   * for an explicit module deep link, and failure-tolerant: no value, no meter.
+   * for a module entry request, and failure-tolerant: no value, no meter.
    */
   loadRefinementProgress?: (
     userId: string,
@@ -85,10 +85,11 @@ export type PlanStartSearchParams = {
 }
 
 /**
- * The Routine refinement nudge links to `/plan-start?refine=1`. Without it, a
- * directly accepted plan has a COMPLETE refinement draft, so the resolver would
- * seed the completed session and Stage 2 would auto-hand off straight into
- * Stage 3 — the user would never see the Feinschliff again.
+ * `?refine=1` (the historic Routine refinement nudge) still parses: it resolves
+ * to the first open module and behaves like an explicit module deep link end to
+ * end. Without the refine request, a directly accepted plan has a COMPLETE
+ * refinement draft, so the resolver would seed the completed session and
+ * Stage 2 would auto-hand off straight into Stage 3.
  */
 export function parseRefineParam(value: string | string[] | undefined): boolean {
   return parseStage2RefineEntry(value).refine
@@ -202,10 +203,11 @@ export async function resolvePlanStartPageState(
     // An explicit refine request outranks every later-stage resume: it exists
     // precisely to stop the completed draft from being handed off again.
     if (options.refine) {
-      const moduleProgress =
-        options.refineModule && options.refineModule !== "first_open"
-          ? await deps.loadRefinementProgress?.(userId).catch(() => null)
-          : null
+      // Every module entry request carries the meter — `first_open` included,
+      // since it resolves to a module entry end to end (relic removal 28.08.2026).
+      const moduleProgress = options.refineModule
+        ? await deps.loadRefinementProgress?.(userId).catch(() => null)
+        : null
       return production(
         {
           stage: "stage2",

@@ -1822,7 +1822,13 @@ test("the final Stage 1 CTA enters the first Stage 2 question without an invitat
   assert.doesNotMatch(componentSource, /setStep\("transition"\)/)
   assert.match(componentSource, /props\.onContinue\?\.\("optional"\)/)
   assert.match(componentSource, /props\.onContinue\?\.\("basis"\)/)
-  assert.match(componentSource, /directEntry/)
+  // The invitation chapter is deleted outright (relic removal 28.08.2026), so
+  // there is no directEntry escape hatch left to wire — prove it stays gone.
+  const flowSource = readFileSync(
+    "src/components/personal-plan-refinement/refinement-flow.tsx",
+    "utf8",
+  )
+  assert.doesNotMatch(flowSource, /InvitationShell|"invitation"/)
 })
 
 test("preserves paused included categories from the saved snapshot", () => {
