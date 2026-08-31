@@ -1116,6 +1116,71 @@ test("a subject that allows no action at all is blocked rather than forced", () 
   })
 })
 
+test("an owned product the rehydrated draft never captured is blocked, not dropped", () => {
+  // The acquire/scan path flips a PLANNED routine item to `owned`
+  // (`routine/source-reconciler.ts:40-59`, `scan/saved-state.ts:200`) without
+  // ever writing a capture into the routine's immutable source draft, so
+  // rehydration has nothing to copy: the subject comes back as the same
+  // uncovered-role key (`…:null`) whose evaluation carries no product facts.
+  // Walking KEEP_OWNED_CHAIN would end at `leave_uncovered` — the person's own
+  // product would vanish from the plan while the recompute reported `applied`.
+  const evaluation = knownEvaluation({
+    category: "shampoo",
+    role: "shampoo_everyday",
+    allowedActions: ["plan_recommendation", "leave_uncovered"],
+    recommendationProductId: "product-recommended",
+  })
+  assert.equal(evaluation.productFactFingerprint, null)
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [reviewBundle(evaluation, [], "shampoo_everyday")],
+    routine: routine([
+      routineItem({
+        category: "shampoo",
+        role: "shampoo_everyday",
+        // The item still points at the uncovered-role decision key it was
+        // planned under; only its product turned into an owned one.
+        capturedProductId: null,
+        product: {
+          kind: "owned",
+          capturedProductId: "acquired:user-product-1",
+          productId: "product-recommended",
+          displayName: "Shampoo",
+        },
+      }),
+    ]),
+  })
+  assert.deepEqual(plan, {
+    intents: [],
+    blocked: [{ subjectKey: evaluation.subjectKey, blocked: "owned_capture_missing" }],
+  })
+})
+
+test("a pending product the rehydrated draft never captured is blocked, not dropped", () => {
+  const evaluation = knownEvaluation({
+    category: "mask",
+    role: "intensive_conditioning_mask",
+    allowedActions: ["plan_recommendation", "leave_uncovered"],
+    recommendationProductId: "product-recommended",
+  })
+  const plan = buildStage3RecomputeIntents({
+    evaluations: [evaluation],
+    reviewBundles: [reviewBundle(evaluation, [], "intensive_conditioning_mask")],
+    routine: routine([
+      routineItem({
+        category: "mask",
+        role: "intensive_conditioning_mask",
+        capturedProductId: null,
+        product: { kind: "pending_review", submissionId: "submission-1", displayName: "Maske" },
+      }),
+    ]),
+  })
+  assert.deepEqual(plan, {
+    intents: [],
+    blocked: [{ subjectKey: evaluation.subjectKey, blocked: "owned_capture_missing" }],
+  })
+})
+
 test("the same input twice produces the same plan", () => {
   const owned = knownEvaluation({
     category: "shampoo",

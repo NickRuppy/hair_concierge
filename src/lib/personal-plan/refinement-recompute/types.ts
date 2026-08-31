@@ -82,10 +82,18 @@ export type Stage3RecomputeIntentInput = {
  *   unavailable.
  * - `no_allowed_action` — the preferred action and its whole fallback chain,
  *   `leave_uncovered` included, are absent from `allowedActions`.
+ * - `owned_capture_missing` — the routine owns (or is waiting on) a product for
+ *   this subject, but the evaluation carries no captured product to keep. The
+ *   routine's immutable source draft never held that capture, so rehydration
+ *   could not copy one: the acquire/scan path flips a planned item to `owned`
+ *   in the routine alone (`routine/source-reconciler.ts`,
+ *   `lib/scan/saved-state.ts`). Preserving it is impossible here, and every
+ *   fallback would end at `leave_uncovered` — dropping the person's own product
+ *   while the recompute reported success. The pass fails closed instead.
  */
 export type Stage3RecomputeBlockedSubject = {
   subjectKey: string
-  blocked: "unsupported" | "no_allowed_action"
+  blocked: "unsupported" | "no_allowed_action" | "owned_capture_missing"
 }
 
 export type Stage3RecomputeIntentPlan = {

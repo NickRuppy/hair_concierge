@@ -143,6 +143,22 @@ function deferralReasonFor(evaluation: Stage3AuthorityEvaluation): Stage3Decisio
   return hasBuyableRecommendation(evaluation) ? "unseen_recommendation" : "no_product"
 }
 
+/**
+ * Does this evaluation have a captured product behind it — the thing
+ * `keep_owned` / `acknowledge_override` / `keep_pending` would preserve?
+ *
+ * `productFactFingerprint` is the discriminator: every category adapter sets it
+ * from `input.productFacts.factFingerprint` when the subject carries a capture
+ * (`authority/categories/shampoo.ts:255`, `mask.ts:323`, and the same line in
+ * every other adapter) and leaves it null on the no-capture recommendation
+ * path. A capture whose catalog facts cannot be loaded reports `unknown`
+ * instead of `known` (`authority/shared.ts:94`), and a pending submission
+ * reports `pending`, so neither of those is mistaken for a missing capture.
+ */
+function carriesCapturedProduct(evaluation: Stage3AuthorityEvaluation): boolean {
+  return evaluation.status !== "known" || evaluation.productFactFingerprint !== null
+}
+
 function isPrimaryRecommendation(
   evaluation: Stage3AuthorityEvaluation,
   productId: string | null,
@@ -230,6 +246,23 @@ export function buildStage3RecomputeIntents(
     }
 
     const state = routineStateFor(input.routine, items.get(evaluation.subjectKey))
+
+    // Fail closed when the routine holds a product for this subject that the
+    // rehydrated draft cannot see. The acquire/scan path flips a PLANNED item
+    // to `owned` in the routine alone (`routine/source-reconciler.ts`,
+    // `lib/scan/saved-state.ts`), never writing a capture back into the
+    // immutable source draft rehydration copies from — so the subject comes
+    // back as an uncovered role. No preserving action can apply, and the whole
+    // fallback chain would end at `leave_uncovered`: the person's own product
+    // silently gone while the recompute reports `applied`.
+    if (
+      (state.kind === "owned" || state.kind === "pending") &&
+      !carriesCapturedProduct(evaluation)
+    ) {
+      blocked.push({ subjectKey: evaluation.subjectKey, blocked: "owned_capture_missing" })
+      continue
+    }
+
     switch (state.kind) {
       case "owned":
         resolve(

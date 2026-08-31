@@ -34,7 +34,7 @@ Beide Defekte verstoßen gegen `plans/feinschliff-einstieg.md` Entscheidung 12 (
 
 Recompute-Ergebnis ist dreiwertig — `applied | unchanged | unavailable`:
 - `applied`: neue Routine-Version sofort aktiv → `/routine?planUpdated=1` (Toast).
-- `unchanged`: Antworten ergaben dieselbe Refined-Version (Input-Hash-Dedupe, Migrationen `20260825130000:98` / `20260808062602:306`) oder semantisch identische Routine → `/routine` **ohne** Toast (ehrlich; Banner-Countdown ist die Bestätigung).
+- `unchanged`: Antworten ergaben dieselbe Refined-Version (Input-Hash-Dedupe, Migrationen `20260825130000:98` / `20260808062602:306`) oder semantisch identische Routine → `/routine` **ohne** Toast (ehrlich; Banner-Countdown ist die Bestätigung). Maßgeblich ist die Ausgangszustands-Definition in §4c, die die Formulierung „semantisch identische Routine" ablöst: `unchanged` heißt ausschließlich „die Ziel-Version war schon VOR der Arbeit die aktive Quelle" — eine Aktivierung auf dieselbe Quelle meldet `applied`, auch wenn die neue Routine-Payload byte-identisch ist.
 - `unavailable`: Recompute fehlgeschlagen → `/routine` ohne Toast; Modul-Abschluss bleibt gültig; Self-Heal über T1.5.
 
 Ausnahme (Codex-Finding 6): ein Modul-Abschluss OHNE akzeptierten Plan (nur per Hand gebauter `?refine=habits`-Link erreichbar; keine Produkt-Surface verlinkt das) behält das heutige Bridge-Verhalten — `/routine` würde diese Kohorte bouncen, ihr Abschluss ist eine Erst-Aktivierung. Routing entscheidet `isPostAcceptModuleEntry`, nicht das Modul allein.

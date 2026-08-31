@@ -311,5 +311,8 @@ const handlers = createStage2RouteHandlers({
     )
   },
 })
+// A habits-module completion runs the headless Stage-3 recompute inline, the
+// same shape `accept-ideal-plan/route.ts` needs the raised ceiling for.
+export const maxDuration = 60
 export const GET = handlers.GET
 export const PATCH = handlers.PATCH

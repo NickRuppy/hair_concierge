@@ -54,6 +54,10 @@ const handlers = createPersonalPlanRoutineSyncRouteHandlers({
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   service: () => createProductionRoutineSourceSyncService(createAdminClient()),
 })
+// The sync worker's self-heal lane runs the headless Stage-3 recompute inline
+// (`routine/production-sync-service.ts`), the same shape
+// `accept-ideal-plan/route.ts` needs the raised ceiling for.
+export const maxDuration = 60
 export const POST = async () => {
   const startedAt = performance.now()
   const result = await handlers.POST()

@@ -138,7 +138,7 @@ test("the unlock sub-note disappears once products is done", () => {
   assert.equal(rowByKey(view.rows, "products").note, null)
 })
 
-test("only refinement_required deferrals count as the cohort signal", () => {
+test("no_product and preview_unavailable deferrals never count as the cohort signal", () => {
   assert.equal(hasRefinementDeferredRoles(null), false)
   assert.equal(hasRefinementDeferredRoles({ deferredRoleReasons: {} }), false)
   assert.equal(hasRefinementDeferredRoles({ deferredRoleReasons: { a: "no_product" } }), false)

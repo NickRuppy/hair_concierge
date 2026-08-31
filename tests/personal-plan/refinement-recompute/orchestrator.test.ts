@@ -178,8 +178,58 @@ function ownedEvaluation(capturedProductId: string): Stage3AuthorityEvaluation {
     criteria: [],
     allowedActions: ["keep_owned"],
     recommendation: null,
-    productFactFingerprint: null,
+    // A subject the draft holds a capture for always carries the product's own
+    // fact fingerprint (`authority/categories/shampoo.ts:255`); null there is
+    // what tells the intent builder no captured product exists to keep.
+    productFactFingerprint: "b".repeat(64),
     recommendationFactFingerprint: null,
+    coverageRuleIds: [],
+  }
+}
+
+/**
+ * The source draft for the acquired-owned-product scenario: the person PLANNED
+ * this role's product in Stage 3, so the completed source draft carries no
+ * capture for it at all.
+ */
+function plannedSourceDraft(): Stage3ProductDraft {
+  return { ...sourceDraft(), products: [], roleAssignments: [] }
+}
+
+/**
+ * What the acquire/scan path leaves behind (`routine/source-reconciler.ts:40-59`,
+ * `scan/saved-state.ts:200`): the item's product became `owned` with an
+ * `acquired:<userProductId>` capture id, while `sourceDecisionKeys` still names
+ * the ORIGINAL uncovered-role subject the `plan_recommendation` was decided on.
+ * The flip never writes that product back into the immutable source draft.
+ */
+function acquiredOwnedRoutineItem(): RoutinePayloadV1["items"][number] {
+  return {
+    ...ownedRoutineItem("acquired:user-product-1"),
+    sourceDecisionKeys: [stage3DecisionKey("shampoo", "shampoo_everyday", null)],
+  }
+}
+
+/** What the rehydrated draft reports for that role: an uncovered role. */
+function uncoveredRoleEvaluation(): Stage3AuthorityEvaluation {
+  return {
+    status: "known",
+    category: "shampoo",
+    subjectKey: stage3DecisionKey("shampoo", "shampoo_everyday", null),
+    verdict: "ideal",
+    criteria: [],
+    allowedActions: ["plan_recommendation", "leave_uncovered"],
+    recommendation: {
+      recommendationId: "recommendation:catalog-shampoo",
+      productId: "catalog-shampoo",
+      category: "shampoo",
+      role: "shampoo_everyday",
+      displayName: "Shampoo",
+      reason: "passt zu deinem Profil",
+      authorityRuleId: "shampoo.rule.v1",
+    },
+    productFactFingerprint: null,
+    recommendationFactFingerprint: "c".repeat(64),
     coverageRuleIds: [],
   }
 }
@@ -457,6 +507,48 @@ test("a blocked subject => unavailable, non-retryable, no completion attempted",
   assert.equal(calls.resolveDecisions.length, 0)
   assert.equal(calls.complete.length, 0)
   // No end-of-operation re-read either: nothing was attempted.
+  assert.equal(routineCalls.length, 1)
+})
+
+test("composition: a routine product the rehydrated draft cannot see => unavailable, non-retryable, nothing resolved or completed", async () => {
+  // End-to-end shape of the acquire/scan case: the routine owns a product that
+  // was PLANNED in the source draft, so rehydration copies no capture for it
+  // and the fresh evaluation is an uncovered role. Without the fail-close the
+  // whole pass would resolve `leave_uncovered`, complete, and report `applied`
+  // — dropping the person's product behind a success toast.
+  const starting = activeRoutineVersion({
+    routineVersionId: "rv-1",
+    refinedVersionId: REFINED_OLD,
+    items: [acquiredOwnedRoutineItem()],
+  })
+  const { routineState, calls: routineCalls } = fakeRoutineState([starting])
+  const { persistence, calls: persistenceCalls } = fakePersistence({
+    "draft-source": plannedSourceDraft(),
+    "draft-target": freshDraft(REFINED_NEW),
+  })
+  const { gateway, calls } = fakeGateway({
+    loadOrCreate: reacquiringLoadOrCreate(),
+    evaluateDecisions: async () => [uncoveredRoleEvaluation()],
+    reviewDecisionBundles: async () => [],
+    // `resolveDecisions` and `complete` stay unconfigured on purpose: calling
+    // either one throws and fails this test loudly.
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, { status: "unavailable", reason: "decision_blocked", retryable: false })
+  // Blocking is detected only after evaluate + bundles ran against the
+  // rehydrated draft, so those two are expected to have happened.
+  assert.equal(persistenceCalls.save.length, 1)
+  assert.equal(calls.evaluateDecisions.length, 1)
+  assert.equal(calls.reviewDecisionBundles.length, 1)
+  assert.equal(calls.resolveDecisions.length, 0)
+  assert.equal(calls.complete.length, 0)
+  // No end-of-operation re-read: the routine was never touched, so there is
+  // nothing to classify and no toast to raise.
   assert.equal(routineCalls.length, 1)
 })
 
