@@ -306,6 +306,26 @@ function fakeGateway(handlers: GatewayHandlers) {
   return { gateway, calls }
 }
 
+/**
+ * `loadOrCreate` for tests where rehydration is expected to run: the first
+ * call (before rehydration) returns the fresh, revision-0 draft; every call
+ * after that returns revision 1, matching what `fakePersistence`'s
+ * rehydration write bumps it to (`expectedRevision + 1`). This is what the
+ * orchestrator's post-rehydration re-acquisition (fix round 1 CRITICAL 1)
+ * expects to see when it resets the gateway's per-draft memo to the
+ * rehydrated row.
+ */
+function reacquiringLoadOrCreate(
+  refinedVersionId = REFINED_NEW,
+  draftId = "draft-target",
+): Stage3RecomputeGateway["loadOrCreate"] {
+  let call = 0
+  return async () => {
+    call += 1
+    return draftResponse(freshDraft(refinedVersionId, draftId, { revision: call === 1 ? 0 : 1 }))
+  }
+}
+
 /** Default resolveDecisions: bumps the revision by one and echoes intent count. */
 function bumpingResolveDecisions(): Stage3RecomputeGateway["resolveDecisions"] {
   return async (input) => ({
@@ -348,7 +368,7 @@ test("happy path: distinct target version becomes active during the operation =>
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway, calls } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
     resolveDecisions: bumpingResolveDecisions(),
@@ -423,7 +443,7 @@ test("a blocked subject => unavailable, non-retryable, no completion attempted",
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway, calls } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [unsupportedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
   })
@@ -523,7 +543,7 @@ test("more than 25 intents are resolved in batches of the authority decision lim
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway, calls } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => evaluations,
     reviewDecisionBundles: async () => [],
     resolveDecisions: bumpingResolveDecisions(),
@@ -562,7 +582,7 @@ test("a concurrent lane activates a third refined version => unavailable, retrya
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
     resolveDecisions: bumpingResolveDecisions(),
@@ -590,7 +610,7 @@ test("a completion conflict whose re-read shows the target active anyway => appl
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
     resolveDecisions: bumpingResolveDecisions(),
@@ -616,7 +636,7 @@ test("a completion conflict whose re-read shows nothing new => unavailable, retr
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
     resolveDecisions: bumpingResolveDecisions(),
@@ -646,7 +666,7 @@ test("completion reports not_ready => unavailable, non-retryable", async () => {
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
     resolveDecisions: bumpingResolveDecisions(),
@@ -676,7 +696,7 @@ test("a conflict from resolveDecisions => unavailable, retryable, completion nev
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway, calls } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
     resolveDecisions: async (input) => ({
@@ -722,7 +742,13 @@ test("the habits module completion never throws: a rejecting dependency becomes 
     { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
   )
 
-  assert.deepEqual(result, { status: "unavailable", reason: "unexpected_error", retryable: true })
+  assert.equal(result.status, "unavailable")
+  if (result.status !== "unavailable") return
+  assert.equal(result.reason, "unexpected_error")
+  assert.equal(result.retryable, true)
+  // fix round 1 MINOR 5: the caught error is carried out for logging.
+  assert.ok(result.cause instanceof Error)
+  assert.equal((result.cause as Error).message, "network blip")
 })
 
 test("a thrown Stage3AuthorityMutationError from a stale bundle during resolve also becomes unavailable, retryable", async () => {
@@ -733,7 +759,7 @@ test("a thrown Stage3AuthorityMutationError from a stale bundle during resolve a
     "draft-target": freshDraft(REFINED_NEW),
   })
   const { gateway } = fakeGateway({
-    loadOrCreate: async () => draftResponse(freshDraft(REFINED_NEW)),
+    loadOrCreate: reacquiringLoadOrCreate(),
     evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
     reviewDecisionBundles: async () => [],
     resolveDecisions: async () => {
@@ -746,5 +772,221 @@ test("a thrown Stage3AuthorityMutationError from a stale bundle during resolve a
     { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
   )
 
-  assert.deepEqual(result, { status: "unavailable", reason: "unexpected_error", retryable: true })
+  assert.equal(result.status, "unavailable")
+  if (result.status !== "unavailable") return
+  assert.equal(result.reason, "unexpected_error")
+  assert.equal(result.retryable, true)
+  assert.ok(result.cause instanceof Error)
+})
+
+// ---------------------------------------------------------------------------
+// Fix round 1 regressions
+// ---------------------------------------------------------------------------
+
+/**
+ * A gateway that behaves like the REAL production gateway's per-draft memo
+ * (`cached` in `production-persistence-gateway.ts`, served by `current()` to
+ * every one of `evaluateDecisions`/`reviewDecisionBundles`/`resolveDecisions`/
+ * `complete`): `loadOrCreate` snapshots whatever is in `sharedStore` at that
+ * moment and every later call is served from that snapshot, NOT from
+ * `sharedStore`, until the next `loadOrCreate` call. Rehydration writes
+ * through `deps.persistence.save()` directly into the SAME `sharedStore` —
+ * exactly like the real gateway and the real rehydration service share one
+ * underlying Supabase table — without going through this gateway at all.
+ *
+ * Against this fake, the pre-fix orchestrator (a single `loadOrCreate` call,
+ * no post-rehydration re-acquisition) evaluates and completes the STALE,
+ * pre-rehydration snapshot: zero role assignments, so zero evaluations, so
+ * zero intents, so `complete()` runs with `expectedRevision` from the
+ * rehydrated draft (1) against a snapshot still at revision 0 — a permanent
+ * `completion_conflict`, never `applied`, on every retry. The fixed
+ * orchestrator's second `loadOrCreate` resets the snapshot to the rehydrated
+ * row first, so `complete()` succeeds and the re-read shows the target active.
+ */
+function sharedStoreGateway(sharedStore: Record<string, Stage3ProductDraft>, draftKey: string) {
+  let snapshot: Stage3ProductDraft | null = null
+  const calls = {
+    loadOrCreate: [] as unknown[],
+    evaluateDecisions: [] as unknown[],
+    resolveDecisions: [] as unknown[],
+    complete: [] as unknown[],
+  }
+  const gateway: Stage3RecomputeGateway = {
+    loadOrCreate: async (input) => {
+      calls.loadOrCreate.push(input)
+      snapshot = sharedStore[draftKey]!
+      return draftResponse(snapshot)
+    },
+    evaluateDecisions: async (input) => {
+      calls.evaluateDecisions.push(input)
+      if (!snapshot || snapshot.draftId !== input.draftId) {
+        throw new Error("evaluateDecisions called against an unknown draftId")
+      }
+      // Mirrors the real gateway: one evaluation per role assignment on
+      // whatever snapshot is currently cached — empty pre-rehydration.
+      return snapshot.roleAssignments.map((assignment) =>
+        ownedEvaluation(assignment.capturedProductId),
+      )
+    },
+    reviewDecisionBundles: async () => [],
+    resolveDecisions: async (input) => {
+      calls.resolveDecisions.push(input)
+      if (!snapshot || snapshot.revision !== input.expectedRevision) {
+        return { status: "conflict", latestDraft: snapshot ?? sharedStore[draftKey]! }
+      }
+      snapshot = { ...snapshot, revision: snapshot.revision + 1 }
+      sharedStore[draftKey] = snapshot
+      return { status: "saved", draft: snapshot }
+    },
+    complete: async (input) => {
+      calls.complete.push(input)
+      if (
+        !snapshot ||
+        snapshot.revision !== input.expectedRevision ||
+        snapshot.status !== "active"
+      ) {
+        return { status: "conflict", latestDraft: snapshot ?? sharedStore[draftKey]! }
+      }
+      snapshot = { ...snapshot, status: "completed" }
+      sharedStore[draftKey] = snapshot
+      return {
+        status: "ready_for_routine",
+        draft: snapshot,
+        portfolio: {} as AnyProposedProductPortfolio,
+        personalPlanId: PLAN_ID,
+        refinedVersionId: REFINED_NEW,
+        productPortfolioVersionId: "portfolio-2",
+        routineProposalId: null,
+        next: { stage: 4, href: "/routine" },
+      }
+    },
+  }
+  return { gateway, calls }
+}
+
+/** `Stage3RehydrationPersistence` writing into the SAME store the gateway reads. */
+function sharedStorePersistence(
+  sharedStore: Record<string, Stage3ProductDraft>,
+  extraDrafts: Record<string, Stage3ProductDraft>,
+): Stage3RehydrationPersistence {
+  return {
+    loadDraft: async ({ userId, draftId }) => {
+      if (userId !== USER_ID) return null
+      return sharedStore[draftId] ?? extraDrafts[draftId] ?? null
+    },
+    save: async ({ draftId, expectedRevision, draft }) => {
+      const saved = { ...draft, revision: expectedRevision + 1 }
+      sharedStore[draftId] = saved
+      return { outcome: "saved", draft: saved }
+    },
+  }
+}
+
+test("REGRESSION (fix round 1 CRITICAL 1): the gateway's per-draft memo from the first loadOrCreate is reset after rehydration, not served stale", async () => {
+  const draftKey = "draft-target"
+  const sharedStore: Record<string, Stage3ProductDraft> = {
+    [draftKey]: freshDraft(REFINED_NEW, draftKey),
+  }
+  const persistence = sharedStorePersistence(sharedStore, { "draft-source": sourceDraft() })
+  const { gateway, calls } = sharedStoreGateway(sharedStore, draftKey)
+
+  const starting = activeRoutineVersion({ routineVersionId: "rv-1", refinedVersionId: REFINED_OLD })
+  let routineStateCall = 0
+  const routineState: Stage3RecomputeRoutineStateReader = {
+    loadActiveRoutineVersion: async () => {
+      routineStateCall += 1
+      if (routineStateCall === 1) return starting
+      // Reflects reality: the routine only advances once the draft this
+      // fake gateway is tracking actually reached "completed".
+      return sharedStore[draftKey]?.status === "completed"
+        ? activeRoutineVersion({ routineVersionId: "rv-2", refinedVersionId: REFINED_NEW })
+        : starting
+    },
+  }
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, { status: "applied", routineVersionId: "rv-2" })
+  // Proves the re-acquisition actually happened: the initial load, plus one
+  // more after rehydration, resetting the gateway's memo.
+  assert.equal(calls.loadOrCreate.length, 2)
+  assert.equal(sharedStore[draftKey]?.status, "completed")
+})
+
+test("a completion whose receipt stages a pending proposal but whose re-read still shows the starting source => pending_proposal_staged, non-retryable", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-1", refinedVersionId: REFINED_OLD })
+  // A replayed complete() short-circuited to the stored receipt without this
+  // attempt's confirm landing: the routine never left its starting source.
+  const { routineState } = fakeRoutineState([starting, starting])
+  const { persistence } = fakePersistence({
+    "draft-source": sourceDraft(),
+    "draft-target": freshDraft(REFINED_NEW),
+  })
+  const { gateway } = fakeGateway({
+    loadOrCreate: reacquiringLoadOrCreate(),
+    evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
+    reviewDecisionBundles: async () => [],
+    resolveDecisions: bumpingResolveDecisions(),
+    complete: readyForRoutine({ routineProposalId: "proposal-staged-not-confirmed" }),
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, {
+    status: "unavailable",
+    reason: "pending_proposal_staged",
+    retryable: false,
+  })
+})
+
+test("a completion whose receipt carries no proposal id and whose re-read shows the starting source stays concurrent_activation, not pending_proposal_staged", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-1", refinedVersionId: REFINED_OLD })
+  const { routineState } = fakeRoutineState([starting, starting])
+  const { persistence } = fakePersistence({
+    "draft-source": sourceDraft(),
+    "draft-target": freshDraft(REFINED_NEW),
+  })
+  const { gateway } = fakeGateway({
+    loadOrCreate: reacquiringLoadOrCreate(),
+    evaluateDecisions: async () => [ownedEvaluation("capture-shampoo")],
+    reviewDecisionBundles: async () => [],
+    resolveDecisions: bumpingResolveDecisions(),
+    complete: readyForRoutine({ routineProposalId: null }),
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, {
+    status: "unavailable",
+    reason: "concurrent_activation",
+    retryable: true,
+  })
+})
+
+test("a loaded draft in status stale => draft_stale, retryable, no rehydration attempted", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-1", refinedVersionId: REFINED_OLD })
+  const { routineState } = fakeRoutineState([starting])
+  const { persistence, calls: persistenceCalls } = fakePersistence({})
+  const { gateway, calls } = fakeGateway({
+    loadOrCreate: async () =>
+      draftResponse(freshDraft(REFINED_NEW, "draft-target", { status: "stale" })),
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, { status: "unavailable", reason: "draft_stale", retryable: true })
+  assert.equal(calls.loadOrCreate.length, 1)
+  assert.equal(persistenceCalls.loadDraft.length, 0)
 })

@@ -1,4 +1,5 @@
 import { STAGE3_AUTHORITY_DECISION_BATCH_LIMIT } from "@/lib/personal-plan/products/authority/contracts"
+import type { Stage3ProductDraft } from "@/lib/personal-plan/products/contracts"
 
 import { buildStage3RecomputeIntents } from "./intents"
 import { rehydrateStage3ProductDraft } from "./rehydration"
@@ -23,8 +24,11 @@ const RETRYABLE_REHYDRATION_REASONS = new Set<Stage3RehydrationUnavailableReason
 function unavailable(
   reason: Stage3RecomputeUnavailableReason,
   retryable: boolean,
+  cause?: unknown,
 ): Stage3RecomputeResult {
-  return { status: "unavailable", reason, retryable }
+  return cause === undefined
+    ? { status: "unavailable", reason, retryable }
+    : { status: "unavailable", reason, retryable, cause }
 }
 
 function chunk<T>(items: readonly T[], size: number): T[][] {
@@ -86,20 +90,34 @@ export async function recomputeRoutineAfterHabitsCompletion(
     // the RPC runs: it lands on whatever the plan's actual current version is
     // rather than throwing, so the check below is what turns that outcome
     // into a typed, reported `superseded` instead of silently recomputing for
-    // a version nobody asked for.
-    const loaded = await deps.gateway.loadOrCreate({
-      draftId: "server-derived",
-      userId,
-      personalPlanId,
-      refinedVersionId,
-      requirements: [],
-      rebuildOnStaleRefinedVersion: true,
-    })
-    if (loaded.draft.refinedVersionId !== refinedVersionId) {
-      return unavailable("superseded", true)
+    // a version nobody asked for. Reused for the post-rehydration
+    // re-acquisition below (fix round 1 CRITICAL 1), so the same race
+    // detection applies there too.
+    type Acquisition =
+      | { ok: true; draft: Stage3ProductDraft }
+      | { ok: false; result: Stage3RecomputeResult }
+    async function acquireDraft(): Promise<Acquisition> {
+      const loaded = await deps.gateway.loadOrCreate({
+        draftId: "server-derived",
+        userId,
+        personalPlanId,
+        refinedVersionId,
+        requirements: [],
+        rebuildOnStaleRefinedVersion: true,
+      })
+      if (loaded.draft.refinedVersionId !== refinedVersionId) {
+        return { ok: false, result: unavailable("superseded", true) }
+      }
+      return { ok: true, draft: loaded.draft }
     }
 
-    let draft = loaded.draft
+    const acquired = await acquireDraft()
+    if (!acquired.ok) return acquired.result
+    let draft = acquired.draft
+
+    // `"stale"` never resolves itself here — a fresh invocation rebuilds on
+    // the current refined version instead (fix round 1 MINOR 4).
+    if (draft.status === "stale") return unavailable("draft_stale", true)
 
     // A draft already COMPLETED on the target version at start (lost-response
     // replay) skips straight to the completion call below, which returns the
@@ -120,7 +138,28 @@ export async function recomputeRoutineAfterHabitsCompletion(
       if (rehydrated.status === "unavailable") {
         return unavailable(rehydrated.reason, RETRYABLE_REHYDRATION_REASONS.has(rehydrated.reason))
       }
-      draft = rehydrated.draft
+
+      // CRITICAL fix (fix round 1, finding 1): rehydration writes through
+      // `deps.persistence.save()` directly — the SAME underlying store the
+      // gateway's own persistence uses, but NOT through the gateway. The
+      // gateway memoizes the draft it last loaded per draftId
+      // (`cached` in `production-persistence-gateway.ts`, served by
+      // `current()` at :354-357 to every one of `evaluateDecisions`,
+      // `reviewDecisionBundles`, `resolveDecisions` and `complete`) and that
+      // memo was set by `acquireDraft()` above, BEFORE rehydration ran. Left
+      // alone, every call below would silently operate on the pre-rehydration
+      // (empty) draft. Re-running `loadOrCreate` is what resets that memo —
+      // `cached = loaded` unconditionally at `:718-727` — to the rehydrated
+      // row now on disk.
+      const reacquired = await acquireDraft()
+      if (!reacquired.ok) return reacquired.result
+      if (
+        reacquired.draft.draftId !== rehydrated.draft.draftId ||
+        reacquired.draft.revision !== rehydrated.draft.revision
+      ) {
+        return unavailable("rehydration_reload_conflict", true)
+      }
+      draft = reacquired.draft
 
       // 3. Evaluate + review bundles back-to-back against this same draft
       // state, then resolve immediately: the gateway re-derives alternatives
@@ -161,15 +200,6 @@ export async function recomputeRoutineAfterHabitsCompletion(
       expectedRevision: draft.revision,
       markUnrefinedDirectAccept: false,
     })
-    const completionFailure: {
-      reason: Stage3RecomputeUnavailableReason
-      retryable: boolean
-    } | null =
-      completed.status === "not_ready"
-        ? { reason: "completion_not_ready", retryable: false }
-        : completed.status === "conflict"
-          ? { reason: "completion_conflict", retryable: true }
-          : null
 
     // 5. Applied/unchanged/unavailable is decided ONLY by re-reading the
     // active routine's source now, relative to the starting state captured in
@@ -178,17 +208,35 @@ export async function recomputeRoutineAfterHabitsCompletion(
     if (ending && ending.source.refinedVersionId === refinedVersionId) {
       return { status: "applied", routineVersionId: ending.routineVersionId }
     }
-    if (completionFailure) return unavailable(completionFailure.reason, completionFailure.retryable)
-    // The completion call itself reported success, but the re-read shows
-    // neither the target nor (by construction, since we would have returned
-    // above) still the starting source: a concurrent lane won the plan's
-    // active routine with something else.
+
+    if (completed.status === "not_ready") return unavailable("completion_not_ready", false)
+    if (completed.status === "conflict") return unavailable("completion_conflict", true)
+
+    // completed.status === "ready_for_routine" from here: it reported
+    // success, but the re-read did not show the target active.
+    if (
+      completed.routineProposalId !== null &&
+      ending?.source.refinedVersionId === starting.source.refinedVersionId
+    ) {
+      // A replayed completion short-circuits to the stored receipt
+      // (production-persistence-gateway.ts:913-916) and can leave a routine
+      // proposal staged rather than activated when its confirm didn't land
+      // (20260825140000:121-129). The routine page's own pending-proposal
+      // "Änderungen prüfen" recovery is the correct next step here, not an
+      // automatic retry — see fix round 1 IMPORTANT 2.
+      return unavailable("pending_proposal_staged", false)
+    }
+
+    // Neither the target nor a staged-but-unconfirmed proposal explains the
+    // re-read: a concurrent lane won the plan's active routine with
+    // something else entirely.
     return unavailable("concurrent_activation", true)
-  } catch {
+  } catch (error) {
     // Never let a habits module completion fail because recompute failed —
     // every dependency rejection (network/infra, or a thrown
     // `Stage3AuthorityMutationError` from a stale bundle) becomes a retryable
-    // unavailable instead of propagating.
-    return unavailable("unexpected_error", true)
+    // unavailable instead of propagating. `cause` carries the error through
+    // for logging (fix round 1 MINOR 5).
+    return unavailable("unexpected_error", true, error)
   }
 }

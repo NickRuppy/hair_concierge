@@ -161,14 +161,38 @@ export type Stage3RecomputeUnavailableReason =
   | "superseded"
   | Stage3RehydrationUnavailableReason
   | "rehydration_conflict"
+  /**
+   * The gateway's per-draft memo (set by the first `loadOrCreate`) still
+   * pointed at the pre-rehydration row when re-acquired after rehydration's
+   * direct persistence write — a race, not a structural problem.
+   */
+  | "rehydration_reload_conflict"
   | "decision_blocked"
   | "resolve_conflict"
+  /** `loadOrCreate` returned a draft in the `"stale"` status — fix round 1 MINOR 4. */
+  | "draft_stale"
   | "completion_not_ready"
   | "completion_conflict"
+  /**
+   * `complete()` reported success and staged a routine proposal
+   * (`routineProposalId !== null`), but the re-read shows the active
+   * routine still on the starting source — a replayed completion call
+   * short-circuited to the stored receipt without this attempt being the
+   * one that activated it, and the confirm that would activate the staged
+   * proposal never landed. The routine page's own "Änderungen prüfen"
+   * pending-proposal recovery is the correct next step, not a retry.
+   */
+  | "pending_proposal_staged"
   | "concurrent_activation"
   | "unexpected_error"
 
 export type Stage3RecomputeResult =
   | { status: "applied"; routineVersionId: string }
   | { status: "unchanged" }
-  | { status: "unavailable"; reason: Stage3RecomputeUnavailableReason; retryable: boolean }
+  | {
+      status: "unavailable"
+      reason: Stage3RecomputeUnavailableReason
+      retryable: boolean
+      /** The caught error, when `reason` is `"unexpected_error"` — for logging. */
+      cause?: unknown
+    }
