@@ -8,6 +8,7 @@ import { resolveIntakeState } from "@/lib/auth/intake-state"
 import { isProductIntakeEnabled } from "@/lib/product-intake/config"
 import { PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
 import { resolveOnboardingCompletionDestination } from "@/lib/onboarding/completion-destination"
+import { loadPersonalPlanRoutingFrontierForUser } from "@/lib/personal-plan/frontier-routing-loader"
 
 type OnboardingSearchParams = {
   lead?: string | string[]
@@ -142,6 +143,18 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   } = await supabase.auth.getUser()
   if (!user) {
     redirect("/auth?next=/onboarding")
+  }
+
+  if (!forcedStep && !returnTo) {
+    const frontier = await loadPersonalPlanRoutingFrontierForUser(supabase, user.id)
+    if (frontier.kind !== "legacy") {
+      // Preserve the requested source for owner validation in the preparation POST.
+      redirect(
+        frontier.kind === "recovery" && leadId
+          ? `/plan-bereit?lead=${encodeURIComponent(leadId)}`
+          : frontier.nextHref,
+      )
+    }
   }
 
   // Link quiz lead if present

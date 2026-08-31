@@ -4,7 +4,19 @@ import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import { cleanProductDisplayName } from "@/lib/product-identity"
 import {
+  mapLegacyRefinementPrefill,
+  type LegacyCatalogMatch,
+  type LegacyProductUsageRow,
+  type LegacyRefinementPrefillInput,
+} from "@/lib/personal-plan/legacy-prefill"
+import {
+  createStage3OptionalInventorySeedDraft,
+  filterStage3ExactInventory,
+} from "./legacy-inventory-entry"
+import type { Stage3DraftResponse } from "./gateway"
+import {
   parseProposedProductPortfolio,
+  stage3LegacyPrefillHintsSchema,
   type PersonalPlanCategory,
   type Stage3ProductDraft,
 } from "./contracts"
@@ -22,6 +34,124 @@ import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import { isPersonalPlanStage3ThumbnailsEnabled } from "@/lib/personal-plan/release"
 
 type AdminClient = SupabaseClient
+type Stage3OptionalMigrationState = {
+  legacyPrefillEligible: boolean
+  stage3InventoryConsumed: boolean
+}
+
+export async function openSupabaseStage3OptionalInventory(
+  client: AdminClient,
+  input: {
+    userId: string
+    personalPlanId: string
+    refinedVersionId: string
+  },
+  options: { thumbnailsEnabled?: boolean; now?: () => string } = {},
+): Promise<Stage3DraftResponse> {
+  const loadGeneric = () => openGenericStage3Draft(client, input, options)
+  const migrationState = await loadStage3OptionalMigrationState(client, input)
+  if (!migrationState.legacyPrefillEligible || migrationState.stage3InventoryConsumed) {
+    return loadGeneric()
+  }
+
+  const context = await loadOptionalStage3EntryContext(client, input)
+  if (!(await hasProductsModuleHandoff(client, input))) {
+    throw new Stage3AuthoritySnapshotError("stale_refined_source")
+  }
+
+  if (await hasCurrentStage3Draft(client, input)) {
+    return openOptionalInventoryWithRpc(client, {
+      input,
+      context,
+      exactInventory: [],
+      payload: draftPayload(
+        createStage3Draft({
+          draftId: "pending-sql-assignment",
+          userId: input.userId,
+          personalPlanId: input.personalPlanId,
+          refinedVersionId: input.refinedVersionId,
+          requirements: context.orderedCategories,
+          authoritySnapshot: context.authoritySnapshot,
+          now: options.now?.() ?? new Date().toISOString(),
+        }),
+      ),
+      sourceFingerprint: "legacy-prefill-v1:skipped-existing-stage3",
+      sourceIds: [],
+    })
+  }
+
+  const prefill = mapLegacyRefinementPrefill(
+    await loadLegacyInventoryPrefillInput(client, input.userId),
+  )
+  const seed = createStage3OptionalInventorySeedDraft({
+    draftId: "pending-sql-assignment",
+    userId: input.userId,
+    personalPlanId: input.personalPlanId,
+    refinedVersionId: input.refinedVersionId,
+    requirements: context.orderedCategories,
+    authoritySnapshot: context.authoritySnapshot,
+    prefill,
+    now: options.now?.() ?? new Date().toISOString(),
+  })
+  const exactInventory = filterStage3ExactInventory({
+    prefill,
+    orderedCategories: context.orderedCategories.map((requirement) => requirement.category),
+  })
+  return openOptionalInventoryWithRpc(client, {
+    input,
+    context,
+    exactInventory,
+    payload: draftPayload(seed),
+    sourceFingerprint: prefill.sourceFingerprint,
+    sourceIds: prefill.sourceIds,
+  })
+}
+
+async function openGenericStage3Draft(
+  client: AdminClient,
+  input: { userId: string; personalPlanId: string; refinedVersionId: string },
+  options: { thumbnailsEnabled?: boolean },
+): Promise<Stage3DraftResponse> {
+  const persistence = createSupabaseStage3ProductionPersistence(client, {
+    thumbnailsEnabled: options.thumbnailsEnabled,
+  })
+  const loaded = await persistence.loadOrCreate(input)
+  return { status: loaded.draft.status, ...loaded }
+}
+
+async function openOptionalInventoryWithRpc(
+  client: AdminClient,
+  args: {
+    input: { userId: string; personalPlanId: string; refinedVersionId: string }
+    context: Awaited<ReturnType<typeof loadOptionalStage3EntryContext>>
+    exactInventory: unknown[]
+    payload: Record<string, unknown>
+    sourceFingerprint: string
+    sourceIds: string[]
+  },
+): Promise<Stage3DraftResponse> {
+  const { data, error } = await client.rpc("personal_plan_open_optional_inventory_v1", {
+    p_user_id: args.input.userId,
+    p_personal_plan_id: args.input.personalPlanId,
+    p_refined_need_version_id: args.input.refinedVersionId,
+    p_contract_version: args.context.schemaVersion,
+    p_category_authority_versions: Object.fromEntries(
+      args.context.orderedCategories.map((item) => [item.category, item.authorityVersion]),
+    ),
+    p_payload: args.payload,
+    p_exact_inventory: args.exactInventory,
+    p_source_fingerprint: args.sourceFingerprint,
+    p_source_ids: args.sourceIds,
+  })
+  if (error || !data) throw new Error("stage3_optional_inventory_open_failed")
+  const outcome = typeof data === "object" ? String((data as Record<string, unknown>).outcome) : ""
+  if (outcome === "stale_source") {
+    throw new Stage3AuthoritySnapshotError("stale_refined_source")
+  }
+  if (outcome !== "ready") throw new Error("stage3_optional_inventory_open_rejected")
+  const draft = mapStage3Draft((data as Record<string, unknown>).draft)
+  return { status: draft.status, draft, requirements: args.context.orderedCategories }
+}
 
 /** Server-only adapter for the Stage-3 service primitives. */
 export function createSupabaseStage3ProductionPersistence(
@@ -554,6 +684,232 @@ export function buildAuthorityRefreshDraft(
   }
 }
 
+async function loadStage3OptionalMigrationState(
+  client: AdminClient,
+  input: { userId: string; personalPlanId: string },
+): Promise<Stage3OptionalMigrationState> {
+  const { data, error } = await client
+    .from("personal_plans")
+    .select("enrollment_purchase_source_id,legacy_prefill_v1")
+    .eq("id", input.personalPlanId)
+    .eq("user_id", input.userId)
+    .maybeSingle()
+  if (error) throw new Error("stage3_optional_plan_read_failed")
+  const receipt = (data as Record<string, unknown> | null)?.legacy_prefill_v1
+  const stage3InventoryConsumed =
+    Boolean(receipt && typeof receipt === "object" && !Array.isArray(receipt)) &&
+    "stage3Inventory" in (receipt as Record<string, unknown>)
+  if (stage3InventoryConsumed) return { legacyPrefillEligible: false, stage3InventoryConsumed }
+  const enrollmentId = fieldString(data, "enrollment_purchase_source_id")
+  if (!enrollmentId) {
+    return { legacyPrefillEligible: false, stage3InventoryConsumed }
+  }
+  const { data: enrollment, error: enrollmentError } = await client
+    .from("personal_plan_migration_enrollments")
+    .select("id")
+    .eq("id", enrollmentId)
+    .eq("user_id", input.userId)
+    .eq("status", "ready")
+    .maybeSingle()
+  if (enrollmentError) throw new Error("stage3_migration_enrollment_read_failed")
+  return { legacyPrefillEligible: Boolean(enrollment?.id), stage3InventoryConsumed }
+}
+
+async function loadOptionalStage3EntryContext(
+  client: AdminClient,
+  input: { userId: string; personalPlanId: string; refinedVersionId: string },
+) {
+  const { data: refined, error: refinedError } = await client
+    .from("personal_plan_need_versions")
+    .select("id,output_snapshot")
+    .eq("id", input.refinedVersionId)
+    .eq("personal_plan_id", input.personalPlanId)
+    .eq("user_id", input.userId)
+    .eq("kind", "refined")
+    .maybeSingle()
+  if (refinedError || !refined) throw new Error("stage3_refined_need_unavailable")
+  return buildStage3EntryContext(refined.output_snapshot as InitialNeedPlanSnapshot, {
+    personalPlanId: input.personalPlanId,
+    refinedVersionId: input.refinedVersionId,
+  })
+}
+
+async function hasProductsModuleHandoff(
+  client: AdminClient,
+  input: { userId: string; personalPlanId: string; refinedVersionId: string },
+): Promise<boolean> {
+  const { data, error } = await client
+    .from("personal_plan_refinement_drafts")
+    .select("id")
+    .eq("user_id", input.userId)
+    .eq("personal_plan_id", input.personalPlanId)
+    .eq("module_projections->products->>needVersionId", input.refinedVersionId)
+    .eq("module_projections->products->>stage3Handoff", "true")
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error) throw new Error("stage3_optional_handoff_read_failed")
+  return Boolean(data?.id)
+}
+
+async function hasCurrentStage3Draft(
+  client: AdminClient,
+  input: { userId: string; personalPlanId: string; refinedVersionId: string },
+): Promise<boolean> {
+  const { data, error } = await client
+    .from("personal_plan_product_drafts")
+    .select("id")
+    .eq("user_id", input.userId)
+    .eq("personal_plan_id", input.personalPlanId)
+    .eq("refined_need_version_id", input.refinedVersionId)
+    .in("status", ["active", "completed"])
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error) throw new Error("stage3_optional_current_draft_read_failed")
+  return Boolean(data?.id)
+}
+
+async function loadLegacyInventoryPrefillInput(
+  client: AdminClient,
+  userId: string,
+): Promise<LegacyRefinementPrefillInput> {
+  const { data: usage, error: usageError } = await client
+    .from("user_product_usage")
+    .select("id,category,product_name,frequency_range,product_id")
+    .eq("user_id", userId)
+  if (usageError) throw new Error("stage3_legacy_usage_read_failed")
+
+  const usageRows = coerceLegacyUsageRows(usage)
+  const catalogMatches = await loadLegacyCatalogMatches(client, userId, usageRows)
+  return {
+    profile: {},
+    usageRows: usageRows.map((row) => ({
+      id: row.id,
+      category: row.category,
+      productName: row.productName,
+      frequencyRange: row.frequencyRange,
+      catalogMatch: row.productId ? (catalogMatches.get(row.productId) ?? null) : null,
+    })),
+  }
+}
+
+async function loadLegacyCatalogMatches(
+  client: AdminClient,
+  userId: string,
+  usageRows: Array<LegacyProductUsageRow & { productId?: string | null }>,
+): Promise<Map<string, LegacyCatalogMatch>> {
+  const ids = Array.from(
+    new Set(usageRows.flatMap((row) => (row.productId ? [row.productId] : []))),
+  )
+  if (ids.length === 0) return new Map()
+  const { data, error } = await client
+    .from("products")
+    .select(
+      "id,category_key,brand,name,image_url,thumbnail_image_url,origin,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
+    )
+    .in("id", ids)
+  if (error) throw new Error("stage3_legacy_catalog_read_failed")
+  const [ownedMatches, excludedCatalogIds] = await Promise.all([
+    loadExistingOwnedCatalogIdentitySet(client, userId, ids),
+    loadExcludedCatalogProductSet(client, ids),
+  ])
+  const rows = Array.isArray(data) ? data : []
+  const matches = new Map<string, LegacyCatalogMatch>()
+  for (const row of rows) {
+    if (!row || typeof row !== "object") continue
+    const record = row as Record<string, unknown>
+    const id = fieldString(record, "id")
+    const category = fieldString(record, "category_key")
+    if (!id || !category) continue
+    matches.set(id, {
+      productId: id,
+      category,
+      displayName: canonicalCatalogCompleteIdentity(
+        { name: record.name, brand: record.brand },
+        readProductLineName(record.product_line),
+      ),
+      eligible:
+        record.is_active === true &&
+        record.lifecycle_status === "active" &&
+        !excludedCatalogIds.has(id) &&
+        (record.origin === "curated" || ownedMatches.has(`${category}:${id}`)),
+    })
+  }
+  return matches
+}
+
+async function loadExcludedCatalogProductSet(
+  client: AdminClient,
+  productIds: string[],
+): Promise<Set<string>> {
+  if (productIds.length === 0) return new Set()
+  const { data, error } = await client
+    .from("personal_plan_product_search_dispositions")
+    .select("product_id")
+    .in("product_id", productIds)
+  if (error) throw new Error("stage3_legacy_disposition_read_failed")
+  const rows = Array.isArray(data) ? data : []
+  return new Set(
+    rows.flatMap((row) => {
+      const productId = fieldString(row, "product_id")
+      return productId ? [productId] : []
+    }),
+  )
+}
+
+async function loadExistingOwnedCatalogIdentitySet(
+  client: AdminClient,
+  userId: string,
+  productIds: string[],
+): Promise<Set<string>> {
+  const { data, error } = await client
+    .from("user_products")
+    .select("category,catalog_product_id")
+    .eq("user_id", userId)
+    .eq("identity_status", "matched")
+    .eq("ownership_status", "owned")
+    .in("catalog_product_id", productIds)
+  if (error) throw new Error("stage3_legacy_owned_identity_read_failed")
+  const rows = Array.isArray(data) ? data : []
+  return new Set(
+    rows.flatMap((row) => {
+      if (!row || typeof row !== "object") return []
+      const category = fieldString(row, "category")
+      const productId = fieldString(row, "catalog_product_id")
+      return category && productId ? [`${category}:${productId}`] : []
+    }),
+  )
+}
+
+function coerceLegacyUsageRows(
+  value: unknown,
+): Array<LegacyProductUsageRow & { productId?: string | null }> {
+  if (!Array.isArray(value)) return []
+  return value.flatMap((row) => {
+    if (!row || typeof row !== "object" || Array.isArray(row)) return []
+    const record = row as Record<string, unknown>
+    const id = fieldString(record, "id")
+    const category = fieldString(record, "category")
+    if (!id || !category) return []
+    return [
+      {
+        id,
+        category,
+        productName: fieldString(record, "product_name"),
+        frequencyRange: fieldString(record, "frequency_range"),
+        productId: fieldString(record, "product_id"),
+      },
+    ]
+  })
+}
+
+function fieldString(value: unknown, key: string): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null
+  const candidate = (value as Record<string, unknown>)[key]
+  return typeof candidate === "string" && candidate.trim() ? candidate.trim() : null
+}
+
 function mapAssessmentSearchCandidate(
   raw: unknown,
   category: PersonalPlanCategory,
@@ -642,8 +998,9 @@ function draftPayload(draft: Stage3ProductDraft) {
 function mapStage3Draft(raw: unknown): Stage3ProductDraft {
   const row = raw as Record<string, unknown>
   const payload = (row.payload ?? row) as Record<string, unknown>
-  return {
-    ...payload,
+  const { legacyPrefillHints: rawLegacyPrefillHints, ...payloadWithoutLegacyPrefillHints } = payload
+  const draft: Stage3ProductDraft = {
+    ...payloadWithoutLegacyPrefillHints,
     schemaVersion: Number(payload.schemaVersion ?? row.contract_version ?? 1) as 1,
     status: String(row.status ?? payload.status ?? "active") as Stage3ProductDraft["status"],
     authorityVersions: (row.category_authority_versions ??
@@ -677,5 +1034,15 @@ function mapStage3Draft(raw: unknown): Stage3ProductDraft {
     inventoryAuthority: payload.inventoryAuthority as Stage3ProductDraft["inventoryAuthority"],
     inventoryDispositions:
       payload.inventoryDispositions as Stage3ProductDraft["inventoryDispositions"],
+    productLoadResolution:
+      payload.productLoadResolution as Stage3ProductDraft["productLoadResolution"],
   }
+  const legacyPrefillHints = parseStage3LegacyPrefillHints(rawLegacyPrefillHints)
+  return legacyPrefillHints ? { ...draft, legacyPrefillHints } : draft
+}
+
+function parseStage3LegacyPrefillHints(value: unknown): Stage3ProductDraft["legacyPrefillHints"] {
+  if (value === undefined) return undefined
+  const parsed = stage3LegacyPrefillHintsSchema.safeParse(value)
+  return parsed.success ? parsed.data : undefined
 }

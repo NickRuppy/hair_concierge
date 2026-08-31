@@ -58,6 +58,8 @@ export type Stage2SaveAndCompleteModuleResult = {
 
 export interface Stage2RefinementGateway {
   load(): Promise<Stage2RefinementSession>
+  /** Explicit optional entry only; baseline load/direct acceptance never imports legacy data. */
+  openOptionalRefinement?(module: Stage2Module): Promise<Stage2RefinementSession>
   saveAnswer(input: Stage2SaveAnswerInput): Promise<Stage2RefinementSession>
   saveAnswerAndComplete?(input: Stage2SaveAnswerInput): Promise<Stage2SaveAndCompleteResult>
   /** Client-side counterpart of the PATCH `completeModuleAfterSave` contract. */

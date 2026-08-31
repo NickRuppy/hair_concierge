@@ -5,7 +5,7 @@ import Link from "next/link"
 import type { MouseEventHandler } from "react"
 
 import { cn } from "@/lib/utils"
-import { PERSONAL_PLAN_JOURNEY_STAGES, type PersonalPlanJourneyStage } from "./journey-content"
+import type { PersonalPlanJourneyStage } from "./journey-content"
 
 export type PersonalPlanSaveStatus = "idle" | "local" | "saving" | "saved" | "error"
 
@@ -41,7 +41,6 @@ export function PersonalPlanJourneyHeader({
   sticky = true,
   centeredBrand = false,
   showWordmark = true,
-  showStageProgress = true,
   moduleProgress,
 }: {
   currentStage: PersonalPlanJourneyStage
@@ -54,16 +53,8 @@ export function PersonalPlanJourneyHeader({
   /** false auf Seiten, deren App-Shell die Wortmarke bereits zeigt (/routine, /anwendung). */
   showWordmark?: boolean
   /**
-   * false für Flächen ohne 5-Stufen-Orientierung (Task 2.7): die Bottom-Nav
-   * trägt die Orientierung, dieser Header bleibt nur noch für Zurück +
-   * Speicherstatus stehen, die die jeweilige Fläche selbst braucht.
-   */
-  showStageProgress?: boolean
-  /**
    * The coarse Personal-Plan meter ("X von 4") the Routine banner shows,
-   * rendered in the slot the retired 5-stage bar left behind (Task 2.7 took
-   * that bar away; the field test on 26.08.2026 showed module questions then
-   * had no sense of place at all). Same numbers, same semantics as the banner
+   * rendered below the shared controls. Same numbers, same semantics as the banner
    * — the caller passes them through, this component never derives them.
    */
   moduleProgress?: { completedSteps: number; totalSteps: number }
@@ -140,50 +131,7 @@ export function PersonalPlanJourneyHeader({
           </span>
         </div>
 
-        {showStageProgress ? (
-          <div
-            aria-label="Personal-Plan-Stufen"
-            role="progressbar"
-            aria-valuemin={1}
-            aria-valuemax={5}
-            aria-valuenow={currentStage}
-          >
-            <ol className="mt-1 grid grid-cols-5 gap-1" aria-label="Stufen im Personal Plan">
-              {PERSONAL_PLAN_JOURNEY_STAGES.map(({ stage, headerLabel }) => {
-                const complete = stage < currentStage
-                const current = stage === currentStage
-                return (
-                  <li key={stage} aria-current={current ? "step" : undefined} className="min-w-0">
-                    <span
-                      className={cn(
-                        "block h-1.5 rounded-full",
-                        complete
-                          ? "bg-[var(--brand-plum)]"
-                          : current
-                            ? "bg-[var(--brand-plum-dark)]"
-                            : "bg-[var(--border)]",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "mt-1 block truncate text-center text-[10px] font-bold",
-                        current
-                          ? "text-[var(--brand-plum-darkest)]"
-                          : complete
-                            ? "text-[var(--brand-plum)]"
-                            : "text-[var(--text-caption)]",
-                      )}
-                    >
-                      {headerLabel}
-                    </span>
-                  </li>
-                )
-              })}
-            </ol>
-          </div>
-        ) : null}
-
-        {!showStageProgress && moduleProgress ? (
+        {moduleProgress ? (
           <div className="mt-1.5 flex items-center gap-2.5">
             <div
               role="progressbar"

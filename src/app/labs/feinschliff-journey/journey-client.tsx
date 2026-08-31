@@ -257,7 +257,6 @@ export function FeinschliffJourneyClient({
           gateway={stage3Gateway}
           searchDebounceMs={0}
           stageEntrance
-          directRoutineHandoff
           onBackToRefinement={() => openRoutine("after-products", true)}
           onOpenRoutine={() => openRoutine("after-products", true)}
         />

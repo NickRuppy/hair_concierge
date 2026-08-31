@@ -249,7 +249,7 @@ export function mapModuleProjections(value: unknown): Stage2ModuleProjections {
   return projections
 }
 
-function mapDraft(
+export function mapDraft(
   row: Record<string, unknown>,
   triggerContext: Stage2PersistedDraft["triggerContext"],
   initial: {

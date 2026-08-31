@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import { readFile, readdir } from "node:fs/promises"
 import path from "node:path"
 import test from "node:test"
+import type React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import {
@@ -9,7 +10,6 @@ import {
   REFINEMENT_TELEMETRY_EVENTS,
   RefinementQuestion,
 } from "../src/components/personal-plan-refinement/refinement-question"
-import { RefinementBridge } from "../src/components/personal-plan-refinement/refinement-bridge"
 import {
   ADDITIONAL_HEAT_TOOL_OPTIONS,
   DRYING_ROUTE_OPTIONS,
@@ -19,6 +19,7 @@ import {
   mergeGroupedCategorySelection,
 } from "../src/components/personal-plan-refinement/refinement-options"
 import {
+  RefinementFlow,
   getCompletedHandoffForLoadedSession,
   getBridgeBackQuestionId,
   type Stage2RefinementTelemetryEvent,
@@ -63,33 +64,67 @@ test("Stage 2 ordinary answer saves stay in the question flow without a full-scr
   assert.match(flowSource, /if \(status === "saving"\) return/)
 })
 
-test("renders the German invitation and neutral bridge hierarchy without result leakage", () => {
+test("the Stage-2 bridge is an inline handoff shell without chapter ceremony", () => {
+  const completeSession = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: {
+      relevantCategories: ["shampoo"],
+      hasReportedIrritatedScalp: false,
+      dryShampooBridgeEligibility: "ineligible",
+    },
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+      dryingRoutes: [],
+      additionalHeatTools: [],
+      nightProtection: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+      "night_protection",
+    ],
+    completedHandoff: {
+      refinedVersionId: "fixture-refined-stage2-v1-r9",
+      nextHref: "/plan-start",
+    },
+    status: "complete",
+  })
+  const gateway = {
+    load: async () => completeSession,
+    saveAnswer: async () => completeSession,
+    complete: async () => completeSession.completedHandoff!,
+  } as unknown as React.ComponentProps<typeof RefinementFlow>["gateway"]
   const bridgeHtml = renderToStaticMarkup(
-    <RefinementBridge refinedVersionId="fixture-refined-stage2-v1-r9" nextHref="/plan-start" />,
+    <RefinementFlow gateway={gateway} initialSession={completeSession} />,
   )
 
-  assert.match(bridgeHtml, /Jetzt gleichen wir deine Produkte ab\./)
-  assert.match(bridgeHtml, /data-personal-plan-chapter="3"/)
-  assert.match(bridgeHtml, /Produkte erfassen/)
+  assert.match(bridgeHtml, /Deine Produkte werden vorbereitet\./)
+  assert.match(bridgeHtml, /Feinschliff gespeichert/)
   assert.match(bridgeHtml, /fixture-refined-stage2-v1-r9/)
   assert.match(bridgeHtml, /data-stage2-next-href="\/plan-start"/)
+  assert.doesNotMatch(bridgeHtml, /data-personal-plan-chapter/)
+  assert.doesNotMatch(bridgeHtml, /Produkte erfassen/)
   assert.doesNotMatch(bridgeHtml, /<a\b/)
   assert.doesNotMatch(bridgeHtml, /Empfehlung|Delta|verändert|Tier|Routinekarte|Produktkarte/i)
 })
 
-test("the bridge exposes a real continuation action and blocks duplicate handoff attempts", () => {
-  const bridgeHtml = renderToStaticMarkup(
-    <RefinementBridge
-      refinedVersionId="fixture-refined-stage2-v1-r9"
-      nextHref="/plan-start"
-      onContinue={() => {}}
-      isContinuing
-    />,
+test("Stage 2 flow source has no ResumeShell or chapter bridge branch", async () => {
+  const flowSource = await readFile(
+    new URL("../src/components/personal-plan-refinement/refinement-flow.tsx", import.meta.url),
+    "utf8",
   )
 
-  assert.match(bridgeHtml, /Produkte werden vorbereitet/)
-  assert.match(bridgeHtml, /disabled=""/)
-  assert.match(bridgeHtml, /aria-busy="true"/)
+  assert.doesNotMatch(flowSource, /ResumeShell/)
+  assert.doesNotMatch(flowSource, /RefinementBridge/)
+  assert.doesNotMatch(flowSource, /refinement-bridge/)
+  assert.doesNotMatch(flowSource, /stage2BridgePresentation/)
+  assert.match(flowSource, /openOptionalRefinement\?\.bind\(gateway\)/)
+  assert.match(flowSource, /handoffInFlightRef/)
 })
 
 test("renders the current qualitative section and never a numeric question total", () => {

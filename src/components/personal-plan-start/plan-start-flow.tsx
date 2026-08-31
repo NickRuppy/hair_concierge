@@ -131,11 +131,11 @@ export type PlanStartInitialJourney =
     }
 
 /**
- * Whether Stage 2's bridge may hand off into Stage 3 on its own. An explicit
- * refine request (`/plan-start?refine=1`, the Routine refinement nudge) must
- * not: after a direct accept the draft is already complete, so an auto-handoff
- * would bounce the user straight back to Stage 3 without ever showing the
- * Feinschliff.
+ * Whether Stage 2's bridge may hand off into Stage 3 on its own. Off for any
+ * `?refine=…` re-entry — though for a module entry this only matters for a
+ * bridge armed at ENTRY: a bridge armed by a module the user just finished in
+ * this session always auto-continues (`stage2BridgeAutoContinues`), because a
+ * finished module is a surface hop, not a chapter to confirm.
  */
 export function refinementAutoHandoffEnabled(initialJourney: PlanStartInitialJourney): boolean {
   return !(initialJourney.stage === "stage2" && initialJourney.returningToRefinement === true)
@@ -187,8 +187,9 @@ export function planStartModuleEntry(
 }
 
 /**
- * SCOPE. Whether this Feinschliff run was launched by an EXPLICIT module deep
- * link (the Routine banner, a Profil row, or the failed-accept escape hatch).
+ * SCOPE. Whether this Feinschliff run was launched by a module entry request
+ * (the Routine banner, a Profil row, the failed-accept escape hatch, or the
+ * `?refine=1` nudge, which resolves to the first open module).
  */
 export function isExplicitModuleRefinementEntry(initialJourney: PlanStartInitialJourney): boolean {
   return stage2SecondaryExitDestination(planStartModuleEntry(initialJourney)) === "routine"
@@ -226,6 +227,31 @@ export function planStartSuppressesChapterCeremony(
   initialJourney: PlanStartInitialJourney,
 ): boolean {
   return isExplicitModuleRefinementEntry(initialJourney)
+}
+
+export type PlanStartStage3BootstrapSource = "initial" | "stage2_handoff" | "correction"
+export type PlanStartStage3BootstrapMode = "baseline" | "optional_inventory"
+
+export function planStartUsesOptionalStage2Entry(initialJourney: PlanStartInitialJourney): boolean {
+  return initialJourney.stage === "stage2" && Boolean(initialJourney.refineModule)
+}
+
+export function planStartStage3BootstrapMode(
+  initialJourney: PlanStartInitialJourney,
+  source: PlanStartStage3BootstrapSource,
+): PlanStartStage3BootstrapMode {
+  if (source === "correction") return "baseline"
+  if (source === "initial") {
+    return initialJourney.stage === "stage3" &&
+      initialJourney.refineModule === "products" &&
+      !initialJourney.repairRoutineVersionId
+      ? "optional_inventory"
+      : "baseline"
+  }
+  const moduleEntry = planStartModuleEntry(initialJourney)
+  return moduleEntry === "products" || moduleEntry === "first_open"
+    ? "optional_inventory"
+    : "baseline"
 }
 
 /**
@@ -525,10 +551,11 @@ async function requestStage1ProductExamplePreviews(input: {
 }
 
 export async function loadPlanStartStage3Bootstrap(input: {
-  gateway: Pick<Stage3ProductsGateway, "loadOrCreate">
+  gateway: Pick<Stage3ProductsGateway, "loadOrCreate" | "openOptionalInventory">
   personalPlanId: string
   refinedVersionId: string
   repairRoutineVersionId?: string
+  optionalInventory?: boolean
   /**
    * Module-driven Stage-3 (re-)entry: a later module completion stales the
    * draft this version produced, so the load must rebuild on the plan's
@@ -537,23 +564,37 @@ export async function loadPlanStartStage3Bootstrap(input: {
    */
   rebuildOnStaleRefinedVersion?: boolean
 }): Promise<Stage3Bootstrap> {
-  const loaded = await input.gateway.loadOrCreate({
-    draftId: "client-derived",
-    userId: "client-derived",
-    personalPlanId: input.personalPlanId,
-    refinedVersionId: input.refinedVersionId,
-    ...(input.repairRoutineVersionId
-      ? { repairRoutineVersionId: input.repairRoutineVersionId }
-      : {}),
-    ...(input.rebuildOnStaleRefinedVersion && !input.repairRoutineVersionId
-      ? { rebuildOnStaleRefinedVersion: true }
-      : {}),
-    requirements: [],
-  })
+  const loaded = input.optionalInventory
+    ? await openOptionalStage3Inventory(input.gateway, {
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: input.refinedVersionId,
+      })
+    : await input.gateway.loadOrCreate({
+        draftId: "client-derived",
+        userId: "client-derived",
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: input.refinedVersionId,
+        ...(input.repairRoutineVersionId
+          ? { repairRoutineVersionId: input.repairRoutineVersionId }
+          : {}),
+        ...(input.rebuildOnStaleRefinedVersion && !input.repairRoutineVersionId
+          ? { rebuildOnStaleRefinedVersion: true }
+          : {}),
+        requirements: [],
+      })
   return buildStage3Bootstrap(
     loaded as typeof loaded & { authorityEvaluations?: Stage3AuthorityEvaluation[] },
     input,
   )
+}
+
+function openOptionalStage3Inventory(
+  gateway: Pick<Stage3ProductsGateway, "openOptionalInventory">,
+  input: { personalPlanId: string; refinedVersionId: string },
+) {
+  const openOptionalInventory = gateway.openOptionalInventory?.bind(gateway)
+  if (!openOptionalInventory) throw new Stage3ProductsGatewayError("temporarily_unavailable")
+  return openOptionalInventory(input)
 }
 
 export async function loadPlanStartStage2HandoffBootstrap(input: {
@@ -679,7 +720,9 @@ export function PlanStartCustomerJourney({
   const [stage2LoadState, setStage2LoadState] = useState<"idle" | "loading" | "error">("idle")
   const [stage2EnteredLocally, setStage2EnteredLocally] = useState(false)
   const [stage3EnteredLocally, setStage3EnteredLocally] = useState(false)
-  const stage2SeedRef = useRef(initialRefinementSession)
+  const stage2SeedRef = useRef(
+    planStartUsesOptionalStage2Entry(initialJourney) ? undefined : initialRefinementSession,
+  )
   const pendingStage2CompletionRef = useRef<Stage2RefinementSession | null>(null)
   const pendingStage3BootstrapRef = useRef<Stage2RefinementSession | null>(null)
   const stage3JourneyStartedRef = useRef(false)
@@ -740,14 +783,20 @@ export function PlanStartCustomerJourney({
   const loadStage3Bootstrap = useCallback(
     async (
       refinedVersionId: string,
-      options: { rebuildOnStaleRefinedVersion?: boolean } = {},
+      options: {
+        rebuildOnStaleRefinedVersion?: boolean
+        source?: PlanStartStage3BootstrapSource
+      } = {},
     ): Promise<Stage3Bootstrap> => {
+      const source = options.source ?? "initial"
       return loadPlanStartStage3Bootstrap({
         gateway: stage3Gateway,
         personalPlanId,
         refinedVersionId,
         repairRoutineVersionId:
           initialJourney.stage === "stage3" ? initialJourney.repairRoutineVersionId : undefined,
+        optionalInventory:
+          planStartStage3BootstrapMode(initialJourney, source) === "optional_inventory",
         rebuildOnStaleRefinedVersion: options.rebuildOnStaleRefinedVersion,
       })
     },
@@ -768,7 +817,10 @@ export function PlanStartCustomerJourney({
       const bootstrap = await loadPlanStartStage2HandoffBootstrap({
         handoff,
         loadStage3Bootstrap: (refinedVersionId) =>
-          loadStage3Bootstrap(refinedVersionId, { rebuildOnStaleRefinedVersion: true }),
+          loadStage3Bootstrap(refinedVersionId, {
+            rebuildOnStaleRefinedVersion: true,
+            source: "stage2_handoff",
+          }),
         reloadServerFrontier,
       })
       if (!bootstrap) return
@@ -796,7 +848,8 @@ export function PlanStartCustomerJourney({
           pendingCompletionSession: pendingStage2CompletionRef.current,
           pendingBootstrapSession: pendingStage3BootstrapRef.current,
           stage2Gateway,
-          loadStage3Bootstrap,
+          loadStage3Bootstrap: (refinedVersionId) =>
+            loadStage3Bootstrap(refinedVersionId, { source: "correction" }),
         })
         pendingStage2CompletionRef.current = result.pendingCompletionSession
         pendingStage3BootstrapRef.current = result.pendingBootstrapSession
@@ -1044,7 +1097,6 @@ export function PlanStartCustomerJourney({
           openRoutineHref(moduleCompletionRoutineHref(initialJourney))
         }}
         autoHandoff={!returningToRefinement}
-        directEntry
         stageEntrance={stage2EnteredLocally}
       />
     )
@@ -1076,7 +1128,6 @@ export function PlanStartCustomerJourney({
         intakeClient={intakeClient}
         analytics={stage3BaselineAnalytics}
         stageEntrance={stage3EnteredLocally}
-        directRoutineHandoff={planStartSuppressesChapterCeremony(initialJourney)}
         onOpenRoutine={openRoutine}
         onProductKindsCorrection={handleProductKindsCorrection}
         onBackToRefinement={() => {

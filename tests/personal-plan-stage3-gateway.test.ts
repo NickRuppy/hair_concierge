@@ -28,6 +28,50 @@ function gateway(): FixtureStage3Gateway {
   return createFixtureStage3Gateway({ now: () => now, searchDelayMs: 0 })
 }
 
+test("the fixture resumes a prefilled catalog product using its persisted product identity", async () => {
+  const { draft } = await createDraft(gateway())
+  draft.products = [
+    {
+      capturedProductId: "legacy-imported",
+      userProductId: "legacy-owned",
+      identity: {
+        kind: "catalog_product",
+        productId: "fixture-product-conditioner-1",
+        category: "conditioner",
+        displayName: "Conditioner Balance",
+      },
+      frequencyRange: "weekly_2x",
+      ownership: "owned",
+      source: "existing_inventory",
+    },
+  ]
+  const subject = createFixtureStage3Gateway({ initialDraft: { draft, requirements } })
+  const result = await subject.mutate({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    mutation: {
+      type: "replace_capture_category",
+      category: "conditioner",
+      refinedNeedVersionId: draft.refinedVersionId,
+      refinedInputHash: "fixture-hash",
+      categoryAuthorityVersion: requirements[0]!.authorityVersion,
+      candidates: [
+        {
+          kind: "catalog",
+          candidateId: "fixture-product-conditioner-1",
+          frequencyRange: "weekly_2x",
+          roles: ["conditioner_rinse_out"],
+        },
+      ],
+      uncoveredRoles: [],
+    },
+  })
+  assert.equal(result.status, "saved")
+  if (result.status !== "saved") return
+  assert.equal(result.draft.products[0]?.userProductId, "legacy-owned")
+  assert.equal(result.draft.products[0]?.source, "existing_inventory")
+})
+
 test("production product failures share the frozen unavailable and snapshot codes", () => {
   for (const code of [
     "temporarily_unavailable",

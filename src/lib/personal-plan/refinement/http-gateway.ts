@@ -17,6 +17,14 @@ export function createHttpStage2RefinementGateway({
   fetch: fetcher = fetch,
 }: { fetch?: FetchLike } = {}): Stage2RefinementGateway {
   return {
+    async openOptionalRefinement(module: Stage2Module) {
+      return request<Stage2RefinementSession>(
+        fetcher,
+        "/api/personal-plan/stage-2/optional-entry",
+        jsonRequest("POST", { module }),
+        "stage2_optional_entry",
+      )
+    },
     async load() {
       return request<Stage2RefinementSession>(
         fetcher,

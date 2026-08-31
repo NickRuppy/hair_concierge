@@ -16,6 +16,10 @@ import {
   isPersonalPlanLegacyQuizCutoverEnabled,
 } from "@/lib/personal-plan/release"
 import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
+import {
+  isPersonalPlanLegacyMigrationEnabled,
+  resolvePersonalPlanMigrationAdmission,
+} from "./migration-admission"
 
 export type PersonalPlanEnrollment = {
   accessState: OneTimeAccessState
@@ -24,7 +28,7 @@ export type PersonalPlanEnrollment = {
   qualifiedAt: string | null
   artifactLeadId: string | null
   quizSourceKind: "personal_plan" | "legacy" | null
-  sourceKind: "one_time" | "launch_subscription" | "field_test" | null
+  sourceKind: "one_time" | "launch_subscription" | "field_test" | "migration" | null
 }
 
 type CorrelationRow = {
@@ -39,12 +43,14 @@ type LeadRow = {
 
 type EnrollmentReleaseDependencies = {
   legacyQuizCutoverEnabled: () => boolean
+  migrationEnabled?: () => boolean
   cohortCutoff: () => Date | null
   appAllowedForUser: (userId: string, client: unknown) => Promise<boolean>
 }
 
 const defaultReleaseDependencies: EnrollmentReleaseDependencies = {
   legacyQuizCutoverEnabled: isPersonalPlanLegacyQuizCutoverEnabled,
+  migrationEnabled: () => isPersonalPlanLegacyMigrationEnabled(),
   cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
   appAllowedForUser: (userId, client) => isPersonalPlanAppV1AllowedForUser(userId, client as never),
 }
@@ -162,6 +168,23 @@ export async function findPersonalPlanEnrollmentForUser(
   now: Date = new Date(),
   release: EnrollmentReleaseDependencies = defaultReleaseDependencies,
 ): Promise<PersonalPlanEnrollment> {
+  // A durable migration binding remains the Plan's source when billing changes.
+  // The read RPC rechecks current paid authority; this record grants no access.
+  const migration = await resolvePersonalPlanMigrationAdmission({
+    client: supabase as never,
+    userId,
+  })
+  if (migration.status === "ready") {
+    return {
+      accessState: "active",
+      sourceId: migration.enrollmentId,
+      paidAt: null,
+      qualifiedAt: migration.admittedAt,
+      artifactLeadId: migration.leadId,
+      quizSourceKind: migration.quizSourceKind,
+      sourceKind: "migration",
+    }
+  }
   const oneTime = await findOneTimePurchaseEntitlementForUser(supabase, userId)
   const oneTimeState = resolveOneTimePurchaseAccessState(oneTime)
   if (oneTimeState === "active" && oneTime?.consent?.lead_id) {
@@ -327,10 +350,17 @@ async function resolveEligibleLeadKind(input: {
 }): Promise<"personal_plan" | "legacy" | null> {
   if (input.lead?.user_id !== input.userId) return null
   if (input.lead.quiz_kind === "personal_plan") return "personal_plan"
-  if (input.lead.quiz_kind !== "legacy" || !input.release.legacyQuizCutoverEnabled()) return null
-  const cutoff = input.release.cohortCutoff()
+  if (input.lead.quiz_kind !== "legacy") return null
   const qualifiedAt = new Date(input.qualifiedAt)
-  if (!cutoff || Number.isNaN(qualifiedAt.getTime()) || qualifiedAt.getTime() < cutoff.getTime()) {
+  if (Number.isNaN(qualifiedAt.getTime())) return null
+  const historicalPaidEnabled = input.release.migrationEnabled?.() === true
+  const cutoff = input.release.cohortCutoff()
+  if (
+    !historicalPaidEnabled &&
+    (!input.release.legacyQuizCutoverEnabled() ||
+      !cutoff ||
+      qualifiedAt.getTime() < cutoff.getTime())
+  ) {
     return null
   }
   return (await input.release.appAllowedForUser(input.userId, input.supabase)) ? "legacy" : null

@@ -93,7 +93,7 @@ test("integrated Personal Plan runtime paths run the persisted journey", () => {
     "src/app/routine/page.tsx",
     "src/components/application/application-page.tsx",
     "src/components/personal-plan-products/stage3-products-flow.tsx",
-    "src/components/personal-plan-refinement/refinement-bridge.tsx",
+    "src/components/personal-plan-refinement/refinement-flow.tsx",
     "src/components/personal-plan-start/plan-start-flow.tsx",
     "src/components/routine/personal-plan/routine-page.tsx",
     "src/components/routine/routine-page-client.tsx",

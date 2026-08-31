@@ -52,6 +52,12 @@ async function searchAndSelect(page: Page, query: string, productName: string) {
   await page.getByRole("button", { name: "2×/Woche" }).click()
 }
 
+async function expectRoutineAuthHandoff(page: Page) {
+  await page.waitForURL(
+    (url) => url.pathname === "/auth" && url.searchParams.get("next") === "/routine",
+  )
+}
+
 async function expectProductFrequencyLabelsAligned(page: Page) {
   await page.evaluate(async () => {
     await Promise.all(
@@ -214,25 +220,7 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: /Auf Analyse warten/ }).click()
 
     await expect(page.getByRole("button", { name: "Plan fertigstellen" })).toHaveCount(0)
-
-    const routineChapter = page.locator('[data-personal-plan-chapter="4"]')
-    await expect(routineChapter).toBeVisible()
-    await expect(page.getByRole("heading", { name: "Deine Produktauswahl steht." })).toBeVisible()
-    // Variante D: the transition scrolls naturally; the auto-focus must leave
-    // the current stage card fully visible above the fixed CTA dock.
-    const focusCardClear = await page.evaluate(() => {
-      const card = document.querySelector('[data-stage-state="current"]')
-      const dock = document.querySelector("footer")
-      if (!card || !dock) return false
-      const cardRect = card.getBoundingClientRect()
-      const dockRect = dock.getBoundingClientRect()
-      return cardRect.top >= 0 && cardRect.bottom <= dockRect.top
-    })
-    expect(focusCardClear).toBe(true)
-    await page.getByRole("button", { name: "Routine ansehen" }).click()
-
-    await page.waitForURL((url) => url.pathname !== labPath)
-    await expect(page).not.toHaveURL(new RegExp(`${labPath}$`))
+    await expectRoutineAuthHandoff(page)
   })
 
   test("skips empty Conditioner roles without showing an empty assignment page", async ({
@@ -242,8 +230,7 @@ test.describe("Personal Plan products lab", () => {
     await searchAndSelect(page, "Balance", "Chaarlie Fixture Conditioner Balance")
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
 
-    await expect(page.getByRole("heading", { name: /Welche Aufgabe/ })).toHaveCount(0)
-    await expect(page.getByRole("heading", { name: "Deine Produktauswahl steht." })).toBeVisible()
+    await expectRoutineAuthHandoff(page)
   })
 
   test("keeps product-frequency labels centered on their markers at every target width", async ({
@@ -343,12 +330,6 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: "Dieses Produkt einplanen" }).click()
 
     await expect(page.getByRole("button", { name: "Plan fertigstellen" })).toHaveCount(0)
-
-    await expect(page.locator('[data-personal-plan-chapter="4"]')).toBeVisible()
-    await page.getByRole("button", { name: "Routine ansehen" }).click()
-
-    await page.waitForURL(
-      (url) => url.pathname === "/auth" && url.searchParams.get("next") === "/routine",
-    )
+    await expectRoutineAuthHandoff(page)
   })
 })

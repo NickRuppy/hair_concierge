@@ -112,7 +112,7 @@ test("Feinschliff keeps its Journey header outside the ordered-question depth su
     },
   })
   const html = renderToStaticMarkup(
-    <RefinementFlow gateway={{} as never} initialSession={session} directEntry />,
+    <RefinementFlow gateway={{} as never} initialSession={session} />,
   )
 
   assert.equal(html.match(/data-personal-plan-stage="2"/g)?.length, 1)
@@ -195,7 +195,7 @@ test("successful Stage 3 handoff marks Routine before invoking client route repl
   assert.deepEqual(calls, ["mark:/routine", "replace:/routine"])
 })
 
-test("automatic Stage 3 bootstrap keeps the meaningful Feinschliff bridge visible", () => {
+test("automatic Stage 3 bootstrap keeps the direct products-prep bridge visible", () => {
   const session = createStage2RefinementSession({
     pathVersion: "transition-complete",
     triggerContext: {
@@ -228,12 +228,13 @@ test("automatic Stage 3 bootstrap keeps the meaningful Feinschliff bridge visibl
       initialSession={session}
       onHandoff={() => new Promise(() => {})}
       autoHandoff
-      directEntry
     />,
   )
 
-  assert.match(html, /Jetzt gleichen wir deine Produkte ab\./)
-  assert.match(html, /data-personal-plan-chapter="3"/)
-  assert.match(html, /Produkte erfassen/)
+  assert.match(html, /Feinschliff gespeichert/)
+  assert.match(html, /Deine Produkte werden vorbereitet\./)
+  assert.match(html, /Wir bringen dich direkt zur Produktauswahl\./)
+  assert.doesNotMatch(html, /data-personal-plan-chapter="3"/)
+  assert.doesNotMatch(html, /Produkte erfassen/)
   assert.doesNotMatch(html, /Wir laden deinen Stand\./)
 })

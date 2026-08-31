@@ -6,7 +6,29 @@ import {
   loadPlanBereitInitialReadiness,
   loadPlanBereitReadiness,
   updateMissingPlanBereitSourceFact,
+  needsFreshMigrationQuiz,
 } from "../src/app/plan-bereit/readiness"
+
+test("migration quiz recovery retains the existing hair-length repair and rejects authorization failures", () => {
+  assert.equal(needsFreshMigrationQuiz({ status: "invalid_source" }), true)
+  assert.equal(
+    needsFreshMigrationQuiz({
+      status: "missing_source_facts",
+      missingFacts: [{ field: "hair_length" }, { field: "density" }],
+    }),
+    true,
+  )
+  assert.equal(
+    needsFreshMigrationQuiz({
+      status: "missing_source_facts",
+      missingFacts: [{ field: "hair_length" }],
+    }),
+    false,
+  )
+  for (const status of ["ready", "forbidden", "transient_error", "checking"]) {
+    assert.equal(needsFreshMigrationQuiz({ status }), false)
+  }
+})
 
 const COMPLETE_LEGACY_ANSWERS = {
   structure: "wavy",
@@ -102,7 +124,9 @@ class FakeQuery {
   }
 
   then<TResult1 = { data: Row[]; error: null }, TResult2 = never>(
-    onfulfilled?: ((value: { data: Row[]; error: null }) => TResult1 | PromiseLike<TResult1>) | null,
+    onfulfilled?:
+      | ((value: { data: Row[]; error: null }) => TResult1 | PromiseLike<TResult1>)
+      | null,
     onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
   ) {
     return Promise.resolve({ data: this.matchingRows(), error: null }).then(onfulfilled, onrejected)
@@ -140,7 +164,10 @@ class FakeSupabase {
 
   constructor(
     readonly tables: Record<string, Row[]>,
-    private readonly rpcResults: Record<string, { data: unknown; error: { message: string } | null }> = {},
+    private readonly rpcResults: Record<
+      string,
+      { data: unknown; error: { message: string } | null }
+    > = {},
   ) {}
 
   from(table: string) {
@@ -242,7 +269,9 @@ test("legacy readiness compares every projected profile field and ignores goals 
           updated_at: "2026-08-12T08:00:00.000Z",
         },
       ],
-      hair_profiles: [{ ...COMPLETE_PROFILE, goals: ["ignored"], unrelated_note: "ignored", [field]: value }],
+      hair_profiles: [
+        { ...COMPLETE_PROFILE, goals: ["ignored"], unrelated_note: "ignored", [field]: value },
+      ],
     })
 
     const readiness = await loadPlanBereitInitialReadiness(db as never, {

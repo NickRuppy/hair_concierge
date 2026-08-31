@@ -4,7 +4,6 @@ import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { PersonalPlanChapterTransition } from "../src/components/personal-plan-journey"
 import {
   IntakeFallbackBoundary,
   ProductCaptureScreen,
@@ -49,6 +48,7 @@ import {
 import { createFixtureStage3Gateway } from "../src/lib/personal-plan/products/fixture-gateway"
 import {
   Stage3ProductsGatewayError,
+  type Stage3CompleteResponse,
   type Stage3MutationResponse,
   type Stage3ProductsGateway,
   type Stage3SearchResponse,
@@ -130,6 +130,124 @@ function oilSearchEntryContext(id: string): Stage3EntryContext {
     inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
   }
 }
+
+test("saved inventory uses the existing selected cards, while unresolved hints prefill search without overwriting edits", async () => {
+  const entryContext = oilSearchEntryContext("legacy-prefill")
+  const draft = createStage3Draft({
+    draftId: "legacy-draft",
+    userId: "owner",
+    personalPlanId: entryContext.personalPlanId,
+    refinedVersionId: entryContext.refinedVersionId,
+    requirements: entryContext.orderedCategories,
+    now: "2026-08-28T00:00:00Z",
+  })
+  draft.products = [
+    {
+      capturedProductId: "captured",
+      userProductId: "owned-product",
+      ownership: "owned",
+      source: "existing_inventory",
+      frequencyRange: "weekly_2x",
+      identity: {
+        kind: "catalog_product",
+        productId: "saved-catalog",
+        displayName: "Gespeichertes Öl",
+        category: "oil",
+      },
+    },
+  ]
+  draft.legacyPrefillHints = {
+    schemaVersion: 1,
+    sourceFingerprint: "fixture",
+    categories: {
+      oil: [
+        {
+          kind: "search_name",
+          usageId: "old-usage",
+          category: "oil",
+          productName: "Mein altes Öl",
+        },
+      ],
+    },
+  }
+  const gateway = createAuthorityTestGateway()
+  gateway.search = async (input) =>
+    searchResponse({ ...input, candidateId: "other", totalCapped: false })
+  const bootstrap: Stage3Bootstrap = {
+    entryContext,
+    draft,
+    requirements: entryContext.orderedCategories,
+    authorityEvaluations: [],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ bootstrap, gateway, searchDebounceMs: 0 }),
+  )
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )!
+  assert.equal(capture.props.query, "Mein altes Öl")
+  assert.equal(capture.props.capturedProducts[0].sourceLabel, "Aus deinen bisherigen Angaben")
+  assert.equal(capture.props.canContinue, true)
+  assert.equal(capture.props.showFrequency, false)
+  capture.props.onQueryChange("Meine Korrektur")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )!
+  assert.equal(capture.props.query, "Meine Korrektur")
+})
+
+test("an exact saved identity missing frequency is selected only after current catalog search confirms it", async () => {
+  const entryContext = oilSearchEntryContext("legacy-frequency")
+  const draft = createStage3Draft({
+    draftId: "frequency-draft",
+    userId: "owner",
+    personalPlanId: entryContext.personalPlanId,
+    refinedVersionId: entryContext.refinedVersionId,
+    requirements: entryContext.orderedCategories,
+    now: "2026-08-28T00:00:00Z",
+  })
+  draft.legacyPrefillHints = {
+    schemaVersion: 1,
+    sourceFingerprint: "fixture",
+    categories: {
+      oil: [
+        {
+          kind: "catalog_frequency_required",
+          usageId: "old-usage",
+          category: "oil",
+          productId: "exact-oil",
+          displayName: "Bekanntes Öl",
+        },
+      ],
+    },
+  }
+  const gateway = createAuthorityTestGateway()
+  gateway.search = async (input) =>
+    searchResponse({ ...input, candidateId: "exact-oil", totalCapped: false })
+  const bootstrap: Stage3Bootstrap = {
+    entryContext,
+    draft,
+    requirements: entryContext.orderedCategories,
+    authorityEvaluations: [],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ bootstrap, gateway, searchDebounceMs: 0 }),
+  )
+  const tree = await renderSettled(harness)
+  const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )!
+  assert.equal(capture.props.selectedCandidateId, "exact-oil")
+  assert.equal(capture.props.showFrequency, true)
+  assert.equal(capture.props.selectedFrequency, null)
+  assert.equal(capture.props.canContinue, false)
+  assert.equal(capture.props.capturedProducts.length, 0)
+})
 
 test("the journey header labels local review choices without claiming a server save", () => {
   const html = renderToStaticMarkup(
@@ -2512,7 +2630,82 @@ test("uncertain decision save confirms canonical state before showing manual rec
   assert.doesNotMatch(textContent(tree), /Speichern fehlgeschlagen|Speicherstatus noch offen/)
 })
 
-test("completed canonical recovery shows the Routine chapter without replaying completion", async () => {
+test("a bare completed Stage 3 resume opens Routine directly once", async () => {
+  const gateway = createAuthorityTestGateway()
+  const handoffs: Stage3RoutineHandoff[] = []
+  let loadCalls = 0
+  let completeCalls = 0
+  let completedDraft: Stage3ProductDraft | null = null
+  gateway.loadOrCreate = async (input) => {
+    loadCalls += 1
+    const draft = createStage3Draft({
+      draftId: input.draftId,
+      userId: input.userId,
+      personalPlanId: input.personalPlanId,
+      refinedVersionId: input.refinedVersionId,
+      requirements: input.requirements,
+      authoritySnapshot: input.authoritySnapshot,
+      now: "2026-08-28T00:00:00.000Z",
+    })
+    completedDraft = {
+      ...draft,
+      status: "completed",
+      pass: "ready_for_routine",
+      categoryCursor: null,
+      revision: 7,
+      updatedAt: "2026-08-28T00:01:00.000Z",
+    }
+    return { status: "completed", draft: completedDraft, requirements: input.requirements }
+  }
+  gateway.complete = async (input) => {
+    completeCalls += 1
+    assert.ok(completedDraft)
+    assert.equal(input.draftId, completedDraft.draftId)
+    assert.equal(input.expectedRevision, completedDraft.revision)
+    const response: Extract<Stage3CompleteResponse, { status: "ready_for_routine" }> = {
+      status: "ready_for_routine",
+      draft: completedDraft,
+      portfolio: {
+        schemaVersion: 1,
+        portfolioVersionId: "portfolio-bare-completed-resume",
+        personalPlanId: completedDraft.personalPlanId,
+        refinedVersionId: completedDraft.refinedVersionId,
+        sourceDraftRevision: completedDraft.revision,
+        categoryResolutions: [],
+        ownedProducts: [],
+        plannedPurchases: [],
+        pendingProducts: [],
+        uncoveredRoles: [],
+        createdAt: "2026-08-28T00:01:00.000Z",
+      },
+      personalPlanId: completedDraft.personalPlanId,
+      refinedVersionId: completedDraft.refinedVersionId,
+      productPortfolioVersionId: "portfolio-bare-completed-resume",
+      routineProposalId: "routine-bare-completed-resume",
+      next: { stage: 4, href: "/routine" },
+    }
+    return response
+  }
+
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      gateway,
+      searchDebounceMs: 0,
+      onOpenRoutine: (handoff) => handoffs.push(handoff),
+    }),
+  )
+
+  const tree = await renderUntil(harness, () => handoffs.length === 1, "the bare direct handoff")
+
+  assert.equal(loadCalls, 1)
+  assert.equal(completeCalls, 1)
+  assert.equal(handoffs[0]?.next.href, "/routine")
+  assert.equal(systemStateTitle(tree), "Deine Routine wird geöffnet.")
+  await renderSettled(harness)
+  assert.equal(handoffs.length, 1, "a bare resume must not navigate twice")
+})
+
+test("completed canonical recovery opens the Routine directly without replaying completion", async () => {
   let completeCalls = 0
   let receiptCalls = 0
   const gateway = createAuthorityTestGateway()
@@ -2564,14 +2757,10 @@ test("completed canonical recovery shows the Routine chapter without replaying c
 
   assert.equal(completeCalls, 1)
   assert.equal(receiptCalls, 1)
-  assert.equal(handoffs.length, 0)
-  const chapter = findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
-    tree,
-    PersonalPlanChapterTransition,
-  )
-  assert.equal(chapter?.props.currentStage, 4)
-  chapter?.props.onAction?.()
   assert.equal(handoffs.length, 1)
+  assert.equal(systemStateTitle(tree), "Deine Routine wird geöffnet.")
+  await renderSettled(harness)
+  assert.equal(handoffs.length, 1, "canonical receipt recovery must not open Routine twice")
   assert.doesNotMatch(textContent(tree), /Speichern fehlgeschlagen|Speicherstatus noch offen/)
 })
 
@@ -2877,7 +3066,7 @@ test("replacement recovery resends once at the canonical revision when the finge
   )
 
   await captureCatalogProduct(harness, "Conditioner", "conditioner")
-  let tree = await renderSettled(harness)
+  const tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
@@ -3027,7 +3216,7 @@ test("global inventory review keeps server-authored no-owned gaps local without 
     Stage3ProductsFlow({ bootstrap, gateway, searchDebounceMs: 0 }),
   )
 
-  let tree = await renderSettled(harness)
+  const tree = await renderSettled(harness)
   assert.equal(findByType(tree, ProductKindReviewScreen), null)
   assert.deepEqual(recordedMutationTypes, [])
   assert.equal(findByType(tree, ProductCaptureScreen), null)
@@ -3918,14 +4107,8 @@ test("waiting for analysis advances a pending product without framing it as excl
       null,
       `${actionKind} should advance past the final pending decision`,
     )
-    assert.equal(handoffs.length, 0)
-    const chapter = findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
-      tree,
-      PersonalPlanChapterTransition,
-    )
-    assert.equal(chapter?.props.currentStage, 4)
-    chapter?.props.onAction?.()
-    assert.equal(handoffs.length, 1, "the chapter action opens the validated Routine handoff")
+    assert.equal(handoffs.length, 1, "the validated Routine handoff opens directly")
+    assert.equal(systemStateTitle(tree), "Deine Routine wird geöffnet.")
     assert.deepEqual(
       intents.map((intent) => intent.action),
       ["keep_pending"],
@@ -4244,12 +4427,14 @@ test("a finalization timeout auto-reconciles and reaches the handoff", async () 
     await stalledBatch.promise
     return result
   }
+  const handoffs: Stage3RoutineHandoff[] = []
   const harness = createClientStateHarness(() =>
     Stage3ProductsFlow({
       entryContext: finalizationTimeoutEntryContext("final-timeout-reconcile"),
       gateway,
       searchDebounceMs: 0,
       finalizationTimeoutMs: 5,
+      onOpenRoutine: (handoff) => handoffs.push(handoff),
     }),
   )
 
@@ -4270,17 +4455,10 @@ test("a finalization timeout auto-reconciles and reaches the handoff", async () 
     "Speicherstatus wird geprüft",
   )
 
-  tree = await renderUntil(
-    harness,
-    (candidate) => findByType(candidate, PersonalPlanChapterTransition) !== null,
-    "the Routine chapter handoff",
-  )
+  tree = await renderUntil(harness, () => handoffs.length === 1, "the direct Routine handoff")
   assert.equal(
-    findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
-      tree,
-      PersonalPlanChapterTransition,
-    )?.props.currentStage,
-    4,
+    systemStateTitle(tree),
+    "Deine Routine wird geöffnet.",
     "the timeout reconciles to the handoff without any manual step",
   )
   assert.equal(batchCalls, 1, "the recovery must not resubmit the committed batch")
@@ -4856,7 +5034,7 @@ test("Back from a later review edits the previous local decision without reopeni
   )
 })
 
-test("multiple individual reviews progress to one intentional Routine chapter handoff", async () => {
+test("multiple individual reviews progress to one direct Routine handoff", async () => {
   const events: string[] = []
   const analytics = {
     track(eventName: string) {
@@ -4911,20 +5089,15 @@ test("multiple individual reviews progress to one intentional Routine chapter ha
   await new Promise((resolve) => setImmediate(resolve))
   const completedTree = await renderSettled(harness)
 
-  assert.equal(handoffs.length, 0)
-  assert.ok(events.includes("personal_plan_stage3_review_completed"))
-  assert.ok(!events.includes("personal_plan_stage3_routine_opened"))
-  const chapter = findByType<React.ComponentProps<typeof PersonalPlanChapterTransition>>(
-    completedTree,
-    PersonalPlanChapterTransition,
-  )
-  assert.equal(chapter?.props.currentStage, 4)
-  chapter?.props.onAction?.()
   assert.equal(handoffs.length, 1)
+  assert.ok(events.includes("personal_plan_stage3_review_completed"))
   assert.ok(events.includes("personal_plan_stage3_routine_opened"))
+  assert.equal(systemStateTitle(completedTree), "Deine Routine wird geöffnet.")
+  await renderSettled(harness)
+  assert.equal(handoffs.length, 1, "re-rendering the completed handoff must not navigate twice")
 })
 
-test("a post-accept Stage 3 lands on the Routine directly, with no chapter screen", async () => {
+test("an explicit products module completion lands on the Routine directly", async () => {
   // Field test 26.08.2026: the user reached Stage 3 from a Feinschliff module
   // with the full app nav on screen. "Deine Produktauswahl steht." is creation
   // funnel ceremony there — the Routine's own toast carries the feedback.
@@ -4955,7 +5128,6 @@ test("a post-accept Stage 3 lands on the Routine directly, with no chapter scree
       entryContext,
       gateway,
       searchDebounceMs: 0,
-      directRoutineHandoff: true,
       onOpenRoutine: (handoff) => handoffs.push(handoff),
       analytics,
     }),
@@ -4983,11 +5155,12 @@ test("a post-accept Stage 3 lands on the Routine directly, with no chapter scree
   await new Promise((resolve) => setImmediate(resolve))
   const completedTree = await renderSettled(harness)
 
-  // No tap needed, and no chapter rendered at any point after completion.
+  // No tap needed; every post-payment entry now uses the same direct Routine handoff.
   assert.equal(handoffs.length, 1)
   assert.ok(events.includes("personal_plan_stage3_routine_opened"))
-  assert.equal(findByType(completedTree, PersonalPlanChapterTransition), null)
   assert.equal(systemStateTitle(completedTree), "Deine Routine wird geöffnet.")
+  await renderSettled(harness)
+  assert.equal(handoffs.length, 1, "a settled direct handoff must remain single-shot")
 })
 
 test("assigning an Oil use to another product moves the exclusive checkbox", () => {

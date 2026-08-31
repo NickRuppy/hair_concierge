@@ -34,7 +34,7 @@ export function PlanBereitArrival({
       className="flex min-h-dvh flex-col bg-[var(--background,#fdfbf9)] text-[var(--foreground)]"
       data-plan-bereit-arrival="true"
     >
-      <PersonalPlanJourneyHeader currentStage={1} centeredBrand showStageProgress={false} />
+      <PersonalPlanJourneyHeader currentStage={1} centeredBrand />
 
       {/* personal-plan-cookie-clearance owns the bottom padding (cookie banner
           + safe area) — the CTA sits in flow, so it must not be overridden. */}

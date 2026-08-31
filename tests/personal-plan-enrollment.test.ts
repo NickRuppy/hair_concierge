@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { findPersonalPlanEnrollmentForUser } from "../src/lib/personal-plan/enrollment"
+import { loadPersonalPlanRoutingFrontierForUser } from "../src/lib/personal-plan/frontier-routing-loader"
 
 type Row = Record<string, unknown>
 
@@ -9,6 +10,7 @@ function client(responses: Record<string, Row[]>, errors: Record<string, unknown
   const queries: Array<{ table: string; predicates: Array<[string, unknown]> }> = []
   return {
     queries,
+    rpc: async () => ({ data: { status: "ineligible" }, error: null }),
     from(table: string) {
       const query = { table, predicates: [] as Array<[string, unknown]> }
       queries.push(query)
@@ -279,6 +281,94 @@ test("a post-cutoff owned legacy lead is eligible only behind the independent cu
   assert.equal(disabled.accessState, "none")
 })
 
+test("historical paid legacy enrollment and frontier agree when migration replaces the old cutover", async () => {
+  const qualifiedAt = "2026-01-01T00:00:00.000Z"
+  for (const migrationEnabled of [false, true]) {
+    const release = {
+      legacyQuizCutoverEnabled: () => false,
+      migrationEnabled: () => migrationEnabled,
+      cohortCutoff: () => new Date("2026-08-08T00:00:00.000Z"),
+      appAllowedForUser: async () => true,
+    }
+    const admin = client({
+      billing_subscriptions: [subscription],
+      funnel_sessions: [
+        {
+          ...attributedSession({ provider: "paypal", purchaseReference: "I-PERSONAL-PLAN" }),
+          purchase_completed_at: qualifiedAt,
+        },
+      ],
+      leads: [
+        { id: "44444444-4444-4444-8444-444444444444", quiz_kind: "legacy", user_id: "user-1" },
+      ],
+    })
+    const enrollment = await findPersonalPlanEnrollmentForUser(
+      admin as never,
+      "user-1",
+      new Date("2026-08-10"),
+      release,
+    )
+    const frontier = await loadPersonalPlanRoutingFrontierForUser(
+      {
+        rpc: async () => ({
+          data: {
+            source_kind: "paid",
+            qualified_at: qualifiedAt,
+            quiz_source_kind: "legacy",
+            plan: null,
+          },
+          error: null,
+        }),
+      } as never,
+      "user-1",
+      release,
+    )
+    assert.equal(enrollment.accessState === "active", migrationEnabled)
+    assert.equal(frontier.kind !== "legacy", migrationEnabled)
+    if (migrationEnabled) assert.equal(enrollment.quizSourceKind, "legacy")
+  }
+})
+
+test("historical legacy eligibility still requires owner, valid date, app rollout and live payment", async () => {
+  for (const condition of ["wrong_owner", "bad_date", "app_off", "expired"] as const) {
+    const admin = client({
+      billing_subscriptions: [
+        {
+          ...subscription,
+          current_period_end:
+            condition === "expired" ? "2020-01-01T00:00:00Z" : subscription.current_period_end,
+        },
+      ],
+      funnel_sessions: [
+        {
+          ...attributedSession({ provider: "paypal", purchaseReference: "I-PERSONAL-PLAN" }),
+          purchase_completed_at: condition === "bad_date" ? "invalid" : "2026-01-01T00:00:00Z",
+        },
+      ],
+      leads: [
+        {
+          id: "44444444-4444-4444-8444-444444444444",
+          quiz_kind: "legacy",
+          user_id: condition === "wrong_owner" ? "other-user" : "user-1",
+        },
+      ],
+    })
+    const release = {
+      legacyQuizCutoverEnabled: () => false,
+      migrationEnabled: () => true,
+      cohortCutoff: () => null,
+      appAllowedForUser: async () => condition !== "app_off",
+    }
+    const enrollment = await findPersonalPlanEnrollmentForUser(
+      admin as never,
+      "user-1",
+      new Date("2026-08-10"),
+      release,
+    )
+    assert.notEqual(enrollment.accessState, "active", condition)
+  }
+})
+
 test("a legacy moderator enrollment uses its persisted source discriminator", async () => {
   const admin = client({
     billing_one_time_purchases: [],
@@ -366,4 +456,50 @@ test("field-test enrollment reads still fail closed on unrelated database errors
     (error: unknown) =>
       typeof error === "object" && error !== null && "code" in error && error.code === "XX000",
   )
+})
+
+test("an existing paid migration keeps its immutable source even when another launch purchase exists", async () => {
+  const admin = client({ billing_subscriptions: [subscription] })
+  const migrationClient = {
+    ...admin,
+    rpc: async () => ({
+      data: {
+        status: "ready",
+        enrollment_id: "migration-1",
+        admission_kind: "legacy_profile",
+        admission_source_id: "user-1",
+        lead_id: "old-lead",
+        quiz_source_kind: "legacy",
+        admitted_at: "2026-01-01T00:00:00Z",
+      },
+      error: null,
+    }),
+  }
+  const result = await findPersonalPlanEnrollmentForUser(migrationClient as never, "user-1")
+  assert.deepEqual(result, {
+    accessState: "active",
+    sourceId: "migration-1",
+    paidAt: null,
+    qualifiedAt: "2026-01-01T00:00:00Z",
+    artifactLeadId: "old-lead",
+    quizSourceKind: "legacy",
+    sourceKind: "migration",
+  })
+  assert.equal(admin.queries.length, 0)
+})
+
+test("an unavailable migration authority never substitutes another purchase as the Plan source", async () => {
+  const admin = client({ billing_subscriptions: [subscription] })
+  const failure = { code: "XX000", message: "migration authority unavailable" }
+  await assert.rejects(
+    findPersonalPlanEnrollmentForUser(
+      {
+        ...admin,
+        rpc: async () => ({ data: null, error: failure }),
+      } as never,
+      "user-1",
+    ),
+    (error: unknown) => error === failure,
+  )
+  assert.equal(admin.queries.length, 0)
 })

@@ -13,7 +13,6 @@ import {
   applyStage2ModuleCompletion,
   RefinementFlow,
   stage2BridgeAutoContinues,
-  stage2BridgePresentation,
   type Stage2ModuleCompletionPayload,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
@@ -177,7 +176,7 @@ test("a scoped path keeps only its own module's questions in canonical order", (
   assert.equal(scopeStage2SessionToModule(session, null), session)
 })
 
-test("the entry module resolves products first and falls back to legacy when nothing is open", () => {
+test("the entry module resolves products first and first_open always lands on a module", () => {
   assert.equal(firstOpenStage2Module(untouchedSession()), "products")
   assert.equal(firstOpenStage2Module(productsDoneSession()), "habits")
   assert.equal(firstOpenStage2Module(fullyAnsweredSession("in_progress")), null)
@@ -185,8 +184,19 @@ test("the entry module resolves products first and falls back to legacy when not
   assert.equal(resolveStage2EntryModule(productsDoneSession(), "first_open"), "habits")
   assert.equal(resolveStage2EntryModule(productsDoneSession(), "products"), "products")
   assert.equal(resolveStage2EntryModule(productsDoneSession(), null), null)
-  // `?refine=1` on an all-answered draft must stay on the legacy linear entry.
-  assert.equal(resolveStage2EntryModule(fullyAnsweredSession("in_progress"), "first_open"), null)
+  // `?refine=1` on an all-answered draft behaves like an explicit entry into the
+  // first module — the same edit visit a `?refine=products` deep link gets.
+  assert.equal(
+    resolveStage2EntryModule(fullyAnsweredSession("in_progress"), "first_open"),
+    "products",
+  )
+  assert.equal(resolveStage2EntryModule(fullyAnsweredSession("complete"), "first_open"), "products")
+
+  // A resolved first_open request IS an explicit module scope.
+  assert.equal(resolveStage2ModuleScope("first_open", "products"), "explicit")
+  assert.equal(resolveStage2ModuleScope("first_open", "habits"), "explicit")
+  assert.equal(resolveStage2ModuleScope(null, null), "none")
+  assert.equal(resolveStage2ModuleScope(undefined, null), "none")
 })
 
 test("module entry resumes question-exact and never re-bridges a consumed handoff", () => {
@@ -195,7 +205,6 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(fresh, "products"),
       moduleScope: "explicit",
-      directEntry: true,
     }),
     {
       mode: "question",
@@ -220,7 +229,6 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(midModule, "habits"),
       moduleScope: "explicit",
-      directEntry: true,
     }),
     {
       // Field test 26.08.2026: an explicit module entry never shows the resume
@@ -232,15 +240,6 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
       bridge: false,
     },
   )
-  // `?refine=1` (first_open) is still the funnel's own re-entry and keeps it.
-  assert.equal(
-    resolveStage2FlowEntryView({
-      session: scopeStage2SessionToModule(midModule, "habits"),
-      moduleScope: "first_open",
-      directEntry: true,
-    }).mode,
-    "resume",
-  )
 
   // Handoff consumption: re-entering an ALREADY finished module (a reload after
   // Stage-3 entry, or the banner pointing back at it) re-walks the module and
@@ -249,7 +248,6 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(productsDoneSession(), "products"),
       moduleScope: "explicit",
-      directEntry: true,
     }),
     {
       mode: "question",
@@ -265,7 +263,6 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
     resolveStage2FlowEntryView({
       session: fullyAnsweredSession("in_progress"),
       moduleScope: "none",
-      directEntry: true,
     }),
     {
       mode: "question",
@@ -279,7 +276,6 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
     resolveStage2FlowEntryView({
       session: fullyAnsweredSession("complete"),
       moduleScope: "none",
-      directEntry: true,
     }),
     {
       mode: "bridge",
@@ -289,13 +285,14 @@ test("module entry resumes question-exact and never re-bridges a consumed handof
       bridge: true,
     },
   )
+  // A fresh legacy entry opens its first question — the invitation chapter is
+  // retired (relic removal 28.08.2026).
   assert.deepEqual(
     resolveStage2FlowEntryView({
       session: untouchedSession(),
       moduleScope: "none",
-      directEntry: false,
     }).mode,
-    "invitation",
+    "question",
   )
 })
 
@@ -397,7 +394,6 @@ test("a module-scoped flow renders only its own module's questions", () => {
       gateway={gateway}
       initialSession={productsDoneSession()}
       moduleEntry="habits"
-      directEntry
     />,
   )
   assert.match(habitsHtml, /Wie du dein Haar behandelst/)
@@ -409,7 +405,6 @@ test("a module-scoped flow renders only its own module's questions", () => {
       gateway={gateway}
       initialSession={productsDoneSession()}
       moduleEntry="products"
-      directEntry
     />,
   )
   assert.match(productsHtml, /Was du heute benutzt/)
@@ -450,12 +445,12 @@ test("plan-start turns a module deep link into a module-scoped Stage-2 entry", a
 })
 
 /**
- * A10 (founder ruling 27.08.2026). The universal escape hatch used to be
- * `/plan-start?refine=1`, which resolves to `first_open` — a NON-explicit entry
- * that resurrects the retired ceremony: the invitation/resume chapter shells and
- * the chapter screens the module entry had already retired. Pointing it at the
- * `products` module makes it an explicit module deep link, so a buyer whose
- * accept could not resolve lands directly in their product questions.
+ * A10 (founder ruling 27.08.2026). The failed-accept escape hatch is an
+ * explicit `products` deep link, so a buyer whose accept could not resolve
+ * lands directly in their product questions. (Since the relic removal
+ * 28.08.2026, `?refine=1` behaves the same way — resolved to the first open
+ * module — so the hatch's `products` target is about naming the right module,
+ * not about escaping retired ceremony.)
  */
 test("the accept escape hatch opens the products module with no chapter screen and no 5-stage bar", async () => {
   const refineParam = new URL(PLAN_ACCEPT_REFINE_HREF, "https://chaarlie.de").searchParams.get(
@@ -511,7 +506,6 @@ test("the accept escape hatch opens the products module with no chapter screen a
       gateway={gateway}
       initialSession={refinement}
       moduleEntry={initialJourney.stage === "stage2" ? initialJourney.refineModule : undefined}
-      directEntry
     />,
   )
 
@@ -527,31 +521,22 @@ test("the accept escape hatch opens the products module with no chapter screen a
   assert.doesNotMatch(html, /Stufen im Personal Plan/)
 })
 
-test("the retired `?refine=1` escape hatch would have resurrected the ceremony", () => {
-  // The negative half of A10: proof the constant change is what removes the
-  // ceremony, not an incidental property of the module flow.
+test("`?refine=1` behaves like an explicit entry into the first open module", () => {
+  // Relic removal 28.08.2026: `first_open` no longer resurrects the retired
+  // ceremony — it IS an explicit module entry, resolved against the session.
   assert.equal(parseRefineModuleParam("1"), "first_open")
   assert.equal(
     planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
-    false,
+    true,
   )
-  // The cohort the escape hatch exists for is the direct-accept cohort: a
-  // COMPLETE draft. `first_open` dead-ends it on the bridge chapter; only an
-  // explicit module opens the questions.
+  // The direct-accept cohort (COMPLETE draft) gets the same edit visit an
+  // explicit `?refine=products` deep link gets — never the bridge chapter.
   const completeDraft = fullyAnsweredSession("complete")
+  assert.equal(resolveStage2EntryModule(completeDraft, "first_open"), "products")
   assert.equal(
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(completeDraft, "products"),
-      moduleScope: "first_open",
-      directEntry: true,
-    }).mode,
-    "bridge",
-  )
-  assert.equal(
-    resolveStage2FlowEntryView({
-      session: scopeStage2SessionToModule(completeDraft, "products"),
-      moduleScope: "explicit",
-      directEntry: true,
+      moduleScope: resolveStage2ModuleScope("first_open", "products"),
     }).mode,
     "question",
   )
@@ -575,7 +560,6 @@ test("an explicit module deep link opens the module even on a complete direct-ac
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(session, "products"),
       moduleScope: "explicit",
-      directEntry: true,
     }),
     {
       mode: "question",
@@ -589,19 +573,21 @@ test("an explicit module deep link opens the module even on a complete direct-ac
     resolveStage2FlowEntryView({
       session: scopeStage2SessionToModule(session, "habits"),
       moduleScope: "explicit",
-      directEntry: true,
     }).activeQuestionId,
     "towel_handling",
   )
 
-  // `?refine=1` keeps the legacy bridge for the nudge cohort: nothing is open,
-  // so no module is resolved and the entry stays unscoped.
-  assert.equal(resolveStage2EntryModule(session, "first_open"), null)
-  assert.equal(resolveStage2ModuleScope("first_open", null), "none")
-  assert.deepEqual(
-    resolveStage2FlowEntryView({ session, moduleScope: "none", directEntry: true }),
-    { mode: "bridge", activeQuestionId: null, status: "idle", liveMessage: "", bridge: true },
-  )
+  // The unscoped LEGACY entry (no refine request at all) still bridges — that
+  // is the linear cohort's surface, untouched by the module entries.
+  assert.equal(resolveStage2EntryModule(session, null), null)
+  assert.equal(resolveStage2ModuleScope(null, null), "none")
+  assert.deepEqual(resolveStage2FlowEntryView({ session, moduleScope: "none" }), {
+    mode: "bridge",
+    activeQuestionId: null,
+    status: "idle",
+    liveMessage: "",
+    bridge: true,
+  })
 })
 
 test("a module deep link renders the module's first question for a completed draft", () => {
@@ -622,7 +608,6 @@ test("a module deep link renders the module's first question for a completed dra
       gateway={gateway}
       initialSession={directAcceptSession()}
       moduleEntry="habits"
-      directEntry
     />,
   )
   assert.match(html, /Wie du dein Haar behandelst/)
@@ -630,9 +615,11 @@ test("a module deep link renders the module's first question for a completed dra
 
   // The same completed draft without a module deep link still bridges.
   const legacyHtml = renderToStaticMarkup(
-    <RefinementFlow gateway={gateway} initialSession={directAcceptSession()} directEntry />,
+    <RefinementFlow gateway={gateway} initialSession={directAcceptSession()} />,
   )
-  assert.match(legacyHtml, /Jetzt gleichen wir deine Produkte ab\./)
+  assert.match(legacyHtml, /Deine Produkte werden vorbereitet\./)
+  assert.doesNotMatch(legacyHtml, /data-personal-plan-chapter/)
+  assert.doesNotMatch(legacyHtml, /Produkte erfassen/)
 })
 
 test("a module-scoped session never leaves the flow", () => {
@@ -648,7 +635,8 @@ test("a module-scoped session never leaves the flow", () => {
 test("leaving an explicit module entry returns to the Routine, not the Idealplan", () => {
   assert.equal(stage2SecondaryExitDestination("products"), "routine")
   assert.equal(stage2SecondaryExitDestination("habits"), "routine")
-  assert.equal(stage2SecondaryExitDestination("first_open"), "stage1")
+  // `?refine=1` is the Routine refinement nudge — an explicit module entry too.
+  assert.equal(stage2SecondaryExitDestination("first_open"), "routine")
   assert.equal(stage2SecondaryExitDestination(undefined), "stage1")
 
   // The journey-level destination additionally needs the post-accept ORIGIN —
@@ -667,6 +655,11 @@ test("leaving an explicit module entry returns to the Routine, not the Idealplan
       refineModule: "first_open",
       planAccepted: true,
     }),
+    "routine",
+  )
+  // Without the accepted ORIGIN the exit stays inside the flow.
+  assert.equal(
+    planStartRefinementExitDestination({ stage: "stage2", refineModule: "first_open" }),
     "stage1",
   )
   assert.equal(planStartRefinementExitDestination({ stage: "stage2" }), "stage1")
@@ -685,8 +678,17 @@ test("Task 2.6: a habits-first module completion signals the toast only for an e
     moduleCompletionRoutineHref({ stage: "stage2", refineModule: "products", planAccepted: true }),
     "/routine?planUpdated=1",
   )
-  // `?refine=1` (first_open) and the legacy linear entry are ordinary
-  // Routine visits from the toast's perspective — no signal.
+  // `?refine=1` is the Routine refinement nudge — on an accepted plan its
+  // completion is a refinement-driven recompute like any other module entry.
+  assert.equal(
+    moduleCompletionRoutineHref({
+      stage: "stage2",
+      refineModule: "first_open",
+      planAccepted: true,
+    }),
+    "/routine?planUpdated=1",
+  )
+  // Without the accepted ORIGIN, and for the legacy linear entry: no signal.
   assert.equal(
     moduleCompletionRoutineHref({ stage: "stage2", refineModule: "first_open" }),
     "/routine",
@@ -699,6 +701,14 @@ test("Task 2.6: a Stage-3 completion signals the toast only when it followed an 
   assert.equal(
     stage3CompletionRoutineHref(
       { stage: "stage2", refineModule: "products", planAccepted: true },
+      "/routine",
+    ),
+    "/routine?planUpdated=1",
+  )
+  // The accepted `?refine=1` nudge cohort toasts too — it is a module entry.
+  assert.equal(
+    stage3CompletionRoutineHref(
+      { stage: "stage2", refineModule: "first_open", planAccepted: true },
       "/routine",
     ),
     "/routine?planUpdated=1",
@@ -885,7 +895,6 @@ test("module questions carry the banner's coarse meter, verbatim from the server
       initialSession={untouchedSession()}
       moduleEntry="products"
       moduleProgress={{ completedSteps: 2, totalSteps: 4 }}
-      directEntry
     />,
   )
   assert.match(productsHtml, />2 von 4</)
@@ -900,7 +909,6 @@ test("module questions carry the banner's coarse meter, verbatim from the server
       initialSession={productsDoneSession()}
       moduleEntry="habits"
       moduleProgress={{ completedSteps: 3, totalSteps: 4 }}
-      directEntry
     />,
   )
   assert.match(habitsHtml, />3 von 4</)
@@ -913,7 +921,6 @@ test("module questions carry the banner's coarse meter, verbatim from the server
       gateway={inertGateway}
       initialSession={untouchedSession()}
       moduleEntry="products"
-      directEntry
     />,
   )
   assert.doesNotMatch(withoutProgress, /von 4/)
@@ -933,22 +940,34 @@ test("an explicit module entry opens its first open question, never the resume c
   })
 
   const html = renderToStaticMarkup(
-    <RefinementFlow
-      gateway={inertGateway}
-      initialSession={midModule}
-      moduleEntry="habits"
-      directEntry
-    />,
+    <RefinementFlow gateway={inertGateway} initialSession={midModule} moduleEntry="habits" />,
   )
   assert.doesNotMatch(html, /Du machst bei der ersten offenen Frage weiter\./)
   assert.doesNotMatch(html, /Bei der offenen Frage fortfahren/)
   assert.doesNotMatch(html, /Jetzt geben wir deinem Plan den Feinschliff\./)
   assert.match(html, /Wie du dein Haar behandelst/)
+
+  // `first_open` resolves to that same module and renders identically — the
+  // `?refine=1` nudge is an explicit module entry end to end.
+  const firstOpenHtml = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={inertGateway}
+      initialSession={midModule}
+      moduleEntry="first_open"
+      moduleProgress={{ completedSteps: 3, totalSteps: 4 }}
+    />,
+  )
+  assert.match(firstOpenHtml, /Wie du dein Haar behandelst/)
+  assert.match(firstOpenHtml, />3 von 4</)
+  assert.doesNotMatch(firstOpenHtml, /Du machst bei der ersten offenen Frage weiter\./)
+  assert.doesNotMatch(firstOpenHtml, /Personal-Plan-Stufen/)
 })
 
-test("the bridge ceremony is suppressed for an explicit module entry but kept for failures", () => {
+test("the bridge auto-handoff rule no longer implies a chapter presentation", () => {
   // Auto-continue: the funnel's `autoHandoff` rule, overridden by an explicit
-  // module entry (which the host turns `autoHandoff` off for).
+  // module entry (which the host turns `autoHandoff` off for). The rendered
+  // surface is now always the inline handoff shell; there is no separate
+  // chapter/presentation branch left to choose from.
   assert.equal(
     stage2BridgeAutoContinues({ autoHandoff: false, explicitModuleEntry: true }),
     true,
@@ -956,25 +975,6 @@ test("the bridge ceremony is suppressed for an explicit module entry but kept fo
   )
   assert.equal(stage2BridgeAutoContinues({ autoHandoff: false, explicitModuleEntry: false }), false)
   assert.equal(stage2BridgeAutoContinues({ autoHandoff: true, explicitModuleEntry: false }), true)
-
-  for (const handoffStatus of ["idle", "loading", "complete"] as const) {
-    assert.equal(
-      stage2BridgePresentation({ explicitModuleEntry: true, handoffStatus }),
-      "pending",
-      `expected the quiet pending surface while ${handoffStatus}`,
-    )
-    assert.equal(
-      stage2BridgePresentation({ explicitModuleEntry: false, handoffStatus }),
-      "chapter",
-      "the creation funnel keeps its chapter",
-    )
-  }
-  // A failed handoff keeps a real surface in BOTH entries — it is the only
-  // screen carrying the error copy and the retry action.
-  assert.equal(
-    stage2BridgePresentation({ explicitModuleEntry: true, handoffStatus: "error" }),
-    "chapter",
-  )
 })
 
 test("chapter ceremony is suppressed exactly for explicit module journeys", () => {
@@ -986,10 +986,11 @@ test("chapter ceremony is suppressed exactly for explicit module journeys", () =
     planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "habits" }),
     true,
   )
-  // The creation funnel and the plain `?refine=1` nudge keep every chapter.
+  // The `?refine=1` nudge is a module entry too (relic removal 28.08.2026);
+  // only the legacy linear journeys keep the remaining chapters.
   assert.equal(
     planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
-    false,
+    true,
   )
   assert.equal(planStartSuppressesChapterCeremony({ stage: "stage2" }), false)
   assert.equal(planStartSuppressesChapterCeremony({ stage: "stage1" }), false)
@@ -1034,22 +1035,23 @@ test("plan-start carries the banner's progress into an explicit module entry onl
   })
   assert.equal(progressReads, 1)
 
-  // `?refine=1` shows no meter, so it must not pay for the read either.
-  const legacy = await resolvePlanStartPageState(deps, {
+  // `?refine=1` is a module entry end to end, so it carries the meter too.
+  const firstOpen = await resolvePlanStartPageState(deps, {
     refine: true,
     refineModule: "first_open",
   })
-  assert.deepEqual(legacy, {
+  assert.deepEqual(firstOpen, {
     state: "production",
     initialJourney: {
       stage: "stage2",
       returningToRefinement: true,
       refineModule: "first_open",
+      moduleProgress: { completedSteps: 3, totalSteps: 4 },
     },
     personalPlanId: "plan-1",
     initialRefinementSession: refinement,
   })
-  assert.equal(progressReads, 1)
+  assert.equal(progressReads, 2)
 
   // A failing progress read must never cost the user the module entry.
   const failing = await resolvePlanStartPageState(
@@ -1210,7 +1212,6 @@ test("Back out of a reloaded Stage-3 module run renders the module's questions, 
       gateway={gateway}
       initialSession={session}
       moduleEntry={planStartModuleEntry(reloaded)}
-      directEntry
     />,
   )
   assert.match(scoped, /Was du heute benutzt/)
@@ -1219,7 +1220,141 @@ test("Back out of a reloaded Stage-3 module run renders the module's questions, 
   // The regression this pins: without the module marker the same seed renders
   // the resume shell — the retired ceremony, on a post-accept surface hop.
   const unscoped = renderToStaticMarkup(
-    <RefinementFlow gateway={gateway} initialSession={session} directEntry />,
+    <RefinementFlow gateway={gateway} initialSession={session} />,
   )
-  assert.match(unscoped, /Wir laden deinen Feinschliff\./)
+  assert.match(unscoped, /Wie du dein Haar behandelst/)
+  assert.doesNotMatch(unscoped, /Wir laden deinen Feinschliff\./)
+})
+
+/**
+ * Codex review 28.08.2026: the direct-accept `?refine=1` cohort, integrated —
+ * parse → page journey → complete-draft render → the products edit through the
+ * fused module completion the component submits — plus the revision-conflict
+ * reload keeping the first_open scope. The separate helper assertions above
+ * each pin one seam; this pins the composition.
+ */
+test("the ?refine=1 direct-accept journey opens products and completes the edit end to end", async () => {
+  const fullyAnsweredIds = [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "towel_handling",
+    "drying_routes",
+    "additional_heat_tools",
+    "night_protection",
+  ] as const
+  const fullyAnsweredAnswers = {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x" as const,
+    towel: { material: "no_towel" as const },
+    dryingRoutes: [],
+    additionalHeatTools: [],
+    nightProtection: [],
+  }
+
+  // Parse → page journey: an ACCEPTED plan whose draft is complete.
+  const journeyState = await resolvePlanStartPageState(
+    {
+      enabled: () => true,
+      stage2Enabled: () => true,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: "plan-1",
+        frontier: "stage4",
+        nextHref: "/routine",
+        activeRoutineVersionId: "routine-1",
+        allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+      }),
+      loadExistingRefinementSession: async () => fullyAnsweredSession("complete"),
+      loadRefinementProgress: async () => ({ completedSteps: 4, totalSteps: 4 }),
+    },
+    { refine: parseRefineParam("1"), refineModule: parseRefineModuleParam("1") },
+  )
+  assert.equal(journeyState.state, "production")
+  const journey = journeyState.state === "production" ? journeyState.initialJourney : null
+  assert.ok(journey)
+  assert.deepEqual(journey, {
+    stage: "stage2",
+    returningToRefinement: true,
+    refineModule: "first_open",
+    moduleProgress: { completedSteps: 4, totalSteps: 4 },
+    planAccepted: true,
+  })
+  assert.equal(planStartModuleEntry(journey), "first_open")
+  assert.equal(planStartSuppressesChapterCeremony(journey), true)
+  assert.equal(planStartRefinementExitDestination(journey), "routine")
+  assert.equal(moduleCompletionRoutineHref(journey), "/routine?planUpdated=1")
+
+  // The REAL fixture gateway's complete draft renders the products module's
+  // first question with the meter — never the bridge chapter or a shell.
+  const gateway = createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: plainTriggerContext,
+    initialAnswers: fullyAnsweredAnswers,
+    initialCompletedQuestionIds: [...fullyAnsweredIds],
+    initialRevision: 6,
+    initialStatus: "complete",
+  })
+  const loaded = await gateway.load()
+  assert.equal(loaded.status, "complete")
+  const seededHandoffVersion = loaded.completedHandoff?.refinedVersionId
+  assert.ok(seededHandoffVersion)
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={gateway}
+      initialSession={loaded}
+      moduleEntry={planStartModuleEntry(journey)}
+      moduleProgress={journey.stage === "stage2" ? (journey.moduleProgress ?? null) : null}
+    />,
+  )
+  assert.match(html, /Was du heute benutzt/)
+  assert.match(html, />4 von 4</)
+  assert.doesNotMatch(html, /Jetzt gleichen wir deine Produkte ab\./)
+  assert.doesNotMatch(html, /Wir laden deinen Feinschliff\./)
+  assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+
+  // The edit the component submits when the module page completes again: the
+  // fused save + module completion, at the loaded revision. The save reopens
+  // the complete draft, so the completion mints a FRESH handoff.
+  const fused = await gateway.saveAnswerAndCompleteModule({
+    module: "products",
+    questionId: "current_product_categories",
+    answer: ["shampoo"],
+    expectedRevision: loaded.revision,
+  })
+  assert.equal(fused.session.revision, loaded.revision + 1)
+  assert.equal(fused.moduleCompletion.module, "products")
+  assert.equal(fused.moduleCompletion.stage3Handoff, true)
+  // Every question is answered, so this is the closing-module path: the draft
+  // closes again, exactly like the linear completion.
+  assert.equal(fused.moduleCompletion.status, "complete")
+  assert.notEqual(fused.moduleCompletion.refinedVersionId, seededHandoffVersion)
+  // Despite `returningToRefinement` (autoHandoff off), a bridge armed by THIS
+  // session's module completion auto-continues into Stage 3.
+  assert.equal(stage2BridgeAutoContinues({ autoHandoff: false, explicitModuleEntry: true }), true)
+
+  // A concurrent write conflicts, and the reload keeps the first_open scope:
+  // the reloaded draft still resolves to a module entry in question mode.
+  const staleRevision = fused.session.revision
+  gateway.simulateExternalRevision()
+  await assert.rejects(
+    gateway.saveAnswer({
+      questionId: "current_product_categories",
+      answer: [],
+      expectedRevision: staleRevision,
+    }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError && error.code === "revision_conflict",
+  )
+  const reloaded = await gateway.load()
+  const reloadedModule = resolveStage2EntryModule(reloaded, "first_open")
+  assert.ok(reloadedModule)
+  assert.equal(resolveStage2ModuleScope("first_open", reloadedModule), "explicit")
+  assert.equal(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(reloaded, reloadedModule),
+      moduleScope: "explicit",
+    }).mode,
+    "question",
+  )
 })

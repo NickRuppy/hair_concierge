@@ -78,7 +78,6 @@ export function Stage2PreviewClient({
         gateway={gateway}
         moduleEntry={moduleEntry}
         moduleProgress={moduleProgress}
-        directEntry={moduleEntry !== undefined}
         onSecondaryExit={() => {
           // The preview must not invent an Idealplan href, but it records the
           // destination the production host would route to — the SAME shared

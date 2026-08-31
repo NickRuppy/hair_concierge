@@ -95,6 +95,17 @@ export type PlanBereitInitialReadiness = {
   initialAction: PlanBereitInitialAction
 }
 
+export function needsFreshMigrationQuiz(readiness: {
+  status: string
+  missingFacts?: readonly { field: string }[]
+}): boolean {
+  return (
+    readiness.status === "invalid_source" ||
+    (readiness.status === "missing_source_facts" &&
+      !(readiness.missingFacts?.length === 1 && readiness.missingFacts[0].field === "hair_length"))
+  )
+}
+
 type ExactReadinessInput = {
   userId: string
   email?: string | null
@@ -216,9 +227,7 @@ async function hasActiveFieldTestEnrollment(
   now: Date = new Date(),
 ): Promise<boolean> {
   const enrollmentTable =
-    quizSourceKind === "legacy"
-      ? "regular_quiz_test_enrollments"
-      : "personal_plan_test_enrollments"
+    quizSourceKind === "legacy" ? "regular_quiz_test_enrollments" : "personal_plan_test_enrollments"
   const { data, error } = await supabase
     .from(enrollmentTable)
     .select(
@@ -326,12 +335,7 @@ async function loadExactPlanBereitLead(
   )
   if (
     directOwner ||
-    (await hasActiveFieldTestEnrollment(
-      supabase,
-      input.userId,
-      input.leadId,
-      lead.quiz_kind,
-    ))
+    (await hasActiveFieldTestEnrollment(supabase, input.userId, input.leadId, lead.quiz_kind))
   ) {
     return { lead, forbidden: false }
   }

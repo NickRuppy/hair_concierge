@@ -3,48 +3,7 @@ import test from "node:test"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import {
-  PERSONAL_PLAN_CHAPTERS,
-  PERSONAL_PLAN_JOURNEY_STAGES,
-  PersonalPlanChapterTransition,
-  PersonalPlanJourneyHeader,
-  PersonalPlanJourneyOverview,
-} from "../src/components/personal-plan-journey"
-
-test("journey overview and progress header share the approved five-stage vocabulary", () => {
-  const overview = renderToStaticMarkup(React.createElement(PersonalPlanJourneyOverview))
-  const header = renderToStaticMarkup(
-    React.createElement(PersonalPlanJourneyHeader, { currentStage: 1 }),
-  )
-
-  assert.deepEqual(
-    PERSONAL_PLAN_JOURNEY_STAGES.map(({ headerLabel }) => headerLabel),
-    ["Plan", "Feinschliff", "Produkte", "Routine", "Anwendung"],
-  )
-
-  for (const stage of PERSONAL_PLAN_JOURNEY_STAGES) {
-    assert.match(overview, new RegExp(stage.title))
-    assert.match(overview, new RegExp(stage.description))
-    assert.match(header, new RegExp(stage.headerLabel))
-  }
-
-  assert.match(overview, /aria-current="step"/)
-  assert.match(overview, /Für schönes, gesundes Haar\./)
-  assert.doesNotMatch(overview, /<a|<button/)
-  assert.doesNotMatch(header, /Bedarf|Verfeinerung/)
-})
-
-test("journey overview distinguishes completed, current, and future chapters", () => {
-  const overview = renderToStaticMarkup(
-    React.createElement(PersonalPlanJourneyOverview, { currentStage: 4 }),
-  )
-
-  assert.equal((overview.match(/data-stage-state="complete"/g) ?? []).length, 3)
-  assert.equal((overview.match(/data-stage-state="current"/g) ?? []).length, 1)
-  assert.equal((overview.match(/data-stage-state="future"/g) ?? []).length, 1)
-  assert.match(overview, /aria-current="step"/)
-  assert.equal((overview.match(/>✓</g) ?? []).length, 3)
-})
+import { PersonalPlanJourneyHeader } from "../src/components/personal-plan-journey"
 
 test("shared journey Back uses the approved 48px target for callback and link navigation", () => {
   const callbackHeader = renderToStaticMarkup(
@@ -74,60 +33,33 @@ test("shared journey Back uses the approved 48px target for callback and link na
   assert.equal((linkHeader.match(/<a/g) ?? []).length, 1)
 })
 
-test("journey header's 5-stage bar can retire while Back and the wordmark stay (Task 2.7)", () => {
-  const fullHeader = renderToStaticMarkup(
-    React.createElement(PersonalPlanJourneyHeader, { currentStage: 2 }),
-  )
-  const compactHeader = renderToStaticMarkup(
+test("journey header retains Back, save state, wordmark, and its stage hook without the retired five-stage bar", () => {
+  const header = renderToStaticMarkup(
     React.createElement(PersonalPlanJourneyHeader, {
       currentStage: 2,
       onBack: () => {},
-      showStageProgress: false,
+      saveStatus: "saved",
     }),
   )
 
-  assert.match(fullHeader, /role="progressbar"/)
-  assert.match(fullHeader, /Personal-Plan-Stufen/)
-
-  assert.doesNotMatch(compactHeader, /role="progressbar"/)
-  assert.doesNotMatch(compactHeader, /Personal-Plan-Stufen/)
-  assert.match(compactHeader, />chaarlie</)
-  assert.match(compactHeader, /aria-label="Zurück"/)
-  // The stage marker survives for CSS/analytics hooks even without the bar.
-  assert.match(compactHeader, /data-personal-plan-stage="2"/)
+  assert.doesNotMatch(header, /Personal-Plan-Stufen/)
+  assert.doesNotMatch(header, /Stufen im Personal Plan/)
+  assert.match(header, />chaarlie</)
+  assert.match(header, /aria-label="Zurück"/)
+  assert.match(header, />Gespeichert</)
+  assert.match(header, /data-personal-plan-stage="2"/)
 })
 
-test("shared chapter transition renders the approved stage-specific copy and one primary action", () => {
-  const chapter = renderToStaticMarkup(
-    React.createElement(PersonalPlanChapterTransition, {
-      currentStage: 4,
-      onAction: () => {},
+test("journey header renders the retained module progress as X von 4", () => {
+  const header = renderToStaticMarkup(
+    React.createElement(PersonalPlanJourneyHeader, {
+      currentStage: 2,
+      moduleProgress: { completedSteps: 2, totalSteps: 4 },
     }),
   )
 
-  assert.match(chapter, /Deine Produktauswahl steht\./)
-  assert.match(chapter, /Jetzt ordnen wir alles zu deiner persönlichen Routine\./)
-  assert.match(chapter, /Routine ansehen/)
-  assert.equal((chapter.match(/<button/g) ?? []).length, 1)
-  assert.match(chapter, /data-personal-plan-chapter="4"/)
-  // Variante D (2026-08-17): the page scrolls naturally under a sticky header
-  // instead of squeezing all five cards into one locked viewport.
-  assert.match(chapter, /min-h-dvh/)
-  assert.doesNotMatch(chapter, /overflow-hidden/)
-  assert.doesNotMatch(chapter, /max-height:519px/)
-})
-
-test("stage 5 has no chapter screen any more", () => {
-  // Field test 26.08.2026: the Routine's "Anwendung ansehen" hero button is
-  // gone and the Bottom-Nav tab owns that destination, so nothing announces
-  // Anwendung with a full-screen chapter. The journey OVERVIEW keeps its
-  // five stages — only the chapter is retired.
-  assert.equal(PERSONAL_PLAN_CHAPTERS.length, 4)
-  assert.deepEqual(
-    PERSONAL_PLAN_CHAPTERS.map((entry) => entry.stage),
-    [1, 2, 3, 4],
-  )
-  assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Deine Routine steht/)
-  assert.doesNotMatch(JSON.stringify(PERSONAL_PLAN_CHAPTERS), /Anwendung ansehen/)
-  assert.equal(PERSONAL_PLAN_JOURNEY_STAGES.length, 5)
+  assert.match(header, /aria-label="Fortschritt in deinem Plan"/)
+  assert.match(header, /aria-valuenow="2"/)
+  assert.match(header, /aria-valuemax="4"/)
+  assert.match(header, /2 von 4/)
 })

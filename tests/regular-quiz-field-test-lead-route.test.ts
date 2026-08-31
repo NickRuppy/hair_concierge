@@ -2,14 +2,32 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { createQuizLeadPostHandler } from "../src/app/api/quiz/lead/route"
+import {
+  MIGRATION_QUIZ_CONTEXT_COOKIE,
+  createMigrationQuizContextCookie,
+} from "../src/lib/personal-plan/migration-quiz-context"
 import { REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE } from "../src/lib/personal-plan-field-test"
 
 const leadId = "10000000-0000-4000-8000-000000000001"
+const migrationUserId = "50000000-0000-4000-8000-000000000005"
+const migrationEnrollmentId = "60000000-0000-4000-8000-000000000006"
+const migrationCookieSecret = "migration-quiz-context-secret-32-plus"
+const migrationNow = Date.UTC(2026, 7, 28, 12, 0, 0)
 const funnelContext = {
   visitorId: "20000000-0000-4000-8000-000000000002",
   sessionId: "30000000-0000-4000-8000-000000000003",
   packageKey: "default_organic",
   issuedAt: Date.now(),
+}
+
+function migrationCookie(userId = migrationUserId, enrollmentId = migrationEnrollmentId) {
+  const value = createMigrationQuizContextCookie(
+    { userId, enrollmentId },
+    migrationCookieSecret,
+    migrationNow,
+  )
+  assert.ok(value)
+  return value
 }
 
 const requestBody = {
@@ -31,12 +49,19 @@ const requestBody = {
   },
 } as const
 
-function request() {
+function request(
+  headers: Record<string, string> = {},
+  bodyOverrides: Record<string, unknown> = {},
+) {
   return new Request("https://chaarlie.de/api/quiz/lead", {
     method: "POST",
-    headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.14" },
-    body: JSON.stringify(requestBody),
+    headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.14", ...headers },
+    body: JSON.stringify({ ...requestBody, ...bodyOverrides }),
   })
+}
+
+function migrationRecoveryRequest(headers: Record<string, string> = {}) {
+  return request(headers, { migrationRecovery: true })
 }
 
 function existingLeadClient(
@@ -377,4 +402,387 @@ test("invalid moderator ownership fails closed before deliverability and persist
     },
   })
   assert.equal((await post(request())).status, 503)
+})
+
+test("migration recovery intent without a signed cookie returns to recovery instead of ordinary persistence", async () => {
+  let deliverabilityChecked = false
+  let adminCreated = false
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({ get: () => undefined })) as never,
+    createAdminClient: (() => {
+      adminCreated = true
+      return existingLeadClient()
+    }) as never,
+    checkEmailDeliverability: (async () => {
+      deliverabilityChecked = true
+      throw Error("cookie-less migration recovery must not enter ordinary flow")
+    }) as never,
+  })
+
+  const response = await post(migrationRecoveryRequest())
+
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), {
+    error: "Migration nicht verfügbar",
+    nextHref: "/plan-bereit",
+  })
+  assert.equal(deliverabilityChecked, false)
+  assert.equal(adminCreated, false)
+})
+
+test("ordinary lead capture ignores leftover migration cookies unless recovery intent is explicit", async () => {
+  for (const cookieValue of [migrationCookie(), "not-a-valid-context"]) {
+    let migrationRpcCalled = false
+    const post = createQuizLeadPostHandler({
+      resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+      checkRateLimit: async () => ({ allowed: true }),
+      checkEmailDeliverability: (async () => ({
+        ok: true,
+        normalized: requestBody.email,
+        outcome: "mx",
+      })) as never,
+      recordEmailDeliverabilityOutcome: () => {},
+      cookies: (async () => ({
+        get: (name: string) =>
+          name === MIGRATION_QUIZ_CONTEXT_COOKIE ? { value: cookieValue } : undefined,
+      })) as never,
+      createAdminClient: (() => ({
+        ...existingLeadClient(),
+        rpc: async () => {
+          migrationRpcCalled = true
+          throw Error("ordinary flow must not call migration RPC")
+        },
+      })) as never,
+      syncQuizLeadToCustomerIo: (async () => ({})) as never,
+      enqueueMetaLead: () => false,
+      scheduleAfter: ((callback: unknown) => {
+        if (typeof callback === "function") void callback()
+      }) as never,
+    })
+
+    const response = await post(request())
+
+    assert.equal(response.status, 200)
+    assert.deepEqual(await response.json(), { leadId })
+    assert.equal(migrationRpcCalled, false)
+  }
+})
+
+test("migration quiz completion uses authenticated server context and skips public lead side effects", async () => {
+  const calls: Array<[string, Record<string, unknown>]> = []
+  let forbiddenCalls = 0
+  const forbidden = () => {
+    forbiddenCalls += 1
+    throw Error("migration quiz must not enter public lead side effects")
+  }
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MIGRATION_QUIZ_CONTEXT_COOKIE ? { value: migrationCookie() } : undefined,
+    })) as never,
+    createSessionClient: (async () => ({
+      auth: { getUser: async () => ({ data: { user: { id: migrationUserId } }, error: null }) },
+    })) as never,
+    createAdminClient: (() => ({
+      rpc: async (name: string, args: Record<string, unknown>) => {
+        calls.push([name, args])
+        return {
+          data: {
+            status: "saved",
+            lead_id: leadId,
+          },
+          error: null,
+        }
+      },
+    })) as never,
+    migrationQuizCookieSecret: () => migrationCookieSecret,
+    migrationQuizEnabled: () => true,
+    now: () => migrationNow,
+    checkEmailDeliverability: forbidden,
+    resolveModeratorJourney: forbidden as never,
+    resolveFunnelCookieContext: forbidden as never,
+    resolvePendingFunnelTouchValue: forbidden as never,
+    recordFunnelEvent: forbidden as never,
+    syncQuizLeadToCustomerIo: forbidden as never,
+    enqueueMetaLead: forbidden,
+    scheduleAfter: forbidden as never,
+  })
+
+  const response = await post(migrationRecoveryRequest())
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { leadId, nextHref: "/plan-bereit" })
+  assert.match(response.headers.get("set-cookie") ?? "", /chaarlie_personal_plan_migration_quiz=/)
+  assert.match(response.headers.get("set-cookie") ?? "", /Max-Age=0/)
+  assert.deepEqual(calls, [
+    [
+      "personal_plan_save_migration_quiz_lead",
+      {
+        p_user_id: migrationUserId,
+        p_enrollment_id: migrationEnrollmentId,
+        p_name: requestBody.name,
+        p_email: requestBody.email,
+        p_marketing_consent: false,
+        p_quiz_answers: requestBody.quizAnswers,
+      },
+    ],
+  ])
+  assert.equal(forbiddenCalls, 0)
+})
+
+test("migration quiz completion rejects cross-origin requests before its private RPC", async () => {
+  let saveCalled = false
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MIGRATION_QUIZ_CONTEXT_COOKIE ? { value: migrationCookie() } : undefined,
+    })) as never,
+    createSessionClient: (async () => ({
+      auth: { getUser: async () => ({ data: { user: { id: migrationUserId } }, error: null }) },
+    })) as never,
+    createAdminClient: (() => ({
+      rpc: async () => {
+        saveCalled = true
+        throw Error("cross-origin migration request must not mutate")
+      },
+    })) as never,
+    migrationQuizCookieSecret: () => migrationCookieSecret,
+    migrationQuizEnabled: () => true,
+    now: () => migrationNow,
+  })
+
+  const response = await post(migrationRecoveryRequest({ origin: "https://attacker.invalid" }))
+
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), { error: "Ungültige Anfrage" })
+  assert.equal(saveCalled, false)
+})
+
+test("migration quiz completion fails closed before binding while the migration release flag is off", async () => {
+  let saveCalled = false
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MIGRATION_QUIZ_CONTEXT_COOKIE ? { value: migrationCookie() } : undefined,
+    })) as never,
+    createSessionClient: (async () => ({
+      auth: { getUser: async () => ({ data: { user: { id: migrationUserId } }, error: null }) },
+    })) as never,
+    createAdminClient: (() => ({
+      rpc: async () => {
+        saveCalled = true
+        throw Error("flag-off migration request must not mutate")
+      },
+    })) as never,
+    migrationQuizCookieSecret: () => migrationCookieSecret,
+    migrationQuizEnabled: () => false,
+    now: () => migrationNow,
+  })
+
+  const response = await post(migrationRecoveryRequest())
+
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), {
+    error: "Migration nicht verfügbar",
+    nextHref: "/plan-bereit",
+  })
+  assert.match(response.headers.get("set-cookie") ?? "", /Max-Age=0/)
+  assert.equal(saveCalled, false)
+})
+
+test("migration quiz completion sends unauthenticated users back to recovery before admin persistence", async () => {
+  let adminCreated = false
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MIGRATION_QUIZ_CONTEXT_COOKIE ? { value: migrationCookie() } : undefined,
+    })) as never,
+    createSessionClient: (async () => ({
+      auth: { getUser: async () => ({ data: { user: null }, error: null }) },
+    })) as never,
+    createAdminClient: (() => {
+      adminCreated = true
+      throw Error("must stop before admin persistence")
+    }) as never,
+    migrationQuizCookieSecret: () => migrationCookieSecret,
+    now: () => migrationNow,
+  })
+
+  const response = await post(migrationRecoveryRequest())
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), {
+    error: "Migration nicht verfügbar",
+    nextHref: "/plan-bereit",
+  })
+  assert.match(response.headers.get("set-cookie") ?? "", /Max-Age=0/)
+  assert.equal(adminCreated, false)
+})
+
+test("migration quiz completion rejects invalid or mismatched context before public lead flow", async () => {
+  let deliverabilityChecked = false
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MIGRATION_QUIZ_CONTEXT_COOKIE
+          ? { value: migrationCookie("50000000-0000-4000-8000-000000000099") }
+          : undefined,
+    })) as never,
+    createSessionClient: (async () => ({
+      auth: { getUser: async () => ({ data: { user: { id: migrationUserId } }, error: null }) },
+    })) as never,
+    migrationQuizCookieSecret: () => migrationCookieSecret,
+    migrationQuizEnabled: () => true,
+    now: () => migrationNow,
+    checkEmailDeliverability: async () => {
+      deliverabilityChecked = true
+      throw Error("must stop before public lead flow")
+    },
+  })
+
+  const response = await post(migrationRecoveryRequest())
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), {
+    error: "Migration nicht verfügbar",
+    nextHref: "/plan-bereit",
+  })
+  assert.match(response.headers.get("set-cookie") ?? "", /Max-Age=0/)
+  assert.equal(deliverabilityChecked, false)
+})
+
+test("migration quiz completion sends expired contexts back to recovery instead of the ordinary quiz path", async () => {
+  const expiredCookie = createMigrationQuizContextCookie(
+    { userId: migrationUserId, enrollmentId: migrationEnrollmentId },
+    migrationCookieSecret,
+    migrationNow - 3 * 60 * 60 * 1000,
+  )
+  assert.ok(expiredCookie)
+  let deliverabilityChecked = false
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MIGRATION_QUIZ_CONTEXT_COOKIE ? { value: expiredCookie } : undefined,
+    })) as never,
+    createSessionClient: (async () => ({
+      auth: { getUser: async () => ({ data: { user: { id: migrationUserId } }, error: null }) },
+    })) as never,
+    migrationQuizCookieSecret: () => migrationCookieSecret,
+    migrationQuizEnabled: () => true,
+    now: () => migrationNow,
+    checkEmailDeliverability: async () => {
+      deliverabilityChecked = true
+      throw Error("expired migration context must not enter public lead flow")
+    },
+  })
+
+  const response = await post(migrationRecoveryRequest())
+
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), {
+    error: "Migration nicht verfügbar",
+    nextHref: "/plan-bereit",
+  })
+  assert.match(response.headers.get("set-cookie") ?? "", /Max-Age=0/)
+  assert.equal(deliverabilityChecked, false)
+})
+
+test("migration quiz replay rejection does not fall back to email dedupe", async () => {
+  let queriedLeads = false
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MIGRATION_QUIZ_CONTEXT_COOKIE ? { value: migrationCookie() } : undefined,
+    })) as never,
+    createSessionClient: (async () => ({
+      auth: { getUser: async () => ({ data: { user: { id: migrationUserId } }, error: null }) },
+    })) as never,
+    createAdminClient: (() => ({
+      rpc: async () => ({ data: { status: "invalid_context" }, error: null }),
+      from: () => {
+        queriedLeads = true
+        throw Error("migration replay must not query public lead dedupe")
+      },
+    })) as never,
+    migrationQuizCookieSecret: () => migrationCookieSecret,
+    migrationQuizEnabled: () => true,
+    now: () => migrationNow,
+  })
+
+  const response = await post(migrationRecoveryRequest())
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), {
+    error: "Migration nicht verfügbar",
+    nextHref: "/plan-bereit",
+  })
+  assert.match(response.headers.get("set-cookie") ?? "", /Max-Age=0/)
+  assert.equal(queriedLeads, false)
+})
+
+test("plain migration query parameters carry no authority without the signed cookie", async () => {
+  let migrationRpcCalled = false
+  const post = createQuizLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    checkRateLimit: async () => ({ allowed: true }),
+    checkEmailDeliverability: (async () => ({
+      ok: true,
+      normalized: requestBody.email,
+      outcome: "mx",
+    })) as never,
+    recordEmailDeliverabilityOutcome: () => {},
+    cookies: (async () => ({ get: () => undefined })) as never,
+    createAdminClient: (() => ({
+      from: () => ({
+        select: () => ({
+          eq: () => ({
+            eq: () => ({
+              gte: () => ({
+                order: () => ({
+                  limit: async () => ({
+                    data: [
+                      {
+                        id: leadId,
+                        quiz_answers: requestBody.quizAnswers,
+                        marketing_consent: false,
+                        status: "captured",
+                      },
+                    ],
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+          }),
+        }),
+      }),
+      rpc: async () => {
+        migrationRpcCalled = true
+        throw Error("plain query must not call migration rpc")
+      },
+    })) as never,
+    syncQuizLeadToCustomerIo: (async () => ({})) as never,
+    enqueueMetaLead: () => false,
+    scheduleAfter: ((callback: unknown) => {
+      if (typeof callback === "function") void callback()
+    }) as never,
+  })
+
+  const response = await post(
+    new Request(
+      `https://chaarlie.de/api/quiz/lead?migrationEnrollmentId=${migrationEnrollmentId}`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.14" },
+        body: JSON.stringify(requestBody),
+      },
+    ),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { leadId })
+  assert.equal(migrationRpcCalled, false)
 })

@@ -11,7 +11,7 @@ export type Stage1Entitlement = {
   qualifiedAt: string | null
   artifactLeadId: string | null
   quizSourceKind?: "personal_plan" | "legacy" | null
-  sourceKind?: "one_time" | "launch_subscription" | "field_test" | null
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null
 }
 
 export type Stage1PreparedArtifact = {
@@ -49,8 +49,13 @@ export type CreateInitialNeedResult =
 
 export type Stage1PersistenceDependencies = {
   isEnabled: () => boolean
+  migrationEnabled?: () => boolean
   cohortCutoff: () => Date | null
   findEntitlement: (userId: string) => Promise<Stage1Entitlement>
+  loadExistingMigrationPlan?: (
+    userId: string,
+    enrollmentId: string,
+  ) => Promise<Extract<Stage1LoadOrCreateResult, { status: "completed" }> | null>
   loadArtifact: (userId: string, artifactLeadId: string) => Promise<Stage1PreparedArtifact | null>
   loadLegacyLead?: (userId: string, leadId: string) => Promise<Stage1LegacyLead | null>
   createOrReuseInitialNeed: (request: CreateInitialNeedRequest) => Promise<CreateInitialNeedResult>
@@ -86,8 +91,26 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
       }
 
       if (entitlement.accessState === "paid_pending") return { status: "activation_pending" }
-      if (!isEligibleQualifiedOwner(entitlement, deps.cohortCutoff())) {
+      if (
+        !isEligibleQualifiedOwner(
+          entitlement,
+          deps.cohortCutoff(),
+          deps.migrationEnabled?.() ?? false,
+        )
+      ) {
         return { status: "personal_plan_not_available" }
+      }
+
+      if (entitlement.sourceKind === "migration" && deps.loadExistingMigrationPlan) {
+        try {
+          const existing = await deps.loadExistingMigrationPlan(
+            userId,
+            entitlement.enrollmentSourceId!,
+          )
+          if (existing) return existing
+        } catch {
+          return { status: "temporarily_unavailable" }
+        }
       }
 
       let artifact: Stage1PreparedArtifact | null = null
@@ -155,7 +178,11 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
   }
 }
 
-function isEligibleQualifiedOwner(entitlement: Stage1Entitlement, cutoff: Date | null): boolean {
+function isEligibleQualifiedOwner(
+  entitlement: Stage1Entitlement,
+  cutoff: Date | null,
+  migrationEnabled: boolean,
+): boolean {
   if (
     entitlement.accessState !== "active" ||
     !entitlement.enrollmentSourceId ||
@@ -165,7 +192,13 @@ function isEligibleQualifiedOwner(entitlement: Stage1Entitlement, cutoff: Date |
     return false
   const qualifiedAt = new Date(entitlement.qualifiedAt)
   if (Number.isNaN(qualifiedAt.getTime())) return false
-  return entitlement.sourceKind === "field_test"
+  return entitlement.sourceKind === "field_test" || entitlement.sourceKind === "migration"
     ? true
-    : Boolean(cutoff && qualifiedAt.getTime() >= cutoff.getTime())
+    : isMigrationPaidSource(entitlement.sourceKind) && migrationEnabled
+      ? true
+      : Boolean(cutoff && qualifiedAt.getTime() >= cutoff.getTime())
+}
+
+function isMigrationPaidSource(sourceKind: Stage1Entitlement["sourceKind"]): boolean {
+  return sourceKind === "one_time" || sourceKind === "launch_subscription"
 }

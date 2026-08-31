@@ -138,6 +138,11 @@ export type Stage3CompletionReceiptResponse = Extract<
 >
 
 export type Stage3ProductsGateway = {
+  /** The server verifies a persisted products-module handoff before importing inventory. */
+  openOptionalInventory?(input: {
+    personalPlanId: string
+    refinedVersionId: string
+  }): Promise<Stage3DraftResponse>
   loadOrCreate(input: {
     draftId: string
     userId: string

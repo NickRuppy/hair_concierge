@@ -19,7 +19,8 @@ async function chooseNoneAndContinue(page: Page) {
 }
 
 async function completeRefinement(page: Page) {
-  await page.getByRole("button", { name: /Feinschliff starten/ }).click()
+  // No invitation chapter any more — the flow opens on its first question.
+  await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
   await chooseAndContinue(page, "Shampoo")
   await chooseAndContinue(page, "2×/Woche")
   await chooseAndContinue(page, "Leicht empfindlich oder juckend")
@@ -47,7 +48,7 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
   }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" })
     await page.goto(labPath)
-    await page.getByRole("button", { name: /Feinschliff starten/ }).click()
+    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await page.clock.install({ time: new Date("2026-08-28T12:00:00Z") })
     await page.clock.pauseAt(new Date("2026-08-28T12:00:01Z"))
 
@@ -108,18 +109,18 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
     await page.getByRole("button", { name: "Zur letzten Frage" }).click()
     await page.getByRole("button", { name: "Seidenkissenbezug" }).click()
     await visibleContinueButton(page).click()
+
+    // Returning from Stage 3 keeps the correction handoff explicit so the saved
+    // state stays visible instead of immediately pulling the user away again.
     await expect(bridge).toBeVisible()
     const successorVersion = await bridge.getAttribute("data-refined-version-id")
     expect(successorVersion).not.toBe(firstRefinedVersion)
+    await page.getByRole("button", { name: "Produktauswahl öffnen" }).click()
 
-    await page.getByRole("button", { name: /Produkte erfassen/ }).click()
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
-    await expect(
-      page
-        .locator("[data-stage3-entry-refined-version-id]")
-        .getByText("Gespeichert", { exact: true }),
-    ).toBeVisible()
-    await expect(page.locator("[data-stage3-entry-refined-version-id]")).toHaveAttribute(
+    const successorEntry = page.locator("[data-stage3-entry-refined-version-id]")
+    await expect(successorEntry.getByText("Gespeichert", { exact: true })).toBeVisible()
+    await expect(successorEntry).toHaveAttribute(
       "data-stage3-entry-refined-version-id",
       successorVersion!,
     )
