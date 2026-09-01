@@ -55,6 +55,20 @@ export const QUIZ_LEAD_RATE_LIMIT: RateLimitConfig = {
   windowMs: 3_600_000,
 }
 
+export const PERSONAL_PLAN_PREPARE_JOURNEY_RATE_LIMIT: RateLimitConfig = {
+  // Normal preparation uses one request plus at most one bounded recovery.
+  prefix: "personal-plan-prepare-journey",
+  limit: 10,
+  windowMs: 10_000,
+}
+
+export const PERSONAL_PLAN_PREPARE_IP_RATE_LIMIT: RateLimitConfig = {
+  // High-headroom emergency cost ceiling; verified journeys use the tighter bucket above.
+  prefix: "personal-plan-prepare-ip",
+  limit: 100,
+  windowMs: 10_000,
+}
+
 /**
  * Eigener Topf fuer die Zustellbarkeits-Vorabpruefung: Sie loest einen
  * ausgehenden DNS-Lookup aus, darf aber niemals das Lead-Budget eines echten

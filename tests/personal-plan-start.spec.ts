@@ -588,7 +588,14 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.getByRole("button", { name: "Auf meine Produkte abstimmen" }).click()
 
     await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toHaveCount(0)
-    await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
+    const stage3Heading = page.getByRole("heading", { name: "Dein Shampoo" })
+    await expect(stage3Heading).toBeVisible()
+    await expect
+      .poll(() => stage3Heading.evaluate((element) => document.activeElement === element))
+      .toBe(true)
+    await expect
+      .poll(() => stage3Heading.evaluate((element) => getComputedStyle(element).outlineStyle))
+      .toBe("none")
     await expect
       .poll(() =>
         page

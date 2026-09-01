@@ -32,6 +32,7 @@ test("authenticated moderator entry clears only known unscoped quiz data", () =>
     ["chaarlie:quiz-draft:v1", "legacy"],
     ["chaarlie:personal-plan-quiz-draft:v4", "old personal plan"],
     ["chaarlie:personal-plan-quiz-prepared:v1", "old claim"],
+    ["chaarlie:personal-plan-pending-preparation:v1", "old pending credential"],
     ["other-app-preference", "keep"],
     ["chaarlie:moderator:fresh:chaarlie:personal-plan-quiz-draft:v4", "fresh answers"],
   ])

@@ -917,7 +917,8 @@
   animation: personalPlanSelectionSettle 180ms ease-out both;
 }
 
-[data-personal-plan-transition-root] :is(h1, h2)[tabindex="-1"]:focus {
+[data-personal-plan-transition-root] :is(h1, h2)[tabindex="-1"]:focus,
+[data-stage3-progress] :is(h1, h2)[tabindex="-1"]:focus {
   outline: none;
 }
 
