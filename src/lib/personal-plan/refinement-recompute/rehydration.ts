@@ -2,10 +2,19 @@ import {
   stage3ProductDraftSchema,
   validateStage3Draft,
   type PersonalPlanCategory,
+  type Stage3CategoryRequirement,
   type Stage3ProductDraft,
 } from "@/lib/personal-plan/products/contracts"
-import { effectiveStage3CategoryDecisions } from "@/lib/personal-plan/products/product-load-resolution"
-import type { PlanProductRole } from "@/lib/personal-plan/types"
+import {
+  effectiveStage3CategoryDecisions,
+  effectiveStage3Requirements,
+} from "@/lib/personal-plan/products/product-load-resolution"
+import {
+  completeCaptureCategory,
+  computeStage3PathState,
+  markRoleUncovered,
+} from "@/lib/personal-plan/products/state-machine"
+import type { InitialNeedPlanSnapshot, PlanProductRole } from "@/lib/personal-plan/types"
 
 import type {
   Stage3RehydrationInput,
@@ -55,9 +64,16 @@ function requiredRolesByCategory(
  * Copies the capture state of the source draft onto the fresh draft.
  *
  * Only capture facts travel: owned and pending captures (with their observed
- * `frequencyRange`), their role assignments and the retained-inventory
- * dispositions behind "Nicht verwendete Produkte". Decisions stay unset — they
- * are re-authored against fresh evaluations by the intent pass.
+ * `frequencyRange`) and their role assignments. Decisions stay unset — they are
+ * re-authored against fresh evaluations by the intent pass.
+ *
+ * The retained-inventory dispositions behind "Nicht verwendete Produkte" are
+ * deliberately NOT copied: they are derived state, and `deriveInventoryDispositions`
+ * re-derives them from these very captures during the capture completion below,
+ * against the CURRENT authority fingerprint. Copying the old rows would carry
+ * the person's acknowledgement of the OLD authority onto a disposition they
+ * never saw. The recompute lane acknowledges the re-derived ones explicitly
+ * instead (orchestrator step 3b, founder ruling R2).
  *
  * Captures whose category left the refined plan are dropped, because a Stage-3
  * draft may only carry captures for its own ordered categories. Assignments to
@@ -82,18 +98,10 @@ function buildRehydratedDraft(
     const roles = assignment.roles.filter((role) => stillRequired?.has(role))
     return roles.length > 0 ? [{ ...assignment, roles }] : []
   })
-  const assignedProductIds = new Set(
-    roleAssignments.map((assignment) => assignment.capturedProductId),
-  )
   const coveredRoleKeys = new Set(
     roleAssignments.flatMap((assignment) =>
       assignment.roles.map((role) => `${assignment.category}:${role}`),
     ),
-  )
-  const inventoryDispositions = (source.inventoryDispositions ?? []).filter(
-    (disposition) =>
-      capturedProductIds.has(disposition.capturedProductId) &&
-      !assignedProductIds.has(disposition.capturedProductId),
   )
 
   return {
@@ -103,10 +111,77 @@ function buildRehydratedDraft(
     uncoveredRoles: target.uncoveredRoles.filter(
       (uncoveredRole) => !coveredRoleKeys.has(`${uncoveredRole.category}:${uncoveredRole.role}`),
     ),
-    ...(inventoryDispositions.length > 0 || target.inventoryDispositions
-      ? { inventoryDispositions }
-      : {}),
   }
+}
+
+/**
+ * Drives the copied draft through the SAME capture-completion transitions the
+ * person's own Stage-3 pass would run, headlessly.
+ *
+ * This is the difference between a draft that can complete and one that can
+ * never complete. `createStage3Draft` marks only the categories the person owns
+ * NOTHING in as capture-complete (`state-machine.ts`,
+ * `productLoadContext.ownedCategories`), because every owned category is
+ * exactly what the capture pass exists to confirm. A rebuilt draft for the
+ * recompute lane's main cohort — everyone with owned products — therefore
+ * starts in `pass: "product_capture"`, and copying captures onto it does not
+ * change that: `computeStage3PathState` keeps `canCreatePortfolio: false` and
+ * `complete()` answers `not_ready` forever.
+ *
+ * Copying the captures is what MAKES the capture pass answered — the person
+ * already told us these products in the source draft — so the completion is
+ * driven, never hand-set:
+ *
+ * 1. every required role the copied assignments do not cover becomes an
+ *    explicit `no_product_owned` gap (`markRoleUncovered`), the same fact
+ *    `resolveStage3NeedRevision` derives for the same situation. Without it the
+ *    capture pass is legitimately incomplete and nothing below would fire. The
+ *    gap surfaces as an `uncovered_role` decision subject, which the intent
+ *    builder answers with `leave_uncovered` (founder ruling R2/R5);
+ * 2. `completeCaptureCategory` then runs per still-open category, exactly as
+ *    the client's `complete_capture_category` mutation does — including the
+ *    immutable refined snapshot the production gateway loads for the same
+ *    transition (`shouldLoadBaseRefinedSnapshotForMutation`), so the product
+ *    load authority envelope and the retained-inventory dispositions are
+ *    derived by the state machine against the CURRENT authority.
+ */
+function completeRehydratedCapture(
+  draft: Stage3ProductDraft,
+  requirements: Stage3CategoryRequirement[],
+  baseRefinedSnapshot: InitialNeedPlanSnapshot,
+): Stage3ProductDraft {
+  const effective = effectiveStage3Requirements(requirements, draft)
+  let next = draft
+  const coveredRoleKeys = new Set([
+    ...next.roleAssignments.flatMap((assignment) =>
+      assignment.roles.map((role) => `${assignment.category}:${role}`),
+    ),
+    ...next.uncoveredRoles.map(
+      (uncoveredRole) => `${uncoveredRole.category}:${uncoveredRole.role}`,
+    ),
+  ])
+  for (const requirement of effective) {
+    for (const role of requirement.requiredRoles) {
+      if (coveredRoleKeys.has(`${requirement.category}:${role}`)) continue
+      next = markRoleUncovered(next, {
+        category: requirement.category,
+        role,
+        reason: "no_product_owned",
+      })
+    }
+  }
+  const pending = next.orderedCategories.filter(
+    (candidate) => !next.completedCaptureCategories.includes(candidate),
+  )
+  // A draft the person owns nothing in is created already capture-complete, so
+  // it has no pending category to drive — but the copied captures still have to
+  // reach the product-load authority and the retained-inventory dispositions.
+  // Re-running the last category's completion is the canonical way to get
+  // there; the transition is idempotent on an already-completed category.
+  for (const category of pending.length > 0 ? pending : next.orderedCategories.slice(-1)) {
+    next = completeCaptureCategory(next, category, effective, { baseRefinedSnapshot })
+  }
+  return next
 }
 
 /**
@@ -152,8 +227,46 @@ export async function rehydrateStage3ProductDraft(
     return { status: "conflict", currentRevision: rawTarget.revision }
   }
 
-  const rehydrated = buildRehydratedDraft(rawTarget, rawSource)
+  const requirements = await persistence.loadRequirements({
+    userId,
+    personalPlanId,
+    refinedVersionId: rawTarget.refinedVersionId,
+  })
+  const baseRefinedSnapshot = await persistence.loadRefinedNeedSnapshot({
+    userId,
+    personalPlanId,
+    refinedVersionId: rawTarget.refinedVersionId,
+  })
+
+  let rehydrated: Stage3ProductDraft
+  try {
+    rehydrated = completeRehydratedCapture(
+      buildRehydratedDraft(rawTarget, rawSource),
+      requirements,
+      baseRefinedSnapshot,
+    )
+  } catch {
+    // Every canonical transition validates the draft it produces and throws on
+    // a shape the state machine rejects. That is a structural mismatch between
+    // the copied captures and the new authority, not a race.
+    return unavailable("rehydrated_draft_invalid")
+  }
+  // Copied inventory carried the person's own product load into a need the
+  // refined version does not describe yet; only they can resolve that.
+  if (rehydrated.pass === "need_revision_review") {
+    return unavailable("rehydrated_draft_pending_need_revision")
+  }
+  // The state machine — not this service — decides whether the capture pass is
+  // answered. Refusing to save a draft that did not reach the decisions pass is
+  // what keeps `complete()`'s `not_ready` from becoming this lane's steady state.
+  const pathState = computeStage3PathState(rehydrated, requirements)
+  if (!pathState.canCompleteCapture || pathState.pass !== "product_decisions") {
+    return unavailable("rehydrated_capture_incomplete")
+  }
   if (validateStage3Draft(rehydrated).length > 0) return unavailable("rehydrated_draft_invalid")
+  // The canonical transitions each bump a local revision counter; the row's own
+  // revision is server-assigned by the save RPC and is the only one that counts.
+  rehydrated = { ...rehydrated, revision: rawTarget.revision }
 
   const saved = await persistence.save({
     userId,

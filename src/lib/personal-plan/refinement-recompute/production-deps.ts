@@ -27,6 +27,10 @@ import {
   type RoutineRefinedNeedClassificationClient,
 } from "./module-driven-classification"
 import { recomputeRoutineAfterHabitsCompletion } from "./orchestrator"
+import {
+  reactivateRoutineForProductDraft,
+  type RoutineReactivationClient,
+} from "./routine-reactivation"
 import type { Stage3RecomputeActiveRoutineVersion, Stage3RecomputeDeps } from "./types"
 
 /**
@@ -93,6 +97,16 @@ export function createProductionStage3RecomputeDeps(input: {
           },
         }
       },
+    },
+    // A→B→A only: the target refined version's Routine already exists and is
+    // just not active, so nothing new is compiled — the existing one is staged
+    // as a successor of the current active Routine and confirmed.
+    routineReactivator: {
+      reactivateRoutineForProductDraft: (reactivation) =>
+        reactivateRoutineForProductDraft({
+          client: admin as unknown as RoutineReactivationClient,
+          ...reactivation,
+        }),
     },
   }
 }

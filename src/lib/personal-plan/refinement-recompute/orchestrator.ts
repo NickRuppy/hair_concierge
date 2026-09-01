@@ -119,10 +119,13 @@ export async function recomputeRoutineAfterHabitsCompletion(
     // the current refined version instead (fix round 1 MINOR 4).
     if (draft.status === "stale") return unavailable("draft_stale", true)
 
-    // A draft already COMPLETED on the target version at start (lost-response
-    // replay) skips straight to the completion call below, which returns the
-    // stored receipt for a completed draft without re-mutating anything; the
-    // re-read afterwards is what actually classifies the outcome.
+    // A draft already COMPLETED on the target version at start (a lost-response
+    // replay, or an A→B→A return to an earlier answer set) skips straight to
+    // the completion call below, which returns the stored receipt for a
+    // completed draft without re-mutating anything; the re-read afterwards is
+    // what actually classifies the outcome.
+    const completedAtAcquisition = draft.status === "completed"
+
     if (draft.status === "active") {
       const rehydrated = await rehydrateStage3ProductDraft({
         persistence: deps.persistence,
@@ -190,6 +193,29 @@ export async function recomputeRoutineAfterHabitsCompletion(
         draft = resolved.draft
         expectedRevision = draft.revision
       }
+
+      // 3b. Retained inventory. A product the new plan no longer assigns to a
+      // role becomes a "Nicht verwendete Produkte" disposition, and
+      // `computeStage3PathState` refuses `canCreatePortfolio` while any of them
+      // is unacknowledged — there is no decision intent for them
+      // (`authorityDecisionSubjects` filters inventory dispositions out), so
+      // nothing above can answer one. The person is not in this loop to answer
+      // it either, and founder ruling R2 says plan changes from Verhalten
+      // answers are applied silently; the product stays visible under
+      // "Nicht verwendete Produkte" on the Routine. So this lane acknowledges
+      // them through the real server-owned transition rather than letting a
+      // re-derived disposition dead-end the whole recompute.
+      for (const disposition of draft.inventoryDispositions ?? []) {
+        if (disposition.acknowledged) continue
+        const acknowledged = await deps.gateway.acknowledgeInventoryDisposition({
+          draftId: draft.draftId,
+          expectedRevision,
+          dispositionKey: disposition.dispositionKey,
+        })
+        if (acknowledged.status === "conflict") return unavailable("acknowledge_conflict", true)
+        draft = acknowledged.draft
+        expectedRevision = draft.revision
+      }
     }
 
     // 4. Completion. `markUnrefinedDirectAccept: false` — this lane never
@@ -214,16 +240,62 @@ export async function recomputeRoutineAfterHabitsCompletion(
 
     // completed.status === "ready_for_routine" from here: it reported
     // success, but the re-read did not show the target active.
+
+    // 6. Only reachable for a draft that was ALREADY completed when this pass
+    // acquired it: `complete()` then short-circuits to the stored receipt
+    // (production-persistence-gateway.ts:913-916) and activates nothing. Two
+    // situations produce it, and neither can be told apart from the receipt —
+    // its `routineProposalId` is returned regardless of the proposal's status
+    // (stage3-persistence-supabase.ts:406):
+    //
+    //   (a) a lost-response replay whose confirm never landed, and
+    //   (b) A→B→A — the person returned to an earlier answer set, Stage-2's
+    //       input-hash dedupe (20260825130000) handed back the OLD refined
+    //       version and moved the plan's head to it, so acquisition lands on
+    //       that version's historical completed draft.
+    //
+    // What both share is the fact that decides the fix: a Routine compiled from
+    // the target version's draft ALREADY EXISTS and is simply not active. Per
+    // the plan's silent-apply ruling (R2) the honest outcome is to make it
+    // active again — staged as a successor of the CURRENT active Routine and
+    // confirmed, through the existing lifecycle RPCs.
+    if (
+      completedAtAcquisition &&
+      ending?.source.refinedVersionId === starting.source.refinedVersionId
+    ) {
+      const reactivated = await deps.routineReactivator.reactivateRoutineForProductDraft({
+        userId,
+        personalPlanId,
+        productDraftId: draft.draftId,
+      })
+      if (reactivated.status === "conflict") return unavailable("reactivation_conflict", true)
+      if (reactivated.status === "activated" || reactivated.status === "unchanged") {
+        // Same rule as everywhere else in this lane: the owner-scoped re-read
+        // decides, never the mutation's own report.
+        const afterReactivation = await deps.routineState.loadActiveRoutineVersion({
+          userId,
+          personalPlanId,
+        })
+        if (afterReactivation?.source.refinedVersionId === refinedVersionId) {
+          return { status: "applied", routineVersionId: afterReactivation.routineVersionId }
+        }
+        return unavailable("concurrent_activation", true)
+      }
+      if (reactivated.reason !== "no_routine_for_draft") {
+        return unavailable("reactivation_rejected", false)
+      }
+      // Nothing was ever compiled from this completed draft, so there is
+      // nothing to re-activate: fall through to the pre-existing classification.
+    }
+
     if (
       completed.routineProposalId !== null &&
       ending?.source.refinedVersionId === starting.source.refinedVersionId
     ) {
-      // A replayed completion short-circuits to the stored receipt
-      // (production-persistence-gateway.ts:913-916) and can leave a routine
-      // proposal staged rather than activated when its confirm didn't land
-      // (20260825140000:121-129). The routine page's own pending-proposal
-      // "Änderungen prüfen" recovery is the correct next step here, not an
-      // automatic retry — see fix round 1 IMPORTANT 2.
+      // A routine proposal is staged rather than activated because its confirm
+      // didn't land (20260825140000:121-129). The routine page's own
+      // pending-proposal "Änderungen prüfen" recovery is the correct next step
+      // here, not an automatic retry — see fix round 1 IMPORTANT 2.
       return unavailable("pending_proposal_staged", false)
     }
 

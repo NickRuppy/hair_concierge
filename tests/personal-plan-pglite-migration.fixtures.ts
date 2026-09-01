@@ -59,6 +59,12 @@ const ROOT = new URL("../", import.meta.url)
 const MIGRATIONS = [
   "supabase/migrations/20260808062602_personal_plan_stage1_3_foundation.sql",
   "supabase/migrations/20260808062603_personal_plan_routine_backend.sql",
+  // The successor lifecycle (`personal_plan_stage_routine_successor`) and the
+  // source-reconciliation patch that rewrites its portfolio-lineage guard. The
+  // recompute lane's historical-Routine re-activation stages through exactly
+  // this pair, so a faithful test must apply both, in deploy order.
+  "supabase/migrations/20260808070000_personal_plan_routine_successor_lifecycle.sql",
+  "supabase/migrations/20260808071000_personal_plan_routine_source_reconciliation.sql",
   "supabase/migrations/20260811154526_personal_plan_initial_routine_activation_v1.sql",
   "supabase/migrations/20260817085000_personal_plan_direct_acceptance_provenance.sql",
   "supabase/migrations/20260825120000_personal_plan_refinement_answer_provenance.sql",
@@ -333,6 +339,104 @@ export async function activateV2(
       input.routineSourceFingerprint ?? "fingerprint-1",
       input.markUnrefinedDirectAccept ?? false,
     ],
+  )
+  return rows[0]!.result
+}
+
+export type RoutineVersionRow = {
+  id: string
+  source_refined_need_version_id: string
+  source_portfolio_version_id: string
+  source_product_draft_id: string
+  source_product_draft_revision: number
+  payload: Record<string, unknown>
+  source_fingerprint: string
+}
+
+/** The Routine version compiled from a given completed Stage-3 draft, if any. */
+export async function loadRoutineVersionForProductDraft(
+  pg: PersonalPlanTestDb,
+  input: { userId: string; planId: string; productDraftId: string },
+): Promise<RoutineVersionRow | null> {
+  const { rows } = await pg.query<RoutineVersionRow>(
+    `SELECT id, source_refined_need_version_id, source_portfolio_version_id,
+            source_product_draft_id, source_product_draft_revision, payload, source_fingerprint
+       FROM public.personal_plan_routine_versions
+      WHERE user_id = $1 AND personal_plan_id = $2 AND source_product_draft_id = $3
+      ORDER BY created_at ASC LIMIT 1`,
+    [input.userId, input.planId, input.productDraftId],
+  )
+  return rows[0] ?? null
+}
+
+export type StageSuccessorResult = {
+  outcome: string
+  routineVersionId?: string
+  routineProposalId?: string
+  revision?: number
+  reasonCode?: string
+  currentRevision?: number
+  currentSourceRevision?: number
+  currentActiveRoutineVersionId?: string
+}
+
+export async function stageRoutineSuccessor(
+  pg: PersonalPlanTestDb,
+  input: {
+    userId: string
+    planId: string
+    expectedActiveRoutineVersionId: string | null
+    expectedRevision: number
+    expectedSourceRevision: number
+    sourceRefinedNeedVersionId: string
+    sourcePortfolioVersionId: string
+    sourceProductDraftId: string
+    sourceProductDraftRevision: number
+    payload: unknown
+    sourceFingerprint: string
+    origin?: string
+  },
+): Promise<StageSuccessorResult> {
+  const { rows } = await pg.query<{ result: StageSuccessorResult }>(
+    `SELECT public.personal_plan_stage_routine_successor(
+       $1::uuid, $2::uuid, $3::uuid, $4::bigint, $5::bigint,
+       $6::uuid, $7::uuid, $8::uuid, $9::bigint,
+       1::integer, 'compiler-v1'::text, '{}'::jsonb, $10::text, $11::jsonb, '{}'::jsonb,
+       '{}'::text[], $12::text
+     ) AS result`,
+    [
+      input.userId,
+      input.planId,
+      input.expectedActiveRoutineVersionId,
+      input.expectedRevision,
+      input.expectedSourceRevision,
+      input.sourceRefinedNeedVersionId,
+      input.sourcePortfolioVersionId,
+      input.sourceProductDraftId,
+      input.sourceProductDraftRevision,
+      input.sourceFingerprint,
+      JSON.stringify(input.payload),
+      input.origin ?? "source_sync",
+    ],
+  )
+  return rows[0]!.result
+}
+
+export type ConfirmProposalResult = {
+  outcome: string
+  revision?: number
+  currentRevision?: number
+}
+
+export async function confirmRoutineProposal(
+  pg: PersonalPlanTestDb,
+  input: { userId: string; planId: string; proposalId: string; expectedRevision: number },
+): Promise<ConfirmProposalResult> {
+  const { rows } = await pg.query<{ result: ConfirmProposalResult }>(
+    `SELECT public.personal_plan_confirm_routine_proposal(
+       $1::uuid, $2::uuid, $3::uuid, $4::bigint
+     ) AS result`,
+    [input.userId, input.planId, input.proposalId, input.expectedRevision],
   )
   return rows[0]!.result
 }

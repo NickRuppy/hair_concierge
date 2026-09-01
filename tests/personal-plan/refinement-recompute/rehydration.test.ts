@@ -176,6 +176,12 @@ function sourceDraft(overrides: Partial<Stage3ProductDraft> = {}): Stage3Product
   }
 }
 
+const targetAuthoritySnapshot = authoritySnapshot([
+  categoryDecision("shampoo", ["shampoo_everyday"]),
+  categoryDecision("conditioner", ["conditioner_rinse_out"]),
+  categoryDecision("mask", ["intensive_conditioning_mask"]),
+])
+
 /** Freshly rebuilt, empty Stage-3 draft on the newer refined need version. */
 function targetDraft(overrides: Partial<Stage3ProductDraft> = {}): Stage3ProductDraft {
   const base = createStage3Draft({
@@ -184,6 +190,7 @@ function targetDraft(overrides: Partial<Stage3ProductDraft> = {}): Stage3Product
     personalPlanId: "plan-a",
     refinedVersionId: "refined-new",
     requirements: targetRequirements,
+    authoritySnapshot: targetAuthoritySnapshot,
     now: "2026-08-31T00:00:00.000Z",
   })
   return { ...base, revision: 3, ...overrides }
@@ -195,10 +202,23 @@ function fakePersistence(input: {
   drafts: Record<string, unknown>
   saveOutcome?: SaveOutcome
   conflictRevision?: number
+  requirements?: Stage3CategoryRequirement[]
 }) {
   const saves: Array<{ draftId: string; expectedRevision: number; draft: Stage3ProductDraft }> = []
   const loads: string[] = []
   const persistence: Stage3RehydrationPersistence = {
+    loadRequirements: async () => input.requirements ?? targetRequirements,
+    // The immutable refined snapshot the production gateway loads for the same
+    // capture-completion transition. Its hash must match the draft's authority
+    // snapshot, exactly as the real source does.
+    loadRefinedNeedSnapshot: async () =>
+      ({
+        inputHash: "refined-input-new",
+        profile: {
+          source: { projection: "refined_post_plan" },
+          hair: { thickness: "normal" },
+        },
+      }) as never,
     loadDraft: async ({ userId, draftId }) => {
       loads.push(draftId)
       if (userId !== "owner-a") return null
@@ -278,7 +298,15 @@ test("does not copy decisions from the source draft", async () => {
   assert.deepEqual(result.draft.completedDecisionKeys, [])
 })
 
-test("carries retained-inventory dispositions across, including acknowledgement", async () => {
+/**
+ * The retained product travels; its DISPOSITION does not. Acknowledgement is
+ * bound to the authority fingerprint the person saw, so copying the old row
+ * would claim they acknowledged a verdict from an authority that no longer
+ * applies. The state machine re-derives the disposition from the copied
+ * captures against the current fingerprint instead, and the recompute lane
+ * acknowledges it explicitly (orchestrator step 3b, founder ruling R2).
+ */
+test("re-derives retained-inventory dispositions against the current authority", async () => {
   const { persistence } = fakePersistence({
     drafts: { "draft-source": sourceDraft(), "draft-target": targetDraft() },
   })
@@ -287,7 +315,34 @@ test("carries retained-inventory dispositions across, including acknowledgement"
 
   assert.equal(result.status, "rehydrated")
   if (result.status !== "rehydrated") return
-  assert.deepEqual(result.draft.inventoryDispositions, [maskDisposition])
+  assert.deepEqual(result.draft.inventoryDispositions, [
+    {
+      ...maskDisposition,
+      acknowledged: false,
+      authorityFingerprint: result.draft.inventoryDispositions![0]!.authorityFingerprint,
+    },
+  ])
+  assert.notEqual(result.draft.inventoryDispositions![0]!.authorityFingerprint, FINGERPRINT)
+  assert.match(result.draft.inventoryDispositions![0]!.authorityFingerprint, /^[0-9a-f]{64}$/)
+})
+
+test("the rehydrated draft reaches the decisions pass, so completion is possible at all", async () => {
+  const { persistence } = fakePersistence({
+    drafts: { "draft-source": sourceDraft(), "draft-target": targetDraft() },
+  })
+
+  const result = await run(persistence)
+
+  assert.equal(result.status, "rehydrated")
+  if (result.status !== "rehydrated") return
+  assert.equal(result.draft.pass, "product_decisions")
+  assert.equal(result.draft.categoryCursor, null)
+  assert.deepEqual(result.draft.completedCaptureCategories, ["shampoo", "conditioner", "mask"])
+  // The mask capture covers no required role, so the role is an honest gap the
+  // intent pass answers with `leave_uncovered` — not a silent block.
+  assert.deepEqual(result.draft.uncoveredRoles, [
+    { category: "mask", role: "intensive_conditioning_mask", reason: "no_product_owned" },
+  ])
 })
 
 test("skips captures whose category left the refined plan", async () => {
@@ -336,7 +391,10 @@ test("skips captures whose category left the refined plan", async () => {
     result.draft.products.map((product) => product.capturedProductId),
     ["capture-shampoo", "capture-conditioner", "capture-mask"],
   )
-  assert.deepEqual(result.draft.inventoryDispositions, [maskDisposition])
+  assert.deepEqual(
+    (result.draft.inventoryDispositions ?? []).map((disposition) => disposition.capturedProductId),
+    ["capture-mask"],
+  )
 })
 
 test("drops assignments to a role the refined plan no longer requires and retains the capture", async () => {
@@ -394,6 +452,7 @@ test("drops assignments to a role the refined plan no longer requires and retain
   })
   const { persistence } = fakePersistence({
     drafts: { "draft-source": withLeaveIn, "draft-target": target },
+    requirements: [...targetRequirements, requirement("leave_in", ["pre_heat_application"])],
   })
 
   const result = await run(persistence)
@@ -412,6 +471,9 @@ test("drops assignments to a role the refined plan no longer requires and retain
   )
   assert.deepEqual(result.draft.uncoveredRoles, [
     { category: "leave_in", role: "pre_heat_application", reason: "no_product_owned" },
+    // The mask capture covers no required role either, so the canonical capture
+    // completion records that gap too instead of stalling the pass on it.
+    { category: "mask", role: "intensive_conditioning_mask", reason: "no_product_owned" },
   ])
   assert.deepEqual(
     result.draft.roleAssignments.map((assignment) => assignment.capturedProductId),

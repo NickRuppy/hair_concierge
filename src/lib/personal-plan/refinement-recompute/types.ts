@@ -11,12 +11,21 @@ import type {
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 
 /**
- * Narrow persistence surface the recompute lane needs. Both members already
- * exist on the Stage-3 production persistence port, so the Supabase adapter
+ * Narrow persistence surface the recompute lane needs. Every member already
+ * exists on the Stage-3 production persistence port, so the Supabase adapter
  * (`createSupabaseStage3ProductionPersistence`) satisfies this as-is and no
  * new RPC or migration is required.
+ *
+ * `loadRequirements` / `loadRefinedNeedSnapshot` are the same two reads the
+ * production gateway performs before the client's own capture-completion
+ * mutation (`production-persistence-gateway.ts`,
+ * `shouldLoadBaseRefinedSnapshotForMutation`); rehydration drives that exact
+ * transition headlessly and so needs the exact same inputs.
  */
-export type Stage3RehydrationPersistence = Pick<Stage3ProductionPersistence, "loadDraft" | "save">
+export type Stage3RehydrationPersistence = Pick<
+  Stage3ProductionPersistence,
+  "loadDraft" | "save" | "loadRequirements" | "loadRefinedNeedSnapshot"
+>
 
 export type Stage3RehydrationInput = {
   persistence: Stage3RehydrationPersistence
@@ -50,6 +59,20 @@ export type Stage3RehydrationUnavailableReason =
   | "target_draft_pending_need_revision"
   | "target_draft_stale_source"
   | "rehydrated_draft_invalid"
+  /**
+   * Driving the copied captures through the canonical capture completion made
+   * the state machine open a product-load need revision: the person's own
+   * inventory implies a need the new refined version does not describe. Only
+   * they can accept or reject that, so the recompute stops rather than
+   * answering it for them.
+   */
+  | "rehydrated_draft_pending_need_revision"
+  /**
+   * The copied captures did not answer the capture pass — `computeStage3PathState`
+   * still reports it unfinished after the canonical transitions ran. Saving that
+   * draft would guarantee a `completion_not_ready` later, so nothing is written.
+   */
+  | "rehydrated_capture_incomplete"
 
 export type Stage3RehydrationResult =
   | { status: "rehydrated"; draft: Stage3ProductDraft }
@@ -111,7 +134,12 @@ export type Stage3RecomputeIntentPlan = {
  */
 export type Stage3RecomputeGateway = Pick<
   Stage3AuthorityProductionGateway,
-  "loadOrCreate" | "evaluateDecisions" | "reviewDecisionBundles" | "resolveDecisions" | "complete"
+  | "loadOrCreate"
+  | "evaluateDecisions"
+  | "reviewDecisionBundles"
+  | "resolveDecisions"
+  | "acknowledgeInventoryDisposition"
+  | "complete"
 >
 
 /**
@@ -142,11 +170,52 @@ export type Stage3RecomputeRoutineStateReader = {
   }): Promise<Stage3RecomputeActiveRoutineVersion | null>
 }
 
+/**
+ * Outcome of making the Routine compiled from a given completed Stage-3 draft
+ * the plan's active Routine again.
+ */
+export type Stage3RecomputeRoutineReactivation =
+  | { status: "activated"; routineVersionId: string }
+  /** It already was the active Routine — nothing to do. */
+  | { status: "unchanged" }
+  /** Plan revision / source revision / active version moved between the reads. */
+  | { status: "conflict" }
+  | {
+      status: "unavailable"
+      reason: /** Nothing was ever compiled from this draft (or the plan row is gone). */
+        | "no_routine_for_draft"
+        /** `personal_plan_stage_routine_successor` refused the candidate. */
+        | "stage_rejected"
+        /** `personal_plan_confirm_routine_proposal` refused the staged proposal. */
+        | "confirm_rejected"
+    }
+
+/**
+ * Re-activates a Routine version the plan already owns.
+ *
+ * Needed only for the A→B→A corner: Stage-2 dedupes refined need versions by
+ * input hash (`20260825130000`), so returning to an earlier answer set moves
+ * the plan's head back to a version whose Stage-3 draft is already `completed`.
+ * `complete()` can then only replay the stored receipt — it never re-activates
+ * anything — so the Routine compiled from that draft has to be staged as a
+ * successor of the CURRENT active Routine and confirmed. Both steps are
+ * existing lifecycle RPCs (`personal_plan_stage_routine_successor` +
+ * `personal_plan_confirm_routine_proposal`); no new migration is involved.
+ */
+export type Stage3RecomputeRoutineReactivator = {
+  reactivateRoutineForProductDraft(input: {
+    userId: string
+    personalPlanId: string
+    productDraftId: string
+  }): Promise<Stage3RecomputeRoutineReactivation>
+}
+
 export type Stage3RecomputeDeps = {
   gateway: Stage3RecomputeGateway
-  /** Raw persistence rehydration needs (`loadDraft`/`save`) — same port T1.1 takes. */
+  /** Raw persistence rehydration needs — same port T1.1 takes. */
   persistence: Stage3RehydrationPersistence
   routineState: Stage3RecomputeRoutineStateReader
+  routineReactivator: Stage3RecomputeRoutineReactivator
 }
 
 export type Stage3RecomputeInput = {
@@ -177,6 +246,11 @@ export type Stage3RecomputeUnavailableReason =
   | "rehydration_reload_conflict"
   | "decision_blocked"
   | "resolve_conflict"
+  /**
+   * A retained-inventory acknowledgement lost its CAS race. Retryable: the next
+   * pass rebuilds and re-acknowledges from the canonical draft.
+   */
+  | "acknowledge_conflict"
   /** `loadOrCreate` returned a draft in the `"stale"` status — fix round 1 MINOR 4. */
   | "draft_stale"
   | "completion_not_ready"
@@ -187,10 +261,23 @@ export type Stage3RecomputeUnavailableReason =
    * routine still on the starting source — a replayed completion call
    * short-circuited to the stored receipt without this attempt being the
    * one that activated it, and the confirm that would activate the staged
-   * proposal never landed. The routine page's own "Änderungen prüfen"
+   * proposal never landed. Reached only when re-activating the target
+   * version's own Routine is impossible because no Routine was ever compiled
+   * from its completed draft. The routine page's own "Änderungen prüfen"
    * pending-proposal recovery is the correct next step, not a retry.
    */
   | "pending_proposal_staged"
+  /**
+   * Re-activating the target version's existing Routine lost a CAS race
+   * (the plan's revision, source revision or active version moved between
+   * staging the successor and confirming it). Retryable.
+   */
+  | "reactivation_conflict"
+  /**
+   * The server refused to stage or confirm the historical Routine as a
+   * successor. Non-retryable: the same inputs would be refused again.
+   */
+  | "reactivation_rejected"
   | "concurrent_activation"
   | "unexpected_error"
 

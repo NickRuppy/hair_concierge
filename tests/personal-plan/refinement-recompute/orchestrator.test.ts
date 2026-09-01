@@ -18,7 +18,10 @@ import { createStage3Draft } from "../../../src/lib/personal-plan/products/state
 import { recomputeRoutineAfterHabitsCompletion } from "../../../src/lib/personal-plan/refinement-recompute/orchestrator"
 import type {
   Stage3RecomputeActiveRoutineVersion,
+  Stage3RecomputeDeps,
   Stage3RecomputeGateway,
+  Stage3RecomputeRoutineReactivation,
+  Stage3RecomputeRoutineReactivator,
   Stage3RecomputeRoutineStateReader,
   Stage3RehydrationPersistence,
 } from "../../../src/lib/personal-plan/refinement-recompute/types"
@@ -285,6 +288,15 @@ function fakePersistence(
 ) {
   const calls = { loadDraft: [] as unknown[], save: [] as unknown[] }
   const persistence: Stage3RehydrationPersistence = {
+    loadRequirements: async () => targetRequirements,
+    loadRefinedNeedSnapshot: async () =>
+      ({
+        inputHash: "refined-input-new",
+        profile: {
+          source: { projection: "refined_post_plan" },
+          hair: { thickness: "normal" },
+        },
+      }) as never,
     loadDraft: async ({ userId, draftId }) => {
       calls.loadDraft.push({ userId, draftId })
       if (userId !== USER_ID) return null
@@ -312,6 +324,7 @@ type GatewayHandlers = Partial<{
   evaluateDecisions: Stage3RecomputeGateway["evaluateDecisions"]
   reviewDecisionBundles: Stage3RecomputeGateway["reviewDecisionBundles"]
   resolveDecisions: Stage3RecomputeGateway["resolveDecisions"]
+  acknowledgeInventoryDisposition: Stage3RecomputeGateway["acknowledgeInventoryDisposition"]
   complete: Stage3RecomputeGateway["complete"]
 }>
 
@@ -321,6 +334,10 @@ function fakeGateway(handlers: GatewayHandlers) {
     evaluateDecisions: [] as unknown[],
     reviewDecisionBundles: [] as unknown[],
     resolveDecisions: [] as Array<{ expectedRevision: number; count: number }>,
+    acknowledgeInventoryDisposition: [] as Array<{
+      expectedRevision: number
+      dispositionKey: string
+    }>,
     complete: [] as unknown[],
   }
   function notConfigured(name: string): () => Promise<never> {
@@ -347,6 +364,15 @@ function fakeGateway(handlers: GatewayHandlers) {
         count: input.intents.length,
       })
       return (handlers.resolveDecisions ?? notConfigured("resolveDecisions"))(input)
+    },
+    acknowledgeInventoryDisposition: async (input) => {
+      calls.acknowledgeInventoryDisposition.push({
+        expectedRevision: input.expectedRevision,
+        dispositionKey: input.dispositionKey,
+      })
+      return (
+        handlers.acknowledgeInventoryDisposition ?? notConfigured("acknowledgeInventoryDisposition")
+      )(input)
     },
     complete: async (input) => {
       calls.complete.push(input)
@@ -403,11 +429,36 @@ function readyForRoutine(
   })
 }
 
+/** Records every re-activation attempt; answers with a canned result. */
+function fakeReactivator(
+  result: Stage3RecomputeRoutineReactivation = {
+    status: "unavailable",
+    reason: "no_routine_for_draft",
+  },
+) {
+  const calls: Array<{ personalPlanId: string; productDraftId: string }> = []
+  const routineReactivator: Stage3RecomputeRoutineReactivator = {
+    reactivateRoutineForProductDraft: async (input) => {
+      calls.push({ personalPlanId: input.personalPlanId, productDraftId: input.productDraftId })
+      return result
+    },
+  }
+  return { routineReactivator, calls }
+}
+
 const deps = (input: {
   gateway: Stage3RecomputeGateway
   persistence: Stage3RehydrationPersistence
   routineState: Stage3RecomputeRoutineStateReader
-}) => input
+  routineReactivator?: Stage3RecomputeRoutineReactivator
+}): Stage3RecomputeDeps => ({
+  ...input,
+  routineReactivator: input.routineReactivator ?? {
+    reactivateRoutineForProductDraft: async () => {
+      throw new Error("routineReactivator was called but is not configured for this test")
+    },
+  },
+})
 
 test("happy path: distinct target version becomes active during the operation => applied, decided by re-read not proposal id", async () => {
   const starting = activeRoutineVersion({ routineVersionId: "rv-1", refinedVersionId: REFINED_OLD })
@@ -921,6 +972,9 @@ function sharedStoreGateway(sharedStore: Record<string, Stage3ProductDraft>, dra
       )
     },
     reviewDecisionBundles: async () => [],
+    acknowledgeInventoryDisposition: async () => {
+      throw new Error("this fixture's drafts carry no inventory dispositions")
+    },
     resolveDecisions: async (input) => {
       calls.resolveDecisions.push(input)
       if (!snapshot || snapshot.revision !== input.expectedRevision) {
@@ -962,6 +1016,15 @@ function sharedStorePersistence(
   extraDrafts: Record<string, Stage3ProductDraft>,
 ): Stage3RehydrationPersistence {
   return {
+    loadRequirements: async () => targetRequirements,
+    loadRefinedNeedSnapshot: async () =>
+      ({
+        inputHash: "refined-input-new",
+        profile: {
+          source: { projection: "refined_post_plan" },
+          hair: { thickness: "normal" },
+        },
+      }) as never,
     loadDraft: async ({ userId, draftId }) => {
       if (userId !== USER_ID) return null
       return sharedStore[draftId] ?? extraDrafts[draftId] ?? null
@@ -1060,6 +1123,101 @@ test("a completion whose receipt carries no proposal id and whose re-read shows 
   assert.deepEqual(result, {
     status: "unavailable",
     reason: "concurrent_activation",
+    retryable: true,
+  })
+})
+
+/**
+ * A→B→A. The person answered Verhalten one way, changed their mind, then went
+ * back. Stage-2 dedupes refined versions by input hash
+ * (`20260825130000`), so the third completion hands back the FIRST version and
+ * moves the plan's head to it — and draft acquisition lands on that version's
+ * long-since COMPLETED Stage-3 draft. `complete()` can then only replay the
+ * stored receipt, whose `routineProposalId` is a proposal that was ACCEPTED
+ * ages ago (the receipt loader does not check status,
+ * `stage3-persistence-supabase.ts:406`), so the lane used to report a terminal
+ * `pending_proposal_staged` and the plan stayed on B forever.
+ *
+ * The target version's Routine still exists — it is only inactive. Founder
+ * ruling R2 (changes are applied silently) makes re-activating it the correct
+ * outcome.
+ */
+test("a completed draft whose Routine exists but is inactive is re-activated => applied", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-b", refinedVersionId: REFINED_OLD })
+  const reactivated = activeRoutineVersion({
+    routineVersionId: "rv-a",
+    refinedVersionId: REFINED_NEW,
+  })
+  // Before, after the receipt replay (unchanged), and after the re-activation.
+  const { routineState } = fakeRoutineState([starting, starting, reactivated])
+  const { persistence, calls: persistenceCalls } = fakePersistence({})
+  const { gateway, calls } = fakeGateway({
+    loadOrCreate: async () =>
+      draftResponse(freshDraft(REFINED_NEW, "draft-historical", { status: "completed" })),
+    complete: readyForRoutine({ routineProposalId: "proposal-accepted-long-ago" }),
+  })
+  const { routineReactivator, calls: reactivations } = fakeReactivator({
+    status: "activated",
+    routineVersionId: "rv-a",
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState, routineReactivator }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, { status: "applied", routineVersionId: "rv-a" })
+  assert.deepEqual(reactivations, [{ personalPlanId: PLAN_ID, productDraftId: "draft-historical" }])
+  // A completed draft is never rehydrated or re-decided.
+  assert.equal(persistenceCalls.save.length, 0)
+  assert.equal(calls.evaluateDecisions.length, 0)
+})
+
+test("a re-activation that finds no Routine for the completed draft keeps pending_proposal_staged", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-b", refinedVersionId: REFINED_OLD })
+  const { routineState } = fakeRoutineState([starting, starting])
+  const { persistence } = fakePersistence({})
+  const { gateway } = fakeGateway({
+    loadOrCreate: async () =>
+      draftResponse(freshDraft(REFINED_NEW, "draft-historical", { status: "completed" })),
+    complete: readyForRoutine({ routineProposalId: "proposal-staged-not-confirmed" }),
+  })
+  const { routineReactivator } = fakeReactivator({
+    status: "unavailable",
+    reason: "no_routine_for_draft",
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState, routineReactivator }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, {
+    status: "unavailable",
+    reason: "pending_proposal_staged",
+    retryable: false,
+  })
+})
+
+test("a CAS conflict between staging and confirming the historical Routine is retryable", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-b", refinedVersionId: REFINED_OLD })
+  const { routineState } = fakeRoutineState([starting, starting])
+  const { persistence } = fakePersistence({})
+  const { gateway } = fakeGateway({
+    loadOrCreate: async () =>
+      draftResponse(freshDraft(REFINED_NEW, "draft-historical", { status: "completed" })),
+    complete: readyForRoutine({ routineProposalId: "proposal-accepted-long-ago" }),
+  })
+  const { routineReactivator } = fakeReactivator({ status: "conflict" })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState, routineReactivator }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, {
+    status: "unavailable",
+    reason: "reactivation_conflict",
     retryable: true,
   })
 })
