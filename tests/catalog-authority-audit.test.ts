@@ -31,6 +31,23 @@ test("a complete ten-category fixture has no authority issues", () => {
   )
 })
 
+test("Shampoo authority rejects protocol roles unsupported by reviewed buckets", () => {
+  const product = completeProduct("shampoo", uuid(11))
+  const snapshot = completeSnapshot([product])
+  snapshot.protocols.push({
+    ...snapshot.protocols[0]!,
+    role: "shampoo_dandruff",
+  })
+
+  const receipt = auditCatalogAuthority(snapshot)
+
+  assert.equal(receipt.issueCounts.exact_protocol_scope_mismatch, 1)
+  assert.match(
+    receipt.issues.find((issue) => issue.code === "exact_protocol_scope_mismatch")!.detail,
+    /role shampoo_dandruff is not supported by reviewed Shampoo buckets/,
+  )
+})
+
 test("legacy display labels normalize to the canonical category keys", () => {
   const displayLabels = {
     shampoo: "Shampoo",

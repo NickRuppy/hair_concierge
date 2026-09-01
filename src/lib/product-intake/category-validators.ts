@@ -41,6 +41,7 @@ import { SHAMPOO_BUCKETS, SHAMPOO_SCALP_ROUTES_BY_BUCKET } from "@/lib/shampoo/c
 import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import { buildProductApplicationPointerV2 } from "@/lib/product-intake/catalog-enrichment/stage5-v2-builder"
+import { deriveShampooProtocolRoles } from "@/lib/product-intake/shampoo-protocol-roles"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
 export const PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__" as const
@@ -1042,7 +1043,9 @@ function validateExactProtocol(
   const suppliedRoles = new Set(
     protocols.data.product_application_protocols.map((protocol) => protocol.role),
   )
-  if (requiredRoles.some((role) => !suppliedRoles.has(role))) {
+  const unsupportedShampooRole =
+    categoryKey === "shampoo" && [...suppliedRoles].some((role) => !requiredRoles.includes(role))
+  if (requiredRoles.some((role) => !suppliedRoles.has(role)) || unsupportedShampooRole) {
     return {
       ok: false,
       missingFields: ["final.category_specs.product_application_protocols.role"],
@@ -1087,9 +1090,9 @@ function requiredProtocolRoles(
   switch (categoryKey) {
     case "shampoo": {
       const rows = Array.isArray(specs.product_shampoo_specs) ? specs.product_shampoo_specs : []
-      return rows.some((row) => (row as { shampoo_bucket?: unknown }).shampoo_bucket === "schuppen")
-        ? ["shampoo_everyday", "shampoo_dandruff"]
-        : ["shampoo_everyday"]
+      return deriveShampooProtocolRoles(
+        rows.map((row) => (row as { shampoo_bucket?: string | null }).shampoo_bucket),
+      )
     }
     case "leave_in":
       return (specs.product_leave_in_specs as { provides_heat_protection?: unknown })
