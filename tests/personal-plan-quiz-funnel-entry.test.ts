@@ -31,13 +31,16 @@ test("personal-plan offer placeholder remains local and gated", () => {
 test("personal-plan quiz prepares the plan, saves V2 answers, and enters the result reveal", () => {
   const landing = read("src/funnels/landing/personal-plan-quiz.tsx")
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+  const preparationClient = read("src/lib/personal-plan-quiz/preparation-client.ts")
   const api = read("src/app/api/quiz/personal-plan-lead/route.ts")
 
   assert.match(
     landing,
     /<PersonalPlanQuizEntry\s+key=\{moderatorQuiz\?\.scope\}\s+fieldTest=\{personalPlanFieldTest\}\s+resume=\{personalPlanQuizResume\}\s*\/>/,
   )
-  assert.match(quiz, /fetch\("\/api\/quiz\/personal-plan-prepare"/)
+  assert.match(quiz, /runPersonalPlanPreparationRequest\(/)
+  assert.match(preparationClient, /const doFetch = input\.fetch/)
+  assert.match(preparationClient, /doFetch\("\/api\/quiz\/personal-plan-prepare"/)
   assert.match(quiz, /artifactId/)
   assert.match(quiz, /claimToken/)
   assert.match(quiz, /fetch\("\/api\/quiz\/personal-plan-lead"/)

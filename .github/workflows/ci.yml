@@ -213,7 +213,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium webkit
       - name: Run Personal Plan development journeys
         run: npm run test:playwright:personal-plan-stage3:journey
 

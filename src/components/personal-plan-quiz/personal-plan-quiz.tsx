@@ -113,6 +113,15 @@ import {
 import type { PortraitConfig } from "@/lib/quiz/portrait-config"
 import { cn } from "@/lib/utils"
 import { resolvePrimaryPersonalPlanConcern } from "@/lib/personal-plan-quiz/hair-assessment"
+import {
+  clearPendingPersonalPlanPreparationCredential,
+  createPendingPersonalPlanPreparationCredential,
+  isPendingPersonalPlanPreparationCredentialFresh,
+  loadPendingPersonalPlanPreparationCredential,
+  runPersonalPlanPreparationRequest,
+  savePendingPersonalPlanPreparationCredential,
+  type PendingPersonalPlanPreparationCredential,
+} from "@/lib/personal-plan-quiz/preparation-client"
 
 import {
   DAILY_TIME_OPTIONS,
@@ -2157,6 +2166,9 @@ export function PersonalPlanQuiz({
   const entrySelectionSupersededRef = useRef(false)
   const quizCompletedRef = useRef(false)
   const preparationRequestRef = useRef<{ answersKey: string; promise: Promise<void> } | null>(null)
+  const pendingPreparationCredentialRef = useRef<PendingPersonalPlanPreparationCredential | null>(
+    null,
+  )
   const latestAnswersKeyRef = useRef(getAnswersKey(answers))
   const latestDraftRef = useRef<PersonalPlanQuizDraft>({
     screen,
@@ -2219,6 +2231,7 @@ export function PersonalPlanQuiz({
         const sessionStorage = getBrowserSessionStorage(draftScope)
         const claim = sessionStorage ? loadPreparedPlanClaim(sessionStorage, draft.answers) : null
         if (claim) {
+          if (sessionStorage) clearPendingPersonalPlanPreparationCredential(sessionStorage)
           setPreparedPlan({ status: "ready", claim, error: null })
         }
         // Seed one browser history entry per restorable step so the system
@@ -2274,7 +2287,20 @@ export function PersonalPlanQuiz({
 
   const answersKey = useMemo(() => getAnswersKey(answers), [answers])
   useEffect(() => {
+    if (
+      pendingPreparationCredentialRef.current &&
+      pendingPreparationCredentialRef.current.answersKey !== answersKey
+    ) {
+      pendingPreparationCredentialRef.current = null
+      const storage = getBrowserSessionStorage(draftScope)
+      if (storage) clearPendingPersonalPlanPreparationCredential(storage)
+    }
+  }, [answersKey, draftScope])
+
+  useEffect(() => {
     latestAnswersKeyRef.current = answersKey
+    // A changed answer set invalidates the currently rendered server claim immediately.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPreparedPlan((current) => {
       if (current.status !== "ready" || current.claim.answersKey === answersKey) return current
       const storage = getBrowserSessionStorage(draftScope)
@@ -2299,59 +2325,77 @@ export function PersonalPlanQuiz({
 
       setPreparedPlan({ status: "preparing", claim: null, error: null })
       const promise = (async () => {
-        let lastError: unknown = null
-        for (let attempt = 0; attempt < 2; attempt += 1) {
-          try {
-            const response = await fetch("/api/quiz/personal-plan-prepare", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ answers }),
+        try {
+          const storage = getBrowserSessionStorage(draftScope)
+          let credential =
+            (pendingPreparationCredentialRef.current &&
+            isPendingPersonalPlanPreparationCredentialFresh(
+              pendingPreparationCredentialRef.current,
+              requestKey,
+            )
+              ? pendingPreparationCredentialRef.current
+              : null) ??
+            (storage ? loadPendingPersonalPlanPreparationCredential(storage, requestKey) : null) ??
+            createPendingPersonalPlanPreparationCredential(requestKey)
+          pendingPreparationCredentialRef.current = credential
+          if (storage) savePendingPersonalPlanPreparationCredential(storage, credential)
+
+          for (let credentialAttempt = 0; credentialAttempt < 2; credentialAttempt += 1) {
+            const result = await runPersonalPlanPreparationRequest({
+              fetch,
+              body: {
+                answers,
+                preparationId: credential.preparationId,
+                claimToken: credential.claimToken,
+              },
+              expectedPreparationId: credential.preparationId,
+              expectedClaimToken: credential.claimToken,
             })
-            if (!response.ok) {
-              throw new Error(`Preparation failed with ${response.status}`)
-            }
-            const payload: unknown = await response.json()
-            const artifactId =
-              payload && typeof payload === "object" && !Array.isArray(payload)
-                ? (payload as Record<string, unknown>).artifactId
-                : null
-            const claimToken =
-              payload && typeof payload === "object" && !Array.isArray(payload)
-                ? (payload as Record<string, unknown>).claimToken
-                : null
-            const expiresAt =
-              payload && typeof payload === "object" && !Array.isArray(payload)
-                ? (payload as Record<string, unknown>).expiresAt
-                : null
-            const status =
-              payload && typeof payload === "object" && !Array.isArray(payload)
-                ? (payload as Record<string, unknown>).status
-                : null
-            if (
-              typeof artifactId !== "string" ||
-              typeof claimToken !== "string" ||
-              typeof expiresAt !== "string" ||
-              status !== "ready"
-            ) {
-              throw new Error("Preparation response is incomplete")
-            }
             if (latestAnswersKeyRef.current !== requestKey) return
-            const claim = { artifactId, claimToken, answersKey: requestKey, expiresAt }
-            const storage = getBrowserSessionStorage(draftScope)
-            if (storage) savePreparedPlanClaim(storage, claim)
-            setPreparedPlan({ status: "ready", claim, error: null })
+            if (result.status === "ready") {
+              const claim = {
+                artifactId: result.artifactId,
+                claimToken: result.claimToken,
+                answersKey: requestKey,
+                expiresAt: result.expiresAt,
+              }
+              if (storage) {
+                savePreparedPlanClaim(storage, claim)
+                clearPendingPersonalPlanPreparationCredential(storage)
+              }
+              pendingPreparationCredentialRef.current = null
+              setPreparedPlan({ status: "ready", claim, error: null })
+              return
+            }
+            if (result.discardCredential) {
+              pendingPreparationCredentialRef.current = null
+              if (storage) clearPendingPersonalPlanPreparationCredential(storage)
+              if (credentialAttempt === 0) {
+                credential = createPendingPersonalPlanPreparationCredential(requestKey)
+                pendingPreparationCredentialRef.current = credential
+                if (storage) savePendingPersonalPlanPreparationCredential(storage, credential)
+                continue
+              }
+            }
+            setPreparedPlan({
+              status: "error",
+              claim: null,
+              error: result.error,
+            })
             return
-          } catch (error) {
-            lastError = error
           }
+        } catch (error) {
+          if (latestAnswersKeyRef.current !== requestKey) return
+          const storage = getBrowserSessionStorage(draftScope)
+          if (storage && !pendingPreparationCredentialRef.current) {
+            clearPendingPersonalPlanPreparationCredential(storage)
+          }
+          setPreparedPlan({
+            status: "error",
+            claim: null,
+            error: error instanceof Error ? error.message : "Die Vorbereitung ist fehlgeschlagen.",
+          })
         }
-        if (latestAnswersKeyRef.current !== requestKey) return
-        setPreparedPlan({
-          status: "error",
-          claim: null,
-          error:
-            lastError instanceof Error ? lastError.message : "Die Vorbereitung ist fehlgeschlagen.",
-        })
       })().finally(() => {
         if (preparationRequestRef.current?.answersKey === requestKey) {
           preparationRequestRef.current = null
@@ -2372,6 +2416,8 @@ export function PersonalPlanQuiz({
     ) {
       return
     }
+    // Entering a preparation-owned screen intentionally starts its state machine.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void preparePersonalPlan()
   }, [draftReady, preparePersonalPlan, preparedPlan.status, screen])
 

@@ -1,6 +1,7 @@
 import { QUIZ_DRAFT_STORAGE_KEY } from "@/lib/quiz/draft"
 import {
   PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,
+  PERSONAL_PLAN_PENDING_PREPARATION_STORAGE_KEY,
   PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY,
 } from "./draft"
 
@@ -25,6 +26,7 @@ export function clearUnscopedQuizDraftStorage(storage: QuizDraftStorage): void {
     QUIZ_DRAFT_STORAGE_KEY,
     PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,
     PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY,
+    PERSONAL_PLAN_PENDING_PREPARATION_STORAGE_KEY,
   ]) {
     try {
       storage.removeItem(key)
