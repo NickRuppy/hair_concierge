@@ -12,10 +12,10 @@ Canonical brand authority resolves the spelling: product `07895098-a301-4137-b5c
 
 Historical research manifests and August 26 ledgers remain unchanged. Only E1/E2 v2 and the frozen production manifests below are executable:
 
-| Batch | Products | GTINs | Exact raw SHA-256 |
-| --- | ---: | ---: | --- |
-| E1 v2 | 20 | 21 | `0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522` |
-| E2 v2 | 21 | 22 | `aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147` |
+| Batch | Products | GTINs | Exact raw SHA-256                                                  |
+| ----- | -------: | ----: | ------------------------------------------------------------------ |
+| E1 v2 |       20 |    21 | `0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522` |
+| E2 v2 |       21 |    22 | `aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147` |
 
 Sources reopened August 28; extra exact-package corroboration is retained in `source_urls`. Package identity is neither sales evidence nor proof of classification accuracy.
 
@@ -78,12 +78,12 @@ E3 applied 08:20:40Z against clean reviewed head `a5083d2e85ea971b45b5139668a543
 
 Source refresh covers all 77 previously researched remaining products. Final physical-identity reconciliation retains 73 products / 75 codes; four remain held. A fresh read-only readiness audit at 08:19:23Z passed all 77 candidates (zero blockers; fingerprint `bb1b11bd38f39dbb43192f8ea0c509641066f29ceeafeaba22ef0fc5376fe6b0`). Reuse the existing executor, extending its explicit batch allowlist and exact pins through migration `20260828083000`; no new table, column or service. E1-E3 pins and applied migration files remain immutable. Each cohort still runs and verifies separately.
 
-| Batch | Products | GTINs | Exact raw SHA-256 |
-| --- | ---: | ---: | --- |
-| E4 v1 | 20 | 21 | `6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436` |
-| E5 v1 | 19 | 20 | `8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136` |
-| E6 v1 | 19 | 19 | `92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903` |
-| E7 v1 | 15 | 15 | `c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e` |
+| Batch | Products | GTINs | Exact raw SHA-256                                                  |
+| ----- | -------: | ----: | ------------------------------------------------------------------ |
+| E4 v1 |       20 |    21 | `6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436` |
+| E5 v1 |       19 |    20 | `8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136` |
+| E6 v1 |       19 |    19 | `92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903` |
+| E7 v1 |       15 |    15 | `c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e` |
 
 Fresh canonical brand joins resolve legacy strings through existing IDs: OLAPLEX (`1fbf8e21-0988-48c1-b6a0-493f575b44f0`), Garnier (`e4b57913-ff70-4e94-a83f-41445d0d7a2e`), It's a 10 (`fab97ff7-38b9-40bc-bb90-5a48bd3b8ed6`), Hask, Isana and Alverde. The executable compare-and-set retains the actual current product.brand, not the canonical label; no database rename or new identity row.
 
@@ -107,10 +107,10 @@ E4-E7 applied 08:43:05Z–08:43:38Z against clean reviewed head `e4b1dbd1abbe645
 
 All 53 older source/identity holds received a fresh source pass: 26 now have direct package/barcode evidence; 27 remain held. Durable evidence: `existing-catalog-gtin-research-refresh-2026-08-28.json`, SHA `4c3851c8fc9566b77ad869113f89da41b72e6e7113e8a3b0bda1f6bf2a72c1bc`. Each ID is accounted for once. This is still the existing product catalog, including masks and oils, not the parked new-product expansion.
 
-| Batch | Products | GTINs | Exact raw SHA-256 |
-| --- | ---: | ---: | --- |
-| E8 v1 | 20 | 20 | `d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602` |
-| E9 v1 | 6 | 6 | `69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6` |
+| Batch | Products | GTINs | Exact raw SHA-256                                                  |
+| ----- | -------: | ----: | ------------------------------------------------------------------ |
+| E8 v1 |       20 |    20 | `d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602` |
+| E9 v1 |        6 |     6 | `69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6` |
 
 All 26 were strict-ready in the 08:29:40Z live inventory. At 08:41:23Z: zero existing GTIN owners or unresolved-submission overlaps. The full-catalog physical-identity comparison flags only distinct formats or variants (Sante/Syoss mask vs conditioner; Pomélo 100-ml mask vs 200-ml conditioner; HASK 18-ml oil vs shampoo/conditioner/sachet; Papaya vs Aloe Hair Food). The active OGX Argan conditioner has an explicitly discontinued legacy duplicate without the proposed GTIN; do not attach anything to that old row. No new physical-owner choice is required for these 26.
 
@@ -186,3 +186,9 @@ The exact 2-product / 3-GTIN manifest fingerprint is `82841d4d5d7438f6eb029c8f54
 The post-apply readiness export reports **222/259 barcode-linked (85.7%)** and **210/259 strict scan-result-ready (81.1%)**. The 37 unlinked rows split into 17 otherwise-ready and 20 blocked under the corrected scanner-readiness oracle.
 
 Separately, commit `5e9b6cdc` corrected the readiness bootstrap for treatment-only anti-dandruff Shampoos: it now derives `shampoo_dandruff` from the complete stored scalp-route observations instead of manufacturing an inapplicable `shampoo_everyday` requirement. Live data plus the corrected local oracle moved all eight affected rows from blocked to GTIN-research-ready. Research found 12 collision-free exact package GTINs across those eight products; they remain unapplied pending their own frozen manifest, migration, clean-head preflight and verification. This code correction is committed locally but not pushed, merged or application-deployed.
+
+## E16 prepared research — September 1
+
+Fresh manufacturer, dm and Rossmann package research resolved 12 checksum-valid GTINs across the eight existing anti-dandruff Shampoo rows: Balea Med 250 ml current/legacy (`4066447972528`, `4066447785425`), Guhl 250 ml (`4072600282205`), Head & Shoulders Sensitive 250 ml (`8006530222037`), Head & Shoulders DERMAXPRO 250 ml (`8700216328661`), Pantene 250/500 ml (`8700216558037`, `8700216558730`), Salthouse 250 ml (`4008890006429`), Schauma 400 ml current/legacy (`4015100890730`, `4015100864977`) and Sebamed 200/400 ml (`4103040051691`, `4103040051714`). Fresh live reads found no current canonical owner, unresolved-submission overlap or disposition for any selected code/product. Head & Shoulders Sensitive 500 ml `8700216517669` is deliberately excluded because its formula differs materially from the analyzed 250 ml product.
+
+The frozen E16 artifact is `phase1-existing-identifier-backfill-e16-v1.json`, exact shape 8 products / 12 GTINs. Its item-level source URLs and package notes are the executable evidence record; this receipt is the durable research/accounting reference. E16 is not yet applied at this point in the receipt.

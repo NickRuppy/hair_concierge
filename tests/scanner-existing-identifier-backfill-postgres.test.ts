@@ -33,7 +33,8 @@ function makeManifest(
     | "E12"
     | "E13"
     | "E14"
-    | "E15",
+    | "E15"
+    | "E16",
 ) {
   const shape = {
     E1: [20, 21, "1", 31],
@@ -51,6 +52,7 @@ function makeManifest(
     E13: [5, 6, "d", 151],
     E14: [1, 1, "e", 161],
     E15: [2, 3, "f", 171],
+    E16: [8, 12, "a", 181],
   } as const
   const [productCount, gtinCount, batchDigit, prefix] = shape[batch]
   const items = Array.from({ length: productCount }, (_, index) => {
@@ -455,6 +457,10 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     "supabase/migrations/20260901114638_scanner_existing_identifier_backfill_e15.sql",
     "utf8",
   )
+  let e16Executor = await readFile(
+    "supabase/migrations/20260901120358_scanner_existing_identifier_backfill_e16.sql",
+    "utf8",
+  )
   for (const batch of [
     "E1",
     "E2",
@@ -471,6 +477,7 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     "E13",
     "E14",
     "E15",
+    "E16",
   ] as const) {
     const pins = {
       E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
@@ -488,10 +495,13 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       E13: "2efe9cf73fd0294298daaad125f95cf9c387bb2fabe88ad90efade5ca1f9afe4",
       E14: "bc6a9751dffbd28508e47d37ef9c340591e6cb233aee8eab5081e2f015a94c34",
       E15: "82841d4d5d7438f6eb029c8f542a708a3c4ee6d22c0583643f4b246c6dad1175",
+      E16: "ccead11317e181fedaad572ebf14d33b6300c7bd9c85eaae76bc8b2bef2a54c0",
     }
     e15Executor = e15Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+    e16Executor = e16Executor.replace(pins[batch], makeManifest(batch).fingerprint)
   }
   await pg.exec(e15Executor)
+  await pg.exec(e16Executor)
   return pg
 }
 
@@ -703,9 +713,9 @@ test("E4-E7 each apply and replay exactly while rejecting a wrong pin", async (t
   }
 })
 
-test("E8-E15 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
-  const manifests = (["E8", "E9", "E10", "E11", "E12", "E13", "E14", "E15"] as const).map((batch) =>
-    makeManifest(batch),
+test("E8-E16 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
+  const manifests = (["E8", "E9", "E10", "E11", "E12", "E13", "E14", "E15", "E16"] as const).map(
+    (batch) => makeManifest(batch),
   )
   const pg = await database(manifests)
   t.after(async () => pg.close())
@@ -743,12 +753,12 @@ test("E8-E15 each apply and replay exactly while rejecting wrong fingerprints an
   }
 })
 
-test("E15 executor rejects an unknown future batch before it can inherit E15 configuration", async (t) => {
+test("E16 executor rejects an unknown future batch before it can inherit E16 configuration", async (t) => {
   const e10 = makeManifest("E10")
   const pg = await database([e10])
   t.after(async () => pg.close())
   const unknown = JSON.parse(e10.raw)
-  unknown.batch = "E16"
+  unknown.batch = "E17"
   const unknownRaw = JSON.stringify(unknown)
 
   await assert.rejects(
@@ -826,6 +836,32 @@ test("E15 rejects an unresolved submitted GTIN and rolls the full wave back", as
     [e15.items[1]?.identifiers[0]?.value],
   )
   await assert.rejects(() => apply(pg, e15), /open submission.*overlap/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("E16 quarantines and blocks unresolved submitted GTINs atomically", async (t) => {
+  const e16 = makeManifest("E16")
+  const pg = await database([e16])
+  t.after(async () => pg.close())
+  await pg.query(
+    `INSERT INTO public.personal_plan_product_search_dispositions (product_id) VALUES ($1)`,
+    [e16.items[0]?.product_id],
+  )
+  await assert.rejects(() => apply(pg, e16), /E16 product is not scan-result-ready/i)
+  await pg.exec(`DELETE FROM public.personal_plan_product_search_dispositions`)
+  await pg.query(
+    `INSERT INTO public.product_submissions
+      (status, scanned_identifier_type, scanned_identifier_value)
+     VALUES ('researching', 'ean', $1)`,
+    [e16.items[0]?.identifiers[0]?.value],
+  )
+  await assert.rejects(() => apply(pg, e16), /open submission.*overlap/i)
   const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
     SELECT
       (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
