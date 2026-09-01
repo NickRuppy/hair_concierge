@@ -75,10 +75,19 @@ function declaredRoles(values: ReadonlyArray<string | null> | null | undefined):
  */
 export function scanReadinessRoles(facts: Stage3CategoryProductFacts): PlanProductRole[] {
   switch (facts.category) {
-    case "shampoo":
-      return facts.spec.shampooBucket === "schuppen"
-        ? ["shampoo_everyday", "shampoo_dandruff"]
-        : ["shampoo_everyday"]
+    case "shampoo": {
+      // Scanner readiness starts by loading the everyday target. Read the complete observed
+      // scalp-route coverage when it is available, so that bootstrap load can discover a
+      // dandruff-only product without inferring everyday coverage from `schuppen` alone.
+      const supportedRoutes = facts.comparisonObservations?.supportedScalpRoutes
+      if (supportedRoutes?.length) {
+        const roles: PlanProductRole[] = []
+        if (supportedRoutes.some((route) => route !== "dandruff")) roles.push("shampoo_everyday")
+        if (supportedRoutes.includes("dandruff")) roles.push("shampoo_dandruff")
+        return roles
+      }
+      return facts.spec.shampooBucket === "schuppen" ? ["shampoo_dandruff"] : ["shampoo_everyday"]
+    }
     case "conditioner":
       return ["conditioner_rinse_out"]
     case "mask":

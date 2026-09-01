@@ -7,6 +7,75 @@ import {
   fingerprint,
   selectActiveSupportedProducts,
 } from "../scripts/scanner-catalog-coverage/readiness-export"
+import { evaluateScanCatalogReadiness, scanReadinessRoles } from "../src/lib/scan/catalog-readiness"
+import type { Stage3ShampooFacts } from "../src/lib/personal-plan/products/authority/contracts"
+
+function shampooFacts(
+  shampooBucket: string | null,
+  overrides: Partial<Stage3ShampooFacts> = {},
+): Stage3ShampooFacts {
+  return {
+    productId: "shampoo-product",
+    displayName: "Test Shampoo",
+    category: "shampoo",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: ["fine", "normal", "coarse"],
+    knownReaction: false,
+    protocols: [],
+    factFingerprint: "test-shampoo-fingerprint",
+    ...overrides,
+    spec: {
+      thickness: "normal",
+      shampooBucket,
+      scalpRoute: shampooBucket === "schuppen" ? "dandruff" : "balanced",
+      cleansingIntensity: "regular",
+      targetFit: "matched",
+      ...overrides.spec,
+    },
+  }
+}
+
+test("scanner readiness derives shampoo roles from the applicable reviewed bucket", () => {
+  assert.deepEqual(scanReadinessRoles(shampooFacts("normal")), ["shampoo_everyday"])
+  assert.deepEqual(scanReadinessRoles(shampooFacts("schuppen")), ["shampoo_dandruff"])
+})
+
+test("scanner readiness discovers a dandruff-only product through its live authority load", async () => {
+  const result = await evaluateScanCatalogReadiness({
+    category: "shampoo",
+    productId: "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+    loadFacts: async (_category, _productId, selection) =>
+      shampooFacts(selection.role === "shampoo_dandruff" ? "schuppen" : null, {
+        comparisonObservations: {
+          cleansingIntensity: "regular",
+          supportedScalpRoutes: ["dandruff"],
+        },
+        protocols: [
+          { role: "shampoo_everyday", status: "missing", fingerprint: null },
+          {
+            role: "shampoo_dandruff",
+            status: "verified_complete",
+            fingerprint: "dandruff-protocol",
+          },
+        ],
+        spec: {
+          thickness: "normal",
+          shampooBucket: selection.role === "shampoo_dandruff" ? "schuppen" : null,
+          scalpRoute: selection.role === "shampoo_dandruff" ? "dandruff" : null,
+          cleansingIntensity: selection.role === "shampoo_dandruff" ? "regular" : null,
+          targetFit: selection.role === "shampoo_dandruff" ? "matched" : "known_mismatch",
+        },
+      }),
+  })
+
+  assert.equal(result.protocolsComplete, true)
+  assert.deepEqual(
+    [...new Set(result.verdicts.map((verdict) => verdict.role))],
+    ["shampoo_dandruff"],
+  )
+})
 
 test("readiness classification is deterministic and only admits complete non-unknown candidates", () => {
   const ready = classifyCandidate({
