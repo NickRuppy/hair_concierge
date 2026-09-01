@@ -67,7 +67,11 @@ import type {
   Stage3SelectedComparisonCandidate,
 } from "../src/lib/personal-plan/products/fit-comparison"
 import type { Stage3AnalyticsPort } from "../src/lib/personal-plan/products/stage3-analytics"
-import { createStage3Draft } from "../src/lib/personal-plan/products/state-machine"
+import {
+  addCapturedProduct,
+  createStage3Draft,
+  finalizeStage3CaptureWithoutInventoryAuthority,
+} from "../src/lib/personal-plan/products/state-machine"
 
 type ClientStateHarness = {
   render: () => Promise<ReactElement | null>
@@ -1520,6 +1524,32 @@ test("inventory-only products render acknowledgement-only and never enter fit co
   )
   assert.doesNotMatch(dispositionHtml, /Alternative|Ersatz|übernehmen/)
 
+  const heatDispositionHtml = renderToStaticMarkup(
+    <Stage3InventoryDispositionReview
+      disposition={{
+        ...disposition.props.disposition,
+        dispositionKey: "inventory:heat_protectant:heat-owned",
+        capturedProductId: "heat-owned",
+        category: "heat_protectant",
+        reason: "category_not_in_final_plan",
+      }}
+      product={{
+        ...disposition.props.product,
+        capturedProductId: "heat-owned",
+        identity: {
+          kind: "catalog_product",
+          productId: "heat-product",
+          displayName: "Hitzeschutz Spray",
+          category: "heat_protectant",
+        },
+      }}
+      onAcknowledge={() => {}}
+    />,
+  )
+  assert.match(heatDispositionHtml, /Kein separater Hitzeschutz nötig/)
+  assert.match(heatDispositionHtml, /Du kannst dieses Produkt weglassen/)
+  assert.doesNotMatch(heatDispositionHtml, /Nicht in deiner Routine/)
+
   const unassignedRoleHtml = renderToStaticMarkup(
     <Stage3InventoryDispositionReview
       disposition={{
@@ -1539,6 +1569,116 @@ test("inventory-only products render acknowledgement-only and never enter fit co
   assert.deepEqual(acknowledgements, [dispositionKey])
   assert.equal(findByType(tree, Stage3InventoryDispositionReview), null)
   assert.equal(completeCalls, 1)
+})
+
+test("deferred owned heat protection asks for habits instead of creating a skip verdict", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "heat_protectant",
+      requiredRoles: [],
+      needSummary: "Vorhandenen Hitzeschutz erfassen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+    },
+  ]
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: "refined-deferred-heat-ui",
+    refinedInputHash: "a".repeat(64),
+    categoryDecisions: [
+      {
+        category: "heat_protectant",
+        resolution: "deferred_until_post_plan_onboarding",
+        needTier: null,
+        roles: [],
+        target: {
+          category: "heat_protectant",
+          roles: [],
+          qualifyingRoutes: [],
+          carrierPolicy: "integrated_or_separate_verified_binary_capability",
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: ["heat_tool_use"],
+      },
+    ],
+    coverage: [],
+    orderedCategories: ["heat_protectant"],
+    inventoryOnlyCategories: ["heat_protectant"],
+    authorityVersions: Object.fromEntries(
+      Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+        category,
+        policy.authorityVersion,
+      ]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1,
+      scalpOiliness: "balanced",
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x",
+      oilPurposes: [],
+      ownedCategories: ["heat_protectant"],
+    },
+  }
+  let draft = createStage3Draft({
+    draftId: "draft-deferred-heat-ui",
+    userId: "user-deferred-heat-ui",
+    personalPlanId: "plan-deferred-heat-ui",
+    refinedVersionId: "refined-deferred-heat-ui",
+    requirements,
+    authoritySnapshot,
+    now: "2026-08-31T00:00:00.000Z",
+  })
+  draft = addCapturedProduct(draft, {
+    capturedProductId: "heat-owned-ui",
+    userProductId: "user-product-heat-owned-ui",
+    identity: {
+      kind: "catalog_product",
+      productId: "catalog-heat-owned-ui",
+      displayName: "Hitzeschutz Spray",
+      category: "heat_protectant",
+    },
+    frequencyRange: "weekly_2x",
+    ownership: "owned",
+    source: "existing_inventory",
+  })
+  draft = finalizeStage3CaptureWithoutInventoryAuthority(draft)
+  let completeCalls = 0
+  const gateway = {
+    ...createAuthorityTestGateway(),
+    complete: async () => {
+      completeCalls += 1
+      return { status: "not_ready" as const, draft }
+    },
+  }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: draft.personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [
+        { category: "heat_protectant", allowsMultiple: true, allowsExplicitNone: true },
+      ],
+      authoritySnapshot,
+    },
+    draft,
+    requirements,
+    authorityEvaluations: [],
+  }
+
+  const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
+  const tree = await renderSettled(harness)
+  const html = renderToStaticMarkup(tree)
+
+  assert.match(html, /Hitzeschutz noch offen/)
+  assert.match(html, /Bevor wir ihn einplanen oder weglassen/)
+  assert.match(html, /href="\/plan-start\?refine=habits"/)
+  assert.match(html, /Hitze-Nutzung klären/)
+  assert.doesNotMatch(html, /Nicht in deiner Routine|Kein separater Hitzeschutz nötig/)
+  assert.equal(completeCalls, 0)
 })
 
 test("an unconfirmed inventory acknowledgement auto-reconciles from its durable entry", async () => {

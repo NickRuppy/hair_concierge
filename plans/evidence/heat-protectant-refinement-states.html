@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hitzeschutz im Produkt-Check – Zustände</title>
+    <style>
+      :root {
+        --ink: #2e1743;
+        --muted: #6f6a6e;
+        --line: #ded8df;
+        --paper: #fbfaf8;
+        --card: #ffffff;
+        --lavender: #eee7f4;
+        --purple: #7249a5;
+        --coral: #d85c6d;
+        --soft-coral: #fae9eb;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #f3f0ed;
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      main { width: 1440px; margin: 0 auto; padding: 48px 42px 62px; }
+      .intro { max-width: 910px; margin: 0 auto 32px; text-align: center; }
+      .eyebrow { color: var(--purple); font-size: 14px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+      h1 { margin: 10px 0 8px; font-family: Georgia, serif; font-size: 36px; font-weight: 500; }
+      .intro p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.5; }
+      .phones { display: grid; grid-template-columns: repeat(3, 390px); justify-content: center; gap: 44px; }
+      .state-label { margin: 0 0 12px 2px; color: var(--purple); font-size: 14px; font-weight: 800; }
+      .phone {
+        position: relative;
+        height: 760px;
+        overflow: hidden;
+        border: 1px solid #d7d1d8;
+        border-radius: 34px;
+        background: var(--paper);
+        box-shadow: 0 18px 45px rgba(44, 27, 48, .12);
+      }
+      .status { display: flex; justify-content: space-between; padding: 16px 24px 8px; color: #111; font-weight: 700; }
+      .journey { padding: 8px 22px 14px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.72); }
+      .brand { text-align: center; font-family: Georgia, serif; font-size: 24px; }
+      .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 12px; color: #6f696c; font-size: 10px; text-align: center; }
+      .steps span::before { content: ""; display: block; height: 5px; margin-bottom: 7px; border-radius: 5px; background: #ddd8dd; }
+      .steps .done::before, .steps .active::before { background: var(--purple); }
+      .steps .active { color: var(--ink); font-weight: 800; }
+      .content { padding: 26px 24px 112px; }
+      .kicker { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 650; text-align: right; }
+      h2 { margin: 0; font-family: Georgia, serif; font-size: 34px; line-height: 1.08; font-weight: 500; }
+      .lede { margin: 14px 0 20px; color: var(--muted); font-size: 16px; line-height: 1.48; }
+      .notice { margin: 0 0 18px; padding: 13px 15px; border-radius: 15px; background: var(--soft-coral); color: #9a3e4b; font-size: 14px; line-height: 1.42; }
+      .product { display: flex; gap: 16px; align-items: center; padding: 18px; border: 1px solid var(--line); border-radius: 21px; background: var(--card); }
+      .bottle { width: 64px; height: 88px; flex: 0 0 64px; border-radius: 18px 18px 13px 13px; background: linear-gradient(155deg, #402356, #9b70b4); position: relative; }
+      .bottle::before { content: ""; position: absolute; width: 24px; height: 10px; left: 20px; top: -7px; border-radius: 4px 4px 0 0; background: #23122e; }
+      .category { margin: 0 0 5px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      .name { margin: 0; font-size: 17px; font-weight: 750; line-height: 1.25; }
+      .meta { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+      .sticky { position: absolute; inset: auto 0 0; padding: 14px 22px 22px; background: linear-gradient(transparent, var(--paper) 16%, var(--paper)); }
+      .button { display: block; width: 100%; border: 0; border-radius: 999px; padding: 17px; background: var(--coral); color: white; font-size: 17px; font-weight: 800; text-align: center; }
+      .routine-title { margin-top: 8px; }
+      .routine-row { margin-top: 24px; padding: 18px; border-radius: 22px; background: var(--lavender); }
+      .routine-row strong { display: block; font-family: Georgia, serif; font-size: 22px; font-weight: 500; }
+      .routine-row span { display: block; margin-top: 6px; color: var(--muted); font-size: 14px; }
+      .accordion { margin-top: 22px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+      .accordion-title { display: flex; justify-content: space-between; padding: 17px 2px; font-weight: 750; }
+      .reason-card { margin-bottom: 18px; padding: 16px; border-radius: 17px; background: white; border: 1px solid var(--line); }
+      .reason-card strong { font-size: 15px; }
+      .reason-card p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+      .annotation { margin: 14px 4px 0; color: #5c5559; font-size: 13px; line-height: 1.42; }
+      .annotation b { color: var(--purple); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="intro">
+        <div class="eyebrow">Planungsevidence · 31.08.2026</div>
+        <h1>Hitzeschutz: erst klären, dann einplanen oder weglassen</h1>
+        <p>Vorgeschlagene Zustände in der bestehenden mobilen Produkt- und Routine-Hierarchie. Der Routine-Headline bleibt unverändert.</p>
+      </div>
+      <div class="phones">
+        <section>
+          <p class="state-label">A · Hitzenutzung noch nicht bestätigt</p>
+          <div class="phone">
+            <div class="status"><span>17:38</span><span>● ● 36%</span></div>
+            <div class="journey">
+              <div class="brand">chaarlie</div>
+              <div class="steps"><span class="done">Plan</span><span class="done">Feinschliff</span><span class="active">Produkte</span><span>Routine</span><span>Anwendung</span></div>
+            </div>
+            <div class="content">
+              <p class="kicker">Produkte prüfen</p>
+              <h2>Hitzeschutz noch offen</h2>
+              <p class="lede">Du nutzt bereits einen Hitzeschutz. Bevor wir ihn einplanen oder weglassen, prüfen wir kurz, wie du Hitze beim Styling verwendest.</p>
+              <div class="notice">Deine bisherigen Hitze-Angaben sind noch nicht von dir bestätigt.</div>
+              <div class="product">
+                <div class="bottle"></div>
+                <div><p class="category">Hitzeschutz</p><p class="name">Dein erfasstes Produkt</p><p class="meta">Bleibt unter „Meine Produkte“ gespeichert</p></div>
+              </div>
+            </div>
+            <div class="sticky"><div class="button">Hitze-Nutzung klären</div></div>
+          </div>
+          <p class="annotation"><b>Entscheidung:</b> Kein „nicht verwendet“-Urteil. Der CTA öffnet den bestehenden Feinschliff „Gewohnheiten“.</p>
+        </section>
+
+        <section>
+          <p class="state-label">B · Keine qualifizierende Hitze bestätigt</p>
+          <div class="phone">
+            <div class="status"><span>17:42</span><span>● ● 35%</span></div>
+            <div class="journey">
+              <div class="brand">chaarlie</div>
+              <div class="steps"><span class="done">Plan</span><span class="done">Feinschliff</span><span class="active">Produkte</span><span>Routine</span><span>Anwendung</span></div>
+            </div>
+            <div class="content">
+              <p class="kicker">Produkte prüfen</p>
+              <h2>Kein separater Hitzeschutz nötig</h2>
+              <p class="lede">Für deine angegebene Routine brauchst du keinen separaten Hitzeschutz. Du kannst dieses Produkt weglassen.</p>
+              <div class="product">
+                <div class="bottle"></div>
+                <div><p class="category">Hitzeschutz</p><p class="name">Dein erfasstes Produkt</p><p class="meta">Nicht in der Routine eingeplant</p></div>
+              </div>
+            </div>
+            <div class="sticky"><div class="button">Weiter</div></div>
+          </div>
+          <p class="annotation"><b>Variante:</b> Bei Glätteisen, Lockenstab oder formender Heißluft wird dieser Zustand nicht gezeigt; dann folgt die normale Produktprüfung.</p>
+        </section>
+
+        <section>
+          <p class="state-label">C · Finale Routine nach bestätigtem Ergebnis</p>
+          <div class="phone">
+            <div class="status"><span>17:44</span><span>● ● 34%</span></div>
+            <div class="journey">
+              <div class="brand">chaarlie</div>
+              <div class="steps"><span class="done">Plan</span><span class="done">Feinschliff</span><span class="done">Produkte</span><span class="active">Routine</span><span>Anwendung</span></div>
+            </div>
+            <div class="content">
+              <p class="kicker">Dein Plan</p>
+              <h2 class="routine-title">Deine Routine</h2>
+              <p class="lede">Alle Schritte, Produkte und Häufigkeiten auf einen Blick.</p>
+              <div class="routine-row"><strong>Waschtag</strong><span>Shampoo · Conditioner · Leave-in</span></div>
+              <div class="accordion">
+                <div class="accordion-title"><span>Nicht eingeplant (1)</span><span>⌃</span></div>
+                <div class="reason-card">
+                  <strong>Kein separater Hitzeschutz nötig</strong>
+                  <p>Für deine angegebene Routine brauchst du dieses Produkt nicht als separaten Hitzeschutz. Es bleibt unter „Meine Produkte“ gespeichert.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="annotation"><b>Headline:</b> „Deine Routine“ bleibt. Die Erklärung sitzt beim betroffenen Produkt; „Nicht eingeplant“ behauptet nicht, dass die Person es aktuell nie verwendet.</p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

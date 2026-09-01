@@ -72,6 +72,7 @@ type ModuleCompletionCall = {
   module: string
   expectedRevision: number
   inputSnapshot: Record<string, unknown>
+  outputSnapshot: Record<string, unknown>
   inputHash: string
 }
 
@@ -181,6 +182,7 @@ function createModuleRefinementDb(seed: {
         module: input.module,
         expectedRevision: input.expectedRevision,
         inputSnapshot: input.inputSnapshot,
+        outputSnapshot: input.outputSnapshot,
         inputHash: input.inputHash,
       })
       // Guard order mirrors the SQL: a moved Stage-1 source invalidates every
@@ -292,6 +294,83 @@ test("module completion projects a new refined version from user answers ∪ ass
   )
   assert.deepEqual(projected.answers.dryingRoutes, ["air_dry"])
   assert.ok(projected.completedQuestionIds.includes("night_protection"))
+})
+
+test("products-first completion keeps assumption-only heat use unresolved", async () => {
+  const db = createModuleRefinementDb({
+    answers: {
+      currentProductCategories: ["heat_protectant"],
+      wetWashFrequency: "daily_1x",
+    },
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const service = createService(db)
+
+  await service.completeModule({ module: "products", expectedRevision: 2 })
+
+  const projected = db.moduleCalls[0]!
+  assert.equal(projected.inputSnapshot.habitsModuleUserComplete, false)
+  const output =
+    projected.outputSnapshot as import("@/lib/personal-plan/types").InitialNeedPlanSnapshot
+  assert.deepEqual(output.profile.routine.heatToolUse, {
+    state: "unknown",
+    reason: "heat_tool_use",
+  })
+  assert.deepEqual(
+    output.decisions.find((decision) => decision.category === "heat_protectant"),
+    {
+      category: "heat_protectant",
+      resolution: "deferred_until_post_plan_onboarding",
+      needTier: null,
+      roles: [],
+      target: {
+        category: "heat_protectant",
+        roles: [],
+        qualifyingRoutes: [],
+        carrierPolicy: "integrated_or_separate_verified_binary_capability",
+      },
+      frequency: null,
+      reasons: [],
+      executionState: "available",
+      executionPauseReason: null,
+      deferredFacts: ["heat_tool_use"],
+    },
+  )
+})
+
+test("products-first completion without owned heat protection preserves non-heat decisions", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const service = createService(db)
+
+  await service.completeModule({ module: "products", expectedRevision: 2 })
+
+  const projected = db.moduleCalls[0]!
+  const projectedInput = projected.inputSnapshot as {
+    answers: PersonalPlanRefinementAnswersV1
+    completedQuestionIds: Stage2QuestionId[]
+  }
+  const legacyProjection = createRefinedNeedSnapshot({
+    baseInitialNeedVersionId: "initial-1",
+    preparedArtifactSourceId: "artifact-1",
+    baseInputSnapshot: COMPLETE_V3_PLAN_ENVELOPE,
+    triggerContext: TRIGGER_CONTEXT,
+    answers: projectedInput.answers,
+    completedQuestionIds: projectedInput.completedQuestionIds,
+    createdAt: "2026-08-25T10:00:00.000Z",
+  })
+  const output =
+    projected.outputSnapshot as import("@/lib/personal-plan/types").InitialNeedPlanSnapshot
+
+  assert.deepEqual(output.profile.routine.heatToolUse, { state: "known", value: [] })
+  assert.deepEqual(output.decisions, legacyProjection.outputSnapshot.decisions)
+  assert.deepEqual(output.coverage, legacyProjection.outputSnapshot.coverage)
 })
 
 test("module completion records the projection lineage and the Modul-1 handoff marker", async () => {

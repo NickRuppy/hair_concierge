@@ -2,6 +2,7 @@ import { allowsMultipleProductsForRole, CATEGORY_ROLE_POLICIES } from "./authori
 import type { InitialNeedPlanSnapshot, PlanProductRole } from "@/lib/personal-plan/types"
 import {
   deriveStage3DecisionSubjects,
+  isStage3InventoryClarificationProduct,
   isExecutableChoice,
   stage3CapturedProductSchema,
   stage3CapturedUncoveredRoleSchema,
@@ -28,6 +29,28 @@ import {
 
 export type Stage3InventoryAuthorityTransitionOptions = {
   baseRefinedSnapshot?: InitialNeedPlanSnapshot
+}
+
+export type Stage3InventoryClarification = {
+  category: "heat_protectant"
+  capturedProductId: string
+  reason: "heat_tool_use_unconfirmed"
+}
+
+export function deriveStage3InventoryClarifications(
+  draft: Stage3ProductDraft,
+): Stage3InventoryClarification[] {
+  return draft.products.flatMap((product) =>
+    isStage3InventoryClarificationProduct(draft, product)
+      ? [
+          {
+            category: "heat_protectant" as const,
+            capturedProductId: product.capturedProductId,
+            reason: "heat_tool_use_unconfirmed" as const,
+          },
+        ]
+      : [],
+  )
 }
 
 function clearProductLoadResolution(draft: Stage3ProductDraft): Stage3ProductDraft {
@@ -155,9 +178,7 @@ function finalRefinedRequirementsForInventoryDispositions(
   )
   const orderedCategories = [
     ...snapshot.orderedCategories,
-    ...draft.orderedCategories.filter(
-      (category) => !snapshot.orderedCategories.includes(category),
-    ),
+    ...draft.orderedCategories.filter((category) => !snapshot.orderedCategories.includes(category)),
   ]
 
   return orderedCategories.map((category) => {
@@ -185,9 +206,18 @@ function deriveInventoryDispositions(
     requirements.map((requirement) => [requirement.category, requirement]),
   )
   const inventoryOnlyCategories = new Set(draft.authoritySnapshot?.inventoryOnlyCategories ?? [])
+  const clarificationProductIds = new Set(
+    deriveStage3InventoryClarifications(draft).map(
+      (clarification) => clarification.capturedProductId,
+    ),
+  )
 
   return draft.products
-    .filter((product) => !assignedProductIds.has(product.capturedProductId))
+    .filter(
+      (product) =>
+        !assignedProductIds.has(product.capturedProductId) &&
+        !clarificationProductIds.has(product.capturedProductId),
+    )
     .map((product) => {
       const requirement = requirementByCategory.get(product.identity.category)
       const categoryNotInFinalPlan =
@@ -228,7 +258,10 @@ type ResolveNeedRevisionInput =
       updatedAt?: string
     }
 
-function requirePendingNeedRevision(draft: Stage3ProductDraft, expectedProposalFingerprint: string) {
+function requirePendingNeedRevision(
+  draft: Stage3ProductDraft,
+  expectedProposalFingerprint: string,
+) {
   const authority = draft.inventoryAuthority
   if (!authority || authority.status !== "pending" || draft.pass !== "need_revision_review") {
     throw new Error("need_revision_review_not_pending")
@@ -597,9 +630,7 @@ export function replaceCategoryRoleAssignments(
     next.orderedCategories.every((candidate) =>
       next.completedCaptureCategories.includes(candidate),
     ) && computeCaptureCompletion(next, requirements).canCompleteCapture
-  return captureComplete
-    ? applyProductLoadResolution(next, options)
-    : next
+  return captureComplete ? applyProductLoadResolution(next, options) : next
 }
 
 export function markRoleUncovered(
@@ -938,7 +969,10 @@ function hasDecisionForRole(
   )
 }
 
-function isDecisionSubjectResolved(draft: Stage3ProductDraft, subject: ReturnType<typeof deriveStage3DecisionSubjects>[number]): boolean {
+function isDecisionSubjectResolved(
+  draft: Stage3ProductDraft,
+  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+): boolean {
   if (subject.subjectKind === "inventory_disposition") {
     return Boolean(
       (draft.inventoryDispositions ?? []).find(
@@ -958,8 +992,7 @@ function areAllDecisionSubjectsComplete(
     (subject) => subject.category === category,
   )
   return (
-    subjects.length > 0 &&
-    subjects.every((subject) => isDecisionSubjectResolved(draft, subject))
+    subjects.length > 0 && subjects.every((subject) => isDecisionSubjectResolved(draft, subject))
   )
 }
 
@@ -1088,10 +1121,7 @@ export function computeStage3PathState(
     }
   }
 
-  if (
-    draft.pass === "need_revision_review" ||
-    draft.inventoryAuthority?.status === "pending"
-  ) {
+  if (draft.pass === "need_revision_review" || draft.inventoryAuthority?.status === "pending") {
     return {
       pass: "need_revision_review",
       orderedStepKeys: [...orderedStepKeys, "need_revision_review"],
@@ -1113,10 +1143,17 @@ export function computeStage3PathState(
   }
 
   const subjects = deriveStage3DecisionSubjects(draft)
+  const inventoryClarifications = deriveStage3InventoryClarifications(draft)
   const requirementKeys = new Set(requirements.map((requirement) => requirement.category))
-  const decisionStepKeys = subjects
-    .filter((subject) => requirementKeys.has(subject.category))
-    .map((subject) => subject.decisionKey)
+  const clarificationStepKeys = inventoryClarifications.map(
+    (clarification) => `clarification:${clarification.category}:${clarification.capturedProductId}`,
+  )
+  const decisionStepKeys = [
+    ...clarificationStepKeys,
+    ...subjects
+      .filter((subject) => requirementKeys.has(subject.category))
+      .map((subject) => subject.decisionKey),
+  ]
   const completedDecisionStepKeys = decisionStepKeys.filter((stepKey) =>
     subjects.some(
       (subject) => subject.decisionKey === stepKey && isDecisionSubjectResolved(draft, subject),
@@ -1124,6 +1161,15 @@ export function computeStage3PathState(
   )
   const firstUnresolvedDecisionStepKey =
     decisionStepKeys.find((stepKey) => !completedDecisionStepKeys.includes(stepKey)) ?? null
+
+  for (const clarification of inventoryClarifications) {
+    blockingReasons.push({
+      code: "inventory_clarification_required",
+      category: clarification.category,
+      role: null,
+      message: "Heat-protection inventory requires confirmed heat-use facts.",
+    })
+  }
 
   for (const requirement of requirements) {
     for (const role of requirement.requiredRoles) {
@@ -1166,7 +1212,9 @@ export function computeStage3PathState(
     captureCompletion.canCompleteCapture &&
     firstUnresolvedDecisionStepKey === null &&
     !blockingReasons.some(
-      (reason) => reason.code === "inventory_disposition_unacknowledged",
+      (reason) =>
+        reason.code === "inventory_disposition_unacknowledged" ||
+        reason.code === "inventory_clarification_required",
     ) &&
     draft.decisions.every(
       (decision) =>

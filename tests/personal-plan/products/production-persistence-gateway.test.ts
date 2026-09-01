@@ -1021,7 +1021,7 @@ test("catalog search consistently preserves the derived Shampoo target route", a
   assert.equal(received[0]?.assessmentContext.shampooTargets[0]?.scalpRoute, "irritated")
 })
 
-test("catalog search permits every signed inventory-only category without a refined category decision", async () => {
+test("catalog search permits signed inventory-only categories while heat retains its refined decision", async () => {
   for (const category of PERSONAL_PLAN_PRODUCT_CATEGORIES) {
     const requirement: Stage3CategoryRequirement = {
       category,
@@ -1036,7 +1036,28 @@ test("catalog search permits every signed inventory-only category without a refi
       orderedCategories: [category],
       authoritySnapshot: {
         ...base.authoritySnapshot!,
-        categoryDecisions: [],
+        categoryDecisions:
+          category === "heat_protectant"
+            ? [
+                {
+                  category: "heat_protectant",
+                  resolution: "deferred_until_post_plan_onboarding",
+                  needTier: null,
+                  roles: [],
+                  target: {
+                    category: "heat_protectant",
+                    roles: [],
+                    qualifyingRoutes: [],
+                    carrierPolicy: "integrated_or_separate_verified_binary_capability",
+                  },
+                  frequency: null,
+                  reasons: [],
+                  executionState: "available",
+                  executionPauseReason: null,
+                  deferredFacts: ["heat_tool_use"],
+                },
+              ]
+            : [],
         orderedCategories: [category],
         inventoryOnlyCategories: [category],
       },

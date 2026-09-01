@@ -104,11 +104,18 @@ export function authoritySnapshotMayNeedVersionRefresh(
   for (const decision of snapshot.categoryDecisions as unknown[]) {
     if (!isValidPersistedCategoryDecision(decision)) return false
     const category = (decision as { category: PersonalPlanCategory }).category
-    if (!ordered.has(category) || inventoryOnly.has(category)) return false
+    if (!ordered.has(category) || (inventoryOnly.has(category) && category !== "heat_protectant")) {
+      return false
+    }
     decisionCounts.set(category, (decisionCounts.get(category) ?? 0) + 1)
   }
   for (const category of snapshot.orderedCategories) {
-    if (!inventoryOnly.has(category) && decisionCounts.get(category) !== 1) return false
+    if (inventoryOnly.has(category)) {
+      if (category === "heat_protectant" && decisionCounts.get(category) !== 1) return false
+      if (category !== "heat_protectant" && decisionCounts.has(category)) return false
+      continue
+    }
+    if (decisionCounts.get(category) !== 1) return false
   }
   if ([...decisionCounts.values()].some((count) => count !== 1)) return false
 
@@ -176,12 +183,24 @@ export function requireCurrentAuthoritySnapshot(
   const appendedOverlayCategories = new Set(appendedOverlayOrder)
   const inventoryOnlyCategories = new Set(snapshot.inventoryOnlyCategories ?? [])
   for (const category of draft.orderedCategories) {
-    if (appendedOverlayCategories.has(category) || inventoryOnlyCategories.has(category)) {
+    if (appendedOverlayCategories.has(category)) {
       continue
     }
     const decisions = snapshot.categoryDecisions.filter(
       (decision) => decision.category === category,
     )
+    if (inventoryOnlyCategories.has(category)) {
+      if (
+        category === "heat_protectant" &&
+        (decisions.length !== 1 || !isValidPersistedCategoryDecision(decisions[0]))
+      ) {
+        throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+      }
+      if (category !== "heat_protectant" && decisions.length !== 0) {
+        throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+      }
+      continue
+    }
     if (
       decisions.length !== 1 ||
       snapshot.authorityVersions[category] !== CATEGORY_ROLE_POLICIES[category].authorityVersion ||

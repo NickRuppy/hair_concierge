@@ -235,7 +235,7 @@ export function RoutinePage({
           (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
             <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">
               <summary className="cursor-pointer text-sm font-semibold text-[var(--brand-plum-darkest)]">
-                Nicht verwendete Produkte (
+                Nicht eingeplant (
                 {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) +
                   (portfolioPresentation?.retainedInventoryProducts?.length ?? 0)}
                 )
@@ -244,13 +244,26 @@ export function RoutinePage({
                 {portfolioPresentation?.retainedOwnedProducts.map((product) => (
                   <li key={product.capturedProductId}>
                     {product.displayName} · {routineCategoryLabel(product.category)} · Nicht
-                    verwendet
+                    eingeplant
                   </li>
                 ))}
                 {portfolioPresentation?.retainedInventoryProducts?.map((product) => (
                   <li key={product.capturedProductId}>
-                    {product.displayName} · {routineCategoryLabel(product.category)} · Nicht
-                    verwendet
+                    <span>
+                      {product.displayName} · {routineCategoryLabel(product.category)}
+                    </span>
+                    {product.category === "heat_protectant" &&
+                    product.reason === "category_not_in_final_plan" ? (
+                      <span className="mt-1 block">
+                        <strong className="font-semibold text-[var(--brand-plum-darkest)]">
+                          Kein separater Hitzeschutz nötig.
+                        </strong>{" "}
+                        Für deine angegebene Routine brauchst du dieses Produkt nicht als separaten
+                        Hitzeschutz. Es bleibt unter „Meine Produkte“ gespeichert.
+                      </span>
+                    ) : (
+                      <span> · Nicht eingeplant</span>
+                    )}
                   </li>
                 ))}
               </ul>

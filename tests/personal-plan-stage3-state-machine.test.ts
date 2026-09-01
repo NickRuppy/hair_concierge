@@ -691,6 +691,179 @@ test("no-change inventory dispositions distinguish in-plan extras from inventory
   )
 })
 
+test("deferred owned heat protection blocks completion without creating a not-used disposition", () => {
+  const heatRequirement: Stage3CategoryRequirement = {
+    category: "heat_protectant",
+    requiredRoles: [],
+    needSummary: "Vorhandenen Hitzeschutz erfassen",
+    authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+  }
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: "refined-deferred-heat",
+    refinedInputHash: "a".repeat(64),
+    categoryDecisions: [
+      {
+        category: "heat_protectant",
+        resolution: "deferred_until_post_plan_onboarding",
+        needTier: null,
+        roles: [],
+        target: {
+          category: "heat_protectant",
+          roles: [],
+          qualifyingRoutes: [],
+          carrierPolicy: "integrated_or_separate_verified_binary_capability",
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: ["heat_tool_use"],
+      },
+    ],
+    coverage: [],
+    orderedCategories: ["heat_protectant"],
+    inventoryOnlyCategories: ["heat_protectant"],
+    authorityVersions: Object.fromEntries(
+      Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+        category,
+        policy.authorityVersion,
+      ]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1,
+      scalpOiliness: "balanced",
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x",
+      oilPurposes: [],
+      ownedCategories: ["heat_protectant"],
+    },
+  }
+  let draft = createStage3Draft({
+    draftId: "draft-deferred-heat",
+    userId: "user-deferred-heat",
+    personalPlanId: "plan-deferred-heat",
+    refinedVersionId: "refined-deferred-heat",
+    requirements: [heatRequirement],
+    authoritySnapshot,
+    now,
+  })
+  draft = addCapturedProduct(draft, {
+    capturedProductId: "heat-owned",
+    userProductId: "user-product-heat-owned",
+    identity: {
+      kind: "catalog_product",
+      productId: "catalog-heat-owned",
+      displayName: "Hitzeschutz Spray",
+      category: "heat_protectant",
+    },
+    frequencyRange: "weekly_2x",
+    ownership: "owned",
+    source: "existing_inventory",
+  })
+
+  const finalized = finalizeStage3CaptureWithoutInventoryAuthority(draft)
+  const path = computeStage3PathState(finalized, [heatRequirement])
+
+  assert.deepEqual(finalized.inventoryDispositions, [])
+  assert.equal(path.canCreatePortfolio, false)
+  assert.ok(
+    path.blockingReasons.some((reason) => reason.code === "inventory_clarification_required"),
+  )
+})
+
+test("a newer confirmed no-heat authority replaces clarification with the normal not-used result", () => {
+  const heatRequirement: Stage3CategoryRequirement = {
+    category: "heat_protectant",
+    requiredRoles: [],
+    needSummary: "Vorhandenen Hitzeschutz erfassen",
+    authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+  }
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: "refined-confirmed-no-heat",
+    refinedInputHash: "b".repeat(64),
+    categoryDecisions: [
+      {
+        category: "heat_protectant",
+        resolution: "resolved",
+        needTier: "not_needed",
+        roles: [],
+        target: {
+          category: "heat_protectant",
+          roles: [],
+          qualifyingRoutes: [],
+          carrierPolicy: "integrated_or_separate_verified_binary_capability",
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: [],
+      },
+    ],
+    coverage: [],
+    orderedCategories: ["heat_protectant"],
+    inventoryOnlyCategories: ["heat_protectant"],
+    authorityVersions: Object.fromEntries(
+      Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+        category,
+        policy.authorityVersion,
+      ]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1,
+      scalpOiliness: "balanced",
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x",
+      oilPurposes: [],
+      ownedCategories: ["heat_protectant"],
+    },
+  }
+  let draft = createStage3Draft({
+    draftId: "draft-confirmed-no-heat",
+    userId: "user-confirmed-no-heat",
+    personalPlanId: "plan-confirmed-no-heat",
+    refinedVersionId: "refined-confirmed-no-heat",
+    requirements: [heatRequirement],
+    authoritySnapshot,
+    now,
+  })
+  draft = addCapturedProduct(draft, {
+    capturedProductId: "heat-owned-confirmed",
+    userProductId: "user-product-heat-owned-confirmed",
+    identity: {
+      kind: "catalog_product",
+      productId: "catalog-heat-owned-confirmed",
+      displayName: "Hitzeschutz Spray",
+      category: "heat_protectant",
+    },
+    frequencyRange: "weekly_2x",
+    ownership: "owned",
+    source: "existing_inventory",
+  })
+
+  const finalized = finalizeStage3CaptureWithoutInventoryAuthority(draft)
+  const disposition = finalized.inventoryDispositions?.[0]
+  const path = computeStage3PathState(finalized, [heatRequirement])
+
+  assert.equal(disposition?.reason, "category_not_in_final_plan")
+  assert.equal(disposition?.acknowledged, false)
+  assert.equal(
+    path.blockingReasons.some((reason) => reason.code === "inventory_clarification_required"),
+    false,
+  )
+  assert.equal(path.canCreatePortfolio, false)
+
+  const acknowledged = acknowledgeStage3InventoryDisposition(
+    finalized,
+    disposition?.dispositionKey ?? "missing",
+  )
+  assert.equal(computeStage3PathState(acknowledged, [heatRequirement]).canCreatePortfolio, true)
+})
+
 test("rejecting a need revision creates current inventory dispositions that block until acknowledged", () => {
   const pending = completeCaptureCategory(
     completeCaptureCategory(
@@ -727,7 +900,10 @@ test("rejecting a need revision creates current inventory dispositions that bloc
     rejected,
   )
 
-  assert.equal(computeStage3PathState(acknowledged, currentOnlyRequirements).canCreatePortfolio, true)
+  assert.equal(
+    computeStage3PathState(acknowledged, currentOnlyRequirements).canCreatePortfolio,
+    true,
+  )
 })
 
 test("accepting a need revision rebases to the accepted authority without inventing product ownership", () => {
@@ -744,16 +920,18 @@ test("accepting a need revision rebases to the accepted authority without invent
   const proposalFingerprint = pending.inventoryAuthority?.proposalFingerprint
   assert.ok(proposal)
   assert.ok(proposalFingerprint)
-  const acceptedRequirements: Stage3CategoryRequirement[] = proposal.renderedOrder.map((category) => {
-    const decision = proposal.decisions.find((candidate) => candidate.category === category)
-    if (!decision) throw new Error(`missing decision for ${category}`)
-    return {
-      category,
-      requiredRoles: decision.roles,
-      needSummary: category,
-      authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
-    }
-  })
+  const acceptedRequirements: Stage3CategoryRequirement[] = proposal.renderedOrder.map(
+    (category) => {
+      const decision = proposal.decisions.find((candidate) => candidate.category === category)
+      if (!decision) throw new Error(`missing decision for ${category}`)
+      return {
+        category,
+        requiredRoles: decision.roles,
+        needSummary: category,
+        authorityVersion: CATEGORY_ROLE_POLICIES[category].authorityVersion,
+      }
+    },
+  )
   const acceptedSnapshot: Stage3AuthoritySnapshotV1 = {
     ...pending.authoritySnapshot!,
     refinedNeedVersionId: "refined-accepted-v1",
