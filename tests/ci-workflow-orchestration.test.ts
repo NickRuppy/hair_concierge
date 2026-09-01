@@ -296,12 +296,16 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   assert.match(journeyCommand, /^WAIT_ON_TIMEOUT=60000 /)
   assert.match(
     journeyCommand,
-    /start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true npm run dev -- --hostname 127\.0\.0\.1 --port 3217'/,
+    /start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_QUIZ_V1_ENABLED=true npm run dev -- --hostname 127\.0\.0\.1 --port 3217'/,
   )
   assert.match(journeyCommand, /PLAYWRIGHT_BASE_URL=http:\/\/127\.0\.0\.1:3217/)
   assert.match(
     journeyCommand,
-    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-feinschliff-journey\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts tests\/personal-plan-routine-editor\.spec\.ts --project=chromium/,
+    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-feinschliff-journey\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts tests\/personal-plan-routine-editor\.spec\.ts tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts --project=chromium/,
+  )
+  assert.match(
+    journeyCommand,
+    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts --project=webkit-mobile-action/,
   )
   assert.doesNotMatch(journeyCommand, /tests\/personal-plan-stage3\.spec\.ts/)
 
@@ -327,6 +331,10 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   assert.match(
     qualityPersonalPlanJourney,
     /- name: Run Personal Plan development journeys\n        run: npm run test:playwright:personal-plan-stage3:journey/,
+  )
+  assert.match(
+    qualityPersonalPlanJourney,
+    /- name: Install Playwright browsers\n        run: npx playwright install --with-deps chromium webkit/,
   )
   assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
   assert.match(qualityPersonalPlanJourney, /^    timeout-minutes: 10$/m)
