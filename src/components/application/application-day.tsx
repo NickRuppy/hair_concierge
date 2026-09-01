@@ -65,7 +65,12 @@ export function ApplicationDay({
         </ol>
       ) : (
         <p className="type-body mt-6 rounded-md border border-border bg-card p-4 text-[var(--text-body)]">
-          An einem Pausentag ist keine Anwendung nötig.
+          {/* Only the Pausentag legitimately compiles without steps; any other day
+              reaching this state is outside the compiler contract and must not be
+              mislabeled as a rest day. */}
+          {day.dayType === "rest_day"
+            ? "An einem Pausentag ist keine Anwendung nötig."
+            : "Für diesen Tag liegt gerade keine Anleitung vor."}
         </p>
       )}
     </article>
