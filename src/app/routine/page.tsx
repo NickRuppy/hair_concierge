@@ -1,3 +1,4 @@
+import Link from "next/link"
 import type { ReactNode } from "react"
 
 import { PersonalPlanRoutineClient } from "@/components/routine/personal-plan"
@@ -148,7 +149,15 @@ export function RoutineUnavailableState({
         <p className="text-sm text-muted-foreground">
           Bitte lade diese Seite erneut. Deine bestätigte Routine bleibt unverändert.
         </p>
-        {retryAction}
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          {retryAction}
+          <Link
+            href="/plan-start"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-[12px] border-[1.5px] border-primary px-5 text-sm font-semibold text-primary hover:bg-muted"
+          >
+            Zum Plan
+          </Link>
+        </div>
       </section>
     </main>
   )

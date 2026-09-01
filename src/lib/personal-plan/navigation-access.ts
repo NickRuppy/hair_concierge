@@ -45,6 +45,14 @@ export type AuthenticatedAppNavigationAccess =
       items: readonly PersonalPlanNavigationItem[]
       hasPendingRoutineProposal: boolean
       /**
+       * Whether `/routine` is a real destination for this user (Stage 4
+       * reached) rather than the deliberately hidden "Routine nicht
+       * verfügbar" page. Independent of `items` now that the nav always
+       * lists all five tabs (product ruling 2026-08-31) — see
+       * `hasRoutineTabAccess`.
+       */
+      hasRoutineAccess: boolean
+      /**
        * Tabs to show the never-visited dot on (Task 2.9, decision 14).
        * Always a subset of `items`' keys — computed from the same list, so
        * a currently-ungated tab never dots — and never contains "routine"
@@ -68,17 +76,17 @@ export function toAuthenticatedAppNavigationAccess(
     return { kind: "legacy" }
   }
 
-  const items: PersonalPlanNavigationItem[] = [{ key: "chat", href: "/chat", label: "Chat" }]
-  if (access.allowed.stage4) {
-    items.push({ key: "routine", href: "/routine", label: "Routine" })
-    // Stealth rollout: Scan stays reachable via direct link only — re-add the
-    // item below to relaunch the tab.
-    // items.push({ key: "scan", href: "/scan", label: "Scan" })
-  }
-  if (access.allowed.stage5) {
-    items.push({ key: "application", href: "/anwendung", label: "Anwendung" })
-  }
-  items.push({ key: "profile", href: "/profile", label: "Profil" })
+  // Product ruling (2026-08-31): the navigation never changes composition —
+  // every Personal Plan user always sees the same five tabs. Access
+  // enforcement for pre-plan users remains the middleware frontier redirect
+  // (frontier-routing.ts), not this list.
+  const items: PersonalPlanNavigationItem[] = [
+    { key: "chat", href: "/chat", label: "Chat" },
+    { key: "routine", href: "/routine", label: "Routine" },
+    { key: "scan", href: "/scan", label: "Scan" },
+    { key: "application", href: "/anwendung", label: "Anwendung" },
+    { key: "profile", href: "/profile", label: "Profil" },
+  ]
 
   // No `navVisitedState` (caller didn't wire the lifecycle read) degrades the
   // same way an unavailable read does: zero dots, never all of them.
@@ -96,21 +104,23 @@ export function toAuthenticatedAppNavigationAccess(
     hasPendingRoutineProposal:
       access.kind === "personal_plan" ? access.hasPendingRoutineProposal === true : false,
     unvisitedNavSurfaces,
+    hasRoutineAccess: access.allowed.stage4,
   }
 }
 
 /**
- * Whether this user sees the Routine tab — i.e. whether `/routine` is a real
- * destination for them rather than the deliberately hidden "Routine nicht
- * verfügbar" page. Deliberately derived from the SAME item list the navigation
- * renders, so the two can never drift apart.
+ * Whether `/routine` is a real destination for this user rather than the
+ * deliberately hidden "Routine nicht verfügbar" page. The nav always lists
+ * a Routine tab now (product ruling 2026-08-31: fixed five-tab composition
+ * for every Personal Plan user), so this reads the underlying Stage 4
+ * signal (`hasRoutineAccess`) instead of tab presence.
  *
  * The Profil tab's Haarprofil section links „Dein Plan“ at the plan view
  * (`/routine`) and presents it as done, so it stays absent for a mid-journey
  * buyer who has not reached Stage 4 yet (Task 2.5, review round 1).
  */
 export function hasRoutineTabAccess(access: AuthenticatedAppNavigationAccess): boolean {
-  return access.kind === "personal_plan" && access.items.some((item) => item.key === "routine")
+  return access.kind === "personal_plan" && access.hasRoutineAccess
 }
 
 export async function resolveAuthenticatedAppNavigationAccess(

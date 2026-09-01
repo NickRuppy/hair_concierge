@@ -35,6 +35,7 @@ import { buildScanVerdict, type ScanRoleFacts } from "@/lib/scan/resolve-verdict
 import { loadScanSavedState } from "@/lib/scan/saved-state"
 import type { ScanResolveResult, ScanVerdictPayload } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
+import { captureScanException } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -83,6 +84,7 @@ export type ScanResolveRouteDeps = {
     client: SupabaseClient,
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
+  captureScanException?: typeof captureScanException
 }
 
 /**
@@ -314,6 +316,12 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       })
     } catch (error) {
       console.error("[scan] resolve failed", error)
+      ;(deps.captureScanException ?? captureScanException)(error, {
+        route: "resolve",
+        status: 503,
+        reason: "resolve_failed",
+        userId,
+      })
       return fail("temporarily_unavailable", 503)
     }
   }

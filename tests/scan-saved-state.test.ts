@@ -267,13 +267,7 @@ test("saveScanRoutineProduct: inserts a matched/owned/scan row for a new curated
   const { client, inserts } = stubClient({
     products: {
       select: () => ({
-        data: {
-          id: "prod-1",
-          name: "Shampoo X",
-          brand: "Marke",
-          category_key: "shampoo",
-          origin: "curated",
-        },
+        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
         error: null,
       }),
     },
@@ -305,17 +299,51 @@ test("saveScanRoutineProduct: inserts a matched/owned/scan row for a new curated
   ])
 })
 
-test("saveScanRoutineProduct: a disposition-quarantined product is refused (ruling R7)", async () => {
+// Ruling R7, relaxed 2026-09-01: a product ruling that users must never hit a save dead
+// end. `origin` no longer gates a first-time routine save — only lifecycle-active +
+// not-quarantined does (18 active `user_submitted` products were blocked under the old
+// origin === "curated" rule).
+test("saveScanRoutineProduct: a lifecycle-active user_submitted product is saveable (ruling R7 relaxed 2026-09-01)", async () => {
   const { client, inserts } = stubClient({
     products: {
       select: () => ({
-        data: {
-          id: "prod-1",
-          name: "Shampoo X",
-          brand: "Marke",
-          category_key: "shampoo",
-          origin: "curated",
-        },
+        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
+        error: null,
+      }),
+    },
+    personal_plan_product_search_dispositions: notQuarantined,
+    user_products: {
+      selectList: () => ({ data: [], error: null }),
+      insert: () => ({ error: null }),
+    },
+  })
+  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
+  assert.deepEqual(result, {
+    outcome: "saved",
+    savedState: { state: "routine", managedByScan: true },
+  })
+  assert.deepEqual(inserts, [
+    {
+      table: "user_products",
+      payload: {
+        user_id: "user-1",
+        category: "shampoo",
+        catalog_product_id: "prod-1",
+        brand_text: "Marke",
+        product_name_text: "Shampoo X",
+        identity_status: "matched",
+        ownership_status: "owned",
+        intake_source: "scan",
+      },
+    },
+  ])
+})
+
+test("saveScanRoutineProduct: a disposition-quarantined product is refused regardless of origin (ruling R7)", async () => {
+  const { client, inserts } = stubClient({
+    products: {
+      select: () => ({
+        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
         error: null,
       }),
     },
@@ -327,25 +355,13 @@ test("saveScanRoutineProduct: a disposition-quarantined product is refused (ruli
   assert.deepEqual(inserts, [])
 })
 
-test("saveScanRoutineProduct: a non-curated product the user does not already own is refused", async () => {
+test("saveScanRoutineProduct: an inactive product is refused before quarantine is even checked", async () => {
   const { client, inserts } = stubClient({
-    products: {
-      select: () => ({
-        data: {
-          id: "prod-1",
-          name: "Shampoo X",
-          brand: "Marke",
-          category_key: "shampoo",
-          origin: "user_submitted",
-        },
-        error: null,
-      }),
-    },
-    personal_plan_product_search_dispositions: notQuarantined,
-    user_products: { selectList: () => ({ data: [], error: null }) },
+    products: { select: () => ({ data: null, error: null }) },
+    // personal_plan_product_search_dispositions deliberately has no handler: must not be reached.
   })
-  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
-  assert.deepEqual(result, { outcome: "product_not_saveable" })
+  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-inactive")
+  assert.deepEqual(result, { outcome: "product_not_found" })
   assert.deepEqual(inserts, [])
 })
 

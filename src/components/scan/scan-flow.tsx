@@ -61,9 +61,9 @@ const RESOLVE_ERRORS: Record<string, string> = {
   product_not_found: "Dieses Produkt können wir gerade nicht öffnen.",
   invalid_identifier: "Diese Barcode-Nummer stimmt nicht.",
   rate_limited: "Gerade zu viele Anfragen. Versuch es in einem Moment noch einmal.",
-  temporarily_unavailable: "Das hat gerade nicht geklappt. Versuch es noch einmal.",
+  temporarily_unavailable: "Hat nicht geklappt – versuch's nochmal.",
 }
-const GENERIC_ERROR = "Das hat gerade nicht geklappt. Versuch es noch einmal."
+const GENERIC_ERROR = "Hat nicht geklappt – versuch's nochmal."
 const CAMERA_UNAVAILABLE_COPY: Record<ScanUnavailableReason, string> = {
   denied: "Ohne Kamerazugriff findest du dein Produkt hier über die Suche.",
   no_camera: "Wir finden keine Kamera — nutze so lange die Suche.",
@@ -499,8 +499,7 @@ function PendingBody({ headline, onContinue }: { headline: string; onContinue: (
       </span>
       <h2 className="font-header text-2xl leading-tight text-foreground">{headline}</h2>
       <p className="max-w-[320px] text-sm leading-6 text-[var(--text-sub)]">
-        Meist innerhalb von 24 Stunden. Du bekommst eine Nachricht im Chat, sobald wir es
-        eingeordnet haben.
+        Meist innerhalb von 24 Stunden – wir melden uns im Chat.
       </p>
       <button
         type="button"

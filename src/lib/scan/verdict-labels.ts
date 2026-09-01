@@ -17,13 +17,13 @@ export const SCAN_VERDICT_COPY: Record<
     status: "pending",
   },
   mismatch: { label: "Passt nicht", title: "Passt nicht zu deinem Haar", status: "danger" },
-  unknown: { label: "Unklar", title: "Noch nicht sicher einzuordnen", status: "neutral" },
+  unknown: { label: "Unklar", title: "Da sind wir noch nicht sicher", status: "neutral" },
 }
 
 export const SCAN_NOT_NEEDED_STATUS: Extract<ScanStatusToken, "neutral"> = "neutral"
 
 /** Used when the profile carries no measurable target on this category at all. */
-export const SCAN_SUBTITLE_WITHOUT_TARGETS = "Bewertet anhand deines Profils"
+export const SCAN_SUBTITLE_WITHOUT_TARGETS = "Basierend auf deinem Haarprofil"
 
 export function scanTargetSubtitle(matches: number, total: number): string {
   return `${matches} von ${total} Zielbereichen getroffen`
@@ -61,19 +61,34 @@ export function scanNotNeededSubtitle(category: PersonalPlanCategory): string {
 
 export const SCAN_DEFERRED_HEADLINE = "Das klären wir noch"
 
-/** Unknown-product intake, step 1 (warm two-line header — copy sign-off 2026-08-21). */
-export const SCAN_UNKNOWN_HEADLINE = "Oh, das kennen wir noch nicht!"
-export const SCAN_UNKNOWN_QUESTION = "Was für ein Produkt ist es? Wir nehmen es gern auf."
+/**
+ * Unknown-product intake, single success-first step (copy sign-off 2026-09-01): the
+ * headline leads with thanks/success tone, not surprise, and the question sits under
+ * it above the category cards — tapping a card submits immediately (no step 2).
+ */
+export const SCAN_UNKNOWN_HEADLINE = "Danke dir – das ist neu für uns!"
+export const SCAN_UNKNOWN_SUBLINE = "Wir nehmen es auf. Dein Ergebnis kommt in den Chat."
+export const SCAN_UNKNOWN_QUESTION = "Wobei benutzt du es?"
 
 /** Resolving sheet while the verdict loads (Variante A decode feedback). */
 export const SCAN_RESOLVING_TITLE = "Produkt wird geprüft …"
 export const SCAN_RESOLVING_SUBLINE = "Passt es zu deinem Haar?"
 
-/** `POST /api/scan/resolve` and `POST /api/scan/submit`: an open submission exists. */
-export const SCAN_PENDING_SUBMISSION_HEADLINE = "Wir prüfen dein Produkt"
+/**
+ * `POST /api/scan/resolve` and `POST /api/scan/submit`: an open submission exists.
+ * Success-first (copy sign-off 2026-09-01) — the intake step already told the user
+ * we're on it, so this confirms rather than re-announcing a review.
+ */
+export const SCAN_PENDING_SUBMISSION_HEADLINE = "Eingereicht!"
 
-/** "steht … noch aus" mirrors the plan fork's wording for an open decision. */
+/**
+ * "steht … noch aus" mirrors the plan fork's wording for an open decision.
+ * `scalp_care`'s label ("Kopfhautprodukt") reads badly without an article in this
+ * frame ("Für Kopfhautprodukt steht …"), so it gets the plural special-case instead
+ * (copy sign-off 2026-09-01) — every other category keeps the plain label form.
+ */
 export function scanDeferredSubtitle(category: PersonalPlanCategory): string {
+  if (category === "scalp_care") return "Für Kopfhautprodukte steht deine Einschätzung noch aus"
   return `Für ${CATEGORY_COPY[category].label} steht deine Einschätzung noch aus`
 }
 
