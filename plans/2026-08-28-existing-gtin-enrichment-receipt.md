@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: E1-E12 applied and verified in production. Added 181 GTINs to 176 existing products; 214/259 active products are barcode-linked and 202/259 are strict scan-result-ready. Remaining 45 are explicitly held or readiness-blocked, not silently completed.
+Status: E1-E13 applied and verified in production. Added 187 GTINs to 181 existing products; 219/259 active products are barcode-linked and 207/259 are strict scan-result-ready. Remaining 40 are explicitly held or readiness-blocked, not silently completed.
 
 ## Contract
 
@@ -158,3 +158,13 @@ The static migration `20260901093000` preserves the E1-E11 executor and adds onl
 Clean-head preflight against `cd0f8cd084a2fe9ea75b8876f03db2ed71f32e54` passed exact product identity, global ownership, open-submission, migration, branch and replay gates. The atomic apply and guarded verify returned 6 products / 7 GTINs; direct readback confirmed every canonical GTIN owner, six item receipts, seven identifiers, the reviewed head/fingerprint and exact migration-history SHA. No product fields, category assignments or formulas were mutated.
 
 The post-apply readiness export reports **214/259 barcode-linked (82.6%)** and **202/259 strict scan-result-ready (78.0%)**. The 45 remaining unlinked products split into 17 otherwise-ready for identity research and 28 readiness-blocked. This is catalog coverage, not measured German market-scan coverage.
+
+## E13 continuation — September 1
+
+E13 resolved five more existing products / six exact package GTINs under the now-durable September 1 rules: Hair Food Aloe and Balea Aqua use their mask owners; Hair Food Macadamia uses the supportive leave-in owner; Balea Intensivmaske accepts both directly evidenced DE/AT 300-ml codes; current German OGX Keratin Oil Shampoo uses the existing shampoo analysis. The exact manifest fingerprint is `2efe9cf73fd0294298daaad125f95cf9c387bb2fabe88ad90efade5ca1f9afe4`.
+
+Migration `20260901102000` preserves the E1-E12 executor and adds only E13's exact 5/6 pin, allowlist and disposition rollback guard. Its production history source SHA is `db9317744c7c15b32647d380275ade344e8854b0b9f6dc30be904c4fc3902290`. Main and worker verification passed 35 focused TypeScript/PGlite tests, typecheck, targeted lint and diff checks. Claude Opus 4.8 / high returned GO. A separate correctness review first stopped on stale conservative plan wording; after the newer user decisions were recorded as the controlling policy, its bounded re-review returned GO.
+
+Clean-head preflight against `72813b5bb2643be26dbb3c2ffc47ed78278da37c` passed exact live product identity, migration, global ownership, open-submission, branch/head and replay gates. The atomic apply and guarded verify returned 5 products / 6 GTINs. Direct readback confirmed all owners, five item receipts, six identifiers, the reviewed head/fingerprint and exact migration-history SHA. No product field or category row was mutated.
+
+The post-apply readiness export reports **219/259 barcode-linked (84.6%)** and **207/259 strict scan-result-ready (79.9%)**. The 40 remaining unlinked rows split into 12 otherwise-ready and 28 readiness-blocked. Several of those 12 are losing duplicate-category rows for packages that now already scan successfully, so they are not all real uncovered physical products.
