@@ -206,3 +206,19 @@ Nivea Volumen & Kraft Conditioner (`26985fdd-1b41-46e3-9c9a-94b98f92310a`) now h
 E17 deliberately preserves the strict readiness gate. It cannot insert the GTIN while Nivea retains its `awaiting_exact_analysis` disposition. Exact conditioner directions have now been found separately; the additive Stage 5 protocol-amendment/disposition-resolution lane must apply and verify that protocol before the E17 scanner preflight can become green. E17 is prepared only and has not been applied in production.
 
 The post-apply readiness export reports **230/259 barcode-linked (88.8%)** and **218/259 strict scan-result-ready (84.2%)**. The 29 unlinked rows now split into 9 otherwise-ready and 20 blocked. Seven of the nine ready rows are losing duplicate-category records whose physical packages already resolve through selected owners; the two genuine ready package gaps are Balea Natural Beauty 3in1 Locken, held by its open submission, and Gliss Aqua Revive mask, held on medium-only exact-GTIN evidence.
+
+## E18 prepared research — September 1
+
+E18 freezes 14 exact-package GTINs for 14 curated oil catalog rows whose application protocols were added by the separate oil-authority lane: Allgäuer Ölmühle Traubenkernöl; four benecos body oils; BioGourmet Distelöl; dmBio Kokosöl and Olivenöl; Dr. Scheller Jojobaöl; Garnier Sleek & Stay Serum; KoRo MCT Öl; MoriVeda Moringaöl; nedura Schwarzkümmelöl; and Primavera Calendulaöl. Food oils and body oils are intentionally included under Nick's explicit decision. The exact manifest fingerprint is `1b59aefef8ba0a5ae217c16d49a37b2b1e2e118157855a68b7c2e2931d3d5643`.
+
+OGX Argan Oil remains outside E18. The researched code `3574661563312` identifies the exact 100 ml OGX Moroccan Argan Penetrating Oil, while the existing catalog row is still a generic ambiguous OGX Argan Oil identity. Pinning or renaming that row to the exact finished-product formula is required before attaching the barcode. This is the only unresolved physical identity among the 15 curated oils.
+
+## E19 prepared research — September 1
+
+E19 freezes three directly evidenced aliases for the same existing 300 ml Balea 2 in 1 Urea 5% product: current German dm `4066447965414`, current Austrian/EU dm `4066447591644`, and older/parallel package `4058172738272`. Its exact manifest fingerprint is `5f062d6932340d504ffd796985f25e03464ada0f32c119e07572c4c8543b47b8`. Storing all three follows the approved multiple-barcodes-per-product rule.
+
+Additive migrations `20260901150000` and `20260901153000` preserve E1-E17 and extend only the batch allowlist, exact fingerprints/shapes and readiness guards. E18 applies atomically only after every selected oil has no Personal Plan disposition. E19 applies only after Balea's anti-dandruff/everyday protocol amendment resolves its `awaiting_exact_analysis` disposition. Both waves also reject global owner conflicts and unresolved-submission overlap and replay idempotently.
+
+Nivea remains in the separately committed E17 wave. The losing Cantu conditioner duplicate receives no second barcode row: its physical package is already assigned through the canonical leave-in owner under the approved single-owner rule. The two user-added products are excluded from this curated continuation.
+
+E18 and E19 are prepared only. No migration or GTIN data from these waves has been applied to production.

@@ -35,7 +35,9 @@ function makeManifest(
     | "E14"
     | "E15"
     | "E16"
-    | "E17",
+    | "E17"
+    | "E18"
+    | "E19",
 ) {
   const shape = {
     E1: [20, 21, "1", 31],
@@ -55,13 +57,15 @@ function makeManifest(
     E15: [2, 3, "f", 171],
     E16: [8, 12, "a", 181],
     E17: [1, 1, "b", 191],
+    E18: [14, 14, "c", 201],
+    E19: [1, 3, "d", 211],
   } as const
   const [productCount, gtinCount, batchDigit, prefix] = shape[batch]
   const items = Array.from({ length: productCount }, (_, index) => {
     const productId =
       batch === "E11"
         ? "8f84eae5-222d-4bbf-9ab0-f30361882a95"
-        : `${batchDigit}${String(index + 1).padStart(7, "0")}-1111-4111-8111-${String(index + 1).padStart(12, "0")}`
+        : `${batchDigit}${String(index + 1).padStart(7, "0")}-${batch === "E18" ? "1818" : batch === "E19" ? "1919" : "1111"}-4111-8111-${String(index + 1).padStart(12, "0")}`
     const item = {
       item_key: `${batch.toLowerCase()}-product-${index + 1}`,
       product_id: productId,
@@ -75,19 +79,22 @@ function makeManifest(
         is_active: batch === "E11" ? true : index !== 0,
         lifecycle_status: batch === "E11" ? "active" : index !== 0 ? "active" : "inactive",
       },
-      identifiers: Array.from({ length: index < gtinCount - productCount ? 2 : 1 }, (_, slot) => {
-        const value = gtin(`${prefix}${String(index * 10 + slot).padStart(9, "0")}`)
-        return {
-          type: "ean" as const,
-          value: batch === "E11" ? "858511001463" : value,
-          source_url: `https://example.test/${batch.toLowerCase()}/${index + 1}`,
-          size: "250 ml",
-          market_scope: "DE",
-          raw_gtin: batch === "E11" ? "858511001463" : value,
-          canonical_gtin14: batch === "E11" ? "00858511001463" : value.padStart(14, "0"),
-          source_urls: [`https://example.test/${batch.toLowerCase()}/${index + 1}`],
-        }
-      }),
+      identifiers: Array.from(
+        { length: batch === "E19" ? 3 : index < gtinCount - productCount ? 2 : 1 },
+        (_, slot) => {
+          const value = gtin(`${prefix}${String(index * 10 + slot).padStart(9, "0")}`)
+          return {
+            type: "ean" as const,
+            value: batch === "E11" ? "858511001463" : value,
+            source_url: `https://example.test/${batch.toLowerCase()}/${index + 1}`,
+            size: "250 ml",
+            market_scope: "DE",
+            raw_gtin: batch === "E11" ? "858511001463" : value,
+            canonical_gtin14: batch === "E11" ? "00858511001463" : value.padStart(14, "0"),
+            source_urls: [`https://example.test/${batch.toLowerCase()}/${index + 1}`],
+          }
+        },
+      ),
     }
     return { ...item, content_fingerprint: catalogEnrichmentFingerprint(item) }
   })
@@ -467,6 +474,14 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     "supabase/migrations/20260901143000_scanner_existing_identifier_backfill_e17.sql",
     "utf8",
   )
+  let e18Executor = await readFile(
+    "supabase/migrations/20260901150000_scanner_existing_identifier_backfill_e18.sql",
+    "utf8",
+  )
+  let e19Executor = await readFile(
+    "supabase/migrations/20260901153000_scanner_existing_identifier_backfill_e19.sql",
+    "utf8",
+  )
   for (const batch of [
     "E1",
     "E2",
@@ -485,6 +500,8 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     "E15",
     "E16",
     "E17",
+    "E18",
+    "E19",
   ] as const) {
     const pins = {
       E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
@@ -504,14 +521,20 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       E15: "82841d4d5d7438f6eb029c8f542a708a3c4ee6d22c0583643f4b246c6dad1175",
       E16: "ccead11317e181fedaad572ebf14d33b6300c7bd9c85eaae76bc8b2bef2a54c0",
       E17: "6b259ee2ceff31116e92d04a5a2c627379eb4b88e8cde3c51ae026860243f5ce",
+      E18: "1b59aefef8ba0a5ae217c16d49a37b2b1e2e118157855a68b7c2e2931d3d5643",
+      E19: "5f062d6932340d504ffd796985f25e03464ada0f32c119e07572c4c8543b47b8",
     }
     e15Executor = e15Executor.replace(pins[batch], makeManifest(batch).fingerprint)
     e16Executor = e16Executor.replace(pins[batch], makeManifest(batch).fingerprint)
     e17Executor = e17Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+    e18Executor = e18Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+    e19Executor = e19Executor.replace(pins[batch], makeManifest(batch).fingerprint)
   }
   await pg.exec(e15Executor)
   await pg.exec(e16Executor)
   await pg.exec(e17Executor)
+  await pg.exec(e18Executor)
+  await pg.exec(e19Executor)
   return pg
 }
 
@@ -723,9 +746,9 @@ test("E4-E7 each apply and replay exactly while rejecting a wrong pin", async (t
   }
 })
 
-test("E8-E17 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
+test("E8-E19 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
   const manifests = (
-    ["E8", "E9", "E10", "E11", "E12", "E13", "E14", "E15", "E16", "E17"] as const
+    ["E8", "E9", "E10", "E11", "E12", "E13", "E14", "E15", "E16", "E17", "E18", "E19"] as const
   ).map((batch) => makeManifest(batch))
   const pg = await database(manifests)
   t.after(async () => pg.close())
@@ -763,12 +786,12 @@ test("E8-E17 each apply and replay exactly while rejecting wrong fingerprints an
   }
 })
 
-test("E17 executor rejects an unknown future batch before it can inherit E17 configuration", async (t) => {
+test("E19 executor rejects an unknown future batch before it can inherit E19 configuration", async (t) => {
   const e10 = makeManifest("E10")
   const pg = await database([e10])
   t.after(async () => pg.close())
   const unknown = JSON.parse(e10.raw)
-  unknown.batch = "E18"
+  unknown.batch = "E20"
   const unknownRaw = JSON.stringify(unknown)
 
   await assert.rejects(
@@ -898,6 +921,53 @@ test("E17 blocks Nivea while its readiness disposition exists and rejects open G
     [e17.items[0]?.identifiers[0]?.value],
   )
   await assert.rejects(() => apply(pg, e17), /open submission.*overlap/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("E18 rolls the full oil wave back while any repaired product retains a disposition", async (t) => {
+  const e18 = makeManifest("E18")
+  const pg = await database([e18])
+  t.after(async () => pg.close())
+  await pg.query(
+    `INSERT INTO public.personal_plan_product_search_dispositions (product_id) VALUES ($1)`,
+    [e18.items[7]?.product_id],
+  )
+  await assert.rejects(() => apply(pg, e18), /E18 product is not scan-result-ready/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("E19 blocks Balea until readiness and rejects each of its three submitted GTINs", async (t) => {
+  const e19 = makeManifest("E19")
+  const pg = await database([e19])
+  t.after(async () => pg.close())
+  await pg.query(
+    `INSERT INTO public.personal_plan_product_search_dispositions (product_id) VALUES ($1)`,
+    [e19.items[0]?.product_id],
+  )
+  await assert.rejects(() => apply(pg, e19), /E19 product is not scan-result-ready/i)
+  await pg.exec(`DELETE FROM public.personal_plan_product_search_dispositions`)
+  for (const identifier of e19.items[0]?.identifiers ?? []) {
+    await pg.query(
+      `INSERT INTO public.product_submissions
+        (status, scanned_identifier_type, scanned_identifier_value)
+       VALUES ('researching', 'ean', $1)`,
+      [identifier.value],
+    )
+    await assert.rejects(() => apply(pg, e19), /open submission.*overlap/i)
+    await pg.exec(`DELETE FROM public.product_submissions`)
+  }
   const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
     SELECT
       (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,

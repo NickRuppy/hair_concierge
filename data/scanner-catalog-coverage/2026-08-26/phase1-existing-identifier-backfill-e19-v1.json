@@ -1,0 +1,68 @@
+{
+  "batch": "E19",
+  "batch_id": "scanner-existing-identifiers-e19-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "plans/2026-08-28-existing-gtin-enrichment-receipt.md#e19-prepared-research-september-1",
+    "production_identity_checked_at": "2026-09-01T15:30:00.000Z",
+    "source_refresh_receipt": "E19 adds three exact 300 ml Balea med Duschgel & Shampoo 5% Urea 2in1 package generations. The current German and Austrian codes come from official dm pages; the third is retained as a supported older package alias."
+  },
+  "items": [
+    {
+      "item_key": "balea-med-duschgel-shampoo-5-urea-2in1",
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "expected_product": {
+        "name": "Balea 2 in 1 Urea 5%",
+        "brand": "Balea",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4066447965414",
+          "raw_gtin": "4066447965414",
+          "canonical_gtin14": "04066447965414",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1376376/balea-med-duschgel-und-shampoo-5-prozent-urea-2in1",
+          "source_urls": [
+            "https://www.dm.de/p/d/1376376/balea-med-duschgel-und-shampoo-5-prozent-urea-2in1"
+          ],
+          "source_checked_at": "2026-09-01T15:30:00.000Z",
+          "exact_match_note": "The current dm Germany page ties article 1376376, Balea med Duschgel & Shampoo 5% Urea 2in1, 300 ml and the current matching INCI to GTIN 4066447965414."
+        },
+        {
+          "type": "ean",
+          "value": "4066447591644",
+          "raw_gtin": "4066447591644",
+          "canonical_gtin14": "04066447591644",
+          "size": "300 ml",
+          "market_scope": "EU",
+          "source_url": "https://www.dm.at/p/d/1376376/balea-med-duschgel-2in1-dusche-shampoo-5-prozent-urea?appPageType=productdetails&appProductId=4066447591644",
+          "source_urls": [
+            "https://www.dm.at/p/d/1376376/balea-med-duschgel-2in1-dusche-shampoo-5-prozent-urea?appPageType=productdetails&appProductId=4066447591644"
+          ],
+          "source_checked_at": "2026-09-01T15:30:00.000Z",
+          "exact_match_note": "The official dm Austria page ties the same article 1376376 and 300 ml 5% Urea 2in1 formula to GTIN 4066447591644; official dm pages in other EU markets corroborate it."
+        },
+        {
+          "type": "ean",
+          "value": "4058172738272",
+          "raw_gtin": "4058172738272",
+          "canonical_gtin14": "04058172738272",
+          "size": "300 ml",
+          "market_scope": "EU",
+          "source_url": "https://www.bol.com/be/nl/p/balea-med-douchegel-5-ureum-2in1-douche-shampoo-300-ml/9300000097644877/",
+          "source_urls": [
+            "https://www.bol.com/be/nl/p/balea-med-douchegel-5-ureum-2in1-douche-shampoo-300-ml/9300000097644877/"
+          ],
+          "source_checked_at": "2026-09-01T15:30:00.000Z",
+          "exact_match_note": "An exact secondary-market listing ties the older/parallel 300 ml Balea Med 5% Urea 2in1 Duschgel & Shampoo package and dm manufacturer identity to EAN 4058172738272."
+        }
+      ],
+      "content_fingerprint": "2b5a3fbb784a13db7f022e54a31265e2cb47e053ee616920c8ee2e37f6c6830c"
+    }
+  ]
+}
