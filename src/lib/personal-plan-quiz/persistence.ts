@@ -115,8 +115,21 @@ export type PersonalPlanLeadRequest = z.infer<typeof personalPlanLeadRequestSche
 export const personalPlanPrepareRequestSchema = z
   .object({
     answers: personalPlanDurableAnswersSchema,
+    preparationId: z.string().uuid().optional(),
+    claimToken: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]{43}$/)
+      .optional(),
   })
   .strict()
+  .superRefine((value, context) => {
+    if (Boolean(value.preparationId) === Boolean(value.claimToken)) return
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "preparationId and claimToken must be provided together",
+      path: value.preparationId ? ["claimToken"] : ["preparationId"],
+    })
+  })
 
 export type PersonalPlanPrepareRequest = z.infer<typeof personalPlanPrepareRequestSchema>
 

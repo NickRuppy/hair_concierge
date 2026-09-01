@@ -9,6 +9,8 @@ import {
 
 export const PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY = "chaarlie:personal-plan-quiz-draft:v4"
 export const PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY = "chaarlie:personal-plan-quiz-prepared:v1"
+export const PERSONAL_PLAN_PENDING_PREPARATION_STORAGE_KEY =
+  "chaarlie:personal-plan-pending-preparation:v1"
 const DRAFT_VERSION = 4
 
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">

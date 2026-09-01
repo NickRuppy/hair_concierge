@@ -46,6 +46,61 @@ const request = {
   },
 } as const
 
+const preparationCredential = {
+  preparationId: "1f83fb67-1bee-4b20-8fc2-1d53c38b2cec",
+  claimToken: "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+} as const
+
+const preparePayload = (answers: unknown, extra: Record<string, unknown> = {}) => ({
+  answers,
+  ...preparationCredential,
+  ...extra,
+})
+
+test("personal-plan preparation accepts a paired replay credential and transitional legacy requests", () => {
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: request.answers,
+      ...preparationCredential,
+    }).success,
+    true,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({ answers: request.answers }).success,
+    true,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: request.answers,
+      preparationId: preparationCredential.preparationId,
+    }).success,
+    false,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: request.answers,
+      claimToken: preparationCredential.claimToken,
+    }).success,
+    false,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: request.answers,
+      ...preparationCredential,
+      preparationId: "not-a-uuid",
+    }).success,
+    false,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: request.answers,
+      ...preparationCredential,
+      claimToken: "too-short",
+    }).success,
+    false,
+  )
+})
+
 test("personal-plan persistence accepts only the complete durable envelope and canonically orders selections", () => {
   const parsed = personalPlanLeadRequestSchema.parse(request)
   const envelope = canonicalizePersonalPlanAnswers(parsed.answers)
@@ -66,65 +121,65 @@ test("personal-plan persistence accepts only the complete durable envelope and c
 
 test("personal-plan persistence accepts split concerns and binds recurrence to a selected concern", () => {
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({ answers: request.answers }).success,
+    personalPlanPrepareRequestSchema.safeParse(preparePayload(request.answers)).success,
     true,
   )
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({
-      answers: {
+    personalPlanPrepareRequestSchema.safeParse(
+      preparePayload({
         ...request.answers,
         concernRecurrence: { concernId: "dry_lengths", frequency: "sometimes" },
-      },
-    }).success,
+      }),
+    ).success,
     false,
   )
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({
-      answers: {
+    personalPlanPrepareRequestSchema.safeParse(
+      preparePayload({
         ...request.answers,
         currentConcerns: ["breakage_or_split_ends"],
         concernRecurrence: undefined,
-      },
-    }).success,
+      }),
+    ).success,
     false,
   )
 })
 
 test("personal-plan persistence canonicalizes a 50-character concern note and rejects longer text", () => {
   const note = "x".repeat(50)
-  const parsed = personalPlanPrepareRequestSchema.parse({
-    answers: { ...request.answers, currentConcernsOtherText: `  ${note}  ` },
-  })
+  const parsed = personalPlanPrepareRequestSchema.parse(
+    preparePayload({ ...request.answers, currentConcernsOtherText: `  ${note}  ` }),
+  )
   assert.equal(
     canonicalizePersonalPlanAnswers(parsed.answers).answers.currentConcernsOtherText,
     note,
   )
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({
-      answers: { ...request.answers, currentConcernsOtherText: "x".repeat(51) },
-    }).success,
+    personalPlanPrepareRequestSchema.safeParse(
+      preparePayload({ ...request.answers, currentConcernsOtherText: "x".repeat(51) }),
+    ).success,
     false,
   )
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({
-      answers: {
+    personalPlanPrepareRequestSchema.safeParse(
+      preparePayload({
         ...request.answers,
         currentConcerns: [],
         concernRecurrence: undefined,
         currentConcernsOtherText: "Anderes Thema",
-      },
-    }).success,
+      }),
+    ).success,
     true,
   )
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({
-      answers: { ...request.answers, blockersOtherText: "x".repeat(280) },
-    }).success,
+    personalPlanPrepareRequestSchema.safeParse(
+      preparePayload({ ...request.answers, blockersOtherText: "x".repeat(280) }),
+    ).success,
     true,
   )
-  const blank = personalPlanPrepareRequestSchema.parse({
-    answers: { ...request.answers, currentConcernsOtherText: "   " },
-  })
+  const blank = personalPlanPrepareRequestSchema.parse(
+    preparePayload({ ...request.answers, currentConcernsOtherText: "   " }),
+  )
   assert.equal(
     canonicalizePersonalPlanAnswers(blank.answers).answers.currentConcernsOtherText,
     undefined,
@@ -157,20 +212,19 @@ test("personal-plan persistence rejects ephemeral commitments and duplicate scal
 
 test("personal-plan preparation accepts durable answers without contact data or conversion answers", () => {
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({ answers: request.answers }).success,
+    personalPlanPrepareRequestSchema.safeParse(preparePayload(request.answers)).success,
     true,
   )
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({
-      answers: { ...request.answers, dailyTime: "5_minutes" },
-    }).success,
+    personalPlanPrepareRequestSchema.safeParse(
+      preparePayload({ ...request.answers, dailyTime: "5_minutes" }),
+    ).success,
     false,
   )
   assert.equal(
-    personalPlanPrepareRequestSchema.safeParse({
-      answers: request.answers,
-      email: request.email,
-    }).success,
+    personalPlanPrepareRequestSchema.safeParse(
+      preparePayload(request.answers, { email: request.email }),
+    ).success,
     false,
   )
 })
@@ -182,7 +236,7 @@ test("personal-plan claim credentials are high entropy and only their hashes are
   assert.equal(first.claimToken.length >= 40, true)
   assert.equal(first.claimTokenHash, hashPersonalPlanClaimToken(first.claimToken))
   assert.match(first.claimTokenHash, /^[0-9a-f]{64}$/)
-  const parsed = personalPlanPrepareRequestSchema.parse({ answers: request.answers })
+  const parsed = personalPlanPrepareRequestSchema.parse(preparePayload(request.answers))
   assert.match(
     hashPersonalPlanAnswers(canonicalizePersonalPlanAnswers(parsed.answers)),
     /^[0-9a-f]{64}$/,
@@ -259,8 +313,8 @@ test("prepare and lead endpoints exchange only an opaque claim before the result
     "utf8",
   )
 
-  assert.match(prepareRoute, /artifactId: data\.id/)
-  assert.match(prepareRoute, /claimToken,/)
+  assert.match(prepareRoute, /artifactId: result\.artifactId/)
+  assert.match(prepareRoute, /claimToken: credential\.claimToken/)
   assert.doesNotMatch(prepareRoute, /NextResponse\.json\(\{[\s\S]{0,200}lockedPlan/)
   assert.doesNotMatch(prepareRoute, /NextResponse\.json\(\{[\s\S]{0,200}publicOfferModel/)
   assert.match(leadRoute, /save_personal_plan_lead_with_artifact/)

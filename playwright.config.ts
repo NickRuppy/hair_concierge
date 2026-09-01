@@ -39,6 +39,8 @@ export default defineConfig({
         "personal-plan-mobile-action.spec.ts",
         "legacy-quiz-mobile-action.spec.ts",
         "offer-payment-overlay.spec.ts",
+        "personal-plan-stage3-focus.spec.ts",
+        "personal-plan-preparation-browser.spec.ts",
       ],
       use: { ...devices["iPhone 13"], browserName: "webkit" },
     },
