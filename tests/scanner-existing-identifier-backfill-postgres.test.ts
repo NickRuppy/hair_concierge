@@ -17,7 +17,9 @@ function gtin(body: string): string {
   return `${body}${(10 - (weighted % 10)) % 10}`
 }
 
-function makeManifest(batch: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E8" | "E9" | "E10") {
+function makeManifest(
+  batch: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E8" | "E9" | "E10" | "E11",
+) {
   const shape = {
     E1: [20, 21, "1", 31],
     E2: [21, 22, "2", 41],
@@ -29,30 +31,37 @@ function makeManifest(batch: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E
     E8: [20, 20, "8", 101],
     E9: [6, 6, "9", 111],
     E10: [12, 12, "0", 121],
+    E11: [1, 1, "a", 131],
   } as const
   const [productCount, gtinCount, batchDigit, prefix] = shape[batch]
   const items = Array.from({ length: productCount }, (_, index) => {
-    const productId = `${batchDigit}${String(index + 1).padStart(7, "0")}-1111-4111-8111-${String(index + 1).padStart(12, "0")}`
+    const productId =
+      batch === "E11"
+        ? "8f84eae5-222d-4bbf-9ab0-f30361882a95"
+        : `${batchDigit}${String(index + 1).padStart(7, "0")}-1111-4111-8111-${String(index + 1).padStart(12, "0")}`
     const item = {
       item_key: `${batch.toLowerCase()}-product-${index + 1}`,
       product_id: productId,
       expected_product: {
-        name: `${batch} Product ${index + 1}`,
-        brand: index % 2 ? null : `Brand ${index + 1}`,
-        category_key: "shampoo",
-        is_active: index !== 0,
-        lifecycle_status: index !== 0 ? "active" : "inactive",
+        name:
+          batch === "E11"
+            ? "K18 Hair Professional Molecular Repair Hair Mist"
+            : `${batch} Product ${index + 1}`,
+        brand: batch === "E11" ? "K18" : index % 2 ? null : `Brand ${index + 1}`,
+        category_key: batch === "E11" ? "leave_in" : "shampoo",
+        is_active: batch === "E11" ? true : index !== 0,
+        lifecycle_status: batch === "E11" ? "active" : index !== 0 ? "active" : "inactive",
       },
       identifiers: Array.from({ length: index < gtinCount - productCount ? 2 : 1 }, (_, slot) => {
         const value = gtin(`${prefix}${String(index * 10 + slot).padStart(9, "0")}`)
         return {
           type: "ean" as const,
-          value,
+          value: batch === "E11" ? "858511001463" : value,
           source_url: `https://example.test/${batch.toLowerCase()}/${index + 1}`,
           size: "250 ml",
           market_scope: "DE",
-          raw_gtin: value,
-          canonical_gtin14: value.padStart(14, "0"),
+          raw_gtin: batch === "E11" ? "858511001463" : value,
+          canonical_gtin14: batch === "E11" ? "00858511001463" : value.padStart(14, "0"),
           source_urls: [`https://example.test/${batch.toLowerCase()}/${index + 1}`],
         }
       }),
@@ -88,7 +97,9 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       brand text,
       category_key text NOT NULL,
       is_active boolean NOT NULL,
-      lifecycle_status text NOT NULL
+      lifecycle_status text NOT NULL, description text,
+      suitable_thicknesses text[] NOT NULL DEFAULT ARRAY[]::text[],
+      net_content_value numeric, net_content_unit text
     );
     CREATE TABLE public.product_identifiers (
       id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -108,6 +119,24 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       scanned_identifier_type text,
       scanned_identifier_value text,
       researched_payload jsonb
+    );
+    CREATE TABLE public.personal_plan_product_search_dispositions (
+      product_id uuid PRIMARY KEY REFERENCES public.products(id)
+    );
+    CREATE TABLE public.product_leave_in_specs (
+      product_id uuid PRIMARY KEY REFERENCES public.products(id),
+      category_key text NOT NULL, ingredient_flags text[] NOT NULL DEFAULT ARRAY[]::text[],
+      care_direction text, repair_support_level text, plan_roles text[],
+      functional_benefits text[], provides_heat_protection boolean NOT NULL
+    );
+    CREATE TABLE public.product_leave_in_eligibility (
+      product_id uuid NOT NULL REFERENCES public.products(id), category_key text NOT NULL,
+      thickness text NOT NULL, need_bucket text NOT NULL, styling_context text NOT NULL
+    );
+    CREATE TABLE public.product_application_protocols (
+      product_id uuid NOT NULL REFERENCES public.products(id), category text NOT NULL,
+      category_key text, role text NOT NULL, application_family text NOT NULL,
+      contact_time_seconds integer, rinse_action text, guidance_payload_v2 jsonb
     );
   `)
   const expand = await readFile(
@@ -136,6 +165,39 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
         ],
       )
     }
+  }
+  if (
+    manifests.some((manifest) =>
+      manifest.items.some((item) => item.product_id === "8f84eae5-222d-4bbf-9ab0-f30361882a95"),
+    )
+  ) {
+    await pg.exec(`
+      UPDATE public.products
+      SET description = 'K18 Hair Professional Molecular Repair Hair Mist ist ein leichtes Leave-in für Längen und Spitzen bei Proteinbedarf.',
+          suitable_thicknesses = ARRAY['fine', 'normal', 'coarse']::text[],
+          net_content_value = 300,
+          net_content_unit = 'ml'
+      WHERE id = '8f84eae5-222d-4bbf-9ab0-f30361882a95';
+      INSERT INTO public.product_leave_in_specs
+        (product_id, category_key, ingredient_flags, care_direction, repair_support_level, plan_roles, functional_benefits, provides_heat_protection)
+      VALUES
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', ARRAY['humectants', 'proteins', 'polymers']::text[],
+         'protein', 'medium', ARRAY['post_wash_leave_in']::text[], ARRAY['repair_support']::text[], false);
+      INSERT INTO public.product_leave_in_eligibility
+        (product_id, category_key, thickness, need_bucket, styling_context)
+      VALUES
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', 'fine', 'repair', 'air_dry'),
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', 'fine', 'repair', 'non_heat_style'),
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', 'normal', 'repair', 'air_dry'),
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', 'normal', 'repair', 'non_heat_style'),
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', 'coarse', 'repair', 'air_dry'),
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', 'coarse', 'repair', 'non_heat_style');
+      INSERT INTO public.product_application_protocols
+        (product_id, category, category_key, role, application_family, contact_time_seconds, rinse_action, guidance_payload_v2)
+      VALUES
+        ('8f84eae5-222d-4bbf-9ab0-f30361882a95', 'leave_in', 'leave_in', 'post_wash_leave_in', 'post_wash_damp_conditioning', 240, 'leave_in',
+         '{"schemaVersion":2,"contractKind":"product_pointer","scope":{"kind":"product","category":"leave_in","productId":"8f84eae5-222d-4bbf-9ab0-f30361882a95"},"sourceRole":"post_wash_leave_in","runtimeBlockerCode":null}'::jsonb);
+    `)
   }
   let executor = await readFile(
     "supabase/migrations/20260826143000_scanner_existing_identifier_backfill_executor.sql",
@@ -226,6 +288,39 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     e10Executor = e10Executor.replace(pins[batch], makeManifest(batch).fingerprint)
   }
   await pg.exec(e10Executor)
+  let e11Executor = await readFile(
+    "supabase/migrations/20260901091000_scanner_existing_identifier_backfill_e11.sql",
+    "utf8",
+  )
+  for (const batch of [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6",
+    "E7",
+    "E8",
+    "E9",
+    "E10",
+    "E11",
+  ] as const) {
+    const pins = {
+      E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+      E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+      E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+      E4: "6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436",
+      E5: "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
+      E6: "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
+      E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
+      E8: "d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602",
+      E9: "69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6",
+      E10: "e9b803b9d36f7cc41a6a0972958e0f045d5c91668c8b5766c60976a84384f0e3",
+      E11: "f224db6c44e4b50dc22b15a8ed28b81922273d3127d83ad4c8e3c55711abf6ec",
+    }
+    e11Executor = e11Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+  }
+  await pg.exec(e11Executor)
   return pg
 }
 
@@ -275,6 +370,31 @@ test("E10 migration retains all ten raw manifest pins", async () => {
   assert.match(
     sql,
     /ELSIF v_batch_name = 'E10' THEN[\s\S]*?ELSE\s+RAISE EXCEPTION 'scanner identifier backfill batch is not approved: %', v_batch_name;/,
+  )
+})
+
+test("E11 migration retains every prior raw manifest pin plus the one-product pin", async () => {
+  const sql = await readFile(
+    "supabase/migrations/20260901091000_scanner_existing_identifier_backfill_e11.sql",
+    "utf8",
+  )
+  for (const pin of [
+    "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+    "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+    "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+    "6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436",
+    "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
+    "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
+    "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
+    "d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602",
+    "69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6",
+    "e9b803b9d36f7cc41a6a0972958e0f045d5c91668c8b5766c60976a84384f0e3",
+    "f224db6c44e4b50dc22b15a8ed28b81922273d3127d83ad4c8e3c55711abf6ec",
+  ])
+    assert.match(sql, new RegExp(pin))
+  assert.match(
+    sql,
+    /ELSIF v_batch_name = 'E11' THEN[\s\S]*?v_expected_products := 1;[\s\S]*?v_expected_gtins := 1;/,
   )
 })
 
@@ -412,8 +532,8 @@ test("E4-E7 each apply and replay exactly while rejecting a wrong pin", async (t
   }
 })
 
-test("E8-E10 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
-  const manifests = (["E8", "E9", "E10"] as const).map((batch) => makeManifest(batch))
+test("E8-E11 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
+  const manifests = (["E8", "E9", "E10", "E11"] as const).map((batch) => makeManifest(batch))
   const pg = await database(manifests)
   t.after(async () => pg.close())
   for (const manifest of manifests) {
@@ -450,12 +570,12 @@ test("E8-E10 each apply and replay exactly while rejecting wrong fingerprints an
   }
 })
 
-test("E10 executor rejects an unknown future batch before it can inherit E10 configuration", async (t) => {
+test("E11 executor rejects an unknown future batch before it can inherit E11 configuration", async (t) => {
   const e10 = makeManifest("E10")
   const pg = await database([e10])
   t.after(async () => pg.close())
   const unknown = JSON.parse(e10.raw)
-  unknown.batch = "E11"
+  unknown.batch = "E12"
   const unknownRaw = JSON.stringify(unknown)
 
   await assert.rejects(
@@ -466,6 +586,86 @@ test("E10 executor rejects an unknown future batch before it can inherit E10 con
       ),
     /manifest header is invalid/i,
   )
+})
+
+test("E11 rejects an otherwise exact K18 GTIN wave when its scanner readiness regresses", async (t) => {
+  const e11 = makeManifest("E11")
+  const pg = await database([e11])
+  t.after(async () => pg.close())
+  await pg.query(
+    `UPDATE public.products SET suitable_thicknesses = ARRAY['fine']::text[] WHERE id = $1`,
+    [e11.items[0].product_id],
+  )
+  await assert.rejects(() => apply(pg, e11), /E11 K18 readiness is incomplete/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("E11 rejects K18 when its V2 protocol omits the explicit null runtime blocker", async (t) => {
+  const e11 = makeManifest("E11")
+  const pg = await database([e11])
+  t.after(async () => pg.close())
+  await pg.query(
+    `UPDATE public.product_application_protocols
+     SET guidance_payload_v2 = '{"schemaVersion":2,"sourceRole":"post_wash_leave_in"}'::jsonb
+     WHERE product_id = $1`,
+    [e11.items[0].product_id],
+  )
+  await assert.rejects(() => apply(pg, e11), /E11 K18 readiness is incomplete/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("E11 rejects K18 when its V2 product scope points at another product", async (t) => {
+  const e11 = makeManifest("E11")
+  const pg = await database([e11])
+  t.after(async () => pg.close())
+  await pg.query(
+    `UPDATE public.product_application_protocols
+     SET guidance_payload_v2 = jsonb_set(
+       guidance_payload_v2,
+       '{scope,productId}',
+       to_jsonb('00000000-0000-4000-8000-000000000001'::text)
+     )
+     WHERE product_id = $1`,
+    [e11.items[0].product_id],
+  )
+  await assert.rejects(() => apply(pg, e11), /E11 K18 readiness is incomplete/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("E11 rejects K18 when the approved repair-support level drifts", async (t) => {
+  const e11 = makeManifest("E11")
+  const pg = await database([e11])
+  t.after(async () => pg.close())
+  await pg.query(
+    `UPDATE public.product_leave_in_specs SET repair_support_level = NULL WHERE product_id = $1`,
+    [e11.items[0].product_id],
+  )
+  await assert.rejects(() => apply(pg, e11), /E11 K18 readiness is incomplete/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
 })
 
 test("E2 rejects a canonical owner on an inactive product and rolls the full wave back", async (t) => {

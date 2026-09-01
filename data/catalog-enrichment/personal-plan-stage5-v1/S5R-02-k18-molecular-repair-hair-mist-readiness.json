@@ -1,0 +1,207 @@
+{
+  "schema_version": "k18-molecular-repair-hair-mist-readiness-v1",
+  "batch_id": "S5R-02-k18-mist-readiness",
+  "review": {
+    "state": "approved_by_nick",
+    "reviewed_by": "nick"
+  },
+  "item": {
+    "expected_product": {
+      "id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "brand": "K18",
+      "name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "category_key": "leave_in",
+      "origin": "curated",
+      "is_active": true,
+      "lifecycle_status": "active"
+    },
+    "expected_preimage": {
+      "description": "K18 Hair Professional Molecular Repair Hair Mist ist ein Leave-in von K18, empfohlen für feines Haar bei Proteinbedarf.",
+      "suitable_thicknesses": ["fine"],
+      "net_content_value": null,
+      "net_content_unit": null,
+      "leave_in_specs": {
+        "weight": "light",
+        "application_stage": ["towel_dry"],
+        "ingredient_flags": [],
+        "care_direction": null,
+        "repair_support_level": null,
+        "roles": ["styling_prep"],
+        "care_benefits": ["repair"],
+        "plan_roles": null,
+        "functional_benefits": null,
+        "provides_heat_protection": false
+      },
+      "disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "wrong_category",
+        "reason": "Exact product is a professional-service mist and is not compatible with the consumer Personal Plan leave-in role.",
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      }
+    },
+    "target": {
+      "product": {
+        "description": "K18 Hair Professional Molecular Repair Hair Mist ist ein leichtes Leave-in für Längen und Spitzen bei Proteinbedarf.",
+        "suitable_thicknesses": ["fine", "normal", "coarse"],
+        "net_content_value": 300,
+        "net_content_unit": "ml"
+      },
+      "leave_in_specs": {
+        "ingredient_flags": ["humectants", "proteins", "polymers"],
+        "care_direction": "protein",
+        "repair_support_level": "medium",
+        "plan_roles": ["post_wash_leave_in"],
+        "functional_benefits": ["repair_support"],
+        "provides_heat_protection": false
+      },
+      "eligibility": [
+        { "thickness": "fine", "need_bucket": "repair", "styling_context": "air_dry" },
+        { "thickness": "fine", "need_bucket": "repair", "styling_context": "non_heat_style" },
+        { "thickness": "normal", "need_bucket": "repair", "styling_context": "air_dry" },
+        { "thickness": "normal", "need_bucket": "repair", "styling_context": "non_heat_style" },
+        { "thickness": "coarse", "need_bucket": "repair", "styling_context": "air_dry" },
+        { "thickness": "coarse", "need_bucket": "repair", "styling_context": "non_heat_style" }
+      ],
+      "protocol": {
+        "role": "post_wash_leave_in",
+        "application_family": "post_wash_damp_conditioning",
+        "contact_time_seconds": 240,
+        "rinse_action": "leave_in",
+        "guidance_de": "Nach dem Waschen gleichmäßig ins handtuchtrockene Haar sprühen, vier Minuten einwirken lassen und nicht ausspülen. Danach wie gewohnt weiter stylen.",
+        "guidance_payload": {
+          "schemaVersion": 1,
+          "guidanceKey": "product-leave-in-8f84eae5-222d-4bbf-9ab0-f30361882a95-post-wash",
+          "protocolVersion": 1,
+          "locale": "de",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "8f84eae5-222d-4bbf-9ab0-f30361882a95"
+          },
+          "role": "leave_in",
+          "applicationFamily": "post_wash_damp_conditioning",
+          "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+          "exactGuidanceRequired": true,
+          "sequence": {
+            "anchor": "damp_leave_on",
+            "before": [],
+            "after": ["post_rinse_towel_dry"],
+            "conflictsWith": []
+          },
+          "requirements": {
+            "requiredCatalogFacts": ["leave_in.plan_roles"],
+            "requiredProtocolFacts": [],
+            "requiredProfileFacts": []
+          },
+          "protocolFacts": {
+            "applicationArea": "lengths_ends",
+            "rinse": "leave_in",
+            "contactTimeSeconds": 240,
+            "conditionerRelationship": "not_applicable",
+            "reapplication": "none",
+            "amount": {
+              "kind": "qualitative",
+              "copyDe": "Gleichmäßig in Längen und Spitzen sprühen."
+            },
+            "cautions": []
+          },
+          "steps": [
+            {
+              "stepKey": "apply-k18-mist",
+              "action": "apply_product",
+              "copyTemplateDe": "Nach dem Waschen gleichmäßig ins handtuchtrockene Haar sprühen."
+            },
+            {
+              "stepKey": "wait-k18-mist",
+              "action": "wait",
+              "copyTemplateDe": "Vier Minuten einwirken lassen."
+            },
+            {
+              "stepKey": "finish-k18-mist",
+              "action": "dry",
+              "copyTemplateDe": "Nicht ausspülen und danach wie gewohnt weiter stylen."
+            }
+          ],
+          "evidence": [
+            {
+              "sourceUrl": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+              "sourceType": "manufacturer",
+              "checkedAt": "2026-09-01"
+            },
+            {
+              "sourceUrl": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+              "sourceType": "internal_authority",
+              "checkedAt": "2026-09-01"
+            }
+          ]
+        },
+        "guidance_payload_v2": {
+          "schemaVersion": 2,
+          "contractKind": "product_pointer",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "8f84eae5-222d-4bbf-9ab0-f30361882a95"
+          },
+          "sourceRole": "post_wash_leave_in",
+          "role": "leave_in",
+          "applicationFamily": "post_wash_damp_conditioning",
+          "facts": {
+            "applicationState": "damp_hair",
+            "applicationArea": "hair_lengths_ends",
+            "rinse": "leave_in",
+            "contactTime": {
+              "kind": "seconds",
+              "seconds": 240
+            },
+            "amount": null,
+            "heat": null,
+            "conditionerPolicy": "not_applicable"
+          },
+          "workflowId": null,
+          "requiredCompanionProductId": null,
+          "runtimeBlockerCode": null,
+          "exactSteps": [],
+          "cautionCodes": [],
+          "evidence": [
+            {
+              "sourceUrl": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+              "sourceType": "manufacturer",
+              "checkedAt": "2026-09-01"
+            },
+            {
+              "sourceUrl": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+              "sourceType": "internal_authority",
+              "checkedAt": "2026-09-01"
+            }
+          ]
+        }
+      }
+    },
+    "sources": [
+      {
+        "label": "K18 Professional Molecular Repair Hair Mist",
+        "url": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+        "text": "Official evidence supports the exact professional 300 ml Molecular Repair Hair Mist, lightweight leave-in format, formula, and four-minute/no-rinse timing. It frames the product as a professional service and does not itself establish the ordinary consumer Personal Plan role.",
+        "source_type": "manufacturer",
+        "checked_at": "2026-09-01"
+      },
+      {
+        "label": "Chaarlie consumer-role decision",
+        "url": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+        "text": "Nick approved the hairdresser-informed decision to treat this lighter K18 mist as an ordinary lightweight consumer leave-in, not as the primary bondbuilder. Official K18 evidence remains limited to product identity, formula, and timing.",
+        "source_type": "internal_verified",
+        "checked_at": "2026-09-01"
+      },
+      {
+        "label": "CosmoProf K18 Molecular Repair Hair Mist",
+        "url": "https://www.cosmoprofbeauty.com/USA-040285.html",
+        "text": "Exact 10 fl oz / 300 ml professional mist package identity supports the scoped net-content correction.",
+        "source_type": "retailer",
+        "checked_at": "2026-09-01"
+      }
+    ]
+  }
+}

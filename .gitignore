@@ -228,6 +228,7 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v1/deep-cleansing-candidates.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5-21-product-search-dispositions.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5R-01-oil-reentry.json
+!/data/catalog-enrichment/personal-plan-stage5-v1/S5R-02-k18-molecular-repair-hair-mist-readiness.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research.schema.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/scalp-refresh.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/
@@ -295,6 +296,7 @@ test-screenshots*/
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e8-v1.json
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e9-v1.json
 !/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e10-v1.json
+!/data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e11-v1.json
 !/data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-research-refresh-2026-08-28.json
 !/data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-final-audit-2026-08-28.json
 !/data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-research-update-2026-08-31.json
