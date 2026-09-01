@@ -4,7 +4,14 @@ Jeder Barcode-Resolve-Versuch schreibt eine Zeile (service-role-only, fail-open;
 siehe Migration `20260821120000_scan_resolve_events.sql` und
 `src/lib/scan/resolve-event-log.ts`). Nur Barcode-Versuche: der productId-Pfad
 (Such-Sheet/Merkliste) loggt nichts. `user_id` wird gespeichert (Stealth-Phase-
-Entscheidung 2026-08-21); vor Public Launch Retention-Regel festlegen.
+Entscheidung 2026-08-21); `user_id` wird nach 90 Tagen automatisch anonymisiert
+(pg_cron-Job `scan_resolve_events_anonymize`, Migration
+`20260901090000_scan_resolve_events_retention.sql`). Konto-Löschung kaskadiert
+ohnehin (FK `ON DELETE CASCADE` auf `auth.users`). Job inspizieren:
+
+```sql
+select * from cron.job where jobname = 'scan_resolve_events_anonymize';
+```
 
 ## Miss-Ranking = WP10-Backfill-Prioritätenliste
 
@@ -45,3 +52,17 @@ limit 50;
 `quarantined` gesondert beobachten: der Barcode zeigt auf ein Katalogprodukt,
 das die Disposition-Quarantäne blockt — `matched_product_id` ist dann gesetzt
 und benennt das aufzuräumende Produkt.
+
+## Täglicher Operator-Loop (Public Launch)
+
+Volles Verfahren in `docs/product-intake-research-ops.md` — hier nur die
+tägliche Kurzfassung:
+
+1. `npm run products:intake:queue -- --status pending_review --report`
+2. Review/Approval pro `docs/product-intake-research-ops.md` (Review-Center
+   oder `approve-package`).
+3. `npm run products:intake:notify-pending` (Dry-Run), dann
+   `npm run products:intake:notify-pending -- --apply --confirm`.
+
+Die Pending-Screen-Zusage im Scan-Flow ist „Meist innerhalb von 24 Stunden –
+wir melden uns im Chat" — daher der tägliche Lauf.

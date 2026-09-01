@@ -31,37 +31,27 @@ function personalPlanAccess(
   }
 }
 
-test("Personal Plan navigation exposes only reachable destinations in the signed order", () => {
-  assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(false, false)), {
-    kind: "personal_plan",
-    hasPendingRoutineProposal: false,
-    items: [
-      { key: "chat", href: "/chat", label: "Chat" },
-      { key: "profile", href: "/profile", label: "Profil" },
-    ],
-    unvisitedNavSurfaces: new Set(),
-  })
-  assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(true, false)), {
-    kind: "personal_plan",
-    hasPendingRoutineProposal: false,
-    items: [
-      { key: "chat", href: "/chat", label: "Chat" },
-      { key: "routine", href: "/routine", label: "Routine" },
-      { key: "profile", href: "/profile", label: "Profil" },
-    ],
-    unvisitedNavSurfaces: new Set(),
-  })
-  assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true)), {
-    kind: "personal_plan",
-    hasPendingRoutineProposal: false,
-    items: [
-      { key: "chat", href: "/chat", label: "Chat" },
-      { key: "routine", href: "/routine", label: "Routine" },
-      { key: "application", href: "/anwendung", label: "Anwendung" },
-      { key: "profile", href: "/profile", label: "Profil" },
-    ],
-    unvisitedNavSurfaces: new Set(),
-  })
+test("Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access", () => {
+  const fixedItems = [
+    { key: "chat", href: "/chat", label: "Chat" },
+    { key: "routine", href: "/routine", label: "Routine" },
+    { key: "scan", href: "/scan", label: "Scan" },
+    { key: "application", href: "/anwendung", label: "Anwendung" },
+    { key: "profile", href: "/profile", label: "Profil" },
+  ]
+  for (const [stage4, stage5] of [
+    [false, false],
+    [true, false],
+    [true, true],
+  ] as const) {
+    assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(stage4, stage5)), {
+      kind: "personal_plan",
+      hasPendingRoutineProposal: false,
+      items: fixedItems,
+      unvisitedNavSurfaces: new Set(),
+      hasRoutineAccess: stage4,
+    })
+  }
 })
 
 test("Personal Plan navigation carries the already-authoritative routine-attention state", () => {
@@ -89,7 +79,10 @@ test("an unvisited tab dots, a visited one doesn't, and routine never dots even 
 
   assert.equal(navigation.kind, "personal_plan")
   if (navigation.kind !== "personal_plan") return
-  assert.deepEqual([...navigation.unvisitedNavSurfaces].sort(), ["application", "chat"].sort())
+  assert.deepEqual(
+    [...navigation.unvisitedNavSurfaces].sort(),
+    ["application", "chat", "scan"].sort(),
+  )
   assert.equal(navigation.unvisitedNavSurfaces.has("profile"), false)
   assert.equal(navigation.unvisitedNavSurfaces.has("routine"), false)
 })
@@ -125,7 +118,10 @@ test("resolveAuthenticatedAppNavigationAccess wires the nav-visited read through
   assert.equal(loadNavVisitedStateCalls, 1)
   assert.equal(navigation.kind, "personal_plan")
   if (navigation.kind !== "personal_plan") return
-  assert.deepEqual([...navigation.unvisitedNavSurfaces].sort(), ["chat", "profile"].sort())
+  assert.deepEqual(
+    [...navigation.unvisitedNavSurfaces].sort(),
+    ["application", "chat", "profile", "scan"].sort(),
+  )
 })
 
 test("resolveAuthenticatedAppNavigationAccess skips the nav-visited read entirely for legacy destinations", async () => {
@@ -144,17 +140,20 @@ test("resolveAuthenticatedAppNavigationAccess skips the nav-visited read entirel
 })
 
 test("the rendered nav shows a dot only on an unvisited, non-routine tab", () => {
-  // chat and routine are visited; application and profile are not.
+  // chat and routine are visited; scan, application, and profile are not.
   const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true), {
     available: true,
     visitedSurfaces: new Set(["chat", "routine"]),
   })
   assert.equal(navigation.kind, "personal_plan")
   if (navigation.kind !== "personal_plan") return
-  assert.deepEqual([...navigation.unvisitedNavSurfaces].sort(), ["application", "profile"].sort())
+  assert.deepEqual(
+    [...navigation.unvisitedNavSurfaces].sort(),
+    ["application", "profile", "scan"].sort(),
+  )
 
   // pathname pinned to "/chat" — an already-visited surface, not one of the
-  // two unvisited ones under test — so this test's dot assertions are
+  // unvisited ones under test — so this test's dot assertions are
   // unaffected by the active-tab suppression covered separately below.
   const html = renderToStaticMarkup(
     createElement(PersonalPlanNavigationView, {
@@ -165,7 +164,7 @@ test("the rendered nav shows a dot only on an unvisited, non-routine tab", () =>
   )
   // One dot per unvisited surface, doubled for the header + mobile tab bar renders
   // (the header also has an unrelated "/chat" logo link with no dot).
-  assert.equal((html.match(/data-nav-unvisited-dot="true"/g) ?? []).length, 4)
+  assert.equal((html.match(/data-nav-unvisited-dot="true"/g) ?? []).length, 6)
 
   const headerNav = html.match(
     /<nav aria-label="Personal-Plan-Navigation"[^>]*>[\s\S]*?<\/nav>/,
@@ -184,7 +183,7 @@ test("the rendered nav shows a dot only on an unvisited, non-routine tab", () =>
       assert.ok(link, `expected a nav link for ${href}`)
       assert.doesNotMatch(link!, /data-nav-unvisited-dot/)
     }
-    for (const href of ["/anwendung", "/profile"]) {
+    for (const href of ["/scan", "/anwendung", "/profile"]) {
       const link = linkFor(nav, href)
       assert.ok(link, `expected a nav link for ${href}`)
       assert.match(link!, /data-nav-unvisited-dot="true"/)
@@ -236,7 +235,7 @@ test("fix round 1: the active tab never dots even when it's still in unvisitedNa
 
     // Every OTHER unvisited, non-active, non-routine surface still dots —
     // the suppression is scoped to the active tab only.
-    for (const href of ["/chat", "/profile"]) {
+    for (const href of ["/chat", "/scan", "/profile"]) {
       const link = linkFor(nav, href)
       assert.ok(link, `expected a nav link for ${href}`)
       assert.match(link!, /data-nav-unvisited-dot="true"/)
@@ -303,12 +302,14 @@ test("the signed navigation marks the current destination and the shell owns its
   assert.match(navHtml, /aria-current="page"[^>]*href="\/anwendung"/)
   assert.equal((navHtml.match(/>Chat</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Routine</g) ?? []).length, 2)
+  assert.equal((navHtml.match(/>Scan</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Anwendung</g) ?? []).length, 2)
   assert.equal((navHtml.match(/>Profil</g) ?? []).length, 2)
-  // Four reachable destinations; Scan stays out of the tab bar during its
-  // stealth rollout (reachable via direct link only).
-  assert.equal(navigation.items.length, 4)
-  assert.equal(navigation.items[2]?.key, "application")
+  // Five fixed destinations, always in the same order (product ruling
+  // 2026-08-31: navigation composition never changes per user).
+  assert.equal(navigation.items.length, 5)
+  assert.equal(navigation.items[2]?.key, "scan")
+  assert.equal(navigation.items[3]?.key, "application")
 
   const shellHtml = renderToStaticMarkup(
     createElement(AuthenticatedAppShell, {

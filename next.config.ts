@@ -56,6 +56,9 @@ const noindexRoutes = [
   "/profile/:path*",
   "/result/:path*",
   "/routine/:path*",
+  // `/scan` and `/scan/:path*` are both listed because `:path*` does not
+  // match the bare segment on its own (see `cameraRoutes` above).
+  "/scan",
   "/scan/:path*",
   "/welcome/:path*",
   "/warteliste/:path*",

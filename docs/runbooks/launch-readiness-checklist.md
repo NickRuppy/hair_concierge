@@ -31,6 +31,16 @@ Use this as the working checklist before the public influencer launch.
 - Confirm the influencer forecast does not materially exceed the historical peak hour of 152 landing pageviews, 61 quiz starts, and 27 leads.
 - Record that write-path and 2x/5x capacity are not experimentally proven on the simpler launch path.
 
+## Scan
+
+- Confirm the scan nav entry is live in production.
+- Run one manual end-to-end scan on production: open scan, scan a known EAN, confirm the result screen.
+- Run the unknown-EAN path end to end: submit an unresolved barcode, complete the operator loop (`docs/scan-attempt-log.md` — queue, review/approve, notify-pending), confirm the resulting chat notification arrives.
+- Confirm Sentry shows `scan.route`-tagged events for the scan API routes (`src/lib/observability/scan.ts`).
+- Confirm PostHog is receiving `scan_started` and `scan_result_shown` events.
+- After a few days of production traffic, run the miss-ranking query (`docs/scan-attempt-log.md`) and review the results.
+- Confirm the retention job is scheduled: `select * from cron.job where jobname = 'scan_resolve_events_anonymize';` returns a row.
+
 ## Strong Follow-Ups
 
 - Investigate homepage mobile LCP. Current first Lighthouse baseline: LCP 5320ms, CLS 0.000, TBT 81ms.

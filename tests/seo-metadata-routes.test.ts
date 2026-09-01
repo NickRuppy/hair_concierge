@@ -408,6 +408,9 @@ test("private and unstable routes receive response-level noindex headers", async
     "/profile/:path*",
     "/result/:path*",
     "/routine/:path*",
+    // Both are needed: `:path*` does not match the bare `/scan` segment
+    // (mirrors the camera-header workaround below).
+    "/scan",
     "/scan/:path*",
     "/welcome/:path*",
   ]) {

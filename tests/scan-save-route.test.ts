@@ -51,13 +51,20 @@ test("scan save POST: rate limited returns 429 with Retry-After, before any writ
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
-test("scan save POST: rate limiter unavailable fails closed with 503", async () => {
+test("scan save POST: rate limiter unavailable fails closed with 503, without a Sentry capture", async () => {
+  const captured: unknown[] = []
   const handlers = createScanSaveRouteHandlers(
-    baseDeps({ checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }) }),
+    baseDeps({
+      checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }),
+      captureScanException: (_error, details) => {
+        captured.push(details)
+      },
+    }),
   )
   const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
   assert.equal(response.status, 503)
   assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.deepEqual(captured, [])
 })
 
 test("scan save DELETE: rate limited returns 429, before any removal", async () => {
@@ -142,17 +149,26 @@ test("scan save POST: a refused cleanup is not a failure, the save still stands"
   })
 })
 
-test("scan save POST: a failed cleanup reports save_incomplete, never a silent success", async () => {
+test("scan save POST: a failed cleanup reports save_incomplete, never a silent success, and captures to Sentry", async () => {
+  const thrown = new Error("cleanup boom")
+  const captured: unknown[] = []
   const handlers = createScanSaveRouteHandlers(
     baseDeps({
       removeWishlist: async () => {
-        throw new Error("cleanup boom")
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
       },
     }),
   )
   const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
   assert.equal(response.status, 500)
   assert.deepEqual(await response.json(), { error: "save_incomplete" })
+  assert.deepEqual(captured, [
+    { route: "save", status: 500, reason: "save_move_cleanup_failed", userId },
+  ])
 })
 
 test("scan save POST merkliste: a refused product maps to 409, same as routine", async () => {
@@ -182,7 +198,7 @@ test("scan save POST routine: product_not_found from the helper maps to 404", as
   assert.deepEqual(await response.json(), { error: "product_not_found" })
 })
 
-test("scan save POST routine: refused (quarantined or non-curated/not-owned) maps to 409", async () => {
+test("scan save POST routine: product_not_saveable from the helper (search-quarantined) maps to 409", async () => {
   const handlers = createScanSaveRouteHandlers(
     baseDeps({ saveRoutine: async () => ({ outcome: "product_not_saveable" }) }),
   )
@@ -293,14 +309,42 @@ test("scan save DELETE routine: calls the routine remover, is idempotent on repe
   assert.deepEqual(calls, ["routine", "routine"])
 })
 
-test("scan save POST: an unexpected error maps to 503", async () => {
+test("scan save POST: an unexpected error maps to 503 and captures to Sentry", async () => {
+  const thrown = new Error("boom")
+  const captured: unknown[] = []
   const handlers = createScanSaveRouteHandlers(
     baseDeps({
       saveWishlist: async () => {
-        throw new Error("boom")
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
       },
     }),
   )
   const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
   assert.equal(response.status, 503)
+  assert.deepEqual(captured, [{ route: "save", status: 503, reason: "save_failed", userId }])
+})
+
+test("scan save DELETE: an unexpected error maps to 503 and captures to Sentry", async () => {
+  const thrown = new Error("boom")
+  const captured: unknown[] = []
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({
+      removeWishlist: async () => {
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
+      },
+    }),
+  )
+  const response = await handlers.DELETE(request("DELETE", { productId, kind: "merkliste" }))
+  assert.equal(response.status, 503)
+  assert.deepEqual(captured, [
+    { route: "save", status: 503, reason: "save_removal_failed", userId },
+  ])
 })

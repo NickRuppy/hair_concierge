@@ -425,7 +425,7 @@ test("a deferred category says the decision is still open instead of claiming no
   if (payload.kind !== "not_needed") return
   assert.equal(payload.mode, "deferred")
   assert.equal(payload.headline, "Das klären wir noch")
-  assert.equal(payload.subtitle, "Für Kopfhautprodukt steht deine Einschätzung noch aus")
+  assert.equal(payload.subtitle, "Für Kopfhautprodukte steht deine Einschätzung noch aus")
   assert.equal(payload.status, "neutral")
   // Everything else the branch carries is unchanged by the mode.
   assert.deepEqual(payload.reasons, [
@@ -742,7 +742,7 @@ test("a needed category with no evaluable role stays honestly unclear", () => {
   if (payload.kind !== "in_catalog") return
   assert.equal(payload.verdict, "unknown")
   assert.equal(payload.verdictLabel, "Unklar")
-  assert.equal(payload.verdictTitle, "Noch nicht sicher einzuordnen")
+  assert.equal(payload.verdictTitle, "Da sind wir noch nicht sicher")
   assert.equal(payload.status, "neutral")
   assert.equal(payload.evaluatedRole, null)
   assert.equal(payload.evaluatedRoleLabel, null)

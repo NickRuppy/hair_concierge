@@ -223,7 +223,10 @@ function CriterionRows({ criteria }: { criteria: Stage3CriterionResult[] }) {
 function CoveredBy({ entries }: { entries: Array<{ label: string; detail: string | null }> }) {
   return (
     <section>
-      <p className="mb-2 text-[13px] font-bold text-foreground">Das übernimmt bei dir</p>
+      {/* Inline lead-in sentence, not a standalone header like "Passende Alternativen"
+          above it (copy sign-off 2026-09-01, reverting the earlier header deviation) —
+          the colon reads straight into the covering entries below. */}
+      <p className="mb-2 text-[13px] leading-5 text-muted-foreground">Das übernimmt bei dir:</p>
       <ul className="flex flex-col gap-2">
         {entries.map((entry) => (
           <li
