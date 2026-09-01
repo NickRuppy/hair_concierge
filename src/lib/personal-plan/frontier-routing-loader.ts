@@ -30,7 +30,7 @@ const releaseDefaults: RoutingReleaseDependencies = {
 type RoutingSource = {
   qualifiedAt: string
   quizSourceKind: "legacy" | "personal_plan" | null
-  sourceKind: "paid" | "field_test" | "migration"
+  sourceKind: "paid" | "field_test" | "partner" | "migration"
   migrationStatus: "candidate" | "pending_source" | "ready" | null
   plan: {
     currentInitialNeedVersionId: string | null
@@ -47,9 +47,14 @@ export async function loadPersonalPlanRoutingFrontierForUser(
 ): Promise<PersonalPlanRoutingFrontier> {
   if (!(await release.appAllowedForUser(userId, client))) return { kind: "legacy" }
 
-  const { data, error } = await client.rpc("personal_plan_get_own_routing_source")
-  if (error) throw error
-  const source = parseRoutingSource(data)
+  const primary = await client.rpc("personal_plan_get_own_routing_source")
+  if (primary.error) throw primary.error
+  let source = parseRoutingSource(primary.data)
+  if (!source && primary.data == null) {
+    const partner = await client.rpc("personal_plan_get_own_partner_routing_source")
+    if (partner.error && !isMissingPartnerRoutingFunction(partner.error)) throw partner.error
+    if (!partner.error) source = parseRoutingSource(partner.data)
+  }
   if (!source) return { kind: "legacy" }
 
   const cutoff = release.cohortCutoff()
@@ -59,7 +64,8 @@ export async function loadPersonalPlanRoutingFrontierForUser(
     source.sourceKind === "migration"
       ? qualifiedAtIsValid &&
         (source.migrationStatus !== "candidate" || release.migrationEnabled?.() === true)
-      : qualifiedAtIsValid && source.sourceKind === "field_test"
+      : qualifiedAtIsValid &&
+          (source.sourceKind === "field_test" || source.sourceKind === "partner")
         ? true
         : qualifiedAtIsValid &&
           (release.migrationEnabled?.() === true ||
@@ -76,6 +82,16 @@ export async function loadPersonalPlanRoutingFrontierForUser(
     sourceReady: Boolean(source.plan?.currentInitialNeedVersionId),
     plan: source.plan,
   })
+}
+
+function isMissingPartnerRoutingFunction(error: unknown) {
+  if (!error || typeof error !== "object") return false
+  const value = error as { code?: unknown; message?: unknown }
+  return (
+    (value.code === "PGRST202" || value.code === "42883") &&
+    typeof value.message === "string" &&
+    value.message.includes("personal_plan_get_own_partner_routing_source")
+  )
 }
 
 function parseRoutingSource(value: unknown): RoutingSource | null {
@@ -101,9 +117,11 @@ function parseRoutingSource(value: unknown): RoutingSource | null {
       ? "paid"
       : row.source_kind === "field_test"
         ? "field_test"
-        : row.source_kind === "migration" && migrationStatus
-          ? "migration"
-          : null
+        : row.source_kind === "partner"
+          ? "partner"
+          : row.source_kind === "migration" && migrationStatus
+            ? "migration"
+            : null
   if (!sourceKind) return null
   if (row.plan === null || row.plan === undefined) {
     return {

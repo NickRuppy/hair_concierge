@@ -9,6 +9,7 @@ import { WistiaVideo } from "@/components/organic-plan-offer/wistia-video"
 import { BeforeAfterFigure } from "@/components/offer-media/before-after-figure"
 import { RegularQuizFieldTestActivationCard } from "@/components/regular-quiz-field-test/activation-card"
 import { RegularQuizFieldTestBanner } from "@/components/regular-quiz-field-test/banner"
+import { PartnerAccessActivationCard } from "@/components/partner-access/activation-card"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import { buildPersonalPlanAssessmentRows } from "@/lib/personal-plan-quiz/assessment-copy"
 import { assessPersonalPlanHair } from "@/lib/personal-plan-quiz/hair-assessment"
@@ -226,17 +227,22 @@ export function OrganicPlanOffer({
   pricingSlot,
   quizAnswers,
   regularFieldTest = null,
+  partnerAccess = null,
 }: OrganicPlanOfferProps) {
   const diagnosticInput = adaptLegacyQuizAnswersForAssessment(quizAnswers)
   const assessment = assessPersonalPlanHair(diagnosticInput)
   const diagnosticRows = buildPersonalPlanAssessmentRows(assessment, diagnosticInput)
   const isRegularFieldTest = Boolean(regularFieldTest)
+  const isPartnerAccess = Boolean(partnerAccess)
+  const isNonCommercialOffer = isRegularFieldTest || isPartnerAccess
   const isEmailBoundModerator = regularFieldTest?.identityMode === "email_bound"
   const usesBeforeAfterHero = heroMedia === "before_after"
-  const visibleFaqItems = isRegularFieldTest
+  const visibleFaqItems = isNonCommercialOffer
     ? faqItems.filter(([question]) => question !== "Was passiert direkt nach dem Kauf?")
     : faqItems
-  const activationHref = "#regular_field_test_activation"
+  const activationHref = isPartnerAccess
+    ? "#partner_access_activation"
+    : "#regular_field_test_activation"
 
   return (
     <OfferTrackingProvider
@@ -247,7 +253,7 @@ export function OrganicPlanOffer({
       offerRevision={ORGANIC_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
-      testKind={isRegularFieldTest ? "field_test" : null}
+      testKind={isPartnerAccess ? "partner" : isRegularFieldTest ? "field_test" : null}
       trackingIdentity={{
         conditionerModuleId: null,
         needLane: null,
@@ -268,16 +274,22 @@ export function OrganicPlanOffer({
               className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white"
               data-offer-cta="sticky_header"
               data-offer-destination={
-                isEmailBoundModerator
-                  ? "moderator_organic_test_activation"
-                  : isRegularFieldTest
-                    ? "regular_field_test_activation"
-                    : "pricing"
+                isPartnerAccess
+                  ? "partner_access_activation"
+                  : isEmailBoundModerator
+                    ? "moderator_organic_test_activation"
+                    : isRegularFieldTest
+                      ? "regular_field_test_activation"
+                      : "pricing"
               }
               data-offer-source-section="hero"
-              href={isRegularFieldTest ? activationHref : "#pricing"}
+              href={isNonCommercialOffer ? activationHref : "#pricing"}
             >
-              {isRegularFieldTest ? "Kostenlos fortfahren" : "Angebot ansehen"}
+              {isPartnerAccess
+                ? "Zugang aktivieren"
+                : isRegularFieldTest
+                  ? "Kostenlos fortfahren"
+                  : "Angebot ansehen"}
             </a>
           </div>
         </div>
@@ -379,23 +391,33 @@ export function OrganicPlanOffer({
         <section
           className="mx-auto max-w-4xl scroll-mt-16 px-4 py-10 sm:py-14"
           data-offer-section="pricing"
-          id={isRegularFieldTest ? "regular_field_test_activation" : "pricing"}
+          id={
+            isPartnerAccess
+              ? "partner_access_activation"
+              : isRegularFieldTest
+                ? "regular_field_test_activation"
+                : "pricing"
+          }
           tabIndex={-1}
         >
-          <div className="text-center">
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-              {isRegularFieldTest ? "Kostenlos aktivieren" : "Plan freischalten"}
-            </p>
-            <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
-              {isEmailBoundModerator
-                ? "Starte deinen 90-Tage-Testzugang ab Aktivierung."
-                : isRegularFieldTest
-                  ? "Starte deinen siebentägigen Chaarlie Testzugang."
-                  : "Starte mit deinem persönlichen Plan."}
-            </h2>
-          </div>
+          {isPartnerAccess ? null : (
+            <div className="text-center">
+              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+                {isRegularFieldTest ? "Kostenlos aktivieren" : "Plan freischalten"}
+              </p>
+              <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
+                {isEmailBoundModerator
+                  ? "Starte deinen 90-Tage-Testzugang ab Aktivierung."
+                  : isRegularFieldTest
+                    ? "Starte deinen siebentägigen Chaarlie Testzugang."
+                    : "Starte mit deinem persönlichen Plan."}
+              </h2>
+            </div>
+          )}
           <div className="mt-7">
-            {regularFieldTest ? (
+            {isPartnerAccess ? (
+              <PartnerAccessActivationCard leadId={leadId} />
+            ) : regularFieldTest ? (
               <RegularQuizFieldTestActivationCard
                 accessDurationHours={regularFieldTest.accessDurationHours}
                 activationApiPath={regularFieldTest.activationApiPath}

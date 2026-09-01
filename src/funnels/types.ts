@@ -26,6 +26,10 @@ export type FunnelOfferFieldTest =
       identityMode: "email_bound"
     }
 
+export type FunnelOfferPartnerAccess = {
+  activationApiPath: "/api/partner-access/activate"
+}
+
 export type FunnelOfferVariantProps = {
   name: string
   narrative: QuizResultNarrative
@@ -39,6 +43,7 @@ export type FunnelOfferVariantProps = {
   offerVariant: string
   isInternalTest?: boolean
   regularFieldTest?: FunnelOfferFieldTest | null
+  partnerAccess?: FunnelOfferPartnerAccess | null
 }
 
 export type FunnelOfferVariantComponent = ComponentType<FunnelOfferVariantProps>

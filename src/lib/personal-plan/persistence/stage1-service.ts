@@ -11,7 +11,7 @@ export type Stage1Entitlement = {
   qualifiedAt: string | null
   artifactLeadId: string | null
   quizSourceKind?: "personal_plan" | "legacy" | null
-  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "partner" | "migration" | null
 }
 
 export type Stage1PreparedArtifact = {
@@ -192,7 +192,9 @@ function isEligibleQualifiedOwner(
     return false
   const qualifiedAt = new Date(entitlement.qualifiedAt)
   if (Number.isNaN(qualifiedAt.getTime())) return false
-  return entitlement.sourceKind === "field_test" || entitlement.sourceKind === "migration"
+  return entitlement.sourceKind === "field_test" ||
+    entitlement.sourceKind === "partner" ||
+    entitlement.sourceKind === "migration"
     ? true
     : isMigrationPaidSource(entitlement.sourceKind) && migrationEnabled
       ? true

@@ -47,6 +47,7 @@ import {
   saveMigrationQuizLead,
 } from "@/lib/personal-plan/migration-quiz"
 import { isPersonalPlanLegacyMigrationEnabled } from "@/lib/personal-plan/migration-admission"
+import { resolvePartnerJourney, savePartnerAccessLead } from "@/lib/partner-access/journey"
 
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
@@ -58,6 +59,8 @@ function normalizeEmail(email: string): string {
 interface QuizLeadPostDependencies {
   resolveModeratorJourney: typeof resolveModeratorJourney
   saveModeratorOrganicLead: typeof saveModeratorOrganicLead
+  resolvePartnerJourney: typeof resolvePartnerJourney
+  savePartnerAccessLead: typeof savePartnerAccessLead
   checkRateLimit: typeof checkRateLimit
   checkEmailDeliverability: typeof checkEmailDeliverability
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
@@ -82,6 +85,8 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
   const dependencies: QuizLeadPostDependencies = {
     resolveModeratorJourney,
     saveModeratorOrganicLead,
+    resolvePartnerJourney,
+    savePartnerAccessLead,
     checkRateLimit,
     checkEmailDeliverability,
     recordEmailDeliverabilityOutcome,
@@ -169,6 +174,38 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           })
           .catch(() => null)
         return saved ? leadResponse(saved.leadId, false, true) : fieldTestUnavailableResponse()
+      }
+      const partner = await dependencies.resolvePartnerJourney({
+        cookies: cookieStore,
+        funnelContext,
+      })
+      if (partner.kind === "unavailable") return partnerUnavailableResponse()
+      if (partner.kind === "authorized") {
+        const origin = request.headers.get("origin")
+        if (origin && origin !== new URL(request.url).origin) {
+          return NextResponse.json({ error: "Ungültige Anfrage" }, { status: 403 })
+        }
+        if (email !== partner.email) {
+          return NextResponse.json(
+            {
+              code: "invited_email_mismatch",
+              error: "Bitte verwende die E-Mail-Adresse deines Kontos.",
+            },
+            { status: 422 },
+          )
+        }
+        const saved = await dependencies
+          .savePartnerAccessLead({
+            invitationId: partner.invitationId,
+            userId: partner.userId,
+            funnelSessionId: partner.funnelSessionId,
+            email: partner.email,
+            name: parsed.name,
+            marketingConsent: parsed.marketingConsent,
+            quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers) as Record<string, unknown>,
+          })
+          .catch(() => null)
+        return saved ? leadResponse(saved.leadId, false) : partnerUnavailableResponse()
       }
       const deliverability = await dependencies.checkEmailDeliverability(email)
       dependencies.recordEmailDeliverabilityOutcome("legacy", deliverability)
@@ -548,6 +585,10 @@ export async function bindRegularFieldTestLead({
 
 function fieldTestUnavailableResponse() {
   return NextResponse.json({ error: "Testzugang ist nicht verfügbar" }, { status: 503 })
+}
+
+function partnerUnavailableResponse() {
+  return NextResponse.json({ error: "Dein Zugang ist nicht verfügbar" }, { status: 503 })
 }
 
 function leadResponse(leadId: string, clearTouch: boolean, fieldTestAttached?: boolean) {

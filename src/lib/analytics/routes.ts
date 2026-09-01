@@ -14,6 +14,7 @@ export const eventRoutes = {
   checkout_started: { customerio: true, meta: true, posthog: true },
   first_chat_message: { customerio: true, meta: false, posthog: true },
   onboarding_completed: { customerio: true, meta: false, posthog: true },
+  partner_access_activated: { customerio: false, meta: false, posthog: true },
   offer_chapter_revealed: { customerio: false, meta: false, posthog: true },
   offer_checkout_opened: { customerio: false, meta: true, posthog: true },
   offer_checkout_lifecycle: { customerio: false, meta: false, posthog: true },

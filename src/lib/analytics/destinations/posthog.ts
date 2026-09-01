@@ -423,6 +423,10 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       const data = payload as AppEventMap["personal_plan_stage4_outcome"]
       return { origin: data.origin, outcome: data.outcome }
     }
+    case "partner_access_activated": {
+      const data = payload as AppEventMap["partner_access_activated"]
+      return { lead_id: data.leadId }
+    }
     case "pricing_viewed": {
       const data = payload as AppEventMap["pricing_viewed"]
       return {

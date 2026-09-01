@@ -3,7 +3,15 @@
 import { Header } from "@/components/layout/header"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Quote, FileText, Package, Users, MessageCircle } from "lucide-react"
+import {
+  LayoutDashboard,
+  Quote,
+  FileText,
+  Package,
+  Users,
+  MessageCircle,
+  Sparkles,
+} from "lucide-react"
 import { AppRouteProviders } from "@/providers/route-providers"
 
 const adminNav = [
@@ -12,6 +20,7 @@ const adminNav = [
   { href: "/admin/articles", label: "Artikel", icon: FileText },
   { href: "/admin/products", label: "Produkte", icon: Package },
   { href: "/admin/users", label: "Nutzer", icon: Users },
+  { href: "/admin/partner-access", label: "Partnerzugänge", icon: Sparkles },
   { href: "/admin/conversations", label: "Chats", icon: MessageCircle },
 ]
 

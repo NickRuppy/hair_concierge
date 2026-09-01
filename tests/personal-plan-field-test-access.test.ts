@@ -18,6 +18,10 @@ function client(responses: Record<string, Row[]>) {
           predicates.push([column, value])
           return builder
         },
+        is: (column: string, value: unknown) => {
+          predicates.push([column, value])
+          return builder
+        },
         maybeSingle: async () => {
           const rows = (responses[table] ?? []).filter((row) =>
             predicates.every(([column, value]) => row[column] === value),

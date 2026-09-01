@@ -5,6 +5,7 @@ import type { PersonalPlanJourneyAccess } from "@/lib/personal-plan/journey-acce
 import { NextResponse } from "next/server"
 import type { EmailOtpType } from "@supabase/supabase-js"
 import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
+import { isPartnerAccessReturnPath } from "@/lib/auth/partner-access-return"
 
 type AuthConfirmUser = { id: string; email?: string }
 
@@ -69,7 +70,11 @@ function sanitizeAuthIntendedPath(rawNext: string | null, origin: string): strin
         redirectUrl.searchParams.delete(key)
       }
     }
-    if (/(?:access|refresh)?_?token|token_hash|code|error/i.test(redirectUrl.hash)) {
+    const sanitizedDestination = `${redirectUrl.pathname}${redirectUrl.search}${redirectUrl.hash}`
+    if (
+      /(?:access|refresh)?_?token|token_hash|code|error/i.test(redirectUrl.hash) &&
+      !isPartnerAccessReturnPath(sanitizedDestination)
+    ) {
       redirectUrl.hash = ""
     }
 
@@ -182,7 +187,7 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
   } = await deps.getUser()
 
   if (verified) {
-    if (user && !isModeratorReturnPath(next)) {
+    if (user && !isModeratorReturnPath(next) && !isPartnerAccessReturnPath(next)) {
       try {
         await deps.linkQuizToProfile(user.id, user.email, leadId)
       } catch (e) {

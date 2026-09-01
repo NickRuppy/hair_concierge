@@ -112,7 +112,7 @@ test("result routing preserves persisted field-test intent after authorization l
     resultPageSource,
     /fieldTestUnavailable = fieldTestIntent && !fieldTestAuthorization/,
   )
-  assert.match(resultPageSource, /offerTracking =\s*hasAccess \|\| fieldTestUnavailable/)
+  assert.match(resultPageSource, /baseOfferTracking\s*=\s*hasAccess\s*\|\|\s*fieldTestUnavailable/)
 })
 
 test("moderator offer promises account return and ninety days without guest-browser limits", () => {

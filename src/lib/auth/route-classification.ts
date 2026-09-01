@@ -34,12 +34,14 @@ const PUBLIC_EXACT_ROUTES = [
 const PUBLIC_ROUTE_PREFIXES = [
   "/auth",
   "/lp",
+  "/partner",
   "/result",
   "/test/haarplan",
   "/test/quiz",
   "/api/funnel",
   "/api/og",
   "/api/paypal",
+  "/api/partner-access",
   "/api/quiz",
   "/api/stripe",
 ]

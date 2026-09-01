@@ -19,7 +19,7 @@ test("the no-access organic result resolves its media experiment before recordin
   assert.match(resultPageSource, /resolveOrganicOfferMediaExperiment\(/)
   assert.match(
     resultPageSource,
-    /excluded:\s*moderatorTest \|\|\s*Boolean\(regularFieldTestState\.authorization\) \|\|\s*regularFieldTestState\.unavailable/,
+    /excluded:\s*moderatorTest \|\|\s*partnerIntent \|\|\s*Boolean\(regularFieldTestState\.authorization\) \|\|\s*regularFieldTestState\.unavailable/,
   )
   assert.match(resultPageSource, /hasAccess\s*\? "organic-plan-v1"/)
   assert.ok(
