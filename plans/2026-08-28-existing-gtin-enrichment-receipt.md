@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: E1-E13 applied and verified in production. Added 187 GTINs to 181 existing products; 219/259 active products are barcode-linked and 207/259 are strict scan-result-ready. Remaining 40 are explicitly held or readiness-blocked, not silently completed.
+Status: E1-E14 applied and verified in production. Added 188 GTINs to 182 existing products; 220/259 active products are barcode-linked and 208/259 are strict scan-result-ready. Remaining 39 are explicitly held or readiness-blocked, not silently completed.
 
 ## Contract
 
@@ -168,3 +168,11 @@ Migration `20260901102000` preserves the E1-E12 executor and adds only E13's exa
 Clean-head preflight against `72813b5bb2643be26dbb3c2ffc47ed78278da37c` passed exact live product identity, migration, global ownership, open-submission, branch/head and replay gates. The atomic apply and guarded verify returned 5 products / 6 GTINs. Direct readback confirmed all owners, five item receipts, six identifiers, the reviewed head/fingerprint and exact migration-history SHA. No product field or category row was mutated.
 
 The post-apply readiness export reports **219/259 barcode-linked (84.6%)** and **207/259 strict scan-result-ready (79.9%)**. The 40 remaining unlinked rows split into 12 otherwise-ready and 28 readiness-blocked. Several of those 12 are losing duplicate-category rows for packages that now already scan successfully, so they are not all real uncovered physical products.
+
+## E14 continuation — September 1
+
+E14 added the exact current German Gliss Kur Aqua Revive Conditioner package, raw GTIN `4015100812336` / canonical `04015100812336`, to existing conditioner owner `02113cc7-80c4-45a5-a56b-738ac96f4f02`. Balea Natural Beauty 3in1 Locken remained excluded because open researching submission `08991f6b-cf73-4d9b-9ebe-18f746602b6f` currently holds its code; the collision guard was not weakened.
+
+The exact 1-product / 1-GTIN manifest fingerprint is `bc6a9751dffbd28508e47d37ef9c340591e6cb233aee8eab5081e2f015a94c34`. Migration `20260901110000` preserves E1-E13 and has production history source SHA `8b335e2f50826767c470366de066357132b7b0c87bdc7f1d42809699f211cf4e`. Main and independent read-only review passed 36 focused tests, typecheck, targeted lint, exact hash/static-delta checks and the live readiness audit.
+
+An intentionally mistyped reviewed-head dry run stopped before execution, demonstrating the clean-head gate. The corrected preflight against `ffa1858011ce6821a9b3694a90f25b2039912b45` passed; atomic apply, guarded verify and direct owner/batch/item/migration readback all reconciled exactly. The final readiness export reports **220/259 barcode-linked (84.9%)** and **208/259 strict scan-result-ready (80.3%)**. The 39 remaining unlinked rows split into 11 otherwise-ready and 28 readiness-blocked.
