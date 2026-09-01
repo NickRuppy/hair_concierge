@@ -117,7 +117,7 @@ test("accepts approved cohort shapes and canonicalizes all GTINs", () => {
   assert.equal(second.canonical_gtins.length, 22)
 })
 
-test("loads the reviewed E1-E14 files with their exact pinned raw fingerprints", () => {
+test("loads the reviewed E1-E15 files with their exact pinned raw fingerprints", () => {
   for (const [batch, filename] of [
     ["E1", "phase1-existing-identifier-backfill-e1-v2.json"],
     ["E2", "phase1-existing-identifier-backfill-e2-v2.json"],
@@ -133,6 +133,7 @@ test("loads the reviewed E1-E14 files with their exact pinned raw fingerprints",
     ["E12", "phase1-existing-identifier-backfill-e12-v1.json"],
     ["E13", "phase1-existing-identifier-backfill-e13-v1.json"],
     ["E14", "phase1-existing-identifier-backfill-e14-v1.json"],
+    ["E15", "phase1-existing-identifier-backfill-e15-v1.json"],
   ] as const) {
     const raw = readFileSync(`data/scanner-catalog-coverage/2026-08-26/${filename}`, "utf8")
     const parsed = parseScannerIdentifierBackfillManifest(raw)
@@ -155,20 +156,20 @@ test("E11 freezes the exact K18 Pro product page with the UPC and EAN corroborat
   ])
 })
 
-test("names E14 as the current final approved batch in parser errors", () => {
+test("names E15 as the current final approved batch in parser errors", () => {
   const raw = readFileSync(
     "data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e11-v1.json",
     "utf8",
   )
   const unknown = JSON.parse(raw)
-  unknown.batch = "E15"
+  unknown.batch = "E16"
   assert.throws(
     () => parseScannerIdentifierBackfillManifest(JSON.stringify(unknown)),
-    /E1 through E14/i,
+    /E1 through E15/i,
   )
 })
 
-test("accepts only exact E3-E14 shapes", () => {
+test("accepts only exact E3-E15 shapes", () => {
   for (const [batch, products, gtins] of [
     ["E3", 17, 17],
     ["E4", 20, 21],
@@ -182,6 +183,7 @@ test("accepts only exact E3-E14 shapes", () => {
     ["E12", 6, 7],
     ["E13", 5, 6],
     ["E14", 1, 1],
+    ["E15", 2, 3],
   ] as const) {
     const raw = readFileSync(
       `data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-${batch.toLowerCase()}-v1.json`,
@@ -251,6 +253,7 @@ test("apply arguments are fail-closed and pin all exact raw manifest fingerprint
     E12: "1e1c69be793d4ab00b42c3c618b4580403dde6a85c47185568b2a7ebfb76915b",
     E13: "2efe9cf73fd0294298daaad125f95cf9c387bb2fabe88ad90efade5ca1f9afe4",
     E14: "bc6a9751dffbd28508e47d37ef9c340591e6cb233aee8eab5081e2f015a94c34",
+    E15: "82841d4d5d7438f6eb029c8f542a708a3c4ee6d22c0583643f4b246c6dad1175",
   })
   assert.throws(() => parseScannerIdentifierBackfillArgs(["--apply"]), /confirm-project/i)
   assert.throws(
@@ -620,11 +623,11 @@ test("preflight reports absent migrations without querying not-yet-created schem
   assert.equal(schemaReads, 0)
 })
 
-test("preflight never assigns E14 migration requirements to an unknown future batch", async () => {
+test("preflight never assigns E15 migration requirements to an unknown future batch", async () => {
   const approved = reviewedE1()
   const unknownBatchManifest = {
     ...approved,
-    batch: "E15",
+    batch: "E16",
   } as unknown as typeof approved
 
   await assert.rejects(
@@ -643,7 +646,7 @@ test("preflight never assigns E14 migration requirements to an unknown future ba
         }),
         projectId: SCANNER_IDENTIFIER_BACKFILL_PROJECT_ID,
       }),
-    /unknown scanner identifier backfill batch: E15/i,
+    /unknown scanner identifier backfill batch: E16/i,
   )
 })
 
