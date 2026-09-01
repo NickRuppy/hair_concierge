@@ -23,6 +23,7 @@ export const SCANNER_IDENTIFIER_BACKFILL_K18_READINESS_MIGRATION = "202609010900
 export const SCANNER_IDENTIFIER_BACKFILL_E11_MIGRATION = "20260901091000" as const
 export const SCANNER_IDENTIFIER_BACKFILL_E12_MIGRATION = "20260901093000" as const
 export const SCANNER_IDENTIFIER_BACKFILL_E13_MIGRATION = "20260901102000" as const
+export const SCANNER_IDENTIFIER_BACKFILL_E14_MIGRATION = "20260901110000" as const
 
 export type ScannerIdentifierBackfillBatch =
   | "E1"
@@ -38,6 +39,7 @@ export type ScannerIdentifierBackfillBatch =
   | "E11"
   | "E12"
   | "E13"
+  | "E14"
 export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
   E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
   E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
@@ -52,6 +54,7 @@ export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
   E11: "f224db6c44e4b50dc22b15a8ed28b81922273d3127d83ad4c8e3c55711abf6ec",
   E12: "1e1c69be793d4ab00b42c3c618b4580403dde6a85c47185568b2a7ebfb76915b",
   E13: "2efe9cf73fd0294298daaad125f95cf9c387bb2fabe88ad90efade5ca1f9afe4",
+  E14: "bc6a9751dffbd28508e47d37ef9c340591e6cb233aee8eab5081e2f015a94c34",
 } as const satisfies Record<ScannerIdentifierBackfillBatch, string | null>
 
 export type ScannerIdentifierType = "ean" | "gtin" | "barcode"
@@ -164,6 +167,7 @@ const EXPECTED_SHAPES = {
   E11: { products: 1, gtins: 1 },
   E12: { products: 6, gtins: 7 },
   E13: { products: 5, gtins: 6 },
+  E14: { products: 1, gtins: 1 },
 } as const
 
 function record(value: unknown, label: string): Record<string, unknown> {
@@ -198,10 +202,25 @@ export function parseScannerIdentifierBackfillManifest(
     throw new Error("scanner identifier manifest schema_version is invalid")
   if (
     !(
-      ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13"] as const
+      [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+      ] as const
     ).includes(root.batch as ScannerIdentifierBackfillBatch)
   )
-    throw new Error("scanner identifier manifest batch must be E1 through E13")
+    throw new Error("scanner identifier manifest batch must be E1 through E14")
   const batch = root.batch as ScannerIdentifierBackfillBatch
   const batchId = requiredString(root.batch_id, "manifest.batch_id")
   if (!SAFE_KEY.test(batchId)) throw new Error("manifest.batch_id must be a safe key")
@@ -432,6 +451,19 @@ function requiredScannerIdentifierBackfillMigrations(
         SCANNER_IDENTIFIER_BACKFILL_E11_MIGRATION,
         SCANNER_IDENTIFIER_BACKFILL_E12_MIGRATION,
         SCANNER_IDENTIFIER_BACKFILL_E13_MIGRATION,
+      ]
+    case "E14":
+      return [
+        ...SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS,
+        SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E4_E7_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E8_E9_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E10_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_K18_READINESS_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E11_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E12_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E13_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E14_MIGRATION,
       ]
     default:
       throw new Error(`unknown scanner identifier backfill batch: ${batch}`)

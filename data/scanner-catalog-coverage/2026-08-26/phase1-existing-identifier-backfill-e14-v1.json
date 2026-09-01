@@ -1,0 +1,40 @@
+{
+  "batch": "E14",
+  "batch_id": "scanner-existing-identifiers-e14-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "existing-catalog-gtin-research-update-2026-08-31",
+    "production_identity_checked_at": "2026-09-01T10:44:00.000Z",
+    "source_refresh_receipt": "E14 retains only the exact unowned package that passed the fresh unresolved-submission collision check; the Balea candidate is intentionally excluded because an open research submission already claims its GTIN."
+  },
+  "items": [
+    {
+      "item_key": "gliss-kur-aqua-revive-conditioner",
+      "product_id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "expected_product": {
+        "name": "Gliss Kur Aqua Revive Conditioner",
+        "brand": "Gliss",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100812336",
+          "raw_gtin": "4015100812336",
+          "canonical_gtin14": "04015100812336",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/schwarzkopf-gliss-conditioner-aqua-revive-p4015100812336.html",
+          "source_urls": [
+            "https://www.dm.de/schwarzkopf-gliss-conditioner-aqua-revive-p4015100812336.html"
+          ],
+          "source_checked_at": "2026-09-01T10:44:00.000Z",
+          "exact_match_note": "dm exact PDP identifies Schwarzkopf Gliss Aqua Revive Conditioner 200 ml and lists GTIN 4015100812336. The existing active conditioner row is the reviewed scanner owner."
+        }
+      ],
+      "content_fingerprint": "c87715cad2d2def929d8551eb6f287c5eda337eb6bd75b48fce5d45e0f34efb0"
+    }
+  ]
+}
