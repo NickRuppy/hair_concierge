@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
 
@@ -13,6 +14,7 @@ const BASELINE_PATH =
   "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-baseline-2026-08-12.json"
 const MIGRATION_PATH =
   "supabase/migrations/20260901140744_20260901133000_personal_plan_product_disposition_resolution.sql"
+const sha256 = (value: string) => createHash("sha256").update(value).digest("hex")
 
 test("the disposition-resolution RPC resolves, replays, and rejects conflicting state atomically", async (t) => {
   const [amendmentText, baselineText, migration] = await Promise.all([
@@ -21,6 +23,9 @@ test("the disposition-resolution RPC resolves, replays, and rejects conflicting 
     readFile(MIGRATION_PATH, "utf8"),
   ])
   const built = buildStage5ProtocolAmendmentManifest(JSON.parse(amendmentText), baselineText)
+  const batchBody = built.resolutionBatch.canonicalJson
+  const batchFingerprint = sha256(batchBody)
+  assert.equal(batchFingerprint, built.resolutionBatch.fingerprint)
   const manifestItem = built.manifest.items[0]!
   const resolutionItem = built.resolutionBatch.items[0]!
   const pg = new PGlite()
@@ -35,7 +40,14 @@ test("the disposition-resolution RPC resolves, replays, and rejects conflicting 
       RETURNS bytea
       LANGUAGE sql
       IMMUTABLE
-      AS $$ SELECT pg_catalog.decode('${built.resolutionBatch.fingerprint}', 'hex') $$;
+      AS $$
+        SELECT CASE
+          WHEN $2 = 'sha256'
+            AND $1 = pg_catalog.convert_to('${batchBody.replaceAll("'", "''")}', 'UTF8')
+          THEN pg_catalog.decode('${batchFingerprint}', 'hex')
+          ELSE pg_catalog.decode(repeat('00', 32), 'hex')
+        END
+      $$;
 
     CREATE TABLE public.products (
       id uuid PRIMARY KEY,
@@ -91,6 +103,12 @@ test("the disposition-resolution RPC resolves, replays, and rejects conflicting 
       $stub$;
   `)
   await pg.exec(migration)
+
+  const tamperedBatchBody = `${batchBody}\n`
+  await assert.rejects(
+    resolve(pg, built, tamperedBatchBody, sha256(tamperedBatchBody)),
+    /product disposition resolution fingerprint mismatch/,
+  )
 
   await pg.query(
     `INSERT INTO public.products (id, category_key, origin, is_active, lifecycle_status)
@@ -160,10 +178,15 @@ async function insertDisposition(
   )
 }
 
-async function resolve(pg: PGlite, built: ReturnType<typeof buildStage5ProtocolAmendmentManifest>) {
+async function resolve(
+  pg: PGlite,
+  built: ReturnType<typeof buildStage5ProtocolAmendmentManifest>,
+  batchJson = built.resolutionBatch.canonicalJson,
+  batchFingerprint = built.resolutionBatch.fingerprint,
+) {
   return pg.query<{ product_id: string; resolution: string }>(
     "SELECT * FROM public.apply_personal_plan_product_disposition_resolutions_v1($1, $2, 'nick')",
-    [built.resolutionBatch.canonicalJson, built.resolutionBatch.fingerprint],
+    [batchJson, batchFingerprint],
   )
 }
 

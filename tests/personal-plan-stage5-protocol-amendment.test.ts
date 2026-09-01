@@ -8,6 +8,7 @@ import {
   parseStage5DispositionResolutionApplyArgs,
   preflightStage5DispositionResolution,
 } from "@/lib/product-intake/catalog-enrichment/stage5-protocol-amendments"
+import { stage5DispositionResolutionCommandExitCode } from "../scripts/product-intake/catalog-enrichment/stage5-product-disposition-resolution-client"
 import { loadStage5ProtocolBatch } from "../scripts/product-intake/catalog-enrichment/stage5-protocol-preflight"
 
 const PRODUCT_ID = "b000d235-1fc6-434c-9ba1-f1207d36cded"
@@ -214,6 +215,20 @@ test("Balea amendment reuses one source-backed V1 payload and one derived V2 poi
     false,
   )
   assert.equal(item.guidance_payload.protocolFacts.contactTimeSeconds, null)
+})
+
+test("an amendment cannot create multiple disposition resolutions for one product", () => {
+  const duplicateProduct = structuredClone(amendmentInput)
+  duplicateProduct.items.push({
+    ...structuredClone(duplicateProduct.items[0]),
+    role: "shampoo_dandruff",
+    expected_category_facts: { shampoo_buckets: ["schuppen"] },
+  })
+
+  assert.throws(
+    () => buildStage5ProtocolAmendmentManifest(duplicateProduct, baselineText),
+    new RegExp(`duplicate_disposition_resolution_product:${PRODUCT_ID}`),
+  )
 })
 
 test("the existing Stage 5 V1 loader accepts the post-baseline amendment batch", async () => {
@@ -425,6 +440,12 @@ test("disposition resolution apply is dry-run by default and fully production ga
     }),
     true,
   )
+})
+
+test("a blocked read-only disposition preflight has a nonzero command exit code", () => {
+  assert.equal(stage5DispositionResolutionCommandExitCode({ mode: "dry-run", ok: true }), 0)
+  assert.equal(stage5DispositionResolutionCommandExitCode({ mode: "dry-run", ok: false }), 1)
+  assert.equal(stage5DispositionResolutionCommandExitCode({ mode: "applied" }), 0)
 })
 
 test("the resolution RPC is service-role only and deletes only after exact V1/V2 verification", () => {

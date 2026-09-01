@@ -21,8 +21,21 @@ BEGIN
     AND protocol.role = 'pre_heat_protection'
     AND protocol.application_family = 'pre_heat_damp'
   FOR UPDATE;
-  IF NOT FOUND
-     OR v_protocol.source_url IS DISTINCT FROM v_expected_source_url
+  IF NOT FOUND THEN
+    -- A fresh install has neither the repaired Oil protocol nor its authority
+    -- receipt, so there is no legacy V2 pointer to reconcile. Once the repair
+    -- receipt exists, however, a missing target is authoritative drift.
+    IF EXISTS (
+      SELECT 1
+      FROM public.catalog_enrichment_applied_items AS applied
+      WHERE applied.batch_id = 'OIL-20260901-authority-enrichment-v1'
+        AND applied.product_key = 'oil-authority:' || v_product_id::text
+    ) THEN
+      RAISE EXCEPTION 'Garnier Oil V2 reconciliation requires exact approved V1 authority';
+    END IF;
+    RETURN;
+  END IF;
+  IF v_protocol.source_url IS DISTINCT FROM v_expected_source_url
      OR v_protocol.guidance_payload IS DISTINCT FROM v_expected_v1 THEN
     RAISE EXCEPTION 'Garnier Oil V2 reconciliation requires exact approved V1 authority';
   END IF;

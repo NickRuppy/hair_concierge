@@ -168,10 +168,20 @@ export async function runStage5DispositionResolutionCommand(
   }
 }
 
+export function stage5DispositionResolutionCommandExitCode(result: {
+  mode: "dry-run" | "applied"
+  ok?: boolean
+}) {
+  return result.mode === "dry-run" && result.ok === false ? 1 : 0
+}
+
 if (require.main === module) {
   loadLocalEnv()
   runStage5DispositionResolutionCommand()
-    .then((result) => process.stdout.write(`${JSON.stringify(result, null, 2)}\n`))
+    .then((result) => {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`)
+      process.exitCode = stage5DispositionResolutionCommandExitCode(result)
+    })
     .catch((error: unknown) => {
       console.error(error instanceof Error ? error.message : String(error))
       process.exitCode = 1

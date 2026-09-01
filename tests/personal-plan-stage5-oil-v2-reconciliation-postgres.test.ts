@@ -51,6 +51,15 @@ test("the Oil V2 reconciliation replaces only the exact reviewed legacy pointer"
       updated_at timestamptz,
       PRIMARY KEY (product_id, category, role, application_family)
     );
+    CREATE TABLE public.catalog_enrichment_applied_items (
+      batch_id text NOT NULL,
+      product_key text NOT NULL,
+      batch_fingerprint text NOT NULL,
+      content_fingerprint text NOT NULL,
+      product_id uuid NOT NULL,
+      reviewed_by text NOT NULL,
+      PRIMARY KEY (batch_id, product_key)
+    );
   `)
   await pg.query(
     `INSERT INTO public.product_application_protocols
@@ -79,6 +88,56 @@ test("the Oil V2 reconciliation replaces only the exact reviewed legacy pointer"
   assert.deepEqual(await storedPointer(pg), { unexpected: true })
 })
 
+test("the Oil V2 reconciliation is a no-op before the Oil authority repair is applied", async (t) => {
+  const pg = await emptyReconciliationDatabase(t)
+  const migration = await readFile(MIGRATION_PATH, "utf8")
+
+  await pg.exec(migration)
+  assert.equal(await protocolCount(pg), 0)
+})
+
+test("the Oil V2 reconciliation rejects a missing Garnier protocol after Oil authority apply", async (t) => {
+  const pg = await emptyReconciliationDatabase(t)
+  const migration = await readFile(MIGRATION_PATH, "utf8")
+
+  await pg.query(
+    `INSERT INTO public.catalog_enrichment_applied_items
+       (batch_id, product_key, batch_fingerprint, content_fingerprint, product_id, reviewed_by)
+     VALUES ('OIL-20260901-authority-enrichment-v1', $1, $2, $3, $4, 'nick')`,
+    [`oil-authority:${PRODUCT_ID}`, "a".repeat(64), "b".repeat(64), PRODUCT_ID],
+  )
+
+  await assert.rejects(pg.exec(migration), /requires exact approved V1 authority/)
+})
+
+async function emptyReconciliationDatabase(t: test.TestContext) {
+  const pg = new PGlite()
+  t.after(async () => pg.close())
+  await pg.exec(`
+    CREATE TABLE public.product_application_protocols (
+      product_id uuid NOT NULL,
+      category text NOT NULL,
+      role text NOT NULL,
+      application_family text NOT NULL,
+      source_url text,
+      guidance_payload jsonb,
+      guidance_payload_v2 jsonb,
+      updated_at timestamptz,
+      PRIMARY KEY (product_id, category, role, application_family)
+    );
+    CREATE TABLE public.catalog_enrichment_applied_items (
+      batch_id text NOT NULL,
+      product_key text NOT NULL,
+      batch_fingerprint text NOT NULL,
+      content_fingerprint text NOT NULL,
+      product_id uuid NOT NULL,
+      reviewed_by text NOT NULL,
+      PRIMARY KEY (batch_id, product_key)
+    );
+  `)
+  return pg
+}
+
 async function storedPointer(pg: PGlite) {
   const result = await pg.query<{ guidance_payload_v2: unknown }>(
     `SELECT guidance_payload_v2
@@ -87,4 +146,11 @@ async function storedPointer(pg: PGlite) {
     [PRODUCT_ID],
   )
   return result.rows[0]!.guidance_payload_v2
+}
+
+async function protocolCount(pg: PGlite) {
+  const result = await pg.query<{ count: number }>(
+    "SELECT count(*)::integer AS count FROM public.product_application_protocols",
+  )
+  return result.rows[0]!.count
 }

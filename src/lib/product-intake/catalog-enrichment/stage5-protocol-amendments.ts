@@ -152,11 +152,16 @@ export function buildStage5ProtocolAmendmentManifest(
   const baseline = JSON.parse(baselineText) as { items?: Array<{ key?: string }> }
   const baselineKeys = new Set((baseline.items ?? []).map(({ key }) => key))
   const identities = new Set<string>()
+  const resolutionProductIds = new Set<string>()
   const v2Inserts = manifest.items.map((item) => {
     const identity = `${item.product_id}:${item.role}`
     if (identities.has(identity))
       throw new Error(`duplicate_protocol_amendment_identity:${identity}`)
     identities.add(identity)
+    if (resolutionProductIds.has(item.product_id)) {
+      throw new Error(`duplicate_disposition_resolution_product:${item.product_id}`)
+    }
+    resolutionProductIds.add(item.product_id)
     if (item.category_key !== manifest.category_key) {
       throw new Error(`protocol_amendment_category_mismatch:${item.product_id}`)
     }
