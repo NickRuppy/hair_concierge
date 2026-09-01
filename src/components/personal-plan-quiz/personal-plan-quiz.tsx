@@ -706,9 +706,8 @@ function QuestionScreen({
     value?: string
     placeholder?: string
     maxLength: number
-    onShow: () => void
+    onToggle: () => void
     onChange: (value: string) => void
-    onClear: () => void
   }
 }) {
   const prefersReducedMotion = usePrefersReducedMotion()
@@ -726,7 +725,7 @@ function QuestionScreen({
 
   // A typed note is an answer in its own right, so it counts towards the CTA
   // tally next to the picked option cards.
-  const noteHasContent = Boolean(standaloneOtherText?.value?.trim())
+  const noteHasContent = noteVisible && Boolean(standaloneOtherText?.value?.trim())
   const selectedCount = selected.length + (noteHasContent ? 1 : 0)
 
   return (
@@ -839,13 +838,13 @@ function QuestionScreen({
         <div className="mt-3">
           <OptionCard
             multi
-            onClick={standaloneOtherText.onShow}
+            onClick={standaloneOtherText.onToggle}
             option={{
               value: "__other__",
               label: "Etwas anderes",
               description: "Wenn dein Thema nicht in der Liste steht, beschreib es kurz selbst.",
             }}
-            selected={standaloneOtherText.visible || Boolean(standaloneOtherText.value?.trim())}
+            selected={standaloneOtherText.visible}
           />
           {standaloneOtherText.visible ? (
             <div
@@ -870,14 +869,7 @@ function QuestionScreen({
                 rows={2}
                 value={standaloneOtherText.value ?? ""}
               />
-              <div className="mt-2 flex items-center justify-between gap-3">
-                <button
-                  className="text-xs font-medium text-[var(--text-caption)] underline underline-offset-4"
-                  onClick={standaloneOtherText.onClear}
-                  type="button"
-                >
-                  Notiz entfernen
-                </button>
+              <div className="mt-2 flex items-center justify-end gap-3">
                 <p className="text-xs text-[var(--text-caption)]">
                   {(standaloneOtherText.value ?? "").length}/{standaloneOtherText.maxLength}
                 </p>
@@ -2122,6 +2114,7 @@ export function PersonalPlanQuiz({
           browserGeneration: resume.snapshot.browserGeneration,
         })
       : null
+  const initialCurrentConcernNote = initialServerDraft?.answers.currentConcernsOtherText ?? ""
   const [screen, setScreen] = useState<PersonalPlanQuizScreenId>(
     () => initialServerDraft?.screen ?? "texture",
   )
@@ -2132,7 +2125,10 @@ export function PersonalPlanQuiz({
     () => initialServerDraft?.answers ?? (entry?.texture ? { texture: entry.texture } : {}),
   )
   const [ephemeral, setEphemeral] = useState<PersonalPlanQuizEphemeralState>({})
-  const [currentConcernNoteOpen, setCurrentConcernNoteOpen] = useState(false)
+  const [currentConcernNoteOpen, setCurrentConcernNoteOpen] = useState(
+    Boolean(initialCurrentConcernNote.trim()),
+  )
+  const [currentConcernNoteDraft, setCurrentConcernNoteDraft] = useState(initialCurrentConcernNote)
   const [draftReady, setDraftReady] = useState(false)
   const [preparedPlan, setPreparedPlan] = useState<PreparedPlanState>({
     status: "idle",
@@ -2211,6 +2207,9 @@ export function PersonalPlanQuiz({
         setScreen(draft.screen)
         setHistory(draft.history)
         setAnswers(draft.answers)
+        const restoredCurrentConcernNote = draft.answers.currentConcernsOtherText ?? ""
+        setCurrentConcernNoteDraft(restoredCurrentConcernNote)
+        setCurrentConcernNoteOpen(Boolean(restoredCurrentConcernNote.trim()))
         const restoredSections = getSettledSectionIndicesForRestoredJourney(
           draft.history,
           draft.screen,
@@ -2593,10 +2592,10 @@ export function PersonalPlanQuiz({
         value?: string
         placeholder?: string
         maxLength: number
-        onShow: () => void
+        onToggle: () => void
         onChange: (value: string) => void
-        onClear: () => void
       }
+      onContinue?: () => void
     },
   ) {
     const selected = selectedValues(config, answers)
@@ -2613,7 +2612,7 @@ export function PersonalPlanQuiz({
         onEmpty={options?.onEmpty}
         noneOption={options?.noneOption}
         noneSelected={noneSelected}
-        onContinue={() => goNext()}
+        onContinue={options?.onContinue ?? (() => goNext())}
         onOtherTextChange={options?.otherText?.onChange}
         onSelect={(value) =>
           config.multi
@@ -2698,31 +2697,44 @@ export function PersonalPlanQuiz({
         undefined,
         {
           continueValidity: Boolean(answers.currentConcerns?.length) || hasCurrentConcernNote,
+          onContinue: () => {
+            if (!currentConcernNoteOpen) setCurrentConcernNoteDraft("")
+            goNext()
+          },
           standaloneOtherText: {
-            visible: currentConcernNoteOpen || hasCurrentConcernNote,
-            value: answers.currentConcernsOtherText,
+            visible: currentConcernNoteOpen,
+            value: currentConcernNoteDraft,
             maxLength: 50,
-            onShow: () => {
+            onToggle: () => {
+              if (currentConcernNoteOpen) {
+                setCurrentConcernNoteOpen(false)
+                setAnswers((existing) => {
+                  const next = { ...existing }
+                  delete next.currentConcernsOtherText
+                  return next
+                })
+                return
+              }
+
               setCurrentConcernNoteOpen(true)
+              if (!currentConcernNoteDraft.trim()) return
+              setAnswers((existing) => ({
+                ...existing,
+                currentConcerns: existing.currentConcerns ?? [],
+                currentConcernsOtherText: currentConcernNoteDraft,
+              }))
             },
             onChange: (value) => {
+              const bounded = value.slice(0, 50)
+              setCurrentConcernNoteDraft(bounded)
               setAnswers((existing) => {
                 const next = { ...existing }
-                const bounded = value.slice(0, 50)
                 if (bounded.trim()) {
                   next.currentConcerns = existing.currentConcerns ?? []
                   next.currentConcernsOtherText = bounded
                 } else {
                   delete next.currentConcernsOtherText
                 }
-                return next
-              })
-            },
-            onClear: () => {
-              setCurrentConcernNoteOpen(false)
-              setAnswers((existing) => {
-                const next = { ...existing }
-                delete next.currentConcernsOtherText
                 return next
               })
             },

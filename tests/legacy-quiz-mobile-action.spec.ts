@@ -265,6 +265,23 @@ test.describe("@ci regular quiz mobile parity", () => {
     await expect(note).toBeFocused()
     await expect(action.locator("button")).toBeEnabled()
 
+    await page.getByRole("button", { name: "Wenig Glanz", exact: true }).click()
+    await expect(action.locator("button")).toContainText("2 ausgewählt")
+
+    const other = page.getByRole("button", { name: "Etwas anderes", exact: true })
+    await other.click()
+    await expect(other).toHaveAttribute("aria-pressed", "false")
+    await expect(note).toBeHidden()
+    await expect(action.locator("button")).toBeEnabled()
+    await expect(action.locator("button")).toContainText("1 ausgewählt")
+
+    await other.click()
+    await expect(other).toHaveAttribute("aria-pressed", "true")
+    await expect(note).toHaveValue("Stumpf nach dem Föhnen")
+    await expect(action.locator("button")).toBeEnabled()
+    await expect(action.locator("button")).toContainText("2 ausgewählt")
+    await page.waitForTimeout(500)
+
     const focusedGeometry = await page.evaluate(() => {
       const textarea = document.querySelector<HTMLElement>("#quiz-concerns-other-text")
       const footer = document.querySelector<HTMLElement>('[data-quiz-bottom-action="viewport"]')
