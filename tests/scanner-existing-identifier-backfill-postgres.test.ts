@@ -18,7 +18,20 @@ function gtin(body: string): string {
 }
 
 function makeManifest(
-  batch: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E8" | "E9" | "E10" | "E11" | "E12",
+  batch:
+    | "E1"
+    | "E2"
+    | "E3"
+    | "E4"
+    | "E5"
+    | "E6"
+    | "E7"
+    | "E8"
+    | "E9"
+    | "E10"
+    | "E11"
+    | "E12"
+    | "E13",
 ) {
   const shape = {
     E1: [20, 21, "1", 31],
@@ -33,6 +46,7 @@ function makeManifest(
     E10: [12, 12, "0", 121],
     E11: [1, 1, "a", 131],
     E12: [6, 7, "c", 141],
+    E13: [5, 6, "d", 151],
   } as const
   const [productCount, gtinCount, batchDigit, prefix] = shape[batch]
   const items = Array.from({ length: productCount }, (_, index) => {
@@ -357,6 +371,43 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     e12Executor = e12Executor.replace(pins[batch], makeManifest(batch).fingerprint)
   }
   await pg.exec(e12Executor)
+  let e13Executor = await readFile(
+    "supabase/migrations/20260901102000_scanner_existing_identifier_backfill_e13.sql",
+    "utf8",
+  )
+  for (const batch of [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6",
+    "E7",
+    "E8",
+    "E9",
+    "E10",
+    "E11",
+    "E12",
+    "E13",
+  ] as const) {
+    const pins = {
+      E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+      E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+      E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+      E4: "6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436",
+      E5: "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
+      E6: "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
+      E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
+      E8: "d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602",
+      E9: "69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6",
+      E10: "e9b803b9d36f7cc41a6a0972958e0f045d5c91668c8b5766c60976a84384f0e3",
+      E11: "f224db6c44e4b50dc22b15a8ed28b81922273d3127d83ad4c8e3c55711abf6ec",
+      E12: "1e1c69be793d4ab00b42c3c618b4580403dde6a85c47185568b2a7ebfb76915b",
+      E13: "2efe9cf73fd0294298daaad125f95cf9c387bb2fabe88ad90efade5ca1f9afe4",
+    }
+    e13Executor = e13Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+  }
+  await pg.exec(e13Executor)
   return pg
 }
 
@@ -568,8 +619,10 @@ test("E4-E7 each apply and replay exactly while rejecting a wrong pin", async (t
   }
 })
 
-test("E8-E12 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
-  const manifests = (["E8", "E9", "E10", "E11", "E12"] as const).map((batch) => makeManifest(batch))
+test("E8-E13 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
+  const manifests = (["E8", "E9", "E10", "E11", "E12", "E13"] as const).map((batch) =>
+    makeManifest(batch),
+  )
   const pg = await database(manifests)
   t.after(async () => pg.close())
   for (const manifest of manifests) {
@@ -606,12 +659,12 @@ test("E8-E12 each apply and replay exactly while rejecting wrong fingerprints an
   }
 })
 
-test("E12 executor rejects an unknown future batch before it can inherit E12 configuration", async (t) => {
+test("E13 executor rejects an unknown future batch before it can inherit E13 configuration", async (t) => {
   const e10 = makeManifest("E10")
   const pg = await database([e10])
   t.after(async () => pg.close())
   const unknown = JSON.parse(e10.raw)
-  unknown.batch = "E13"
+  unknown.batch = "E14"
   const unknownRaw = JSON.stringify(unknown)
 
   await assert.rejects(
@@ -624,15 +677,15 @@ test("E12 executor rejects an unknown future batch before it can inherit E12 con
   )
 })
 
-test("E12 rejects a product that becomes quarantined and rolls the full wave back", async (t) => {
-  const e12 = makeManifest("E12")
-  const pg = await database([e12])
+test("E13 rejects a product that becomes quarantined and rolls the full wave back", async (t) => {
+  const e13 = makeManifest("E13")
+  const pg = await database([e13])
   t.after(async () => pg.close())
   await pg.query(
     `INSERT INTO public.personal_plan_product_search_dispositions (product_id) VALUES ($1)`,
-    [e12.items[0]?.product_id],
+    [e13.items[0]?.product_id],
   )
-  await assert.rejects(() => apply(pg, e12), /E12 product is not scan-result-ready/i)
+  await assert.rejects(() => apply(pg, e13), /E13 product is not scan-result-ready/i)
   const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
     SELECT
       (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,

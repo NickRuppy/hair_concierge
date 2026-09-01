@@ -45,7 +45,7 @@ Fresh concrete recoveries, not new evidence-policy exceptions. The August 31 con
 - `7b5ff358-1b3b-411d-9220-5e6d30543235`: [Maria Nila True Soft Argan Oil, 100 ml](https://marianila.com/products/true-soft-argan-oil-100-ml), GTIN **7391681036376**.
 - `aa349c07-1add-44d4-9161-d99190182e5c`: OGX Argan Weightless, 118 ml, EU GTIN **3574661563350**; older US **0022796916204** needs formulation reconciliation.
 - `c320750f-6a1e-420d-8594-409f04e05319`: OGX Bond Protein Repair Oil Mist, 50 ml, EU GTIN **3574661818481**; US **0052800681958** needs formulation reconciliation.
-- `bef4f219-2c1f-4e02-8e3a-93056b95465a`: [OGX Keratin Oil shampoo](https://www.shop-apotheke.com/beauty/upm9ZPH3U/ogx-shampoo-keratin-oil.htm), old/international GTIN **0022796977519**; current-DE candidate **3574661798448** appears to be a different formulation and therefore belongs in a separate analyzed row if confirmed.
+- `bef4f219-2c1f-4e02-8e3a-93056b95465a`: [OGX Keratin Oil shampoo](https://www.dm.de/ogx-shampoo-strenght-und-lenght-keratin-oil-p3574661798448.html), current-DE GTIN **3574661798448**. Nick's September 1 pragmatic formula-parity decision allows this current German package to use the existing analysis. Keep old/international GTIN **0022796977519** held because its package evidence is weaker.
 - `663acf09-7090-40d8-9411-71154b9d60f3`: Fino has two distinct 70-ml products: [Premium Touch Rich](https://onlineshop.finetoday.com/products/fino-06), JAN **4550516493590**, and Airy Smooth, JAN **4550516483836**. They must not share one ingredient analysis.
 - `7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9`: Gliss Aqua Revive mask older German GTIN **4015100813555**; newer/regional candidates **4015100813272**, **9000101726053** and **8410436457873** require exact formulation mapping.
 
@@ -56,12 +56,12 @@ All 29 candidate codes checked in the August 31 read-only snapshot passed check-
 - Gliss Aqua Revive conditioner `02113cc7…`: regional 200/360-ml ambiguity. Candidate conditioner GTINs **5410091768041** and **9000101658736** require formulation mapping; spray **5201143753876** is a different format and must not attach to this row.
 - Redken Anti-Snap `2b7db7e3…`: the retained code has 240/250-ml conflicting source descriptions. Do not pick one by majority or round the volume.
 - Curlsmith Multitasking `2bafeb7e…`: verify one exact base package first; 59/946-ml additional packages need formula parity before sharing the same classification.
-- Balea Intensivmaske `d5d67009…`: DE/AT ingredient panels disagree. Identify which formulation the catalog analysis describes before attaching either candidate code.
+- Balea Intensivmaske `d5d67009…`: Nick's September 1 pragmatic regional-parity decision supersedes the earlier formulation hold. Attach both directly evidenced 300-ml package codes, DE **4066447982817** and AT **4066447237443**, to the same existing product analysis.
 - Nuxe Huile Prodigieuse `5767f7a6…`: the catalog names a product family; choose an evidenced exact size/variant, not an arbitrary code from a multi-variant page.
 
 Cantu leave-in `e3c4b607…` has an existing owner decision, but today's [dm 453-g page](https://www.dm.de/p/d/1685686/cantu-leave-in-haarkur-repair-creme) explicitly lists **810006945430**, whereas the held research code was **810006943405**. Neither is attached. Preserve both as distinct candidates and resolve package/formulation correspondence before selecting or combining them. Owner clarity does not prove code or formula parity.
 
-Nick's August 31 rule resolves the policy question: **same verified formulation, different size/region/package may add multiple GTINs to one product; different formulation gets its own product row and its own ingredient analysis.** We prefer extra verified records over suppressing a real package. A barcode still resolves to exactly one canonical product owner.
+Nick's September 1 execution rule is intentionally more pragmatic for this coverage phase: **different size/region/package codes may share one existing product analysis even when regional formula parity is not provable; treat them as the same formulation until the catalog supports regional analyses.** Explicitly different named variants, such as Fino Rich versus Airy Smooth, remain separate products. We prefer extra verified packages over suppressing a real package. A barcode still resolves to exactly one canonical product owner.
 
 ### Six genuine ownership decisions
 
@@ -69,12 +69,12 @@ Nick's August 31 rule resolves the policy question: **same verified formulation,
 | ------------------------ | --------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------- |
 | Guhl Panthenol 2in1      | conditioner `11d42d9d…`; mask `8ef172f7…`     | 4072600703403           | **Conditioner owner**; preserve the mask use as usage guidance                                        |
 | Hair Food Aloe           | leave-in `0307c903…`; mask `52264c47…`        | 3600542511049           | **Mask owner**; the exact German package is sold as a 3-in-1 hair mask                                |
-| Hair Food Macadamia      | conditioner `4c3e1a63…`; leave-in `a72d630d…` | 3600542511612           | **Create/consolidate to a mask owner**; neither existing category accurately represents the package   |
+| Hair Food Macadamia      | conditioner `4c3e1a63…`; leave-in `a72d630d…` | 3600542511612           | **Leave-in owner** for the pragmatic scanner result; it is supportive across all thicknesses, while the conditioner row currently mismatches all three |
 | Balea Aqua Hyaluron 3in1 | leave-in `c6e80f39…`; mask `55727898…`        | 4066447668315           | **Mask owner**; the exact package is sold as a 3-in-1 hair mask                                       |
 | Midnight Serum           | leave-in `6b01025d…`; oil `21a94166…`         | 3600524135805           | **Oil owner**; it has the complete dry-finish and leave-on protocols                                  |
 | Pantene 7in1             | leave-in `f8f3b51d…`; oil `5827a3b9…`         | 8700216178402           | **Oil owner**; the exact package is a hair-oil spray and the oil row has the current source/protocols |
 
-Rule: use an existing reviewed owner decision first. Otherwise compare the marketed product type, exact use instructions, approved category authority/protocols and current references. No automatic hierarchy, oldest-ID tie-break or retailer-navigation shortcut. Choosing an owner changes which category scanner evaluation uses. Alternate use modes belong in protocols, not competing barcode owners. **All six recommendations require Nick's explicit confirmation**; Hair Food Macadamia additionally requires creating/consolidating to a category not represented by either current row.
+Rule: use an existing reviewed owner decision first. Otherwise compare the marketed product type, exact use instructions, approved category authority/protocols and current references. No automatic hierarchy, oldest-ID tie-break or retailer-navigation shortcut. Choosing an owner changes which category scanner evaluation uses. Alternate use modes belong in protocols, not competing barcode owners. Nick approved the one-owner approach and instructed the team to continue; the six selections above are the controlling scanner-owner decisions for this phase. A future catalog-consolidation pass may model multi-category identity more cleanly without duplicating GTIN ownership.
 
 Cantu's conditioner row `7539ab79…` is already Nick-reviewed `retired_from_personal_plan / duplicate_identity` (August 12), explicitly favoring the leave-in. Reuse that decision for `e3c4b607…` after the code/formula issue above clears. Balea Tiefenreinigung's legacy shampoo row `0f71ff9d…` must remain barcode-less: the approved deep-cleansing owner `375ee7a0…` already resolves its code. No second assignment is needed.
 
@@ -82,9 +82,9 @@ Cantu's conditioner row `7539ab79…` is already Nick-reviewed `retired_from_per
 
 Nick does not want to spend this phase processing user submissions. Leave Balea Natural Beauty Locken `f212a8ff…` and its researching submission untouched. The apply guard must still check unresolved submissions: if any candidate overlaps one, hold only that candidate rather than override uniqueness or break the user's association. Submission processing is not a prerequisite for unrelated clean candidates.
 
-### Anti-dandruff default: complete the existing two-role model
+### Anti-dandruff default: derive the required role from the canonical bucket
 
-All eight anti-dandruff shampoos (DERMAXPRO, H&S Sensitive, Salthouse, Sebamed, Pantene, Guhl, Schauma, Balea Med) have a live `shampoo_dandruff` protocol and lack `shampoo_everyday`. The current Personal Plan deliberately uses both roles for an oily/dandruff profile: ordinary shampooing plus a targeted dandruff wash within the total shampoo budget. Keep that model and add a conservative `shampoo_everyday` protocol to each exact product rather than changing the role oracle.
+All eight anti-dandruff shampoos (DERMAXPRO, H&S Sensitive, Salthouse, Sebamed, Pantene, Guhl, Schauma, Balea Med) already have the correct live `shampoo_dandruff` protocol. A dandruff-only product does not also need a synthetic `shampoo_everyday` protocol. Require `shampoo_dandruff` for `schuppen`, `shampoo_everyday` for non-`schuppen`, and both only when a product genuinely carries both canonical buckets.
 
 The default mechanics are deliberately label-directed rather than a universal active-treatment claim:
 

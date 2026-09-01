@@ -1,0 +1,163 @@
+{
+  "batch": "E13",
+  "batch_id": "scanner-existing-identifiers-e13-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "existing-catalog-gtin-research-update-2026-08-31",
+    "production_identity_checked_at": "2026-09-01T08:04:39.000Z",
+    "source_refresh_receipt": "E13 selects the Nick-approved canonical owner for each shared physical package and retains only the reviewed package-parity GTINs."
+  },
+  "items": [
+    {
+      "item_key": "garnier-hair-food-macadamia-leave-in",
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "expected_product": {
+        "name": "Garnier Hair Food Macadamia",
+        "brand": "Garnier",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542511612",
+          "raw_gtin": "3600542511612",
+          "canonical_gtin14": "03600542511612",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+          "source_urls": [
+            "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html"
+          ],
+          "source_checked_at": "2026-09-01T08:04:39.000Z",
+          "exact_match_note": "dm exact PDP identifies the 400 ml Garnier Fructis Hair Food Macadamia 3-in-1 package and lists GTIN 3600542511612. Nick approved this leave-in row as the single scanner owner."
+        }
+      ],
+      "content_fingerprint": "4127ff11ed91b14bb54180fc34731b0379bae15e80af0cbe0a7ea7009a5ed662"
+    },
+    {
+      "item_key": "fructis-hair-food-aloe-vera-mask",
+      "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "expected_product": {
+        "name": "Fructis Hair Food Aloe Vera",
+        "brand": "Fructis",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542511049",
+          "raw_gtin": "3600542511049",
+          "canonical_gtin14": "03600542511049",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+          "source_urls": [
+            "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html"
+          ],
+          "source_checked_at": "2026-09-01T08:04:39.000Z",
+          "exact_match_note": "dm exact PDP identifies the 400 ml Fructis Hair Food Aloe Vera 3-in-1 package and lists GTIN 3600542511049. Nick approved this mask row as the single scanner owner."
+        }
+      ],
+      "content_fingerprint": "9947cfa653e7e1b3df069e11dae99a3e0a5c39584afdfcb53965b8d8356a1a95"
+    },
+    {
+      "item_key": "balea-aqua-hyaluron-mask",
+      "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "expected_product": {
+        "name": "Balea Aqua Hyaluron 3 in 1",
+        "brand": "Balea Aqua",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4066447668315",
+          "raw_gtin": "4066447668315",
+          "canonical_gtin14": "04066447668315",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+          "source_urls": [
+            "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html"
+          ],
+          "source_checked_at": "2026-09-01T08:04:39.000Z",
+          "exact_match_note": "dm exact PDP identifies the Balea Professional Aqua Hyaluron 3-in-1 package and lists GTIN 4066447668315. Nick approved this mask row as the single scanner owner."
+        }
+      ],
+      "content_fingerprint": "7c40b078c981c5f19c9dd3f3d0b466fad0a4a247e9a7396025a84f4f23210ce1"
+    },
+    {
+      "item_key": "balea-3-in-1-intensivmaske",
+      "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "expected_product": {
+        "name": "Balea 3 in 1 Intensivmaske",
+        "brand": "Balea",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4066447237443",
+          "raw_gtin": "4066447237443",
+          "canonical_gtin14": "04066447237443",
+          "size": "300 ml",
+          "market_scope": "AT/EU",
+          "source_url": "https://www.dm.at/p/d/1671219/balea-haarmaske-3in1-intensivpflege",
+          "source_urls": ["https://www.dm.at/p/d/1671219/balea-haarmaske-3in1-intensivpflege"],
+          "source_checked_at": "2026-09-01T08:04:39.000Z",
+          "exact_match_note": "dm AT exact PDP identifies Balea 3-in-1 Intensivpflege 300 ml and lists GTIN 4066447237443. Nick approved the reviewed package-parity assumption for this existing product analysis."
+        },
+        {
+          "type": "ean",
+          "value": "4066447982817",
+          "raw_gtin": "4066447982817",
+          "canonical_gtin14": "04066447982817",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+          "source_urls": ["https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1"],
+          "source_checked_at": "2026-09-01T08:04:39.000Z",
+          "exact_match_note": "dm DE exact PDP identifies Balea 3-in-1 Intensivpflege 300 ml and lists GTIN 4066447982817. Nick approved the reviewed package-parity assumption for this existing product analysis."
+        }
+      ],
+      "content_fingerprint": "47047a7163d9e476ce6bf89777341e2e474f225e26b24d0e3b593b40be20e84a"
+    },
+    {
+      "item_key": "ogx-keratin-oil-shampoo",
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "expected_product": {
+        "name": "Keratin Oil Shampoo",
+        "brand": "OGX",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3574661798448",
+          "raw_gtin": "3574661798448",
+          "canonical_gtin14": "03574661798448",
+          "size": "385 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/ogx-shampoo-strenght-und-lenght-keratin-oil-p3574661798448.html",
+          "source_urls": [
+            "https://www.dm.de/ogx-shampoo-strenght-und-lenght-keratin-oil-p3574661798448.html",
+            "https://www.shop-apotheke.com/beauty/upm9ZPH3U/ogx-shampoo-keratin-oil.htm"
+          ],
+          "source_checked_at": "2026-09-01T08:04:39.000Z",
+          "exact_match_note": "dm DE exact PDP identifies OGX Strength & Length + Keratin Oil Shampoo and lists GTIN 3574661798448. The approved catalog analysis treats this reviewed current-DE package as formula-parity with the existing OGX Keratin Oil Shampoo row."
+        }
+      ],
+      "content_fingerprint": "52c77c5419f27ff3f91bdc15cac221d5a8d76ceaafc7a6fa2f4370b727f5b07a"
+    }
+  ]
+}
