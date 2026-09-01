@@ -12,7 +12,7 @@ const AMENDMENT_PATH =
 const BASELINE_PATH =
   "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-baseline-2026-08-12.json"
 const MIGRATION_PATH =
-  "supabase/migrations/20260901133000_personal_plan_product_disposition_resolution.sql"
+  "supabase/migrations/20260901140744_20260901133000_personal_plan_product_disposition_resolution.sql"
 
 test("the disposition-resolution RPC resolves, replays, and rejects conflicting state atomically", async (t) => {
   const [amendmentText, baselineText, migration] = await Promise.all([

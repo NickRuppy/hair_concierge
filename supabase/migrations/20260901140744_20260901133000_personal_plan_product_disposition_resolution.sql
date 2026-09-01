@@ -1,3 +1,4 @@
+-- Production migration history version: 20260901140744.
 -- Repin the existing Stage 5 V2 executor to the reviewed post-baseline product
 -- protocol amendment. The executor implementation and permissions stay intact.
 DO $repin_stage5_v2_executor$

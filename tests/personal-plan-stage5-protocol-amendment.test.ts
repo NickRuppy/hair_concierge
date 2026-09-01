@@ -19,7 +19,7 @@ const BASELINE_PATH =
 const ARTIFACT_PATH =
   "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json"
 const MIGRATION_PATH =
-  "supabase/migrations/20260901133000_personal_plan_product_disposition_resolution.sql"
+  "supabase/migrations/20260901140744_20260901133000_personal_plan_product_disposition_resolution.sql"
 
 const amendmentInput = JSON.parse(readFileSync(AMENDMENT_PATH, "utf8"))
 const baselineText = readFileSync(BASELINE_PATH, "utf8")
