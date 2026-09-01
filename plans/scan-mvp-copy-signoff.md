@@ -1,5 +1,7 @@
 # Produkt-Scan — Copy-Sign-off für Nick (Stand 2026-08-20)
 
+**Status: RESOLVED 2026-09-01 — alle Strings abgenommen; Änderungen: Unklar-Titel, Such-Fehler, generischer Fehler, Profil-Subtitle, scalp_care-Plural, Inline-Satz "Das übernimmt bei dir:", Unknown-Flow-Umbau (siehe plans/scan-public-launch.md Task 9).**
+
 Neue deutsche UI-Texte, die nicht 1:1 aus der abgenommenen Spec stammen. Bitte prüfen/anpassen — alles Einzeiler-Änderungen.
 
 ## Aus Task 8 (Result-UI)

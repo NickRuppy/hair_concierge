@@ -51,7 +51,7 @@ const OPTIONS: Array<{
 
 const NOT_SAVEABLE_TOAST = "Dieses Produkt kann gerade nicht gespeichert werden."
 const NOT_REMOVABLE_HERE_TOAST = "Dieses Produkt wird über deine Routine verwaltet."
-const GENERIC_ERROR_TOAST = "Das hat gerade nicht geklappt. Versuch es noch einmal."
+const GENERIC_ERROR_TOAST = "Hat nicht geklappt – versuch's nochmal."
 
 type SaveApiResult =
   | { status: "ok"; savedState: ScanSavedStatePayload }

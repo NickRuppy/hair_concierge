@@ -19,7 +19,7 @@ const MIN_QUERY_LENGTH = 2
 const DEBOUNCE_MS = 250
 const EMPTY_COPY =
   "Nichts gefunden — prüfe die Schreibweise oder reiche das Produkt per Barcode ein."
-const ERROR_COPY = "Die Suche ist gerade nicht erreichbar."
+const ERROR_COPY = "Die Suche klappt gerade nicht."
 
 type SearchStatus = "idle" | "loading" | "ready" | "error"
 

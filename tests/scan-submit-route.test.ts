@@ -130,7 +130,7 @@ test("scan submit: pending_review maps to 202 pending_submission with headline",
   assert.deepEqual(await response.json(), {
     kind: "pending_submission",
     submissionId,
-    headline: "Wir prüfen dein Produkt",
+    headline: "Eingereicht!",
   })
 })
 

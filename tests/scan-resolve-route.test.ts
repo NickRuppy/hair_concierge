@@ -174,7 +174,7 @@ test("scan resolve: an open submission answers a catalog miss", async () => {
   assert.deepEqual(await response.json(), {
     kind: "pending_submission",
     submissionId: "sub-1",
-    headline: "Wir prüfen dein Produkt",
+    headline: "Eingereicht!",
     status: "researching",
   })
 })
