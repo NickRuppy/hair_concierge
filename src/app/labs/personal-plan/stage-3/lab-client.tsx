@@ -10,6 +10,7 @@ import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities
 import type { Stage3Bootstrap } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import {
   FIXTURE_STAGE3_SCENARIOS,
+  createFixtureDeferredHeatProtectionEntryContext,
   createFixtureInventoryOnlyConditionerEntryContext,
   createFixtureOwnedSearchOverflowCatalog,
   createFixtureUncoveredConditionerEntryContext,
@@ -38,11 +39,13 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
   )
   const entryContext = useMemo(
     () =>
-      scenario === FIXTURE_STAGE3_SCENARIOS.inventoryOnlyConditioner
-        ? createFixtureInventoryOnlyConditionerEntryContext()
-        : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
-          ? createFixtureUncoveredConditionerEntryContext()
-          : undefined,
+      scenario === FIXTURE_STAGE3_SCENARIOS.deferredHeatProtection
+        ? createFixtureDeferredHeatProtectionEntryContext()
+        : scenario === FIXTURE_STAGE3_SCENARIOS.inventoryOnlyConditioner
+          ? createFixtureInventoryOnlyConditionerEntryContext()
+          : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
+            ? createFixtureUncoveredConditionerEntryContext()
+            : undefined,
     [scenario],
   )
 
@@ -52,13 +55,15 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
       analytics={developmentStage3Analytics}
       entryContext={entryContext}
       draftId={
-        scenario === FIXTURE_STAGE3_SCENARIOS.inventoryOnlyConditioner
-          ? "fixture-draft-inventory-only-conditioner"
-          : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
-            ? "fixture-draft-uncovered-conditioner"
-            : scenario === FIXTURE_STAGE3_SCENARIOS.ownedSearchOverflow
-              ? "fixture-draft-owned-search-overflow"
-              : undefined
+        scenario === FIXTURE_STAGE3_SCENARIOS.deferredHeatProtection
+          ? "fixture-draft-deferred-heat-protection"
+          : scenario === FIXTURE_STAGE3_SCENARIOS.inventoryOnlyConditioner
+            ? "fixture-draft-inventory-only-conditioner"
+            : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
+              ? "fixture-draft-uncovered-conditioner"
+              : scenario === FIXTURE_STAGE3_SCENARIOS.ownedSearchOverflow
+                ? "fixture-draft-owned-search-overflow"
+                : undefined
       }
       gateway={gateway}
       searchDebounceMs={0}

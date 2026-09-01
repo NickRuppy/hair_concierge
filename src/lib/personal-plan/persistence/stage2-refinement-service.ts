@@ -129,6 +129,8 @@ export type Stage2RefinementSnapshotBuilder = (input: {
   triggerContext: Stage2TriggerContext
   answers: PersonalPlanRefinementAnswersV1
   completedQuestionIds: readonly Stage2QuestionId[]
+  /** Present only for a partial module projection; omitted by terminal completion. */
+  habitsModuleUserComplete?: boolean
 }) => {
   inputSnapshot: Record<string, unknown>
   outputSnapshot: Record<string, unknown>
@@ -337,6 +339,7 @@ export function createStage2RefinementService(input: {
         triggerContext: draft.triggerContext,
         answers: resolution.answers,
         completedQuestionIds: resolution.orderedQuestionIds,
+        habitsModuleUserComplete: moduleStates.habits.status === "complete",
       })
       const result = await input.persistence.completeModule({
         userId: input.userId,

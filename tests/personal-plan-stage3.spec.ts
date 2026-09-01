@@ -43,6 +43,16 @@ async function openOwnedSearchOverflowLab(page: Page) {
   }
 }
 
+async function openDeferredHeatProtectionLab(page: Page) {
+  await page.goto(`${baseUrl}${labPath}?scenario=deferred-heat-protection`)
+  await expect(page.getByRole("heading", { name: "Dein Hitzeschutz" })).toBeVisible()
+  const cookieDialog = page.getByRole("dialog", { name: "Cookie-Einstellungen" })
+  await cookieDialog.waitFor({ state: "visible", timeout: 2_000 }).catch(() => undefined)
+  if (await cookieDialog.isVisible()) {
+    await cookieDialog.getByRole("button", { name: "Nur essentielle" }).click()
+  }
+}
+
 async function searchAndSelect(page: Page, query: string, productName: string) {
   const search = page.getByRole("searchbox", { name: "Produkt suchen" })
   await search.fill(query)
@@ -231,6 +241,25 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
 
     await expectRoutineAuthHandoff(page)
+  })
+
+  test("asks for confirmed heat habits before planning or skipping an owned heat protectant", async ({
+    page,
+  }) => {
+    await openDeferredHeatProtectionLab(page)
+    await searchAndSelect(page, "Hitzeschutz", "Chaarlie Fixture Hitzeschutz-Spray")
+    await page.getByRole("button", { name: "Weiter", exact: true }).click()
+
+    await expect(page.getByRole("heading", { name: "Hitzeschutz noch offen" })).toBeVisible()
+    await expect(page.getByText(/Bevor wir ihn einplanen oder weglassen/)).toBeVisible()
+    const clarificationLink = page.getByRole("link", { name: "Hitze-Nutzung klären" })
+    await expect(clarificationLink).toHaveAttribute("href", "/plan-start?refine=habits")
+    await expect(page.getByText("Nicht in deiner Routine", { exact: true })).toHaveCount(0)
+    await expect(page.getByText("Kein separater Hitzeschutz nötig", { exact: true })).toHaveCount(0)
+    const noHorizontalOverflow = await page
+      .locator("html")
+      .evaluate((element: HTMLElement) => element.scrollWidth <= element.clientWidth)
+    expect(noHorizontalOverflow).toBe(true)
   })
 
   test("keeps product-frequency labels centered on their markers at every target width", async ({

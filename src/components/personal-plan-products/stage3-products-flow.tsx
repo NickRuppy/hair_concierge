@@ -1,9 +1,10 @@
 "use client"
 
 import * as Sentry from "@sentry/nextjs"
+import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   allowsMultipleProductsForRole,
   CATEGORY_ROLE_POLICIES,
@@ -33,7 +34,10 @@ import {
   deriveOilReviewGroup,
   groupedReviewCounts,
 } from "@/lib/personal-plan/products/oil-review-group"
-import { createStage3Draft } from "@/lib/personal-plan/products/state-machine"
+import {
+  createStage3Draft,
+  deriveStage3InventoryClarifications,
+} from "@/lib/personal-plan/products/state-machine"
 import {
   Stage3ProductsGatewayError,
   type Stage3CompleteResponse,
@@ -438,6 +442,7 @@ export function Stage3ProductsFlow({
 
   const allDecisionSubjects = useMemo(() => deriveStage3DecisionSubjects(draft), [draft])
   const decisionSubjects = useMemo(() => unresolvedDecisionSubjects(draft), [draft])
+  const inventoryClarifications = useMemo(() => deriveStage3InventoryClarifications(draft), [draft])
   const displayedReviewSubject = useMemo(() => {
     if (phase !== "decisions") return null
     return (
@@ -847,6 +852,7 @@ export function Stage3ProductsFlow({
       authorityStatus !== "ready" ||
       allDecisionSubjects.length !== 0 ||
       decisionSubjects.length !== 0 ||
+      inventoryClarifications.length !== 0 ||
       // A running recovery installs the canonical draft, which would otherwise look like a fresh
       // no-decision state and start a second completion next to the one being reconciled.
       pendingRecoveryMode ||
@@ -862,6 +868,7 @@ export function Stage3ProductsFlow({
     authorityStatus,
     decisionSubjects.length,
     draft,
+    inventoryClarifications.length,
     pendingRecoveryMode,
     phase,
   ])
@@ -1246,6 +1253,19 @@ export function Stage3ProductsFlow({
   }
 
   if (phase === "decisions") {
+    const clarification = inventoryClarifications[0]
+    if (clarification) {
+      const product = draft.products.find(
+        (candidate) => candidate.capturedProductId === clarification.capturedProductId,
+      )
+      if (product) {
+        return shell(
+          <Stage3HeatProtectionClarification product={product} />,
+          CATEGORY_COPY.heat_protectant.label,
+          onBackToRefinement,
+        )
+      }
+    }
     const nextSubject = displayedReviewSubject
     if (!nextSubject) {
       if (decisionSubjects.length > 0) {
@@ -3451,6 +3471,10 @@ export function Stage3InventoryDispositionReview({
   /** @deprecated Journey Back is owned by PersonalPlanJourneyHeader. */
   onBack?: () => void
 }) {
+  const isUnneededHeatProtection =
+    disposition.category === "heat_protectant" &&
+    disposition.reason === "category_not_in_final_plan"
+
   return (
     <section className="min-w-0 pb-28" aria-labelledby="stage3-inventory-disposition-title">
       <div className="mb-5 flex items-center justify-end gap-3">
@@ -3462,12 +3486,16 @@ export function Stage3InventoryDispositionReview({
           id="stage3-inventory-disposition-title"
           className="font-header text-3xl leading-tight text-foreground"
         >
-          Nicht in deiner Routine
+          {isUnneededHeatProtection
+            ? "Kein separater Hitzeschutz nötig"
+            : "Nicht in deiner Routine"}
         </h1>
         <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-          {disposition.reason === "category_not_in_final_plan"
-            ? "Diese Produktart ist aktuell nicht in deinem Plan vorgesehen. Du findest das Produkt weiterhin unter „Meine Produkte“."
-            : "Dieses Produkt übernimmt aktuell keine Aufgabe in deiner Routine. Du findest es weiterhin unter „Meine Produkte“."}
+          {isUnneededHeatProtection
+            ? "Für deine angegebene Routine brauchst du keinen separaten Hitzeschutz. Du kannst dieses Produkt weglassen. Du findest es weiterhin unter „Meine Produkte“."
+            : disposition.reason === "category_not_in_final_plan"
+              ? "Diese Produktart ist aktuell nicht in deinem Plan vorgesehen. Du findest das Produkt weiterhin unter „Meine Produkte“."
+              : "Dieses Produkt übernimmt aktuell keine Aufgabe in deiner Routine. Du findest es weiterhin unter „Meine Produkte“."}
         </p>
       </header>
 
@@ -3495,6 +3523,59 @@ export function Stage3InventoryDispositionReview({
         >
           Weiter
         </Button>
+      </Stage3StickyAction>
+    </section>
+  )
+}
+
+export function Stage3HeatProtectionClarification({ product }: { product: Stage3CapturedProduct }) {
+  return (
+    <section className="min-w-0 pb-28" aria-labelledby="stage3-heat-clarification-title">
+      <div className="mb-5 flex items-center justify-end gap-3">
+        <p className="text-right text-sm font-medium text-muted-foreground">Produkte prüfen</p>
+      </div>
+
+      <header className="mb-5">
+        <h1
+          id="stage3-heat-clarification-title"
+          className="font-header text-3xl leading-tight text-foreground"
+        >
+          Hitzeschutz noch offen
+        </h1>
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+          Du nutzt bereits einen Hitzeschutz. Bevor wir ihn einplanen oder weglassen, prüfen wir
+          kurz, wie du Hitze beim Styling verwendest.
+        </p>
+      </header>
+
+      <div className="mb-5 rounded-2xl bg-[var(--brand-coral-soft)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-coral-dark)]">
+        Deine bisherigen Hitze-Angaben sind noch nicht von dir bestätigt.
+      </div>
+
+      <article className="rounded-2xl border border-border bg-card p-5">
+        <div className="flex min-w-0 gap-4">
+          <ProductIdentityImage product={product} />
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {CATEGORY_COPY.heat_protectant.label}
+            </p>
+            <h2 className="mt-1 break-words text-lg font-semibold text-foreground">
+              {product.identity.displayName}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Bleibt unter „Meine Produkte“ gespeichert
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <Stage3StickyAction>
+        <Link
+          href="/plan-start?refine=habits"
+          className={buttonVariants({ variant: "funnelCta", size: null })}
+        >
+          Hitze-Nutzung klären
+        </Link>
       </Stage3StickyAction>
     </section>
   )

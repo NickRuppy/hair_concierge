@@ -18,6 +18,8 @@ type CompletedRefinementInput = {
   triggerContext: Stage2TriggerContext
   answers: PersonalPlanRefinementAnswersV1
   completedQuestionIds: readonly Stage2QuestionId[]
+  /** False only for a partial products-first projection whose habits remain open. */
+  habitsModuleUserComplete?: boolean
 }
 
 export function deriveStage2TriggerContext(
@@ -54,6 +56,9 @@ export function buildPlanRoutineContextFromCompletedRefinement(
   const dryShampooBridgePreference = getEffectiveDryShampooBridgePreference(contract.answers)
   const mechanicalExposureSignals =
     contract.answers.towel?.technique === "rough_rubbing" ? [TOWEL_ROUGH_RUBBING_SIGNAL] : []
+  const ownedHeatProtectionIsUnresolved =
+    input.habitsModuleUserComplete === false &&
+    contract.answers.currentProductCategories?.includes("heat_protectant")
 
   return {
     currentProductLoad: {
@@ -64,16 +69,18 @@ export function buildPlanRoutineContextFromCompletedRefinement(
       },
     },
     shampooFrequency: { state: "known", value: shampooFrequency },
-    heatToolUse: {
-      state: "known",
-      value: projectStage2HeatEvents(contract.answers).map((event) => ({
-        id: event.id,
-        tool: event.tool,
-        route: event.route,
-        frequency: event.frequency,
-        sourceRuleIds: [...STAGE2_HEAT_SOURCE_RULE_IDS],
-      })),
-    },
+    heatToolUse: ownedHeatProtectionIsUnresolved
+      ? { state: "unknown", reason: "heat_tool_use" }
+      : {
+          state: "known",
+          value: projectStage2HeatEvents(contract.answers).map((event) => ({
+            id: event.id,
+            tool: event.tool,
+            route: event.route,
+            frequency: event.frequency,
+            sourceRuleIds: [...STAGE2_HEAT_SOURCE_RULE_IDS],
+          })),
+        },
     mechanicalExposureSignals,
     dryShampooBridgePreference: dryShampooBridgePreference
       ? { state: "known", value: dryShampooBridgePreference }

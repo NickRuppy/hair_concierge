@@ -503,7 +503,7 @@ test("shows v3 replacement labels and retained owned products without adding the
   assert.match(html, /Zweck: Regelmäßige Reinigung; Produkt: Neues Shampoo;[^"]*Status: Aktiv/)
   assert.doesNotMatch(html, /Noch kaufen/)
   assert.match(html, /Mit Einschränkung/)
-  assert.match(html, /Nicht verwendete Produkte \(1\)/)
+  assert.match(html, /Nicht eingeplant \(1\)/)
   assert.match(html, /Altes Shampoo/)
   assert.equal((html.match(/Altes Shampoo/g) ?? []).length, 1)
   assert.match(html, /<details class=/)
@@ -515,7 +515,7 @@ test("shows v3 replacement labels and retained owned products without adding the
       portfolioPresentation={{ ...presentation, retainedOwnedProducts: [] }}
     />,
   )
-  assert.doesNotMatch(emptyHtml, /Nicht verwendete Produkte/)
+  assert.doesNotMatch(emptyHtml, /Nicht eingeplant/)
 })
 
 test("shows v4 retained inventory as stored, non-executable product context", () => {
@@ -552,10 +552,42 @@ test("shows v4 retained inventory as stored, non-executable product context", ()
     />,
   )
 
-  assert.match(html, /Nicht verwendete Produkte/)
+  assert.match(html, /Nicht eingeplant/)
   assert.match(html, /Nicht verwendetes Trockenshampoo/)
-  assert.match(html, /Nicht verwendet/)
+  assert.match(html, /Nicht eingeplant/)
   assert.doesNotMatch(html, /inventory-captured/)
+})
+
+test("explains confirmed unnecessary heat protection in the not-planned routine section", () => {
+  const routine = payload([item()])
+  const presentation: PortfolioPresentation = {
+    schemaVersion: 4,
+    plannedPurchaseDecisionKeys: [],
+    retainedOwnedProducts: [],
+    retainedInventoryProducts: [
+      {
+        kind: "catalog_product",
+        capturedProductId: "heat-captured",
+        userProductId: "heat-user-product",
+        productId: "heat-product",
+        displayName: "Hitzeschutz Spray",
+        category: "heat_protectant",
+        role: null,
+        sourceDispositionKey: "inventory:heat_protectant:heat-captured",
+        planStatus: "not_used",
+        reason: "category_not_in_final_plan",
+      },
+    ],
+  }
+
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,
+  )
+
+  assert.match(html, /Nicht eingeplant \(1\)/)
+  assert.match(html, /Kein separater Hitzeschutz nötig/)
+  assert.match(html, /Für deine angegebene Routine brauchst du dieses Produkt nicht/)
+  assert.match(html, /Meine Produkte/)
 })
 
 test("keeps required Basis gaps explicit and renders a named recovery state without payload", () => {

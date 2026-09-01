@@ -151,6 +151,15 @@ test("role and decision schemas enforce category authority and explicit allowed 
     false,
   )
   assert.equal(
+    stage3CategoryRequirementSchema.safeParse({
+      category: "heat_protectant",
+      requiredRoles: [],
+      needSummary: "Vorhandenen Hitzeschutz erfassen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+    }).success,
+    true,
+  )
+  assert.equal(
     stage3RoleAssignmentSchema.safeParse({
       capturedProductId: "oil-1",
       category: "oil",

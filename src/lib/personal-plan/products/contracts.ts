@@ -430,6 +430,7 @@ export type Stage3BlockingReason = {
     | "decision_incomplete"
     | "draft_invalid"
     | "need_revision_pending"
+    | "inventory_clarification_required"
     | "inventory_disposition_unacknowledged"
     | "stale_refined_version"
   category: PersonalPlanCategory | null
@@ -853,10 +854,26 @@ export const stage3CategoryRequirementSchema: z.ZodType<Stage3CategoryRequiremen
         path: ["requiredRoles"],
       })
     }
-    if (requirement.category === "heat_protectant" && !requirement.qualifyingRoutes) {
+    const requiresHeatProtection = requirement.requiredRoles.includes("pre_heat_protection")
+    if (
+      requirement.category === "heat_protectant" &&
+      requiresHeatProtection &&
+      !requirement.qualifyingRoutes
+    ) {
       context.addIssue({
         code: "custom",
         message: "heat protectant requires qualifying route metadata",
+        path: ["qualifyingRoutes"],
+      })
+    }
+    if (
+      requirement.category === "heat_protectant" &&
+      !requiresHeatProtection &&
+      requirement.qualifyingRoutes
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "heat protectant without a required role cannot carry qualifying routes",
         path: ["qualifyingRoutes"],
       })
     }
@@ -1235,6 +1252,30 @@ export function stage3InventoryDispositionKey(
   return `inventory:${category}:${capturedProductId}`
 }
 
+export function isStage3InventoryClarificationProduct(
+  draft: Pick<Stage3ProductDraft, "status" | "authoritySnapshot" | "roleAssignments">,
+  product: Stage3CapturedProduct,
+): boolean {
+  if (
+    draft.status !== "active" ||
+    product.identity.category !== "heat_protectant" ||
+    !draft.authoritySnapshot?.inventoryOnlyCategories?.includes("heat_protectant") ||
+    draft.roleAssignments.some(
+      (assignment) => assignment.capturedProductId === product.capturedProductId,
+    )
+  ) {
+    return false
+  }
+
+  const heatDecision = draft.authoritySnapshot.categoryDecisions.find(
+    (decision) => decision.category === "heat_protectant",
+  )
+  return (
+    heatDecision?.resolution === "deferred_until_post_plan_onboarding" &&
+    heatDecision.deferredFacts.includes("heat_tool_use")
+  )
+}
+
 export function deriveStage3DecisionSubjects(draft: Stage3ProductDraft): Stage3DecisionSubject[] {
   const productsById = new Map(
     draft.products.map((product) => [product.capturedProductId, product]),
@@ -1385,7 +1426,8 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
     for (const product of draft.products) {
       if (
         !assignedProductIds.has(product.capturedProductId) &&
-        !dispositionsByProductId.has(product.capturedProductId)
+        !dispositionsByProductId.has(product.capturedProductId) &&
+        !isStage3InventoryClarificationProduct(draft, product)
       ) {
         issues.push(`captured product ${product.capturedProductId} has no Stage 3 result`)
       }

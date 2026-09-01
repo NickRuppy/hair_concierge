@@ -36,6 +36,7 @@ export function createRefinedNeedSnapshot(input: {
   triggerContext: Stage2TriggerContext
   answers: PersonalPlanRefinementAnswersV1
   completedQuestionIds: readonly Stage2QuestionId[]
+  habitsModuleUserComplete?: boolean
   createdAt: string
 }): {
   inputSnapshot: Record<string, unknown>
@@ -48,6 +49,7 @@ export function createRefinedNeedSnapshot(input: {
     triggerContext: input.triggerContext,
     answers: input.answers,
     completedQuestionIds: input.completedQuestionIds,
+    habitsModuleUserComplete: input.habitsModuleUserComplete,
   })
   const computed = computeNeedPlan({
     rawEnvelope: input.baseInputSnapshot,
@@ -64,6 +66,9 @@ export function createRefinedNeedSnapshot(input: {
     triggerContext: input.triggerContext,
     answers: input.answers,
     completedQuestionIds: [...input.completedQuestionIds],
+    ...(input.habitsModuleUserComplete === false
+      ? { habitsModuleUserComplete: false as const }
+      : {}),
   }
   return {
     inputSnapshot,

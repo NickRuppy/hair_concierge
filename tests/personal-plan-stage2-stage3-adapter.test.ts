@@ -163,6 +163,70 @@ test("preserves refined rendered order and appends current-only inventory in can
   assert.equal(context.authoritySnapshot.productLoadContext?.shampooFrequency, "weekly_2x")
 })
 
+test("admits owned deferred heat protection without inventing routes or other inventory decisions", () => {
+  const snapshot = refinedSnapshot(["shampoo"])
+  snapshot.profile = {
+    source: { projection: "refined_post_plan" },
+    concerns: [],
+    scalp: { oiliness: "balanced", concerns: [] },
+    routine: {
+      shampooFrequency: { state: "known", value: "weekly_2x" },
+      currentProductLoad: {
+        state: "known",
+        value: {
+          categories: ["conditioner", "heat_protectant"],
+          oilPurposes: [],
+        },
+      },
+      heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+    },
+  } as never
+  snapshot.decisions.push({
+    category: "heat_protectant",
+    resolution: "deferred_until_post_plan_onboarding",
+    needTier: null,
+    roles: [],
+    target: {
+      category: "heat_protectant",
+      roles: [],
+      qualifyingRoutes: [],
+      carrierPolicy: "integrated_or_separate_verified_binary_capability",
+    },
+    frequency: null,
+    reasons: [],
+    executionState: "available",
+    executionPauseReason: null,
+    deferredFacts: ["heat_tool_use"],
+  })
+
+  const context = buildStage3EntryContext(snapshot, {
+    personalPlanId: "plan-owned-deferred-heat",
+    refinedVersionId: "refined-owned-deferred-heat",
+  })
+
+  assert.deepEqual(
+    context.orderedCategories.map((requirement) => requirement.category),
+    ["shampoo", "conditioner", "heat_protectant"],
+  )
+  assert.deepEqual(
+    context.orderedCategories.find((requirement) => requirement.category === "heat_protectant"),
+    {
+      category: "heat_protectant",
+      requiredRoles: [],
+      needSummary: "Schützt das Haar bei Styling mit Hitze.",
+      authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+    },
+  )
+  assert.deepEqual(context.authoritySnapshot.inventoryOnlyCategories, [
+    "conditioner",
+    "heat_protectant",
+  ])
+  assert.deepEqual(
+    context.authoritySnapshot.categoryDecisions.map((decision) => decision.category),
+    ["shampoo", "heat_protectant"],
+  )
+})
+
 test("preserves unknown current product load instead of encoding known-empty authority facts", () => {
   const snapshot = refinedSnapshot(["shampoo"])
   snapshot.profile = {

@@ -7,10 +7,76 @@ import type {
 } from "./contracts"
 
 export const FIXTURE_STAGE3_SCENARIOS = {
+  deferredHeatProtection: "deferred-heat-protection",
   inventoryOnlyConditioner: "inventory-only-conditioner",
   uncoveredConditioner: "uncovered-conditioner",
   ownedSearchOverflow: "owned-search-overflow",
 } as const
+
+export function createFixtureDeferredHeatProtectionEntryContext(): Stage3EntryContext {
+  const refinedVersionId = "fixture-refined-deferred-heat-protection"
+  const requirements: Stage3CategoryRequirement[] = [
+    {
+      category: "heat_protectant",
+      requiredRoles: [],
+      needSummary: "Vorhandenen Hitzeschutz erfassen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+    },
+  ]
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: refinedVersionId,
+    refinedInputHash: "deferred-heat-protection-fixture",
+    categoryDecisions: [
+      {
+        category: "heat_protectant",
+        resolution: "deferred_until_post_plan_onboarding",
+        needTier: null,
+        roles: [],
+        target: {
+          category: "heat_protectant",
+          roles: [],
+          qualifyingRoutes: [],
+          carrierPolicy: "integrated_or_separate_verified_binary_capability",
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: ["heat_tool_use"],
+      },
+    ],
+    coverage: [],
+    orderedCategories: ["heat_protectant"],
+    inventoryOnlyCategories: ["heat_protectant"],
+    authorityVersions: Object.fromEntries(
+      Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+        category,
+        policy.authorityVersion,
+      ]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1,
+      scalpOiliness: "balanced",
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x",
+      oilPurposes: [],
+      ownedCategories: ["heat_protectant"],
+    },
+  }
+
+  return {
+    schemaVersion: 1,
+    personalPlanId: "fixture-plan-deferred-heat-protection",
+    refinedVersionId,
+    orderedCategories: requirements,
+    inventoryPrompts: [
+      { category: "heat_protectant", allowsMultiple: true, allowsExplicitNone: true },
+    ],
+    authoritySnapshot,
+  }
+}
 
 export function createFixtureInventoryOnlyConditionerEntryContext(): Stage3EntryContext {
   return {

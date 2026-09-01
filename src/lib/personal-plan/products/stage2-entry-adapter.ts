@@ -125,7 +125,11 @@ export function buildStage3EntryContext(
   const inventoryOnlyCategories = orderedCategories.filter(
     (category) => !renderedCategories.has(category),
   )
-  const categoryDecisions = snapshot.renderedOrder.map((category) => {
+  const authorityDecisionCategories = [
+    ...snapshot.renderedOrder,
+    ...(inventoryOnlyCategories.includes("heat_protectant") ? (["heat_protectant"] as const) : []),
+  ]
+  const categoryDecisions = authorityDecisionCategories.map((category) => {
     const matches = snapshot.decisions.filter((candidate) => candidate.category === category)
     if (matches.length !== 1) {
       throw new Error(`Stage 3 entry requires exactly one refined decision for ${category}`)
@@ -150,7 +154,7 @@ export function buildStage3EntryContext(
         throw new Error(`Stage 3 role is not allowed for category ${category}`)
       }
       const qualifyingRoutes =
-        category === "heat_protectant" && decision
+        category === "heat_protectant" && decision && requiredRoles.includes("pre_heat_protection")
           ? requireHeatQualifyingRoutes(decision.target)
           : undefined
 
