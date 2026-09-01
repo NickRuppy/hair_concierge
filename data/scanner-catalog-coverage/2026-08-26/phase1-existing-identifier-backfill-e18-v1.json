@@ -1,0 +1,419 @@
+{
+  "batch": "E18",
+  "batch_id": "scanner-existing-identifiers-e18-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "plans/2026-08-28-existing-gtin-enrichment-receipt.md#e18-prepared-research-september-1",
+    "production_identity_checked_at": "2026-09-01T15:00:00.000Z",
+    "source_refresh_receipt": "E18 adds 14 exact oil packages after independent package-level research. OGX Argan Oil is excluded until its generic catalog identity is pinned to one exact finished-product formula."
+  },
+  "items": [
+    {
+      "item_key": "allgaeuer-oelmuehle-bio-traubenkernoel",
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "expected_product": {
+        "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+        "brand": "Allgäuer Ölmühle",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4260389030401",
+          "raw_gtin": "4260389030401",
+          "canonical_gtin14": "04260389030401",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.bio123.de/produkt/allgauer-olmuhle/bio-traubenkernol",
+          "source_urls": [
+            "https://www.bio123.de/produkt/allgauer-olmuhle/bio-traubenkernol",
+            "https://taleoo.de/allgaeuer-oelmuehle-traubenkernoel-44584"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Two exact organic-retailer pages tie Allgäuer Ölmühle Bio Traubenkernöl in the 100 ml glass bottle to EAN 4260389030401."
+        }
+      ],
+      "content_fingerprint": "244fd401a32d58c1e3e16fe40039c707a91176b9bc4c6f9342582d5e73c50ea6"
+    },
+    {
+      "item_key": "benecos-bio-koerperoel-aprikosenkernoel",
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Aprikosenkernöl",
+        "brand": "benecos",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4260198097541",
+          "raw_gtin": "4260198097541",
+          "canonical_gtin14": "04260198097541",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.shop-apotheke.com/beauty/upmCL3DPZ/benecosbio-koerperoel-bio-aprikosenkernoel.htm",
+          "source_urls": [
+            "https://www.shop-apotheke.com/beauty/upmCL3DPZ/benecosbio-koerperoel-bio-aprikosenkernoel.htm",
+            "https://www.violey.com/de/benecos-koerperoel-bio-aprikosenkernoel_p_44313.html"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Two exact retailer pages tie benecos BIO Körperöl Aprikosenkernöl in the 100 ml glass bottle to EAN 4260198097541."
+        }
+      ],
+      "content_fingerprint": "35b5ebf6996d779f73c9b21ff60a6e0dfb828282803c993bb32aff3fca1005c4"
+    },
+    {
+      "item_key": "benecos-bio-koerperoel-macadamianussoel",
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Macadamianussöl",
+        "brand": "benecos",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4260198097596",
+          "raw_gtin": "4260198097596",
+          "canonical_gtin14": "04260198097596",
+          "size": "100 ml",
+          "market_scope": "EU",
+          "source_url": "https://www.ecco-verde.it/benecos/benecosbio-olio-corpo-allolio-di-noci-di-macadamia-bio",
+          "source_urls": [
+            "https://www.ecco-verde.it/benecos/benecosbio-olio-corpo-allolio-di-noci-di-macadamia-bio",
+            "https://www.shop-apotheke.com/naturkosmetik-koerperpflege/?pageNumber=8"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Exact EU retailer evidence ties the 100 ml benecos BIO Macadamia body oil and its matching single-oil INCI to EAN 4260198097596."
+        }
+      ],
+      "content_fingerprint": "4b7dbc8f62e4e6744d4148c23a34e1eca7ca4afb9b94d78d2b1c049a18484ed1"
+    },
+    {
+      "item_key": "benecos-bio-koerperoel-mandeloel",
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Mandelöl",
+        "brand": "benecos",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4260198097572",
+          "raw_gtin": "4260198097572",
+          "canonical_gtin14": "04260198097572",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.shop-apotheke.com/beauty/upmATCCAW/benecosbio-koerperoel-bio-mandeloel.htm",
+          "source_urls": [
+            "https://www.shop-apotheke.com/beauty/upmATCCAW/benecosbio-koerperoel-bio-mandeloel.htm",
+            "https://www.ecco-verde.de/benecos/benecosbio-koerperoel-dein-hautschutzmandel"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Two exact retailer pages tie benecos BIO Körperöl Mandelöl in the 100 ml glass bottle to EAN 4260198097572."
+        }
+      ],
+      "content_fingerprint": "2d848624e10823cdbc1292dc6829641775b23ca4604f62cdd534811b6d82ba15"
+    },
+    {
+      "item_key": "benecos-bio-koerperoel-wunderbaumsamenoel",
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+        "brand": "benecos",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4260198097534",
+          "raw_gtin": "4260198097534",
+          "canonical_gtin14": "04260198097534",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.shop-apotheke.com/beauty/upmTEGA7Z/benecosbio-koerperoel-bio-wunderbaumsamenoel.htm",
+          "source_urls": [
+            "https://www.shop-apotheke.com/beauty/upmTEGA7Z/benecosbio-koerperoel-bio-wunderbaumsamenoel.htm",
+            "https://www.ecco-verde.de/benecos/benecosbio-koerperoel-wunder-schmierst-du-immer-wieder"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Two exact retailer pages tie the 100 ml benecos BIO Wunderbaumsamenöl/Rizinusöl package to EAN 4260198097534."
+        }
+      ],
+      "content_fingerprint": "70945a45e4a18720f4eeb85c3ac0149f33f0a3a1e3bc484fbf711ab74e2798ad"
+    },
+    {
+      "item_key": "biogourmet-disteloel",
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "expected_product": {
+        "name": "BioGourmet Distelöl",
+        "brand": "BioGourmet",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4039057414863",
+          "raw_gtin": "4039057414863",
+          "canonical_gtin14": "04039057414863",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://bio-gourmet.com/wp-content/uploads/2025/02/BioGourmet-Katalog_20250124_Web.pdf",
+          "source_urls": [
+            "https://bio-gourmet.com/wp-content/uploads/2025/02/BioGourmet-Katalog_20250124_Web.pdf",
+            "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html?c=41"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "The manufacturer catalogue and an independent retailer tie BioGourmet Distelöl nativ, 250 ml, to EAN 4039057414863."
+        }
+      ],
+      "content_fingerprint": "67e088f4745cab02162cb22d2d54024585774e0bfa5c5fcaf2bff4a9484995a2"
+    },
+    {
+      "item_key": "dmbio-kokosoel-nativ",
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "expected_product": {
+        "name": "dmBio Kokosöl nativ",
+        "brand": "dmBio",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4058172504969",
+          "raw_gtin": "4058172504969",
+          "canonical_gtin14": "04058172504969",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "source_urls": [
+            "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+            "https://www.dm-drogeriemarkt.ba/p/d/1544928/dmbio-kokosovo-ulje"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Current dm pages tie dmBio Kokosöl nativ, 300 ml and 100% cold-pressed organic coconut oil, to GTIN 4058172504969."
+        }
+      ],
+      "content_fingerprint": "3f940b35b31b95d07a52c1aac8a390ec8359999f5773874a38f6d1ef5ef5530b"
+    },
+    {
+      "item_key": "dmbio-natives-olivenoel-extra",
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "expected_product": {
+        "name": "dmBio natives Olivenöl extra",
+        "brand": "dmBio",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4066447918687",
+          "raw_gtin": "4066447918687",
+          "canonical_gtin14": "04066447918687",
+          "size": "750 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+          "source_urls": [
+            "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+            "https://www.dm.at/p/d/1459848/dmbio-olivenoel-extra-nativ"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Current dm Germany and Austria pages tie dmBio Natives Olivenöl extra, 750 ml, to GTIN 4066447918687; the separate unfiltered 500 ml variant is excluded."
+        }
+      ],
+      "content_fingerprint": "8c05046cc4345bdfc88b2c1277a1b40ad9f43a767536873e2d0d3ab4adf25876"
+    },
+    {
+      "item_key": "dr-scheller-reines-jojobaoel",
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "expected_product": {
+        "name": "Dr. Scheller Jojobaöl",
+        "brand": "Dr. Scheller",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4051424570248",
+          "raw_gtin": "4051424570248",
+          "canonical_gtin14": "04051424570248",
+          "size": "30 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.at/p/d/1675203/dr-scheller-reines-jojobaoel",
+          "source_urls": [
+            "https://www.dm.at/p/d/1675203/dr-scheller-reines-jojobaoel",
+            "https://www.ecco-verde.de/dr-scheller/reines-jojobaoel"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "Two exact retailers tie Dr. Scheller Reines Jojobaöl, 30 ml and 100% organic cold-pressed jojoba oil, to GTIN 4051424570248."
+        }
+      ],
+      "content_fingerprint": "dd842f66f5987bf361ce4d830d8eab9dfcd300cbfb02a1749179d0164556419c"
+    },
+    {
+      "item_key": "garnier-fructis-sleek-stay-heat-activated-serum",
+      "product_id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "expected_product": {
+        "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+        "brand": "Garnier",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542638852",
+          "raw_gtin": "3600542638852",
+          "canonical_gtin14": "03600542638852",
+          "size": "50 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.medpex.de/garnier-fructis-sleek-stay-heat-activated-serum/CF4T9HKW",
+          "source_urls": [
+            "https://www.medpex.de/garnier-fructis-sleek-stay-heat-activated-serum/CF4T9HKW",
+            "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "An exact pharmacy listing and the catalog's exact Rossmann URL tie the 50 ml Garnier Fructis Sleek & Stay Heat-Activated Serum to GTIN 3600542638852."
+        }
+      ],
+      "content_fingerprint": "9b79579689a89d1b3c42a04b94e6465debc45c0ca33a0d9cc96a4fd4ebbcdac6"
+    },
+    {
+      "item_key": "koro-bio-mct-oel",
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "expected_product": {
+        "name": "KoRo MCT Öl",
+        "brand": "KoRo",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4260718296232",
+          "raw_gtin": "4260718296232",
+          "canonical_gtin14": "04260718296232",
+          "size": "500 ml",
+          "market_scope": "EU",
+          "source_url": "https://www.koro.com/bede/bio-mct-oel-500-ml",
+          "source_urls": [
+            "https://www.koro.com/bede/bio-mct-oel-500-ml",
+            "https://www.koro-shop.it/olio-mct-bio-500-ml"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "KoRo's exact product pages tie Bio MCT Öl product OEL_033, 500 ml, to GTIN 4260718296232; the outer multipack GTIN is excluded."
+        }
+      ],
+      "content_fingerprint": "ed36e0b762ef88506242128e49b257e2dc6458571e85ab95bfa197012009cca1"
+    },
+    {
+      "item_key": "moriveda-premium-moringaoel",
+      "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "expected_product": {
+        "name": "MoriVeda Premium Moringaöl",
+        "brand": "MoriVeda",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4251762160037",
+          "raw_gtin": "4251762160037",
+          "canonical_gtin14": "04251762160037",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "source_urls": [
+            "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "The exact Shop Apotheke product page ties MoriVeda Premium Moringaöl, 100 ml, to EAN 4251762160037."
+        }
+      ],
+      "content_fingerprint": "b558019a9d9ebf54f85e3b1f8ecbaf9b32d5cfae27c760e32daa03eea685089d"
+    },
+    {
+      "item_key": "nedura-schwarzkuemmeloel-ungefiltert",
+      "product_id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "expected_product": {
+        "name": "nedura Schwarzkümmelöl ungefiltert",
+        "brand": "nedura",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4262490410776",
+          "raw_gtin": "4262490410776",
+          "canonical_gtin14": "04262490410776",
+          "size": "500 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3098859/nedura-schwarzkuemmeloel-ungefiltert",
+          "source_urls": [
+            "https://www.dm.de/p/d/3098859/nedura-schwarzkuemmeloel-ungefiltert",
+            "https://www.shop-apotheke.at/ernaehrung/upmGDA3HW/nedura-bio-schwarzkuemmeloel-ungefiltert.htm",
+            "https://www.medpex.de/nedura-bio-schwarzkuemmeloel-ungefiltert-500-ml/7FGHTL0Z"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "dm and two pharmacy pages tie nedura Bio Schwarzkümmelöl ungefiltert, 500 ml, to GTIN 4262490410776; a variable-size listing's other code is excluded."
+        }
+      ],
+      "content_fingerprint": "eb5e25773f9bef088a642a94c2f729cb8263afc8b6c4586989536e51b57bdc3a"
+    },
+    {
+      "item_key": "primavera-calendulaoel-bio",
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "expected_product": {
+        "name": "Primavera Calendulaöl Bio",
+        "brand": "Primavera",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4086900743540",
+          "raw_gtin": "4086900743540",
+          "canonical_gtin14": "04086900743540",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+          "source_urls": [
+            "https://www.primaveralife.com/calendulaoel-bio.html",
+            "https://www.violey.com/de/primavera-calendulaoel-bio_p_9092.html",
+            "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/"
+          ],
+          "source_checked_at": "2026-09-01T15:00:00.000Z",
+          "exact_match_note": "The current manufacturer page and two exact retailers tie Primavera Calendulaöl Bio article 74354, 100 ml, to EAN 4086900743540; predecessor article 74307 is excluded."
+        }
+      ],
+      "content_fingerprint": "463b5df4d2125e67055be5edc244beb4565161d6a352d6f10757a988dd4bad9d"
+    }
+  ]
+}

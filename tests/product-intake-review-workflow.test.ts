@@ -135,7 +135,7 @@ function reviewedPayload(
         purchase_link_checked_at: "2026-06-17T09:00:00.000Z",
         price_checked_at: "2026-06-17T09:00:00.000Z",
       },
-      identifiers: [{ type: "barcode", value: "4000000000000" }],
+      identifiers: [{ type: "barcode", value: "4006381333931" }],
       category_specs: categorySpecs,
       sources: [
         {
@@ -347,6 +347,18 @@ test("unsupported category fails approval validation", () => {
 
   assert.equal(result.ok, false)
   assert.ok(result.missingFields.includes("final.product.category_key"))
+})
+
+test("approval payload rejects invalid barcode identifiers before product publish", () => {
+  const payload = reviewedPayload("conditioner", validCategorySpecs("conditioner"))
+  payload.final.identifiers = [{ type: "ean", value: "4006381333930" }]
+
+  const result = validateProductIntakeApprovalPayload(payload)
+
+  assert.equal(result.ok, false)
+  if (!result.ok) {
+    assert.ok(result.missingFields.includes("final.identifiers.0.value"))
+  }
 })
 
 test("every curated category requires its own exact canonical application protocol", () => {
@@ -636,14 +648,14 @@ test("null image URL is allowed for an explicit reviewed no-image approval path"
 
 test("barcode-like identifiers are canonicalized before approval writes", () => {
   const payload = reviewedPayload("mask", validCategorySpecs("mask"))
-  payload.final.identifiers = [{ type: "EAN", value: "40000-123 45678" }]
+  payload.final.identifiers = [{ type: "EAN", value: "4006-3813 33931" }]
 
   const result = validateProductIntakeApprovalPayload(payload)
 
   assert.equal(result.ok, true)
   if (!result.ok) return
   assert.deepEqual(result.normalizedPayload.final.identifiers, [
-    { type: "ean", value: "4000012345678" },
+    { type: "ean", value: "4006381333931" },
   ])
 })
 

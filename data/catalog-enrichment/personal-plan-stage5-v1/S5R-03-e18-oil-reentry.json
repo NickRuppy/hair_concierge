@@ -1,0 +1,227 @@
+{
+  "schema_version": "personal-plan-product-disposition-reversal-v1",
+  "batch_id": "S5R-03-e18-oil-reentry",
+  "review": {
+    "state": "approved_by_nick",
+    "reviewed_by": "nick"
+  },
+  "items": [
+    {
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Macadamianussöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "awaiting_exact_analysis",
+        "reason_code": "insufficient_executable_directions",
+        "reason": "Exact product evidence does not provide a complete executable hair-oil protocol for Personal Plan.",
+        "sources": [
+          {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+            "text": "The exact page supports a body-oil identity and does not provide enough product-specific hair timing, placement, or rinse/leave-in direction for an executable Personal Plan oil protocol.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact single-oil body product is now covered by the separate oil authority/protocol enrichment. Body positioning alone should not keep it out of conservative shaft-only hair analysis.",
+      "sources": [
+        {
+          "label": "Ecco Verde exact Macadamianussöl composition and GTIN",
+          "url": "https://www.ecco-verde.it/benecos/benecosbio-olio-corpo-allolio-di-noci-di-macadamia-bio",
+          "checked_at": "2026-09-01"
+        }
+      ]
+    },
+    {
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "expected_product": {
+        "name": "Primavera Calendulaöl Bio",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "awaiting_exact_analysis",
+        "reason_code": "insufficient_finished_product_evidence",
+        "reason": "Exact product evidence has limited hair-use support but does not establish the complete Oil v2 Personal Plan fact set.",
+        "sources": [
+          {
+            "label": "Hersteller-Produktseite",
+            "url": "https://www.primaveralife.com/calendulaoel-bio.html",
+            "text": "The exact manufacturer page documents cosmetic oil use, but the available evidence is not enough to assign a source-backed Oil v2 weight and full role support without inference.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact cosmetic oil is now covered by the separate oil authority/protocol enrichment, so the old missing-fact disposition can be removed only after live readiness checks pass.",
+      "sources": [
+        {
+          "label": "Primavera exact Calendulaöl Bio composition and GTIN",
+          "url": "https://www.primaveralife.com/calendulaoel-bio.html",
+          "checked_at": "2026-09-01"
+        }
+      ]
+    },
+    {
+      "product_id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "expected_product": {
+        "name": "nedura Schwarzkümmelöl ungefiltert",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "awaiting_exact_analysis",
+        "reason_code": "insufficient_finished_product_evidence",
+        "reason": "Exact evidence does not establish a complete finished hair-product fact set for Personal Plan.",
+        "sources": [
+          {
+            "label": "Hersteller-Produktseite",
+            "url": "https://www.nedura.de/products/bio-schwarzkummeloel-kaltgepresst-kaufen",
+            "text": "The exact page primarily presents the oil for ingestion and general use; it does not provide enough finished-product hair evidence for Oil v2 facts.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact food/general-use oil is now covered by the separate oil authority/protocol enrichment. Food positioning alone should not keep it out of conservative shaft-only hair analysis.",
+      "sources": [
+        {
+          "label": "dm exact Schwarzkümmelöl composition and GTIN",
+          "url": "https://www.dm.de/p/d/3098859/nedura-schwarzkuemmeloel-ungefiltert",
+          "checked_at": "2026-09-01"
+        }
+      ]
+    },
+    {
+      "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "expected_product": {
+        "name": "MoriVeda Premium Moringaöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "awaiting_exact_analysis",
+        "reason_code": "insufficient_executable_directions",
+        "reason": "Exact listing does not provide enough executable hair-use instructions for Personal Plan.",
+        "sources": [
+          {
+            "label": "Amazon Produktseite",
+            "url": "https://www.amazon.de/MoriVeda-Kaltgepresstes-unges%C3%A4ttigten-Fetts%C3%A4uren-Antioxidantien/dp/B0787ZH6LC",
+            "text": "The exact listing mentions cosmetic use including hair, but does not provide complete placement, amount, timing, or rinse/leave-in instructions.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact oil is now covered by the separate oil authority/protocol enrichment, so the old executable-direction blocker can be removed only after live readiness checks pass.",
+      "sources": [
+        {
+          "label": "Shop Apotheke exact Moringaöl GTIN evidence",
+          "url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "checked_at": "2026-09-01"
+        }
+      ]
+    },
+    {
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "awaiting_exact_analysis",
+        "reason_code": "insufficient_executable_directions",
+        "reason": "Exact evidence has some hair-use support but not a complete executable Personal Plan protocol.",
+        "sources": [
+          {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+            "text": "The exact retailer page does not provide enough hair-specific execution details to turn this body-oil record into a Personal Plan oil protocol.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          },
+          {
+            "label": "Hersteller-Produktseite",
+            "url": "https://cosmondial.com/products/benecosbio-koerperoel-wunderbaumsamen",
+            "text": "The manufacturer page supports the exact product identity, but the available evidence remains insufficient for complete Personal Plan hair-oil guidance.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact castor-oil body product is now covered by the separate oil authority/protocol enrichment. Body positioning alone should not keep it out of conservative shaft-only hair analysis.",
+      "sources": [
+        {
+          "label": "Shop Apotheke exact Wunderbaumsamenöl GTIN evidence",
+          "url": "https://www.shop-apotheke.com/beauty/upmTEGA7Z/benecosbio-koerperoel-bio-wunderbaumsamenoel.htm",
+          "checked_at": "2026-09-01"
+        }
+      ]
+    },
+    {
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "expected_product": {
+        "name": "Dr. Scheller Jojobaöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "awaiting_exact_analysis",
+        "reason_code": "insufficient_finished_product_evidence",
+        "reason": "Exact evidence includes limited hair directions but does not establish all Oil v2 facts without inference.",
+        "sources": [
+          {
+            "label": "Hersteller-Produktseite",
+            "url": "https://dr-scheller.de/products/reines-jojobaol",
+            "text": "The exact manufacturer page includes hair-tip and mask use, but the source does not establish a complete Oil v2 weight and role-support set.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact jojoba oil is now covered by the separate oil authority/protocol enrichment, so the old missing-fact disposition can be removed only after live readiness checks pass.",
+      "sources": [
+        {
+          "label": "dm Austria exact Jojobaöl composition and GTIN",
+          "url": "https://www.dm.at/p/d/1675203/dr-scheller-reines-jojobaoel",
+          "checked_at": "2026-09-01"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "schema_version": "personal-plan-product-disposition-reversal-v1",
+  "batch_id": "S5R-01-oil-reentry",
+  "review": {
+    "state": "approved_by_nick",
+    "reviewed_by": "nick"
+  },
+  "items": [
+    {
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "expected_product": {
+        "name": "BioGourmet Distelöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "non_hair_product",
+        "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+        "sources": [
+          {
+            "label": "Hersteller-Produktseite",
+            "url": "https://bio-gourmet.com/essig-oel-und-dips/biogourmet-produkte-essig-oel-und-dips-disteloel/",
+            "text": "The exact BioGourmet page presents the product as an edible oil for food, not as a finished hair-care product.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact product is pure safflower oil. Food positioning alone is not a valid exclusion from conservative hair-fibre analysis; suitability remains separately research-gated.",
+      "sources": [
+        {
+          "label": "BioGourmet exact Distelöl composition",
+          "url": "https://bio-gourmet.com/essig-oel-und-dips/biogourmet-produkte-essig-oel-und-dips-disteloel/",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "label": "Comparative triglyceride-oil hair penetration evidence",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/38922913/",
+          "checked_at": "2026-08-31"
+        }
+      ]
+    },
+    {
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "expected_product": {
+        "name": "KoRo MCT Öl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "non_hair_product",
+        "reason": "Exact product evidence supports food/ingestion use, not a hair-care product.",
+        "sources": [
+          {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1657270/koro-mct-oel",
+            "text": "The exact dm page presents the product as MCT edible oil; it does not identify it as a finished hair-care product.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact product is a defined triglyceride oil. Food positioning alone is not a valid exclusion; weak hair-specific evidence remains an explicit readiness blocker.",
+      "sources": [
+        {
+          "label": "KoRo exact MCT oil composition and GTIN",
+          "url": "https://www.koro.com/lude/bio-mct-oel-500-ml",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "label": "Comparative triglyceride-oil hair penetration evidence",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/38922913/",
+          "checked_at": "2026-08-31"
+        }
+      ]
+    },
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "expected_product": {
+        "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "non_hair_product",
+        "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+        "sources": [
+          {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+            "text": "The exact retailer page documents food use and does not support a Personal Plan pre-wash or leave-on hair-oil protocol.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact product is pure cold-pressed grapeseed oil. Food positioning alone is not a valid exclusion from conservative hair-fibre analysis.",
+      "sources": [
+        {
+          "label": "Allgäuer Ölmühle exact Traubenkernöl composition",
+          "url": "https://gutes.bio/products/bio-traubenkernol",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "label": "Comparative triglyceride-oil hair penetration evidence",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/38922913/",
+          "checked_at": "2026-08-31"
+        }
+      ]
+    },
+    {
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "expected_product": {
+        "name": "dmBio natives Olivenöl extra",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "non_hair_product",
+        "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+        "sources": [
+          {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1512947/dmbio-natives-olivenoel",
+            "text": "The exact dm page presents native extra olive oil for Mediterranean cooking, not as a finished hair-care oil.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact product is 100 percent extra-virgin olive oil. Food positioning alone is not a valid exclusion from conservative hair-fibre analysis.",
+      "sources": [
+        {
+          "label": "dm exact extra-virgin olive-oil composition and GTIN",
+          "url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "label": "Comparative triglyceride-oil hair penetration evidence",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/38922913/",
+          "checked_at": "2026-08-31"
+        }
+      ]
+    },
+    {
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Aprikosenkernöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "wrong_category",
+        "reason": "Exact product page identifies a body/skin oil, not a hair oil.",
+        "sources": [
+          {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+            "text": "The exact retailer page describes the product as body oil for skin feel and complexion; no hair-care direction is provided.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact body oil is pure apricot-kernel oil and a retailer explicitly describes hair smoothing/shine use. Body positioning alone is not a valid category exclusion.",
+      "sources": [
+        {
+          "label": "Violey exact Aprikosenkernöl composition, GTIN, and hair use",
+          "url": "https://www.violey.com/de/benecos-koerperoel-bio-aprikosenkernoel_p_44313.html",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "label": "Comparative triglyceride-oil hair penetration evidence",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/38922913/",
+          "checked_at": "2026-08-31"
+        }
+      ]
+    },
+    {
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "expected_product": {
+        "name": "dmBio Kokosöl nativ",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "non_hair_product",
+        "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+        "sources": [
+          {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+            "text": "The exact dm page does not document a hair pre-wash or leave-on protocol; the previous catalog role cannot be used as exact product guidance.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact product is pure cold-pressed coconut oil; dm explicitly includes hair care and controlled evidence supports conservative pre-wash fibre use.",
+      "sources": [
+        {
+          "label": "dm exact coconut-oil composition, GTIN, and hair-care use",
+          "url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "label": "Coconut-oil hair protein-loss evidence",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/12715094/",
+          "checked_at": "2026-08-31"
+        }
+      ]
+    },
+    {
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "expected_product": {
+        "name": "benecos BIO Körperöl Mandelöl",
+        "category_key": "oil",
+        "origin": "curated",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "expected_disposition": {
+        "disposition": "retired_from_personal_plan",
+        "reason_code": "wrong_category",
+        "reason": "Exact product page identifies a body/skin oil, not a hair oil.",
+        "sources": [
+          {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+            "text": "The exact retailer page describes a rich body oil for skin and massage use; no finished-product hair directions are provided.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "reversal_reason": "The exact body oil is pure sweet-almond oil. Body positioning alone is not a valid exclusion from conservative hair-fibre analysis.",
+      "sources": [
+        {
+          "label": "Avocadostore exact Mandelöl composition and GTIN",
+          "url": "https://www.avocadostore.de/products/346141-benecosbio-dein-hautschutzmandel-koerperoel-bio-mandeloel-benecos",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "label": "Comparative triglyceride-oil hair penetration evidence",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/38922913/",
+          "checked_at": "2026-08-31"
+        }
+      ]
+    }
+  ]
+}

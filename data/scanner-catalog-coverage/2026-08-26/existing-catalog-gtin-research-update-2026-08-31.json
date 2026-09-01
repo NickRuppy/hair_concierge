@@ -1,0 +1,314 @@
+{
+  "schema_version": "scanner_existing_gtin_research_update_v1",
+  "checked_at": "2026-08-31",
+  "scope": "research_only_no_apply",
+  "policy": {
+    "one_gtin_one_canonical_owner": true,
+    "multiple_gtins_per_product": "allowed_when_exact_formulation_identity_is_verified",
+    "different_formulation": "create_separate_product_and_ingredient_analysis",
+    "open_submission_overlap": "hold_only_the_colliding_candidate"
+  },
+  "preflight_snapshot": {
+    "checked_set_scope": "The 29 direct/ambiguity candidates checked in the live query include candidates outside this file's 15-product list (Cantu and Gliss conditioner). Reopened-oil candidates require their own fresh full preflight.",
+    "candidate_codes_checked": 29,
+    "check_digits_valid": 29,
+    "existing_owner_overlaps": 0,
+    "unresolved_submission_overlaps": 0,
+    "warning": "Time-sensitive read-only snapshot. Repeat global ownership and unresolved-submission checks immediately before any frozen apply."
+  },
+  "existing_catalog_candidates": [
+    {
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "product": "OGX Bond Protein Repair Conditioner",
+      "variants": [
+        {
+          "gtin": "3574661818467",
+          "package": "385 ml",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": ["https://www.dm.de/p/d/3068101/ogx-conditioner-bond-protein-repair"]
+    },
+    {
+      "product_id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "product": "Garnier Wahre Schätze Argan-Mandelcreme Spülung",
+      "variants": [
+        {
+          "gtin": "3600542462594",
+          "package": "200 ml",
+          "disposition": "candidate_for_existing_product"
+        },
+        {
+          "gtin": "3600542462761",
+          "package": "250 ml",
+          "disposition": "hold_for_formula_parity_or_separate_product"
+        }
+      ],
+      "sources": [
+        "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/argan-mandelcreme/reichhaltige-creme-spuelung"
+      ]
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "product": "Guhl Bond+ Reparatur Spülung",
+      "variants": [
+        {
+          "gtin": "4072600701218",
+          "package": "200 ml",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": ["https://www.guhl.com/produkt/bond-reparatur/"]
+    },
+    {
+      "product_id": "17c50884-3c17-479a-848a-10447464e086",
+      "product": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "variants": [
+        {
+          "gtin": "3600542510271",
+          "package": "340 ml",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": [
+        "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut"
+      ]
+    },
+    {
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "product": "Isana 3in1 Milchprotein & Mandel",
+      "variants": [
+        {
+          "gtin": "4305615627441",
+          "package": "250 ml",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": [
+        "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441"
+      ]
+    },
+    {
+      "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "product": "Syoss Intense Curls Haarmaske",
+      "variants": [
+        {
+          "gtin": "4015100866100",
+          "package": "400 ml",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": ["https://www.dm.de/p/d/3099668/syoss-haarmaske-intense-curls"]
+    },
+    {
+      "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "product": "Gliss Aqua Revive Maske",
+      "variants": [
+        {
+          "gtin": "4015100813555",
+          "package": "older German package",
+          "disposition": "candidate_for_existing_product_after_formula_match"
+        },
+        {
+          "gtin": "4015100813272",
+          "package": "regional package",
+          "disposition": "hold_for_formula_mapping"
+        },
+        {
+          "gtin": "9000101726053",
+          "package": "regional package",
+          "disposition": "hold_for_formula_mapping"
+        },
+        {
+          "gtin": "8410436457873",
+          "package": "regional package",
+          "disposition": "hold_for_formula_mapping"
+        }
+      ],
+      "sources": ["https://prices.nedostavka.net/en/product/4015100813555"]
+    },
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "product": "HASK Argan Oil Repairing Deep Conditioner",
+      "variants": [
+        {
+          "gtin": "071164333068",
+          "package": "50 ml sachet",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": ["https://www.beautyplaza.com/de-de/p/argan-oil-repairing-deep-conditioner/10734/"]
+    },
+    {
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "product": "Syoss Haarkur Lamination Intense Glaze",
+      "variants": [
+        {
+          "gtin": "4015100867213",
+          "package": "200 ml German package",
+          "disposition": "candidate_for_existing_product"
+        },
+        {
+          "gtin": "9000101760095",
+          "package": "regional package",
+          "disposition": "hold_for_formula_parity_or_separate_product"
+        },
+        {
+          "gtin": "5410091778088",
+          "package": "regional package",
+          "disposition": "hold_for_formula_parity_or_separate_product"
+        }
+      ],
+      "sources": ["https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze"]
+    },
+    {
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "product": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+      "variants": [
+        {
+          "gtin": "4001638590839",
+          "package": "30 ml",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": [
+        "https://www.weleda.at/produkt/hydra-shine-gloss-drops-haar-oel-alpen-lein-g05483",
+        "https://www.bio123.de/produkt/weleda/weleda-hydrashine-gloss-drops-haar-ol-30-ml"
+      ]
+    },
+    {
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "product": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "variants": [
+        {
+          "gtin": "4550516493590",
+          "package": "70 ml Rich",
+          "disposition": "reconcile_existing_analysis_then_candidate"
+        },
+        {
+          "gtin": "4550516483836",
+          "package": "70 ml Airy Smooth",
+          "disposition": "separate_product_and_analysis"
+        }
+      ],
+      "sources": [
+        "https://onlineshop.finetoday.com/products/fino-06",
+        "https://www.samurai-drugstore.jp/default/4550516483836.html"
+      ]
+    },
+    {
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "product": "Maria Nila True Soft Argan Oil",
+      "variants": [
+        {
+          "gtin": "7391681036376",
+          "package": "100 ml",
+          "disposition": "candidate_for_existing_product"
+        }
+      ],
+      "sources": [
+        "https://marianila.com/products/true-soft-argan-oil-100-ml",
+        "https://www.alfastore.de/Maria-Nila-True-Soft-Argan-Oil-100ml"
+      ]
+    },
+    {
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "product": "OGX Argan Weightless Öl",
+      "variants": [
+        {
+          "gtin": "3574661563350",
+          "package": "118 ml EU",
+          "disposition": "candidate_for_existing_product"
+        },
+        {
+          "gtin": "022796916204",
+          "package": "older US",
+          "disposition": "hold_for_formula_parity_or_separate_product"
+        }
+      ],
+      "sources": [
+        "https://www.bol.com/nl/nl/p/ogx-renewing-moroccan-argan-oil-weightless-reviving-dry-oil/9300000005624991/"
+      ]
+    },
+    {
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "product": "OGX Bond Protein Repair Öl",
+      "variants": [
+        {
+          "gtin": "3574661818481",
+          "package": "50 ml EU",
+          "disposition": "candidate_for_existing_product"
+        },
+        {
+          "gtin": "0052800681958",
+          "package": "US",
+          "disposition": "hold_for_formula_parity_or_separate_product"
+        }
+      ],
+      "sources": [
+        "https://nordapotek.no/har-munn-og-tann/ogx-bond-protein-repair-3-in-1-oil-mist-50-ml/p/962797/"
+      ]
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "product": "OGX Keratin Oil Shampoo",
+      "variants": [
+        {
+          "gtin": "0022796977519",
+          "package": "older/international",
+          "disposition": "reconcile_existing_analysis_then_candidate"
+        },
+        {
+          "gtin": "3574661798448",
+          "package": "current German candidate",
+          "disposition": "separate_product_and_analysis_if_formula_difference_confirmed"
+        }
+      ],
+      "sources": ["https://www.shop-apotheke.com/beauty/upm9ZPH3U/ogx-shampoo-keratin-oil.htm"]
+    }
+  ],
+  "reopened_oil_candidates": [
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "product": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "gtins": ["4260389030401"],
+      "status": "research_hair_use_and_other_sizes"
+    },
+    {
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "product": "benecos BIO Körperöl Aprikosenkernöl",
+      "gtins": ["4260198097541"],
+      "status": "research_hair_use"
+    },
+    {
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "product": "benecos BIO Körperöl Mandelöl",
+      "gtins": ["4260198097572"],
+      "status": "research_hair_use"
+    },
+    {
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "product": "BioGourmet Distelöl",
+      "gtins": ["4039057414863"],
+      "status": "research_hair_use"
+    },
+    {
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "product": "dmBio Kokosöl nativ",
+      "gtins": ["4058172504969", "4066447602685"],
+      "status": "official_dm_300ml_and_620ml_same_pure_coconut_identity_candidate"
+    },
+    {
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "product": "dmBio natives Olivenöl extra",
+      "gtins": ["4066447918687"],
+      "status": "official_dm_750ml_candidate;_hold_500ml_4066447918700_as_unfiltered_variant_until_mapping"
+    },
+    {
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "product": "KoRo MCT Öl",
+      "gtins": ["4260718296232"],
+      "status": "research_hair_use_with_weak_evidence_boundary"
+    }
+  ]
+}

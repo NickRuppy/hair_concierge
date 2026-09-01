@@ -74,7 +74,10 @@ test("validateEanInput: surrounding whitespace tolerated", () => {
 
 test("lookupCatalogProductByIdentifier: normalizes whitespace and matches active product", async () => {
   const { client } = stubClient({
-    product_identifiers: () => ({ data: [{ product_id: "prod-1" }], error: null }),
+    product_identifiers: (calls) => {
+      assert.equal(calls.filters.get("canonical_gtin14"), "04006381333931")
+      return { data: [{ product_id: "prod-1" }], error: null }
+    },
     products: (calls) => {
       assert.deepEqual(calls.filters.get("id"), ["prod-1"])
       assert.equal(calls.filters.get("is_active"), true)
@@ -92,16 +95,10 @@ test("lookupCatalogProductByIdentifier: normalizes whitespace and matches active
   assert.deepEqual(result, { productId: "prod-1", category: "shampoo" })
 })
 
-test("lookupCatalogProductByIdentifier: hyphenated spelling keeps raw form and adds canonical", async () => {
+test("lookupCatalogProductByIdentifier: hyphenated spelling queries canonical ownership", async () => {
   const { client } = stubClient({
     product_identifiers: (calls) => {
-      // Raw form stays queryable (hyphens matter for non-GTIN identifiers); the
-      // hyphen-stripped GTIN reading is queried alongside it in every spelling.
-      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
-        "4006-3813-33931",
-        "04006381333931",
-        "4006381333931",
-      ])
+      assert.equal(calls.filters.get("canonical_gtin14"), "04006381333931")
       return { data: [], error: null }
     },
     products: () => ({ data: [], error: null }),
@@ -115,19 +112,14 @@ test("lookupCatalogProductByIdentifier: hyphenated spelling keeps raw form and a
 test("lookupCatalogProductByIdentifier: leading zeros preserved", async () => {
   const { client } = stubClient({
     product_identifiers: (calls) => {
-      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
-        "00012345",
-        "00000000012345",
-        "0000000012345",
-        "000000012345",
-      ])
+      assert.equal(calls.filters.get("canonical_gtin14"), "00000000012348")
       return { data: [], error: null }
     },
     products: () => ({ data: [], error: null }),
   })
   const result = await lookupCatalogProductByIdentifier(client as never, {
     type: "ean",
-    value: "00012345",
+    value: "00012348",
   })
   assert.equal(result, null)
 })
@@ -193,7 +185,7 @@ test("lookupCatalogProductByIdentifier: no identifier row is a miss", async () =
   assert.equal(result, null)
 })
 
-test("lookupCatalogProductByIdentifier: collision picks lowest id and warns with both ids", async () => {
+test("lookupCatalogProductByIdentifier: collision fails closed instead of picking a winner", async () => {
   const { client } = stubClient({
     product_identifiers: () => ({
       data: [{ product_id: "prod-b" }, { product_id: "prod-a" }],
@@ -208,36 +200,29 @@ test("lookupCatalogProductByIdentifier: collision picks lowest id and warns with
     }),
   })
 
-  const warnCalls: unknown[][] = []
-  const originalWarn = console.warn
-  console.warn = (...args: unknown[]) => {
-    warnCalls.push(args)
+  const errorCalls: unknown[][] = []
+  const originalError = console.error
+  console.error = (...args: unknown[]) => {
+    errorCalls.push(args)
   }
   try {
     const result = await lookupCatalogProductByIdentifier(client as never, {
       type: "ean",
       value: "4006381333931",
     })
-    assert.deepEqual(result, { productId: "prod-a", category: "shampoo" })
-    assert.equal(warnCalls.length, 1)
-    const [, payload] = warnCalls[0] as [string, { winnerId: string; otherIds: string[] }]
-    assert.equal(payload.winnerId, "prod-a")
-    assert.deepEqual(payload.otherIds, ["prod-b"])
+    assert.equal(result, null)
+    assert.equal(errorCalls.length, 1)
+    const [, payload] = errorCalls[0] as [string, { productIds: string[] }]
+    assert.deepEqual(payload.productIds, ["prod-a", "prod-b"])
   } finally {
-    console.warn = originalWarn
+    console.error = originalError
   }
 })
 
-test("lookupCatalogProductByIdentifier: queries every GTIN spelling of the scanned number", async () => {
-  // Stored rows may hold 12-digit UPC imports, 13-digit EANs, 14-digit feed values, or
-  // the canonical form — a scan must match all of them, in either deploy order.
+test("lookupCatalogProductByIdentifier: equivalent stored GTIN spellings use one ownership key", async () => {
   const { client } = stubClient({
     product_identifiers: (calls) => {
-      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
-        "0022796976116",
-        "00022796976116",
-        "022796976116",
-      ])
+      assert.equal(calls.filters.get("canonical_gtin14"), "00022796976116")
       return { data: [], error: null }
     },
     products: () => ({ data: [], error: null }),
@@ -248,14 +233,10 @@ test("lookupCatalogProductByIdentifier: queries every GTIN spelling of the scann
   })
 })
 
-test("lookupCatalogProductByIdentifier: canonical input still queries the legacy spellings", async () => {
+test("lookupCatalogProductByIdentifier: canonical input uses the same ownership key", async () => {
   const { client } = stubClient({
     product_identifiers: (calls) => {
-      assert.deepEqual(calls.filters.get("normalized_identifier_value"), [
-        "00022796976116",
-        "0022796976116",
-        "022796976116",
-      ])
+      assert.equal(calls.filters.get("canonical_gtin14"), "00022796976116")
       return { data: [], error: null }
     },
     products: () => ({ data: [], error: null }),
@@ -266,16 +247,12 @@ test("lookupCatalogProductByIdentifier: canonical input still queries the legacy
   })
 })
 
-test("lookupCatalogProductByIdentifier: non-GTIN value falls back to raw-normalized only", async () => {
-  const { client } = stubClient({
-    product_identifiers: (calls) => {
-      assert.deepEqual(calls.filters.get("normalized_identifier_value"), ["not-a-barcode"])
-      return { data: [], error: null }
-    },
-    products: () => ({ data: [], error: null }),
-  })
-  await lookupCatalogProductByIdentifier(client as never, {
+test("lookupCatalogProductByIdentifier: invalid GTIN never reaches the catalog query", async () => {
+  const { client, callsByTable } = stubClient({})
+  const result = await lookupCatalogProductByIdentifier(client as never, {
     type: "ean",
     value: "not-a-barcode",
   })
+  assert.equal(result, null)
+  assert.equal(callsByTable.size, 0)
 })

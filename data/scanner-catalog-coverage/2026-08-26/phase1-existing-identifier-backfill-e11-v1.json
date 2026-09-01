@@ -1,0 +1,42 @@
+{
+  "batch": "E11",
+  "batch_id": "scanner-existing-identifiers-e11-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "k18-molecular-repair-hair-mist-identifier-research-2026-09-01",
+    "production_identity_checked_at": "2026-09-01T06:46:00.000Z",
+    "source_refresh_receipt": "k18-molecular-repair-hair-mist-identifier-research-2026-09-01"
+  },
+  "items": [
+    {
+      "item_key": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "expected_product": {
+        "name": "K18 Hair Professional Molecular Repair Hair Mist",
+        "brand": "K18",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "858511001463",
+          "raw_gtin": "858511001463",
+          "canonical_gtin14": "00858511001463",
+          "size": "300 ml",
+          "market_scope": "Professional-market package; verified exact package, with no German shelf-availability claim.",
+          "source_url": "https://www.cosmoprofbeauty.com/USA-040285.html",
+          "source_urls": [
+            "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+            "https://www.cosmoprofbeauty.com/USA-040285.html",
+            "https://www.saloncentric.com/858511001463.html"
+          ],
+          "source_checked_at": "2026-09-01T06:46:00.000Z",
+          "exact_match_note": "Official K18 PRO product page establishes the exact 300 ml Professional Molecular Repair Hair Mist; CosmoProf USA-040285 confirms 10 fl oz UPC 858511001463; SalonCentric confirms the exact professional product tied to UPC 858511001463."
+        }
+      ],
+      "content_fingerprint": "160712bf23538b1877060ec51a6e78034b226cd7ab41b112f607adc50ecec8fa"
+    }
+  ]
+}

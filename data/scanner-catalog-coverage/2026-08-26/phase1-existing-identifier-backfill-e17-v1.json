@@ -1,0 +1,41 @@
+{
+  "batch": "E17",
+  "batch_id": "scanner-existing-identifiers-e17-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "plans/2026-08-28-existing-gtin-enrichment-receipt.md#e17-prepared-research-september-1",
+    "production_identity_checked_at": "2026-09-01T14:00:00.000Z",
+    "source_refresh_receipt": "E17 adds the exact 200 ml Nivea Volumen & Kraft Conditioner package after two independent EU retailer pages aligned on product identity and GTIN 4005900918031."
+  },
+  "items": [
+    {
+      "item_key": "nivea-volumen-kraft-conditioner",
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "expected_product": {
+        "name": "Nivea Volumen & Kraft",
+        "brand": "Nivea",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4005900918031",
+          "raw_gtin": "4005900918031",
+          "canonical_gtin14": "04005900918031",
+          "size": "200 ml",
+          "market_scope": "EU",
+          "source_url": "https://www.mojedrogerie.cz/nivea-kondicioner-volume-200-ml-ean4005900918031.php",
+          "source_urls": [
+            "https://www.mojedrogerie.cz/nivea-kondicioner-volume-200-ml-ean4005900918031.php",
+            "https://www.aptekaolmed.pl/produkt/nivea-volumen-kraft-odzywka-do-wlosow-nadajaca-objetosci-200-ml,173209.html"
+          ],
+          "source_checked_at": "2026-09-01T14:00:00.000Z",
+          "exact_match_note": "Two exact EU retailer pages identify Nivea Volumen & Kraft/Volume Conditioner in the 200 ml package with EAN 4005900918031; the catalog's historical dm URL also embeds the same GTIN."
+        }
+      ],
+      "content_fingerprint": "c9902655cf5ec8f21673c04c6532d2860fd9a8cf26afd45451d48391829df482"
+    }
+  ]
+}

@@ -1,0 +1,467 @@
+{
+  "generated_at": "2026-08-26T16:44:06.570Z",
+  "schema_version": "scanner-existing-identifier-research-candidates-v1",
+  "batch": "E5",
+  "research_only": true,
+  "source_summary_content_fingerprint": "355163b2d7cca865b805f0d233e60fd5fa69d17c76f221bb3f211b8d9d9b1f9c",
+  "items": [
+    {
+      "product_id": "63239c38-5633-4062-9e8d-d528ee71502a",
+      "expected_product": {
+        "brand": "Bali Curls",
+        "name": "Bali Curls Moisturising Conditioner",
+        "category_key": "conditioner"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "4262391990056",
+          "canonical_gtin14": "04262391990056",
+          "size": "250 ml",
+          "market_scope": "EU",
+          "source_url": "https://www.aladinbeauty.com/products/bali-curls-moisturising-conditioner-250ml",
+          "source_urls": [
+            "https://www.aladinbeauty.com/products/bali-curls-moisturising-conditioner-250ml"
+          ],
+          "source_checked_at": "2026-08-26T15:56:56.700Z",
+          "exact_match_note": "Exact Bali Curls Moisturising Conditioner 250 ml retailer page lists GTIN Barcode 4262391990056 and product type Moisturizing Conditioner."
+        }
+      ]
+    },
+    {
+      "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "expected_product": {
+        "brand": "Curlsmith",
+        "name": "Curlsmith Hydrate & Plump Leave-In",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "0850035298718",
+          "canonical_gtin14": "00850035298718",
+          "size": "237 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.supersales.nl/p/curlsmith-hydrate-plump-leave-in-conditioner-237ml-66602342ff24cf328702a18e",
+          "source_urls": [
+            "https://www.supersales.nl/p/curlsmith-hydrate-plump-leave-in-conditioner-237ml-66602342ff24cf328702a18e"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "SuperSales exact PDP names Curlsmith Hydrate & Plump Leave-In Conditioner 237 ml and lists EAN code 0850035298718."
+        }
+      ]
+    },
+    {
+      "product_id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "expected_product": {
+        "brand": "Sante",
+        "name": "Sante Sensitive Care",
+        "category_key": "shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "4055297221467",
+          "canonical_gtin14": "04055297221467",
+          "size": "250 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.violey.com/en/sante-sensitive-care-shampoo-probiotica_p_50464.html",
+          "source_urls": [
+            "https://www.violey.com/en/sante-sensitive-care-shampoo-probiotica_p_50464.html",
+            "https://www.sante.de/sensitive-care-shampoo-probiotika-3-fach-protein-komplex/40620"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "EU retailer Violey explicitly names Sante Sensitive Care Shampoo Probiotica, 250 ml and EAN 4055297221467; official Sante page confirms the current Sensitive Care Shampoo Probiotika identity without publishing a GTIN."
+        }
+      ]
+    },
+    {
+      "product_id": "695414e1-3435-4304-943b-76677408980c",
+      "expected_product": {
+        "brand": "Maria Nila",
+        "name": "Maria Nila Structure Repair Leave-In",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "7391681036079",
+          "canonical_gtin14": "07391681036079",
+          "size": "200 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html",
+          "source_urls": [
+            "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Flaconi exact PDP names Maria Nila Structure Repair Leave-In Treatment 200 ml and lists EAN 7391681036079."
+        }
+      ]
+    },
+    {
+      "product_id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "expected_product": {
+        "brand": "It's a 10",
+        "name": "It’s a 10 Miracle Leave-In",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "898571000211",
+          "canonical_gtin14": "00898571000211",
+          "size": "295.7 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-product-295-7-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-product-295-7-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names It's a 10 Miracle Leave-In Product 295.7 ml and lists EAN 898571000211."
+        }
+      ]
+    },
+    {
+      "product_id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "expected_product": {
+        "brand": "Batiste",
+        "name": "Trockenshampoo dunkel",
+        "category_key": "dry_shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "5010724527443",
+          "canonical_gtin14": "05010724527443",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1551790/batiste-trockenshampoo-dunkel",
+          "source_urls": [
+            "https://www.dm.de/p/d/1551790/batiste-trockenshampoo-dunkel"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Batiste Trockenshampoo Dunkel, 200 ml and GTIN 5010724527443."
+        }
+      ]
+    },
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "expected_product": {
+        "brand": "Kevin Murphy",
+        "name": "Kevin Murphy Young Again",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "9339341020356",
+          "canonical_gtin14": "09339341020356",
+          "size": "100 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Kevin Murphy Young Again Leave In Treatment 100 ml and lists EAN 9339341020356."
+        }
+      ]
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "expected_product": {
+        "brand": "L'Oréal Paris",
+        "name": "Midnight Serum",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "3600524135805",
+          "canonical_gtin14": "03600524135805",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum",
+          "source_urls": [
+            "https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "dm exact PDP names L'ORÉAL PARiS ELVITAL Öl Magique Midnight Serum 100 ml and lists GTIN 3600524135805."
+        }
+      ]
+    },
+    {
+      "product_id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "expected_product": {
+        "brand": "Monday Haircare",
+        "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+        "category_key": "shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "4897097266343",
+          "canonical_gtin14": "04897097266343",
+          "size": "350 ml",
+          "market_scope": "EU/IT",
+          "source_url": "https://www.kelkoo.it/gtin/04897097266343",
+          "source_urls": [
+            "https://www.kelkoo.it/gtin/04897097266343"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "EU product database page names MONDAY Haircare Shampoo Volume Kraft & Fülle, 350 ml and GTIN 4897097266343; no German dm/Rossmann PDP with GTIN was found for this exact row."
+        }
+      ]
+    },
+    {
+      "product_id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "expected_product": {
+        "brand": "Pantene",
+        "name": "Pantene Pro-V Volumen Pur",
+        "category_key": "shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "8700216558471",
+          "canonical_gtin14": "08700216558471",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1561742/pantene-pro-v-shampoo-volumen-pur",
+          "source_urls": [
+            "https://www.dm.de/p/d/1561742/pantene-pro-v-shampoo-volumen-pur"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Pantene Pro-V Shampoo Volumen Pur, 300 ml and GTIN 8700216558471."
+        }
+      ]
+    },
+    {
+      "product_id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "expected_product": {
+        "brand": "Wahre Schätze",
+        "name": "Wahre Schätze Aktivkohle",
+        "category_key": "shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "3600542512466",
+          "canonical_gtin14": "03600542512466",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut",
+          "source_urls": [
+            "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Garnier Wahre Schätze Shampoo Aktivkohle Fettige Kopfhaut, 300 ml and GTIN 3600542512466."
+        }
+      ]
+    },
+    {
+      "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "expected_product": {
+        "brand": "Pantene",
+        "name": "Pantene Grow Abundance",
+        "category_key": "shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "8006530060042",
+          "canonical_gtin14": "08006530060042",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+          "source_urls": [
+            "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Pantene Pro-V Shampoo Grow Abundant Anti-Haarverlust, 300 ml and GTIN 8006530060042."
+        }
+      ]
+    },
+    {
+      "product_id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "expected_product": {
+        "brand": "Batiste",
+        "name": "Trockenshampoo Original",
+        "category_key": "dry_shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "5010724527481",
+          "canonical_gtin14": "05010724527481",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original",
+          "source_urls": [
+            "https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names Batiste Trockenshampoo Original, 200 ml and GTIN 5010724527481."
+        }
+      ]
+    },
+    {
+      "product_id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "expected_product": {
+        "brand": "Isana",
+        "name": "Isana Professional Arganöl & Pflege Spülung",
+        "category_key": "conditioner"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "4305615624945",
+          "canonical_gtin14": "04305615624945",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-arganoel-und-pflege/p/4305615624945",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-arganoel-und-pflege/p/4305615624945",
+            "https://utopio.de/ean/4305615624945.htm"
+          ],
+          "source_checked_at": "2026-08-26T15:56:56.700Z",
+          "exact_match_note": "Rossmann exact ISANA Professional Spuelung Arganoel & Pflege 200 ml PDP encodes GTIN 4305615624945; Utopio mirrors the exact EAN/product identity."
+        }
+      ]
+    },
+    {
+      "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "expected_product": {
+        "brand": "Alverde",
+        "name": "Alverde Conditioner Glanz",
+        "category_key": "conditioner"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "4066447592085",
+          "canonical_gtin14": "04066447592085",
+          "size": "200 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://incibeauty.com/en/produit/4066447592085",
+          "source_urls": [
+            "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+            "https://incibeauty.com/en/produit/4066447592085"
+          ],
+          "source_checked_at": "2026-08-26T15:56:56.700Z",
+          "exact_match_note": "Exact Alverde Conditioner Glanz Bio-Rosenbluetenwasser & pflanzlichem Protein 200 ml page/product-database evidence ties the identity to GTIN 4066447592085; dm PDP confirms current saleable package identity."
+        }
+      ]
+    },
+    {
+      "product_id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "expected_product": {
+        "brand": "Moroccanoil",
+        "name": "Moroccanoil All In One Leave In Conditioner",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "7290113142947",
+          "canonical_gtin14": "07290113142947",
+          "size": "160 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/moroccanoil-all-in-one-le-ave-in-conditioner-160-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/moroccanoil-all-in-one-le-ave-in-conditioner-160-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names Moroccanoil All In One Leave-In Conditioner 160 ml and lists EAN 7290113142947."
+        },
+        {
+          "raw_gtin": "7290113142954",
+          "canonical_gtin14": "07290113142954",
+          "size": "50 ml",
+          "market_scope": "EU/NL",
+          "source_url": "https://www.haarshop.nl/moroccanoil-all-in-one-leave-in-conditioner-50ml",
+          "source_urls": [
+            "https://www.haarshop.nl/moroccanoil-all-in-one-leave-in-conditioner-50ml"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Haarshop exact PDP names Moroccanoil All in One Leave-in Conditioner 50 ml and lists EAN 7290113142954."
+        }
+      ]
+    },
+    {
+      "product_id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "expected_product": {
+        "brand": "It's a 10",
+        "name": "It’s a 10 Miracle Leave-In Lite",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "898571000433",
+          "canonical_gtin14": "00898571000433",
+          "size": "120 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-conditioner-lite-120-ml.html",
+          "source_urls": [
+            "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-conditioner-lite-120-ml.html"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Hagel-Shop exact PDP names It's a 10 Miracle Leave-In Conditioner Lite 120 ml and lists EAN 898571000433."
+        }
+      ]
+    },
+    {
+      "product_id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "expected_product": {
+        "brand": "Sebamed",
+        "name": "Sebamed Anti Schuppen Plus",
+        "category_key": "shampoo"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "4103040051677",
+          "canonical_gtin14": "04103040051677",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+          "source_urls": [
+            "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+            "https://www.rossmann.de/de/pflege-und-duft-sebamed-anti-schuppen-shampoo-plus/p/4103040051677"
+          ],
+          "source_checked_at": "2026-08-26T16:30:00.000Z",
+          "exact_match_note": "Current dm PDP explicitly names sebamed Shampoo Anti-Schuppen Plus, 200 ml and GTIN 4103040051677."
+        }
+      ]
+    },
+    {
+      "product_id": "82f9dcba-0422-4932-a879-c2bec0113e55",
+      "expected_product": {
+        "brand": "Gliss",
+        "name": "Gliss Ultimate Repair Spülung",
+        "category_key": "conditioner"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "4015100812237",
+          "canonical_gtin14": "04015100812237",
+          "size": "200 ml",
+          "market_scope": "DE/AT",
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-spuelung/p/4015100812237",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-spuelung/p/4015100812237",
+            "https://www.dm.at/p/d/1919619/schwarzkopf-gliss-conditioner-ultimate-repair"
+          ],
+          "source_checked_at": "2026-08-26T15:56:56.700Z",
+          "exact_match_note": "Rossmann exact Gliss Ultimate Repair Spuelung PDP and dm.at exact conditioner page tie the 200 ml package to GTIN 4015100812237."
+        }
+      ]
+    },
+    {
+      "product_id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "expected_product": {
+        "brand": "Curlsmith",
+        "name": "Curlsmith Weightless Air Dry Cream",
+        "category_key": "leave_in"
+      },
+      "identifiers": [
+        {
+          "raw_gtin": "850048197626",
+          "canonical_gtin14": "00850048197626",
+          "size": "237 ml",
+          "market_scope": "EU/AT",
+          "source_url": "https://www.beautyplaza.com/de-at/p/curlsmith-stylers-weightless-air-dry-cream/161451/",
+          "source_urls": [
+            "https://www.beautyplaza.com/de-at/p/curlsmith-stylers-weightless-air-dry-cream/161451/"
+          ],
+          "source_checked_at": "2026-08-26T16:45:00Z",
+          "exact_match_note": "Beauty Plaza exact PDP names Curlsmith Weightless Air Dry Cream 237 ml and lists EAN-code 850048197626."
+        }
+      ]
+    }
+  ],
+  "content_fingerprint": "87dd8a755df8fe2167e143981b990661b02f21b1bc79f7d035c9b1ed02075385"
+}

@@ -24,7 +24,13 @@ import {
 } from "@/lib/scan/catalog-eligibility"
 import { lookupCatalogProductByIdentifier, validateEanInput } from "@/lib/scan/identifier-lookup"
 import { findOpenScanSubmission } from "@/lib/scan/pending-submission"
-import { recordScanResolveEvent } from "@/lib/scan/resolve-event-log"
+import {
+  completeScanResolveAttempt,
+  createScanResolveAttemptId,
+  recordScanResolveAttempt,
+  type ScanResolveFailureStage,
+  type ScanResolveLookupOutcome,
+} from "@/lib/scan/resolve-event-log"
 import {
   presentScanVerdictPayload,
   toScanProductHeader,
@@ -70,7 +76,9 @@ export type ScanResolveRouteDeps = {
   createAdminClient: typeof createAdminClient
   validateEanInput: typeof validateEanInput
   findOpenScanSubmission: typeof findOpenScanSubmission
-  recordScanResolveEvent: typeof recordScanResolveEvent
+  createScanResolveAttemptId: typeof createScanResolveAttemptId
+  recordScanResolveAttempt: typeof recordScanResolveAttempt
+  completeScanResolveAttempt: typeof completeScanResolveAttempt
   lookupCatalogProductByIdentifier: typeof lookupCatalogProductByIdentifier
   isProductSearchQuarantined: typeof isProductSearchQuarantined
   loadQuarantinedProductIdsAmong: typeof loadQuarantinedProductIdsAmong
@@ -141,31 +149,52 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       })),
     })
 
+    let attemptId: string | null = null
+    let lookupOutcome: ScanResolveLookupOutcome | null = null
+    let matchedProductId: string | null = null
+    let failureStage: ScanResolveFailureStage = "identifier_lookup"
+
+    const completeAttempt = async (
+      terminalOutcome:
+        | "invalid_identifier"
+        | "unknown_product"
+        | "pending_submission"
+        | "resolved"
+        | "verdict_unknown"
+        | "profile_ineligible"
+        | "temporarily_unavailable",
+      stage: ScanResolveFailureStage | null,
+    ) => {
+      if (!attemptId) return
+      await deps.completeScanResolveAttempt(client, {
+        attemptId,
+        lookupOutcome,
+        terminalOutcome,
+        matchedProductId,
+        failureStage: stage,
+      })
+    }
+
     try {
       let productId: string
       let category: PersonalPlanCategory
 
       if (parsed.data.identifier) {
         const identifier = parsed.data.identifier
-        // Attempt log (fail-open, barcode attempts only — the productId branch below
-        // comes from the search sheet and involves no barcode): outcome mirrors what
-        // the user is shown; matchedProductId also survives quarantined outcomes so
-        // the operator sees which product the barcode pointed at.
-        const logAttempt = (
-          outcome: Parameters<typeof recordScanResolveEvent>[1]["outcome"],
-          matchedProductId: string | null,
-        ) =>
-          deps.recordScanResolveEvent(client, {
-            userId,
-            identifierType: identifier.type,
-            rawValue: identifier.value,
-            outcome,
-            matchedProductId,
-          })
+        // Barcode attempts are started before validation; productId resolution below
+        // originates in the search sheet and intentionally has no barcode telemetry.
+        attemptId = deps.createScanResolveAttemptId()
+        await deps.recordScanResolveAttempt(client, {
+          attemptId,
+          userId,
+          identifierType: identifier.type,
+          rawValue: identifier.value,
+        })
 
         const validation = deps.validateEanInput(identifier.value)
         if (!validation.ok) {
-          await logAttempt("invalid", null)
+          lookupOutcome = "invalid"
+          await completeAttempt("invalid_identifier", "identifier_lookup")
           return fail("invalid_identifier", 400)
         }
         const normalizedValue = normalizeIdentifierValue(validation.value)
@@ -179,16 +208,20 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         // awaiting exact analysis — personal_plan_product_search_dispositions) is not
         // resolvable via scan either. The research/review pipeline is the right place to
         // untangle it; treat it as though the identifier lookup missed.
+        failureStage = "quarantine_lookup"
         const quarantined =
           hit !== null && (await deps.isProductSearchQuarantined(client, hit.productId))
+        matchedProductId = hit?.productId ?? null
+        lookupOutcome = quarantined ? "quarantined" : hit ? "hit" : "miss"
 
         if (!hit || quarantined) {
           // The catalog is the authority: an open research submission only decides what
           // this scan shows once the EAN is genuinely not (usably) in the catalog. A
           // cataloged product must still reach its verdict while a submission is open.
+          failureStage = "submission_lookup"
           const pending = await deps.findOpenScanSubmission(client, userId, normalizedValue)
           if (pending) {
-            await logAttempt("pending_submission", hit?.productId ?? null)
+            await completeAttempt("pending_submission", null)
             return ok({
               kind: "pending_submission",
               submissionId: pending.submissionId,
@@ -196,11 +229,10 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
               status: pending.status,
             })
           }
-          await logAttempt(quarantined ? "quarantined" : "miss", hit?.productId ?? null)
+          await completeAttempt("unknown_product", null)
           return ok(unknownProduct(identifier.type, normalizedValue))
         }
 
-        await logAttempt("hit", hit.productId)
         productId = hit.productId
         category = hit.category
       } else {
@@ -214,9 +246,14 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         category = active.category
       }
 
+      failureStage = "profile_context"
       const context = await deps.loadScanEvaluationContext(client, userId)
-      if (!context) return fail("profile_missing", 409)
+      if (!context) {
+        await completeAttempt("profile_ineligible", null)
+        return fail("profile_missing", 409)
+      }
 
+      failureStage = "decision"
       const decision = context.snapshot.decisions.find((entry) => entry.category === category)
       if (!decision) throw new Error("scan_resolve_decision_missing")
 
@@ -234,6 +271,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           shampooTarget,
           conditionerTarget,
         }
+        failureStage = "product_facts"
         const [productFacts, recommendationCandidates] = await Promise.all([
           deps.loadScanProductFacts(client, category, productId, selectionContext),
           isDecisionWithoutTarget(decision)
@@ -270,6 +308,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       )
       const primaryFacts = loadedFacts.get(primaryRole) as ScanRoleFacts
 
+      failureStage = "verdict"
       const verdict = deps.buildScanVerdict({
         category,
         decision,
@@ -291,6 +330,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         verdict.kind === "in_catalog"
           ? verdict.alternatives.map((alternative) => alternative.productId)
           : []
+      failureStage = "post_verdict_load"
       const [savedState, presentationRows] = await Promise.all([
         deps.loadScanSavedState(client, userId, productId),
         deps.loadPresentationRows(client, [productId, ...alternativeIds]),
@@ -304,18 +344,28 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       // be offered as an alternative on a surface that refuses to resolve or save it. Done
       // on the final (≤3) list rather than on the candidate pool: same outcome, one small
       // keyed query instead of filtering the whole catalog.
+      failureStage = "alternative_filter"
       const eligibleVerdict = await withEligibleAlternatives(verdict, (ids) =>
         deps.loadQuarantinedProductIdsAmong(client, ids),
       )
 
-      return ok({
+      failureStage = "response_build"
+      const result = {
         ...presentScanVerdictPayload(eligibleVerdict, presentationRows),
         product: toScanProductHeader(scannedRow),
         snapshotSource: context.snapshotSource,
         savedState,
-      })
+      }
+      await completeAttempt(
+        eligibleVerdict.kind === "in_catalog" && eligibleVerdict.verdict === "unknown"
+          ? "verdict_unknown"
+          : "resolved",
+        null,
+      )
+      return ok(result)
     } catch (error) {
       console.error("[scan] resolve failed", error)
+      await completeAttempt("temporarily_unavailable", failureStage)
       ;(deps.captureScanException ?? captureScanException)(error, {
         route: "resolve",
         status: 503,
@@ -412,7 +462,9 @@ export const POST = createScanResolveRouteHandler({
   createAdminClient,
   validateEanInput,
   findOpenScanSubmission,
-  recordScanResolveEvent,
+  createScanResolveAttemptId,
+  recordScanResolveAttempt,
+  completeScanResolveAttempt,
   lookupCatalogProductByIdentifier,
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,

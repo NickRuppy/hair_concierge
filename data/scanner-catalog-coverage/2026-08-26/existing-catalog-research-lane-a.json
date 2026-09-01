@@ -1,0 +1,1435 @@
+{
+  "generated_at": "2026-08-26T16:43:14.212Z",
+  "schema_version": "scanner-existing-catalog-research-lane-v1",
+  "lane": "A",
+  "categories": [
+    "shampoo",
+    "deep_cleansing_shampoo",
+    "dry_shampoo"
+  ],
+  "source": {
+    "existing_catalog_coverage_ledger_content_fingerprint": "fe23a3fcdde059bc55060bbe5a429d57bd230c0503a7cb1fe9ad68a046e9b7f8",
+    "readiness_baseline_content_fingerprint": "0ce6273341f11db30121802e314669e0844ed9ee7abde015b2bd0ecdc3c031d9",
+    "note": "Research lane only. Each GTIN still requires fresh exact-product evidence, GS1 checksum validation, global ownership checks, and guarded application approval."
+  },
+  "reconciliation": {
+    "assigned_products": 41,
+    "by_category": {
+      "deep_cleansing_shampoo": 4,
+      "dry_shampoo": 8,
+      "shampoo": 29
+    }
+  },
+  "rows": [
+    {
+      "product_id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "category_key": "deep_cleansing_shampoo",
+      "identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Shampoo Tiefenreinigung",
+        "product_line": "Professional"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "category_key": "deep_cleansing_shampoo",
+      "identity": {
+        "canonical_brand": "Gliss",
+        "clean_name": "Tiefenreinigungs-Shampoo",
+        "product_line": "Scalp Balance"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "category_key": "deep_cleansing_shampoo",
+      "identity": {
+        "canonical_brand": "Isana",
+        "clean_name": "Professional Shampoo Tiefenreinigung",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "category_key": "deep_cleansing_shampoo",
+      "identity": {
+        "canonical_brand": "Swiss-O-Par",
+        "clean_name": "Tiefenreinigung Shampoo",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "mineral_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "coarse",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "mineral_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "mineral_reset",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "residue_reset",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Blond",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Bruenett",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo dunkel",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Original",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "Batiste",
+        "clean_name": "Trockenshampoo Sensible Kopfhaut",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "got2b",
+        "clean_name": "Trockenshampoo Extra Volumen",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "got2b",
+        "clean_name": "Trockenshampoo Liquid to Dry",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "category_key": "dry_shampoo",
+      "identity": {
+        "canonical_brand": "Isana",
+        "clean_name": "Trockenshampoo Jedes Haar",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "fine",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "root_refresh_bridge",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Balea",
+        "clean_name": "Balea Tiefenreinigung",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Cantu",
+        "clean_name": "Cantu Shampoo Locken Pflege",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Dejan Garz",
+        "clean_name": "Dejan Garz Shampoo",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Guhl",
+        "clean_name": "Guhl Frische und Leichtigkeit",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Guhl",
+        "clean_name": "Guhl Kraft & Fülle",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Hair Biology",
+        "clean_name": "Hair Biology Revitalize & Soothe",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "Hask Curl Care Shampoo",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Hask",
+        "clean_name": "Hask Shampoo Argan Oil",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Head & Shoulders",
+        "clean_name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Langhaarmädchen",
+        "clean_name": "Langhaarmädchen Lovely Long",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Lavera",
+        "clean_name": "Lavera Basis Sensitiv",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Monday Haircare",
+        "clean_name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Nivea",
+        "clean_name": "Nivea Shampoo&Conditioner 2in1",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "Biotin & Collagen Shampoo",
+        "product_line": "Thick & Full +"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "ideal"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "Keratin Oil Shampoo",
+        "product_line": "Strength & Length +"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "OGX",
+        "clean_name": "Rosemary Mint Shampoo",
+        "product_line": "Refreshing Scalp +"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Grow Abundance",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Hydra Glow Shampoo",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Pantene",
+        "clean_name": "Pantene Pro-V Volumen Pur",
+        "product_line": "Pro-V"
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Salthouse",
+        "clean_name": "Salthouse Anti Juckreiz",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Sante",
+        "clean_name": "Sante Glossy Shine",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "ideal"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Sante",
+        "clean_name": "Sante Sensitive Care",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Sebamed",
+        "clean_name": "Sebamed Anti Schuppen Plus",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Sebamed",
+        "clean_name": "Sebamed Every-Day Shampoo",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Sebamed",
+        "clean_name": "Sebamed Urea 5%",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Swiss-O-Par",
+        "clean_name": "Swiss-O-Par Teebaumöl",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Syoss",
+        "clean_name": "Syoss Intense Curls",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "supportive"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Wahre Schätze",
+        "clean_name": "Wahre Schätze Aktivkohle",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    },
+    {
+      "product_id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "category_key": "shampoo",
+      "identity": {
+        "canonical_brand": "Wahre Schätze",
+        "clean_name": "Wahre Schätze Sanfte Hafermilch",
+        "product_line": null
+      },
+      "partition": "ready_for_gtin_research",
+      "linked_in_baseline": false,
+      "current_identifiers": [],
+      "strict_readiness": {
+        "status": "ready_for_ean_research",
+        "blockers": [],
+        "verdicts": [
+          {
+            "profile": "coarse",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "fine",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          },
+          {
+            "profile": "normal",
+            "role": "shampoo_everyday",
+            "verdict": "mismatch"
+          }
+        ]
+      },
+      "gtin_status": "research_pending"
+    }
+  ],
+  "content_fingerprint": "c17a2dcd9ef8f8a2ffb7bd02bfb837829fa356d377e7fd0bf92aa627e046312b"
+}

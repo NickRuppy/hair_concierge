@@ -1,0 +1,616 @@
+{
+  "batch": "E2",
+  "batch_id": "scanner-existing-identifiers-e2-v1",
+  "items": [
+    {
+      "content_fingerprint": "ecbbf1efec42f7751d34f6c74f43ed3bd15cd8e81ce6d5f4192cfe819c6ff6d2",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Pro-V Coconut Oil"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "08001841890012",
+          "market_scope": "DE",
+          "raw_gtin": "8001841890012",
+          "size": "100 ml",
+          "source_url": "https://www.dm.de/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil",
+          "source_urls": [
+            "https://www.dm.de/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil"
+          ],
+          "type": "ean",
+          "value": "8001841890012"
+        }
+      ],
+      "item_key": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "product_id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5"
+    },
+    {
+      "content_fingerprint": "4dbf3191f7c1b10c51d8bf51deb360b87616017480b2b6c2c30a12cd3fb65090",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Professional Glow & Shine"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04067796166453",
+          "market_scope": "AT/EU",
+          "raw_gtin": "4067796166453",
+          "size": "200 ml",
+          "source_url": "https://www.dm.pl/p/d/3050111/balea-professional-kuracja-do-w-osow-glow-shine",
+          "source_urls": [
+            "https://www.dm.pl/p/d/3050111/balea-professional-kuracja-do-w-osow-glow-shine"
+          ],
+          "type": "ean",
+          "value": "4067796166453"
+        }
+      ],
+      "item_key": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "product_id": "1f3920fe-c91e-4298-a40e-99dccd13ea30"
+    },
+    {
+      "content_fingerprint": "1515fae0a6595d21d52b5f3f9982f2236c73980d25ce1e302d39f194ff30225c",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Peptide Power"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528086297",
+          "market_scope": "DE",
+          "raw_gtin": "4063528086297",
+          "size": "100 ml",
+          "source_url": "https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power",
+          "source_urls": [
+            "https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power",
+            "https://neqi-hair.com/products/treatment-treasure-peptide-power"
+          ],
+          "type": "ean",
+          "value": "4063528086297"
+        }
+      ],
+      "item_key": "22d41784-5fc6-40bb-a4dc-92841322f933",
+      "product_id": "22d41784-5fc6-40bb-a4dc-92841322f933"
+    },
+    {
+      "content_fingerprint": "71c1c5028dc4224637b46abb5637a5a9a2b64eb600904546fd94007766c42a2f",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Repair Reveal Conditioner"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078223",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078223",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1455210/neqi-conditioner-repair-reveal",
+          "source_urls": [
+            "https://www.dm.de/p/d/1455210/neqi-conditioner-repair-reveal",
+            "https://neqi-hair.com/products/repair-reveal-conditioner"
+          ],
+          "type": "ean",
+          "value": "4063528078223"
+        },
+        {
+          "canonical_gtin14": "04063528093127",
+          "market_scope": "DE",
+          "raw_gtin": "4063528093127",
+          "size": "90 ml",
+          "source_url": "https://neqi-hair.com/products/repair-reveal-conditioner",
+          "source_urls": [
+            "https://neqi-hair.com/products/repair-reveal-conditioner",
+            "https://www.maquibeauty.de/neqi-repair-reveal-reparierender-conditioner-90-ml-p-90930.html"
+          ],
+          "type": "ean",
+          "value": "4063528093127"
+        }
+      ],
+      "item_key": "35ae622e-1458-42bf-a44d-1b23ecfd5516",
+      "product_id": "35ae622e-1458-42bf-a44d-1b23ecfd5516"
+    },
+    {
+      "content_fingerprint": "05196e20779fb6c69506e6be49591ff3af2b1098bb3c4ebe223b66490c310b5a",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Volume Victory"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078377",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078377",
+          "size": "330 ml",
+          "source_url": "https://www.dm.de/p/d/2972922/neqi-shampoo-volume-victory",
+          "source_urls": [
+            "https://www.dm.de/p/d/2972922/neqi-shampoo-volume-victory",
+            "https://neqi-hair.com/products/volume-victory-shampoo"
+          ],
+          "type": "ean",
+          "value": "4063528078377"
+        }
+      ],
+      "item_key": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "product_id": "64fb44d5-8701-46ab-bcba-f1747f071e48"
+    },
+    {
+      "content_fingerprint": "fa82080157366a6fc86af7599202b5e2eb0d8393904f6f1dca6178a089d9ab67",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Volume Victory Conditioner"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078407",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078407",
+          "size": "250 ml",
+          "source_url": "https://neqi-hair.com/products/volume-victory-conditioner",
+          "source_urls": [
+            "https://neqi-hair.com/products/volume-victory-conditioner",
+            "https://www.cocooncenter.de/neqi-victory-volume-volumizing-conditioner/115450.html"
+          ],
+          "type": "ean",
+          "value": "4063528078407"
+        }
+      ],
+      "item_key": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4"
+    },
+    {
+      "content_fingerprint": "1e67d332aa92d81f7412218117dca6d63e367eafa8cdabf3d5163fd48d66c9bf",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Pro-V Miracles Hydra Glow Conditioner"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "08700216151412",
+          "market_scope": "DE",
+          "raw_gtin": "8700216151412",
+          "size": "160 ml",
+          "source_url": "https://www.dm.de/p/d/1647565/pantene-pro-v-conditioner-miracles-hydra-glow",
+          "source_urls": [
+            "https://www.dm.de/p/d/1647565/pantene-pro-v-conditioner-miracles-hydra-glow"
+          ],
+          "type": "ean",
+          "value": "8700216151412"
+        }
+      ],
+      "item_key": "98d08c22-97d2-4e06-872f-9f9447530452",
+      "product_id": "98d08c22-97d2-4e06-872f-9f9447530452"
+    },
+    {
+      "content_fingerprint": "c0fe992cf94adf71bce4a1bf368792db9d358f311378c03554dedb9f57f5a402",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Professional Plex Care 2in1"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04070765006346",
+          "market_scope": "DE",
+          "raw_gtin": "4070765006346",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1690411/balea-professional-haarmaske-2in1-plex-care",
+          "source_urls": [
+            "https://www.dm.de/p/d/1690411/balea-professional-haarmaske-2in1-plex-care"
+          ],
+          "type": "ean",
+          "value": "4070765006346"
+        }
+      ],
+      "item_key": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+      "product_id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6"
+    },
+    {
+      "content_fingerprint": "20383d1581e09bb23b89ee92a73e89b91d3a096083ae242a5247aca95c9cb32a",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Build Boost Leave-In Balm"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528097651",
+          "market_scope": "DE",
+          "raw_gtin": "4063528097651",
+          "size": "75 ml",
+          "source_url": "https://neqi-hair.com/products/build-boost-balm",
+          "source_urls": [
+            "https://neqi-hair.com/products/build-boost-balm",
+            "https://www.dm.de/p/d/3101266/neqi-balm-build-boost-fill-und-seal"
+          ],
+          "type": "ean",
+          "value": "4063528097651"
+        }
+      ],
+      "item_key": "9f94c225-61ec-455d-b303-f39e885e222a",
+      "product_id": "9f94c225-61ec-455d-b303-f39e885e222a"
+    },
+    {
+      "content_fingerprint": "5bbf583103db12ebdd0e8287f3db4aa92e457d6c81651093218ad3208c556798",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Professional Aqua Hyaluron Conditioner"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04066447342055",
+          "market_scope": "DE",
+          "raw_gtin": "4066447342055",
+          "size": "200 ml",
+          "source_url": "https://www.dm.de/p/d/1675522/balea-professional-spuelung-aqua-hyaluron",
+          "source_urls": [
+            "https://www.dm.de/p/d/1675522/balea-professional-spuelung-aqua-hyaluron"
+          ],
+          "type": "ean",
+          "value": "4066447342055"
+        }
+      ],
+      "item_key": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df"
+    },
+    {
+      "content_fingerprint": "a8dde745beaf1c9ddfab233f71842028392fa02adcc0c44ca4f1e69d07b92159",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Ultra Sensitive"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04066447966008",
+          "market_scope": "DE",
+          "raw_gtin": "4066447966008",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+          "source_urls": [
+            "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive"
+          ],
+          "type": "ean",
+          "value": "4066447966008"
+        }
+      ],
+      "item_key": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "product_id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be"
+    },
+    {
+      "content_fingerprint": "694e71f36a0cfc5c2020457e14f567534b696b696389da8d9bc74609959b4931",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Moisture Mystery"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078285",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078285",
+          "size": "330 ml",
+          "source_url": "https://neqi-hair.com/products/moisture-mystery-shampoo",
+          "source_urls": [
+            "https://neqi-hair.com/products/moisture-mystery-shampoo",
+            "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-shampoo/p/4063528078285"
+          ],
+          "type": "ean",
+          "value": "4063528078285"
+        }
+      ],
+      "item_key": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "product_id": "a7ff335a-7e81-4cf4-9c20-9209bff4386b"
+    },
+    {
+      "content_fingerprint": "9410b18aa0817e578ae16e245c5b307464c82c53270eb7148d671cc8cc5a9c26",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Gloss Glaze"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528086327",
+          "market_scope": "DE",
+          "raw_gtin": "4063528086327",
+          "size": "100 ml",
+          "source_url": "https://www.dm.de/p/d/2972720/neqi-haarkur-treatment-treasures-gloss-glaze",
+          "source_urls": [
+            "https://www.dm.de/p/d/2972720/neqi-haarkur-treatment-treasures-gloss-glaze",
+            "https://neqi-hair.com/products/treatment-treasure-gloss-glaze"
+          ],
+          "type": "ean",
+          "value": "4063528086327"
+        }
+      ],
+      "item_key": "b281d528-b312-4e44-98be-3e01f7e56644",
+      "product_id": "b281d528-b312-4e44-98be-3e01f7e56644"
+    },
+    {
+      "content_fingerprint": "f96150d6c3b539dbf1390a40b0191a54ea3e0e104f984889229249084a1c6600",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Build Boost"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528086303",
+          "market_scope": "DE",
+          "raw_gtin": "4063528086303",
+          "size": "100 ml",
+          "source_url": "https://neqi-hair.com/products/treatment-treasure-build-boost",
+          "source_urls": [
+            "https://neqi-hair.com/products/treatment-treasure-build-boost",
+            "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost"
+          ],
+          "type": "ean",
+          "value": "4063528086303"
+        }
+      ],
+      "item_key": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "product_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d"
+    },
+    {
+      "content_fingerprint": "60ff50db4d32cd53be5286a9934dc55a647d3233e41c2794afa73bf1c6ae9ab6",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Professional Ultimate Volume"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04067796075021",
+          "market_scope": "DE",
+          "raw_gtin": "4067796075021",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume",
+          "source_urls": [
+            "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume"
+          ],
+          "type": "ean",
+          "value": "4067796075021"
+        }
+      ],
+      "item_key": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "product_id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc"
+    },
+    {
+      "content_fingerprint": "6ee7870df4923c2c597dcfa9c4ea4bca74ed370943a42f76aa8929f5a84180ff",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Repair Reveal"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078254",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078254",
+          "size": "250 ml",
+          "source_url": "https://www.dm.de/p/d/1455211/neqi-haarkur-repair-reveal",
+          "source_urls": [
+            "https://www.dm.de/p/d/1455211/neqi-haarkur-repair-reveal",
+            "https://neqi-hair.com/products/repair-reveal-haarmaske"
+          ],
+          "type": "ean",
+          "value": "4063528078254"
+        }
+      ],
+      "item_key": "d33543b0-6011-45f1-9bb2-125289ac849a",
+      "product_id": "d33543b0-6011-45f1-9bb2-125289ac849a"
+    },
+    {
+      "content_fingerprint": "c77b7c8543c9204de295f9e8ee9b09f24fb5cdcb556f7c4f9c4047fd62d121cd",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea 3 in 1 Intensivmaske"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04066447237443",
+          "market_scope": "AT/EU",
+          "raw_gtin": "4066447237443",
+          "size": "300 ml",
+          "source_url": "https://www.dm.at/p/d/1671219/balea-haarmaske-3in1-intensivpflege",
+          "source_urls": [
+            "https://www.dm.at/p/d/1671219/balea-haarmaske-3in1-intensivpflege",
+            "https://www.dm.si/p/d/1671219/balea-maska-za-lase-3v1-intensiv-pflege"
+          ],
+          "type": "ean",
+          "value": "4066447237443"
+        },
+        {
+          "canonical_gtin14": "04066447982817",
+          "market_scope": "DE",
+          "raw_gtin": "4066447982817",
+          "size": "300 ml",
+          "source_url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+          "source_urls": [
+            "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1"
+          ],
+          "type": "ean",
+          "value": "4066447982817"
+        }
+      ],
+      "item_key": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c"
+    },
+    {
+      "content_fingerprint": "a77aff567b6b5c78cdb2bae5c0aead356894dec657ce564e3e0f88da444937e4",
+      "expected_product": {
+        "brand": "Neqi",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Neqi Moisture Mystery"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04063528078346",
+          "market_scope": "DE",
+          "raw_gtin": "4063528078346",
+          "size": "200 ml",
+          "source_url": "https://www.dm.de/p/d/1455206/neqi-leave-in-creme-moisture-mystery",
+          "source_urls": [
+            "https://www.dm.de/p/d/1455206/neqi-leave-in-creme-moisture-mystery",
+            "https://neqi-hair.com/products/moisture-mystery-leave-in-cream"
+          ],
+          "type": "ean",
+          "value": "4063528078346"
+        }
+      ],
+      "item_key": "e6896862-523b-42b3-967d-41cbd16acf64",
+      "product_id": "e6896862-523b-42b3-967d-41cbd16acf64"
+    },
+    {
+      "content_fingerprint": "c2034f4b47f1636f1d262267bd15de3f72d133d6c4daea2d28d332eafcb7d14a",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "08700216939768",
+          "market_scope": "DE",
+          "raw_gtin": "8700216939768",
+          "size": "135 ml",
+          "source_url": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+          "source_urls": [
+            "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow"
+          ],
+          "type": "ean",
+          "value": "8700216939768"
+        }
+      ],
+      "item_key": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+    },
+    {
+      "content_fingerprint": "fee41793d76428adaecc2f380dfbde01155788e51ee1ccad9041bbf319e01bf4",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Professional Oil Repair Intensiv Spülung"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04066447365443",
+          "market_scope": "AT/EU",
+          "raw_gtin": "4066447365443",
+          "size": "200 ml",
+          "source_url": "https://www.dm.pl/p/d/1703916/balea-professional-odzywka-do-w-osow-oil-repair-intensiv",
+          "source_urls": [
+            "https://www.dm.pl/p/d/1703916/balea-professional-odzywka-do-w-osow-oil-repair-intensiv"
+          ],
+          "type": "ean",
+          "value": "4066447365443"
+        }
+      ],
+      "item_key": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
+    },
+    {
+      "content_fingerprint": "fffc5ea01954fca5e7eddfe7cd24ae226e3575b6429506360337594b438bf634",
+      "expected_product": {
+        "brand": "Balea",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Balea Traumlocken Öl"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04070765002089",
+          "market_scope": "DE",
+          "raw_gtin": "4070765002089",
+          "size": "100 ml",
+          "source_url": "https://www.dm.de/p/d/1635760/balea-professional-haaroel-traumlocken",
+          "source_urls": [
+            "https://www.dm.de/p/d/1635760/balea-professional-haaroel-traumlocken"
+          ],
+          "type": "ean",
+          "value": "4070765002089"
+        }
+      ],
+      "item_key": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+      "product_id": "fd83b493-f7be-4071-9642-3d5b92e30dc2"
+    },
+    {
+      "content_fingerprint": "ffcfec90d612a48dc0a2a9b7ce5e204ebff98a42198a082855e0ddfbcb2b45ef",
+      "expected_product": {
+        "brand": "Pantene",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "name": "Pantene Pro-V Keratin Protect Öl"
+      },
+      "identifiers": [
+        {
+          "canonical_gtin14": "04084500084971",
+          "market_scope": "DE",
+          "raw_gtin": "4084500084971",
+          "size": "100 ml",
+          "source_url": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+          "source_urls": [
+            "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+            "https://www.pantene.pl/pl-pl/produkty-do-wlosow/olejek-do-wlosow/intensywna-regeneracja-z-keratyna/"
+          ],
+          "type": "ean",
+          "value": "4084500084971"
+        }
+      ],
+      "item_key": "fe974387-b487-470e-9799-69bb4249070b",
+      "product_id": "fe974387-b487-470e-9799-69bb4249070b"
+    }
+  ],
+  "schema_version": "scanner-existing-identifier-backfill-v1"
+}

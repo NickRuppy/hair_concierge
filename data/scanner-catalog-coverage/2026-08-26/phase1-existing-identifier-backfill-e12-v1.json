@@ -1,0 +1,57 @@
+{
+  "batch": "E12",
+  "batch_id": "scanner-existing-identifiers-e12-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "existing-catalog-gtin-research-summary-and-remaining-barcode-resolution-rules",
+    "production_identity_checked_at": "2026-09-01T08:15:00.000Z",
+    "source_refresh_receipt": "E12 owner selections follow Nick-approved duplicate and package-parity rules."
+  },
+  "items": [
+    {
+      "item_key": "curlsmith-multitasking-conditioner-3-in-1",
+      "product_id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "expected_product": { "name": "Curlsmith Multitasking Conditioner 3 in 1", "brand": "Curlsmith", "category_key": "leave_in", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [
+        { "type": "gtin", "value": "0850005417781", "raw_gtin": "0850005417781", "canonical_gtin14": "00850005417781", "size": "59 ml", "market_scope": "EU/UK", "source_url": "https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-ts-59ml-63b55992adf50e4de65933a5", "source_urls": ["https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-ts-59ml-63b55992adf50e4de65933a5"], "source_checked_at": "2026-09-01T08:15:00.000Z", "exact_match_note": "SuperSales exact PDP names Curlsmith Multitasking Conditioner travel size 59 ml and lists EAN 0850005417781." },
+        { "type": "gtin", "value": "0850005417804", "raw_gtin": "0850005417804", "canonical_gtin14": "00850005417804", "size": "946 ml", "market_scope": "EU/UK", "source_url": "https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-xl-946ml-63b558a8adf50e4de659173f", "source_urls": ["https://www.supersales.co.uk/p/curlsmith-multitasking-conditioner-xl-946ml-63b558a8adf50e4de659173f"], "source_checked_at": "2026-09-01T08:15:00.000Z", "exact_match_note": "SuperSales exact PDP names Curlsmith Multitasking Conditioner XL 946 ml and lists EAN 0850005417804." }
+      ],
+      "content_fingerprint": "d4babc3077e4e4861856f63304e94a28071b167b6f3f158007d18c517ec3d28e"
+    },
+    {
+      "item_key": "cantu-leave-in-repair-cream",
+      "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "expected_product": { "name": "Cantu Leave-In Repair Cream", "brand": "Cantu", "category_key": "leave_in", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "gtin", "value": "810006945430", "raw_gtin": "810006945430", "canonical_gtin14": "00810006945430", "size": "453 g", "market_scope": "DE", "source_url": "https://www.dm.de/p/d/1685686/cantu-leave-in-haarkur-repair-creme", "source_urls": ["https://www.dm.de/p/d/1685686/cantu-leave-in-haarkur-repair-creme"], "source_checked_at": "2026-09-01T08:15:00.000Z", "exact_match_note": "dm exact PDP lists Cantu Leave-In Haar Kur Repair Creme 453 g with GTIN 810006945430. The older 810006943405 candidate is intentionally excluded because it is not the current approved package identity." }],
+      "content_fingerprint": "1cb88e97185da2c3291edfe5c07e5764799abee43b015ba1af964f9e9d291e1c"
+    },
+    {
+      "item_key": "redken-extreme-anti-snap",
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "expected_product": { "name": "Redken Extreme Anti-Snap", "brand": "Redken", "category_key": "leave_in", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "gtin", "value": "884486453402", "raw_gtin": "884486453402", "canonical_gtin14": "00884486453402", "size": "240/250 ml (source discrepancy)", "market_scope": "EU/NL", "source_url": "https://www.haarshop.nl/redken-extreme-anti-snap-240-ml-nieuw", "source_urls": ["https://www.haarshop.nl/redken-extreme-anti-snap-240-ml-nieuw"], "source_checked_at": "2026-09-01T08:15:00.000Z", "exact_match_note": "Haarshop exact PDP names Redken Extreme Anti Snap 240 ml and lists EAN 884486453402. A separate product source describes 250 ml; this unresolved package-volume discrepancy is recorded here and does not mutate catalog net content." }],
+      "content_fingerprint": "c0e5654ff89c3b991a48fa830ebbf77e9ca49d458477180551863235f4b32d0f"
+    },
+    {
+      "item_key": "guhl-panthenol-reparatur-2in1",
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "expected_product": { "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung", "brand": "Guhl", "category_key": "conditioner", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "gtin", "value": "4072600703403", "raw_gtin": "4072600703403", "canonical_gtin14": "04072600703403", "size": "200 ml", "market_scope": "DE", "source_url": "https://duftfeeling.de/Guhl-Panthenol-Reparatur-2-in1-Kur-Spuelung-200-ml", "source_urls": ["https://duftfeeling.de/Guhl-Panthenol-Reparatur-2-in1-Kur-Spuelung-200-ml"], "source_checked_at": "2026-09-01T08:15:00.000Z", "exact_match_note": "Exact Guhl Panthenol + Reparatur 2in1 Kur & Spuelung 200 ml retailer page lists GTIN 4072600703403. Nick approved the conditioner owner as the single canonical scanner result for this duplicate physical product." }],
+      "content_fingerprint": "9920d557723e9a4c05cdee0d7bc11ea2f67b91f8fe9f88cdcf8eed8923bea949"
+    },
+    {
+      "item_key": "loreal-oel-magique-midnight-serum",
+      "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "expected_product": { "name": "L’Oréal Öl Magique Midnight Serum", "brand": "L’Oréal", "category_key": "oil", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "gtin", "value": "3600524135805", "raw_gtin": "3600524135805", "canonical_gtin14": "03600524135805", "size": "100 ml", "market_scope": "DE", "source_url": "https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum", "source_urls": ["https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum"], "source_checked_at": "2026-09-01T08:15:00.000Z", "exact_match_note": "dm exact PDP names L'ORÉAL PARiS ELVITAL Haarserum Öl Magique Midnight Serum 100 ml and lists GTIN 3600524135805. Nick approved the oil owner as the single canonical scanner result for this duplicate physical product." }],
+      "content_fingerprint": "5332733b52f24f17fcb7f9682e882283123d6eb046084f26a58f3b8de058107d"
+    },
+    {
+      "item_key": "pantene-miracles-7in1-oel-spray",
+      "product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "expected_product": { "name": "Pantene Pro-V Miracles 7in1 Öl-Spray", "brand": "Pantene", "category_key": "oil", "is_active": true, "lifecycle_status": "active" },
+      "identifiers": [{ "type": "gtin", "value": "8700216178402", "raw_gtin": "8700216178402", "canonical_gtin14": "08700216178402", "size": "145 ml", "market_scope": "DE", "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402", "source_urls": ["https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402"], "source_checked_at": "2026-09-01T08:15:00.000Z", "exact_match_note": "Rossmann exact PDP names Pantene Pro-V Miracles schwereloses 7in1 Haaröl Spray and embeds GTIN 8700216178402 in the direct product URL. Nick approved the oil owner as the single canonical scanner result for this duplicate physical product." }],
+      "content_fingerprint": "bc8864038b776a893823ed3f85777e492e923f326b7037e920781e68caf77bfc"
+    }
+  ]
+}

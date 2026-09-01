@@ -1,0 +1,184 @@
+{
+  "batch": "E9",
+  "batch_id": "scanner-existing-identifiers-e9-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "existing-catalog-gtin-research-refresh-2026-08-28.json",
+    "production_identity_checked_at": "2026-08-28T08:45:05.751Z",
+    "source_refresh_receipt": "plans/2026-08-28-existing-gtin-enrichment-receipt.md"
+  },
+  "items": [
+    {
+      "item_key": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "product_id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "expected_product": {
+        "name": "OGX Renewing Argan Oil of Morocco Conditioner",
+        "brand": "OGX",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3574661799162",
+          "raw_gtin": "3574661799162",
+          "canonical_gtin14": "03574661799162",
+          "size": "385 ml",
+          "market_scope": "Exact sourced package; no German shelf-availability claim",
+          "source_url": "https://www.dm.de/p/d/1442294/ogx-conditioner-renewing-argan-oil-of-marocco",
+          "source_urls": [
+            "https://www.dm.de/p/d/1442294/ogx-conditioner-renewing-argan-oil-of-marocco"
+          ],
+          "source_checked_at": "2026-08-28T08:20:25Z",
+          "exact_match_note": "dm PDP names OGX Conditioner Renewing Argan Oil of Morocco, 385 ml; separate GTIN field is 3574661799162."
+        }
+      ],
+      "content_fingerprint": "f8c6e255b9c5a6b0c2b5854daa4e19eedeb3f198bb77eb489ee01c307cb17188"
+    },
+    {
+      "item_key": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "product_id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "expected_product": {
+        "name": "Guhl 30 sec. Feuchtigkeit",
+        "brand": "Guhl",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4072600720097",
+          "raw_gtin": "4072600720097",
+          "canonical_gtin14": "04072600720097",
+          "size": "100 ml",
+          "market_scope": "Exact sourced package; no German shelf-availability claim",
+          "source_url": "https://www.beautywelt.de/guhl-30-sek-intensiv-kur-feuchtigkeit-100-ml/a/210861",
+          "source_urls": [
+            "https://www.beautywelt.de/guhl-30-sek-intensiv-kur-feuchtigkeit-100-ml/a/210861",
+            "https://www.dm.de/guhl-haarkur-30-sek-feuchtigkeit-p4072600720097.html"
+          ],
+          "source_checked_at": "2026-08-28T08:25:00Z",
+          "exact_match_note": "Beautywelt exact PDP identifies Guhl 30 Sek Intensiv Kur Feuchtigkeit, 100 ml, and separately publishes EAN 4072600720097."
+        }
+      ],
+      "content_fingerprint": "6945fa27e9a6152c9a13e7554f5f9f79fa2b969f18f2c4aeb4af50acc2e31f8e"
+    },
+    {
+      "item_key": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "expected_product": {
+        "name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+        "brand": "Gliss",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100813913",
+          "raw_gtin": "4015100813913",
+          "canonical_gtin14": "04015100813913",
+          "size": "400 ml",
+          "market_scope": "Exact sourced package; no German shelf-availability claim",
+          "source_url": "https://www.dm.de/p/d/1431893/schwarzkopf-gliss-haarmaske-4in1-liquid-silk",
+          "source_urls": [
+            "https://www.dm.de/p/d/1431893/schwarzkopf-gliss-haarmaske-4in1-liquid-silk"
+          ],
+          "source_checked_at": "2026-08-28T08:20:25Z",
+          "exact_match_note": "dm PDP identifies GLISS Haarmaske 4in1 Liquid Silk, 400 ml, and separately gives GTIN 4015100813913."
+        }
+      ],
+      "content_fingerprint": "291fb34d0ff1f993ca068d393eaf295bd5fb512cdf0adfaf573ba80e45d84e95"
+    },
+    {
+      "item_key": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "expected_product": {
+        "name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+        "brand": "Wahre Schätze",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542509572",
+          "raw_gtin": "3600542509572",
+          "canonical_gtin14": "03600542509572",
+          "size": "340 ml",
+          "market_scope": "Exact sourced package; no German shelf-availability claim",
+          "source_url": "https://www.dm.de/p/d/1679238/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel",
+          "source_urls": [
+            "https://www.dm.de/p/d/1679238/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel",
+            "https://www.dm.de/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel-p3600542509572.html"
+          ],
+          "source_checked_at": "2026-08-28T08:25:00Z",
+          "exact_match_note": "dm exact PDP identifies Wahre Schätze Haarkur 1-Minute Argan & Camelia-Öl, 340 ml, and explicitly publishes GTIN 3600542509572."
+        }
+      ],
+      "content_fingerprint": "95223e37ed3d414e6ed22c2d1f212e9574deb18c926127e18f772bb41fc600a3"
+    },
+    {
+      "item_key": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "product_id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "expected_product": {
+        "name": "Garnier Wahre Schätze Curl Revival Öl",
+        "brand": "Garnier",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542624336",
+          "raw_gtin": "3600542624336",
+          "canonical_gtin14": "03600542624336",
+          "size": "120 ml",
+          "market_scope": "Exact sourced package; no German shelf-availability claim",
+          "source_url": "https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir",
+          "source_urls": [
+            "https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir",
+            "https://www.dm.de/wahre-schaetze-haaroel-curl-revival-elixir-p3600542624336.html"
+          ],
+          "source_checked_at": "2026-08-28T08:25:00Z",
+          "exact_match_note": "dm exact PDP identifies Wahre Schätze Haaröl Curl Revival Elixir, 120 ml, and explicitly publishes GTIN 3600542624336."
+        }
+      ],
+      "content_fingerprint": "da454b7f9f64f73cffc52bf7d705f479db2d0699c7321a550a7d48af14ce84f2"
+    },
+    {
+      "item_key": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "product_id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "expected_product": {
+        "name": "NANOIL Avocadoöl",
+        "brand": "NANOIL",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "5905669547130",
+          "raw_gtin": "5905669547130",
+          "canonical_gtin14": "05905669547130",
+          "size": "50 ml",
+          "market_scope": "Exact sourced package; no German shelf-availability claim",
+          "source_url": "https://www.redcare-apotheke.ch/de/beauty/CH90001157/nanoil-avocadooel.htm",
+          "source_urls": [
+            "https://www.redcare-apotheke.ch/de/beauty/CH90001157/nanoil-avocadooel.htm",
+            "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130"
+          ],
+          "source_checked_at": "2026-08-28T08:38:00Z",
+          "exact_match_note": "Swiss/EU pharmacy PDP identifies NANOIL Avocadoöl 50 ml and has separate PZN/EAN field 5905669547130."
+        }
+      ],
+      "content_fingerprint": "fa9d4ebf7a7a9b0ba3357d027d79eaade56b9061cdc91f5784ba50b05bfcba02"
+    }
+  ]
+}

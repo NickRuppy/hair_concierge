@@ -1,0 +1,85 @@
+{
+  "batch": "E15",
+  "batch_id": "scanner-existing-identifiers-e15-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "fresh-e15-source-refresh-2026-09-01",
+    "production_identity_checked_at": "2026-09-01T11:18:00.000Z",
+    "source_refresh_receipt": "E15 selects the exact active, unowned package codes that passed the fresh unresolved-submission and readiness checks. Nuxe 30 ml and Fino Airy Smooth remain excluded because they are not package/formula-parity evidence for these existing analyses."
+  },
+  "items": [
+    {
+      "item_key": "nuxe-huile-prodigieuse-oil",
+      "product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "expected_product": {
+        "name": "Nuxe Huile Prodigieuse Öl",
+        "brand": "Nuxe",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3264680009754",
+          "raw_gtin": "3264680009754",
+          "canonical_gtin14": "03264680009754",
+          "size": "100 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+          "source_urls": [
+            "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+            "https://www.vidal.fr/parapharmacie/nuxe-huile-prodigieuse-165368.html"
+          ],
+          "source_checked_at": "2026-09-01T11:18:00.000Z",
+          "exact_match_note": "Official NUXE product page confirms Huile Prodigieuse multi-purpose dry oil for hair; Vidal's current manufacturer/distributor listing identifies the marketed 100 ml package as EAN 3264680009754. Nick's approved package-parity policy attaches the two exact classic Huile Prodigieuse sizes to this existing oil analysis."
+        },
+        {
+          "type": "ean",
+          "value": "3264680009761",
+          "raw_gtin": "3264680009761",
+          "canonical_gtin14": "03264680009761",
+          "size": "50 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+          "source_urls": [
+            "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+            "https://www.vidal.fr/parapharmacie/nuxe-huile-prodigieuse-165368.html"
+          ],
+          "source_checked_at": "2026-09-01T11:18:00.000Z",
+          "exact_match_note": "Official NUXE product page confirms Huile Prodigieuse multi-purpose dry oil for hair; Vidal's current manufacturer/distributor listing identifies the marketed 50 ml package as EAN 3264680009761. Nuxe 30 ml is intentionally excluded because it was not part of the verified package set."
+        }
+      ],
+      "content_fingerprint": "f693e9f162259013798d190fc1d9d3c6cf0bc7518f937f917e337d376186c673"
+    },
+    {
+      "item_key": "shiseido-fino-premium-touch-rich-oil",
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "expected_product": {
+        "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+        "brand": "Shiseido Fino",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4550516493590",
+          "raw_gtin": "4550516493590",
+          "canonical_gtin14": "04550516493590",
+          "size": "70 ml",
+          "market_scope": "JP/DE",
+          "source_url": "https://onlineshop.finetoday.com/products/fino-06",
+          "source_urls": [
+            "https://onlineshop.finetoday.com/products/fino-06",
+            "https://www.otto.de/p/shiseido-haarserum-fino-premium-touch-penetrating-essence-hair-oil-70-ml-j-beauty-S0DED0WY/"
+          ],
+          "source_checked_at": "2026-09-01T11:18:00.000Z",
+          "exact_match_note": "FineToday official product page identifies Fino Premium Touch Rich serum hair oil 70 ml; Otto Germany corroborates the exact 70 ml Rich package and JAN/EAN 4550516493590. Airy Smooth 4550516483836 is explicitly excluded because it is a distinct formula and must not share this analysis."
+        }
+      ],
+      "content_fingerprint": "1c03697a79b7b9cd1d55e0dc4b450f2868f21ca529d1b2d83cd3c9e3b6f81350"
+    }
+  ]
+}

@@ -1,0 +1,445 @@
+{
+  "batch": "E7",
+  "batch_id": "scanner-existing-identifiers-e7-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "candidate_manifest": "phase1-existing-identifier-backfill-e7-candidates-v1.json",
+    "source_checked_at": "2026-08-28T08:23:06Z",
+    "production_identity_checked_at": "2026-08-28T08:27:35.179Z",
+    "source_refresh_receipt": "plans/2026-08-28-existing-gtin-enrichment-receipt.md",
+    "physical_identity_audit": "Excluded duplicate category representation pending canonical physical-owner decision; see enrichment receipt."
+  },
+  "items": [
+    {
+      "item_key": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "product_id": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "expected_product": {
+        "name": "Sante Intense Hydration Conditioner",
+        "brand": "Sante",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4055297220866",
+          "raw_gtin": "4055297220866",
+          "canonical_gtin14": "04055297220866",
+          "size": "150 ml",
+          "market_scope": "DE/EU",
+          "source_url": "https://www.santi-shop.eu/en/shop/sn050-intense-moisturizing-conditioner-5790",
+          "source_urls": [
+            "https://www.santi-shop.eu/en/shop/sn050-intense-moisturizing-conditioner-5790",
+            "https://www.violey.com/en/sante-intense-hydration-conditioner-aloe-vera_p_23697.html",
+            "https://www.avocadostore.de/products/675928-intense-hydration-conditioner-150-ml-sante"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "EU retailer PDP identifies SANTE Intense Hydration Conditioner, 150 ml, and explicitly labels barcode 4055297220866."
+        }
+      ],
+      "content_fingerprint": "d7abb7837078205ff52c1005a33fa664344aecdd260e566dec1ef6b6acda8744"
+    },
+    {
+      "item_key": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "expected_product": {
+        "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        "brand": "Head & Shoulders",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "8700216496032",
+          "raw_gtin": "8700216496032",
+          "canonical_gtin14": "08700216496032",
+          "size": "250 ml",
+          "market_scope": "DE/AT",
+          "source_url": "https://www.dm.at/p/d/2482704/head-und-shoulders-shampoo-derma-x-pro-sensitive-pflege",
+          "source_urls": [
+            "https://www.dm.at/p/d/2482704/head-und-shoulders-shampoo-derma-x-pro-sensitive-pflege",
+            "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm Austria PDP identifies head&shoulders Shampoo Derma x Pro Sensitive Pflege, 250 ml, and explicitly publishes GTIN 8700216496032."
+        }
+      ],
+      "content_fingerprint": "f01c18d50a98d251cd5eb0863d03c909ba8f497f64ec9a704dc1b185342fa4b9"
+    },
+    {
+      "item_key": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "expected_product": {
+        "name": "Cantu Conditioner Cream",
+        "brand": "Cantu",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "810006945478",
+          "raw_gtin": "810006945478",
+          "canonical_gtin14": "00810006945478",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1675021/cantu-conditioner-cream",
+          "source_urls": [
+            "https://www.dm.de/p/d/1675021/cantu-conditioner-cream"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies cantu Conditioner Cream, 400 ml, and explicitly publishes GTIN 810006945478."
+        }
+      ],
+      "content_fingerprint": "260493bb12d77a4f54e2df3cec46f01ec1b1d3ec5e3297aca0e5cf04f9e7007d"
+    },
+    {
+      "item_key": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "product_id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "expected_product": {
+        "name": "Trockenshampoo Liquid to Dry",
+        "brand": "got2b",
+        "category_key": "dry_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100815788",
+          "raw_gtin": "4015100815788",
+          "canonical_gtin14": "04015100815788",
+          "size": "150 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry",
+          "source_urls": [
+            "https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry",
+            "https://www.dm.de/p/d/1681323/got2b-trockenshampoo-liquid-to-dry"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "Exact dm PDP identifies got2b Trockenshampoo Liquid to Dry, 150 ml, and explicitly publishes GTIN 4015100815788."
+        }
+      ],
+      "content_fingerprint": "617da87273fb69c146be7db527fad4b0b51ccced28bddcc604176ded0a1d97cf"
+    },
+    {
+      "item_key": "e1ad37be-9330-49b4-8add-872a30324122",
+      "product_id": "e1ad37be-9330-49b4-8add-872a30324122",
+      "expected_product": {
+        "name": "Jean&Len Conditioner Keratin/Mandel",
+        "brand": "Jean&Len",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4262500781575",
+          "raw_gtin": "4262500781575",
+          "canonical_gtin14": "04262500781575",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1551254/jean-und-len-conditioner-repair-keratin-mandel",
+          "source_urls": [
+            "https://www.dm.de/p/d/1551254/jean-und-len-conditioner-repair-keratin-mandel"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies Jean&Len Conditioner Repair Keratin Mandel, 300 ml, and explicitly publishes GTIN 4262500781575."
+        }
+      ],
+      "content_fingerprint": "7604998dc1453e7c813046b896bcc8c1b27e50d066677a8c6f3cce72384fd71b"
+    },
+    {
+      "item_key": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "product_id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "expected_product": {
+        "name": "Garnier Fructis Wunderöl",
+        "brand": "Garnier",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600542020053",
+          "raw_gtin": "3600542020053",
+          "canonical_gtin14": "03600542020053",
+          "size": "150 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1499815/garnier-fructis-haaroel-oil-repair-wunder-oel",
+          "source_urls": [
+            "https://www.dm.de/p/d/1499815/garnier-fructis-haaroel-oil-repair-wunder-oel"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies Garnier Fructis Haaröl Oil Repair Wunder-Öl, 150 ml, and explicitly publishes GTIN 3600542020053."
+        }
+      ],
+      "content_fingerprint": "06764f1f5acb69ded66c39c99559381f651535f2201112ee742be513c167e4e2"
+    },
+    {
+      "item_key": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "expected_product": {
+        "name": "Langhaarmädchen Lovely Long",
+        "brand": "Langhaarmädchen",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4067796002621",
+          "raw_gtin": "4067796002621",
+          "canonical_gtin14": "04067796002621",
+          "size": "300 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.at/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+          "source_urls": [
+            "https://www.dm.at/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+            "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm Austria PDP identifies LANGHAARMÄDCHEN Shampoo Lovely Long, 300 ml, and explicitly publishes GTIN 4067796002621."
+        }
+      ],
+      "content_fingerprint": "ca32b9d62e7ecddb9575dd8a53f49a6ac8a3aa95aa430b5271a236862878f5f3"
+    },
+    {
+      "item_key": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "product_id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "expected_product": {
+        "name": "Sebamed Every-Day Shampoo",
+        "brand": "Sebamed",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4103040051752",
+          "raw_gtin": "4103040051752",
+          "canonical_gtin14": "04103040051752",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1005244/sebamed-shampoo-every-day",
+          "source_urls": [
+            "https://www.dm.de/p/d/1005244/sebamed-shampoo-every-day",
+            "https://www.rossmann.de/de/pflege-und-duft-sebamed-everyday-shampoo/p/4103040051752"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies sebamed Shampoo Every-Day, 200 ml, and explicitly publishes GTIN 4103040051752."
+        }
+      ],
+      "content_fingerprint": "5752834c6f7ea51da9e0fea718e43731385a12de75f11fcfc57aa3b4d9d9e255"
+    },
+    {
+      "item_key": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "product_id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "expected_product": {
+        "name": "Syoss Intense Keratin Conditioner",
+        "brand": "Syoss",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100860467",
+          "raw_gtin": "4015100860467",
+          "canonical_gtin14": "04015100860467",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3047026/syoss-conditioner-intense-keratin",
+          "source_urls": [
+            "https://www.dm.de/p/d/3047026/syoss-conditioner-intense-keratin",
+            "https://www.syoss.net/care/conditioner/syoss-intense-keratin-conditioner.html"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies syoss Conditioner Intense Keratin, 250 ml, and explicitly publishes GTIN 4015100860467."
+        }
+      ],
+      "content_fingerprint": "11d54fc112a1a03eda8ede4140ea0d713df72b82e2f181cc6e9082d035d0566e"
+    },
+    {
+      "item_key": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "product_id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "expected_product": {
+        "name": "Nivea Shampoo&Conditioner 2in1",
+        "brand": "Nivea",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4006000193991",
+          "raw_gtin": "4006000193991",
+          "canonical_gtin14": "04006000193991",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1",
+          "source_urls": [
+            "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies NIVEA Shampoo & Conditioner Express 2in1, 400 ml, and explicitly publishes GTIN 4006000193991. Live identity reconciliation supplied by the owner found this is the sole physical Nivea 2in1 row."
+        }
+      ],
+      "content_fingerprint": "8380c8dde679fc5a893e24459e807bf88240544777659e93fee83e0bb3f26f3b"
+    },
+    {
+      "item_key": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "expected_product": {
+        "name": "Epres Bond Repair Treatment",
+        "brand": "Epres",
+        "category_key": "bondbuilder",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "0850040615500",
+          "raw_gtin": "0850040615500",
+          "canonical_gtin14": "00850040615500",
+          "size": "starter kit: spray bottle + 2 x 15 ml concentrate",
+          "market_scope": "EU/NL",
+          "source_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+          "source_urls": [
+            "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+            "https://www.salontopper.nl/product/epres-bond-repair-treatment-starter-kit-33605"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "Official German Epres link is explicitly titled Starterkit für die Bond-Repair-Behandlung mit Sprühflasche and directs filling an Epres ampoule into the supplied spray bottle. The matching EU retailer PDP for that Starter Kit explicitly lists EAN 0850040615500."
+        }
+      ],
+      "content_fingerprint": "96c6be4fba908359a0553b44c480c9248916933ab9f3780ab39a4960c02112aa"
+    },
+    {
+      "item_key": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "expected_product": {
+        "name": "alverde Leave-In Sprühkur Express 7in1",
+        "brand": "alverde",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4066447919387",
+          "raw_gtin": "4066447919387",
+          "canonical_gtin14": "04066447919387",
+          "size": "75 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express",
+          "source_urls": [
+            "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies alverde NATURKOSMETIK Leave-In Sprühkur 7in1 Express, 75 ml, and explicitly publishes GTIN 4066447919387."
+        }
+      ],
+      "content_fingerprint": "8c60b5afb2898782ae737c6e01ee54ea771f974e847617941df38360a6cb80b6"
+    },
+    {
+      "item_key": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "product_id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "expected_product": {
+        "name": "Pantene Hydra Glow Shampoo",
+        "brand": "Pantene",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "8700216170345",
+          "raw_gtin": "8700216170345",
+          "canonical_gtin14": "08700216170345",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow",
+          "source_urls": [
+            "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm PDP identifies Pantene Pro-V Shampoo Miracles Hydra Glow, 250 ml, and explicitly publishes GTIN 8700216170345."
+        }
+      ],
+      "content_fingerprint": "95f7ab79ccaa4d25867fcee3b304a5b03d739875c3224c1f71a4a4748bf20036"
+    },
+    {
+      "item_key": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "product_id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "expected_product": {
+        "name": "Trockenshampoo Blond",
+        "brand": "Batiste",
+        "category_key": "dry_shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "5010724527467",
+          "raw_gtin": "5010724527467",
+          "canonical_gtin14": "05010724527467",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.hu/p/d/1435894/batiste-szarazsampon-blonde",
+          "source_urls": [
+            "https://www.dm.hu/p/d/1435894/batiste-szarazsampon-blonde",
+            "https://www.dm.de/p/d/1551788/batiste-trockenshampoo-blond"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "dm Hungary PDP identifies Batiste Blonde dry shampoo, 200 ml, and explicitly publishes GTIN 5010724527467."
+        }
+      ],
+      "content_fingerprint": "a808060f2a42110a20e0194059b0d8b7457b367bdfc943aa21df8e5cf3e569d7"
+    },
+    {
+      "item_key": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "product_id": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "expected_product": {
+        "name": "Monday Moisture Conditioner",
+        "brand": "Monday",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4897097266404",
+          "raw_gtin": "4897097266404",
+          "canonical_gtin14": "04897097266404",
+          "size": "350 ml",
+          "market_scope": "EU/IE",
+          "source_url": "https://www.kruidvat.nl/monday-moisture-conditioner/p/5917854",
+          "source_urls": [
+            "https://www.kruidvat.nl/monday-moisture-conditioner/p/5917854",
+            "https://shaws.ie/products/monday-conditioner-moisture-350ml",
+            "https://www.superdrug.com/hair/hair-conditioners/monday-haircare-moisture-conditioner-350ml/p/828318"
+          ],
+          "source_checked_at": "2026-08-28T08:23:06Z",
+          "exact_match_note": "EU retailer PDP identifies Monday Moisture Conditioner and explicitly labels EAN code 4897097266404."
+        }
+      ],
+      "content_fingerprint": "c714990edb747d8ad6896fb37b31dc0e6d9568f4901819bea4d4ce5bb8684f3f"
+    }
+  ]
+}

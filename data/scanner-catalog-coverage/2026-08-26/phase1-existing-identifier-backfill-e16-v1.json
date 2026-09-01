@@ -1,0 +1,286 @@
+{
+  "batch": "E16",
+  "batch_id": "scanner-existing-identifiers-e16-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "research_manifest": "plans/2026-08-28-existing-gtin-enrichment-receipt.md#e16-prepared-research-september-1",
+    "production_identity_checked_at": "2026-09-01T12:00:00.000Z",
+    "source_refresh_receipt": "E16 uses Nick-approved package-parity for the exact multiple-size packages below; Head & Shoulders Sensitive 500 ml 8700216517669 is excluded because it has a different formula."
+  },
+  "items": [
+    {
+      "item_key": "balea-med-anti-schuppen",
+      "product_id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "expected_product": {
+        "name": "Balea Med Anti Schuppen",
+        "brand": "Balea Med",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4066447972528",
+          "raw_gtin": "4066447972528",
+          "canonical_gtin14": "04066447972528",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/balea-med-shampoo-anti-schuppen-ultra-sensitive-p4066447785425.html",
+          "source_urls": [
+            "https://www.dm.de/balea-med-shampoo-anti-schuppen-ultra-sensitive-p4066447785425.html"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm manufacturer-retailer evidence identifies Balea Med Anti-Schuppen Ultra Sensitive. This 250 ml package is retained under the approved package-parity rule."
+        },
+        {
+          "type": "ean",
+          "value": "4066447785425",
+          "raw_gtin": "4066447785425",
+          "canonical_gtin14": "04066447785425",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/balea-med-shampoo-anti-schuppen-ultra-sensitive-p4066447785425.html",
+          "source_urls": [
+            "https://www.dm.de/balea-med-shampoo-anti-schuppen-ultra-sensitive-p4066447785425.html"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm exact PDP identifies Balea Med Anti-Schuppen Ultra Sensitive and GTIN 4066447785425."
+        }
+      ],
+      "content_fingerprint": "2e0ac8ea7d1ec95d095616e5aed2eab078fcfab0d5accae32598f52e75fe9700"
+    },
+    {
+      "item_key": "guhl-anti-schuppen",
+      "product_id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "expected_product": {
+        "name": "Guhl Anti Schuppen",
+        "brand": "Guhl",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4072600282205",
+          "raw_gtin": "4072600282205",
+          "canonical_gtin14": "04072600282205",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/guhl-shampoo-anti-schuppen-p4072600282205.html",
+          "source_urls": ["https://www.dm.de/guhl-shampoo-anti-schuppen-p4072600282205.html"],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm exact PDP identifies Guhl Anti-Schuppen shampoo and GTIN 4072600282205."
+        }
+      ],
+      "content_fingerprint": "b9c15426a0543403b1cffce4eb90b9505dda544c4eeba315c03aace746f75bea"
+    },
+    {
+      "item_key": "head-shoulders-sensitive",
+      "product_id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "expected_product": {
+        "name": "Head & Shoulders Anti Schuppen Sensitive",
+        "brand": "Head & Shoulders",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "8006530222037",
+          "raw_gtin": "8006530222037",
+          "canonical_gtin14": "08006530222037",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
+          "source_urls": [
+            "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm exact PDP identifies Head & Shoulders Anti-Schuppen Sensitive and GTIN 8006530222037. The 500 ml 8700216517669 formula is intentionally excluded."
+        }
+      ],
+      "content_fingerprint": "c8736277a10f843e59982e2cfb6835f072e27e632104d1c88e22fc72a49744cd"
+    },
+    {
+      "item_key": "head-shoulders-dermaxpro",
+      "product_id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "expected_product": {
+        "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+        "brand": "Head & Shoulders",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "8700216328661",
+          "raw_gtin": "8700216328661",
+          "canonical_gtin14": "08700216328661",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+          "source_urls": [
+            "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm manufacturer-retailer PDP identifies Head & Shoulders DERMAXPRO Beruhigende Pflege and GTIN 8700216328661."
+        }
+      ],
+      "content_fingerprint": "be5a94252fd4ff0b363c5f9edc6c5aa5b9b2f2337e84a7e6536d0588fb66e414"
+    },
+    {
+      "item_key": "pantene-anti-schuppen",
+      "product_id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "expected_product": {
+        "name": "Pantene Anti Schuppen",
+        "brand": "Pantene",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "8700216558037",
+          "raw_gtin": "8700216558037",
+          "canonical_gtin14": "08700216558037",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex-p8700216558037.html",
+          "source_urls": [
+            "https://www.dm.de/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex-p8700216558037.html"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm exact PDP identifies Pantene Pro-V Anti-Schuppen Active Nutri-Plex and GTIN 8700216558037."
+        },
+        {
+          "type": "ean",
+          "value": "8700216558730",
+          "raw_gtin": "8700216558730",
+          "canonical_gtin14": "08700216558730",
+          "size": "500 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex-p8700216558037.html",
+          "source_urls": [
+            "https://www.dm.de/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex-p8700216558037.html"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "Manufacturer/dm evidence identifies the same Pantene Anti-Schuppen Active Nutri-Plex formula; this 500 ml package is retained under the approved package-parity rule."
+        }
+      ],
+      "content_fingerprint": "ad594f54c74492637a62a5ef0a86e63dfe79b1e28d29065c825a13b8477af463"
+    },
+    {
+      "item_key": "salthouse-anti-schuppen",
+      "product_id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "expected_product": {
+        "name": "Salthouse Anti Schuppen",
+        "brand": "Salthouse",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4008890006429",
+          "raw_gtin": "4008890006429",
+          "canonical_gtin14": "04008890006429",
+          "size": "250 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "Rossmann exact PDP identifies Salthouse Totes Meer Mildes Anti-Schuppen Shampoo and GTIN 4008890006429."
+        }
+      ],
+      "content_fingerprint": "60bbb89b383b1f3c8092d495627b0a83d2e4ed97a8ba955053d935230ae22f48"
+    },
+    {
+      "item_key": "schauma-anti-schuppen",
+      "product_id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "expected_product": {
+        "name": "Schauma Anti Schuppen",
+        "brand": "Schauma",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100890730",
+          "raw_gtin": "4015100890730",
+          "canonical_gtin14": "04015100890730",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/schauma-shampoo-anti-schuppen-classic-p4015100864977.html",
+          "source_urls": [
+            "https://www.dm.de/schauma-shampoo-anti-schuppen-classic-p4015100864977.html"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "Manufacturer/dm evidence identifies Schauma Anti-Schuppen Classic; this package is retained under the approved package-parity rule."
+        },
+        {
+          "type": "ean",
+          "value": "4015100864977",
+          "raw_gtin": "4015100864977",
+          "canonical_gtin14": "04015100864977",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/schauma-shampoo-anti-schuppen-classic-p4015100864977.html",
+          "source_urls": [
+            "https://www.dm.de/schauma-shampoo-anti-schuppen-classic-p4015100864977.html"
+          ],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm exact PDP identifies Schauma Anti-Schuppen Classic and GTIN 4015100864977."
+        }
+      ],
+      "content_fingerprint": "410f140ee20c46caedc3b1d5694f0b09f6a2a688e25b316e707fb995fc797d43"
+    },
+    {
+      "item_key": "sebamed-anti-schuppen",
+      "product_id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "expected_product": {
+        "name": "Sebamed Anti Schuppen",
+        "brand": "Sebamed",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4103040051691",
+          "raw_gtin": "4103040051691",
+          "canonical_gtin14": "04103040051691",
+          "size": "200 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/sebamed-shampoo-anti-schuppen-p4103040051691.html",
+          "source_urls": ["https://www.dm.de/sebamed-shampoo-anti-schuppen-p4103040051691.html"],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "dm exact PDP identifies Sebamed Anti-Schuppen shampoo and GTIN 4103040051691."
+        },
+        {
+          "type": "ean",
+          "value": "4103040051714",
+          "raw_gtin": "4103040051714",
+          "canonical_gtin14": "04103040051714",
+          "size": "400 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/sebamed-shampoo-anti-schuppen-p4103040051691.html",
+          "source_urls": ["https://www.dm.de/sebamed-shampoo-anti-schuppen-p4103040051691.html"],
+          "source_checked_at": "2026-09-01T12:00:00.000Z",
+          "exact_match_note": "Manufacturer/dm evidence identifies the same Sebamed Anti-Schuppen formula; this 400 ml package is retained under the approved package-parity rule."
+        }
+      ],
+      "content_fingerprint": "bef12d20687f42f5ba70536daecb3012ea0f2189d40da41261b6788d3872d5d7"
+    }
+  ]
+}

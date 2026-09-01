@@ -1,0 +1,1443 @@
+{
+  "schema_version": "scanner-existing-catalog-source-refresh-v1",
+  "checked_at": "2026-08-28T08:45:05.750Z",
+  "counts": {
+    "products": 53,
+    "source_ready_products": 26,
+    "source_ready_gtins": 26,
+    "held_products": 27
+  },
+  "scope": "Research only; source_ready is not a production apply authorization. Exact physical-owner and live-identifier checks precede the pinned E8/E9 cohorts.",
+  "items": [
+    {
+      "product_id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "expected_name": "Gliss Kur Aqua Revive Conditioner",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh exact-name search found conflicting 200 ml and 360 ml regional GTINs; no direct DE/EU exact current package barcode was confirmed.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+        "name": "Gliss Kur Aqua Revive Conditioner",
+        "brand": "Gliss",
+        "brand_id": "1c460ddf-75b8-4db6-9a33-748dfe7a5da0",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1633094/schwarzkopf-gliss-conditioner-aqua-revive",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Gliss"
+        }
+      }
+    },
+    {
+      "product_id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "expected_name": "Hair Biology Full & Shining Conditioner",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "8001841216997",
+          "size": "160 ml",
+          "source": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+          "evidence": "dm PDP identifies Hair Biology Conditioner Full & Shining 160 ml and explicitly publishes GTIN 8001841216997."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "4506954b-128a-473c-866f-54a300ff23f4",
+        "name": "Hair Biology Full & Shining Conditioner",
+        "brand": "Hair Biology",
+        "brand_id": "2f27013a-74f8-42bc-a787-9647fa4a4660",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Hair Biology"
+        }
+      }
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "expected_name": "Guhl Bond+ Reparatur Spülung",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Official Guhl Bond+ page confirms the 200 ml conditioner identity but exposes no GTIN; only marketplace evidence surfaced 4072600701218.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+        "name": "Guhl Bond+ Reparatur Spülung",
+        "brand": "Guhl",
+        "brand_id": "99acdf73-cc47-45af-b841-da3061d77b0e",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.amazon.de/Guhl-BOND-REPARATUR-Sp%C3%BClung-Rotalgenextrakt/dp/B0CWJHVKV5",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Guhl"
+        }
+      }
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "expected_name": "Garnier Hair Food Aloe Vera",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "duplicate_physical_product_requires_catalog_authority_resolution: fresh dm PDP identifies the 400 ml Garnier Fructis Haarmaske Aloe Vera Hair Food 3in1 and explicitly lists GTIN 3600542511049, but this exact 3-in-1 physical package is also represented by the catalog mask row; no owner is chosen in research.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+        "name": "Garnier Hair Food Aloe Vera",
+        "brand": "Garnier",
+        "brand_id": "e4b57913-ff70-4e94-a83f-41445d0d7a2e",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Garnier"
+        }
+      }
+    },
+    {
+      "product_id": "17c50884-3c17-479a-848a-10447464e086",
+      "expected_name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh exact-name searches did not produce a qualifying retailer/manufacturer barcode field for the Aktivkohle hair mask.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "17c50884-3c17-479a-848a-10447464e086",
+        "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+        "brand": "Garnier Wahre Schätze",
+        "brand_id": "e4b57913-ff70-4e94-a83f-41445d0d7a2e",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Garnier"
+        }
+      }
+    },
+    {
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "expected_name": "Isana 3in1 Milchprotein & Mandel",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh searches confirm the exact 250 ml ISANA 3in1 Mandelmilch/Milchprotein/Mandel product and candidate 4305615627441, but found no current manufacturer, Rossmann, dm, Hagel, or reputable-retailer PDP that separately publishes the code rather than only placing it in a URL or secondary record.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+        "name": "Isana 3in1 Milchprotein & Mandel",
+        "brand": "Isana",
+        "brand_id": "c3481711-82bb-436b-8ae8-654f013387c6",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Isana"
+        }
+      }
+    },
+    {
+      "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "expected_name": "Balea Aqua Hyaluron 3 in 1",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "duplicate_physical_product_requires_catalog_authority_resolution: fresh dm PDP identifies Balea Professional Haarmaske 3in1 Aqua Hyaluron and explicitly lists GTIN 4066447668315, but the same 3-in-1 physical package is also represented by the catalog leave-in row; no owner is chosen in research.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+        "name": "Balea Aqua Hyaluron 3 in 1",
+        "brand": "Balea Aqua",
+        "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Balea"
+        }
+      }
+    },
+    {
+      "product_id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "expected_name": "Sante Intense Hydration",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4055297220682",
+          "size": "150 ml",
+          "source": "https://www.flaconi.at/haare/sante/intense-hydration/sante-intense-hydration-haarmaske.html",
+          "evidence": "Flaconi Austria exact PDP identifies Sante Intense Hydration Haarmaske, 150 ml, and separately publishes EAN 4055297220682."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+        "name": "Sante Intense Hydration",
+        "brand": "Sante",
+        "brand_id": "ca9c32a7-3c81-41ac-a188-d707a877d0db",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-sante-intense-hydration-haarmaske/p/4025089005896",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Sante"
+        }
+      }
+    },
+    {
+      "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "expected_name": "Syoss Intense Keratin",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4015100860863",
+          "size": "400 ml",
+          "source": "https://www.dm.de/p/d/3047025/syoss-haarmaske-intense-keratin",
+          "evidence": "dm exact PDP identifies syoss Haarmaske Intense Keratin, 400 ml, and explicitly publishes GTIN 4015100860863."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "961e3935-f823-44e7-8601-900c62855d3d",
+        "name": "Syoss Intense Keratin",
+        "brand": "Syoss",
+        "brand_id": "98be54c5-e077-4b8a-bbb8-9859c269058a",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/syoss-haarmaske-intense-keratin-p4015100860863.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Syoss"
+        }
+      }
+    },
+    {
+      "product_id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "expected_name": "Guhl 30 sec. Feuchtigkeit",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4072600720097",
+          "size": "100 ml",
+          "source": "https://www.beautywelt.de/guhl-30-sek-intensiv-kur-feuchtigkeit-100-ml/a/210861",
+          "evidence": "Beautywelt exact PDP identifies Guhl 30 Sek Intensiv Kur Feuchtigkeit, 100 ml, and separately publishes EAN 4072600720097."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+        "name": "Guhl 30 sec. Feuchtigkeit",
+        "brand": "Guhl",
+        "brand_id": "99acdf73-cc47-45af-b841-da3061d77b0e",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/guhl-haarkur-30-sek-feuchtigkeit-p4072600720097.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Guhl"
+        }
+      }
+    },
+    {
+      "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "expected_name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3600542509572",
+          "size": "340 ml",
+          "source": "https://www.dm.de/p/d/1679238/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel",
+          "evidence": "dm exact PDP identifies Wahre Schätze Haarkur 1-Minute Argan & Camelia-Öl, 340 ml, and explicitly publishes GTIN 3600542509572."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "ea353b65-544d-48a8-a057-c3e733b66326",
+        "name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+        "brand": "Wahre Schätze",
+        "brand_id": "1c800bf7-4182-41c0-8308-0434304d9371",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel-p3600542509572.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Wahre Schätze"
+        }
+      }
+    },
+    {
+      "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "expected_name": "L’Oréal Öl Magique Midnight Serum",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "duplicate_physical_product_requires_catalog_authority_resolution: fresh dm PDP identifies L'ORÉAL PARiS ELVITAL Haarserum Öl Magique Midnight Serum, 100 ml, with GTIN 3600524135805, but the same physical package is also represented by the catalog leave-in row; no owner is chosen in research.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+        "name": "L’Oréal Öl Magique Midnight Serum",
+        "brand": "L’Oréal",
+        "brand_id": "6dc89406-01d3-4d28-93e5-7ed964f14eb1",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum-p3600524135805.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "L’Oréal"
+        }
+      }
+    },
+    {
+      "product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "expected_name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "duplicate_physical_product_requires_catalog_authority_resolution: fresh Rossmann evidence identifies Pantene Pro-V Miracles schwereloses 7in1 Haaröl Spray, 145 ml, with GTIN 8700216178402, but the same physical package is also represented by the catalog leave-in row; no owner is chosen in research.",
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+        "name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+        "brand": "Pantene",
+        "brand_id": "1a4871a2-893b-4d49-9743-d00c15a63edc",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.mueller.de/p/pantene-pro-v-miracles-oel-spray-7-in-1-IPN2992303/",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Pantene"
+        }
+      }
+    },
+    {
+      "product_id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "expected_name": "Dr. Scheller Reines Arganöl",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4051424570040",
+          "size": "30 ml",
+          "source": "https://www.hagel-shop.de/dr-scheller-reines-arganoel-30-ml.html",
+          "evidence": "Hagel exact PDP identifies DR.SCHELLER Reines Arganöl, 30 ml, and separately publishes EAN 4051424570040."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+        "name": "Dr. Scheller Reines Arganöl",
+        "brand": "Dr. Scheller",
+        "brand_id": "8844f91d-7379-46d4-ba3e-3017aad91f44",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.mueller.de/p/dr-scheller-reines-arganoel-2859166/",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Dr. Scheller"
+        }
+      }
+    },
+    {
+      "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "expected_name": "Olaplex No.7 Bonding Oil",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "0850045076085",
+          "size": "30 ml",
+          "source": "https://www.shop-apotheke.com/beauty/upmHRGR4P/olaplex-no-7-bonding-oil.htm",
+          "evidence": "Shop Apotheke exact PDP identifies OLAPLEX No.7 Bonding Oil, 30 ml, and separately publishes EAN 850045076085; stored as checksum-valid EAN-13 equivalent 0850045076085."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+        "name": "Olaplex No.7 Bonding Oil",
+        "brand": "Olaplex",
+        "brand_id": "1fbf8e21-0988-48c1-b6a0-493f575b44f0",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OLAPLEX"
+        }
+      }
+    },
+    {
+      "product_id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "expected_name": "HASK Argan Oil Repairing Shine Oil",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "0071164029855",
+          "size": "18 ml",
+          "source": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+          "evidence": "Hagel exact PDP identifies HASK Argan Oil Repairing Shine Oil, 18 ml, and separately publishes UPC 071164029855; stored as checksum-valid EAN-13 equivalent 0071164029855."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+        "name": "HASK Argan Oil Repairing Shine Oil",
+        "brand": "HASK",
+        "brand_id": "190575ae-19c1-4b51-a4f4-8840fd7a5e14",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Hask"
+        }
+      }
+    },
+    {
+      "product_id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "expected_name": "Garnier Wahre Schätze Curl Revival Öl",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3600542624336",
+          "size": "120 ml",
+          "source": "https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir",
+          "evidence": "dm exact PDP identifies Wahre Schätze Haaröl Curl Revival Elixir, 120 ml, and explicitly publishes GTIN 3600542624336."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+        "name": "Garnier Wahre Schätze Curl Revival Öl",
+        "brand": "Garnier",
+        "brand_id": "e4b57913-ff70-4e94-a83f-41445d0d7a2e",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/wahre-schaetze-haaroel-curl-revival-elixir-p3600542624336.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Garnier"
+        }
+      }
+    },
+    {
+      "product_id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "expected_name": "Rosemary Mint Shampoo",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3574661805931",
+          "size": "385 ml",
+          "source": "https://www.deonlinedrogist.nl/drogist/ogx-rosemary-mint-shampoo-385ml.htm",
+          "evidence": "DeOnlineDrogist exact EU retailer PDP identifies OGX Rosemary Mint Shampoo, 385 ml, and separately publishes EAN 3574661805931."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:25:00Z",
+      "inventory": {
+        "id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+        "name": "Rosemary Mint Shampoo",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "expected_name": "OGX Bond Protein Repair Conditioner",
+      "status": "hold",
+      "hold_reason": "Fresh search still separates rinse-out conditioner from similarly named leave-in variants; no exact barcode field for the assigned rinse-out conditioner.",
+      "identifiers": [],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+        "name": "OGX Bond Protein Repair Conditioner",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/3068101/ogx-conditioner-bond-protein-repair",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "expected_name": "Garnier Hair Food Macadamia",
+      "status": "hold",
+      "hold_reason": "Cross-category duplicate owner: the same Hair Food Macadamia 3-in-1 400 ml physical package/GTIN 3600542511612 is represented by this conditioner and leave-in owner a72d630d-547a-465f-9846-3006b38af0a2. Hold all ambiguous owners.",
+      "identifiers": [
+        {
+          "gtin": "3600542511612",
+          "size": "400 ml",
+          "source": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+          "evidence": "Historical exact package evidence retained for the shared 3-in-1 package; ownership is intentionally unresolved."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+        "name": "Garnier Hair Food Macadamia",
+        "brand": "Garnier",
+        "brand_id": "e4b57913-ff70-4e94-a83f-41445d0d7a2e",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Garnier"
+        }
+      }
+    },
+    {
+      "product_id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+      "expected_name": "Syoss Intense Curls Conditioner",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4015100860887",
+          "size": "250 ml",
+          "source": "https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls",
+          "evidence": "dm PDP names syoss Conditioner Intense Curls, 250 ml, and publishes GTIN 4015100860887."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+        "name": "Syoss Intense Curls Conditioner",
+        "brand": "Syoss",
+        "brand_id": "98be54c5-e077-4b8a-bbb8-9859c269058a",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1666690/syoss-conditioner-intense-curls",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Syoss"
+        }
+      }
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "expected_name": "Garnier Hair Food Macadamia",
+      "status": "hold",
+      "hold_reason": "Cross-category duplicate owner: the same Hair Food Macadamia 3-in-1 400 ml physical package/GTIN 3600542511612 is represented by this leave-in and conditioner owner 4c3e1a63-4696-406a-be67-f2aacc678b0c. Hold all ambiguous owners.",
+      "identifiers": [
+        {
+          "gtin": "3600542511612",
+          "size": "400 ml",
+          "source": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+          "evidence": "Historical exact package evidence retained for the shared 3-in-1 package; ownership is intentionally unresolved."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+        "name": "Garnier Hair Food Macadamia",
+        "brand": "Garnier",
+        "brand_id": "e4b57913-ff70-4e94-a83f-41445d0d7a2e",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Garnier"
+        }
+      }
+    },
+    {
+      "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "expected_name": "Schaebens Argan-Öl Haarmaske",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4003573025018",
+          "size": "20 ml",
+          "source": "https://www.petersberg-apotheke.de/schaebens-argan-oel-haarma-a19341206.html",
+          "evidence": "German pharmacy PDP identifies Schaebens Argan-Öl Haarmaske and has separate EAN 4003573025018; Rossmann confirms the 20 ml single-use hair-mask package."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+        "name": "Schaebens Argan-Öl Haarmaske",
+        "brand": "Schaebens",
+        "brand_id": "cafd122c-9dea-4339-80c9-20436bf23d24",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/schaebens-haarmaske-arganoel-p4003573025018.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Schaebens"
+        }
+      }
+    },
+    {
+      "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "expected_name": "Syoss Intense Curls Haarmaske",
+      "status": "hold",
+      "hold_reason": "Official Syoss page confirms the exact mask but publishes no GTIN; the Rossmann URL suffix alone is not barcode proof.",
+      "identifiers": [],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+        "name": "Syoss Intense Curls Haarmaske",
+        "brand": "Syoss",
+        "brand_id": "98be54c5-e077-4b8a-bbb8-9859c269058a",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Syoss"
+        }
+      }
+    },
+    {
+      "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "expected_name": "Gliss Aqua Revive",
+      "status": "hold",
+      "hold_reason": "The retained 4-in-1 mask page is reachable by URL but no fresh independent barcode field was found; do not infer GTIN 4015100813555 from its URL.",
+      "identifiers": [],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+        "name": "Gliss Aqua Revive",
+        "brand": "Gliss",
+        "brand_id": "1c460ddf-75b8-4db6-9a33-748dfe7a5da0",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-gliss-aqua-revive-feuchtigkeit-4-in-1-bonding-haarmaske/p/4015100813555",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Gliss"
+        }
+      }
+    },
+    {
+      "product_id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "expected_name": "Pomélo+Co Shine Therapy",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4260625261996",
+          "size": "100 ml",
+          "source": "https://www.dm.de/p/d/3110549/pomelo-co-haarmaske-shine-therapy",
+          "evidence": "dm PDP names Pomélo + Co. Haarmaske Shine Therapy, 100 ml, and publishes GTIN 4260625261996."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+        "name": "Pomélo+Co Shine Therapy",
+        "brand": "Pomélo+Co",
+        "brand_id": "791f4b32-de07-4684-ad00-90b0db33859e",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/3110549/pomelo-co-haarmaske-shine-therapy",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Pomélo+Co"
+        }
+      }
+    },
+    {
+      "product_id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+      "expected_name": "Fructis Hair Food Papaya",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3600542511100",
+          "size": "400 ml",
+          "source": "https://www.dm.de/p/d/1676330/garnier-fructis-haarkur-papaya-hair-food-3in1-maske",
+          "evidence": "dm PDP names GARNIER FRUCTIS Haarkur Papaya Hair Food 3in1 Maske, 400 ml, and publishes GTIN 3600542511100."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+        "name": "Fructis Hair Food Papaya",
+        "brand": "Fructis",
+        "brand_id": "c02c31b3-a062-4207-ade6-9d771713a821",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/garnier-fructis-haarkur-papaya-hair-food-3in1-maske-p3600542511100.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Fructis"
+        }
+      }
+    },
+    {
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "expected_name": "Syoss Haarkur Lamination Intense Glaze",
+      "status": "hold",
+      "hold_reason": "No fresh reputable source exposed an exact barcode field for the assigned mask; do not infer it from the dm URL.",
+      "identifiers": [],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+        "name": "Syoss Haarkur Lamination Intense Glaze",
+        "brand": "Syoss",
+        "brand_id": "98be54c5-e077-4b8a-bbb8-9859c269058a",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/syoss-haarkur-lamination-intense-glaze-p4015100867213.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Syoss"
+        }
+      }
+    },
+    {
+      "product_id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "expected_name": "Balea Natural Beauty 3in1 Locken",
+      "status": "hold",
+      "hold_reason": "3-in-1 package requires catalog-owner/usage adjudication because it spans mask and leave-in use; prior open-submission overlap remains unresolved. Hold despite exact package evidence.",
+      "identifiers": [
+        {
+          "gtin": "4066447704709",
+          "size": "250 ml",
+          "source": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+          "evidence": "dm PDP names Balea Haarmaske 3in1 Natural Beauty Locken, 250 ml, and publishes GTIN 4066447704709; it describes mask, hair milk and overnight uses."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+        "name": "Balea Natural Beauty 3in1 Locken",
+        "brand": "Balea",
+        "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Balea"
+        }
+      }
+    },
+    {
+      "product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "expected_name": "OGX Miracle Coconut Oil",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3574661563398",
+          "size": "100 ml",
+          "source": "https://www.deonlinedrogist.nl/drogist/ogx-coconut-miracle-oil-100ml.htm",
+          "evidence": "EU retailer PDP identifies OGX Coconut Miracle Oil hair oil, 100 ml, and has separate EAN 3574661563398."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+        "name": "OGX Miracle Coconut Oil",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/ogx-haaroel-coconut-miracle-oil-p3574661563398.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "expected_name": "Urban Alchemy Smooth Supreme Öl Serum",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4063528079978",
+          "size": "75 ml",
+          "source": "https://www.hagel-shop.de/urban-alchemy-smooth-oil-serum-75-ml.html",
+          "evidence": "Hagel PDP identifies Urban Alchemy Smooth Oil Serum 75 ml, classifies it as Haar-Öl, and has separate EAN 4063528079978. Official product JSON at https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml.js independently exposes the same barcode."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+        "name": "Urban Alchemy Smooth Supreme Öl Serum",
+        "brand": "Urban Alchemy",
+        "brand_id": "f6b93a51-505f-443a-9ece-417ab2f25d53",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Urban Alchemy"
+        }
+      }
+    },
+    {
+      "product_id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "expected_name": "NUTREEOIL Cacay Öl",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4260541540014",
+          "size": "30 ml",
+          "source": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml.js",
+          "evidence": "Official Shopify product JSON identifies NUTREEOIL Cacay Öl 30 ml and exposes variant barcode 4260541540014. The prior comparison-only 4260541540007 was removed."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+        "name": "NUTREEOIL Cacay Öl",
+        "brand": "NUTREEOIL",
+        "brand_id": "e8c0a921-8548-498a-b3e8-bdc8cdaeb2b0",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "NUTREEOIL"
+        }
+      }
+    },
+    {
+      "product_id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "expected_name": "Innersense Harmonic Treatment Oil",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "850006575039",
+          "size": "118 ml",
+          "source": "https://www.cosmeterie.at/innersense-organic-beauty/harmonic-treatment-oil?sai=7838",
+          "evidence": "EU retailer PDP identifies Innersense Harmonic Treatment Oil, 118 ml, lists EAN 850006575039, and classifies it as oil for hair."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+        "name": "Innersense Harmonic Treatment Oil",
+        "brand": "Innersense",
+        "brand_id": "e7255c9d-1992-4287-8639-23a9f8e26d07",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.douglas.de/de/p/m001643012",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Innersense"
+        }
+      }
+    },
+    {
+      "product_id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "expected_name": "L’Oréal Elvital Öl Magique Jojoba",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3600523749188",
+          "size": "100 ml",
+          "source": "https://www.dm.de/p/d/1621825/l-oreal-paris-elvital-haaroel-oel-magique-jojoba",
+          "evidence": "dm PDP identifies L’ORÉAL PARiS ELVITAL Haaröl Öl Magique Jojoba, 100 ml, and publishes GTIN 3600523749188. This is a distinct oil product, not Midnight Serum."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+        "name": "L’Oréal Elvital Öl Magique Jojoba",
+        "brand": "L’Oréal",
+        "brand_id": "6dc89406-01d3-4d28-93e5-7ed964f14eb1",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-oel-magique-jojoba-haaroel/p/3600523749188",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "L’Oréal"
+        }
+      }
+    },
+    {
+      "product_id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "expected_name": "NANOIL Avocadoöl",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "5905669547130",
+          "size": "50 ml",
+          "source": "https://www.redcare-apotheke.ch/de/beauty/CH90001157/nanoil-avocadooel.htm",
+          "evidence": "Swiss/EU pharmacy PDP identifies NANOIL Avocadoöl 50 ml and has separate PZN/EAN field 5905669547130."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+        "name": "NANOIL Avocadoöl",
+        "brand": "NANOIL",
+        "brand_id": "e56372a6-1c71-4441-a780-7dc82b945bed",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "NANOIL"
+        }
+      }
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "expected_name": "Keratin Oil Shampoo",
+      "status": "hold",
+      "hold_reason": "No exact current German/EU barcode field for the assigned OGX Keratin Oil Shampoo was found without substituting a different OGX variant.",
+      "identifiers": [],
+      "source_checked_at": "2026-08-28T08:38:00Z",
+      "inventory": {
+        "id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "name": "Keratin Oil Shampoo",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/ogx-shampoo-strenght-und-lenght-keratin-oil-p3574661798448.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "expected_name": "Pomélo+Co Shine Therapy Conditioner",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4260625261989",
+          "size": "200 ml",
+          "checksum_valid": true,
+          "source": "https://www.dm.de/p/d/3110568/pomelo-co-conditioner-shine-therapy",
+          "evidence": "dm PDP identifies Pomélo+Co Shine Therapy Conditioner, 200 ml, and separately publishes GTIN 4260625261989 (with ingredients)."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+        "name": "Pomélo+Co Shine Therapy Conditioner",
+        "brand": "Pomélo+Co",
+        "brand_id": "791f4b32-de07-4684-ad00-90b0db33859e",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-pomeloco-shine-therapy-conditioner/p/4260625261989",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Pomélo+Co"
+        }
+      }
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "expected_name": "OGX Biotin & Collagen Conditioner",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3574661799506",
+          "size": "385 ml",
+          "checksum_valid": true,
+          "source": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+          "evidence": "dm PDP names OGX Conditioner Thick & Full Biotin & Collagen, 385 ml; separate GTIN field is 3574661799506."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+        "name": "OGX Biotin & Collagen Conditioner",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "expected_name": "OGX Renewing Argan Oil Morocco Conditioner",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "3574661799162",
+          "size": "385 ml",
+          "checksum_valid": true,
+          "source": "https://www.dm.de/p/d/1442294/ogx-conditioner-renewing-argan-oil-of-marocco",
+          "evidence": "dm PDP names OGX Conditioner Renewing Argan Oil of Morocco, 385 ml; separate GTIN field is 3574661799162."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+        "name": "OGX Renewing Argan Oil of Morocco Conditioner",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "conditioner",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1442294/ogx-conditioner-renewing-argan-oil-of-marocco",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "expected_name": "Balea Aqua Hyaluron 3in1",
+      "status": "hold",
+      "identifiers": [
+        {
+          "gtin": "4066447668315",
+          "size": null,
+          "source": "data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-research-summary.json",
+          "evidence": "Historical exact-package collision is documented with existing mask row 55727898-2a5e-4f01-ace1-bd91521d98ab. This is a cross-category physical-product hold, not a fresh barcode inference."
+        }
+      ],
+      "hold_reason": "Known physical duplicate: do not attach same 3-in-1 package to a second catalog row pending owner policy.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+        "name": "Balea Aqua Hyaluron 3in1",
+        "brand": "Balea Aqua",
+        "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+        "category_key": "leave_in",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Balea"
+        }
+      }
+    },
+    {
+      "product_id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "expected_name": "Bali Curls SOS Protein Treatment",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4262391991114",
+          "size": "20 ml",
+          "checksum_valid": true,
+          "source": "https://www.dm.de/p/d/3122257/bali-curls-haarkur-total-repair-sos-protein-treatment?appPageType=productdetails&appProductId=3122257",
+          "evidence": "dm PDP identifies BALI CURLS Total Repair SOS Protein Treatment, 20 ml, with separate GTIN 4262391991114 and ingredient list."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+        "name": "Bali Curls SOS Protein Treatment",
+        "brand": "Bali Curls",
+        "brand_id": "f09f382e-2c26-41f2-b52b-deacc7e54b13",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-bali-curls-total-repair-sos-protein-treatment/p/4262391991114",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Bali Curls"
+        }
+      }
+    },
+    {
+      "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "expected_name": "Fructis Hair Food Aloe Vera",
+      "status": "hold",
+      "identifiers": [
+        {
+          "gtin": "3600542511049",
+          "size": null,
+          "source": "data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-research-summary.json",
+          "evidence": "Historical summary documents this GTIN as the same Fructis Aloe Vera 3-in-1 package already represented by leave-in row 0307c903-84f9-46b4-8f1f-a51c2b1f38ff."
+        }
+      ],
+      "hold_reason": "Known cross-category physical duplicate; no second attachment pending owner policy.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+        "name": "Fructis Hair Food Aloe Vera",
+        "brand": "Fructis",
+        "brand_id": "c02c31b3-a062-4207-ade6-9d771713a821",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Fructis"
+        }
+      }
+    },
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "expected_name": "Hask Argan Oil Repairing Deep Conditioner",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh attempt to reopen retained Hagel 50 ml sachet PDP returned an internal page error; no manufacturer/major-retailer page with a separate barcode field was verified. Do not derive a GTIN from a URL or title.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+        "name": "Hask Argan Oil Repairing Deep Conditioner",
+        "brand": "Hask",
+        "brand_id": "190575ae-19c1-4b51-a4f4-8840fd7a5e14",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.hagel-shop.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Hask"
+        }
+      }
+    },
+    {
+      "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "expected_name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "status": "hold",
+      "identifiers": [
+        {
+          "gtin": "4072600703403",
+          "size": "200 ml",
+          "source": "plans/2026-08-28-existing-gtin-enrichment-receipt.md",
+          "evidence": "Prior approved research receipt records the exact 200 ml 2-in-1 package as also represented by conditioner row 11d42d9d-b8d8-42ae-a432-9a3d0f9d3504; Müller refresh was unavailable."
+        }
+      ],
+      "hold_reason": "Known cross-category physical duplicate; do not add barcode to this second row.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+        "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+        "brand": "Guhl",
+        "brand_id": "99acdf73-cc47-45af-b841-da3061d77b0e",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Guhl"
+        }
+      }
+    },
+    {
+      "product_id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "expected_name": "Jean&Len Tiefenreparatur Haarkur",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4262401737824",
+          "size": "250 ml",
+          "checksum_valid": true,
+          "source": "https://www.budni.de/sortiment/produkte/6641238006",
+          "evidence": "Budni PDP identifies Jean & Len Tiefenreparatur Haarkur Kokosöl/Macadamia, 0.25 l, and separately lists EAN 4262401737824."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+        "name": "Jean&Len Tiefenreparatur Haarkur",
+        "brand": "Jean&Len",
+        "brand_id": "d1a06eff-1c23-472e-908e-f5364edb1bec",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-jeanundlen-tiefenreparatur-haarkur/p/4262401737824",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Jean&Len"
+        }
+      }
+    },
+    {
+      "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "expected_name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+      "status": "source_ready",
+      "identifiers": [
+        {
+          "gtin": "4015100813913",
+          "size": "400 ml",
+          "checksum_valid": true,
+          "source": "https://www.dm.de/p/d/1431893/schwarzkopf-gliss-haarmaske-4in1-liquid-silk",
+          "evidence": "dm PDP identifies GLISS Haarmaske 4in1 Liquid Silk, 400 ml, and separately gives GTIN 4015100813913."
+        }
+      ],
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+        "name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+        "brand": "Gliss",
+        "brand_id": "1c460ddf-75b8-4db6-9a33-748dfe7a5da0",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/p/d/1431893/schwarzkopf-gliss-haarmaske-4in1-liquid-silk",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Gliss"
+        }
+      }
+    },
+    {
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "expected_name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh Müller PDP refresh identified the product but exposes no EAN/GTIN field in returned page content; no independent authoritative barcode source was verified.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+        "name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+        "brand": "Weleda",
+        "brand_id": "29682fda-bf03-409e-bb70-60bf56cfea13",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.mueller.de/p/weleda-hydrashine-gloss-drops-haaroel-alpen-lein-PPN3138905/",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Weleda"
+        }
+      }
+    },
+    {
+      "product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "expected_name": "Nuxe Huile Prodigieuse Öl",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Official NUXE DE page confirms the product family but presents 50/60/100/700 ml variants without a barcode field. A package-specific GTIN cannot be selected safely.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+        "name": "Nuxe Huile Prodigieuse Öl",
+        "brand": "Nuxe",
+        "brand_id": "8fe33cde-4886-4c1c-9294-1aa3048f8b4f",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Nuxe"
+        }
+      }
+    },
+    {
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "expected_name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh Amazon DE page attempt did not yield a structured EAN/GTIN field; no primary or major-retailer barcode corroboration found in the bounded pass.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+        "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+        "brand": "Shiseido Fino",
+        "brand_id": "5e32f3da-609a-46af-a153-64121f6cb146",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.amazon.de/Fino-Premium-Touch-Penetrating-Essence/dp/B0GVFQP34X",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Shiseido Fino"
+        }
+      }
+    },
+    {
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "expected_name": "Maria Nila True Soft Argan Oil",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh Hagel 100 ml PDP refresh confirms the product/size but no separate EAN/GTIN field was returned; bounded search did not produce a stronger exact-package barcode source.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+        "name": "Maria Nila True Soft Argan Oil",
+        "brand": "Maria Nila",
+        "brand_id": "5821f9b8-bc6a-45da-af2b-b3f9545796de",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.hagel-shop.de/maria-nila-true-soft-argan-oil-100-ml.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Maria Nila"
+        }
+      }
+    },
+    {
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "expected_name": "OGX Argan Weightless Oil",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Retained dm PDP reopen returned an internal error; no separate exact-product/pack barcode field was verified in a replacement source.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "name": "OGX Argan weightless Öl",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/ogx-haaroel-moroccan-argan-oil-weightless-dry-out-oil-p22796976208.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "expected_name": "OGX Bond Protein Repair 3-in-1 Oil Mist",
+      "status": "hold",
+      "identifiers": [],
+      "hold_reason": "Fresh Amazon DE page confirms the 50 ml product title but does not publish a structured EAN/GTIN field; marketplace URL/ASIN is not barcode evidence.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "c320750f-6a1e-420d-8594-409f04e05319",
+        "name": "OGX Bond Protein Repair",
+        "brand": "OGX",
+        "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "OGX"
+        }
+      }
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "expected_name": "Balea Tiefenreinigung Shampoo",
+      "status": "hold",
+      "identifiers": [
+        {
+          "gtin": "4070765001020",
+          "size": "250 ml",
+          "source": "data/scanner-catalog-coverage/2026-08-26/existing-catalog-gtin-research-summary.json",
+          "evidence": "Historical summary records the exact 250 ml package as already applied to Balea Tiefenreinigung Shampoo row 375ee7a0-3262-4b99-8e48-4f327c6e09aa."
+        }
+      ],
+      "hold_reason": "Known active exact physical duplicate; retain the already-approved owner and do not attach a second identical GTIN.",
+      "source_checked_at": "2026-08-28T08:20:25Z",
+      "inventory": {
+        "id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+        "name": "Balea Tiefenreinigung",
+        "brand": "Balea",
+        "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+        "category_key": "shampoo",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "affiliate_link": "https://www.dm.de/balea-professional-shampoo-tiefenreinigung-p4010355426239.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "brands": {
+          "canonical_name": "Balea"
+        }
+      }
+    }
+  ]
+}

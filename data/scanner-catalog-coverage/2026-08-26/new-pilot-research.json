@@ -1,0 +1,74 @@
+{
+  "schema_version": "scanner-new-pilot-research-v1",
+  "research_id": "scanner-phase1-new-pilot-2026-08-26",
+  "ownership_checked_at": "2026-08-26T13:32:25.656Z",
+  "ownership_scope": "all product_identifiers rows with identifier_type ean, gtin, or barcode, including inactive product owners",
+  "research_only": true,
+  "products": [
+    {
+      "candidate_id": "shampoo-003",
+      "category_key": "shampoo",
+      "brand": "head&shoulders",
+      "product_line": null,
+      "name": "Shampoo Anti-Schuppen Classic Clean",
+      "package_size": "300 ml",
+      "gtin": "8001090890054",
+      "canonical_gtin14": "08001090890054",
+      "source_urls": ["https://www.dm.de/p/d/1493045/head-und-shoulders-shampoo-anti-schuppen-classic-clean"],
+      "reconciliation_status": "new_candidate_confirmed",
+      "popularity_signal": "Current dm shampoo listing/PDP; 19 visible reviews and a flagship anti-dandruff identity."
+    },
+    {
+      "candidate_id": "conditioner-011",
+      "category_key": "conditioner",
+      "brand": "Being",
+      "product_line": "Big Hair",
+      "name": "Conditioner",
+      "package_size": "354 ml",
+      "gtin": "4895248005926",
+      "canonical_gtin14": "04895248005926",
+      "source_urls": ["https://www.rossmann.de/de/pflege-und-duft-being-big-hair-conditioner/p/4895248005926"],
+      "reconciliation_status": "new_candidate_confirmed",
+      "popularity_signal": "Current Rossmann PDP; in stock with exact package and product identifier."
+    },
+    {
+      "candidate_id": "mask-015",
+      "category_key": "mask",
+      "brand": "Garnier Wahre Schätze",
+      "product_line": "Reiswasser Ritual & Stärke",
+      "name": "Haarkur 1-Minute",
+      "package_size": "340 ml",
+      "gtin": "3600542571586",
+      "canonical_gtin14": "03600542571586",
+      "source_urls": ["https://www.dm.de/p/d/1324786/wahre-schaetze-haarkur-1-minute-reiswasser-ritual-und-staerke"],
+      "reconciliation_status": "new_candidate_confirmed",
+      "popularity_signal": "Current dm PDP plus Rossmann category visibility with more than 1,000 visible reviews."
+    },
+    {
+      "candidate_id": "leave-in-001",
+      "category_key": "leave_in",
+      "brand": "Pantene Pro-V",
+      "product_line": "Sunkiss Glow",
+      "name": "Leave-In Spray",
+      "package_size": "200 ml",
+      "gtin": "8006530063807",
+      "canonical_gtin14": "08006530063807",
+      "source_urls": ["https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow"],
+      "reconciliation_status": "new_candidate_confirmed",
+      "popularity_signal": "Top-row current dm Leave-In visibility with 65 visible reviews."
+    },
+    {
+      "candidate_id": "oil-001",
+      "category_key": "oil",
+      "brand": "Dejan Garz",
+      "product_line": "The Britney",
+      "name": "Violet Hair Oil",
+      "package_size": "50 ml",
+      "gtin": "4063528101808",
+      "canonical_gtin14": "04063528101808",
+      "source_urls": ["https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney", "https://www.rossmann.de/de/pflege-und-duft-dejan-garz-violet-hair-oil-the-britney/p/4063528101808"],
+      "reconciliation_status": "new_candidate_confirmed",
+      "popularity_signal": "Current dm and Rossmann visibility; dm showed more than 330 visible reviews."
+    }
+  ]
+}
