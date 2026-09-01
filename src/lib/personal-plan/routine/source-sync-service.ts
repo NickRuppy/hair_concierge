@@ -529,7 +529,15 @@ export function createRoutineSourceSyncService(input: {
           delta,
           origin: "acquisition",
         })
-      } else if (claimErrors.size === 0) {
+      } else if (
+        // Only an UNRESOLVED remaining claim may suppress the no-change record.
+        // `claimErrors` also holds `null` entries for claims the self-heal lane
+        // already settled successfully, so keying this off its size made a
+        // mixed batch (a healed recompute plus an ordinary no-op source claim)
+        // silently skip `recordNoChange` and never advance
+        // `last_evaluated_source_fingerprint`.
+        remainingClaims.every((remaining) => !claimErrors.get(remaining.outboxId))
+      ) {
         outcome = await input.repository.recordNoChange({
           userId: request.userId,
           plan,

@@ -764,6 +764,72 @@ test("a module-driven recompute runs before, and reloads the base for, its sibli
   assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: null }])
 })
 
+/**
+ * The self-heal lane records a `null` (successfully settled) entry in
+ * `claimErrors` for every refined claim it classified. Keying the no-change
+ * branch off `claimErrors.size` therefore made a MIXED batch — one healed
+ * recompute plus one ordinary source claim that reconciles to a no-op — skip
+ * `recordNoChange` entirely, so `last_evaluated_source_fingerprint` was never
+ * advanced and the same no-op claim re-evaluated on every later sync.
+ */
+test("a healed recompute never suppresses the sibling no-op's evaluated fingerprint", async () => {
+  const db = repository({
+    async claim() {
+      return [claim, refinedClaim]
+    },
+  })
+  const lane = recomputeLane()
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.equal(db.recorded.length, 1, "the sibling no-op must still record no change")
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 2,
+    terminalized: 0,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+    recomputeApplied: true,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: null }])
+})
+
+/**
+ * ...but a remaining claim that ended in a real (non-terminal) error must still
+ * suppress it: the batch did not evaluate cleanly, so its fingerprint may not
+ * be advanced.
+ */
+test("an unresolved sibling still suppresses the no-change fingerprint", async () => {
+  const db = repository({
+    async claim() {
+      return [claim, claimB, refinedClaim]
+    },
+    async loadUserProduct(_, sourceKey) {
+      if (sourceKey === claimB.sourceKey) return null
+      return {
+        id: sourceKey,
+        category: "conditioner",
+        catalogProductId: "unrelated-product",
+        displayName: "Unrelated",
+        identityStatus: "matched",
+        ownershipStatus: "owned",
+      }
+    },
+  })
+  const lane = recomputeLane()
+
+  await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.equal(db.recorded.length, 0)
+})
+
 test("an unavailable base keeps the lane's already-final outcomes", async () => {
   const reported: unknown[] = []
   const db = repository({
