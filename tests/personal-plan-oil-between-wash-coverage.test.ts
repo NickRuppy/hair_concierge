@@ -39,16 +39,27 @@ const conventionalProductIds = oilProductIds.filter((productId) =>
   ),
 )
 
-test("the reviewed Oil cohort has 24 conventional leave-on products and two exact-only exceptions", () => {
-  assert.equal(oilProductIds.length, 26)
-  assert.equal(conventionalProductIds.length, 24)
+test("the reviewed Oil cohort has 27 conventional leave-on products and 13 exact-only exceptions", () => {
+  assert.equal(oilProductIds.length, 40)
+  assert.equal(conventionalProductIds.length, 27)
   const exactOnly = oilProductIds
     .filter((productId) => !conventionalProductIds.includes(productId))
     .map((productId) => oilItems.find((item) => item.product_id === productId)!.product_name)
     .sort()
   assert.deepEqual(exactOnly, [
+    "Allgäuer Ölmühle Bio Traubenkernöl",
+    "BioGourmet Distelöl",
     "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+    "KoRo MCT Öl",
+    "MoriVeda Premium Moringaöl",
     "NANOIL Avocadoöl",
+    "benecos BIO Körperöl Aprikosenkernöl",
+    "benecos BIO Körperöl Macadamianussöl",
+    "benecos BIO Körperöl Mandelöl",
+    "benecos BIO Körperöl Wunderbaumsamenöl",
+    "dmBio Kokosöl nativ",
+    "dmBio natives Olivenöl extra",
+    "nedura Schwarzkümmelöl ungefiltert",
   ])
 })
 

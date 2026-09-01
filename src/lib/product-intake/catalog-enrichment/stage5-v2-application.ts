@@ -140,6 +140,7 @@ export type Stage5V2ApplicationPreflightRead = {
       role: string
       application_family?: string
       guidance_payload: unknown
+      guidance_payload_v2?: unknown
     }>
   >
   listActiveCuratedProtocols?(): Promise<
@@ -249,6 +250,13 @@ export async function preflightStage5V2ApplicationArtifact(
       item.source_fingerprint
     ) {
       blockers.push(`source_protocol_diverged:${item.key}`)
+    }
+    if (
+      "guidance_payload_v2" in protocol &&
+      protocol.guidance_payload_v2 !== null &&
+      canonicalJson(protocol.guidance_payload_v2) !== canonicalJson(pointer)
+    ) {
+      blockers.push(`v2_authority_conflict:${item.key}`)
     }
   }
 
