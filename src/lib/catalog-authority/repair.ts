@@ -33,6 +33,7 @@ const repairEntrySchema = z.object({
   productId: z.string().uuid(),
   categoryKey: personalPlanCategorySchema,
   expectedOldFingerprint: sha256Schema,
+  expectedCurrentAuthority: z.record(z.string(), jsonValueSchema).optional(),
   intendedAuthority: z.record(z.string(), jsonValueSchema),
   evidence: repairEvidenceSchema.array().min(1),
   expectedNewFingerprint: sha256Schema,
@@ -72,7 +73,7 @@ const REPAIR_SLICE_CATEGORIES = {
 } satisfies Record<CatalogAuthorityRepairManifest["slice"], Set<PersonalPlanCategory>>
 
 export function catalogAuthorityValueFingerprint(value: unknown): string {
-  return createHash("sha256").update(canonicalJson(value), "utf8").digest("hex")
+  return createHash("sha256").update(catalogAuthorityCanonicalJson(value), "utf8").digest("hex")
 }
 
 export function catalogAuthorityRepairReviewFingerprint(
@@ -120,6 +121,13 @@ export function assertCatalogAuthorityRepairReady(
     if (entry.expectedNewFingerprint !== expectedNewFingerprint) {
       throw new Error(`catalog_authority_repair_new_fingerprint_mismatch:${entry.productId}`)
     }
+    if (
+      entry.expectedCurrentAuthority &&
+      catalogAuthorityValueFingerprint(entry.expectedCurrentAuthority) !==
+        entry.expectedOldFingerprint
+    ) {
+      throw new Error(`catalog_authority_repair_old_fingerprint_mismatch:${entry.productId}`)
+    }
     const current = currentByProduct.get(entry.productId)
     if (!current) {
       throw new Error(`catalog_authority_repair_current_state_missing:${entry.productId}`)
@@ -145,18 +153,18 @@ export function assertCatalogAuthorityRepairReady(
 
 // Deterministic canonical JSON: code-unit key ordering (never locale-sensitive)
 // and hard rejection of values JSON.stringify would silently coerce.
-function canonicalJson(value: unknown): string {
+export function catalogAuthorityCanonicalJson(value: unknown): string {
   if (value === undefined) {
     throw new Error("catalog_authority_fingerprint_undefined_value")
   }
   if (typeof value === "number" && !Number.isFinite(value)) {
     throw new Error("catalog_authority_fingerprint_non_finite_number")
   }
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`
+  if (Array.isArray(value)) return `[${value.map(catalogAuthorityCanonicalJson).join(",")}]`
   if (value !== null && typeof value === "object") {
     return `{${Object.entries(value as Record<string, unknown>)
       .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
-      .map(([key, child]) => `${JSON.stringify(key)}:${canonicalJson(child)}`)
+      .map(([key, child]) => `${JSON.stringify(key)}:${catalogAuthorityCanonicalJson(child)}`)
       .join(",")}}`
   }
   const serialized = JSON.stringify(value)

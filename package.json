@@ -51,6 +51,7 @@
     "personal-plan:application-audit": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-generate.ts --check",
     "personal-plan:stage3:coverage-audit": "tsx scripts/personal-plan/audit-stage3-production-coverage.ts",
     "catalog:authority:audit": "tsx scripts/catalog-authority/audit.ts",
+    "catalog:authority:oil-repair": "tsx scripts/catalog-authority/oil-repair-client.ts",
     "catalog:relationships:verify:dual": "tsx scripts/catalog-authority/verify-product-spec-relationships.ts --expect-dual-relationships",
     "catalog:relationships:verify:converged": "tsx scripts/catalog-authority/verify-product-spec-relationships.ts --expect-converged",
     "products:intake:stage5-v2-application:preflight": "tsx scripts/product-intake/catalog-enrichment/stage5-v2-preflight.ts",

@@ -1,0 +1,3915 @@
+{
+  "schemaVersion": 1,
+  "slice": "leave_in_oil",
+  "entries": [
+    {
+      "productId": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "e02934edf361f1a7405b7b379fc998a089339cb013a9b8a9d5ac9b6b2383430c",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Macadamianussöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Macadamianussöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "productOilSpec": {
+          "weight": "medium",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-19aea9c4-4b90-4ec4-8cb6-90cb270010f7-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-19aea9c4-4b90-4ec4-8cb6-90cb270010f7-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-19aea9c4-4b90-4ec4-8cb6-90cb270010f7-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-19aea9c4-4b90-4ec4-8cb6-90cb270010f7-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-19aea9c4-4b90-4ec4-8cb6-90cb270010f7-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Cosmondial — benecosBIO Körperöl Macadamianussöl",
+            "sourceUrl": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-macadamia",
+            "sourceText": "INCI: Macadamia Integrifolia Seed Oil; 100% organic macadamia oil.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes normal/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-macadamia",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: INCI: Macadamia Integrifolia Seed Oil; 100% organic macadamia oil."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: normal/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "826efb4abafe8267feba31809f1ceeb19a9753a2cb09e3595aa2313d96211f28"
+    },
+    {
+      "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "a020eba5422b17671f1e41f7fe958b11ac88df29c995d83549bf43d1a589c05a",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "Primavera Calendulaöl Bio",
+          "brand": "Primavera",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "Primavera Calendulaöl Bio",
+          "brand": "Primavera",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "productOilSpec": {
+          "weight": "rich",
+          "roleSupport": ["dry_finish", "pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "dry_finish",
+            "applicationFamily": "dry_finish",
+            "cadence": null,
+            "applicationStage": "post_styling",
+            "applicationState": "dry",
+            "placement": "ends",
+            "contactTimeSeconds": null,
+            "rinseAction": "leave_in",
+            "reapplication": "optional",
+            "instructionModifiers": ["use_a_small_amount", "avoid_scalp_and_roots"],
+            "sourceLabel": "PRIMAVERA — Calendulaöl bio",
+            "sourceUrl": "https://www.primaveralife.com/calendulaoel-bio.html",
+            "sourceText": "INCI: Helianthus Annuus Seed Oil, Olea Europaea Fruit Oil, Calendula Officinalis Flower Extract, Rosmarinus Officinalis Leaf Extract. Kleine Menge in trockene Haarspitzen.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-1dce2c18-6a45-4017-a748-e3a7f1cba36f-dry",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f"
+              },
+              "role": "finish",
+              "applicationFamily": "dry_finish",
+              "compatibleDayTypes": ["wash_day", "styling_day", "between_wash_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "dry_finish",
+                "before": [],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "ends",
+                "rinse": "leave_in",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Eine sehr kleine Menge verwenden."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-primavera-dry",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Eine sehr kleine Menge zwischen den Handflächen verteilen."
+                },
+                {
+                  "stepKey": "apply-primavera-dry",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Nur in die trockenen Haarspitzen geben; nicht auf Kopfhaut oder Ansatz und nicht ausspülen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://www.primaveralife.com/calendulaoel-bio.html",
+                  "sourceType": "manufacturer",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          },
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-1dce2c18-6a45-4017-a748-e3a7f1cba36f-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-1dce2c18-6a45-4017-a748-e3a7f1cba36f-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                {
+                  "stepKey": "apply-1dce2c18-6a45-4017-a748-e3a7f1cba36f-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-1dce2c18-6a45-4017-a748-e3a7f1cba36f-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-1dce2c18-6a45-4017-a748-e3a7f1cba36f-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["dry_finish", "pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes coarse/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["dry_finish", "pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["dry_finish", "pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "PRIMAVERA — Calendulaöl bio",
+            "sourceUrl": "https://www.primaveralife.com/calendulaoel-bio.html",
+            "sourceText": "INCI: Helianthus Annuus Seed Oil, Olea Europaea Fruit Oil, Calendula Officinalis Flower Extract, Rosmarinus Officinalis Leaf Extract. Kleine Menge in trockene Haarspitzen.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.primaveralife.com/calendulaoel-bio.html",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: INCI: Helianthus Annuus Seed Oil, Olea Europaea Fruit Oil, Calendula Officinalis Flower Extract, Rosmarinus Officinalis Leaf Extract. Kleine Menge in trockene Haarspitzen."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: coarse/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "981bf441400e4ced55a8acab10abc356a59b3ec3d169bcac902283e09d116d6e"
+    },
+    {
+      "productId": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "d78a40f52cecf9e316a944a9d97e8255a72accf2916f38d281b8596c88ce2900",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "OGX Argan Oil",
+          "brand": "OGX",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/ogx-haaroel-moroccan-argan-penetrating-oil-p3574661563312.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilPurpose": "styling_finish",
+            "oilSubtype": "styling-oel",
+            "ingredientFlags": ["silicones"]
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "OGX Argan Oil",
+          "brand": "OGX",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/ogx-haaroel-moroccan-argan-penetrating-oil-p3574661563312.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "productOilSpec": {
+          "weight": "medium",
+          "roleSupport": ["leave_on_fibre_conditioning", "pre_heat_protection"],
+          "providesHeatProtection": true
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilSubtype": "styling-oel",
+            "oilPurpose": "styling_finish",
+            "ingredientFlags": ["oils", "silicones"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "leave_on_fibre_conditioning",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "cadence": null,
+            "applicationStage": "post_wash",
+            "applicationState": "damp",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": null,
+            "rinseAction": "leave_in",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "use_only_a_few_drops",
+              "fine_hair_apply_to_ends_only",
+              "avoid_roots"
+            ],
+            "sourceLabel": "dm — OGX Moroccan Argan Penetrating Oil 100 ml",
+            "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+            "sourceText": "Wenige Tropfen in handtuchtrockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen, Ansatz aussparen. Finished-product heat-protection claim.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf-damp",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"
+              },
+              "role": "leave_in",
+              "applicationFamily": "post_wash_damp_conditioning",
+              "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "damp_leave_on",
+                "before": [],
+                "after": ["post_rinse_towel_dry"],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "leave_in",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Wenige Tropfen verwenden; bei feinem Haar nur die Spitzen behandeln."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-ogx-damp",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Wenige Tropfen zwischen den Handflächen verteilen."
+                },
+                {
+                  "stepKey": "apply-ogx-damp",
+                  "action": "apply_product",
+                  "copyTemplateDe": "In handtuchtrockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz. Nicht ausspülen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+                  "sourceType": "retailer",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          },
+          {
+            "role": "pre_heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "cadence": null,
+            "applicationStage": "pre_heat",
+            "applicationState": "damp",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": null,
+            "rinseAction": "leave_in",
+            "reapplication": "required",
+            "instructionModifiers": [
+              "use_only_a_few_drops",
+              "fine_hair_apply_to_ends_only",
+              "avoid_roots",
+              "reapply_before_each_separate_heat_event"
+            ],
+            "sourceLabel": "dm — OGX Moroccan Argan Penetrating Oil 100 ml",
+            "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+            "sourceText": "Wenige Tropfen in handtuchtrockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen, Ansatz aussparen. Finished-product heat-protection claim.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf-heat",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"
+              },
+              "role": "heat_protection",
+              "applicationFamily": "pre_heat_damp",
+              "compatibleDayTypes": ["styling_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "damp_leave_on",
+                "before": ["heat_tool"],
+                "after": ["post_rinse_towel_dry"],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "leave_in",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "each_separate_heat_event",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Wenige Tropfen verwenden; bei feinem Haar nur die Spitzen behandeln."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-ogx-heat",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Vor dem Hitzestyling wenige Tropfen zwischen den Handflächen verteilen."
+                },
+                {
+                  "stepKey": "apply-ogx-heat",
+                  "action": "apply_product",
+                  "copyTemplateDe": "In handtuchtrockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz."
+                },
+                {
+                  "stepKey": "tool-ogx-heat",
+                  "action": "tool",
+                  "copyTemplateDe": "Danach mit Hitze stylen; vor jedem späteren separaten Hitzevorgang erneut anwenden."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+                  "sourceType": "retailer",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["leave_on_fibre_conditioning", "pre_heat_protection"],
+              "provides_heat_protection": true,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "styling-oel",
+                  "oil_purpose": "styling_finish",
+                  "ingredient_flags": ["oils", "silicones"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes normal/styling-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["leave_on_fibre_conditioning", "pre_heat_protection"],
+              "provides_heat_protection": true,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "styling-oel",
+                  "oil_purpose": "styling_finish",
+                  "ingredient_flags": ["oils", "silicones"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["leave_on_fibre_conditioning", "pre_heat_protection"],
+              "provides_heat_protection": true,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "styling-oel",
+                  "oil_purpose": "styling_finish",
+                  "ingredient_flags": ["oils", "silicones"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "dm — OGX Moroccan Argan Penetrating Oil 100 ml",
+            "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+            "sourceText": "Wenige Tropfen in handtuchtrockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen, Ansatz aussparen. Finished-product heat-protection claim.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+          "sourceType": "retailer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: Wenige Tropfen in handtuchtrockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen, Ansatz aussparen. Finished-product heat-protection claim."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: normal/styling-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "69b08b3bfa9b1de49006e43e2a75881122c9bb4d2b2369a9c4a3f6853c76d5fc"
+    },
+    {
+      "productId": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "55b0b56ec882169d9e13428de810752d3a67265e1b3ff70d049f637e530cbe1d",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "BioGourmet Distelöl",
+          "brand": "BioGourmet",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/biogourmet-disteloel-2529149/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "BioGourmet Distelöl",
+          "brand": "BioGourmet",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/biogourmet-disteloel-2529149/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "productOilSpec": {
+          "weight": "light",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-29e36443-93ff-4b62-9cf0-55ad9f89f530-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "29e36443-93ff-4b62-9cf0-55ad9f89f530"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-29e36443-93ff-4b62-9cf0-55ad9f89f530-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-29e36443-93ff-4b62-9cf0-55ad9f89f530-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-29e36443-93ff-4b62-9cf0-55ad9f89f530-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-29e36443-93ff-4b62-9cf0-55ad9f89f530-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "BioGourmet — Distelöl",
+            "sourceUrl": "https://bio-gourmet.com/essig-oel-und-dips/biogourmet-produkte-essig-oel-und-dips-disteloel/",
+            "sourceText": "Native, cold-pressed safflower food oil.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes fine/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://bio-gourmet.com/essig-oel-und-dips/biogourmet-produkte-essig-oel-und-dips-disteloel/",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: Native, cold-pressed safflower food oil."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: fine/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        },
+        {
+          "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/38922913/",
+          "sourceType": "professional_authority",
+          "checkedAt": "2026-09-01",
+          "note": "Direct safflower-inclusive hair-fibre study supports only the conservative pre-wash role."
+        }
+      ],
+      "expectedNewFingerprint": "a63687f8881a922df2a3dea7f0bf0fdbf7abf118df9aba709eb38c13c9fe30e2"
+    },
+    {
+      "productId": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "605e40a4214b1ffb77fa951f8d55ef74e976512b64ccc6520d4354b835cee4f3",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "nedura Schwarzkümmelöl ungefiltert",
+          "brand": "nedura",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "nedura Schwarzkümmelöl ungefiltert",
+          "brand": "nedura",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "productOilSpec": {
+          "weight": "medium",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-2ffeae68-c625-4df5-be02-0c1b620aa0fc-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "2ffeae68-c625-4df5-be02-0c1b620aa0fc"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-2ffeae68-c625-4df5-be02-0c1b620aa0fc-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-2ffeae68-c625-4df5-be02-0c1b620aa0fc-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-2ffeae68-c625-4df5-be02-0c1b620aa0fc-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-2ffeae68-c625-4df5-be02-0c1b620aa0fc-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes normal/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "dm — nedura Schwarzkümmelöl ungefiltert",
+            "sourceUrl": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+            "sourceText": "500 ml; 100% organic Egyptian Nigella sativa oil, unfiltered.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+          "sourceType": "retailer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: 500 ml; 100% organic Egyptian Nigella sativa oil, unfiltered."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: normal/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "a65af5144220d7545faffe0d97abe14039e7dbed32f9ed497272a9b8f2994d9d"
+    },
+    {
+      "productId": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "39803673f4eb529c059423e89e88bdb5884627fb5fc5e4e810a1d3a03bac154e",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "MoriVeda Premium Moringaöl",
+          "brand": "MoriVeda",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "38886b62-2c45-4b34-9a24-7d831e97946e",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "MoriVeda Premium Moringaöl",
+          "brand": "MoriVeda",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "38886b62-2c45-4b34-9a24-7d831e97946e",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "productOilSpec": {
+          "weight": "medium",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-38886b62-2c45-4b34-9a24-7d831e97946e-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "38886b62-2c45-4b34-9a24-7d831e97946e"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-38886b62-2c45-4b34-9a24-7d831e97946e-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-38886b62-2c45-4b34-9a24-7d831e97946e-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-38886b62-2c45-4b34-9a24-7d831e97946e-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-38886b62-2c45-4b34-9a24-7d831e97946e-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes normal/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Shop Apotheke — MoriVeda Moringa Öl Premium",
+            "sourceUrl": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+            "sourceText": "100 ml; ingredient stated as moringa oil; food and cosmetic use.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "sourceType": "retailer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: 100 ml; ingredient stated as moringa oil; food and cosmetic use."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: normal/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "d6250023862bc3e388d44d5e9165144f3b1e2c6cd413b19b713874272f48db6e"
+    },
+    {
+      "productId": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "a6fcb0001335c8198d7ec77db0c40956696f31eeef98aaa820d25710b96bb282",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "productOilSpec": {
+          "weight": "rich",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                {
+                  "stepKey": "apply-3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Cosmondial — benecosBIO Körperöl Wunderbaumsamenöl",
+            "sourceUrl": "https://cosmondial.com/products/benecosbio-koerperoel-wunderbaumsamen",
+            "sourceText": "INCI: Ricinus Communis Seed Oil; 100% organic castor oil; described as thick and rich.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes coarse/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://cosmondial.com/products/benecosbio-koerperoel-wunderbaumsamen",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: INCI: Ricinus Communis Seed Oil; 100% organic castor oil; described as thick and rich."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: coarse/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        },
+        {
+          "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/35816075/",
+          "sourceType": "professional_authority",
+          "checkedAt": "2026-09-01",
+          "note": "Systematic review does not support a castor-oil hair-growth claim; only handling/weight authority is proposed."
+        }
+      ],
+      "expectedNewFingerprint": "1e3a4aebbcdffdb20ad7f5d04b22ac40615538e6a39e55f83c525b6f2851ea05"
+    },
+    {
+      "productId": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "eea68ba5bceacf37d7f3c85f384c296fc79825193a13f2c01743229b9e181853",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "KoRo MCT Öl",
+          "brand": "KoRo",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/koro-mct-oel-p4260718296232.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "KoRo MCT Öl",
+          "brand": "KoRo",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/koro-mct-oel-p4260718296232.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "productOilSpec": {
+          "weight": "light",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-3eb198a5-9aab-4f28-9df1-c4869c6a12db-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "3eb198a5-9aab-4f28-9df1-c4869c6a12db"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-3eb198a5-9aab-4f28-9df1-c4869c6a12db-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-3eb198a5-9aab-4f28-9df1-c4869c6a12db-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-3eb198a5-9aab-4f28-9df1-c4869c6a12db-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-3eb198a5-9aab-4f28-9df1-c4869c6a12db-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes fine/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "dm — KoRo MCT Öl",
+            "sourceUrl": "https://www.dm.de/p/d/1657270/koro-mct-oel",
+            "sourceText": "100% medium-chain triglycerides from coconut, mainly caprylic/capric.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1657270/koro-mct-oel",
+          "sourceType": "retailer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: 100% medium-chain triglycerides from coconut, mainly caprylic/capric."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: fine/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "ff75b48d149b410decf37b708aa156742c1fe2f6351b14c643f9a546f180ed77"
+    },
+    {
+      "productId": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "d78f8fe9c66ab08d5f1c4c9d43a0fefd38186e9fe07076efd03c7c538351fb12",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "Dr. Scheller Jojobaöl",
+          "brand": "Dr. Scheller",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/p/d/1675203/dr-scheller-koerperoel-jojoba",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "Dr. Scheller Jojobaöl",
+          "brand": "Dr. Scheller",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/p/d/1675203/dr-scheller-koerperoel-jojoba",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "productOilSpec": {
+          "weight": "light",
+          "roleSupport": ["dry_finish", "pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "dry_finish",
+            "applicationFamily": "dry_finish",
+            "cadence": null,
+            "applicationStage": "post_styling",
+            "applicationState": "dry",
+            "placement": "ends",
+            "contactTimeSeconds": null,
+            "rinseAction": "leave_in",
+            "reapplication": "optional",
+            "instructionModifiers": ["start_with_one_drop", "avoid_scalp_and_roots"],
+            "sourceLabel": "Dr. Scheller — Reines Jojobaöl",
+            "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+            "sourceText": "INCI: Simmondsia Chinensis (Jojoba) Seed Oil. Sparsam in Spitzen; als intensive Kur zehn Minuten, danach auswaschen.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-4a95e1de-54e9-4fcd-b227-72a5824d13c1-dry",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "4a95e1de-54e9-4fcd-b227-72a5824d13c1"
+              },
+              "role": "finish",
+              "applicationFamily": "dry_finish",
+              "compatibleDayTypes": ["wash_day", "styling_day", "between_wash_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "dry_finish",
+                "before": [],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "ends",
+                "rinse": "leave_in",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Mit einem Tropfen starten."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-jojoba-dry",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Mit einem Tropfen starten und zwischen den Handflächen verteilen."
+                },
+                {
+                  "stepKey": "apply-jojoba-dry",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Sparsam nur über die trockenen Spitzen streichen; nicht ausspülen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+                  "sourceType": "manufacturer",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          },
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": ["apply_sparingly", "avoid_scalp_and_roots"],
+            "sourceLabel": "Dr. Scheller — Reines Jojobaöl",
+            "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+            "sourceText": "INCI: Simmondsia Chinensis (Jojoba) Seed Oil. Sparsam in Spitzen; als intensive Kur zehn Minuten, danach auswaschen.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-4a95e1de-54e9-4fcd-b227-72a5824d13c1-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "4a95e1de-54e9-4fcd-b227-72a5824d13c1"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Sparsam in die trockenen Längen und Spitzen geben."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "apply-jojoba-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Sparsam ausschließlich in die trockenen Längen und Spitzen geben; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-jojoba-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-jojoba-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+                  "sourceType": "manufacturer",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["dry_finish", "pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes fine/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["dry_finish", "pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Dr. Scheller — Reines Jojobaöl",
+            "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+            "sourceText": "INCI: Simmondsia Chinensis (Jojoba) Seed Oil. Sparsam in Spitzen; als intensive Kur zehn Minuten, danach auswaschen.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["dry_finish", "pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: INCI: Simmondsia Chinensis (Jojoba) Seed Oil. Sparsam in Spitzen; als intensive Kur zehn Minuten, danach auswaschen."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: fine/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        },
+        {
+          "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/34073772/",
+          "sourceType": "professional_authority",
+          "checkedAt": "2026-09-01",
+          "note": "Jojoba composition evidence does not establish growth efficacy; exact product directions govern the proposed roles."
+        }
+      ],
+      "expectedNewFingerprint": "bd5900a46058fd7b6d63ca93b83c2f03dc64ae84353660a270248a09389f7911"
+    },
+    {
+      "productId": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "1cf32bf3e6a48be8be0b5debd2f71df6fe177429fec1f8cc73e02166b81a1340",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+          "brand": "Allgäuer Ölmühle",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "517dca50-5d55-4038-ba1d-f9b745708327",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+          "brand": "Allgäuer Ölmühle",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "517dca50-5d55-4038-ba1d-f9b745708327",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "productOilSpec": {
+          "weight": "light",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-517dca50-5d55-4038-ba1d-f9b745708327-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "517dca50-5d55-4038-ba1d-f9b745708327"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-517dca50-5d55-4038-ba1d-f9b745708327-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-517dca50-5d55-4038-ba1d-f9b745708327-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-517dca50-5d55-4038-ba1d-f9b745708327-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-517dca50-5d55-4038-ba1d-f9b745708327-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes fine/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Müller — Allgäuer Ölmühle Bio Traubenkernöl",
+            "sourceUrl": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+            "sourceText": "100 ml food oil; ingredient is organic grape-seed oil.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "sourceType": "retailer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: 100 ml food oil; ingredient is organic grape-seed oil."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: fine/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "c6008bcf5ec9ed75fb04fd4cb25feebf535401afa21c6d81554dea82e6deefa3"
+    },
+    {
+      "productId": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "7e522cce1a8f12e5af490aafa1efd2f03d5c340a4c9048680891427cceb9c978",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "dmBio natives Olivenöl extra",
+          "brand": "dmBio",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/dmbio-natives-olivenoel-extra-p4066447423761.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "dmBio natives Olivenöl extra",
+          "brand": "dmBio",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/dmbio-natives-olivenoel-extra-p4066447423761.html",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["normal"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["normal"]
+        },
+        "productOilSpec": {
+          "weight": "rich",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "normal",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-9bfe0a67-72ad-4951-bb99-9f2f5d5c724a-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-9bfe0a67-72ad-4951-bb99-9f2f5d5c724a-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                {
+                  "stepKey": "apply-9bfe0a67-72ad-4951-bb99-9f2f5d5c724a-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-9bfe0a67-72ad-4951-bb99-9f2f5d5c724a-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-9bfe0a67-72ad-4951-bb99-9f2f5d5c724a-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes normal/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "normal",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["normal"]
+            },
+            "sourceLabel": "dm — dmBio Natives Olivenöl Extra",
+            "sourceUrl": "https://www.dm.de/p/d/1512947/dmbio-natives-olivenoel",
+            "sourceText": "500 ml, 100% extra-virgin olive food oil.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1512947/dmbio-natives-olivenoel",
+          "sourceType": "retailer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: 500 ml, 100% extra-virgin olive food oil."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: normal/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        },
+        {
+          "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/16258695/",
+          "sourceType": "professional_authority",
+          "checkedAt": "2026-09-01",
+          "note": "Comparative penetration evidence includes olive oil; claims remain limited to conservative pre-wash use."
+        }
+      ],
+      "expectedNewFingerprint": "ee113161cdbabab989fba3d641356bac8c99929efe8611630b88e3ba0aab45a1"
+    },
+    {
+      "productId": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "060b6bd84f94dc035e1546914e3ea1318cb6f19855fc89210a884e3258962c91",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Aprikosenkernöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Aprikosenkernöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "productOilSpec": {
+          "weight": "light",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-a11855eb-64e5-438f-8880-1d3573efa9fa-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "a11855eb-64e5-438f-8880-1d3573efa9fa"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-a11855eb-64e5-438f-8880-1d3573efa9fa-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-a11855eb-64e5-438f-8880-1d3573efa9fa-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-a11855eb-64e5-438f-8880-1d3573efa9fa-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-a11855eb-64e5-438f-8880-1d3573efa9fa-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Cosmondial — benecosBIO Körperöl Aprikosenkernöl",
+            "sourceUrl": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-aprikosenkernoel",
+            "sourceText": "INCI: Prunus Armeniaca Kernel Oil; 100% organic apricot-kernel oil.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes fine/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-aprikosenkernoel",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: INCI: Prunus Armeniaca Kernel Oil; 100% organic apricot-kernel oil."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: fine/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "fd0b49e5fcb311cd138b3cbb679e98356a7c509acabee518b485ce090ae4f8c9"
+    },
+    {
+      "productId": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "4f6571e1571a72260e637b4a551bfebd4489b8855390bce0e5bba0e385990beb",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "dmBio Kokosöl nativ",
+          "brand": "dmBio",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "dmBio Kokosöl nativ",
+          "brand": "dmBio",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "productOilSpec": {
+          "weight": "rich",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-acf9d5cd-76e4-49c7-9c04-0af1f20506ad-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-acf9d5cd-76e4-49c7-9c04-0af1f20506ad-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+                },
+                {
+                  "stepKey": "apply-acf9d5cd-76e4-49c7-9c04-0af1f20506ad-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-acf9d5cd-76e4-49c7-9c04-0af1f20506ad-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-acf9d5cd-76e4-49c7-9c04-0af1f20506ad-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes coarse/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "rich",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "dm — dmBio Kokosöl nativ",
+            "sourceUrl": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+            "sourceText": "100% organic, cold-pressed virgin coconut oil.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "sourceType": "retailer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: 100% organic, cold-pressed virgin coconut oil."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: coarse/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        },
+        {
+          "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/32949101/",
+          "sourceType": "professional_authority",
+          "checkedAt": "2026-09-01",
+          "note": "Direct coconut-oil single-fibre evidence supports preventive fibre guidance, not scalp or growth claims."
+        }
+      ],
+      "expectedNewFingerprint": "45375baf467ff9de313930483a50c7bb6348c894a0317da3788a35de9af56d20"
+    },
+    {
+      "productId": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "d5a279911dc15d7f7e357b22001c02a1238170a11596f32e6f6111769521dc2e",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+          "brand": "Garnier",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "c574ee6f-ad22-45c0-b936-57b847d93433",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "protocols": [
+          {
+            "role": "pre_heat_protection",
+            "cadence": null,
+            "placement": "lengths_ends",
+            "sourceUrl": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "sourceText": "Hersteller: Heat-Activated Serum auf feuchtes Haar in mittlere Längen und Spitzen geben; Dosierung 1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar.",
+            "rinseAction": "leave_in",
+            "sourceLabel": "Garnier USA Produktseite",
+            "reapplication": "required",
+            "guidancePayload": {
+              "role": "heat_protection",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "c574ee6f-ad22-45c0-b936-57b847d93433"
+              },
+              "steps": [
+                {
+                  "action": "apply_product",
+                  "stepKey": "dose-garnier-sleek-heat",
+                  "copyTemplateDe": "Auf feuchtem Haar dosieren: 1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply-garnier-sleek-heat",
+                  "copyTemplateDe": "In mittlere Längen und Spitzen geben."
+                },
+                {
+                  "action": "tool",
+                  "stepKey": "tool-garnier-sleek-heat",
+                  "copyTemplateDe": "Danach mit Hitze stylen; die regionale Herstellerseite belegt Hitzeschutz bis 230 °C."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+                  "sourceType": "manufacturer"
+                },
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.garnier.com.au/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "sequence": {
+                "after": ["post_rinse_towel_dry"],
+                "anchor": "damp_leave_on",
+                "before": ["heat_tool"],
+                "conflictsWith": []
+              },
+              "guidanceKey": "product-oil-c574ee6f-ad22-45c0-b936-57b847d93433-heat",
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": []
+              },
+              "protocolFacts": {
+                "rinse": "leave_in",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar."
+                },
+                "cautions": [],
+                "reapplication": "each_separate_heat_event",
+                "applicationArea": "lengths_ends",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable"
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "pre_heat_damp",
+              "compatibleDayTypes": ["styling_day"],
+              "exactGuidanceRequired": true
+            },
+            "applicationStage": "damp_leave_on",
+            "applicationState": "damp",
+            "applicationFamily": "pre_heat_damp",
+            "contactTimeSeconds": null,
+            "instructionModifiers": []
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "checkedAt": "2026-08-11",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_heat_protection"]
+            },
+            "sourceUrl": "https://www.garnier.com.au/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "sourceText": "Herstellerregionale Seite beschreibt die Formel als hitzeschützenden Film bis 230 °C und verbindet die Anwendung mit Hitze-Styling.",
+            "sourceType": "manufacturer",
+            "sourceLabel": "Garnier Australia Produktseite"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "checkedAt": "2026-08-11",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_heat_protection"]
+            },
+            "sourceUrl": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "sourceText": "Hersteller: Heat-Activated Serum auf feuchtes Haar in mittlere Längen und Spitzen geben; Dosierung 1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar.",
+            "sourceType": "manufacturer",
+            "sourceLabel": "Garnier USA Produktseite"
+          }
+        ],
+        "productOilSpec": {
+          "weight": "light",
+          "roleSupport": ["pre_heat_protection"],
+          "providesHeatProtection": null
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilPurpose": "light_finish",
+            "oilSubtype": "trocken-oel",
+            "ingredientFlags": ["silicones"]
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+          "brand": "Garnier",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "c574ee6f-ad22-45c0-b936-57b847d93433",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["coarse"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["coarse"]
+        },
+        "productOilSpec": {
+          "weight": "light",
+          "roleSupport": ["pre_heat_protection"],
+          "providesHeatProtection": true
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "coarse",
+            "oilSubtype": "trocken-oel",
+            "oilPurpose": null,
+            "ingredientFlags": ["silicones"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "cadence": null,
+            "applicationStage": "pre_heat",
+            "applicationState": "damp",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": null,
+            "rinseAction": "leave_in",
+            "reapplication": "required",
+            "instructionModifiers": [
+              "use_one_pump",
+              "avoid_scalp_and_roots",
+              "reapply_before_each_separate_heat_event"
+            ],
+            "sourceLabel": "Garnier — Fructis Sleek & Stay Heat-Activated Serum",
+            "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/serum",
+            "sourceText": "Einen Pumpstoß in feuchte Längen und Spitzen geben, nicht ausspülen und anschließend föhnen oder glätten.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-c574ee6f-ad22-45c0-b936-57b847d93433-heat",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "c574ee6f-ad22-45c0-b936-57b847d93433"
+              },
+              "role": "heat_protection",
+              "applicationFamily": "pre_heat_damp",
+              "compatibleDayTypes": ["styling_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "damp_leave_on",
+                "before": ["heat_tool"],
+                "after": ["post_rinse_towel_dry"],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "leave_in",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "each_separate_heat_event",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Einen Pumpstoß verwenden."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-garnier-heat",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Einen Pumpstoß gleichmäßig in die feuchten Längen und Spitzen geben."
+                },
+                {
+                  "stepKey": "tool-garnier-heat",
+                  "action": "tool",
+                  "copyTemplateDe": "Nicht ausspülen; anschließend föhnen oder glätten."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/serum",
+                  "sourceType": "manufacturer",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_heat_protection"],
+              "provides_heat_protection": true,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "trocken-oel",
+                  "oil_purpose": null,
+                  "ingredient_flags": ["silicones"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes coarse/trocken-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_heat_protection"],
+              "provides_heat_protection": true,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "trocken-oel",
+                  "oil_purpose": null,
+                  "ingredient_flags": ["silicones"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "checkedAt": "2026-08-11",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_heat_protection"]
+            },
+            "sourceUrl": "https://www.garnier.com.au/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "sourceText": "Herstellerregionale Seite beschreibt die Formel als hitzeschützenden Film bis 230 °C und verbindet die Anwendung mit Hitze-Styling.",
+            "sourceType": "manufacturer",
+            "sourceLabel": "Garnier Australia Produktseite"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_heat_protection"],
+              "provides_heat_protection": true,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "coarse",
+                  "oil_subtype": "trocken-oel",
+                  "oil_purpose": null,
+                  "ingredient_flags": ["silicones"]
+                }
+              ],
+              "suitable_thicknesses": ["coarse"]
+            },
+            "sourceLabel": "Garnier — Fructis Sleek & Stay Heat-Activated Serum",
+            "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/serum",
+            "sourceText": "Einen Pumpstoß in feuchte Längen und Spitzen geben, nicht ausspülen und anschließend föhnen oder glätten.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "checkedAt": "2026-08-11",
+            "factValue": {
+              "weight": "light",
+              "role_support": ["pre_heat_protection"]
+            },
+            "sourceUrl": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "sourceText": "Hersteller: Heat-Activated Serum auf feuchtes Haar in mittlere Längen und Spitzen geben; Dosierung 1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar.",
+            "sourceType": "manufacturer",
+            "sourceLabel": "Garnier USA Produktseite"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/serum",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: Einen Pumpstoß in feuchte Längen und Spitzen geben, nicht ausspülen und anschließend föhnen oder glätten."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: coarse/trocken-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "6802e9e5267e54d72e6e7b67a35b6b274c6ccd6afb6491ff0730255f66cb2a32"
+    },
+    {
+      "productId": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "categoryKey": "oil",
+      "expectedOldFingerprint": "97a1122a3f22d7e82e4a02ddea5fce4e224080e43b0d4405bc35a2d6715ab274",
+      "expectedCurrentAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Mandelöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "protocols": [],
+        "factEvidence": [],
+        "productOilSpec": null,
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilPurpose": "pre_wash_oiling",
+            "oilSubtype": "natuerliches-oel",
+            "ingredientFlags": []
+          }
+        ]
+      },
+      "intendedAuthority": {
+        "identity": {
+          "name": "benecos BIO Körperöl Mandelöl",
+          "brand": "benecos",
+          "origin": "curated",
+          "isActive": true,
+          "productId": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+          "categoryKey": "oil",
+          "affiliateLink": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+          "lifecycleStatus": "active",
+          "suitableThicknesses": ["fine"],
+          "isChaarlieRecommended": true,
+          "normalizedThicknesses": ["fine"]
+        },
+        "productOilSpec": {
+          "weight": "medium",
+          "roleSupport": ["pre_wash_fibre_treatment"],
+          "providesHeatProtection": false
+        },
+        "productOilEligibility": [
+          {
+            "thickness": "fine",
+            "oilSubtype": "natuerliches-oel",
+            "oilPurpose": "pre_wash_oiling",
+            "ingredientFlags": ["oils"]
+          }
+        ],
+        "protocols": [
+          {
+            "role": "pre_wash_fibre_treatment",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "cadence": null,
+            "applicationStage": "pre_wash",
+            "applicationState": "dry",
+            "placement": "lengths_ends",
+            "contactTimeSeconds": 600,
+            "rinseAction": "shampoo_out",
+            "reapplication": "not_stated",
+            "instructionModifiers": [
+              "apply_to_lengths_and_ends_only",
+              "avoid_scalp_and_roots",
+              "reduce_or_stop_if_residue_or_irritation_occurs"
+            ],
+            "sourceLabel": "Chaarlie oil authority — exact carrier-oil pre-wash protocol (proposed)",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceText": "Vorgeschlagene genaue Operationalisierung: nur Längen und Spitzen, zehn Minuten, danach mit Shampoo auswaschen. Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht.",
+            "guidancePayload": {
+              "schemaVersion": 1,
+              "guidanceKey": "product-oil-ca4ae209-79d2-4f4d-8e44-46e586cec62d-pre-wash",
+              "protocolVersion": 1,
+              "locale": "de",
+              "scope": {
+                "kind": "product",
+                "category": "oil",
+                "productId": "ca4ae209-79d2-4f4d-8e44-46e586cec62d"
+              },
+              "role": "intensive_care",
+              "applicationFamily": "pre_wash_lengths_treatment",
+              "compatibleDayTypes": ["intensive_care_day"],
+              "exactGuidanceRequired": true,
+              "sequence": {
+                "anchor": "pre_wash",
+                "before": ["wet_cleanse"],
+                "after": [],
+                "conflictsWith": []
+              },
+              "requirements": {
+                "requiredCatalogFacts": ["oil.v2.weight", "oil.v2.role_support"],
+                "requiredProtocolFacts": [],
+                "requiredProfileFacts": []
+              },
+              "protocolFacts": {
+                "applicationArea": "lengths_ends",
+                "rinse": "rinse_out",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "not_applicable",
+                "reapplication": "none",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                "cautions": []
+              },
+              "steps": [
+                {
+                  "stepKey": "dose-ca4ae209-79d2-4f4d-8e44-46e586cec62d-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+                },
+                {
+                  "stepKey": "apply-ca4ae209-79d2-4f4d-8e44-46e586cec62d-pre-wash",
+                  "action": "apply_product",
+                  "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+                },
+                {
+                  "stepKey": "wait-ca4ae209-79d2-4f4d-8e44-46e586cec62d-pre-wash",
+                  "action": "wait",
+                  "copyTemplateDe": "Zehn Minuten einwirken lassen."
+                },
+                {
+                  "stepKey": "rinse-ca4ae209-79d2-4f4d-8e44-46e586cec62d-pre-wash",
+                  "action": "rinse",
+                  "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+                }
+              ],
+              "evidence": [
+                {
+                  "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+                  "sourceType": "internal_authority",
+                  "checkedAt": "2026-09-01"
+                }
+              ]
+            }
+          }
+        ],
+        "factEvidence": [
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Cosmondial — benecosBIO Körperöl Mandelöl",
+            "sourceUrl": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-mandel",
+            "sourceText": "INCI: Prunus Amygdalus Dulcis Oil; 100% organic sweet-almond oil.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Haartyp workbook — Oil inclusion matrix",
+            "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+            "sourceText": "Haartyp authorizes fine/natuerliches-oel for this exact product; it does not authorize scalp, growth, treatment, or Heat claims.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "factKey": "oil.authority_facts",
+            "factValue": {
+              "weight": "medium",
+              "role_support": ["pre_wash_fibre_treatment"],
+              "provides_heat_protection": false,
+              "product_oil_eligibility": [
+                {
+                  "thickness": "fine",
+                  "oil_subtype": "natuerliches-oel",
+                  "oil_purpose": "pre_wash_oiling",
+                  "ingredient_flags": ["oils"]
+                }
+              ],
+              "suitable_thicknesses": ["fine"]
+            },
+            "sourceLabel": "Chaarlie Oil authority enrichment proposal",
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+            "sourceText": "Unapproved exact-product proposal with conservative shaft-only guidance, evidence limits, and explicit claim boundaries.",
+            "sourceType": "internal_verified",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-mandel",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-01",
+          "note": "Exact product identity/INCI or finished-product directions: INCI: Prunus Amygdalus Dulcis Oil; 100% organic sweet-almond oil."
+        },
+        {
+          "sourceUrl": "https://docs.google.com/spreadsheets/d/15pR1v1StWCXF1Qj7T1pJgn3GUlZgbp5U/edit?gid=408715675#gid=408715675",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Authoritative placement: fine/natuerliches-oel."
+        },
+        {
+          "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-09-01-oil-authority-enrichment/README.md",
+          "sourceType": "internal_verified",
+          "checkedAt": "2026-09-01",
+          "note": "Proposed conservative shaft-only protocol and evidence-limit record; approval remains pending."
+        }
+      ],
+      "expectedNewFingerprint": "5a2da12bbc1a49ae260bc3bbcd4cbb94f116f753ecfae658a0936091903f29f7"
+    }
+  ],
+  "review": {
+    "state": "approved",
+    "reviewedBy": "nick",
+    "reviewedAt": "2026-09-01T11:30:04.000Z",
+    "reviewedContentFingerprint": "bc2cca3c68ae4eea4dd337fcbbd5f02be5d7ac1d42635a26bd68a74255929b2b"
+  }
+}
