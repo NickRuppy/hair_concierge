@@ -94,18 +94,22 @@
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-22-balea-urea-everyday-protocol.json",
       "sha256": "d0429269974cfa44999c0b7fdc405792a170a63444e067a465a8213c1eea6f83"
+    },
+    {
+      "path": "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-23-nivea-volumen-kraft-conditioner-protocol.json",
+      "sha256": "ff448aafe13b7fc9920b7b6dac668426db5b58fcb09f53f9fe6acff22c9b5edc"
     }
   ],
   "observed_counts": {
-    "rows": 308,
-    "products": 239,
+    "rows": 309,
+    "products": 240,
     "exact_workflows": 4,
     "family_templates": 28,
-    "composable_rows": 308,
+    "composable_rows": 309,
     "blocked_rows": 0,
     "by_category": {
       "bondbuilder": 3,
-      "conditioner": 41,
+      "conditioner": 42,
       "deep_cleansing_shampoo": 6,
       "dry_shampoo": 10,
       "heat_protectant": 7,
@@ -3709,6 +3713,66 @@
             "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
             "sourceType": "retailer",
             "checkedAt": "2026-08-10"
+          }
+        ]
+      }
+    },
+    {
+      "key": "26985fdd-1b41-46e3-9c9a-94b98f92310a:conditioner_rinse_out:standard_rinse_out_conditioning",
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "product_name": "Nivea Volumen & Kraft Conditioner",
+      "source_role": "conditioner_rinse_out",
+      "source_fingerprint": "ac0dfd0af20ddfecf719a54e316b5744a2351e395281fc7d9ca7c6d50c787ccb",
+      "template_keys": [
+        "conditioner.standard-rinse-out.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "ca4eb5ccc6f40c8548fb07b06033cde4690343c843b72e4517bee333fbc35394",
+      "after_visible_step_fingerprint": "30b15ddc2235580c8b18ba2dc46d38e2846cd5496a59a2913c8a7f9e21f7346b",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "26985fdd-1b41-46e3-9c9a-94b98f92310a"
+        },
+        "sourceRole": "conditioner_rinse_out",
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "facts": {
+          "applicationState": "wet_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "rinse_out",
+          "contactTime": {
+            "kind": "range_seconds",
+            "minimumSeconds": 120,
+            "maximumSeconds": 180
+          },
+          "amount": null,
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.drogeriaolmed.pl/produkt/nivea-volumen-kraft-odzywka-do-wlosow-nadajaca-objetosci-200-ml%2C173209.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://wizaz24.pl/nivea-odzywka-do-wlosow-volume-p457891",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://www.mojedrogerie.cz/nivea-kondicioner-volume-200-ml-ean4005900918031.php",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
           }
         ]
       }

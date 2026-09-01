@@ -1,0 +1,139 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-amendments-v1",
+  "batch_id": "S5-23-nivea-volumen-kraft-conditioner-protocol",
+  "category_key": "conditioner",
+  "snapshot_date": "2026-09-01",
+  "baseline": {
+    "path": "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-baseline-2026-08-12.json",
+    "sha256": "db2e7bbef4d5e64afa9adbbfe05acbb1c43fc5624f5baeecfe1ee85ec2fb3886"
+  },
+  "review": {
+    "state": "approved_by_nick",
+    "reviewed_by": "nick"
+  },
+  "items": [
+    {
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "product_name": "Nivea Volumen & Kraft Conditioner",
+      "category_key": "conditioner",
+      "role": "conditioner_rinse_out",
+      "expected_category_facts": {},
+      "expected_disposition": {
+        "disposition": "awaiting_exact_analysis",
+        "reason_code": "insufficient_executable_directions",
+        "reason": "No current exact product-specific rinse-out conditioner directions were found.",
+        "sources": [
+          {
+            "label": "Händler-Produktseite",
+            "url": "https://www.ohfeliz.de/nivea/volumen-kraft-spuelung",
+            "text": "Available exact retailer evidence did not provide product-specific rinse-out directions; generic Nivea conditioner guidance was not used.",
+            "source_type": "retailer",
+            "checked_at": "2026-08-11"
+          }
+        ],
+        "source_batch": "S5-21-product-search-dispositions",
+        "source_fingerprint": "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6",
+        "reviewed_by": "nick"
+      },
+      "sources": [
+        {
+          "label": "Drogeria Olmed Produktseite",
+          "url": "https://www.drogeriaolmed.pl/produkt/nivea-volumen-kraft-odzywka-do-wlosow-nadajaca-objetosci-200-ml%2C173209.html",
+          "text": "Exact EU retailer page for Nivea Volumen & Kraft conditioner 200 ml instructs applying to damp hair, distributing through the lengths while avoiding the roots, leaving on for 2–3 minutes, and rinsing thoroughly with lukewarm water.",
+          "source_type": "retailer",
+          "checked_at": "2026-09-01"
+        },
+        {
+          "label": "Wizaż24 Produktseite",
+          "url": "https://wizaz24.pl/nivea-odzywka-do-wlosow-volume-p457891",
+          "text": "A second exact EU retailer page for Nivea Volume & Kraft conditioner 200 ml independently gives the same damp-hair, avoid-roots, 2–3-minute and thorough lukewarm-rinse directions.",
+          "source_type": "retailer",
+          "checked_at": "2026-09-01"
+        },
+        {
+          "label": "MojeDrogerie GTIN-Produktseite",
+          "url": "https://www.mojedrogerie.cz/nivea-kondicioner-volume-200-ml-ean4005900918031.php",
+          "text": "Exact retailer page ties EAN 4005900918031 to the Nivea Volume conditioner 200 ml package. It is retained as package-identity evidence only and is not used as evidence for the application directions.",
+          "source_type": "retailer",
+          "checked_at": "2026-09-01"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-26985fdd-1b41-46e3-9c9a-94b98f92310a",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "26985fdd-1b41-46e3-9c9a-94b98f92310a"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": ["wash_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "sharedTemplateContactTime": "include",
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-conditioner",
+            "action": "section",
+            "copyTemplateDe": "Nach dem Shampoo im feuchten Haar anwenden."
+          },
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "In Längen und Spitzen verteilen; Ansatz und Kopfhaut aussparen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich mit lauwarmem Wasser ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.drogeriaolmed.pl/produkt/nivea-volumen-kraft-odzywka-do-wlosow-nadajaca-objetosci-200-ml%2C173209.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://wizaz24.pl/nivea-odzywka-do-wlosow-volume-p457891",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://www.mojedrogerie.cz/nivea-kondicioner-volume-200-ml-ean4005900918031.php",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    }
+  ]
+}

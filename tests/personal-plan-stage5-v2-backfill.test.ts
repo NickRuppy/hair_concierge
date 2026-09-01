@@ -34,15 +34,15 @@ const artifact = JSON.parse(
 
 test("Stage 5 V2 backfill exhaustively covers the reviewed production-shaped snapshot", () => {
   assert.deepEqual(artifact.observed_counts, {
-    rows: 308,
-    products: 239,
+    rows: 309,
+    products: 240,
     exact_workflows: 4,
     family_templates: 28,
-    composable_rows: 308,
+    composable_rows: 309,
     blocked_rows: 0,
     by_category: {
       bondbuilder: 3,
-      conditioner: 41,
+      conditioner: 42,
       deep_cleansing_shampoo: 6,
       dry_shampoo: 10,
       heat_protectant: 7,
@@ -54,7 +54,7 @@ test("Stage 5 V2 backfill exhaustively covers the reviewed production-shaped sna
     },
   })
   assert.equal(new Set(artifact.items.map(({ key }) => key)).size, artifact.items.length)
-  assert.equal(new Set(artifact.items.map(({ product_id }) => product_id)).size, 239)
+  assert.equal(new Set(artifact.items.map(({ product_id }) => product_id)).size, 240)
   assert.equal(artifact.family_templates.length, SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.size)
 })
 
@@ -89,7 +89,7 @@ test("all OGX shampoos use the canonical shampoo template with no exact steps", 
   }
 })
 
-test("only the two reviewed conditioners retain a typed wait", () => {
+test("only the three reviewed conditioners retain a typed wait", () => {
   const timed = artifact.items
     .filter((item) => item.source_role === "conditioner_rinse_out")
     .flatMap((item) => {
@@ -98,7 +98,11 @@ test("only the two reviewed conditioners retain a typed wait", () => {
     })
     .sort()
 
-  assert.deepEqual(timed, ["Elvital Fiber Booster Conditioner", "Nivea Power Repair Conditioner"])
+  assert.deepEqual(timed, [
+    "Elvital Fiber Booster Conditioner",
+    "Nivea Power Repair Conditioner",
+    "Nivea Volumen & Kraft Conditioner",
+  ])
 })
 
 test("targeted shampoo timing is rendered once instead of repeated as a generic caution", () => {
