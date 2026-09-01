@@ -15,6 +15,10 @@ const PRODUCT_ID = "b000d235-1fc6-434c-9ba1-f1207d36cded"
 const BATCH_ID = "S5-22-balea-urea-everyday-protocol"
 const AMENDMENT_PATH =
   "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-22-balea-urea-everyday-protocol.json"
+const NIVEA_PRODUCT_ID = "26985fdd-1b41-46e3-9c9a-94b98f92310a"
+const NIVEA_BATCH_ID = "S5-23-nivea-volumen-kraft-conditioner-protocol"
+const NIVEA_AMENDMENT_PATH =
+  "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-23-nivea-volumen-kraft-conditioner-protocol.json"
 const BASELINE_PATH =
   "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-baseline-2026-08-12.json"
 const ARTIFACT_PATH =
@@ -27,6 +31,10 @@ const baselineText = readFileSync(BASELINE_PATH, "utf8")
 const built = buildStage5ProtocolAmendmentManifest(amendmentInput, baselineText)
 const item = built.manifest.items[0]!
 const pointer = built.v2Inserts[0]!.guidance_payload_v2
+const niveaInput = JSON.parse(readFileSync(NIVEA_AMENDMENT_PATH, "utf8"))
+const niveaBuilt = buildStage5ProtocolAmendmentManifest(niveaInput, baselineText)
+const niveaItem = niveaBuilt.manifest.items[0]!
+const niveaPointer = niveaBuilt.v2Inserts[0]!.guidance_payload_v2
 const CONDITIONER_ID = "00000000-0000-4000-8000-000000000023"
 
 const conditionerInput = {
@@ -290,16 +298,94 @@ test("the Stage 5 protocol loader rejects an unknown batch without amendment fal
   )
 })
 
+test("Nivea Volumen & Kraft amendment adds exact rinse-out conditioner guidance", async () => {
+  assert.equal(niveaBuilt.manifest.batch_id, NIVEA_BATCH_ID)
+  assert.equal(niveaBuilt.manifest.category_key, "conditioner")
+  assert.equal(niveaBuilt.protocolApplyBatch.batch.protocols.length, 1)
+  assert.equal(niveaBuilt.protocolApplyBatch.batch.protocols[0]!.category_key, "conditioner")
+  assert.equal(niveaBuilt.protocolApplyBatch.batch.protocols[0]!.role, "conditioner_rinse_out")
+  assert.equal(niveaBuilt.protocolApplyBatch.batch.protocols[0]!.cadence, null)
+  assert.equal(niveaPointer.applicationFamily, "standard_rinse_out_conditioning")
+  assert.deepEqual(niveaPointer.facts, {
+    applicationState: "wet_hair",
+    applicationArea: "hair_lengths_ends",
+    rinse: "rinse_out",
+    contactTime: {
+      kind: "range_seconds",
+      minimumSeconds: 120,
+      maximumSeconds: 180,
+    },
+    amount: null,
+    heat: null,
+    conditionerPolicy: "not_applicable",
+  })
+  assert.equal(niveaPointer.runtimeBlockerCode, null)
+
+  const loaded = await loadStage5ProtocolBatch(NIVEA_BATCH_ID)
+  assert.equal(loaded.fingerprint, niveaBuilt.protocolApplyBatch.fingerprint)
+  assert.deepEqual(loaded.batch, niveaBuilt.protocolApplyBatch.batch)
+
+  const allCopy = niveaItem.guidance_payload.steps
+    .map(({ copyTemplateDe }) => copyTemplateDe)
+    .join(" ")
+  assert.match(allCopy, /feuchten Haar/i)
+  assert.match(allCopy, /Längen und Spitzen/i)
+  assert.match(allCopy, /Ansatz und Kopfhaut aussparen/i)
+  assert.match(allCopy, /2–3 Minuten/i)
+  assert.match(allCopy, /lauwarmem Wasser/i)
+  assert.doesNotMatch(allCopy, /täglich|jeden tag|wiederholen/i)
+
+  const ready = await preflightStage5DispositionResolution(niveaBuilt, {
+    listProducts: async () => [
+      {
+        id: NIVEA_PRODUCT_ID,
+        category_key: "conditioner",
+        origin: "curated",
+        is_active: true,
+        lifecycle_status: "active",
+        shampoo_buckets: [],
+      },
+    ],
+    listProtocols: async () => [
+      {
+        product_id: NIVEA_PRODUCT_ID,
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        application_family: "standard_rinse_out_conditioning",
+        source_url: niveaItem.sources[0]!.url,
+        guidance_payload: niveaItem.guidance_payload,
+        guidance_payload_v2: niveaPointer,
+      },
+    ],
+    listDispositions: async () => [
+      { product_id: NIVEA_PRODUCT_ID, ...niveaItem.expected_disposition },
+    ],
+    listAppliedItems: async () => [],
+  })
+  assert.equal(ready.ok, true)
+  assert.equal(ready.releaseCount, 1)
+  assert.deepEqual(ready.blockers, [])
+})
+
 test("the generated V2 artifact includes Balea without changing the frozen V1 research row", () => {
   const artifact = JSON.parse(readFileSync(ARTIFACT_PATH, "utf8"))
   const baleaItems = artifact.items.filter(
     (candidate: { product_id: string }) => candidate.product_id === PRODUCT_ID,
   )
-  assert.equal(artifact.observed_counts.rows, 308)
+  const niveaItems = artifact.items.filter(
+    (candidate: { product_id: string }) => candidate.product_id === NIVEA_PRODUCT_ID,
+  )
+  assert.equal(artifact.observed_counts.rows, 309)
   assert.equal(baleaItems.length, 1)
   assert.equal(baleaItems[0].source_role, "shampoo_everyday")
   assert.deepEqual(baleaItems[0].guidance_payload_v2, pointer)
+  assert.equal(niveaItems.length, 1)
+  assert.equal(niveaItems[0].source_role, "conditioner_rinse_out")
+  assert.deepEqual(niveaItems[0].guidance_payload_v2, niveaPointer)
   assert.ok(artifact.source_files.some(({ path }: { path: string }) => path === AMENDMENT_PATH))
+  assert.ok(
+    artifact.source_files.some(({ path }: { path: string }) => path === NIVEA_AMENDMENT_PATH),
+  )
 
   const frozenResearch = readFileSync(
     "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-11-shampoo-exact-02.json",
@@ -310,6 +396,16 @@ test("the generated V2 artifact includes Balea without changing the frozen V1 re
   )
   assert.equal(frozenRow.research_status, "blocked_missing_direction")
   assert.equal(frozenRow.guidance_payload, null)
+
+  const frozenConditionerResearch = readFileSync(
+    "data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-12-conditioner-exact-01.json",
+    "utf8",
+  )
+  const frozenConditionerRow = JSON.parse(frozenConditionerResearch).products.find(
+    (candidate: { product_id: string }) => candidate.product_id === NIVEA_PRODUCT_ID,
+  )
+  assert.equal(frozenConditionerRow.research_status, "blocked_missing_direction")
+  assert.equal(frozenConditionerRow.guidance_payload, null)
 })
 
 test("disposition resolution requires the exact applicable and complete V1/V2 protocol", async () => {
