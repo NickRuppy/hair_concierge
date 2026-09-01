@@ -131,13 +131,23 @@ test("scan resolve: rate limited returns 429 with Retry-After", async () => {
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
-test("scan resolve: rate limiter unavailable fails closed with 503", async () => {
+test("scan resolve: rate limiter unavailable fails closed with 503, without a Sentry capture", async () => {
+  const captured: unknown[] = []
   const handler = createScanResolveRouteHandler(
-    baseDeps({ checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }) }),
+    baseDeps({
+      checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }),
+      captureScanException: (_error, details) => {
+        captured.push(details)
+      },
+    }),
   )
   const response = await handler(request({ productId }))
   assert.equal(response.status, 503)
   assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  // The rate limiter's fail-closed 503 is an upstream outage already logged inside
+  // checkRateLimit itself — not an unexpected route-level throw, so it must not also
+  // page through Sentry.
+  assert.deepEqual(captured, [])
 })
 
 test("scan resolve: body with both identifier and productId is rejected", async () => {
@@ -499,17 +509,24 @@ test("scan resolve: a category whose facts do not vary by role loads exactly onc
   assert.equal(received!.perRoleFacts, undefined)
 })
 
-test("scan resolve: an unexpected lib error maps to 503", async () => {
+test("scan resolve: an unexpected lib error maps to 503 and captures to Sentry", async () => {
+  const thrown = new Error("scan_profile_context_unavailable")
+  const captured: unknown[] = []
   const handler = createScanResolveRouteHandler(
     baseDeps({
       loadScanEvaluationContext: async () => {
-        throw new Error("scan_profile_context_unavailable")
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
       },
     }),
   )
   const response = await handler(request({ productId }))
   assert.equal(response.status, 503)
   assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.deepEqual(captured, [{ route: "resolve", status: 503, reason: "resolve_failed", userId }])
 })
 
 function collectEvents() {

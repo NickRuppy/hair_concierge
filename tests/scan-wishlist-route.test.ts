@@ -40,13 +40,20 @@ test("scan wishlist GET: rate limited returns 429 with Retry-After, before any l
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
-test("scan wishlist GET: rate limiter unavailable fails closed with 503", async () => {
+test("scan wishlist GET: rate limiter unavailable fails closed with 503, without a Sentry capture", async () => {
+  const captured: unknown[] = []
   const handler = createScanWishlistRouteHandler(
-    baseDeps({ checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }) }),
+    baseDeps({
+      checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }),
+      captureScanException: (_error, details) => {
+        captured.push(details)
+      },
+    }),
   )
   const response = await handler()
   assert.equal(response.status, 503)
   assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.deepEqual(captured, [])
 })
 
 test("scan wishlist GET: returns the injected entries", async () => {
@@ -64,16 +71,25 @@ test("scan wishlist GET: returns the injected entries", async () => {
   assert.deepEqual(await response.json(), { entries: [entry] })
 })
 
-test("scan wishlist GET: an unexpected error maps to 503", async () => {
+test("scan wishlist GET: an unexpected error maps to 503 and captures to Sentry", async () => {
+  const thrown = new Error("boom")
+  const captured: unknown[] = []
   const handler = createScanWishlistRouteHandler(
     baseDeps({
       listWishlist: async () => {
-        throw new Error("boom")
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
       },
     }),
   )
   const response = await handler()
   assert.equal(response.status, 503)
+  assert.deepEqual(captured, [
+    { route: "wishlist", status: 503, reason: "wishlist_list_failed", userId },
+  ])
 })
 
 /** `listScanWishlist` itself, against a stub client — join + commerce presentation. */

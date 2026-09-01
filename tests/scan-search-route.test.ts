@@ -37,6 +37,21 @@ test("scan search: rate limited returns 429", async () => {
   assert.equal(response.status, 429)
 })
 
+test("scan search: rate limiter unavailable fails closed with 503, without a Sentry capture", async () => {
+  const captured: unknown[] = []
+  const handler = createScanSearchRouteHandler(
+    baseDeps({
+      checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }),
+      captureScanException: (_error, details) => {
+        captured.push(details)
+      },
+    }),
+  )
+  const response = await handler(request("?q=shampoo"))
+  assert.equal(response.status, 503)
+  assert.deepEqual(captured, [])
+})
+
 test("scan search: a too-short query is empty results, not a 400", async () => {
   const handler = createScanSearchRouteHandler(
     baseDeps({
@@ -72,16 +87,23 @@ test("scan search: returns the injected search results", async () => {
   assert.deepEqual(await response.json(), { results: [entry] })
 })
 
-test("scan search: an unexpected lookup error maps to 503", async () => {
+test("scan search: an unexpected lookup error maps to 503 and captures to Sentry", async () => {
+  const thrown = new Error("scan_search_catalog_unavailable")
+  const captured: unknown[] = []
   const handler = createScanSearchRouteHandler(
     baseDeps({
       search: async () => {
-        throw new Error("scan_search_catalog_unavailable")
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
       },
     }),
   )
   const response = await handler(request("?q=shampoo"))
   assert.equal(response.status, 503)
+  assert.deepEqual(captured, [{ route: "search", status: 503, reason: "search_failed", userId }])
 })
 
 /**
