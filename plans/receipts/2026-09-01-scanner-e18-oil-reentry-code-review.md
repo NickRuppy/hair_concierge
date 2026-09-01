@@ -17,4 +17,3 @@ The separate Balea Pflegeöl Natural Beauty row remains intentionally untouched 
 ## Residual gate
 
 Do not apply either reversal batch until the oil V2 authority migration is live and fresh production preflight reports no publication blocker for every selected product. The transient Claude report remains outside the repository.
-

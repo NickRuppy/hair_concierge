@@ -430,4 +430,3 @@ REVOKE ALL ON FUNCTION public.apply_scanner_existing_identifier_backfill_v1(
 GRANT EXECUTE ON FUNCTION public.apply_scanner_existing_identifier_backfill_v1(
   text, text, text, text, boolean
 ) TO service_role;
-

@@ -23,4 +23,3 @@ The fingerprint covers the sorted path-and-content-hash manifest for the nine fu
 ## Release gate
 
 This delta is ready to commit, but not ready to apply in production yet. Live readback showed the 13 products still lack V2 oil protocol pointers. The reversal therefore remains correctly fail-closed until PR #496's oil-authority reconciliation is merged and applied, followed by a fresh live preflight with zero blockers.
-
