@@ -149,13 +149,35 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
 
     const modalActive = visible && !closing
 
-    React.useEffect(() => {
+    const requestDismissal = React.useCallback(
+      (origin: "x" | "backdrop" | "escape" | "handle_drag") => {
+        if (onDismissRequest) onDismissRequest(origin)
+        else onOpenChange(false)
+      },
+      [onDismissRequest, onOpenChange],
+    )
+    // Latest-refs so callback/state changes never re-register (and re-order) the layer.
+    const requestDismissalRef = React.useRef(requestDismissal)
+    const modalActiveRef = React.useRef(modalActive)
+    React.useLayoutEffect(() => {
+      requestDismissalRef.current = requestDismissal
+      modalActiveRef.current = modalActive
+    })
+
+    // Layout effect, not passive: the panel carries role="dialog" from its first
+    // visible commit, so its layer — including the manager-owned Escape routing —
+    // must be live before the browser can deliver any input against that dialog.
+    React.useLayoutEffect(() => {
       if (!visible || !rootElement) return
 
       const layer = registerModalLayer({
         root: rootElement,
         priority: modalPriority,
         onTopLayerChange: setIsTopLayer,
+        onEscape: () => {
+          // Ignore Escape while the sheet is already animating closed.
+          if (modalActiveRef.current) requestDismissalRef.current("escape")
+        },
       })
       setIsTopLayer(layer.isTopLayer())
 
@@ -247,26 +269,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       return () => document.removeEventListener("keydown", handleKeyDown)
     }, [modalActive, isTopLayer])
 
-    const requestDismissal = React.useCallback(
-      (origin: "x" | "backdrop" | "escape" | "handle_drag") => {
-        if (onDismissRequest) onDismissRequest(origin)
-        else onOpenChange(false)
-      },
-      [onDismissRequest, onOpenChange],
-    )
-
-    // Escape key
-    React.useEffect(() => {
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key !== "Escape" || !isTopLayer) return
-        e.preventDefault()
-        requestDismissal("escape")
-      }
-      if (modalActive) {
-        document.addEventListener("keydown", handleEscape)
-      }
-      return () => document.removeEventListener("keydown", handleEscape)
-    }, [modalActive, isTopLayer, requestDismissal])
+    // Escape is routed by the modal-layer manager (see onEscape at registration).
 
     // Drag handlers
     const handlePointerDown = React.useCallback(

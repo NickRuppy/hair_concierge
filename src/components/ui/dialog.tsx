@@ -133,13 +133,23 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
       setMounted(true)
     }, [])
 
-    React.useEffect(() => {
+    // Latest-ref so callback identity changes never re-register (and re-order) the layer.
+    const onOpenChangeRef = React.useRef(onOpenChange)
+    React.useLayoutEffect(() => {
+      onOpenChangeRef.current = onOpenChange
+    })
+
+    // Layout effect, not passive: the dialog is visible from its first commit, so
+    // its layer — including the manager-owned Escape routing — must be live before
+    // the browser can deliver any input against it.
+    React.useLayoutEffect(() => {
       if (!open || !rootElement) return
 
       const layer = registerModalLayer({
         root: rootElement,
         priority: modalPriority,
         onTopLayerChange: setIsTopLayer,
+        onEscape: () => onOpenChangeRef.current(false),
       })
       setIsTopLayer(layer.isTopLayer())
 
@@ -207,17 +217,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
       return () => document.removeEventListener("keydown", handleTab)
     }, [open, isTopLayer])
 
-    React.useEffect(() => {
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key !== "Escape" || !isTopLayer) return
-        e.preventDefault()
-        onOpenChange(false)
-      }
-      if (open) {
-        document.addEventListener("keydown", handleEscape)
-      }
-      return () => document.removeEventListener("keydown", handleEscape)
-    }, [open, isTopLayer, onOpenChange])
+    // Escape is routed by the modal-layer manager (see onEscape at registration).
 
     if (!mounted || !open) return null
 
