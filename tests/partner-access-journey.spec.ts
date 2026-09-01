@@ -27,7 +27,7 @@ async function seedFinalQuestionDraft(page: import("@playwright/test").Page) {
   }, completeAnswers)
 }
 
-test("@ci creator invitation stays personal and lets the recipient correct the email", async ({
+test("creator invitation stays personal and lets the recipient correct the email", async ({
   page,
 }) => {
   await page.goto("/labs/partner-access", { waitUntil: "domcontentloaded" })
@@ -51,7 +51,7 @@ test("@ci creator invitation stays personal and lets the recipient correct the e
   await expect(page.getByRole("button", { name: "Los geht’s" })).toBeVisible()
 })
 
-test("@ci creator invite and activation card fit a narrow phone viewport", async ({ page }) => {
+test("creator invite and activation card fit a narrow phone viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
 
   await page.goto("/labs/partner-access", { waitUntil: "domcontentloaded" })
