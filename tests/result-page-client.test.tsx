@@ -61,8 +61,8 @@ test("an entitled existing account still sees its pending partner activation", (
     />,
   )
 
-  assert.match(html, /Dein Chaarlie Zugang ist bereit\./i)
-  assert.match(html, /Zugang aktivieren/i)
+  assert.match(html, /Dein Zugang ist bereit\./i)
+  assert.match(html, /Meinen Plan öffnen/i)
   assert.doesNotMatch(html, /href="\/onboarding\?lead=/)
 })
 

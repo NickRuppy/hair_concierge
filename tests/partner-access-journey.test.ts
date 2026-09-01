@@ -25,6 +25,7 @@ function dependencies(overrides: Record<string, unknown> = {}) {
     decodeIntent: () => intent,
     getUser: async () => ({ id: "creator-user", email: "lea@example.test" }),
     loadInvitation: async () => ({
+      display_name: "Lea Sommer",
       normalized_email: "lea@example.test",
       token_version: 2,
       claimed_user_id: "creator-user",
@@ -53,6 +54,7 @@ test("stale partner intent never blocks an ordinary quiz journey", async () => {
       { cookies: cookie(), funnelContext },
       dependencies({
         loadInvitation: async () => ({
+          display_name: "Andere Person",
           normalized_email: "other@example.test",
           token_version: 2,
           claimed_user_id: "other-user",
@@ -73,6 +75,7 @@ test("only the exact claimed creator journey is authorized or revoked", async ()
       kind: "authorized",
       invitationId: intent.invitationId,
       userId: "creator-user",
+      name: "Lea Sommer",
       email: "lea@example.test",
       funnelSessionId: funnelContext.sessionId,
     },
@@ -82,6 +85,7 @@ test("only the exact claimed creator journey is authorized or revoked", async ()
       { cookies: cookie(), funnelContext },
       dependencies({
         loadInvitation: async () => ({
+          display_name: "Lea Sommer",
           normalized_email: "lea@example.test",
           token_version: 2,
           claimed_user_id: "creator-user",

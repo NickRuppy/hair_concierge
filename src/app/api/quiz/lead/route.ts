@@ -200,7 +200,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
             userId: partner.userId,
             funnelSessionId: partner.funnelSessionId,
             email: partner.email,
-            name: parsed.name,
+            name: partner.name,
             marketingConsent: parsed.marketingConsent,
             quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers) as Record<string, unknown>,
           })

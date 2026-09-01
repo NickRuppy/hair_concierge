@@ -19,6 +19,13 @@ import {
   suggestEmailCorrection,
 } from "@/lib/email-deliverability-shared"
 import { useQuizBrowserBack } from "./quiz-browser-history"
+import { useAuth } from "@/providers/auth-provider"
+import {
+  getPartnerQuizContextLookupKey,
+  hasPartnerAccessQuizHint,
+  parsePartnerQuizContextPayload,
+  PARTNER_QUIZ_CONTEXT_ENDPOINT,
+} from "@/lib/partner-access/quiz-context"
 import {
   isMigrationQuizRecoverySearch,
   resolveLeadCaptureRecoveryNextHref,
@@ -30,9 +37,13 @@ function isValidEmail(email: string) {
 }
 
 export function QuizLeadCapture() {
+  const { user, loading: authLoading } = useAuth()
   const {
     leadCaptureSubStep,
+    leadCaptureMode,
     setLeadCaptureSubStep,
+    setPartnerLeadIdentity,
+    setRegularLeadCapture,
     lead,
     setLeadField,
     answers,
@@ -44,8 +55,57 @@ export function QuizLeadCapture() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
+  const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
+  const [contextAttempt, setContextAttempt] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
   const liveSuggestion = suggestEmailCorrection(lead.email)
+  const contextLookupKey = getPartnerQuizContextLookupKey({
+    authLoading,
+    hasMetadataHint: hasPartnerAccessQuizHint(user),
+    search: typeof window === "undefined" ? "" : window.location.search,
+    userId: user?.id ?? null,
+  })
+
+  useEffect(() => {
+    if (contextLookupKey === "regular") {
+      setRegularLeadCapture()
+      setContextStatus("ready")
+      return
+    }
+
+    let active = true
+    setContextStatus("checking")
+    void fetch(PARTNER_QUIZ_CONTEXT_ENDPOINT, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      credentials: "same-origin",
+    })
+      .then(async (response) => {
+        if (!response.ok) return { status: "unavailable" } as const
+        return parsePartnerQuizContextPayload(await response.json().catch(() => null))
+      })
+      .then((payload) => {
+        if (!active) return
+        if (payload.status === "creator") {
+          setPartnerLeadIdentity({ name: payload.name, email: payload.email })
+          setContextStatus("ready")
+          return
+        }
+        if (payload.status === "regular") {
+          setRegularLeadCapture()
+          setContextStatus("ready")
+          return
+        }
+        setContextStatus("unavailable")
+      })
+      .catch(() => {
+        if (active) setContextStatus("unavailable")
+      })
+
+    return () => {
+      active = false
+    }
+  }, [contextAttempt, contextLookupKey, setPartnerLeadIdentity, setRegularLeadCapture])
 
   useEffect(() => {
     if (leadCaptureSubStep !== "email") return
@@ -89,6 +149,10 @@ export function QuizLeadCapture() {
 
   const handleBack = useCallback(() => {
     if (leadCaptureSubStep === "consent") {
+      if (leadCaptureMode === "partner") {
+        goBack()
+        return
+      }
       setLeadCaptureSubStep("email")
     } else if (leadCaptureSubStep === "email") {
       setError("")
@@ -97,7 +161,7 @@ export function QuizLeadCapture() {
     } else if (leadCaptureSubStep === "name") {
       goBack()
     }
-  }, [goBack, leadCaptureSubStep, setLeadCaptureSubStep])
+  }, [goBack, leadCaptureMode, leadCaptureSubStep, setLeadCaptureSubStep])
   const requestBack = useQuizBrowserBack(handleBack)
 
   const handleConsent = async (accepted: boolean) => {
@@ -142,8 +206,12 @@ export function QuizLeadCapture() {
             detail.code === "invited_email_mismatch"
           ) {
             setServerSuggestion(null)
-            setError("Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.")
-            requestBack()
+            setError(
+              leadCaptureMode === "partner"
+                ? "Dein persönlicher Zugang konnte gerade nicht bestätigt werden."
+                : "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
+            )
+            if (leadCaptureMode !== "partner") requestBack()
             window.scrollTo(0, 0)
             return
           }
@@ -178,10 +246,48 @@ export function QuizLeadCapture() {
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
-      requestBack()
+      if (leadCaptureMode !== "partner") requestBack()
     } finally {
       setSaving(false)
     }
+  }
+
+  if (contextStatus !== "ready") {
+    return (
+      <div className="flex flex-col">
+        <div className="mb-4 flex items-center gap-3">
+          <button
+            aria-label="Zurück"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+            onClick={requestBack}
+            type="button"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="flex-1">
+            <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
+          </div>
+        </div>
+        {contextStatus === "checking" ? (
+          <p className="text-center text-sm text-muted-foreground" role="status">
+            Dein Zugang wird geladen …
+          </p>
+        ) : (
+          <div className="rounded-2xl border border-border bg-background p-5 text-center shadow-sm">
+            <p className="text-base text-muted-foreground">
+              Deine Angaben konnten gerade nicht geladen werden.
+            </p>
+            <Button
+              className="mt-4"
+              onClick={() => setContextAttempt((attempt) => attempt + 1)}
+              type="button"
+            >
+              Erneut versuchen
+            </Button>
+          </div>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -310,6 +416,14 @@ export function QuizLeadCapture() {
       )}
 
       {/* Consent inline card */}
+      {leadCaptureMode === "partner" && error ? (
+        <p
+          className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
+          role="alert"
+        >
+          {error}
+        </p>
+      ) : null}
       <QuizConsentSheet
         open={leadCaptureSubStep === "consent"}
         saving={saving}
