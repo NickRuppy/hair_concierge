@@ -13,6 +13,7 @@ import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "@/lib/personal-plan/products/authority/contracts"
+import { Stage3BootstrapContractError } from "@/lib/personal-plan/products/bootstrap-response"
 import {
   noOpStage3Analytics,
   type Stage3AnalyticsPort,
@@ -122,6 +123,16 @@ type FlowPhase =
   | "need_revision_review"
   | "decisions"
   | "handoff"
+
+export function normalizeCanonicalStage3LoadError(error: unknown): unknown {
+  if (
+    error instanceof Stage3BootstrapContractError &&
+    (error.violation === "plan_mismatch" || error.violation === "refined_version_mismatch")
+  ) {
+    return new Stage3ProductsGatewayError("stale_refined_source")
+  }
+  return error
+}
 
 function flowPhaseForDraft(draft: Stage3ProductDraft): FlowPhase {
   if (draft.pass === "need_revision_review") return "need_revision_review"
@@ -2289,14 +2300,19 @@ export function Stage3ProductsFlow({
   }
 
   async function loadCanonicalStage3Draft(sourceDraft: Stage3ProductDraft) {
-    const response = (await gateway.loadOrCreate({
-      draftId: sourceDraft.draftId,
-      userId: sourceDraft.userId,
-      personalPlanId,
-      refinedVersionId,
-      requirements,
-      authoritySnapshot: resolvedEntryContext?.authoritySnapshot,
-    })) as Stage3AuthorityDraftResponse
+    let response: Stage3AuthorityDraftResponse
+    try {
+      response = (await gateway.loadOrCreate({
+        draftId: sourceDraft.draftId,
+        userId: sourceDraft.userId,
+        personalPlanId,
+        refinedVersionId,
+        requirements,
+        authoritySnapshot: resolvedEntryContext?.authoritySnapshot,
+      })) as Stage3AuthorityDraftResponse
+    } catch (error) {
+      throw normalizeCanonicalStage3LoadError(error)
+    }
     if (
       response.draft.personalPlanId !== personalPlanId ||
       response.draft.refinedVersionId !== refinedVersionId

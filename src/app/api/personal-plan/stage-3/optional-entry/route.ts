@@ -9,6 +9,7 @@ import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journe
 import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
 import type { Stage3DraftResponse } from "@/lib/personal-plan/products/gateway"
 import { openSupabaseStage3OptionalInventory } from "@/lib/personal-plan/products/stage3-persistence-supabase"
+import { composeStage3BootstrapResponse } from "@/lib/personal-plan/products/stage3-bootstrap-response-server"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import {
   checkRateLimit,
@@ -114,7 +115,9 @@ export function createStage3OptionalEntryRouteHandler(deps: Stage3OptionalEntryR
         refinedVersionId: parsed.data.refinedVersionId,
       })
       phases.operation = Date.now() - phaseStarted
-      return response(result, 200, { "Server-Timing": serverTiming(phases) })
+      return response(await composeStage3BootstrapResponse({ loaded: result }), 200, {
+        "Server-Timing": serverTiming(phases),
+      })
     } catch (error) {
       if (error instanceof Stage3AuthoritySnapshotError) {
         return response({ error: error.code }, 409, { "Server-Timing": serverTiming(phases) })

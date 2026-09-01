@@ -22,6 +22,7 @@ import {
   RefinementFlow,
   getCompletedHandoffForLoadedSession,
   getBridgeBackQuestionId,
+  stage3HandoffFailure,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
 import {
@@ -40,6 +41,8 @@ import {
   type Stage2TriggerContext,
 } from "../src/lib/personal-plan/refinement/types"
 import { NIGHT_PROTECTIONS } from "../src/lib/vocabulary/onboarding-care"
+import { Stage3PreparationError } from "../src/lib/personal-plan/products/bootstrap-recovery"
+import { Stage3ProductsGatewayError } from "../src/lib/personal-plan/products/gateway"
 
 const baseTriggerContext: Stage2TriggerContext = {
   relevantCategories: ["shampoo", "mask", "heat_protectant"],
@@ -50,6 +53,21 @@ const baseTriggerContext: Stage2TriggerContext = {
 function countOccurrences(source: string, needle: string): number {
   return source.split(needle).length - 1
 }
+
+test("Stage 2 handoff failures keep recovery semantics instead of collapsing to retry", () => {
+  assert.deepEqual(stage3HandoffFailure(new Stage3PreparationError("contract_violation", true)), {
+    kind: "contract_violation",
+    diagnosticQueued: true,
+  })
+  assert.deepEqual(
+    stage3HandoffFailure(new Stage3ProductsGatewayError("stale_authority_snapshot")),
+    { kind: "checkpoint_changed", diagnosticQueued: false },
+  )
+  assert.deepEqual(stage3HandoffFailure(new Error("network")), {
+    kind: "transient",
+    diagnosticQueued: false,
+  })
+})
 
 test("Stage 2 ordinary answer saves stay in the question flow without a full-screen interstitial", async () => {
   const flowSource = await readFile(

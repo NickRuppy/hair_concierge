@@ -18,6 +18,7 @@ import {
   Stage3CategoryFinalizing,
   Stage3NeedRevisionCheckpoint,
   Stage3ProductsFlow,
+  normalizeCanonicalStage3LoadError,
   type Stage3RoutineHandoff,
   updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
@@ -33,6 +34,7 @@ import { customerIoDestination } from "../src/lib/analytics/destinations/custome
 import { metaDestination } from "../src/lib/analytics/destinations/meta"
 import { postHogDestination } from "../src/lib/analytics/destinations/posthog"
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+import { Stage3BootstrapContractError } from "../src/lib/personal-plan/products/bootstrap-response"
 import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
@@ -76,6 +78,17 @@ import {
 type ClientStateHarness = {
   render: () => Promise<ReactElement | null>
 }
+
+test("canonical mid-flow reloads preserve stale-source recovery after transport parsing", () => {
+  const identityError = normalizeCanonicalStage3LoadError(
+    new Stage3BootstrapContractError("refined_version_mismatch"),
+  )
+  assert.ok(identityError instanceof Stage3ProductsGatewayError)
+  assert.equal(identityError.code, "stale_refined_source")
+
+  const envelopeError = new Stage3BootstrapContractError("missing_authority_evaluations")
+  assert.equal(normalizeCanonicalStage3LoadError(envelopeError), envelopeError)
+})
 
 function deferred<T>() {
   let resolve!: (value: T) => void

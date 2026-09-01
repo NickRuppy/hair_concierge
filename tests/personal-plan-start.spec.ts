@@ -552,6 +552,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
           status: "active",
           requirements: preparedStage3Entry.orderedCategories,
           authorityEvaluations: [],
+          fitComparisons: [],
           draft: {
             schemaVersion: 1,
             status: "active",
@@ -599,6 +600,46 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       page.getByText(preparedStage3Entry.orderedCategories[0]!.needSummary),
     ).toBeVisible()
   })
+})
+
+test("Stage 3 preparation recovery keeps each mobile action truthful", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  for (const scenario of [
+    {
+      kind: "checkpoint_changed",
+      heading: "Dein Feinschliff wurde aktualisiert.",
+      recover: "Aktuellen Stand laden",
+    },
+    {
+      kind: "transient",
+      heading: "Die Produktauswahl ist gerade nicht verfügbar.",
+      recover: "Erneut versuchen",
+    },
+  ]) {
+    await page.goto(`/labs/personal-plan-stage-3-recovery?scenario=${scenario.kind}`)
+    await expect(page.getByRole("heading", { name: scenario.heading })).toBeVisible()
+    await page.getByRole("button", { name: scenario.recover }).click()
+    await expect(page.locator("[data-stage3-recovery-scenario]")).toHaveAttribute(
+      "data-last-action",
+      "recover",
+    )
+    await expect(page.getByRole("button", { name: "Zur Routine" })).toBeVisible()
+  }
+
+  await page.goto("/labs/personal-plan-stage-3-recovery?scenario=contract_violation&registered=1")
+  await expect(
+    page.getByRole("heading", {
+      name: "Die Produktauswahl kann gerade nicht geöffnet werden.",
+    }),
+  ).toBeVisible()
+  await expect(page.getByText(/Wir haben das Problem registriert\./)).toBeVisible()
+  await expect(page.getByRole("button", { name: "Erneut versuchen" })).toHaveCount(0)
+  await page.getByRole("button", { name: "Zur Routine" }).click()
+  await expect(page.locator("[data-stage3-recovery-scenario]")).toHaveAttribute(
+    "data-last-action",
+    "routine",
+  )
+  await expect(page.locator("body")).not.toHaveCSS("overflow-x", "scroll")
 })
 
 // Outside the describe on purpose: its beforeEach suppresses the cookie banner,

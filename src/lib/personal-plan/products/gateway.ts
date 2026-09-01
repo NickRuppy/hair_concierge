@@ -11,6 +11,7 @@ import type {
   Stage3RoleAssignment,
 } from "./contracts"
 import type { Stage3AuthoritySemanticIntent } from "./authority/contracts"
+import type { Stage3AuthorityEvaluation } from "./authority/contracts"
 import type { Stage3FitComparison } from "./fit-comparison"
 
 export type Stage3ProductsGatewayErrorCode =
@@ -104,6 +105,27 @@ export type Stage3DraftResponse = {
   fitComparisons?: Stage3FitComparison[]
   /** Ephemeral compact-card projection; never serialized into the draft. */
   catalogThumbnails?: Record<string, string>
+}
+
+export type Stage3BootstrapResponse = Omit<Stage3DraftResponse, "fitComparisons"> & {
+  authorityEvaluations: Stage3AuthorityEvaluation[]
+  fitComparisons: Stage3FitComparison[]
+}
+
+export type Stage3BootstrapClientPort = {
+  openOptionalInventory?(input: {
+    personalPlanId: string
+    refinedVersionId: string
+  }): Promise<Stage3BootstrapResponse>
+  loadOrCreate(input: {
+    draftId: string
+    userId: string
+    personalPlanId: string
+    refinedVersionId: string
+    repairRoutineVersionId?: string
+    requirements: Stage3CategoryRequirement[]
+    rebuildOnStaleRefinedVersion?: boolean
+  }): Promise<Stage3BootstrapResponse>
 }
 
 export type Stage3SearchResponse = {
