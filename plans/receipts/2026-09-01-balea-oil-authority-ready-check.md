@@ -3,6 +3,7 @@
 - Branch: `codex/balea-urea-everyday-protocol`
 - Base: `7fddf869` (`origin/main` after PR #495)
 - Reviewed functional head: `aabfb89e`
+- Publication receipt head: `3b506edc`
 - Functional content fingerprint: `25c3bb4e1e3c091f60ebc979812d2e9ef0572ee8ada202c5f043965ddfe57628`
 
 The fingerprint covers the sorted path-and-content-hash manifest for all 27 changed functional, data, migration, plan and verification paths against the recorded base. This receipt and the final code-review receipt are excluded from their own fingerprint.
