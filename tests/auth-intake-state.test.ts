@@ -238,7 +238,7 @@ test("the onboarding bypass route set covers routine, anwendung, chat and scan",
   assert.equal(isPersonalPlanOnboardingBypassRoute("/onboarding"), false)
 })
 
-test("scan bypasses legacy onboarding with a pending or active routine, like chat", () => {
+test("scan bypasses legacy onboarding for any personal-plan entitlement holder, regardless of routine pointers", () => {
   const activeRoutine = {
     hasActivePersonalPlanEntitlement: true,
     pendingRoutineProposalId: null,
@@ -249,24 +249,50 @@ test("scan bypasses legacy onboarding with a pending or active routine, like cha
     pendingRoutineProposalId: "proposal-1",
     activeRoutineVersionId: null,
   }
+  const noRoutinePointers = {
+    hasActivePersonalPlanEntitlement: true,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: null,
+  }
 
   assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", activeRoutine), true)
   assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", pendingRoutine), true)
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", noRoutinePointers), true)
   assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", undefined), false)
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", {
+      hasActivePersonalPlanEntitlement: false,
+      pendingRoutineProposalId: "proposal-1",
+      activeRoutineVersionId: "routine-1",
+    }),
+    false,
+  )
+
+  // A fresh personal-plan buyer with a completed quiz but unfinished legacy
+  // onboarding, and no routine pointers yet, must still reach /scan: the
+  // verdict engine only needs the quiz-written hair profile, and quiz
+  // completion is enforced downstream by the scan page's own gate
+  // (loadScanRouteAccess -> redirect to /quiz), not by this bypass.
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
+      personalPlanRoutineAccess: noRoutinePointers,
+    }),
+    null,
+  )
   assert.equal(
     getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
       personalPlanRoutineAccess: activeRoutine,
     }),
     null,
   )
+
+  // A user who hasn't completed the quiz yet is still sent to /quiz first,
+  // even with an active personal-plan entitlement — the /scan bypass only
+  // applies once intake state has already progressed past needs_quiz.
   assert.equal(
-    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
-      personalPlanRoutineAccess: {
-        hasActivePersonalPlanEntitlement: true,
-        pendingRoutineProposalId: null,
-        activeRoutineVersionId: null,
-      },
+    getAuthenticatedAppRedirect("/scan", "needs_quiz", {
+      personalPlanRoutineAccess: activeRoutine,
     }),
-    "/onboarding",
+    "/quiz",
   )
 })

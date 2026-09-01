@@ -93,7 +93,11 @@ export function canBypassLegacyOnboardingForPersonalPlanRoutine(
   if (isRoute(pathname, "/routine")) return hasPendingOrActiveRoutine
   if (isRoute(pathname, "/anwendung")) return Boolean(access.activeRoutineVersionId)
   if (isRoute(pathname, "/chat")) return hasPendingOrActiveRoutine
-  if (isRoute(pathname, "/scan")) return hasPendingOrActiveRoutine
+  // /scan bypasses legacy onboarding for any personal-plan entitlement holder,
+  // independent of routine pointers: quiz completion (the actual prerequisite
+  // for the verdict engine) is enforced downstream by the scan page's own
+  // gate (loadScanRouteAccess -> redirect to /quiz).
+  if (isRoute(pathname, "/scan")) return true
   return false
 }
 

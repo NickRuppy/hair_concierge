@@ -59,7 +59,7 @@ Immediately after deploy, Nick on his own phone: five tabs render with dot on Sc
 
 **B. Frischer User direkt nach Quiz/Payment:** same 5 tabs. Routine/Anwendung show the first plan version (with refinement banner) as soon as the plan-start CTA was pressed; before that, tapping them redirects into the plan flow (`/plan-start`). Scan works immediately (verdict from quiz profile).
 
-**C. Unbekannter Barcode:** "Das kennen wir noch nicht" → 2-step category/brand submission → pending screen ("meist innerhalb von 24 Stunden…") → Nick's daily operator run classifies it → chat notification in "Produktprüfung" conversation → user re-scans, gets verdict.
+**C. Unbekannter Barcode:** "Danke dir – das ist neu für uns!" → single tap on a shelf-category card submits immediately (no brand/product-name step) → "Eingereicht!" pending screen ("meist innerhalb von 24 Stunden…") → Nick's daily operator run classifies it → chat notification in "Produktprüfung" conversation → user re-scans, gets verdict.
 
 **Error/edge states (all existing, unchanged):** expired access → `/reactivate?next=/scan`; quiz incomplete → `/quiz`; legacy-onboarding user → now reaches `/scan` (Task 3) instead of bouncing; rate limit → 429 German toast; camera denied → search fallback.
 
