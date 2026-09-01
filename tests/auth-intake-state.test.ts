@@ -227,11 +227,46 @@ test("chat keeps legacy onboarding without entitlement or routine pointers", () 
   )
 })
 
-test("the onboarding bypass route set covers routine, anwendung and chat", () => {
+test("the onboarding bypass route set covers routine, anwendung, chat and scan", () => {
   assert.equal(isPersonalPlanOnboardingBypassRoute("/routine"), true)
   assert.equal(isPersonalPlanOnboardingBypassRoute("/anwendung/wash_day"), true)
   assert.equal(isPersonalPlanOnboardingBypassRoute("/chat"), true)
   assert.equal(isPersonalPlanOnboardingBypassRoute("/chat/verlauf"), true)
+  assert.equal(isPersonalPlanOnboardingBypassRoute("/scan"), true)
+  assert.equal(isPersonalPlanOnboardingBypassRoute("/scan/ergebnis"), true)
   assert.equal(isPersonalPlanOnboardingBypassRoute("/tracker"), false)
   assert.equal(isPersonalPlanOnboardingBypassRoute("/onboarding"), false)
+})
+
+test("scan bypasses legacy onboarding with a pending or active routine, like chat", () => {
+  const activeRoutine = {
+    hasActivePersonalPlanEntitlement: true,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: "routine-1",
+  }
+  const pendingRoutine = {
+    hasActivePersonalPlanEntitlement: true,
+    pendingRoutineProposalId: "proposal-1",
+    activeRoutineVersionId: null,
+  }
+
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", activeRoutine), true)
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", pendingRoutine), true)
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", undefined), false)
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
+      personalPlanRoutineAccess: activeRoutine,
+    }),
+    null,
+  )
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
+      personalPlanRoutineAccess: {
+        hasActivePersonalPlanEntitlement: true,
+        pendingRoutineProposalId: null,
+        activeRoutineVersionId: null,
+      },
+    }),
+    "/onboarding",
+  )
 })
