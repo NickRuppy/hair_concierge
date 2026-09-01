@@ -116,7 +116,7 @@ test("keeps telemetry service-role-only, with bounded UTC retention and a stable
     /create or replace function private\.run_scan_resolve_retention\(\)[\s\S]*security invoker[\s\S]*set search_path = pg_catalog, public/,
   )
   assert.doesNotMatch(sql, /pg_catalog\.coalesce/)
-  assert.match(sql, /revoke all on schema private from public, anon, authenticated/)
+  assert.doesNotMatch(sql, /revoke all on schema private/)
   assert.match(sql, /grant usage on schema private to service_role/)
   assert.match(
     sql,
@@ -141,6 +141,8 @@ test("telemetry migration executes, accepts v2 starts, and aggregates before ret
     CREATE ROLE anon;
     CREATE ROLE authenticated;
     CREATE ROLE service_role;
+    CREATE SCHEMA private;
+    GRANT USAGE ON SCHEMA private TO authenticated;
     CREATE SCHEMA cron;
     CREATE TABLE cron.job (
       jobid bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -191,6 +193,30 @@ test("telemetry migration executes, accepts v2 starts, and aggregates before ret
   `)
 
   await pg.exec(readFileSync(migrationPath, "utf8"))
+
+  const authenticatedSchemaAccess = await pg.query<{ allowed: boolean }>(`
+    SELECT has_schema_privilege('authenticated', 'private', 'USAGE') AS allowed
+  `)
+  assert.equal(authenticatedSchemaAccess.rows[0]?.allowed, true)
+  const retentionPrivileges = await pg.query<{
+    authenticated: boolean
+    anon: boolean
+    service_role: boolean
+  }>(`
+    SELECT
+      has_function_privilege(
+        'authenticated', 'private.run_scan_resolve_retention()', 'EXECUTE'
+      ) AS authenticated,
+      has_function_privilege('anon', 'private.run_scan_resolve_retention()', 'EXECUTE') AS anon,
+      has_function_privilege(
+        'service_role', 'private.run_scan_resolve_retention()', 'EXECUTE'
+      ) AS service_role
+  `)
+  assert.deepEqual(retentionPrivileges.rows[0], {
+    authenticated: false,
+    anon: false,
+    service_role: true,
+  })
 
   const legacy = await pg.query<{ count: number }>(`
     SELECT count(*)::integer AS count

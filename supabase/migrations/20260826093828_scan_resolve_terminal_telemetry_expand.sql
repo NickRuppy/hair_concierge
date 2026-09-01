@@ -102,7 +102,9 @@ CREATE POLICY scan_resolve_daily_aggregates_service_role_all
   WITH CHECK (true);
 
 CREATE SCHEMA IF NOT EXISTS private;
-REVOKE ALL ON SCHEMA private FROM PUBLIC, anon, authenticated;
+-- The private schema is shared by existing authenticated Personal Plan helper
+-- functions. Do not reset schema-wide grants from this late-applicable
+-- telemetry migration; restrict only the retention function below.
 GRANT USAGE ON SCHEMA private TO service_role;
 
 -- This routine is deliberately SECURITY INVOKER. The cron owner or an
