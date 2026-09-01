@@ -89,6 +89,11 @@ export type Stage3FitVerdict = (typeof STAGE3_FIT_VERDICTS)[number]
  *   packshot, fact-fingerprint churn, verdict gating), so the person never saw
  *   and never echoed it. Nothing may be bought for it, but the plan must not
  *   claim a product gap that does not exist.
+ * - `unseen_recommendation` — a headless recompute (modular Feinschliff exit)
+ *   surfaced a role the person's plan never had, and the engine DOES have a
+ *   buyable recommendation for it. Nothing unseen may be planned on the
+ *   person's behalf, so the role stays a visible gap that links back into the
+ *   finished Produkte module.
  *
  * Only the server writes this: it is derived from the plan's own preview and
  * evaluation state, never from a client payload.
@@ -97,6 +102,7 @@ export const STAGE3_DECISION_DEFERRAL_REASONS = [
   "refinement_required",
   "no_product",
   "preview_unavailable",
+  "unseen_recommendation",
 ] as const
 export type Stage3DecisionDeferralReason = (typeof STAGE3_DECISION_DEFERRAL_REASONS)[number]
 

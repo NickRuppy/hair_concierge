@@ -161,6 +161,55 @@ test("anomalous Routine terminal-source observability excludes source keys and u
   assert.equal((captured as Error).message, "personal_plan_routine_source_terminalized")
 })
 
+test("a blocked module recompute is visible as a Routine terminal source", () => {
+  const tags: Record<string, string> = {}
+  let context: Record<string, unknown> | undefined
+  let captured: unknown
+  const sink: PersonalPlanApplicationSentrySink = {
+    withScope(callback) {
+      callback({
+        setTag(key, value) {
+          tags[key] = value
+        },
+        setContext(_name, value) {
+          context = value
+        },
+        setFingerprint() {},
+        setLevel() {},
+      })
+    },
+    captureException(error) {
+      captured = error
+    },
+  }
+
+  // The self-heal lane parks a non-retryable recompute (unsupported subject,
+  // no allowed action, an already-staged proposal) on its own terminal code.
+  // Unlike `terminal_refinement_pending_stage3` — the expected lifecycle state
+  // for a refinement nobody recomputes — this one is an anomaly worth seeing.
+  capturePersonalPlanRoutineTerminalSource(
+    {
+      planId: "plan-1",
+      sourceKind: "refined_need",
+      observedRevision: 7,
+      terminalCode: "terminal_refinement_recompute_blocked",
+    },
+    sink,
+  )
+
+  assert.deepEqual(tags, {
+    "personal_plan.stage": "routine",
+    "personal_plan.terminal_code": "terminal_refinement_recompute_blocked",
+  })
+  assert.deepEqual(context, {
+    plan_id: "plan-1",
+    source_kind: "refined_need",
+    observed_revision: 7,
+    terminal_code: "terminal_refinement_recompute_blocked",
+  })
+  assert.equal((captured as Error).message, "personal_plan_routine_source_terminalized")
+})
+
 test("Stage 5 V2 unresolved guidance reports a typed product identifier without copy", () => {
   let context: Record<string, unknown> | undefined
   let level: "error" | "warning" | undefined

@@ -66,4 +66,8 @@ const handlers = createPersonalPlanRoutineAcquireRouteHandlers({
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   service: () => createSupabaseRoutineAcquisitionService(createAdminClient()),
 })
+// Acquisition drains the same sync worker, whose self-heal lane runs the
+// headless Stage-3 recompute inline (`routine/production-sync-service.ts`) —
+// the same shape `accept-ideal-plan/route.ts` needs the raised ceiling for.
+export const maxDuration = 60
 export const POST = handlers.POST

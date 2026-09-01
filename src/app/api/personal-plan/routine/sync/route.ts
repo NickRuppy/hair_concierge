@@ -9,18 +9,11 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
-import {
-  createRoutineSourceSyncService,
-  createSupabaseRoutineSourceSyncRepository,
-} from "@/lib/personal-plan/routine/source-sync-service"
-import {
-  createSupabaseRoutineCadenceAuthorityReader,
-  type RoutineCadenceAuthorityReadClient,
-} from "@/lib/personal-plan/routine/cadence-authority"
+import type { createRoutineSourceSyncService } from "@/lib/personal-plan/routine/source-sync-service"
+import { createProductionRoutineSourceSyncService } from "@/lib/personal-plan/routine/production-sync-service"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
-import { capturePersonalPlanRoutineTerminalSource } from "@/lib/observability/personal-plan-application"
 
 type Service = ReturnType<typeof createRoutineSourceSyncService>
 export type PersonalPlanRoutineSyncRouteDeps = {
@@ -59,17 +52,12 @@ const handlers = createPersonalPlanRoutineSyncRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-  service: () => {
-    const admin = createAdminClient()
-    return createRoutineSourceSyncService({
-      repository: createSupabaseRoutineSourceSyncRepository(admin),
-      reportTerminalSource: capturePersonalPlanRoutineTerminalSource,
-      cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
-        admin as unknown as RoutineCadenceAuthorityReadClient,
-      ),
-    })
-  },
+  service: () => createProductionRoutineSourceSyncService(createAdminClient()),
 })
+// The sync worker's self-heal lane runs the headless Stage-3 recompute inline
+// (`routine/production-sync-service.ts`), the same shape
+// `accept-ideal-plan/route.ts` needs the raised ceiling for.
+export const maxDuration = 60
 export const POST = async () => {
   const startedAt = performance.now()
   const result = await handlers.POST()

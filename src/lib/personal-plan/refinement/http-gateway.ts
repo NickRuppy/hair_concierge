@@ -53,6 +53,11 @@ export function createHttpStage2RefinementGateway({
       module: stage2Module,
       ...input
     }: Stage2SaveAnswerInput & { module: Stage2Module }) {
+      // `request` returns the response body verbatim (cast, not re-shaped), so
+      // `moduleCompletion.recompute` (T1.4's habits-recompute outcome) already
+      // passes through untouched when present, and stays `undefined` when the
+      // server omits it — no extra parsing needed for T2.2's honest toast to
+      // see the real outcome.
       return request<Stage2SaveAndCompleteModuleResult>(
         fetcher,
         "/api/personal-plan/stage-2",

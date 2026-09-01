@@ -432,7 +432,11 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await chooseNoneAndContinue(page)
     await chooseNoneAndContinue(page)
 
-    await expect(page.locator("[data-refined-version-id]")).toBeVisible()
+    // The closing habits module hands back to the host (→ /routine in
+    // production) instead of arming the Stage-3 bridge — the module is done,
+    // the answers are saved, and no product step follows (T2.1, R1).
+    await expect(page.getByText("Fertig. Antworten gespeichert.")).toBeVisible()
+    await expect(page.locator("[data-refined-version-id]")).toHaveCount(0)
     await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
   })
 

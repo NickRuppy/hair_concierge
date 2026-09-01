@@ -806,8 +806,11 @@ test("an accepted Routine keeps Stage 4/5 reachable while a malformed successor 
           }) as never,
       }),
       // `allowed.stage4` is asserted true above — this owner has an accepted
-      // Routine — so the journey carries the post-accept origin.
-      { state: "production", initialJourney: { stage: "stage2", planAccepted: true } },
+      // Routine and a COMPLETE refinement draft, undirected — Task 2.3's D3
+      // guard redirects this cohort to `/routine` instead of falling through
+      // to the Stage-2 bridge (which would seed a completed session and
+      // auto-hand off into a brand-new Stage-3 creation funnel).
+      { state: "routine_redirect" },
     )
   }
 })

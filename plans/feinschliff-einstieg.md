@@ -21,7 +21,7 @@ Research-Grundlage (Zwei-Stufen-Report, 2026-08-25): Default statt Fork, Endowed
 9. Nav bleibt unverändert (aktuell: Chat · Routine · Anwendung · Profil; Scan versteckt).
 10. PostHog-Events erst NACH dem Ship (separater Schritt, nicht Teil dieser PRs).
 11. **PR-Schnitt (rev. 2):** PR 1 ist rein additiv und nutzer-unsichtbar (Backend-Modell); der sichtbare Cutover (Fork-Entfernung + alle neuen Oberflächen) liegt komplett in PR 2. Kein Zwischenzustand mit alter Banner-UX auf neuem Accept-Pfad.
-12. **Routine-Update bei Modul-Abschluss:** sofortige Aktivierung (Mockup-Verhalten „✓ Plan aktualisiert"), kein Proposal-Pending. Verlust manueller Routine-Anpassungen beim Recompute in Kauf genommen (Testnutzer). **Bestätigt von Nick 25.08.**
+12. **Routine-Update bei Modul-Abschluss:** sofortige Aktivierung (Mockup-Verhalten „✓ Plan aktualisiert"), kein Proposal-Pending. Verlust manueller Routine-Anpassungen beim Recompute in Kauf genommen (Testnutzer). **Bestätigt von Nick 25.08.** [Umsetzung nachgereicht 2026-08-31: plans/2026-08-31-feinschliff-modular-exit.md]
 13. **Stage-1-CTA:** „Zu deiner Routine". **Bestätigt von Nick 25.08.**
 14. **Nav-Orientierung: Punkte + selbsterklärende Tabs, keine Popups.** Unbesuchte Tabs tragen einen dezenten Punkt (einmalig, verschwindet nach erstem Besuch, Zustand persistiert); jeder Tab erklärt sich beim ersten Öffnen durch seinen Inhalt. Keine Tour, keine Tooltips (Research 25.08.: 76 % der Tooltips <3 s dismissed, Tour-Amnesie, NN/g: Overlays nur für unvertraute UI — 4 klar beschriftete Tabs sind es nicht; Duolingo/Instagram-Muster). **Bestätigt von Nick 25.08.**
 
@@ -81,7 +81,7 @@ Stage-1-CTA (Wortlaut s. Walkthrough) → Accept (mit Deferred-Rollen aus 1.5) �
 Ersetzt `routine-refinement-nudge.tsx` vollständig (inkl. Löschung der 24h-Tests, neue Tests auf Modul-Lifecycle). Inhalt Mockup v3: „Mach deinen Plan genauer." + Balken + „X von 4" + „Weiter · 2 Min." + ✕; nach Modul 1: „Noch ein Schritt: deine Gewohnheiten." „· 3 Min." unterhalb der Routine-Blöcke. CTA führt in den Modul-Kontext (nicht in den linearen Gesamt-Flow).
 
 ### Task 2.4 — Modul-Einstiege im Refinement-Flow
-`refinement-flow.tsx`: Einstieg pro Modul (Banner/Profil übergeben Modul), Fragen des Moduls in bestehender Reihenfolge; Modul-Abschluss ruft `complete_module`; nach Modul 1 Handoff in Stage 3 (persistenter Marker aus 1.4); nach Modul 2 wie heutiger Voll-Abschluss. Resume bleibt fragegenau.
+`refinement-flow.tsx`: Einstieg pro Modul (Banner/Profil übergeben Modul), Fragen des Moduls in bestehender Reihenfolge; Modul-Abschluss ruft `complete_module`; nach Modul 1 Handoff in Stage 3 (persistenter Marker aus 1.4); nach Modul 2 wie heutiger Voll-Abschluss — [Superseded 2026-08-31: der schließende Verhalten-Abschluss führt zurück zur Routine mit headless Recompute; siehe plans/2026-08-31-feinschliff-modular-exit.md]. Resume bleibt fragegenau.
 
 ### Task 2.5 — Profil-Tab: Haarprofil-Sektion
 `profile/page.tsx` + Modul-Status-API (1.7): Balken + „X von 4" + 4 Zeilen (Haar-Analyse ✓ · Dein Idealplan ✓ → Link zur Plan-Ansicht · Deine Produkte › · Deine Gewohnheiten ›), ohne Minuten. Loading-/Error-/kein-Plan-Zustände definiert.

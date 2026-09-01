@@ -89,6 +89,23 @@ export function classifyProposalReload(
   return "resolved"
 }
 
+export type RoutineSyncKickResponse = { proposalStaged?: unknown; recomputeApplied?: unknown }
+
+/**
+ * Entry-sync reload gate. A staged successor proposal is not the only
+ * user-visible result any more: a module-driven Feinschliff recompute that
+ * healed during this sync is already ACTIVE (auto-confirmed), so it leaves
+ * `proposalStaged` false while the rendered Routine is stale. Reload on either.
+ */
+export function routineSyncReloadOutcome(result: RoutineSyncKickResponse): {
+  reload: boolean
+  outcome: "proposal_staged" | "recompute_applied" | "unchanged"
+} {
+  if (result.proposalStaged === true) return { reload: true, outcome: "proposal_staged" }
+  if (result.recomputeApplied === true) return { reload: true, outcome: "recompute_applied" }
+  return { reload: false, outcome: "unchanged" }
+}
+
 export function refreshRouteAfterRoutineAcceptance({
   action,
   refresh,
@@ -326,12 +343,12 @@ export function PersonalPlanRoutineClient({
         try {
           const response = await fetch("/api/personal-plan/routine/sync", { method: "POST" })
           if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
-          const result = (await response.json()) as { proposalStaged?: unknown }
-          if (result.proposalStaged === true) {
+          const sync = routineSyncReloadOutcome((await response.json()) as RoutineSyncKickResponse)
+          if (sync.reload) {
             await reload()
             setProposalOpen(false)
           }
-          outcome = result.proposalStaged === true ? "proposal_staged" : "unchanged"
+          outcome = sync.outcome
         } catch {
           routineAnalytics.track("personal_plan_stage4_outcome", {
             origin: "sync",

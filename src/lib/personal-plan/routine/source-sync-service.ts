@@ -2,6 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { PersonalPlanRoutineTerminalSourceDetails } from "@/lib/observability/personal-plan-application"
 
+import type { RoutineRefinedNeedClassification } from "../refinement-recompute/module-driven-classification"
+import type { Stage3RecomputeResult } from "../refinement-recompute/types"
 import {
   parseProposedProductPortfolio,
   type AnyProposedProductPortfolio,
@@ -107,9 +109,40 @@ export type RoutineSourceSyncResult =
       deferred: number
       unfinished: number
       proposalStaged: boolean
+      /**
+       * A module-driven refined-need claim healed inline: a successor Routine
+       * was compiled AND activated during this sync. Unlike `proposalStaged`
+       * there is nothing for the user to confirm, so the client reloads the
+       * Routine view on this signal too.
+       */
+      recomputeApplied: boolean
     }
   | { status: "conflict"; reason: string }
   | { status: "temporarily_unavailable" }
+
+/**
+ * The self-heal lane (T1.5). Optional: without it every `refined_need` claim
+ * keeps its historical blanket-terminal behavior, so non-production
+ * constructions of this service stay valid.
+ */
+export type RoutineRefinedNeedRecomputeLane = {
+  /** Owner-scoped lineage read — see `refinement-recompute/module-driven-classification.ts`. */
+  classify(input: {
+    userId: string
+    personalPlanId: string
+    refinedVersionId: string
+  }): Promise<RoutineRefinedNeedClassification>
+  recompute(input: {
+    userId: string
+    personalPlanId: string
+    refinedVersionId: string
+  }): Promise<Stage3RecomputeResult>
+}
+
+/** Retryable recompute failure: non-terminal, so the outbox re-arms in 30s. */
+const REFINEMENT_RECOMPUTE_RETRY_ERROR = "refinement_recompute_retry"
+/** Non-retryable recompute failure: terminal, so the outbox row parks. */
+const REFINEMENT_RECOMPUTE_TERMINAL_ERROR = "terminal_refinement_recompute_blocked"
 
 export type RoutineSuccessorCadenceResolver = (
   routine: RoutineCompiledPayload,
@@ -197,6 +230,7 @@ export function createRoutineSourceSyncService(input: {
   cadenceAuthorityReader?: RoutineCadenceAuthorityReader
   resolveCadences?: RoutineSuccessorCadenceResolver
   reportTerminalSource?: (details: PersonalPlanRoutineTerminalSourceDetails) => void
+  refinementRecompute?: RoutineRefinedNeedRecomputeLane
 }) {
   const resolveCadences =
     input.resolveCadences ??
@@ -207,13 +241,151 @@ export function createRoutineSourceSyncService(input: {
             authorityReader: input.cadenceAuthorityReader!,
           })
       : async (routine: RoutineCompiledPayload) => routine)
+  /**
+   * The batch tail: finish every claim under its decided error code, report the
+   * terminal ones, and reduce the batch to a single result. `claimErrors` holds
+   * `null` for a claim that was decided as successfully processed (only the
+   * self-heal lane does that today) — distinct from an absent entry, which
+   * falls back to the batch-level transition error.
+   */
+  async function settleClaims(settle: {
+    claims: RoutineSourceClaim[]
+    claimErrors: Map<string, string | null>
+    outcome: SourceTransitionOutcome | null
+    changed: boolean
+    recomputeApplied: boolean
+  }): Promise<RoutineSourceSyncResult> {
+    const { claims, claimErrors, outcome } = settle
+    const transitionError = outcome && !successfulOutcomes.has(outcome) ? outcome : null
+    const finishTransitionError =
+      transitionError === "invalid_source" ? "terminal_invalid_source" : transitionError
+    const errorCodeFor = (claim: RoutineSourceClaim) =>
+      claimErrors.has(claim.outboxId)
+        ? (claimErrors.get(claim.outboxId) ?? null)
+        : finishTransitionError
+    const finished = await Promise.all(
+      claims.map((claim) => input.repository.finish({ claim, errorCode: errorCodeFor(claim) })),
+    )
+    for (const [index, claim] of claims.entries()) {
+      if (!finished[index]) continue
+      const terminalCode = errorCodeFor(claim)
+      if (!isTerminalSourceError(terminalCode)) continue
+      try {
+        input.reportTerminalSource?.({
+          planId: claim.personalPlanId,
+          sourceKind: claim.sourceKind,
+          observedRevision: claim.observedRevision,
+          terminalCode,
+        })
+      } catch {
+        // Observability must never make a durably settled source retry.
+      }
+    }
+    if (transitionError) return { status: "conflict", reason: transitionError }
+    const unfinished = finished.filter((didFinish) => !didFinish).length
+    const deferredErrors = claims
+      .map((claim, index) => (finished[index] ? claimErrors.get(claim.outboxId) : undefined))
+      .filter((reason): reason is string => Boolean(reason) && !isTerminalSourceError(reason))
+    const deferredError = deferredErrors[0]
+    // A staged sibling change — or a healed module recompute, which is already
+    // active rather than merely proposed — is a successful user-visible outcome.
+    // Keep unresolved claims retryable without hiding it behind a batch-level
+    // conflict. If every claim was deferred, retain the conflict response so
+    // background callers know there was no progress to surface.
+    if (deferredError && !settle.changed && !settle.recomputeApplied)
+      return { status: "conflict", reason: deferredError }
+    if (unfinished > 0 && outcome !== "staged" && outcome !== "already_staged")
+      return { status: "temporarily_unavailable" }
+    const terminalized = claims.filter(
+      (claim, index) => finished[index] && isTerminalSourceError(claimErrors.get(claim.outboxId)),
+    ).length
+    return {
+      status: "processed",
+      processed: claims.length - terminalized - deferredErrors.length - unfinished,
+      terminalized,
+      deferred: deferredErrors.length,
+      unfinished,
+      proposalStaged: outcome === "staged" || outcome === "already_staged",
+      recomputeApplied: settle.recomputeApplied,
+    }
+  }
+
+  /**
+   * Requirement 4d(i)/(ii): module-driven `refined_need` claims are processed in
+   * their own exclusive pass, BEFORE the ordinary reconciliation base is
+   * loaded. A successful recompute activates a Routine and advances the plan's
+   * revision / source revision / active version, so every sibling claim in the
+   * same batch has to be reconciled and CAS-staged against the post-activation
+   * state — never the pre-batch snapshot.
+   */
+  async function runRefinedNeedRecomputes(pass: {
+    userId: string
+    plan: RoutineSourcePlan
+    claims: RoutineSourceClaim[]
+    claimErrors: Map<string, string | null>
+  }): Promise<{ ran: boolean; applied: boolean }> {
+    const lane = input.refinementRecompute
+    // Without an active Routine there is nothing to recompute against; the
+    // orchestrator would only report `no_active_routine`. Keep the historical
+    // terminal behavior for that cohort instead, at zero extra round trips.
+    if (!lane || !pass.plan.activeRoutineVersionId) return { ran: false, applied: false }
+    let ran = false
+    let applied = false
+    for (const claim of pass.claims) {
+      if (claim.sourceKind !== "refined_need") continue
+      const lineage = {
+        userId: pass.userId,
+        personalPlanId: pass.plan.id,
+        refinedVersionId: claim.sourceKey,
+      }
+      let classification: RoutineRefinedNeedClassification
+      try {
+        classification = await lane.classify(lineage)
+      } catch {
+        // The classification read is infrastructure, not a verdict. Re-arm this
+        // one claim instead of stranding the whole leased batch on a 503.
+        pass.claimErrors.set(claim.outboxId, REFINEMENT_RECOMPUTE_RETRY_ERROR)
+        continue
+      }
+      // Today's linear refinement, the Stage-3 Routine-authority repair and
+      // editor edits keep the existing terminal handling.
+      if (classification === "not_module_driven") continue
+      if (classification === "stale_target") {
+        // A newer refined version supersedes this claim and carries its own
+        // outbox row: settle this one as processed for its observed revision.
+        pass.claimErrors.set(claim.outboxId, null)
+        continue
+      }
+      ran = true
+      // The orchestrator reports failure rather than throwing (T1.3), but a
+      // rejection must never leave the batch mid-flight either.
+      const result = await lane.recompute(lineage).catch(
+        (): Stage3RecomputeResult => ({
+          status: "unavailable",
+          reason: "unexpected_error",
+          retryable: true,
+        }),
+      )
+      if (result.status === "applied") applied = true
+      pass.claimErrors.set(
+        claim.outboxId,
+        result.status === "unavailable"
+          ? result.retryable
+            ? REFINEMENT_RECOMPUTE_RETRY_ERROR
+            : REFINEMENT_RECOMPUTE_TERMINAL_ERROR
+          : null,
+      )
+    }
+    return { ran, applied }
+  }
+
   return {
     async sync(request: { userId: string; limit?: number }): Promise<RoutineSourceSyncResult> {
-      const plan = await input.repository.loadPlan(request.userId)
-      if (!plan) return { status: "no_personal_plan" }
+      const claimedPlan = await input.repository.loadPlan(request.userId)
+      if (!claimedPlan) return { status: "no_personal_plan" }
       const claims = await input.repository.claim(
         request.userId,
-        plan.id,
+        claimedPlan.id,
         Math.min(Math.max(request.limit ?? 20, 1), 100),
       )
       if (claims.length === 0)
@@ -224,24 +396,59 @@ export function createRoutineSourceSyncService(input: {
           deferred: 0,
           unfinished: 0,
           proposalStaged: false,
+          recomputeApplied: false,
         }
+
+      const claimErrors = new Map<string, string | null>()
+      const recompute = await runRefinedNeedRecomputes({
+        userId: request.userId,
+        plan: claimedPlan,
+        claims,
+        claimErrors,
+      })
+      // Reload the plan whenever the recompute ran at all: `applied` is not the
+      // only outcome that can have advanced plan state (a concurrent activation
+      // reported as `unavailable` moved it too).
+      const plan = recompute.ran
+        ? ((await input.repository.loadPlan(request.userId)) ?? claimedPlan)
+        : claimedPlan
+      const remainingClaims = claims.filter((claim) => !claimErrors.has(claim.outboxId))
+      if (remainingClaims.length === 0) {
+        return settleClaims({
+          claims,
+          claimErrors,
+          outcome: null,
+          changed: false,
+          recomputeApplied: recompute.applied,
+        })
+      }
 
       const base = await input.repository.loadBase(request.userId, plan)
       if (!base) {
-        await Promise.all(
-          claims.map((claim) =>
-            input.repository.finish({ claim, errorCode: "routine_source_base_unavailable" }),
-          ),
-        )
-        return { status: "temporarily_unavailable" }
+        // The lane ran BEFORE the base load, so its outcomes are already final:
+        // settle through the same tail so lane-decided terminal codes are still
+        // reported and a committed activation still reaches the client.
+        for (const claim of remainingClaims) {
+          claimErrors.set(claim.outboxId, "routine_source_base_unavailable")
+        }
+        const settled = await settleClaims({
+          claims,
+          claimErrors,
+          outcome: null,
+          changed: false,
+          recomputeApplied: recompute.applied,
+        })
+        // An unavailable base is a batch-level infrastructure failure: keep
+        // today's 503 unless the lane already committed something the client
+        // has to see, in which case the healed result is the honest answer.
+        return recompute.applied ? settled : { status: "temporarily_unavailable" }
       }
 
       let routine = base.routine
       let portfolio = base.portfolio
-      const claimErrors = new Map<string, string>()
       const changedClaims: RoutineSourceClaim[] = []
       const directChangesByItemKey = new Map<string, RoutineProposalDelta["direct"][number]>()
-      for (const claim of claims) {
+      for (const claim of remainingClaims) {
         if (claim.sourceKind !== "user_product") {
           claimErrors.set(
             claim.outboxId,
@@ -322,7 +529,15 @@ export function createRoutineSourceSyncService(input: {
           delta,
           origin: "acquisition",
         })
-      } else if (claimErrors.size === 0) {
+      } else if (
+        // Only an UNRESOLVED remaining claim may suppress the no-change record.
+        // `claimErrors` also holds `null` entries for claims the self-heal lane
+        // already settled successfully, so keying this off its size made a
+        // mixed batch (a healed recompute plus an ordinary no-op source claim)
+        // silently skip `recordNoChange` and never advance
+        // `last_evaluated_source_fingerprint`.
+        remainingClaims.every((remaining) => !claimErrors.get(remaining.outboxId))
+      ) {
         outcome = await input.repository.recordNoChange({
           userId: request.userId,
           plan,
@@ -334,57 +549,13 @@ export function createRoutineSourceSyncService(input: {
         })
       }
 
-      const transitionError = outcome && !successfulOutcomes.has(outcome) ? outcome : null
-      const finishTransitionError =
-        transitionError === "invalid_source" ? "terminal_invalid_source" : transitionError
-      const finished = await Promise.all(
-        claims.map((claim) =>
-          input.repository.finish({
-            claim,
-            errorCode: claimErrors.get(claim.outboxId) ?? finishTransitionError,
-          }),
-        ),
-      )
-      for (const [index, claim] of claims.entries()) {
-        if (!finished[index]) continue
-        const terminalCode = claimErrors.get(claim.outboxId) ?? finishTransitionError
-        if (!isTerminalSourceError(terminalCode)) continue
-        try {
-          input.reportTerminalSource?.({
-            planId: claim.personalPlanId,
-            sourceKind: claim.sourceKind,
-            observedRevision: claim.observedRevision,
-            terminalCode,
-          })
-        } catch {
-          // Observability must never make a durably settled source retry.
-        }
-      }
-      if (transitionError) return { status: "conflict", reason: transitionError }
-      const unfinished = finished.filter((didFinish) => !didFinish).length
-      const deferredErrors = claims
-        .map((claim, index) => (finished[index] ? claimErrors.get(claim.outboxId) : undefined))
-        .filter((reason): reason is string => Boolean(reason) && !isTerminalSourceError(reason))
-      const deferredError = deferredErrors[0]
-      // A staged sibling change is already a successful user-visible outcome.
-      // Keep unresolved claims retryable without hiding that proposal behind a
-      // batch-level conflict. If every claim was deferred, retain the conflict
-      // response so background callers know there was no progress to surface.
-      if (deferredError && changedClaims.length === 0)
-        return { status: "conflict", reason: deferredError }
-      if (unfinished > 0 && outcome !== "staged" && outcome !== "already_staged")
-        return { status: "temporarily_unavailable" }
-      const terminalized = claims.filter(
-        (claim, index) => finished[index] && isTerminalSourceError(claimErrors.get(claim.outboxId)),
-      ).length
-      return {
-        status: "processed",
-        processed: claims.length - terminalized - deferredErrors.length - unfinished,
-        terminalized,
-        deferred: deferredErrors.length,
-        unfinished,
-        proposalStaged: outcome === "staged" || outcome === "already_staged",
-      }
+      return settleClaims({
+        claims,
+        claimErrors,
+        outcome,
+        changed: changedClaims.length > 0,
+        recomputeApplied: recompute.applied,
+      })
     },
   }
 }

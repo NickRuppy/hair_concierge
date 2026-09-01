@@ -1,17 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import { capturePersonalPlanRoutineTerminalSource } from "@/lib/observability/personal-plan-application"
-
 import { loadPersonalPlanRoutineView } from "./load-view"
+import { createProductionRoutineSourceSyncService } from "./production-sync-service"
 import type { PersonalPlanRoutineReadClient } from "./repository"
-import {
-  createRoutineSourceSyncService,
-  createSupabaseRoutineSourceSyncRepository,
-} from "./source-sync-service"
-import {
-  createSupabaseRoutineCadenceAuthorityReader,
-  type RoutineCadenceAuthorityReadClient,
-} from "./cadence-authority"
 
 type PlannedItem = { personalPlanId: string; category: string; productId: string }
 
@@ -60,13 +51,7 @@ export function createRoutineAcquisitionService(input: {
 }
 
 export function createSupabaseRoutineAcquisitionService(client: SupabaseClient) {
-  const sync = createRoutineSourceSyncService({
-    repository: createSupabaseRoutineSourceSyncRepository(client),
-    reportTerminalSource: capturePersonalPlanRoutineTerminalSource,
-    cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
-      client as unknown as RoutineCadenceAuthorityReadClient,
-    ),
-  })
+  const sync = createProductionRoutineSourceSyncService(client)
   return createRoutineAcquisitionService({
     repository: {
       async loadPlannedItem(userId, itemKey) {

@@ -36,6 +36,7 @@ import {
   type Stage3ProductsGateway,
 } from "../src/lib/personal-plan/products/gateway"
 import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
+import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
 import type { Stage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 import { readFileSync } from "node:fs"
 
@@ -1035,4 +1036,185 @@ test("refine=1 outranks a repair request and only accepts the exact param value"
 
   // A normal (non-refine) journey keeps the auto-handoff.
   assert.equal(refinementAutoHandoffEnabled({ stage: "stage2" }), true)
+})
+
+/**
+ * Task T2.3. Defect (exists on main today): a user with an ACTIVE routine and
+ * a COMPLETE refinement draft opens undirected `/plan-start`. Their frontier
+ * is stage4 (`hasAcceptedRoutine` keeps stage 4/5 reachable regardless of the
+ * Stage-2 draft), so none of the earlier branches — explicit refine, repair,
+ * stage3-frontier resume, in-progress module1 resume — fire, and the resolver
+ * falls through to the stage2 bridge. The client then seeds the completed
+ * session, the legacy entry view arms the auto-handoff bridge, and the user
+ * gets forwarded straight into a NEW Stage 3 creation funnel instead of their
+ * already-activated Routine.
+ */
+const acceptedRoutineVersionId = "66666666-6666-4666-8666-666666666666"
+
+function acceptedAccess(
+  overrides: Partial<Extract<PersonalPlanJourneyAccess, { kind: "personal_plan" }>> = {},
+): PersonalPlanJourneyAccess {
+  return {
+    kind: "personal_plan",
+    personalPlanId: "plan-1",
+    frontier: "stage4",
+    nextHref: "/routine",
+    allowed: { ...allowed, stage4: true },
+    activeRoutineVersionId: acceptedRoutineVersionId,
+    ...overrides,
+  }
+}
+
+test("RED: accepted routine + complete draft + undirected /plan-start redirects to /routine (today: stage2 bridge)", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => acceptedAccess(),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), { state: "routine_redirect" })
+})
+
+test("accepted + complete + a pending routine proposal still redirects to /routine (the routine page owns proposal review)", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () =>
+      acceptedAccess({ hasPendingRoutineProposal: true, allowed: { ...allowed, stage4: true } }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), { state: "routine_redirect" })
+})
+
+test("accepted + complete + ?refine=habits still opens the Stage 2 module entry (unchanged)", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => acceptedAccess(),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  assert.deepEqual(
+    await resolvePlanStartPageState(deps, { refine: true, refineModule: "habits" }),
+    {
+      state: "production",
+      initialJourney: {
+        stage: "stage2",
+        returningToRefinement: true,
+        refineModule: "habits",
+        planAccepted: true,
+      },
+      personalPlanId: "plan-1",
+      initialRefinementSession: refinementSession("complete", "refined-1"),
+    },
+  )
+})
+
+test("accepted + complete + ?refine=1 still opens Stage 2 (unchanged, legacy)", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => acceptedAccess(),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps, { refine: true }), {
+    state: "production",
+    initialJourney: { stage: "stage2", returningToRefinement: true, planAccepted: true },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
+})
+
+test("accepted + complete + a repair request still re-enters Stage 3 (unchanged)", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () =>
+      acceptedAccess({ allowed: { ...allowed, stage3: true, stage4: true } }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+  const repairRoutineVersionId = "77777777-7777-4777-8777-777777777777"
+
+  assert.deepEqual(await resolvePlanStartPageState(deps, { repairRoutineVersionId }), {
+    state: "production",
+    initialJourney: {
+      stage: "stage3",
+      refinedVersionId: "refined-1",
+      repairRoutineVersionId,
+      planAccepted: true,
+    },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
+})
+
+test("accepted + IN-PROGRESS draft, undirected: unchanged Stage 2 fall-through", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => acceptedAccess(),
+    loadExistingRefinementSession: async () => refinementSession("in_progress"),
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), {
+    state: "production",
+    initialJourney: { stage: "stage2", planAccepted: true },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("in_progress"),
+  })
+})
+
+test("NOT accepted + complete draft + frontier stage3, undirected: unchanged Stage 3 resume", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage3",
+      nextHref: "/plan-start",
+      allowed: { ...allowed, stage3: true },
+    }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), {
+    state: "production",
+    initialJourney: { stage: "stage3", refinedVersionId: "refined-1" },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
+})
+
+test("NOT accepted + complete draft + frontier != stage3, undirected: unchanged Stage 2 fall-through", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage2",
+      nextHref: "/plan-start",
+      allowed,
+    }),
+    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), {
+    state: "production",
+    initialJourney: { stage: "stage2" },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
+  })
 })

@@ -22,6 +22,7 @@ import {
   planStartModuleEntry,
   planStartRefinementExitDestination,
   planStartSuppressesChapterCeremony,
+  stage2ModuleCompletionRoutingProps,
   stage3CompletionRoutineHref,
 } from "../src/components/personal-plan-start/plan-start-flow"
 import {
@@ -670,31 +671,74 @@ test("Task 2.6: a habits-first module completion signals the toast only for an e
   // `planAccepted` is what makes this a re-computation rather than a first
   // activation — see "the „Plan aktualisiert“ toast is never claimed for an
   // initial activation" below for the escape-hatch half of this contract.
+  // Task 2.2: origin alone is no longer enough — the outcome must be
+  // "applied" too (see the dedicated Task 2.2 test below for the full matrix).
   assert.equal(
-    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "habits", planAccepted: true }),
+    moduleCompletionRoutineHref(
+      { stage: "stage2", refineModule: "habits", planAccepted: true },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   assert.equal(
-    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "products", planAccepted: true }),
+    moduleCompletionRoutineHref(
+      { stage: "stage2", refineModule: "products", planAccepted: true },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   // `?refine=1` is the Routine refinement nudge — on an accepted plan its
   // completion is a refinement-driven recompute like any other module entry.
   assert.equal(
-    moduleCompletionRoutineHref({
-      stage: "stage2",
-      refineModule: "first_open",
-      planAccepted: true,
-    }),
+    moduleCompletionRoutineHref(
+      {
+        stage: "stage2",
+        refineModule: "first_open",
+        planAccepted: true,
+      },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   // Without the accepted ORIGIN, and for the legacy linear entry: no signal.
   assert.equal(
-    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "first_open" }),
+    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "first_open" }, "applied"),
     "/routine",
   )
-  assert.equal(moduleCompletionRoutineHref({ stage: "stage2" }), "/routine")
-  assert.equal(moduleCompletionRoutineHref({ stage: "stage1" }), "/routine")
+  assert.equal(moduleCompletionRoutineHref({ stage: "stage2" }, "applied"), "/routine")
+  assert.equal(moduleCompletionRoutineHref({ stage: "stage1" }, "applied"), "/routine")
+})
+
+/**
+ * Task 2.2. `moduleCompletionRoutineHref`'s honesty fix: origin
+ * (`isPostAcceptModuleEntry`) is necessary but no longer sufficient — the
+ * server-reported recompute outcome (T1.4's `moduleCompletion.recompute?.outcome`)
+ * must ALSO be `"applied"`. `"unchanged"`, `"unavailable"`, and an absent
+ * field (no active routine yet, or an older server) all mean the routine was
+ * NOT touched, so the toast must not ride along even on a genuine post-accept
+ * module entry.
+ */
+test("Task 2.2: the toast is claimed only when the server actually recomputed the routine", () => {
+  const postAcceptHabits = {
+    stage: "stage2",
+    refineModule: "habits",
+    planAccepted: true,
+  } as const
+
+  // applied + post-accept origin -> the one case that toasts.
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits, "applied"), "/routine?planUpdated=1")
+  // unchanged / unavailable / absent field -> nothing was recomputed, no toast.
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits, "unchanged"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits, "unavailable"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(postAcceptHabits), "/routine")
+
+  // Non-post-accept journeys stay plain regardless of outcome — origin is
+  // still a necessary condition, this task only tightens it further.
+  const escapeHatchHabits = { stage: "stage2", refineModule: "habits" } as const
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits, "applied"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits, "unchanged"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits, "unavailable"), "/routine")
+  assert.equal(moduleCompletionRoutineHref(escapeHatchHabits), "/routine")
 })
 
 test("Task 2.6: a Stage-3 completion signals the toast only when it followed an explicit module entry", () => {
@@ -761,8 +805,82 @@ const habitsQuestionIds = [
   "night_protection",
 ] as const
 
-test("module completion routes its three outcomes through a fake gateway", async () => {
-  // 1. products first: bridge into Stage 3, draft stays open.
+// Fix-round IMPORTANT 1: `plan-start-flow.tsx`'s JSX spreads
+// `stage2ModuleCompletionRoutingProps(initialJourney)` onto `<RefinementFlow>`
+// instead of listing `moduleEntry`/`postAcceptModuleEntry` as separate prop
+// lines (see the call site) — precisely so this exported pure function IS the
+// wiring, not just a proxy for it. Deleting or breaking that spread at the
+// call site cannot leave this pinned without also either breaking these
+// assertions (if the fix is inside the function) or being visible as an
+// explicit, reviewable prop override in the JSX diff (if the divergence is
+// only at the call site) — there is no way to reintroduce the T2.1 bug by
+// silently deleting one line.
+test("stage2ModuleCompletionRoutingProps threads the post-accept origin signal the host hands to RefinementFlow", () => {
+  // stage1: no module scope, never post-accept.
+  assert.deepEqual(stage2ModuleCompletionRoutingProps({ stage: "stage1" }), {
+    moduleEntry: undefined,
+    postAcceptModuleEntry: false,
+  })
+  // stage2, no explicit module (plain resume/first_open): never post-accept,
+  // regardless of `planAccepted` — SCOPE gates origin, not acceptance alone.
+  assert.deepEqual(stage2ModuleCompletionRoutingProps({ stage: "stage2", planAccepted: true }), {
+    moduleEntry: undefined,
+    postAcceptModuleEntry: false,
+  })
+  // stage2, explicit module deep link, ALREADY ACCEPTED plan — the post-accept
+  // loop this task fixes (Routine banner / Profil row tap).
+  assert.deepEqual(
+    stage2ModuleCompletionRoutingProps({
+      stage: "stage2",
+      refineModule: "habits",
+      planAccepted: true,
+    }),
+    { moduleEntry: "habits", postAcceptModuleEntry: true },
+  )
+  // stage2, explicit module deep link, but the plan is NOT accepted yet — the
+  // failed-accept escape hatch / unaccepted-cohort exception: scope without
+  // origin.
+  assert.deepEqual(
+    stage2ModuleCompletionRoutingProps({ stage: "stage2", refineModule: "products" }),
+    { moduleEntry: "products", postAcceptModuleEntry: false },
+  )
+  // stage3, reloaded Modul-1 journey with an explicit module marker and an
+  // accepted plan (Back-out-of-Stage-3 case): still post-accept.
+  assert.deepEqual(
+    stage2ModuleCompletionRoutingProps({
+      stage: "stage3",
+      refinedVersionId: "refined-1",
+      refineModule: "products",
+      planAccepted: true,
+    }),
+    { moduleEntry: "products", postAcceptModuleEntry: true },
+  )
+})
+
+/**
+ * Builds a fixture gateway whose products questions are already answered, so
+ * `completeModule({ module: "habits", ... })` can close the draft (habits was
+ * NOT the first module). Shared by the closing-module cases below.
+ */
+function closingHabitsGateway() {
+  return createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: plainTriggerContext,
+    initialAnswers: {
+      ...habitsAnswers,
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+    },
+    initialCompletedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      ...habitsQuestionIds,
+    ],
+    initialRevision: 6,
+  })
+}
+
+test("Modul 1 (products) completing NON-closing always bridges into Stage 3", async () => {
   const productsGateway = createStage2FixtureGateway({
     runtimeEnvironment: "test",
     triggerContext: plainTriggerContext,
@@ -780,6 +898,7 @@ test("module completion routes its three outcomes through a fake gateway", async
         module: "products",
         expectedRevision: 2,
       }),
+      postAcceptModuleEntry: false,
     },
     products.effects,
   )
@@ -790,8 +909,51 @@ test("module completion routes its three outcomes through a fake gateway", async
     products.recorded.events.map((event) => event.name),
     ["personal_plan_stage2_module_completed", "personal_plan_stage2_bridge_viewed"],
   )
+})
 
-  // 2. habits FIRST: nothing to hand off, so the host routes the user away.
+test("Modul 1 (products) completing as the CLOSING module (habits-first order) is unaffected by origin — exactly today's completed-session path, never handed back", async () => {
+  for (const postAcceptModuleEntry of [false, true]) {
+    const gateway = createStage2FixtureGateway({
+      runtimeEnvironment: "test",
+      triggerContext: plainTriggerContext,
+      initialAnswers: {
+        ...habitsAnswers,
+        currentProductCategories: [],
+        wetWashFrequency: "weekly_2x",
+      },
+      initialCompletedQuestionIds: [
+        ...habitsQuestionIds,
+        "current_product_categories",
+        "wet_wash_frequency",
+      ],
+      initialRevision: 6,
+    })
+    const session = await gateway.load()
+    const completion = await gateway.completeModule({ module: "products", expectedRevision: 6 })
+    assert.equal(completion.status, "complete")
+    assert.equal(completion.stage3Handoff, true)
+    const recording = recordingEffects()
+    await applyStage2ModuleCompletion(
+      {
+        session: scopeStage2SessionToModule(session, "products"),
+        hostSession: session,
+        moduleCompletion: completion,
+        postAcceptModuleEntry,
+      },
+      recording.effects,
+    )
+    // `stage3Handoff` is exclusive to `products` — the ONLY module whose
+    // closing completion is unaffected by the T2.1 origin routing. It still
+    // marks the session complete (today's `showCompletedSession` path, not
+    // `showStage3Bridge`), so a later Back-out-of-Stage-3 sees a correctly
+    // completed draft rather than a falsely reopened one.
+    assert.equal(recording.recorded.completed.length, 1)
+    assert.equal(recording.recorded.bridged.length, 0)
+    assert.equal(recording.recorded.handedBack.length, 0)
+  }
+})
+
+test("Modul 2 (habits) completing NON-closing hands back to the host — origin-independent", async () => {
   const habitsGateway = createStage2FixtureGateway({
     runtimeEnvironment: "test",
     triggerContext: plainTriggerContext,
@@ -812,6 +974,7 @@ test("module completion routes its three outcomes through a fake gateway", async
       session: scopeStage2SessionToModule(habitsSession, "habits"),
       hostSession: habitsSession,
       moduleCompletion: habitsCompletion,
+      postAcceptModuleEntry: true,
     },
     habits.effects,
   )
@@ -833,23 +996,56 @@ test("module completion routes its three outcomes through a fake gateway", async
     ),
     true,
   )
+})
 
-  // 3. the closing module: the draft is complete, exactly like the linear flow.
-  const closingGateway = createStage2FixtureGateway({
-    runtimeEnvironment: "test",
-    triggerContext: plainTriggerContext,
-    initialAnswers: {
-      ...habitsAnswers,
-      currentProductCategories: [],
-      wetWashFrequency: "weekly_2x",
-    },
-    initialCompletedQuestionIds: [
-      "current_product_categories",
-      "wet_wash_frequency",
-      ...habitsQuestionIds,
-    ],
-    initialRevision: 6,
+// The bug report (T2.1): Verhalten is the CLOSING module in the canonical
+// order (Produkte → Stage 3 → Routine → Verhalten). Its completion must NOT
+// re-arm the Stage-3 bridge for a post-accept module entry — the user already
+// walked Stage 3 in this very cohort and must go back to the Routine instead.
+test("Modul 2 (habits) completing as the CLOSING module on a POST-ACCEPT run hands back to the host, not the bridge", async () => {
+  const closingGateway = closingHabitsGateway()
+  const closingSession = await closingGateway.load()
+  const closingCompletion = await closingGateway.completeModule({
+    module: "habits",
+    expectedRevision: 6,
   })
+  assert.equal(closingCompletion.status, "complete")
+  assert.equal(closingCompletion.stage3Handoff, false)
+  const closing = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session: scopeStage2SessionToModule(closingSession, "habits"),
+      hostSession: closingSession,
+      moduleCompletion: closingCompletion,
+      postAcceptModuleEntry: true,
+    },
+    closing.effects,
+  )
+  assert.equal(closing.recorded.handedBack.length, 1)
+  assert.equal(closing.recorded.bridged.length, 0)
+  assert.equal(closing.recorded.completed.length, 0)
+  // The host payload must carry the FULL (unscoped) path — same discipline as
+  // the non-closing habits hand-back above.
+  assert.deepEqual(
+    closing.recorded.handedBack[0].session.path.orderedQuestionIds,
+    closingSession.path.orderedQuestionIds,
+  )
+  // The draft DID fully complete server-side — the canonical completion event
+  // still fires (future telemetry wiring should see it), but bridge_viewed
+  // must NOT: the bridge never shows on this path (fix-round MINOR 3).
+  assert.deepEqual(
+    closing.recorded.events.map((event) => event.name),
+    ["personal_plan_stage2_module_completed", "personal_plan_stage2_completed"],
+  )
+})
+
+// The unaccepted-cohort exception: reachable only via a hand-built
+// `?refine=habits` link on a draft that was never accepted (no product surface
+// links it). `/routine` would bounce that cohort, so the closing completion
+// keeps today's behavior — the bridge, since the full completion ran — so
+// their journey can still reach initial activation.
+test("Modul 2 (habits) completing as the CLOSING module WITHOUT an accepted plan keeps the bridge (unaccepted-cohort exception)", async () => {
+  const closingGateway = closingHabitsGateway()
   const closingSession = await closingGateway.load()
   const closingCompletion = await closingGateway.completeModule({
     module: "habits",
@@ -862,6 +1058,7 @@ test("module completion routes its three outcomes through a fake gateway", async
       session: scopeStage2SessionToModule(closingSession, "habits"),
       hostSession: closingSession,
       moduleCompletion: closingCompletion,
+      postAcceptModuleEntry: false,
     },
     closing.effects,
   )
@@ -1128,13 +1325,17 @@ test("the ceremony stays suppressed for BOTH module cohorts, accepted or not", (
 })
 
 test("the „Plan aktualisiert“ toast is never claimed for an initial activation", () => {
-  // An accepted plan really is being updated — signal it.
+  // An accepted plan really is being updated — signal it (only once the
+  // server confirms it actually recomputed, Task 2.2 — see "applied" here).
   assert.equal(
-    moduleCompletionRoutineHref({
-      stage: "stage2",
-      refineModule: "habits",
-      planAccepted: true,
-    }),
+    moduleCompletionRoutineHref(
+      {
+        stage: "stage2",
+        refineModule: "habits",
+        planAccepted: true,
+      },
+      "applied",
+    ),
     "/routine?planUpdated=1",
   )
   assert.equal(
@@ -1147,7 +1348,10 @@ test("the „Plan aktualisiert“ toast is never claimed for an initial activati
 
   // The failed-accept cohort is arriving at their FIRST routine. Nothing was
   // updated; the arrival speaks for itself.
-  assert.equal(moduleCompletionRoutineHref({ stage: "stage2", refineModule: "habits" }), "/routine")
+  assert.equal(
+    moduleCompletionRoutineHref({ stage: "stage2", refineModule: "habits" }, "applied"),
+    "/routine",
+  )
   assert.equal(
     stage3CompletionRoutineHref({ stage: "stage2", refineModule: "products" }, "/routine"),
     "/routine",
@@ -1283,7 +1487,7 @@ test("the ?refine=1 direct-accept journey opens products and completes the edit 
   assert.equal(planStartModuleEntry(journey), "first_open")
   assert.equal(planStartSuppressesChapterCeremony(journey), true)
   assert.equal(planStartRefinementExitDestination(journey), "routine")
-  assert.equal(moduleCompletionRoutineHref(journey), "/routine?planUpdated=1")
+  assert.equal(moduleCompletionRoutineHref(journey, "applied"), "/routine?planUpdated=1")
 
   // The REAL fixture gateway's complete draft renders the products module's
   // first question with the meter — never the bridge chapter or a shell.

@@ -55,10 +55,13 @@ const PLAN_VIEW_HREF = "/routine"
 const moduleHref = (stage2Module: Stage2Module) => `/plan-start?refine=${stage2Module}`
 
 /**
- * Partially-deferred cohort signal (2.1 M4 successor): Stage 3 may leave a role
- * uncovered with the server-derived reason `refinement_required`. That is the one
- * deferral the products module actually unlocks — `no_product` and
- * `preview_unavailable` are not resolved by answering anything.
+ * Partially-deferred cohort signal (2.1 M4 successor, widened in Task 2.2):
+ * Stage 3 may leave a role uncovered with the server-derived reason
+ * `refinement_required` or `unseen_recommendation`. Both are deferrals the
+ * products module actually unlocks — the first because the refinement answer
+ * was missing, the second because a recommendation was staged behind an
+ * unseen-preview gate that a products-module answer can clear. `no_product`
+ * and `preview_unavailable` are not resolved by answering anything.
  *
  * Read off the portfolio presentation the Profil tab already loads, so this costs
  * no extra request.
@@ -67,7 +70,7 @@ export function hasRefinementDeferredRoles(
   presentation: { deferredRoleReasons?: Record<string, Stage3DecisionDeferralReason> } | null,
 ): boolean {
   return Object.values(presentation?.deferredRoleReasons ?? {}).some(
-    (reason) => reason === "refinement_required",
+    (reason) => reason === "refinement_required" || reason === "unseen_recommendation",
   )
 }
 

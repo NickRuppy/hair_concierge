@@ -1,13 +1,24 @@
 /**
- * The "Plan aktualisiert" toast signal (Task 2.6).
+ * The "Plan aktualisiert" toast signal (Task 2.6, made honest in Task 2.2).
  *
  * An explicit, one-shot navigation marker attached to the `/routine` href by
- * the Task-2.4 routing touchpoints — a habits-first module completion, or a
- * Stage-3 completion that followed an explicit `products` module entry
- * (`src/components/personal-plan-start/plan-start-flow.tsx`). A query param,
- * not routine-content diffing: the toast reflects where the user came from
- * (an explicit refinement-module deep link that just recomputed the routine),
- * never whether the routine payload happens to look different.
+ * the Task-2.4 routing touchpoints
+ * (`src/components/personal-plan-start/plan-start-flow.tsx`):
+ *
+ * - a habits-first (or habits-closing) module completion — attached ONLY when
+ *   the server-reported recompute outcome was `"applied"`
+ *   (`moduleCompletion.recompute`, T1.4). `"unchanged"`, `"unavailable"`, and
+ *   an absent field (no active routine, or an older server) all mean nothing
+ *   was actually recomputed, so no signal rides along — even on an otherwise
+ *   post-accept module entry.
+ * - a Stage-3 completion that followed an explicit post-accept `products`
+ *   module entry — that path always genuinely activates a routine, so its
+ *   signal stays unconditional on post-accept origin alone
+ *   (`stage3CompletionRoutineHref`, unchanged by Task 2.2).
+ *
+ * A query param, not routine-content diffing: the toast reflects a
+ * server-confirmed fact about what THIS request just did, never whether the
+ * routine payload happens to look different on a later read.
  *
  * The Routine page consumes the param exactly once (see
  * `personal-plan-routine-client.tsx`) and strips it from the URL

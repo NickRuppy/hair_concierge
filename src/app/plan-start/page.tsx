@@ -106,6 +106,7 @@ export function parseRefineModuleParam(
 export type PlanStartPageState =
   | { state: "unavailable" }
   | { state: "paid_pending" }
+  | { state: "routine_redirect" }
   | {
       state: "production"
       initialJourney: PlanStartInitialJourney
@@ -281,6 +282,19 @@ export async function resolvePlanStartPageState(
         )
       }
     }
+    // D3 guard (Task 2.3). None of the branches above fired: no explicit
+    // refine/repair request, and the Stage-3-frontier resume did not apply
+    // (an accepted Routine keeps stage 4/5 reachable regardless of the
+    // Stage-2 draft, so `access.frontier` is never `stage3` for this cohort).
+    // A COMPLETE draft on an already-ACCEPTED plan is not a fresh Stage-2
+    // bridge — falling through here would seed the completed session, arm
+    // the legacy entry view's auto-handoff, and forward the user into a NEW
+    // Stage-3 creation funnel instead of their already-activated Routine.
+    // Not a stage-1 view either: that shape loses `planAccepted` and renders
+    // an invalid accept CTA (`accept.ts` rejects an already-active plan).
+    if (planAccepted && refinement.status === "complete") {
+      return { state: "routine_redirect" }
+    }
     return production(
       { stage: "stage2", ...directAcceptance },
       initialRefinementSession
@@ -351,6 +365,7 @@ export default async function PlanStartPage({
     },
   )
   if (state.state === "paid_pending") redirect("/plan-bereit")
+  if (state.state === "routine_redirect") redirect("/routine")
   if (state.state === "unavailable") return <PlanStartFlow state="unavailable" />
 
   return (
