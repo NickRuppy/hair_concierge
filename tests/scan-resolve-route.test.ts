@@ -573,6 +573,28 @@ test("attempt telemetry: catalog hit starts before lookup and completes only aft
   ])
 })
 
+test("attempt telemetry: an unknown fit verdict is completed but not counted as resolved", async () => {
+  const { completions, recordScanResolveAttempt, completeScanResolveAttempt } = collectAttempts()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      buildScanVerdict: () => ({ ...inCatalogVerdict, verdict: "unknown" }),
+      recordScanResolveAttempt: recordScanResolveAttempt as never,
+      completeScanResolveAttempt: completeScanResolveAttempt as never,
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(completions, [
+    {
+      attemptId: "attempt-1",
+      lookupOutcome: "hit",
+      terminalOutcome: "verdict_unknown",
+      matchedProductId: productId,
+      failureStage: null,
+    },
+  ])
+})
+
 test("attempt telemetry: catalog miss completes as unknown_product", async () => {
   const { starts, completions, recordScanResolveAttempt, completeScanResolveAttempt } =
     collectAttempts()

@@ -160,6 +160,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         | "unknown_product"
         | "pending_submission"
         | "resolved"
+        | "verdict_unknown"
         | "profile_ineligible"
         | "temporarily_unavailable",
       stage: ScanResolveFailureStage | null,
@@ -355,7 +356,12 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         snapshotSource: context.snapshotSource,
         savedState,
       }
-      await completeAttempt("resolved", null)
+      await completeAttempt(
+        eligibleVerdict.kind === "in_catalog" && eligibleVerdict.verdict === "unknown"
+          ? "verdict_unknown"
+          : "resolved",
+        null,
+      )
       return ok(result)
     } catch (error) {
       console.error("[scan] resolve failed", error)

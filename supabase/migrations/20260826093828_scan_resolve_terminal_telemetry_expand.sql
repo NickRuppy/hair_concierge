@@ -26,6 +26,7 @@ ALTER TABLE public.scan_resolve_events
       terminal_outcome IS NULL
       OR terminal_outcome IN (
         'resolved',
+        'verdict_unknown',
         'unknown_product',
         'pending_submission',
         'invalid_identifier',

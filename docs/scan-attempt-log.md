@@ -7,6 +7,8 @@ für die Person abgeschlossenen Terminal-Ergebnis (`terminal_outcome`).
 `failure_stage` zeigt bei unvollständigen Antworten die begrenzte technische
 Stufe. Die alte Spalte `outcome` wird während der Dual-Write-Phase bewusst
 weitergeschrieben und ist kein Ersatz für `terminal_outcome`.
+Ein exakter Katalogtreffer mit noch nicht belastbar bewertbarem Fit wird als
+`verdict_unknown` abgeschlossen und zählt ausdrücklich nicht als `resolved`.
 
 Nur Barcode-Versuche werden erfasst: der productId-Pfad (Such-Sheet/Merkliste)
 loggt nichts. Rohereignisse sind service-role-only und werden nach 30 UTC-

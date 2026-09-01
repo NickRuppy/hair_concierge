@@ -11,6 +11,7 @@ export type ScanResolveTerminalOutcome =
   | "unknown_product"
   | "pending_submission"
   | "resolved"
+  | "verdict_unknown"
   | "profile_ineligible"
   | "temporarily_unavailable"
 

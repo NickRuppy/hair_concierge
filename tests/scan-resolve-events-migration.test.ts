@@ -28,6 +28,7 @@ test("adds nullable v2 terminal telemetry without changing the legacy outcome co
   }
   for (const value of [
     "resolved",
+    "verdict_unknown",
     "unknown_product",
     "pending_submission",
     "invalid_identifier",
