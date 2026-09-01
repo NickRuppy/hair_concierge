@@ -40,7 +40,7 @@ test("the snapshot reader exhaustively requests only the declared read relations
         {
           product_id: PRODUCT_ID,
           thickness: "normal",
-          shampoo_bucket: "standard",
+          shampoo_bucket: "normal",
           scalp_route: "balanced",
           cleansing_intensity: "gentle",
         },

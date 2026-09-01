@@ -203,9 +203,7 @@ function approvalReadyPayload(
         product_line: null,
         clean_name: `Audit ${categoryKey} Product`,
         category_key: categoryKey,
-        suitable_thicknesses: ["heat_protectant", "dry_shampoo", "scalp_care"].includes(
-          categoryKey,
-        )
+        suitable_thicknesses: ["heat_protectant", "dry_shampoo", "scalp_care"].includes(categoryKey)
           ? []
           : ["normal"],
         affiliate_link: "https://example.test/product",
@@ -1073,6 +1071,8 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /approval_payload_schema/)
   assert.match(workerScript, /approvalPayloadContract/)
   assert.match(workerScript, /categoryApprovalContract/)
+  assert.match(workerScript, /derive Shampoo protocol roles from the reviewed Shampoo buckets/i)
+  assert.match(workerScript, /A schuppen-only Shampoo is complete without shampoo_everyday/i)
   assert.match(workerScript, /loadBrandResolutionCatalogForWorker/)
   assert.match(workerScript, /brand_resolution_context/)
   assert.match(workerScript, /resolveBrandFromText/)

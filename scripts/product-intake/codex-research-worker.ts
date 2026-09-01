@@ -999,7 +999,7 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
       product_application_protocols: applicationProtocolResearchContract(
         "shampoo",
         ["shampoo_everyday", "shampoo_dandruff"],
-        "Always include shampoo_everyday; include shampoo_dandruff when any row uses the schuppen bucket.",
+        "Derive Shampoo protocol roles from the reviewed Shampoo buckets: include shampoo_dandruff when any row uses schuppen, and include shampoo_everyday only when at least one source-supported row uses a non-schuppen bucket. A schuppen-only Shampoo is complete without shampoo_everyday. When an exact source supports ordinary or daily use, research the matching non-schuppen scalp-route facts before adding shampoo_everyday; daily-use wording alone must not invent a bucket or cadence.",
       ),
     }
   }

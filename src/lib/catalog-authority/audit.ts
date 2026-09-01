@@ -484,6 +484,29 @@ function auditProductProtocols(
     category?: PersonalPlanCategory | null,
   ) => void,
 ): void {
+  if (product.categoryKey === "shampoo") {
+    const unsupportedRoles = [
+      ...new Set(
+        snapshot.protocols
+          .filter(
+            (protocol) =>
+              protocol.productId === product.productId &&
+              protocol.category === product.categoryKey &&
+              protocol.role !== null &&
+              !product.requiredRoles.includes(protocol.role),
+          )
+          .map((protocol) => protocol.role as string),
+      ),
+    ].sort()
+    for (const role of unsupportedRoles) {
+      add(
+        "exact_protocol_scope_mismatch",
+        product,
+        "product_application_protocols",
+        `protocol role ${role} is not supported by reviewed Shampoo buckets`,
+      )
+    }
+  }
   for (const role of product.requiredRoles) {
     const complete = snapshot.protocols.some(
       (protocol) =>

@@ -2,6 +2,10 @@ import { createHash } from "node:crypto"
 
 import type { ApplicationGuidanceProtocolV1 } from "@/lib/routines/personal-plan/application/contracts"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
+import {
+  deriveShampooProtocolRoles,
+  isCanonicalShampooBucket,
+} from "@/lib/product-intake/shampoo-protocol-roles"
 
 type ProtocolResearchManifest = {
   schema_version: "personal-plan-stage5-protocol-research-v1"
@@ -61,6 +65,7 @@ export type Stage5ProtocolPreflightRead = {
       origin?: string | null
       is_active: boolean
       lifecycle_status: string
+      shampoo_buckets: Array<string | null>
     }>
   >
   listProtocols: (productIds: string[]) => Promise<
@@ -138,14 +143,13 @@ export function deriveStage5RequiredRoles(row: Stage5LiveCatalogRow): {
           roles: [],
           blockers: [`canonical_fact_missing:${row.product_id}:shampoo.bucket`],
         }
-      return {
-        roles: unique(
-          buckets.map((bucket) =>
-            bucket === "schuppen" ? "shampoo_dandruff" : "shampoo_everyday",
-          ),
-        ),
-        blockers: [],
-      }
+      const invalidBucket = buckets.find((bucket) => !isCanonicalShampooBucket(bucket))
+      if (invalidBucket)
+        return {
+          roles: [],
+          blockers: [`canonical_fact_invalid:${row.product_id}:shampoo.bucket:${invalidBucket}`],
+        }
+      return { roles: deriveShampooProtocolRoles(buckets), blockers: [] }
     }
     case "conditioner":
       return { roles: ["conditioner_rinse_out"], blockers: [] }
@@ -607,6 +611,21 @@ export async function preflightStage5ProtocolApplyBatch(
       blockers.push(
         `product_category_mismatch:${protocol.product_id}:${product.category_key}:${protocol.category_key}`,
       )
+    }
+    if (product.category_key === "shampoo" && protocol.category_key === "shampoo") {
+      const invalidBucket = product.shampoo_buckets.find(
+        (bucket) => bucket !== null && !isCanonicalShampooBucket(bucket),
+      )
+      const applicableRoles = deriveShampooProtocolRoles(product.shampoo_buckets)
+      if (invalidBucket !== undefined) {
+        blockers.push(
+          `canonical_fact_invalid:${protocol.product_id}:shampoo.bucket:${invalidBucket}`,
+        )
+      } else if (applicableRoles.length === 0) {
+        blockers.push(`canonical_fact_missing:${protocol.product_id}:shampoo.bucket`)
+      } else if (!applicableRoles.some((role) => role === protocol.role)) {
+        blockers.push(`protocol_role_not_supported:${protocol.product_id}:${protocol.role}`)
+      }
     }
     const existing = existingProtocols.find(
       (row) =>
