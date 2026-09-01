@@ -380,63 +380,128 @@ export type StageSuccessorResult = {
   currentActiveRoutineVersionId?: string
 }
 
-export async function stageRoutineSuccessor(
-  pg: PersonalPlanTestDb,
-  input: {
-    userId: string
-    planId: string
-    expectedActiveRoutineVersionId: string | null
-    expectedRevision: number
-    expectedSourceRevision: number
-    sourceRefinedNeedVersionId: string
-    sourcePortfolioVersionId: string
-    sourceProductDraftId: string
-    sourceProductDraftRevision: number
-    payload: unknown
-    sourceFingerprint: string
-    origin?: string
-  },
-): Promise<StageSuccessorResult> {
-  const { rows } = await pg.query<{ result: StageSuccessorResult }>(
-    `SELECT public.personal_plan_stage_routine_successor(
-       $1::uuid, $2::uuid, $3::uuid, $4::bigint, $5::bigint,
-       $6::uuid, $7::uuid, $8::uuid, $9::bigint,
-       1::integer, 'compiler-v1'::text, '{}'::jsonb, $10::text, $11::jsonb, '{}'::jsonb,
-       '{}'::text[], $12::text
-     ) AS result`,
-    [
-      input.userId,
-      input.planId,
-      input.expectedActiveRoutineVersionId,
-      input.expectedRevision,
-      input.expectedSourceRevision,
-      input.sourceRefinedNeedVersionId,
-      input.sourcePortfolioVersionId,
-      input.sourceProductDraftId,
-      input.sourceProductDraftRevision,
-      input.sourceFingerprint,
-      JSON.stringify(input.payload),
-      input.origin ?? "source_sync",
-    ],
-  )
-  return rows[0]!.result
-}
-
 export type ConfirmProposalResult = {
   outcome: string
   revision?: number
   currentRevision?: number
 }
 
-export async function confirmRoutineProposal(
-  pg: PersonalPlanTestDb,
-  input: { userId: string; planId: string; proposalId: string; expectedRevision: number },
-): Promise<ConfirmProposalResult> {
-  const { rows } = await pg.query<{ result: ConfirmProposalResult }>(
-    `SELECT public.personal_plan_confirm_routine_proposal(
-       $1::uuid, $2::uuid, $3::uuid, $4::bigint
-     ) AS result`,
-    [input.userId, input.planId, input.proposalId, input.expectedRevision],
-  )
-  return rows[0]!.result
+/**
+ * A minimal PostgREST-shaped client over PGlite, so the REAL
+ * `reactivateRoutineForProductDraft` service can be driven against real
+ * Postgres rather than re-implemented as SQL in a test. It supports exactly the
+ * surface that service uses: `select` + `eq` + `order` + `limit` +
+ * `maybeSingle`, and named-notation `rpc` for the two lifecycle functions.
+ */
+export function pgliteReactivationClient(pg: PersonalPlanTestDb) {
+  function toArrayLiteral(values: readonly string[]): string {
+    return `{${values
+      .map((value) => `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`)
+      .join(",")}}`
+  }
+
+  return {
+    from(table: string) {
+      return {
+        select(columns: string) {
+          const filters: Array<[string, unknown]> = []
+          let orderBy: string | null = null
+          let ascending = true
+          let rowLimit: number | null = null
+          async function execute() {
+            const where = filters
+              .map(([column], index) => `${column} = $${index + 1}`)
+              .join(" AND ")
+            const sql = [
+              `SELECT ${columns} FROM public.${table}`,
+              where ? `WHERE ${where}` : "",
+              orderBy ? `ORDER BY ${orderBy} ${ascending ? "ASC" : "DESC"}` : "",
+              rowLimit === null ? "" : `LIMIT ${rowLimit}`,
+            ]
+              .filter(Boolean)
+              .join(" ")
+            const { rows } = await pg.query<Record<string, unknown>>(
+              sql,
+              filters.map(([, value]) => value),
+            )
+            return { data: rows[0] ?? null, error: null }
+          }
+          const chain = {
+            eq(column: string, value: unknown) {
+              filters.push([column, value])
+              return chain
+            },
+            order(column: string, options: { ascending: boolean }) {
+              orderBy = column
+              ascending = options.ascending
+              return chain
+            },
+            limit(count: number) {
+              rowLimit = count
+              return chain
+            },
+            maybeSingle: execute,
+            then: (resolve: (value: { data: unknown; error: unknown }) => unknown) =>
+              execute().then(resolve),
+          }
+          return chain
+        },
+      }
+    },
+    async rpc(functionName: string, args: Record<string, unknown>) {
+      if (functionName === "personal_plan_stage_routine_successor") {
+        const { rows } = await pg.query<{ result: StageSuccessorResult }>(
+          `SELECT public.personal_plan_stage_routine_successor(
+             p_user_id => $1::uuid,
+             p_personal_plan_id => $2::uuid,
+             p_expected_active_routine_version_id => $3::uuid,
+             p_expected_revision => $4::bigint,
+             p_expected_source_revision => $5::bigint,
+             p_source_refined_need_version_id => $6::uuid,
+             p_source_portfolio_version_id => $7::uuid,
+             p_source_product_draft_id => $8::uuid,
+             p_source_product_draft_revision => $9::bigint,
+             p_routine_schema_version => $10::integer,
+             p_routine_compiler_version => $11::text,
+             p_routine_authority_versions => $12::jsonb,
+             p_routine_source_fingerprint => $13::text,
+             p_routine_payload => $14::jsonb,
+             p_proposal_delta => $15::jsonb,
+             p_direct_operation_keys => $16::text[],
+             p_origin => $17::text
+           ) AS result`,
+          [
+            args.p_user_id,
+            args.p_personal_plan_id,
+            args.p_expected_active_routine_version_id,
+            args.p_expected_revision,
+            args.p_expected_source_revision,
+            args.p_source_refined_need_version_id,
+            args.p_source_portfolio_version_id,
+            args.p_source_product_draft_id,
+            args.p_source_product_draft_revision,
+            args.p_routine_schema_version,
+            args.p_routine_compiler_version,
+            JSON.stringify(args.p_routine_authority_versions ?? {}),
+            args.p_routine_source_fingerprint,
+            JSON.stringify(args.p_routine_payload ?? {}),
+            JSON.stringify(args.p_proposal_delta ?? {}),
+            toArrayLiteral((args.p_direct_operation_keys ?? []) as string[]),
+            args.p_origin,
+          ],
+        )
+        return { data: rows[0]!.result, error: null }
+      }
+      const { rows } = await pg.query<{ result: ConfirmProposalResult }>(
+        `SELECT public.personal_plan_confirm_routine_proposal(
+           p_user_id => $1::uuid,
+           p_personal_plan_id => $2::uuid,
+           p_proposal_id => $3::uuid,
+           p_expected_revision => $4::bigint
+         ) AS result`,
+        [args.p_user_id, args.p_personal_plan_id, args.p_proposal_id, args.p_expected_revision],
+      )
+      return { data: rows[0]!.result, error: null }
+    },
+  }
 }

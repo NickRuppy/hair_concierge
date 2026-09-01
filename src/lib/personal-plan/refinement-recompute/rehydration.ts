@@ -163,6 +163,14 @@ function completeRehydratedCapture(
   for (const requirement of effective) {
     for (const role of requirement.requiredRoles) {
       if (coveredRoleKeys.has(`${requirement.category}:${role}`)) continue
+      // `no_product_owned` is the CAPTURE-pass reason and an intermediate state
+      // here, not the reason the person ever sees: it says only "no copied
+      // capture covers this role", which is the same fact
+      // `resolveStage3NeedRevision`'s `missingUncoveredRoles` records for the
+      // same situation. The gap becomes an `uncovered_role` decision subject,
+      // and the intent pass re-derives the reason that actually gets shown
+      // against the NEW authority — `no_product` or `unseen_recommendation`
+      // (`intents.ts` `deferralReasonFor`, founder ruling R5).
       next = markRoleUncovered(next, {
         category: requirement.category,
         role,

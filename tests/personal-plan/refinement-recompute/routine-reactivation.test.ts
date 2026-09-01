@@ -14,6 +14,8 @@ type Rows = {
   plan: Record<string, unknown> | null
   portfolio: Record<string, unknown> | null
   routine: Record<string, unknown> | null
+  /** A PENDING proposal for the target Routine, when the scenario has one. */
+  pendingProposal: Record<string, unknown> | null
 }
 
 const historicalRoutine = {
@@ -40,10 +42,12 @@ function fakeClient(input: {
     plan: { revision: 7, source_revision: 5, active_routine_version_id: "routine-b" },
     portfolio: { id: "portfolio-a" },
     routine: historicalRoutine,
+    pendingProposal: null,
     ...input.rows,
   }
   const rpcCalls: Array<{ fn: string; args: Record<string, unknown> }> = []
   const selects: string[] = []
+  const queries: Array<{ table: string; filters: Array<[string, unknown]> }> = []
 
   function query(table: string) {
     const data =
@@ -51,9 +55,16 @@ function fakeClient(input: {
         ? rows.plan
         : table === "personal_plan_portfolio_versions"
           ? rows.portfolio
-          : rows.routine
+          : table === "personal_plan_routine_proposals"
+            ? rows.pendingProposal
+            : rows.routine
+    const filters: Array<[string, unknown]> = []
+    queries.push({ table, filters })
     const chain = {
-      eq: () => chain,
+      eq: (column: string, value: unknown) => {
+        filters.push([column, value])
+        return chain
+      },
       order: () => chain,
       limit: () => chain,
       maybeSingle: async () => ({ data, error: null }),
@@ -89,7 +100,7 @@ function fakeClient(input: {
     },
   } as unknown as RoutineReactivationClient
 
-  return { client, rpcCalls, selects }
+  return { client, rpcCalls, selects, queries }
 }
 
 function run(client: RoutineReactivationClient) {
@@ -129,6 +140,74 @@ test("stages the historical Routine as a successor of the current one and confir
   assert.equal(rpcCalls[1]!.args.p_proposal_id, "proposal-new")
 })
 
+/**
+ * The proposal fingerprint is `sha256(payload_hash : delta : direct_keys)`
+ * (`20260808070000:115-117`) and every other input is deterministic for a given
+ * pair of versions. Without a per-transition key, a SECOND flip back re-derives
+ * the fingerprint of the proposal the first re-activation already had accepted,
+ * the stager answers `already_staged` without re-pending it, and the confirm
+ * answers `stale_proposal` — on deterministic inputs, so forever.
+ */
+test("the direct operation keys name the exact transition, so a repeated flip stages afresh", async () => {
+  const first = fakeClient({})
+  await run(first.client)
+  const secondFlip = fakeClient({
+    // The state after one re-activation and one flip away: a different active
+    // Routine, and a plan revision that has moved on.
+    rows: { plan: { revision: 11, source_revision: 5, active_routine_version_id: "routine-b2" } },
+  })
+  await run(secondFlip.client)
+
+  const keysOf = (calls: Array<{ args: Record<string, unknown> }>) =>
+    calls[0]!.args.p_direct_operation_keys as string[]
+  assert.deepEqual(keysOf(first.rpcCalls), [
+    "refinement_recompute:reactivate:routine-a:routine-b:7",
+  ])
+  assert.notDeepEqual(keysOf(secondFlip.rpcCalls), keysOf(first.rpcCalls))
+})
+
+/** ...while a plain retry at the same plan state stays idempotent. */
+test("an identical retry at the same plan revision reuses the same fingerprint inputs", async () => {
+  const first = fakeClient({})
+  await run(first.client)
+  const retry = fakeClient({})
+  await run(retry.client)
+
+  assert.deepEqual(
+    retry.rpcCalls[0]!.args.p_direct_operation_keys,
+    first.rpcCalls[0]!.args.p_direct_operation_keys,
+  )
+})
+
+/**
+ * Controller ruling (fix round 1, IMPORTANT 2): a lost-response replay whose
+ * proposal is merely PENDING belongs to the person — the routine page's
+ * "Änderungen prüfen" recovery. Staging over it would also supersede every
+ * other pending proposal on the plan (`20260808070000:181-183`).
+ */
+test("a still-pending proposal for the target Routine is reported, never staged over", async () => {
+  const { client, rpcCalls, queries } = fakeClient({
+    rows: { pendingProposal: { id: "proposal-pending" } },
+  })
+
+  assert.deepEqual(await run(client), { status: "unavailable", reason: "proposal_pending" })
+  assert.deepEqual(rpcCalls, [], "nothing is staged and nothing is superseded")
+  const proposalQuery = queries.find((query) => query.table === "personal_plan_routine_proposals")
+  assert.deepEqual(proposalQuery?.filters, [
+    ["candidate_routine_version_id", "routine-a"],
+    ["user_id", USER_ID],
+    ["personal_plan_id", PLAN_ID],
+    ["status", "pending"],
+  ])
+})
+
+test("a missing or foreign plan row gets its own terminal reason", async () => {
+  const { client, rpcCalls } = fakeClient({ rows: { plan: null } })
+
+  assert.deepEqual(await run(client), { status: "unavailable", reason: "plan_unavailable" })
+  assert.deepEqual(rpcCalls, [])
+})
+
 test("does nothing when the historical Routine is already the active one", async () => {
   const { client, rpcCalls } = fakeClient({
     rows: { plan: { revision: 7, source_revision: 5, active_routine_version_id: "routine-a" } },
@@ -151,12 +230,6 @@ test("reports no_routine_for_draft when nothing was ever compiled from the draft
     status: "unavailable",
     reason: "no_routine_for_draft",
   })
-
-  const missingPlan = fakeClient({ rows: { plan: null } })
-  assert.deepEqual(await run(missingPlan.client), {
-    status: "unavailable",
-    reason: "no_routine_for_draft",
-  })
 })
 
 test("a moved plan between the read and the stage is a retryable conflict", async () => {
@@ -167,10 +240,21 @@ test("a moved plan between the read and the stage is a retryable conflict", asyn
 })
 
 test("a moved plan between the stage and the confirm is a retryable conflict", async () => {
-  for (const outcome of ["revision_conflict", "stale_proposal", "stale_source"]) {
+  for (const outcome of ["revision_conflict", "stale_source"]) {
     const { client } = fakeClient({ confirm: { outcome } })
     assert.deepEqual(await run(client), { status: "conflict" }, outcome)
   }
+})
+
+/**
+ * `stale_proposal` names the proposal this call itself staged, so the identical
+ * next attempt reproduces it. Reporting it as retryable would re-arm the outbox
+ * claim forever on deterministic inputs.
+ */
+test("a stale_proposal confirm is terminal, never retried", async () => {
+  const { client } = fakeClient({ confirm: { outcome: "stale_proposal" } })
+
+  assert.deepEqual(await run(client), { status: "unavailable", reason: "confirm_rejected" })
 })
 
 /**

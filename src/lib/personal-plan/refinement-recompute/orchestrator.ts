@@ -254,10 +254,14 @@ export async function recomputeRoutineAfterHabitsCompletion(
     //       version and moved the plan's head to it, so acquisition lands on
     //       that version's historical completed draft.
     //
-    // What both share is the fact that decides the fix: a Routine compiled from
-    // the target version's draft ALREADY EXISTS and is simply not active. Per
-    // the plan's silent-apply ruling (R2) the honest outcome is to make it
-    // active again — staged as a successor of the CURRENT active Routine and
+    // The reactivator is what tells them apart, because only it can read the
+    // target Routine's own proposal state: a PENDING proposal is (a) and stays
+    // the person's to confirm on the routine page (`proposal_pending` ->
+    // `pending_proposal_staged`, fix round 1 IMPORTANT 2 — nothing is staged
+    // over it). Otherwise this is (b), true historical reuse: the Routine
+    // compiled from the target version's draft already exists and is simply not
+    // active, and the plan's silent-apply ruling (R2) makes re-activating it the
+    // honest outcome — staged as a successor of the CURRENT active Routine and
     // confirmed, through the existing lifecycle RPCs.
     if (
       completedAtAcquisition &&
@@ -280,6 +284,11 @@ export async function recomputeRoutineAfterHabitsCompletion(
           return { status: "applied", routineVersionId: afterReactivation.routineVersionId }
         }
         return unavailable("concurrent_activation", true)
+      }
+      // The target Routine's own proposal is still pending: this is the
+      // lost-response replay, and its recovery belongs to the person.
+      if (reactivated.reason === "proposal_pending") {
+        return unavailable("pending_proposal_staged", false)
       }
       if (reactivated.reason !== "no_routine_for_draft") {
         return unavailable("reactivation_rejected", false)

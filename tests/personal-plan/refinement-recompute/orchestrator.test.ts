@@ -1173,6 +1173,41 @@ test("a completed draft whose Routine exists but is inactive is re-activated => 
   assert.equal(calls.evaluateDecisions.length, 0)
 })
 
+/**
+ * The controller ruling of fix round 1 (IMPORTANT 2) stands: a lost-response
+ * replay whose proposal is still PENDING is the person's to confirm on the
+ * routine page, and nothing may be staged over it — staging supersedes every
+ * pending proposal on the plan (`20260808070000:181-183`). The reactivator is
+ * the only layer that can see that proposal's status, so it reports
+ * `proposal_pending` and the orchestrator keeps the terminal outcome.
+ */
+test("a still-pending proposal for the target Routine keeps pending_proposal_staged, unstaged", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-b", refinedVersionId: REFINED_OLD })
+  const { routineState } = fakeRoutineState([starting, starting])
+  const { persistence } = fakePersistence({})
+  const { gateway } = fakeGateway({
+    loadOrCreate: async () =>
+      draftResponse(freshDraft(REFINED_NEW, "draft-historical", { status: "completed" })),
+    complete: readyForRoutine({ routineProposalId: "proposal-staged-not-confirmed" }),
+  })
+  const { routineReactivator, calls: reactivations } = fakeReactivator({
+    status: "unavailable",
+    reason: "proposal_pending",
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState, routineReactivator }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, {
+    status: "unavailable",
+    reason: "pending_proposal_staged",
+    retryable: false,
+  })
+  assert.equal(reactivations.length, 1)
+})
+
 test("a re-activation that finds no Routine for the completed draft keeps pending_proposal_staged", async () => {
   const starting = activeRoutineVersion({ routineVersionId: "rv-b", refinedVersionId: REFINED_OLD })
   const { routineState } = fakeRoutineState([starting, starting])
@@ -1195,6 +1230,32 @@ test("a re-activation that finds no Routine for the completed draft keeps pendin
   assert.deepEqual(result, {
     status: "unavailable",
     reason: "pending_proposal_staged",
+    retryable: false,
+  })
+})
+
+test("an unreadable plan row is terminal, never the routine page's proposal recovery", async () => {
+  const starting = activeRoutineVersion({ routineVersionId: "rv-b", refinedVersionId: REFINED_OLD })
+  const { routineState } = fakeRoutineState([starting, starting])
+  const { persistence } = fakePersistence({})
+  const { gateway } = fakeGateway({
+    loadOrCreate: async () =>
+      draftResponse(freshDraft(REFINED_NEW, "draft-historical", { status: "completed" })),
+    complete: readyForRoutine({ routineProposalId: "proposal-accepted-long-ago" }),
+  })
+  const { routineReactivator } = fakeReactivator({
+    status: "unavailable",
+    reason: "plan_unavailable",
+  })
+
+  const result = await recomputeRoutineAfterHabitsCompletion(
+    deps({ gateway, persistence, routineState, routineReactivator }),
+    { userId: USER_ID, personalPlanId: PLAN_ID, refinedVersionId: REFINED_NEW },
+  )
+
+  assert.deepEqual(result, {
+    status: "unavailable",
+    reason: "reactivation_rejected",
     retryable: false,
   })
 })

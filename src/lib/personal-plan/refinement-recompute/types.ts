@@ -182,8 +182,19 @@ export type Stage3RecomputeRoutineReactivation =
   | { status: "conflict" }
   | {
       status: "unavailable"
-      reason: /** Nothing was ever compiled from this draft (or the plan row is gone). */
+      reason: /** Nothing was ever compiled from this draft. */
         | "no_routine_for_draft"
+        /**
+         * The Routine compiled from this draft still carries a PENDING
+         * proposal: a lost-response replay whose confirm never landed, not a
+         * historical reuse. That one belongs to the person — it is left alone
+         * for the routine page's "Änderungen prüfen" recovery, and nothing is
+         * staged over it (staging would supersede every pending proposal on
+         * the plan, `20260808070000:181-183`).
+         */
+        | "proposal_pending"
+        /** The plan row is missing or belongs to someone else. */
+        | "plan_unavailable"
         /** `personal_plan_stage_routine_successor` refused the candidate. */
         | "stage_rejected"
         /** `personal_plan_confirm_routine_proposal` refused the staged proposal. */
@@ -201,6 +212,11 @@ export type Stage3RecomputeRoutineReactivation =
  * successor of the CURRENT active Routine and confirmed. Both steps are
  * existing lifecycle RPCs (`personal_plan_stage_routine_successor` +
  * `personal_plan_confirm_routine_proposal`); no new migration is involved.
+ *
+ * Staging writes a NEW Routine version row carrying the historical payload —
+ * the RPC's payload-hash conflict clause does not match the original row, whose
+ * hash was taken before the stored payload's ids were injected. Same content,
+ * same source lineage, which is all the caller's re-read classifies on.
  */
 export type Stage3RecomputeRoutineReactivator = {
   reactivateRoutineForProductDraft(input: {

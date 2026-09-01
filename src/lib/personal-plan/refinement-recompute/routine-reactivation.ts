@@ -25,8 +25,17 @@ const STAGE_CONFLICTS = new Set([
   "revision_conflict",
   "source_revision_conflict",
 ])
-/** Same for the confirm: a moved plan, a superseded proposal, a moved source. */
-const CONFIRM_CONFLICTS = new Set(["revision_conflict", "stale_proposal", "stale_source"])
+/**
+ * Same for the confirm — but `stale_proposal` is deliberately NOT here.
+ *
+ * A retry re-reads the same rows and rebuilds the same request, so anything a
+ * retry cannot change must be terminal or the outbox claim re-arms forever.
+ * `revision_conflict` and `stale_source` name a value another writer moved,
+ * which the next pass reads afresh. `stale_proposal` means the proposal this
+ * very call staged is not the plan's pending one, or is no longer pending
+ * (`20260808062603:411-414`) — a state the identical next attempt reproduces.
+ */
+const CONFIRM_CONFLICTS = new Set(["revision_conflict", "stale_source"])
 
 function outcomeOf(data: unknown): Record<string, unknown> | null {
   return data && typeof data === "object" ? (data as Record<string, unknown>) : null
@@ -69,13 +78,25 @@ type RoutineVersionRow = {
  *    source metadata and compiled payload. Its `stale_source` guards all pass
  *    for this shape: the plan's `current_refined_need_version_id` is that
  *    version again, and the portfolio/draft rows are exactly the ones it names
- *    (`20260808070000:76-88`). Its `ON CONFLICT (personal_plan_id,
- *    source_portfolio_version_id, payload_hash) DO NOTHING` means the identical
- *    payload re-uses the existing Routine version row rather than duplicating it.
+ *    (`20260808070000:76-88`).
+ *
+ *    This writes a NEW Routine version row carrying the historical payload,
+ *    rather than re-pointing at the old one. The RPC's `ON CONFLICT
+ *    (personal_plan_id, source_portfolio_version_id, payload_hash) DO NOTHING`
+ *    does not match the original row, because that row's `payload_hash` was
+ *    taken over the payload as SUBMITTED while the row STORES the same payload
+ *    with `versionId` / `planId` / `parentVersionId` / `createdAt` / `source`
+ *    injected (`20260808070000:91-111`), and only `versionId`/`createdAt` are
+ *    stripped before hashing. The new row is harmless and carries the same
+ *    user-visible content and the same source lineage, which is what the
+ *    caller's re-read classifies on. It does mean a REPEATED flip re-uses the
+ *    row this service created the first time, which is why the proposal
+ *    fingerprint below must vary per attempt.
  * 2. `personal_plan_confirm_routine_proposal` on the proposal that staged.
  *
- * Anything moving in between is reported as a retryable `conflict`; the caller
- * decides the outcome from an owner-scoped re-read, never from this result.
+ * A value another writer moved is reported as a retryable `conflict`; anything
+ * an identical retry would reproduce is terminal. The caller decides the
+ * outcome from an owner-scoped re-read, never from this result.
  */
 export async function reactivateRoutineForProductDraft(input: {
   client: RoutineReactivationClient
@@ -97,7 +118,10 @@ export async function reactivateRoutineForProductDraft(input: {
     source_revision: number
     active_routine_version_id: string | null
   } | null
-  if (!plan) return { status: "unavailable", reason: "no_routine_for_draft" }
+  // A missing or foreign plan row is an ownership/infrastructure fact, not
+  // "this draft never produced a Routine" — the caller maps the latter to the
+  // routine page's pending-proposal recovery, which would be a lie here.
+  if (!plan) return { status: "unavailable", reason: "plan_unavailable" }
 
   // The same two-step join the completion receipt loader uses
   // (`stage3-persistence-supabase.ts:515-535`): the portfolio a completed draft
@@ -132,6 +156,26 @@ export async function reactivateRoutineForProductDraft(input: {
   if (!routine) return { status: "unavailable", reason: "no_routine_for_draft" }
   if (plan.active_routine_version_id === routine.id) return { status: "unchanged" }
 
+  // A PENDING proposal for this very Routine means the completion that staged
+  // it never got its confirm — a lost-response replay, not a historical reuse.
+  // That case belongs to the person: the routine page's own "Änderungen prüfen"
+  // recovery is the next step (fix round 1, IMPORTANT 2). Staging over it would
+  // also supersede every other pending proposal on the plan
+  // (`20260808070000:181-183`), silently discarding a review the person may be
+  // in the middle of.
+  const pendingProposal = (await readMaybeSingle(
+    client
+      .from("personal_plan_routine_proposals")
+      .select("id")
+      .eq("candidate_routine_version_id", routine.id)
+      .eq("user_id", userId)
+      .eq("personal_plan_id", personalPlanId)
+      .eq("status", "pending")
+      .limit(1)
+      .maybeSingle(),
+  )) as { id: string } | null
+  if (pendingProposal) return { status: "unavailable", reason: "proposal_pending" }
+
   const stageResponse = await client.rpc("personal_plan_stage_routine_successor", {
     p_user_id: userId,
     p_personal_plan_id: personalPlanId,
@@ -151,7 +195,20 @@ export async function reactivateRoutineForProductDraft(input: {
     // the person already had. An empty delta is the truthful description, and
     // it is only ever read in the window before the confirm below lands.
     p_proposal_delta: { schemaVersion: 1, direct: [], consequential: [], unchangedItemCount: 0 },
-    p_direct_operation_keys: [],
+    // The proposal fingerprint is `sha256(payload_hash : delta : direct_keys)`
+    // (`20260808070000:115-117`), and every other input here is deterministic
+    // for a given pair of versions. Without something per-transition, a person
+    // who flips back a SECOND time (A→B→A→B→A) re-derives the fingerprint of
+    // the proposal the FIRST re-activation already had accepted; the stager
+    // then returns `already_staged` for that accepted proposal without
+    // re-pending it (`20260808070000:152-179`) and the confirm answers
+    // `stale_proposal` forever. Naming the exact transition — which Routine is
+    // being restored, over which currently active one, at which plan revision —
+    // makes each attempt its own proposal, while an identical RETRY at the same
+    // plan revision still re-finds its own pending proposal and confirms it.
+    p_direct_operation_keys: [
+      `refinement_recompute:reactivate:${routine.id}:${plan.active_routine_version_id ?? "none"}:${plan.revision}`,
+    ],
     // Not an editor edit: this is the system's own refinement recompute, the
     // same origin the sync worker's self-heal pass stages under.
     p_origin: "source_sync",

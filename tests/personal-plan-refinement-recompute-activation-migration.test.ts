@@ -2,10 +2,14 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  reactivateRoutineForProductDraft,
+  type RoutineReactivationClient,
+} from "../src/lib/personal-plan/refinement-recompute/routine-reactivation"
+
+import {
   activateV2,
   completeRefinementDraft,
   completeStage2Module,
-  confirmRoutineProposal,
   createInitialNeed,
   id,
   insertOpenRefinementDraft,
@@ -13,10 +17,23 @@ import {
   loadProductDraft,
   loadRoutineVersionForProductDraft,
   migratedPersonalPlanDatabase,
+  pgliteReactivationClient,
   portfolioSnapshot,
   readPlan,
-  stageRoutineSuccessor,
+  type PersonalPlanTestDb,
 } from "./personal-plan-pglite-migration.fixtures"
+
+/** The refined need version the plan's ACTIVE Routine was compiled from. */
+async function activeSourceVersion(
+  pg: PersonalPlanTestDb,
+  plan: { active_routine_version_id: string | null },
+): Promise<string | null> {
+  const { rows } = await pg.query<{ source_refined_need_version_id: string }>(
+    "SELECT source_refined_need_version_id FROM public.personal_plan_routine_versions WHERE id = $1",
+    [plan.active_routine_version_id],
+  )
+  return rows[0]?.source_refined_need_version_id ?? null
+}
 
 /**
  * `personal_plan_complete_draft_activate_v2`
@@ -931,51 +948,77 @@ test("a returning (A→B→A) refined version can re-activate its historical Rou
   assert.equal(historicalDraft.id, versionA.draftId)
   assert.equal(historicalDraft.status, "completed")
 
-  // The fix: stage the historical Routine's own compiled payload as a
-  // successor of the CURRENT active Routine, then confirm it.
   const historical = await loadRoutineVersionForProductDraft(pg, {
     userId: USER_ID,
     planId: initial.personalPlanId,
     productDraftId: historicalDraft.id,
   })
   assert.ok(historical, "A's Routine version still exists; it is only inactive")
-  const staged = await stageRoutineSuccessor(pg, {
+
+  // The fix, driven through the REAL service against real Postgres.
+  const client = pgliteReactivationClient(pg) as unknown as RoutineReactivationClient
+  const reactivated = await reactivateRoutineForProductDraft({
+    client,
     userId: USER_ID,
-    planId: initial.personalPlanId,
-    expectedActiveRoutineVersionId: flipped.active_routine_version_id,
-    expectedRevision: flipped.revision,
-    expectedSourceRevision: flipped.source_revision,
-    sourceRefinedNeedVersionId: historical.source_refined_need_version_id,
-    sourcePortfolioVersionId: historical.source_portfolio_version_id,
-    sourceProductDraftId: historical.source_product_draft_id,
-    sourceProductDraftRevision: historical.source_product_draft_revision,
-    payload: historical.payload,
-    sourceFingerprint: historical.source_fingerprint,
+    personalPlanId: initial.personalPlanId,
+    productDraftId: historicalDraft.id,
   })
-  assert.equal(
-    staged.outcome,
-    "staged",
+  assert.deepEqual(
+    reactivated.status,
+    "activated",
     "the stale_source guards accept a historical completed draft on the plan's CURRENT head",
   )
-  const confirmed = await confirmRoutineProposal(pg, {
-    userId: USER_ID,
-    planId: initial.personalPlanId,
-    proposalId: staged.routineProposalId!,
-    expectedRevision: staged.revision!,
-  })
-  assert.equal(confirmed.outcome, "accepted")
 
   const after = await readPlan(pg, initial.personalPlanId)
   assert.equal(after.pending_routine_proposal_id, null)
   assert.notEqual(after.active_routine_version_id, versionB.routineVersionId)
-  const activeSource = await pg.query<{ source_refined_need_version_id: string }>(
-    "SELECT source_refined_need_version_id FROM public.personal_plan_routine_versions WHERE id = $1",
-    [after.active_routine_version_id],
-  )
+  assert.equal(await activeSourceVersion(pg, after), versionA.refined, "the plan runs on A again")
+
+  // ── The SECOND round trip: A→B→A→B→A ──────────────────────────────────────
+  //
+  // This is where a deterministic proposal fingerprint dead-ended. The first
+  // re-activation left an ACCEPTED proposal; without something per-transition
+  // in `p_direct_operation_keys`, the second return to A re-derives that same
+  // fingerprint, the stager answers `already_staged` for the accepted proposal
+  // without re-pending it (20260808070000:152-179), and the confirm answers
+  // `stale_proposal` (20260808062603:405-412) — on deterministic inputs, so
+  // every retry reproduces it and the outbox claim re-arms forever.
+  async function flipTo(inputHash: string, expectedRevision: number, refined: string) {
+    await reAnswer()
+    assert.equal(await completeHabitsModule(expectedRevision, inputHash), refined)
+    const draft = await loadProductDraft(pg, {
+      userId: USER_ID,
+      planId: initial.personalPlanId,
+      refinedNeedVersionId: refined,
+    })
+    assert.equal(draft.status, "completed")
+    return reactivateRoutineForProductDraft({
+      client,
+      userId: USER_ID,
+      personalPlanId: initial.personalPlanId,
+      productDraftId: draft.id,
+    })
+  }
+
+  const backToB = await flipTo("b".repeat(64), 3, versionB.refined)
+  assert.equal(backToB.status, "activated")
   assert.equal(
-    activeSource.rows[0]!.source_refined_need_version_id,
+    await activeSourceVersion(pg, await readPlan(pg, initial.personalPlanId)),
+    versionB.refined,
+  )
+
+  const backToASecondTime = await flipTo("a".repeat(64), 4, versionA.refined)
+  assert.equal(
+    backToASecondTime.status,
+    "activated",
+    "a repeated flip stages a FRESH proposal instead of re-finding the accepted one",
+  )
+  const settled = await readPlan(pg, initial.personalPlanId)
+  assert.equal(settled.pending_routine_proposal_id, null)
+  assert.equal(
+    await activeSourceVersion(pg, settled),
     versionA.refined,
-    "the plan runs on A again",
+    "the plan runs on A again after the SECOND return, not just the first",
   )
 })
 
