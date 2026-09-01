@@ -94,7 +94,7 @@ test("only a stable creator hint triggers context lookup", () => {
       search: "",
       userId: null,
     }),
-    "regular",
+    "checking",
   )
   assert.equal(
     getPartnerQuizContextLookupKey({

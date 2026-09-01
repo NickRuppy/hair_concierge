@@ -67,6 +67,11 @@ export function QuizLeadCapture() {
   })
 
   useEffect(() => {
+    if (contextLookupKey === "checking") {
+      setContextStatus("checking")
+      return
+    }
+
     if (contextLookupKey === "regular") {
       setRegularLeadCapture()
       setContextStatus("ready")
@@ -252,7 +257,7 @@ export function QuizLeadCapture() {
     }
   }
 
-  if (contextStatus !== "ready") {
+  if (contextLookupKey === "checking" || contextStatus !== "ready") {
     return (
       <div className="flex flex-col">
         <div className="mb-4 flex items-center gap-3">
@@ -268,7 +273,7 @@ export function QuizLeadCapture() {
             <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
           </div>
         </div>
-        {contextStatus === "checking" ? (
+        {contextLookupKey === "checking" || contextStatus === "checking" ? (
           <p className="text-center text-sm text-muted-foreground" role="status">
             Dein Zugang wird geladen …
           </p>

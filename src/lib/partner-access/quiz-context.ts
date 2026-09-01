@@ -27,8 +27,9 @@ export function getPartnerQuizContextLookupKey({
   hasMetadataHint: boolean
   search: string
   userId: string | null
-}): "regular" | "marker" | `user:${string}` {
+}): "checking" | "regular" | "marker" | `user:${string}` {
   if (isPartnerQuizEntrySearch(search)) return "marker"
+  if (authLoading) return "checking"
   if (!authLoading && hasMetadataHint && userId) return `user:${userId}`
   return "regular"
 }
