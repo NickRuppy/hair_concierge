@@ -17,6 +17,8 @@ import { assertOilRepairApplyCliGate } from "../scripts/catalog-authority/oil-re
 const MANIFEST_PATH = "data/catalog-enrichment/oil-authority-enrichment-v1/manifest.json"
 const MIGRATION_PATH =
   "supabase/migrations/20260901113013_oil_authority_repair_v1_executor_approved.sql"
+const AMBIGUITY_FIX_MIGRATION_PATH =
+  "supabase/migrations/20260901131456_fix_oil_authority_executor_product_id_ambiguity.sql"
 const EXPECTED_FINGERPRINT = "bc2cca3c68ae4eea4dd337fcbbd5f02be5d7ac1d42635a26bd68a74255929b2b"
 const OGX_ID = "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"
 const GARNIER_ID = "c574ee6f-ad22-45c0-b936-57b847d93433"
@@ -206,6 +208,27 @@ test("the SQL executor pins the approved fingerprint and retains explicit null s
   assert.match(sql, /INSERT INTO public\.product_application_protocols/)
   assert.match(sql, /INSERT INTO public\.personal_plan_catalog_fact_evidence/)
   assert.match(sql, /INSERT INTO public\.catalog_enrichment_applied_items/)
+  assert.match(sql, /REVOKE ALL ON FUNCTION[\s\S]*FROM PUBLIC, anon, authenticated/)
+  assert.doesNotMatch(sql, /UPDATE public\.products/)
+  assert.doesNotMatch(sql, /product_identifiers/)
+  assert.doesNotMatch(sql, /catalog_product_dispositions/)
+})
+
+test("the SQL executor fix resolves output-column ambiguity without widening its scope", () => {
+  const sql = readFileSync(AMBIGUITY_FIX_MIGRATION_PATH, "utf8")
+  const conflictDirective = sql.indexOf("#variable_conflict use_column")
+  const declaration = sql.indexOf("DECLARE")
+  const protocolUpsert = sql.indexOf(
+    "ON CONFLICT (product_id, category, role, application_family) DO UPDATE SET",
+  )
+
+  assert.match(sql, /CREATE OR REPLACE FUNCTION public\.apply_catalog_authority_oil_repair_v1/)
+  assert.match(
+    sql,
+    new RegExp(`v_approved_manifest_fingerprint constant text := '${EXPECTED_FINGERPRINT}'`),
+  )
+  assert.ok(conflictDirective >= 0 && declaration > conflictDirective)
+  assert.ok(protocolUpsert > declaration)
   assert.match(sql, /REVOKE ALL ON FUNCTION[\s\S]*FROM PUBLIC, anon, authenticated/)
   assert.doesNotMatch(sql, /UPDATE public\.products/)
   assert.doesNotMatch(sql, /product_identifiers/)
