@@ -39,9 +39,9 @@ export function QuizConcernsQuestion() {
 
   const handleContinue = useCallback(() => {
     setAnswer("concerns", localSelection)
-    setAnswer("concerns_other_text", otherText.trim() || undefined)
+    setAnswer("concerns_other_text", showOtherField ? otherText.trim() || undefined : undefined)
     goNext()
-  }, [goNext, localSelection, otherText, setAnswer])
+  }, [goNext, localSelection, otherText, setAnswer, showOtherField])
 
   const handleOtherFocus = useCallback((event: FocusEvent<HTMLTextAreaElement>) => {
     if (!window.matchMedia("(max-width: 639px), (max-height: 700px)").matches) return
@@ -66,7 +66,12 @@ export function QuizConcernsQuestion() {
     )
   }, [])
 
-  const handleShowOtherField = () => {
+  const handleToggleOtherField = () => {
+    if (showOtherField) {
+      setAnswer("concerns_other_text", undefined)
+      setShowOtherField(false)
+      return
+    }
     setShowOtherField(true)
     window.requestAnimationFrame(() => otherTextRef.current?.focus())
   }
@@ -75,9 +80,9 @@ export function QuizConcernsQuestion() {
 
   const hasSelection = localSelection.length > 0
   const hasTypedNote = otherText.trim().length > 0
-  const customOptionActive = showOtherField || hasTypedNote
-  const canContinue = hasSelection || hasTypedNote
-  const selectedCount = localSelection.length + (hasTypedNote ? 1 : 0)
+  const activeTypedNote = showOtherField && hasTypedNote
+  const canContinue = hasSelection || activeTypedNote
+  const selectedCount = localSelection.length + (activeTypedNote ? 1 : 0)
   const instruction = "Wähle alles aus, was immer wieder eine Rolle spielt."
 
   return (
@@ -126,9 +131,9 @@ export function QuizConcernsQuestion() {
             icon="help"
             label="Etwas anderes"
             description="Wenn dein Thema nicht in der Liste steht, beschreib es kurz selbst."
-            active={customOptionActive}
+            active={showOtherField}
             multi
-            onClick={handleShowOtherField}
+            onClick={handleToggleOtherField}
             animationDelay={concerns.length * 60}
           />
           {showOtherField ? (
@@ -150,17 +155,7 @@ export function QuizConcernsQuestion() {
                 placeholder="Zum Beispiel: stumpf nach dem Föhnen"
                 className="h-[78.75px] min-h-[78.75px] w-full overflow-y-auto rounded-xl border border-border bg-background px-[18px] py-[14px] text-base font-semibold leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
               />
-              <div className="mt-2 flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOtherText("")
-                    setShowOtherField(false)
-                  }}
-                  className="text-xs font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
-                >
-                  Notiz entfernen
-                </button>
+              <div className="mt-2 flex items-center justify-end gap-3">
                 <p className="text-xs text-[var(--text-caption)]">{otherText.length}/50</p>
               </div>
             </div>
