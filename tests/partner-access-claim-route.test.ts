@@ -72,7 +72,10 @@ test("new creator claim creates and signs into the exact named account without a
   const response = await createPartnerAccessClaimHandler(deps)(request())
 
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { destination: "/quiz", requiresEmail: false })
+  assert.deepEqual(await response.json(), {
+    destination: "/quiz?partner=1",
+    requiresEmail: false,
+  })
   assert.deepEqual(
     calls.map(([name]) => name),
     ["reserve", "createUser", "createFunnel", "complete", "signIn"],

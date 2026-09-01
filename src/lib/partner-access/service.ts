@@ -45,7 +45,7 @@ export type PartnerInvitationResolution = {
   state: "pending" | "claimed" | "active"
 }
 
-export type PartnerInvitationStatus = "invited" | "active" | "revoked"
+export type PartnerInvitationStatus = "invited" | "claimed" | "active" | "revoked"
 
 export type PartnerInvitationListItem = {
   invitationId: string
@@ -187,17 +187,19 @@ export async function listPartnerInvitations(
       siteUrl,
     })
     const activatedAt = typeof row.activated_at === "string" ? row.activated_at : null
+    const claimedAt = typeof row.claimed_at === "string" ? row.claimed_at : null
     const revokedAt = typeof row.revoked_at === "string" ? row.revoked_at : null
     return {
       invitationId,
       name,
       email: String(row.normalized_email),
       status: derivePartnerInvitationStatus({
+        claimedAt,
         activatedAt,
         revokedAt,
         grantActive: row.grant_active === true,
       }),
-      claimedAt: typeof row.claimed_at === "string" ? row.claimed_at : null,
+      claimedAt,
       activatedAt,
       revokedAt,
       emailStatus:
@@ -275,12 +277,14 @@ function projectPartnerInvitation(row: InvitationRow): PartnerInvitationResoluti
 }
 
 export function derivePartnerInvitationStatus(input: {
+  claimedAt: string | null
   revokedAt: string | null
   activatedAt: string | null
   grantActive: boolean
 }): PartnerInvitationStatus {
   if (input.revokedAt || (input.activatedAt && !input.grantActive)) return "revoked"
-  return input.activatedAt && input.grantActive ? "active" : "invited"
+  if (input.activatedAt && input.grantActive) return "active"
+  return input.claimedAt ? "claimed" : "invited"
 }
 
 export async function mutatePartnerInvitation(

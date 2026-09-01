@@ -284,3 +284,32 @@ test("quiz store saves the completed page draft when advancing", async () => {
 
   Reflect.deleteProperty(globalThis, "window")
 })
+
+test("quiz store applies verified partner identity and consent mode atomically", async () => {
+  const storage = new MemoryStorage()
+  Object.defineProperty(globalThis, "window", {
+    value: { localStorage: storage },
+    configurable: true,
+  })
+
+  const { useQuizStore } = await import("../src/lib/quiz/store")
+  useQuizStore.getState().reset()
+  useQuizStore.getState().setPartnerLeadIdentity({
+    name: "Lea Sommer",
+    email: "lea@example.test",
+  })
+
+  const state = useQuizStore.getState()
+  assert.equal(state.leadCaptureMode, "partner")
+  assert.equal(state.leadCaptureSubStep, "consent")
+  assert.deepEqual(state.lead, {
+    name: "Lea Sommer",
+    email: "lea@example.test",
+    marketingConsent: false,
+  })
+
+  state.reset()
+  assert.equal(useQuizStore.getState().leadCaptureMode, "regular")
+  assert.equal(useQuizStore.getState().leadCaptureSubStep, "name")
+  Reflect.deleteProperty(globalThis, "window")
+})

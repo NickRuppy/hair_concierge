@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import { PARTNER_QUIZ_ENTRY_HREF } from "@/lib/partner-access/quiz-context"
 
 export function PartnerAccessContinuation() {
   const startedRef = useRef(false)
@@ -21,7 +22,7 @@ export function PartnerAccessContinuation() {
         body && typeof body === "object" && !Array.isArray(body)
           ? (body as Record<string, unknown>).destination
           : null
-      if (!response.ok || destination !== "/quiz") throw new Error("claim failed")
+      if (!response.ok || destination !== PARTNER_QUIZ_ENTRY_HREF) throw new Error("claim failed")
       window.location.assign(destination)
     } catch {
       setError(true)

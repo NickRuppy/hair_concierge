@@ -118,20 +118,49 @@ test("partner invitation resolution is read-only and fails closed on version or 
 
 test("partner invitation status is derived from current revocation and grant state", () => {
   assert.equal(
-    derivePartnerInvitationStatus({ revokedAt: null, activatedAt: null, grantActive: false }),
+    derivePartnerInvitationStatus({
+      claimedAt: null,
+      revokedAt: null,
+      activatedAt: null,
+      grantActive: false,
+    }),
     "invited",
   )
   assert.equal(
-    derivePartnerInvitationStatus({ revokedAt: null, activatedAt: "now", grantActive: true }),
+    derivePartnerInvitationStatus({
+      claimedAt: "before",
+      revokedAt: null,
+      activatedAt: "now",
+      grantActive: true,
+    }),
     "active",
   )
   assert.equal(
-    derivePartnerInvitationStatus({ revokedAt: "now", activatedAt: "before", grantActive: false }),
+    derivePartnerInvitationStatus({
+      claimedAt: "earlier",
+      revokedAt: "now",
+      activatedAt: "before",
+      grantActive: false,
+    }),
     "revoked",
   )
   assert.equal(
-    derivePartnerInvitationStatus({ revokedAt: null, activatedAt: "before", grantActive: false }),
+    derivePartnerInvitationStatus({
+      claimedAt: "earlier",
+      revokedAt: null,
+      activatedAt: "before",
+      grantActive: false,
+    }),
     "revoked",
+  )
+  assert.equal(
+    derivePartnerInvitationStatus({
+      claimedAt: "now",
+      revokedAt: null,
+      activatedAt: null,
+      grantActive: false,
+    }),
+    "claimed",
   )
 })
 
@@ -156,4 +185,25 @@ test("admin list projects reproducible links without returning raw credentials",
   assert.match(rows[0]?.url ?? "", /^https:\/\/chaarlie\.de\/partner\/einladung#code=/)
   assert.match(rows[0]?.message ?? "", /^Hi Lea, dein Zugang ist bereit:/)
   assert.equal("credential" in (rows[0] ?? {}), false)
+})
+
+test("admin list distinguishes a claimed account from an untouched invitation", async () => {
+  const rows = await listPartnerInvitations({
+    secret,
+    siteUrl,
+    load: async () => [
+      {
+        id: invitationId,
+        display_name: "Lea",
+        normalized_email: "lea@example.test",
+        token_version: 3,
+        claimed_at: "2026-09-01T12:00:00.000Z",
+        activated_at: null,
+        revoked_at: null,
+        grant_active: false,
+      },
+    ],
+  })
+
+  assert.equal(rows[0]?.status, "claimed")
 })

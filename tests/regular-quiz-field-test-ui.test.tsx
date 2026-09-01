@@ -9,6 +9,10 @@ import {
   parseRegularQuizFieldTestActivationDestination,
   RegularQuizFieldTestActivationCard,
 } from "../src/components/regular-quiz-field-test/activation-card"
+import {
+  parsePartnerAccessActivationDestination,
+  requestPartnerAccessActivation,
+} from "../src/components/partner-access/activation-button"
 import OrganicPlanOfferVariant from "../src/funnels/offers/organic-plan-v1"
 import { buildQuizResultNarrative } from "../src/lib/quiz/result-narrative"
 import type { QuizAnswers } from "../src/lib/quiz/types"
@@ -136,12 +140,57 @@ test("partner organic offer keeps the ordinary journey and swaps only the paymen
     />,
   )
 
-  assert.match(html, /Dein Chaarlie Zugang ist bereit\./)
-  assert.match(html, /Dein persönlicher Plan und deine Routine sind freigeschaltet\./)
-  assert.match(html, /Zugang aktivieren/)
-  assert.match(html, /Für dich kostenlos/)
+  assert.match(html, /Dein Zugang ist bereit\./)
+  assert.match(html, /Öffne jetzt deinen persönlichen Plan und deine Routine\./)
+  assert.equal((html.match(/Meinen Plan öffnen/g) ?? []).length, 3)
+  assert.match(html, /data-offer-source-section="hero"/)
+  assert.doesNotMatch(html, /href="#partner_access_activation"/)
+  assert.doesNotMatch(html, />Plan sichern</)
+  assert.doesNotMatch(html, /Für dich kostenlos/)
   assert.match(html, /data-partner-access-activation-card/)
   assert.doesNotMatch(html, /Monatlich|€14,99|Keine Zahlungsdaten|kein Abo|90 Tage|siebentägigen/i)
+})
+
+test("partner activation accepts only the canonical plan-ready destination", () => {
+  const destination = "/plan-bereit?lead=11111111-1111-4111-8111-111111111111"
+
+  assert.equal(parsePartnerAccessActivationDestination({ destination }), destination)
+  assert.equal(parsePartnerAccessActivationDestination({ redirectTo: destination }), null)
+  assert.equal(parsePartnerAccessActivationDestination({ destination: "/pricing" }), null)
+})
+
+test("partner activation shares one request and event across concurrent CTA clicks", async () => {
+  const destination = "/plan-bereit?lead=11111111-1111-4111-8111-111111111111"
+  let requestCount = 0
+  let eventCount = 0
+  const fetcher: typeof fetch = async () => {
+    requestCount += 1
+    return new Response(JSON.stringify({ destination }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+  const track = () => {
+    eventCount += 1
+  }
+
+  const [first, second] = await Promise.all([
+    requestPartnerAccessActivation({
+      leadId: "11111111-1111-4111-8111-111111111111",
+      fetcher,
+      track,
+    }),
+    requestPartnerAccessActivation({
+      leadId: "11111111-1111-4111-8111-111111111111",
+      fetcher,
+      track,
+    }),
+  ])
+
+  assert.equal(first, destination)
+  assert.equal(second, destination)
+  assert.equal(requestCount, 1)
+  assert.equal(eventCount, 1)
 })
 
 test("legacy result client fails closed when regular field-test intent lost authorization", () => {

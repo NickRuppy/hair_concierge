@@ -1,5 +1,5 @@
 import { QUIZ_QUESTION_STEPS } from "./questions"
-import type { LeadCaptureSubStep, QuizStep } from "./types"
+import type { LeadCaptureMode, LeadCaptureSubStep, QuizStep } from "./types"
 
 export const LEGACY_QUIZ_HISTORY_DEPTH_KEY = "legacyQuizDepth"
 
@@ -14,7 +14,7 @@ type BrowserWindowLike = {
   location: { href: string }
 }
 
-const LEGACY_QUIZ_SCREEN_ORDER: ReadonlyArray<{
+const REGULAR_QUIZ_SCREEN_ORDER: ReadonlyArray<{
   step: QuizStep
   leadCaptureSubStep?: LeadCaptureSubStep
 }> = [
@@ -27,6 +27,13 @@ const LEGACY_QUIZ_SCREEN_ORDER: ReadonlyArray<{
   { step: 14 },
 ]
 
+const PARTNER_QUIZ_SCREEN_ORDER = REGULAR_QUIZ_SCREEN_ORDER.filter(
+  (entry) =>
+    entry.step !== 9 ||
+    entry.leadCaptureSubStep === undefined ||
+    entry.leadCaptureSubStep === "consent",
+)
+
 function asStateRecord(state: unknown): Record<string, unknown> {
   return state && typeof state === "object" && !Array.isArray(state)
     ? { ...(state as Record<string, unknown>) }
@@ -36,8 +43,11 @@ function asStateRecord(state: unknown): Record<string, unknown> {
 export function getLegacyQuizScreenPosition(
   step: QuizStep,
   leadCaptureSubStep: LeadCaptureSubStep,
+  leadCaptureMode: LeadCaptureMode = "regular",
 ): number {
-  const index = LEGACY_QUIZ_SCREEN_ORDER.findIndex(
+  const screenOrder =
+    leadCaptureMode === "partner" ? PARTNER_QUIZ_SCREEN_ORDER : REGULAR_QUIZ_SCREEN_ORDER
+  const index = screenOrder.findIndex(
     (entry) =>
       entry.step === step && (step !== 9 || entry.leadCaptureSubStep === leadCaptureSubStep),
   )
