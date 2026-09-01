@@ -427,7 +427,7 @@ test("Stage 5 apply batch contains only verified exact protocols and has a stabl
   assert.equal(first.canonicalJson, second.canonicalJson)
 })
 
-test("an explicit everyday-shampoo protocol can supplement a dandruff-only derived role", async () => {
+test("an everyday-shampoo protocol cannot supplement a dandruff-only derived role", async () => {
   const sourceManifest = validateProtocolResearchManifest(
     await json<unknown>(`${ROOT}/protocol-research/S5-03-targeted-dandruff-shampoo.json`),
   )
@@ -474,12 +474,15 @@ test("an explicit everyday-shampoo protocol can supplement a dandruff-only deriv
         origin: "curated",
         is_active: true,
         lifecycle_status: "active",
+        shampoo_buckets: ["schuppen"],
       },
     ],
     listProtocols: async () => [],
   })
-  assert.equal(preflight.ok, true)
-  assert.deepEqual(preflight.blockers, [])
+  assert.equal(preflight.ok, false)
+  assert.deepEqual(preflight.blockers, [
+    `protocol_role_not_supported:${sourceProduct.product_id}:shampoo_everyday`,
+  ])
 })
 
 test("Mask research closes the eligible cohort and applies label-specific Conditioner relationships", async () => {
