@@ -186,3 +186,20 @@ test("manifest entries reject non-JSON intended authority values", () => {
     ]),
   )
 })
+
+test("explicit expected current authority is fingerprint-bound before approval can execute", () => {
+  const manifest = approvedManifest()
+  const entry = manifest.entries[0]! as CatalogAuthorityRepairManifest["entries"][number] & {
+    expectedCurrentAuthority?: Record<string, unknown>
+  }
+  entry.expectedCurrentAuthority = { thicknessEligibility: ["coarse"] }
+  manifest.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(manifest)
+
+  assert.throws(
+    () =>
+      assertCatalogAuthorityRepairReady(manifest, [
+        { productId: PRODUCT_ID, categoryKey: "shampoo", authority: before },
+      ]),
+    /catalog_authority_repair_old_fingerprint_mismatch/,
+  )
+})

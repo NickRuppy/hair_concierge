@@ -203,6 +203,8 @@ test-screenshots*/
 /data/*
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*
+!/data/catalog-enrichment/oil-authority-enrichment-v1/
+!/data/catalog-enrichment/oil-authority-enrichment-v1/manifest.json
 !/data/catalog-enrichment/image-corrections/
 /data/catalog-enrichment/image-corrections/*
 !/data/catalog-enrichment/image-corrections/the-ordinary-multi-peptide-hair-density-serum-v1.json
