@@ -14,12 +14,20 @@ interface ModalLayerRegistration {
   root: HTMLElement
   priority?: number
   onTopLayerChange?: (isTopLayer: boolean) => void
+  /**
+   * Called when Escape is pressed while this layer is on top. The manager owns
+   * the single document listener, so dismissal works from the same moment the
+   * layer registers — components must not wire their own Escape handling on
+   * top of a state snapshot, which goes live only one commit later.
+   */
+  onEscape?: (event: KeyboardEvent) => void
 }
 
-interface ModalLayer extends Required<ModalLayerRegistration> {
+interface ModalLayer extends Required<Omit<ModalLayerRegistration, "onEscape">> {
   id: string
   order: number
   lastTopState: boolean
+  onEscape: ((event: KeyboardEvent) => void) | null
 }
 
 interface BodyLockSnapshot {
@@ -149,6 +157,28 @@ function releaseBodyLock() {
   window.scrollTo(snapshot.scrollX, snapshot.scrollY)
 }
 
+let escapeListenerActive = false
+
+function handleDocumentEscape(event: KeyboardEvent) {
+  if (event.key !== "Escape") return
+  const topLayer = getCurrentTopLayer()
+  if (!topLayer?.onEscape) return
+  event.preventDefault()
+  topLayer.onEscape(event)
+}
+
+function ensureEscapeListener() {
+  if (escapeListenerActive || typeof document === "undefined") return
+  escapeListenerActive = true
+  document.addEventListener("keydown", handleDocumentEscape)
+}
+
+function releaseEscapeListener() {
+  if (!escapeListenerActive) return
+  escapeListenerActive = false
+  document.removeEventListener("keydown", handleDocumentEscape)
+}
+
 function ensureBodyChildrenObserved() {
   if (
     bodyChildrenObserver ||
@@ -193,6 +223,7 @@ function reconcileTopLayerState() {
 function reconcileIsolation() {
   if (layers.length === 0) {
     releaseBodyChildrenObserver()
+    releaseEscapeListener()
     for (const element of Array.from(attributeSnapshots.keys())) {
       restoreElementAttributes(element)
     }
@@ -227,17 +258,20 @@ export function registerModalLayer({
   root,
   priority = MODAL_LAYER_PRIORITIES.bottomSheet,
   onTopLayerChange = () => {},
+  onEscape,
 }: ModalLayerRegistration): ModalLayerHandle {
   const layer: ModalLayer = {
     id: `modal-layer-${nextLayerId++}`,
     root,
     priority,
     onTopLayerChange,
+    onEscape: onEscape ?? null,
     order: nextOrder++,
     lastTopState: false,
   }
 
   layers.push(layer)
+  ensureEscapeListener()
   reconcileIsolation()
 
   let released = false
@@ -290,6 +324,7 @@ export function resetModalLayerManagerForTests() {
   layers = []
   nextLayerId = 1
   nextOrder = 1
+  releaseEscapeListener()
   releaseBodyChildrenObserver()
   for (const element of Array.from(attributeSnapshots.keys())) {
     restoreElementAttributes(element)

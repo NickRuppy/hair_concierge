@@ -75,14 +75,37 @@ class FakeElement {
 }
 
 let scrollToCalls: Array<[number, number]> = []
-let fakeDocument: { activeElement: FakeElement | null; body: FakeElement }
+let fakeDocument: {
+  activeElement: FakeElement | null
+  body: FakeElement
+  listeners: Map<string, Set<(event: unknown) => void>>
+  addEventListener: (type: string, listener: (event: unknown) => void) => void
+  removeEventListener: (type: string, listener: (event: unknown) => void) => void
+  dispatchKeydown: (event: { key: string; preventDefault?: () => void }) => void
+}
 const originalDocumentDescriptor = Object.getOwnPropertyDescriptor(globalThis, "document")
 const originalHTMLElementDescriptor = Object.getOwnPropertyDescriptor(globalThis, "HTMLElement")
 const originalWindowDescriptor = Object.getOwnPropertyDescriptor(globalThis, "window")
 
 function installFakeDom(scrollX = 12, scrollY = 345) {
   scrollToCalls = []
-  fakeDocument = { activeElement: null, body: new FakeElement("body") }
+  const documentListeners = new Map<string, Set<(event: unknown) => void>>()
+  fakeDocument = {
+    activeElement: null,
+    body: new FakeElement("body"),
+    listeners: documentListeners,
+    addEventListener(type: string, listener: (event: unknown) => void) {
+      const existing = documentListeners.get(type) ?? new Set()
+      existing.add(listener)
+      documentListeners.set(type, existing)
+    },
+    removeEventListener(type: string, listener: (event: unknown) => void) {
+      documentListeners.get(type)?.delete(listener)
+    },
+    dispatchKeydown(event: { key: string; preventDefault?: () => void }) {
+      for (const listener of documentListeners.get("keydown") ?? []) listener(event)
+    },
+  }
 
   Object.defineProperty(globalThis, "HTMLElement", {
     configurable: true,
@@ -313,6 +336,41 @@ test("bottom sheet and dialog primitives use the shared top-layer manager", () =
   assert.match(dialogSource, /aria-labelledby=\{titleId\}/)
   assert.match(dialogSource, /isTopLayer/)
   assert.doesNotMatch(dialogSource, /document\.body\.style\.overflow/)
+})
+
+test("routes Escape to the top layer only and releases the listener with the last layer", () => {
+  installFakeDom()
+  const lower = new FakeElement("div")
+  const upper = new FakeElement("div")
+  appendToBody(lower, upper)
+
+  const escapes: string[] = []
+  const lowerLayer = registerModalLayer({
+    root: modalRoot(lower),
+    priority: 50,
+    onEscape: () => escapes.push("lower"),
+  })
+  const upperLayer = registerModalLayer({
+    root: modalRoot(upper),
+    priority: 120,
+    onEscape: () => escapes.push("upper"),
+  })
+
+  let prevented = 0
+  fakeDocument.dispatchKeydown({ key: "Escape", preventDefault: () => (prevented += 1) })
+  assert.deepEqual(escapes, ["upper"])
+  assert.equal(prevented, 1)
+
+  fakeDocument.dispatchKeydown({ key: "a", preventDefault: () => (prevented += 1) })
+  assert.deepEqual(escapes, ["upper"])
+  assert.equal(prevented, 1)
+
+  upperLayer.release()
+  fakeDocument.dispatchKeydown({ key: "Escape", preventDefault: () => (prevented += 1) })
+  assert.deepEqual(escapes, ["upper", "lower"])
+
+  lowerLayer.release()
+  assert.equal(fakeDocument.listeners.get("keydown")?.size ?? 0, 0)
 })
 
 test("modal manager observes newly inserted body siblings while a layer is active", () => {
