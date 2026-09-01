@@ -266,6 +266,13 @@ function CopyButton({ children, value }: { children: string; value: string }) {
 }
 
 function Status({ value }: { value: PartnerInvitationListItem["status"] }) {
-  const label = value === "active" ? "Aktiv" : value === "revoked" ? "Widerrufen" : "Eingeladen"
+  const label =
+    value === "active"
+      ? "Aktiv"
+      : value === "claimed"
+        ? "Konto erstellt"
+        : value === "revoked"
+          ? "Widerrufen"
+          : "Eingeladen"
   return <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold">{label}</span>
 }

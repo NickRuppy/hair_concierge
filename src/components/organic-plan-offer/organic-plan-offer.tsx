@@ -10,6 +10,7 @@ import { BeforeAfterFigure } from "@/components/offer-media/before-after-figure"
 import { RegularQuizFieldTestActivationCard } from "@/components/regular-quiz-field-test/activation-card"
 import { RegularQuizFieldTestBanner } from "@/components/regular-quiz-field-test/banner"
 import { PartnerAccessActivationCard } from "@/components/partner-access/activation-card"
+import { PartnerAccessActivationButton } from "@/components/partner-access/activation-button"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import { buildPersonalPlanAssessmentRows } from "@/lib/personal-plan-quiz/assessment-copy"
 import { assessPersonalPlanHair } from "@/lib/personal-plan-quiz/hair-assessment"
@@ -240,9 +241,7 @@ export function OrganicPlanOffer({
   const visibleFaqItems = isNonCommercialOffer
     ? faqItems.filter(([question]) => question !== "Was passiert direkt nach dem Kauf?")
     : faqItems
-  const activationHref = isPartnerAccess
-    ? "#partner_access_activation"
-    : "#regular_field_test_activation"
+  const activationHref = "#regular_field_test_activation"
 
   return (
     <OfferTrackingProvider
@@ -270,27 +269,30 @@ export function OrganicPlanOffer({
             <Link href="/" className="font-serif text-2xl font-semibold tracking-tight">
               chaarlie
             </Link>
-            <a
-              className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white"
-              data-offer-cta="sticky_header"
-              data-offer-destination={
-                isPartnerAccess
-                  ? "partner_access_activation"
-                  : isEmailBoundModerator
+            {isPartnerAccess ? (
+              <PartnerAccessActivationButton
+                className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
+                cta="sticky_header"
+                leadId={leadId}
+                sourceSection="hero"
+              />
+            ) : (
+              <a
+                className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white"
+                data-offer-cta="sticky_header"
+                data-offer-destination={
+                  isEmailBoundModerator
                     ? "moderator_organic_test_activation"
                     : isRegularFieldTest
                       ? "regular_field_test_activation"
                       : "pricing"
-              }
-              data-offer-source-section="hero"
-              href={isNonCommercialOffer ? activationHref : "#pricing"}
-            >
-              {isPartnerAccess
-                ? "Zugang aktivieren"
-                : isRegularFieldTest
-                  ? "Kostenlos fortfahren"
-                  : "Angebot ansehen"}
-            </a>
+                }
+                data-offer-source-section="hero"
+                href={isNonCommercialOffer ? activationHref : "#pricing"}
+              >
+                {isRegularFieldTest ? "Kostenlos fortfahren" : "Angebot ansehen"}
+              </a>
+            )}
           </div>
         </div>
 
@@ -613,25 +615,36 @@ export function OrganicPlanOffer({
             data-offer-section="final_cta"
           >
             <h2 className="font-serif text-3xl leading-tight">
-              {isRegularFieldTest
-                ? "Dein Testzugang ist für diese Auswertung bereit."
-                : "Dein Plan zu schöneren Haaren in 30 Tagen."}
+              {isPartnerAccess
+                ? "Dein Plan ist bereit."
+                : isRegularFieldTest
+                  ? "Dein Testzugang ist für diese Auswertung bereit."
+                  : "Dein Plan zu schöneren Haaren in 30 Tagen."}
             </h2>
-            <a
-              className="mt-5 inline-flex rounded-full bg-white px-7 py-3 font-bold text-[var(--brand-plum-darkest)]"
-              data-offer-cta="final"
-              data-offer-destination={
-                isEmailBoundModerator
-                  ? "moderator_organic_test_activation"
-                  : isRegularFieldTest
-                    ? "regular_field_test_activation"
-                    : "pricing"
-              }
-              data-offer-source-section="final_cta"
-              href={isRegularFieldTest ? activationHref : "#pricing"}
-            >
-              {isRegularFieldTest ? "Kostenlos mit Chaarlie fortfahren" : "Plan sichern"}
-            </a>
+            {isPartnerAccess ? (
+              <PartnerAccessActivationButton
+                className="mt-5 inline-flex rounded-full bg-white px-7 py-3 font-bold text-[var(--brand-plum-darkest)] disabled:opacity-60"
+                cta="final"
+                leadId={leadId}
+                sourceSection="final_cta"
+              />
+            ) : (
+              <a
+                className="mt-5 inline-flex rounded-full bg-white px-7 py-3 font-bold text-[var(--brand-plum-darkest)]"
+                data-offer-cta="final"
+                data-offer-destination={
+                  isEmailBoundModerator
+                    ? "moderator_organic_test_activation"
+                    : isRegularFieldTest
+                      ? "regular_field_test_activation"
+                      : "pricing"
+                }
+                data-offer-source-section="final_cta"
+                href={isRegularFieldTest ? activationHref : "#pricing"}
+              >
+                {isRegularFieldTest ? "Kostenlos mit Chaarlie fortfahren" : "Plan sichern"}
+              </a>
+            )}
           </div>
         </section>
       </main>

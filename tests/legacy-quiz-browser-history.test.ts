@@ -37,6 +37,16 @@ test("legacy quiz screen positions include each lead-capture substep", () => {
   assert.ok(getLegacyQuizScreenPosition(10, "consent") > getLegacyQuizScreenPosition(9, "consent"))
 })
 
+test("creator quiz history collapses hidden identity screens without changing regular positions", () => {
+  const finalQuestionPosition = getLegacyQuizScreenPosition(12, "name")
+  const regularConsentPosition = getLegacyQuizScreenPosition(9, "consent")
+  const creatorConsentPosition = getLegacyQuizScreenPosition(9, "consent", "partner")
+
+  assert.equal(creatorConsentPosition, finalQuestionPosition + 1)
+  assert.ok(regularConsentPosition > creatorConsentPosition)
+  assert.equal(getLegacyQuizScreenPosition(10, "consent", "partner"), creatorConsentPosition + 1)
+})
+
 test("legacy quiz browser history preserves unrelated state while incrementing depth", () => {
   const win = createWindowLike({ campaign: "creator" })
 

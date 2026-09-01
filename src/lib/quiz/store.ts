@@ -1,11 +1,12 @@
 import { create } from "zustand"
 import { clearQuizDraft, loadQuizDraft, saveQuizDraft } from "./draft"
 import { QUIZ_QUESTION_STEPS } from "./questions"
-import type { QuizStep, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
+import type { QuizStep, LeadCaptureMode, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
 
 interface QuizState {
   step: QuizStep
   leadCaptureSubStep: LeadCaptureSubStep
+  leadCaptureMode: LeadCaptureMode
   answers: QuizAnswers
   lead: LeadData
   leadId: string | null
@@ -16,6 +17,8 @@ interface QuizState {
   setLeadField: <K extends keyof LeadData>(key: K, value: LeadData[K]) => void
   setLeadId: (id: string) => void
   setLeadCaptureSubStep: (sub: LeadCaptureSubStep) => void
+  setPartnerLeadIdentity: (identity: { name: string; email: string }) => void
+  setRegularLeadCapture: () => void
   setStep: (step: QuizStep) => void
   restoreDraft: () => boolean
   clearDraft: () => void
@@ -40,6 +43,7 @@ const initialState = {
   // landing at /, so we skip it.
   step: 2 as QuizStep,
   leadCaptureSubStep: "name" as LeadCaptureSubStep,
+  leadCaptureMode: "regular" as LeadCaptureMode,
   answers: {} as QuizAnswers,
   lead: { name: "", email: "", marketingConsent: false } as LeadData,
   leadId: null as string | null,
@@ -78,6 +82,13 @@ export const useQuizStore = create<QuizState>((set, get) => ({
 
   setLeadId: (id) => set({ leadId: id }),
   setLeadCaptureSubStep: (sub) => set({ leadCaptureSubStep: sub }),
+  setPartnerLeadIdentity: ({ name, email }) =>
+    set((state) => ({
+      leadCaptureMode: "partner",
+      leadCaptureSubStep: "consent",
+      lead: { ...state.lead, name, email },
+    })),
+  setRegularLeadCapture: () => set({ leadCaptureMode: "regular" }),
   setStep: (step) => set({ step }),
   restoreDraft: () => {
     const draft = loadQuizDraft()

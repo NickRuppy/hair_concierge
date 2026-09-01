@@ -17,6 +17,7 @@ import {
   partnerAccessIntentCookieOptions,
 } from "@/lib/partner-access/intent"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { PARTNER_QUIZ_ENTRY_HREF } from "@/lib/partner-access/quiz-context"
 
 const NO_STORE_HEADERS = { "Cache-Control": "private, no-store" }
 const CLAIM_ATTEMPT_COOKIE = "chaarlie_partner_claim_attempt"
@@ -92,7 +93,7 @@ export function createPartnerAccessClaimHandler(overrides: Partial<ClaimDependen
     if (!intent) return jsonError("Diese Einladung ist nicht verfügbar.", 410)
 
     const response = NextResponse.json(
-      { destination: "/quiz", requiresEmail: false },
+      { destination: PARTNER_QUIZ_ENTRY_HREF, requiresEmail: false },
       { headers: NO_STORE_HEADERS },
     )
     if (handoffIntent) {

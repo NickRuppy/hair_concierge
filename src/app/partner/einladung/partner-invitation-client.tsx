@@ -1,6 +1,7 @@
 "use client"
 
 import { type FormEvent, useEffect, useRef, useState } from "react"
+import { PARTNER_QUIZ_ENTRY_HREF } from "@/lib/partner-access/quiz-context"
 
 type InvitationMode =
   | "ready"
@@ -259,7 +260,7 @@ function isDestination(value: unknown): value is { destination: string } {
     value &&
     typeof value === "object" &&
     !Array.isArray(value) &&
-    (value as Record<string, unknown>).destination === "/quiz",
+    (value as Record<string, unknown>).destination === PARTNER_QUIZ_ENTRY_HREF,
   )
 }
 

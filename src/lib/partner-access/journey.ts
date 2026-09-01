@@ -18,11 +18,13 @@ export type PartnerJourneyResolution =
       kind: "authorized"
       invitationId: string
       userId: string
+      name: string
       email: string
       funnelSessionId: string
     }
 
 type PartnerJourneyInvitation = {
+  display_name: string
   normalized_email: string
   token_version: number
   claimed_user_id: string | null
@@ -67,6 +69,7 @@ export async function resolvePartnerJourney(
     kind: "authorized",
     invitationId: intent.invitationId,
     userId: user.id,
+    name: data.display_name,
     email: data.normalized_email,
     funnelSessionId: input.funnelContext.sessionId,
   }
@@ -83,7 +86,9 @@ async function defaultGetUser() {
 async function defaultLoadInvitation(invitationId: string) {
   const { data, error } = await createAdminClient()
     .from("partner_access_invitations")
-    .select("normalized_email,token_version,claimed_user_id,funnel_session_id,revoked_at")
+    .select(
+      "display_name,normalized_email,token_version,claimed_user_id,funnel_session_id,revoked_at",
+    )
     .eq("id", invitationId)
     .maybeSingle()
   if (error) throw error

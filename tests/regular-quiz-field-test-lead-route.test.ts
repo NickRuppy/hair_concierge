@@ -303,6 +303,51 @@ test("organic moderator saves a private owned lead without guest binding, dedupe
   })
 })
 
+test("partner lead capture persists the server-authorized creator name instead of client input", async () => {
+  const calls: unknown[] = []
+  const forbidden = () => {
+    throw Error("partner must not use commercial persistence")
+  }
+  const partner = {
+    kind: "authorized" as const,
+    invitationId: "40000000-0000-4000-8000-000000000004",
+    userId: "50000000-0000-4000-8000-000000000005",
+    name: "Lea Sommer",
+    email: requestBody.email,
+    funnelSessionId: funnelContext.sessionId,
+  }
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({ get: () => undefined })) as never,
+    resolveFunnelCookieContext: async () => funnelContext,
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    resolvePartnerJourney: async () => partner,
+    savePartnerAccessLead: async (input) => {
+      calls.push(input)
+      return { leadId, reused: false }
+    },
+    createAdminClient: forbidden,
+    checkEmailDeliverability: forbidden,
+    syncQuizLeadToCustomerIo: forbidden,
+    enqueueMetaLead: forbidden,
+    bindRegularQuizFieldTestLead: forbidden,
+    scheduleAfter: forbidden,
+  })
+  const response = await post(request({}, { name: "Changed in the browser" }))
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { leadId })
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[0])), {
+    invitationId: partner.invitationId,
+    userId: partner.userId,
+    funnelSessionId: partner.funnelSessionId,
+    email: partner.email,
+    name: partner.name,
+    marketingConsent: false,
+    quizAnswers: requestBody.quizAnswers,
+  })
+})
+
 test("organic moderator rejects a quiz email that differs from the invited account before persistence", async () => {
   const post = createQuizLeadPostHandler({
     checkRateLimit: async () => ({ allowed: true }),

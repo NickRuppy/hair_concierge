@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Creator Journey – Konsistenz-Review</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #372844;
+        --muted: #746b78;
+        --plum: #7650ad;
+        --plum-dark: #563579;
+        --plum-soft: #eee8f6;
+        --paper: #fcfaf7;
+        --line: #e6dfea;
+        --good: #e9f7ee;
+        --good-ink: #23623a;
+        --warn: #fff4e1;
+        --warn-ink: #825316;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      main { max-width: 1440px; margin: 0 auto; padding: 42px 28px 64px; }
+      h1, h2, h3, p { margin: 0; }
+      h1 { font-family: Georgia, serif; font-size: clamp(34px, 5vw, 58px); letter-spacing: -0.04em; }
+      .intro { max-width: 860px; margin-top: 12px; color: var(--muted); font-size: 18px; line-height: 1.6; }
+      .scope {
+        display: inline-flex; align-items: center; gap: 8px; margin-top: 22px;
+        border-radius: 999px; background: var(--good); color: var(--good-ink);
+        padding: 9px 14px; font-weight: 800; font-size: 13px;
+      }
+      .grid { display: grid; gap: 26px; margin-top: 34px; }
+      .change {
+        display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 18px; border-top: 1px solid var(--line); padding-top: 26px;
+      }
+      .change-heading { grid-column: 1 / -1; display: flex; align-items: end; justify-content: space-between; gap: 18px; }
+      .change-heading h2 { font-family: Georgia, serif; font-size: 28px; }
+      .change-heading p { max-width: 630px; color: var(--muted); line-height: 1.5; }
+      .panel { border: 1px solid var(--line); border-radius: 28px; background: #fff; overflow: hidden; box-shadow: 0 24px 65px -52px rgba(73, 45, 97, .8); }
+      .panel-label { display: flex; justify-content: space-between; gap: 12px; padding: 13px 17px; border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+      .before .panel-label { background: var(--warn); color: var(--warn-ink); }
+      .after .panel-label { background: var(--good); color: var(--good-ink); }
+      .screen { padding: 24px; min-height: 300px; }
+      .phone { max-width: 430px; margin: 0 auto; }
+      .progress { height: 6px; border-radius: 999px; background: var(--plum-soft); overflow: hidden; }
+      .progress span { display: block; width: 100%; height: 100%; background: var(--plum); }
+      .banner { margin-top: 18px; border-radius: 14px; background: var(--plum-soft); padding: 13px 15px; font-weight: 800; }
+      .screen h3 { margin-top: 24px; font-family: Georgia, serif; font-size: 32px; letter-spacing: -.025em; }
+      .screen p { margin-top: 12px; color: var(--muted); line-height: 1.55; }
+      .input { margin-top: 20px; height: 56px; border: 2px solid var(--plum); border-radius: 16px; background: #f6f1fb; padding: 16px; color: #92889a; }
+      .button { display: flex; align-items: center; justify-content: center; margin-top: 20px; min-height: 52px; border-radius: 999px; background: var(--plum); color: #fff; font-weight: 900; padding: 12px 18px; }
+      .button.secondary { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+      .choice { margin-top: 16px; display: grid; gap: 10px; }
+      .skip-note { margin-top: 16px; border-left: 3px solid var(--good-ink); padding-left: 12px; color: var(--good-ink); font-size: 13px; line-height: 1.5; }
+      .offer-top { margin: -24px -24px 0; padding: 14px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .logo { font-family: Georgia, serif; font-size: 25px; font-weight: 800; }
+      .pill { border-radius: 999px; background: var(--plum); color: #fff; padding: 10px 14px; font-size: 13px; font-weight: 900; }
+      .offer-card { margin-top: 40px; border: 1px solid var(--line); border-radius: 24px; padding: 22px; text-align: center; }
+      .offer-card h3 { margin-top: 0; font-size: 28px; }
+      .mini { font-size: 12px; color: var(--muted); margin-top: 8px; }
+      .email { max-width: 520px; margin: 0 auto; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+      .email-head { background: #f7f4f8; padding: 14px 18px; display: grid; gap: 5px; font-size: 13px; }
+      .email-body { padding: 22px 18px; line-height: 1.6; }
+      .email-body p { margin-top: 10px; color: var(--ink); }
+      .admin-row { border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+      .admin-row strong { display: block; }
+      .admin-row small { display: block; margin-top: 4px; color: var(--muted); }
+      .status { white-space: nowrap; border-radius: 999px; background: var(--plum-soft); padding: 7px 10px; font-size: 12px; font-weight: 900; }
+      .flow { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 12px; }
+      .flow span { border-radius: 999px; background: #f5f2f6; padding: 6px 9px; }
+      .footer { margin-top: 34px; border-radius: 24px; background: var(--ink); color: #fff; padding: 24px; }
+      .footer h2 { font-family: Georgia, serif; font-size: 28px; }
+      .footer p { margin-top: 9px; max-width: 900px; color: #e7dfea; line-height: 1.6; }
+
+      @media (max-width: 820px) {
+        main { padding: 28px 16px 44px; }
+        .change { grid-template-columns: 1fr; }
+        .change-heading { display: block; }
+        .change-heading p { margin-top: 8px; }
+        .screen { min-height: 0; padding: 20px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Creator Journey: weniger Reibung, gleiche Basis</h1>
+      <p class="intro">Die reguläre Journey bleibt die Quelle der Wahrheit. Creator sehen weiterhin dieselben Quizfragen, dieselbe Analyse, dieselbe Angebotsseite und denselben Personal Plan. Nur bereits bekannte Identität und der kostenlose Zugang werden kontextgerecht behandelt.</p>
+      <div class="scope">✓ Nur Creator-Kontext · reguläre Nutzer unverändert</div>
+
+      <div class="grid">
+        <section class="change">
+          <div class="change-heading">
+            <h2>1. Bekannte Identität nicht erneut abfragen</h2>
+            <p>Name und E-Mail kommen aus der serverseitig bestätigten Einladung. Die rechtlich relevante Marketing-Einwilligung bleibt eine echte Wahl.</p>
+          </div>
+          <article class="panel before">
+            <div class="panel-label"><span>Heute</span><span>2 unnötige Schritte</span></div>
+            <div class="screen phone">
+              <div class="progress"><span></span></div>
+              <div class="banner">✓ Dein persönlicher Pflegeplan ist bereit!</div>
+              <h3>Wie heißt du?</h3>
+              <div class="input">Dein Vorname</div>
+              <div class="button">Weiter zum Ergebnis</div>
+              <h3 style="margin-top:32px">Deine E-Mail Adresse</h3>
+              <div class="input">name@beispiel.de</div>
+            </div>
+          </article>
+          <article class="panel after">
+            <div class="panel-label"><span>Vorschlag</span><span>Name + E-Mail sicher übernommen</span></div>
+            <div class="screen phone">
+              <div class="banner">✓ Deine Analyse ist abgeschlossen.</div>
+              <h3>Dürfen wir dir Haarpflege-Tipps schicken?</h3>
+              <p>Deine Auswertung bekommst du in jedem Fall. Mit Ja erlaubst du zusätzliche Tipps, Produkt-News und Angebote per E-Mail.</p>
+              <div class="choice">
+                <div class="button">Ja, weiter zu meiner Auswertung</div>
+                <div class="button secondary">Nein, nur meine Auswertung schicken</div>
+              </div>
+              <div class="skip-note">Creator-Weiche: Die regulären Name- und E-Mail-Schritte werden übersprungen. Die gespeicherten Werte bleiben serverseitig autoritativ.</div>
+            </div>
+          </article>
+        </section>
+
+        <section class="change">
+          <div class="change-heading">
+            <h2>2. „Öffnen“ muss wirklich öffnen</h2>
+            <p>Der erste Creator-CTA auf der Angebotsseite aktiviert den Zugang direkt. Wer die Seite erkunden möchte, kann weiter scrollen; niemand muss zweimal denselben CTA drücken.</p>
+          </div>
+          <article class="panel before">
+            <div class="panel-label"><span>Heute</span><span>CTA scrollt nur</span></div>
+            <div class="screen phone">
+              <div class="offer-top"><span class="logo">chaarlie</span><span class="pill">Zugang aktivieren</span></div>
+              <h3>Dein Haarplan ist bereit.</h3>
+              <p>Der obere CTA scrollt zur Karte. Dort steht, Plan und Routine seien freigeschaltet — gleichzeitig folgt ein zweiter „Zugang aktivieren“-CTA.</p>
+              <div class="offer-card">
+                <h3>Dein Chaarlie Zugang ist bereit.</h3>
+                <p>Dein persönlicher Plan und deine Routine sind freigeschaltet.</p>
+                <div class="button">Zugang aktivieren</div>
+                <div class="mini">Für dich kostenlos</div>
+              </div>
+            </div>
+          </article>
+          <article class="panel after">
+            <div class="panel-label"><span>Vorschlag</span><span>ein CTA, eine Wirkung</span></div>
+            <div class="screen phone">
+              <div class="offer-top"><span class="logo">chaarlie</span><span class="pill">Meinen Plan öffnen</span></div>
+              <h3>Dein Haarplan ist bereit.</h3>
+              <p>Der Sticky-CTA öffnet den Plan direkt. Die Karte verwendet dieselbe gemeinsame Aktion und bleibt für Creator sichtbar, die die Angebotsseite zuerst ansehen.</p>
+              <div class="offer-card">
+                <h3>Dein Zugang ist bereit.</h3>
+                <p>Öffne jetzt deinen persönlichen Plan und deine Routine.</p>
+                <div class="button">Meinen Plan öffnen</div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="change">
+          <div class="change-heading">
+            <h2>3. E-Mail beschreibt den echten Zustand</h2>
+            <p>Das Konto wurde bereits vor dem Quiz erstellt. Die Abschlussmail verspricht deshalb kein neues Konto, sondern erklärt den dauerhaften Rückweg.</p>
+          </div>
+          <article class="panel before">
+            <div class="panel-label"><span>Heute</span><span>falscher Zeitpunkt</span></div>
+            <div class="screen">
+              <div class="email">
+                <div class="email-head"><strong>Dein Chaarlie Konto ist bereit</strong><span>Chaarlie &lt;info@chaarlie.de&gt;</span></div>
+                <div class="email-body"><strong>Hi Lea,</strong><p>dein Chaarlie Konto ist bereit. Du kannst dich jederzeit mit deiner E-Mail anmelden.</p><div class="button">Zu Chaarlie</div></div>
+              </div>
+            </div>
+          </article>
+          <article class="panel after">
+            <div class="panel-label"><span>Vorschlag</span><span>klarer Rückweg</span></div>
+            <div class="screen">
+              <div class="email">
+                <div class="email-head"><strong>Dein Chaarlie Zugang ist aktiv</strong><span>Chaarlie &lt;info@chaarlie.de&gt;</span></div>
+                <div class="email-body"><strong>Hi Lea,</strong><p>dein persönlicher Plan ist jetzt mit deinem Chaarlie Konto verbunden. Du kannst jederzeit zurückkehren.</p><div class="button">Zu Chaarlie</div></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="change">
+          <div class="change-heading">
+            <h2>4. Admin zeigt, wo der Creator steht</h2>
+            <p>„Eingeladen“ darf nicht zugleich „Link ungeöffnet“ und „Konto erstellt, Quiz noch offen“ bedeuten.</p>
+          </div>
+          <article class="panel before">
+            <div class="panel-label"><span>Heute</span><span>Fortschritt verborgen</span></div>
+            <div class="screen">
+              <div class="admin-row"><div><strong>Lea Sommer</strong><small>lea@example.com</small><small>E-Mail: gesendet</small></div><span class="status">Eingeladen</span></div>
+              <div class="flow"><span>Link gesendet</span><span>Konto erstellt?</span><span>Quiz begonnen?</span></div>
+            </div>
+          </article>
+          <article class="panel after">
+            <div class="panel-label"><span>Vorschlag</span><span>bestehende Daten sichtbar</span></div>
+            <div class="screen">
+              <div class="admin-row"><div><strong>Lea Sommer</strong><small>lea@example.com</small><small>E-Mail: gesendet</small></div><span class="status">Konto erstellt</span></div>
+              <div class="flow"><span>Eingeladen</span><span>→ Konto erstellt</span><span>→ Aktiv</span><span>→ Widerrufen</span></div>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <section class="footer">
+        <h2>Architekturregel für zukünftige Änderungen</h2>
+        <p>Creator erhalten keinen separaten duplizierten Funnel. Die reguläre Journey bleibt gemeinsam; ein serverseitig verifizierter Creator-Kontext liefert nur die erlaubten Abweichungen: bekannte Identität überspringen, Partnerzugang statt Zahlung aktivieren, passende Status- und Lifecycle-Texte zeigen.</p>
+      </section>
+    </main>
+  </body>
+</html>

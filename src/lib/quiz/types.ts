@@ -17,6 +17,7 @@ export type QuizStep =
   | 14 // welcome
 
 export type LeadCaptureSubStep = "name" | "email" | "consent"
+export type LeadCaptureMode = "regular" | "partner"
 
 export type SelectionMode = "single" | "multi"
 

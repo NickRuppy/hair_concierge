@@ -30,9 +30,10 @@ const QuizBrowserHistoryContext = createContext<QuizBrowserHistoryContextValue |
 export function QuizBrowserHistoryProvider({ children }: { children: ReactNode }) {
   const step = useQuizStore((state) => state.step)
   const leadCaptureSubStep = useQuizStore((state) => state.leadCaptureSubStep)
+  const leadCaptureMode = useQuizStore((state) => state.leadCaptureMode)
   const goBack = useQuizStore((state) => state.goBack)
   const setLeadCaptureSubStep = useQuizStore((state) => state.setLeadCaptureSubStep)
-  const currentPosition = getLegacyQuizScreenPosition(step, leadCaptureSubStep)
+  const currentPosition = getLegacyQuizScreenPosition(step, leadCaptureSubStep, leadCaptureMode)
   const previousPositionRef = useRef(currentPosition)
   const currentDepthRef = useRef(0)
   const customBackHandlerRef = useRef<(() => void) | null>(null)
@@ -40,6 +41,10 @@ export function QuizBrowserHistoryProvider({ children }: { children: ReactNode }
 
   const defaultBackHandler = useCallback(() => {
     if (step === 9 && leadCaptureSubStep === "consent") {
+      if (leadCaptureMode === "partner") {
+        goBack()
+        return
+      }
       setLeadCaptureSubStep("email")
       return
     }
@@ -48,7 +53,7 @@ export function QuizBrowserHistoryProvider({ children }: { children: ReactNode }
       return
     }
     goBack()
-  }, [goBack, leadCaptureSubStep, setLeadCaptureSubStep, step])
+  }, [goBack, leadCaptureMode, leadCaptureSubStep, setLeadCaptureSubStep, step])
 
   useEffect(() => {
     defaultBackHandlerRef.current = defaultBackHandler
