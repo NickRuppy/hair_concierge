@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: E1-E11 applied and verified in production. Added 174 GTINs to 170 existing products; 208/259 active products are barcode-linked and 196/259 are strict scan-result-ready. Remaining 51 are explicitly held or readiness-blocked, not silently completed.
+Status: E1-E12 applied and verified in production. Added 181 GTINs to 176 existing products; 214/259 active products are barcode-linked and 202/259 are strict scan-result-ready. Remaining 45 are explicitly held or readiness-blocked, not silently completed.
 
 ## Contract
 
@@ -148,3 +148,13 @@ E11 completed the K18 Professional Molecular Repair Hair Mist at product `8f84ea
 E11 migration `20260901091000` then extended the existing guarded executor. The clean-head preflight on `d4e96171534ab0f9db6d3d5598f916a923aebd94` passed project, migration, exact identity, global owner, open-submission and readiness checks. The exact manifest fingerprint `f224db6c44e4b50dc22b15a8ed28b81922273d3127d83ad4c8e3c55711abf6ec` applied one raw code `858511001463`, canonical GTIN-14 `00858511001463`, to the K18 product. Guarded verify and direct receipt/identifier/migration-history readback passed. The final readiness export reports **208/259 barcode-linked (80.3%)** and **196/259 strict scan-result-ready (75.7%)**; 51 active products remain unlinked, split into 23 otherwise-ready for GTIN research and 28 blocked.
 
 Official K18 evidence establishes the exact 300 ml lightweight professional mist and four-minute/no-rinse use; CosmoProf establishes UPC `858511001463`. Nick's approved internal decision remains explicit and separate: treat this lighter mist as an ordinary consumer Leave-in, not the main K18 bondbuilder. [K18 Hair Pro](https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale), [CosmoProf](https://www.cosmoprofbeauty.com/USA-040285.html), [SalonCentric corroboration](https://www.saloncentric.com/858511001463.html).
+
+## E12 continuation — September 1
+
+E12 resolved six previously held existing products under Nick's approved package-parity and single-owner rules. The exact 6-product / 7-GTIN manifest fingerprint is `1e1c69be793d4ab00b42c3c618b4580403dde6a85c47185568b2a7ebfb76915b`: Curlsmith Multitasking Conditioner has separate 59 ml and 946 ml package codes; Cantu uses the current dm 453 g package; Redken Anti-Snap records the source's 240/250 ml discrepancy without changing product content; Guhl 2in1 resolves to the conditioner owner; Midnight Serum and Pantene 7in1 resolve to their oil owners.
+
+The static migration `20260901093000` preserves the E1-E11 executor and adds only E12's allowlist, exact 6/7 pin and disposition rollback guard. Its production migration-history source SHA is `4fa29d40b9c278dcb0f01b46ad0c3bc4a4ecf171b2d2e7c7548eba7c458b8944`. Both internal read-only reviews and Claude Opus 4.8 / high found no hard defect; the 35 focused TypeScript/PGlite tests, typecheck, targeted lint and diff checks passed. A fresh full readiness export confirmed all six were undisposed and blocker-free immediately before deployment.
+
+Clean-head preflight against `cd0f8cd084a2fe9ea75b8876f03db2ed71f32e54` passed exact product identity, global ownership, open-submission, migration, branch and replay gates. The atomic apply and guarded verify returned 6 products / 7 GTINs; direct readback confirmed every canonical GTIN owner, six item receipts, seven identifiers, the reviewed head/fingerprint and exact migration-history SHA. No product fields, category assignments or formulas were mutated.
+
+The post-apply readiness export reports **214/259 barcode-linked (82.6%)** and **202/259 strict scan-result-ready (78.0%)**. The 45 remaining unlinked products split into 17 otherwise-ready for identity research and 28 readiness-blocked. This is catalog coverage, not measured German market-scan coverage.
