@@ -18,7 +18,7 @@ function gtin(body: string): string {
 }
 
 function makeManifest(
-  batch: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E8" | "E9" | "E10" | "E11",
+  batch: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E8" | "E9" | "E10" | "E11" | "E12",
 ) {
   const shape = {
     E1: [20, 21, "1", 31],
@@ -32,6 +32,7 @@ function makeManifest(
     E9: [6, 6, "9", 111],
     E10: [12, 12, "0", 121],
     E11: [1, 1, "a", 131],
+    E12: [6, 7, "c", 141],
   } as const
   const [productCount, gtinCount, batchDigit, prefix] = shape[batch]
   const items = Array.from({ length: productCount }, (_, index) => {
@@ -321,6 +322,41 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     e11Executor = e11Executor.replace(pins[batch], makeManifest(batch).fingerprint)
   }
   await pg.exec(e11Executor)
+  let e12Executor = await readFile(
+    "supabase/migrations/20260901093000_scanner_existing_identifier_backfill_e12.sql",
+    "utf8",
+  )
+  for (const batch of [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6",
+    "E7",
+    "E8",
+    "E9",
+    "E10",
+    "E11",
+    "E12",
+  ] as const) {
+    const pins = {
+      E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
+      E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
+      E3: "ef20870b5c5ca23b001cea92ce33524c6f1f2416f5e39225237ef05eb5fc7134",
+      E4: "6335df5709bde47fadb5c2740ca96866d461d6a37fe192a989c66ca0773a2436",
+      E5: "8b94a3a22d1e5554d00f84c9858b16a66d73afc3f24adbf7499f43d5d4a08136",
+      E6: "92def27ab25378987eb0c9e01f7d4818c886b9b63363716410658cf6cb4ae903",
+      E7: "c705507449cea92051853b15f1995f03d4b42b1fecdb1e439b8732d46c557e5e",
+      E8: "d0307aa4fc449a49b438dd7efe6652757cf2f54239ebfa9b5082854fc24df602",
+      E9: "69730542eb6a5a51ca590954fe2efaa865c91b6f1f7ff73118c563fa21f2bfd6",
+      E10: "e9b803b9d36f7cc41a6a0972958e0f045d5c91668c8b5766c60976a84384f0e3",
+      E11: "f224db6c44e4b50dc22b15a8ed28b81922273d3127d83ad4c8e3c55711abf6ec",
+      E12: "1e1c69be793d4ab00b42c3c618b4580403dde6a85c47185568b2a7ebfb76915b",
+    }
+    e12Executor = e12Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+  }
+  await pg.exec(e12Executor)
   return pg
 }
 
@@ -532,8 +568,8 @@ test("E4-E7 each apply and replay exactly while rejecting a wrong pin", async (t
   }
 })
 
-test("E8-E11 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
-  const manifests = (["E8", "E9", "E10", "E11"] as const).map((batch) => makeManifest(batch))
+test("E8-E12 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
+  const manifests = (["E8", "E9", "E10", "E11", "E12"] as const).map((batch) => makeManifest(batch))
   const pg = await database(manifests)
   t.after(async () => pg.close())
   for (const manifest of manifests) {
@@ -560,7 +596,7 @@ test("E8-E11 each apply and replay exactly while rejecting wrong fingerprints an
     assert.equal(first.rows.length, manifest.items.length)
     assert.equal(
       first.rows.reduce((sum, row) => sum + Number(row.inserted_identifier_count), 0),
-      manifest.items.length,
+      manifest.items.reduce((sum, item) => sum + item.identifiers.length, 0),
     )
     const replay = await apply(pg, manifest)
     assert.equal(
@@ -570,12 +606,12 @@ test("E8-E11 each apply and replay exactly while rejecting wrong fingerprints an
   }
 })
 
-test("E11 executor rejects an unknown future batch before it can inherit E11 configuration", async (t) => {
+test("E12 executor rejects an unknown future batch before it can inherit E12 configuration", async (t) => {
   const e10 = makeManifest("E10")
   const pg = await database([e10])
   t.after(async () => pg.close())
   const unknown = JSON.parse(e10.raw)
-  unknown.batch = "E12"
+  unknown.batch = "E13"
   const unknownRaw = JSON.stringify(unknown)
 
   await assert.rejects(
@@ -586,6 +622,24 @@ test("E11 executor rejects an unknown future batch before it can inherit E11 con
       ),
     /manifest header is invalid/i,
   )
+})
+
+test("E12 rejects a product that becomes quarantined and rolls the full wave back", async (t) => {
+  const e12 = makeManifest("E12")
+  const pg = await database([e12])
+  t.after(async () => pg.close())
+  await pg.query(
+    `INSERT INTO public.personal_plan_product_search_dispositions (product_id) VALUES ($1)`,
+    [e12.items[0]?.product_id],
+  )
+  await assert.rejects(() => apply(pg, e12), /E12 product is not scan-result-ready/i)
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
 })
 
 test("E11 rejects an otherwise exact K18 GTIN wave when its scanner readiness regresses", async (t) => {
