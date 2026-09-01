@@ -105,7 +105,10 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
           cadence: unknown
           source_url: string | null
           guidance_payload: unknown
-        }>("product_id,category,role,application_family,cadence,source_url,guidance_payload")
+          guidance_payload_v2: unknown
+        }>(
+          "product_id,category,role,application_family,cadence,source_url,guidance_payload,guidance_payload_v2",
+        )
         .in("product_id", productIds)
       if (error) throw new Error(`Stage 5 protocol preflight failed: ${error.message}`)
       return data ?? []

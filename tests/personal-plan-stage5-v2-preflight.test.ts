@@ -43,7 +43,7 @@ const artifact = {
   items: [item],
 }
 
-function reads(payload: unknown = sourcePayload) {
+function reads(payload: unknown = sourcePayload, pointer: unknown = undefined) {
   return {
     listProducts: async () => [
       {
@@ -61,6 +61,7 @@ function reads(payload: unknown = sourcePayload) {
         role: item.source_role,
         application_family: item.guidance_payload_v2.applicationFamily,
         guidance_payload: payload,
+        ...(pointer === undefined ? {} : { guidance_payload_v2: pointer }),
       },
     ],
   }
@@ -85,6 +86,16 @@ test("Stage 5 V2 preflight rejects source drift", async () => {
 
   assert.equal(result.ok, false)
   assert.deepEqual(result.blockers, [`source_protocol_diverged:${item.key}`])
+})
+
+test("Stage 5 V2 preflight exposes a conflicting stored V2 pointer before apply", async () => {
+  const result = await preflightStage5V2ApplicationArtifact(
+    artifact,
+    reads(sourcePayload, { ...item.guidance_payload_v2, evidence: [] }),
+  )
+
+  assert.equal(result.ok, false)
+  assert.deepEqual(result.blockers, [`v2_authority_conflict:${item.key}`])
 })
 
 test("Stage 5 V2 preflight rejects every stale observed-count projection", async () => {

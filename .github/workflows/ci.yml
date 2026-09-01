@@ -158,6 +158,8 @@ jobs:
         run: npm run test:node
       - name: Run nested Personal Plan contracts
         run: npm run test:personal-plan:nested
+      - name: Verify Stage 5 application artifact freshness
+        run: npm run personal-plan:application-audit
       - name: Run agent contracts
         run: npm run test:agent
 
