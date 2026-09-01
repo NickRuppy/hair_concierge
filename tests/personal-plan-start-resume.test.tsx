@@ -20,6 +20,8 @@ import {
   Stage3ProductKindCorrectionError,
   stage3LoadRecoveryMode,
 } from "../src/components/personal-plan-start/plan-start-flow"
+import { Stage3BootstrapContractError } from "../src/lib/personal-plan/products/bootstrap-response"
+import { Stage3PreparationError } from "../src/lib/personal-plan/products/bootstrap-recovery"
 import {
   deriveRefinementEntryMode,
   RefinementFlow,
@@ -32,6 +34,7 @@ import {
 } from "../src/lib/personal-plan/persistence/stage2-refinement-service"
 import {
   Stage3ProductsGatewayError,
+  type Stage3BootstrapClientPort,
   type Stage3DraftResponse,
   type Stage3ProductsGateway,
 } from "../src/lib/personal-plan/products/gateway"
@@ -363,8 +366,14 @@ test("a stale Stage 3 source retries through the server frontier instead of the 
   recover(new Stage3ProductsGatewayError("stale_refined_source"))
   assert.deepEqual({ stage3Retries, frontierReloads }, { stage3Retries: 0, frontierReloads: 1 })
 
+  recover(new Stage3ProductsGatewayError("stale_authority_snapshot"))
+  assert.deepEqual({ stage3Retries, frontierReloads }, { stage3Retries: 0, frontierReloads: 2 })
+
   recover(new Stage3ProductsGatewayError("temporarily_unavailable"))
-  assert.deepEqual({ stage3Retries, frontierReloads }, { stage3Retries: 1, frontierReloads: 1 })
+  assert.deepEqual({ stage3Retries, frontierReloads }, { stage3Retries: 1, frontierReloads: 2 })
+
+  recover(new Stage3PreparationError("contract_violation", true))
+  assert.deepEqual({ stage3Retries, frontierReloads }, { stage3Retries: 1, frontierReloads: 2 })
 })
 
 test("a transient server Stage 1 preload failure preserves the browser retry path", async () => {
@@ -475,7 +484,7 @@ test("an explicit module entry does not seed the old baseline Stage 2 resume she
 function stage3DraftResponse(
   draftId: string,
   refinedVersionId: string,
-): Stage3DraftResponse & { authorityEvaluations: [] } {
+): Stage3DraftResponse & { authorityEvaluations: []; fitComparisons: [] } {
   const authorityVersions = {
     shampoo: "shampoo-v1",
     conditioner: "conditioner-v1",
@@ -530,13 +539,14 @@ function stage3DraftResponse(
       },
     },
     authorityEvaluations: [],
+    fitComparisons: [],
   }
 }
 
 test("Stage 3 bootstrap selects optional inventory only for a verified products handoff", async () => {
   const calls: string[] = []
   const optionalDraft = stage3DraftResponse("optional-draft", "refined-products")
-  const gateway: Pick<Stage3ProductsGateway, "loadOrCreate" | "openOptionalInventory"> = {
+  const gateway: Pick<Stage3BootstrapClientPort, "loadOrCreate" | "openOptionalInventory"> = {
     openOptionalInventory: async (input) => {
       calls.push(`optional:${input.personalPlanId}:${input.refinedVersionId}`)
       return optionalDraft
@@ -558,10 +568,77 @@ test("Stage 3 bootstrap selects optional inventory only for a verified products 
   assert.equal(bootstrap.draft.draftId, "optional-draft")
 })
 
+test("a malformed optional bootstrap falls back to one normal GET without replaying the POST", async () => {
+  const calls: string[] = []
+  const captures: string[] = []
+  const baselineDraft = stage3DraftResponse("baseline-draft", "refined-products")
+  const gateway: Pick<Stage3BootstrapClientPort, "loadOrCreate" | "openOptionalInventory"> = {
+    openOptionalInventory: async () => {
+      calls.push("optional")
+      throw new Stage3BootstrapContractError("missing_authority_evaluations")
+    },
+    loadOrCreate: async () => {
+      calls.push("baseline")
+      return baselineDraft
+    },
+  }
+
+  const bootstrap = await loadPlanStartStage3Bootstrap({
+    gateway,
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-products",
+    optionalInventory: true,
+    captureContractViolation: (source, violation) => {
+      captures.push(`${source}:${violation}`)
+      return true
+    },
+  })
+
+  assert.deepEqual(calls, ["optional", "baseline"])
+  assert.deepEqual(captures, ["optional_entry:missing_authority_evaluations"])
+  assert.equal(bootstrap.draft.draftId, "baseline-draft")
+})
+
+test("two malformed bootstrap transports stop after one GET fallback and one diagnostic", async () => {
+  const calls: string[] = []
+  let captures = 0
+  const gateway: Pick<Stage3BootstrapClientPort, "loadOrCreate" | "openOptionalInventory"> = {
+    openOptionalInventory: async () => {
+      calls.push("optional")
+      throw new Stage3BootstrapContractError("missing_authority_evaluations")
+    },
+    loadOrCreate: async () => {
+      calls.push("baseline")
+      throw new Stage3BootstrapContractError("missing_fit_comparisons")
+    },
+  }
+
+  await assert.rejects(
+    () =>
+      loadPlanStartStage3Bootstrap({
+        gateway,
+        personalPlanId: "plan-1",
+        refinedVersionId: "refined-products",
+        optionalInventory: true,
+        captureContractViolation: () => {
+          captures += 1
+          return true
+        },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3PreparationError &&
+      error.kind === "contract_violation" &&
+      error.diagnosticQueued,
+  )
+
+  assert.deepEqual(calls, ["optional", "baseline"])
+  assert.equal(captures, 1)
+})
+
 test("baseline and direct-accept Stage 3 bootstrap keep loadOrCreate", async () => {
   const calls: string[] = []
   const baselineDraft = stage3DraftResponse("baseline-draft", "refined-baseline")
-  const gateway: Pick<Stage3ProductsGateway, "loadOrCreate" | "openOptionalInventory"> = {
+  const gateway: Pick<Stage3BootstrapClientPort, "loadOrCreate" | "openOptionalInventory"> = {
     openOptionalInventory: async () => {
       calls.push("optional")
       throw new Error("baseline/direct accept must not import optional inventory")
@@ -644,7 +721,7 @@ test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstra
     bondbuilder: "bondbuilder-v1",
     deep_cleansing_shampoo: "deep-cleansing-v1",
   }
-  const response: Stage3DraftResponse & { authorityEvaluations: [] } = {
+  const response: Stage3DraftResponse & { authorityEvaluations: []; fitComparisons: [] } = {
     status: "active",
     requirements: [
       {
@@ -686,9 +763,10 @@ test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstra
       },
     },
     authorityEvaluations: [],
+    fitComparisons: [],
   }
   const authorityDraft = { ...response, authorityEvaluations: [] }
-  const gateway: Pick<Stage3ProductsGateway, "loadOrCreate"> = {
+  const gateway: Pick<Stage3BootstrapClientPort, "loadOrCreate"> = {
     loadOrCreate: async (input) => {
       requestCount += 1
       received = input

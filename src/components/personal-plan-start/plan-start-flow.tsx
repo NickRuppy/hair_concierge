@@ -32,15 +32,24 @@ import {
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
 import type { Stage3RoutineHandoff } from "@/components/personal-plan-products/stage3-products-flow"
 import {
+  Stage3PreparationRecoveryPanel,
+  type Stage3PreparationRecoveryKind,
+} from "@/components/personal-plan-products/stage3-preparation-recovery"
+import {
   createHttpStage3IntakeClient,
   createHttpStage3ProductsGateway,
 } from "@/lib/personal-plan/products/http-gateway"
 import { stage3BaselineAnalytics } from "@/lib/personal-plan/products/stage3-analytics"
-import type { Stage3AuthorityEvaluation } from "@/lib/personal-plan/products/authority/contracts"
+import {
+  Stage3BootstrapContractError,
+  type Stage3BootstrapContractViolation,
+} from "@/lib/personal-plan/products/bootstrap-response"
+import { Stage3PreparationError } from "@/lib/personal-plan/products/bootstrap-recovery"
+import { captureStage3BootstrapContractViolation } from "@/lib/observability/personal-plan-stage3"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import {
   Stage3ProductsGatewayError,
-  type Stage3ProductsGateway,
+  type Stage3BootstrapClientPort,
 } from "@/lib/personal-plan/products/gateway"
 import {
   buildStage3Bootstrap,
@@ -323,10 +332,15 @@ export function stage3CompletionRoutineHref(
   return isPostAcceptModuleEntry(initialJourney) ? withRoutinePlanUpdatedSignal(href) : href
 }
 
-export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
+export type Stage3LoadRecoveryMode =
+  | "retry_stage3"
+  | "reload_server_frontier"
+  | "contract_violation"
 
 export function stage3LoadRecoveryMode(error: unknown): Stage3LoadRecoveryMode {
-  return error instanceof Stage3ProductsGatewayError && error.code === "stale_refined_source"
+  if (error instanceof Stage3PreparationError) return "contract_violation"
+  return error instanceof Stage3ProductsGatewayError &&
+    (error.code === "stale_refined_source" || error.code === "stale_authority_snapshot")
     ? "reload_server_frontier"
     : "retry_stage3"
 }
@@ -339,6 +353,7 @@ export function recoverPlanStartStage3Load(
     actions.reloadServerFrontier()
     return
   }
+  if (mode === "contract_violation") return
   actions.retryStage3()
 }
 
@@ -594,7 +609,7 @@ async function requestStage1ProductExamplePreviews(input: {
 }
 
 export async function loadPlanStartStage3Bootstrap(input: {
-  gateway: Pick<Stage3ProductsGateway, "loadOrCreate" | "openOptionalInventory">
+  gateway: Pick<Stage3BootstrapClientPort, "loadOrCreate" | "openOptionalInventory">
   personalPlanId: string
   refinedVersionId: string
   repairRoutineVersionId?: string
@@ -606,33 +621,62 @@ export async function loadPlanStartStage3Bootstrap(input: {
    * failing closed — it must plan against exactly the version it names.
    */
   rebuildOnStaleRefinedVersion?: boolean
+  captureContractViolation?: (
+    source: "normal_get" | "optional_entry",
+    violation: Stage3BootstrapContractViolation,
+  ) => boolean
 }): Promise<Stage3Bootstrap> {
-  const loaded = input.optionalInventory
-    ? await openOptionalStage3Inventory(input.gateway, {
+  const loadBaseline = () =>
+    input.gateway.loadOrCreate({
+      draftId: "client-derived",
+      userId: "client-derived",
+      personalPlanId: input.personalPlanId,
+      refinedVersionId: input.refinedVersionId,
+      ...(input.repairRoutineVersionId
+        ? { repairRoutineVersionId: input.repairRoutineVersionId }
+        : {}),
+      ...(input.rebuildOnStaleRefinedVersion && !input.repairRoutineVersionId
+        ? { rebuildOnStaleRefinedVersion: true }
+        : {}),
+      requirements: [],
+    })
+  const captureContractViolation =
+    input.captureContractViolation ?? captureStage3BootstrapContractViolation
+  let loaded
+  if (input.optionalInventory) {
+    try {
+      loaded = await openOptionalStage3Inventory(input.gateway, {
         personalPlanId: input.personalPlanId,
         refinedVersionId: input.refinedVersionId,
       })
-    : await input.gateway.loadOrCreate({
-        draftId: "client-derived",
-        userId: "client-derived",
-        personalPlanId: input.personalPlanId,
-        refinedVersionId: input.refinedVersionId,
-        ...(input.repairRoutineVersionId
-          ? { repairRoutineVersionId: input.repairRoutineVersionId }
-          : {}),
-        ...(input.rebuildOnStaleRefinedVersion && !input.repairRoutineVersionId
-          ? { rebuildOnStaleRefinedVersion: true }
-          : {}),
-        requirements: [],
-      })
-  return buildStage3Bootstrap(
-    loaded as typeof loaded & { authorityEvaluations?: Stage3AuthorityEvaluation[] },
-    input,
-  )
+    } catch (error) {
+      if (!(error instanceof Stage3BootstrapContractError)) throw error
+      const diagnosticQueued = captureContractViolation("optional_entry", error.violation)
+      try {
+        loaded = await loadBaseline()
+      } catch (fallbackError) {
+        if (fallbackError instanceof Stage3BootstrapContractError) {
+          throw new Stage3PreparationError("contract_violation", diagnosticQueued)
+        }
+        throw fallbackError
+      }
+    }
+  } else {
+    try {
+      loaded = await loadBaseline()
+    } catch (error) {
+      if (!(error instanceof Stage3BootstrapContractError)) throw error
+      throw new Stage3PreparationError(
+        "contract_violation",
+        captureContractViolation("normal_get", error.violation),
+      )
+    }
+  }
+  return buildStage3Bootstrap(loaded, input)
 }
 
 function openOptionalStage3Inventory(
-  gateway: Pick<Stage3ProductsGateway, "openOptionalInventory">,
+  gateway: Pick<Stage3BootstrapClientPort, "openOptionalInventory">,
   input: { personalPlanId: string; refinedVersionId: string },
 ) {
   const openOptionalInventory = gateway.openOptionalInventory?.bind(gateway)
@@ -777,6 +821,7 @@ export function PlanStartCustomerJourney({
   const [stage3LoadState, setStage3LoadState] = useState<
     "idle" | "loading" | Stage3LoadRecoveryMode
   >(initialJourney.stage === "stage3" ? "loading" : "idle")
+  const [stage3DiagnosticQueued, setStage3DiagnosticQueued] = useState(false)
   const stage3Gateway = useMemo(() => createHttpStage3ProductsGateway(), [])
   const intakeClient = useMemo(() => createHttpStage3IntakeClient(), [])
   const stage2Gateway = useMemo(() => createHttpStage2RefinementGateway(), [])
@@ -936,6 +981,7 @@ export function PlanStartCustomerJourney({
       installNewStage3Bootstrap(await loadStage3Bootstrap(initialJourney.refinedVersionId))
       setStage3LoadState("idle")
     } catch (error) {
+      setStage3DiagnosticQueued(error instanceof Stage3PreparationError && error.diagnosticQueued)
       setStage3LoadState(stage3LoadRecoveryMode(error))
     }
   }, [initialJourney, installNewStage3Bootstrap, loadStage3Bootstrap])
@@ -950,7 +996,12 @@ export function PlanStartCustomerJourney({
         setStage3LoadState("idle")
       },
       (error) => {
-        if (!cancelled) setStage3LoadState(stage3LoadRecoveryMode(error))
+        if (!cancelled) {
+          setStage3DiagnosticQueued(
+            error instanceof Stage3PreparationError && error.diagnosticQueued,
+          )
+          setStage3LoadState(stage3LoadRecoveryMode(error))
+        }
       },
     )
     return () => {
@@ -1156,15 +1207,53 @@ export function PlanStartCustomerJourney({
   }
   if (stage === "stage3" && !stage3Bootstrap) {
     if (stage3LoadState === "retry_stage3" || stage3LoadState === "reload_server_frontier") {
+      const recoveryKind: Stage3PreparationRecoveryKind =
+        stage3LoadState === "reload_server_frontier" ? "checkpoint_changed" : "transient"
       return (
-        <PlanStartRetryableError
-          onRetry={() =>
-            recoverPlanStartStage3Load(stage3LoadState, {
-              retryStage3: () => void resumeStage3(),
-              reloadServerFrontier,
-            })
-          }
-        />
+        <div className="min-h-dvh bg-[var(--background)] text-[var(--text-body)]">
+          <PlanStartHeader stageLabel="Produkte" />
+          <Stage3PreparationRecoveryPanel
+            kind={recoveryKind}
+            diagnosticQueued={false}
+            onRecover={() =>
+              recoverPlanStartStage3Load(stage3LoadState, {
+                retryStage3: () => void resumeStage3(),
+                reloadServerFrontier,
+              })
+            }
+            onExit={() =>
+              initialJourney.stage !== "stage1" && initialJourney.planAccepted
+                ? openRoutineHref("/routine")
+                : replaceRoute("/profile")
+            }
+            exitLabel={
+              initialJourney.stage !== "stage1" && initialJourney.planAccepted
+                ? "Zur Routine"
+                : "Zum Profil"
+            }
+          />
+        </div>
+      )
+    }
+    if (stage3LoadState === "contract_violation") {
+      return (
+        <div className="min-h-dvh bg-[var(--background)] text-[var(--text-body)]">
+          <PlanStartHeader stageLabel="Produkte" />
+          <Stage3PreparationRecoveryPanel
+            kind="contract_violation"
+            diagnosticQueued={stage3DiagnosticQueued}
+            onExit={() =>
+              initialJourney.stage !== "stage1" && initialJourney.planAccepted
+                ? openRoutineHref("/routine")
+                : replaceRoute("/profile")
+            }
+            exitLabel={
+              initialJourney.stage !== "stage1" && initialJourney.planAccepted
+                ? "Zur Routine"
+                : "Zum Profil"
+            }
+          />
+        </div>
       )
     }
     return <PlanStartLoading />

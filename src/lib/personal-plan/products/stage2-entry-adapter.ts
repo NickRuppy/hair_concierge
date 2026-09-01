@@ -1,7 +1,5 @@
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
-import type { Stage3AuthorityEvaluation } from "./authority/contracts"
-import type { Stage3FitComparison } from "./fit-comparison"
-import type { Stage3DraftResponse } from "./gateway"
+import type { Stage3BootstrapResponse } from "./gateway"
 
 import { CATEGORY_ROLE_POLICIES } from "./authorities"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "./contracts"
@@ -28,18 +26,15 @@ type Stage3EntryIds = Pick<Stage3EntryContext, "personalPlanId" | "refinedVersio
 
 export type Stage3Bootstrap = {
   entryContext: Stage3EntryContext
-  draft: Stage3DraftResponse["draft"]
-  requirements: Stage3DraftResponse["requirements"]
-  authorityEvaluations: Stage3AuthorityEvaluation[]
-  fitComparisons?: Stage3FitComparison[]
+  draft: Stage3BootstrapResponse["draft"]
+  requirements: Stage3BootstrapResponse["requirements"]
+  authorityEvaluations: Stage3BootstrapResponse["authorityEvaluations"]
+  fitComparisons?: Stage3BootstrapResponse["fitComparisons"]
   catalogThumbnails?: Record<string, string>
 }
 
 export function buildStage3Bootstrap(
-  response: Stage3DraftResponse & {
-    authorityEvaluations?: Stage3AuthorityEvaluation[]
-    fitComparisons?: Stage3FitComparison[]
-  },
+  response: Stage3BootstrapResponse,
   ids: Stage3EntryIds,
 ): Stage3Bootstrap {
   const personalPlanId = requireOpaqueId(ids.personalPlanId, "personalPlanId")
@@ -56,10 +51,6 @@ export function buildStage3Bootstrap(
   if (!response.draft.authoritySnapshot) {
     throw new Error("Stage 3 bootstrap requires an authority snapshot")
   }
-  if (!Array.isArray(response.authorityEvaluations)) {
-    throw new Error("Stage 3 bootstrap requires authority evaluations")
-  }
-
   return {
     entryContext: {
       schemaVersion: 1,
@@ -76,7 +67,7 @@ export function buildStage3Bootstrap(
     draft: response.draft,
     requirements: response.requirements,
     authorityEvaluations: response.authorityEvaluations,
-    fitComparisons: Array.isArray(response.fitComparisons) ? response.fitComparisons : [],
+    fitComparisons: response.fitComparisons,
     catalogThumbnails: response.catalogThumbnails,
   }
 }
