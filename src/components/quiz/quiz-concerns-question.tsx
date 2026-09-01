@@ -68,6 +68,7 @@ export function QuizConcernsQuestion() {
 
   const handleToggleOtherField = () => {
     if (showOtherField) {
+      setAnswer("concerns_other_text", undefined)
       setShowOtherField(false)
       return
     }

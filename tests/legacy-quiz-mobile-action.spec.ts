@@ -334,6 +334,35 @@ test.describe("@ci regular quiz mobile parity", () => {
     expect(Math.abs(landing.scrollY - initialScrollY)).toBeLessThanOrEqual(32)
   })
 
+  test("keeps a saved concern note deselected after navigating Back and returning", async ({
+    page,
+  }) => {
+    await openDraft(
+      page,
+      8,
+      { width: 390, height: 844 },
+      {
+        concerns: ["low_shine"],
+        concerns_other_text: "Stumpf nach dem Föhnen",
+      },
+    )
+
+    const other = page.getByRole("button", { name: "Etwas anderes", exact: true })
+    await expect(other).toHaveAttribute("aria-pressed", "true")
+    await other.click()
+    await expect(other).toHaveAttribute("aria-pressed", "false")
+
+    await page.getByRole("button", { name: "Zurück" }).click()
+    await expect(
+      page.getByRole("heading", { name: "Wie fühlt sich deine Kopfhaut normalerweise an?" }),
+    ).toBeVisible()
+    await page.getByRole("button", { name: "Nein", exact: true }).click()
+
+    await expect(page.getByRole("heading", { name: "Was beschäftigt dich gerade?" })).toBeVisible()
+    await expect(other).toHaveAttribute("aria-pressed", "false")
+    await expect(page.getByLabel("Eigene Notiz")).toBeHidden()
+  })
+
   test("keeps the regular desktop action inline", async ({ page }) => {
     await openDraft(page, 7, { width: 1024, height: 800 })
 
