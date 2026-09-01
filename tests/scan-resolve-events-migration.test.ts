@@ -58,7 +58,6 @@ test("adds nullable v2 terminal telemetry without changing the legacy outcome co
 test("backfills every legacy event as terminal-unknown, never as a proven resolution", () => {
   const sql = migration()
 
-  assert.match(sql, /legacy_count\s+not in\s*\(0, 6\)/)
   assert.match(
     sql,
     /update public\.scan_resolve_events[\s\S]*set telemetry_version = 1,[\s\S]*terminal_outcome = 'legacy_unknown'/,
@@ -188,7 +187,7 @@ test("telemetry migration executes, accepts v2 starts, and aggregates before ret
       '04006381333931',
       CASE WHEN value <= 2 THEN 'hit' ELSE 'miss' END,
       now() - interval '31 days'
-    FROM generate_series(1, 6) AS value;
+    FROM generate_series(1, 10) AS value;
   `)
 
   await pg.exec(readFileSync(migrationPath, "utf8"))
@@ -198,7 +197,7 @@ test("telemetry migration executes, accepts v2 starts, and aggregates before ret
     FROM public.scan_resolve_events
     WHERE telemetry_version = 1 AND terminal_outcome = 'legacy_unknown'
   `)
-  assert.equal(legacy.rows[0]?.count, 6)
+  assert.equal(legacy.rows[0]?.count, 10)
 
   await pg.exec(`
     INSERT INTO public.scan_resolve_events (
@@ -210,6 +209,19 @@ test("telemetry migration executes, accepts v2 starts, and aggregates before ret
       '00000040170725',
       NULL
     );
+  `)
+
+  await pg.exec(readFileSync(migrationPath, "utf8"))
+
+  const inFlight = await pg.query<{ telemetry_version: number; terminal_outcome: string | null }>(`
+    SELECT telemetry_version, terminal_outcome
+    FROM public.scan_resolve_events
+    WHERE user_id = '22222222-2222-4222-8222-222222222222'
+  `)
+  assert.deepEqual(inFlight.rows[0], { telemetry_version: 2, terminal_outcome: null })
+
+  await pg.exec(`
+    SELECT private.run_scan_resolve_retention();
     SELECT private.run_scan_resolve_retention();
   `)
 
@@ -221,5 +233,5 @@ test("telemetry migration executes, accepts v2 starts, and aggregates before ret
     SELECT sum(attempt_count)::integer AS attempts
     FROM public.scan_resolve_daily_aggregates
   `)
-  assert.equal(aggregate.rows[0]?.attempts, 6)
+  assert.equal(aggregate.rows[0]?.attempts, 10)
 })

@@ -73,7 +73,7 @@ eindeutige Personenzahl gelesen werden. Insbesondere lassen sich 7-Tage-
 Fenster „distinct user × GTIN“ nicht aus summierten Tages-Distinct-Counts
 rekonstruieren.
 
-## Die sechs v1-Zeilen getrennt behandeln
+## Historische v1-Zeilen getrennt behandeln
 
 ```sql
 select count(*) as legacy_terminal_unknown_events
@@ -82,9 +82,12 @@ where telemetry_version = 1
   and terminal_outcome = 'legacy_unknown';
 ```
 
-Beim Migrationsstand sind das genau sechs historische Ereignisse. Sie enthalten
-nur den alten Lookup-Status und werden ausdrücklich weder als `resolved` noch
-als belastbare Hit/Miss-Quote interpretiert.
+Beim ursprünglichen Planungssnapshot waren das sechs historische Ereignisse;
+bis zum Cutover können weitere reguläre v1-Ereignisse hinzukommen. Der
+Live-Preflight prüft deshalb Anzahl und Altformat unmittelbar vor dem Apply.
+Alle vorhandenen v1-Zeilen enthalten nur den alten Lookup-Status und werden
+ausdrücklich weder als `resolved` noch als belastbare Hit/Miss-Quote
+interpretiert.
 
 ## Freigabe- und Cutover-Reihenfolge
 
@@ -93,7 +96,8 @@ Identifier-Vertrag. Deshalb gilt für jede spätere, separat autorisierte
 Produktionsfreigabe zwingend:
 
 1. Unmittelbar vor dem Apply den Live-Preflight für Kollisionen, ungültige
-   GTIN-Zeilen und die erwarteten sechs v1-Telemetriezeilen wiederholen.
+   GTIN-Zeilen sowie Anzahl und Form aller historischen v1-Telemetriezeilen
+   wiederholen. Diese Prüfung ist zugleich der Sizing-Check für das Backfill.
 2. Die Migrationen `20260826093828`, `20260826142000`, `20260826142100` und
    `20260826142200` in genau dieser Reihenfolge anwenden und verifizieren.
 3. Erst nachdem `canonical_gtin14`, die v2-Telemetriefelder, Writer-Guards,
@@ -105,9 +109,9 @@ Produktionsfreigabe zwingend:
 
 Ein Datenbankschema vor der alten Anwendung ist rollback-kompatibel; die neue
 Anwendung vor den Migrationen ist es nicht und würde Barcode-Scans ausfallen
-lassen. Ein abweichender Bestand historischer v1-Zeilen blockiert die erste
-Migration absichtlich und muss vor einem Replay in einer anderen Umgebung
-explizit beurteilt werden.
+lassen. Die Migration klassifiziert alle bis dahin vorhandenen Altformat-Zeilen
+als `legacy_unknown`; ihre Anzahl wird bewusst nicht eingefroren, weil die alte
+Anwendung bis zum Cutover weitere reguläre v1-Zeilen schreiben kann.
 
 Ungültige checksum-behaftete Altwerte werden nicht kanonisch indiziert und
 dürfen nicht stillschweigend korrigiert werden. Die operative Hold-Liste bleibt

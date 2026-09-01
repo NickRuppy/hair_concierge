@@ -52,32 +52,15 @@ ALTER TABLE public.scan_resolve_events
       )
     );
 
--- The deployment baseline contains exactly six v1 rows. They record only a
--- lookup result, so they must not be reclassified as successful responses.
-DO $$
-DECLARE
-  legacy_count integer;
-BEGIN
-  SELECT count(*)
-    INTO legacy_count
-    FROM public.scan_resolve_events
-   WHERE telemetry_version IS NULL
-     AND terminal_outcome IS NULL;
-
-  IF legacy_count NOT IN (0, 6) THEN
-    RAISE EXCEPTION
-      'expected 0 or 6 unversioned scan resolve events, found %', legacy_count;
-  END IF;
-
-  IF legacy_count = 6 THEN
-    UPDATE public.scan_resolve_events
-       SET telemetry_version = 1,
-           terminal_outcome = 'legacy_unknown'
-     WHERE telemetry_version IS NULL
-       AND terminal_outcome IS NULL;
-  END IF;
-END;
-$$;
+-- Every row that predates these columns records only a lookup result. The
+-- table can continue receiving legitimate v1 rows until this migration lands,
+-- so classify the complete legacy set by shape instead of pinning a row count.
+-- None may be reclassified as a proven successful response.
+UPDATE public.scan_resolve_events
+   SET telemetry_version = 1,
+       terminal_outcome = 'legacy_unknown'
+ WHERE telemetry_version IS NULL
+   AND terminal_outcome IS NULL;
 
 ALTER TABLE public.scan_resolve_events
   ALTER COLUMN telemetry_version SET DEFAULT 2,
