@@ -229,6 +229,7 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5-21-product-search-dispositions.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5R-01-oil-reentry.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5R-02-k18-molecular-repair-hair-mist-readiness.json
+!/data/catalog-enrichment/personal-plan-stage5-v1/S5R-03-e18-oil-reentry.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research.schema.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/scalp-refresh.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/

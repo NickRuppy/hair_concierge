@@ -7,6 +7,7 @@ import {
   assertPersonalPlanProductDispositionReversalApprovedFingerprint,
   buildPersonalPlanProductDispositionReversalManifest,
   preflightPersonalPlanProductDispositionReversalManifest,
+  PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS,
 } from "@/lib/product-intake/catalog-enrichment/stage5-product-disposition-reversals"
 
 const SOURCE_FINGERPRINT = "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6"
@@ -26,6 +27,38 @@ const products = [
   ],
   ["acf9d5cd-76e4-49c7-9c04-0af1f20506ad", "dmBio Kokosöl nativ", "non_hair_product"],
   ["ca4ae209-79d2-4f4d-8e44-46e586cec62d", "benecos BIO Körperöl Mandelöl", "wrong_category"],
+] as const
+const e18Products = [
+  [
+    "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+    "benecos BIO Körperöl Macadamianussöl",
+    "insufficient_executable_directions",
+  ],
+  [
+    "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+    "Primavera Calendulaöl Bio",
+    "insufficient_finished_product_evidence",
+  ],
+  [
+    "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+    "nedura Schwarzkümmelöl ungefiltert",
+    "insufficient_finished_product_evidence",
+  ],
+  [
+    "38886b62-2c45-4b34-9a24-7d831e97946e",
+    "MoriVeda Premium Moringaöl",
+    "insufficient_executable_directions",
+  ],
+  [
+    "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+    "benecos BIO Körperöl Wunderbaumsamenöl",
+    "insufficient_executable_directions",
+  ],
+  [
+    "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+    "Dr. Scheller Jojobaöl",
+    "insufficient_finished_product_evidence",
+  ],
 ] as const
 
 function manifest(state: "prepared_for_review" | "approved_by_nick" = "prepared_for_review") {
@@ -67,6 +100,51 @@ function manifest(state: "prepared_for_review" | "approved_by_nick" = "prepared_
           label: "Hair-fibre oil evidence",
           url: "https://pubmed.ncbi.nlm.nih.gov/12715094/",
           checked_at: "2026-08-31",
+        },
+      ],
+    })),
+  }
+}
+
+function e18Manifest(state: "prepared_for_review" | "approved_by_nick" = "prepared_for_review") {
+  return {
+    schema_version: "personal-plan-product-disposition-reversal-v1",
+    batch_id: "S5R-03-e18-oil-reentry",
+    review:
+      state === "approved_by_nick" ? { state, reviewed_by: "nick" } : { state, reviewed_by: null },
+    items: e18Products.map(([product_id, name, reason_code]) => ({
+      product_id,
+      expected_product: {
+        name,
+        category_key: "oil",
+        origin: "curated",
+        is_active: true,
+        lifecycle_status: "active",
+      },
+      expected_disposition: {
+        disposition: "awaiting_exact_analysis",
+        reason_code,
+        reason: "Old reviewed analysis blocker",
+        sources: [
+          {
+            label: "Old source",
+            url: "https://example.test/old",
+            text: "Old",
+            source_type: "retailer",
+            checked_at: "2026-08-12",
+          },
+        ],
+        source_batch: "S5-21-product-search-dispositions",
+        source_fingerprint: SOURCE_FINGERPRINT,
+        reviewed_by: "nick",
+      },
+      reversal_reason:
+        "The exact oil is now covered by the separate oil authority and protocol enrichment.",
+      sources: [
+        {
+          label: "Exact oil evidence",
+          url: "https://example.test/oil-reentry",
+          checked_at: "2026-09-01",
         },
       ],
     })),
@@ -144,7 +222,21 @@ test("builds one canonical exact-seven oil reversal manifest", () => {
   assert.equal(JSON.parse(built.canonicalJson).items.length, 7)
 })
 
-test("prepared S5R-01 artifact validates but is not marked approved", async () => {
+test("oil reversal cohorts account for the exact 13 disposed E18 products once", () => {
+  const productIds: readonly string[] = Object.values(
+    PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS,
+  ).flat()
+  assert.equal(productIds.length, 13)
+  assert.equal(new Set(productIds).size, 13)
+  // In the 18-row scanner target, Garnier has no disposition to reverse, OGX
+  // remains identity-ambiguous, and this separate Balea body oil stays outside
+  // the exact approved cohort even though it has an old oil disposition.
+  assert.ok(!productIds.includes("c574ee6f-ad22-45c0-b936-57b847d93433"))
+  assert.ok(!productIds.includes("1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"))
+  assert.ok(!productIds.includes("4f373d4f-fef8-4434-91c7-055133d8427f"))
+})
+
+test("approved S5R-01 artifact validates and matches its pinned fingerprint", async () => {
   const input = JSON.parse(
     await readFile(
       "data/catalog-enrichment/personal-plan-stage5-v1/S5R-01-oil-reentry.json",
@@ -152,9 +244,34 @@ test("prepared S5R-01 artifact validates but is not marked approved", async () =
     ),
   )
   const built = buildPersonalPlanProductDispositionReversalManifest(input)
-  assert.deepEqual(built.manifest.review, { state: "prepared_for_review", reviewed_by: null })
+  assert.deepEqual(built.manifest.review, { state: "approved_by_nick", reviewed_by: "nick" })
   assert.equal(built.manifest.items.length, 7)
-  assert.match(built.fingerprint, /^[a-f0-9]{64}$/)
+  assert.equal(
+    built.fingerprint,
+    "f13d497a33ec651920b6610efdd0404783fd707f7d505299c5ba5fbd4080be69",
+  )
+  assert.doesNotThrow(() => assertPersonalPlanProductDispositionReversalApprovedFingerprint(built))
+})
+
+test("approved S5R-03 artifact validates and matches its pinned fingerprint", async () => {
+  const input = JSON.parse(
+    await readFile(
+      "data/catalog-enrichment/personal-plan-stage5-v1/S5R-03-e18-oil-reentry.json",
+      "utf8",
+    ),
+  )
+  const built = buildPersonalPlanProductDispositionReversalManifest(input)
+  assert.deepEqual(built.manifest.review, { state: "approved_by_nick", reviewed_by: "nick" })
+  assert.equal(built.manifest.items.length, 6)
+  assert.deepEqual(
+    built.manifest.items.map(({ product_id }) => product_id),
+    [...PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS["S5R-03-e18-oil-reentry"]].sort(),
+  )
+  assert.equal(
+    built.fingerprint,
+    "9bdbcad847edc3140d045f059efb3f762951a1d32c68040915c0f93e7d58e7a3",
+  )
+  assert.doesNotThrow(() => assertPersonalPlanProductDispositionReversalApprovedFingerprint(built))
 })
 
 test("rejects a partial cohort and drift in the approved prior disposition", () => {
@@ -168,6 +285,10 @@ test("rejects a partial cohort and drift in the approved prior disposition", () 
     () => buildPersonalPlanProductDispositionReversalManifest(drifted),
     /source fingerprint/i,
   )
+
+  const mixed = e18Manifest()
+  ;(mixed.items[0] as { product_id: string }).product_id = products[0][0]
+  assert.throws(() => buildPersonalPlanProductDispositionReversalManifest(mixed), /outside/i)
 })
 
 test("preflight requires exact active curated products and exact quarantine rows", async () => {
@@ -224,6 +345,20 @@ test("preflight reports an unapplied reversal migration without reading absent r
   assert.ok(blocked.blockers.includes("required_migration_not_applied:20260831182124"))
 })
 
+test("preflight requires the additive S5R-03 migration for the E18 oil re-entry wave", async () => {
+  const built = buildPersonalPlanProductDispositionReversalManifest(e18Manifest())
+  const read = exactRead(built)
+  const blocked = await preflightPersonalPlanProductDispositionReversalManifest(built, {
+    ...read,
+    async migrationState(version) {
+      assert.equal(version, "20260901162000")
+      return "absent"
+    },
+  })
+  assert.equal(blocked.ok, false)
+  assert.ok(blocked.blockers.includes("required_migration_not_applied:20260901162000"))
+})
+
 test("preflight recognizes only an exact completed replay", async () => {
   const built = buildPersonalPlanProductDispositionReversalManifest(manifest("approved_by_nick"))
   const read = exactRead(built)
@@ -262,7 +397,7 @@ test("preflight recognizes only an exact completed replay", async () => {
   assert.equal(replay.replay, true)
 })
 
-test("apply is fail-closed until S5R-01's reviewed fingerprint is pinned in code", async () => {
+test("apply rejects unapproved manifests, synthetic fingerprints, and disabled gates", async () => {
   const prepared = buildPersonalPlanProductDispositionReversalManifest(manifest())
   const approved = buildPersonalPlanProductDispositionReversalManifest(manifest("approved_by_nick"))
   const writes: unknown[] = []
@@ -293,7 +428,7 @@ test("apply is fail-closed until S5R-01's reviewed fingerprint is pinned in code
   )
   await assert.rejects(
     () => applyPersonalPlanProductDispositionReversal({ ...base, built: approved }),
-    /pinned_approved_manifest_fingerprint/i,
+    /matching_pinned_approved_manifest_fingerprint/i,
   )
   assert.throws(
     () => assertPersonalPlanProductDispositionReversalApprovedFingerprint(approved, "0".repeat(64)),

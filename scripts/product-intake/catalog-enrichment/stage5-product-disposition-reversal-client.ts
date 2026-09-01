@@ -7,7 +7,7 @@ import {
   applyPersonalPlanProductDispositionReversal,
   buildPersonalPlanProductDispositionReversalManifest,
   preflightPersonalPlanProductDispositionReversalManifest,
-  PRODUCT_DISPOSITION_REVERSAL_MIGRATION,
+  PRODUCT_DISPOSITION_REVERSAL_MIGRATIONS,
   type PersonalPlanProductDispositionReversalRead,
 } from "@/lib/product-intake/catalog-enrichment/stage5-product-disposition-reversals"
 import { createSupabaseClientFromEnv, flag, flagBool, parseArgs, printJson } from "../cli"
@@ -80,7 +80,7 @@ export function createPersonalPlanProductDispositionReversalRead(
   }
   return {
     async migrationState(version) {
-      if (version !== PRODUCT_DISPOSITION_REVERSAL_MIGRATION) {
+      if (!Object.hasOwn(PRODUCT_DISPOSITION_REVERSAL_MIGRATIONS, version)) {
         throw new Error(`unknown disposition reversal migration: ${version}`)
       }
       return linkedMigrationState(await linkedMigrations(), version)

@@ -9,27 +9,112 @@ export const PRODUCT_DISPOSITION_REVERSAL_REVIEWER = "nick" as const
 export const PRODUCT_DISPOSITION_REVERSAL_SOURCE_BATCH =
   "S5-21-product-search-dispositions" as const
 export const PRODUCT_DISPOSITION_REVERSAL_MIGRATION = "20260831182124" as const
+export const PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION = "20260901162000" as const
 export const PRODUCT_DISPOSITION_REVERSAL_SOURCE_FINGERPRINT =
   "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6" as const
 
-// This starts deliberately unpinned. Changing the manifest review state is not
-// sufficient to authorize a reversal: Nick must review the exact canonical
-// artifact and replace this null sentinel with its resulting SHA-256.
+// Review state alone never authorizes a reversal. Each approved batch must also
+// match the exact canonical SHA-256 pinned here after Nick's cohort decision.
 export const PRODUCT_DISPOSITION_REVERSAL_APPROVED_MANIFEST_FINGERPRINTS = {
-  "S5R-01-oil-reentry": null,
+  "S5R-01-oil-reentry": "f13d497a33ec651920b6610efdd0404783fd707f7d505299c5ba5fbd4080be69",
+  "S5R-03-e18-oil-reentry": "9bdbcad847edc3140d045f059efb3f762951a1d32c68040915c0f93e7d58e7a3",
+} as const
+
+export const PRODUCT_DISPOSITION_REVERSAL_MIGRATIONS = {
+  [PRODUCT_DISPOSITION_REVERSAL_MIGRATION]: PRODUCT_DISPOSITION_REVERSAL_MIGRATION,
+  [PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION]: PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION,
+} as const
+
+export const PRODUCT_DISPOSITION_REVERSAL_BATCH_MIGRATIONS = {
+  "S5R-01-oil-reentry": PRODUCT_DISPOSITION_REVERSAL_MIGRATION,
+  "S5R-03-e18-oil-reentry": PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION,
+} as const
+
+export const PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS = {
+  "S5R-01-oil-reentry": [
+    "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+    "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+    "517dca50-5d55-4038-ba1d-f9b745708327",
+    "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+    "a11855eb-64e5-438f-8880-1d3573efa9fa",
+    "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+    "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+  ],
+  "S5R-03-e18-oil-reentry": [
+    "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+    "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+    "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+    "38886b62-2c45-4b34-9a24-7d831e97946e",
+    "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+    "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+  ],
 } as const
 
 export const PRODUCT_DISPOSITION_REVERSAL_PRODUCTS = {
-  "29e36443-93ff-4b62-9cf0-55ad9f89f530": "non_hair_product",
-  "3eb198a5-9aab-4f28-9df1-c4869c6a12db": "non_hair_product",
-  "517dca50-5d55-4038-ba1d-f9b745708327": "non_hair_product",
-  "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a": "non_hair_product",
-  "a11855eb-64e5-438f-8880-1d3573efa9fa": "wrong_category",
-  "acf9d5cd-76e4-49c7-9c04-0af1f20506ad": "non_hair_product",
-  "ca4ae209-79d2-4f4d-8e44-46e586cec62d": "wrong_category",
+  "19aea9c4-4b90-4ec4-8cb6-90cb270010f7": {
+    disposition: "awaiting_exact_analysis",
+    reason_code: "insufficient_executable_directions",
+  },
+  "1dce2c18-6a45-4017-a748-e3a7f1cba36f": {
+    disposition: "awaiting_exact_analysis",
+    reason_code: "insufficient_finished_product_evidence",
+  },
+  "29e36443-93ff-4b62-9cf0-55ad9f89f530": {
+    disposition: "retired_from_personal_plan",
+    reason_code: "non_hair_product",
+  },
+  "2ffeae68-c625-4df5-be02-0c1b620aa0fc": {
+    disposition: "awaiting_exact_analysis",
+    reason_code: "insufficient_finished_product_evidence",
+  },
+  "38886b62-2c45-4b34-9a24-7d831e97946e": {
+    disposition: "awaiting_exact_analysis",
+    reason_code: "insufficient_executable_directions",
+  },
+  "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b": {
+    disposition: "awaiting_exact_analysis",
+    reason_code: "insufficient_executable_directions",
+  },
+  "3eb198a5-9aab-4f28-9df1-c4869c6a12db": {
+    disposition: "retired_from_personal_plan",
+    reason_code: "non_hair_product",
+  },
+  "4a95e1de-54e9-4fcd-b227-72a5824d13c1": {
+    disposition: "awaiting_exact_analysis",
+    reason_code: "insufficient_finished_product_evidence",
+  },
+  "517dca50-5d55-4038-ba1d-f9b745708327": {
+    disposition: "retired_from_personal_plan",
+    reason_code: "non_hair_product",
+  },
+  "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a": {
+    disposition: "retired_from_personal_plan",
+    reason_code: "non_hair_product",
+  },
+  "a11855eb-64e5-438f-8880-1d3573efa9fa": {
+    disposition: "retired_from_personal_plan",
+    reason_code: "wrong_category",
+  },
+  "acf9d5cd-76e4-49c7-9c04-0af1f20506ad": {
+    disposition: "retired_from_personal_plan",
+    reason_code: "non_hair_product",
+  },
+  "ca4ae209-79d2-4f4d-8e44-46e586cec62d": {
+    disposition: "retired_from_personal_plan",
+    reason_code: "wrong_category",
+  },
 } as const
 
-const productIds = Object.keys(PRODUCT_DISPOSITION_REVERSAL_PRODUCTS)
+type ProductDispositionReversalBatchId = keyof typeof PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS
+
+function productIdsForBatch(batchId: string) {
+  return PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS[batchId as ProductDispositionReversalBatchId]
+}
+
+function requiredMigrationForBatch(batchId: ProductDispositionReversalBatchId) {
+  return PRODUCT_DISPOSITION_REVERSAL_BATCH_MIGRATIONS[batchId]
+}
+
 const sha256 = /^[a-f0-9]{64}$/
 
 const sourceSchema = z
@@ -62,8 +147,13 @@ const itemSchema = z
       .strict(),
     expected_disposition: z
       .object({
-        disposition: z.literal("retired_from_personal_plan"),
-        reason_code: z.enum(["wrong_category", "non_hair_product"]),
+        disposition: z.enum(["retired_from_personal_plan", "awaiting_exact_analysis"]),
+        reason_code: z.enum([
+          "wrong_category",
+          "non_hair_product",
+          "insufficient_executable_directions",
+          "insufficient_finished_product_evidence",
+        ]),
         reason: z.string().min(1),
         sources: z.array(priorDispositionSourceSchema).min(1),
         source_batch: z.literal(PRODUCT_DISPOSITION_REVERSAL_SOURCE_BATCH),
@@ -89,17 +179,36 @@ export const personalPlanProductDispositionReversalManifestSchema = z
         })
         .strict(),
     ]),
-    items: z.array(itemSchema).length(7, "Reversal manifest must contain exactly 7 products"),
+    items: z.array(itemSchema).min(1),
   })
   .strict()
   .superRefine((manifest, context) => {
+    const expectedProductIds = productIdsForBatch(manifest.batch_id)
+    if (!expectedProductIds) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["batch_id"],
+        message: "Unknown product disposition reversal batch",
+      })
+      return
+    }
+    if (manifest.items.length !== expectedProductIds.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["items"],
+        message: `Reversal manifest must contain exactly ${expectedProductIds.length} products`,
+      })
+    }
     const seen = new Set<string>()
     for (const [index, item] of manifest.items.entries()) {
-      const expectedReason =
+      const expectedDisposition =
         PRODUCT_DISPOSITION_REVERSAL_PRODUCTS[
           item.product_id as keyof typeof PRODUCT_DISPOSITION_REVERSAL_PRODUCTS
         ]
-      if (!expectedReason) {
+      if (
+        !expectedDisposition ||
+        !(expectedProductIds as readonly string[]).includes(item.product_id)
+      ) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["items", index, "product_id"],
@@ -114,7 +223,20 @@ export const personalPlanProductDispositionReversalManifestSchema = z
         })
       }
       seen.add(item.product_id)
-      if (expectedReason && item.expected_disposition.reason_code !== expectedReason) {
+      if (
+        expectedDisposition &&
+        item.expected_disposition.disposition !== expectedDisposition.disposition
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["items", index, "expected_disposition", "disposition"],
+          message: "Prior disposition does not match the exact approved cohort",
+        })
+      }
+      if (
+        expectedDisposition &&
+        item.expected_disposition.reason_code !== expectedDisposition.reason_code
+      ) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["items", index, "expected_disposition", "reason_code"],
@@ -132,7 +254,7 @@ export const personalPlanProductDispositionReversalManifestSchema = z
         })
       }
     }
-    for (const productId of productIds) {
+    for (const productId of expectedProductIds) {
       if (!seen.has(productId)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
@@ -296,8 +418,14 @@ export async function preflightPersonalPlanProductDispositionReversalManifest(
   read: PersonalPlanProductDispositionReversalRead,
 ) {
   const ids = built.manifest.items.map(({ product_id }) => product_id)
-  const migrationApplied =
-    (await read.migrationState(PRODUCT_DISPOSITION_REVERSAL_MIGRATION)) === "applied"
+  const requiredMigration = requiredMigrationForBatch(
+    built.manifest.batch_id as ProductDispositionReversalBatchId,
+  )
+  const expectedItemCount =
+    PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS[
+      built.manifest.batch_id as ProductDispositionReversalBatchId
+    ].length
+  const migrationApplied = (await read.migrationState(requiredMigration)) === "applied"
   const [products, dispositions, batchReceipts, itemReceipts, oilEligibility, oilSpecs, protocols] =
     await Promise.all([
       read.listProducts(ids),
@@ -315,7 +443,7 @@ export async function preflightPersonalPlanProductDispositionReversalManifest(
   const replay = batchReceipts.length === 1
 
   if (!migrationApplied) {
-    blockers.push(`required_migration_not_applied:${PRODUCT_DISPOSITION_REVERSAL_MIGRATION}`)
+    blockers.push(`required_migration_not_applied:${requiredMigration}`)
   }
 
   if (batchReceipts.length > 1) blockers.push("reversal_batch_receipt_conflict")
@@ -329,8 +457,8 @@ export async function preflightPersonalPlanProductDispositionReversalManifest(
       batch.manifest_fingerprint !== built.fingerprint ||
       !/^[a-f0-9]{40}$/.test(batch.reviewed_head) ||
       batch.reviewed_by !== PRODUCT_DISPOSITION_REVERSAL_REVIEWER ||
-      batch.item_count !== 7 ||
-      itemReceipts.length !== 7
+      batch.item_count !== expectedItemCount ||
+      itemReceipts.length !== expectedItemCount
     ) {
       blockers.push("reversal_batch_receipt_conflict")
     }

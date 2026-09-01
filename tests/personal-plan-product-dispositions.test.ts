@@ -14,6 +14,8 @@ const rpcFixMigrationPath =
   "supabase/migrations/20260812100000_personal_plan_product_search_disposition_rpc_fix.sql"
 const reversalMigrationPath =
   "supabase/migrations/20260831182124_personal_plan_product_search_disposition_reversal.sql"
+const reversalE18OilMigrationPath =
+  "supabase/migrations/20260901162000_personal_plan_product_search_disposition_reversal_e18_oils.sql"
 const manifestPath =
   "data/catalog-enrichment/personal-plan-stage5-v1/S5-21-product-search-dispositions.json"
 const cohortPath = "data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json"
@@ -131,6 +133,49 @@ test("oil disposition reversal is exact, receipted, replay-safe, and service-rol
     /REVOKE ALL ON FUNCTION public\.apply_personal_plan_product_search_disposition_reversal_v1\(text,text,text,text,boolean\)[\s\S]*FROM PUBLIC, anon, authenticated/i,
   )
   assert.match(sql, /GRANT EXECUTE ON FUNCTION[\s\S]*TO service_role/i)
+})
+
+test("E18 oil disposition reversal extension keeps exact batches and guarded readiness", async () => {
+  const sql = await readFile(reversalE18OilMigrationPath, "utf8")
+
+  assert.match(sql, /S5R-01-oil-reentry/i)
+  assert.match(sql, /S5R-03-e18-oil-reentry/i)
+  assert.match(sql, /pg_catalog\.pg_get_constraintdef\(oid\) LIKE '%item_count%'/i)
+  assert.match(sql, /pp_disposition_reversal_batch_count_check/i)
+  assert.match(sql, /pp_disposition_reversal_prior_disposition_check/i)
+  assert.match(sql, /pp_disposition_reversal_prior_reason_check/i)
+  assert.match(sql, /item_count IN \(6, 7\)/i)
+  assert.match(
+    sql,
+    /prior_disposition IN \('retired_from_personal_plan', 'awaiting_exact_analysis'\)/i,
+  )
+  assert.match(sql, /insufficient_executable_directions/i)
+  assert.match(sql, /insufficient_finished_product_evidence/i)
+  assert.match(sql, /v_expected_item_count := CASE v_batch_id/i)
+  for (const productId of [
+    "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+    "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+    "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+    "38886b62-2c45-4b34-9a24-7d831e97946e",
+    "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+    "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+  ]) {
+    assert.match(sql, new RegExp(productId, "i"))
+  }
+  assert.match(sql, /product_oil_eligibility/i)
+  assert.match(sql, /product_oil_specs/i)
+  assert.match(sql, /guidance_payload_v2/i)
+  assert.match(
+    sql,
+    /DELETE FROM public\.personal_plan_product_search_dispositions AS disposition[\s\S]*disposition\.disposition = v_expected_disposition[\s\S]*disposition\.reason_code = v_expected_reason_code[\s\S]*RETURNING/i,
+  )
+  assert.match(
+    sql,
+    /REVOKE ALL ON FUNCTION public\.apply_personal_plan_product_search_disposition_reversal_v1\(text,text,text,text,boolean\)[\s\S]*FROM PUBLIC, anon, authenticated/i,
+  )
+  assert.match(sql, /GRANT EXECUTE ON FUNCTION[\s\S]*TO service_role/i)
+  assert.doesNotMatch(sql, /UPDATE public\.products/i)
+  assert.doesNotMatch(sql, /INSERT INTO public\.products/i)
 })
 
 test("Stage 3 search excludes only disposed curated catalog candidates", async () => {

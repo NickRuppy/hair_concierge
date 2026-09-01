@@ -2,8 +2,8 @@
   "schema_version": "personal-plan-product-disposition-reversal-v1",
   "batch_id": "S5R-01-oil-reentry",
   "review": {
-    "state": "prepared_for_review",
-    "reviewed_by": null
+    "state": "approved_by_nick",
+    "reviewed_by": "nick"
   },
   "items": [
     {
