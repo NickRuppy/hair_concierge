@@ -199,4 +199,10 @@ The final E16 manifest fingerprint is `ccead11317e181fedaad572ebf14d33b6300c7bd9
 
 Supabase recorded the additive executor migration as `20260901120358`. Clean-head preflight against reviewed head `818c3abfbcb0887a4a35a99cb4b7e11f4aedd88a` passed exact identity, migration, global ownership, open-submission, disposition, branch/head and replay gates. Atomic apply and guarded verify returned **8 products / 12 GTINs**, with no errors. Direct aggregate readback reports 242 distinct canonical barcode identifiers owned by 230 product rows.
 
+## E17 prepared research — September 1
+
+Nivea Volumen & Kraft Conditioner (`26985fdd-1b41-46e3-9c9a-94b98f92310a`) now has an exact frozen 200 ml package identity: EAN `4005900918031` (canonical GTIN-14 `04005900918031`). Two independent EU retailer pages align on the exact product, package size and EAN; the historical dm catalog URL embeds the same number. The frozen artifact is `phase1-existing-identifier-backfill-e17-v1.json`, exact shape 1 product / 1 GTIN, with raw fingerprint `6b259ee2ceff31116e92d04a5a2c627379eb4b88e8cde3c51ae026860243f5ce`.
+
+E17 deliberately preserves the strict readiness gate. It cannot insert the GTIN while Nivea retains its `awaiting_exact_analysis` disposition. Exact conditioner directions have now been found separately; the additive Stage 5 protocol-amendment/disposition-resolution lane must apply and verify that protocol before the E17 scanner preflight can become green. E17 is prepared only and has not been applied in production.
+
 The post-apply readiness export reports **230/259 barcode-linked (88.8%)** and **218/259 strict scan-result-ready (84.2%)**. The 29 unlinked rows now split into 9 otherwise-ready and 20 blocked. Seven of the nine ready rows are losing duplicate-category records whose physical packages already resolve through selected owners; the two genuine ready package gaps are Balea Natural Beauty 3in1 Locken, held by its open submission, and Gliss Aqua Revive mask, held on medium-only exact-GTIN evidence.
