@@ -14,15 +14,6 @@ Kalendertagen in die service-role-only Tagesaggregate überführt. Die Aggregate
 enthalten weder `user_id`, `raw_value` noch `matched_product_id` und werden
 nach 12 Monaten gelöscht.
 
-Der zusätzlich installierte pg_cron-Job `scan_resolve_events_anonymize`
-(Migration `20260901163000_scan_resolve_events_retention.sql`) anonymisiert
-`user_id` nach 90 Tagen als zweite Schutzlinie. Im normalen V2-Ablauf sind die
-Rohzeilen dann bereits nach 30 Tagen aggregiert und gelöscht. Job inspizieren:
-
-```sql
-select * from cron.job where jobname = 'scan_resolve_events_anonymize';
-```
-
 ## V2: Backfill-Prioritäten aus aktuellen Rohereignissen
 
 ```sql

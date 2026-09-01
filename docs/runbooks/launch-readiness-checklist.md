@@ -39,7 +39,7 @@ Use this as the working checklist before the public influencer launch.
 - Confirm Sentry shows `scan.route`-tagged events for the scan API routes (`src/lib/observability/scan.ts`).
 - Confirm PostHog is receiving `scan_started` and `scan_result_shown` events.
 - After a few days of production traffic, run the miss-ranking query (`docs/scan-attempt-log.md`) and review the results.
-- Confirm the retention job is scheduled: `select * from cron.job where jobname = 'scan_resolve_events_anonymize';` returns a row.
+- Confirm the retention job is scheduled: `select * from cron.job where jobname = 'scan-resolve-retention-daily-v1';` returns a row.
 
 ## Strong Follow-Ups
 
