@@ -80,10 +80,19 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
           origin: string | null
           is_active: boolean
           lifecycle_status: string
-        }>("id,category_key,origin,is_active,lifecycle_status")
+          product_shampoo_specs: Array<{ shampoo_bucket: string | null }>
+        }>(
+          `id,category_key,origin,is_active,lifecycle_status,${embedProductSpec(
+            "product_shampoo_specs",
+            "shampoo_bucket",
+          )}`,
+        )
         .in("id", productIds)
       if (error) throw new Error(`Stage 5 product preflight failed: ${error.message}`)
-      return data ?? []
+      return (data ?? []).map(({ product_shampoo_specs, ...product }) => ({
+        ...product,
+        shampoo_buckets: (product_shampoo_specs ?? []).map(({ shampoo_bucket }) => shampoo_bucket),
+      }))
     },
     async listProtocols(productIds) {
       const { data, error } = await client

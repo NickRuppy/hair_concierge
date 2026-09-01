@@ -386,6 +386,92 @@ test("multi-role Leave-in requires an exact canonical protocol for every executa
   }
 })
 
+test("treatment-only Shampoo is complete with its derived dandruff protocol", () => {
+  const specs = {
+    product_shampoo_specs: [
+      {
+        thickness: "normal",
+        shampoo_bucket: "schuppen",
+        scalp_route: "dandruff",
+        cleansing_intensity: "regular",
+      },
+    ],
+    product_application_protocols: [exactProtocol("shampoo", "shampoo_dandruff")],
+  }
+
+  const result = validateProductIntakeApprovalPayload(reviewedPayload("shampoo", specs))
+
+  assert.equal(result.ok, true)
+})
+
+test("dual-role Shampoo requires both ordinary and dandruff protocols", () => {
+  const categorySpecs = {
+    product_shampoo_specs: [
+      {
+        thickness: "normal",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "regular",
+      },
+      {
+        thickness: "normal",
+        shampoo_bucket: "schuppen",
+        scalp_route: "dandruff",
+        cleansing_intensity: "regular",
+      },
+    ],
+  }
+  const incomplete = validateProductIntakeApprovalPayload(
+    reviewedPayload("shampoo", {
+      ...categorySpecs,
+      product_application_protocols: [exactProtocol("shampoo", "shampoo_dandruff")],
+    }),
+  )
+  const complete = validateProductIntakeApprovalPayload(
+    reviewedPayload("shampoo", {
+      ...categorySpecs,
+      product_application_protocols: [
+        exactProtocol("shampoo", "shampoo_everyday"),
+        exactProtocol("shampoo", "shampoo_dandruff"),
+      ],
+    }),
+  )
+
+  assert.equal(incomplete.ok, false)
+  if (!incomplete.ok) {
+    assert.ok(
+      incomplete.missingFields.includes("final.category_specs.product_application_protocols.role"),
+    )
+  }
+  assert.equal(complete.ok, true)
+})
+
+test("Shampoo rejects an extra protocol for a role unsupported by its reviewed buckets", () => {
+  const specs = {
+    product_shampoo_specs: [
+      {
+        thickness: "normal",
+        shampoo_bucket: "schuppen",
+        scalp_route: "dandruff",
+        cleansing_intensity: "regular",
+      },
+    ],
+    product_application_protocols: [
+      exactProtocol("shampoo", "shampoo_dandruff"),
+      exactProtocol("shampoo", "shampoo_everyday"),
+    ],
+  }
+
+  const result = validateProductIntakeApprovalPayload(reviewedPayload("shampoo", specs))
+
+  assert.equal(result.ok, false)
+  if (!result.ok) {
+    assert.ok(
+      result.missingFields.includes("final.category_specs.product_application_protocols.role"),
+    )
+  }
+})
+
 test("Mask and Leave-in emit every canonical v3 fact", () => {
   for (const category of ["mask", "leave_in"] as const) {
     const result = validateProductIntakeApprovalPayload(

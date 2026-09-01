@@ -574,6 +574,7 @@ test("Stage 5 protocol preflight rejects category drift and conflicting existing
         category_key: index === 0 ? "conditioner" : "shampoo",
         is_active: true,
         lifecycle_status: "active",
+        shampoo_buckets: ["schuppen"],
       })),
     listProtocols: async () => [],
   })
@@ -589,6 +590,7 @@ test("Stage 5 protocol preflight rejects category drift and conflicting existing
         category_key: "shampoo",
         is_active: true,
         lifecycle_status: "active",
+        shampoo_buckets: ["schuppen"],
       })),
     listProtocols: async () => [
       {
@@ -611,6 +613,7 @@ test("Stage 5 protocol preflight rejects category drift and conflicting existing
         category_key: "shampoo",
         is_active: true,
         lifecycle_status: "active",
+        shampoo_buckets: ["schuppen"],
       })),
     listProtocols: async () => [
       {
@@ -633,10 +636,64 @@ test("Stage 5 protocol preflight rejects category drift and conflicting existing
         origin: "user_submitted",
         is_active: true,
         lifecycle_status: "active",
+        shampoo_buckets: ["schuppen"],
       })),
     listProtocols: async () => [],
   })
   assert.ok(originDrift.blockers.some((blocker) => blocker.startsWith("product_origin_mismatch:")))
+})
+
+test("Stage 5 protocol preflight rejects a Shampoo role unsupported by canonical buckets", async () => {
+  const manifest = validateProtocolResearchManifest(
+    await json<unknown>(`${ROOT}/protocol-research/S5-03-targeted-dandruff-shampoo.json`),
+  )
+  const built = buildStage5ProtocolApplyBatch(manifest)
+  const productIds = built.batch.protocols.map(({ product_id }) => product_id)
+
+  const result = await preflightStage5ProtocolApplyBatch(built, {
+    listProducts: async () =>
+      productIds.map((id) => ({
+        id,
+        category_key: "shampoo",
+        origin: "curated",
+        is_active: true,
+        lifecycle_status: "active",
+        shampoo_buckets: ["normal"],
+      })),
+    listProtocols: async () => [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(result.blockers.every((blocker) => blocker.includes("protocol_role_not_supported")))
+})
+
+test("Stage 5 protocol preflight fails closed for missing or invalid Shampoo buckets", async () => {
+  const manifest = validateProtocolResearchManifest(
+    await json<unknown>(`${ROOT}/protocol-research/S5-03-targeted-dandruff-shampoo.json`),
+  )
+  const built = buildStage5ProtocolApplyBatch(manifest)
+  const productIds = built.batch.protocols.map(({ product_id }) => product_id)
+  const preflight = (shampoo_buckets: Array<string | null>) =>
+    preflightStage5ProtocolApplyBatch(built, {
+      listProducts: async () =>
+        productIds.map((id) => ({
+          id,
+          category_key: "shampoo",
+          origin: "curated",
+          is_active: true,
+          lifecycle_status: "active",
+          shampoo_buckets,
+        })),
+      listProtocols: async () => [],
+    })
+
+  const missing = await preflight([])
+  const invalid = await preflight(["legacy-drift"])
+
+  assert.equal(missing.ok, false)
+  assert.ok(missing.blockers.every((blocker) => blocker.includes("canonical_fact_missing")))
+  assert.equal(invalid.ok, false)
+  assert.ok(invalid.blockers.every((blocker) => blocker.includes("canonical_fact_invalid")))
 })
 
 test("Stage 5 curated audit is exact-only and makes frozen-cohort drift reviewable", async () => {

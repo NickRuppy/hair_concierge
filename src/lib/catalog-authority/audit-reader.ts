@@ -8,6 +8,7 @@ import {
   type CatalogAuditSchemaObject,
   type PersonalPlanCategory,
 } from "./contracts"
+import { deriveShampooProtocolRoles } from "@/lib/product-intake/shampoo-protocol-roles"
 
 type Row = Record<string, unknown>
 
@@ -386,11 +387,9 @@ function requiredRoles(
     (facts.get(table) ?? []).filter((row) => text(row.product_id) === productId)
   switch (categoryKey) {
     case "shampoo":
-      return unique(
-        rows("product_shampoo_specs").map((row) =>
-          text(row.shampoo_bucket) === "schuppen" ? "shampoo_dandruff" : "shampoo_everyday",
-        ),
-      )
+      return deriveShampooProtocolRoles(
+        rows("product_shampoo_specs").map((row) => text(row.shampoo_bucket)),
+      ).sort()
     case "conditioner":
       return ["conditioner_rinse_out"]
     case "leave_in":
