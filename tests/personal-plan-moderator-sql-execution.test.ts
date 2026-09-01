@@ -624,7 +624,7 @@ async function seedModeratorFixtures(pg: PGlite) {
       INSERT INTO public.personal_plan_prepared_artifacts
         (id, answer_hash, claim_token_hash, quiz_answers, canonical_profile, fallback_metadata, priorities, diagnostic_scores, public_offer_model, locked_plan, status, user_id, expires_at)
       VALUES
-        ($1, repeat('c', 64), repeat('b', 64), '{"answers":["fresh"]}'::jsonb, '{}'::jsonb, '{}'::jsonb, '[]'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'prepared', $2, '2026-09-01T00:00:00Z')
+        ($1, repeat('c', 64), repeat('b', 64), '{"answers":["fresh"]}'::jsonb, '{}'::jsonb, '{}'::jsonb, '[]'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'prepared', $2, now() + interval '1 day')
     `,
     [ids.artifact, ids.user],
   )
