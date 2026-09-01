@@ -852,3 +852,118 @@ test("Heat uses one direct event by default and repeats only when exact guidance
   assert.ok(repeatedDay)
   assert.equal(repeatedDay.productBlocks.length, 2)
 })
+
+test("no non-rest day ever compiles with an empty outer sequence", () => {
+  // Guards the day view's empty-state contract: only the Pausentag may render
+  // with zero steps. Every adversarial removal path (guidance conflicts that
+  // delete every block, cyclic anchors isolating everything, conditioner
+  // suppression) must end in unresolved steps or in the day's exclusion —
+  // never in an empty non-rest day.
+  const conflictingExact = protocol(
+    "mask",
+    "intensive_care",
+    "post_shampoo_rinse_out_mask",
+    "intensive_care_day",
+    "timed_treatment",
+  )
+  conflictingExact.guidanceKey = "mask-variant-a"
+  const conflictingExactB = protocol(
+    "mask",
+    "intensive_care",
+    "post_shampoo_rinse_out_mask",
+    "intensive_care_day",
+    "timed_treatment",
+  )
+  conflictingExactB.guidanceKey = "mask-variant-b"
+  conflictingExactB.steps = [
+    { stepKey: "apply-b", action: "apply_product", copyTemplateDe: "Anders verteilen." },
+  ]
+  const maskA = {
+    ...leaveInAndHeat,
+    itemId: "mask-a",
+    productName: "Maske",
+    category: "mask" as const,
+    role: "intensive_care" as const,
+    applicationInstanceKey: undefined,
+  }
+  const maskB = { ...maskA, itemId: "mask-b" }
+  const cleanseForIntensive = protocol(
+    "shampoo",
+    "cleanse",
+    "standard_rinse_out_cleanse",
+    "intensive_care_day",
+    "wet_cleanse",
+  )
+  const cyclicA = protocol(
+    "shampoo",
+    "cleanse",
+    "standard_rinse_out_cleanse",
+    "wash_day",
+    "wet_cleanse",
+  )
+  cyclicA.sequence = {
+    anchor: "wet_cleanse",
+    before: ["post_cleanse_rinse_off"],
+    after: [],
+    conflictsWith: [],
+  }
+  const cyclicB = protocol(
+    "conditioner",
+    "condition",
+    "standard_rinse_out_conditioning",
+    "wash_day",
+    "post_cleanse_rinse_off",
+  )
+  cyclicB.sequence = {
+    anchor: "post_cleanse_rinse_off",
+    before: ["wet_cleanse"],
+    after: [],
+    conflictsWith: [],
+  }
+
+  const scenarios = [
+    // Conflicting exact guidance on the same product/anchor deletes every block.
+    {
+      input: input([maskA, maskB, shampoo]),
+      protocols: [conflictingExact, conflictingExactB, cleanseForIntensive],
+    },
+    // Cyclic anchors isolate every resolved product on the wash day.
+    { input: input([shampoo, conditioner]), protocols: [cyclicA, cyclicB] },
+    // Conditioner suppression removes the only companion role.
+    (() => {
+      const replacing = protocol(
+        "mask",
+        "intensive_care",
+        "post_shampoo_rinse_out_mask",
+        "intensive_care_day",
+        "post_cleanse_rinse_off",
+      )
+      replacing.protocolFacts.conditionerRelationship = "replaces_conditioner"
+      return {
+        input: input([shampoo, conditioner, { ...maskA, itemId: "mask-replacing" }]),
+        protocols: [
+          cleanseForIntensive,
+          protocol(
+            "conditioner",
+            "condition",
+            "standard_rinse_out_conditioning",
+            "intensive_care_day",
+            "post_cleanse_rinse_off",
+          ),
+          replacing,
+        ],
+      }
+    })(),
+  ]
+
+  for (const [index, scenario] of scenarios.entries()) {
+    const result = compileApplicationView(scenario)
+    for (const day of result.days) {
+      if (day.key === "rest_day") continue
+      assert.ok(
+        day.outerSequence.length > 0,
+        `scenario ${index}: non-rest day ${day.key} compiled with an empty outer sequence`,
+      )
+    }
+  }
+})
