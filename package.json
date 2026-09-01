@@ -112,6 +112,7 @@
     "products:intake:stage5-protocol:apply": "tsx scripts/product-intake/catalog-enrichment/stage5-protocol-apply.ts",
     "products:intake:stage5-catalog-bundle": "tsx scripts/product-intake/catalog-enrichment/stage5-catalog-bundle-client.ts",
     "products:intake:stage5-product-dispositions": "tsx scripts/product-intake/catalog-enrichment/stage5-product-dispositions-client.ts",
+    "products:intake:stage5-disposition-resolution": "tsx scripts/product-intake/catalog-enrichment/stage5-product-disposition-resolution-client.ts",
     "products:intake:catalog-enrichment:scalp:preflight": "tsx scripts/product-intake/catalog-enrichment/scalp-preflight.ts",
     "products:intake:catalog-enrichment:scalp:apply": "tsx scripts/product-intake/catalog-enrichment/scalp-apply.ts",
     "products:intake:catalog-enrichment:scalp:verify": "tsx scripts/product-intake/catalog-enrichment/scalp-verify.ts",

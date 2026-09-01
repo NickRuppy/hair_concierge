@@ -229,6 +229,7 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/deep-cleansing-candidates.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5-21-product-search-dispositions.json
+!/data/catalog-enrichment/personal-plan-stage5-v1/S5R-02-k18-molecular-repair-hair-mist-readiness.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research.schema.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/scalp-refresh.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/
@@ -242,6 +243,9 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json
 !/data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-baseline-2026-08-12.json
 !/data/catalog-enrichment/personal-plan-stage5-v2/leave-in-use-cases-2026-08-14.json
+!/data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/
+/data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/*
+!/data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-*.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-02-mask-critical-protocols.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-03-targeted-dandruff-shampoo.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-04-bondbuilder-primary-protocols.json

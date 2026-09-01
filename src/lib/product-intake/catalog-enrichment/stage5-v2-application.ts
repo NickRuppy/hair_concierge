@@ -100,6 +100,7 @@ export const stage5V2ApplicationArtifactSchema = z
     source_kind: z.enum([
       "reviewed_stage5_v1_artifacts",
       "reviewed_stage5_v1_and_use_case_artifacts",
+      "reviewed_stage5_v1_use_case_and_amendment_artifacts",
     ]),
     source_files: z.array(
       z.object({ path: z.string().min(1), sha256: z.string().regex(/^[a-f0-9]{64}$/) }).strict(),
