@@ -111,7 +111,7 @@ const deferralCopy: Record<Stage3DecisionDeferralReason, RoutineDeferralCopy> = 
     href: null,
   },
   unseen_recommendation: {
-    text: "Neue Empfehlung für dich — sieh sie im Produkte-Schritt an.",
+    text: "Neue Empfehlung für diesen Baustein — ansehen.",
     href: "/plan-start?refine=products",
   },
 }
