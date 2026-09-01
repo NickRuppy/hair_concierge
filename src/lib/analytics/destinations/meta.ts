@@ -9,6 +9,7 @@ import {
 } from "@/lib/meta-pixel"
 import { bootstrapFunnelContext, getCurrentFunnelContext } from "@/lib/funnel/client"
 import type { AppEventMap, AppEventName } from "../events"
+import { isNonCommercialFunnelTestKind } from "@/lib/funnel/journey-kind"
 
 const FUNNEL_CONTEXT_WAIT_MS = 500
 
@@ -63,7 +64,7 @@ function trackWithFunnelPackage(
 
 export const metaDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
-    if ((payload as { testKind?: unknown }).testKind === "field_test") return false
+    if (isNonCommercialFunnelTestKind((payload as { testKind?: unknown }).testKind)) return false
     switch (eventName) {
       case "checkout_started": {
         const data = payload as AppEventMap["checkout_started"]

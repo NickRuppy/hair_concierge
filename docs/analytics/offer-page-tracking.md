@@ -165,7 +165,7 @@ The readout's eligible exposure is the first valid `offer_viewed` in the reporti
 non-empty `funnel_session_id`, `funnel_package_key=default_organic`, one of those two arm IDs, and
 no marked internal traffic. Each session must contain exactly one arm among its scoped offer-view
 events. Sessions marked `is_internal_test=true` (including string/`1` representations) or
-`test_kind=field_test` are excluded. Field-test and moderator journeys stay on the video control
+`test_kind=field_test` and `test_kind=partner` are excluded. Field-test, partner, and moderator journeys stay on the video control
 and are not comparable paid-experiment traffic.
 
 The overview reports, per arm, unique eligible session counts for raw offer views, pricing reach

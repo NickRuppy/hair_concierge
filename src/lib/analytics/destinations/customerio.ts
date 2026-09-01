@@ -5,6 +5,7 @@ import {
   type CurrentFunnelContext,
 } from "@/lib/funnel/client"
 import type { AppEventMap, AppEventName, FunnelAnalyticsEnvelope } from "../events"
+import { isCustomerIoJourneyEligible } from "@/lib/funnel/journey-kind"
 
 const FUNNEL_CONTEXT_WAIT_MS = 500
 const FUNNEL_CONTEXT_EVENTS = new Set<AppEventName>([
@@ -170,6 +171,7 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
 
 export const customerIoDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
+    if (!isCustomerIoJourneyEligible((payload as FunnelAnalyticsEnvelope).testKind)) return false
     const mapped = toCustomerIoPayload(eventName, payload) as CustomerIoProperties
     const funnel = payload as FunnelAnalyticsEnvelope
     if (FUNNEL_CONTEXT_EVENTS.has(eventName)) {

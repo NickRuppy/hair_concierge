@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie Creator-Einladung – Einstiegs- und Korrekturzustände</title>
+    <style>
+      :root {
+        --plum: #2c154e;
+        --purple: #7252ae;
+        --purple-dark: #563c7f;
+        --lavender: #e7dcf4;
+        --paper: #fcfaf7;
+        --muted: #756f6b;
+        --green: #287456;
+        --green-soft: #eaf6ef;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f2eee8;
+        color: var(--plum);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .note {
+        max-width: 1120px;
+        margin: 24px auto 0;
+        padding: 14px 18px;
+        border: 1px solid #ddd3ca;
+        border-radius: 14px;
+        background: white;
+        color: #5f5751;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .note strong {
+        color: var(--plum);
+      }
+      .states {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 340px));
+        gap: 22px;
+        justify-content: center;
+        padding: 28px 20px 52px;
+      }
+
+      .phone {
+        overflow: hidden;
+        min-height: 680px;
+        border-radius: 30px;
+        background: var(--paper);
+        box-shadow: 0 24px 65px rgba(44, 21, 78, 0.12);
+      }
+
+      .state-label {
+        padding: 12px 18px;
+        border-bottom: 1px solid #e6dfd7;
+        background: #fff;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .screen {
+        padding: 34px 22px 28px;
+      }
+      .brand {
+        text-align: center;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 26px;
+        letter-spacing: -0.03em;
+      }
+
+      h1 {
+        margin: 62px auto 0;
+        max-width: 12ch;
+        text-align: center;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 36px;
+        font-weight: 500;
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+      }
+
+      .identity {
+        margin-top: 28px;
+        padding: 15px 16px;
+        border: 1.5px solid var(--lavender);
+        border-radius: 16px;
+        background: #fff;
+        text-align: center;
+      }
+
+      .email {
+        font-size: 15px;
+        font-weight: 800;
+      }
+      .change {
+        margin-top: 8px;
+        color: var(--purple-dark);
+        font-size: 12px;
+        font-weight: 750;
+        text-decoration: underline;
+      }
+      .confirmed {
+        display: inline-flex;
+        margin-top: 9px;
+        border-radius: 999px;
+        padding: 5px 9px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 850;
+      }
+
+      .button {
+        display: block;
+        margin-top: 22px;
+        width: 100%;
+        border-radius: 999px;
+        padding: 15px 18px;
+        background: var(--purple);
+        color: white;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 850;
+      }
+
+      .disclaimer {
+        margin: 11px auto 0;
+        max-width: 31ch;
+        color: #8a837d;
+        text-align: center;
+        font-size: 10.5px;
+        line-height: 1.45;
+      }
+
+      .edit-card {
+        margin-top: 28px;
+        padding: 18px;
+        border: 1.5px solid var(--lavender);
+        border-radius: 18px;
+        background: white;
+      }
+
+      .edit-card h2 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 23px;
+        font-weight: 500;
+      }
+      .edit-card p {
+        margin: 9px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .field-label {
+        margin-top: 18px;
+        color: #5f5764;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .input {
+        margin-top: 7px;
+        border: 1px solid #d8cfe0;
+        border-radius: 10px;
+        padding: 12px;
+        color: #423848;
+        font-size: 14px;
+      }
+      .cancel {
+        margin-top: 13px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .caption {
+        margin: 0;
+        padding: 0 22px 24px;
+        color: #625a54;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .caption strong {
+        color: var(--plum);
+      }
+      @media (max-width: 1100px) {
+        .states {
+          grid-template-columns: minmax(0, 380px);
+        }
+        .note {
+          margin: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="note">
+      <strong>Creator-Einstieg.</strong> Drei kurze Zustände: Einstieg, E-Mail-Korrektur und
+      Rückkehr nach Bestätigung.
+    </div>
+
+    <main class="states">
+      <article class="phone">
+        <div class="state-label">1 · Persönlicher Einstieg</div>
+        <div class="screen">
+          <div class="brand">chaarlie</div>
+          <h1>Hi Lea, dein Zugang ist bereit.</h1>
+          <section class="identity">
+            <div class="email">lea@example.com</div>
+            <div class="change">Nicht deine E-Mail? Ändern</div>
+          </section>
+          <div class="button">Los geht’s</div>
+          <p class="disclaimer">Damit erstellst du dein Chaarlie Konto mit dieser E-Mail.</p>
+        </div>
+        <p class="caption">
+          <strong>Standardpfad:</strong> Die E-Mail ist sichtbar, aber nicht als Formular. Eine
+          echte Person beansprucht den Link erst mit dem CTA.
+        </p>
+      </article>
+
+      <article class="phone">
+        <div class="state-label">2 · Nur wenn die E-Mail falsch ist</div>
+        <div class="screen">
+          <div class="brand">chaarlie</div>
+          <div class="edit-card">
+            <h2>E-Mail ändern</h2>
+            <p>Wir senden dir einen Bestätigungslink.</p>
+            <div class="field-label">E-Mail-Adresse</div>
+            <div class="input">lea.sommer@example.com</div>
+            <div class="button">Bestätigungslink senden</div>
+            <div class="cancel">Abbrechen</div>
+          </div>
+        </div>
+        <p class="caption">
+          <strong>Korrekturpfad:</strong> Nur eine geänderte Adresse braucht die zusätzliche
+          Inbox-Bestätigung.
+        </p>
+      </article>
+
+      <article class="phone">
+        <div class="state-label">3 · Rückkehr nach Bestätigung</div>
+        <div class="screen">
+          <div class="brand">chaarlie</div>
+          <h1>Hi Lea, dein Zugang ist bereit.</h1>
+          <section class="identity">
+            <div class="email">lea.sommer@example.com</div>
+            <div class="confirmed">Bestätigt</div>
+          </section>
+          <div class="button">Los geht’s</div>
+          <p class="disclaimer">Damit erstellst du dein Chaarlie Konto mit dieser E-Mail.</p>
+        </div>
+        <p class="caption">
+          <strong>Vertraute Rückkehr:</strong> Gleicher Einstieg, korrigierte Adresse und sichtbare
+          Bestätigung – kein überraschender Sprung.
+        </p>
+      </article>
+    </main>
+  </body>
+</html>

@@ -49,6 +49,63 @@ test("result page client preserves a validated retake destination for entitled u
   )
 })
 
+test("an entitled existing account still sees its pending partner activation", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      quizAnswers={quizAnswers}
+      focusRoutine={false}
+      hasAccess
+      partnerAccess={{ activationApiPath: "/api/partner-access/activate" }}
+    />,
+  )
+
+  assert.match(html, /Dein Chaarlie Zugang ist bereit\./i)
+  assert.match(html, /Zugang aktivieren/i)
+  assert.doesNotMatch(html, /href="\/onboarding\?lead=/)
+})
+
+test("revoking partner access does not hide an independent existing entitlement", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      quizAnswers={quizAnswers}
+      focusRoutine={false}
+      hasAccess
+      partnerAccessUnavailable
+    />,
+  )
+
+  assert.match(html, /href="\/onboarding\?lead=/)
+  assert.doesNotMatch(html, /nicht verfügbar/i)
+})
+
+test("partner work does not change the existing regular field-test unavailable state", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      quizAnswers={quizAnswers}
+      focusRoutine={false}
+      hasAccess
+      regularFieldTestUnavailable
+    />,
+  )
+
+  assert.match(html, /Dein Testzugang ist gerade nicht verfügbar/i)
+  assert.doesNotMatch(html, /href="\/onboarding\?lead=/)
+})
+
+test("a returning entitled partner does not create an empty offer-tracking envelope", () => {
+  const source = readFileSync(
+    new URL("../src/app/result/[leadId]/page.tsx", import.meta.url),
+    "utf8",
+  )
+  assert.match(source, /partnerAuthorization\s*&&\s*baseOfferTracking/)
+})
+
 test("result page client passes persisted quiz answers into the organic offer", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient

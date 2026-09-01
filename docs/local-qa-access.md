@@ -6,12 +6,12 @@ refer to that date on `main`.
 
 ## Which path do I need?
 
-| What you want to click through | Fastest path |
-| --- | --- |
-| Authenticated app surfaces: `/chat`, `/profile`, `/routine`, `/scan`, `/tracker`, `/onboarding`, … | **Dev login** — one URL (§1) |
-| Personal Plan stage UIs in isolation (Plan, Feinschliff, Stage 3–5) | **`/labs` harnesses** — no auth at all (§2) |
-| The real post-payment handoff: checkout → `/welcome` auth → `/plan-bereit` → `/plan-start` | **Local test-mode checkout** (§3 — read its blocker note first) |
-| Post-payment verification in production | Field-test link or synthetic entitlement — pointers only (§4) |
+| What you want to click through                                                                     | Fastest path                                                    |
+| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Authenticated app surfaces: `/chat`, `/profile`, `/routine`, `/scan`, `/tracker`, `/onboarding`, … | **Dev login** — one URL (§1)                                    |
+| Personal Plan stage UIs in isolation (Plan, Feinschliff, Stage 3–5)                                | **`/labs` harnesses** — no auth at all (§2)                     |
+| The real post-payment handoff: checkout → `/welcome` auth → `/plan-bereit` → `/plan-start`         | **Local test-mode checkout** (§3 — read its blocker note first) |
+| Post-payment verification in production                                                            | Field-test link or synthetic entitlement — pointers only (§4)   |
 
 Do not mix them: the dev-login account can never reach the Personal Plan journey (§1 limits),
 and no amount of clicking will fix that. Pick the row that matches the surface under test.
@@ -128,6 +128,7 @@ Recipe (Personal Plan one-time purchase, once the blocker above is resolved):
    Open `/result/<leadId>?qa=<token>` — the QA arm assigns and the one-time checkout becomes
    reachable. (Lead and session ids: from the result URL and the `funnel_sessions` row for
    the lead.)
+
 4. **Pay with a Stripe test card** (4242 4242 4242 4242).
 5. **Complete the `/welcome` authentication step — do not skip it.** Stripe returns the buyer
    to `/welcome`, where an unauthenticated buyer must set a password
@@ -165,3 +166,11 @@ Local dev talks to the **production** Supabase project (`pqdkhefxsxkyeqelqegq`) 
 local database in the normal workflow. Every row you seed is real: always carry a test marker
 in `metadata`, never sign in with or mutate a customer account, and never widen a rollout flag
 for a local test. When a step here turns out stale, fix this file in the same PR as the fix.
+
+# Partner access QA
+
+Use the dedicated partner route and an isolated/local database migration for creator-flow QA.
+Do not use a production creator or send real Customer.io messages. The personal credential may be
+projected locally with `PARTNER_ACCESS_INVITATION_SIGNING_SECRET`; verify that opening or refreshing
+the URL does not mutate the invitation and that only `Los geht’s` begins the claim. For the complete
+operator contract and environment keys, see `docs/partner-access-operations.md`.

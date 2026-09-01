@@ -258,3 +258,11 @@ identify:personal_plan_lead:<lead_id>:<profile_revision>
 personal_plan_profile_submitted:<lead_id>
 <canonical_event_name>:<billing_analytics_event_key>
 ```
+
+# Partner transactional messages
+
+Partner access uses three optional transactional message IDs documented in
+`docs/partner-access-operations.md`. Partner quiz and offer traffic carries
+`test_kind=partner` to PostHog but is excluded from commercial Customer.io automation.
+Transactional partner sends use message retention disabled and contain only the
+recipient email, first name, and the purpose-specific link.

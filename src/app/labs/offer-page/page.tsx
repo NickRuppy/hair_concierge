@@ -237,12 +237,19 @@ export default async function OfferPageLab({
   return (
     <OrganicOfferVariant
       entryContext="quiz_completion"
-      leadId={params.scenario === "moderator" ? "11111111-1111-4111-8111-111111111111" : null}
+      leadId={
+        params.scenario === "moderator" || params.scenario === "partner"
+          ? "11111111-1111-4111-8111-111111111111"
+          : null
+      }
       name="Lea"
       narrative={narrative}
       offerVariant={organicOfferVariant}
       quizAnswers={REVIEW_ANSWERS}
       pricingSlot={<StaticPricingPreview />}
+      partnerAccess={
+        params.scenario === "partner" ? { activationApiPath: "/api/partner-access/activate" } : null
+      }
       regularFieldTest={
         params.scenario === "moderator"
           ? {

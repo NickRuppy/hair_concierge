@@ -55,6 +55,7 @@ import {
   resolveRegularQuizFieldTestOfferAuthorization,
 } from "@/lib/personal-plan-field-test"
 import { PERSONAL_PLAN_PRICING_EXPERIMENT } from "@/lib/funnel/personal-plan-pricing-experiment"
+import { resolvePartnerOfferAuthorization } from "@/lib/partner-access/offer"
 
 export const dynamic = "force-dynamic"
 
@@ -83,6 +84,7 @@ interface LeadResultRow {
   quiz_kind: "legacy" | "personal_plan"
   quiz_answers: unknown
   moderator_campaign_id: string | null
+  partner_access_invitation_id: string | null
 }
 
 type RegularQuizFieldTestAuthorization = {
@@ -96,7 +98,9 @@ async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
   const supabase = createAdminClient()
   const { data, error } = await supabase
     .from("leads")
-    .select("id, user_id, name, quiz_kind, quiz_answers, moderator_campaign_id")
+    .select(
+      "id, user_id, name, quiz_kind, quiz_answers, moderator_campaign_id, partner_access_invitation_id",
+    )
     .eq("id", leadId)
     .maybeSingle()
 
@@ -349,10 +353,12 @@ export default async function ResultPage({ params, searchParams }: Props) {
   }
 
   const hasAccess = authenticatedAccess.hasAccess
+  const partnerIntent = Boolean(lead.partner_access_invitation_id)
 
-  const funnelContext = hasAccess
-    ? null
-    : (persistedFunnel ?? (await resolveFunnelContextForLead(leadId)))
+  const funnelContext =
+    hasAccess && !partnerIntent
+      ? null
+      : (persistedFunnel ?? (await resolveFunnelContextForLead(leadId)))
   const fieldTestCookie = (await cookies()).get(PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE)?.value
   const fieldTestAuthorization =
     lead.quiz_kind === "personal_plan"
@@ -377,6 +383,14 @@ export default async function ResultPage({ params, searchParams }: Props) {
     moderatorTest,
     funnelContext,
   })
+  const partnerAuthorization = partnerIntent
+    ? await resolvePartnerOfferAuthorization({
+        userId: authenticatedAccess.userId,
+        funnelSessionId: funnelContext?.sessionId,
+        leadId,
+      })
+    : null
+  const partnerAccessUnavailable = partnerIntent && !partnerAuthorization && !hasAccess
   const personalPlanSession = funnelContext
     ? {
         sessionId: funnelContext.sessionId,
@@ -425,15 +439,23 @@ export default async function ResultPage({ params, searchParams }: Props) {
             session: organicOfferSession,
             excluded:
               moderatorTest ||
+              partnerIntent ||
               Boolean(regularFieldTestState.authorization) ||
               regularFieldTestState.unavailable,
           })
-  const offerTracking =
-    hasAccess || fieldTestUnavailable || regularFieldTestState.unavailable
+  const baseOfferTracking =
+    hasAccess ||
+    fieldTestUnavailable ||
+    regularFieldTestState.unavailable ||
+    partnerAccessUnavailable
       ? null
       : entryContext === "quiz_return"
         ? buildReturnOfferTracking(funnelContext)
         : await recordLeadOfferView(leadId, funnelContext, offerVariant)
+  const offerTracking =
+    partnerAuthorization && baseOfferTracking
+      ? { ...baseOfferTracking, testKind: "partner" as const }
+      : baseOfferTracking
   const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
 
   return (
@@ -467,6 +489,10 @@ export default async function ResultPage({ params, searchParams }: Props) {
             : null
       }
       regularFieldTestUnavailable={regularFieldTestState.unavailable}
+      partnerAccess={
+        partnerAuthorization ? { activationApiPath: "/api/partner-access/activate" } : null
+      }
+      partnerAccessUnavailable={partnerAccessUnavailable}
       returnTo={returnTo}
       offerTracking={offerTracking}
       offerVariant={offerVariant}

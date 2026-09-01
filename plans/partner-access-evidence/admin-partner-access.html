@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie Admin – Partnerzugänge</title>
+    <style>
+      :root {
+        --ink: #21172f;
+        --muted: #716a77;
+        --line: #e7e1ea;
+        --plum: #563c7f;
+        --plum-soft: #f1ecf7;
+        --green: #247454;
+        --green-soft: #e9f6ef;
+        --amber: #956319;
+        --amber-soft: #fff5dd;
+        --red: #a23d4b;
+        --red-soft: #fdecef;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #faf9fb;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .topbar {
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+        padding: 0 26px;
+        background: white;
+      }
+
+      .brand {
+        font-family: Georgia, serif;
+        font-size: 24px;
+        color: #2c154e;
+      }
+      .admin-chip {
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--muted);
+      }
+      .shell {
+        min-height: calc(100vh - 58px);
+        display: grid;
+        grid-template-columns: 220px 1fr;
+      }
+      aside {
+        padding: 22px 14px;
+        border-right: 1px solid var(--line);
+        background: #f7f4f9;
+      }
+      .side-label {
+        margin: 0 10px 12px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .nav {
+        display: grid;
+        gap: 4px;
+      }
+      .nav span {
+        padding: 10px 12px;
+        border-radius: 9px;
+        color: #514a57;
+        font-size: 14px;
+      }
+      .nav .active {
+        background: #e9e1f1;
+        color: #3b2857;
+        font-weight: 800;
+      }
+
+      main {
+        padding: 30px;
+        overflow: hidden;
+      }
+      .heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 27px;
+      }
+      .lede {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        padding: 10px 14px;
+        background: var(--plum);
+        color: white;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .button.secondary {
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--ink);
+      }
+      .button.danger {
+        border: 1px solid #edc6cc;
+        background: white;
+        color: var(--red);
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(310px, 0.72fr);
+        gap: 18px;
+        margin-top: 24px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+        box-shadow: 0 10px 28px rgba(38, 25, 53, 0.04);
+      }
+      .card-head {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+      }
+      .card-head h2 {
+        margin: 0;
+        font-size: 17px;
+      }
+      .card-head p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .card-body {
+        padding: 20px;
+      }
+      .tabs {
+        display: inline-flex;
+        padding: 3px;
+        border-radius: 9px;
+        background: #f2eef5;
+      }
+      .tab {
+        padding: 8px 13px;
+        border-radius: 7px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .tab.active {
+        background: white;
+        color: var(--ink);
+        box-shadow: 0 1px 4px rgba(38, 25, 53, 0.1);
+      }
+      .fields {
+        display: grid;
+        grid-template-columns: 1fr 1.25fr;
+        gap: 12px;
+        margin-top: 18px;
+      }
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .input,
+      .textarea {
+        border: 1px solid #d8d1dc;
+        border-radius: 9px;
+        background: white;
+        color: #4d4651;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .input {
+        padding: 11px 12px;
+      }
+      .textarea {
+        min-height: 106px;
+        padding: 12px;
+        line-height: 1.6;
+        white-space: pre-line;
+      }
+      .check {
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+        margin-top: 16px;
+        color: #4f4854;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .box {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 auto;
+        border-radius: 4px;
+        background: var(--plum);
+        color: white;
+        text-align: center;
+        font-size: 11px;
+        line-height: 16px;
+      }
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .batch-sample {
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px dashed #d8d1dc;
+      }
+      .batch-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+      .batch-top strong {
+        font-size: 13px;
+      }
+      .batch-top span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .batch-grid {
+        display: grid;
+        grid-template-columns: 1fr 120px;
+        gap: 12px;
+        margin-top: 10px;
+      }
+      .validation {
+        border-radius: 9px;
+        padding: 11px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.5;
+      }
+
+      .receipt {
+        display: grid;
+        gap: 13px;
+      }
+      .receipt-status {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 850;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .receipt-person {
+        padding: 13px;
+        border-radius: 10px;
+        background: #f7f5f8;
+      }
+      .receipt-person strong {
+        display: block;
+        font-size: 14px;
+      }
+      .receipt-person span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .link {
+        overflow: hidden;
+        border: 1px solid #ded7e3;
+        border-radius: 9px;
+        padding: 10px 11px;
+        background: white;
+        color: #776f7b;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .receipt-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .mail-note {
+        border-radius: 9px;
+        padding: 10px 11px;
+        background: var(--amber-soft);
+        color: var(--amber);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .table-card {
+        margin-top: 18px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      th {
+        padding: 11px 14px;
+        background: #f8f6f9;
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-align: left;
+        text-transform: uppercase;
+      }
+      td {
+        padding: 13px 14px;
+        border-top: 1px solid var(--line);
+        vertical-align: middle;
+      }
+      .person strong {
+        display: block;
+        font-size: 12px;
+      }
+      .person span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .badge {
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 5px 8px;
+        font-size: 10px;
+        font-weight: 850;
+      }
+      .badge.active {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+      .badge.invited {
+        background: var(--plum-soft);
+        color: var(--plum);
+      }
+      .badge.revoked {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+      .delivery {
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .mini {
+        border: 1px solid #ddd6e2;
+        border-radius: 7px;
+        padding: 6px 8px;
+        background: white;
+        color: #4d4651;
+        font-size: 10px;
+        font-weight: 750;
+      }
+      .mini.red {
+        color: var(--red);
+      }
+      .annotation {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      @media (max-width: 900px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+        aside {
+          display: none;
+        }
+        main {
+          padding: 18px;
+        }
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+        .fields,
+        .batch-grid {
+          grid-template-columns: 1fr;
+        }
+        .table-card {
+          overflow-x: auto;
+        }
+        table {
+          min-width: 780px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="brand">chaarlie</span><span class="admin-chip">Admin · Nick</span>
+    </header>
+    <div class="shell">
+      <aside>
+        <p class="side-label">Admin</p>
+        <nav class="nav">
+          <span>Dashboard</span><span>Zitate</span><span>Artikel</span><span>Produkte</span
+          ><span>Nutzer</span><span class="active">Partnerzugänge</span><span>Chats</span>
+        </nav>
+      </aside>
+
+      <main>
+        <div class="heading">
+          <div>
+            <h1>Partnerzugänge</h1>
+            <p class="lede">Persönliche Creator-Zugänge erstellen, teilen und verwalten.</p>
+          </div>
+          <span class="button">Neue Einladung</span>
+        </div>
+
+        <section class="workspace">
+          <div class="card">
+            <div class="card-head">
+              <h2>Einladungen erstellen</h2>
+              <p>Jede Person erhält einen eigenen, E-Mail-gebundenen Zugang.</p>
+            </div>
+            <div class="card-body">
+              <div class="tabs">
+                <span class="tab active">Einzeln</span><span class="tab">Mehrere</span>
+              </div>
+              <div class="fields">
+                <label
+                  >Name
+                  <div class="input">Lea Sommer</div></label
+                >
+                <label
+                  >E-Mail-Adresse
+                  <div class="input">lea@example.com</div></label
+                >
+              </div>
+              <div class="check">
+                <span class="box">✓</span
+                ><span
+                  >Einladung zusätzlich per E-Mail senden. Der persönliche Link steht danach immer
+                  auch zum Kopieren bereit.</span
+                >
+              </div>
+              <div class="form-actions">
+                <span class="button secondary">Zurücksetzen</span
+                ><span class="button">Einladung erstellen</span>
+              </div>
+
+              <div class="batch-sample">
+                <div class="batch-top">
+                  <strong>Batch-Modus</strong><span>gleiche Oberfläche, Tab „Mehrere“</span>
+                </div>
+                <div class="batch-grid">
+                  <div class="textarea">
+                    Lea Sommer, lea@example.com Mara König, mara@example.com Sofia Brandt,
+                    sofia@example.com
+                  </div>
+                  <div class="validation">✓ 3 gültig<br />0 Duplikate<br />0 Fehler</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h2>Einladung erstellt</h2>
+              <p>Der Zugang ist vorbereitet; aktiviert wird er auf der Angebotsseite.</p>
+            </div>
+            <div class="card-body receipt">
+              <div class="receipt-status">
+                <span class="dot"></span>Persönlicher Link ist bereit
+              </div>
+              <div class="receipt-person">
+                <strong>Lea Sommer</strong><span>lea@example.com</span>
+              </div>
+              <div class="link">chaarlie.de/partner/einladung/••••••••</div>
+              <div class="receipt-actions">
+                <span class="button secondary">Link kopieren</span
+                ><span class="button secondary">Nachricht kopieren</span>
+              </div>
+              <span class="button">E-Mail senden</span>
+              <div class="mail-note">
+                Falls die E-Mail nicht zugestellt werden kann, bleibt der persönliche Link gültig
+                und kann manuell geteilt werden.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card table-card">
+          <div class="card-head">
+            <h2>Alle Partnerzugänge</h2>
+            <p>Einladungsstatus und Zugang bleiben getrennt nachvollziehbar.</p>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Creator</th>
+                <th>Status</th>
+                <th>Einladung</th>
+                <th>Erstellt</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="person"><strong>Lea Sommer</strong><span>lea@example.com</span></td>
+                <td><span class="badge invited">Eingeladen</span></td>
+                <td class="delivery">Link kopiert · E-Mail offen</td>
+                <td>31.08.2026</td>
+                <td>
+                  <div class="actions">
+                    <span class="mini">Link kopieren</span><span class="mini">E-Mail senden</span
+                    ><span class="mini red">Widerrufen</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="person"><strong>Mara König</strong><span>mara@example.com</span></td>
+                <td><span class="badge active">Aktiv</span></td>
+                <td class="delivery">E-Mail gesendet</td>
+                <td>28.08.2026</td>
+                <td>
+                  <div class="actions">
+                    <span class="mini">Login-Link senden</span
+                    ><span class="mini red">Widerrufen</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="person"><strong>Sofia Brandt</strong><span>sofia@example.com</span></td>
+                <td><span class="badge revoked">Widerrufen</span></td>
+                <td class="delivery">Manuell geteilt</td>
+                <td>14.08.2026</td>
+                <td>
+                  <div class="actions"><span class="mini">Erneut freischalten</span></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <p class="annotation">
+          Planungsartefakt: Namen, E-Mails, Links und Zustände sind illustrative Beispiele. Keine
+          Einladung oder E-Mail wurde erzeugt.
+        </p>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie Creator-Zugang – reduzierte Copy</title>
+    <style>
+      :root {
+        --plum: #2c154e;
+        --purple: #7252ae;
+        --lavender: #d8c8ef;
+        --paper: #fcfaf7;
+        --sub: #756f6b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f2eee8;
+        color: var(--plum);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .note {
+        max-width: 960px;
+        margin: 24px auto 0;
+        padding: 14px 18px;
+        border: 1px solid #ddd3ca;
+        border-radius: 14px;
+        background: white;
+        color: #5f5751;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .note strong {
+        color: var(--plum);
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 410px));
+        gap: 28px;
+        justify-content: center;
+        padding: 28px 20px 52px;
+      }
+
+      .phone {
+        overflow: hidden;
+        border-radius: 30px;
+        background: var(--paper);
+        box-shadow: 0 24px 65px rgba(44, 21, 78, 0.12);
+      }
+
+      .label {
+        padding: 12px 18px;
+        border-bottom: 1px solid #e6dfd7;
+        background: #fff;
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .label.after {
+        color: #287456;
+      }
+      .screen {
+        padding: 52px 22px 36px;
+      }
+      .eyebrow {
+        margin: 0;
+        text-align: center;
+        color: #9a83c4;
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 15px auto 0;
+        max-width: 11ch;
+        text-align: center;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 40px;
+        font-weight: 500;
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+      }
+
+      .card {
+        margin-top: 32px;
+        padding: 25px 22px 22px;
+        border: 1.5px solid var(--lavender);
+        border-radius: 25px;
+        background: white;
+        text-align: center;
+        box-shadow: 0 16px 42px -34px rgba(44, 21, 78, 0.55);
+      }
+
+      .price {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 55px;
+        line-height: 1;
+      }
+
+      .dense {
+        margin: 18px auto 0;
+        font-size: 17px;
+        font-weight: 850;
+        line-height: 1.45;
+      }
+
+      .status {
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 7px 11px;
+        background: #f0eafa;
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .access-title {
+        margin: 16px 0 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 1.1;
+      }
+
+      .copy {
+        margin: 15px auto 0;
+        color: var(--sub);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .button {
+        display: block;
+        margin-top: 23px;
+        width: 100%;
+        border-radius: 999px;
+        padding: 15px 18px;
+        background: var(--purple);
+        color: white;
+        font-size: 16px;
+        font-weight: 850;
+      }
+
+      .quiet {
+        margin: 12px 0 0;
+        color: #8a837d;
+        font-size: 12px;
+      }
+
+      .caption {
+        margin: 0;
+        padding: 0 22px 26px;
+        color: #625a54;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .caption strong {
+        color: var(--plum);
+      }
+
+      @media (max-width: 900px) {
+        .comparison {
+          grid-template-columns: minmax(0, 410px);
+        }
+        .note {
+          margin: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="note">
+      <strong>Revidiertes Planungsartefakt.</strong>
+      Die normale Angebotsseite bleibt vollständig sichtbar. Nur der Zahlungsblock wird zu einem
+      kurzen, persönlichen Aktivierungsmoment. Preis-, Abo- und Laufzeitargumente sind bewusst nicht
+      die Hauptbotschaft.
+    </div>
+
+    <main class="comparison">
+      <article class="phone">
+        <div class="label">Heute</div>
+        <div class="screen">
+          <p class="eyebrow">Produkttest</p>
+          <h1>Starte kostenlos mit deinem persönlichen Plan.</h1>
+          <section class="card">
+            <p class="price">0 €</p>
+            <p class="dense">Keine Zahlungsdaten · kein Abo · 90 Tage ab Aktivierung</p>
+            <p class="copy">
+              Dein Plan wird in deinem Konto gespeichert. Du kannst dich später mit derselben
+              E-Mail-Adresse wieder anmelden.
+            </p>
+            <span class="button">Kostenlos mit meinem Plan fortfahren</span>
+          </section>
+        </div>
+        <p class="caption">
+          <strong>Problem:</strong> Das kostenlose Angebot wird größer als das Produkt und klingt
+          nach internem Produkttest.
+        </p>
+      </article>
+
+      <article class="phone">
+        <div class="label after">Creator-Perspektive</div>
+        <div class="screen">
+          <h1>Dein Chaarlie Zugang ist bereit.</h1>
+          <section class="card">
+            <p class="copy">Dein persönlicher Plan und deine Routine sind freigeschaltet.</p>
+            <span class="button">Zugang aktivieren</span>
+            <p class="quiet">Für dich kostenlos</p>
+          </section>
+        </div>
+        <p class="caption">
+          <strong>Wirkung:</strong> Eine Botschaft, eine Handlung. „Kostenlos“ bleibt eine ruhige
+          Nebeninformation.
+        </p>
+      </article>
+    </main>
+  </body>
+</html>
