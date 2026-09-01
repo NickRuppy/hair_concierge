@@ -85,13 +85,18 @@ baseline, so it must not be edited in place.
    current disposition, then deletes only that disposition and records/reuses a
    `catalog_enrichment_applied_items` ledger entry.
 5. Keep application ordering explicit and fail-closed:
-   - apply the V1 amendment batch first;
-   - apply the regenerated full V2 artifact second;
+   - confirm the already-applied disposition-resolution migration
+     `20260901140744_20260901133000` is present;
+   - apply the Oil V2 authority reconciliation migration `20260901160000`;
+   - apply the V1 amendment batch;
+   - apply the regenerated full V2 artifact;
    - resolve the disposition last, only after both payloads verify.
      Balea remains quarantined through the first two steps, so an interruption is
      safe and the sequence is replayable. Before the V1 step lands, the new full
      V2 artifact is intentionally expected to report Balea's source protocol as
-     missing in a live preflight and must not be applied.
+     missing in a live preflight and must not be applied. Applying the V2
+     artifact before the Oil reconciliation is also expected to fail closed on
+     the superseded Garnier pointer.
 6. Add focused tests for schema/evidence validation, the generated artifact,
    read-only preflight conflicts, apply gates, SQL privileges/atomic ordering,
    and the Balea payload semantics. Update stable artifact fingerprints/counts

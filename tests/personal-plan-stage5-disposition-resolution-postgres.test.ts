@@ -26,6 +26,14 @@ test("the disposition-resolution RPC resolves, replays, and rejects conflicting 
   const batchBody = built.resolutionBatch.canonicalJson
   const batchFingerprint = sha256(batchBody)
   assert.equal(batchFingerprint, built.resolutionBatch.fingerprint)
+  const malformedBatch = structuredClone(built.resolutionBatch) as Record<string, unknown> & {
+    items: Array<{ expected_guidance_payload_v2: { runtimeBlockerCode: string | null } }>
+  }
+  delete malformedBatch.canonicalJson
+  delete malformedBatch.fingerprint
+  malformedBatch.items[0]!.expected_guidance_payload_v2.runtimeBlockerCode = "blocked"
+  const malformedBatchBody = JSON.stringify(malformedBatch)
+  const malformedBatchFingerprint = sha256(malformedBatchBody)
   const manifestItem = built.manifest.items[0]!
   const resolutionItem = built.resolutionBatch.items[0]!
   const pg = new PGlite()
@@ -45,6 +53,9 @@ test("the disposition-resolution RPC resolves, replays, and rejects conflicting 
           WHEN $2 = 'sha256'
             AND $1 = pg_catalog.convert_to('${batchBody.replaceAll("'", "''")}', 'UTF8')
           THEN pg_catalog.decode('${batchFingerprint}', 'hex')
+          WHEN $2 = 'sha256'
+            AND $1 = pg_catalog.convert_to('${malformedBatchBody.replaceAll("'", "''")}', 'UTF8')
+          THEN pg_catalog.decode('${malformedBatchFingerprint}', 'hex')
           ELSE pg_catalog.decode(repeat('00', 32), 'hex')
         END
       $$;
@@ -109,6 +120,10 @@ test("the disposition-resolution RPC resolves, replays, and rejects conflicting 
     resolve(pg, built, tamperedBatchBody, sha256(tamperedBatchBody)),
     /product disposition resolution fingerprint mismatch/,
   )
+  await assert.rejects(
+    resolve(pg, built, malformedBatchBody, malformedBatchFingerprint),
+    /product disposition resolution protocol payload is invalid/,
+  )
 
   await pg.query(
     `INSERT INTO public.products (id, category_key, origin, is_active, lifecycle_status)
@@ -129,6 +144,23 @@ test("the disposition-resolution RPC resolves, replays, and rejects conflicting 
     ],
   )
   await insertDisposition(pg, { ...manifestItem.expected_disposition, reason: "changed" })
+
+  await pg.query("UPDATE public.products SET origin = 'user_submitted' WHERE id = $1", [PRODUCT_ID])
+  await assert.rejects(resolve(pg, built), /product disposition resolution product state diverged/)
+  await pg.query("UPDATE public.products SET origin = 'curated' WHERE id = $1", [PRODUCT_ID])
+
+  await pg.query(
+    "UPDATE public.product_application_protocols SET source_url = source_url || '?drifted=1' WHERE product_id = $1",
+    [PRODUCT_ID],
+  )
+  await assert.rejects(
+    resolve(pg, built),
+    /product disposition resolution requires complete exact V1\/V2 authority/,
+  )
+  await pg.query(
+    "UPDATE public.product_application_protocols SET source_url = $1 WHERE product_id = $2",
+    [resolutionItem.expected_source_url, PRODUCT_ID],
+  )
 
   await assert.rejects(resolve(pg, built), /conflicts with current quarantine/)
   assert.equal(await count(pg, "personal_plan_product_search_dispositions"), 1)

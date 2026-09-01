@@ -49,7 +49,7 @@ export function createStage5DispositionResolutionRead(
           origin: string | null
           is_active: boolean
           lifecycle_status: string
-          product_shampoo_specs: Array<{ shampoo_bucket: string }>
+          product_shampoo_specs: Array<{ shampoo_bucket: string | null }>
         }>(
           `id,category_key,origin,is_active,lifecycle_status,${embedProductSpec(
             "product_shampoo_specs",
@@ -60,7 +60,9 @@ export function createStage5DispositionResolutionRead(
       if (error) throw new Error(`disposition_resolution_product_read_failed:${error.message}`)
       return (data ?? []).map(({ product_shampoo_specs, ...product }) => ({
         ...product,
-        shampoo_buckets: (product_shampoo_specs ?? []).map(({ shampoo_bucket }) => shampoo_bucket),
+        shampoo_buckets: (product_shampoo_specs ?? [])
+          .map(({ shampoo_bucket }) => shampoo_bucket)
+          .filter((shampoo_bucket): shampoo_bucket is string => shampoo_bucket !== null),
       }))
     },
     async listProtocols(ids) {
