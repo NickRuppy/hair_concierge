@@ -10,6 +10,7 @@ import {
   saveScanWishlistProduct,
   type ScanSavedStatePayload,
 } from "@/lib/scan/saved-state"
+import { captureScanException } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -29,6 +30,7 @@ export type ScanSaveRouteDeps = {
   saveRoutine: typeof saveScanRoutineProduct
   removeRoutine: typeof removeScanRoutineProduct
   loadSavedState: typeof loadScanSavedState
+  captureScanException?: typeof captureScanException
 }
 
 type ScanSaveKind = "routine" | "merkliste"
@@ -106,6 +108,12 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
           await removeKind(client, userId, parsed.productId, otherKind(parsed.kind))
         } catch (error) {
           console.error("[scan] save move cleanup failed", error)
+          ;(deps.captureScanException ?? captureScanException)(error, {
+            route: "save",
+            status: 500,
+            reason: "save_move_cleanup_failed",
+            userId,
+          })
           return fail("save_incomplete", 500)
         }
 
@@ -120,6 +128,12 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
         )
       } catch (error) {
         console.error("[scan] save failed", error)
+        ;(deps.captureScanException ?? captureScanException)(error, {
+          route: "save",
+          status: 503,
+          reason: "save_failed",
+          userId,
+        })
         return fail("temporarily_unavailable", 503)
       }
     },
@@ -150,6 +164,12 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
         )
       } catch (error) {
         console.error("[scan] save removal failed", error)
+        ;(deps.captureScanException ?? captureScanException)(error, {
+          route: "save",
+          status: 503,
+          reason: "save_removal_failed",
+          userId,
+        })
         return fail("temporarily_unavailable", 503)
       }
     },

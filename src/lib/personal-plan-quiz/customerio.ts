@@ -5,6 +5,7 @@ import {
   type CustomerIoServerProperties,
 } from "@/lib/customerio/server"
 import type { PersonalPlanQuizSubmissionEnvelope } from "@/lib/personal-plan-quiz/types"
+import { isNonCommercialFunnelTestKind, type FunnelTestKind } from "@/lib/funnel/journey-kind"
 
 export const PERSONAL_PLAN_LEGACY_CONCERNS = [
   "dry_dull_lengths",
@@ -152,7 +153,7 @@ type PersonalPlanCustomerIoInput = {
   quizAnswers: PersonalPlanCustomerIoEnvelope
   funnelSessionId?: string | null
   funnelPackageKey?: string | null
-  testKind?: "field_test" | null
+  testKind?: FunnelTestKind | null
 }
 
 function labelFor(value: string | undefined, labels: Record<string, string>) {
@@ -188,7 +189,7 @@ export function buildPersonalPlanCustomerIoTraits(
     funnel_session_id: input.funnelSessionId,
     funnel_package_key: input.funnelPackageKey,
     test_kind: input.testKind,
-    commercial_automation_eligible: input.testKind !== "field_test",
+    commercial_automation_eligible: !isNonCommercialFunnelTestKind(input.testKind),
     profile_line: buildProfileLine(answers),
 
     // These fields have the same primitive type and vocabulary as the legacy quiz.

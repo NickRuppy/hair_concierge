@@ -39,6 +39,7 @@ test("legacy concerns reuse the Personal Plan concern options while retaining fr
   assert.match(quizConcernsSource, /Was beschäftigt dich gerade\?/)
   assert.match(quizConcernsSource, /label="Etwas anderes"/)
   assert.match(quizConcernsSource, /maxLength=\{50\}/)
+  assert.doesNotMatch(quizConcernsSource, /Notiz entfernen/)
   assert.doesNotMatch(quizConcernsSource, /question\.options\.map/)
   assert.doesNotMatch(quizConcernsSource, /Nichts davon/)
 })

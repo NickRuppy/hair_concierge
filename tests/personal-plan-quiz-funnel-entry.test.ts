@@ -231,7 +231,7 @@ test("personal-plan concern notes are standalone, bounded, and do not restore a 
   assert.match(quiz, /continueValidity/)
   assert.match(quiz, /maxLength: 50/)
   assert.match(quiz, /next\.currentConcerns = existing\.currentConcerns \?\? \[\]/)
-  assert.match(quiz, /Notiz entfernen/)
+  assert.doesNotMatch(quiz, /Notiz entfernen/)
   assert.match(quiz, /<textarea/)
   assert.doesNotMatch(currentProblems, /noneOption|onEmpty|Nichts davon/)
   assert.match(scalpConcerns, /noneOption/)

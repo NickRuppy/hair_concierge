@@ -3,6 +3,7 @@ import test from "node:test"
 import {
   buildAuthenticatedAppRedirectUrl,
   hasActivePersonalPlanRoutineEntitlement,
+  isPartnerAccessGuest,
 } from "../src/lib/supabase/middleware"
 
 test("authenticated auth routing strips auth-only error and token query material", () => {
@@ -81,6 +82,38 @@ test("ordinary app access does not become Personal Plan routine entitlement", ()
     hasActivePersonalPlanRoutineEntitlement({
       hasCurrentAppAccess: true,
       fieldTestGuest: false,
+      oneTimeAccessState: "none",
+    }),
+    false,
+  )
+})
+
+test("active partner accounts receive Personal Plan routine access", () => {
+  assert.equal(isPartnerAccessGuest({ app_metadata: { access_kind: "partner" } }), true)
+  assert.equal(
+    isPartnerAccessGuest({
+      app_metadata: {
+        access_kind: "customer",
+        partner_access_invitation_id: "10000000-0000-4000-8000-000000000001",
+      },
+    }),
+    true,
+  )
+  assert.equal(isPartnerAccessGuest({ app_metadata: { access_kind: "customer" } }), false)
+  assert.equal(
+    hasActivePersonalPlanRoutineEntitlement({
+      hasCurrentAppAccess: true,
+      fieldTestGuest: false,
+      partnerGuest: true,
+      oneTimeAccessState: "none",
+    }),
+    true,
+  )
+  assert.equal(
+    hasActivePersonalPlanRoutineEntitlement({
+      hasCurrentAppAccess: false,
+      fieldTestGuest: false,
+      partnerGuest: true,
       oneTimeAccessState: "none",
     }),
     false,

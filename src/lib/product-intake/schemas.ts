@@ -174,8 +174,11 @@ export const onboardingProductIntakeCancelSchema = z.object({
 })
 
 // Scan intake (source "scan"): unknown-scanned-EAN flow. Brand/product name stay
-// optional here (the 2-step unknown-product UI names both optional — "der Barcode
-// reicht meist schon"); category is user-picked and required. Modeled after
+// optional here — the single-tap unknown-product UI (ScanUnknownFlow) only asks for a
+// shelf category and submits on tap; it never collects brand or product name. Both
+// fields are kept optional for API/schema compatibility with the other intake
+// sources, not because the UI still asks for them. Category is user-picked and
+// required. Modeled after
 // `identifierSchema` in category-validators.ts:222-248, but deliberately WITHOUT its
 // value transform (which strips non-alphanumerics for barcode types): this schema is a
 // passthrough validator only. The single normalization point for the stored/matched
@@ -196,7 +199,7 @@ export type ScanProductIntakeIdentifierInput = z.infer<typeof scanProductIntakeI
 export const scanProductIntakeSubmissionSchema = z.object({
   intake_method: z.literal("manual").default("manual"),
   category: productIntakeCategorySchema,
-  // Scan's 2-step unknown-product UI never asks for a use-frequency (plan §WP6), and
+  // Scan's single-tap unknown-product UI never asks for a use-frequency (plan §WP6), and
   // submitScanProductIntake never reads/writes user_product_usage — nullable here (unlike
   // every other intake schema) rather than inventing a value (controller ruling R8).
   // Migration 20260820110000 relaxes product_submissions.frequency_range to NULL only

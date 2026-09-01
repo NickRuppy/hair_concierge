@@ -9,6 +9,12 @@ import {
 } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import {
+  Stage3PreparationRecoveryPanel,
+  type Stage3PreparationRecoveryKind,
+} from "@/components/personal-plan-products/stage3-preparation-recovery"
+import { Stage3PreparationError } from "@/lib/personal-plan/products/bootstrap-recovery"
+import { Stage3ProductsGatewayError } from "@/lib/personal-plan/products/gateway"
+import {
   Stage2RefinementError,
   type Stage2RefinementErrorCode,
   type Stage2RefinementGateway,
@@ -151,6 +157,22 @@ export function shouldReturnToStage1FromQuestion(input: {
   )
 }
 
+export function stage3HandoffFailure(error: unknown): {
+  kind: Stage3PreparationRecoveryKind
+  diagnosticQueued: boolean
+} {
+  if (error instanceof Stage3PreparationError) {
+    return { kind: "contract_violation", diagnosticQueued: error.diagnosticQueued }
+  }
+  if (
+    error instanceof Stage3ProductsGatewayError &&
+    (error.code === "stale_refined_source" || error.code === "stale_authority_snapshot")
+  ) {
+    return { kind: "checkpoint_changed", diagnosticQueued: false }
+  }
+  return { kind: "transient", diagnosticQueued: false }
+}
+
 export function RefinementFlow({
   gateway,
   initialSession,
@@ -244,6 +266,10 @@ export function RefinementFlow({
   const [handoffStatus, setHandoffStatus] = useState<"idle" | "loading" | "error" | "complete">(
     "idle",
   )
+  const [handoffFailure, setHandoffFailure] = useState<{
+    kind: Stage3PreparationRecoveryKind
+    diagnosticQueued: boolean
+  }>({ kind: "transient", diagnosticQueued: false })
   const [entryRetryNonce, setEntryRetryNonce] = useState(0)
   const handoffInFlightRef = useRef(false)
   const bridgeCancelledRef = useRef(false)
@@ -423,6 +449,7 @@ export function RefinementFlow({
       return
     }
     handoffInFlightRef.current = true
+    setHandoffFailure({ kind: "transient", diagnosticQueued: false })
     setHandoffStatus("loading")
     try {
       await onHandoff({
@@ -431,9 +458,10 @@ export function RefinementFlow({
       })
       if (bridgeCancelledRef.current) return
       setHandoffStatus("complete")
-    } catch {
+    } catch (error) {
       handoffInFlightRef.current = false
       emit({ name: "personal_plan_stage2_handoff_failed" })
+      setHandoffFailure(stage3HandoffFailure(error))
       setHandoffStatus("error")
     }
   }, [bridge, emit, handoffStatus, onHandoff, session])
@@ -796,7 +824,10 @@ export function RefinementFlow({
           status={status}
           liveMessage={liveMessage}
           handoffStatus={handoffStatus}
+          handoffFailure={handoffFailure}
           onBack={getBridgeBackQuestionId(session) ? handleBridgeBack : undefined}
+          onExit={onSecondaryExit}
+          exitLabel={postAcceptModuleEntry ? "Zur Routine" : "Zum Plan"}
           onRetry={onHandoff ? handleBridgeContinue : undefined}
           showManualContinue={
             Boolean(onHandoff) &&
@@ -861,9 +892,11 @@ export function RefinementFlow({
     localAnswer,
     mode,
     moduleProgress,
+    handoffFailure,
     handoffStatus,
     onHandoff,
     onSecondaryExit,
+    postAcceptModuleEntry,
     questionDirection,
     session,
     stageEntrance,
@@ -1089,7 +1122,10 @@ function BridgeHandoffShell({
   status,
   liveMessage,
   handoffStatus,
+  handoffFailure,
   onBack,
+  onExit,
+  exitLabel,
   onRetry,
   showManualContinue,
 }: {
@@ -1097,12 +1133,38 @@ function BridgeHandoffShell({
   status: RefinementQuestionStatus
   liveMessage: string
   handoffStatus: "idle" | "loading" | "error" | "complete"
+  handoffFailure: { kind: Stage3PreparationRecoveryKind; diagnosticQueued: boolean }
   onBack?: () => void
+  onExit?: () => void
+  exitLabel: string
   onRetry?: () => void
   showManualContinue: boolean
 }) {
   const isBusy = handoffStatus === "loading"
   const hasError = handoffStatus === "error"
+  if (hasError) {
+    return (
+      <div
+        {...stage2BridgeMarkerProps(handoff)}
+        className="min-h-dvh bg-[var(--background)] text-[var(--text-body)]"
+      >
+        <PersonalPlanJourneyHeader currentStage={2} />
+        <Stage3PreparationRecoveryPanel
+          kind={handoffFailure.kind}
+          diagnosticQueued={handoffFailure.diagnosticQueued}
+          onRecover={
+            handoffFailure.kind === "contract_violation"
+              ? undefined
+              : handoffFailure.kind === "checkpoint_changed"
+                ? () => window.location.reload()
+                : onRetry
+          }
+          onExit={onExit}
+          exitLabel={exitLabel}
+        />
+      </div>
+    )
+  }
   return (
     <div
       {...stage2BridgeMarkerProps(handoff)}
@@ -1123,14 +1185,6 @@ function BridgeHandoffShell({
         <p className="mt-3 text-sm leading-6 text-[var(--text-sub,#6a6560)]">
           Deine Antworten sind gespeichert. Wir bringen dich direkt zur Produktauswahl.
         </p>
-        {hasError ? (
-          <p
-            role="alert"
-            className="mt-4 rounded-xl bg-[#fff4f2] px-3 py-2.5 text-sm text-[#a3434b]"
-          >
-            Deine Produkte konnten nicht vorbereitet werden. Versuche es noch einmal.
-          </p>
-        ) : null}
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           {onBack ? (
             <Button type="button" onClick={onBack} variant="outline" className="rounded-full">

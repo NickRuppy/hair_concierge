@@ -74,8 +74,10 @@ async function loadOwnedRoutineRows(
 /**
  * A Merkliste entry points at a catalog product the scan surface will later re-resolve
  * and offer to buy, so it gets the same front gate as the routine save: the product must
- * still be active, and ruling R7's disposition quarantine applies here too. The
- * origin/ownership half of the routine gate does not — bookmarking is not a claim of use.
+ * still be active, and ruling R7's disposition quarantine applies here too. Both save
+ * kinds are lifecycle-active-and-not-quarantined gates only (2026-09-01) — the routine
+ * save's "already owned" branch below is a reporting concern, not an extra eligibility
+ * check bookmarking would need.
  */
 export async function saveScanWishlistProduct(
   client: SupabaseClient,
@@ -140,7 +142,6 @@ type ActiveProductRow = {
   name: string | null
   brand: string | null
   category_key: string
-  origin: string | null
 }
 
 /**
@@ -154,10 +155,13 @@ type ActiveProductRow = {
  * touch or replace an existing different product in the same category — it only ever
  * adds this exact product, or no-ops if it's already owned.
  *
- * Ruling R7: mirrors the RPC's FULL eligibility predicate (migration
- * `20260811212000_...gate.sql:267-280`), not just the active-product check — a
- * disposition-quarantined product is refused, and a non-curated (`user_submitted`) product
- * is only saveable when the user already owns that exact product elsewhere.
+ * Ruling R7 (relaxed 2026-09-01, product ruling: users must never hit a save dead end
+ * — 18 active `user_submitted` products were being blocked here): a disposition-
+ * quarantined product is refused, same as the RPC, but `origin` no longer gates a
+ * first-time save — any lifecycle-active, non-quarantined product is saveable
+ * regardless of who submitted it. This is intentionally wider than the RPC's own
+ * `origin = 'curated' OR already owned` predicate (`catalog-eligibility.ts`'s doc
+ * comment still describes that narrower RPC rule; scan no longer mirrors it here).
  */
 export async function saveScanRoutineProduct(
   client: SupabaseClient,
@@ -166,7 +170,7 @@ export async function saveScanRoutineProduct(
 ): Promise<ScanSaveResult> {
   const { data: product, error: productError } = await client
     .from("products")
-    .select("id, name, brand, category_key, origin")
+    .select("id, name, brand, category_key")
     .eq("id", productId)
     .eq("is_active", true)
     .eq("lifecycle_status", "active")
@@ -192,10 +196,6 @@ export async function saveScanRoutineProduct(
       },
     }
   }
-
-  // Not already owned, so the RPC's alternate eligibility branch doesn't apply — only a
-  // curated product may be saved for the first time this way.
-  if (activeProduct.origin !== "curated") return { outcome: "product_not_saveable" }
 
   const { error: insertError } = await client.from("user_products").insert({
     user_id: userId,

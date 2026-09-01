@@ -121,6 +121,29 @@ test("email-bound moderator organic offer remains free and uses its dedicated ac
   )
 })
 
+test("partner organic offer keeps the ordinary journey and swaps only the payment position", () => {
+  const narrative = buildQuizResultNarrative(quizAnswers)
+  const html = renderToStaticMarkup(
+    <OrganicPlanOfferVariant
+      entryContext="quiz_completion"
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      narrative={narrative}
+      offerVariant="organic-plan-v1"
+      quizAnswers={quizAnswers}
+      pricingSlot={<div>Monatlich · €14,99</div>}
+      partnerAccess={{ activationApiPath: "/api/partner-access/activate" }}
+    />,
+  )
+
+  assert.match(html, /Dein Chaarlie Zugang ist bereit\./)
+  assert.match(html, /Dein persönlicher Plan und deine Routine sind freigeschaltet\./)
+  assert.match(html, /Zugang aktivieren/)
+  assert.match(html, /Für dich kostenlos/)
+  assert.match(html, /data-partner-access-activation-card/)
+  assert.doesNotMatch(html, /Monatlich|€14,99|Keine Zahlungsdaten|kein Abo|90 Tage|siebentägigen/i)
+})
+
 test("legacy result client fails closed when regular field-test intent lost authorization", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient

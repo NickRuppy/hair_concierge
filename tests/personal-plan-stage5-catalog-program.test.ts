@@ -699,6 +699,26 @@ test("Stage 5 protocol preflight fails closed for missing or invalid Shampoo buc
   assert.ok(invalid.blockers.every((blocker) => blocker.includes("canonical_fact_invalid")))
 })
 
+test("Stage 5 cohort derivation fails closed for a non-canonical Shampoo bucket", () => {
+  const product = deriveStage5CuratedCohortProduct({
+    product_id: "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+    category_key: "shampoo",
+    origin: "curated",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
+    brand: "Fixture",
+    name: "Legacy Shampoo",
+    affiliate_link: null,
+    shampoo_specs: [{ shampoo_bucket: "standard" }],
+  })
+
+  assert.deepEqual(product.required_roles, [])
+  assert.deepEqual(product.authority_fact_blockers, [
+    "canonical_fact_invalid:f184aef4-d8f9-4956-bcd6-ba1bf1ebeace:shampoo.bucket:standard",
+  ])
+})
+
 test("Stage 5 curated audit is exact-only and makes frozen-cohort drift reviewable", async () => {
   const researched = await json<{
     products: Array<{

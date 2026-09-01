@@ -7,12 +7,20 @@ import { loadPersonalPlanRoutingFrontierForUser } from "../src/lib/personal-plan
 type Row = Record<string, unknown>
 
 function client(responses: Record<string, Row[]>, errors: Record<string, unknown> = {}) {
-  const queries: Array<{ table: string; predicates: Array<[string, unknown]> }> = []
+  const queries: Array<{
+    table: string
+    predicates: Array<[string, unknown]>
+    selection: string | null
+  }> = []
   return {
     queries,
     rpc: async () => ({ data: { status: "ineligible" }, error: null }),
     from(table: string) {
-      const query = { table, predicates: [] as Array<[string, unknown]> }
+      const query = {
+        table,
+        predicates: [] as Array<[string, unknown]>,
+        selection: null as string | null,
+      }
       queries.push(query)
       const matching = () =>
         (responses[table] ?? []).filter((row) =>
@@ -20,8 +28,15 @@ function client(responses: Record<string, Row[]>, errors: Record<string, unknown
         )
       const result = () => Promise.resolve({ data: matching(), error: null })
       const builder = {
-        select: () => builder,
+        select: (columns: string) => {
+          query.selection = columns
+          return builder
+        },
         eq: (column: string, value: unknown) => {
+          query.predicates.push([column, value])
+          return builder
+        },
+        is: (column: string, value: unknown) => {
           query.predicates.push([column, value])
           return builder
         },
@@ -239,6 +254,81 @@ test("an unapplied field-test relation preserves ordinary non-Personal-Plan enro
       quizSourceKind: null,
       sourceKind: null,
     },
+  )
+  assert.match(
+    admin.queries.find((query) => query.table === "partner_access_invitations")?.selection ?? "",
+    /current_grant:manual_access_grants!partner_access_invitations_current_manual_access_grant_id_fkey!inner/,
+  )
+})
+
+test("a stale PostgREST partner relationship hint preserves ordinary enrollment", async () => {
+  const admin = client(
+    {
+      billing_one_time_purchases: [],
+      billing_subscriptions: [{ ...subscription, metadata: { pricing_catalog: "standard" } }],
+    },
+    {
+      partner_access_invitations: {
+        code: "PGRST200",
+        message:
+          "Could not find a relationship between partner_access_invitations and manual_access_grants",
+      },
+    },
+  )
+
+  assert.equal(
+    (await findPersonalPlanEnrollmentForUser(admin as never, "user-1", new Date("2026-08-10")))
+      .accessState,
+    "none",
+  )
+})
+
+test("an active partner grant admits the exact legacy quiz indefinitely without cohort gates", async () => {
+  const admin = client({
+    billing_one_time_purchases: [],
+    billing_subscriptions: [],
+    partner_access_invitations: [
+      {
+        id: "partner-invitation",
+        claimed_user_id: "user-1",
+        lead_id: "partner-lead",
+        activated_at: "2026-09-01T10:00:00.000Z",
+        revoked_at: null,
+        current_manual_access_grant_id: "partner-grant",
+        current_grant: {
+          id: "partner-grant",
+          user_id: "user-1",
+          reason: "partner",
+          expires_at: null,
+          revoked_at: null,
+          partner_access_invitation_id: "partner-invitation",
+        },
+      },
+    ],
+  })
+
+  assert.deepEqual(
+    await findPersonalPlanEnrollmentForUser(admin as never, "user-1", new Date("2046-09-01"), {
+      legacyQuizCutoverEnabled: () => false,
+      cohortCutoff: () => null,
+      appAllowedForUser: async () => false,
+    }),
+    {
+      accessState: "active",
+      sourceId: "partner-invitation",
+      paidAt: null,
+      qualifiedAt: "2026-09-01T10:00:00.000Z",
+      artifactLeadId: "partner-lead",
+      quizSourceKind: "legacy",
+      sourceKind: "partner",
+    },
+  )
+  assert.deepEqual(
+    admin.queries.find((query) => query.table === "partner_access_invitations")?.predicates,
+    [
+      ["claimed_user_id", "user-1"],
+      ["revoked_at", null],
+    ],
   )
 })
 

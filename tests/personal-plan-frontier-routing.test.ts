@@ -171,6 +171,88 @@ test("an explicit regular-quiz field test reaches readiness without opening the 
   assert.deepEqual(result, { kind: "recovery", nextHref: "/plan-bereit" })
 })
 
+test("partner routing falls back to its additive owner-only source", async () => {
+  const calls: string[] = []
+  const client = {
+    rpc: async (name: string) => {
+      calls.push(name)
+      return name === "personal_plan_get_own_routing_source"
+        ? { data: null, error: null }
+        : {
+            data: {
+              qualified_at: "2026-09-01T12:00:00.000Z",
+              quiz_source_kind: "legacy",
+              source_kind: "partner",
+              plan: null,
+            },
+            error: null,
+          }
+    },
+    from: () => {
+      throw new Error("routing must not load private tables from middleware")
+    },
+  }
+  const result = await loadPersonalPlanRoutingFrontierForUser(client as never, "creator-1", {
+    cohortCutoff: () => null,
+    legacyQuizCutoverEnabled: () => false,
+    appAllowedForUser: async () => true,
+  })
+  assert.deepEqual(calls, [
+    "personal_plan_get_own_routing_source",
+    "personal_plan_get_own_partner_routing_source",
+  ])
+  assert.deepEqual(result, { kind: "recovery", nextHref: "/plan-bereit" })
+})
+
+test("code deployed before the additive partner RPC preserves ordinary legacy routing", async () => {
+  const client = {
+    rpc: async (name: string) =>
+      name === "personal_plan_get_own_routing_source"
+        ? { data: null, error: null }
+        : {
+            data: null,
+            error: {
+              code: "PGRST202",
+              message:
+                "Could not find the function public.personal_plan_get_own_partner_routing_source",
+            },
+          },
+    from: () => null,
+  }
+  const result = await loadPersonalPlanRoutingFrontierForUser(client as never, "user-1", {
+    cohortCutoff: () => null,
+    legacyQuizCutoverEnabled: () => false,
+    appAllowedForUser: async () => true,
+  })
+  assert.deepEqual(result, { kind: "legacy" })
+
+  const unrelated = {
+    ...client,
+    rpc: async (name: string) =>
+      name === "personal_plan_get_own_routing_source"
+        ? { data: null, error: null }
+        : {
+            data: null,
+            error: { code: "42883", message: "function public.something_else does not exist" },
+          },
+  }
+  await assert.rejects(
+    loadPersonalPlanRoutingFrontierForUser(unrelated as never, "user-1", {
+      cohortCutoff: () => null,
+      legacyQuizCutoverEnabled: () => false,
+      appAllowedForUser: async () => true,
+    }),
+    (error: unknown) =>
+      Boolean(
+        error &&
+        typeof error === "object" &&
+        (error as { code?: unknown }).code === "42883" &&
+        (error as { message?: unknown }).message ===
+          "function public.something_else does not exist",
+      ),
+  )
+})
+
 test("a paid legacy source still requires the customer cutover", async () => {
   const client = {
     rpc: async () => ({

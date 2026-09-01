@@ -35,6 +35,7 @@ import type {
 import { createFunnelEventId } from "@/lib/funnel/client"
 import { resolveOfferSectionIndex } from "@/lib/analytics/offer-section-order"
 import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
+import { isNonCommercialFunnelTestKind, type FunnelTestKind } from "@/lib/funnel/journey-kind"
 
 export const OFFER_REVISION = "product_led_v2"
 export const GUIDED_STORY_OFFER_REVISION = "guided_story_v1"
@@ -96,7 +97,7 @@ export function OfferTrackingProvider({
   entryContext: OfferEntryContext
   focusRoutine: boolean
   isInternalTest?: boolean
-  testKind?: "field_test" | null
+  testKind?: FunnelTestKind | null
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
@@ -184,7 +185,8 @@ export function OfferTrackingProvider({
     offerEngagedRef.current = true
     pendingOfferEngagementRef.current = null
     trackAppEvent("offer_engaged", payload)
-    if (context.testKind !== "field_test") void sendCustomerIoOfferEngagement(payload)
+    if (!isNonCommercialFunnelTestKind(context.testKind))
+      void sendCustomerIoOfferEngagement(payload)
   }, [context])
 
   const trackOfferEngagement = useCallback(
@@ -229,7 +231,8 @@ export function OfferTrackingProvider({
   }, [context, revealGeneration, revealedThrough])
 
   useEffect(() => {
-    if (entryContext !== "quiz_completion" || !leadId || testKind === "field_test") return
+    if (entryContext !== "quiz_completion" || !leadId || isNonCommercialFunnelTestKind(testKind))
+      return
     void trackMetaOfferViewOnce({
       entryContext,
       funnelPackageKey: offerTracking?.funnelPackageKey,

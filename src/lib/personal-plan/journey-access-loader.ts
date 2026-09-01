@@ -38,7 +38,7 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
     qualifiedAt: string | null
     artifactLeadId: string | null
     quizSourceKind?: "personal_plan" | "legacy" | null
-    sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null
+    sourceKind?: "one_time" | "launch_subscription" | "field_test" | "partner" | "migration" | null
   }>
   cohortCutoff: () => Date | null
   migrationEnabled?: () => boolean
@@ -121,13 +121,13 @@ function phaseElapsed(reporter: JourneyAccessPhaseReporter | undefined, startedA
 function isQualifiedOwnerCohort(
   qualifiedAt: string | null,
   cutoff: Date | null,
-  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null,
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "partner" | "migration" | null,
   migrationEnabled = false,
 ): boolean {
   if (!qualifiedAt) return false
   const parsed = new Date(qualifiedAt)
   if (Number.isNaN(parsed.getTime())) return false
-  return sourceKind === "field_test" || sourceKind === "migration"
+  return sourceKind === "field_test" || sourceKind === "partner" || sourceKind === "migration"
     ? true
     : isMigrationPaidSource(sourceKind) && migrationEnabled
       ? true
@@ -135,7 +135,7 @@ function isQualifiedOwnerCohort(
 }
 
 function isMigrationPaidSource(
-  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "migration" | null,
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | "partner" | "migration" | null,
 ): boolean {
   return sourceKind === "one_time" || sourceKind === "launch_subscription"
 }

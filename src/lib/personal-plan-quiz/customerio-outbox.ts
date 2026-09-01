@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { isNonCommercialFunnelTestKind, type FunnelTestKind } from "@/lib/funnel/journey-kind"
 
 import { personalPlanPrepareRequestSchema } from "@/lib/personal-plan-quiz/persistence"
 import {
@@ -103,9 +104,16 @@ export async function dispatchCustomerIoProfileSyncForLead(
     const funnel = await deps.loadFunnel(supabase, leadId)
     // A repeat submission moves the funnel away from its previous lead. The
     // durable owner marker must keep that earlier result non-commercial too.
-    const fieldTest = funnel?.test_kind === "field_test" || Boolean(lead.moderator_campaign_id)
+    const testKind: FunnelTestKind | null = isNonCommercialFunnelTestKind(funnel?.test_kind)
+      ? funnel.test_kind
+      : lead.moderator_campaign_id
+        ? "field_test"
+        : null
+    const nonCommercial = testKind !== null
     const shouldSendCompletionEvent =
-      claimed.send_completion_event && claimed.completion_event_delivered_at === null && !fieldTest
+      claimed.send_completion_event &&
+      claimed.completion_event_delivered_at === null &&
+      !nonCommercial
     const result = await deps.deliver({
       createdAt: lead.created_at,
       email: lead.email!,
@@ -115,7 +123,7 @@ export async function dispatchCustomerIoProfileSyncForLead(
       quizAnswers,
       funnelSessionId: funnel?.id,
       funnelPackageKey: funnel?.package_key,
-      testKind: fieldTest ? "field_test" : null,
+      testKind,
       profileSyncRevision: claimed.profile_revision,
       sendCompletionEvent: shouldSendCompletionEvent,
     })

@@ -99,6 +99,13 @@ export function isPersonalPlanFieldTestGuest(user: { app_metadata?: Record<strin
   return user.app_metadata?.access_kind === "field_test"
 }
 
+export function isPartnerAccessGuest(user: { app_metadata?: Record<string, unknown> }) {
+  return (
+    user.app_metadata?.access_kind === "partner" ||
+    typeof user.app_metadata?.partner_access_invitation_id === "string"
+  )
+}
+
 export function getFieldTestEndedRoute(user: { app_metadata?: Record<string, unknown> }) {
   return user.app_metadata?.field_test_flow === "regular_quiz"
     ? "/test/quiz/beendet"
@@ -108,17 +115,20 @@ export function getFieldTestEndedRoute(user: { app_metadata?: Record<string, unk
 export function hasActivePersonalPlanRoutineEntitlement({
   hasCurrentAppAccess,
   fieldTestGuest,
+  partnerGuest = false,
   moderatorAccess = "none",
   oneTimeAccessState,
 }: {
   hasCurrentAppAccess: boolean
   fieldTestGuest: boolean
+  partnerGuest?: boolean
   moderatorAccess?: ModeratorAccessState
   oneTimeAccessState: OneTimeAccessState | null
 }) {
   return (
     oneTimeAccessState === "active" ||
     (fieldTestGuest && hasCurrentAppAccess) ||
+    (partnerGuest && hasCurrentAppAccess) ||
     moderatorAccess === "active"
   )
 }
@@ -340,6 +350,7 @@ export function createUpdateSession(
     // --- Subscription paywall ---------------------------------------------
     const needsSub = requiresSubscriptionPath(pathname)
     const fieldTestGuest = isPersonalPlanFieldTestGuest(user)
+    const partnerGuest = isPartnerAccessGuest(user)
     let oneTimeAccessState: OneTimeAccessState | null = null
     let hasActivePersonalPlanEntitlement = false
     let moderatorAccess: ModeratorAccessState = "none"
@@ -386,6 +397,7 @@ export function createUpdateSession(
         hasActivePersonalPlanEntitlement = hasActivePersonalPlanRoutineEntitlement({
           hasCurrentAppAccess: active,
           fieldTestGuest,
+          partnerGuest,
           moderatorAccess,
           oneTimeAccessState,
         })

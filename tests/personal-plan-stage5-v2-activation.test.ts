@@ -23,7 +23,7 @@ test("Stage 5 V2 activation fingerprints the exact artifact bytes", () => {
   )
   assert.equal(
     stage5V2ArtifactFingerprint(artifactText),
-    "c6afa7d2a7e6af41ad0bf6db067664a1eb950fc80b64463e2a05c031796b5324",
+    "244370c86b9ceebf96be56794b32c676153f6a41a5bca6799c753b244c9ef57e",
   )
   assert.notEqual(
     stage5V2ArtifactFingerprint(`${artifactText}\n`),
@@ -115,5 +115,5 @@ test("Stage 5 V2 post-apply verification requires every exact family and product
 
   assert.equal(result.ok, true)
   assert.deepEqual(result.blockers, [])
-  assert.deepEqual(result.observed, { familyRows: 28, productRows: 289 })
+  assert.deepEqual(result.observed, { familyRows: 28, productRows: 308 })
 })

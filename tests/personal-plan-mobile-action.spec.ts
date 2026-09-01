@@ -50,6 +50,22 @@ const scalpConcernsDraft = {
   answers: { texture: "wavy", thickness: "normal", density: "medium" },
 }
 
+const currentProblemsDraft = {
+  version: 4,
+  screen: "current_problems",
+  history: [
+    "texture",
+    "thickness",
+    "density",
+    "early_proof",
+    "goals",
+    "routine_clarity",
+    "result_reliability",
+    "adaptation_confidence",
+  ],
+  answers: { texture: "wavy", thickness: "normal", density: "medium" },
+}
+
 type ActionGeometry = {
   actionBottom: number
   insideTransitionRoot: boolean
@@ -59,7 +75,11 @@ type ActionGeometry = {
 
 async function seedDraft(
   page: Page,
-  draft: typeof analysisDraft | typeof earlyProofDraft | typeof scalpConcernsDraft,
+  draft:
+    | typeof analysisDraft
+    | typeof earlyProofDraft
+    | typeof scalpConcernsDraft
+    | typeof currentProblemsDraft,
 ) {
   await page.addInitScript((value) => {
     window.localStorage.setItem("chaarlie:personal-plan-quiz-draft:v4", JSON.stringify(value))
@@ -263,4 +283,36 @@ test("scalp concerns: 'Nichts davon' toggles as a stateful answer without naviga
   await expect(none).toHaveAttribute("aria-pressed", "false")
   await expect(forward).toBeEnabled()
   await expect(heading).toBeVisible()
+})
+
+test("current concerns: deselects and restores an in-screen note through the card", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await seedDraft(page, currentProblemsDraft)
+  await page.goto(`${baseUrl}/lp/haarplan`, { waitUntil: "networkidle" })
+
+  const other = page.getByRole("button", { name: /^Etwas anderes/ })
+  const forward = page.getByRole("button", { name: /Weiter$/ })
+  await expect(other).toHaveAttribute("aria-pressed", "false")
+
+  await other.click()
+  const note = page.getByLabel("Eigene Notiz")
+  await note.fill("Stumpf nach dem Föhnen")
+  await expect(other).toHaveAttribute("aria-pressed", "true")
+  await expect(forward).toContainText("1 ausgewählt")
+
+  await page.getByRole("button", { name: /^Wenig Glanz/ }).click()
+  await expect(forward).toContainText("2 ausgewählt")
+
+  await other.click()
+  await expect(other).toHaveAttribute("aria-pressed", "false")
+  await expect(note).toBeHidden()
+  await expect(forward).toBeEnabled()
+  await expect(forward).toContainText("1 ausgewählt")
+
+  await other.click()
+  await expect(other).toHaveAttribute("aria-pressed", "true")
+  await expect(note).toHaveValue("Stumpf nach dem Föhnen")
+  await expect(forward).toContainText("2 ausgewählt")
 })

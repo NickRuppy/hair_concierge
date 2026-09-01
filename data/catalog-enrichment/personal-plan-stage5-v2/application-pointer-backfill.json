@@ -1,7 +1,7 @@
 {
   "schema_version": "personal-plan-stage5-application-pointer-backfill-v2",
-  "snapshot_date": "2026-08-14",
-  "source_kind": "reviewed_stage5_v1_and_use_case_artifacts",
+  "snapshot_date": "2026-09-01",
+  "source_kind": "reviewed_stage5_v1_use_case_and_amendment_artifacts",
   "source_files": [
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-14-leave-in-exact-01.json",
@@ -82,14 +82,26 @@
     {
       "path": "data/catalog-enrichment/personal-plan-stage5-v2/leave-in-use-cases-2026-08-14.json",
       "sha256": "c6e6c3df65142b96b4a091017ec35d64bff0fa38956abd5cd5f33ec634002104"
+    },
+    {
+      "path": "data/catalog-enrichment/personal-plan-stage5-v1/S5R-02-k18-molecular-repair-hair-mist-readiness.json",
+      "sha256": "4a6694959985138baf17701025e479387c827bd4f89948cd12f58aae29efe4dd"
+    },
+    {
+      "path": "data/catalog-enrichment/oil-authority-enrichment-v1/manifest.json",
+      "sha256": "fb0804392095be430a0f6c69b705576c53fdac820a9c3e35dfad45d9801e6131"
+    },
+    {
+      "path": "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-22-balea-urea-everyday-protocol.json",
+      "sha256": "d0429269974cfa44999c0b7fdc405792a170a63444e067a465a8213c1eea6f83"
     }
   ],
   "observed_counts": {
-    "rows": 289,
-    "products": 223,
+    "rows": 308,
+    "products": 239,
     "exact_workflows": 4,
     "family_templates": 28,
-    "composable_rows": 289,
+    "composable_rows": 308,
     "blocked_rows": 0,
     "by_category": {
       "bondbuilder": 3,
@@ -97,11 +109,11 @@
       "deep_cleansing_shampoo": 6,
       "dry_shampoo": 10,
       "heat_protectant": 7,
-      "leave_in": 78,
+      "leave_in": 79,
       "mask": 34,
-      "oil": 54,
+      "oil": 71,
       "scalp_care": 8,
-      "shampoo": 48
+      "shampoo": 49
     }
   },
   "family_templates": [
@@ -2670,6 +2682,58 @@
       }
     },
     {
+      "key": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "product_name": "benecos BIO Körperöl Macadamianussöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "72a7b7e154de8c8fbdce1ee1858e9dd219f8306490dbb7cf15d1986fb682fdfc",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "002eac8cc9095c48837cc3869b81ed2b56a762f4942528265668be46a84775f6",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5:dry_finish:dry_finish",
       "product_id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
       "product_name": "Pantene Pro-V Coconut Oil",
@@ -2961,6 +3025,212 @@
             "sourceUrl": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
             "sourceType": "retailer",
             "checkedAt": "2026-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "1dce2c18-6a45-4017-a748-e3a7f1cba36f:dry_finish:dry_finish",
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "product_name": "Primavera Calendulaöl Bio",
+      "source_role": "dry_finish",
+      "source_fingerprint": "d88d22b03423ba24ed01f7be91765d92a3fc20693c6e314e56ebbdbdde621e7d",
+      "template_keys": [
+        "oil.dry-finish.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "c0d1a80b023621466e91cfc601694b332fe28dc0c6d348a57f54810a828a9479",
+      "after_visible_step_fingerprint": "b0968cc6b190b91b308943cb4c538318d1a355eee9e7fa24d88786670a7b673a",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f"
+        },
+        "sourceRole": "dry_finish",
+        "role": "finish",
+        "applicationFamily": "dry_finish",
+        "facts": {
+          "applicationState": "dry_hair",
+          "applicationArea": "hair_ends",
+          "rinse": "leave_in",
+          "contactTime": null,
+          "amount": {
+            "kind": "qualitative",
+            "value": "very_small_amount"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.primaveralife.com/calendulaoel-bio.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
+      "key": "1dce2c18-6a45-4017-a748-e3a7f1cba36f:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "product_name": "Primavera Calendulaöl Bio",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "480aab95c5796d0307d524de53c046fa515cc1812570f7a7f7b270ea2e7680db",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "cd630a69f7fc68f4194e5a41ff8b100e334032222ee657d86173061bc8262bfd",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
+      "key": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf:leave_on_fibre_conditioning:post_wash_damp_conditioning",
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "product_name": "OGX Argan Oil",
+      "source_role": "leave_on_fibre_conditioning",
+      "source_fingerprint": "82b795af62452cf955964e45b0a6e231b040b160b58e187d2b2bdaf14cda08f1",
+      "template_keys": [
+        "oil.damp.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "22b223f609950ea3aafac69d69dca8b8360148e43c1ffa4d8c2bb6a38d3249a7",
+      "after_visible_step_fingerprint": "86aca47b8a8403c861efed5f313d6dd0d1489efb672b14a0f1b87a1510e236c6",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"
+        },
+        "sourceRole": "leave_on_fibre_conditioning",
+        "role": "leave_in",
+        "applicationFamily": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationState": "damp_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "leave_in",
+          "contactTime": null,
+          "amount": {
+            "kind": "qualitative",
+            "value": "few_drops"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
+      "key": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf:pre_heat_protection:pre_heat_damp",
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "product_name": "OGX Argan Oil",
+      "source_role": "pre_heat_protection",
+      "source_fingerprint": "29e67a4080016aaf84f58eb7ff6953ec7622db6396de3ed188bffbfbf6c8030f",
+      "template_keys": [
+        "heat.damp.oil.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "7c0705fefe121a6f5e89088f0528f1ea869a0c67cad2aecc3a1b436ade00b3e7",
+      "after_visible_step_fingerprint": "99457aa2f0cf54faef4de68774efad9ccb86bd30d94564e7a9c878f903672df7",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"
+        },
+        "sourceRole": "pre_heat_protection",
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_damp",
+        "facts": {
+          "applicationState": "damp_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "leave_in",
+          "contactTime": null,
+          "amount": {
+            "kind": "qualitative",
+            "value": "few_drops"
+          },
+          "heat": {
+            "supportedStates": [
+              "damp_hair"
+            ],
+            "activationRequired": false,
+            "maximumClaimedTemperatureC": null,
+            "reapplication": "each_separate_heat_event"
+          },
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
           }
         ]
       }
@@ -3686,6 +3956,58 @@
       }
     },
     {
+      "key": "29e36443-93ff-4b62-9cf0-55ad9f89f530:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "product_name": "BioGourmet Distelöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "8b4ba98fd2d984ddfba9edad98beef4668f7315417b67ae12d1caf60547bf22c",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "a0a90d52b16b17fc232222891c539be4233eb151f5e86af4ee36706a0c07d7fd",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "29e36443-93ff-4b62-9cf0-55ad9f89f530"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "29fc985e-3b7e-4567-b7bc-b416583139fe:intensive_conditioning_mask:post_shampoo_rinse_out_mask",
       "product_id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
       "product_name": "Balea Haarkur reparierend",
@@ -3965,6 +4287,58 @@
             "sourceUrl": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-hair-restoring-strengthening-shampoo",
             "sourceType": "manufacturer",
             "checkedAt": "2026-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "2ffeae68-c625-4df5-be02-0c1b620aa0fc:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "product_name": "nedura Schwarzkümmelöl ungefiltert",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "baf8443a2d7cd6bb2d5aa2b4d1584bec67bab3150c7d8da65d048f9ade3d4457",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "1d42cf82d3fe5e7c8447cd3312e4992a37c74bfce9f81c29c6b7c6b7bfed50bd",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "2ffeae68-c625-4df5-be02-0c1b620aa0fc"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
           }
         ]
       }
@@ -4393,6 +4767,58 @@
       }
     },
     {
+      "key": "38886b62-2c45-4b34-9a24-7d831e97946e:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "product_name": "MoriVeda Premium Moringaöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "ef22c898cd6d3834abc8b8aefcd22699809b6386b8750004fabea511a1c4341f",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "68e67e6054d3985cf6c7ad1dc613269b40c5d6c360faa07b49bcc0a7e8b4f3f5",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "38886b62-2c45-4b34-9a24-7d831e97946e"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "38dace91-0fba-49ee-a93f-ac36e488fe4b:specialized_bond_treatment:post_shampoo_timed_leave_in",
       "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
       "product_name": "K18 Leave-In Molecular Repair Hair Mask",
@@ -4704,6 +5130,58 @@
       }
     },
     {
+      "key": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "product_name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "84aa95976eefca7a5c23334650b518a7e6e41a46fa50df375b435564a301d053",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "64288761726ed5b7f96bf926abe5e69e829140f7e1c8eb29834c1111eb381bb3",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "3ce9a9da-4d58-4a66-a424-f8818960b5dc:intensive_conditioning_mask:post_shampoo_rinse_out_mask",
       "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
       "product_name": "Schaebens Argan-Öl Haarmaske",
@@ -4857,6 +5335,58 @@
             "sourceUrl": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
             "sourceType": "manufacturer",
             "checkedAt": "2026-08-10"
+          }
+        ]
+      }
+    },
+    {
+      "key": "3eb198a5-9aab-4f28-9df1-c4869c6a12db:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "product_name": "KoRo MCT Öl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "2b41eb9adadeca6308194d96e5854ce5752f22e5d6e1b3754467a283952d4a94",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "f0249794fa2db14a392f71fac912199438f08c3c62331d467229c8d2197016cd",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "3eb198a5-9aab-4f28-9df1-c4869c6a12db"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
           }
         ]
       }
@@ -5534,6 +6064,101 @@
       }
     },
     {
+      "key": "4a95e1de-54e9-4fcd-b227-72a5824d13c1:dry_finish:dry_finish",
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "product_name": "Dr. Scheller Jojobaöl",
+      "source_role": "dry_finish",
+      "source_fingerprint": "190b885effa6c9a88f7494523e7d75cd53e0c67d9e9f4c04f93b795dae4a30a7",
+      "template_keys": [
+        "oil.dry-finish.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "f3679a4ff6e36d5a49ab7559e5d784f45ddb3cae842bab903d625bccf4c56c69",
+      "after_visible_step_fingerprint": "b0968cc6b190b91b308943cb4c538318d1a355eee9e7fa24d88786670a7b673a",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "4a95e1de-54e9-4fcd-b227-72a5824d13c1"
+        },
+        "sourceRole": "dry_finish",
+        "role": "finish",
+        "applicationFamily": "dry_finish",
+        "facts": {
+          "applicationState": "dry_hair",
+          "applicationArea": "hair_ends",
+          "rinse": "leave_in",
+          "contactTime": null,
+          "amount": null,
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
+      "key": "4a95e1de-54e9-4fcd-b227-72a5824d13c1:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "product_name": "Dr. Scheller Jojobaöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "9cab8d2c32c4c87cb4758af6b381cd74693f9d77a0a8e8575b9617fa783dbcd4",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "22ce53770a4070ac76934a99812777212062028d4558ab4a34b754ca03501e3b",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "4a95e1de-54e9-4fcd-b227-72a5824d13c1"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": null,
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://dr-scheller.de/products/reines-jojobaol",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "4c3e1a63-4696-406a-be67-f2aacc678b0c:conditioner_rinse_out:standard_rinse_out_conditioning",
       "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
       "product_name": "Garnier Hair Food Macadamia",
@@ -5935,6 +6560,58 @@
             "sourceUrl": "https://swissopar.de/produkt/teebaumoel-shampoo/",
             "sourceType": "manufacturer",
             "checkedAt": "2026-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "517dca50-5d55-4038-ba1d-f9b745708327:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "product_name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "3ddcddd53455e83888e65d90d6808b1b68d4b895124f9c504f33b8ab6b1ec240",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "9a4fce6a3a538ae6f73e8d4995fd3ac0ae2c18555faa410b539d147df3658994",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "517dca50-5d55-4038-ba1d-f9b745708327"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
           }
         ]
       }
@@ -9694,6 +10371,60 @@
       }
     },
     {
+      "key": "8f84eae5-222d-4bbf-9ab0-f30361882a95:post_wash_leave_in:post_wash_damp_conditioning",
+      "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "product_name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "source_role": "post_wash_leave_in",
+      "source_fingerprint": "b77d6121d36fb17487e3309cca35bb2fd68d35f4e6c569fa11a2dd7a10482e96",
+      "template_keys": [
+        "leave-in.damp-conditioning.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "f85405016e51eec7a014ada3a8dbc56bc02fdfacba8bb9f38fa8211afc662490",
+      "after_visible_step_fingerprint": "b43fa8419d2e2a3c48910717d92b347a3d4082c18c35bafab2565081ee68f831",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "8f84eae5-222d-4bbf-9ab0-f30361882a95"
+        },
+        "sourceRole": "post_wash_leave_in",
+        "role": "leave_in",
+        "applicationFamily": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationState": "damp_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "leave_in",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 240
+          },
+          "amount": null,
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "915aa362-6479-41f2-bb59-0260493b3d58:post_wash_leave_in:post_wash_damp_conditioning",
       "product_id": "915aa362-6479-41f2-bb59-0260493b3d58",
       "product_name": "Paul Mitchell Full Circle Leave-In",
@@ -10411,6 +11142,58 @@
       }
     },
     {
+      "key": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "product_name": "dmBio natives Olivenöl extra",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "53fc270b59d9d9d8c67a93f0a5c137b12d62cf2a07fca01a72fd6f6f8195c1de",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "8ada60b41b60ece4b476aa9dabfc0b803368f25f431c74033cea1d97eedbcdd7",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6:intensive_conditioning_mask:post_shampoo_rinse_out_mask",
       "product_id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
       "product_name": "Balea Professional Plex Care 2in1",
@@ -10798,6 +11581,58 @@
             "sourceUrl": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
             "sourceType": "retailer",
             "checkedAt": "2026-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "a11855eb-64e5-438f-8880-1d3573efa9fa:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "product_name": "benecos BIO Körperöl Aprikosenkernöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "4118fe452f230a18db8b1d08d4e7bde3199d8c8549d6372ba7de249592efdc0d",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "e5b9e8c8ded36fb91670dfe23b6dcf4e5fef89e303472f2d7f520ebd71d0bfeb",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "a11855eb-64e5-438f-8880-1d3573efa9fa"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
           }
         ]
       }
@@ -11319,6 +12154,58 @@
       }
     },
     {
+      "key": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "product_name": "dmBio Kokosöl nativ",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "daf29bbac37156460b5fc78b0a5eee715e8c76cb9e877b89f6a0f8ff6d7dd807",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "792cc411e0269ca26800f09baf36d3ebe3339ccfdb80276c9be61e3a07ada373",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
+          }
+        ]
+      }
+    },
+    {
       "key": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18:residue_reset:reset_cleanse",
       "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
       "product_name": "Professional Shampoo Tiefenreinigung",
@@ -11360,6 +12247,62 @@
             "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
             "sourceType": "retailer",
             "checkedAt": "2026-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "b000d235-1fc6-434c-9ba1-f1207d36cded:shampoo_everyday:standard_rinse_out_cleanse",
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "product_name": "Balea med Duschgel & Shampoo 5% Urea 2in1",
+      "source_role": "shampoo_everyday",
+      "source_fingerprint": "82bc5039f9629c02ca06f9d461b74c6490c305f8851a8c6d7c9badb9c1779c36",
+      "template_keys": [
+        "shampoo.standard-scalp-cleanse.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "27881ff6b359cd59f04b7ce31c27af36f8bae0e2f2413a820aaa684622c6ab1f",
+      "after_visible_step_fingerprint": "5f6bbc3d32b7d2dc1ee8634be323b12c9d2df0c9004ff4d4562288075b9d62c9",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "b000d235-1fc6-434c-9ba1-f1207d36cded"
+        },
+        "sourceRole": "shampoo_everyday",
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "facts": {
+          "applicationState": "wet_hair",
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTime": null,
+          "amount": null,
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1376376/balea-med-duschgel-und-shampoo-5-prozent-urea-2in1",
+            "sourceType": "retailer",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://www.aad.org/public/everyday-care/hair-scalp-care/hair/habits-that-damage-hair",
+            "sourceType": "professional_authority",
+            "checkedAt": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://www.aad.org/public/everyday-care/hair-scalp-care/hair/healthy-hair-tips",
+            "sourceType": "professional_authority",
+            "checkedAt": "2026-09-01"
           }
         ]
       }
@@ -12286,12 +13229,12 @@
       "product_id": "c574ee6f-ad22-45c0-b936-57b847d93433",
       "product_name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
       "source_role": "pre_heat_protection",
-      "source_fingerprint": "3e3500465c46fdc2064b64ea70ece0468addf90f8f99c468eb48be6bc85bd76e",
+      "source_fingerprint": "3a1eeb52bac2cb91374942b3b27bc71b820e50a50dacd1eb099abd161993ca74",
       "template_keys": [
         "heat.damp.oil.v2"
       ],
       "exact_workflow_id": null,
-      "before_visible_step_fingerprint": "5090e2ab137db49e840ac5a413265dd935223493d1a49afbb14f961a36d78363",
+      "before_visible_step_fingerprint": "dd0c428aad5e15f24ca62a6dbcd3e01b1dd600ee3a50ff359f290981d1556fd4",
       "after_visible_step_fingerprint": "99457aa2f0cf54faef4de68774efad9ccb86bd30d94564e7a9c878f903672df7",
       "guidance_payload_v2": {
         "schemaVersion": 2,
@@ -12315,7 +13258,7 @@
               "damp_hair"
             ],
             "activationRequired": false,
-            "maximumClaimedTemperatureC": 230,
+            "maximumClaimedTemperatureC": null,
             "reapplication": "each_separate_heat_event"
           },
           "conditionerPolicy": "not_applicable"
@@ -12327,14 +13270,9 @@
         "cautionCodes": [],
         "evidence": [
           {
-            "sourceUrl": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/serum",
             "sourceType": "manufacturer",
-            "checkedAt": "2026-08-11"
-          },
-          {
-            "sourceUrl": "https://www.garnier.com.au/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
-            "sourceType": "manufacturer",
-            "checkedAt": "2026-08-11"
+            "checkedAt": "2026-09-01"
           }
         ]
       }
@@ -12522,6 +13460,58 @@
             "sourceUrl": "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege",
             "sourceType": "retailer",
             "checkedAt": "2026-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "ca4ae209-79d2-4f4d-8e44-46e586cec62d:pre_wash_fibre_treatment:pre_wash_lengths_treatment",
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "product_name": "benecos BIO Körperöl Mandelöl",
+      "source_role": "pre_wash_fibre_treatment",
+      "source_fingerprint": "04bb209ab4bc530ae3d90a099dfbcd87ea73bd207022886df153dca906ba856c",
+      "template_keys": [
+        "oil.pre-wash.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "203457ab6d93b43cf00e27494617fbfa7a67be3ea3eeac4d00764e2407f45c1b",
+      "after_visible_step_fingerprint": "3ebadd597c98bda75bd01797b7ec8a1ec8c200973617d664623bdf926c491b09",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "ca4ae209-79d2-4f4d-8e44-46e586cec62d"
+        },
+        "sourceRole": "pre_wash_fibre_treatment",
+        "role": "intensive_care",
+        "applicationFamily": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationState": "pre_wash_dry_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "follow_with_shampoo",
+          "contactTime": {
+            "kind": "seconds",
+            "seconds": 600
+          },
+          "amount": {
+            "kind": "qualitative",
+            "value": "one_drop"
+          },
+          "heat": null,
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/personal-plan/categories/oil/decision.md",
+            "sourceType": "internal_authority",
+            "checkedAt": "2026-09-01"
           }
         ]
       }

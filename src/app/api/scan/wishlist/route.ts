@@ -4,6 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { presentCatalogCommerce } from "@/lib/personal-plan/routine/commerce"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import { loadQuarantinedProductIdsAmong } from "@/lib/scan/catalog-eligibility"
+import { captureScanException } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -37,6 +38,7 @@ export type ScanWishlistRouteDeps = {
   checkRateLimit: typeof checkRateLimit
   createAdminClient: typeof createAdminClient
   listWishlist: (client: SupabaseClient, userId: string) => Promise<ScanWishlistEntry[]>
+  captureScanException?: typeof captureScanException
 }
 
 const fail = (error: string, status: number, headers?: HeadersInit) =>
@@ -64,6 +66,12 @@ export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
       return NextResponse.json({ entries }, { headers: { "Cache-Control": "no-store" } })
     } catch (error) {
       console.error("[scan] wishlist list failed", error)
+      ;(deps.captureScanException ?? captureScanException)(error, {
+        route: "wishlist",
+        status: 503,
+        reason: "wishlist_list_failed",
+        userId,
+      })
       return fail("temporarily_unavailable", 503)
     }
   }

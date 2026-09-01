@@ -9,6 +9,7 @@ import {
 } from "@/lib/personal-plan/products/contracts"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import { loadQuarantinedProductIds } from "@/lib/scan/catalog-eligibility"
+import { captureScanException } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -52,6 +53,7 @@ export type ScanSearchRouteDeps = {
   checkRateLimit: typeof checkRateLimit
   createAdminClient: typeof createAdminClient
   search: (client: SupabaseClient, query: string) => Promise<ScanSearchResult[]>
+  captureScanException?: typeof captureScanException
 }
 
 const querySchema = z
@@ -89,6 +91,12 @@ export function createScanSearchRouteHandler(deps: ScanSearchRouteDeps) {
       return NextResponse.json({ results }, { headers: { "Cache-Control": "no-store" } })
     } catch (error) {
       console.error("[scan] search failed", error)
+      ;(deps.captureScanException ?? captureScanException)(error, {
+        route: "search",
+        status: 503,
+        reason: "search_failed",
+        userId,
+      })
       return fail("temporarily_unavailable", 503)
     }
   }

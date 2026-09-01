@@ -100,6 +100,7 @@ export const stage5V2ApplicationArtifactSchema = z
     source_kind: z.enum([
       "reviewed_stage5_v1_artifacts",
       "reviewed_stage5_v1_and_use_case_artifacts",
+      "reviewed_stage5_v1_use_case_and_amendment_artifacts",
     ]),
     source_files: z.array(
       z.object({ path: z.string().min(1), sha256: z.string().regex(/^[a-f0-9]{64}$/) }).strict(),
@@ -139,6 +140,7 @@ export type Stage5V2ApplicationPreflightRead = {
       role: string
       application_family?: string
       guidance_payload: unknown
+      guidance_payload_v2?: unknown
     }>
   >
   listActiveCuratedProtocols?(): Promise<
@@ -248,6 +250,13 @@ export async function preflightStage5V2ApplicationArtifact(
       item.source_fingerprint
     ) {
       blockers.push(`source_protocol_diverged:${item.key}`)
+    }
+    if (
+      "guidance_payload_v2" in protocol &&
+      protocol.guidance_payload_v2 !== null &&
+      canonicalJson(protocol.guidance_payload_v2) !== canonicalJson(pointer)
+    ) {
+      blockers.push(`v2_authority_conflict:${item.key}`)
     }
   }
 

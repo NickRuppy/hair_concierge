@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server"
 import type { SupabaseBillingAnalyticsClient } from "@/lib/billing/types"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { isNonCommercialFunnelTestKind } from "@/lib/funnel/journey-kind"
 import {
   decodeFunnelContext,
   decodeFunnelTouch,
@@ -208,7 +209,7 @@ export async function resolveOrganicOfferMediaExperiment(input: {
 }): Promise<string> {
   const fallback = ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant
   const { session } = input
-  if (!session || input.excluded || session.testKind === "field_test") return fallback
+  if (!session || input.excluded || isNonCommercialFunnelTestKind(session.testKind)) return fallback
   if (session.packageKey !== ORGANIC_OFFER_MEDIA_EXPERIMENT.packageKey)
     return resolveLegacyResultOfferVariant(session)
 

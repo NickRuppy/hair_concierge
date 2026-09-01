@@ -83,6 +83,9 @@ test("classifies every current public page and route handler", () => {
     "/methodik",
     "/opengraph-image",
     "/pricing",
+    "/partner/einladung",
+    "/partner/e-mail-bestaetigen",
+    "/partner/weiter",
     "/quiz",
     "/result/lead-123",
     "/test/haarplan/campaign-token",
@@ -105,6 +108,11 @@ test("classifies every current public page and route handler", () => {
     "/api/paypal/cancel-subscription",
     "/api/paypal/create-subscription-intent",
     "/api/paypal/webhook",
+    "/api/partner-access/activate",
+    "/api/partner-access/claim",
+    "/api/partner-access/email-change",
+    "/api/partner-access/email-change/confirm",
+    "/api/partner-access/resolve",
     "/api/quiz/analyze",
     "/api/quiz/lead",
     "/api/quiz/result-artifact",
@@ -408,6 +416,9 @@ test("private and unstable routes receive response-level noindex headers", async
     "/profile/:path*",
     "/result/:path*",
     "/routine/:path*",
+    // Both are needed: `:path*` does not match the bare `/scan` segment
+    // (mirrors the camera-header workaround below).
+    "/scan",
     "/scan/:path*",
     "/welcome/:path*",
   ]) {

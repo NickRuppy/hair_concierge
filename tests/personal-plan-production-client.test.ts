@@ -6,13 +6,81 @@ import {
   createHttpStage3IntakeClient,
   createHttpStage3ProductsGateway,
 } from "../src/lib/personal-plan/products/http-gateway"
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+
+function bootstrapResponse(personalPlanId: string, refinedVersionId: string) {
+  const authorityVersions = Object.fromEntries(
+    Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+      category,
+      policy.authorityVersion,
+    ]),
+  )
+  return {
+    status: "active",
+    requirements: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Basisreinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    authorityEvaluations: [],
+    fitComparisons: [],
+    draft: {
+      schemaVersion: 1,
+      status: "active",
+      authorityVersions: { shampoo: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion },
+      draftId: "imported",
+      userId: "owner",
+      personalPlanId,
+      refinedVersionId,
+      staleRefinedVersionId: null,
+      revision: 0,
+      pass: "product_capture",
+      orderedCategories: ["shampoo"],
+      categoryCursor: "shampoo",
+      products: [],
+      roleAssignments: [],
+      uncoveredRoles: [],
+      decisions: [],
+      completedCaptureCategories: [],
+      completedDecisionKeys: [],
+      createdAt: "2026-09-01T10:00:00.000Z",
+      updatedAt: "2026-09-01T10:00:00.000Z",
+      authoritySnapshot: {
+        schemaVersion: 1,
+        refinedNeedVersionId: refinedVersionId,
+        refinedInputHash: "fixture-input-hash",
+        categoryDecisions: [],
+        coverage: [],
+        orderedCategories: ["shampoo"],
+        inventoryOnlyCategories: [],
+        authorityVersions,
+      },
+    },
+  }
+}
 
 test("optional inventory entry is a POST separate from baseline draft loading", async () => {
   const requests: Array<{ url: string; init?: RequestInit }> = []
   const gateway = createHttpStage3ProductsGateway({
     fetch: async (url, init) => {
       requests.push({ url: String(url), init })
-      return new Response(JSON.stringify({ draft: { draftId: "imported", revision: 0 } }))
+      const body = JSON.parse(String(init?.body ?? "{}")) as {
+        personalPlanId?: string
+        refinedVersionId?: string
+      }
+      const requestUrl = String(url)
+      const query = new URL(requestUrl, "http://test").searchParams
+      return new Response(
+        JSON.stringify(
+          bootstrapResponse(
+            body.personalPlanId ?? query.get("personalPlanId") ?? "plan",
+            body.refinedVersionId ?? query.get("refinedVersionId") ?? "refined",
+          ),
+        ),
+      )
     },
   })
   const input = { personalPlanId: "plan", refinedVersionId: "refined" }

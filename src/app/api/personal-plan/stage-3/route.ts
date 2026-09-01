@@ -24,7 +24,7 @@ import {
   stage3RoleAssignmentSchema,
 } from "@/lib/personal-plan/products/contracts"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
-import { stage3FitComparisonForTransport } from "@/lib/personal-plan/products/fit-comparison"
+import { composeStage3BootstrapResponse } from "@/lib/personal-plan/products/stage3-bootstrap-response-server"
 import {
   createSupabaseStage3RoutineAuthorityRepairService,
   type Stage3RoutineAuthorityRepairService,
@@ -363,36 +363,14 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
             parsed.data.rebuildStale === "1" && !parsed.data.repairRoutineVersionId,
         })
         if (repairRequirements) loaded.requirements = repairRequirements
-        const usesReviewBundles =
-          loaded.draft.status === "active" &&
-          loaded.draft.pass !== "product_capture" &&
-          loaded.draft.pass !== "need_revision_review" &&
-          Boolean(gateway.reviewDecisionBundles)
-        const reviewBundles =
-          !usesReviewBundles || !gateway.reviewDecisionBundles
-            ? []
-            : await gateway.reviewDecisionBundles({ draftId: loaded.draft.draftId })
-        const authorityEvaluations = usesReviewBundles
-          ? reviewBundles.map((bundle) => bundle.authorityEvaluation)
-          : loaded.draft.status !== "active" ||
-              loaded.draft.pass === "product_capture" ||
-              loaded.draft.pass === "need_revision_review" ||
-              !gateway.evaluateDecisions
-            ? []
-            : await gateway.evaluateDecisions({ draftId: loaded.draft.draftId })
-        return response(
-          {
-            ...loaded,
-            authorityEvaluations,
-            fitComparisons: reviewBundles.map((bundle) =>
-              stage3FitComparisonForTransport(bundle.fitComparison),
-            ),
-          },
-          200,
-          {
-            "Server-Timing": serverTiming(auth.phases),
-          },
-        )
+        const bootstrap = await composeStage3BootstrapResponse({
+          loaded,
+          evaluateDecisions: gateway.evaluateDecisions?.bind(gateway),
+          reviewDecisionBundles: gateway.reviewDecisionBundles?.bind(gateway),
+        })
+        return response(bootstrap, 200, {
+          "Server-Timing": serverTiming(auth.phases),
+        })
       } catch (error) {
         if (error instanceof Stage3AuthoritySnapshotError) {
           log("conflict", started, error.code)

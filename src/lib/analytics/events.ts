@@ -2,6 +2,7 @@ import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import type { EmailDeliverabilityFailure } from "@/lib/email-deliverability-shared"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import type { FunnelTestKind } from "@/lib/funnel/journey-kind"
 
 export type AnalyticsValue = string | number | boolean | null | string[] | number[] | boolean[]
 export type AnalyticsPayload = Record<string, AnalyticsValue | undefined>
@@ -10,7 +11,7 @@ export type FunnelAnalyticsEnvelope = {
   funnelEventId?: string | null
   funnelSessionId?: string | null
   funnelPackageKey?: string | null
-  testKind?: "field_test" | null
+  testKind?: FunnelTestKind | null
 }
 
 export type OfferEntryContext =
@@ -30,7 +31,7 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
   entryContext: OfferEntryContext
   focusRoutine: boolean
   isInternalTest?: boolean
-  testKind?: "field_test" | null
+  testKind?: FunnelTestKind | null
   leadId?: string | null
   needLane?: string | null
   offerRevision: string
@@ -73,6 +74,7 @@ export type OfferCtaId =
   | "pricing_primary"
   | "change_plan"
   | "field_test_activation"
+  | "partner_access_activation"
   | "final"
 
 export type OfferEngagementReason = "cta_clicked" | "faq_opened" | "section_depth"
@@ -331,6 +333,9 @@ export type AppEventMap = {
   first_chat_message: Record<string, never>
   onboarding_completed: {
     userId: string
+  }
+  partner_access_activated: FunnelAnalyticsEnvelope & {
+    leadId: string
   }
   offer_chapter_revealed: OfferAnalyticsContext & {
     chapterId: OfferChapterId

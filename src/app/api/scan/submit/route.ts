@@ -14,6 +14,7 @@ import type { ScanProductIntakeSubmissionResult } from "@/lib/product-intake/typ
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
+import { captureScanException } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -43,6 +44,7 @@ export type ScanSubmitRouteDeps = {
   createAdminClient: typeof createAdminClient
   createRepository: (admin: ReturnType<typeof createAdminClient>) => ProductIntakeRepository
   submit: typeof submitScanProductIntake
+  captureScanException?: typeof captureScanException
 }
 
 const fail = (error: string, status: number, headers?: HeadersInit) =>
@@ -103,6 +105,12 @@ export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
       })
     } catch (error) {
       console.error("[scan] submit failed", error)
+      ;(deps.captureScanException ?? captureScanException)(error, {
+        route: "submit",
+        status: 503,
+        reason: "submit_failed",
+        userId,
+      })
       return fail("temporarily_unavailable", 503)
     }
   }

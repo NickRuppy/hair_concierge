@@ -1,26 +1,35 @@
 import {
   Stage3ProductsGatewayError,
+  type Stage3BootstrapClientPort,
+  type Stage3BootstrapResponse,
   type Stage3CompletionReceiptResponse,
   type Stage3CompleteResponse,
-  type Stage3DraftResponse,
   type Stage3IntakeClientPort,
   type Stage3MutationResponse,
   type Stage3ProductsGateway,
   type Stage3SearchResponse,
 } from "./gateway"
+import { parseStage3BootstrapResponse } from "./bootstrap-response"
 import { stage3ProductDraftSchema } from "./contracts"
 
 type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 
+export type HttpStage3ProductsGateway = Omit<
+  Stage3ProductsGateway,
+  "loadOrCreate" | "openOptionalInventory"
+> &
+  Stage3BootstrapClientPort
+
 export function createHttpStage3ProductsGateway({
   fetch: fetcher = fetch,
-}: { fetch?: FetchLike } = {}): Stage3ProductsGateway {
+}: { fetch?: FetchLike } = {}): HttpStage3ProductsGateway {
   return {
     openOptionalInventory: async (input) =>
-      request<Stage3DraftResponse>(
+      requestStage3Bootstrap(
         fetcher,
         "/api/personal-plan/stage-3/optional-entry",
         jsonRequest("POST", input),
+        input,
       ),
     loadOrCreate: async ({
       personalPlanId,
@@ -28,7 +37,7 @@ export function createHttpStage3ProductsGateway({
       repairRoutineVersionId,
       rebuildOnStaleRefinedVersion,
     }) =>
-      request<Stage3DraftResponse>(
+      requestStage3Bootstrap(
         fetcher,
         `/api/personal-plan/stage-3?${new URLSearchParams({
           personalPlanId,
@@ -39,6 +48,7 @@ export function createHttpStage3ProductsGateway({
           ...(rebuildOnStaleRefinedVersion && !repairRoutineVersionId ? { rebuildStale: "1" } : {}),
         })}`,
         { method: "GET" },
+        { personalPlanId, refinedVersionId },
       ),
     search: async ({ draftId, category, query, requestToken }) =>
       request<Stage3SearchResponse>(
@@ -103,6 +113,15 @@ export function createHttpStage3ProductsGateway({
         { allowRevisionConflict: true },
       ),
   }
+}
+
+async function requestStage3Bootstrap(
+  fetcher: FetchLike,
+  url: string,
+  init: RequestInit,
+  expected: { personalPlanId: string; refinedVersionId: string },
+): Promise<Stage3BootstrapResponse> {
+  return parseStage3BootstrapResponse(await request<unknown>(fetcher, url, init), expected)
 }
 
 export function createHttpStage3IntakeClient({

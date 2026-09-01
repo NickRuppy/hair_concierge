@@ -231,6 +231,44 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     expect(stage2Requests).toBe(0)
   })
 
+  test("Escape at the first dialog-visible instant closes the detail sheet", async ({ page }) => {
+    // Regression for a CI-only flake of the journey test above: the sheet's Escape
+    // handling used to be wired one passive-effect phase (plus one commit for the
+    // top-layer state) after the dialog became visible, so a single Escape pressed
+    // at the first visible instant was silently swallowed and the sheet never
+    // closed. Dispatching Escape from a MutationObserver microtask lands exactly
+    // in that window, deterministically.
+    await page.addInitScript(() => {
+      new MutationObserver(() => {
+        const panel = document.querySelector('[data-bottom-sheet-panel][role="dialog"]')
+        if (!panel || (window as { __escapeSent?: boolean }).__escapeSent) return
+        ;(window as { __escapeSent?: boolean }).__escapeSent = true
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }))
+      }).observe(document, { subtree: true, childList: true, attributes: true })
+    })
+    await page.route("**/api/personal-plan/stage-1/previews?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(previewResponse),
+      }),
+    )
+    await page.setViewportSize({ width: 375, height: 844 })
+    await page.goto(labPath)
+
+    const basisCards = page
+      .locator(".personal-plan-view-transition-layer:not(.personal-plan-view-transition-outgoing)")
+      .locator("[data-plan-start-card-list] [data-plan-start-card]")
+    await expect(basisCards).not.toHaveCount(0)
+    await basisCards.first().getByRole("button").click()
+
+    await expect(page.getByRole("dialog")).toHaveCount(0)
+    // Prove the race was exercised: the observer really did fire the early Escape.
+    expect(await page.evaluate(() => (window as { __escapeSent?: boolean }).__escapeSent)).toBe(
+      true,
+    )
+  })
+
   test("keeps the forward-only Optional action inside 320, 375, and 390px viewports", async ({
     page,
   }) => {
@@ -514,6 +552,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
           status: "active",
           requirements: preparedStage3Entry.orderedCategories,
           authorityEvaluations: [],
+          fitComparisons: [],
           draft: {
             schemaVersion: 1,
             status: "active",
@@ -561,4 +600,72 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       page.getByText(preparedStage3Entry.orderedCategories[0]!.needSummary),
     ).toBeVisible()
   })
+})
+
+test("Stage 3 preparation recovery keeps each mobile action truthful", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  for (const scenario of [
+    {
+      kind: "checkpoint_changed",
+      heading: "Dein Feinschliff wurde aktualisiert.",
+      recover: "Aktuellen Stand laden",
+    },
+    {
+      kind: "transient",
+      heading: "Die Produktauswahl ist gerade nicht verfügbar.",
+      recover: "Erneut versuchen",
+    },
+  ]) {
+    await page.goto(`/labs/personal-plan-stage-3-recovery?scenario=${scenario.kind}`)
+    await expect(page.getByRole("heading", { name: scenario.heading })).toBeVisible()
+    await page.getByRole("button", { name: scenario.recover }).click()
+    await expect(page.locator("[data-stage3-recovery-scenario]")).toHaveAttribute(
+      "data-last-action",
+      "recover",
+    )
+    await expect(page.getByRole("button", { name: "Zur Routine" })).toBeVisible()
+  }
+
+  await page.goto("/labs/personal-plan-stage-3-recovery?scenario=contract_violation&registered=1")
+  await expect(
+    page.getByRole("heading", {
+      name: "Die Produktauswahl kann gerade nicht geöffnet werden.",
+    }),
+  ).toBeVisible()
+  await expect(page.getByText(/Wir haben das Problem registriert\./)).toBeVisible()
+  await expect(page.getByRole("button", { name: "Erneut versuchen" })).toHaveCount(0)
+  await page.getByRole("button", { name: "Zur Routine" }).click()
+  await expect(page.locator("[data-stage3-recovery-scenario]")).toHaveAttribute(
+    "data-last-action",
+    "routine",
+  )
+  await expect(page.locator("body")).not.toHaveCSS("overflow-x", "scroll")
+})
+
+// Outside the describe on purpose: its beforeEach suppresses the cookie banner,
+// and this regression needs the banner's settings dialog as a Dialog surface.
+test("Escape at the first dialog-visible instant closes the cookie settings dialog", async ({
+  page,
+}) => {
+  // Same swallowed-Escape window as the bottom-sheet regression above, for the
+  // shared Dialog component: Escape dispatched the microtask the modal overlay
+  // appears must already reach a live, top-layer-aware handler.
+  await page.addInitScript(() => {
+    new MutationObserver(() => {
+      if (!document.querySelector("[data-dialog-overlay]")) return
+      if ((window as { __escapeSent?: boolean }).__escapeSent) return
+      ;(window as { __escapeSent?: boolean }).__escapeSent = true
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }))
+    }).observe(document, { subtree: true, childList: true, attributes: true })
+  })
+  await page.route("**/api/personal-plan/stage-1/previews?*", (route) =>
+    route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({}) }),
+  )
+  await page.goto(labPath)
+
+  await page.getByRole("button", { name: "Einstellungen" }).click()
+  await expect(page.getByRole("heading", { name: "Cookie-Einstellungen" })).toHaveCount(0)
+  await expect(page.getByRole("button", { name: "Einstellungen" })).toBeVisible()
+  // Prove the race was exercised: the observer really did fire the early Escape.
+  expect(await page.evaluate(() => (window as { __escapeSent?: boolean }).__escapeSent)).toBe(true)
 })

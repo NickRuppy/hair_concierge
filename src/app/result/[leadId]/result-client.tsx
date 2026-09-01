@@ -15,6 +15,7 @@ import {
 } from "@/components/personal-plan-offer/personal-plan-offer"
 import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-test/personal-plan-field-test-ended"
 import { RegularQuizFieldTestUnavailable } from "@/components/regular-quiz-field-test/unavailable"
+import { PartnerAccessUnavailable } from "@/components/partner-access/unavailable"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { renderOfferVariant } from "@/funnels/offers/registry"
 import { QUIZ_RESULT_CTA } from "@/lib/quiz/result-cta"
@@ -25,7 +26,7 @@ import type { QuizAnswers } from "@/lib/quiz/types"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
-import type { FunnelOfferFieldTest } from "@/funnels/types"
+import type { FunnelOfferFieldTest, FunnelOfferPartnerAccess } from "@/funnels/types"
 
 export function ResultPageClient({
   showQuizRestart = false,
@@ -45,6 +46,8 @@ export function ResultPageClient({
   isInternalTest = false,
   regularFieldTest = null,
   regularFieldTestUnavailable = false,
+  partnerAccess = null,
+  partnerAccessUnavailable = false,
   returnTo = null,
   offerTracking = null,
   offerVariant = "default",
@@ -67,6 +70,8 @@ export function ResultPageClient({
   isInternalTest?: boolean
   regularFieldTest?: FunnelOfferFieldTest | null
   regularFieldTestUnavailable?: boolean
+  partnerAccess?: FunnelOfferPartnerAccess | null
+  partnerAccessUnavailable?: boolean
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
@@ -116,6 +121,10 @@ export function ResultPageClient({
     return <PersonalPlanOfferRecovery leadId={leadId} />
   }
 
+  if (!hasAccess && partnerAccessUnavailable) {
+    return <PartnerAccessUnavailable />
+  }
+
   if (regularFieldTestUnavailable) {
     return <RegularQuizFieldTestUnavailable />
   }
@@ -135,6 +144,7 @@ export function ResultPageClient({
       pricingCatalogWasProvided={pricingCatalogWasProvided}
       quizAnswers={quizAnswers}
       regularFieldTest={regularFieldTest}
+      partnerAccess={partnerAccess}
       returnTo={returnTo}
     />
   )
@@ -154,6 +164,7 @@ function LegacyResultPageClient({
   pricingCatalogWasProvided,
   quizAnswers,
   regularFieldTest,
+  partnerAccess,
   returnTo,
 }: {
   entryContext: OfferEntryContext
@@ -169,6 +180,7 @@ function LegacyResultPageClient({
   pricingCatalogWasProvided: boolean
   quizAnswers: QuizAnswers
   regularFieldTest?: FunnelOfferFieldTest | null
+  partnerAccess?: FunnelOfferPartnerAccess | null
   returnTo?: string | null
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)
@@ -182,14 +194,18 @@ function LegacyResultPageClient({
 
     window.requestAnimationFrame(() => {
       const fieldTestTarget =
-        regularFieldTest && focusTarget === "pricing" ? "regular_field_test_activation" : null
+        partnerAccess && focusTarget === "pricing"
+          ? "partner_access_activation"
+          : regularFieldTest && focusTarget === "pricing"
+            ? "regular_field_test_activation"
+            : null
       document
         .getElementById(fieldTestTarget ?? presentationTarget)
         ?.scrollIntoView({ behavior: "smooth", block: "start" })
     })
-  }, [focusTarget, offerVariant, regularFieldTest])
+  }, [focusTarget, offerVariant, partnerAccess, regularFieldTest])
 
-  if (hasAccess) {
+  if (hasAccess && !partnerAccess) {
     return (
       <QuizResultsView
         name={name}
@@ -227,6 +243,7 @@ function LegacyResultPageClient({
       />
     ),
     regularFieldTest,
+    partnerAccess,
   })
   if (!offer) throw new Error(`Unknown funnel offer variant: ${offerVariant}`)
   return offer

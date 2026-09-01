@@ -51,6 +51,21 @@ test("scan submit: rate limited returns 429", async () => {
   assert.equal(response.status, 429)
 })
 
+test("scan submit: rate limiter unavailable fails closed with 503, without a Sentry capture", async () => {
+  const captured: unknown[] = []
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }),
+      captureScanException: (_error, details) => {
+        captured.push(details)
+      },
+    }),
+  )
+  const response = await handler(request(validBody))
+  assert.equal(response.status, 503)
+  assert.deepEqual(captured, [])
+})
+
 test("scan submit: an invalid category is a zod rejection", async () => {
   const handler = createScanSubmitRouteHandler(baseDeps())
   const response = await handler(request({ ...validBody, category: "not_a_category" }))
@@ -130,7 +145,7 @@ test("scan submit: pending_review maps to 202 pending_submission with headline",
   assert.deepEqual(await response.json(), {
     kind: "pending_submission",
     submissionId,
-    headline: "Wir prüfen dein Produkt",
+    headline: "Eingereicht!",
   })
 })
 
@@ -161,14 +176,21 @@ test("scan submit: passes frequency_range null (no invented data), never touchin
   })
 })
 
-test("scan submit: an unexpected error maps to 503", async () => {
+test("scan submit: an unexpected error maps to 503 and captures to Sentry", async () => {
+  const thrown = new Error("boom")
+  const captured: unknown[] = []
   const handler = createScanSubmitRouteHandler(
     baseDeps({
       submit: async () => {
-        throw new Error("boom")
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
       },
     }),
   )
   const response = await handler(request(validBody))
   assert.equal(response.status, 503)
+  assert.deepEqual(captured, [{ route: "submit", status: 503, reason: "submit_failed", userId }])
 })

@@ -28,7 +28,7 @@ export type PersonalPlanEnrollment = {
   qualifiedAt: string | null
   artifactLeadId: string | null
   quizSourceKind: "personal_plan" | "legacy" | null
-  sourceKind: "one_time" | "launch_subscription" | "field_test" | "migration" | null
+  sourceKind: "one_time" | "launch_subscription" | "field_test" | "partner" | "migration" | null
 }
 
 type CorrelationRow = {
@@ -76,9 +76,20 @@ type ManualAccessGrantRow = {
   revoked_at?: unknown
 }
 
+type PartnerInvitationEnrollmentRow = {
+  id?: unknown
+  claimed_user_id?: unknown
+  lead_id?: unknown
+  activated_at?: unknown
+  revoked_at?: unknown
+  current_manual_access_grant_id?: unknown
+  current_grant?: unknown
+}
+
 type EnrollmentQueryBuilder = {
   select: (columns: string) => EnrollmentQueryBuilder
   eq: (column: string, value: unknown) => EnrollmentQueryBuilder
+  is: (column: string, value: unknown) => EnrollmentQueryBuilder
   maybeSingle: () => Promise<{ data: unknown; error: unknown }>
 }
 
@@ -267,6 +278,47 @@ export async function findPersonalPlanEnrollmentForUser(
   }
 
   const enrollmentClient = supabase as unknown as EnrollmentSupabaseClient
+  const { data: partnerData, error: partnerError } = await enrollmentClient
+    .from("partner_access_invitations")
+    .select(
+      "id,claimed_user_id,lead_id,activated_at,revoked_at,current_manual_access_grant_id,current_grant:manual_access_grants!partner_access_invitations_current_manual_access_grant_id_fkey!inner(id,user_id,reason,expires_at,revoked_at,partner_access_invitation_id)",
+    )
+    .eq("claimed_user_id", userId)
+    .is("revoked_at", null)
+    .maybeSingle()
+  if (partnerError && !isMissingPartnerAccessRelation(partnerError)) throw partnerError
+  const partner = (partnerData as PartnerInvitationEnrollmentRow | null) ?? null
+  const partnerGrant = partner?.current_grant as
+    | (ManualAccessGrantRow & {
+        partner_access_invitation_id?: unknown
+      })
+    | null
+  if (
+    partner &&
+    typeof partner.id === "string" &&
+    typeof partner.lead_id === "string" &&
+    typeof partner.activated_at === "string" &&
+    partner.claimed_user_id === userId &&
+    partner.revoked_at === null &&
+    typeof partner.current_manual_access_grant_id === "string" &&
+    partnerGrant?.id === partner.current_manual_access_grant_id &&
+    partnerGrant.user_id === userId &&
+    partnerGrant.reason === "partner" &&
+    partnerGrant.expires_at === null &&
+    partnerGrant.revoked_at === null &&
+    partnerGrant.partner_access_invitation_id === partner.id
+  ) {
+    return {
+      accessState: "active",
+      sourceId: partner.id,
+      paidAt: null,
+      qualifiedAt: partner.activated_at,
+      artifactLeadId: partner.lead_id,
+      quizSourceKind: "legacy",
+      sourceKind: "partner",
+    }
+  }
+
   // Deploy the source-discriminator migration before this reader. A missing
   // column is a schema error, not proof that the user has no test access.
   const { data: fieldTestData, error: fieldTestError } = await enrollmentClient
@@ -315,6 +367,19 @@ export async function findPersonalPlanEnrollmentForUser(
       now,
       "legacy",
     ) ?? emptyEnrollment(oneTimeState)
+  )
+}
+
+function isMissingPartnerAccessRelation(error: unknown) {
+  if (!error || typeof error !== "object") return false
+  const value = error as { code?: unknown; message?: unknown }
+  return (
+    (value.code === "PGRST200" ||
+      value.code === "PGRST204" ||
+      value.code === "PGRST205" ||
+      value.code === "42P01") &&
+    typeof value.message === "string" &&
+    value.message.includes("partner_access_invitations")
   )
 }
 

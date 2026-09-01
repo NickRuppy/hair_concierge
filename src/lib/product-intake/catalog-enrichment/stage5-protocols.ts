@@ -143,6 +143,12 @@ export function deriveStage5RequiredRoles(row: Stage5LiveCatalogRow): {
           roles: [],
           blockers: [`canonical_fact_missing:${row.product_id}:shampoo.bucket`],
         }
+      const invalidBucket = buckets.find((bucket) => !isCanonicalShampooBucket(bucket))
+      if (invalidBucket)
+        return {
+          roles: [],
+          blockers: [`canonical_fact_invalid:${row.product_id}:shampoo.bucket:${invalidBucket}`],
+        }
       return { roles: deriveShampooProtocolRoles(buckets), blockers: [] }
     }
     case "conditioner":
