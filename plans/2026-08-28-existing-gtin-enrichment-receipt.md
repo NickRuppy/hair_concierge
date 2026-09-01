@@ -1,6 +1,6 @@
 # Existing-catalog GTIN enrichment — 2026-08-28
 
-Status: E1-E9 applied and verified in production. Added 161 GTINs to 157 existing products; 195/259 active products are barcode-linked. Remaining 64 are explicitly held or readiness-blocked, not silently completed.
+Status: E1-E11 applied and verified in production. Added 174 GTINs to 170 existing products; 208/259 active products are barcode-linked and 196/259 are strict scan-result-ready. Remaining 51 are explicitly held or readiness-blocked, not silently completed.
 
 ## Contract
 
@@ -138,3 +138,13 @@ Durable exact-ID audit: `data/scanner-catalog-coverage/2026-08-26/existing-catal
 The next product decision is canonical ownership for the same physical package represented in multiple categories: e.g. Guhl 2in1, Garnier Hair Food, Balea 3in1, Cantu leave-in, Midnight Serum and Pantene 7in1. Do not assign one code to both records or merge/reclassify records silently. Existing canonical brand IDs already settle spelling; no brand-name decision is outstanding. Source gaps stay researchable, but no unresolved candidate is represented as verified or written. New-product expansion remains parked until existing-catalog gaps are deliberately resolved.
 
 Changes and evidence are committed locally; nothing was pushed, opened as a PR, merged or application-deployed. The authorized database schema and identifier-data writes described above are complete. Counterpart review reports and SQL wrappers are intentionally retained only as transient `/tmp` diagnostics; durable decisions, manifests and verification remain with the task branch.
+
+## E10-E11 continuation — September 1
+
+E10 added 12 verified GTINs to 12 existing products from the refreshed August 31 ledger. Its exact manifest fingerprint is `e9b803b9d36f7cc41a6a0972958e0f045d5c91668c8b5766c60976a84384f0e3`; migration `20260831190726` and all 12 item receipts passed exact readback against reviewed head `551b7a52b56a9f061eeafcb331084b7893b59ffe`. The live catalog moved from 195 to 207 barcode-linked and from 183 to 195 strict-ready products.
+
+E11 completed the K18 Professional Molecular Repair Hair Mist at product `8f84eae5-222d-4bbf-9ab0-f30361882a95`. Readiness migration `20260901090000` first replaced the stale fine-only description, completed the reviewed Leave-in facts and six eligibility rows, stored schema-valid V1/V2 application guidance, removed only the exact guarded prior disposition and recorded three evidence rows plus the receipt fingerprint `4a6694959985138baf17701025e479387c827bd4f89948cd12f58aae29efe4dd`. This intermediate state was classification-ready but still unlinked.
+
+E11 migration `20260901091000` then extended the existing guarded executor. The clean-head preflight on `d4e96171534ab0f9db6d3d5598f916a923aebd94` passed project, migration, exact identity, global owner, open-submission and readiness checks. The exact manifest fingerprint `f224db6c44e4b50dc22b15a8ed28b81922273d3127d83ad4c8e3c55711abf6ec` applied one raw code `858511001463`, canonical GTIN-14 `00858511001463`, to the K18 product. Guarded verify and direct receipt/identifier/migration-history readback passed. The final readiness export reports **208/259 barcode-linked (80.3%)** and **196/259 strict scan-result-ready (75.7%)**; 51 active products remain unlinked, split into 23 otherwise-ready for GTIN research and 28 blocked.
+
+Official K18 evidence establishes the exact 300 ml lightweight professional mist and four-minute/no-rinse use; CosmoProf establishes UPC `858511001463`. Nick's approved internal decision remains explicit and separate: treat this lighter mist as an ordinary consumer Leave-in, not the main K18 bondbuilder. [K18 Hair Pro](https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale), [CosmoProf](https://www.cosmoprofbeauty.com/USA-040285.html), [SalonCentric corroboration](https://www.saloncentric.com/858511001463.html).
