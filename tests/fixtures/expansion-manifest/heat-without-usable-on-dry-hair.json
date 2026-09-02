@@ -1,0 +1,89 @@
+{
+  "batch_id": "S5-EXP-pilot-2026-09-02-heat-without-usable-on-dry-hair",
+  "generated_at": "2026-09-02T09:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Balea Professional Hitzeschutz Spray",
+          "brand": "Balea",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "candidate_image": {
+            "url": "https://cdn.dm.de/balea-hitzeschutz-spray.jpg",
+            "source_url": "https://www.dm.de/balea-hitzeschutz-spray-p4234"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4004234567823",
+            "cross_source_agreement": true,
+            "source_urls": ["https://www.dm.de/balea-hitzeschutz-spray-p4234"],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "spray",
+            "weight": "light",
+            "roles": ["extension_conditioner"],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 200,
+            "heat_activation_required": false,
+            "care_benefits": ["moisture"],
+            "ingredient_flags": ["humectants"],
+            "application_stage": ["towel_dry", "pre_heat"],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
+            "functional_benefits": ["moisture_softness", "heat_protect"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["heat_protect"]
+          },
+          "product_leave_in_eligibility": [
+            { "thickness": "normal", "need_bucket": "heat_protect", "styling_context": "heat_style" }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["dryness"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-hitzeschutz-spray-p4234",
+              "text": "Nach dem Waschen ins handtuchtrockene Haar spruehen, nicht ausspuelen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-hitzeschutz-spray-p4234",
+              "text": "Vor dem Hitzestyling gleichmaessig im handtuchtrockenen Haar verteilen; Schutz bis 200 Grad."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": { "provides_heat_protection": true },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/balea-hitzeschutz-spray-p4234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {}
+      }
+    }
+  ],
+  "existing_product_updates": []
+}

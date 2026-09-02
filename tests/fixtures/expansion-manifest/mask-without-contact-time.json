@@ -1,0 +1,65 @@
+{
+  "batch_id": "S5-EXP-pilot-2026-09-02-mask-without-contact-time",
+  "generated_at": "2026-09-02T09:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Balea Professional Repair Haarkur",
+          "brand": "Balea",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "candidate_image": {
+            "url": "https://cdn.dm.de/balea-repair-haarkur.jpg",
+            "source_url": "https://www.dm.de/balea-haarkur-repair-p3234"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4003234567819",
+            "cross_source_agreement": true,
+            "source_urls": ["https://www.dm.de/balea-haarkur-repair-p3234"],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": ["oils"],
+            "repair_support_level": "medium",
+            "functional_benefits": ["shine"]
+          }
+        },
+        "thickness_eligibility": ["coarse"],
+        "concern_eligibility": ["hair_damage", "repair"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-haarkur-repair-p3234",
+              "text": "Nach der Haarwaesche einarbeiten, einwirken lassen und ausspuelen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": { "weight": "rich" },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/balea-haarkur-repair-p3234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {}
+      }
+    }
+  ],
+  "existing_product_updates": []
+}

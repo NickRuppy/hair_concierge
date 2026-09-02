@@ -1,0 +1,388 @@
+{
+  "batch_id": "S5-EXP-pilot-2026-09-02",
+  "generated_at": "2026-09-02T09:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Balea Trockenes Haar Shampoo",
+          "brand": "Balea",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.95,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://cdn.dm.de/balea-trockenes-haar-shampoo.jpg",
+            "source_url": "https://www.dm.de/balea-shampoo-trockenes-haar-p1234"
+          },
+          "description": "Feuchtigkeitsspendendes Shampoo fuer trockenes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4001234567891",
+            "cross_source_agreement": true,
+            "source_urls": ["https://www.dm.de/balea-shampoo-trockenes-haar-p1234"],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "thickness": "normal",
+              "shampoo_bucket": "trocken",
+              "scalp_route": "dry",
+              "cleansing_intensity": "gentle"
+            },
+            {
+              "thickness": "coarse",
+              "shampoo_bucket": "trocken",
+              "scalp_route": "dry",
+              "cleansing_intensity": "gentle"
+            }
+          ],
+          "cleansing_intensity": "gentle"
+        },
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["dryness", "trocken"],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-shampoo-trockenes-haar-p1234",
+              "text": "Ins nasse Haar einmassieren, aufschaeumen und gruendlich ausspuelen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": { "shampoo_bucket": "trocken" },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/balea-shampoo-trockenes-haar-p1234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Produktseite.",
+          "category_specs.product_shampoo_specs": "Bucket aus Produktbeschreibung (fuer trockenes Haar)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Balea Repair Conditioner",
+          "brand": "Balea",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.45,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://cdn.dm.de/balea-repair-conditioner.jpg",
+            "source_url": "https://www.dm.de/balea-conditioner-repair-p2234"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4002234567805",
+            "cross_source_agreement": true,
+            "source_urls": ["https://www.dm.de/balea-conditioner-repair-p2234"],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            { "thickness": "normal", "protein_moisture_balance": "snaps" },
+            { "thickness": "coarse", "protein_moisture_balance": "snaps" }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "medium",
+            "repair_level": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": ["humectants"]
+          }
+        },
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["dryness", "feuchtigkeit"],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-conditioner-repair-p2234",
+              "text": "Nach der Haarwaesche in Laengen und Spitzen einarbeiten, Ansatz aussparen, kurz einwirken lassen und ausspuelen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": { "balance_direction": "moisture" },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/balea-conditioner-repair-p2234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Produktseite."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Balea Professional Repair Haarkur",
+          "brand": "Balea",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://cdn.dm.de/balea-repair-haarkur.jpg",
+            "source_url": "https://www.dm.de/balea-haarkur-repair-p3234"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4003234567819",
+            "cross_source_agreement": true,
+            "source_urls": ["https://www.dm.de/balea-haarkur-repair-p3234"],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": ["oils"],
+            "repair_support_level": "medium",
+            "functional_benefits": ["shine"]
+          }
+        },
+        "thickness_eligibility": ["coarse"],
+        "concern_eligibility": ["hair_damage", "repair"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-haarkur-repair-p3234",
+              "text": "Nach der Haarwaesche einarbeiten, 3 Minuten einwirken lassen und ausspuelen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 180,
+              "source_text": "3 Minuten einwirken lassen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": { "weight": "rich" },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/balea-haarkur-repair-p3234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Produktseite."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Balea Professional Hitzeschutz Spray",
+          "brand": "Balea",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.5,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://cdn.dm.de/balea-hitzeschutz-spray.jpg",
+            "source_url": "https://www.dm.de/balea-hitzeschutz-spray-p4234"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4004234567823",
+            "cross_source_agreement": true,
+            "source_urls": ["https://www.dm.de/balea-hitzeschutz-spray-p4234"],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "spray",
+            "weight": "light",
+            "roles": ["extension_conditioner"],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 200,
+            "heat_activation_required": false,
+            "care_benefits": ["moisture"],
+            "ingredient_flags": ["humectants"],
+            "application_stage": ["towel_dry", "pre_heat"],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
+            "functional_benefits": ["moisture_softness", "heat_protect"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["heat_protect"]
+          },
+          "product_leave_in_eligibility": [
+            { "thickness": "normal", "need_bucket": "heat_protect", "styling_context": "heat_style" }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["dryness"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-hitzeschutz-spray-p4234",
+              "text": "Nach dem Waschen ins handtuchtrockene Haar sprühen, nicht ausspuelen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-hitzeschutz-spray-p4234",
+              "text": "Vor dem Hitzestyling gleichmaessig im handtuchtrockenen Haar verteilen; Schutz bis 200 Grad."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": false
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": { "provides_heat_protection": true },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/balea-hitzeschutz-spray-p4234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Produktseite."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Alterra Bio-Arganoel",
+          "brand": "Alterra",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.95,
+          "net_content_value": 50,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://cdn.rossmann.de/alterra-arganoel.jpg",
+            "source_url": "https://www.rossmann.de/alterra-bio-arganoel-p5234"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4005234567837",
+            "cross_source_agreement": true,
+            "source_urls": ["https://www.rossmann.de/alterra-bio-arganoel-p5234"],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": ["pre_wash_fibre_treatment", "dry_finish"]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "normal",
+              "oil_subtype": "natuerliches-oel",
+              "oil_purpose": "pre_wash_oiling",
+              "ingredient_flags": []
+            }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["dryness", "frizz"],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-PREWASH",
+            "product_source": {
+              "label": "Rossmann.de Produktseite",
+              "url": "https://www.rossmann.de/alterra-bio-arganoel-p5234",
+              "text": "Vor der Haarwaesche in die trockenen Laengen und Spitzen einarbeiten, 15-20 Minuten einwirken lassen und mit Shampoo auswaschen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "Rossmann.de Produktseite",
+              "url": "https://www.rossmann.de/alterra-bio-arganoel-p5234",
+              "text": "Wenige Tropfen in die trockenen Spitzen einarbeiten."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": { "role_support": ["pre_wash_fibre_treatment", "dry_finish"] },
+            "source_label": "Rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/alterra-bio-arganoel-p5234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Produktseite."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": [
+    {
+      "product_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "add_identifiers": [
+        {
+          "type": "ean",
+          "value": "4006234567841",
+          "cross_source_agreement": true,
+          "source_urls": ["https://www.dm.de/ultimate-shampoo-500ml-p9234"],
+          "excluded_from_apply": false
+        }
+      ]
+    }
+  ]
+}

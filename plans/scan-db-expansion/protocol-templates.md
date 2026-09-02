@@ -232,17 +232,23 @@ step** — massage in, rinse out (P1, P4).
     {
       "stepKey": "apply-shampoo",
       "action": "apply_product",
-      "copyTemplateDe": "Ins nasse Haar geben und auf der Kopfhaut aufschäumen und einmassieren."
+      "copyTemplateDe": "Das Shampoo mit etwas Wasser in den Handflächen aufschäumen. Auf der Kopfhaut verteilen und mit den Fingerkuppen sanft einmassieren."
     },
     {
       "stepKey": "rinse-shampoo",
       "action": "rinse",
-      "copyTemplateDe": "Gründlich ausspülen – die Längen werden dabei mitgereinigt."
+      "copyTemplateDe": "Gründlich lauwarm ausspülen – der ablaufende Schaum reinigt die Längen mit."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Pre-emulsify shampoo with water in the palms before it touches the scalp (better distribution, no concentrated surfactant deposit in one spot) → trichology/professional-stylist education consensus (e.g. Philip Kingsley trichology guides); uncontested, no clinical trial needed.
+- Massage with fingertip pads, never nails (avoids scalp micro-abrasion) → dermatology + trichology practitioner consensus.
+- Lukewarm rinse, lengths cleaned by runoff → practitioner consensus; the cold-water-for-shine claim was deliberately excluded (TRI Princeton testing found no shine benefit — myth territory).
 
 **Schema constraint:** this family allows **exactly one** `apply_product` step
 (`contracts.ts:339-349`). A "bei Bedarf wiederholen" second pass is not expressible
@@ -319,7 +325,7 @@ guidance stays separate from medically adjacent scalp guidance).
     {
       "stepKey": "apply-shampoo",
       "action": "apply_product",
-      "copyTemplateDe": "Ins nasse Haar geben und auf der Kopfhaut aufschäumen und einmassieren."
+      "copyTemplateDe": "Das Shampoo mit etwas Wasser in den Handflächen aufschäumen. Auf der Kopfhaut verteilen und mit den Fingerkuppen sanft einmassieren."
     },
     {
       "stepKey": "wait-shampoo",
@@ -329,7 +335,7 @@ guidance stays separate from medically adjacent scalp guidance).
     {
       "stepKey": "rinse-shampoo",
       "action": "rinse",
-      "copyTemplateDe": "Gründlich ausspülen – die Längen werden dabei mitgereinigt."
+      "copyTemplateDe": "Gründlich lauwarm ausspülen – der ablaufende Schaum reinigt die Längen mit."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
@@ -346,6 +352,11 @@ guidance stays separate from medically adjacent scalp guidance).
 - **Fibre-claim products that arrived here** → move to STD.
 - Two-pass rituals → these become `workflowId` products; out of scope for a
   drugstore pilot stamp.
+
+**Technique evidence**
+
+- Same pre-emulsify / fingertip-massage / lukewarm-rinse basis as TPL-SHAMPOO-STD.
+- Contact time exists so deposited actives can work **on the scalp** (not the lather in the hair) → consistent with AAD patient guidance for treatment shampoos ("apply to and lather on the scalp", some need minutes of contact); copy stays cosmetic per the repo rule.
 
 ---
 
@@ -404,7 +415,7 @@ cosmetic framing only.
     {
       "stepKey": "apply-dandruff-shampoo",
       "action": "apply_product",
-      "copyTemplateDe": "Ins nasse Haar geben und auf der Kopfhaut aufschäumen und einmassieren."
+      "copyTemplateDe": "Das Shampoo mit etwas Wasser in den Handflächen aufschäumen. Auf der Kopfhaut verteilen und mit den Fingerkuppen sanft einmassieren."
     },
     {
       "stepKey": "wait-dandruff-shampoo",
@@ -414,7 +425,7 @@ cosmetic framing only.
     {
       "stepKey": "rinse-dandruff-shampoo",
       "action": "rinse",
-      "copyTemplateDe": "Gründlich ausspülen – die Längen werden dabei mitgereinigt."
+      "copyTemplateDe": "Gründlich lauwarm ausspülen – der ablaufende Schaum reinigt die Längen mit."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
@@ -431,6 +442,11 @@ cosmetic framing only.
 - **Anything that reads as medical** (Pilzinfektion, ärztlicher Rat) → do not
   paraphrase into cosmetic copy; flag for Nick.
 - 2 applications ("zweimal shampoonieren") → deviation.
+
+**Technique evidence**
+
+- Same pre-emulsify / fingertip-massage / lukewarm-rinse basis as TPL-SHAMPOO-STD.
+- Anti-dandruff agents must reach and stay on the scalp for a few minutes → AAD patient guidance + product monograph practice (Ketoconazol/Selendisulfid labels state contact times); the ruled 2–3 min default is the conservative floor, exact label times override per the deviation rule.
 
 ---
 
@@ -488,7 +504,7 @@ cosmetic framing only.
     {
       "stepKey": "apply-conditioner",
       "action": "apply_product",
-      "copyTemplateDe": "Nach der Haarwäsche in Längen und Spitzen verteilen und den Ansatz aussparen."
+      "copyTemplateDe": "Das Haar erst sanft ausdrücken, bis es nicht mehr tropft – sonst verdünnt Wasser den Conditioner. Dann in Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit den Fingern oder einem grobzinkigen Kamm gleichmäßig verteilen."
     },
     {
       "stepKey": "wait-conditioner",
@@ -500,6 +516,12 @@ cosmetic framing only.
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Squeeze water out before applying (product otherwise gets diluted and slides off with the drip) → cosmetic-chemistry mechanism (cationic conditioner deposits from the concentrated phase; water dilution reduces deposition) + universal stylist/manufacturer-professional consensus. This is Nick's flagged example, and the evidence is solid.
+- Distribute with fingers or a wide-tooth comb (even deposition; comb, never brush, on wet hair) → trichologist consensus; wet hair is measurably more extensible/fragile.
+- Deliberately left out: cold-water rinse for shine (myth — TRI Princeton found no effect) and "rinse until squeaky" (over-rinsing strips the deposited film; contested).
 
 **`sharedTemplateContactTime: "include"` is deliberate.** The V2 builder suppresses
 conditioner contact time entirely unless this is set
@@ -579,7 +601,7 @@ published.
     {
       "stepKey": "apply-mask",
       "action": "apply_product",
-      "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben, in Längen und Spitzen verteilen und den Ansatz aussparen."
+      "copyTemplateDe": "Das Haar nach der Wäsche sanft ausdrücken, bis es nicht mehr tropft. In Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit einem grobzinkigen Kamm durchkämmen, damit jede Strähne bedeckt ist."
     },
     {
       "stepKey": "wait-mask",
@@ -591,6 +613,12 @@ published.
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Towel-press to "handtuchtrocken" before a mask (stronger than the conditioner squeeze-out — high-payload formulas dilute and run off dripping hair) → stylist education + manufacturer professional lines, same deposition mechanism as conditioner.
+- Comb through with a wide-tooth comb so every strand is coated (masks are the one rinse-out step where per-strand coverage plausibly changes the visible result) → practitioner consensus.
+- Deliberately left out: heat/towel-turban activation (product-specific, not encodable here — already a listed deviation) and full quadrant sectioning (real technique, but too much ceremony for a 3-step drugstore protocol; the comb-through clause carries the coverage value).
 
 **Validity check for the stamp:** the `wait-mask` step must name a time, the copy
 form must match §2.5, and the column and `contactTimeSeconds` must agree.
@@ -660,17 +688,23 @@ explicitly marketed for dry-hair/between-wash use, it gets this template.
     {
       "stepKey": "towel-dry",
       "action": "section",
-      "copyTemplateDe": "Das Haar nach dem Waschen sanft handtuchtrocknen."
+      "copyTemplateDe": "Das Haar nach dem Waschen mit dem Handtuch sanft ausdrücken, nicht rubbeln – nasses Haar bricht leichter."
     },
     {
       "stepKey": "apply",
       "action": "apply_product",
-      "copyTemplateDe": "Eine kleine Menge in Längen und Spitzen verteilen, den Ansatz aussparen. Nicht ausspülen."
+      "copyTemplateDe": "Eine kleine Menge in den Handflächen verreiben und in Längen und Spitzen einarbeiten, den Ansatz aussparen. Zum Verteilen mit einem grobzinkigen Kamm durchkämmen. Nicht ausspülen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Blot/press with the towel instead of rubbing (wet hair has a lifted cuticle and higher elasticity → friction breakage) → cosmetic-science consensus, trichologist-endorsed; the copy carries the "why" in five words.
+- Small amount spread in the palms first, then comb-through for even distribution → practitioner consensus; prevents the classic leave-in failure mode (a blob in one spot, limp hair).
+- Deliberately left out: "plopping"/microfiber-only claims (tool-specific, curl-community practice with weak generalization) — the neutral "sanft ausdrücken" covers the supported core.
 
 **Typical deviations to watch for**
 
@@ -736,12 +770,17 @@ still TPL-LEAVEIN-DAMP.
     {
       "stepKey": "dry-care",
       "action": "apply_product",
-      "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen. Den Ansatz aussparen."
+      "copyTemplateDe": "Mit einer sehr kleinen Menge starten und in den Handflächen verreiben. Zuerst in die trockenen Spitzen einarbeiten, dann in die Längen – den Ansatz aussparen. Nur bei Bedarf nachlegen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Start tiny, ends first, top up only if needed (dry hair shows overload immediately — no water to buffer; ends are oldest/driest and need product most) → practitioner consensus across stylist education and manufacturer professional lines; the "start small" build-up rule is the single most repeated dry-application technique.
+- Rub out in the palms before touching hair → same even-distribution consensus as the damp template.
 
 **Typical deviations to watch for**
 
@@ -817,17 +856,23 @@ a separate template. That fact drives the family slot:
     {
       "stepKey": "apply-pre-heat",
       "action": "apply_product",
-      "copyTemplateDe": "⟨damp: \"Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar geben und in Längen und Spitzen verteilen.\" | either: \"Vor dem Hitzestyling gleichmäßig ins feuchte oder trockene Haar geben und in Längen und Spitzen verteilen.\"⟩"
+      "copyTemplateDe": "⟨damp: \"Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar geben, in Längen und Spitzen verteilen und durchkämmen – nur Strähnen mit Produkt sind geschützt.\" | either: \"Vor dem Hitzestyling gleichmäßig ins feuchte oder trockene Haar geben, in Längen und Spitzen verteilen und durchkämmen – nur Strähnen mit Produkt sind geschützt.\"⟩"
     },
     {
       "stepKey": "tool-pre-heat",
       "action": "tool",
-      "copyTemplateDe": "Danach wie geplant mit Wärme stylen. Vor jedem weiteren Hitzestyling erneut auftragen."
+      "copyTemplateDe": "Danach mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Comb through after applying — heat protectants work as a deposited film, so protection scales with coverage; an untouched strand is an unprotected strand → cosmetic-chemist consensus (LabMuffin/Beauty-Brains-style mechanism explanations + professional styling education all converge here).
+- Flat iron / curling iron only on fully dry hair — water in the fibre flash-boils under plate contact ("bubble hair", documented in peer-reviewed case literature); this is the strongest-evidenced sentence in the template.
+- Reapplication before each separate heat session (P7 ruling) is consistent with the film mechanism: the film wears off with brushing/washing. Deliberately left out: any waiting time before blow-drying (no consensus; blow-drying damp hair is the normal use case).
 
 **Choose `either_state_protection` only on an explicit "nass oder trocken" source
 statement.** "Am besten auf handtuchtrockenem Haar" is a preference, not either-state
@@ -891,17 +936,23 @@ statement.** "Am besten auf handtuchtrockenem Haar" is a preference, not either-
     {
       "stepKey": "dose-dry-finish",
       "action": "apply_product",
-      "copyTemplateDe": "Wenige Tropfen zwischen den Handflächen verteilen."
+      "copyTemplateDe": "Wenige Tropfen zwischen den Handflächen verreiben und anwärmen, bis beide Hände dünn benetzt sind."
     },
     {
       "stepKey": "apply-dry-finish",
       "action": "apply_product",
-      "copyTemplateDe": "Sparsam in die trockenen Längen und Spitzen geben; den Ansatz aussparen und nicht ausspülen."
+      "copyTemplateDe": "Zuerst in die trockenen Spitzen einarbeiten, dann den Rest über die Längen streichen. Den Ansatz aussparen, nicht ausspülen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Warm/spread a few drops between the palms until both hands carry a thin film (even micro-dosing; warmed oil spreads instead of clumping) → universal stylist + manufacturer-professional consensus for finishing oils.
+- Ends first, then hands-over-lengths ("praying hands" motion), roots never (ends are the driest, oldest fibre; roots show oil as grease immediately) → practitioner consensus.
+- Deliberately left out: any absorption/nourishment claim for finishing oils — on dry styled hair the effect is surface smoothing/shine (cosmetic-chemistry consensus); the copy stays purely mechanical.
 
 **Amount matters for V2.** `stage5-v2-builder.ts:245-250` maps oil `amount.copyDe` to
 a V2 enum by regex: `"1 Tropfen"` → `one_drop`, `"wenige"`/`"ein paar Tropfen"` →
@@ -967,17 +1018,22 @@ silently yields no V2 amount.
     {
       "stepKey": "dose-damp",
       "action": "apply_product",
-      "copyTemplateDe": "Wenige Tropfen zwischen den Handflächen verteilen."
+      "copyTemplateDe": "Wenige Tropfen zwischen den Handflächen verreiben und anwärmen, bis beide Hände dünn benetzt sind."
     },
     {
       "stepKey": "apply-damp",
       "action": "apply_product",
-      "copyTemplateDe": "In die handtuchtrockenen Längen und Spitzen geben; den Ansatz aussparen und nicht ausspülen."
+      "copyTemplateDe": "Zuerst in die handtuchtrockenen Spitzen einarbeiten, dann den Rest über die Längen streichen. Den Ansatz aussparen, nicht ausspülen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Towel-dry state + few warmed drops, ends first, then lengths → same palm-warming/ends-first consensus as the dry-finish template; on damp hair the oil additionally slows water loss and reduces comb friction while drying (cosmetic-science mechanism, uncontested).
+- Deliberately conservative: no comb-through step forced here (damp oils distribute well by hand; combing is already covered where coverage is the mechanism, i.e. the heat template).
 
 **Typical deviations to watch for**
 
@@ -1049,22 +1105,27 @@ TPL-LEAVEIN-HEAT:
     {
       "stepKey": "dose-heat",
       "action": "apply_product",
-      "copyTemplateDe": "Vor dem Hitzestyling wenige Tropfen zwischen den Handflächen verteilen."
+      "copyTemplateDe": "Vor dem Hitzestyling wenige Tropfen zwischen den Handflächen verreiben und anwärmen."
     },
     {
       "stepKey": "apply-heat",
       "action": "apply_product",
-      "copyTemplateDe": "⟨damp: \"In die handtuchtrockenen Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz.\" | either: \"In handtuchtrockene oder trockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz.\"⟩"
+      "copyTemplateDe": "⟨damp: \"In die handtuchtrockenen Längen und Spitzen einarbeiten und zum Verteilen durchkämmen; bei feinem Haar nur die Spitzen und nie den Ansatz.\" | either: \"In handtuchtrockene oder trockene Längen und Spitzen einarbeiten und zum Verteilen durchkämmen; bei feinem Haar nur die Spitzen und nie den Ansatz.\"⟩"
     },
     {
       "stepKey": "tool-heat",
       "action": "tool",
-      "copyTemplateDe": "Danach mit Wärme stylen. Vor jedem weiteren Hitzestyling erneut auftragen."
+      "copyTemplateDe": "Danach mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Comb-through for coverage + iron only on fully dry hair → same film-coverage and bubble-hair evidence as TPL-LEAVEIN-HEAT (see there); for oils the dry-hair rule matters even more because an oil film over waterlogged fibre traps steam.
+- Fine-hair "nur die Spitzen" clause retained → oil weight vs. fine-hair limpness is settled practitioner consensus and already the repo's dosing pattern.
 
 **Typical deviations to watch for**
 
@@ -1134,7 +1195,7 @@ nothing about timing does not change it. Because it is a range,
     {
       "stepKey": "apply-pre-wash",
       "action": "apply_product",
-      "copyTemplateDe": "Das Öl sehr dünn ausschließlich in trockenen Längen und Spitzen verteilen; Kopfhaut und Ansatz aussparen."
+      "copyTemplateDe": "Das Öl vor dem Waschen ins trockene Haar geben: Strähne für Strähne sehr dünn in Längen und Spitzen verteilen. Kopfhaut und Ansatz aussparen."
     },
     {
       "stepKey": "wait-pre-wash",
@@ -1150,6 +1211,12 @@ nothing about timing does not change it. Because it is a range,
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
+
+**Technique evidence**
+
+- Pre-wash oiling on **dry** lengths before shampooing reduces wash-induced protein loss → the one peer-reviewed anchor in this file (Rele & Mohile 2003, *J Cosmet Sci*: coconut oil, pre-wash > post-wash application; penetrating oils generally). Generalizing from coconut to every drugstore oil is weaker — hence thin film + conservative framing, no "repariert" claims.
+- Very thin film, strand by strand, scalp excluded → practitioner consensus; also keeps the template on the cosmetic side of the scalp-guidance boundary.
+- Deliberately left out: overnight oiling (evidence for extra benefit beyond ~15–20 min is weak; the study soaked far longer but under lab conditions — P8's 15–20 min stays the conservative rule) and shampoo-onto-oil emulsifying tricks (two-pass washing is not expressible in this schema).
 
 For rich oils, swap the dosing line (both `amount.copyDe` and the `dose-pre-wash`
 step) to:
